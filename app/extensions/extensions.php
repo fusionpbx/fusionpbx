@@ -38,17 +38,17 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	if (isset($_GET["order_by"])) {
+		$order_by = check_str($_GET["order_by"]);
+		$order = check_str($_GET["order"]);
+	}
+
 require_once "resources/header.php";
 $document['title'] = $text['title-extensions'];
 
 require_once "resources/paging.php";
-
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//get search term, if any
-	$search = $_REQUEST['search'];
 
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
