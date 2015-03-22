@@ -47,6 +47,9 @@ require_once "resources/paging.php";
 	$language = new text;
 	$text = $language->get();
 
+//get search term, if any
+	$search = $_REQUEST['search'];
+
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
@@ -55,7 +58,7 @@ require_once "resources/paging.php";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='30%' align='right'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
 	echo "		</form>\n";
