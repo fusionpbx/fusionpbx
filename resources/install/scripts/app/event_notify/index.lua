@@ -21,6 +21,7 @@
 --
 --      Contributor(s):
 --      Mark J Crane <markjcrane@fusionpbx.com>
+--		Errol Samuels <voiptology@gmail.com>
 
 --define explode
 	function explode ( seperator, str )
@@ -61,6 +62,16 @@
 	event:addHeader('user', user);
 	event:addHeader('host', domain);
 	event:addHeader('content-type', 'application/simple-message-summary');
+
+--aastra
+	if (vendor == "aastra") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+	end
 
 --cisco
 	if (vendor == "cisco") then
