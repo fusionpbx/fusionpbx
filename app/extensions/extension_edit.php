@@ -780,8 +780,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 
-
-
 //begin the page content
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -1576,12 +1574,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (if_group("superadmin")) {
 		if (strlen($user_context) == 0) {
-			if (count($_SESSION["domains"]) > 1) {
-				$user_context = $_SESSION['domain_name'];
-			}
-			else {
-				$user_context = "default";
-			}
+			$user_context = $_SESSION['domain_name'];
 		}
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
