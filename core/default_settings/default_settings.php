@@ -78,7 +78,6 @@ else {
 						$default_setting_order = $row["default_setting_order"];
 						$default_setting_enabled = $row["default_setting_enabled"];
 						$default_setting_description = $row["default_setting_description"];
-						break; //limit to 1 row
 					}
 					unset ($prep_statement);
 
@@ -287,7 +286,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 200;
+	$rows_per_page = 1000;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
