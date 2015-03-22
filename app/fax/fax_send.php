@@ -108,7 +108,15 @@ if (!$included) {
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir']);
-				chmod($dir_fax_sent,0774);
+				chmod($_SESSION['switch']['storage']['dir'],0774);
+			}
+			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax');
+				chmod($_SESSION['switch']['storage']['dir'].'/fax',0774);
+			}
+			if (count($_SESSION["domains"]) > 1 && !is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
+				chmod($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'],0774);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
 				mkdir($fax_dir.'/'.$fax_extension,0774,true);
