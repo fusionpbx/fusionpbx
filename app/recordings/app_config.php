@@ -99,5 +99,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "descr";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_base64";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Recording file encoded in base64.";
+		$z++;
 
 ?>
