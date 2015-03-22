@@ -429,4 +429,9 @@
 	$text['message-required']['pt-pt'] = "Por favor indique: ";
 	$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+	$text['message-maximum_gateways']['en-us'] = "Maximum Gateways:";
+	$text['message-maximum_gateways']['es-cl'] = "Gateways Máximo Permitido:";
+	$text['message-maximum_gateways']['pt-pt'] = "Gateways Máximo Permitido:";
+	$text['message-maximum_gateways']['fr-fr'] = "Passerelles Maximum Autorisé:";
+
 ?>

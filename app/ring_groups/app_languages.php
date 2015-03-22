@@ -414,4 +414,9 @@
 	$text['button-delete']['pt-pt'] = "Remover";
 	$text['button-delete']['fr-fr'] = "Supprimer";
 
+	$text['message-maximum_ring_groups']['en-us'] = "Maximum Ring Groups:";
+	$text['message-maximum_ring_groups']['es-cl'] = "Grupos máximos Anillo Animales:";
+	$text['message-maximum_ring_groups']['pt-pt'] = "Grupos Máximo Anel de Estimação:";
+	$text['message-maximum_ring_groups']['fr-fr'] = "Groupes de Sonneries Maximum Autorisé:";
+
 ?>

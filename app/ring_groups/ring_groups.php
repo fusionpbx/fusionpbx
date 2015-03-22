@@ -59,9 +59,17 @@ require_once "resources/paging.php";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_ring_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+	//get total ring group count from the database
+		$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$total_ring_groups = $row['num_rows'];
+		}
+		unset($prep_statement, $row);
+
+	//prepare to page the results (reuse $sql from above)
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -114,7 +122,9 @@ require_once "resources/paging.php";
 	echo th_order_by('ring_group_description', $text['header-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('ring_group_add')) {
-		echo "<a href='ring_group_edit.php' alt='add'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['ring_groups']['numeric'] == '' || ($_SESSION['limit']['ring_groups']['numeric'] != '' && $total_ring_groups < $_SESSION['limit']['ring_groups']['numeric'])) {
+			echo "<a href='ring_group_edit.php' alt='add'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -160,7 +170,9 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('ring_group_add')) {
-		echo 		"<a href='ring_group_edit.php' alt='add'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['ring_groups']['numeric'] == '' || ($_SESSION['limit']['ring_groups']['numeric'] != '' && $total_ring_groups < $_SESSION['limit']['ring_groups']['numeric'])) {
+			echo "<a href='ring_group_edit.php' alt='add'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

@@ -47,6 +47,26 @@ else {
 		$action = "add";
 	}
 
+//get total gateway count from the database, check limit, if defined
+	if ($action == 'add') {
+		if ($_SESSION['limit']['gateways']['numeric'] != '') {
+			$sql = "select count(*) as num_rows from v_gateways where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$total_gateways = $row['num_rows'];
+			}
+			unset($prep_statement, $row);
+			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message'] = $text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'];
+				header('Location: gateways.php');
+				return;
+			}
+		}
+	}
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$domain_uuid = check_str($_POST["domain_uuid"]);

@@ -76,6 +76,9 @@ else {
 		$ivr->where = $where;
 		$num_rows = $ivr->count();
 
+	//use total ivr menu count from the database
+		$total_ivr_menus = $num_rows;
+
 	//prepare to page the results
 		$rows_per_page = 150;
 		$param = "";
@@ -107,7 +110,9 @@ else {
 		echo th_order_by('ivr_menu_description', $text['label-description'], $order_by[0]['name'], $order_by[0]['order']);
 		echo "<td class='list_control_icons'>";
 		if (permission_exists('ivr_menu_add')) {
-			echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+			if ($_SESSION['limit']['ivr_menus']['numeric'] == '' || ($_SESSION['limit']['ivr_menus']['numeric'] != '' && $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+				echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			}
 		}
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -151,7 +156,9 @@ else {
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td class='list_control_icons'>";
 		if (permission_exists('ivr_menu_add')) {
-			echo 		"<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+			if ($_SESSION['limit']['ivr_menus']['numeric'] == '' || ($_SESSION['limit']['ivr_menus']['numeric'] != '' && $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+				echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			}
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

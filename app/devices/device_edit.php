@@ -76,6 +76,26 @@ require_once "resources/require.php";
 		$action = "add";
 	}
 
+//get total device count from the database, check limit, if defined
+	if ($action == 'add') {
+		if ($_SESSION['limit']['devices']['numeric'] != '') {
+			$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$total_devices = $row['num_rows'];
+			}
+			unset($prep_statement, $row);
+			if ($total_devices >= $_SESSION['limit']['devices']['numeric']) {
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message'] = $text['message-maximum_devices'].' '.$_SESSION['limit']['devices']['numeric'];
+				header('Location: devices.php');
+				return;
+			}
+		}
+	}
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		//devices

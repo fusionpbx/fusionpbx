@@ -40,6 +40,24 @@ require_once "resources/require.php";
 	$language = new text;
 	$text = $language->get();
 
+//get total user count from the database, check limit, if defined
+	if ($_SESSION['limit']['users']['numeric'] != '') {
+		$sql = "select count(*) as num_rows from v_users where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$total_users = $row['num_rows'];
+		}
+		unset($prep_statement, $row);
+		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
+			$_SESSION['message_mood'] = 'negative';
+			$_SESSION['message'] = $text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric']
+			header('Location: index.php');
+			return;
+		}
+	}
+
 //get the values from http and set as variables
 	$username = check_str($_POST["username"]);
 	$password = check_str($_POST["password"]);

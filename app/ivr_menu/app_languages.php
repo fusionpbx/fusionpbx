@@ -415,4 +415,9 @@
 	$text['message-message']['pt-pt'] = "Mensagem";
 	$text['message-message']['fr-fr'] = "Message";
 
+	$text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
+	$text['message-maximum_ivr_menus']['es-cl'] = "Máxima IVR Menús Animales:";
+	$text['message-maximum_ivr_menus']['pt-pt'] = "Menus Máxima IVR de Estimação:";
+	$text['message-maximum_ivr_menus']['fr-fr'] = "Menus Maximale SVI Admis:";
+
 ?>

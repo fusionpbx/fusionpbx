@@ -67,13 +67,23 @@ else {
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br />";
+
+	//get total devices count from the database
+		$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$total_devices = $row['num_rows'];
+		}
+		unset($sql, $prep_statement, $row);
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
@@ -179,7 +189,9 @@ else {
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
-		echo "	<a href='device_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		if ($_SESSION['limit']['devices']['numeric'] == '' || ($_SESSION['limit']['devices']['numeric'] != '' && $total_devices < $_SESSION['limit']['devices']['numeric'])) {
+			echo "	<a href='device_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>\n";
+		}
 	}
 	else {
 		echo "	&nbsp;\n";
@@ -225,7 +237,9 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>".$paging_controls."</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('device_add')) {
-		echo "		<a href='device_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['devices']['numeric'] == '' || ($_SESSION['limit']['devices']['numeric'] != '' && $total_devices < $_SESSION['limit']['devices']['numeric'])) {
+			echo "		<a href='device_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

@@ -52,6 +52,26 @@ else {
 		$action = "add";
 	}
 
+//get total ivr menu count from the database, check limit, if defined
+	if ($action == 'add') {
+		if ($_SESSION['limit']['ivr_menus']['numeric'] != '') {
+			$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$total_ivr_menus = $row['num_rows'];
+			}
+			unset($prep_statement, $row);
+			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message'] = $text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'];
+				header('Location: ivr_menus.php');
+				return;
+			}
+		}
+	}
+
 //get http post values and set them to php variables
 	if (count($_POST) > 0) {
 		//get ivr menu

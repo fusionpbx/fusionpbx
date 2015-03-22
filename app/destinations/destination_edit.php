@@ -53,6 +53,26 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 		$action = "add";
 	}
 
+//get total destination count from the database, check limit, if defined
+	if ($action == 'add') {
+		if ($_SESSION['limit']['destinations']['numeric'] != '') {
+			$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$total_destinations = $row['num_rows'];
+			}
+			unset($prep_statement, $row);
+			if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message'] = $text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'];
+				header('Location: destinations.php');
+				return;
+			}
+		}
+	}
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		//set the variables

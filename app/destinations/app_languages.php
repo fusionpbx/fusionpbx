@@ -285,4 +285,9 @@ $text['label-domain-name']['es-cl'] = "Nombre de Dominio";
 $text['label-domain-name']['pt-pt'] = "Nome de Domínio";
 $text['label-domain-name']['fr-fr'] = "Nom de Domaine";
 
+$text['message-maximum_destinations']['en-us'] = "Maximum Destinations:";
+$text['message-maximum_destinations']['es-cl'] = "Destinos Máximo Permitido:";
+$text['message-maximum_destinations']['pt-pt'] = "Destinos Máximo Permitido:";
+$text['message-maximum_destinations']['fr-fr'] = "Destinations Maximum Autorisé:";
+
 ?>

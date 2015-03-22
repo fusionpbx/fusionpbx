@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('destination_view')) {
 	//access granted
 }
 else {
@@ -56,10 +56,10 @@ else {
 	if (permission_exists('destination_show_all')) {
 		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
 		if ($_GET['showall'] == 'true') {
-				echo "                  <input type='hidden' name='showall' value='true'>";
+				echo "	<input type='hidden' name='showall' value='true'>";
 		}
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
 	echo "			</form>\n";
@@ -71,14 +71,24 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
+	//get total extension count from the database
+		$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$total_destinations = $row['num_rows'];
+		}
+		unset($sql, $prep_statement, $row);
+
 	//prepare to page the results
-		$sql = " select count(*) as num_rows from v_destinations ";
+		$sql = "select count(*) as num_rows from v_destinations ";
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
 		} else {
-			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			if (strlen($search) > 0) {
 				$sql .= "and ";
 			}
@@ -159,7 +169,11 @@ else {
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
-	echo "<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	if (permission_exists('destination_add')) {
+		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
+			echo "<a href='destination_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -176,8 +190,12 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_enabled'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['destination_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
-			echo 		"<a href='destination_edit.php?id=".$row['destination_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			echo 		"<a href='destination_delete.php?id=".$row['destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			if (permission_exists('destination_edit')) {
+				echo 	"<a href='destination_edit.php?id=".$row['destination_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+			}
+			if (permission_exists('destination_delete')) {
+				echo 	"<a href='destination_delete.php?id=".$row['destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -196,7 +214,11 @@ else {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	echo 			"<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	if (permission_exists('destination_add')) {
+		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
+			echo "<a href='destination_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
