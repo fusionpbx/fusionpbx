@@ -970,7 +970,7 @@ if ($action == 'update') {
 		echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
 		echo "		<tr>";
 		echo "			<td>";
-		echo "				<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += ' ".$text['description-presets_advanced']."'; });\" value='".$text['button-advanced']."'>\n";
+		echo "				<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });\" value='".$text['button-advanced']."'>\n";
 		echo "				<span id='default_preset_destination' style=' display: none;'>";
 								switch_select_destination("dialplan", $text['label-select_default_destination'], "default_preset_action", $dialplan_action, 'width: 300px;', '', 'alternate_destination_required();');
 		echo "				</span>";
