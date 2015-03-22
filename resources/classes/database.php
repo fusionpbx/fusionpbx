@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -517,10 +517,10 @@ include "root.php";
 						$prep_statement->execute();
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] > 0) {
-							$this->result = $row['num_rows'];
+							return $row['num_rows'];
 						}
 						else {
-							$this->result = 0;
+							return 0;
 						}
 					}
 					unset($prep_statement);
