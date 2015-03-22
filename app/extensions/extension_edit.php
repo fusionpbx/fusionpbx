@@ -55,6 +55,26 @@ else {
 		$action = "add";
 	}
 
+//get total extension count from the database, check limit, if defined
+	if ($action == 'add') {
+		if ($_SESSION['limit']['extensions']['numeric'] != '') {
+			$sql = "select count(*) as num_rows from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$total_extensions = $row['num_rows'];
+			}
+			unset($prep_statement, $row);
+			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message'] = $text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'];
+				header('Location: extensions.php');
+				return;
+			}
+		}
+	}
+
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 		//get the values from the HTTP POST and save them as PHP variables

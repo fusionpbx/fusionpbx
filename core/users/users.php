@@ -90,9 +90,17 @@ $field_value = $_REQUEST["field_value"];
 	}
 	unset ($sql, $prep_statement);
 
-//get the users from the database
-	$sql = "select count(*) as num_rows from v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+//get total user count from the database
+	$sql = "select count(*) as num_rows from v_users where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_users = $row['num_rows'];
+	}
+	unset($prep_statement, $row);
+
+//get the users from the database (reuse $sql from above)
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name = '$field_value' ";
 	}
@@ -148,7 +156,9 @@ $field_value = $_REQUEST["field_value"];
 	echo "<th>".$text['label-enabled']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
-		echo "<a href='signup.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
+			echo "<a href='signup.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -209,7 +219,9 @@ $field_value = $_REQUEST["field_value"];
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
-		echo "<a href='signup.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
+			echo "<a href='signup.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

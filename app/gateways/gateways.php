@@ -100,6 +100,16 @@ else {
 	echo "</table>\n";
 	echo "<br />\n";
 
+//get total gateway count from the database
+	$sql = "select count(*) as num_rows from v_gateways where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_gateways = $row['num_rows'];
+	}
+	unset($sql, $prep_statement, $row);
+
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_gateways ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
@@ -153,7 +163,9 @@ else {
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('gateway_add')) {
-		echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['gateways']['numeric'] == '' || ($_SESSION['limit']['gateways']['numeric'] != '' && $total_gateways < $_SESSION['limit']['gateways']['numeric'])) {
+			echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -229,7 +241,9 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('gateway_add')) {
-		echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		if ($_SESSION['limit']['gateways']['numeric'] == '' || ($_SESSION['limit']['gateways']['numeric'] != '' && $total_gateways < $_SESSION['limit']['gateways']['numeric'])) {
+			echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
 	}
 	else {
 		echo "&nbsp;";

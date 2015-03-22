@@ -640,4 +640,9 @@ $text['button-add']['es-cl'] = "Agregar";
 $text['button-add']['pt-pt'] = "Adicionar";
 $text['button-add']['fr-fr'] = "Ajouter";
 
+$text['message-maximum_extensions']['en-us'] = "Maximum Extensions:";
+$text['message-maximum_extensions']['es-cl'] = "Extensiones Máximo Permitido:";
+$text['message-maximum_extensions']['pt-pt'] = "Extensões Máximo Permitido:";
+$text['message-maximum_extensions']['fr-fr'] = "Extensions Maximum Autorisé:";
+
 ?>

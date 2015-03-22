@@ -422,5 +422,9 @@
 	$text['message-cannot_delete_own_account']['pt-pt'] = "Você não pode excluir a sua própria conta de usuário.\\n\\nIdentifique-se como um usuário diferente, em seguida, tente novamente.";
 	$text['message-cannot_delete_own_account']['fr-fr'] = "Vous ne pouvez pas supprimer votre propre compte utilisateur.\\n\\nSe il vous plaît vous identifier en tant qu'utilisateur différent, puis réessayez.";
 
+	$text['message-maximum_users']['en-us'] = "Maximum Users:";
+	$text['message-maximum_users']['es-cl'] = "Usuarios Máximo Permitido:";
+	$text['message-maximum_users']['pt-pt'] = "Usuários Máximo Permitido:";
+	$text['message-maximum_users']['fr-fr'] = "Utilisateurs Maximale Autorisée:";
 
 ?>
