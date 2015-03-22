@@ -777,7 +777,7 @@ echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";
 echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
 if (if_group("superadmin") && $action == 'update') {
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-advanced']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-dialplan']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-dialplan']."'>\n";
 }
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "		</td>\n";
