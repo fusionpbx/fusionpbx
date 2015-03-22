@@ -93,12 +93,7 @@ else {
 
 		//set the context for users that are not in the superadmin group
 			if (!if_group("superadmin")) {
-				if (count($_SESSION["domains"]) > 1) {
-					$ring_group_context = $_SESSION['domain_name'];
-				}
-				else {
-					$ring_group_context = "default";
-				}
+				$ring_group_context = $_SESSION['domain_name'];
 			}
 	}
 
@@ -380,12 +375,7 @@ else {
 
 //set the context for users that are not in the superadmin group
 	if (strlen($ring_group_context) == 0) {
-		if (count($_SESSION["domains"]) > 1) {
-			$ring_group_context = $_SESSION['domain_name'];
-		}
-		else {
-			$ring_group_context = "default";
-		}
+		$ring_group_context = $_SESSION['domain_name'];
 	}
 
 //show the header
