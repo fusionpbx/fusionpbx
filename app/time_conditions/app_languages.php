@@ -30,6 +30,11 @@
 	$text['button-advanced']['pt-pt'] = "Avancé";
 	$text['button-advanced']['fr-fr'] = "Avançado";
 
+	$text['button-dialplan']['en-us'] = "Dialplan";
+	$text['button-dialplan']['es-cl'] = "Agregar Plan de Marcado";
+	$text['button-dialplan']['pt-pt'] = "Dialplan";
+	$text['button-dialplan']['fr-fr'] = "Plan de num";
+
 	$text['button-search']['en-us'] = "Search";
 	$text['button-search']['es-cl'] = "Buscar";
 	$text['button-search']['pt-pt'] = "Pesquisar";
