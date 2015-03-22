@@ -50,7 +50,7 @@ else {
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-destinations']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']."</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
 	if (permission_exists('destination_show_all')) {
@@ -65,7 +65,7 @@ else {
 	echo "			</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
+	echo "		<td align='left' colspan='2' valign='top'>\n";
 	echo "			".$text['description-destinations']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";

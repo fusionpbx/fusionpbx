@@ -383,7 +383,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		$_SESSION["message"] = $text['confirm-update'];
-		header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+		header("Location: ".$_REQUEST['return_url']);
 		return;
 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -496,13 +496,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
+	echo "<input type='hidden' name='return_url' value='".$_SERVER["HTTP_REFERER"]."'>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>\n";
 	echo "	<b>".$text['title']."</b>\n";
 	echo "</td>\n";
-	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='calls.php'\" value='".$text['button-back']."'>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$_SERVER["HTTP_REFERER"]."'\" value='".$text['button-back']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
