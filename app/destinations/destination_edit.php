@@ -510,12 +510,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destination-add']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destination-edit']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'>";
+	echo "<td width='70%' align='right' valign='top'>";
 	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
