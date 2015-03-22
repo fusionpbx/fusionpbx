@@ -3,7 +3,7 @@
 		<condition field="destination_number" expression="^att_xfer$">
 			<action application="read" data="2 6 'tone_stream://%(10000,0,350,440)' digits 30000 #"/>
 			<action application="set" data="origination_cancel_key=#"/>
-			<action application="set" data="domain_name=${transfer_context}"/>
+			<action application="set" data="domain_name=${context}"/>
 			<!-- sends it to the correct domain but public context-->
 			<!--<action application="att_xfer" data="sofia/internal/${digits}@${context}"/>-->
 			<action application="att_xfer" data="user/${digits}@${context}"/>
