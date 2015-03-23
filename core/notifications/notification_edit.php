@@ -122,15 +122,15 @@ else {
 			$url .= "&os_info_1=".urlencode($os_info_1);
 			$url .= "&os_info_2=".urlencode($os_info_2);
 
-			if (function_exists('curl_version')) {
+			if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+				$response = file_get_contents($url);
+			}
+			else if (function_exists('curl_version')) {
 				$curl = curl_init();
 				curl_setopt($curl, CURLOPT_URL, $url);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 				$response = curl_exec($curl);
 				curl_close($curl);
-			}
-			else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-				$response = file_get_contents($url);
 			}
 
 			// parse response
@@ -174,15 +174,15 @@ else {
 			if ($current_project_notifications == 'true') {
 				// remove remote server record
 				$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid."&action=delete";
-				if (function_exists('curl_version')) {
+				if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+					$response = file_get_contents($url);
+				}
+				else if (function_exists('curl_version')) {
 					$curl = curl_init();
 					curl_setopt($curl, CURLOPT_URL, $url);
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					$response = curl_exec($curl);
 					curl_close($curl);
-				}
-				else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-					$response = file_get_contents($url);
 				}
 
 				// parse response
@@ -208,6 +208,7 @@ else {
 				($project_notification_method == 'email' && $project_notification_recipient == '')
 				) {
 					$_SESSION["postback"] = $_POST;
+					$_SESSION["message_mood"] = 'negative';
 					$_SESSION["message"] = $text['message-invalid_recipient'];
 					header("Location: notification_edit.php");
 					exit;
@@ -233,15 +234,15 @@ else {
 		$url .= "&os_info_1=".urlencode($os_info_1);
 		$url .= "&os_info_2=".urlencode($os_info_2);
 
-		if (function_exists('curl_version')) {
+		if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+			$response = file_get_contents($url);
+		}
+		else if (function_exists('curl_version')) {
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, $url);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$response = curl_exec($curl);
 			curl_close($curl);
-		}
-		else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-			$response = file_get_contents($url);
 		}
 
 		// parse response
@@ -260,8 +261,8 @@ else {
 				$project_events == 'false' &&
 				$project_news == 'false'
 				) {
-				$_SESSION["message"] = $_SESSION["message"]." - ".$text['message-no_channels'];
 				$_SESSION["message_mood"] = 'alert';
+				$_SESSION["message"] = $_SESSION["message"]." - ".$text['message-no_channels'];
 			}
 			// redirect
 			header("Location: notification_edit.php");
@@ -291,15 +292,15 @@ else {
 
 			// get current project notification preferences
 			$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid;
-			if (function_exists('curl_version')) {
+			if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+				$response = file_get_contents($url);
+			}
+			else if (function_exists('curl_version')) {
 				$curl = curl_init();
 				curl_setopt($curl, CURLOPT_URL, $url);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 				$response = curl_exec($curl);
 				curl_close($curl);
-			}
-			else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-				$response = file_get_contents($url);
 			}
 
 			// parse response
@@ -405,32 +406,35 @@ $document['title'] = $text['title-notifications'];
 		echo "		</td>\n";
 		echo "	</tr>\n";
 
+		echo "	<input type='hidden' name='project_notification_method' value='email'>\n";
+		/*
+		echo "	<tr>\n";
+		echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_notification_method']."\n";
+		echo "		</td>\n";
+		echo "		<td width='70%' class='vtable' align='left'>\n";
+		echo "			<select name='project_notification_method' class='formfld' style='width: auto;'>\n";
+		echo "				<option value='email' ".(($setting["project_notification_method"] == 'email') ? "selected='selected'" : null).">".$text['option-email']."</option>\n";
+		echo "			</select><br />\n";
+		echo 			$text['description-project_notification_method']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		*/
+
+		echo "	<tr>\n";
+		echo "		<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_notification_recipient']."\n";
+		echo "		</td>\n";
+		echo "		<td class='vtable' align='left'>\n";
+		echo "			<input class='formfld' type='text' name='project_notification_recipient' maxlength='50' value='".$setting["project_notification_recipient"]."'><br />\n";
+		echo 			$text['description-project_notification_recipient']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+
 		echo "</table>\n";
 	echo "</div>\n";
 
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_notification_method']."\n";
-	echo "		</td>\n";
-	echo "		<td width='70%' class='vtable' align='left'>\n";
-	echo "			<select name='project_notification_method' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='email' ".(($setting["project_notification_method"] == 'email') ? "selected='selected'" : null).">".$text['option-email']."</option>\n";
-	echo "			</select><br />\n";
-	echo 			$text['description-project_notification_method']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-
-	echo "	<tr>\n";
-	echo "		<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_notification_recipient']."\n";
-	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	echo "			<input class='formfld' type='text' name='project_notification_recipient' maxlength='50' value='".$setting["project_notification_recipient"]."'><br />\n";
-	echo 			$text['description-project_notification_recipient']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-
 	echo "	<tr>\n";
 	echo "		<td colspan='2' class='vtable' style='padding: 15px;' align='right'>\n";
 	echo "			".$text['message-disclaimer']."\n";
