@@ -118,13 +118,36 @@ require_once "resources/require.php";
 					 if (strlen($_SESSION['username']) > 0) {
 						$sql = "select * from v_users ";
 						$sql .= "where username=:username ";
-						$sql .= "and domain_uuid=:domain_uuid ";
+						if ($_SESSION["user"]["unique"]["text"] == "global") {
+							//unique username - global (example: email address)
+						}
+						else {
+							//unique username - per domain
+							$sql .= "and domain_uuid=:domain_uuid ";
+						}
 						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+						if ($_SESSION["user"]["unique"]["text"] != "global") {
+							$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+						}
 						$prep_statement->bindParam(':username', $username);
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						if (count($result) == 0) {
+						if (count($result) > 0) {
+							foreach ($result as &$row) {
+								//get the domain uuid
+									$domain_uuid = $row["domain_uuid"];
+									$user_uuid = $row["user_uuid"];
+								//set the domain session variables
+									$_SESSION["domain_uuid"] = $domain_uuid;
+									$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+									$_SESSION["domain_name"] = $domain_name;
+								//set the setting arrays
+									$domain = new domains();
+									$domain->db = $db;
+									$domain->set();
+							}
+						}
+						else {
 							//salt used with the password to create a one way hash
 								$salt = generate_password('32', '4');
 								$password = generate_password('32', '4');
@@ -132,6 +155,9 @@ require_once "resources/require.php";
 							//prepare the uuids
 								$user_uuid = uuid();
 								$contact_uuid = uuid();
+							
+							//set the user_id
+								$_SESSION["user_uuid"] = $user_uuid;
 
 							//add the user
 								$sql = "insert into v_users ";
@@ -222,7 +248,8 @@ require_once "resources/require.php";
 								$domain_uuid = $row["domain_uuid"];
 							//set the domain session variables
 								$_SESSION["domain_uuid"] = $domain_uuid;
-								$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+								$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+								$_SESSION["domain_name"] = $domain_name;
 							//set the setting arrays
 								$domain = new domains();
 								$domain->db = $db;
