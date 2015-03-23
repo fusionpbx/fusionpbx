@@ -52,7 +52,7 @@ require_once "resources/require.php";
 		unset($prep_statement, $row);
 		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
 			$_SESSION['message_mood'] = 'negative';
-			$_SESSION['message'] = $text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric']
+			$_SESSION['message'] = $text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'];
 			header('Location: index.php');
 			return;
 		}
