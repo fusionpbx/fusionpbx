@@ -41,6 +41,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_extension_advanced";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "fax_inbox_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

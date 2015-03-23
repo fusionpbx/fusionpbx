@@ -254,7 +254,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
-					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 						$sql .= "fax_email_connection_type, ";
 						$sql .= "fax_email_connection_host, ";
 						$sql .= "fax_email_connection_port, ";
@@ -284,7 +284,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_destination_number', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
-					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 						$sql .= "'$fax_email_connection_type', ";
 						$sql .= "'$fax_email_connection_host', ";
 						$sql .= "'$fax_email_connection_port', ";
@@ -323,7 +323,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
-					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 						$sql .= "fax_email_connection_type = '$fax_email_connection_type', ";
 						$sql .= "fax_email_connection_host = '$fax_email_connection_host', ";
 						$sql .= "fax_email_connection_port = '$fax_email_connection_port', ";
@@ -716,7 +716,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
-		if (function_exists("imap_open") && file_exists("fax_box_remote.php")) {
+		if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 			echo "<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"toggle_advanced('advanced_email_connection');\">\n";
 		}
 		echo "<br />\n";
@@ -845,7 +845,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br />\n";
 
-	if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+	if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 
 		echo "<div id='advanced_email_connection' ".(($fax_email_connection_host == '') ? "style='display: none;'" : null).">\n";
 
