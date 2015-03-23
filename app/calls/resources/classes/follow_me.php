@@ -374,6 +374,7 @@ include "root.php";
 
 						if (strlen($this->accountcode) > 0) {
 							$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
+							$dial_string .= ",accountcode=".$this->accountcode;
 						}
 						$dial_string .= "}";
 						$x = 0;
