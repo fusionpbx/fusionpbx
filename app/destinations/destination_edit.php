@@ -622,6 +622,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$order = 10;
 	foreach($dialplan_details as $row) {
 		if ($row["dialplan_detail_tag"] != "condition") {
+			if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
 			echo "				<tr>\n";
 			echo "					<td>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
@@ -735,7 +736,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 
 		//set the default account code
-		if ($action == "add") { $destination_accountcode=$_SESSION['domain_name']; }
+		if ($action == "add") { $destination_accountcode = $_SESSION['domain_name']; }
 	}
 
 	echo "<tr>\n";
