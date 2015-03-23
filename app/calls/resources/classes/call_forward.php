@@ -71,6 +71,7 @@ include "root.php";
 					$dial_string .= ",extension_uuid=".$this->extension_uuid;
 					if (strlen($this->accountcode) > 0) {
 						$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
+						$dial_string .= ",accountcode=".$this->accountcode;
 					}
 
 					if (strlen($this->forward_caller_id_uuid) > 0){
