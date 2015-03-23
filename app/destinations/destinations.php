@@ -38,14 +38,17 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	if (isset($_GET["order_by"])) {
+		$order_by = check_str($_GET["order_by"]);
+		$order = check_str($_GET["order"]);
+	}
+
 //includes and title
 	require_once "resources/header.php";
 	$document['title'] = $text['title-destinations'];
 	require_once "resources/paging.php";
-
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -54,9 +57,11 @@ else {
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
 	if (permission_exists('destination_show_all')) {
-		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
 		if ($_GET['showall'] == 'true') {
-				echo "	<input type='hidden' name='showall' value='true'>";
+			echo "		<input type='hidden' name='showall' value='true'>";
+		}
+		else {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
 		}
 	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
@@ -71,7 +76,7 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//get total extension count from the database
+	//get total destination count from the database
 		$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -83,7 +88,7 @@ else {
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_destinations ";
-		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		if ($_GET['showall'] && permission_exists('destination_show_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
@@ -102,32 +107,31 @@ else {
 			$sql .= " 	or destination_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
-		$prep_statement->execute();
+			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = 0;
 		}
 
 	//prepare to page the results
 		$rows_per_page = 150;
-		$param = "";
+		$param = "&search=".$search;
+		if ($_GET['showall'] && permission_exists('destination_show_all')) {
+			$param .= "&showall=true";
+		}
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
 
-	//get the  list
+	//get the list
 		$sql = "select * from v_destinations ";
 		if ($_GET['showall'] && permission_exists('destination_show_all')) {
 			$sql .= " join v_domains on v_domains.domain_uuid = v_destinations.domain_uuid ";
-			$param = "&showall=" . $_GET['showall'];
 			if (strlen($search) > 0) {
 				$sql .= " where ";
 			}
@@ -161,13 +165,13 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($_GET['showall'] && permission_exists('destination_show_all')) {
-		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
+		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, '', '', $param);
 	}
-	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
-	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
-	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
-	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
+	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, '', '', $param);
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, '', '', $param);
+	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, '', '', $param);
+	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, '', '', $param);
+	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
 		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
@@ -205,27 +209,22 @@ else {
 
 	echo "<tr>\n";
 	if ($_GET['showall'] && permission_exists('destination_show_all')) {
-		echo "<td colspan='7' align='left'>\n";
-	} else {
-		echo "<td colspan='6' align='left'>\n";
+		echo "<td colspan='7' align='right'>\n";
 	}
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	else {
+		echo "<td colspan='6' align='right'>\n";
+	}
 	if (permission_exists('destination_add')) {
 		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
 			echo "<a href='destination_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "</table>";
+
+	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<br /><br />";
 
 //include the footer
