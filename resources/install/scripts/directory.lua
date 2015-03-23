@@ -326,6 +326,8 @@
 		directory_search();
 	end
 
+	session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+
 --notes
 	--session:execute("say", "en name_spelled pronounced mark");
 	--<action application="say" data="en name_spelled iterated ${destination_number}"/>
