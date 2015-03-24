@@ -49,7 +49,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$domain_name = strtolower(check_str($_POST["domain_name"]));
+		$domain_name = check_str($_POST["domain_name"]);
 		$domain_parent_uuid = check_str($_POST["domain_parent_uuid"]);
 		$domain_enabled = check_str($_POST["domain_enabled"]);
 		$domain_description = check_str($_POST["domain_description"]);
