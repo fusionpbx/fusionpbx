@@ -104,11 +104,12 @@ require_once "resources/require.php";
 					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
 						$domain_name = check_str($_REQUEST["domain_name"]);
 					}
-					//ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
 					$connect = ldap_connect($_SESSION["ldap"]["server_host"]["text"], $_SESSION["ldap"]["server_port"]["numeric"])
 						or die("Could not connect to the LDAP server.");
 					$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$username.",".$_SESSION["ldap"]["user_dn"]["text"];
 					$bind = ldap_bind($connect, $bind_dn, $_REQUEST["password"]);
+					ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
+					//ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
 					if ($bind) {
 						$_SESSION['username'] = $username;
 					}
