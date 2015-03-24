@@ -121,7 +121,6 @@
 							--phrase_detail_group,phrase_detail_tag,phrase_detail_pattern
 							--phrase_detail_function,phrase_detail_data,phrase_detail_method
 							--phrase_detail_type,phrase_detail_order
-							
 							if (previous_phrase_uuid ~= row.phrase_uuid) then
 								if (x > 0) then
 									table.insert(xml, [[							</match>]]);
@@ -137,11 +136,11 @@
 							previous_phrase_uuid = row.phrase_uuid;
 							x = x + 1;
 						end);
-						
-						table.insert(xml, [[							</match>]]);
-						table.insert(xml, [[						</input>]]);
-						table.insert(xml, [[					</macro>]]);;
-						
+						if (x > 0) then
+							table.insert(xml, [[							</match>]]);
+							table.insert(xml, [[						</input>]]);
+							table.insert(xml, [[					</macro>]]);;
+						end
 						--output xml & close previous file
 						table.insert(xml, [[				</macros>]]);
 						table.insert(xml, [[			</phrases>]]);
