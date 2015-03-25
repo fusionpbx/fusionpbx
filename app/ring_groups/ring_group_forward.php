@@ -48,17 +48,19 @@ require_once "resources/paging.php";
 
 //show the content
 
-	//echo "<table width='100%' border='0'>\n";
-	//echo "	<tr>\n";
-	//echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
-	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	//echo "	</tr>\n";
-	//echo "	<tr>\n";
-	//echo "		<td align='left' colspan='2'>\n";
-	//echo "			".$text['description']."<br /><br />\n";
-	//echo "		</td>\n";
-	//echo "	</tr>\n";
-	//echo "</table>\n";
+	if (!$is_included) {
+		echo "<table width='100%' border='0'>\n";
+		echo "	<tr>\n";
+		echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
+		echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+		echo "	</tr>\n";
+		echo "	<tr>\n";
+		echo "		<td align='left' colspan='2'>\n";
+		echo "			".$text['description']."<br /><br />\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "</table>\n";
+	}
 
 	//prepare to page the results
 		if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -147,7 +149,7 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

@@ -85,7 +85,7 @@ require_once "resources/check_auth.php";
 
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: ".PROJECT_PATH."/app/ring_groups/ring_group_forward.php");
+			header("Location: ".$_REQUEST['return_url']);
 			return;
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -110,13 +110,14 @@ require_once "resources/check_auth.php";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
+	echo "<input type='hidden' name='return_url' value='".$_REQUEST['return_url']."'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap>\n";
 	echo "	<b>".$text['header-ring-group-forward']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ring_group_forward.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$_REQUEST['return_url']."';\" value='".$text['button-back']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

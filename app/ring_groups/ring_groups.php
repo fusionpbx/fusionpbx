@@ -114,11 +114,10 @@ require_once "resources/paging.php";
 	echo "<tr>\n";
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
-	//echo th_order_by('ring_group_context', 'Context', $order_by, $order);
-	//echo th_order_by('ring_group_strategy', 'Strategy', $order_by, $order);
-	//echo th_order_by('ring_group_timeout_app', 'Timeout App', $order_by, $order);
-	//echo th_order_by('ring_group_timeout_data', 'Timeout Data', $order_by, $order);
 	echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order);
+	if (permission_exists('ring_group_forward')) {
+		echo "<th>".$text['label-tools']."</th>";
+	}
 	echo th_order_by('ring_group_description', $text['header-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('ring_group_add')) {
@@ -142,11 +141,10 @@ require_once "resources/paging.php";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_context']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_strategy']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ring_group_enabled'])."&nbsp;</td>\n";
+			if (permission_exists('ring_group_forward')) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
+			}
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ring_group_edit')) {
