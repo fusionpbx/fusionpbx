@@ -640,6 +640,11 @@ $text['button-add']['es-cl'] = "Agregar";
 $text['button-add']['pt-pt'] = "Adicionar";
 $text['button-add']['fr-fr'] = "Ajouter";
 
+$text['button-calls']['en-us'] = "Call Control";
+$text['button-calls']['es-cl'] = "Control de Llamada";
+$text['button-calls']['pt-pt'] = "Controle de Chamadas";
+$text['button-calls']['fr-fr'] = "Call Control";
+
 $text['message-maximum_extensions']['en-us'] = "Maximum Extensions:";
 $text['message-maximum_extensions']['es-cl'] = "Extensiones Máximo Permitido:";
 $text['message-maximum_extensions']['pt-pt'] = "Extensões Máximo Permitido:";
