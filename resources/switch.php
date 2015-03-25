@@ -1615,7 +1615,11 @@ function save_var_xml() {
 					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 				}
 			}
-			$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			if (strlen($row['var_hostname']) == 0) {
+				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			} elseif ($row['var_hostname'] == system('hostname')) {
+				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			}
 		}
 		$prev_var_cat = $row['var_cat'];
 	}
