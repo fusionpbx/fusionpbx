@@ -554,7 +554,7 @@ require_once "resources/header.php";
 		html += "			<select class='formfld' style='width: 120px; margin-right: 2px;' name='value[" + group_id + "][" + condition_id + "][stop]' id='value_" + group_id + "_" + condition_id + "_stop'></select>";
 		html += "		</td>";
 		html += "		<td style='vertical-align: middle; text-align: right;'>";
-		html += "			<a href='javascript:void(0);' onclick='delete_condition(" + group_id + ", " + condition_id + ");'><?=$v_link_label_delete?></a>";
+		html += "			<a href='javascript:void(0);' onclick='delete_condition(" + group_id + ", " + condition_id + ");'><?php echo $v_link_label_delete?></a>";
 		html += "		</td>";
 		html += "	</tr>";
 		html += "</table>";
@@ -604,7 +604,7 @@ require_once "resources/header.php";
 				switch (condition_var) {
 
 					case 'year': //years
-						for (y = <?=date('Y')?>; y <= <?=(date('Y') + 10)?>; y++) {
+						for (y = <?php echo date('Y')?>; y <= <?php echo (date('Y') + 10)?>; y++) {
 							sel_start.options[sel_start.options.length] = new Option(y, y);
 							sel_stop.options[sel_stop.options.length] = new Option(y, y);
 						}
