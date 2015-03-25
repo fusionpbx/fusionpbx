@@ -99,6 +99,18 @@
 	$text['description-category']['pt-pt'] = "Escolha a categoria.";
 	$text['description-category']['fr-fr'] = "";
 
+	$text['header-hostname']['en-us'] = "Hostname";
+	$text['header-hostname']['pt-pt'] = "Hostname";
+	$text['header-hostname']['fr-fr'] = "Nom d'hôte";
+
+	$text['label-hostname']['en-us'] = "Hostname";
+	$text['label-hostname']['pt-pt'] = "Hostname";
+	$text['label-hostname']['fr-fr'] = "Nom d'hôte";
+
+	$text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
+	$text['description-hostname']['pt-pt'] = "Introduza o hostname";
+	$text['description-hostname']['fr-fr'] = "Entrer le nom de l'hôte / du switch.";
+
 	$text['option-true']['en-us'] = "True";
 	$text['option-true']['es-cl'] = "Verdadero";
 	$text['option-true']['pt-pt'] = "Sim";
