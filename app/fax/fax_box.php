@@ -357,7 +357,7 @@ else {
 		$row_style["1"] = "row_style1";
 
 		if ($handle = opendir($dir_fax_sent)) {
-			//build an array of the files in the inbox
+			//build an array of the files in the sent box
 				$i = 0;
 				$files = array();
 				while (false !== ($file = readdir($handle))) {
@@ -377,7 +377,7 @@ else {
 				}
 				closedir($handle);
 			//order the index array
-				sort($file_name_array,SORT_STRING);
+				rsort($file_name_array,SORT_STRING);
 
 			//loop through the file array
 				foreach($file_name_array as $i) {
