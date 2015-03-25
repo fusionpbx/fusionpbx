@@ -97,6 +97,7 @@ else {
 	$tmp_var_header .= "<tr>\n";
 	$tmp_var_header .= th_order_by('var_name', $text['label-name'], $order_by, $order);
 	$tmp_var_header .= th_order_by('var_value', $text['label-value'], $order_by, $order);
+	$tmp_var_header .= th_order_by('var_hostname', $text['label-hostname'], $order_by, $order);
 	$tmp_var_header .= th_order_by('var_enabled', $text['label-enabled'], $order_by, $order);
 	$tmp_var_header .= "<th>".$text['label-description']."</th>\n";
 	$tmp_var_header .= "<td class='list_control_icons'>";
@@ -151,6 +152,7 @@ else {
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
 			echo "	</td>\n";
+			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_hostname."&nbsp;</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
