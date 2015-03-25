@@ -223,17 +223,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-hostname']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
-	echo "<br />\n";
-	echo $text['description-hostname']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-value']."\n";
 	echo "</td>\n";
@@ -241,6 +230,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"$var_value\">\n";
 	echo "<br />\n";
 	echo $text['description-value']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-hostname']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
+	echo "<br />\n";
+	echo $text['description-hostname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
