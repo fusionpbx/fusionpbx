@@ -74,11 +74,11 @@ $document['title'] = $text['title-traffic_graph'];
 <table cellpadding='0' cellspacing='0' border='0' width='100%'>
 <tr>
 <td align='left' valign='top'>
-	<p class="pgtitle"><b><?=$text['header-traffic_graph']?></b></p>
+	<p class="pgtitle"><b><?php echo $text['header-traffic_graph']?></b></p>
 </td>
 <td align='right' valign='top'>
 	<form name="form1" action="status_graph.php" method="get" style="">
-	<?=$text['label-interface']?>:
+	<?php echo $text['label-interface']?>:
 	<select name="interface" class="formfld" style="width:100px; z-index: -10;" onchange="document.form1.submit()">
 	<option value=''></option>
 	<?php
@@ -122,7 +122,7 @@ $document['title'] = $text['title-traffic_graph'];
 </tr>
 </table>
 
-<?=$text['description-traffic_graph']?>
+<?php echo $text['description-traffic_graph']?>
 
 <br />
 <br />
@@ -132,7 +132,7 @@ $document['title'] = $text['title-traffic_graph'];
 <div align="center">
 	<object data="svg_graph.php?interface=<?php echo $interface; ?>" type="image/svg+xml" width="<?php echo $width; ?>" height="<?php echo $height; ?>">
 		<param name="src" value="svg_graph.php?interface=<?php echo $interface; ?>" />
-		<?=$text['description-no_svg']?>
+		<?php echo $text['description-no_svg']?>
 	</object>
 </div>
 <br><br>

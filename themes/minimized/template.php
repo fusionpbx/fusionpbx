@@ -1250,16 +1250,16 @@ legend {
 
 		if (recording_audio.paused) {
 			recording_audio.play();
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause)?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause)?>";
 		}
 		else {
 			recording_audio.pause();
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play?>";
 		}
 	}
 
 	function recording_reset(recording_id) {
-		document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
+		document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play?>";
 	}
 </script>
 
@@ -1362,8 +1362,8 @@ legend {
 				</div>
 
 				<script>
-					var domain_names = new Array("<?=implode('","', $ary_domain_names)?>");
-					var domain_descs = new Array("<?=implode('","', $ary_domain_descs)?>");
+					var domain_names = new Array("<?php echo implode('","', $ary_domain_names)?>");
+					var domain_descs = new Array("<?php echo implode('","', $ary_domain_descs)?>");
 
 					function domain_search(criteria) {
 						for (var x = 0; x < domain_names.length; x++) {

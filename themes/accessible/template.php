@@ -420,7 +420,7 @@ table tr:last-child td:last-child {
 		height: auto;
 		background-color: #000;
 		background-repeat: repeat-x;
-		background-image: url('<?=PROJECT_PATH?>/themes/accessible/images/background_black.png');
+		background-image: url('<?php echo PROJECT_PATH?>/themes/accessible/images/background_black.png');
 		background-position: top center;
 		padding: 10px;
 		-webkit-border-radius: 0px 0px 7px 7px;
@@ -470,7 +470,7 @@ function confirmdelete(url) {
 //-->
 </SCRIPT>
 
-<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
+<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
 
 <script language="JavaScript" type="text/javascript">
 	function display_message(msg) {
