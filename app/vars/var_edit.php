@@ -50,6 +50,7 @@ else {
 //set http values as php variables
 	if (count($_POST)>0) {
 		$var_name = check_str($_POST["var_name"]);
+		$var_hostname = check_str($_POST["var_hostname"]);
 		$var_value = check_str($_POST["var_value"]);
 		$var_cat = check_str($_POST["var_cat"]);
 		if (strlen($_POST["var_cat_other"]) > 0) {
@@ -95,6 +96,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "var_uuid, ";
 				$sql .= "var_name, ";
+				$sql .= "var_hostname, ";
 				$sql .= "var_value, ";
 				$sql .= "var_cat, ";
 				$sql .= "var_enabled, ";
@@ -105,6 +107,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "'$var_uuid', ";
 				$sql .= "'$var_name', ";
+				if (strlen($var_hostname) > 0) {
+					$sql .= "'$var_hostname', ";
+				}
+				else {
+					$sql .= "null, ";
+				}
 				$sql .= "'$var_value', ";
 				$sql .= "'$var_cat', ";
 				$sql .= "'$var_enabled', ";
@@ -129,6 +137,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//update the variables
 					$sql = "update v_vars set ";
 					$sql .= "var_name = '$var_name', ";
+					if (strlen($var_hostname) > 0) {
+						$sql .= "var_hostname = '$var_hostname', ";
+					}
+					else {
+						$sql .= "var_hostname = null, ";
+					}
 					$sql .= "var_value = '$var_value', ";
 					$sql .= "var_cat = '$var_cat', ";
 					$sql .= "var_enabled = '$var_enabled', ";
@@ -161,6 +175,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$var_name = $row["var_name"];
+			$var_hostname = $row["var_hostname"];
 			$var_value = $row["var_value"];
 			$var_cat = $row["var_cat"];
 			$var_enabled = $row["var_enabled"];
@@ -204,6 +219,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"$var_name\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-hostname']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='var_hostname' maxlength='255' value=\"$var_hostname\">\n";
+	echo "<br />\n";
+	echo $text['description-hostname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -52,14 +52,14 @@ if (strlen($_GET["sip_profile_uuid"]) > 0) {
 }
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$sip_profile_setting_name = check_str($_POST["sip_profile_setting_name"]);
 		$sip_profile_setting_value = check_str($_POST["sip_profile_setting_value"]);
 		$sip_profile_setting_enabled = check_str($_POST["sip_profile_setting_enabled"]);
 		$sip_profile_setting_description = check_str($_POST["sip_profile_setting_description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
