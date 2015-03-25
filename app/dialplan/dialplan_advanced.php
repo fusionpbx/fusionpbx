@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -102,14 +103,14 @@ function sf() { document.forms[0].savetopath.focus(); }
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			  <tr>
 				<td align='left' width='100%'>
-					<span class="title"><?=$text['header-default_dialplan']?></span><br><br>
-					<?=$text['description-default_dialplan']?>
+					<span class="title"><?php echo $text['header-default_dialplan']?></span><br><br>
+					<?php echo $text['description-default_dialplan']?>
 					<br />
 					<br />
 				</td>
 				<td width='10%' align='right' valign='top'>
-					<input type='button' class='btn' name='' alt='<?=$text['button-back']?>' onclick="window.location='dialplans.php'" value='<?=$text['button-back']?>'>
-					<input type='submit' class='btn' value='<?=$text['button-save']?>' />
+					<input type='button' class='btn' name='' alt='<?php echo $text['button-back']?>' onclick="window.location='dialplans.php'" value='<?php echo $text['button-back']?>'>
+					<input type='submit' class='btn' value='<?php echo $text['button-save']?>' />
 				</td>
 			  </tr>
 			<tr>

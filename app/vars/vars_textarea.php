@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -97,14 +98,14 @@ if ($_GET['a'] == "default" && permission_exists('var_edit')) {
 			<form action="vars.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td width='100%'><span class="vexpl"><span class="red"><strong><?=$text['header-variables_advanced']?></strong></span>
+				<td width='100%'><span class="vexpl"><span class="red"><strong><?php echo $text['header-variables_advanced']?></strong></span>
 					<br /><br />
-					<?=$text['description-variables_advanced']?>
+					<?php echo $text['description-variables_advanced']?>
 					<br /><br />
 				</td>
 				<td align='right' valign='top'>
 					<?php if (permission_exists('var_edit')) { ?>
-					<input type="submit" class='btn' value="<?=$text['button-save']?>" />
+					<input type="submit" class='btn' value="<?php echo $text['button-save']?>" />
 					<?php } ?>
 				</td>
 			</tr>

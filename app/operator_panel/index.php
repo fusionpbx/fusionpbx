@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -181,7 +182,7 @@ require_once "resources/header.php";
 		}
 		else {
 			if (from_ext != to_ext) { // prevent user from dragging extention onto self
-				cmd = get_originate_cmd(from_ext+'@<?=$_SESSION["domain_name"]?>', to_ext); //make a call
+				cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', to_ext); //make a call
 			}
 		}
 
@@ -193,11 +194,11 @@ require_once "resources/header.php";
 //refresh controls
 	function refresh_stop() {
 		clearInterval(interval_timer_id);
-		document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?=$text['label-refresh_enable']?>\" title=\"<?=$text['label-refresh_enable']?>\">";
+		document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
 	}
 
 	function refresh_start() {
-		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?=$text['label-refresh_pause']?>\" title=\"<?=$text['label-refresh_pause']?>\">"; }
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
 		interval_timer_id = setInterval( function() {
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
@@ -216,7 +217,7 @@ require_once "resources/header.php";
 //call destination
 	function call_destination(from_ext, destination) {
 		if (destination != '') {
-			cmd = get_originate_cmd(from_ext+'@<?=$_SESSION["domain_name"]?>', destination); //make a call
+			cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
 		}
 		if (cmd != '') {
 			send_cmd('exec.php?cmd='+escape(cmd));
@@ -280,22 +281,22 @@ require_once "resources/header.php";
 	}
 
 	function get_transfer_cmd(uuid, destination) {
-		cmd = "uuid_transfer " + uuid + " " + destination + " XML <?=trim($_SESSION['user_context'])?>";
+		cmd = "uuid_transfer " + uuid + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
 		return cmd;
 	}
 
 	function get_originate_cmd(source, destination) {
-		cmd = "bgapi originate {sip_auto_answer=true,origination_caller_id_number=" + destination + ",sip_h_Call-Info=_undef_}user/" + source + " " + destination + " XML <?=trim($_SESSION['user_context'])?>";
+		cmd = "bgapi originate {sip_auto_answer=true,origination_caller_id_number=" + destination + ",sip_h_Call-Info=_undef_}user/" + source + " " + destination + " XML <?php echo trim($_SESSION['user_context'])?>";
 		return cmd;
 	}
 
 	function get_eavesdrop_cmd(ext, chan_uuid) {
-		cmd = "bgapi originate {origination_caller_id_name=<?=$text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/"+(document.getElementById('eavesdrop_dest').value)+"@<?=$_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
+		cmd = "bgapi originate {origination_caller_id_name=<?php echo $text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/"+(document.getElementById('eavesdrop_dest').value)+"@<?php echo $_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
 		return cmd;
 	}
 
 	function get_record_cmd(uuid) {
-		cmd = "uuid_record " + uuid + " start <?=$_SESSION['switch']['recordings']['dir']?>/archive/<?=date('Y')?>/<?=date('M')?>/<?=date('d')?>/" + uuid + ".wav";
+		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
 		return cmd;
 	}
 
@@ -325,7 +326,7 @@ require_once "resources/header.php";
 						cmd = get_transfer_cmd(document.getElementById('vd_call_id').value, document.getElementById('vd_ext_to').value); //transfer a call
 					}
 					else {
-						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value + '@<?=$_SESSION["domain_name"]?>', document.getElementById('vd_ext_to').value); //originate a call
+						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value + '@<?php echo $_SESSION["domain_name"]?>', document.getElementById('vd_ext_to').value); //originate a call
 					}
 					if (cmd != '') {
 						//alert(cmd);
