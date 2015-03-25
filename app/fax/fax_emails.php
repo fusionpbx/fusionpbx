@@ -165,8 +165,12 @@ if (sizeof($result) != 0) {
 
 					//get email body (if any) for cover page
 					$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
+					$fax_message = strip_tags($fax_message);
+					$fax_message = trim($fax_message);
 					if ($fax_message == '') {
 						$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
+						$fax_message = strip_tags($fax_message);
+						$fax_message = trim($fax_message);
 					}
 					$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 
