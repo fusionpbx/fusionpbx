@@ -157,7 +157,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-add'];
-			$location = "contacts.php";
+			$location = "contact_edit.php?id=".$contact_uuid;
 		} //if ($action == "add")
 
 		//if contact is shared, remove contact group record containing user's uuid
@@ -223,7 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
-			$location = "contacts.php";
+			$location = "contact_edit.php?id=".$contact_uuid;
 		} //if ($action == "update")
 
 		//handle redirect

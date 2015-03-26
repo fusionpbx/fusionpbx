@@ -91,7 +91,7 @@ require_once "resources/paging.php";
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<th>".$text['label-email_label']."</th>\n";
@@ -118,20 +118,6 @@ require_once "resources/paging.php";
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
-
-	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-// 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-// 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	echo 			"<a href='contact_email_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "</table>";
 
