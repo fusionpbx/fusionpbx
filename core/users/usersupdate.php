@@ -532,7 +532,7 @@ else {
 	echo "		<td width='70%' class='vtable'>\n";
 	$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
 	$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= " order by contact_organization asc ";
+	$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
