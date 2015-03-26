@@ -150,9 +150,9 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_hostname."&nbsp;</td>\n";
 			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
 			echo "	</td>\n";
-			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_hostname."&nbsp;</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
@@ -176,9 +176,9 @@ else {
 	echo "<td colspan='6' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td colspan='2' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td width='33.3%' class='list_control_icons' nowrap='nowrap'>";
 	if (permission_exists('var_add')) {
 		echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
