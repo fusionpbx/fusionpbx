@@ -177,8 +177,8 @@ else {
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td colspan='2' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td width='33.3%' class='list_control_icons' nowrap='nowrap'>";
+	echo "		<td colspan='3' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td width='33.3%' class='list_control_icons'>";
 	if (permission_exists('var_add')) {
 		echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
