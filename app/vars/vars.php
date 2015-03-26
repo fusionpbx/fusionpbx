@@ -149,8 +149,8 @@ else {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_hostname."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
 			echo "	</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
