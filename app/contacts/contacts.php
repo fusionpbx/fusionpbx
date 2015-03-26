@@ -176,7 +176,7 @@ else {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by contact_organization asc, contact_name_given asc, contact_name_family asc ";
+		$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
