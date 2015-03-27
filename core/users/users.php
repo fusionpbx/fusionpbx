@@ -47,7 +47,6 @@ else {
 	echo "<form method='post' action=''>";
 	echo "<tr>\n";
 	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']."</b></td>\n";
-	echo "<td align='right' nowrap='nowrap' valign='middle'>".$text['label-search_by']."&nbsp;</td>";
 	echo "<td align='left' valign='top'>\n";
 	echo "	&nbsp;\n";
 	echo "</td>\n";
