@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_edit')) {
+if (permission_exists('contact_address_edit') || permission_exists('contact_address_add')) {
 	//access granted
 }
 else {
@@ -54,7 +54,6 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		//$address_name = check_str($_POST["address_name"]);
 		$address_type = check_str($_POST["address_type"]);
 		$address_label = check_str($_POST["address_label"]);
 		$address_label_custom = check_str($_POST["address_label_custom"]);
@@ -193,7 +192,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			//$address_name = $row["address_name"];
 			$address_type = $row["address_type"];
 			$address_label = $row["address_label"];
 			$address_street = $row["address_street"];

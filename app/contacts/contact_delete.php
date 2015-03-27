@@ -86,6 +86,18 @@ if (strlen($contact_uuid) > 0) {
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
 
+	//delete relations
+		$sql = "delete from v_contact_relations ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and ";
+		$sql .= "( ";
+		$sql .= "	contact_uuid = '".$contact_uuid."' ";
+		$sql .= "	or relation_contact_uuid = '".$contact_uuid."' ";
+		$sql .= ") ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
+
 	//delete settings
 		$sql = "delete from v_contact_settings ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";

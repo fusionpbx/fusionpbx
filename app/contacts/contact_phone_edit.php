@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_edit')) {
+if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
 	//access granted
 }
 else {
@@ -335,12 +335,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<br>\n";
-	echo "				<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<br>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='contact_phone_uuid' value='$contact_phone_uuid'>\n";
+		echo "		<input type='hidden' name='contact_phone_uuid' value='$contact_phone_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

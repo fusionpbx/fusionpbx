@@ -26,26 +26,13 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_view')) {
+if (permission_exists('contact_note_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
-//require_once "resources/header.php";
-require_once "resources/paging.php";
-
-//get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
-
-//set defaults
-	if (strlen($order_by) == 0) {
-		$order_by = 'last_mod_date';
-		$order = 'desc';
-	}
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -59,7 +46,7 @@ require_once "resources/paging.php";
 		$sql = "select * from v_contact_notes ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and contact_uuid = '$contact_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by ".$order_by." ".$order." "; }
+		$sql .= "order by last_mod_date desc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
 			$prep_statement->execute();
@@ -78,7 +65,9 @@ require_once "resources/paging.php";
 	echo "<th>".$text['label-note_content']."</th>\n";
 	echo "<th style='text-align: right;'>".$text['label-note_user']."</th>\n";
 	echo "<td class='list_control_icons'>";
-	echo 	"<a href='contact_note_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	if (permission_exists('contact_note_add')) {
+		echo "<a href='contact_note_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -89,15 +78,21 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			$contact_note = $row['contact_note'];
 			$contact_note = str_replace("\n","<br />",$contact_note);
-			$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
+			if (permission_exists('contact_note_add')) {
+				$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
+			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' colspan='2'>";
 			echo "		<div style='display: inline-block; float: right; margin: -5px -7px 5px 5px; padding: 3px 4px; font-size: 10px; background-color: #f0f2f6;'><span style='color: #000; font-weight: bold;'>".$row['last_mod_user']."</span>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>";
 			echo 		$contact_note."&nbsp;";
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
-			echo 		"<a href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			echo 		"<a href='contact_note_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			if (permission_exists('contact_note_edit')) {
+				echo "<a href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			}
+			if (permission_exists('contact_note_delete')) {
+				echo "<a href='contact_note_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;

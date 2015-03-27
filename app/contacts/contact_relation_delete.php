@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_note_delete')) {
+if (permission_exists('contact_relation_delete')) {
 	//access granted
 }
 else {
@@ -39,14 +39,15 @@ else {
 	$text = $language->get();
 
 if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
+	$id = check_str($_GET["id"]); //relation
 	$contact_uuid = check_str($_GET["contact_uuid"]);
 }
 
 if (strlen($id)>0) {
-	$sql = "delete from v_contact_notes ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and contact_note_uuid = '$id' ";
+	$sql = "delete from v_contact_relations ";
+	$sql .= "where contact_relation_uuid = '".$id."' ";
+	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and contact_uuid = '".$contact_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	unset($sql);

@@ -27,6 +27,13 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+if (permission_exists('contact_setting_delete')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
