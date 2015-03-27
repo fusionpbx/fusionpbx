@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -77,16 +77,6 @@ else {
 	echo "</table>\n";
 
 	//get total destination count from the database
-		$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_destinations = $row['num_rows'];
-		}
-		unset($sql, $prep_statement, $row);
-
-	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_destinations ";
 		if ($_GET['showall'] && permission_exists('destination_show_all')) {
 			if (strlen($search) > 0) {
@@ -111,7 +101,7 @@ else {
 		if ($prep_statement) {
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$num_rows = $row['num_rows'];
+			$total_destinations = $row['num_rows'];
 		}
 		else {
 			$num_rows = 0;
@@ -125,13 +115,12 @@ else {
 		}
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		list($paging_controls, $rows_per_page, $var3) = paging($total_destinations, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
 
 	//get the list
 		$sql = "select * from v_destinations ";
 		if ($_GET['showall'] && permission_exists('destination_show_all')) {
-			$sql .= " join v_domains on v_domains.domain_uuid = v_destinations.domain_uuid ";
 			if (strlen($search) > 0) {
 				$sql .= " where ";
 			}
@@ -154,8 +143,8 @@ else {
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
+		$destination = $prep_statement->fetchAll();
+		$destination_count = count($destination);
 		unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -181,12 +170,12 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if ($destination_count > 0) {
+		foreach($destination as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('destination_show_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
@@ -204,7 +193,7 @@ else {
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $destination, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
