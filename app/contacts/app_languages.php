@@ -949,6 +949,93 @@
 		$text['description-contact_setting_value']['pt-pt'] = "Introduza o valor desta definição.";
 		$text['description-contact_setting_value']['fr-fr'] = "Entrez la valeur de ce paramètre.";
 
+	// contact relations
+		$text['header-contact_relations']['en-us'] = "Relations";
+		$text['header-contact_relations']['es-cl'] = "Relaciones";
+		$text['header-contact_relations']['pt-pt'] = "Relações";
+		$text['header-contact_relations']['fr-fr'] = "Rapports";
+
+		$text['title-contact_relation']['en-us'] = "Contact Relation";
+		$text['title-contact_relation']['es-cl'] = "Contacto Relación";
+		$text['title-contact_relation']['pt-pt'] = "Contato Relação";
+		$text['title-contact_relation']['fr-fr'] = "Contactez Relation";
+
+		$text['header-contact_relation']['en-us'] = "Contact Relation";
+		$text['header-contact_relation']['es-cl'] = "Contacto Relación";
+		$text['header-contact_relation']['pt-pt'] = "Contato Relação";
+		$text['header-contact_relation']['fr-fr'] = "Contactez Relation";
+
+		$text['label-contact_relation_organization']['en-us'] = "Organization";
+		$text['label-contact_relation_organization']['es-cl'] = "Organización";
+		$text['label-contact_relation_organization']['pt-pt'] = "Organização";
+		$text['label-contact_relation_organization']['fr-fr'] = "Organisation";
+
+		$text['label-contact_relation_name']['en-us'] = "Name";
+		$text['label-contact_relation_name']['es-cl'] = "Nombre";
+		$text['label-contact_relation_name']['pt-pt'] = "Nom";
+		$text['label-contact_relation_name']['fr-fr'] = "Nome";
+
+		$text['label-contact_relation_label']['en-us'] = "Relation";
+		$text['label-contact_relation_label']['es-cl'] = "Relación";
+		$text['label-contact_relation_label']['pt-pt'] = "Relação";
+		$text['label-contact_relation_label']['fr-fr'] = "Relation";
+
+		$text['label-contact_relation_option_parent']['en-us'] = "Parent";
+		$text['label-contact_relation_option_parent']['es-cl'] = "Padre";
+		$text['label-contact_relation_option_parent']['pt-pt'] = "Parente";
+		$text['label-contact_relation_option_parent']['fr-fr'] = "Mère";
+
+		$text['label-contact_relation_option_child']['en-us'] = "Child";
+		$text['label-contact_relation_option_child']['es-cl'] = "Niño";
+		$text['label-contact_relation_option_child']['pt-pt'] = "Criança";
+		$text['label-contact_relation_option_child']['fr-fr'] = "Enfant";
+
+		$text['label-contact_relation_option_employee']['en-us'] = "Employee";
+		$text['label-contact_relation_option_employee']['es-cl'] = "Empleado";
+		$text['label-contact_relation_option_employee']['pt-pt'] = "Empregado";
+		$text['label-contact_relation_option_employee']['fr-fr'] = "Employé";
+
+		$text['label-contact_relation_option_member']['en-us'] = "Member";
+		$text['label-contact_relation_option_member']['es-cl'] = "Miembro";
+		$text['label-contact_relation_option_member']['pt-pt'] = "Membro";
+		$text['label-contact_relation_option_member']['fr-fr'] = "Membre";
+
+		$text['label-contact_relation_option_associate']['en-us'] = "Associate";
+		$text['label-contact_relation_option_associate']['es-cl'] = "Asociado";
+		$text['label-contact_relation_option_associate']['pt-pt'] = "Associado";
+		$text['label-contact_relation_option_associate']['fr-fr'] = "Associé";
+
+		$text['label-contact_relation_option_other']['en-us'] = "Other";
+		$text['label-contact_relation_option_other']['es-cl'] = "Otro";
+		$text['label-contact_relation_option_other']['pt-pt'] = "Outro";
+		$text['label-contact_relation_option_other']['fr-fr'] = "Autre";
+
+		$text['label-contact_relation_contact']['en-us'] = "Contact";
+		$text['label-contact_relation_contact']['es-cl'] = "Contacto";
+		$text['label-contact_relation_contact']['pt-pt'] = "Contato";
+		$text['label-contact_relation_contact']['fr-fr'] = "Contact";
+
+		$text['label-contact_relation_reciprocal']['en-us'] = "Reciprocal";
+		$text['label-contact_relation_reciprocal']['es-cl'] = "Recíproca";
+		$text['label-contact_relation_reciprocal']['pt-pt'] = "Recíproco";
+		$text['label-contact_relation_reciprocal']['fr-fr'] = "Réciproque";
+
+		$text['description-contact_relation_reciprocal']['en-us'] = "Select whether to also create a reciprocal relationship for the contact selected above.";
+		$text['description-contact_relation_reciprocal']['es-cl'] = "Seleccione si desea crear también una relación recíproca para el contacto seleccionado anteriormente.";
+		$text['description-contact_relation_reciprocal']['pt-pt'] = "Seleccione se pretende também criar uma relação de reciprocidade para o contato selecionado acima.";
+		$text['description-contact_relation_reciprocal']['fr-fr'] = "Sélectionnez si vous souhaitez créer également une relation réciproque pour le contact sélectionné ci-dessus.";
+
+		$text['label-contact_relation_reciprocal_label']['en-us'] = "Reciprocal Relation";
+		$text['label-contact_relation_reciprocal_label']['es-cl'] = "Relación Recíproca";
+		$text['label-contact_relation_reciprocal_label']['pt-pt'] = "Relação Recíproca";
+		$text['label-contact_relation_reciprocal_label']['fr-fr'] = "Relation Réciproque";
+
+		$text['description-contact_relation_reciprocal_label']['en-us'] = "Define the relationship of this contact to the contact selected above.";
+		$text['description-contact_relation_reciprocal_label']['es-cl'] = "Definir la relación de este contacto para el contacto seleccionado anteriormente.";
+		$text['description-contact_relation_reciprocal_label']['pt-pt'] = "Definir a relação desse contato para o contato selecionado acima.";
+		$text['description-contact_relation_reciprocal_label']['fr-fr'] = "Définir la relation de ce contact au contact sélectionné ci-dessus.";
+
+
 	// contact import
 		$text['title-contacts_import']['en-us'] = "Import Contacts";
 		$text['title-contacts_import']['es-cl'] = "Importar Contactos";
@@ -1170,5 +1257,7 @@
 		$text['message-required']['es-cl'] = "Por favor ingrese: ";
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
+
+
 
 ?>

@@ -396,8 +396,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='volunteer' ".(($contact_type == "volunteer") ? "selected='selected'" : null).">".$text['option-contact_type_volunteer']."</option>\n";
 			echo "	</select>\n";
 		}
-		echo "<br />\n";
-		echo $text['description-contact_type']."\n";
+//		echo "<br />\n";
+//		echo $text['description-contact_type']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -407,8 +407,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_organization' maxlength='255' value=\"$contact_organization\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_organization']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_organization']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -418,8 +418,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_prefix' maxlength='255' value=\"$contact_name_prefix\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_name_prefix']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_name_prefix']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -429,8 +429,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_given' maxlength='255' value=\"$contact_name_given\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_name_given']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_name_given']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -440,8 +440,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_middle' maxlength='255' value=\"$contact_name_middle\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_name_middle']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_name_middle']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -451,8 +451,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_family' maxlength='255' value=\"$contact_name_family\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_name_family']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_name_family']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -462,8 +462,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_suffix' maxlength='255' value=\"$contact_name_suffix\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_name_suffix']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_name_suffix']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -473,8 +473,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_nickname' maxlength='255' value=\"$contact_nickname\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_nickname']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_nickname']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -495,8 +495,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		else {
 			echo "	<input class='formfld' type='text' name='contact_title' maxlength='255' value=\"$contact_title\">\n";
 		}
-		echo "<br />\n";
-		echo $text['description-contact_title']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_title']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -517,8 +517,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		else {
 			echo "	<input class='formfld' type='text' name='contact_category' maxlength='255' value=\"$contact_category\">\n";
 		}
-		echo "<br />\n";
-		echo $text['description-contact_category']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_category']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -539,8 +539,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		else {
 			echo "	<input class='formfld' type='text' name='contact_role' maxlength='255' value=\"$contact_role\">\n";
 		}
-		echo "<br />\n";
-		echo $text['description-contact_role']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_role']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -550,8 +550,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_time_zone' maxlength='255' value=\"$contact_time_zone\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_time_zone']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_time_zone']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -678,8 +678,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
 		echo "  <textarea class='formfld' style='width: 100%; height: 80px;' name='contact_note'>".$contact_note."</textarea>\n";
-		echo "<br />\n";
-		echo $text['description-contact_note']."\n";
+// 		echo "<br />\n";
+// 		echo $text['description-contact_note']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "	<tr>\n";
@@ -698,14 +698,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "<td width='60%' class='' valign='top' align='center'>\n";
-			//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
-			require "contact_phones.php";
-			require "contact_addresses.php";
-			require "contact_emails.php";
-			require "contact_urls.php";
-			require "contact_extensions.php";
-			require "contact_notes.php";
-			require "contact_settings.php";
+		//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
+		if (permission_exists('contact_phone_view')) { require "contact_phones.php"; }
+		if (permission_exists('contact_address_view')) { require "contact_addresses.php"; }
+		if (permission_exists('contact_email_view')) { require "contact_emails.php"; }
+		if (permission_exists('contact_url_view')) { require "contact_urls.php"; }
+		if (permission_exists('contact_extension_view')) { require "contact_extensions.php"; }
+		if (permission_exists('contact_relation_view')) { require "contact_relations.php"; }
+		if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
+		if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
 		echo "</td>\n";
 	}
 
