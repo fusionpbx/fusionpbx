@@ -180,7 +180,7 @@ th {
 	border-bottom: 1px solid #a4aebf;
 	text-align: left;
 	color: #3164AD;
-	font-size: 13px;
+	font-size: 12px;
 	font-family: arial;
 	padding-top: 4px;
 	padding-bottom: 4px;
