@@ -97,11 +97,6 @@
 	$text['description-group_permissions']['pt-pt'] = "Atribua permissões para este grupo.";
 	$text['description-group_permissions']['fr-fr'] = "Assigner des permissions à ce groupe.";
 
-	$text['label-search_by']['en-us'] = "Search by";
-	$text['label-search_by']['es-cl'] = "Buscar Por";
-	$text['label-search_by']['pt-pt'] = "Pesquisar por";
-	$text['label-search_by']['fr-fr'] = "Chercher par";
-
 	$text['label-username']['en-us'] = "Username";
 	$text['label-username']['es-cl'] = "Nombre de usuario";
 	$text['label-username']['pt-pt'] = "Nome de Utilizador";
