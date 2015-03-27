@@ -37,10 +37,10 @@ else {
 //require_once "resources/header.php";
 	require_once "resources/paging.php";
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
-$field_name = $_REQUEST["field_name"];
-$field_value = $_REQUEST["field_value"];
+//set the variables
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+	$search_value = check_str($_REQUEST["search_value"]);
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -49,18 +49,11 @@ $field_value = $_REQUEST["field_value"];
 	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']."</b></td>\n";
 	echo "<td align='right' nowrap='nowrap' valign='middle'>".$text['label-search_by']."&nbsp;</td>";
 	echo "<td align='left' valign='top'>\n";
-	echo "	<select name='field_name' style='width:150px' class='formfld'>\n";
-	echo "	<option value=''></option>\n";
-	if ($field_name == "username") {
-		echo "	<option value='username' selected='selected'>".$text['label-username']."</option>\n";
-	}
-	else {
-		echo "	<option value='username'>".$text['label-username']."</option>\n";
-	}
-	echo "	</select>\n";
+	echo "	&nbsp;\n";
 	echo "</td>\n";
+
 	echo "<td align='left' width='3px'>&nbsp;</td>";
-	echo "<td align='left'><input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='field_value' value='$field_value'></td>";
+	echo "<td align='left'><input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value='$search_value'></td>";
 	echo "<td align='left' width='60px'><input type='submit' class='btn' name='submit' value='".$text['button-search']."'></td>";
 	echo "</tr>\n";
 	echo "</form>";
@@ -91,7 +84,8 @@ $field_value = $_REQUEST["field_value"];
 	unset ($sql, $prep_statement);
 
 //get total user count from the database
-	$sql = "select count(*) as num_rows from v_users where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select count(*) as num_rows from v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -101,8 +95,8 @@ $field_value = $_REQUEST["field_value"];
 	unset($prep_statement, $row);
 
 //get the users from the database (reuse $sql from above)
-	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
-		$sql .= "and $field_name = '$field_value' ";
+	if (strlen($search_value) > 0) {
+		$sql .= "and username = '$search_value' ";
 	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
@@ -126,8 +120,8 @@ $field_value = $_REQUEST["field_value"];
 
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
-		$sql .= "and $field_name like '%$field_value%' ";
+	if (strlen($search_value) > 0) {
+		$sql .= "and username = '$search_value' ";
 	}
 	if (strlen($order_by)> 0) {
 		$sql .= "order by $order_by $order ";
