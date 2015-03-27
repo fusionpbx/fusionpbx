@@ -392,7 +392,7 @@ function ListFiles($dir) {
 	}
 }
 
-function switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='', $onchange='') {
+function switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='', $onchange='', $text_append=' ...') {
 	//select_type can be ivr, dialplan, call_center_contact or bridge
 	global $text, $config, $db, $domain_uuid;
 
@@ -805,30 +805,30 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					case "dialplan":
 						$default_value = 'bridge:sofia/gateway/'.$row['gateway_uuid'].'/';
 						$selected = (strpos($select_value, $default_value) === 0) ? true : false;
-						$value = ($selected) ? $select_value : $default_value.' ...';
-						$flag = ($selected && $select_value != $default_value.' ...') ? "*" : null;
+						$value = ($selected) ? $select_value : $default_value.$text_append;
+						$flag = ($selected && $select_value != $default_value.$text_append) ? "*" : null;
 						$options[] = "<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$row['gateway']."@".$row['domain_name']." ".$flag."</option>";
 						break;
 					case "bridge":
 						$default_value = 'sofia/gateway/'.$row['gateway_uuid'].'/';
 						$selected = (strpos($select_value, $default_value) === 0) ? true : false;
-						$value = ($selected) ? $select_value : $default_value.' ...';
-						$flag = ($selected && $select_value != $default_value.' ...') ? "*" : null;
+						$value = ($selected) ? $select_value : $default_value.$text_append;
+						$flag = ($selected && $select_value != $default_value.$text_append) ? "*" : null;
 						$options[] = "<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$row['gateway']."@".$row['domain_name']." ".$flag."</option>";
 						break;
 					case "ivr":
 						$default_value = 'menu-exec-app:bridge sofia/gateway/'.$row['gateway_uuid'].'/';
 						$selected = (strpos($select_value, $default_value) === 0) ? true : false;
-						$value = ($selected) ? $select_value : $default_value.' ...';
-						$flag = ($selected && $select_value != $default_value.' ...') ? "*" : null;
+						$value = ($selected) ? $select_value : $default_value.$text_append;
+						$flag = ($selected && $select_value != $default_value.$text_append) ? "*" : null;
 						$options[] = "<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$row['gateway']."@".$row['domain_name']." ".$flag."</option>";
 						break;
 					case "call_center_contact":
 						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/conference_centers/app_config.php")) {
 							$default_value = 'sofia/gateway/'.$row['gateway_uuid'].'/';
 							$selected = (strpos($select_value, $default_value) === 0) ? true : false;
-							$value = ($selected) ? $select_value : $default_value.' ...';
-							$flag = ($selected && $select_value != $default_value.' ...') ? "*" : null;
+							$value = ($selected) ? $select_value : $default_value.$text_append;
+							$flag = ($selected && $select_value != $default_value.$text_append) ? "*" : null;
 							$options[] = "<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$row['gateway']."@".$row['domain_name']." ".$flag."</option>";
 						}
 						break;
