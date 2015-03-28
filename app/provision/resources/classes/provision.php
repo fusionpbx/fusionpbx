@@ -127,7 +127,10 @@ include "root.php";
 		}
 
 		function render() {
-
+			
+			//debug
+				$debug = $_GET['debug']; // array
+			
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
 				$device_template = $this->device_template;
@@ -378,7 +381,7 @@ include "root.php";
 					}
 					unset ($prep_statement);
 
-				//get the provisioning information from device keys table
+				//get the provisioning information from device keys
 					$sql = "SELECT * FROM v_device_keys ";
 					$sql .= "WHERE (";
 					$sql .= "device_uuid = '".$device_uuid."' ";
@@ -387,23 +390,48 @@ include "root.php";
 					}
 					$sql .= ") ";
 					//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
-					$sql .= "ORDER BY device_key_id asc, device_uuid desc";
+					$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
-					$results = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 				//rebuild the array to allow profile keys to be overridden by keys assigned to this device
-					foreach($results as $row) {
-						//set the id using the key id using this id helps to eliminate duplicate keys
-							$id = $row['device_key_id'];
+					$x = 0;
+					$previous_category = '';
+					$previous_id = '';
+					foreach($device_keys as $row) {
 						//set the variables
-							$device_keys[$id]['device_key_category'] = $row['device_key_category'];
-							$device_keys[$id]['device_key_id'] = $row['device_key_id']; //1
-							$device_keys[$id]['device_key_type'] = $row['device_key_type']; //line
-							$device_keys[$id]['device_key_line'] = $row['device_key_line'];
-							$device_keys[$id]['device_key_value'] = $row['device_key_value']; //1
-							$device_keys[$id]['device_key_extension'] = $row['device_key_extension'];
-							$device_keys[$id]['device_key_label'] = $row['device_key_label']; //label
+							if ($row['device_key_category'] == $previous_category && $row['device_key_id'] == $previous_id) {
+								$device_keys[$x]['device_key_override'] = "true";
+								$device_keys[$x]['device_key_message'] = "value=".$device_keys[$x-1]['device_key_value']."&label=".$device_keys[$x-1]['device_key_label'];
+								unset($device_keys[$x-1]);
+							}
+							$device_keys[$x]['device_key_category'] = $row['device_key_category'];
+							$device_keys[$x]['device_key_id'] = $row['device_key_id']; //1
+							$device_keys[$x]['device_key_type'] = $row['device_key_type']; //line, memory, expansion
+							$device_keys[$x]['device_key_line'] = $row['device_key_line'];
+							$device_keys[$x]['device_key_value'] = $row['device_key_value']; //1
+							$device_keys[$x]['device_key_extension'] = $row['device_key_extension'];
+							$device_keys[$x]['device_key_label'] = $row['device_key_label']; //label
+							if (is_uuid($row['device_profile_uuid'])) {
+								$device_keys[$x]['device_key_owner'] = "profile";
+							}
+							else {
+								$device_keys[$x]['device_key_owner'] = "device";
+							}
+						//set previous values
+							$previous_category = $row['device_key_category'];
+							$previous_id = $row['device_key_id'];
+						//increment the key
+							$x++;
+					}
+
+				//debug information
+					if ($debug == "array") {
+						echo "<pre>\n";
+						print_r($device_keys);
+						echo "<pre>\n";
+						exit;
 					}
 
 				//assign the keys array
