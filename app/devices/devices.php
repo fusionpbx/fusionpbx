@@ -58,7 +58,7 @@ else {
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	if (permission_exists('device_show_all')) {
+	if (permission_exists('device_all')) {
 		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
 		if ($_GET['showall'] == 'true') {
 			echo "			<input type='hidden' name='showall' value='true'>";
@@ -87,14 +87,14 @@ else {
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
-		if ($_GET['showall'] && permission_exists('device_show_all')) {
+		if ($_GET['showall'] && permission_exists('device_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
 		} else {
 			$sql .= "where (";
 			$sql .= "	domain_uuid = '$domain_uuid' ";
-			if (permission_exists('device_show_all')) {
+			if (permission_exists('device_all')) {
 				$sql .= "	or domain_uuid is null ";
 			}
 			$sql .= ") ";
@@ -134,14 +134,14 @@ else {
 
 	//get the list
 		$sql = "select * from v_devices ";
-		if ($_GET['showall'] && permission_exists('device_show_all')) {
+		if ($_GET['showall'] && permission_exists('device_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
 		} else {
 			$sql .= "where (";
 			$sql .= "	domain_uuid = '$domain_uuid' ";
-			if (permission_exists('device_show_all')) {
+			if (permission_exists('device_all')) {
 				$sql .= "	or domain_uuid is null ";
 			}
 			$sql .= ") ";
@@ -178,7 +178,7 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($_GET['showall'] && permission_exists('device_show_all')) {
+	if ($_GET['showall'] && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
@@ -203,7 +203,7 @@ else {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if ($_GET['showall'] && permission_exists('device_show_all')) {
+			if ($_GET['showall'] && permission_exists('device_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
