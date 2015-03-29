@@ -56,7 +56,7 @@ else {
 	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']."</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
-	if (permission_exists('destination_show_all')) {
+	if (permission_exists('destination_all')) {
 		if ($_GET['showall'] == 'true') {
 			echo "		<input type='hidden' name='showall' value='true'>";
 		}
@@ -78,7 +78,7 @@ else {
 
 	//get total destination count from the database
 		$sql = "select count(*) as num_rows from v_destinations ";
-		if ($_GET['showall'] && permission_exists('destination_show_all')) {
+		if ($_GET['showall'] && permission_exists('destination_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
@@ -110,7 +110,7 @@ else {
 	//prepare to page the results
 		$rows_per_page = 150;
 		$param = "&search=".$search;
-		if ($_GET['showall'] && permission_exists('destination_show_all')) {
+		if ($_GET['showall'] && permission_exists('destination_all')) {
 			$param .= "&showall=true";
 		}
 		$page = $_GET['page'];
@@ -120,7 +120,7 @@ else {
 
 	//get the list
 		$sql = "select * from v_destinations ";
-		if ($_GET['showall'] && permission_exists('destination_show_all')) {
+		if ($_GET['showall'] && permission_exists('destination_all')) {
 			if (strlen($search) > 0) {
 				$sql .= " where ";
 			}
@@ -153,7 +153,7 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($_GET['showall'] && permission_exists('destination_show_all')) {
+	if ($_GET['showall'] && permission_exists('destination_all')) {
 		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, '', '', $param);
@@ -174,7 +174,7 @@ else {
 		foreach($destination as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
-			if ($_GET['showall'] && permission_exists('destination_show_all')) {
+			if ($_GET['showall'] && permission_exists('destination_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
@@ -197,7 +197,7 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	if ($_GET['showall'] && permission_exists('destination_show_all')) {
+	if ($_GET['showall'] && permission_exists('destination_all')) {
 		echo "<td colspan='7' align='right'>\n";
 	}
 	else {
