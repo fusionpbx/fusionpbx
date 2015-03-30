@@ -54,21 +54,23 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 	}
 
 //get total destination count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($_SESSION['limit']['destinations']['numeric'] != '') {
-			$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$total_destinations = $row['num_rows'];
-			}
-			unset($prep_statement, $row);
-			if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
-				$_SESSION['message_mood'] = 'negative';
-				$_SESSION['message'] = $text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'];
-				header('Location: destinations.php');
-				return;
+	if (!permission_exists('destination_domain')) {
+		if ($action == 'add') {
+			if ($_SESSION['limit']['destinations']['numeric'] != '') {
+				$sql = "select count(*) as num_rows from v_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					$total_destinations = $row['num_rows'];
+				}
+				unset($prep_statement, $row);
+				if ($total_destinations >= $_SESSION['limit']['destinations']['numeric']) {
+					$_SESSION['message_mood'] = 'negative';
+					$_SESSION['message'] = $text['message-maximum_destinations'].' '.$_SESSION['limit']['destinations']['numeric'];
+					header('Location: destinations.php');
+					return;
+				}
 			}
 		}
 	}
@@ -317,7 +319,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
 
@@ -442,10 +444,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$settled=1;
 						$mc_gross = -1 * $destination_sell_current_currency;
 						$post_payload = serialize($_POST);
-						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$_SESSION['domain_uuid']."' )";
+						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$domain_uuid."' )";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
-
 					}
 				}
 				if ($action == "update") {
@@ -464,6 +465,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$orm->uuid($destination_uuid);
 		$result = $orm->find()->get();
 		foreach ($result as &$row) {
+			if (permission_exists('destination_domain')) {
+				$domain_uuid = $row["domain_uuid"];
+			}
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$destination_type = $row["destination_type"];
 			$destination_number = $row["destination_number"];
@@ -500,13 +504,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	while($x < $limit) {
 		$dialplan_details[$x]['domain_uuid'] = $domain_uuid;
 		$dialplan_details[$x]['dialplan_uuid'] = $dialplan_uuid;
-		//$dialplan_details[$x]['dialplan_detail_uuid'] = '';
-		//$dialplan_details[$x]['dialplan_detail_tag'] = '';
 		$dialplan_details[$x]['dialplan_detail_type'] = '';
 		$dialplan_details[$x]['dialplan_detail_data'] = '';
-		//$dialplan_details[$x]['dialplan_detail_break'] = '';
-		//$dialplan_details[$x]['dialplan_detail_inline'] = '';
-		//$dialplan_details[$x]['dialplan_detail_group'] = '';
 		$dialplan_details[$x]['dialplan_detail_order'] = '';
 		$x++;
 	}
@@ -536,7 +535,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -631,8 +630,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".$row['dialplan_detail_type']."\">\n";
 			echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
 
-			//echo $order."<br />\n";
-			//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
 			$data = $row['dialplan_detail_data'];
 			$label = explode("XML", $data);
 			$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
@@ -640,12 +637,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][dialplan_detail_data]", $detail_action, "width: 60%;", $row['dialplan_detail_type']);
 
 			echo "					</td>\n";
-			//echo "					<td>\n";
-			//echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-			//echo "					</td>\n";
 			echo "					<td class='list_control_icons' style='width: 25px;'>";
 			if (strlen($row['destination_uuid']) > 0) {
-				//echo 					"<a href='estination_edit.php?id=".$row['destination_uuid']."&destination_uuid=".$row['destination_uuid']."' alt='edit'>$v_link_label_edit</a>";
 				echo					"<a href='destination_delete.php?id=".$row['destination_uuid']."&destination_uuid=".$row['destination_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "					</td>\n";
