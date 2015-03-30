@@ -317,6 +317,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
 
+//get the recordings
+	$sql = "select * from v_recordings ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "order by recording_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
 //content
 	require_once "resources/header.php";
 	$document['title'] = $text['title-ivr_menu'];
@@ -425,25 +433,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//recordings
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
 			$tmp_selected = false;
-			$files = Array();
 			echo "<optgroup label='recordings'>\n";
-			while($file = readdir($dh)) {
-				if($file != "." && $file != ".." && $file[0] != '.') {
-					if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
-						//this is a directory
-					}
-					else {
-						if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_long) > 0) {
-							$tmp_selected = true;
-							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected=\"selected\">".$file."</option>\n";
-						}
-						else {
-							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
-						}
-					}
+			foreach ($result as &$row) {
+				$name = $row["recording_name"];
+				$filename = $row["recording_filename"];
+				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$filename && strlen($ivr_menu_greet_long) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$filename."' selected='selected'>".$filename."</option>\n";
+				} elseif ($ivr_menu_greet_long == $filename && strlen($ivr_menu_greet_long) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".$filename."' selected='selected'>".$filename."</option>\n";
+				}
+				else {
+					echo "	<option value='".$filename."'>".$filename."</option>\n";
 				}
 			}
-			closedir($dh);
 			echo "</optgroup>\n";
 		}
 	//phrases
@@ -517,25 +521,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//recordings
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
 			$tmp_selected = false;
-			$files = Array();
 			echo "<optgroup label='recordings'>\n";
-			while($file = readdir($dh)) {
-				if($file != "." && $file != ".." && $file[0] != '.') {
-					if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
-						//this is a directory
-					}
-					else {
-						if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_short) > 0) {
-							$tmp_selected = true;
-							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
-						}
-						else {
-							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
-						}
-					}
+			foreach ($result as &$row) {
+				$name = $row["recording_name"];
+				$filename = $row["recording_filename"];
+				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$filename && strlen($ivr_menu_greet_short) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$filename."' selected='selected'>".$filename."</option>\n";
+				} elseif ($ivr_menu_greet_short == $filename && strlen($ivr_menu_greet_short) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".$filename."' selected='selected'>".$filename."</option>\n";
+				}
+				else {
+					echo "	<option value='".$filename."'>".$filename."</option>\n";
 				}
 			}
-			closedir($dh);
 			echo "</optgroup>\n";
 		}
 	//phrases
