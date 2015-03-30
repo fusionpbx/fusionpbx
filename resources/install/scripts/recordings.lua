@@ -38,6 +38,37 @@
 	dofile(scripts_dir.."/resources/functions/config.lua");
 	dofile(config());
 
+--get the domain_uuid
+	domain_uuid = session:getVariable("domain_uuid");
+
+--add functions
+	dofile(scripts_dir.."/resources/functions/mkdir.lua");
+	dofile(scripts_dir.."/resources/functions/base64.lua");
+	dofile(scripts_dir.."/resources/functions/explode.lua");
+
+--initialize the recordings
+	api = freeswitch.API();
+
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+
+	if (settings['recordings']['storage_type'] ~= nil) then
+		if (settings['recordings']['storage_type']['text'] ~= nil) then
+			storage_type = settings['recordings']['storage_type']['text'];
+		end
+	end
+	if (settings['recordings']['storage_path'] ~= nil) then
+		if (settings['recordings']['storage_path']['text'] ~= nil) then
+			storage_path = settings['recordings']['storage_path']['text'];
+		end
+	end
+	if (settings['server']['temp'] ~= nil) then
+		if (settings['server']['temp']['dir'] ~= nil) then
+			temp_dir = settings['server']['temp']['dir'];
+		end
+	end
+
 --dtmf call back function detects the "#" and ends the call
 	function onInput(s, type, obj)
 		if (type == "dtmf" and obj['digit'] == '#') then
@@ -80,7 +111,75 @@
 			session:execute("set", "playback_terminators=#");
 
 		--begin recording
-			session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
+			if (storage_type == "base64") then
+				--make the directory
+					--mkdir(recordings_dir .."/"..domain_uuid);
+
+				--record the file to the file system
+					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
+					session:execute("record", recordings_dir .."/".. recording_name);
+
+				--show the storage type
+					freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. "\n");
+
+				--base64 encode the file
+					local f = io.open(recordings_dir .."/".. recording_name, "rb");
+					local file_content = f:read("*all");
+					f:close();
+					recording_base64 = base64.enc(file_content);
+
+				--delete the previous recording
+					sql = "delete from v_recordings ";
+					sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
+					sql = sql .. "and recording_name = '".. recording_name .."'";
+					dbh:query(sql);
+
+				--get a new uuid
+					recording_uuid = api:execute("create_uuid");
+
+				--save the message to the voicemail message
+					local array = {}
+					table.insert(array, "INSERT INTO v_recordings ");
+					table.insert(array, "(");
+					table.insert(array, "recording_uuid, ");
+					table.insert(array, "domain_uuid, ");
+					table.insert(array, "recording_filename, ");
+					if (storage_type == "base64") then
+						table.insert(array, "recording_base64, ");
+					end
+					table.insert(array, "recording_name ");
+					table.insert(array, ") ");
+					table.insert(array, "VALUES ");
+					table.insert(array, "( ");
+					table.insert(array, "'"..recording_uuid.."', ");
+					table.insert(array, "'"..domain_uuid.."', ");
+					table.insert(array, "'"..recording_name.."', ");
+					if (storage_type == "base64") then
+						table.insert(array, "'"..recording_base64.."', ");
+					end
+					table.insert(array, "'"..recording_name.."' ");
+					table.insert(array, ") ");
+					sql = table.concat(array, "\n");
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+					end
+
+					array = explode("://", database["system"]);
+					local luasql = require "luasql.postgres"
+					local env = assert (luasql.postgres());
+					local dbh = env:connect(array[2]);
+					res, serr = dbh:execute(sql);
+					dbh:close();
+					env:close();
+
+			elseif (storage_type == "http_cache") then
+				freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
+				session:execute("record", "http_cache://".. storage_path .."/"..recording_name);
+			else
+				mkdir(voicemail_dir.."/"..voicemail_id);
+				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
+				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
+			end
 
 		--preview the recording
 			session:streamFile(recordings_dir.."/"..recording_name);
@@ -138,7 +237,8 @@ if ( session:ready() ) then
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
 		domain_name = session:getVariable("domain_name");
-	
+		domain_uuid = session:getVariable("domain_uuid");
+
 	--set the base recordings dir
 		base_recordings_dir = recordings_dir;
 
@@ -178,5 +278,6 @@ if ( session:ready() ) then
 	--start recording
 		begin_record(session, sounds_dir, recordings_dir);
 
-	session:hangup();
+	--hangup the call
+		session:hangup();
 end
