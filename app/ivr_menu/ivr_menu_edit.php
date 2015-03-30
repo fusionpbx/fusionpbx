@@ -319,7 +319,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get the recordings
 	$sql = "select * from v_recordings ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 	$sql .= "order by recording_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -434,18 +434,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
 			$tmp_selected = false;
 			echo "<optgroup label='recordings'>\n";
-			foreach ($result as &$row) {
+			foreach ($recordings as &$row) {
 				$name = $row["recording_name"];
-				$filename = $row["recording_filename"];
-				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$filename && strlen($ivr_menu_greet_long) > 0) {
+				$file = $row["recording_filename"];
+				if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_long) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$filename."' selected='selected'>".$filename."</option>\n";
-				} elseif ($ivr_menu_greet_long == $filename && strlen($ivr_menu_greet_long) > 0) {
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+				} elseif ($ivr_menu_greet_long == $file && strlen($ivr_menu_greet_long) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$filename."' selected='selected'>".$filename."</option>\n";
-				}
-				else {
-					echo "	<option value='".$filename."'>".$filename."</option>\n";
+					echo "	<option value='".$file."' selected='selected'>".$file."</option>\n";
+				} else {
+					echo "	<option value='".$file."'>".$file."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -522,18 +521,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
 			$tmp_selected = false;
 			echo "<optgroup label='recordings'>\n";
-			foreach ($result as &$row) {
+			foreach ($recordings as &$row) {
 				$name = $row["recording_name"];
-				$filename = $row["recording_filename"];
-				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$filename && strlen($ivr_menu_greet_short) > 0) {
+				$file = $row["recording_filename"];
+				if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_short) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$filename."' selected='selected'>".$filename."</option>\n";
-				} elseif ($ivr_menu_greet_short == $filename && strlen($ivr_menu_greet_short) > 0) {
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+				} elseif ($ivr_menu_greet_short == $file && strlen($ivr_menu_greet_short) > 0) {
 					$tmp_selected = true;
-					echo "	<option value='".$filename."' selected='selected'>".$filename."</option>\n";
-				}
-				else {
-					echo "	<option value='".$filename."'>".$filename."</option>\n";
+					echo "	<option value='".$file."' selected='selected'>".$file."</option>\n";
+				} else {
+					echo "	<option value='".$file."'>".$file."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -1087,7 +1085,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "</form>";
 
-
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
