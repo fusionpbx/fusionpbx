@@ -347,6 +347,16 @@
 	$text['button-generate']['pt-pt'] = "Geração";
 	$text['button-generate']['fr-fr'] = "Générer";
 
+	$text['button-show_all']['en-us'] = "Show All";
+	$text['button-show_all']['es-cl'] = "Mostrar Todos";
+	$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+	$text['button-show_all']['fr-fr'] = "Montrer Tout";
+
+	$text['label-domain']['en-us'] = "Domain";
+	$text['label-domain']['es-cl'] = "Dominio";
+	$text['label-domain']['pt-pt'] = "Domínio";
+	$text['label-domain']['fr-fr'] = "Domaine";
+
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
