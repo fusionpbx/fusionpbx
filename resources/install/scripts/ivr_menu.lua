@@ -209,10 +209,10 @@
 					dofile(scripts_dir.."/resources/functions/base64.lua");
 				--get the base64
 					recording_base64 = row["recording_base64"];
-		
+
 				--add the path to filename
 					ivr_menu_greet_long = recordings_dir.."/"..ivr_menu_greet_long;
-		
+
 				--save the recording to the file system
 					if (string.len(recording_base64) > 32) then
 						local file = io.open(ivr_menu_greet_long, "w");
@@ -233,10 +233,10 @@
 					dofile(scripts_dir.."/resources/functions/base64.lua");
 				--get the base64
 					recording_base64 = row["recording_base64"];
-		
+
 				--add the path to filename
 					ivr_menu_greet_short = recordings_dir.."/"..ivr_menu_greet_short;
-		
+
 				--save the recording to the file system
 					if (string.len(recording_base64) > 32) then
 						local file = io.open(ivr_menu_greet_short, "w");
