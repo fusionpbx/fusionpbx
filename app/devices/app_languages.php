@@ -975,11 +975,6 @@
 		$text['button-show_all']['pt-pt'] = "Mostrar Todos";
 		$text['button-show_all']['fr-fr'] = "Montrer Tout";
 
-		$text['label-domain-name']['en-us'] = "Domain Name";
-		$text['label-domain-name']['es-cl'] = "Nombre de Dominio";
-		$text['label-domain-name']['pt-pt'] = "Nome de Domínio";
-		$text['label-domain-name']['fr-fr'] = "Nom de Domaine";
-
 		$text['message-maximum_devices']['en-us'] = "Maximum Devices:";
 		$text['message-maximum_devices']['es-cl'] = "Dispositivos Máximo Permitido:";
 		$text['message-maximum_devices']['pt-pt'] = "Dispositivos Máximo Permitido:";
