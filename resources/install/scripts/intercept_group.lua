@@ -171,6 +171,7 @@
 				x = x + 1;
 			end
 			sql = sql .. ") ";
+			sql = sql .. "and call_uuid is not null ";
 			--if (domain_count > 1) then
 			--	sql = sql .. "and context = '"..context.."' ";
 			--end
