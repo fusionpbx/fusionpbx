@@ -59,9 +59,11 @@ else {
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
 	if (permission_exists('device_all')) {
-		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
 		if ($_GET['showall'] == 'true') {
-			echo "			<input type='hidden' name='showall' value='true'>";
+			echo "	<input type='hidden' name='showall' value='true'>";
+		}
+		else {
+			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
 		}
 	}
 	if (permission_exists('device_profile_view')) {
@@ -179,7 +181,7 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($_GET['showall'] && permission_exists('device_all')) {
-		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);

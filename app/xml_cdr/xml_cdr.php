@@ -113,7 +113,9 @@ else {
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
+		if ($_GET['showall'] != 'true') {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
+		}
 	}
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
@@ -317,7 +319,7 @@ else {
 	}
 	echo "<th>&nbsp;</th>\n";
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, null, null, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
