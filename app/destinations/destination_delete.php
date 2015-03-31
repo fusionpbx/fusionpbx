@@ -55,6 +55,9 @@ else {
 	$orm->uuid($id);
 	$result = $orm->find()->get();
 	foreach ($result as &$row) {
+		if (permission_exists('destination_domain')) {
+			$domain_uuid = $row["domain_uuid"];
+		}
 		$dialplan_uuid = $row["dialplan_uuid"];
 		$destination_context = $row["destination_context"];
 	}
@@ -66,22 +69,22 @@ else {
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
 		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 	 }
 
 //delete the destination
 	$sql = "delete from v_destinations ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and destination_uuid = '$id' ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and destination_uuid = '".$id."' ";
 	$db->exec(check_sql($sql));
 	unset($sql);
 
