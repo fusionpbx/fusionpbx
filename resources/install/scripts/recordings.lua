@@ -126,7 +126,7 @@
 					local f = io.open(recordings_dir .."/".. recording_name, "rb");
 					local file_content = f:read("*all");
 					f:close();
-					recording_base64 = base64.enc(file_content);
+					recording_base64 = base64.encode(file_content);
 
 				--delete the previous recording
 					sql = "delete from v_recordings ";

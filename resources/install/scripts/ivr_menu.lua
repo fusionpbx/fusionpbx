@@ -46,6 +46,31 @@
 	ivr_menu_uuid = session:getVariable("ivr_menu_uuid");
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
+	domain_uuid = session:getVariable("domain_uuid");
+
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+	if (settings['recordings']['storage_type'] ~= nil) then
+		if (settings['recordings']['storage_type']['text'] ~= nil) then
+			storage_type = settings['recordings']['storage_type']['text'];
+		end
+	end
+	if (settings['recordings']['storage_path'] ~= nil) then
+		if (settings['recordings']['storage_path']['text'] ~= nil) then
+			storage_path = settings['recordings']['storage_path']['text'];
+		end
+	end
+	if (settings['server']['temp'] ~= nil) then
+		if (settings['server']['temp']['dir'] ~= nil) then
+			temp_dir = settings['server']['temp']['dir'];
+		end
+	end
+
+--set the recordings directory
+	if (domain_count > 1) then
+		recordings_dir = recordings_dir .. "/"..domain_name;
+	end
 
 --set default variable(s)
 	tries = 0;
@@ -72,6 +97,7 @@
 		freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
 	end
 	status = dbh:query(sql, function(row)
+		domain_uuid = row["domain_uuid"];
 		ivr_menu_name = row["ivr_menu_name"];
 		--ivr_menu_extension = row["ivr_menu_extension"];
 		ivr_menu_greet_long = row["ivr_menu_greet_long"];
@@ -168,6 +194,58 @@
 		ivr_menu_greet_short = ivr_menu_greet_long;
 	end
 	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_invalid_sound;
+
+--get the recordings from the database
+	if (storage_type == "base64") then
+		if (string.len(ivr_menu_greet_long) > 1) then
+			sql = [[SELECT * FROM v_recordings 
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND recording_filename = ']].. ivr_menu_greet_long.. [[' ]];
+			--if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+			--end
+			status = dbh:query(sql, function(row)
+				--add functions
+					dofile(scripts_dir.."/resources/functions/base64.lua");
+				--get the base64
+					recording_base64 = row["recording_base64"];
+		
+				--add the path to filename
+					ivr_menu_greet_long = recordings_dir.."/"..ivr_menu_greet_long;
+		
+				--save the recording to the file system
+					if (string.len(recording_base64) > 32) then
+						local file = io.open(ivr_menu_greet_long, "w");
+						file:write(base64.decode(recording_base64));
+						file:close();
+					end
+			end);
+		end
+		if (string.len(ivr_menu_greet_short) > 1) then
+			sql = [[SELECT * FROM v_recordings 
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND recording_filename = ']].. ivr_menu_greet_short.. [[' ]];
+			--if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+			--end
+			status = dbh:query(sql, function(row)
+				--add functions
+					dofile(scripts_dir.."/resources/functions/base64.lua");
+				--get the base64
+					recording_base64 = row["recording_base64"];
+		
+				--add the path to filename
+					ivr_menu_greet_short = recordings_dir.."/"..ivr_menu_greet_short;
+		
+				--save the recording to the file system
+					if (string.len(recording_base64) > 32) then
+						local file = io.open(ivr_menu_greet_short, "w");
+						file:write(base64.decode(recording_base64));
+						file:close();
+					end
+			end);
+		end
+	end
 
 --define the ivr menu
 	function menu()
