@@ -47,12 +47,12 @@ else {
 
 //delete the group membership
 	$sql_delete = "delete from v_group_users ";
-	$sql_delete .= "where domain_uuid = '$domain_uuid' ";
-	$sql_delete .= "and user_uuid = '$user_uuid' ";
-	$sql_delete .= "and group_uuid = '$group_uuid' ";
+	$sql_delete .= "where user_uuid = '".$user_uuid."' ";
+	$sql_delete .= "and group_uuid = '".$group_uuid."' ";
 	if (!$db->exec($sql_delete)) {
 		$info = $db->errorInfo();
-		print_r($info);
+		echo "<pre>".print_r($info, true)."</pre>";
+		exit;
 	}
 	else {
 		//$log_type = 'group'; $log_status='remove'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." removed from group: ".$group_name;
@@ -60,6 +60,7 @@ else {
 	}
 
 //redirect the user
-	header("Location: groupmembers.php?group_uuid=$group_uuid&group_name=$group_name");
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>

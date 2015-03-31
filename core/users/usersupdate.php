@@ -62,9 +62,6 @@ else {
 			$group_uuid = check_str($_GET["group_uuid"]);
 		//delete the group from the users
 			$sql = "delete from v_group_users where 1 = 1 ";
-			if (!permission_exists('user_domain')) {
-				$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			}
 			$sql .= "and group_uuid = '".$group_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
@@ -100,6 +97,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//get the HTTP values and set as variables
 		$user_uuid = $_REQUEST["id"];
+		$domain_uuid = check_str($_POST["domain_uuid"]);
 		$username_old = check_str($_POST["username_old"]);
 		$username = check_str($_POST["username"]);
 		$password = check_str($_POST["password"]);
@@ -111,15 +109,6 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$group_member = check_str($_POST["group_member"]);
 		$user_enabled = check_str($_POST["user_enabled"]);
 		$api_key = check_str($_POST["api_key"]);
-
-	//get the domain_uuid
-		if (permission_exists('user_domain')) {
-			$domain_uuid = check_str($_POST["domain_uuid"]);
-		}
-		else {
-			$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
-			$domain_uuid = $_SESSION['domain_uuid'];
-		}
 
 	//check required values
 		if ($username != $username_old) {
@@ -377,20 +366,19 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		return;
 
 }
-else {
 
-	$sql = "select * from v_users where 1 = 1 ";
-	if (!permission_exists('user_domain')) {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-	}
-	$sql .= "and user_uuid = '$user_uuid' ";
+
+//pre-populate the form
+	$sql = "select * from v_users ";
+	$sql .= "where user_uuid = '".$user_uuid."' ";
+ 	if (!permission_exists('user_all')) {
+ 		$sql .= "and domain_uuid = '".$domain_uuid."' ";
+ 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		if (permission_exists('user_domain')) {
-			$domain_uuid = $row["domain_uuid"];
-		}
+		$domain_uuid = $row["domain_uuid"];
 		$user_uuid = $row["user_uuid"];
 		$username = $row["username"];
 		$password = $row["password"];
@@ -404,7 +392,6 @@ else {
 	//group_members function defined in config.php
 	$group_members = group_members($db, $user_uuid);
 
-}
 
 //include the header
 	require_once "resources/header.php";
@@ -501,6 +488,9 @@ else {
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
+	else {
+		echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>";
 	}
 
 	echo "	<tr>";
