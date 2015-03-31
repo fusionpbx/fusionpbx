@@ -61,8 +61,10 @@ else {
 		//set the variables
 			$group_uuid = check_str($_GET["group_uuid"]);
 		//delete the group from the users
-			$sql = "delete from v_group_users ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql = "delete from v_group_users where 1 = 1 ";
+			if (!permission_exists('user_domain')) {
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			}
 			$sql .= "and group_uuid = '".$group_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
@@ -109,6 +111,15 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$group_member = check_str($_POST["group_member"]);
 		$user_enabled = check_str($_POST["user_enabled"]);
 		$api_key = check_str($_POST["api_key"]);
+
+	//get the domain_uuid
+		if (permission_exists('user_domain')) {
+			$domain_uuid = check_str($_POST["domain_uuid"]);
+		}
+		else {
+			$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
+			$domain_uuid = $_SESSION['domain_uuid'];
+		}
 
 	//check required values
 		if ($username != $username_old) {
@@ -157,7 +168,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$_SESSION["domain_uuid"]."', ";
+				$sql .= "'".$domain_uuid."', ";
 				$sql .= "'".$user_setting_uuid."', ";
 				$sql .= "'domain', ";
 				$sql .= "'language', ";
@@ -213,7 +224,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$_SESSION["domain_uuid"]."', ";
+				$sql .= "'".$domain_uuid."', ";
 				$sql .= "'".$user_setting_uuid."', ";
 				$sql .= "'domain', ";
 				$sql .= "'time_zone', ";
@@ -279,10 +290,26 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			}
 		}
 
+	//change domain_uuid in group users and user settings tables
+		if (permission_exists('user_domain')) {
+			$sql = "update v_group_users set ";
+			$sql .= "domain_uuid = '".$domain_uuid."' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$db->exec(check_sql($sql));
+
+			$sql = "update v_user_settings set ";
+			$sql .= "domain_uuid = '".$domain_uuid."' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$db->exec(check_sql($sql));
+		}
+
 	//sql update
 		$sql  = "update v_users set ";
+		if (permission_exists('user_domain')) {
+			$sql .= "domain_uuid = '".$domain_uuid."', ";
+		}
 		if (strlen($username) > 0 && $username != $username_old) {
-			$sql .= "username = '$username', ";
+			$sql .= "username = '".$username."', ";
 		}
 		if (strlen($password) > 0 && $confirm_password == $password) {
 			//salt used with the password to create a one way hash
@@ -292,21 +319,24 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				$sql .= "salt = '".$salt."', ";
 		}
 		if (strlen($api_key) > 0) {
-			$sql .= "api_key = '$api_key', ";
+			$sql .= "api_key = '".$api_key."', ";
 		}
 		else {
 			$sql .= "api_key = null, ";
 		}
-		$sql .= "user_status = '$user_status', ";
-		$sql .= "user_enabled = '$user_enabled', ";
+		$sql .= "user_status = '".$user_status."', ";
+		$sql .= "user_enabled = '".$user_enabled."', ";
 		if (strlen($contact_uuid) == 0) {
 			$sql .= "contact_uuid = null ";
 		}
 		else {
-			$sql .= "contact_uuid = '$contact_uuid' ";
+			$sql .= "contact_uuid = '".$contact_uuid."' ";
 		}
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and user_uuid = '$user_uuid' ";
+		$sql .= "where 1 = 1 ";
+		if (!permission_exists('user_domain')) {
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+		}
+		$sql .= "and user_uuid = '".$user_uuid."' ";
 		$db->exec(check_sql($sql));
 
 
@@ -327,11 +357,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 		//update the user_status
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domain_name']." '".$user_status."'";
+			$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$user_status."'";
 			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 
 		//update the user state
-			$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']." Waiting";
 			$response = event_socket_request($fp, $cmd);
 
 	}
@@ -349,16 +379,18 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 }
 else {
 
-	$sql = "select * from v_users ";
-	//allow admin access
-	if (if_group("admin") || if_group("superadmin")) {
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and user_uuid = '$user_uuid' ";
+	$sql = "select * from v_users where 1 = 1 ";
+	if (!permission_exists('user_domain')) {
+		$sql .= "and domain_uuid = '$domain_uuid' ";
 	}
+	$sql .= "and user_uuid = '$user_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
+		if (permission_exists('user_domain')) {
+			$domain_uuid = $row["domain_uuid"];
+		}
 		$user_uuid = $row["user_uuid"];
 		$username = $row["username"];
 		$password = $row["password"];
@@ -454,6 +486,23 @@ else {
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 
+	if (permission_exists('user_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		foreach ($_SESSION['domains'] as $row) {
+			echo "	<option value='".$row['domain_uuid']."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".$row['domain_name']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "	<tr>";
 	echo "		<td class='vncellreq' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
@@ -531,7 +580,7 @@ else {
 	echo "		<td width='30%' class='vncell' valign='top'>".$text['label-contact']."</td>";
 	echo "		<td width='70%' class='vtable'>\n";
 	$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
-	$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= " where domain_uuid = '".$domain_uuid."' ";
 	$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -578,39 +627,14 @@ else {
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
-		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$_SESSION['domain_name']."+'+this.value";
+		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".$username."@".$_SESSION['domains'][$domain_uuid]['domain_name']."+'+this.value";
 		echo "		<select id='user_status' name='user_status' class='formfld' style='' onchange=\"send_cmd($cmd);\">\n";
-		echo "		<option value=''></option>\n";
-		if ($user_status == "Available") {
-			echo "		<option value='Available' selected='selected'>".$text['option-available']."</option>\n";
-		}
-		else {
-			echo "		<option value='Available'>".$text['option-available']."</option>\n";
-		}
-		if ($user_status == "Available (On Demand)") {
-			echo "		<option value='Available (On Demand)' selected='selected'>".$text['option-available_on_demand']."</option>\n";
-		}
-		else {
-			echo "		<option value='Available (On Demand)'>".$text['option-available_on_demand']."</option>\n";
-		}
-		if ($user_status == "Logged Out") {
-			echo "		<option value='Logged Out' selected='selected'>".$text['option-logged_out']."</option>\n";
-		}
-		else {
-			echo "		<option value='Logged Out'>".$text['option-logged_out']."</option>\n";
-		}
-		if ($user_status == "On Break") {
-			echo "		<option value='On Break' selected='selected'>".$text['option-on_break']."</option>\n";
-		}
-		else {
-			echo "		<option value='On Break'>".$text['option-on_break']."</option>\n";
-		}
-		if ($user_status == "Do Not Disturb") {
-			echo "		<option value='Do Not Disturb' selected='selected'>".$text['option-do_not_disturb']."</option>\n";
-		}
-		else {
-			echo "		<option value='Do Not Disturb'>".$text['option-do_not_disturb']."</option>\n";
-		}
+		echo "			<option value=''></option>\n";
+		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
+		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
+		echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
+		echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
+		echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
 		echo "		</select>\n";
 		echo "		<br />\n";
 		echo "		".$text['description-status']."<br />\n";
@@ -694,23 +718,13 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-enabled']."\n";
+	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='user_enabled'>\n";
-	if ($user_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($user_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "    </select>\n";
+	echo "	<select class='formfld' name='user_enabled'>\n";
+	echo "		<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".(($user_enabled == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

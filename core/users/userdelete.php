@@ -43,17 +43,21 @@ else {
 
 //validate the uuid
 	if (is_uuid($user_uuid)) {
-		//get the username from v_users
-			$sql = "select * from v_users ";
-			$sql .= "where user_uuid = '$user_uuid' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$username = $row["username"];
+		//get the user's domain from v_users
+			if (permission_exists('user_domain')) {
+				$sql = "select domain_uuid from v_users ";
+				$sql .= "where user_uuid = '".$user_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$domain_uuid = $row["domain_uuid"];
+				}
+				unset ($prep_statement);
 			}
-			unset ($prep_statement);
+			else {
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}
 
 		//required to be a superadmin to delete a member of the superadmin group
 			$superadmin_list = superadmin_list($db);
@@ -65,10 +69,19 @@ else {
 				}
 			}
 
+		//delete the user settings
+			$sql = "delete from v_user_settings ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			if (!$db->exec($sql)) {
+				$info = $db->errorInfo();
+				print_r($info);
+			}
+
 		//delete the groups the user is assigned to
 			$sql = "delete from v_group_users ";
-			$sql .= "where user_uuid = '$user_uuid' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			if (!$db->exec($sql)) {
 				$info = $db->errorInfo();
 				print_r($info);
@@ -76,8 +89,8 @@ else {
 
 		//delete the user
 			$sql = "delete from v_users ";
-			$sql .= "where user_uuid = '$user_uuid' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			if (!$db->exec($sql)) {
 				$info = $db->errorInfo();
 				print_r($info);
