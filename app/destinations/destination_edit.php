@@ -79,6 +79,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 	if (count($_POST) > 0) {
 		//set the variables
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+			$domain_uuid = check_str($_POST["domain_uuid"]);
 			$destination_type = check_str($_POST["destination_type"]);
 			$destination_number = check_str($_POST["destination_number"]);
 			$db_destination_number = check_str($_POST["db_destination_number"]);
@@ -96,15 +97,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 			$currency_buy = check_str($_POST["currency_buy"]);
 			$destination_accountcode = check_str($_POST["destination_accountcode"]);
 			$destination_carrier = check_str($_POST["destination_carrier"]);
-
-		//get the domain_uuid
-			if (permission_exists('destination_domain')) {
-				$domain_uuid = check_str($_POST["domain_uuid"]);
-			}
-			else {
-				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
-				$domain_uuid = $_SESSION['domain_uuid'];
-			}
 	}
 
 //unset the db_destination_number
@@ -473,9 +465,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$orm->uuid($destination_uuid);
 		$result = $orm->find()->get();
 		foreach ($result as &$row) {
-			if (permission_exists('destination_domain')) {
-				$domain_uuid = $row["domain_uuid"];
-			}
+			$domain_uuid = $row["domain_uuid"];
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$destination_type = $row["destination_type"];
 			$destination_number = $row["destination_number"];
@@ -779,6 +769,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
+	else {
+		echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
 	}
 
 	echo "<tr>\n";

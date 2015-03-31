@@ -22,10 +22,15 @@
 	$text['title-group_manager']['pt-pt'] = "Gestão de Grupos";
 	$text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
 
-	$text['title-group_add']['en-us'] = "Group";
-	$text['title-group_add']['es-cl'] = "Agregar Usuario";
-	$text['title-group_add']['pt-pt'] = "Grupo";
-	$text['title-group_add']['fr-fr'] = "Groupe";
+	$text['title-group_add']['en-us'] = "Add Group";
+	$text['title-group_add']['es-cl'] = "Agregar Grupo";
+	$text['title-group_add']['pt-pt'] = "Adicionar Grupo";
+	$text['title-group_add']['fr-fr'] = "Ajouter un Groupe";
+
+	$text['title-group_edit']['en-us'] = "Edit Group";
+	$text['title-group_edit']['es-cl'] = "Editar Grupo";
+	$text['title-group_edit']['pt-pt'] = "Editar Grupo";
+	$text['title-group_edit']['fr-fr'] = "Modifier le Groupe";
 
 	$text['title-group_permissions']['en-us'] = "Group Permissions";
 	$text['title-group_permissions']['es-cl'] = "Permisos de Grupo";
@@ -57,10 +62,15 @@
 	$text['header-group_manager']['pt-pt'] = "Gestão de Grupos";
 	$text['header-group_manager']['fr-fr'] = "Gestion de Groupe";
 
-	$text['header-group_add']['en-us'] = "Group";
+	$text['header-group_add']['en-us'] = "Add Group";
 	$text['header-group_add']['es-cl'] = "Agregar Grupo";
 	$text['header-group_add']['pt-pt'] = "Adicionar Grupo";
-	$text['header-group_add']['fr-fr'] = "Ajout de Groupe";
+	$text['header-group_add']['fr-fr'] = "Ajouter un Groupe";
+
+	$text['header-group_edit']['en-us'] = "Edit Group";
+	$text['header-group_edit']['es-cl'] = "Editar Grupo";
+	$text['header-group_edit']['pt-pt'] = "Editar Grupo";
+	$text['header-group_edit']['fr-fr'] = "Modifier le Groupe";
 
 	$text['header-group_permissions']['en-us'] = "Group Permissions: ";
 	$text['header-group_permissions']['es-cl'] = "Permisos de Grupo: ";
@@ -87,10 +97,15 @@
 	$text['description-user_edit']['pt-pt'] = "Editar a informação do utilizador e os membros do grupo. ";
 	$text['description-user_edit']['fr-fr'] = "Editer les informations de l'utilisateur et l'appartenance au groupe.";
 
-	$text['description-group_add']['en-us'] = "Please choose a group name.";
-	$text['description-group_add']['es-cl'] = "Por favor escoja un nombre.";
-	$text['description-group_add']['pt-pt'] = "Por favor escolha um nome para o grupo.";
-	$text['description-group_add']['fr-fr'] = "Choisir un nom pour le groupe.";
+	$text['description-group_add']['en-us'] = "Create a new user group.";
+	$text['description-group_add']['es-cl'] = "Crear un nuevo grupo de usuarios.";
+	$text['description-group_add']['pt-pt'] = "Criar um novo grupo de usuários.";
+	$text['description-group_add']['fr-fr'] = "Créez un nouveau groupe d'utilisateurs.";
+
+	$text['description-group_edit']['en-us'] = "Edit the properties of the group.";
+	$text['description-group_edit']['es-cl'] = "Editar las propiedades del grupo.";
+	$text['description-group_edit']['pt-pt'] = "Editar as propriedades do grupo.";
+	$text['description-group_edit']['fr-fr'] = "Modifier les propriétés du groupe.";
 
 	$text['description-group_permissions']['en-us'] = "Assign permissions for this group.";
 	$text['description-group_permissions']['es-cl'] = "Asigne permisos para este grupo.";
@@ -441,5 +456,10 @@
 	$text['message-maximum_users']['es-cl'] = "Usuarios Máximo Permitido:";
 	$text['message-maximum_users']['pt-pt'] = "Usuários Máximo Permitido:";
 	$text['message-maximum_users']['fr-fr'] = "Utilisateurs Maximale Autorisée:";
+
+	$text['message-group_exists']['en-us'] = "Group Already Exists";
+	$text['message-group_exists']['es-cl'] = "El Grupo ya Existe";
+	$text['message-group_exists']['pt-pt'] = "O Grupo já Existe";
+	$text['message-group_exists']['fr-fr'] = "Groupe Existe Déjà";
 
 ?>

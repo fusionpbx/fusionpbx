@@ -90,12 +90,24 @@ require_once "resources/require.php";
 		}
 	}
 
-//get the http values and set them as php variables
-	$group_name = $_REQUEST['group_name'];
+//get the group uuid, lookup domain uuid (if any) and name
+	$group_uuid = check_str($_REQUEST['group_uuid']);
+	$sql = "select domain_uuid, group_name from v_groups ";
+	$sql .= "where group_uuid = '".$group_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$domain_uuid = $row["domain_uuid"];
+		$group_name = $row["group_name"];
+		break; //limit to 1 row
+	}
+	unset ($prep_statement);
 
 //get the permissions assigned to this group
 	$sql = " select * from v_group_permissions ";
 	$sql .= "where group_name = '$group_name' ";
+	$sql .= "and domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ");
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -128,6 +140,7 @@ require_once "resources/require.php";
 
 //process the http post
 	if (count($_POST)>0) {
+
 		foreach($_POST['permissions_form'] as $permission) {
 			$permissions_form[$permission] = "true";
 		}
@@ -217,12 +230,18 @@ require_once "resources/require.php";
 							$sql = "insert into v_group_permissions ";
 							$sql .= "(";
 							$sql .= "group_permission_uuid, ";
+							if ($domain_uuid != '') {
+								$sql .= "domain_uuid, ";
+							}
 							$sql .= "permission_name, ";
 							$sql .= "group_name ";
 							$sql .= ")";
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".uuid()."', ";
+							if ($domain_uuid != '') {
+								$sql .= "'".$domain_uuid."', ";
+							}
 							$sql .= "'$permission', ";
 							$sql .= "'$group_name' ";
 							$sql .= ")";
@@ -315,6 +334,7 @@ require_once "resources/require.php";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
+	echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\" valign='top'>";
@@ -348,7 +368,7 @@ require_once "resources/require.php";
 			if ($description != '') { echo $description."<br />\n"; }
 			echo "<br>";
 
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
 			echo "		<th><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
 			echo "		<th>".$text['label-permission_permissions']."</th>\n";
@@ -357,10 +377,10 @@ require_once "resources/require.php";
 
 			foreach ($app['permissions'] as $permission_index => $row) {
 				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
-				echo "<tr >\n";
+				echo "<tr>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
-				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."'>".$row['name']."</td>\n";
-				echo "	<td valign='top' width='70%' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
+				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
+				echo "	<td valign='top' width='70%' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
 				echo "</tr>\n";
 				$c = ($c == 0) ? 1 : 0;
 

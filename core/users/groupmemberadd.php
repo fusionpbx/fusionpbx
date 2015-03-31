@@ -41,6 +41,7 @@ else {
 	}
 
 //get the http values and set them as variables
+	$domain_uuid = check_str($_POST["domain_uuid"]);
 	$group_uuid = check_str($_POST["group_uuid"]);
 	$group_name = check_str($_POST["group_name"]);
 	$user_uuid = check_str($_POST["user_uuid"]);
@@ -58,14 +59,15 @@ else {
 		$sql .= "values ";
 		$sql .= "(";
 		$sql .= "'".uuid()."', ";
-		$sql .= "'$domain_uuid', ";
-		$sql .= "'$group_uuid', ";
-		$sql .= "'$group_name', ";
-		$sql .= "'$user_uuid' ";
+		$sql .= "'".$domain_uuid."', ";
+		$sql .= "'".$group_uuid."', ";
+		$sql .= "'".$group_name."', ";
+		$sql .= "'".$user_uuid."' ";
 		$sql .= ")";
 		if (!$db->exec($sql)) {
 			$info = $db->errorInfo();
-			print_r($info);
+			echo "<pre>".print_r($info, true)."</pre>";
+			exit;
 		}
 		else {
 			//log the success
@@ -75,6 +77,7 @@ else {
 	}
 
 //redirect the user
-	header("Location: groupmembers.php?group_uuid=$group_uuid&group_name=$group_name");
+	$_SESSION["message"] = $text['message-update'];
+	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>
