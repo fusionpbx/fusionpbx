@@ -77,7 +77,7 @@ else {
 			}
 			echo "<tr ".$tr_link." ".(($row['email_primary']) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['email_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".$row['email_address']."'>".$row['email_address']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".$row['email_address']."'>".$row['email_address']."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['email_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('contact_email_edit')) {
