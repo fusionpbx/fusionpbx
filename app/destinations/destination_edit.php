@@ -184,8 +184,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//check to see if the dialplan exists
 						if (strlen($dialplan_uuid) > 0) {
 							$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+							$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+							if (!permission_exists('destination_domain')) {
+								$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							}
 							$prep_statement = $db->prepare($sql);
 							if ($prep_statement) {
 								$prep_statement->execute();
@@ -286,8 +288,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						if (strlen($fax_uuid) > 0) {
 							//get the fax information
 								$sql = "select * from v_fax ";
-								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and fax_uuid = '".$fax_uuid."' ";
+								$sql .= "where fax_uuid = '".$fax_uuid."' ";
+								if (!permission_exists('destination_domain')) {
+									$sql .= "and domain_uuid = '".$domain_uuid."' ";
+								}
 								$prep_statement = $db->prepare(check_sql($sql));
 								$prep_statement->execute();
 								$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -369,8 +373,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//delete the previous details
 						if(strlen($dialplan_uuid) > 0) {
 							$sql = "delete from v_dialplan_details ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+							$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+							if (!permission_exists('destination_domain')) {
+								$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							}
+							echo $sql."<br><br>";
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
@@ -425,7 +432,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// billing
 					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 						$db2 = new database;
-						$db2->sql = "SELECT currency, billing_uuid, balance FROM v_billings WHERE type_value='$destination_accountcode'";
+						$db2->sql = "select currency, billing_uuid, balance from v_billings where type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
 						$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
 						$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
@@ -435,7 +442,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($db2->sql, $db2->result);
 
 						$balance -= $destination_sell_current_currency;
-						$db2->sql = "UPDATE v_billings SET balance = $balance, old_balance = $balance WHERE type_value='$destination_accountcode'";
+						$db2->sql = "update v_billings set balance = $balance, old_balance = $balance where type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
 
@@ -444,7 +451,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$settled=1;
 						$mc_gross = -1 * $destination_sell_current_currency;
 						$post_payload = serialize($_POST);
-						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$domain_uuid."' )";
+						$db2->sql = "insert into v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) values ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$domain_uuid."' )";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
 					}
@@ -454,6 +461,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				header("Location: destination_edit.php?id=".$destination_uuid);
 				return;
+
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
