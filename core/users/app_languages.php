@@ -357,6 +357,16 @@
 	$text['label-domain']['pt-pt'] = "Domínio";
 	$text['label-domain']['fr-fr'] = "Domaine";
 
+	$text['label-global']['en-us'] = "Global";
+	$text['label-global']['es-cl'] = "Global";
+	$text['label-global']['pt-pt'] = "Global";
+	$text['label-global']['fr-fr'] = "Mondial";
+
+	$text['option-global']['en-us'] = "Global";
+	$text['option-global']['es-cl'] = "Global";
+	$text['option-global']['pt-pt'] = "Global";
+	$text['option-global']['fr-fr'] = "Mondial";
+
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
