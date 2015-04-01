@@ -104,7 +104,7 @@
 					subject = subject:gsub("${account}", id);
 					subject = subject:gsub("${domain_name}", domain_name);
 					subject = trim(subject);
-					subject = '=?utf-8?B?'..base64.enc(subject)..'?=';
+					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
 				--prepare the body
 					local f = io.open(file_body, "r");
