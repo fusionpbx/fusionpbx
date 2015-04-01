@@ -36,6 +36,10 @@ require_once "resources/require.php";
 		return;
 	}
 
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
 //get the http value and set as a variable
 	$group_uuid = check_str($_GET["id"]);
 

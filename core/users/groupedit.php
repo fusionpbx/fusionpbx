@@ -45,7 +45,9 @@ require_once "resources/require.php";
 		//set the variables
 			$group_uuid = check_str($_POST['group_uuid']);
 			$group_name = check_str($_POST['group_name']);
+			$group_name_previous = check_str($_POST['group_name_previous']);
 			$domain_uuid = check_str($_POST["domain_uuid"]);
+			$domain_uuid_previous = check_str($_POST["domain_uuid_previous"]);
 			$group_description = check_str($_POST["group_description"]);
 
 		//check for global/domain duplicates
@@ -64,7 +66,7 @@ require_once "resources/require.php";
 			}
 			unset($sql, $prep_statement, $row);
 
-		//insert group
+		//update group
 			if (!$group_exists) {
 				$sql = "update v_groups ";
 				$sql .= "set ";
@@ -73,13 +75,115 @@ require_once "resources/require.php";
 				$sql .= "group_description = '".$group_description."' ";
 				$sql .= "where group_uuid = '".$group_uuid."' ";
 				if (!$db->exec(check_sql($sql))) {
-					//echo $db->errorCode() . "<br>";
-					$info = $db->errorInfo();
-					echo "<pre>".print_r($info, true)."</pre>";
+					$error = $db->errorInfo();
+					echo "<pre>".print_r($error, true)."</pre>";
 					exit;
-					// $info[0] == $db->errorCode() unified error code
-					// $info[1] is the driver specific error code
-					// $info[2] is the driver specific error string
+				}
+
+				//group changed from global to domain-specific
+				if ($domain_uuid_previous == '' && $domain_uuid != '') {
+					//remove any users assigned to the group from the old domain
+						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid <> '".$domain_uuid."' ";
+						if (!$db->exec(check_sql($sql))) {
+							$error = $db->errorInfo();
+							//echo "<pre>".print_r($error, true)."</pre>"; exit;
+						}
+					//update permissions to use new domain uuid
+						$sql = "update v_group_permissions set domain_uuid = '".$domain_uuid."' where group_name = '".$group_name_previous."' and domain_uuid is null ";
+						if (!$db->exec(check_sql($sql))) {
+							$error = $db->errorInfo();
+							//echo "<pre>".print_r($error, true)."</pre>"; exit;
+						}
+					//change group name
+						if ($group_name != $group_name_previous && $group_name != '') {
+							//change group name in group users
+								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+							//change group name in permissions
+								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+						}
+				}
+
+				//group changed from one domain to another
+				else if ($domain_uuid_previous != '' && $domain_uuid != '' && $domain_uuid_previous != $domain_uuid) {
+					//remove any users assigned to the group from the old domain
+						$sql = "delete from v_group_users where group_uuid = '".$group_uuid."' and domain_uuid = '".$domain_uuid_previous."' ";
+						if (!$db->exec(check_sql($sql))) {
+							$error = $db->errorInfo();
+							//echo "<pre>".print_r($error, true)."</pre>"; exit;
+						}
+					//update permissions to use new domain uuid
+						$sql = "update v_group_permissions set domain_uuid = '".$domain_uuid."' where group_name = '".$group_name_previous."' and domain_uuid = '".$domain_uuid_previous."' ";
+						if (!$db->exec(check_sql($sql))) {
+							$error = $db->errorInfo();
+							//echo "<pre>".print_r($error, true)."</pre>"; exit;
+						}
+					//change group name
+						if ($group_name != $group_name_previous && $group_name != '') {
+							//change group name in group users
+								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+							//change group name in permissions
+								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+						}
+				}
+
+				//group changed from domain-specific to global
+				else if ($domain_uuid_previous != '' && $domain_uuid == '') {
+					//change group name
+						if ($group_name != $group_name_previous && $group_name != '') {
+							//change group name in group users
+								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+							//change group name in permissions
+								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid = '".$domain_uuid_previous."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+						}
+					//update permissions to not use a domain uuid
+						$sql = "update v_group_permissions set domain_uuid = null where group_name = '".$group_name."' and domain_uuid = '".$domain_uuid_previous."' ";
+						if (!$db->exec(check_sql($sql))) {
+							$error = $db->errorInfo();
+							//echo "<pre>".print_r($error, true)."</pre>"; exit;
+						}
+				}
+
+				//domain didn't change, but name may still
+				else {
+					//change group name
+						if ($group_name != $group_name_previous && $group_name != '') {
+							//change group name in group users
+								$sql = "update v_group_users set group_name = '".$group_name."' where group_uuid = '".$group_uuid."' and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+							//change group name in permissions
+								$sql = "update v_group_permissions set group_name = '".$group_name."' where domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ")." and group_name = '".$group_name_previous."' ";
+								if (!$db->exec(check_sql($sql))) {
+									$error = $db->errorInfo();
+									//echo "<pre>".print_r($error, true)."</pre>"; exit;
+								}
+						}
 				}
 
 				$_SESSION["message"] = $text['message-update'];
@@ -140,6 +244,7 @@ require_once "resources/require.php";
 	echo 	$text['label-group_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='left' class='vtable'>\n";
+	echo "	<input type='hidden' name='group_name_previous' value=\"".$group_name."\">\n";
 	echo "  <input type='text' class='formfld' name='group_name' value=\"".$group_name."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -150,14 +255,15 @@ require_once "resources/require.php";
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
-		echo "    	<option value='' ".((strlen($domain_uuid) == 0) ? "selected='selected'" : null).">".$text['option-global']."</option>\n";
+		echo "	<input type='hidden' name='domain_uuid_previous' value='".$domain_uuid."'>\n";
+		echo "	<select class='formfld' name='domain_uuid'>\n";
+		echo "	<option value='' ".((strlen($domain_uuid) == 0) ? "selected='selected'" : null).">".$text['option-global']."</option>\n";
 		foreach ($_SESSION['domains'] as $row) {
-			echo "	<option value='".$row['domain_uuid']."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".$row['domain_name']."</option>\n";
+			echo "<option value='".$row['domain_uuid']."' ".(($row['domain_uuid'] == $domain_uuid) ? "selected='selected'" : null).">".$row['domain_name']."</option>\n";
 		}
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-domain_name']."\n";
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo 	$text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
