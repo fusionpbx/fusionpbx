@@ -52,7 +52,6 @@
 						macro(session, "record_greeting", 1, 100, '');
 					end
 
-
 				--store the voicemail greeting
 					if (storage_type == "base64") then
 						--prepare to record the greeting

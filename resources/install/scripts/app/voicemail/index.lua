@@ -328,7 +328,10 @@
 						destinations[x] = row;
 						x = x + 1;
 					end));
-freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
+
+				--show the storage type
+					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
+
 				--loop through the voicemail destinations
 					for key,row in pairs(destinations) do
 						--get a new uuid
