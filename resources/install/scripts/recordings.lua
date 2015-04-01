@@ -43,7 +43,6 @@
 
 --add functions
 	dofile(scripts_dir.."/resources/functions/mkdir.lua");
-	dofile(scripts_dir.."/resources/functions/base64.lua");
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 
 --initialize the recordings
@@ -52,17 +51,19 @@
 --settings
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
-
+	storage_type = "";
 	if (settings['recordings']['storage_type'] ~= nil) then
 		if (settings['recordings']['storage_type']['text'] ~= nil) then
 			storage_type = settings['recordings']['storage_type']['text'];
 		end
 	end
+	storage_path = "";
 	if (settings['recordings']['storage_path'] ~= nil) then
 		if (settings['recordings']['storage_path']['text'] ~= nil) then
 			storage_path = settings['recordings']['storage_path']['text'];
 		end
 	end
+	temp_dir = "";
 	if (settings['server']['temp'] ~= nil) then
 		if (settings['server']['temp']['dir'] ~= nil) then
 			temp_dir = settings['server']['temp']['dir'];
@@ -112,8 +113,11 @@
 
 		--begin recording
 			if (storage_type == "base64") then
+				--include the base64 function
+					dofile(scripts_dir.."/resources/functions/base64.lua");
+
 				--make the directory
-					--mkdir(recordings_dir .."/"..domain_uuid);
+					mkdir(recordings_dir);
 
 				--record the file to the file system
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
@@ -137,7 +141,7 @@
 				--get a new uuid
 					recording_uuid = api:execute("create_uuid");
 
-				--save the message to the voicemail message
+				--save the message to the voicemail messages
 					local array = {}
 					table.insert(array, "INSERT INTO v_recordings ");
 					table.insert(array, "(");
@@ -163,15 +167,17 @@
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
 					end
-
-					array = explode("://", database["system"]);
-					local luasql = require "luasql.postgres"
-					local env = assert (luasql.postgres());
-					local dbh = env:connect(array[2]);
-					res, serr = dbh:execute(sql);
-					dbh:close();
-					env:close();
-
+					if (storage_type == "base64") then
+						array = explode("://", database["system"]);
+						local luasql = require "luasql.postgres"
+						local env = assert (luasql.postgres());
+						local dbh = env:connect(array[2]);
+						res, serr = dbh:execute(sql);
+						dbh:close();
+						env:close();
+					else
+						dbh:query(sql);
+					end
 			elseif (storage_type == "http_cache") then
 				freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", "http_cache://".. storage_path .."/"..recording_name);
@@ -280,4 +286,5 @@ if ( session:ready() ) then
 
 	--hangup the call
 		session:hangup();
+
 end
