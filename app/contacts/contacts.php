@@ -206,7 +206,9 @@ else {
 	}
 	echo "					</form>\n";
 	echo "				</td>\n";
-	echo "				<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+	if ($paging_controls_mini != '') {
+		echo "			<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+	}
 	echo "			</tr>\n";
 	echo "		</table>\n";
 	echo "	</td>\n";

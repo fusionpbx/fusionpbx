@@ -120,7 +120,9 @@ else {
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
 	}
-	echo "				<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
+	if ($_GET['missed'] != 'true') {
+		echo "			<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
+	}
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
 	echo "			</td>";
@@ -131,7 +133,9 @@ else {
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
-	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+	if ($paging_controls_mini != '') {
+		echo "		<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+	}
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
