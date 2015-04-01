@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-function paging($num_rows, $param, $rows_per_page) {
+function paging($num_rows, $param, $rows_per_page, $mini = false) {
 
 	if (strlen($rows_per_page)==0) {
 		$rows_per_page = "5"; //default number of rows per page
@@ -88,7 +88,7 @@ function paging($num_rows, $param, $rows_per_page) {
 	$returnearray = array();
 	if ($maxpage > 1) {
 		//$returnearray[] = $first . $prev ." Page $pagenum of $maxpage " . $next . $last;
-		$returnearray[] = "<center nowrap>".$prev."&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($pagenum+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$maxpage."</strong>&nbsp;&nbsp;&nbsp;&nbsp;".$next."</center>\n".
+		$returnearray[] = "<center nowrap>".$prev.((!$mini) ? "&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($pagenum+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$maxpage."</strong>&nbsp;&nbsp;&nbsp;&nbsp;" : null).$next."</center>\n".
 			"<script>\n".
 				"function go(e) {\n".
 					"var page_num;\n".

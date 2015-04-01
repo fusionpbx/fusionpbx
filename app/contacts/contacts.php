@@ -167,7 +167,8 @@ else {
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -193,17 +194,21 @@ else {
 	echo "		<br /><br />";
 	echo "		".$text['description-contacts']."<br /><br />\n";
 	echo "	</td>\n";
-	echo "	<td align='center' valign='top' style='white-space: nowrap;' nowrap>\n";
-	echo $paging_controls;
-	echo "	</td>\n";
 	echo "	<td align='right' valign='top' width='50%'>\n";
-	echo "		<form method='GET' name='frm_search' action=''>\n";
-	echo "			<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
-	echo "			<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
+	echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "			<tr>\n";
+	echo "				<td valign='middle' nowrap>\n";
+	echo "					<form method='get' name='frm_search' action=''>\n";
+	echo "					<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
+	echo "					<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
-		echo 		"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
+		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo "		</form>\n";
+	echo "					</form>\n";
+	echo "				</td>\n";
+	echo "				<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+	echo "			</tr>\n";
+	echo "		</table>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
