@@ -144,6 +144,15 @@
 
 					end
 
+				--use the new greeting
+					local array = {}
+					table.insert(array, "update v_voicemails ");
+					table.insert(array, "set greeting_id = '".. greeting_id .."' ");
+					table.insert(array, "where domain_uuid = '".. domain_uuid .."' ");
+					table.insert(array, "and voicemail_id = '".. voicemail_id .."' ");
+					sql = table.concat(array, "\n");
+					dbh:query(sql);
+
 				--play the greeting
 					--if (session:ready()) then
 					--	if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
