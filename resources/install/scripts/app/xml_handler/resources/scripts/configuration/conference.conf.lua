@@ -70,7 +70,7 @@
 	table.insert(xml, [[				<param name="rate" value="16000"/>]]);
 	table.insert(xml, [[				<param name="interval" value="20"/>]]);
 	table.insert(xml, [[				<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[				<param name="auto-gain-level" value="50"/>]]);
+	table.insert(xml, [[				<param name="auto-gain-level" value="0"/>]]);
 	table.insert(xml, [[				<param name="caller-controls" value="default"/>]]);
 	table.insert(xml, [[				<param name="moderator-controls" value="default"/>]]);
 	table.insert(xml, [[				<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
