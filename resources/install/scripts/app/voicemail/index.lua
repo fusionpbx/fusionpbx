@@ -373,7 +373,7 @@ freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 								end
 								if (storage_type == "base64") then
 									array = explode("://", database["system"]);
-									local luasql = require "luasql.postgres"
+									local luasql = require "luasql.postgres";
 									local env = assert (luasql.postgres());
 									local db = env:connect(array[2]);
 									res, serr = db:execute(sql);
@@ -442,7 +442,7 @@ freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 				--remove initial recording file
 					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
 						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-					end					
+					end
 
 			else
 				--voicemail not enabled or does not exist
