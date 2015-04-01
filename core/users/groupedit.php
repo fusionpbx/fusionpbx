@@ -214,10 +214,24 @@ require_once "resources/require.php";
 		}
 	}
 
-
 //include the header
 	include "resources/header.php";
 	$document['title'] = $text['title-group_edit'];
+
+//copy group javascript
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	function copy_group() {\n";
+	echo "		var new_group_name;\n";
+	echo "		var new_group_desc;\n";
+	echo "		new_group_name = prompt('".$text['message-new_group_name']."');\n";
+	echo "		if (new_group_name != null) {\n";
+	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
+	echo "			if (new_group_desc != null) {\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".$group_name."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the content
 	echo "<form name='login' method='post' action=''>\n";
@@ -232,6 +246,7 @@ require_once "resources/require.php";
 	echo "		</td>\n";
 	echo "		<td align='right' valign='top'>\n";
 	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "			<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
 	echo "  		<input type='submit' class='btn' value=\"".$text['button-save']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
