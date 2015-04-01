@@ -51,16 +51,19 @@
 --settings
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
+	storage_type = "";
 	if (settings['recordings']['storage_type'] ~= nil) then
 		if (settings['recordings']['storage_type']['text'] ~= nil) then
 			storage_type = settings['recordings']['storage_type']['text'];
 		end
 	end
+	storage_path = "";
 	if (settings['recordings']['storage_path'] ~= nil) then
 		if (settings['recordings']['storage_path']['text'] ~= nil) then
 			storage_path = settings['recordings']['storage_path']['text'];
 		end
 	end
+	temp_dir = "";
 	if (settings['server']['temp'] ~= nil) then
 		if (settings['server']['temp']['dir'] ~= nil) then
 			temp_dir = settings['server']['temp']['dir'];
