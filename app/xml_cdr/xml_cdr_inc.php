@@ -249,7 +249,8 @@ else {
 			//$rows_per_page = 150; //set on the page that includes this page
 			$page = $_GET['page'];
 			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+			list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
+			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
 			$offset = $rows_per_page * $page;
 	}
 

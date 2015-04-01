@@ -131,6 +131,7 @@ else {
 	echo "					<option value='pdf'>PDF</option>\n";
 	echo "				</select>\n";
 	echo "			</td>\n";
+	echo "			<td style='vertical-align: top; padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	</form>\n";
