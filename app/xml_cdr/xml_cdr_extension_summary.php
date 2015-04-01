@@ -61,9 +61,7 @@ require_once "resources/require.php";
 	$sql .= "v_extensions ";
 	$sql .= "where ";
 	$sql .= "enabled = 'true' ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$sql .= " ";
-	} else {
+	if (!($_GET['showall'] == 'true' && permission_exists('xml_cdr_all'))) {
 		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
 	if (!(if_group("admin") || if_group("superadmin"))) {
@@ -191,7 +189,11 @@ require_once "resources/require.php";
 	echo "			<b>".$text['title-extension_summary']."</b><br><br>\n";
 	echo "			".$text['description-extension_summary']."<br>\n";
 	echo "		</td>\n";
-	echo "		<td align='right' width='100%' style='vertical-align: top;'>&nbsp;</td>\n";
+	echo "		<td align='right' width='100%' style='vertical-align: top;'>";
+	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+		echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_extension_summary.php?showall=true';\">\n";
+	}
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br>\n";
@@ -268,9 +270,6 @@ require_once "resources/require.php";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td colspan='4' style='padding-top: 8px;' align='right'>";
-		if (permission_exists('xml_cdr_all')) {
-			echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_extension_summary.php?showall=true';\">\n";
-		}
 		echo "			<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
 		echo "			<input type='submit' class='btn' name='submit' value='".$text['button-update']."'>\n";
 		echo "		</td>";
