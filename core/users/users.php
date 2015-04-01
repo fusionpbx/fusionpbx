@@ -212,7 +212,7 @@ else {
 						echo "<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					else {
-						echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".$v_link_label_delete."</span>";
+						echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
 					}
 				}
 				echo "	</td>\n";

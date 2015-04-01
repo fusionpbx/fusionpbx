@@ -185,12 +185,20 @@ require_once "resources/require.php";
 			$echo .= "</td>\n";
 			$echo .= "<td class='row_stylebg' nowrap>".$group_description."</td>\n";
 			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
-			if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
-				if (permission_exists('group_edit')) {
+			if (permission_exists('group_edit')) {
+				if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
 					$echo .= "<a href='groupedit.php?id=".$group_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 				}
-				if (permission_exists('group_delete')) {
+				else {
+					$echo .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";
+				}
+			}
+			if (permission_exists('group_delete')) {
+				if (!($domain_uuid == '' && in_array($group_name, $system_groups))) {
 					$echo .= "<a href='groupdelete.php?id=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+				}
+				else {
+					$echo .= "<span onclick=\"alert('".$text['message-default_system_group']."');\" alt='".$text['button-delete']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
 				}
 			}
 			$echo .= "</td>\n";
