@@ -462,4 +462,9 @@
 	$text['message-group_exists']['pt-pt'] = "O Grupo já Existe";
 	$text['message-group_exists']['fr-fr'] = "Groupe Existe Déjà";
 
+	$text['message-default_system_group']['en-us'] = "Default system groups cannot be edited or deleted.";
+	$text['message-default_system_group']['es-cl'] = "Grupos predeterminados del sistema no pueden ser editados o eliminados.";
+	$text['message-default_system_group']['pt-pt'] = "Grupos de sistema padrão não podem ser editados ou apagados.";
+	$text['message-default_system_group']['fr-fr'] = "Les groupes du système par défaut ne peuvent pas être modifiés ou supprimés.";
+
 ?>

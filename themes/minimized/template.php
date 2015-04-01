@@ -228,6 +228,15 @@ img.list_control_icon {
 	-moz-opacity: 0.4;
 	}
 
+img.list_control_icon_disabled {
+	margin: 2px;
+	width: 21px;
+	height: 21px;
+	border: none;
+	opacity: 0.4;
+	-moz-opacity: 0.4;
+	}
+
 form {
 	margin: 0;
 	}
