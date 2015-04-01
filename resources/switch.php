@@ -969,26 +969,35 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 	//recordings
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/recordings/app_config.php")) {
 			if ($select_type == "dialplan" || $select_type == "ivr") {
-				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
-					$files = Array();
+				$sql = "select * from v_recordings ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "order by recording_name asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				$options[] = "<optgroup label='IVR Menu'>";
+				foreach ($result as &$row) {
+					$name = $row["recording_name"];
+					$filename = $row["recording_filename"];
 					$options[] = "<optgroup label='Recordings'>";
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$file)) {
-								if ($select_type == "dialplan") {
-									$selected = ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file) ? true : false;
-									$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>";
-								}
-								if ($select_type == "ivr") {
-									$selected = ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file) ? true : false;
-									$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>";
-								}
-								if ($selected) { $selection_found = true; }
-							}
+					if ($select_type == "dialplan") {
+						if ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
+							$selected = "selected='selected'";
+						} elseif ($select_value == "lua:streamfile.lua ".$filename) {
+							$selected = "selected='selected'";
 						}
+						$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".$selected.">".$name."</option>";
 					}
+					if ($select_type == "ivr") {
+						if ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
+							$selected = "selected='selected'";
+						} elseif ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
+							$selected = "selected='selected'";
+						}
+						$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."'  ".$selected.">".$name."</option>";
+					}
+					if (isset($selected)) { $selection_found = true; }
 					$options[] = "</optgroup>";
-					closedir($dh);
 				}
 			}
 		}
