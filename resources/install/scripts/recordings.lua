@@ -169,7 +169,7 @@
 					end
 					if (storage_type == "base64") then
 						array = explode("://", database["system"]);
-						local luasql = require "luasql.postgres"
+						local luasql = require "luasql.postgres";
 						local env = assert (luasql.postgres());
 						local dbh = env:connect(array[2]);
 						res, serr = dbh:execute(sql);
@@ -180,7 +180,7 @@
 					end
 			elseif (storage_type == "http_cache") then
 				freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
-				session:execute("record", "http_cache://".. storage_path .."/"..recording_name);
+				session:execute("record", storage_path .."/"..recording_name);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
