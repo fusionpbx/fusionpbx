@@ -210,6 +210,7 @@
 			status = dbh:query(sql, function(row)
 				--add functions
 					dofile(scripts_dir.."/resources/functions/base64.lua");
+
 				--get the base64
 					recording_base64 = row["recording_base64"];
 
