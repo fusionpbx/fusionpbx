@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -120,6 +120,28 @@
 			end
 			if (domain_uuid ~= nil) then
 				domain_uuid = string.lower(domain_uuid);
+			end
+
+		--settings
+			dofile(scripts_dir.."/resources/functions/settings.lua");
+			settings = settings(domain_uuid);
+			storage_type = "";
+			if (settings['voicemail']['storage_type'] ~= nil) then
+				if (settings['voicemail']['storage_type']['text'] ~= nil) then
+					storage_type = settings['voicemail']['storage_type']['text'];
+				end
+			end
+			storage_path = "";
+			if (settings['voicemail']['storage_path'] ~= nil) then
+				if (settings['voicemail']['storage_path']['text'] ~= nil) then
+					storage_path = settings['voicemail']['storage_path']['text'];
+				end
+			end
+			temp_dir = "";
+			if (settings['server']['temp'] ~= nil) then
+				if (settings['server']['temp']['dir'] ~= nil) then
+					temp_dir = settings['server']['temp']['dir'];
+				end
 			end
 
 		--if voicemail_id is non numeric then get the number-alias
@@ -278,6 +300,22 @@
 				--save the message
 					record_message();
 
+				--process base64
+					if (storage_type == "base64") then
+						--show the storage type
+							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
+		
+						--include the base64 function
+							dofile(scripts_dir.."/resources/functions/base64.lua");
+		
+						--base64 encode the file
+							local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
+							local file_content = f:read("*all");
+							f:close();
+							message_base64 = base64.encode(file_content);
+							--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
+					end
+
 				--get the voicemail destinations
 					sql = [[select * from v_voicemail_destinations 
 					where voicemail_uuid = ']]..voicemail_uuid..[[']]
@@ -290,7 +328,7 @@
 						destinations[x] = row;
 						x = x + 1;
 					end));
-
+freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 				--loop through the voicemail destinations
 					for key,row in pairs(destinations) do
 						--get a new uuid
@@ -307,6 +345,9 @@
 								table.insert(sql, "created_epoch, ");
 								table.insert(sql, "caller_id_name, ");
 								table.insert(sql, "caller_id_number, ");
+								if (storage_type == "base64") then
+									table.insert(sql, "message_base64, ");
+								end
 								table.insert(sql, "message_length ");
 								--table.insert(sql, "message_status, ");
 								--table.insert(sql, "message_priority, ");
@@ -319,6 +360,9 @@
 								table.insert(sql, "'"..start_epoch.."', ");
 								table.insert(sql, "'"..caller_id_name.."', ");
 								table.insert(sql, "'"..caller_id_number.."', ");
+								if (storage_type == "base64") then
+									table.insert(sql, "'"..message_base64.."', ");
+								end
 								table.insert(sql, "'"..message_length.."' ");
 								--table.insert(sql, "'"..message_status.."', ");
 								--table.insert(sql, "'"..message_priority.."' ");
@@ -327,7 +371,17 @@
 								if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 								end
-								dbh:query(sql);
+								if (storage_type == "base64") then
+									array = explode("://", database["system"]);
+									local luasql = require "luasql.postgres"
+									local env = assert (luasql.postgres());
+									local db = env:connect(array[2]);
+									res, serr = db:execute(sql);
+									db:close();
+									env:close();
+								else
+									dbh:query(sql);
+								end
 							end
 
 						--get saved and new message counts
