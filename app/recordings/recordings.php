@@ -40,7 +40,7 @@ require_once "resources/check_auth.php";
 	$order = $_GET["order"];
 
 //download the recordings
-	if ($_GET['a'] == "download" && permission_exists('recording_download')) {
+	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
 			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']))) {
@@ -157,7 +157,7 @@ require_once "resources/check_auth.php";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
-	echo "<br />\n";
+	echo "<br /><br />\n";
 
 	if (permission_exists('recording_upload')) {
 		echo "<b>".$text['header']."</b>";
@@ -228,7 +228,7 @@ require_once "resources/check_auth.php";
 			echo "	  </a>";
 			echo "	</td>\n";
 			if (strlen($row['recording_filename']) > 0) {
-				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 				$recording_file_path = $row['recording_filename'];
 				$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

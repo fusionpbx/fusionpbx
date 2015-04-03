@@ -328,7 +328,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
 			if (permission_exists('voicemail_greeting_download')) {
 				if (strlen($row['greeting_name']) > 0) {
-					echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+					echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 					$recording_file_path = $row['greeting_name'];
 					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

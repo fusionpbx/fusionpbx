@@ -110,10 +110,10 @@
 	$text['label-duration']['pt-pt'] = "Duração";
 	$text['label-duration']['fr-fr'] = "Durée";
 
-	$text['label-tools']['en-us'] = "Tools";
-	$text['label-tools']['es-cl'] = "Herramientas";
-	$text['label-tools']['pt-pt'] = "Ferramentas";
-	$text['label-tools']['fr-fr'] = "Outils";
+	$text['label-recording']['en-us'] = "Recording";
+	$text['label-recording']['es-cl'] = "Grabación";
+	$text['label-recording']['pt-pt'] = "Gravação";
+	$text['label-recording']['fr-fr'] = "Enregistrement";
 
 	$text['label-play']['en-us'] = "Play";
 	$text['label-play']['es-cl'] = "Reproducir";

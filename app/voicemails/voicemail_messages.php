@@ -149,7 +149,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 				echo "</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 					$recording_file_path = $file;
 					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
