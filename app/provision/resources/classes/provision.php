@@ -201,7 +201,6 @@ include "root.php";
 							$prep_statement_3 = $this->db->prepare(check_sql($sql));
 							if ($prep_statement_3) {
 								$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
-								$prep_statement_3->bindParam(':mac', $mac);
 								$prep_statement_3->execute();
 								$row = $prep_statement_3->fetch();
 								$device_label = $row["device_label"];
