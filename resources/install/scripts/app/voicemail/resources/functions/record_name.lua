@@ -34,14 +34,61 @@
 				dtmf_digits = '';
 				macro(session, "record_name", 1, 100, '');
 
-			--save the recording
+			--prepate to record
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 				max_len_seconds = 30;
 				silence_threshold = 30;
 				silence_seconds = 5;
 				mkdir(voicemail_dir.."/"..voicemail_id);
-				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav", max_len_seconds, silence_threshold, silence_seconds);
-				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+
+			--record and save the file
+				if (storage_type == "base64") then
+					--include the base64 function
+						dofile(scripts_dir.."/resources/functions/base64.lua");
+
+					--set the location
+						voicemail_name_location = voicemail_dir.."/"..voicemail_id.."/recorded_name.wav";
+
+					--record the file to the file system
+						-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
+						result = session:recordFile(voicemail_name_location, max_len_seconds, silence_threshold, silence_seconds);
+						--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+
+					--show the storage type
+						freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. "\n");
+
+					--base64 encode the file
+						local f = io.open(voicemail_name_location, "rb");
+						local file_content = f:read("*all");
+						f:close();
+						voicemail_name_base64 = base64.encode(file_content);
+
+					--update the voicemail name
+						sql = "UPDATE v_voicemails ";
+						sql = sql .. "set voicemail_name_base64 = '".. voicemail_name_base64 .. "' ";
+						sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
+						sql = sql .. "and voicemail_id = '".. voicemail_id .."'";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+						end
+						if (storage_type == "base64") then
+							array = explode("://", database["system"]);
+							local luasql = require "luasql.postgres";
+							local env = assert (luasql.postgres());
+							local dbh = env:connect(array[2]);
+							res, serr = dbh:execute(sql);
+							dbh:close();
+							env:close();
+						else
+							dbh:query(sql);
+						end
+				elseif (storage_type == "http_cache") then
+					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
+					session:execute("record", storage_path .."/"..recording_name);
+				else
+					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav", max_len_seconds, silence_threshold, silence_seconds);
+				end
 
 			--play the name
 				--session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");

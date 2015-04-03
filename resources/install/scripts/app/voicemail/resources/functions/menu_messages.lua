@@ -41,7 +41,7 @@
 		--message_status new,saved
 			if (session:ready()) then
 				if (voicemail_id ~= nil) then
-					sql = [[SELECT * FROM v_voicemail_messages
+					sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
 						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
 					if (message_status == "new") then
