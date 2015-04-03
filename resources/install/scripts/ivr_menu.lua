@@ -198,23 +198,20 @@
 			sql = [[SELECT * FROM v_recordings 
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND recording_filename = ']].. ivr_menu_greet_long.. [[' ]];
-			--if (debug["sql"]) then
+			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
-			--end
+			end
 			status = dbh:query(sql, function(row)
 				--add functions
 					dofile(scripts_dir.."/resources/functions/base64.lua");
-
-				--get the base64
-					recording_base64 = row["recording_base64"];
 
 				--add the path to filename
 					ivr_menu_greet_long = recordings_dir.."/"..ivr_menu_greet_long;
 
 				--save the recording to the file system
-					if (string.len(recording_base64) > 32) then
+					if (string.len(row["recording_base64"]) > 32) then
 						local file = io.open(ivr_menu_greet_long, "w");
-						file:write(base64.decode(recording_base64));
+						file:write(base64.decode(row["recording_base64"]));
 						file:close();
 					end
 			end);
@@ -229,16 +226,14 @@
 			status = dbh:query(sql, function(row)
 				--add functions
 					dofile(scripts_dir.."/resources/functions/base64.lua");
-				--get the base64
-					recording_base64 = row["recording_base64"];
 
 				--add the path to filename
 					ivr_menu_greet_short = recordings_dir.."/"..ivr_menu_greet_short;
 
 				--save the recording to the file system
-					if (string.len(recording_base64) > 32) then
+					if (string.len(row["recording_base64"]) > 32) then
 						local file = io.open(ivr_menu_greet_short, "w");
-						file:write(base64.decode(recording_base64));
+						file:write(base64.decode(row["recording_base64"]));
 						file:close();
 					end
 			end);
