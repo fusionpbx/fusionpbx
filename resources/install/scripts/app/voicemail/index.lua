@@ -304,10 +304,10 @@
 					if (storage_type == "base64") then
 						--show the storage type
 							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-		
+
 						--include the base64 function
 							dofile(scripts_dir.."/resources/functions/base64.lua");
-		
+
 						--base64 encode the file
 							local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
 							local file_content = f:read("*all");
@@ -441,7 +441,7 @@
 								send_email(voicemail_id_copy, voicemail_message_uuid);
 							end
 					end
-				
+
 				--remove initial recording file
 					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
 						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);

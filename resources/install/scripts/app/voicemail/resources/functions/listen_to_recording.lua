@@ -47,16 +47,44 @@
 					session:say(message_number, default_language, "NUMBER", "pronounced");
 				end
 			end
-
-        --say the message date
-            if (session:ready()) then
-                if (string.len(dtmf_digits) == 0) then
-                    if (current_time_zone ~= nil) then
-                        session:execute("set", "timezone="..current_time_zone.."");
-                    end
+		--say the message date
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					if (current_time_zone ~= nil) then
+						session:execute("set", "timezone="..current_time_zone.."");
+					end
 					session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
-                end
-            end
+				end
+			end
+
+		--get the recordings from the database
+			if (storage_type == "base64") then
+				if (string.len(ivr_menu_greet_long) > 1) then
+					sql = [[SELECT * FROM v_voicemail_messages 
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_message_uuid = ']].. uuid.. [[' ]];
+					--if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+					--end
+					status = dbh:query(sql, function(row)
+						--add functions
+							dofile(scripts_dir.."/resources/functions/base64.lua");
+
+						--set the voicemail message path
+							message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+
+						--save the recording to the file system
+							if (string.len(row["message_base64"]) > 32) then
+								local file = io.open(message_location, "w");
+								file:write(base64.decode(row["message_base64"]));
+								file:close();
+							end
+					end);
+				end
+			elseif (storage_type == "http_cache") then
+				--need additional work
+			end
+
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
