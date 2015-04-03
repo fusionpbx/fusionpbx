@@ -52,22 +52,16 @@
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
 	storage_type = "";
-	if (settings['recordings']['storage_type'] ~= nil) then
-		if (settings['recordings']['storage_type']['text'] ~= nil) then
-			storage_type = settings['recordings']['storage_type']['text'];
-		end
+	if (settings['recordings'] ~= nil and settings['recordings']['storage_type'] ~= nil and settings['recordings']['storage_type']['text'] ~= nil) then
+		storage_type = settings['recordings']['storage_type']['text'];
 	end
 	storage_path = "";
-	if (settings['recordings']['storage_path'] ~= nil) then
-		if (settings['recordings']['storage_path']['text'] ~= nil) then
-			storage_path = settings['recordings']['storage_path']['text'];
-		end
+	if (settings['recordings'] ~= nil and settings['recordings']['storage_path'] ~= nil and settings['recordings']['storage_path']['text'] ~= nil) then
+		storage_path = settings['recordings']['storage_path']['text'];
 	end
 	temp_dir = "";
-	if (settings['server']['temp'] ~= nil) then
-		if (settings['server']['temp']['dir'] ~= nil) then
-			temp_dir = settings['server']['temp']['dir'];
-		end
+	if (settings['server'] ~= nil and settings['server']['temp'] ~= nil and settings['server']['temp']['dir'] ~= nil) then
+		temp_dir = settings['server']['temp']['dir'];
 	end
 
 --set the recordings directory
@@ -258,14 +252,20 @@
 		dtmf_digits = "";
 		min_digits = 1;
 		if (tries == 1) then
-			freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_long .. "\n");
+			if (debug["tries"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_long .. "\n");
+			end
 			dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
 		else
-			freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_short .. "\n");
+			if (debug["tries"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_short .. "\n");
+			end
 			dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, ivr_menu_max_timeouts, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_short, "", ".*");
 		end
 		if (string.len(dtmf_digits) > 0) then
-			freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+			if (debug["tries"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+			end
 			menu_options(session, dtmf_digits);
 		else
 			if (tries < tonumber(ivr_menu_max_failures)) then
