@@ -106,6 +106,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_name_base64";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 
 		$y = 1; //table array index
 		$z = 0; //field array index
