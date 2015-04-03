@@ -359,7 +359,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
 							$row_uuid = uuid();
-							echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
@@ -430,7 +430,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
 							$row_uuid = uuid();
-							echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

@@ -75,7 +75,7 @@ else {
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='50%' nowrap='nowrap' style='vertical-align: top;'><b>".$text['title']."</b><br><br><br></td>\n";
+	echo "<td align='left' nowrap='nowrap' style='vertical-align: top;'><b>".$text['title']."</b><br><br><br></td>\n";
 	echo "<td align='right' width='100%' style='vertical-align: top;'>\n";
 	echo "	<form id='frm_export' method='post' action='xml_cdr_export.php'>\n";
 	echo "	<input type='hidden' name='cdr_id' value='$cdr_id'>\n";
@@ -319,7 +319,7 @@ else {
 	echo "<form name='frm' method='post' action='xml_cdr_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('xml_cdr_delete')) {
+	if (permission_exists('xml_cdr_delete') && $result_count > 0) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo "<th>&nbsp;</th>\n";
@@ -329,7 +329,9 @@ else {
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
-	echo "<th>".$text['label-tools']."</th>\n";
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<th>".$text['label-recording']."</th>\n";
+	}
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
 	echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
@@ -346,7 +348,7 @@ else {
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order, $param);
 	if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 		echo "<td class='list_control_icon'>";
-		if (permission_exists('xml_cdr_delete')) {
+		if (permission_exists('xml_cdr_delete') && $result_count > 0) {
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "</td>\n";
@@ -385,47 +387,49 @@ else {
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 
 			//handle recordings
-			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-			$tmp_name = '';
-			if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
-				$tmp_name=$row['recording_file'];
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.wav')) {
-				$tmp_name = $row['uuid'].".wav";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.wav')) {
-				$tmp_name = $row['uuid']."_1.wav";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.mp3')) {
-				$tmp_name = $row['uuid'].".mp3";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
-				$tmp_name = $row['uuid']."_1.mp3";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.wav')) {
-				$tmp_name = $row['bridge_uuid'].".wav";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.wav')) {
-				$tmp_name = $row['bridge_uuid']."_1.wav";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.mp3')) {
-				$tmp_name = $row['bridge_uuid'].".mp3";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.mp3')) {
-				$tmp_name = $row['bridge_uuid']."_1.mp3";
-			}
-			if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name) && $seconds > 0) {
-				$recording_file_path = '/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
-				$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
-				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
-				switch ($recording_file_ext) {
-					case "wav" : $recording_type = "audio/wav"; break;
-					case "mp3" : $recording_type = "audio/mpeg"; break;
-					case "ogg" : $recording_type = "audio/ogg"; break;
+			if (permission_exists('recording_play') || permission_exists('recording_download')) {
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_name = '';
+				if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
+					$tmp_name=$row['recording_file'];
 				}
-			}
-			else {
-				unset($recording_file_path);
+				elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.wav')) {
+					$tmp_name = $row['uuid'].".wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.wav')) {
+					$tmp_name = $row['uuid']."_1.wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.mp3')) {
+					$tmp_name = $row['uuid'].".mp3";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
+					$tmp_name = $row['uuid']."_1.mp3";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.wav')) {
+					$tmp_name = $row['bridge_uuid'].".wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.wav')) {
+					$tmp_name = $row['bridge_uuid']."_1.wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.mp3')) {
+					$tmp_name = $row['bridge_uuid'].".mp3";
+				}
+				elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.mp3')) {
+					$tmp_name = $row['bridge_uuid']."_1.mp3";
+				}
+				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name) && $seconds > 0) {
+					$recording_file_path = '/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
+					$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
+					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+					switch ($recording_file_ext) {
+						case "wav" : $recording_type = "audio/wav"; break;
+						case "mp3" : $recording_type = "audio/mpeg"; break;
+						case "ogg" : $recording_type = "audio/ogg"; break;
+					}
+				}
+				else {
+					unset($recording_file_path);
+				}
 			}
 
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -509,18 +513,22 @@ else {
 			echo "		</a>\n";
 			echo "	</td>\n";
 
-			if ($recording_file_path != '') {
-				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
-				echo 		"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
-				echo 		"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-				echo 		"<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+			if (permission_exists('recording_play') || permission_exists('recording_download')) {
+				if ($recording_file_path != '') {
+					echo "	<td valign='top' align='center' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+					if (permission_exists('recording_play')) {
+						echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+						echo 	"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					}
+					if (permission_exists('recording_download')) {
+						echo 	"<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+					}
+					echo "	</td>\n";
+				}
+				else {
+					echo "	<td valign='top' align='center' class='".$row_style[$c]."'>&nbsp;</td>\n";
+				}
 			}
-			else {
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				echo "&nbsp;";
-			}
-			echo "	</td>\n";
-
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
