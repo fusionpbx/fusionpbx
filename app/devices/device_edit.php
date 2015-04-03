@@ -592,7 +592,7 @@ require_once "resources/require.php";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
-			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][sip_port]' maxlength='255' min='1' max='65535' step='1' value=\"".$row['sip_port']."\">\n";
+			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][sip_port]' maxlength='255' min='0' max='65535' step='1' value=\"".$row['sip_port']."\">\n";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
