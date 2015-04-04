@@ -155,7 +155,7 @@ require_once "resources/require.php";
 							//prepare the uuids
 								$user_uuid = uuid();
 								$contact_uuid = uuid();
-							
+
 							//set the user_id
 								$_SESSION["user_uuid"] = $user_uuid;
 
@@ -379,8 +379,12 @@ require_once "resources/require.php";
 		//redirect the user
 			if (check_str($_REQUEST["rdr"]) !== 'n'){
 				$path = check_str($_POST["path"]);
-				if(isset($path) && !empty($path) && $path!="index2.php" && $path!="/install.php") {
+				if (isset($path) && !empty($path) && $path!="index2.php" && $path!="/install.php") {
 					header("Location: ".$path);
+					exit();
+				}
+				else if ($_SESSION['login']['destination']['url'] != '') {
+					header("Location: ".$_SESSION['login']['destination']['url']);
 					exit();
 				}
 			}
