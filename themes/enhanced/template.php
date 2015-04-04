@@ -903,6 +903,7 @@ legend {
 		border-radius: 1px;
 		font-size: 12px;
 		color: <?php echo $_SESSION['theme']['domain_color']['text']; ?>;
+		text-shadow: 0 0 2px #fff;
 	}
 
 	#domain_selector_domain:hover {
