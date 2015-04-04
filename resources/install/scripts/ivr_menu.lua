@@ -52,16 +52,26 @@
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
 	storage_type = "";
-	if (settings['recordings'] ~= nil and settings['recordings']['storage_type'] ~= nil and settings['recordings']['storage_type']['text'] ~= nil) then
-		storage_type = settings['recordings']['storage_type']['text'];
-	end
 	storage_path = "";
-	if (settings['recordings'] ~= nil and settings['recordings']['storage_path'] ~= nil and settings['recordings']['storage_path']['text'] ~= nil) then
-		storage_path = settings['recordings']['storage_path']['text'];
+	if (settings['voicemail'] ~= nil) then
+		if (settings['voicemail']['storage_type'] ~= nil) then
+			if (settings['voicemail']['storage_type']['text'] ~= nil) then
+				storage_type = settings['voicemail']['storage_type']['text'];
+			end
+		end
+		if (settings['voicemail']['storage_path'] ~= nil) then
+			if (settings['voicemail']['storage_path']['text'] ~= nil) then
+				storage_path = settings['voicemail']['storage_path']['text'];
+			end
+		end
 	end
 	temp_dir = "";
-	if (settings['server'] ~= nil and settings['server']['temp'] ~= nil and settings['server']['temp']['dir'] ~= nil) then
-		temp_dir = settings['server']['temp']['dir'];
+	if (settings['server'] ~= nil) then
+		if (settings['server']['temp'] ~= nil) then
+			if (settings['server']['temp']['dir'] ~= nil) then
+				temp_dir = settings['server']['temp']['dir'];
+			end
+		end
 	end
 
 --set the recordings directory
