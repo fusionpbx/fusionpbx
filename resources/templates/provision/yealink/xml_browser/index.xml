@@ -1,0 +1,71 @@
+﻿<YealinkIPPhoneConfiguration>
+	{foreach $lines as $row}
+	{if isset($user_password_1) }
+	<Item>account.{$row.line_number}.enable = 1</Item>
+	{else}
+	<Item>account.{$row.line_number}.enable = 0</Item>
+	{/if}
+	<Item>account.{$row.line_number}.label = {$row.display_name</Item>
+	<Item>account.{$row.line_number}.display_name = {$row.display_name}</Item>
+	<Item>account.{$row.line_number}.user_name = {$row.user_id}</Item>
+	<Item>account.{$row.line_number}.password = {$row.password}</Item>
+	<Item>account.{$row.line_number}.auth_name = {$row.auth_id}</Item>
+	<Item>account.{$row.line_number}.sip_server_host = {$row.server_address}</Item>
+	<Item>account.{$row.line_number}.sip_server.1.address = {$row.server_address}</Item>
+	<Item>account.{$row.line_number}.sip_server_port = {$row.sip_port}</Item>
+	<Item>account.{$row.line_number}.outbound_host = {$row.outbound_proxy}</Item>
+	<Item>account.{$row.line_number}.outbound_port = {$row.sip_port}</Item>
+	<Item>account.{$row.line_number}.expires = {$row.register_expires}</Item>
+	<!-- Configure the transport type; 0-UDP (default), 1-TCP, 2-TLS, 3-DNS SRV -->
+	{if $sip_transport_1 == 'udp'}<Item>account.{$row.line_number}.transport = 0</Item>{/if}
+	{if $sip_transport_1 == 'tcp'}<Item>account.{$row.line_number}.transport = 1</Item>{/if}
+	{if $sip_transport_1 == 'tls'}<Item>account.{$row.line_number}.transport = 2</Item>{/if}
+	{if $sip_transport_1 == 'dns srv'}<Item>account.{$row.line_number}.transport = 3</Item>{/if}
+	{/foreach}
+
+	{foreach $keys as $row}
+	{if $row.device_key_category == "line"}
+	<!-- Line Key {$row.device_key_id}-->
+	<Item>linekey.{$row.device_key_id}.line = {$row.device_key_line}</Item>
+	<Item>linekey.{$row.device_key_id}.value = {$row.device_key_value}</Item>
+	{if $row.device_key_category == "blf"}
+	<Item>linekey.{$row.device_key_id}.pickup_value = {$row.device_key_extension}</Item>
+	{/if}
+	<Item>linekey.{$row.device_key_id}.type = {$row.device_key_type}</Item>
+	<!--<Item>linekey.{$row.device_key_id}.xml_phonebook = </Item>-->
+	<Item>linekey.{$row.device_key_id}.label = {$row.device_key_label}</Item>
+
+	{/if}
+	{/foreach}
+
+	{foreach $keys as $row}
+	{if $row.device_key_category == "memory"}
+	<!-- Memory key {$row.device_key_id} -->
+	<Item>memorykey.{$row.device_key_id}.type = {$row.device_key_type}</Item>
+	<Item>memorykey.{$row.device_key_id}.line = {$row.device_key_line}</Item>
+	<Item>memorykey.{$row.device_key_id}.value = {$row.device_key_value}</Item>
+	{if $row.device_key_type == "blf"}
+	<Item>memorykey.{$row.device_key_id}.pickup_value = {$row.device_key_extension}</Item>
+	{/if}
+	<Item>memorykey.{$row.device_key_id}.label = {$row.device_key_label}</Item>
+	<Item>memorykey.{$row.device_key_id}.xml_phonebook = </Item>
+	{/if}
+	{/foreach}
+
+	{foreach $keys as $row}
+	{if $row.device_key_category == "expansion"}
+	<!-- Expansion module 1 key {$row.device_key_id} -->
+	<Item>expansion_module.1.key.{$row.device_key_id}.type = {$row.device_key_type}</Item>
+	<Item>expansion_module.1.key.{$row.device_key_id}.line = {$row.device_key_line}</Item>
+	<Item>expansion_module.1.key.{$row.device_key_id}.value = {$row.device_key_value}</Item>
+	{if $row.device_key_type == "blf"}
+	<Item>expansion_module.1.key.{$row.device_key_id}.pickup_value = {$row.device_key_extension}</Item>
+	{/if}
+	<Item>expansion_module.1.key.{$row.device_key_id}.label = {$row.device_key_label}</Item>
+	<Item>expansion_module.1.key.{$row.device_key_id}.xml_phonebook = </Item>
+
+	{/if}
+	{/foreach}
+
+	<Item>voice_mail.number.1 = {$voicemail_number}</Item>
+</YealinkIPPhoneConfiguration>
