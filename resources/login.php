@@ -64,7 +64,7 @@
 			$sql .= "u.password ";
 			$sql .= "from ";
 			$sql .= "v_users as u, ";
-			$sql .= "v_contact_emails e ";
+			$sql .= "v_contact_emails as e ";
 			$sql .= "where ";
 			$sql .= "e.domain_uuid = u.domain_uuid ";
 			$sql .= "and e.contact_uuid = u.contact_uuid ";
