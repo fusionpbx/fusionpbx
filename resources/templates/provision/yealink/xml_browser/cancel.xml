@@ -1,0 +1,11 @@
+<YealinkIPPhoneInputScreen
+	type="string"
+	Password="no"
+	Timeout="15"
+	LockIn="no"
+	inputLanguage="English"
+	displayMode = "normal"  
+	defaultIndex="2" >
+
+	<Title wrap="yes">Login Cancelled</Title>
+</YealinkIPPhoneInputScreen>
