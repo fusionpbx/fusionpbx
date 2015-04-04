@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -39,63 +39,61 @@
 	assert(dbh:connected());
 
 --get the domain_uuid
-	if (domain_uuid == nil) then
-		--get the domain_uuid
-			if (domain_name ~= nil) then
-				sql = "SELECT domain_uuid FROM v_domains ";
-				sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(rows)
-					domain_uuid = rows["domain_uuid"];
-				end);
+	if (domain_uuid == nil and domain_name ~= nil) then
+		if (domain_name ~= nil) then
+			sql = "SELECT domain_uuid FROM v_domains ";
+			sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
-		--if the domain_uuid is null then set an empty string
-			if (domain_uuid == nil) then
-				domain_uuid = " ";
-			end
-			
+			status = dbh:query(sql, function(rows)
+				domain_uuid = rows["domain_uuid"];
+			end);
+		end
 	end
 
 --get the extension information
-	sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
-	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+	if (domain_uuid ~= nil) then
+		sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+		end
+		dbh:query(sql, function(row)
+			--general
+				domain_uuid = row.domain_uuid;
+				extension_uuid = row.extension_uuid;
+				extension = row.extension;
+				cidr = "";
+				if (string.len(row.cidr) > 0) then
+					cidr = [[ cidr="]] .. row.cidr .. [["]];
+				end
+				number_alias = "";
+				if (string.len(row.number_alias) > 0) then
+					number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
+				end
+			--params
+				password = row.password;
+		end);
 	end
-	dbh:query(sql, function(row)
-		--general
-			domain_uuid = row.domain_uuid;
-			extension_uuid = row.extension_uuid;
-			extension = row.extension;
-			cidr = "";
-			if (string.len(row.cidr) > 0) then
-				cidr = [[ cidr="]] .. row.cidr .. [["]];
-			end
-			number_alias = "";
-			if (string.len(row.number_alias) > 0) then
-				number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
-			end
-		--params
-			password = row.password;
-	end);
 
 --build the xml
-	local xml = {}
-	--table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-	table.insert(xml, [[<document type="freeswitch/xml">]]);
-	table.insert(xml, [[	<section name="directory">]]);
-	table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-	table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
-	table.insert(xml, [[				<params>]]);
-	table.insert(xml, [[					<param name="reverse-auth-user" value="]] .. extension .. [["/>]]);
-	table.insert(xml, [[					<param name="reverse-auth-pass" value="]] .. password .. [["/>]]);
-	table.insert(xml, [[				</params>]]);
-	table.insert(xml, [[			</user>]]);
-	table.insert(xml, [[		</domain>]]);
-	table.insert(xml, [[	</section>]]);
-	table.insert(xml, [[</document>]]);
-	XML_STRING = table.concat(xml, "\n");
+	if (domain_name ~= nil and extension ~= nil and password ~= nil) then
+		local xml = {}
+		--table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+		table.insert(xml, [[<document type="freeswitch/xml">]]);
+		table.insert(xml, [[	<section name="directory">]]);
+		table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
+		table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+		table.insert(xml, [[				<params>]]);
+		table.insert(xml, [[					<param name="reverse-auth-user" value="]] .. extension .. [["/>]]);
+		table.insert(xml, [[					<param name="reverse-auth-pass" value="]] .. password .. [["/>]]);
+		table.insert(xml, [[				</params>]]);
+		table.insert(xml, [[			</user>]]);
+		table.insert(xml, [[		</domain>]]);
+		table.insert(xml, [[	</section>]]);
+		table.insert(xml, [[</document>]]);
+		XML_STRING = table.concat(xml, "\n");
+	end
 
 --close the database connection
 	dbh:release();
