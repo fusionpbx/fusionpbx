@@ -86,7 +86,7 @@ if (sizeof($_SESSION['user']['extensions']) > 0) {
 	$status_options[5]['style'] = "op_btn_status_logged_out";
 
 	foreach ($status_options as $status_option) {
-		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."'));\" ".$onhover_pause_refresh.">\n";
+		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."')); this.disabled='disabled'; refresh_start();\" ".$onhover_pause_refresh.">\n";
 	}
 }
 
@@ -120,7 +120,7 @@ if (sizeof($groups) > 0) {
 	echo "					<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
 	if (sizeof($groups) > 5) {
 		//show select box
-		echo "				<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' xonblur='refresh_start();'>\n";
+		echo "				<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		echo "					<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
 		echo "					<option value=''>".$text['button-all']."</option>";
 		foreach ($groups as $group) {
