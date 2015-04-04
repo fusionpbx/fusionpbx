@@ -134,6 +134,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$user_uuid = uuid();
 	$group_user_uuid = uuid();
 	$contact_uuid = uuid();
+	$contact_email_uuid = uuid();
 
 	//add the user
 	$sql = "insert into v_users ";
@@ -150,10 +151,10 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$user_uuid', ";
-	$sql .= "'$contact_uuid', ";
-	$sql .= "'$username', ";
+	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$user_uuid."', ";
+	$sql .= "'".$contact_uuid."', ";
+	$sql .= "'".$username."', ";
 	$sql .= "'".md5($salt.$password)."', ";
 	$sql .= "'".$salt."', ";
 	$sql .= "now(), ";
@@ -196,19 +197,37 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= "contact_organization, ";
 	$sql .= "contact_name_given, ";
 	$sql .= "contact_name_family, ";
-	$sql .= "contact_nickname, ";
-	$sql .= "contact_email ";
+	$sql .= "contact_nickname ";
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$contact_uuid', ";
+	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$contact_uuid."', ";
 	$sql .= "'user', ";
-	$sql .= "'$contact_organization', ";
-	$sql .= "'$contact_name_given', ";
-	$sql .= "'$contact_name_family', ";
-	$sql .= "'$username', ";
-	$sql .= "'$user_email' ";
+	$sql .= "'".$contact_organization."', ";
+	$sql .= "'".$contact_name_given."', ";
+	$sql .= "'".$contact_name_family."', ";
+	$sql .= "'".$username."' ";
+	$sql .= ")";
+	$db->exec(check_sql($sql));
+	unset($sql);
+
+	//add to emails
+	$sql = "insert into v_contact_emails ";
+	$sql .= "(";
+	$sql .= "contact_email_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "contact_uuid, ";
+	$sql .= "email_address, ";
+	$sql .= "email_primary ";
+	$sql .= ") ";
+	$sql .= "values ";
+	$sql .= "(";
+	$sql .= "'".$contact_email_uuid."', ";
+	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$contact_uuid."', ";
+	$sql .= "'".$user_email."', ";
+	$sql .= "1 ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
