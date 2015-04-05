@@ -5,7 +5,7 @@
 	{else}
 	<Item>account.{$row.line_number}.enable = 0</Item>
 	{/if}
-	<Item>account.{$row.line_number}.label = {$row.display_name</Item>
+	<Item>account.{$row.line_number}.label = {$row.display_name}</Item>
 	<Item>account.{$row.line_number}.display_name = {$row.display_name}</Item>
 	<Item>account.{$row.line_number}.user_name = {$row.user_id}</Item>
 	<Item>account.{$row.line_number}.password = {$row.password}</Item>
