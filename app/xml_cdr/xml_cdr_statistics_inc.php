@@ -36,7 +36,7 @@ else {
 
 //show all call detail records to admin and superadmin. for everyone else show only the call details for extensions assigned to them
 	if (!if_group("admin") && !if_group("superadmin")) {
-		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = '' 
+		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 
 		$sql_where = "where domain_uuid = '".$_SESSION["domain_uuid"]."' and ( ";
@@ -81,11 +81,12 @@ else {
 		if (strlen($where) == 0) {
 			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 				$where = "where ";
-			} else {
+			}
+			else {
 				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 			}
 		}
-		$sql = " select count(*) as count from v_xml_cdr ";
+		$sql = "select count(*) as count from v_xml_cdr ";
 		$sql .= $where;
 		$sql .= " start_epoch BETWEEN ".$start." AND ".$end." ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -109,13 +110,14 @@ else {
 		if (strlen($where) == 0) {
 			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 				$where = "where ";
-			} else {
+			}
+			else {
 				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 			}
 		}
-		$sql = " select sum(billsec) as seconds from v_xml_cdr ";
+		$sql = "select sum(billsec) as seconds from v_xml_cdr ";
 		$sql .= $where;
-		$sql .= "start_epoch BETWEEN ".$start." AND ".$end." ";
+		$sql .= " start_epoch BETWEEN ".$start." AND ".$end." ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -163,8 +165,8 @@ else {
 		} else {
 			$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 		}
-		$where .= "billsec = '0' ";
-		$where .= "and direction = 'inbound' ";
+		$where .= " billsec = '0' and ";
+		$where .= " direction = 'inbound' and ";
 		$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
 		$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
 
@@ -191,8 +193,8 @@ else {
 	} else {
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
-	$where .= "billsec = '0' ";
-	$where .= "and direction = 'inbound' ";
+	$where .= " billsec = '0' and ";
+	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
 	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
 	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
@@ -216,8 +218,8 @@ else {
 	} else {
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
-	$where .= "billsec = '0' ";
-	$where .= "and direction = 'inbound' ";
+	$where .= " billsec = '0' and ";
+	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
 	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
 	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
@@ -239,10 +241,10 @@ else {
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		$where = "where ";
 	} else {
-		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and";
+		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
-	$where .= " billsec = '0' ";
-	$where .= "and direction = 'inbound' ";
+	$where .= " billsec = '0' and ";
+	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
 	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
 	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
