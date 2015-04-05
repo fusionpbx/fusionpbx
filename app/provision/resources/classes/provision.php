@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014
+	Copyright (C) 2014-2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -138,8 +138,16 @@ include "root.php";
 				$mac = $this->mac;
 				$file = $this->file;
 
+			//get the device template
+				if (isset($_REQUEST['template'])) {
+					$device_template = $_REQUEST['template'];
+					$search = array('..', '/./');
+					$device_template = str_replace($search, "", $device_template);
+					$device_template = str_replace('//', '/', $device_template);
+				}
+
 			//remove ../ and slashes in the file name
-				$search = array('..', '/', '\\');
+				$search = array('..', '/', '\\', '/./', '//');
 				$file = str_replace($search, "", $file);
 
 			//get the domain_name
@@ -166,124 +174,144 @@ include "root.php";
 				}
 
 			//check to see if the mac_address exists in devices
-				if ($this->mac_exists($mac)) {
-					//get the device_template
-						//if (strlen($device_template) == 0) {
-							$sql = "SELECT * FROM v_devices ";
-							$sql .= "WHERE device_mac_address=:mac ";
-							//$sql .= "WHERE device_mac_address= '$mac' ";
-							$prep_statement_2 = $this->db->prepare(check_sql($sql));
-							if ($prep_statement_2) {
-								//use the prepared statement
-									$prep_statement_2->bindParam(':mac', $mac);
-									$prep_statement_2->execute();
-									$row = $prep_statement_2->fetch();
-								//set the variables from values in the database
-									$device_uuid = $row["device_uuid"];
+				if (!isset($_GET['user_id'])) {
+					if ($this->mac_exists($mac)) {
+						//get the device_template
+							if (strlen($device_template) == 0) {
+								$sql = "SELECT * FROM v_devices ";
+								$sql .= "WHERE device_mac_address=:mac ";
+								//$sql .= "WHERE device_mac_address= '$mac' ";
+								$prep_statement_2 = $this->db->prepare(check_sql($sql));
+								if ($prep_statement_2) {
+									//use the prepared statement
+										$prep_statement_2->bindParam(':mac', $mac);
+										$prep_statement_2->execute();
+										$row = $prep_statement_2->fetch();
+									//set the variables from values in the database
+										$device_uuid = $row["device_uuid"];
+										$device_label = $row["device_label"];
+										if (strlen($row["device_vendor"]) > 0) {
+											$device_vendor = strtolower($row["device_vendor"]);
+										}
+										$device_model = $row["device_model"];
+										$device_firmware_version = $row["device_firmware_version"];
+										$device_provision_enable = $row["device_provision_enable"];
+										$device_template = $row["device_template"];
+										$device_profile_uuid = $row["device_profile_uuid"];
+										$device_description = $row["device_description"];
+								}
+							}
+	
+						//find a template that was defined on another phone and use that as the default.
+							if (strlen($device_template) == 0) {
+								$sql = "SELECT * FROM v_devices ";
+								$sql .= "WHERE domain_uuid=:domain_uuid ";
+								$sql .= "limit 1 ";
+								$prep_statement_3 = $this->db->prepare(check_sql($sql));
+								if ($prep_statement_3) {
+									$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
+									$prep_statement_3->execute();
+									$row = $prep_statement_3->fetch();
 									$device_label = $row["device_label"];
-									if (strlen($row["device_vendor"]) > 0) {
-										$device_vendor = strtolower($row["device_vendor"]);
-									}
+									$device_vendor = strtolower($row["device_vendor"]);
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
 									$device_provision_enable = $row["device_provision_enable"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
+								}
 							}
-						//}
-
-					//find a template that was defined on another phone and use that as the default.
-						if (strlen($device_template) == 0) {
-							$sql = "SELECT * FROM v_devices ";
-							$sql .= "WHERE device_template LIKE '%/%' ";
-							$sql .= "AND domain_uuid=:domain_uuid ";
-							$prep_statement_3 = $this->db->prepare(check_sql($sql));
-							if ($prep_statement_3) {
-								$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
-								$prep_statement_3->execute();
-								$row = $prep_statement_3->fetch();
-								$device_label = $row["device_label"];
-								$device_vendor = strtolower($row["device_vendor"]);
-								$device_model = $row["device_model"];
-								$device_firmware_version = $row["device_firmware_version"];
-								$device_provision_enable = $row["device_provision_enable"];
-								$device_template = $row["device_template"];
-								$device_profile_uuid = $row["device_profile_uuid"];
-								$device_description = $row["device_description"];
+					}
+					else {
+						//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
+							$template_list=array(  
+								"Linksys/SPA-2102"=>"linksys/spa2102",
+								"Linksys/SPA-3102"=>"linksys/spa3102",
+								"Linksys/SPA-9212"=>"linksys/spa921",
+								"Cisco/SPA301"=>"cisco/spa301",
+								"Cisco/SPA301D"=>"cisco/spa302d",
+								"Cisco/SPA303"=>"cisco/spa303",
+								"Cisco/SPA501G"=>"cisco/spa501g",
+								"Cisco/SPA502G"=>"cisco/spa502g",
+								"Cisco/SPA504G"=>"cisco/spa504g",
+								"Cisco/SPA508G"=>"cisco/spa508g",
+								"Cisco/SPA509G"=>"cisco/spa509g",
+								"Cisco/SPA512G"=>"cisco/spa512g",
+								"Cisco/SPA514G"=>"cisco/spa514g",
+								"Cisco/SPA525G2"=>"cisco/spa525g2",
+								"snom300-SIP"=>"snom/300",
+								"snom320-SIP"=>"snom/320",
+								"snom360-SIP"=>"snom/360",
+								"snom370-SIP"=>"snom/370",
+								"snom820-SIP"=>"snom/820",
+								"snom-m3-SIP"=>"snom/m3",
+								"yealink SIP-T20"=>"yealink/t20",
+								"yealink SIP-T22"=>"yealink/t22",
+								"yealink SIP-T26"=>"yealink/t26",
+								"Yealink SIP-T32"=>"yealink/t32",
+								"HW GXP1450"=>"grandstream/gxp1450",
+								"HW GXP2124"=>"grandstream/gxp2124",
+								"HW GXV3140"=>"grandstream/gxv3140",
+								"HW GXV3175"=>"grandstream/gxv3175",
+								"Wget/1.11.3"=>"konftel/kt300ip"
+								);
+	
+							foreach ($template_list as $key=>$val){
+								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
+									$device_template = $val;
+									break;
+								}
 							}
-						}
+							unset($template_list);
+	
+						//mac address does not exist in the table so add it
+							if (strlen($domain_uuid) > 0) {
+								$device_uuid = uuid();
+								$sql = "INSERT INTO v_devices ";
+								$sql .= "(";
+								$sql .= "domain_uuid, ";
+								$sql .= "device_uuid, ";
+								$sql .= "device_mac_address, ";
+								$sql .= "device_vendor, ";
+								$sql .= "device_model, ";
+								$sql .= "device_provision_enable, ";
+								$sql .= "device_template, ";
+								$sql .= "device_description ";
+								$sql .= ") ";
+								$sql .= "VALUES ";
+								$sql .= "(";
+								$sql .= "'".$domain_uuid."', ";
+								$sql .= "'$device_uuid', ";
+								$sql .= "'$mac', ";
+								$sql .= "'$device_vendor', ";
+								$sql .= "'', ";
+								$sql .= "'true', ";
+								$sql .= "'$device_template', ";
+								$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
+								$sql .= ")";
+								$this->db->exec(check_sql($sql));
+								unset($sql);
+							}
+					}
 				}
-				else {
-					//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
-						$template_list=array(  
-							"Linksys/SPA-2102"=>"linksys/spa2102",
-							"Linksys/SPA-3102"=>"linksys/spa3102",
-							"Linksys/SPA-9212"=>"linksys/spa921",
-							"Cisco/SPA301"=>"cisco/spa301",
-							"Cisco/SPA301D"=>"cisco/spa302d",
-							"Cisco/SPA303"=>"cisco/spa303",
-							"Cisco/SPA501G"=>"cisco/spa501g",
-							"Cisco/SPA502G"=>"cisco/spa502g",
-							"Cisco/SPA504G"=>"cisco/spa504g",
-							"Cisco/SPA508G"=>"cisco/spa508g",
-							"Cisco/SPA509G"=>"cisco/spa509g",
-							"Cisco/SPA512G"=>"cisco/spa512g",
-							"Cisco/SPA514G"=>"cisco/spa514g",
-							"Cisco/SPA525G2"=>"cisco/spa525g2",
-							"snom300-SIP"=>"snom/300",
-							"snom320-SIP"=>"snom/320",
-							"snom360-SIP"=>"snom/360",
-							"snom370-SIP"=>"snom/370",
-							"snom820-SIP"=>"snom/820",
-							"snom-m3-SIP"=>"snom/m3",
-							"yealink SIP-T20"=>"yealink/t20",
-							"yealink SIP-T22"=>"yealink/t22",
-							"yealink SIP-T26"=>"yealink/t26",
-							"Yealink SIP-T32"=>"yealink/t32",
-							"HW GXP1450"=>"grandstream/gxp1450",
-							"HW GXP2124"=>"grandstream/gxp2124",
-							"HW GXV3140"=>"grandstream/gxv3140",
-							"HW GXV3175"=>"grandstream/gxv3175",
-							"Wget/1.11.3"=>"konftel/kt300ip"
-							);
 
-						foreach ($template_list as $key=>$val){
-							if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
-								$device_template = $val;
-								break;
-							}
-						}
-						unset($template_list);
-
-					//mac address does not exist in the table so add it
-						if (strlen($domain_uuid) > 0) {
-							$device_uuid = uuid();
-							$sql = "INSERT INTO v_devices ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "device_uuid, ";
-							$sql .= "device_mac_address, ";
-							$sql .= "device_vendor, ";
-							$sql .= "device_model, ";
-							$sql .= "device_provision_enable, ";
-							$sql .= "device_template, ";
-							$sql .= "device_description ";
-							$sql .= ") ";
-							$sql .= "VALUES ";
-							$sql .= "(";
-							$sql .= "'".$domain_uuid."', ";
-							$sql .= "'$device_uuid', ";
-							$sql .= "'$mac', ";
-							$sql .= "'$device_vendor', ";
-							$sql .= "'', ";
-							$sql .= "'true', ";
-							$sql .= "'$device_template', ";
-							$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
-							$sql .= ")";
-							$this->db->exec(check_sql($sql));
-							unset($sql);
-						}
+			//get the device uuid using the username and password
+				if (isset($_GET['user_id'])) {
+					$sql = "SELECT * FROM v_device_lines ";
+					$sql .= "WHERE user_id = :user_id ";
+					$sql .= "AND password = :password ";
+					$sql .= "AND domain_uuid = :domain_uuid ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->bindParam(':user_id', $_GET['user_id']);
+					$prep_statement->bindParam(':password', $_GET['password']);
+					$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach($result as $row) {
+						$device_uuid = $row['device_uuid'];
+					}
+					unset ($prep_statement);
 				}
 
 			//get the device settings table in the provision category and update the provision array
