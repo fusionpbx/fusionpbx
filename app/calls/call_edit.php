@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -392,61 +392,63 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //pre-populate the form
-	$sql = "select * from v_follow_me ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and follow_me_uuid = '$follow_me_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$cid_name_prefix = $row["cid_name_prefix"];
-		$cid_number_prefix = $row["cid_number_prefix"];
-		$follow_me_enabled = $row["follow_me_enabled"];
-		$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
+	if ($follow_me_uuid != '') {
+		$sql = "select * from v_follow_me ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and follow_me_uuid = '$follow_me_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$cid_name_prefix = $row["cid_name_prefix"];
+			$cid_number_prefix = $row["cid_number_prefix"];
+			$follow_me_enabled = $row["follow_me_enabled"];
+			$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
 
-		$sql = "select * from v_follow_me_destinations ";
-		$sql .= "where follow_me_uuid = '$follow_me_uuid' ";
-		$sql .= "order by follow_me_order asc ";
-		$prep_statement_2 = $db->prepare(check_sql($sql));
-		$prep_statement_2->execute();
-		$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-		$x = 1;
-		foreach ($result2 as &$row2) {
-			if ($x == 1) {
-				$destination_data_1 = $row2["follow_me_destination"];
-				$destination_delay_1 = $row2["follow_me_delay"];
-				$destination_prompt_1 = $row2["follow_me_prompt"];
-				$destination_timeout_1 = $row2["follow_me_timeout"];
+			$sql = "select * from v_follow_me_destinations ";
+			$sql .= "where follow_me_uuid = '$follow_me_uuid' ";
+			$sql .= "order by follow_me_order asc ";
+			$prep_statement_2 = $db->prepare(check_sql($sql));
+			$prep_statement_2->execute();
+			$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+			$x = 1;
+			foreach ($result2 as &$row2) {
+				if ($x == 1) {
+					$destination_data_1 = $row2["follow_me_destination"];
+					$destination_delay_1 = $row2["follow_me_delay"];
+					$destination_prompt_1 = $row2["follow_me_prompt"];
+					$destination_timeout_1 = $row2["follow_me_timeout"];
+				}
+				if ($x == 2) {
+					$destination_data_2 = $row2["follow_me_destination"];
+					$destination_delay_2 = $row2["follow_me_delay"];
+					$destination_prompt_2 = $row2["follow_me_prompt"];
+					$destination_timeout_2 = $row2["follow_me_timeout"];
+				}
+				if ($x == 3) {
+					$destination_data_3 = $row2["follow_me_destination"];
+					$destination_delay_3 = $row2["follow_me_delay"];
+					$destination_prompt_3 = $row2["follow_me_prompt"];
+					$destination_timeout_3 = $row2["follow_me_timeout"];
+				}
+				if ($x == 4) {
+					$destination_data_4 = $row2["follow_me_destination"];
+					$destination_delay_4 = $row2["follow_me_delay"];
+					$destination_prompt_4 = $row2["follow_me_prompt"];
+					$destination_timeout_4 = $row2["follow_me_timeout"];
+				}
+				if ($x == 5) {
+					$destination_data_5 = $row2["follow_me_destination"];
+					$destination_delay_5 = $row2["follow_me_delay"];
+					$destination_prompt_5 = $row2["follow_me_prompt"];
+					$destination_timeout_5 = $row2["follow_me_timeout"];
+				}
+				$x++;
 			}
-			if ($x == 2) {
-				$destination_data_2 = $row2["follow_me_destination"];
-				$destination_delay_2 = $row2["follow_me_delay"];
-				$destination_prompt_2 = $row2["follow_me_prompt"];
-				$destination_timeout_2 = $row2["follow_me_timeout"];
-			}
-			if ($x == 3) {
-				$destination_data_3 = $row2["follow_me_destination"];
-				$destination_delay_3 = $row2["follow_me_delay"];
-				$destination_prompt_3 = $row2["follow_me_prompt"];
-				$destination_timeout_3 = $row2["follow_me_timeout"];
-			}
-			if ($x == 4) {
-				$destination_data_4 = $row2["follow_me_destination"];
-				$destination_delay_4 = $row2["follow_me_delay"];
-				$destination_prompt_4 = $row2["follow_me_prompt"];
-				$destination_timeout_4 = $row2["follow_me_timeout"];
-			}
-			if ($x == 5) {
-				$destination_data_5 = $row2["follow_me_destination"];
-				$destination_delay_5 = $row2["follow_me_delay"];
-				$destination_prompt_5 = $row2["follow_me_prompt"];
-				$destination_timeout_5 = $row2["follow_me_timeout"];
-			}
-			$x++;
+			unset ($prep_statement_2);
 		}
-		unset ($prep_statement_2);
+		unset ($prep_statement);
 	}
-	unset ($prep_statement);
 
 //set the default
 	if (!isset($dnd_enabled)) {
