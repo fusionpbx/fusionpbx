@@ -54,14 +54,16 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 //prepare the mac address
-	//normalize the mac address to lower case
-		$mac = strtolower($mac);
-	//replace all non hexadecimal values and validate the mac address
-		$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
-		if (strlen($mac) != 12) {
-			echo "invalid mac address";
-			exit;
-		}
+	if (!isset($_GET['user_id'])) {
+		//normalize the mac address to lower case
+			$mac = strtolower($mac);
+		//replace all non hexadecimal values and validate the mac address
+			$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			if (strlen($mac) != 12) {
+				echo "invalid mac address";
+				exit;
+			}
+	}
 
 //get the domain_name and domain_uuid
 	if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
