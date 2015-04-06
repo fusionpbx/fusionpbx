@@ -406,7 +406,6 @@ require_once "resources/require.php";
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-
 		function check_mac_duplicate(mac_addr, device_uuid_to_ignore) {
 			if (mac_addr != '') {
 				check_url = "device_edit.php?mac="+mac_addr+"&id="+device_uuid_to_ignore;
@@ -447,7 +446,7 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_mac_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
