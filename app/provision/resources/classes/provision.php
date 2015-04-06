@@ -174,7 +174,7 @@ include "root.php";
 				}
 
 			//check to see if the mac_address exists in devices
-				if (isset($_REQUEST['user_id']) or isset($_REQUEST['userid'])) {
+				if (strlen($_REQUEST['user_id']) > 0 || strlen($_REQUEST['userid']) > 0) {
 					if ($this->mac_exists($mac)) {
 						//get the device_template
 							if (strlen($device_template) == 0) {
@@ -297,12 +297,12 @@ include "root.php";
 				}
 
 			//get the device uuid using the username and password
-				if (isset($_REQUEST['user_id']) or isset($_REQUEST['userid'])) {
+				if (strlen($_REQUEST['user_id']) > 0 || strlen($_REQUEST['userid']) > 0) {
 					//set the variables
 						$user_id = $_REQUEST['user_id'];
 						$password = $_REQUEST['password'];
-						if (isset($_REQUEST['userid'])) { $user_id = $_REQUEST['userid']; }
-						if (isset($_REQUEST['password'])) { $password = $_REQUEST['passwd']; }
+						if (strlen($_REQUEST['userid']) > 0) { $user_id = $_REQUEST['userid']; }
+						if (strlen($_REQUEST['passwd']) > 0) { $password = $_REQUEST['passwd']; }
 					//get the device uuid
 						$sql = "SELECT * FROM v_device_lines ";
 						$sql .= "WHERE user_id = :user_id ";
