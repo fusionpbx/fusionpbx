@@ -27,7 +27,6 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "./resources/functions/get_call_activity.php";
-
 if (permission_exists('operator_panel_view')) {
 	//access granted
 }
@@ -178,6 +177,21 @@ foreach ($activity as $extension => $ext) {
 			$call_number = format_phone((int) $ext['dest']);
 		}
 		$dir_icon = 'outbound';
+	}
+	else if ($ext['state'] == 'CS_HIBERNATE') {
+		if ($ext['callstate'] == 'ACTIVE') {
+			$ext_state = 'active';
+			if ($ext['direction'] == 'inbound') {
+				$call_name = $activity[(int) $ext['dest']]['effective_caller_id_name'];
+				$call_number = format_phone((int) $ext['dest']);
+				$dir_icon = 'outbound';
+			}
+			else if ($ext['direction'] == 'outbound') {
+				$call_name = $activity[(int) $ext['cid_num']]['effective_caller_id_name'];
+				$call_number = format_phone((int) $ext['cid_num']);
+				$dir_icon = 'inbound';
+			}
+		}
 	}
 	else if ($ext['state'] == 'CS_CONSUME_MEDIA' || $ext['state'] == 'CS_EXCHANGE_MEDIA') {
 		if ($ext['state'] == 'CS_CONSUME_MEDIA' && $ext['callstate'] == 'RINGING' && $ext['direction'] == 'outbound') {
@@ -333,10 +347,10 @@ foreach ($activity as $extension => $ext) {
 	}
 	else {
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= "		<img src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
-			$block .= "		<form onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
-			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"if (this.value == '') { refresh_start(); }\">";
-			$block .= "		</form>";
+			$block .= "		<img id='destination_control_".$extension."' src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
+			$block .= "		<form id='frm_destination_".$extension."' onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
+			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."');\">";
+			$block .= "		</form>\n";
 		}
 	}
 	$block .= "		</td>";
@@ -402,12 +416,13 @@ else {
 echo "<br><br>";
 
 if (isset($_GET['debug'])) {
+	echo '$activity<br>';
 	echo "<textarea style='width: 100%; height: 600px; overflow: scroll;' onfocus='refresh_stop();' onblur='refresh_start();'>";
 	print_r($activity);
 	echo "</textarea>";
 	echo "<br><br>";
 
-	echo '$_SESSION...';
+	echo '$_SESSION<br>';
 	echo "<textarea style='width: 100%; height: 600px; overflow: scroll;' onfocus='refresh_stop();' onblur='refresh_start();'>";
 	print_r($_SESSION);
 	echo "</textarea>";
