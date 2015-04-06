@@ -54,7 +54,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 //prepare the mac address
-	if (!isset($_GET['user_id'])) {
+	if (isset($_REQUEST['mac'])) {
 		//normalize the mac address to lower case
 			$mac = strtolower($mac);
 		//replace all non hexadecimal values and validate the mac address
