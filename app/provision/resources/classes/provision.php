@@ -377,12 +377,11 @@ include "root.php";
 					//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					$result_count = count($result);
+					$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				//assign the keys array
-					$view->assign("lines", $result);
+					$view->assign("lines", $device_lines);
 				//set the variables
-					foreach($result as $row) {
+					foreach($device_lines as $row) {
 						//set the variables
 							$line_number = $row['line_number'];
 							$register_expires = $row['register_expires'];
@@ -400,6 +399,17 @@ include "root.php";
 									$sip_port = "506".($line_number + 1);
 								}
 							}
+
+						//set a lines array index is the line number
+							$lines[$line_number]['register_expires'] = $register_expires;
+							$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
+							$lines[$line_number]['sip_port'] = $sip_port;
+							$lines[$line_number]['server_address'] = $row["server_address"]);
+							$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy"]);
+							$lines[$line_number]['display_name'] = = $row["display_name"]);
+							$lines[$line_number]['auth_id'] = = $row["auth_id"]);
+							$lines[$line_number]['user_id'] = = $row["user_id"]);
+							$lines[$line_number]['password'] = = $row["password"]);
 
 						//assign the variables
 							$view->assign("server_address_".$line_number, $row["server_address"]);
@@ -480,6 +490,84 @@ include "root.php";
 							$device_key_value = $row['device_key_value']; //1
 							$device_key_extension = $row['device_key_extension'];
 							$device_key_label = $row['device_key_label']; //label
+
+						//set the line key
+							$x = $device_key_line;
+
+						//add a simple variable with the index
+							if ($x === 0 or $x === 1) {
+								$device_key_value = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_value);
+								$device_key_value = str_replace("\${auth_id}", $lines[$x]['auth_id'], $device_key_value);
+								$device_key_value = str_replace("\${extension}", $lines[$x]['user_id'], $device_key_value);
+								$device_key_value = str_replace("\${password}", $lines[$x]['password'], $device_key_value);
+								$device_key_value = str_replace("\${register_expires}", $lines[$x]['register_expires'], $device_key_value);
+								$device_key_value = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_value);
+								$device_key_value = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_value);
+								$device_key_value = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_value);
+								$device_key_value = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_value);
+
+								$device_key_extension = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_extension);
+								$device_key_extension = str_replace("\${auth_id}", $lines[$x]['auth_id'], $device_key_extension);
+								$device_key_extension = str_replace("\${extension}", $lines[$x]['user_id'], $device_key_extension);
+								$device_key_extension = str_replace("\${password}", $lines[$x]['password'], $device_key_extension);
+								$device_key_extension = str_replace("\${register_expires}", $lines[$x]['register_expires'], $device_key_extension);
+								$device_key_extension = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_extension);
+								$device_key_extension = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_extension);
+								$device_key_extension = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_extension);
+								$device_key_extension = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_extension);
+
+								$device_key_label = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_label);
+								$device_key_label = str_replace("\${auth_id}", $lines[$x]['auth_id'], $device_key_label);
+								$device_key_label = str_replace("\${extension}", $lines[$x]['user_id'], $device_key_label);
+								$device_key_label = str_replace("\${password}", $lines[$x]['password'], $device_key_label);
+								$device_key_label = str_replace("\${register_expires}", $lines[$x]['register_expires'], $device_key_label);
+								$device_key_label = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_label);
+								$device_key_label = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_label);
+								$device_key_label = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_label);
+								$device_key_label = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_label);
+							}
+
+						//add variables with the index
+							$device_key_value = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_value);
+							$device_key_value = str_replace("\${auth_id_$x}", $lines[$x]['auth_id'], $device_key_value);
+							$device_key_value = str_replace("\${extension_$x}", $lines[$x]['user_id'], $device_key_value);
+							$device_key_value = str_replace("\${password_$x}", $lines[$x]['password'], $device_key_value);
+							$device_key_value = str_replace("\${register_expires_$x}", $lines[$x]['register_expires'], $device_key_value);
+							$device_key_value = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_value);
+							$device_key_value = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_value);
+							$device_key_value = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_value);
+							$device_key_value = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_value);
+
+							$device_key_extension = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
+							$device_key_extension = str_replace("\${auth_id_$x}", $lines[$x]['auth_id'], $device_key_label);
+							$device_key_extension = str_replace("\${extension_$x}", $lines[$x]['user_id'], $device_key_label);
+							$device_key_extension = str_replace("\${password_$x}", $lines[$x]['password'], $device_key_label);
+							$device_key_extension = str_replace("\${register_expires_$x}", $lines[$x]['register_expires'], $device_key_label);
+							$device_key_extension = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
+							$device_key_extension = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
+							$device_key_extension = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_extension = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
+
+							$device_key_label = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
+							$device_key_label = str_replace("\${auth_id_$x}", $lines[$x]['auth_id'], $device_key_label);
+							$device_key_label = str_replace("\${extension_$x}", $lines[$x]['user_id'], $device_key_label);
+							$device_key_label = str_replace("\${password_$x}", $lines[$x]['password'], $device_key_label);
+							$device_key_label = str_replace("\${register_expires_$x}", $lines[$x]['register_expires'], $device_key_label);
+							$device_key_label = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
+							$device_key_label = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
+							$device_key_label = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_label = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
+
+						//add general variables
+							$device_key_value = str_replace("\${domain_name}", $domain_name, $device_key_value);
+							$device_key_extension = str_replace("\${domain_name}", $domain_name, $device_key_extension);
+							$device_key_label = str_replace("\${domain_name}", $domain_name, $device_key_label);
 
 						//grandstream modes are different based on the category
 							if ($device_vendor == "grandstream") {
