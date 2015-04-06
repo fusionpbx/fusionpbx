@@ -53,15 +53,15 @@
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
-	if (settings['ivr_menu'] ~= nil) then
-		if (settings['ivr_menu']['storage_type'] ~= nil) then
-			if (settings['ivr_menu']['storage_type']['text'] ~= nil) then
-				storage_type = settings['ivr_menu']['storage_type']['text'];
+	if (settings['recordings'] ~= nil) then
+		if (settings['recordings']['storage_type'] ~= nil) then
+			if (settings['recordings']['storage_type']['text'] ~= nil) then
+				storage_type = settings['recordings']['storage_type']['text'];
 			end
 		end
-		if (settings['ivr_menu']['storage_path'] ~= nil) then
-			if (settings['ivr_menu']['storage_path']['text'] ~= nil) then
-				storage_path = settings['ivr_menu']['storage_path']['text'];
+		if (settings['recordings']['storage_path'] ~= nil) then
+			if (settings['recordings']['storage_path']['text'] ~= nil) then
+				storage_path = settings['recordings']['storage_path']['text'];
 				storage_path = storage_path:gsub("${domain_name}", domain_name);
 				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
 				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
