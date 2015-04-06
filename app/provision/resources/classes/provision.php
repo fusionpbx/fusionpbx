@@ -139,7 +139,7 @@ include "root.php";
 				$file = $this->file;
 
 			//get the device template
-				if (isset($_REQUEST['template'])) {
+				if (strlen($_REQUEST['template']) > 0) {
 					$device_template = $_REQUEST['template'];
 					$search = array('..', '/./');
 					$device_template = str_replace($search, "", $device_template);
@@ -174,7 +174,7 @@ include "root.php";
 				}
 
 			//check to see if the mac_address exists in devices
-				if (strlen($_REQUEST['user_id']) > 0 || strlen($_REQUEST['userid']) > 0) {
+				if (strlen($_REQUEST['user_id']) == 0 || strlen($_REQUEST['userid']) == 0) {
 					if ($this->mac_exists($mac)) {
 						//get the device_template
 							if (strlen($device_template) == 0) {
