@@ -46,7 +46,46 @@ $term = check_str($_GET['term']);
 	//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
-//build query for suggestion list
+//get extensions list
+	$sql = "select ";
+	$sql .= "e.extension, ";
+	$sql .= "e.effective_caller_id_name, ";
+	$sql .= "e.directory_full_name ";
+	$sql .= "from ";
+	$sql .= "v_extensions e ";
+	$sql .= "where ";
+	$sql .= "( ";
+	$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or ";
+	$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or ";
+	$sql .= "	lower(e.directory_full_name) like lower('%".$term."%') or ";
+	$sql .= "	lower(e.description) like lower('%".$term."%') or ";
+	$sql .= "	lower(e.call_group) like lower('%".$term."%') or ";
+	$sql .= "	e.extension like '%".$term."%' ";
+	$sql .= ") ";
+	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and e.enabled = 'true' ";
+	$sql .= "order by ";
+	$sql .= "e.directory_full_name asc, ";
+	$sql .= "e.effective_caller_id_name asc ";
+	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
+
+	if ($result_count > 0) {
+		foreach($result as $row) {
+			if ($row['directory_full_name'] != '') { $values[] = $row['directory_full_name']; }
+			if ($row['effective_caller_id_name'] != '') { $values[] = $row['effective_caller_id_name']; }
+
+			$suggestions[] = "{ \"label\": \"".(implode(', ', $values)." @ ".$row['extension'])."\", \"value\": \"".$row['extension']."\" }";
+			unset($values);
+		}
+		unset($sql, $result, $row_count);
+	}
+
+//get contacts list
 	$sql = "select ";
 	$sql .= "c.contact_organization, ";
 	$sql .= "c.contact_name_given, ";
@@ -84,7 +123,11 @@ $term = check_str($_GET['term']);
 		$sql .= ") \n";
 	}
 	$sql .= "and p.phone_type_voice = 1 ";
-	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+	$sql .= "order by ";
+	$sql .= "contact_organization desc, ";
+	$sql .= "contact_name_given asc, ";
+	$sql .= "contact_name_family asc ";
+	if (isset($_GET['debug'])) { echo $sql."<br><br>"; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -92,11 +135,7 @@ $term = check_str($_GET['term']);
 	unset($prep_statement, $sql);
 
 	if ($result_count > 0) {
-		$resp .= "[\n";
-
 		foreach($result as $row) {
-
-			//build suggestions
 			if ($row['contact_organization'] != '') { $values[] = $row['contact_organization']; }
 
 			if ($row['contact_name_given'] != '') { $names = $row['contact_name_given']; }
@@ -110,7 +149,11 @@ $term = check_str($_GET['term']);
 			unset($values, $names);
 		}
 		unset($sql, $result, $row_count);
+	}
 
+//output suggestions, if any
+	if (sizeof($suggestions) > 0) {
+		$resp .= "[\n";
 		$resp .= implode(",\n", $suggestions)."\n";
 		$resp .= "]";
 
@@ -118,5 +161,4 @@ $term = check_str($_GET['term']);
 		echo $resp;
 		if (isset($_GET['debug'])) { echo "</pre>"; }
 	}
-
 ?>
