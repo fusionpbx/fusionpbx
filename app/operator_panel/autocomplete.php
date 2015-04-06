@@ -33,7 +33,8 @@ else {
 	exit;
 }
 
-$term = check_str($_GET['term']);
+//search term
+	$term = check_str($_GET['term']);
 
 //add multi-lingual support
 	$language = new text;
