@@ -252,6 +252,8 @@
 					end
 			end);
 		end
+	elseif (storage_type == "http_cache") then
+		
 	end
 
 --define the ivr menu
@@ -360,7 +362,7 @@
 								session:execute("transfer", digits.." XML "..context);
 						else
 							--run the menu again
-								menu();	
+								menu();
 						end
 				end
 			end
