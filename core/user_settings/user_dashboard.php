@@ -43,7 +43,6 @@
 
 //additional includes
 	require_once "resources/check_auth.php";
-	load_extensions();
 
 //disable login message
 	if ($_GET['msg'] == 'dismiss') {
