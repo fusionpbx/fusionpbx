@@ -75,6 +75,47 @@ require_once "resources/header.php";
 <input type='hidden' class='formfld' id='vd_ext_from' value=''>
 <input type='hidden' class='formfld' id='vd_ext_to' value=''>
 
+<!-- autocomplete for contact lookup -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css" />
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui-1.9.2.min.js"></script>
+<style>
+	.ui-widget {
+		font-family: arial;
+		font-size: 12px;
+		margin: 0px;
+		padding: 0px;
+		}
+
+	.ui-autocomplete {
+		cursor: default;
+		position: absolute;
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		white-space: nowrap;
+		width: auto;
+		border: 1px solid #c0c0c0;
+		}
+
+	.ui-menu .ui-menu-item a {
+		padding-right: 25px;
+		text-decoration: none;
+		cursor: pointer;
+		border-color: #fff;
+		background-image: none;
+		background-color: #fff;
+		color: #444;
+		}
+
+	.ui-menu .ui-menu-item a:hover {
+		padding-right: 25px;
+		color: #5082ca;
+		border: 1px solid white;
+		background-image: none;
+		background-color: #fff;
+		}
+</style>
+
 <script type="text/javascript">
 //ajax refresh
 	var refresh = 1950;
@@ -217,12 +258,20 @@ require_once "resources/header.php";
 //call destination
 	function call_destination(from_ext, destination) {
 		if (destination != '') {
-			cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+			if (!isNaN(parseFloat(destination)) && isFinite(destination)) {
+				cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+				if (cmd != '') {
+					send_cmd('exec.php?cmd='+escape(cmd));
+					$('#destination_'+from_ext).autocomplete("destroy");
+					$('#destination_'+from_ext).removeAttr('onblur');
+					toggle_destination(from_ext);
+					refresh_start();
+				}
+			}
 		}
-		if (cmd != '') {
-			send_cmd('exec.php?cmd='+escape(cmd));
+		else {
+			toggle_destination(from_ext);
 		}
-		refresh_start();
 	}
 
 //kill call
@@ -269,12 +318,22 @@ require_once "resources/header.php";
 //hide/show destination input field
 	function toggle_destination(ext) {
 		refresh_stop();
+		$('#destination_control_'+ext).fadeToggle(200);
 		$('#destination_'+ext).fadeToggle(200, function(){
 			if ($('#destination_'+ext).is(':visible')) {
 				$('#destination_'+ext).focus();
+				$('#destination_'+ext).autocomplete({
+					source: "autocomplete.php",
+					minLength: 3,
+					select: function(event, ui) {
+						$('#destination_'+ext).val(ui.item.value);
+						$('#frm_destination_'+ext).submit();
+					}
+				});
 			}
 			else {
 				$('#destination_'+ext).val('');
+				$('#destination_'+ext).autocomplete('destroy');
 				refresh_start();
 			}
 		});
