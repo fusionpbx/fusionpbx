@@ -129,7 +129,7 @@ include "root.php";
 		function render() {
 			
 			//debug
-				$debug = $_GET['debug']; // array
+				$debug = $_REQUEST['debug']; // array
 			
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
@@ -174,7 +174,7 @@ include "root.php";
 				}
 
 			//check to see if the mac_address exists in devices
-				if (!isset($_GET['user_id'])) {
+				if (isset($_REQUEST['user_id']) or isset($_REQUEST['userid'])) {
 					if ($this->mac_exists($mac)) {
 						//get the device_template
 							if (strlen($device_template) == 0) {
@@ -297,21 +297,27 @@ include "root.php";
 				}
 
 			//get the device uuid using the username and password
-				if (isset($_GET['user_id'])) {
-					$sql = "SELECT * FROM v_device_lines ";
-					$sql .= "WHERE user_id = :user_id ";
-					$sql .= "AND password = :password ";
-					$sql .= "AND domain_uuid = :domain_uuid ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->bindParam(':user_id', $_GET['user_id']);
-					$prep_statement->bindParam(':password', $_GET['password']);
-					$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach($result as $row) {
-						$device_uuid = $row['device_uuid'];
-					}
-					unset ($prep_statement);
+				if (isset($_REQUEST['user_id']) or isset($_REQUEST['userid'])) {
+					//set the variables
+						$user_id = $_REQUEST['user_id'];
+						$password = $_REQUEST['password'];
+						if (isset($_REQUEST['userid'])) { $user_id = $_REQUEST['userid']; }
+						if (isset($_REQUEST['password'])) { $password = $_REQUEST['passwd']; }
+					//get the device uuid
+						$sql = "SELECT * FROM v_device_lines ";
+						$sql .= "WHERE user_id = :user_id ";
+						$sql .= "AND password = :password ";
+						$sql .= "AND domain_uuid = :domain_uuid ";
+						$prep_statement = $this->db->prepare(check_sql($sql));
+						$prep_statement->bindParam(':user_id', $user_id);
+						$prep_statement->bindParam(':password', $password);
+						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach($result as $row) {
+							$device_uuid = $row['device_uuid'];
+						}
+						unset ($prep_statement);
 				}
 
 			//get the device settings table in the provision category and update the provision array
@@ -557,7 +563,9 @@ include "root.php";
 					$view->assign("project_path", PROJECT_PATH);
 					$view->assign("server1_address", $server1_address);
 					$view->assign("proxy1_address", $proxy1_address);
+					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
+					$view->assign("template",$device_template);
 
 				//replace the dynamic provision variables that are defined in default, domain, and device settings
 					foreach($provision as $key=>$val) {
