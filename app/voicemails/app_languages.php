@@ -286,6 +286,11 @@
 		$text['message-required']['pt-pt'] = "Por favor indique";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+		$text['message-mailbox_not_found']['en-us'] = "No mailbox found.";
+		$text['message-mailbox_not_found']['es-cl'] = "No se encontró buzón de correo.";
+		$text['message-mailbox_not_found']['pt-pt'] = "Sem caixa de correio encontrado.";
+		$text['message-mailbox_not_found']['fr-fr'] = "Aucune boîte aux lettres trouvé.";
+
 	//Voicemail Messages
 		$text['title-voicemail_messages']['en-us'] = "Voicemail Messages";
 		$text['title-voicemail_messages']['es-cl'] = "Mensajes de correo de voz";
@@ -386,5 +391,10 @@
 		$text['description-message_priority']['es-cl'] = "Prioridad";
 		$text['description-message_priority']['pt-pt'] = "Prioridade";
 		$text['description-message_priority']['fr-fr'] = "Priorité";
+
+		$text['message-messages_not_found']['en-us'] = "No messages found.";
+		$text['message-messages_not_found']['es-cl'] = "No hay mensajes encontrados.";
+		$text['message-messages_not_found']['pt-pt'] = "Nenhuma mensagem encontrada.";
+		$text['message-messages_not_found']['fr-fr'] = "Aucun message trouvé.";
 
 ?>
