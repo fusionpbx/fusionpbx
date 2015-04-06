@@ -406,10 +406,10 @@ include "root.php";
 							$lines[$line_number]['sip_port'] = $sip_port;
 							$lines[$line_number]['server_address'] = $row["server_address"];
 							$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy"];
-							$lines[$line_number]['display_name'] = = $row["display_name"];
-							$lines[$line_number]['auth_id'] = = $row["auth_id"];
-							$lines[$line_number]['user_id'] = = $row["user_id"];
-							$lines[$line_number]['password'] = = $row["password"];
+							$lines[$line_number]['display_name'] = $row["display_name"];
+							$lines[$line_number]['auth_id'] = $row["auth_id"];
+							$lines[$line_number]['user_id'] = $row["user_id"];
+							$lines[$line_number]['password'] = $row["password"];
 
 						//assign the variables
 							$view->assign("server_address_".$line_number, $row["server_address"]);
