@@ -128,6 +128,7 @@
 							end
 					elseif (storage_type == "http_cache") then
 						freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
+						storage_path = storage_path:gsub("${domain_name}", domain_name);
 						session:execute("record", storage_path .."/"..recording_name);
 					else
 						--prepare to record the greeting
@@ -140,7 +141,6 @@
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
 							--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 						end
-
 					end
 
 				--use the new greeting

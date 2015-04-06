@@ -122,6 +122,19 @@
 				domain_uuid = string.lower(domain_uuid);
 			end
 
+		--if voicemail_id is non numeric then get the number-alias
+			if (voicemail_id ~= nil) then
+				if tonumber(voicemail_id) == nil then
+					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");
+				end
+			end
+
+		--set the voicemail_dir
+			voicemail_dir = voicemail_dir.."/default/"..domain_name;
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
+			end
+
 		--settings
 			dofile(scripts_dir.."/resources/functions/settings.lua");
 			settings = settings(domain_uuid);
@@ -136,6 +149,9 @@
 				if (settings['voicemail']['storage_path'] ~= nil) then
 					if (settings['voicemail']['storage_path']['text'] ~= nil) then
 						storage_path = settings['voicemail']['storage_path']['text'];
+						storage_path = storage_path:gsub("${domain_name}", domain_name);
+						storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
 					end
 				end
 			end
@@ -146,19 +162,6 @@
 						temp_dir = settings['server']['temp']['dir'];
 					end
 				end
-			end
-
-		--if voicemail_id is non numeric then get the number-alias
-			if (voicemail_id ~= nil) then
-				if tonumber(voicemail_id) == nil then
-					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");	 
-				end
-			end
-
-		--set the voicemail_dir
-			voicemail_dir = voicemail_dir.."/default/"..domain_name;
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
 			end
 
 		--get the voicemail settings
