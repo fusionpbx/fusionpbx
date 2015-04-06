@@ -167,12 +167,32 @@ function load_extensions() {
 		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
-				$sql = "select e.extension, e.number_alias, e.user_context, e.extension_uuid, e.outbound_caller_id_name, e.outbound_caller_id_number from v_extensions as e, v_extension_users as u ";
-				$sql .= "where e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and e.extension_uuid = u.extension_uuid ";
-				$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-				$sql .= "and e.enabled = 'true' ";
-				$sql .= "order by e.extension asc ";
+				$sql = "select ";
+				$sql .= "	e.extension, ";
+				$sql .= "	e.number_alias, ";
+				$sql .= "	e.user_context, ";
+				$sql .= "	e.extension_uuid, ";
+				$sql .= "	e.outbound_caller_id_name, ";
+				$sql .= "	e.outbound_caller_id_number, ";
+				$sql .= "	v.voicemail_uuid ";
+				$sql .= "from ";
+				$sql .= "	v_extension_users as u, ";
+				$sql .= "	v_extensions as e ";
+				$sql .= "		left outer join v_voicemails as v on ( ";
+				$sql .= "			e.domain_uuid = v.domain_uuid ";
+				$sql .= "			and v.voicemail_enabled = 'true' ";
+				$sql .= "			and ( ";
+				$sql .= "				e.extension = v.voicemail_id ";
+				$sql .= "				or e.number_alias = v.voicemail_id ";
+				$sql .= "			) ";
+				$sql .= "		) ";
+				$sql .= "where ";
+				$sql .= "	e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "	and e.extension_uuid = u.extension_uuid ";
+				$sql .= "	and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+				$sql .= "	and e.enabled = 'true' ";
+				$sql .= "order by ";
+				$sql .= "	e.extension asc ";
 				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 				if (count($result) > 0) {
 					$x = 0;
@@ -182,6 +202,9 @@ function load_extensions() {
 						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+						if ($row['voicemail_uuid'] != '') {
+							$_SESSION['user']['voicemail'][]['voicemail_uuid'] = $row['voicemail_uuid'];
+						}
 						$_SESSION['user_context'] = $row["user_context"];
 						$x++;
 					}

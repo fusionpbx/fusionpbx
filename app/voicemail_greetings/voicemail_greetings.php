@@ -230,12 +230,15 @@ else {
 	echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frm\" onSubmit=\"\">\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' nowrap>\n";
-	echo "			<span class='title'>".$text['title']."</span><br>\n";
+	echo "		<td align='left' nowrap valign='top'>\n";
+	echo "			<span class='title'>".$text['title']."</span>\n";
+	echo "			<br><br>\n";
+	echo "			".$text['description']." <strong>".$voicemail_id."</strong>\n";
 	echo "		</td>";
 
 	if (permission_exists('voicemail_greeting_upload')) {
-		echo "	<td align='right' nowrap>\n";
+		echo "	<td align='right' nowrap valign='top'>\n";
+		echo "		<div valign='middle'>\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemails.php';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 		echo "		<input name=\"file\" type=\"file\" class=\"formfld fileinput\" id=\"file\">\n";
 		echo "		<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
@@ -244,13 +247,7 @@ else {
 	}
 
 	echo "	</tr>";
-	echo "	<tr>";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description']." $voicemail_id. <br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
 	echo "</table>\n";
-
 	echo "<br />\n";
 
 	//get the number of rows in v_voicemail_greetings

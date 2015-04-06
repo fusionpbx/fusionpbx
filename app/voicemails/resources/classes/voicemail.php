@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -41,13 +41,18 @@
 					$voicemail_uuid = check_str($_REQUEST["id"]);
 				}
 
-			//set the voicemail_id array
-				foreach ($_SESSION['user']['extension'] as $row) {
+			//set the voicemail id and voicemail uuid arrays
+				foreach ($_SESSION['user']['extension'] as $index => $row) {
 					if (strlen($row['number_alias']) > 0) {
-						$voicemail_ids[]['voicemail_id'] = $row['number_alias'];
+						$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
 					}
 					else {
-						$voicemail_ids[]['voicemail_id'] = $row['user'];
+						$voicemail_ids[$index]['voicemail_id'] = $row['user'];
+					}
+				}
+				foreach ($_SESSION['user']['voicemail'] as $row) {
+					if (strlen($row['voicemail_uuid']) > 0) {
+						$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 					}
 				}
 
@@ -60,18 +65,18 @@
 						$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 					}
 					else {
-						//ensure that the requested voicemail id is assigned to this user
+						//ensure that the requested voicemail box is assigned to this user
 						$found = false;
-						foreach($voicemail_ids as $row) {
-							if ($voicemail_uuid == $row['voicemail_id']) {
-								$sql .= "and voicemail_id = '".$row['voicemail_id']."' ";
+						foreach($voicemail_uuids as $row) {
+							if ($voicemail_uuid == $row['voicemail_uuid']) {
+								$sql .= "and voicemail_uuid = '".$row['voicemail_uuid']."' ";
 								$found = true;
 							}
 							$x++;
 						}
 						//id requested is not owned by the user return no results
 						if (!$found) {
-							$sql .= "and voicemail_uuid = '' ";
+							$sql .= "and voicemail_uuid is null ";
 						}
 					}
 				}
@@ -93,7 +98,7 @@
 					}
 					else {
 						//no assigned voicemail ids so return no results
-						$sql .= "and voicemail_uuid = '' ";
+						$sql .= "and voicemail_uuid is null ";
 					}
 				}
 				$sql .= "order by voicemail_id asc ";
