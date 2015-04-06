@@ -12,7 +12,7 @@
 
 	<Title>Login de usuario</Title>
 
-	<URL>http://{$domain_name}{$project_path}/app/provision/?file=index.xml&template={$template}</URL>
+	<URL>http://{$domain_name}{$project_path}/app/provision/?file=config.xml&template={$template}</URL>
 
 	<InputField type="number" password="no" editable="yes">
 			<Prompt>Usuario:</Prompt>
