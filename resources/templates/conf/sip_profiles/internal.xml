@@ -307,7 +307,7 @@
 
 		Note: comment out to restore the behavior before 2008-09-29
 		-->
-		<param name="challenge-realm" value="auto_from"/>
+		<param name="challenge-realm" value="auto_to"/>
 		<param name="disable-rtp-auto-adjust" value="true" enabled="false"/>
 		<!-- on inbound calls make the uuid of the session equal to the sip call id of that call -->
 		<param name="inbound-use-callid-as-uuid" value="true" enabled="false"/>
