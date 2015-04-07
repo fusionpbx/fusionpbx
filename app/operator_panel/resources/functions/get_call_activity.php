@@ -1,6 +1,7 @@
 <?php
 function get_call_activity() {
 	global $db;
+	global $ext_user_status;
 
 	//get the extensions and their user status
 		$sql = "select ";
@@ -10,6 +11,7 @@ function get_call_activity() {
 		$sql .= "e.effective_caller_id_number, ";
 		$sql .= "e.call_group, ";
 		$sql .= "e.description, ";
+		$sql .= "u.user_uuid, ";
 		$sql .= "u.user_status ";
 		$sql .= "from ";
 		$sql .= "v_extensions as e ";
@@ -23,6 +25,14 @@ function get_call_activity() {
 		$prep_statement->execute();
 		$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		unset ($prep_statement, $sql);
+
+	//store extension status by user uuid
+		foreach($extensions as &$row) {
+			if ($row['user_uuid'] != '') {
+				$ext_user_status[$row['user_uuid']] = $row['user_status'];
+				unset($row['user_uuid'], $row['user_status']);
+			}
+		}
 
 	//send the command
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

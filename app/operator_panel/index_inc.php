@@ -267,7 +267,8 @@ foreach ($activity as $extension => $ext) {
 	}
 
 	//determine extension (user) status
-	switch ($ext['user_status']) {
+	$ext_status = (in_array($extension, $_SESSION['user']['extensions'])) ? $ext_user_status[$_SESSION['user_uuid']] : $ext_user_status[$ext['user_uuid']];
+	switch ($ext_status) {
 		case "Available" :
 			$status_icon = "available";
 			$status_hover = $text['label-status_available'];
