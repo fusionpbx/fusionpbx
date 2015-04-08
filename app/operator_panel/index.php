@@ -218,7 +218,8 @@ require_once "resources/header.php";
 	}
 
 //call or transfer to destination
-	function go_destination(from_ext, destination, which, call_id = '') {
+	function go_destination(from_ext, destination, which, call_id) {
+		call_id = typeof call_id !== 'undefined' ? call_id : '';
 		if (destination != '') {
 			if (!isNaN(parseFloat(destination)) && isFinite(destination)) {
 				if (call_id == '') {
