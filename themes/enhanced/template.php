@@ -1260,8 +1260,8 @@ legend {
 
 <script language="JavaScript" type="text/javascript">
 	function display_message(msg, mood, delay) {
-		delay = (typeof delay  === "undefined") ? <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?> : delay;
 		mood = typeof mood !== 'undefined' ? mood : 'default';
+		delay = typeof delay !== 'undefined' ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
 		if (msg != '') {
 			// insert temp div to get width w/o scroll bar
 			var helper_div = $('<div />');
