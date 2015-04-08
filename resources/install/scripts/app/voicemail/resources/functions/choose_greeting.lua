@@ -97,6 +97,7 @@
 						end
 					elseif (storage_type == "http_cache") then
 						--need additional work
+						
 					end
 
 				--play the greeting

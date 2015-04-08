@@ -166,3 +166,81 @@
 	$text['title-2']['fr-fr'] = "Extensions Actives";
 	$text['title-2']['pt-pt'] = "Extensões Ativas";
 ?>
+icação";
+$text['label-app']['pt-br'] = "Aplicação";
+$text['label-app']['pl'] = "Aplikacja";
+$text['label-app']['sv-se'] = "Ansökan";
+
+$text['description-2']['en-us'] = "Use this to view all extensions and monitor and interact with active calls.";
+$text['description-2']['es-cl'] = "Utilice este menú para ver todas las extensiones, monitorear e interactuar con las llamadas activas.";
+$text['description-2']['fr-fr'] = "Voir toutes les extensions, superviser et interagir avec les Communications Actives.";
+$text['description-2']['pt-pt'] = "Utilize este menu para ver todas as extensões, monitorizar e interagir com as chamadas activas.";
+$text['description-2']['pt-br'] = "A informação contem a origem, destino, duração e outros detalhes úteis da chamada.";
+$text['description-2']['pl'] = "Użyj tej opcji, aby zobaczyć wszystkie numery wewnętrzne i monitorować interakcję z aktywnymi połączeniami.";
+$text['description-2']['sv-se'] = "Använd detta för att se alla anknytningar och monitorera och hantera aktiva samtal.";
+
+$text['description']['en-us'] = "Use this to monitor and interact with the active calls.";
+$text['description']['es-cl'] = "Utilice este menú para monitorear e interactuar con las llamadas activas.";
+$text['description']['fr-fr'] = "Superviser et interagir avec les Communications Actives.";
+$text['description']['pt-pt'] = "Utilize este menu para monitorizar e interagir com as chamadas activas.";
+$text['description']['pt-br'] = "Editar informações da conta.";
+$text['description']['pl'] = "Użyć tej opcji do monitorowania i interakcji z aktywnymi połączeniami.";
+$text['description']['sv-se'] = "Använd detta för att monitorera och hantera aktiva samtal.";
+
+$text['confirm-socket']['en-us'] = "Connection to Event Socket failed.";
+$text['confirm-socket']['es-cl'] = "Conexión con socket fallida.";
+$text['confirm-socket']['fr-fr'] = "la Connexion au Event Socket a échoué.";
+$text['confirm-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
+$text['confirm-socket']['pt-br'] = "A conexão ao evento socket falhou";
+$text['confirm-socket']['pl'] = "Polaczenie do  Event Socket  nie powiodło się";
+$text['confirm-socket']['sv-se'] = "Anslutning till 'Event Socket' misslyckades";
+
+$text['confirm-hangup']['en-us'] = "Do you really want to hangup this call?";
+$text['confirm-hangup']['es-cl'] = "¿Realmente desea terminar esta llamada?";
+$text['confirm-hangup']['fr-fr'] = "Voulez-vous vraiment raccrocher cette communication?";
+$text['confirm-hangup']['pt-pt'] = "Deseja realmente terminar esta chamada?";
+$text['confirm-hangup']['pt-br'] = "Deseja realmente finalizar essa chamada?";
+$text['confirm-hangup']['pl'] = "Czy na pewno chcesz się rozłączyć tę rozmowę?";
+$text['confirm-hangup']['sv-se'] = "Vill du verkligen avsluta detta samtal";
+
+$text['check-onbreak-status']['en-us'] = "On Break";
+$text['check-onbreak-status']['es-cl'] = "En Pausa";
+$text['check-onbreak-status']['fr-fr'] = "En Pause";
+$text['check-onbreak-status']['pt-pt'] = "Em Pausa";
+$text['check-onbreak-status']['pt-br'] = "Em Pausa";
+$text['check-onbreak-status']['pl'] = "Na przerwie";
+$text['check-onbreak-status']['sv-se'] = "På Rast";
+
+$text['check-loggedout-status']['en-us'] = "Logged Out";
+$text['check-loggedout-status']['es-cl'] = "Desconectado";
+$text['check-loggedout-status']['fr-fr'] = "Délogué";
+$text['check-loggedout-status']['pt-pt'] = "Desligado";
+$text['check-loggedout-status']['pt-br'] = "Desligado";
+$text['check-loggedout-status']['pl'] = "Wylogowany";
+$text['check-loggedout-status']['sv-se'] = "Utloggad";
+
+$text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
+$text['check-do-not-disturb-status']['es-cl'] = "No molestar";
+$text['check-do-not-disturb-status']['fr-fr'] = "Ne Pas Déranger";
+$text['check-do-not-disturb-status']['pt-pt'] = "Não Perturbar";
+$text['check-do-not-disturb-status']['pt-br'] = "Não Pertube";
+$text['check-do-not-disturb-status']['pl'] = "Nie przeszkadzaj (DND)";
+$text['check-do-not-disturb-status']['sv-se'] = "Stör Ej";
+
+$text['check-available-status']['en-us'] = "Available";
+$text['check-available-status']['es-cl'] = "Disponible";
+$text['check-available-status']['fr-fr'] = "Disponible";
+$text['check-available-status']['pt-pt'] = "Disponível";
+$text['check-available-status']['pt-br'] = "Disponível";
+$text['check-available-status']['pl'] = "Dostępny";
+$text['check-available-status']['sv-se'] = "Anträffbar";
+
+$text['check-available-on-demand-status']['en-us'] = "Available (On Demand)";
+$text['check-available-on-demand-status']['es-cl'] = "Disponible (On Demand)";
+$text['check-available-on-demand-status']['fr-fr'] = "Disponible (Sur Demande)";
+$text['check-available-on-demand-status']['pt-pt'] = "Disponível (A pedido)";
+$text['check-available-on-demand-status']['pt-br'] = "Disponível (A pedido)";
+$text['check-available-on-demand-status']['pl'] = "Dostępny (na żądanie)";
+$text['check-available-on-demand-status']['sv-se'] = "Anträffbar (På Begäran) ";
+
+?>
