@@ -101,8 +101,8 @@ if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				<td valign='top' nowrap='nowrap'>";
 	if (sizeof($_SESSION['user']['extensions']) > 1) {
 		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extensions'][0] : $_REQUEST['eavesdrop_dest'])."\">";
-		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle' ".$onhover_pause_refresh.">";
-		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' xonblur='refresh_start();'>\n";
+		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>";
+		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		foreach ($_SESSION['user']['extensions'] as $user_extension) {
 			echo "				<option value='".$user_extension."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".$user_extension."</option>\n";
 		}
@@ -131,7 +131,7 @@ if (sizeof($groups) > 0) {
 		//show buttons
 		echo "				<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\" ".$onhover_pause_refresh.">";
 		foreach ($groups as $group) {
-			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
+			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\" ".$onhover_pause_refresh.">";
 		}
 	}
 	echo "				</td>";
@@ -314,6 +314,7 @@ foreach ($activity as $extension => $ext) {
 		$block .= "		<span class='op_caller_info'>";
 		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
 		$block .= "				<span class='op_call_info'>".$ext['call_length']."</span><br>";
+		$block .= "				<span class='call_control'>";
 		//record
 		if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 			$call_identifier_record = $ext['call_uuid'];
@@ -342,9 +343,10 @@ foreach ($activity as $extension => $ext) {
 			}
 			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\" ".$onhover_pause_refresh.">";
 		}
+		$block .=				"</span>";
 		//transfer
 		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
-			$block .= 			"<img id='destination_control_".$extension."_transfer' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\">";
+			$block .= 			"<img id='destination_control_".$extension."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\" ".$onhover_pause_refresh.">";
 		}
 		$block .= "			</td></tr></table>";
 		$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
@@ -360,7 +362,7 @@ foreach ($activity as $extension => $ext) {
 	else {
 		//call
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= "		<img id='destination_control_".$extension."_call' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."', 'call');\">";
+			$block .= "		<img id='destination_control_".$extension."_call' class='destination_control' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."', 'call');\" ".$onhover_pause_refresh.">";
 			$block .= "		<form id='frm_destination_".$extension."_call' onsubmit=\"go_destination('".$extension."', document.getElementById('destination_".$extension."_call').value, 'call'); return false;\">";
 			$block .= "			<input type='text' class='formfld' id='destination_".$extension."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."', 'call');\">";
 			$block .= "		</form>\n";

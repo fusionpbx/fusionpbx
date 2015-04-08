@@ -67,6 +67,7 @@ else {
 		exit;
 	}
 
+$document['title'] = $text['title-operator_panel'];
 require_once "resources/header.php";
 ?>
 
@@ -79,8 +80,9 @@ require_once "resources/header.php";
 <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui-1.9.2.min.js"></script>
 <script type="text/javascript">
+
 //ajax refresh
-	var refresh = 1950;
+	var refresh = 1500;
 	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
@@ -230,15 +232,10 @@ require_once "resources/header.php";
 				}
 				if (cmd != '') {
 					send_cmd('exec.php?cmd='+escape(cmd));
-					$('#destination_'+from_ext+'_'+which).autocomplete("destroy");
 					$('#destination_'+from_ext+'_'+which).removeAttr('onblur');
 					toggle_destination(from_ext, which);
-					refresh_start();
 				}
 			}
-		}
-		else {
-			toggle_destination(from_ext, which);
 		}
 	}
 
@@ -288,16 +285,16 @@ require_once "resources/header.php";
 		refresh_stop();
 		if (which == 'call') {
 			if ($('#destination_'+ext+'_call').is(':visible')) {
-				$('#destination_'+ext+'_call').fadeOut(200, function() {
-					$('#destination_'+ext+'_call').val('');
-					$('#destination_'+ext+'_call').autocomplete('destroy');
-					$('#destination_control_'+ext+'_call').prop('disabled', false);
+				$('#destination_'+ext+'_call').val('');
+				$('#destination_'+ext+'_call').autocomplete('destroy');
+				$('#destination_'+ext+'_call').hide(0, function() {
+					$('.call_control').children().attr('onmouseout', "refresh_start();");
+					$('.destination_control').attr('onmouseout', "refresh_start();");
 					refresh_start();
 				});
 			}
 			else {
-				$('#destination_control_'+ext+'_call').prop('disabled', true);
-				$('#destination_'+ext+'_call').fadeIn(200, function() {
+				$('#destination_'+ext+'_call').show(0, function() {
 					$('#destination_'+ext+'_call').focus();
 					$('#destination_'+ext+'_call').autocomplete({
 						source: "autocomplete.php",
@@ -307,31 +304,36 @@ require_once "resources/header.php";
 							$('#frm_destination_'+ext+'_call').submit();
 						}
 					});
+					$('.call_control').children().removeAttr('onmouseout');
+					$('.destination_control').removeAttr('onmouseout');
 				});
 			}
 		}
 		else if (which == 'transfer') {
 			if ($('#destination_'+ext+'_transfer').is(':visible')) {
-				$('#destination_'+ext+'_transfer').fadeOut(200, function() {
+				$('#destination_'+ext+'_transfer').val('');
+				$('#destination_'+ext+'_transfer').autocomplete('destroy');
+				$('#destination_'+ext+'_transfer').hide(0, function() {
 					$('#op_caller_details_'+ext).show();
-					$('#destination_'+ext+'_transfer').val('');
-					$('#destination_'+ext+'_transfer').autocomplete('destroy');
-					$('#destination_control_'+ext+'_transfer').prop('disabled', false);
+					$('.call_control').children().attr('onmouseout', "refresh_start();");
+					$('.destination_control').attr('onmouseout', "refresh_start();");
 					refresh_start();
 				});
 			}
 			else {
-				$('#op_caller_details_'+ext).hide();
-				$('#destination_'+ext+'_transfer').fadeIn(200, function() {
-					$('#destination_control_'+ext+'_transfer').prop('disabled', true);
-					$('#destination_'+ext+'_transfer').focus();
-					$('#destination_'+ext+'_transfer').autocomplete({
-						source: "autocomplete.php",
-						minLength: 3,
-						select: function(event, ui) {
-							$('#destination_'+ext+'_transfer').val(ui.item.value);
-							$('#frm_destination_'+ext+'_transfer').submit();
-						}
+				$('#op_caller_details_'+ext).hide(0, function() {
+					$('#destination_'+ext+'_transfer').show(0, function() {
+						$('#destination_'+ext+'_transfer').focus();
+						$('#destination_'+ext+'_transfer').autocomplete({
+							source: "autocomplete.php",
+							minLength: 3,
+							select: function(event, ui) {
+								$('#destination_'+ext+'_transfer').val(ui.item.value);
+								$('#frm_destination_'+ext+'_transfer').submit();
+							}
+						});
+						$('.call_control').children().removeAttr('onmouseout');
+						$('.destination_control').removeAttr('onmouseout');
 					});
 				});
 			}
