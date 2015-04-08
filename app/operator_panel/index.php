@@ -76,46 +76,8 @@ require_once "resources/header.php";
 <input type='hidden' class='formfld' id='vd_ext_to' value=''>
 
 <!-- autocomplete for contact lookup -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui-1.9.2.min.js"></script>
-<style>
-	.ui-widget {
-		font-family: arial;
-		font-size: 12px;
-		margin: 0px;
-		padding: 0px;
-		}
-
-	.ui-autocomplete {
-		cursor: default;
-		position: absolute;
-		max-height: 200px;
-		overflow-y: auto;
-		overflow-x: hidden;
-		white-space: nowrap;
-		width: auto;
-		border: 1px solid #c0c0c0;
-		}
-
-	.ui-menu .ui-menu-item a {
-		padding-right: 25px;
-		text-decoration: none;
-		cursor: pointer;
-		border-color: #fff;
-		background-image: none;
-		background-color: #fff;
-		color: #444;
-		}
-
-	.ui-menu .ui-menu-item a:hover {
-		padding-right: 25px;
-		color: #5082ca;
-		border: 1px solid white;
-		background-image: none;
-		background-color: #fff;
-		}
-</style>
-
 <script type="text/javascript">
 //ajax refresh
 	var refresh = 1950;
@@ -255,22 +217,27 @@ require_once "resources/header.php";
 		}, refresh);
 	}
 
-//call destination
-	function call_destination(from_ext, destination) {
+//call or transfer to destination
+	function go_destination(from_ext, destination, which, call_id = '') {
 		if (destination != '') {
 			if (!isNaN(parseFloat(destination)) && isFinite(destination)) {
-				cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+				if (call_id == '') {
+					cmd = get_originate_cmd(from_ext+'@<?php echo $_SESSION["domain_name"]?>', destination); //make a call
+				}
+				else {
+					cmd = get_transfer_cmd(call_id, destination);
+				}
 				if (cmd != '') {
 					send_cmd('exec.php?cmd='+escape(cmd));
-					$('#destination_'+from_ext).autocomplete("destroy");
-					$('#destination_'+from_ext).removeAttr('onblur');
-					toggle_destination(from_ext);
+					$('#destination_'+from_ext+'_'+which).autocomplete("destroy");
+					$('#destination_'+from_ext+'_'+which).removeAttr('onblur');
+					toggle_destination(from_ext, which);
 					refresh_start();
 				}
 			}
 		}
 		else {
-			toggle_destination(from_ext);
+			toggle_destination(from_ext, which);
 		}
 	}
 
@@ -316,27 +283,58 @@ require_once "resources/header.php";
 	}
 
 //hide/show destination input field
-	function toggle_destination(ext) {
+	function toggle_destination(ext, which) {
 		refresh_stop();
-		$('#destination_control_'+ext).fadeToggle(200);
-		$('#destination_'+ext).fadeToggle(200, function(){
-			if ($('#destination_'+ext).is(':visible')) {
-				$('#destination_'+ext).focus();
-				$('#destination_'+ext).autocomplete({
-					source: "autocomplete.php",
-					minLength: 3,
-					select: function(event, ui) {
-						$('#destination_'+ext).val(ui.item.value);
-						$('#frm_destination_'+ext).submit();
-					}
+		if (which == 'call') {
+			if ($('#destination_'+ext+'_call').is(':visible')) {
+				$('#destination_'+ext+'_call').fadeOut(200, function() {
+					$('#destination_'+ext+'_call').val('');
+					$('#destination_'+ext+'_call').autocomplete('destroy');
+					$('#destination_control_'+ext+'_call').prop('disabled', false);
+					refresh_start();
 				});
 			}
 			else {
-				$('#destination_'+ext).val('');
-				$('#destination_'+ext).autocomplete('destroy');
-				refresh_start();
+				$('#destination_control_'+ext+'_call').prop('disabled', true);
+				$('#destination_'+ext+'_call').fadeIn(200, function() {
+					$('#destination_'+ext+'_call').focus();
+					$('#destination_'+ext+'_call').autocomplete({
+						source: "autocomplete.php",
+						minLength: 3,
+						select: function(event, ui) {
+							$('#destination_'+ext+'_call').val(ui.item.value);
+							$('#frm_destination_'+ext+'_call').submit();
+						}
+					});
+				});
 			}
-		});
+		}
+		else if (which == 'transfer') {
+			if ($('#destination_'+ext+'_transfer').is(':visible')) {
+				$('#destination_'+ext+'_transfer').fadeOut(200, function() {
+					$('#op_caller_details_'+ext).show();
+					$('#destination_'+ext+'_transfer').val('');
+					$('#destination_'+ext+'_transfer').autocomplete('destroy');
+					$('#destination_control_'+ext+'_transfer').prop('disabled', false);
+					refresh_start();
+				});
+			}
+			else {
+				$('#op_caller_details_'+ext).hide();
+				$('#destination_'+ext+'_transfer').fadeIn(200, function() {
+					$('#destination_control_'+ext+'_transfer').prop('disabled', true);
+					$('#destination_'+ext+'_transfer').focus();
+					$('#destination_'+ext+'_transfer').autocomplete({
+						source: "autocomplete.php",
+						minLength: 3,
+						select: function(event, ui) {
+							$('#destination_'+ext+'_transfer').val(ui.item.value);
+							$('#frm_destination_'+ext+'_transfer').submit();
+						}
+					});
+				});
+			}
+		}
 	}
 
 	function get_transfer_cmd(uuid, destination) {

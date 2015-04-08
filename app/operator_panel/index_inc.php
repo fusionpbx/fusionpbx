@@ -300,7 +300,7 @@ foreach ($activity as $extension => $ext) {
 	$block .= "		</td>";
 	$block .= "		<td class='op_ext_info ".$style."'>";
 	if ($dir_icon != '') {
-		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\" ".$onhover_pause_refresh.">";
+		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">";
 	}
 	$block .= "			<span class='op_user_info'>";
 	if ($ext['effective_caller_id_name'] != '' && $ext['effective_caller_id_name'] != $extension) {
@@ -330,7 +330,7 @@ foreach ($activity as $extension => $ext) {
 			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
 		}
 		//kill
-		if (in_array($extension, $_SESSION['user']['extensions']) || permission_exists('operator_panel_kill')) {
+		if (permission_exists('operator_panel_kill') || in_array($extension, $_SESSION['user']['extensions'])) {
 			if ($ext['variable_bridge_uuid'] == '' && $ext_state == 'ringing') {
 				$call_identifier_kill = $ext['uuid'];
 			}
@@ -342,15 +342,27 @@ foreach ($activity as $extension => $ext) {
 			}
 			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\" ".$onhover_pause_refresh.">";
 		}
+		//transfer
+		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
+			$block .= 			"<img id='destination_control_".$extension."_transfer' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\">";
+		}
 		$block .= "			</td></tr></table>";
-		$block .= "			<strong>".$call_name."</strong><br>".$call_number;
+		$block .= "			<span id='op_caller_details_".$extension."'><strong>".$call_name."</strong><br>".$call_number."</span>";
 		$block .= "		</span>";
+		//transfer
+		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
+			$call_identifier_transfer = $ext['variable_bridge_uuid'];
+			$block .= "		<form id='frm_destination_".$extension."_transfer' onsubmit=\"go_destination('".$extension."', document.getElementById('destination_".$extension."_transfer').value, 'transfer', '".$call_identifier_transfer."'); return false;\">";
+			$block .= "			<input type='text' class='formfld' id='destination_".$extension."_transfer' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 3px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."', 'transfer');\">";
+			$block .= "		</form>\n";
+		}
 	}
 	else {
+		//call
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= "		<img id='destination_control_".$extension."' src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
-			$block .= "		<form id='frm_destination_".$extension."' onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
-			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."');\">";
+			$block .= "		<img id='destination_control_".$extension."_call' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."', 'call');\">";
+			$block .= "		<form id='frm_destination_".$extension."_call' onsubmit=\"go_destination('".$extension."', document.getElementById('destination_".$extension."_call').value, 'call'); return false;\">";
+			$block .= "			<input type='text' class='formfld' id='destination_".$extension."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."', 'call');\">";
 			$block .= "		</form>\n";
 		}
 	}
