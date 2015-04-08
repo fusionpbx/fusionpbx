@@ -1,103 +1,143 @@
 <?php
 
-	$text['title-operator_panel']['en-us'] = 'Operator Panel';
-	$text['title-operator_panel']['es-cl'] = 'Panel de Operador';
-	$text['title-operator_panel']['pt-pt'] = 'Painel do Operador';
-	$text['title-operator_panel']['fr-fr'] = 'Operator Panel';
+$text['title-operator_panel']['en-us'] = "Operator Panel";
+$text['title-operator_panel']['es-cl'] = "Panel de Operador";
+$text['title-operator_panel']['pt-pt'] = "Painel do Operador";
+$text['title-operator_panel']['fr-fr'] = "Operator Panel";
+$text['title-operator_panel']['pt-br'] = "Painel do operador";
+$text['title-operator_panel']['pl'] = "Panel operatora";
 
-	$text['label-call_group']['en-us'] = "Call Group";
-	$text['label-call_group']['es-cl'] = "Llamar a Grupo";
-	$text['label-call_group']['pt-pt'] = "Grupo";
-	$text['label-call_group']['fr-fr'] = "Groupe d'appel";
+$text['label-status_on_demand']['en-us'] = "On Demand";
+$text['label-status_on_demand']['es-cl'] = "A Pedido";
+$text['label-status_on_demand']['pt-pt'] = "A Pedido";
+$text['label-status_on_demand']['fr-fr'] = "Sur Demande";
+$text['label-status_on_demand']['pt-br'] = "A pedido";
+$text['label-status_on_demand']['pl'] = "Na Å¼Ä…danie ";
 
-	$text['label-other_extensions']['en-us'] = "Other Extensions";
-	$text['label-other_extensions']['es-cl'] = "Otras Extensiones";
-	$text['label-other_extensions']['pt-pt'] = "Outros Extensions";
-	$text['label-other_extensions']['fr-fr'] = "Autres Extensions";
+$text['label-status_on_break']['en-us'] = "On Break";
+$text['label-status_on_break']['es-cl'] = "En Pausa";
+$text['label-status_on_break']['pt-pt'] = "Em Pausa";
+$text['label-status_on_break']['fr-fr'] = "En Pause";
+$text['label-status_on_break']['pt-br'] = "Em pausa";
+$text['label-status_on_break']['pl'] = "Na przerwie";
 
-	$text['label-no_extensions_found']['en-us'] = "No extensions found.";
-	$text['label-no_extensions_found']['es-cl'] = "No hay extensiones encontrados.";
-	$text['label-no_extensions_found']['pt-pt'] = "Sem extensões encontrado.";
-	$text['label-no_extensions_found']['fr-fr'] = "Aucun extensions trouvés.";
+$text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
+$text['label-status_logged_out_or_unknown']['es-cl'] = "Desconectado / Desconocido";
+$text['label-status_logged_out_or_unknown']['pt-pt'] = "Desligado / Unknown";
+$text['label-status_logged_out_or_unknown']['fr-fr'] = "Déconnexion / Unknown";
+$text['label-status_logged_out_or_unknown']['pt-br'] = "Desligar / Desconhecido";
+$text['label-status_logged_out_or_unknown']['pl'] = "Wylogowany/nieznany";
 
-	$text['label-status_available']['en-us'] = "Available";
-	$text['label-status_available']['es-cl'] = "Disponible";
-	$text['label-status_available']['pt-pt'] = "Disponível";
-	$text['label-status_available']['fr-fr'] = "Disponible";
+$text['label-status_logged_out']['en-us'] = "Logged Out";
+$text['label-status_logged_out']['es-cl'] = "Desconectado";
+$text['label-status_logged_out']['pt-pt'] = "Desligado";
+$text['label-status_logged_out']['fr-fr'] = "Déconnexion";
+$text['label-status_logged_out']['pt-br'] = "Desligado";
+$text['label-status_logged_out']['pl'] = "Wylogowany";
 
-	$text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
-	$text['label-status_available_on_demand']['es-cl'] = "Disponible (A Pedido)";
-	$text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
-	$text['label-status_available_on_demand']['fr-fr'] = "Disponble (sur demande)";
+$text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
+$text['label-status_do_not_disturb']['es-cl'] = "No Molestar";
+$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
+$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas Déranger";
+$text['label-status_do_not_disturb']['pt-br'] = "NÃ£o perturbe";
+$text['label-status_do_not_disturb']['pl'] = "Nie przeszkadzaÄ‡ (DND)";
 
-	$text['label-status_on_demand']['en-us'] = "On Demand";
-	$text['label-status_on_demand']['es-cl'] = "A Pedido";
-	$text['label-status_on_demand']['pt-pt'] = "A Pedido";
-	$text['label-status_on_demand']['fr-fr'] = "Sur Demande";
+$text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
+$text['label-status_available_on_demand']['es-cl'] = "Disponible (A Pedido)";
+$text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
+$text['label-status_available_on_demand']['fr-fr'] = "Disponble (sur demande)";
+$text['label-status_available_on_demand']['pt-br'] = "Disponivel (A pedido)";
+$text['label-status_available_on_demand']['pl'] = "DostÄ™pny (na Å¼Ä…danie)";
 
-	$text['label-status_logged_out']['en-us'] = "Logged Out";
-	$text['label-status_logged_out']['es-cl'] = "Desconectado";
-	$text['label-status_logged_out']['pt-pt'] = "Desligado";
-	$text['label-status_logged_out']['fr-fr'] = "Déconnexion";
+$text['label-status_available']['en-us'] = "Available";
+$text['label-status_available']['es-cl'] = "Disponible";
+$text['label-status_available']['pt-pt'] = "Disponível";
+$text['label-status_available']['fr-fr'] = "Disponible";
+$text['label-status_available']['pt-br'] = "DisponÃ­vel";
+$text['label-status_available']['pl'] = "DostÄ™pny";
 
-	$text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
-	$text['label-status_logged_out_or_unknown']['es-cl'] = "Desconectado / Desconocido";
-	$text['label-status_logged_out_or_unknown']['pt-pt'] = "Desligado / Unknown";
-	$text['label-status_logged_out_or_unknown']['fr-fr'] = "Déconnexion / Unknown";
+$text['label-refresh_pause']['en-us'] = "Pause Refresh";
+$text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
+$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
+$text['label-refresh_pause']['fr-fr'] = "Pause Actualiser";
+$text['label-refresh_pause']['pt-br'] = "Pausar atualizaÃ§Ã£o";
+$text['label-refresh_pause']['pl'] = "Pauzuj odÅ›wieÅ¼anie";
 
-	$text['label-status_on_break']['en-us'] = "On Break";
-	$text['label-status_on_break']['es-cl'] = "En Pausa";
-	$text['label-status_on_break']['pt-pt'] = "Em Pausa";
-	$text['label-status_on_break']['fr-fr'] = "En Pause";
+$text['label-refresh_enable']['en-us'] = "Enable Refresh";
+$text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
+$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
+$text['label-refresh_enable']['fr-fr'] = "Activer Actualiser";
+$text['label-refresh_enable']['pt-br'] = "Habilitar atualizaÃ§Ã£o";
+$text['label-refresh_enable']['pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
 
-	$text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
-	$text['label-status_do_not_disturb']['es-cl'] = "No Molestar";
-	$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
-	$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas Déranger";
+$text['label-recording']['en-us'] = "Recording";
+$text['label-recording']['es-cl'] = "Grabación de Llamadas";
+$text['label-recording']['pt-pt'] = "Gravação de Chamadas";
+$text['label-recording']['fr-fr'] = "Enregistrement de L'appel";
+$text['label-recording']['pt-br'] = "GravaÃ§Ã£o de chamadas";
+$text['label-recording']['pl'] = "Nagrywanie";
 
-	$text['label-eavesdrop']['en-us'] = "Eavesdrop";
-	$text['label-eavesdrop']['es-cl'] = "Escuchar";
-	$text['label-eavesdrop']['pt-pt'] = "Bisbilhotar";
-	$text['label-eavesdrop']['fr-fr'] = "Espionner";
+$text['label-record']['en-us'] = "Record";
+$text['label-record']['es-cl'] = "Registro";
+$text['label-record']['pt-pt'] = "Registro";
+$text['label-record']['fr-fr'] = "Enregistrer";
+$text['label-record']['pt-br'] = "Registro";
+$text['label-record']['pl'] = "Nagrywanie";
 
-	$text['description-eavesdrop_destination']['en-us'] = "Select the Eavesdrop Destination";
-	$text['description-eavesdrop_destination']['es-cl'] = "Seleccione el Eavesdrop Destino";
-	$text['description-eavesdrop_destination']['pt-pt'] = "Selecione o Eavesdrop Destino";
-	$text['description-eavesdrop_destination']['fr-fr'] = "Sélectionnez le Eavesdrop Destinations";
+$text['label-other_extensions']['en-us'] = "Other Extensions";
+$text['label-other_extensions']['es-cl'] = "Otras Extensiones";
+$text['label-other_extensions']['pt-pt'] = "Outros Extensions";
+$text['label-other_extensions']['fr-fr'] = "Autres Extensions";
+$text['label-other_extensions']['pt-br'] = "Outras extensÃµes";
+$text['label-other_extensions']['pl'] = "Inne numery wew";
 
-	$text['label-kill']['en-us'] = "Kill";
-	$text['label-kill']['es-cl'] = "Finalizar Llamada";
-	$text['label-kill']['pt-pt'] = "Chamada Final";
-	$text['label-kill']['fr-fr'] = "Tuer Appel";
+$text['label-no_extensions_found']['en-us'] = "No extensions found.";
+$text['label-no_extensions_found']['es-cl'] = "No hay extensiones encontrados.";
+$text['label-no_extensions_found']['pt-pt'] = "Sem extensões encontrado.";
+$text['label-no_extensions_found']['fr-fr'] = "Aucun extensions trouvés.";
+$text['label-no_extensions_found']['pt-br'] = "NÃ£o foi encontrada nenhuma extensÃ£o";
+$text['label-no_extensions_found']['pl'] = "Nie znaleziono numeru wew";
 
-	$text['label-record']['en-us'] = "Record";
-	$text['label-record']['es-cl'] = "Registro";
-	$text['label-record']['pt-pt'] = "Registro";
-	$text['label-record']['fr-fr'] = "Enregistrer";
+$text['label-kill']['en-us'] = "Kill";
+$text['label-kill']['es-cl'] = "Finalizar Llamada";
+$text['label-kill']['pt-pt'] = "Chamada Final";
+$text['label-kill']['fr-fr'] = "Tuer Appel";
+$text['label-kill']['pt-br'] = "Chamada final";
+$text['label-kill']['pl'] = "WyÅ‚Ä…cz";
 
-	$text['label-recording']['en-us'] = "Recording";
-	$text['label-recording']['es-cl'] = "Grabación de Llamadas";
-	$text['label-recording']['pt-pt'] = "Gravação de Chamadas";
-	$text['label-recording']['fr-fr'] = "Enregistrement de L'appel";
+$text['label-eavesdrop']['en-us'] = "Eavesdrop";
+$text['label-eavesdrop']['es-cl'] = "Escuchar";
+$text['label-eavesdrop']['pt-pt'] = "Bisbilhotar";
+$text['label-eavesdrop']['fr-fr'] = "Espionner";
+$text['label-eavesdrop']['pt-br'] = "Investigar";
+$text['label-eavesdrop']['pl'] = "PodsÅ‚uchiwanie";
 
-	$text['button-all']['en-us'] = "All";
-	$text['button-all']['es-cl'] = "Todos";
-	$text['button-all']['pt-pt'] = "Tudo";
-	$text['button-all']['fr-fr'] = "Tous";
+$text['label-call_group']['en-us'] = "Call Group";
+$text['label-call_group']['es-cl'] = "Llamar a Grupo";
+$text['label-call_group']['pt-pt'] = "Grupo";
+$text['label-call_group']['fr-fr'] = "Groupe d'appel";
+$text['label-call_group']['pt-br'] = "Grupo";
+$text['label-call_group']['pl'] = "Grupa odbiorcÃ³w rozmowy";
 
-	$text['label-refresh_pause']['en-us'] = "Pause Refresh";
-	$text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
-	$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
-	$text['label-refresh_pause']['fr-fr'] = "Pause Actualiser";
+$text['label-call_direction']['en-us'] = "Call Direction";
+$text['label-call_direction']['es-cl'] = "Dirección de la llamada";
+$text['label-call_direction']['pt-pt'] = "Direção da chamada";
+$text['label-call_direction']['fr-fr'] = "Sens de l'appel";
+$text['label-call_direction']['pt-br'] = "DireÃ§Ã£o da chamada";
+$text['label-call_direction']['pl'] = "Kierunek rozmowy";
 
-	$text['label-refresh_enable']['en-us'] = "Enable Refresh";
-	$text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
-	$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
-	$text['label-refresh_enable']['fr-fr'] = "Activer Actualiser";
+$text['description-eavesdrop_destination']['en-us'] = "Select the Eavesdrop Destination";
+$text['description-eavesdrop_destination']['es-cl'] = "Seleccione el Eavesdrop Destino";
+$text['description-eavesdrop_destination']['pt-pt'] = "Selecione o Eavesdrop Destino";
+$text['description-eavesdrop_destination']['fr-fr'] = "Sélectionnez le Eavesdrop Destinations";
+$text['description-eavesdrop_destination']['pt-br'] = "Selecione o eavesdrop de destino";
+$text['description-eavesdrop_destination']['pl'] = "Wybierz destynacjÄ™ podsÅ‚uchiwanych rozmÃ³w";
 
-	$text['label-call_direction']['en-us'] = "Call Direction";
-	$text['label-call_direction']['es-cl'] = "Dirección de la llamada";
-	$text['label-call_direction']['pt-pt'] = "Direção da chamada";
-	$text['label-call_direction']['fr-fr'] = "Sens de l'appel";
+$text['button-all']['en-us'] = "All";
+$text['button-all']['es-cl'] = "Todos";
+$text['button-all']['pt-pt'] = "Tudo";
+$text['button-all']['fr-fr'] = "Tous";
+$text['button-all']['pt-br'] = "Tudo";
+$text['button-all']['pl'] = "Wszyscy";
 
 ?>
