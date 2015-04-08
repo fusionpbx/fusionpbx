@@ -35,6 +35,17 @@ else {
 
 //search term
 	$term = check_str($_GET['term']);
+	if (isset($_GET['debug'])) {
+		echo "Search Term: ".$term."<br><br>";
+	}
+
+//if term contains spaces, break into array
+	if (substr_count($term, ' ') > 0) {
+		$terms = explode(' ', $term);
+	}
+	else {
+		$terms[] = $term;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -55,14 +66,19 @@ else {
 	$sql .= "from ";
 	$sql .= "v_extensions e ";
 	$sql .= "where ";
-	$sql .= "( ";
-	$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or ";
-	$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or ";
-	$sql .= "	lower(e.directory_full_name) like lower('%".$term."%') or ";
-	$sql .= "	lower(e.description) like lower('%".$term."%') or ";
-	$sql .= "	lower(e.call_group) like lower('%".$term."%') or ";
-	$sql .= "	e.extension like '%".$term."%' ";
-	$sql .= ") ";
+	foreach ($terms as $index => $term) {
+		$sql .= "( ";
+		$sql .= "	lower(e.effective_caller_id_name) like lower('%".$term."%') or ";
+		$sql .= "	lower(e.outbound_caller_id_name) like lower('%".$term."%') or ";
+		$sql .= "	lower(e.directory_full_name) like lower('%".$term."%') or ";
+		$sql .= "	lower(e.description) like lower('%".$term."%') or ";
+		$sql .= "	lower(e.call_group) like lower('%".$term."%') or ";
+		$sql .= "	e.extension like '%".$term."%' ";
+		$sql .= ") ";
+		if ($index + 1 < sizeof($terms)) {
+			$sql .= " and ";
+		}
+	}
 	$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and e.enabled = 'true' ";
 	$sql .= "order by ";
@@ -99,14 +115,19 @@ else {
 	$sql .= "v_contacts as c, ";
 	$sql .= "v_contact_phones as p ";
 	$sql .= "where ";
-	$sql .= "( ";
-	$sql .= "	lower(c.contact_organization) like lower('%".$term."%') or ";
-	$sql .= "	lower(c.contact_name_given) like lower('%".$term."%') or ";
-	$sql .= "	lower(c.contact_name_middle) like lower('%".$term."%') or ";
-	$sql .= "	lower(c.contact_name_family) like lower('%".$term."%') or ";
-	$sql .= "	lower(c.contact_nickname) like lower('%".$term."%') or ";
-	$sql .= "	p.phone_number like '%".$term."%' ";
-	$sql .= ") ";
+	foreach ($terms as $index => $term) {
+		$sql .= "( ";
+		$sql .= "	lower(c.contact_organization) like lower('%".$term."%') or ";
+		$sql .= "	lower(c.contact_name_given) like lower('%".$term."%') or ";
+		$sql .= "	lower(c.contact_name_middle) like lower('%".$term."%') or ";
+		$sql .= "	lower(c.contact_name_family) like lower('%".$term."%') or ";
+		$sql .= "	lower(c.contact_nickname) like lower('%".$term."%') or ";
+		$sql .= "	p.phone_number like '%".$term."%' ";
+		$sql .= ") ";
+		if ($index + 1 < sizeof($terms)) {
+			$sql .= " and ";
+		}
+	}
 	$sql .= "and c.contact_uuid = p.contact_uuid ";
 	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	if (sizeof($user_group_uuids) > 0) {
