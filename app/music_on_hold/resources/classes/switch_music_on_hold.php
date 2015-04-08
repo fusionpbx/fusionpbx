@@ -56,7 +56,7 @@ include "root.php";
 
 			//add multi-lingual support
 				$language = new text;
-				$text = $language->get();
+				$text = $language->get($_SESSION['domain']['language']['code'], 'app/music_on_hold');
 
 			//start the select
 				$select = "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
