@@ -1128,6 +1128,44 @@ legend {
 		border: 1px solid #5d5f5a;
 		}
 
+	/* jquery ui autocomplete styles */
+
+	.ui-widget {
+		font-family: arial;
+		font-size: 12px;
+		margin: 0px;
+		padding: 0px;
+		}
+
+	.ui-autocomplete {
+		cursor: default;
+		position: absolute;
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		white-space: nowrap;
+		width: auto;
+		border: 1px solid #c0c0c0;
+		}
+
+	.ui-menu .ui-menu-item a {
+		padding-right: 25px;
+		text-decoration: none;
+		cursor: pointer;
+		border-color: #fff;
+		background-image: none;
+		background-color: #fff;
+		color: #444;
+		}
+
+	.ui-menu .ui-menu-item a:hover {
+		padding-right: 25px;
+		color: #5082ca;
+		border: 1px solid white;
+		background-image: none;
+		background-color: #fff;
+		}
+
 /* operator panel styles end */
 
 </style>
