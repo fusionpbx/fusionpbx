@@ -24,6 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 	Riccardo Granchi <riccardo.granchi@nems.it>
+	Gill Abada <ga@steadfasttelecom.com>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -225,6 +226,10 @@ else {
 					case "^(411)$":
 						$label = $text['label-411'];
 						$abbrv = "411";
+						break;
+					case "^(711)$":
+						$label = $text['label-711'];
+						$abbrv = "711";
 						break;
 					case "^(911)$":
 						$label = $text['label-911'];
@@ -443,6 +448,20 @@ else {
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'inherit_codec=true';
 						$dialplan_detail_order = '040';
+						$dialplan_detail_group = '0';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'ignore_display_updates=true';
+						$dialplan_detail_order = '042';
+						$dialplan_detail_group = '0';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'callee_id_number=$1';
+						$dialplan_detail_order = '043';
 						$dialplan_detail_group = '0';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -858,6 +877,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    <option value='^(\\d{12,20})\$'>".$text['label-intl']."</option>\n";
 	echo "    <option value='^(311)\$'>".$text['label-311']."</option>\n";
 	echo "    <option value='^(411)\$'>".$text['label-411']."</option>\n";
+	echo "    <option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "    <option value='^(911)\$'>".$text['label-911']."</option>\n";
 	echo "    <option value='^1?(8(00|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "    <option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
