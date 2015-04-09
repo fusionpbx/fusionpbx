@@ -712,12 +712,13 @@ include "root.php";
 					$file_contents = $view->render($file);
 
 				//log file for testing
-					//$tmp_file = "/tmp/provisioning_log.txt";
-					//$fh = fopen($tmp_file, 'w') or die("can't open file");
-					//$tmp_string = $mac."\n";
-					//fwrite($fh, $tmp_string);
-					//fclose($fh);
-
+					if ($_SESSION['provision']['debug']['boolean'] == 'true'){
+						$tmp_file = "/tmp/provisioning_log.txt";
+						$fh = fopen($tmp_file, 'w') or die("can't open file");
+						$tmp_string = $mac."\n";
+						fwrite($fh, $tmp_string);
+						fclose($fh);
+					}
 				//returned the rendered template
 					return $file_contents;
 
