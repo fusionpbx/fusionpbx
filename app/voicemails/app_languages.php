@@ -70,6 +70,13 @@ $text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 $text['message-required']['pt-br'] = "Por favor Indique:";
 $text['message-required']['pl'] = "Wpisz:";
 
+$text['message-messages_not_found']['en-us'] = "No messages found.";
+$text['message-messages_not_found']['es-cl'] = "No hay mensajes encontrados.";
+$text['message-messages_not_found']['pt-pt'] = "Nenhuma mensagem encontrada.";
+$text['message-messages_not_found']['fr-fr'] = "Aucun message trouvé.";
+$text['message-messages_not_found']['pt-br'] = "Nenhuma mensagem encontrada.";
+$text['message-messages_not_found']['pl'] = "Nie znaleziono wiadomości.";
+
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
 $text['message-delete']['pt-pt'] = "Remoção Efectuada";
