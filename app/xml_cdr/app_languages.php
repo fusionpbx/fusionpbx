@@ -160,6 +160,14 @@ $text['option-last_hour']['pt-br'] = "Próxima hora";
 $text['option-last_hour']['pl'] = "W ostatniej godzinie";
 $text['option-last_hour']['sv-se'] = "Senaste Timman";
 
+$text['option-last_seven_days']['en-us'] = "Last 7 Days";
+$text['option-last_seven_days']['es-cl'] = "Últimos 7 días";
+$text['option-last_seven_days']['pt-pt'] = "Nos últimos 7 Dias";
+$text['option-last_seven_days']['fr-fr'] = "Les 7 Derniers Jours";
+$text['option-last_seven_days']['pt-br'] = "Nos últimos 7 Dias";
+$text['option-last_seven_days']['pl'] = "Ostatnie 7 Dni";
+$text['option-last_seven_days']['sv-se'] = "Senaste 7 Dagarna";
+
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "Falso";
 $text['option-false']['pt-pt'] = "Não";
@@ -798,15 +806,7 @@ $text['description_search']['pt-br'] = "Atenção: origem, destino e identifica�
 $text['description_search']['pl'] = "Uwaga: Następujące pola: numer dzwoniącego i odbiorcy rozmowy, prezentacja numeru oraz nazwy wspierają gwiazdkę (‘*’) jako symbol wieloznaczny.";
 $text['description_search']['sv-se'] = "Notera : Källa, Destination och Nummerpresentation ( CID ) Namn fält stödjer användningen av en asterisk ( ' * ' ) som jokertecken.";
 
-$text['description-extension_summary']['en-us'] = "Default View: Last 7 Days";
-$text['description-extension_summary']['es-cl'] = "Vista predeterminada: Últimos 7 días";
-$text['description-extension_summary']['pt-pt'] = "Exibição padrão: nos últimos 7 dias";
-$text['description-extension_summary']['fr-fr'] = "Vue par défaut: Les 7 derniers jours";
-$text['description-extension_summary']['pt-br'] = "Exibição padrão: Nos últimos 7 dias";
-$text['description-extension_summary']['pl'] = "Widok domyślny. Ostatnie 7 dni";
-$text['description-extension_summary']['sv-se'] = "Standard Vy: Senaste 7 Dagarna";
-
-$text['description-7']['en-us'] = "call variables, call flow, timing information, and other useful call details.";
+$text['description-7']['en-us'] = "Call variables, call flow, timing information, and other useful call details.";
 $text['description-7']['es-cl'] = "variables de llamada, flujo, información temporal y otros detalles útiles.";
 $text['description-7']['pt-pt'] = "variáveis de chamada, fluxo da chamada, informações de tempo e outras informações úteis.";
 $text['description-7']['fr-fr'] = "les variables de l'appel, le chemin, les compteurs et d'autres détails.";
