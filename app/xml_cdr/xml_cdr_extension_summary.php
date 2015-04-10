@@ -46,10 +46,12 @@ require_once "resources/require.php";
     require_once "resources/header.php";
 
 //retrieve submitted data
-    $start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
-    $start_stamp_end = check_str($_REQUEST['start_stamp_end']);
-    $include_internal = check_str($_REQUEST['include_internal']);
-    $quick_select = check_str($_REQUEST['quick_select']);
+	$quick_select = check_str($_POST['quick_select']);
+    $start_stamp_begin = check_str($_POST['start_stamp_begin']);
+    $start_stamp_end = check_str($_POST['start_stamp_end']);
+    $include_internal = check_str($_POST['include_internal']);
+
+	$quick_select = (sizeof($_POST) == 0) ? 1 : $quick_select; //set default
 
 //get current extension info
 	$sql = "select ";
@@ -112,47 +114,37 @@ require_once "resources/require.php";
 	$sql .= "hangup_cause ";
 	$sql .= "from v_xml_cdr ";
 	$sql .= "where ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$sql .= " ";
-	} else {
-		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= " and ";
+	if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
+		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
 	$sql .= "( ";
 	$sql .= "	caller_id_number in ('".$ext_list."') or ";
 	$sql .= "	destination_number in ('".$ext_list."') ";
 	$sql .= ") ";
 	if (!$include_internal) {
-		$sql .= " and ( direction = 'inbound' or direction = 'outbound' ) ";
+		$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
 	}
-    if (strlen($quick_select) == 0 || $quick_select == 0 ) {
-    if (strlen($start_stamp_begin) == 0 && strlen($start_stamp_end) == 0) {
-        $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; // show last 7 days if no range specified
-    }
-    else if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql .= " and start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
-    else {
-        if (strlen($start_stamp_begin) > 0) { $sql .= " and start_stamp >= '".$start_stamp_begin.":00.000'"; }
-        if (strlen($start_stamp_end) > 0) { $sql .= " and start_stamp <= '".$start_stamp_end.":59.999'"; }
-    }
-    }
-    else {
-        if ($quick_select == 1){
-			$sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; // show last hour
-        }
-        if ($quick_select == 2){
-            $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00.000' "; // show today
-        }
-        if ($quick_select == 3){
-            $sql .= "and start_stamp BETWEEN '".date('Y-m-d',strtotime("-1 day"))." "."00:00.000' AND '".date('Y-m-d',strtotime("-1 day"))." "."23:59.999'"; // show yesterday
-        }
-        if ($quick_select == 4){
-            $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00.000'"; // show this month
-        }
-        if ($quick_select == 5){
-            $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00.000'"; // show this year
-        }
-    }
-	//echo $sql."<br><br>";
+	if (strlen($start_stamp_begin) > 0 || strlen($start_stamp_end) > 0) {
+		unset($quick_select);
+		if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
+			$sql .= " and start_stamp between '".$start_stamp_begin.":00.000' and '".$start_stamp_end.":59.999'";
+		}
+		else {
+			if (strlen($start_stamp_begin) > 0) { $sql .= "and start_stamp >= '".$start_stamp_begin.":00.000' "; }
+			if (strlen($start_stamp_end) > 0) { $sql .= "and start_stamp <= '".$start_stamp_end.":59.999' "; }
+		}
+	}
+	else {
+		switch ($quick_select) {
+			case 1: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; break; //last 7 days
+			case 2: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; break; //last hour
+			case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00.000' "; break; //today
+			case 4: $sql .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59.999' "; break; //yesterday
+			case 5: $sql .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00.000' "; break; //this week
+			case 6: $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00.000' "; break; //this month
+			case 7: $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00.000' "; break; //this year
+		}
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -200,40 +192,60 @@ require_once "resources/require.php";
 	echo "<br>\n";
 
 	if (permission_exists('xml_cdr_search')) {
-		echo "<form name='frm' method='post' action=''>\n";
+		echo "<form name='frm' id='frm' method='post' action=''>\n";
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
+        echo "		<td width='25%' style='vertical-align: top;'>\n";
+        echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+        echo "				<tr>\n";
+        echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+        echo "						".$text['label-preset']."\n";
+        echo "					</td>\n";
+        echo "					<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+        echo "						<select class='formfld' name='quick_select' id='quick_select' onchange=\"if (this.selectedIndex != 0) { document.getElementById('start_stamp_begin').value = ''; document.getElementById('start_stamp_end').value = ''; document.getElementById('frm').submit(); }\">\n";
+		echo "							<option value=''></option>\n";
+		echo "							<option value='1' ".(($quick_select == 1) ? "selected='selected'" : null).">".$text['option-last_seven_days']."</option>\n";
+        echo "							<option value='2' ".(($quick_select == 2) ? "selected='selected'" : null).">".$text['option-last_hour']."</option>\n";
+        echo "							<option value='3' ".(($quick_select == 3) ? "selected='selected'" : null).">".$text['option-today']."</option>\n";
+        echo "							<option value='4' ".(($quick_select == 4) ? "selected='selected'" : null).">".$text['option-yesterday']."</option>\n";
+        echo "							<option value='5' ".(($quick_select == 5) ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
+        echo "							<option value='6' ".(($quick_select == 6) ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
+        echo "							<option value='7' ".(($quick_select == 7) ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
+        echo "						</select>\n";
+        echo "					</td>\n";
+        echo "				</tr>\n";
+        echo "			</table>\n";
+        echo "		</td>";
+
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 		echo "						".$text['label-start_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
-
 		echo "		</td>";
-		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 		echo "						".$text['label-end_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
-
 		echo "		</td>";
-		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
@@ -247,32 +259,13 @@ require_once "resources/require.php";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
-
 		echo "		</td>";
-        echo "          <td width='25%' style='vertical-align: top;'>\n";
-        echo "                  <table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-        echo "                          <tr>\n";
-        echo "                                  <td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
-        echo "                                          ".$text['label-preset']."\n";
-        echo "                                  </td>\n";
-        echo "                                  <td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-        echo "                                          <select class='formfld' name='quick_select' id='quick_select'>\n";
-		echo "                                                  <option value='0'>".$text['option-last_seven_days']."</option>\n";
-        echo "                                                  <option value='1' ".(($quick_select == 1) ? "selected" : null).">".$text['option-last_hour']."</option>\n";
-        echo "                                                  <option value='2' ".(($quick_select == 2) ? "selected" : null).">".$text['option-today']."</option>\n";
-        echo "                                                  <option value='3' ".(($quick_select == 3) ? "selected" : null).">".$text['option-yesterday']."</option>\n";
-        echo "                                                  <option value='4' ".(($quick_select == 4) ? "selected" : null).">".$text['option-this_month']."</option>\n";
-        echo "                                                  <option value='5' ".(($quick_select == 5) ? "selected" : null).">".$text['option-this_year']."</option>\n";
-        echo "                                          </select>\n";
-        echo "                                  </td>\n";
-        echo "                          </tr>\n";
-        echo "                  </table>\n";
-        echo "          </td>";
+
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td colspan='4' style='padding-top: 8px;' align='right'>";
 		echo "			<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
-		echo "			<input type='submit' class='btn' name='submit' value='".$text['button-update']."'>\n";
+		echo "			<input type='submit' class='btn' value='".$text['button-update']."'>\n";
 		echo "		</td>";
 		echo "	</tr>";
 		echo "</table>";
