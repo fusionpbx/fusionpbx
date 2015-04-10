@@ -327,9 +327,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$user_context = $_SESSION['domain_name'];
 			}
 		}
-	//Prevent users from bypassing extension limit by using range
-	if ($total_extensions + $range > $_SESSION['limit']['extensions']['numeric']){
-		$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
+
+	//prevent users from bypassing extension limit by using range
+	if ($_SESSION['limit']['extensions']['numeric'] != '') {
+		if ($total_extensions + $range > $_SESSION['limit']['extensions']['numeric']){
+			$range = $_SESSION['limit']['extensions']['numeric'] - $total_extensions;
+		}
 	}
 
 	//add or update the database
@@ -478,6 +481,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							}
 							$sql .= "'$description' ";
 							$sql .= ")";
+
 							$db->exec(check_sql($sql));
 							unset($sql);
 							$j++;
@@ -943,7 +947,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='200'>200</option>\n";
 		echo "    <option value='250'>250</option>\n";
 		echo "    <option value='500'>500</option>\n";
-		echo "    <option value='500'>750</option>\n";
+		echo "    <option value='750'>750</option>\n";
 		echo "    <option value='1000'>1000</option>\n";
 		echo "    <option value='5000'>5000</option>\n";
 		echo "    </select>\n";
