@@ -53,6 +53,7 @@ require_once "resources/require.php";
 
 //get current extension info
 	$sql = "select ";
+	$sql .= "domain_uuid, ";
 	$sql .= "extension_uuid, ";
 	$sql .= "extension, ";
 	$sql .= "number_alias, ";
@@ -89,6 +90,7 @@ require_once "resources/require.php";
 	$result_count = count($result);
 	if ($result_count > 0) {
 		foreach($result as $row) {
+			$extensions[$row['extension']]['domain_uuid'] = $row['domain_uuid'];
 			$extensions[$row['extension']]['extension'] = $row['extension'];
 			$extensions[$row['extension']]['extension_uuid'] = $row['extension_uuid'];
 			$extensions[$row['extension']]['number_alias'] = $row['number_alias'];
@@ -187,7 +189,6 @@ require_once "resources/require.php";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%' nowrap='nowrap' style='vertical-align: top;'>\n";
 	echo "			<b>".$text['title-extension_summary']."</b><br><br>\n";
-	echo "			".$text['description-extension_summary']."<br>\n";
 	echo "		</td>\n";
 	echo "		<td align='right' width='100%' style='vertical-align: top;'>";
 	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
@@ -256,7 +257,7 @@ require_once "resources/require.php";
         echo "                                  </td>\n";
         echo "                                  <td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
         echo "                                          <select class='formfld' name='quick_select' id='quick_select'>\n";
-        echo "                                                  <option value='0'>".$text['option-default']."</option>\n";
+		echo "                                                  <option value='0'>".$text['option-last_seven_days']."</option>\n";
         echo "                                                  <option value='1' ".(($quick_select == 1) ? "selected" : null).">".$text['option-last_hour']."</option>\n";
         echo "                                                  <option value='2' ".(($quick_select == 2) ? "selected" : null).">".$text['option-today']."</option>\n";
         echo "                                                  <option value='3' ".(($quick_select == 3) ? "selected" : null).">".$text['option-yesterday']."</option>\n";
@@ -283,6 +284,9 @@ require_once "resources/require.php";
 //show the results
 	echo "<table xclass='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		echo "		<th>".$text['label-domain']."</th>\n";
+	}
 	echo "		<th>".$text['label-extension']."</th>\n";
 	echo "		<th>".$text['label-number_alias']."</th>\n";
 	echo "		<th>".$text['label-missed']."</th>\n";
@@ -293,7 +297,7 @@ require_once "resources/require.php";
 	echo "		<th style='text-align: right;'>".$text['label-inbound_duration']."</th>\n";
 	echo "		<th style='text-align: right;'>".$text['label-outbound_calls']."</th>\n";
 	echo "		<th style='text-align: right;'>".$text['label-outbound_duration']."</th>\n";
-	echo "		<th style='text-align: right;'>".$text['label-description']."</th>\n";
+	echo "		<th style='text-align: left;'>".$text['label-description']."</th>\n";
 	echo "	</tr>\n";
 
 	$c = 0;
@@ -323,6 +327,9 @@ require_once "resources/require.php";
 
 		$tr_link = "xhref='xml_cdr.php?'";
 		echo "<tr ".$tr_link.">\n";
+		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$ext['domain_uuid']]['domain_name']."</td>\n";
+		}
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$extension."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$ext['number_alias']."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['missed']."&nbsp;</td>\n";
@@ -333,7 +340,7 @@ require_once "resources/require.php";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['inbound'] != '') ? gmdate("G:i:s", $seconds['inbound']) : '0:00:00')."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['outbound']['count'] != '') ? $summary[$extension]['outbound']['count'] : "0")."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['outbound'] != '') ? gmdate("G:i:s", $seconds['outbound']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$ext['description']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='row_stylebg'>".$ext['description']."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = ($c==0) ? 1 : 0;
 	}
