@@ -464,6 +464,11 @@ include "root.php";
 
 				//get the provisioning information from device keys
 					if (strlen($device_uuid) > 0) {
+						//get the vendor
+							$vendor = $template_name;
+							$template_name = 'yealink/t46g';
+							$array = explode('/', $template_name);
+							$vendor = strtolower($array[0]);
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";
 							$sql .= "WHERE (";
@@ -472,6 +477,7 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
+							$sql .= "AND (device_key_extension = '".$vendor."' OR device_key_extension = '' OR device_key_extension is null) ";
 							//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
 							$prep_statement = $this->db->prepare(check_sql($sql));
