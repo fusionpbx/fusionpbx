@@ -320,6 +320,39 @@ include "root.php";
 						unset ($prep_statement);
 				}
 
+			//alternate device_uuid
+				if (strlen($device_uuid) > 0) {
+					$sql = "SELECT * FROM v_devices ";
+					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+					$prep_statement_3 = $this->db->prepare(check_sql($sql));
+					if ($prep_statement_3) {
+						$prep_statement_3->execute();
+						$row = $prep_statement_3->fetch();
+						$device_model = $row["device_model"];
+						if (is_uuid($device_model)) {
+							//overide the original device_uuid
+								$device_uuid = $device_model;
+							//get the new devices information
+								$sql = "SELECT * FROM v_devices ";
+								$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+								$prep_statement_4 = $this->db->prepare(check_sql($sql));
+								if ($prep_statement_4) {
+									$prep_statement_4->execute();
+									$row = $prep_statement_4->fetch();
+									$device_label = $row["device_label"];
+									$device_vendor = strtolower($row["device_vendor"]);
+									$device_firmware_version = $row["device_firmware_version"];
+									$device_provision_enable = $row["device_provision_enable"];
+									//keep the original template
+									$device_profile_uuid = $row["device_profile_uuid"];
+									$device_description = $row["device_description"];
+								}
+								unset($prep_statement_4);
+						}
+					}
+					unset($prep_statement_3);
+				}
+
 			//get the device settings table in the provision category and update the provision array
 				if (strlen($device_uuid) > 0) {
 					$sql = "SELECT * FROM v_device_settings ";
