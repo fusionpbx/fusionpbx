@@ -131,6 +131,6 @@
 			copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
 
 		--send the email with the voicemail recording attached
-			send_email(forward_voicemail_id, uuid);
+			send_email(forward_voicemail_id, voicemail_message_uuid);
 
 	end
