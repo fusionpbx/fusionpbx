@@ -900,6 +900,24 @@ $text['label-device_template']['pl'] = "Szablon";
 $text['label-device_template']['uk'] = "";
 $text['label-device_template']['sv-se'] = "Mall";
 
+$text['label-device_username']['en-us'] = "Username";
+$text['label-device_username']['es-cl'] = "Nombre de Usuario";
+$text['label-device_username']['pt-pt'] = "Nome de Utilizador";
+$text['label-device_username']['fr-fr'] = "Nom d'utilisateur";
+$text['label-device_username']['pt-br'] = "Nome de Usuário";
+$text['label-device_username']['pl'] = "Użytkownika";
+$text['label-device_username']['uk'] = "Ім’я користувача";
+$text['label-device_username']['sv-se'] = "Användarnamn";
+
+$text['label-device_password']['en-us'] = "Password";
+$text['label-device_password']['es-cl'] = "Contraseña";
+$text['label-device_password']['pt-pt'] = "Palavra-Passe";
+$text['label-device_password']['fr-fr'] = "Mot de Passe";
+$text['label-device_password']['pt-br'] = "Palavra-Passe";
+$text['label-device_password']['pl'] = "Hasło";
+$text['label-device_password']['uk'] = "Пароль";
+$text['label-device_password']['sv-se'] = "Lösenord";
+
 $text['label-device_setting_value']['en-us'] = "Value";
 $text['label-device_setting_value']['es-cl'] = "Valor";
 $text['label-device_setting_value']['pt-pt'] = "Valor";
