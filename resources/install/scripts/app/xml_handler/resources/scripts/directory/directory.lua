@@ -168,8 +168,12 @@
 							--get the destination hostname from the registration
 								sql = "SELECT hostname FROM registrations ";
 								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
-								sql = sql .. "AND realm = '"..domain_name.."'";
-								sql = sql .. "AND to_timestamp(expires) > NOW()";
+								sql = sql .. "AND realm = '"..domain_name.."' ";
+								if (database["type"] == "mysql") then
+									sql = sql .. "AND expires > unix_timestamp(NOW())";
+								else
+									sql = sql .. "AND to_timestamp(expires) > NOW()";
+								end
 								status = dbh_switch:query(sql, function(row)
 									database_hostname = row["hostname"];
 								end);
