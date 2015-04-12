@@ -296,30 +296,6 @@ include "root.php";
 					}
 				}
 
-			//get the device uuid using the username and password
-				if (strlen($_REQUEST['user_id']) > 0 || strlen($_REQUEST['userid']) > 0) {
-					//set the variables
-						$user_id = $_REQUEST['user_id'];
-						$password = $_REQUEST['password'];
-						if (strlen($_REQUEST['userid']) > 0) { $user_id = $_REQUEST['userid']; }
-						if (strlen($_REQUEST['passwd']) > 0) { $password = $_REQUEST['passwd']; }
-					//get the device uuid
-						$sql = "SELECT * FROM v_device_lines ";
-						$sql .= "WHERE user_id = :user_id ";
-						$sql .= "AND password = :password ";
-						$sql .= "AND domain_uuid = :domain_uuid ";
-						$prep_statement = $this->db->prepare(check_sql($sql));
-						$prep_statement->bindParam(':user_id', $user_id);
-						$prep_statement->bindParam(':password', $password);
-						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach($result as $row) {
-							$device_uuid = $row['device_uuid'];
-						}
-						unset ($prep_statement);
-				}
-
 			//alternate device_uuid
 				if (strlen($device_uuid) > 0) {
 					$sql = "SELECT * FROM v_devices ";
