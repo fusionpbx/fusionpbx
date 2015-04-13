@@ -148,7 +148,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//set the user_status
 		$sql  = "update v_users set ";
 		$sql .= "user_status = '".$agent_status."' ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and username = '".$agent_name."' ";
  		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();

@@ -58,8 +58,8 @@ else {
 						//set the user_status
 							$sql  = "update v_users set ";
 							$sql .= "user_status = '".$row['agent_status']."' ";
-							$sql .= "where domain_uuid = '$domain_uuid' ";
-							$sql .= "and call_center_agent_uuid = '".$row['id']."' ";
+							$sql .= "where domain_uuid = '".$domain_uuid."' ";
+							$sql .= "and username = '".$row['agent_name']."' ";
 							//echo $sql."\n";
 							$prep_statement = $db->prepare(check_sql($sql));
 							$prep_statement->execute();
@@ -129,7 +129,7 @@ else {
 			}
 		//increment x
 			$x++;
-		
+
 	}
 	//echo "<pre>\n";
 	//print_r($agents);
@@ -190,9 +190,9 @@ else {
 	foreach($agents as $row) {
 		$str = '';
 		$str .= "<tr >\n";
-		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
-		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
-		$str .= "	<td valign='top' class='".$row_style[$c]."'>";
+		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
+		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
+		$str .= "	<td valign='middle' class='".$row_style[$c]."'>";
 		$str .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
 		$str .= "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$row['call_center_agent_uuid']."'>\n";
 		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
