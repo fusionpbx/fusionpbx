@@ -113,7 +113,7 @@ else {
 	echo th_order_by('agent_call_timeout', $text['label-call_timeout'], $order_by, $order);
 	echo th_order_by('agent_contact', $text['label-contact'], $order_by, $order);
 	echo th_order_by('agent_max_no_answer', $text['label-max_no_answer'], $order_by, $order);
-	echo th_order_by('agent_status', $text['label-status'], $order_by, $order);
+	echo th_order_by('agent_status', $text['label-default_status'], $order_by, $order);
 	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order);
 	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
 	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);

@@ -425,6 +425,14 @@ $text['label-status']['pt-br'] = "Estado";
 $text['label-status']['pl'] = "Status";
 $text['label-status']['sv-se'] = "Status";
 
+$text['label-default_status']['en-us'] = "Default Status";
+$text['label-default_status']['es-cl'] = "Estado Predeterminado";
+$text['label-default_status']['pt-pt'] = "Estado Predeterminado";
+$text['label-default_status']['fr-fr'] = "Statut Prédéterminée";
+$text['label-default_status']['pt-br'] = "Estado Predeterminado";
+$text['label-default_status']['pl'] = "z góry określony status";
+$text['label-default_status']['sv-se'] = "i förväg fastställda status";
+
 $text['label-reject_delay_time']['en-us'] = "Reject Delay Time";
 $text['label-reject_delay_time']['es-cl'] = "Tiempo de Espera para Rechazar";
 $text['label-reject_delay_time']['pt-pt'] = "Tempo de espera para rejeitar";
@@ -762,7 +770,7 @@ $text['description-strategy']['pt-br'] = "Selecione a estraétia da fila";
 $text['description-strategy']['pl'] = "Wybierz strategię";
 $text['description-strategy']['sv-se'] = "Välj strategi för ringflöde i kö:n.";
 
-$text['description-status']['en-us'] = "Select the agent status.";
+$text['description-status']['en-us'] = "Select the default agent status.";
 $text['description-status']['es-cl'] = "Seleccione el estado del agente.";
 $text['description-status']['pt-pt'] = "Seleccione o estado do agente.";
 $text['description-status']['fr-fr'] = "Choisir le statut de l'agent.";
