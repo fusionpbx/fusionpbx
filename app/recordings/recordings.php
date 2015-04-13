@@ -57,7 +57,7 @@ require_once "resources/check_auth.php";
 						header("Content-Type: audio/x-wav");
 					}
 					if ($file_ext == "mp3") {
-						header("Content-Type: audio/mp3");
+						header("Content-Type: audio/mpeg");
 					}
 				}
 				header('Content-Disposition: attachment; filename="'.base64_decode($_GET['filename']).'"');
@@ -217,6 +217,9 @@ require_once "resources/check_auth.php";
 			$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename']);
 			$tmp_filesize = byte_convert($tmp_filesize);
 
+			//playback progress bar
+			echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -237,7 +240,7 @@ require_once "resources/check_auth.php";
 					case "mp3" : $recording_type = "audio/mpeg"; break;
 					case "ogg" : $recording_type = "audio/ogg"; break;
 				}
-				echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+				echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 				echo "<span id='recording_button_".$row['recording_uuid']."' onclick=\"recording_play('".$row['recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 			}

@@ -316,21 +316,25 @@ else {
 	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
 
 //show the results
+	$col_count = 8;
 	echo "<form name='frm' method='post' action='xml_cdr_delete.php'>\n";
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	if (permission_exists('xml_cdr_delete') && $result_count > 0) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+		$col_count++;
 	}
 	echo "<th>&nbsp;</th>\n";
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+		$col_count++;
 	}
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
 		echo "<th>".$text['label-recording']."</th>\n";
+		$col_count++;
 	}
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
 	echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
@@ -338,12 +342,15 @@ else {
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		// billing collumns
 		echo "<th>".$text['label-price']."</th>\n";
+		$col_count++;
 	}
 	if (permission_exists('xml_cdr_pdd')) {
 		echo th_order_by('pdd_ms', 'PDD', $order_by, $order, null, "style='text-align: right;'", $param);
+		$col_count++;
 	}
 	if (permission_exists('xml_cdr_mos')) {
 		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order, null, "style='text-align: center;'", $param);
+		$col_count++;
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order, $param);
 	if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -352,6 +359,7 @@ else {
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "</td>\n";
+		$col_count++;
 	}
 	echo "</tr>\n";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
@@ -430,6 +438,11 @@ else {
 				else {
 					unset($recording_file_path);
 				}
+			}
+
+			//recording playback progress bar
+			if (permission_exists('recording_play') && $recording_file_path != '') {
+				echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 			}
 
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -517,7 +530,7 @@ else {
 				if ($recording_file_path != '') {
 					echo "	<td valign='top' align='center' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void' nowrap='nowrap'>";
 					if (permission_exists('recording_play')) {
-						echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+						echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['uuid']."')\" onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 						echo 	"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 					}
 					if (permission_exists('recording_download')) {
@@ -614,7 +627,7 @@ else {
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = ($c) ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results

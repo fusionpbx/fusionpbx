@@ -352,13 +352,17 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			if ($handle = opendir($music_on_hold_dir."/".$sampling_rate_dir)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != ".." && is_file($music_on_hold_dir."/".$sampling_rate_dir."/".$file)) {
+						$row_uuid = uuid();
+
 						$file_size = filesize($music_on_hold_dir."/".$sampling_rate_dir."/".$file);
 						$file_size = byte_convert($file_size);
+
+						//playback progress bar
+						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5'><span id='recording_progress_".$row_uuid."' style='background-color: #c43e42; height:1px; display: inline-block;'></span></td></tr>\n";
 
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							$row_uuid = uuid();
 							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
@@ -368,7 +372,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 								case "mp3" : $recording_type = "audio/mpeg"; break;
 								case "ogg" : $recording_type = "audio/ogg"; break;
 							}
-							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 							echo "<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 							echo "<a href=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
@@ -422,14 +426,17 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			if ($handle = opendir($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != ".." && is_file($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file)) {
+						$row_uuid = uuid();
 
 						$file_size = filesize($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file);
 						$file_size = byte_convert($file_size);
 
+						//playback progress bar
+						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							$row_uuid = uuid();
 							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
@@ -439,7 +446,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 								case "mp3" : $recording_type = "audio/mpeg"; break;
 								case "ogg" : $recording_type = "audio/ogg"; break;
 							}
-							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 							echo "<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 							echo "<a href=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
