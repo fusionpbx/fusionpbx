@@ -138,7 +138,11 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 
 			if (count($field['messages']) > 0) {
 				foreach($field['messages'] as &$row) {
-					if ($row['message_status'] == '') { $style = "font-weight: bold;"; } else { $style = ''; }
+					$style = ($row['message_status'] == '') ? "font-weight: bold;" : null;
+
+					//playback progress bar
+					echo "<tr id='recording_progress_bar_".$row['voicemail_message_uuid']."' style='display: none;'><td colspan='6'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_message_uuid']."'></span></td></tr>\n";
+
 					echo "<tr>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap='nowrap'>".$row['created_date']."</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
@@ -152,7 +156,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 							case "mp3" : $recording_type = "audio/mpeg"; break;
 							case "ogg" : $recording_type = "audio/ogg"; break;
 						}
-						echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&type=vm&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
+						echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' ontimeupdate=\"update_progress('".$row['voicemail_message_uuid']."')\" preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&type=vm&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
 						echo "<span id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 						echo "<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 					echo "	</td>\n";

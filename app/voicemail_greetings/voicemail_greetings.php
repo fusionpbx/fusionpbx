@@ -312,6 +312,10 @@ else {
 		foreach($result as $row) {
 			$tmp_filesize = filesize($v_greeting_dir.'/'.$row['greeting_name']);
 			$tmp_filesize = byte_convert($tmp_filesize);
+
+			//playback progress bar
+			echo "<tr id='recording_progress_bar_".$row['voicemail_greeting_uuid']."' style='display: none;'><td colspan='6'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_greeting_uuid']."'></span></td></tr>\n";
+
 			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td class='".$row_style[$c]." tr_link_void' width='30px;' valign='top'>\n";
@@ -334,7 +338,7 @@ else {
 						case "mp3" : $recording_type = "audio/mpeg"; break;
 						case "ogg" : $recording_type = "audio/ogg"; break;
 					}
-					echo "<audio id='recording_audio_".$row['voicemail_greeting_uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['voicemail_greeting_uuid']."');\" src=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+					echo "<audio id='recording_audio_".$row['voicemail_greeting_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['voicemail_greeting_uuid']."')\" onended=\"recording_reset('".$row['voicemail_greeting_uuid']."');\" src=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 					echo "<span id='recording_button_".$row['voicemail_greeting_uuid']."' onclick=\"recording_play('".$row['voicemail_greeting_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 					echo "<a href=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				}
