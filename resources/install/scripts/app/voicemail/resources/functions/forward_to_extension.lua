@@ -67,6 +67,7 @@
 						message_length = row["message_length"];
 						message_status = row["message_status"];
 						message_priority = row["message_priority"];
+						message_base64 = row["message_base64"];
 				end);
 			end
 
@@ -95,6 +96,9 @@
 			table.insert(sql, "voicemail_message_uuid, ");
 			table.insert(sql, "domain_uuid, ");
 			table.insert(sql, "voicemail_uuid, ");
+			if (storage_type == "base64") then
+				table.insert(sql, "message_base64, ");
+			end
 			table.insert(sql, "created_epoch, ");
 			table.insert(sql, "caller_id_name, ");
 			table.insert(sql, "caller_id_number, ");
@@ -107,6 +111,9 @@
 			table.insert(sql, "'".. voicemail_message_uuid .."', ");
 			table.insert(sql, "'".. domain_uuid .."', ");
 			table.insert(sql, "'".. forward_voicemail_uuid .."', ");
+			if (storage_type == "base64") then
+				table.insert(sql, "'".. message_base64 .."', ");
+			end
 			table.insert(sql, "'".. created_epoch .."', ");
 			table.insert(sql, "'".. caller_id_name .."', ");
 			table.insert(sql, "'".. caller_id_number .."', ");
@@ -118,7 +125,17 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
-			dbh:query(sql);
+			if (storage_type == "base64") then
+				array = explode("://", database["system"]);
+				local luasql = require "luasql.postgres";
+				local env = assert (luasql.postgres());
+				local dbh = env:connect(array[2]);
+				res, serr = dbh:execute(sql);
+				dbh:close();
+				env:close();
+			else
+				dbh:query(sql);
+			end
 
 		--set the message waiting event
 			local event = freeswitch.Event("message_waiting");
