@@ -1327,7 +1327,7 @@ SPAN.playback_progress_bar {
 		var recording_progress = document.getElementById('recording_progress_'+recording_id);
 		var value = 0;
 		if (recording_audio.currentTime > 0) {
-			value = Math.floor((100 / recording_audio.duration) * recording_audio.currentTime);
+			value = (100 / recording_audio.duration) * recording_audio.currentTime;
 		}
 		recording_progress.style.width = value + "%";
 	}
