@@ -96,8 +96,7 @@
 							end);
 						end
 					elseif (storage_type == "http_cache") then
-						--need additional work
-						
+						greeting_location = storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 					end
 
 				--play the greeting

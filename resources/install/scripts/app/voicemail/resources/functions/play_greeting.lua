@@ -64,14 +64,17 @@
 												file:write(base64.decode(row["greeting_base64"]));
 												file:close();
 											end
+										--custom greeting
+											session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 									end);
 								end
 							elseif (storage_type == "http_cache") then
-								--need additional work
+								session:streamFile(storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+							else
+								session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
-						--custom greeting
-							session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+						--sleep
 							session:streamFile("silence_stream://200");
 					else
 						--default greeting
