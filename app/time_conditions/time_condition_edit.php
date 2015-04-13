@@ -255,6 +255,17 @@ require_once "resources/header.php";
 					$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 					$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
+					//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+					if ($cond_var == 'time-of-day') {
+						$cond_var = 'minute-of-day';
+						$array_cond_start = explode(':', $cond_start);
+						$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
+						if ($cond_stop != '') {
+							$array_cond_stop = explode(':', $cond_stop);
+							$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
+						}
+					}
+
 					$cond_value = $cond_start;
 					if ($cond_stop != '') {
 						$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
@@ -851,6 +862,16 @@ if ($action == 'update') {
 				$cond_val_start = $tmp[0];
 				$cond_val_stop = $tmp[1];
 				unset($tmp);
+
+				//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+				if ($cond_var == 'minute-of-day') {
+					$cond_var = 'time-of-day';
+					$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
+					if ($cond_val_stop != '') {
+						$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);
+					}
+				}
+
 				echo "<script>";
 				echo "	condition_id = add_condition(".$group_id.",'custom');\n";
 				echo "	$('#variable_".$group_id."_' + condition_id + ' option[value=\"".$cond_var."\"]').prop('selected', true);\n";
@@ -928,6 +949,16 @@ if ($action == 'update') {
 						$cond_val_start = $tmp[0];
 						$cond_val_stop = $tmp[1];
 						unset($tmp);
+
+						//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+						if ($cond_var == 'minute-of-day') {
+							$cond_var = 'time-of-day';
+							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
+							if ($cond_val_stop != '') {
+								$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);
+							}
+						}
+
 						echo "<script>\n";
 						echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
 						echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$cond_var."\"]').prop('selected', true);\n";
