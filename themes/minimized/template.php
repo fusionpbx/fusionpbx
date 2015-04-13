@@ -446,7 +446,7 @@ table.tr_hover tr:hover td a {
 	color: #000;
 	text-align: center;
 	padding: 0 1px 0 1px;
-	width: 42px;
+	width: 51px;
 	white-space: nowrap;
 }
 
@@ -458,7 +458,7 @@ table.tr_hover tr:hover td a {
 	background: -ms-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
 	background: linear-gradient(to right, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e9f0', endColorstr='#e5e9f0',GradientType=1 );
-	}
+}
 
 .row_stylebg {
 	border-bottom: 1px solid #b9c5d8;

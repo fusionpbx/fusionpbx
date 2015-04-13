@@ -491,7 +491,7 @@ else {
 			echo 	$row['caller_id_name'].'&nbsp;';
 			echo "	</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			if (is_numeric($row['caller_id_number'])) {
 				echo "		".format_phone($row['caller_id_number']).' ';
@@ -502,7 +502,7 @@ else {
 			echo "		</a>";
 			echo "	</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			if (is_numeric($row['destination_number'])) {
 				echo format_phone($row['destination_number'])."\n";
@@ -515,7 +515,7 @@ else {
 
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
 				if ($recording_file_path != '') {
-					echo "	<td valign='top' align='center' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+					echo "	<td valign='top' align='center' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void' nowrap='nowrap'>";
 					if (permission_exists('recording_play')) {
 						echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 						echo 	"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
@@ -606,7 +606,7 @@ else {
 			}
 			echo "	</td>\n";
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				echo "	<td class='list_control_icons tr_link_void'>";
+				echo "	<td class='list_control_icons tr_link_void' nowrap='nowrap'>";
 				echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
 				if (permission_exists('xml_cdr_delete')) {
 					echo 	"<a href='xml_cdr_delete.php?id[]=".$row['uuid']."&rec[]=".(($recording_file_path != '') ? base64_encode($recording_file_path) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
