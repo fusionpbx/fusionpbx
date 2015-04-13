@@ -863,7 +863,7 @@ if ($action == 'update') {
 				$cond_val_stop = $tmp[1];
 				unset($tmp);
 
-				//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+				//convert minute-of-day to time-of-day values
 				if ($cond_var == 'minute-of-day') {
 					$cond_var = 'time-of-day';
 					$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
@@ -950,7 +950,7 @@ if ($action == 'update') {
 						$cond_val_stop = $tmp[1];
 						unset($tmp);
 
-						//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+						//convert minute-of-day to time-of-day values
 						if ($cond_var == 'minute-of-day') {
 							$cond_var = 'time-of-day';
 							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
