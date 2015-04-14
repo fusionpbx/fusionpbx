@@ -470,7 +470,6 @@ table.tr_hover tr:hover td a {
 
 .border {
 	border: solid 1px #a4aebf;
-	/*background-color: #FFFFFF;*/
 }
 
 
@@ -488,9 +487,7 @@ table.tr_hover tr:hover td a {
 }
 
 table {
-	/*background:#ccc;*/
-	/*margin:20px;*/
-	/*border:#ccc 1px solid;*/
+
 }
 
 table th {
@@ -498,8 +495,7 @@ table th {
 }
 
 table td {
-	/*background:#fff;*/
-	/*padding:2px 10px 4px 10px*/
+
 }
 
 table tr.even td {
@@ -568,10 +564,10 @@ legend {
 		)) { ?>
 		background-color: #FFFFFF;
 		background-attachment: fixed;
-		opacity: 0.93;
-		filter:alpha(opacity=93);
-		-moz-opacity:0.93;
-		-khtml-opacity: 0.93;
+		opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		filter:alpha(opacity=<?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? (100 * (float) $_SESSION['theme']['body_opacity']['text']) : "93"; ?>);
+		-moz-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		-khtml-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
@@ -594,17 +590,17 @@ legend {
 		right: 0;
 		z-index: 10001;
 		text-align: left;
-		opacity: 0.93;
-		filter:alpha(opacity=93);
-		-moz-opacity:0.93;
-		-khtml-opacity: 0.93;
 	}
 
 	#menu_bar_content {
 		background-image: url('<!--{project_path}-->/themes/minimized/images/background_black.png');
 		background-position: 0px -1px;
-		background-color: #000000;
 		background-repeat: repeat-x;
+		background-color: #000000;
+		opacity: <?php echo ($_SESSION['theme']['menu_opacity']['text'] != '') ? $_SESSION['theme']['menu_opacity']['text'] : "0.93"; ?>;
+		filter:alpha(opacity=<?php echo ($_SESSION['theme']['menu_opacity']['text'] != '') ? (100 * (float) $_SESSION['theme']['menu_opacity']['text']) : "93"; ?>);
+		-moz-opacity: <?php echo ($_SESSION['theme']['menu_opacity']['text'] != '') ? $_SESSION['theme']['menu_opacity']['text'] : "0.93"; ?>;
+		-khtml-opacity: <?php echo ($_SESSION['theme']['menu_opacity']['text'] != '') ? $_SESSION['theme']['menu_opacity']['text'] : "0.93"; ?>;
 		-webkit-border-radius: 0px 0px 4px 4px;
 		-moz-border-radius: 0px 0px 4px 4px;
 		border-radius: 0px 0px 4px 4px;
@@ -649,7 +645,6 @@ legend {
 		font-weight: normal;
 		font-family: Arial, Helvetica, sans-serif;
 		display:block;
-		/*border-color:#ccc #888 #555 #bbb;*/
 		white-space:nowrap;
 		margin:0;
 		padding: 3px;
@@ -685,7 +680,7 @@ legend {
 	}
 
 	#menu .menu_sub {
-		display:none;
+		display: none;
 		top: 31px;
 		padding: 5px 0px 10px 0px;
 		<?php
@@ -702,7 +697,8 @@ legend {
 			echo "width:190px;\n";
 		}
 		?>
-		background: #141414;
+		background-color: #141414;
+		background: rgba(<?php echo hex2rgb("#141414", ','); ?>, <?php echo ($_SESSION['theme']['menu_opacity']['text'] != '') ? $_SESSION['theme']['menu_opacity']['text'] : "0.95"; ?>);
 		-webkit-border-radius: 0 0 3px 3px;
 		-moz-border-radius: 0 0 3px 3px;
 		border-radius: 0 0 3px 3px;
@@ -712,9 +708,9 @@ legend {
 	}
 
 	#menu a:hover{
-		width:114px;
-		color:#fd9c03;
-		background:#1F1F1F;
+		width: 114px;
+		color: #fd9c03;
+		background-color: #141414;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
@@ -758,7 +754,6 @@ legend {
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
-		/*background:#1F1F1F url(<!--{project_path}-->/css/images/expand3.gif) no-repeat -999px -9999px;*/
 	}
 
 	div#menu li:hover{
@@ -781,7 +776,6 @@ legend {
 	#menu a.x, #menu a.x:visited{
 		font-weight:bold;
 		color:#000;
-		/*background:#a4aebf url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 	}
 
 	#menu a.x:hover{

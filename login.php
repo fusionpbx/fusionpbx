@@ -29,8 +29,10 @@ include "root.php";
 	session_start();
 
 //retain message
-	$message_mood = $_SESSION["message_mood"];
-	$message = $_SESSION["message"];
+	if (isset($_SESSION["message"])) {
+		$message_mood = $_SESSION["message_mood"];
+		$message = $_SESSION["message"];
+	}
 
 //destroy session
 	session_unset();

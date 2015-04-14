@@ -153,6 +153,20 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '1.75';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the hide delay of the message bar (seconds).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'body_opacity';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '0.93';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the opacity of the body and content (decimal).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_opacity';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '0.96';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the opacity of the main menu (decimal, Minimized theme only).';
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
