@@ -37,6 +37,14 @@
 		}
 	}
 
+	if (!function_exists('numeric_version')) {
+		function numeric_version() {
+			$v = explode('.', software_version());
+			$n = ($v[0] * 10000 + $v[1] * 100 + $v[2]);
+			return $n;
+		}
+	}
+
 	if (!function_exists('check_float')) {
 		function check_float($string) {
 			$string = str_replace(",",".",$string);
