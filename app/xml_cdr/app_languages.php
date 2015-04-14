@@ -335,6 +335,14 @@ $text['label-remote_media_ip']['pt-br'] = "IP Media remote";
 $text['label-remote_media_ip']['pl'] = "Zdalny adres IP scieżki głosowej";
 $text['label-remote_media_ip']['sv-se'] = "Remote Media IP";
 
+$text['label-recording']['en-us'] = "Recording";
+$text['label-recording']['es-cl'] = "Grabación";
+$text['label-recording']['pt-pt'] = "Gravação";
+$text['label-recording']['fr-fr'] = "Enregistrement";
+$text['label-recording']['pt-br'] = "Gravação";
+$text['label-recording']['pl'] = "Nagranie";
+$text['label-recording']['sv-se'] = "Inspelning";
+
 $text['label-read_codec']['en-us'] = "Read Codec";
 $text['label-read_codec']['es-cl'] = "Leer Códec";
 $text['label-read_codec']['pt-pt'] = "Leia Codec";
