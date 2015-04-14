@@ -160,6 +160,14 @@ $text['label-select']['nl-nl'] = "";
 $text['label-select']['pt-br'] = "Selecionar";
 $text['label-select']['pl'] = "Wybierz";
 
+$text['label-search']['en-us'] = "Search...";
+$text['label-search']['es-cl'] = "Buscar...";
+$text['label-search']['pt-pt'] = "Pesquisa...";
+$text['label-search']['fr-fr'] = "Recherche...";
+$text['label-search']['nl-nl'] = "";
+$text['label-search']['pt-br'] = "Pesquisa...";
+$text['label-search']['pl'] = "Szukaj ...";
+
 $text['label-order']['en-us'] = "Order";
 $text['label-order']['es-cl'] = "Orden";
 $text['label-order']['pt-pt'] = "Ordem";
