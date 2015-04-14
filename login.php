@@ -25,30 +25,45 @@
 */
 include "root.php";
 
-//clear the session variables
+//start session
 	session_start();
+
+//retain message
+	$message_mood = $_SESSION["message_mood"];
+	$message = $_SESSION["message"];
+
+//destroy session
 	session_unset();
 	session_destroy();
 
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//do nothing
-	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+	}
+	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//original directory
-	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+	}
+	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
 		//move config.php from the includes to resources directory.
 		rename($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php", $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php");
-	} elseif (file_exists("/etc/fusionpbx/config.php")){
+	}
+	else if (file_exists("/etc/fusionpbx/config.php")){
 		//linux
-	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+	}
+	else if (file_exists("/usr/local/etc/fusionpbx/config.php")){
 		//bsd
-	} else {
+	}
+	else {
 		header("Location: ".PROJECT_PATH."/resources/install.php");
 		exit;
 	}
 
 //adds multiple includes
 	require_once "resources/require.php";
+
+//restore message
+	$_SESSION["message_mood"] = $message_mood;
+	$_SESSION["message"] = $message;
 
 //use custom login, if present, otherwise use default login
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
