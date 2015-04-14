@@ -141,24 +141,22 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_call_timeout']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			$agent_contact = $row['agent_contact'];
 			// parse out gateway uuid
 			$bridge_statement = explode('/', $row['agent_contact']);
-			if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway') {
-				$gateway_uuid = $bridge_statement[2];
+			if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway' && is_uuid($bridge_statement[2])) {
 				// retrieve gateway name from db
-				$sql = "select gateway from v_gateways where gateway_uuid = '".$gateway_uuid."' ";
+				$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) > 0) { $gateway_name = $result[0]['gateway']; }
-				unset ($prep_statement, $sql);
-				echo str_replace($gateway_uuid, $gateway_name, $row['agent_contact']);
+				if (count($result) > 0) {
+					$gateway_name = $result[0]['gateway'];
+					$agent_contact = str_replace($bridge_statement[2], $gateway_name, $agent_contact);
+				}
+				unset ($prep_statement, $sql, $bridge_statement);
 			}
-			else {
-				echo $row['agent_contact'];
-			}
-			echo "		&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$agent_contact."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_max_no_answer']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."&nbsp;</td>\n";
