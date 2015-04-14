@@ -105,10 +105,7 @@ require_once "resources/check_auth.php";
 
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
-							if (permission_exists('registration_all') && $show == "all") {
-								//show all registrations
-							}
-							else {
+							if (!(permission_exists('registration_all') && $show == "all")) {
 								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
 									unset($registrations[$x]);
 								}
@@ -154,7 +151,7 @@ require_once "resources/check_auth.php";
 		//order the array
 			require_once "resources/classes/array_order.php";
 			$order = new array_order();
-			$registrations = $order->sort($registrations, 'domain', 'user');
+			$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
 
 		//display the array
 			if (count($registrations) > 0) {
