@@ -62,8 +62,10 @@ include "root.php";
 	require_once "resources/require.php";
 
 //restore message
-	$_SESSION["message_mood"] = $message_mood;
-	$_SESSION["message"] = $message;
+	if ($message != '') {
+		$_SESSION["message_mood"] = $message_mood;
+		$_SESSION["message"] = $message;
+	}
 
 //use custom login, if present, otherwise use default login
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
