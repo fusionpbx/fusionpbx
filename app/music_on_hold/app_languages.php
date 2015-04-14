@@ -28,6 +28,20 @@ $text['message-nofiles']['fr-fr'] = "Pas de fichier trouvé.";
 $text['message-nofiles']['pt-br'] = "Não foram encontrados os arquivos";
 $text['message-nofiles']['pl'] = "Nie znaleziono plików";
 
+$text['message-upload_completed']['en-us'] = "Upload Completed";
+$text['message-upload_completed']['es-cl'] = "Cargar Completado";
+$text['message-upload_completed']['pt-pt'] = "Carregar Concluído";
+$text['message-upload_completed']['fr-fr'] = "Upload terminé";
+$text['message-upload_completed']['pt-br'] = "Carregar Concluído";
+$text['message-upload_completed']['pl'] = "Prześlij Zakończony";
+
+$text['message-unsupported_file_type']['en-us'] = "Unsupported File Type";
+$text['message-unsupported_file_type']['es-cl'] = "Tipo de archivo no compatible";
+$text['message-unsupported_file_type']['pt-pt'] = "Não suportado Tipo de Arquivo";
+$text['message-unsupported_file_type']['fr-fr'] = "Type de fichier non pris en charge";
+$text['message-unsupported_file_type']['pt-br'] = "Não suportado Tipo de Arquivo";
+$text['message-unsupported_file_type']['pl'] = "Nieobsługiwany typ pliku";
+
 $text['message-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['message-event-socket']['es-cl'] = "Conexión a socket fallida.";
 $text['message-event-socket']['pt-pt'] = "A Conexão ao Event Socket falhou.";
