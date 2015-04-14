@@ -470,7 +470,6 @@ table.tr_hover tr:hover td a {
 
 .border {
 	border: solid 1px #a4aebf;
-	/*background-color: #FFFFFF;*/
 }
 
 
@@ -488,9 +487,7 @@ table.tr_hover tr:hover td a {
 }
 
 table {
-	/*background:#ccc;*/
-	/*margin:20px;*/
-	/*border:#ccc 1px solid;*/
+
 }
 
 table th {
@@ -498,8 +495,7 @@ table th {
 }
 
 table td {
-	/*background:#fff;*/
-	/*padding:2px 10px 4px 10px*/
+
 }
 
 table tr.even td {
@@ -557,6 +553,34 @@ legend {
 	padding-right: 2px;
 }
 
+#main_content {
+	<?php
+	if (
+		strlen($_SESSION["username"]) > 0 &&
+		(
+			isset($_SESSION['theme']['background_image']) ||
+			$_SESSION['theme']['background_color'][0] != '' ||
+			$_SESSION['theme']['background_color'][1] != ''
+		)) { ?>
+		background-color: #FFFFFF;
+		background-attachment: fixed;
+		opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		filter:alpha(opacity=<?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? (100 * (float) $_SESSION['theme']['body_opacity']['text']) : "93"; ?>);
+		-moz-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		-khtml-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		-webkit-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		padding: 20px;
+	<?php } else { ?>
+		padding: 10px;
+	<?php } ?>
+	text-align: left;
+}
+
 /* begin the menu css*/
 
 	.menu_bar {
@@ -587,13 +611,10 @@ legend {
 		?>
 		background-repeat: repeat-x;
 		background-attachment: fixed;
-		/*background-color: #FFFFFF;*/
-
 		opacity: 0.9;
 		filter:alpha(opacity=90);
 		-moz-opacity:0.9;
 		-khtml-opacity: 0.9;
-
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
@@ -604,34 +625,6 @@ legend {
 		padding-right:20px;
 	}
 
-	.main_content {
-		<?php
-		if (
-			strlen($_SESSION["username"]) > 0 &&
-			(
-				isset($_SESSION['theme']['background_image']) ||
-				$_SESSION['theme']['background_color'][0] != '' ||
-				$_SESSION['theme']['background_color'][1] != ''
-			)) { ?>
-			background-color: #FFFFFF;
-			background-attachment: fixed;
-			opacity: 0.93;
-			filter:alpha(opacity=93);
-			-moz-opacity:0.93;
-			-khtml-opacity: 0.93;
-			-webkit-border-radius: 4px;
-			-moz-border-radius: 4px;
-			border-radius: 4px;
-			-webkit-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-			-moz-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-			box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-			padding: 20px;
-		<?php } else { ?>
-			padding: 10px;
-		<?php } ?>
-		text-align: left;
-	}
-
 	#menu{
 		width:100%;
 		float:left;
@@ -640,7 +633,6 @@ legend {
 	#menu a, #menu h2{
 		font:bold 11px/16px arial,helvetica,sans-serif;
 		display:block;
-		/*border-color:#ccc #888 #555 #bbb;*/
 		white-space:nowrap;
 		margin:0;
 		padding: 3px;
@@ -648,8 +640,6 @@ legend {
 
 	#menu h2{
 		color:#FFFFFF;
-		/*background:#222222 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
-		/*text-transform:uppercase*/
 		<?php
 		if ($_SESSION['domain']['language']['code'] == "en-us") {
 			echo "width:125px;\n";
@@ -667,8 +657,6 @@ legend {
 	}
 
 	#menu h2 h2{
-		/*background:#4e4b56 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
-		/*text-transform:uppercase*/
 		padding: 3px;
 	}
 
@@ -689,7 +677,7 @@ legend {
 
 	#menu .menu_sub {
 		display:none;
-		padding-top:10px;
+		padding: 5px 0px 8px 0px;
 		<?php
 		if ($_SESSION['domain']['language']['code'] == "en-us") {
 			echo "width:125px;\n";
@@ -761,7 +749,6 @@ legend {
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
-		/*background:#1F1F1F url(<!--{project_path}-->/css/images/expand3.gif) no-repeat -999px -9999px;*/
 	}
 
 	div#menu li:hover{
@@ -784,7 +771,6 @@ legend {
 	#menu a.x, #menu a.x:visited{
 		font-weight:bold;
 		color:#000;
-		/*background:#a4aebf url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 	}
 
 	#menu a.x:hover{
@@ -1652,7 +1638,7 @@ if (strlen($_SESSION['message']) > 0) {
 						<table cellpadding='0' cellspacing='1' border='0' width='100%' style='margin-bottom: 60px;'>
 
 							<tr>
-								<td class='main_content' valign='top' align='center'>
+								<td id='main_content' valign='top' align='center'>
 									<!--{body}-->
 								</td>
 							</tr>
