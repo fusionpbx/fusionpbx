@@ -650,21 +650,23 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						//data
 							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
+								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
 									// parse out gateway uuid
 									$bridge_statement = explode('/', $dialplan_detail_data);
-									if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway') {
-										$gateway_uuid = $bridge_statement[2];
+									if ($bridge_statement[0] == 'sofia' && $bridge_statement[1] == 'gateway' && is_uuid($bridge_statement[2])) {
+										// retrieve gateway name from db
+										$sql = "select gateway from v_gateways where gateway_uuid = '".$bridge_statement[2]."' ";
+										$prep_statement = $db->prepare(check_sql($sql));
+										$prep_statement->execute();
+										$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+										if (count($result) > 0) {
+											$gateway_name = $result[0]['gateway'];
+											$dialplan_detail_data_mod = str_replace($bridge_statement[2], $gateway_name, $dialplan_detail_data);
+										}
+										unset ($prep_statement, $sql, $bridge_statement);
 									}
-									// retrieve gateway name from db
-									$sql = "select gateway from v_gateways where gateway_uuid = '".$gateway_uuid."' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									if (count($result) > 0) { $gateway_name = $result[0]['gateway']; }
-									unset ($prep_statement, $sql);
 								}
-								$dialplan_detail_data_mod = ($gateway_name != '') ? str_replace($gateway_uuid, $gateway_name, $dialplan_detail_data) : $dialplan_detail_data;
 								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".htmlspecialchars($dialplan_detail_data_mod)."</label>\n";
 							}
 							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: 100%; min-width: 100%; max-width: 100%; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
