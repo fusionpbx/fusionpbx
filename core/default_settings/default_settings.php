@@ -214,7 +214,6 @@ else {
 		echo "			$('#button_paste').fadeIn(fade_speed);\n";
 		echo "		});";
 		echo "	}";
-		echo "\n";
 		echo "	function hide_domains() {\n";
 		echo "		document.getElementById('action').value = '';\n";
 		echo "		$('#button_back').fadeOut(fade_speed);\n";
@@ -226,7 +225,7 @@ else {
 		echo "	}\n";
 		echo "\n";
 		echo "	$( document ).ready(function() {\n";
-		echo "		// expand previous category\n";
+		echo "		// scroll to previous category\n";
 		echo "		var category_span_id;\n";
 		echo "		var url = document.location.href;\n";
 		echo "		var hashindex = url.indexOf('#');\n";
@@ -235,10 +234,7 @@ else {
 		echo "			category_span_id = url.substr(hashindex + 1);\n";
 		echo "		}\n";
 		echo "		if (category_span_id) {\n";
-		echo "			$('.first_settings_group').hide();\n";
-		echo "			$('#settings_'+category_span_id).slideToggle(400, function() {\n";
-		echo "				$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 50}, 'slow');\n";
-		echo "			});\n";
+		echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
 		echo "		}\n";
 		echo "	});\n";
 		echo "</script>";
@@ -316,53 +312,47 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 
 			if ($previous_category != $row['default_setting_category']) {
 				$c = 0;
+				echo "<tr>\n";
+				echo "	<td colspan='7' align='left'>\n";
 				if ($previous_category != '') {
-					echo "</table>\n";
-					echo "<br />\n";
-					echo "</div>\n";
-					echo "<span id='anchor_".$row['default_setting_category']."'></span>\n";
-					echo "<br />\n";
+					echo "		<span id='anchor_".$row['default_setting_category']."'></span>";
+					echo "		<br /><br />";
 				}
-				else {
-					echo "<br />\n";
-				}
-				echo "<b onmouseover=\"this.style.cursor='pointer';\" onclick=\"$('#settings_".$row['default_setting_category']."').slideToggle(400);\">";
+				echo "		<br />\n";
+				echo "		<b>\n";
 				if (strtolower($row['default_setting_category']) == "api") {
-					echo "API";
-				}
-				else if (strtolower($row['default_setting_category']) == "cdr") {
-					echo "CDR";
-				}
-				else if (strtolower($row['default_setting_category']) == "ldap") {
-					echo "LDAP";
+					echo "		API";
+				} elseif (strtolower($row['default_setting_category']) == "cdr") {
+					echo "		CDR";
+				} elseif (strtolower($row['default_setting_category']) == "ldap") {
+					echo "		LDAP";
 				}
 				else {
-					echo ucwords(str_replace("_", " ", $row['default_setting_category']));
+					echo "		".ucwords(str_replace("_", " ", $row['default_setting_category']));
 				}
-				echo "</b>\n";
-				echo "<br />";
-
-				echo "<div id='settings_".$row['default_setting_category']."' ".(($previous_category != '') ? "style='display: none;'" : "class='first_settings_group'").">\n";
-				echo "<br />\n";
-				echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "		</b>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				echo "<tr>\n";
 				if (
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 					permission_exists('default_setting_delete')
 					) {
-					echo "<th style='text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+					echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
-				echo "<th width='23%'>".$text['label-subcategory']."</th>";
-				echo "<th width='7%'>".$text['label-type']."</th>";
-				echo "<th width='30%'>".$text['label-value']."</th>";
+				echo "<th>".$text['label-subcategory']."</th>";
+				echo "<th>".$text['label-type']."</th>";
+				echo "<th>".$text['label-value']."</th>";
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
-				echo "<th width='40%'>".$text['label-description']."</th>";
+				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('default_setting_add')) {
 					echo "<a href='default_setting_edit.php?default_setting_category=".urlencode($row['default_setting_category'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
@@ -391,7 +381,7 @@ else {
 				echo $row['default_setting_subcategory'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 
 			$category = $row['default_setting_category'];
 			$subcategory = $row['default_setting_subcategory'];
@@ -406,25 +396,24 @@ else {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 			}
-			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['default_setting_value']);
 			}
-			else if ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
+			elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			}
-			else if ($category == "provision" && $subcategory == "password" && $name == "var" ) {
+			elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
-			}
-			else {
-				echo "		".htmlspecialchars($row['default_setting_value']);
+			} else {
+				echo "		".htmlspecialchars(substr($row['default_setting_value'],0,58));
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			echo "		<a href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."'>".ucwords($row['default_setting_enabled'])."</a>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['default_setting_description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' nowrap='nowrap'>";
+			echo "	<td valign='top' class='row_stylebg'>".$row['default_setting_description']."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('default_setting_edit')) {
 				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
@@ -461,9 +450,7 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</table>\n";
-	echo "</div>\n";
-
+	echo "</table>";
 	echo "<br />";
 	echo $paging_controls;
 	echo "<br /><br /><br />";
