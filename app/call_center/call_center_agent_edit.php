@@ -389,7 +389,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-	switch_select_destination("call_center_contact", "", "agent_contact", $agent_contact, "", "");
+	switch_select_destination("call_center_contact", "", "agent_contact", $agent_contact, "width: 350px;", "");
 
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
