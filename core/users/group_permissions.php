@@ -362,6 +362,9 @@ require_once "resources/require.php";
 
 	//list all the permissions
 		foreach($apps as $app_index => $app) {
+			//hide apps for which there are no permissions
+			if (!is_array($app['permissions']) || sizeof($app['permissions']) == 0) { continue; }
+
 			$app_name = $app['name'];
 			$description = $app['description']['en-us'];
 
