@@ -46,14 +46,6 @@
 --define select_entry function 
 	function settings(domain_uuid)
 
-		--include config.lua
-			dofile(scripts_dir.."/resources/functions/config.lua");
-			dofile(config());
-
-		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
-			dbh = database_handle('system');
-
 		--define the table
 			array = {}
 
