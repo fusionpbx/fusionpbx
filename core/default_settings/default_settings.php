@@ -466,8 +466,6 @@ else {
 			echo "</script>\n";
 		}
 
-//echo "<br><br><pre>".print_r($array_categories, true)."</pre><br><br><br>";
-
 	//setting search script
 		echo "<script>\n";
 		echo "	var categories = new Array(\"".implode('","', $array_categories)."\");\n";
@@ -512,9 +510,6 @@ else {
 			echo "	$('#default_setting_search').select();\n";
 		}
 		echo "</script>\n";
-
-
-
 
 //include the footer
 	require_once "resources/footer.php";

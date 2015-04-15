@@ -343,6 +343,7 @@ require_once "resources/require.php";
 	echo "		</td>\n";
 	echo "		<td width='50%' align=\"right\" valign='top'>\n";
 	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "			<input type='text' id='group_permission_search' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' placeholder=\"".$text['label-search']."\" onkeyup='permission_search();'>\n";
 	echo "			<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -364,6 +365,10 @@ require_once "resources/require.php";
 			$app_name = $app['name'];
 			$description = $app['description']['en-us'];
 
+			//used to hide apps, even if permissions don't exist
+			$array_apps_unique[] = str_replace(' ','_',strtolower($app['name']));
+
+			echo "<div id='app_".str_replace(' ','_',strtolower($app['name']))."'>";
 			echo "<b>".$app_name."</b><br />\n";
 			if ($description != '') { echo $description."<br />\n"; }
 			echo "<br>";
@@ -371,18 +376,23 @@ require_once "resources/require.php";
 			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
 			echo "		<th style='text-align: center; padding: 0px;'><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
-			echo "		<th>".$text['label-permission_permissions']."</th>\n";
-			echo "		<th>".$text['label-permission_description']."</th>\n";
+			echo "		<th width='33%'>".$text['label-permission_permissions']."</th>\n";
+			echo "		<th width='66%'>".$text['label-permission_description']."</th>\n";
 			echo "	<tr>\n";
 
 			foreach ($app['permissions'] as $permission_index => $row) {
 				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
-				echo "<tr>\n";
+				echo "<tr id='permission_".$row['name']."'>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
 				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
 				echo "	<td valign='top' width='70%' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
 				echo "</tr>\n";
 				$c = ($c == 0) ? 1 : 0;
+
+				//populate search/filter arrays
+				$array_apps[] = str_replace(' ','_',strtolower($app['name']));
+				$array_permissions[] = $row['name'];
+				$array_descriptions[] = str_replace('"','\"',$row['description']);
 
 				$app_permissions[$app_index][] = "perm_".$app_index."_".$permission_index;
 			}
@@ -391,26 +401,64 @@ require_once "resources/require.php";
 			echo "		<td colspan='3' align='right' style='padding-top: 15px;'><input type='submit' name='submit' class='btn' value='".$text['button-save']."'></td>\n";
 			echo "	</tr>\n";
 			echo "</table>";
-			echo "<br />\n";
+			echo "</div>\n\n";
+
 		} //end foreach
 		echo "<br>";
 		unset($sql, $result, $row_count);
 
-		echo "<script>\n";
-		echo "function check_toggle(app_index, toggle_state) {\n";
-		echo "	switch (app_index) {\n";
-		foreach ($app_permissions as $app_index => $app_permission_ids) {
-			echo "	case '".$app_index."':\n";
-			foreach ($app_permission_ids as $app_permission_id) {
-				echo "	document.getElementById('".$app_permission_id."').checked = toggle_state;\n";
-			}
-			echo "	break;\n";
-		}
-		echo "	}\n";
-		echo "}\n";
-		echo "</script>\n";
-
 	echo "</form>\n";
+
+//check or uncheck all category checkboxes
+	echo "<script>\n";
+	echo "function check_toggle(app_index, toggle_state) {\n";
+	echo "	switch (app_index) {\n";
+	foreach ($app_permissions as $app_index => $app_permission_ids) {
+		echo "	case '".$app_index."':\n";
+		foreach ($app_permission_ids as $app_permission_id) {
+			echo "	document.getElementById('".$app_permission_id."').checked = toggle_state;\n";
+		}
+		echo "	break;\n";
+	}
+	echo "	}\n";
+	echo "}\n";
+	echo "</script>\n";
+
+//setting search script
+	echo "<script>\n";
+	echo "	var apps_unique = new Array(\"".implode('","', $array_apps_unique)."\");\n";
+	echo "	var apps = new Array(\"".implode('","', $array_apps)."\");\n";
+	echo "	var permissions = new Array(\"".implode('","', $array_permissions)."\");\n";
+	echo "	var descriptions = new Array(\"".implode('","', $array_descriptions)."\");\n";
+	echo "\n";
+	echo "	function permission_search() {\n";
+	echo "		var criteria = $('#group_permission_search').val();\n";
+	echo "		if (criteria.length >= 2) {\n";
+	echo "			for (var x = 0; x < apps_unique.length; x++) {\n";
+	echo "				document.getElementById('app_'+apps_unique[x]).style.display = 'none';\n";
+	echo "			}\n";
+	echo "			for (var x = 0; x < permissions.length; x++) {\n";
+	echo "				if (\n";
+	echo "					permissions[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+	echo "					descriptions[x].toLowerCase().match(criteria.toLowerCase())\n";
+	echo "					) {\n";
+	echo "					document.getElementById('app_'+apps[x]).style.display = '';\n";
+	echo "					document.getElementById('permission_'+permissions[x]).style.display = '';\n";
+	echo "				}\n";
+	echo "				else {\n";
+	echo "					document.getElementById('permission_'+permissions[x]).style.display = 'none';\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			for (var x = 0; x < permissions.length; x++) {\n";
+	echo "				document.getElementById('app_'+apps[x]).style.display = '';\n";
+	echo "				document.getElementById('permission_'+permissions[x]).style.display = '';\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "\n";
+	echo "</script>\n";
 
 //show the footer
 	require_once "resources/footer.php";
