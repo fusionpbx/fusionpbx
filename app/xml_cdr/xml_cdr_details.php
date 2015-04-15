@@ -238,8 +238,8 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>".$text['label-name']."</th>\n";
-	echo "<th>".$text['label-value']."</th>\n";
+	echo "<th width='30%'>".$text['label-name']."</th>\n";
+	echo "<th width='70%'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 	foreach($array["channel_data"] as $key => $value) {
 		$value = urldecode($value);
@@ -265,8 +265,8 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>".$text['label-name']."</th>\n";
-	echo "<th>".$text['label-value']."</th>\n";
+	echo "<th width='30%'>".$text['label-name']."</th>\n";
+	echo "<th width='70%'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 	foreach($array["variables"] as $key => $value) {
 		$value = urldecode($value);
@@ -325,8 +325,8 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>".$text['label-name']."</th>\n";
-	echo "<th>".$text['label-data']."</th>\n";
+	echo "<th width='30%'>".$text['label-name']."</th>\n";
+	echo "<th width='70%'>".$text['label-data']."</th>\n";
 	echo "</tr>\n";
 
 	//foreach($array["variables"] as $key => $value) {
@@ -362,8 +362,8 @@ else {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
-			echo "			<th>".$text['label-name']."</th>\n";
-			echo "			<th>".$text['label-value']."</th>\n";
+			echo "			<th width='30%'>".$text['label-name']."</th>\n";
+			echo "			<th width='70%'>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["@attributes"] as $key => $value) {
 				$value = urldecode($value);
@@ -388,8 +388,8 @@ else {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
-			echo "			<th>".$text['label-name']."</th>\n";
-			echo "			<th>".$text['label-value']."</th>\n";
+			echo "			<th width='30%'>".$text['label-name']."</th>\n";
+			echo "			<th width='70%'>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["extension"]["@attributes"] as $key => $value) {
 				$value = urldecode($value);
@@ -414,8 +414,8 @@ else {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
-			echo "			<th>".$text['label-name']."</th>\n";
-			echo "			<th>".$text['label-data']."</th>\n";
+			echo "			<th width='30%'>".$text['label-name']."</th>\n";
+			echo "			<th width='70%'>".$text['label-data']."</th>\n";
 			echo "		</tr>\n";
 			foreach ($row["extension"]["application"] as $tmp_row) {
 				$app_name = $tmp_row["@attributes"]["app_name"];
@@ -441,8 +441,8 @@ else {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
-			echo "			<th>".$text['label-name']."</th>\n";
-			echo "			<th>".$text['label-value']."</th>\n";
+			echo "			<th width='30%'>".$text['label-name']."</th>\n";
+			echo "			<th width='70%'>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["caller_profile"] as $key => $value) {
 				$value = urldecode($value);
@@ -487,8 +487,8 @@ else {
 			echo "		</tr>\n";
 
 			echo "		<tr>\n";
-			echo "			<th>".$text['label-name']."</th>\n";
-			echo "			<th>".$text['label-value']."</th>\n";
+			echo "			<th width='30%'>".$text['label-name']."</th>\n";
+			echo "			<th width='70%'>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["times"] as $key => $value) {
 				$value = urldecode($value);
