@@ -1313,7 +1313,7 @@ SPAN.playback_progress_bar {
 		recording_audio = document.getElementById('recording_audio_'+recording_id)
 
 		if (recording_audio.paused) {
-			recording_audio.volume = 0.5;
+			recording_audio.volume = 1;
 			recording_audio.play();
 			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
 		}

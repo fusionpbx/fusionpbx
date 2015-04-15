@@ -1293,7 +1293,7 @@ SPAN.playback_progress_bar {
 
 		if (recording_audio.paused) {
 			recording_audio.play();
-			recording_audio.volume = 0.5;
+			recording_audio.volume = 1;
 			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
 		}
 		else {
