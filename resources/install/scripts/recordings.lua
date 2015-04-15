@@ -186,10 +186,9 @@
 						dbh:query(sql);
 					end
 			elseif (storage_type == "http_cache") then
-				freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
+				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", storage_path .."/"..recording_name);
 			else
-				mkdir(voicemail_dir.."/"..voicemail_id);
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 			end
