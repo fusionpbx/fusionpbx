@@ -31,15 +31,33 @@
 			function delete() {
 				//set the variables
 					$db = $this->db;
-				//delete the group permisisons
-					$sql = "delete from v_group_permissions ";
-					if (!$db->exec($sql)) {
-						//echo $db->errorCode() . "<br>";
-						$info = $db->errorInfo();
-						print_r($info);
-						// $info[0] == $db->errorCode() unified error code
-						// $info[1] is the driver specific error code
-						// $info[2] is the driver specific error string
+				//get unprotected groups and their domain uuids (if any)
+					$sql = "select group_name, domain_uuid from v_groups where group_protected <> 'true' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$result_count = count($result);
+					if ($result_count > 0) {
+						foreach($result as $row) {
+							$unprotected_groups[$row['group_name']] = $row['domain_uuid'];
+						}
+					}
+					unset ($prep_statement, $sql, $result, $result_count);
+				//delete unprotected group permissions
+					if (is_array($unprotected_groups) && sizeof($unprotected_groups) > 0) {
+						foreach ($unprotected_groups as $unprotected_group_name => $unprotected_domain_uuid) {
+							$sql = "delete from v_group_permissions where ";
+							$sql .= "group_name = '".$unprotected_group_name."' ";
+							$sql .= "and domain_uuid ".(($unprotected_domain_uuid != '') ? " = '".$unprotected_domain_uuid."' " : " is null ");
+							if (!$db->exec($sql)) {
+								//echo $db->errorCode() . "<br>";
+								$info = $db->errorInfo();
+								print_r($info);
+								// $info[0] == $db->errorCode() unified error code
+								// $info[1] is the driver specific error code
+								// $info[2] is the driver specific error string
+							}
+						}
 					}
 			}
 
