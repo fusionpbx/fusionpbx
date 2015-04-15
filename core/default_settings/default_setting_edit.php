@@ -42,6 +42,7 @@ else {
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
 		$default_setting_uuid = check_str($_REQUEST["id"]);
+		$search = check_str($_REQUEST['search']);
 	}
 	else {
 		$action = "add";
@@ -136,7 +137,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				$_SESSION["message"] = $text['message-update'];
-				header("Location: default_settings.php#".$default_setting_category);
+				header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$default_setting_category);
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
@@ -183,7 +184,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-default_setting-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='default_settings.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='default_settings.php".(($search != '') ? "?search=".$search : null)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -551,6 +552,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='default_setting_uuid' value='".$default_setting_uuid."'>\n";
+		echo "		<input type='hidden' name='search' value='".$search."'>\n";
 	}
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

@@ -44,6 +44,7 @@ else {
 		$default_setting_uuids = $_REQUEST["id"];
 		$enabled = check_str($_REQUEST['enabled']);
 		$category = check_str($_REQUEST['category']);
+		$search = check_str($_REQUEST['search']);
 
 		if (sizeof($default_setting_uuids) == 1 && $enabled != '') {
 			$sql = "update v_default_settings set ";
@@ -53,7 +54,7 @@ else {
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: default_settings.php#".$category);
+			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null)."#".$category);
 			exit;
 		}
 
@@ -164,7 +165,7 @@ else {
 				$_SESSION["message"] = $text['message-copy_failed'];
 			}
 
-			header("Location: default_settings.php");
+			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
 			exit;
 		}
 
@@ -188,7 +189,7 @@ else {
 				$_SESSION["message_mood"] = "negative";
 			}
 
-			header("Location: default_settings.php");
+			header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
 			exit;
 		}
 	} // post
@@ -225,20 +226,20 @@ else {
 		echo "	}\n";
 		echo "\n";
 		echo "	$( document ).ready(function() {\n";
-		echo "		// scroll to previous category\n";
-		echo "		var category_span_id;\n";
-		echo "		var url = document.location.href;\n";
-		echo "		var hashindex = url.indexOf('#');\n";
-		echo "		if (hashindex == -1) { }\n";
-		echo "		else {\n";
-		echo "			category_span_id = url.substr(hashindex + 1);\n";
-		echo "		}\n";
-		echo "		if (category_span_id) {\n";
-		echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
-		echo "		}\n";
-		echo "		else {\n";
-		echo "			$('#default_setting_search').focus();\n";
-		echo "		}\n";
+		echo "		$('#default_setting_search').focus();\n";
+		if ($search == '') {
+			echo "		// scroll to previous category\n";
+			echo "		var category_span_id;\n";
+			echo "		var url = document.location.href;\n";
+			echo "		var hashindex = url.indexOf('#');\n";
+			echo "		if (hashindex == -1) { }\n";
+			echo "		else {\n";
+			echo "			category_span_id = url.substr(hashindex + 1);\n";
+			echo "		}\n";
+			echo "		if (category_span_id) {\n";
+			echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
+			echo "		}\n";
+		}
 		echo "	});\n";
 		echo "</script>";
 	}
@@ -255,7 +256,7 @@ else {
 	echo "			".$text['description-default_settings'];
 	echo "		</td>\n";
 	echo "		<td width='50%' align='right' valign='top'>";
-	echo "			<input type='text' id='default_setting_search' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' placeholder=\"".$text['label-search']."\" onkeyup='setting_search(this.value);'>\n";
+	echo "			<input type='text' name='search' id='default_setting_search' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' placeholder=\"".$text['label-search']."\" value=\"".$search."\" onkeyup='setting_search();'>\n";
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
 		echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
@@ -316,37 +317,28 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 
 			if ($previous_category != $row['default_setting_category']) {
 				$c = 0;
-				echo "<tr>\n";
-				echo "	<td colspan='7' align='left'>\n";
 				if ($previous_category != '') {
-					echo "		<span id='anchor_".$row['default_setting_category']."'></span>";
-					echo "		<br />";
+					echo "</table>";
+					echo "</div>";
 				}
-				echo "		<br />\n";
-				echo "		<b>\n";
-				if (strtolower($row['default_setting_category']) == "api") {
-					echo "		API";
+				echo "<div id='category_".$row['default_setting_category']."' style='padding-top: 20px;'>";
+				echo "<span id='anchor_".$row['default_setting_category']."'></span>";
+				echo "<b>";
+				switch (strtolower($row['default_setting_category'])) {
+					case "api" : echo "API"; break;
+					case "cdr" : echo "CDR"; break;
+					case "ldap" : echo "LDAP"; break;
+					default: echo ucwords(str_replace("_", " ", $row['default_setting_category']));
 				}
-				else if (strtolower($row['default_setting_category']) == "cdr") {
-					echo "		CDR";
-				}
-				else if (strtolower($row['default_setting_category']) == "ldap") {
-					echo "		LDAP";
-				}
-				else {
-					echo "		".ucwords(str_replace("_", " ", $row['default_setting_category']));
-				}
-				echo "		</b>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
+				echo "</b>\n";
+
+				echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
 				if (
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
@@ -370,7 +362,7 @@ else {
 				echo "</tr>\n";
 			}
 
-			$tr_link = (permission_exists('default_setting_edit')) ? "href='default_setting_edit.php?id=".$row['default_setting_uuid']."'" : null;
+			$tr_link = (permission_exists('default_setting_edit')) ? "href=\"javascript:document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."&search='+$('#default_setting_search').val();\"" : null;
 			echo "<tr id='setting_".$row['default_setting_uuid']."' ".$tr_link.">\n";
 			if (
 				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
@@ -381,7 +373,7 @@ else {
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {
-				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."'>".$row['default_setting_subcategory']."</a>";
+				echo "<a href=\"javascript:document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."&search='+$('#default_setting_search').val(); return false;\">".$row['default_setting_subcategory']."</a>";
 			}
 			else {
 				echo $row['default_setting_subcategory'];
@@ -406,10 +398,14 @@ else {
 				echo "		".ucwords($row['default_setting_value']);
 			}
 			else if ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
+				echo "		";
+				for ($d = 1; $d <= strlen($row['default_setting_value']); $d++) { echo "*"; }
+				echo "&nbsp;\n";
 			}
 			else if ($category == "provision" && $subcategory == "password" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
+				echo "		";
+				for ($d = 1; $d <= strlen($row['default_setting_value']); $d++) { echo "*"; }
+				echo "&nbsp;\n";
 			}
 			else {
 				echo "		".htmlspecialchars($row['default_setting_value']);
@@ -417,20 +413,21 @@ else {
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."'>".ucwords($row['default_setting_enabled'])."</a>\n";
+			echo "		<a href=\"javascript:document.location.href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."&search='+$('#default_setting_search').val();\">".ucwords($row['default_setting_enabled'])."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap='nowrap'>";
 			if (permission_exists('default_setting_edit')) {
-				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href=\"javascript:document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."&search='+$('#default_setting_search').val();\" alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('default_setting_delete')) {
-				echo "<a href='default_settings.php?id[]=".$row['default_setting_uuid']."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href=\"javascript:document.location.href='default_settings.php?id[]=".$row['default_setting_uuid']."&action=delete&search='+$('#default_setting_search').val();\" alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 
 			//populate search/filter arrays
+			$array_categories[] = $row['default_setting_category'];
 			$array_setting_uuids[] = $row['default_setting_uuid'];
 			$array_setting_subcategories[] = $row['default_setting_subcategory'];
 			$array_setting_types[] = $row['default_setting_name'];
@@ -441,30 +438,13 @@ else {
 			$c = ($c == 0) ? 1 : 0;
 
 		} //end foreach
+
+		echo "</table>";
+		echo "</div>";
+
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	echo "<tr>\n";
-	if (
-		(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-		permission_exists("domain_delete")
-		) {
-		$colspan = 7;
-	}
-	else {
-		$colspan = 6;
-	}
-	echo "<td colspan='".$colspan."' class='list_control_icons'>\n";
-	if (permission_exists('default_setting_add')) {
-		echo "<a href='default_setting_edit.php?' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	if (permission_exists('default_setting_delete')) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
 	echo "<br />";
 	echo $paging_controls;
 	echo "<br /><br /><br />";
@@ -486,30 +466,55 @@ else {
 			echo "</script>\n";
 		}
 
+//echo "<br><br><pre>".print_r($array_categories, true)."</pre><br><br><br>";
+
 	//setting search script
 		echo "<script>\n";
+		echo "	var categories = new Array(\"".implode('","', $array_categories)."\");\n";
 		echo "	var setting_uuids = new Array(\"".implode('","', $array_setting_uuids)."\");\n";
 		echo "	var setting_subcategories = new Array(\"".implode('","', $array_setting_subcategories)."\");\n";
 		echo "	var setting_types = new Array(\"".implode('","', $array_setting_types)."\");\n";
 		echo "	var setting_values = new Array(\"".implode('","', $array_setting_values)."\");\n";
 		echo "	var setting_descriptions = new Array(\"".implode('","', $array_setting_descriptions)."\");\n";
 		echo "\n";
-		echo "	function setting_search(criteria) {\n";
-		echo "		for (var x = 0; x < setting_uuids.length; x++) {\n";
-		echo "			if (\n";
-		echo "				setting_subcategories[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
-		echo "				setting_types[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
-		echo "				setting_values[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
-		echo "				setting_descriptions[x].toLowerCase().match(criteria.toLowerCase())\n";
-		echo "				) {\n";
-		echo "				document.getElementById('setting_'+setting_uuids[x]).style.display = '';\n";
+		echo "	function setting_search() {\n";
+		echo "		var criteria = $('#default_setting_search').val();\n";
+		echo "		if (criteria.length >= 2) {\n";
+		echo "			for (var x = 0; x < categories.length; x++) {\n";
+		echo "				document.getElementById('category_'+categories[x]).style.display = 'none';\n";
 		echo "			}\n";
-		echo "			else {\n";
-		echo "				document.getElementById('setting_'+setting_uuids[x]).style.display = 'none';\n";
+		echo "			for (var x = 0; x < setting_uuids.length; x++) {\n";
+		echo "				if (\n";
+		echo "					setting_subcategories[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+		echo "					setting_types[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+		echo "					setting_values[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+		echo "					setting_descriptions[x].toLowerCase().match(criteria.toLowerCase())\n";
+		echo "					) {\n";
+		echo "					document.getElementById('category_'+categories[x]).style.display = '';\n";
+		echo "					document.getElementById('setting_'+setting_uuids[x]).style.display = '';\n";
+		echo "				}\n";
+		echo "				else {\n";
+		echo "					document.getElementById('setting_'+setting_uuids[x]).style.display = 'none';\n";
+		echo "				}\n";
+		echo "			}\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			for (var x = 0; x < setting_uuids.length; x++) {\n";
+		echo "				document.getElementById('category_'+categories[x]).style.display = '';\n";
+		echo "				document.getElementById('setting_'+setting_uuids[x]).style.display = '';\n";
 		echo "			}\n";
 		echo "		}\n";
 		echo "	}\n";
+		echo "\n";
+	//auto run, if search term passed back
+		if ($search != '') {
+			echo "	setting_search();";
+			echo "	$('#default_setting_search').select();\n";
+		}
 		echo "</script>\n";
+
+
+
 
 //include the footer
 	require_once "resources/footer.php";
