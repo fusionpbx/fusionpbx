@@ -428,6 +428,7 @@ else {
 
 			//populate search/filter arrays
 			$array_categories[] = $row['default_setting_category'];
+			$array_categories_displayed[] = str_replace("_", " ", $row['default_setting_category']);
 			$array_setting_uuids[] = $row['default_setting_uuid'];
 			$array_setting_subcategories[] = $row['default_setting_subcategory'];
 			$array_setting_types[] = $row['default_setting_name'];
@@ -469,6 +470,7 @@ else {
 	//setting search script
 		echo "<script>\n";
 		echo "	var categories = new Array(\"".implode('","', $array_categories)."\");\n";
+		echo "	var categories_displayed = new Array(\"".implode('","', $array_categories_displayed)."\");\n";
 		echo "	var setting_uuids = new Array(\"".implode('","', $array_setting_uuids)."\");\n";
 		echo "	var setting_subcategories = new Array(\"".implode('","', $array_setting_subcategories)."\");\n";
 		echo "	var setting_types = new Array(\"".implode('","', $array_setting_types)."\");\n";
@@ -483,6 +485,7 @@ else {
 		echo "			}\n";
 		echo "			for (var x = 0; x < setting_uuids.length; x++) {\n";
 		echo "				if (\n";
+		echo "					categories_displayed[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
 		echo "					setting_subcategories[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
 		echo "					setting_types[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
 		echo "					setting_values[x].toLowerCase().match(criteria.toLowerCase()) ||\n";

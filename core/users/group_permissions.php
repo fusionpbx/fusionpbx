@@ -398,6 +398,7 @@ require_once "resources/require.php";
 
 				//populate search/filter arrays
 				$array_apps[] = str_replace(' ','_',strtolower($app['name']));
+				$array_apps_original[] = $app['name'];
 				$array_permissions[] = $row['name'];
 				$array_descriptions[] = str_replace('"','\"',$row['description']);
 
@@ -435,6 +436,7 @@ require_once "resources/require.php";
 	echo "<script>\n";
 	echo "	var apps_unique = new Array(\"".implode('","', $array_apps_unique)."\");\n";
 	echo "	var apps = new Array(\"".implode('","', $array_apps)."\");\n";
+	echo "	var apps_original = new Array(\"".implode('","', $array_apps_original)."\");\n";
 	echo "	var permissions = new Array(\"".implode('","', $array_permissions)."\");\n";
 	echo "	var descriptions = new Array(\"".implode('","', $array_descriptions)."\");\n";
 	echo "\n";
@@ -446,6 +448,7 @@ require_once "resources/require.php";
 	echo "			}\n";
 	echo "			for (var x = 0; x < permissions.length; x++) {\n";
 	echo "				if (\n";
+	echo "					apps_original[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
 	echo "					permissions[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
 	echo "					descriptions[x].toLowerCase().match(criteria.toLowerCase())\n";
 	echo "					) {\n";
