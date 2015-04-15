@@ -338,7 +338,7 @@ else {
 				}
 				echo "</b>\n";
 
-				echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "<table class='tr_hover' style='margin-top: 5px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
 				if (
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
