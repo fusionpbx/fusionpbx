@@ -370,7 +370,7 @@ require_once "resources/require.php";
 
 			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
-			echo "		<th><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
+			echo "		<th style='text-align: center; padding: 0px;'><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
 			echo "		<th>".$text['label-permission_permissions']."</th>\n";
 			echo "		<th>".$text['label-permission_description']."</th>\n";
 			echo "	<tr>\n";
@@ -378,7 +378,7 @@ require_once "resources/require.php";
 			foreach ($app['permissions'] as $permission_index => $row) {
 				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
 				echo "<tr>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
 				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
 				echo "	<td valign='top' width='70%' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
 				echo "</tr>\n";
