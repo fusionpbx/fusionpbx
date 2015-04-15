@@ -30,7 +30,7 @@ function get_call_activity() {
 		foreach($extensions as &$row) {
 			if ($row['user_uuid'] != '') {
 				$ext_user_status[$row['user_uuid']] = $row['user_status'];
-				unset($row['user_uuid'], $row['user_status']);
+				unset($row['user_status']);
 			}
 		}
 
