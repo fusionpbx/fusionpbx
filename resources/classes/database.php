@@ -111,10 +111,6 @@ include "root.php";
 
 				if ($this->driver == "mysql") {
 					try {
-						//required for mysql_real_escape_string
-							if (function_exists(mysql_connect)) {
-								$mysql_connection = mysql_connect($this->host, $this->username, $this->password);
-							}
 						//mysql pdo connection
 							if (strlen($this->host) == 0 && strlen($this->port) == 0) {
 								//if both host and port are empty use the unix socket
