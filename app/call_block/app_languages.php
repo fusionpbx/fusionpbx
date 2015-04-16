@@ -9,18 +9,10 @@ $text['title-call-block']['pt-br'] = "Bloqueio de chamadas";
 $text['title-call-block']['pl'] = "Blokowanie rozmów";
 $text['title-call-block']['sv-se'] = "Blockera Samtal";
 
-$text['prompt-block_recent_name']['en-us'] = "Block Recent Call
-
-Edit the Name, if desired...";
-$text['prompt-block_recent_name']['es-cl'] = "Bloqueo de llamadas recientes
-
-Edite el nombre, si lo desea...";
-$text['prompt-block_recent_name']['pt-pt'] = "Bloquear Chamadas Recentes
-
-Edite o nome, se desejar...";
-$text['prompt-block_recent_name']['fr-fr'] = "Bloquer appels récents
-
-Modifiez le nom, si vous le souhaitez...";
+$text['prompt-block_recent_name']['en-us'] = "Block Recent Call - Edit the Name, if desired...";
+$text['prompt-block_recent_name']['es-cl'] = "Bloqueo de llamadas recientes - Edite el nombre, si lo desea...";
+$text['prompt-block_recent_name']['pt-pt'] = "Bloquear Chamadas Recentes - Edite o nome, se desejar...";
+$text['prompt-block_recent_name']['fr-fr'] = "Bloquer appels récents - Modifiez le nom, si vous le souhaitez...";
 $text['prompt-block_recent_name']['nl-nl'] = "";
 $text['prompt-block_recent_name']['pt-br'] = "Bloquear chamadas recentes, edite o nome se assim desejar";
 $text['prompt-block_recent_name']['pl'] = "Zablokuj ostatnią rozmowę. Edytuj nazwę";
