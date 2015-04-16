@@ -751,7 +751,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-forward']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='fax_forward_number' maxlength='255' min='0' step='1'value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : $fax_forward_number)."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : $fax_forward_number)."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-forward-number']."\n";
 		echo "</td>\n";
