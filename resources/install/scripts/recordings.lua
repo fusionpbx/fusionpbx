@@ -38,6 +38,10 @@
 	dofile(scripts_dir.."/resources/functions/config.lua");
 	dofile(config());
 
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
