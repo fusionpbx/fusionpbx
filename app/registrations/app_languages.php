@@ -21,6 +21,20 @@ $text['label-response']['fr-fr'] = "Réponse:";
 $text['label-response']['pt-br'] = "Resposta";
 $text['label-response']['pl'] = "Odpowiedź";
 
+$text['label-refresh_pause']['en-us'] = "Pause Refresh";
+$text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
+$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
+$text['label-refresh_pause']['fr-fr'] = "Pause Actualiser";
+$text['label-refresh_pause']['pt-br'] = "Pausar atualizaÃ§Ã£o";
+$text['label-refresh_pause']['pl'] = "Pauzuj odÅ›wieÅ¼anie";
+
+$text['label-refresh_enable']['en-us'] = "Enable Refresh";
+$text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
+$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
+$text['label-refresh_enable']['fr-fr'] = "Activer Actualiser";
+$text['label-refresh_enable']['pt-br'] = "Habilitar atualizaÃ§Ã£o";
+$text['label-refresh_enable']['pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
+
 $text['label-port']['en-us'] = "Port";
 $text['label-port']['es-cl'] = "Puerto";
 $text['label-port']['pt-pt'] = "Porto";
