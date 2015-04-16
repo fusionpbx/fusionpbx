@@ -139,58 +139,59 @@
 					f:close();
 					recording_base64 = base64.encode(file_content);
 
-				--delete the previous recording
-					sql = "delete from v_recordings ";
-					sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-					sql = sql .. "and recording_name = '".. recording_name .."'";
-					dbh:query(sql);
-
-				--get a new uuid
-					recording_uuid = api:execute("create_uuid");
-
-				--save the message to the voicemail messages
-					local array = {}
-					table.insert(array, "INSERT INTO v_recordings ");
-					table.insert(array, "(");
-					table.insert(array, "recording_uuid, ");
-					table.insert(array, "domain_uuid, ");
-					table.insert(array, "recording_filename, ");
-					if (storage_type == "base64") then
-						table.insert(array, "recording_base64, ");
-					end
-					table.insert(array, "recording_name ");
-					table.insert(array, ") ");
-					table.insert(array, "VALUES ");
-					table.insert(array, "( ");
-					table.insert(array, "'"..recording_uuid.."', ");
-					table.insert(array, "'"..domain_uuid.."', ");
-					table.insert(array, "'"..recording_name.."', ");
-					if (storage_type == "base64") then
-						table.insert(array, "'"..recording_base64.."', ");
-					end
-					table.insert(array, "'"..recording_name.."' ");
-					table.insert(array, ") ");
-					sql = table.concat(array, "\n");
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
-					end
-					if (storage_type == "base64") then
-						array = explode("://", database["system"]);
-						local luasql = require "luasql.postgres";
-						local env = assert (luasql.postgres());
-						local dbh = env:connect(array[2]);
-						res, serr = dbh:execute(sql);
-						dbh:close();
-						env:close();
-					else
-						dbh:query(sql);
-					end
 			elseif (storage_type == "http_cache") then
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
 				session:execute("record", storage_path .."/"..recording_name);
 			else
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 				session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
+			end
+
+		--delete the previous recording
+			sql = "delete from v_recordings ";
+			sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
+			sql = sql .. "and recording_name = '".. recording_name .."'";
+			dbh:query(sql);
+
+		--get a new uuid
+			recording_uuid = api:execute("create_uuid");
+
+		--save the message to the voicemail messages
+			local array = {}
+			table.insert(array, "INSERT INTO v_recordings ");
+			table.insert(array, "(");
+			table.insert(array, "recording_uuid, ");
+			table.insert(array, "domain_uuid, ");
+			table.insert(array, "recording_filename, ");
+			if (storage_type == "base64") then
+				table.insert(array, "recording_base64, ");
+			end
+			table.insert(array, "recording_name ");
+			table.insert(array, ") ");
+			table.insert(array, "VALUES ");
+			table.insert(array, "( ");
+			table.insert(array, "'"..recording_uuid.."', ");
+			table.insert(array, "'"..domain_uuid.."', ");
+			table.insert(array, "'"..recording_name.."', ");
+			if (storage_type == "base64") then
+				table.insert(array, "'"..recording_base64.."', ");
+			end
+			table.insert(array, "'"..recording_name.."' ");
+			table.insert(array, ") ");
+			sql = table.concat(array, "\n");
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+			end
+			if (storage_type == "base64") then
+				array = explode("://", database["system"]);
+				local luasql = require "luasql.postgres";
+				local env = assert (luasql.postgres());
+				local dbh = env:connect(array[2]);
+				res, serr = dbh:execute(sql);
+				dbh:close();
+				env:close();
+			else
+				dbh:query(sql);
 			end
 
 		--preview the recording
