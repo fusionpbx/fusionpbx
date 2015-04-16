@@ -232,13 +232,13 @@ $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 
-$text['message-cannot_delete_own_account']['en-us'] = "You cannot delete your own user account.\\n\\nPlease login as a different user, then try again.";
-$text['message-cannot_delete_own_account']['es-cl'] = "No se puede eliminar su propia cuenta de usuario.\\n\\nPor favor, iniciar sesión como un usuario diferente, vuelva a intentarlo.";
-$text['message-cannot_delete_own_account']['pt-pt'] = "Você não pode excluir a sua própria conta de usuário.\\n\\nIdentifique-se como um usuário diferente, em seguida, tente novamente.";
-$text['message-cannot_delete_own_account']['fr-fr'] = "Vous ne pouvez pas supprimer votre propre compte utilisateur.\\n\\nSe il vous plaît vous identifier en tant qu'utilisateur différent, puis réessayez.";
-$text['message-cannot_delete_own_account']['pl'] = "Nie można usunąć własnego konta użytkownika.\\n\\n Zaloguj się jako inny użytkownik i spróbuj ponownie.";
-$text['message-cannot_delete_own_account']['uk'] = "Ви не можете видалити власний обліковий запис. Будь ласка, увійдіть під іншим користувачем, потім повторіть спробу.";
-$text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt egna användarkonto. Logg ain som en annan användare och försök igen.";
+$text['message-cannot_delete_own_account']['en-us'] = "You cannot delete your own user account. - Please login as a different user, then try again.";
+$text['message-cannot_delete_own_account']['es-cl'] = "No se puede eliminar su propia cuenta de usuario. - Por favor, iniciar sesión como un usuario diferente, vuelva a intentarlo.";
+$text['message-cannot_delete_own_account']['pt-pt'] = "Você não pode excluir a sua própria conta de usuário. - Identifique-se como um usuário diferente, em seguida, tente novamente.";
+$text['message-cannot_delete_own_account']['fr-fr'] = "Vous ne pouvez pas supprimer votre propre compte utilisateur. - Se il vous plaît vous identifier en tant qu'utilisateur différent, puis réessayez.";
+$text['message-cannot_delete_own_account']['pl'] = "Nie można usunąć własnego konta użytkownika. - Zaloguj się jako inny użytkownik i spróbuj ponownie.";
+$text['message-cannot_delete_own_account']['uk'] = "Ви не можете видалити власний обліковий запис. - Будь ласка, увійдіть під іншим користувачем, потім повторіть спробу.";
+$text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt egna användarkonto. - Logg ain som en annan användare och försök igen.";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";

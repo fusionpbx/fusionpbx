@@ -1165,29 +1165,6 @@ SPAN.playback_progress_bar {
 
 </style>
 
-<script type="text/javascript">
-	<!--
-		function jsconfirm(title,msg,url) {
-			if (confirm(msg)){
-				window.location = url;
-			}
-			else{
-			}
-		}
-	//-->
-</script>
-
-<SCRIPT language="JavaScript">
-	<!--
-		function confirmdelete(url) {
-			var confirmed = confirm("Are you sure want to delete this.");
-			if (confirmed == true) {
-				window.location=url;
-			}
-		}
-	//-->
-</SCRIPT>
-
 <?php if (substr_count($_SERVER["PHP_SELF"], "xml_cdr_statistics.php") == 0) { ?>
 	<!-- // javascript calendar and color picker (source: http://rightjs.org) -->
 	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right.js'></script>
@@ -1197,6 +1174,7 @@ SPAN.playback_progress_bar {
 
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
+
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 

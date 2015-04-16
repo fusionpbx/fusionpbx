@@ -545,29 +545,6 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 </style>
 
-<script type="text/javascript">
-<!--
-function jsconfirm(title,msg,url) {
-	if (confirm(msg)){
-		window.location = url;
-	}
-	else{
-	}
-}
-//-->
-</script>
-
-<SCRIPT language="JavaScript">
-<!--
-function confirmdelete(url) {
-	var confirmed = confirm("Are you sure want to delete this.");
-	if (confirmed == true) {
-		window.location=url;
-	}
-}
-//-->
-</SCRIPT>
-
 <script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
 
 <script language="JavaScript" type="text/javascript">
