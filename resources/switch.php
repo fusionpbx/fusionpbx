@@ -1003,20 +1003,21 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				$options[] = "<optgroup label='IVR Menu'>";
-				foreach ($result as &$row) {
-					$name = $row["recording_name"];
-					$filename = $row["recording_filename"];
+				if (sizeof($result) > 0) {
 					$options[] = "<optgroup label='Recordings'>";
-					if ($select_type == "dialplan") {
-						$selected = ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "lua:streamfile.lua ".$filename) ? true : false;
-						$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
+					foreach ($result as &$row) {
+						$name = $row["recording_name"];
+						$filename = $row["recording_filename"];
+						if ($select_type == "dialplan") {
+							$selected = ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "lua:streamfile.lua ".$filename) ? true : false;
+							$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
+						}
+						if ($select_type == "ivr") {
+							$selected = ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) ? true : false;
+							$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
+						}
+						if ($selected) { $selection_found = true; }
 					}
-					if ($select_type == "ivr") {
-						$selected = ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) ? true : false;
-						$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
-					}
-					if ($selected) { $selection_found = true; }
 					$options[] = "</optgroup>";
 				}
 			}
