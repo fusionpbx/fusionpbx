@@ -59,28 +59,26 @@
 
 		--get the recordings from the database
 			if (storage_type == "base64") then
-				if (string.len(ivr_menu_greet_long) > 1) then
-					sql = [[SELECT * FROM v_voicemail_messages 
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_message_uuid = ']].. uuid.. [[' ]];
-					--if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
-					--end
-					status = dbh:query(sql, function(row)
-						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
-
-						--set the voicemail message path
-							message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
-
-						--save the recording to the file system
-							if (string.len(row["message_base64"]) > 32) then
-								local file = io.open(message_location, "w");
-								file:write(base64.decode(row["message_base64"]));
-								file:close();
-							end
-					end);
+				sql = [[SELECT * FROM v_voicemail_messages 
+					WHERE domain_uuid = ']] .. domain_uuid ..[['
+					AND voicemail_message_uuid = ']].. uuid.. [[' ]];
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
 				end
+				status = dbh:query(sql, function(row)
+					--add functions
+						dofile(scripts_dir.."/resources/functions/base64.lua");
+
+					--set the voicemail message path
+						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+
+					--save the recording to the file system
+						if (string.len(row["message_base64"]) > 32) then
+							local file = io.open(message_location, "w");
+							file:write(base64.decode(row["message_base64"]));
+							file:close();
+						end
+				end);
 			elseif (storage_type == "http_cache") then
 				message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 			end
