@@ -56,6 +56,14 @@ $text['message-update']['nl-nl'] = "";
 $text['message-update']['pt-br'] = "Atualização Efetuada";
 $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 
+$text['message-settings_reloaded']['en-us'] = "Settings Reloaded";
+$text['message-settings_reloaded']['es-cl'] = "Ajustes Reloaded";
+$text['message-settings_reloaded']['pt-pt'] = "Configurações Reloaded";
+$text['message-settings_reloaded']['fr-fr'] = "Paramètres Reloaded";
+$text['message-settings_reloaded']['nl-nl'] = "";
+$text['message-settings_reloaded']['pt-br'] = "Configurações Reloaded";
+$text['message-settings_reloaded']['pl'] = "Ustawienia Reloaded";
+
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor indique: ";
 $text['message-required']['pt-pt'] = "Por favor indique: ";
@@ -351,6 +359,14 @@ $text['button-save']['fr-fr'] = "Sauvegarder";
 $text['button-save']['nl-nl'] = "";
 $text['button-save']['pt-br'] = "Salvar";
 $text['button-save']['pl'] = "Zachowaj";
+
+$text['button-reload']['en-us'] = "Reload";
+$text['button-reload']['es-cl'] = "Recargar";
+$text['button-reload']['pt-pt'] = "Recarregar";
+$text['button-reload']['fr-fr'] = "Recharger";
+$text['button-reload']['nl-nl'] = "";
+$text['button-reload']['pt-br'] = "Recarregar";
+$text['button-reload']['pl'] = "Przeładować";
 
 $text['button-paste']['en-us'] = "Paste";
 $text['button-paste']['es-cl'] = "Propagar";

@@ -268,9 +268,7 @@ else {
 		echo "		</select>\n";
 		echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick='document.forms.frm.submit();'>";
 	}
-	else {
-		echo "		&nbsp;";
-	}
+	echo "			<input type='button' class='btn' id='button_reload' alt='".$text['button-reload']."' value='".$text['button-reload']."' onclick=\"document.location.href='default_settings_reload.php?search='+$('#default_setting_search').val();\">";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
