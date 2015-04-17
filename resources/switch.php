@@ -763,7 +763,6 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$sql .= "and dialplan_detail_type = 'fifo' ";
 				$sql .= "and dialplan_detail_data not like '%@${domain_name} in%' ";
 				$sql .= "order by dialplan_detail_data asc ";
-				echo $sql;
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
