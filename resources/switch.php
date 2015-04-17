@@ -914,7 +914,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				foreach ($result as &$row) {
 					$extension = $row["hunt_group_extension"];
 					$hunt_group_name = $row["hunt_group_name"];
-					$selected = ("transfer $extension XML ".$_SESSION["context"] == $select_value || "transfer:".$extension." XML ".$_SESSION["context"] == $select_value) ? true : false;
+					$selected = ("transfer ".$extension." XML ".$_SESSION["context"] == $select_value || "transfer:".$extension." XML ".$_SESSION["context"] == $select_value) ? true : false;
 					if ($select_type == "ivr") {
 						$options[] = "<option value='menu-exec-app:transfer ".$extension." XML ".$_SESSION["context"]."' ".(($selected) ? "selected='selected'" : null).">".$extension." ".$hunt_group_name."</option>";
 					}
@@ -947,7 +947,12 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					if (count($_SESSION["domains"]) > 1) {
 						$extension_name =  $_SESSION['domains'][$row['domain_uuid']]['domain_name'].'-'.$extension_name;
 					}
-					$selected = ("ivr:".$extension_name."" == $select_value || "ivr ".$extension_name == $select_value || "transfer:".$extension." XML ".$_SESSION["context"] == $select_value) ? true : false;
+					$selected = (
+						$select_value == "ivr ".$extension_name ||
+						$select_value == "ivr:".$extension_name ||
+						$select_value == "transfer ".$extension." XML ".$_SESSION["context"] ||
+						$select_value == "transfer:".$extension." XML ".$_SESSION["context"]
+						) ? true : false;
 					if ($select_type == "ivr") {
 						$options[] = "<option value='menu-exec-app:transfer ".$extension." XML ".$_SESSION["context"]."' ".(($selected) ? "selected='selected'" : null).">".$extension." ".$extension_label."</option>";
 					}
@@ -1004,22 +1009,14 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					$filename = $row["recording_filename"];
 					$options[] = "<optgroup label='Recordings'>";
 					if ($select_type == "dialplan") {
-						if ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
-							$selected = "selected='selected'";
-						} elseif ($select_value == "lua:streamfile.lua ".$filename) {
-							$selected = "selected='selected'";
-						}
-						$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".$selected.">".$name."</option>";
+						$selected = ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "lua:streamfile.lua ".$filename) ? true : false;
+						$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
 					}
 					if ($select_type == "ivr") {
-						if ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
-							$selected = "selected='selected'";
-						} elseif ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) {
-							$selected = "selected='selected'";
-						}
-						$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."'  ".$selected.">".$name."</option>";
+						$selected = ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) ? true : false;
+						$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
 					}
-					if (isset($selected)) { $selection_found = true; }
+					if ($selected) { $selection_found = true; }
 					$options[] = "</optgroup>";
 				}
 			}
