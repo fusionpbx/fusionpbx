@@ -878,7 +878,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$result_count = count($result);
 				unset ($prep_statement, $sql);
 				$tmp_selected = '';
-				if ($select_type == "bridge" || $select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
+				if (sizeof($result) > 0 && ($select_type == "bridge" || $select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact")) {
 					$options[] = "<optgroup label='XMPP Gateways'>";
 				}
 				foreach($result as $row) {
@@ -888,7 +888,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					}
 					if ($selected) { $selection_found = true; }
 				}
-				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
+				if (sizeof($result) > 0 && ($select_type == "bridge" || $select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact")) {
 					$options[] = "</optgroup>";
 				}
 				unset($sql, $result);
