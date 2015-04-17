@@ -385,55 +385,57 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</script>\n";
 		echo "\n";
 	}
-	if (if_group("superadmin")) {
-		echo "		<select name='conference_center_greeting' class='formfld' onchange='changeToInput(this);'>\n";
-	}
-	else {
-		echo "		<select name='conference_center_greeting' class='formfld'>\n";
-	}
+	echo "	<select name='conference_center_greeting' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option></option>\n";
 	//recordings
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
 			$tmp_selected = false;
 			$files = Array();
-			echo "<optgroup label='recordings'>\n";
-			while($file = readdir($dh)) {
-				if($file != "." && $file != ".." && $file[0] != '.') {
-					if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
-						//this is a directory
-					}
-					else {
-						if ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($conference_center_greeting) > 0) {
-							$tmp_selected = true;
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected=\"selected\">".$file."</option>\n";
-						}
-						else {
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
-						}
+			echo "<optgroup label='Recordings'>\n";
+			while ($file = readdir($dh)) {
+				if ($file != "." && $file != ".." && $file[0] != '.') {
+					if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$file)) {
+						$selected = ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($conference_center_greeting) > 0) ? true : false;
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
+						if ($selected) { $tmp_selected = true; }
 					}
 				}
 			}
 			closedir($dh);
 			echo "</optgroup>\n";
 		}
+	//phrases
+		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (count($result) > 0) {
+			echo "<optgroup label='Phrases'>\n";
+			foreach ($result as &$row) {
+				$selected = ($conference_center_greeting == "phrase:".$row["phrase_name"].".".$domain_uuid) ? true : false;
+				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
+				if ($selected) { $tmp_selected = true; }
+			}
+			unset ($prep_statement);
+			echo "</optgroup>\n";
+		}
 	//sounds
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		echo "<optgroup label='sounds'>\n";
-		foreach ($dir_array as $key => $value) {
-			if (strlen($value) > 0) {
-				if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-					$conference_center_greeting = substr($conference_center_greeting, 71);
-				}
-				if ($conference_center_greeting == $key) {
-					$tmp_selected = true;
-					echo "		<option value='$key' selected='selected'>$key</option>\n";
-				} else {
-					echo "		<option value='$key'>$key</option>\n";
+		if (count($dir_array) > 0) {
+			echo "<optgroup label='Sounds'>\n";
+			foreach ($dir_array as $key => $value) {
+				if (strlen($value) > 0) {
+					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+						$conference_center_greeting = substr($conference_center_greeting, 71);
+					}
+					$selected = ($conference_center_greeting == $key) ? true : false;
+					echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+					if ($selected) { $tmp_selected = true; }
 				}
 			}
+			echo "</optgroup>\n";
 		}
-		echo "</optgroup>\n";
 	//select
 		if (strlen($conference_center_greeting) > 0) {
 			if (if_group("superadmin")) {
@@ -441,9 +443,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "<optgroup label='selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting)) {
 						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-					} elseif (substr($conference_center_greeting, -3) == "wav" || substr($conference_center_greeting, -3) == "mp3") {
+					}
+					else if (substr($conference_center_greeting, -3) == "wav" || substr($conference_center_greeting, -3) == "mp3") {
 						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
-					} else {
+					}
+					else {
 						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
 					}
 					echo "</optgroup>\n";
@@ -451,7 +455,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($tmp_selected);
 			}
 		}
-	echo "		</select>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-greeting']."\n";
 	echo "</td>\n";

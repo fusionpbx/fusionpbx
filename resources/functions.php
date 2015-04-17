@@ -1074,6 +1074,7 @@ function number_pad($number,$n) {
 					}
 				}
 			}
+			ksort($dir_array, SORT_STRING);
 			closedir($dir_list);
 		}
 	}
