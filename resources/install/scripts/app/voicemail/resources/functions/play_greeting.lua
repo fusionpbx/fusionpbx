@@ -43,14 +43,13 @@
 
 						--get the greeting from the database
 							if (storage_type == "base64") then
-								if (string.len(ivr_menu_greet_long) > 1) then
 									sql = [[SELECT * FROM v_voicemail_greetings 
 										WHERE domain_uuid = ']] .. domain_uuid ..[['
 										AND voicemail_id = ']].. voicemail_id.. [['
 										AND greeting_id = ']].. greeting_id.. [[' ]];
-									--if (debug["sql"]) then
+									if (debug["sql"]) then
 										freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-									--end
+									end
 									status = dbh:query(sql, function(row)
 										--add functions
 											dofile(scripts_dir.."/resources/functions/base64.lua");
@@ -64,10 +63,10 @@
 												file:write(base64.decode(row["greeting_base64"]));
 												file:close();
 											end
-										--custom greeting
+
+										--play the greeting
 											session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 									end);
-								end
 							elseif (storage_type == "http_cache") then
 								session:streamFile(storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
