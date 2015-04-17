@@ -107,7 +107,9 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 			$table_header .= th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
 			$table_header .= "<th>".$text['label-tools']."</th>\n";
 			$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "style='text-align: right;'");
-			$table_header .= "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
+			if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+				$table_header .= "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
+			}
 			$table_header .= "<td style='width: 25px;'>&nbsp;</td>";
 			$table_header .= "</tr>\n";
 
@@ -121,14 +123,15 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 				echo "	<td colspan='3' align='left' valign='top'>\n";
 				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
-				echo "	<td colspan='3' valign='bottom' align='right'>\n";
+				echo "	<td colspan='".(($_SESSION['voicemail']['storage_type']['text'] != 'base64') ? 3 : 2)."' valign='bottom' align='right'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
 					echo "		<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
 				}
 				if (permission_exists('voicemail_edit')) {
 					echo "		<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
 				}
-				echo "	<br /><br /></td>\n";
+				echo "		<br /><br />";
+				echo "	</td>\n";
 				echo "	<td>&nbsp;</td>\n";
 				echo "</tr>\n";
 				if (count($field['messages']) > 0) {
@@ -161,7 +164,9 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 						echo "<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 					echo "	</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\" nowrap='nowrap'>".$row['file_size_label']."</td>\n";
+					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+						echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\" nowrap='nowrap'>".$row['file_size_label']."</td>\n";
+					}
 					echo "	<td class='list_control_icon' style='width: 25px;'>";
 					if (permission_exists('voicemail_message_delete')) {
 						echo 	"<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

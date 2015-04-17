@@ -147,7 +147,7 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
 	echo "			<b>".$text['title']."</b>";
@@ -162,11 +162,11 @@ require_once "resources/check_auth.php";
 	if (permission_exists('recording_upload')) {
 		echo "<b>".$text['header']."</b>";
 		echo "<br><br>";
-		echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-		echo "<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
+		echo "<form action='' method='post' enctype='multipart/form-data' name='frmUpload'>\n";
+		echo "<input name='type' type='hidden' value='rec'>\n";
 		echo "".$text['label-upload']."\n";
-		echo "<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" style=\"width: 260px;\" id=\"ulfile\">\n";
-		echo "<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+		echo "<input name='ulfile' type='file' class='formfld fileinput' style='width: 260px;' id='ulfile'>\n";
+		echo "<input name='submit' type='submit'  class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
 		echo "</form>";
 		echo "<br><br>\n";
 	}
@@ -206,16 +206,20 @@ require_once "resources/check_auth.php";
 	echo "<tr>\n";
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
 	echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
-	echo "<th class=\"listhdr\" nowrap>".$text['label-tools']."</th>\n";
-	echo "<th class=\"listhdr\" style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
+	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
+	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
+	}
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename']);
-			$tmp_filesize = byte_convert($tmp_filesize);
+			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename']);
+				$tmp_filesize = byte_convert($tmp_filesize);
+			}
 
 			//playback progress bar
 			echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
@@ -249,7 +253,9 @@ require_once "resources/check_auth.php";
 				echo "&nbsp;";
 			}
 			echo "	</td>\n";
-			echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+			}
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
