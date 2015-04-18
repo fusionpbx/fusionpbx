@@ -38,6 +38,15 @@
 	dofile(scripts_dir.."/resources/functions/config.lua");
 	dofile(config());
 
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
+
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
 --settings
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
@@ -62,15 +71,6 @@
 --debug
 	debug["info"] = false;
 	debug["sql"] = false;
-
---include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
-
---connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
-	dbh = database_handle('system');
 
 --prepare the api object
 	api = freeswitch.API();
