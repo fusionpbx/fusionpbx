@@ -122,28 +122,6 @@
 				domain_uuid = string.lower(domain_uuid);
 			end
 
-		--settings
-			dofile(scripts_dir.."/resources/functions/settings.lua");
-			settings = settings(domain_uuid);
-			storage_type = "";
-			if (settings['voicemail']['storage_type'] ~= nil) then
-				if (settings['voicemail']['storage_type']['text'] ~= nil) then
-					storage_type = settings['voicemail']['storage_type']['text'];
-				end
-			end
-			storage_path = "";
-			if (settings['voicemail']['storage_path'] ~= nil) then
-				if (settings['voicemail']['storage_path']['text'] ~= nil) then
-					storage_path = settings['voicemail']['storage_path']['text'];
-				end
-			end
-			temp_dir = "";
-			if (settings['server']['temp'] ~= nil) then
-				if (settings['server']['temp']['dir'] ~= nil) then
-					temp_dir = settings['server']['temp']['dir'];
-				end
-			end
-
 		--if voicemail_id is non numeric then get the number-alias
 			if (voicemail_id ~= nil) then
 				if tonumber(voicemail_id) == nil then
