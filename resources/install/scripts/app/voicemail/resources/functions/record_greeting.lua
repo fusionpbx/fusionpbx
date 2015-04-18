@@ -69,7 +69,7 @@
 							dofile(scripts_dir.."/resources/functions/base64.lua");
 
 						--show the storage type
-							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
+							--freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
 						--base64 encode the file
 							local f = io.open(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "rb");
@@ -163,6 +163,10 @@
 					if (session:ready()) then
 						timeouts = 0;
 						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+						if (storage_type == "base64") then
+							--delete the greeting
+							os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+						end
 					end
 			else
 				--invalid greeting_id

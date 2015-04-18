@@ -105,6 +105,10 @@
 					session:streamFile("silence_stream://1000");
 				end
 			end
+		--remove the voicemail message
+			if (storage_type == "base64") then
+				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+			end
 		--to listen to the recording press 1
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
