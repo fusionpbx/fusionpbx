@@ -263,9 +263,9 @@
 								sql = [[SELECT * FROM v_voicemails 
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. row.extension.. [[' ]];
-								if (debug["sql"]) then
+								--if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
-								end
+								--end
 								status = dbh:query(sql, function(row)
 									--add functions
 										dofile(scripts_dir.."/resources/functions/base64.lua");
