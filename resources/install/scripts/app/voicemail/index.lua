@@ -317,11 +317,15 @@
 
 						--base64 encode the file
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
-								local file_content = f:read("*all");
-								f:close();
-								message_base64 = base64.encode(file_content);
-								--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
+								--get the base
+									local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
+									local file_content = f:read("*all");
+									f:close();
+									message_base64 = base64.encode(file_content);
+									--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
+
+								--delete the file
+									os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 							end
 					end
 
