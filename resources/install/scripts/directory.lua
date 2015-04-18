@@ -33,6 +33,27 @@
 	search_limit = 3;
 	search_count = 0;
 
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+	storage_type = "";
+	storage_path = "";
+	if (settings['voicemail'] ~= nil) then
+		if (settings['voicemail']['storage_type'] ~= nil) then
+			if (settings['voicemail']['storage_type']['text'] ~= nil) then
+				storage_type = settings['voicemail']['storage_type']['text'];
+			end
+		end
+		if (settings['voicemail']['storage_path'] ~= nil) then
+			if (settings['voicemail']['storage_path']['text'] ~= nil) then
+				storage_path = settings['voicemail']['storage_path']['text'];
+				storage_path = storage_path:gsub("${domain_name}", domain_name);
+				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+			end
+		end
+	end
+
 --debug
 	debug["info"] = false;
 	debug["sql"] = false;
@@ -232,17 +253,56 @@
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
 					if (row.first_name and row.last_name) then
-						if (debug["info"]) then
-							freeswitch.consoleLog("notice", "[directory] path: "..voicemail_dir.."/"..row.extension.."/recorded_name.wav\n");
-						end
-						if (file_exists(voicemail_dir.."/"..row.extension.."/recorded_name.wav")) then
-							session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
-						else
-							--announce the first and last names
-								session:execute("say", "en name_spelled iterated "..row.first_name);
-								--session:execute("sleep", "500");
-								session:execute("say", "en name_spelled iterated "..row.last_name);
-						end
+						--play the recorded name
+							if (storage_type == "base64") then
+								sql = [[SELECT * FROM v_voicemails 
+									WHERE domain_uuid = ']] .. domain_uuid ..[['
+									AND voicemail_id = ']].. row.extension.. [[' ]];
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
+								end
+								status = dbh:query(sql, function(row)
+									--add functions
+										dofile(scripts_dir.."/resources/functions/base64.lua");
+
+									--set the voicemail message path
+										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";
+
+									--save the recording to the file system
+										if (string.len(row["voicemail_name_base64"]) > 32) then
+											local file = io.open(file_location, "w");
+											file:write(base64.decode(row["voicemail_name_base64"]));
+											file:close();
+										end
+
+									--play the recorded name
+										if (file_exists(file_location)) then
+											session:streamFile(file_location);
+										else
+											--announce the first and last names
+											session:execute("say", "en name_spelled iterated "..row.first_name);
+											--session:execute("sleep", "500");
+											session:execute("say", "en name_spelled iterated "..row.last_name);
+										end
+								end);
+							elseif (storage_type == "http_cache") then
+								file_location = storage_path.."/"..row.extension.."/recorded_name.wav";
+								if (file_exists(file_location)) then
+									session:streamFile(file_location);
+								end
+							else
+								if (debug["info"]) then
+									freeswitch.consoleLog("notice", "[directory] path: "..voicemail_dir.."/"..row.extension.."/recorded_name.wav\n");
+								end
+								if (file_exists(voicemail_dir.."/"..row.extension.."/recorded_name.wav")) then
+									session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
+								else
+									--announce the first and last names
+										session:execute("say", "en name_spelled iterated "..row.first_name);
+										--session:execute("sleep", "500");
+										session:execute("say", "en name_spelled iterated "..row.last_name);
+								end
+							end
 
 						--announce the extension number
 							if (row.directory_exten_visible == "false") then
