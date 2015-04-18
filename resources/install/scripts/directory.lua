@@ -33,6 +33,11 @@
 	search_limit = 3;
 	search_count = 0;
 
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
+
 --settings
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
