@@ -81,7 +81,7 @@
 													pos = string.find(row.voicemail_option_param, " ", 0, true);
 													action = string.sub( row.voicemail_option_param, 0, pos-1);
 													data = string.sub( row.voicemail_option_param, pos+1);
-					
+
 												--check if the option uses a regex
 													regex = string.find(row.voicemail_option_digits, "(", 0, true);
 													if (regex) then
@@ -91,14 +91,14 @@
 																freeswitch.consoleLog("notice", "[voicemail] regex m:~"..digits.."~"..row.voicemail_option_digits.."~$1\n");
 																freeswitch.consoleLog("notice", "[voicemail] result: "..result.."\n");
 															end
-					
+
 														--replace the $1 and the domain name
 															data = data:gsub("$1", result);
 															data = data:gsub("${domain_name}", domain_name);
 													end --if regex
 											end --if menu-exex-app
 										end --if regex match
-					
+
 									--execute
 										if (action) then
 											if (string.len(action) > 0) then
@@ -128,7 +128,6 @@
 										end
 									end
 								end
-
 						end
 					end
 				end

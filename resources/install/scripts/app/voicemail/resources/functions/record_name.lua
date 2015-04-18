@@ -97,6 +97,10 @@
 				if (session:ready()) then
 					timeouts = 0;
 					record_menu("name", voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
+					if (storage_type == "base64") then
+						--delete the greeting
+						os.remove(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
+					end
 				end
 		end
 	end

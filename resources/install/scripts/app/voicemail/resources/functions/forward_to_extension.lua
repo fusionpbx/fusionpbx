@@ -144,8 +144,10 @@
 			event:fire();
 
 		--if local after email is true then copy the recording file
-			mkdir(voicemail_dir.."/"..forward_voicemail_id);
-			copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
+			if (storage_type ~= "base64") then
+				mkdir(voicemail_dir.."/"..forward_voicemail_id);
+				copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
+			end
 
 		--send the email with the voicemail recording attached
 			send_email(forward_voicemail_id, voicemail_message_uuid);
