@@ -66,6 +66,9 @@
 
 										--play the greeting
 											session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+
+										--delete the greeting
+											os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 									end);
 							elseif (storage_type == "http_cache") then
 								session:streamFile(storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");

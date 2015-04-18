@@ -53,7 +53,7 @@
 			if (string.len(voicemail_mail_to) > 2) then
 				--include languages file
 					dofile(scripts_dir.."/app/voicemail/app_languages.lua");
-					
+
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -70,6 +70,21 @@
 							message_length = row["message_length"];
 							--message_status = row["message_status"];
 							--message_priority = row["message_priority"];
+						--get the recordings from the database
+							if (storage_type == "base64") then
+								--add functions
+									dofile(scripts_dir.."/resources/functions/base64.lua");
+
+								--set the voicemail message path
+									message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+
+								--save the recording to the file system
+									if (string.len(row["message_base64"]) > 32) then
+										local f = io.open(message_location, "w");
+										f:write(base64.decode(row["message_base64"]));
+										f:close();
+									end
+							end
 					end);
 
 				--format the message length and date
@@ -148,7 +163,6 @@
 						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
 					end
 					result = api:executeString(cmd);
-
 			end
 
 		--whether to keep the voicemail message and details local after email
@@ -166,11 +180,17 @@
 					--delete voicemail recording file
 						if (file_exists(file)) then
 							os.remove(file);
-						end	
+						end
 					--set message waiting indicator
 						message_waiting(id, domain_uuid);
 					--clear the variable
 						db_voicemail_uuid = '';
+				end
+			end
+			if (storage_type == "base64") then
+				--delete voicemail recording file
+				if (file_exists(file)) then
+					os.remove(file);
 				end
 			end
 	end
