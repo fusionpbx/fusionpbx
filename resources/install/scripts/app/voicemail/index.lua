@@ -186,12 +186,6 @@
 				end
 			end
 
-		--set the voicemail_dir
-			voicemail_dir = voicemail_dir.."/default/"..domain_name;
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
-			end
-
 		--get the voicemail settings
 			if (voicemail_id ~= nil) then
 				if (session:ready()) then
