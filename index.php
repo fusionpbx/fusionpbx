@@ -1,513 +1,80 @@
---	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
---	All rights reserved.
---
---	Redistribution and use in source and binary forms, with or without
---	modification, are permitted provided that the following conditions are met:
---
---	1. Redistributions of source code must retain the above copyright notice,
---	  this list of conditions and the following disclaimer.
---
---	2. Redistributions in binary form must reproduce the above copyright
---	  notice, this list of conditions and the following disclaimer in the
---	  documentation and/or other materials provided with the distribution.
---
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
---	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
---	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
---	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
---	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
---	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
---	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
---	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
---	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
---	POSSIBILITY OF SUCH DAMAGE.
+<?php
+/*
+	FusionPBX
+	Version: MPL 1.1
 
---set default values
-	min_digits = 1;
-	max_digits = 8;
-	max_tries = 3;
-	max_timeouts = 3;
-	digit_timeout = 3000;
-	stream_seek = false;
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
 
---direct dial
-	direct_dial = {}
-	direct_dial["enabled"] = "false";
-	direct_dial["max_digits"] = 4;
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
 
---debug
-	debug["info"] = false;
-	debug["sql"] = false;
+	The Original Code is FusionPBX
 
---get the argv values
-	script_name = argv[1];
-	voicemail_action = argv[2];
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
 
---starting values
-	dtmf_digits = '';
-	timeouts = 0;
-	password_tries = 0;
+	Contributor(s):
+	Mark J. Crane <markjcrane@fusionpbx.com>
+*/
+include "root.php";
 
---connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
-	dbh = database_handle('system');
+// start the session
+	session_start();
 
---set the api
-	api = freeswitch.API();
+//if config.php file does not exist then redirect to the install page
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+		//do nothing
+	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+		//original directory
+	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+		//move config.php from the includes to resources directory.
+		rename($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php", $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php");
+	} elseif (file_exists("/etc/fusionpbx/config.php")) {
+		//linux
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+		//bsd
+	} else {
+		header("Location: ".PROJECT_PATH."/resources/install.php");
+		exit;
+	}
 
---if the session exists
-	if (session ~= nil) then
-		--answer the session
-			if (session:ready()) then
-				session:answer();
-			end
+// if not logged in, clear the session variables
+	//if (strlen($_SESSION["username"]) == 0) {
+	//	session_unset();
+	//	session_destroy();
+	//}
 
-		--unset bind meta app
-			session:execute("unbind_meta_app", "");
+//adds multiple includes
+	require_once "resources/require.php";
 
-		--set the callback function
-			if (session:ready()) then
-				session:setVariable("playback_terminators", "#");
-				session:setInputCallback("on_dtmf", "");
-			end
+// if logged in, redirect to login destination
+	if (strlen($_SESSION["username"]) > 0) {
+		if (strlen($_SESSION['login']['destination']['url']) > 0) {
+			header("Location: ".$_SESSION['login']['destination']['url']);
+		}
+		else {
+			require_once "resources/header.php";
+			require_once "resources/footer.php";
+		}
+	}
+	else {
+		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
+			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
+		}
+		else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
+			require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
+		}
+		else {
+			require_once "resources/login.php";
+		}
+	}
 
-		--get session variables
-			context = session:getVariable("context");
-			sounds_dir = session:getVariable("sounds_dir");
-			domain_name = session:getVariable("domain_name");
-			uuid = session:getVariable("uuid");
-			voicemail_id = session:getVariable("voicemail_id");
-			voicemail_action = session:getVariable("voicemail_action");
-			destination_number = session:getVariable("destination_number");
-			caller_id_name = session:getVariable("caller_id_name");
-			caller_id_number = session:getVariable("caller_id_number");
-			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
-			skip_instructions = session:getVariable("skip_instructions");
-			skip_greeting = session:getVariable("skip_greeting");
-			vm_message_ext = session:getVariable("vm_message_ext");
-			vm_disk_quota = session:getVariable("vm-disk-quota");
-			if (not vm_disk_quota) then
-				vm_disk_quota = session:getVariable("vm_disk_quota");
-			end
-			voicemail_authorized = session:getVariable("voicemail_authorized");
-			if (not vm_message_ext) then vm_message_ext = 'wav'; end
-
-		--set the sounds path for the language, dialect and voice
-			default_language = session:getVariable("default_language");
-			default_dialect = session:getVariable("default_dialect");
-			default_voice = session:getVariable("default_voice");
-			if (not default_language) then default_language = 'en'; end
-			if (not default_dialect) then default_dialect = 'us'; end
-			if (not default_voice) then default_voice = 'callie'; end
-
-		--get the domain_uuid
-			domain_uuid = session:getVariable("domain_uuid");
-			if (domain_count > 1) then
-				if (domain_uuid == nil) then
-					--get the domain_uuid using the domain name required for multi-tenant
-						if (domain_name ~= nil) then
-							sql = "SELECT domain_uuid FROM v_domains ";
-							sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
-							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-							end
-							status = dbh:query(sql, function(rows)
-								domain_uuid = rows["domain_uuid"];
-							end);
-						end
-				end
-			end
-			if (domain_uuid ~= nil) then
-				domain_uuid = string.lower(domain_uuid);
-			end
-
-		--if voicemail_id is non numeric then get the number-alias
-			if (voicemail_id ~= nil) then
-				if tonumber(voicemail_id) == nil then
-					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");
-				end
-			end
-
-		--set the voicemail_dir
-			voicemail_dir = voicemail_dir.."/default/"..domain_name;
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
-			end
-
-		--settings
-			dofile(scripts_dir.."/resources/functions/settings.lua");
-			settings = settings(domain_uuid);
-			storage_type = "";
-			storage_path = "";
-			if (settings['voicemail'] ~= nil) then
-				if (settings['voicemail']['storage_type'] ~= nil) then
-					if (settings['voicemail']['storage_type']['text'] ~= nil) then
-						storage_type = settings['voicemail']['storage_type']['text'];
-					end
-				end
-				if (settings['voicemail']['storage_path'] ~= nil) then
-					if (settings['voicemail']['storage_path']['text'] ~= nil) then
-						storage_path = settings['voicemail']['storage_path']['text'];
-						storage_path = storage_path:gsub("${domain_name}", domain_name);
-						storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
-						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
-					end
-				end
-			end
-			temp_dir = "";
-			if (settings['server'] ~= nil) then
-				if (settings['server']['temp'] ~= nil) then
-					if (settings['server']['temp']['dir'] ~= nil) then
-						temp_dir = settings['server']['temp']['dir'];
-					end
-				end
-			end
-
-		--get the voicemail settings
-			if (voicemail_id ~= nil) then
-				if (session:ready()) then
-					--get the information from the database
-						sql = [[SELECT * FROM v_voicemails
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_id = ']] .. voicemail_id ..[['
-							AND voicemail_enabled = 'true' ]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-						status = dbh:query(sql, function(row)
-							voicemail_uuid = string.lower(row["voicemail_uuid"]);
-							voicemail_password = row["voicemail_password"];
-							greeting_id = row["greeting_id"];
-							voicemail_mail_to = row["voicemail_mail_to"];
-							voicemail_attach_file = row["voicemail_attach_file"];
-							voicemail_local_after_email = row["voicemail_local_after_email"];
-						end);
-					--set default values
-						if (voicemail_local_after_email == nil) then
-							voicemail_local_after_email = "true";
-						end
-						if (voicemail_attach_file == nil) then
-							voicemail_attach_file = "true";
-						end
-				end
-			end
-	end
-
---general functions
-	dofile(scripts_dir.."/resources/functions/base64.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
-	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
-	dofile(scripts_dir.."/resources/functions/copy.lua");
-
---voicemail functions
-	dofile(scripts_dir.."/app/voicemail/resources/functions/on_dtmf.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/get_voicemail_id.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/check_password.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/change_password.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/macro.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/play_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_message.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_menu.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/forward_to_extension.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/main_menu.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/listen_to_recording.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/message_waiting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/send_email.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/delete_recording.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/message_saved.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/return_call.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/menu_messages.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/advanced.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/choose_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_name.lua");
-
---send a message waiting event
-	if (voicemail_action == "mwi") then
-		--get the mailbox info
-			account = argv[3];
-			array = explode("@", account);
-			voicemail_id = array[1];
-			domain_name = array[2];
-
-		--send information the console
-			debug["info"] = "true";
-
-		--get voicemail message details
-			sql = [[SELECT * FROM v_domains WHERE domain_name = ']] .. domain_name ..[[']]
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-			end
-			status = dbh:query(sql, function(row)
-				domain_uuid = string.lower(row["domain_uuid"]);
-			end);
-
-		--get the message count and send the mwi event
-			message_waiting(voicemail_id, domain_uuid);
-	end
-
---check messages
-	if (voicemail_action == "check") then
-		if (session:ready()) then
-			--check the voicemail password
-				if (voicemail_id) then
-					if (voicemail_authorized) then
-						if (voicemail_authorized == "true") then
-							--skip the password check
-						else
-							check_password(voicemail_id, password_tries);
-						end
-					else
-						check_password(voicemail_id, password_tries);
-					end
-				else
-					check_password(voicemail_id, password_tries);
-				end
-
-			--send to the main menu
-				timeouts = 0;
-				main_menu();
-		end
-	end
-
---leave a message
-	if (voicemail_action == "save") then
-
-		--check the voicemail quota
-			if (vm_disk_quota) then
-				--get voicemail message seconds
-					sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(row)
-						message_sum = row["message_sum"];
-					end);
-					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-						--play message mailbox full
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-						--set the voicemail_uuid to nil to prevent saving the voicemail
-							voicemail_uuid = nil;
-					end
-			end
-
-		--valid voicemail
-			if (voicemail_uuid ~= nil) then
-
-				--play the greeting
-					timeouts = 0;
-					play_greeting();
-
-				--save the message
-					record_message();
-
-				--process base64
-					if (storage_type == "base64") then
-						--show the storage type
-							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-
-						--include the base64 function
-							dofile(scripts_dir.."/resources/functions/base64.lua");
-
-						--base64 encode the file
-							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								--get the base
-									local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
-									local file_content = f:read("*all");
-									f:close();
-									message_base64 = base64.encode(file_content);
-									--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
-
-								--delete the file
-									os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-							end
-					end
-
-				--get the voicemail destinations
-					sql = [[select * from v_voicemail_destinations 
-					where voicemail_uuid = ']]..voicemail_uuid..[[']]
-					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "\n");
-					destinations = {};
-					x = 1;
-					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
-					x = x + 1;
-					assert(dbh:query(sql, function(row)
-						destinations[x] = row;
-						x = x + 1;
-					end));
-
-				--show the storage type
-					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-
-				--loop through the voicemail destinations
-					for key,row in pairs(destinations) do
-						--get a new uuid
-							voicemail_message_uuid = api:execute("create_uuid");
-						--save the message to the voicemail messages
-							if (tonumber(message_length) > 2) then
-								caller_id_name = string.gsub(caller_id_name,"'","''");
-								local sql = {}
-								table.insert(sql, "INSERT INTO v_voicemail_messages ");
-								table.insert(sql, "(");
-								table.insert(sql, "voicemail_message_uuid, ");
-								table.insert(sql, "domain_uuid, ");
-								table.insert(sql, "voicemail_uuid, ");
-								table.insert(sql, "created_epoch, ");
-								table.insert(sql, "caller_id_name, ");
-								table.insert(sql, "caller_id_number, ");
-								if (storage_type == "base64") then
-									table.insert(sql, "message_base64, ");
-								end
-								table.insert(sql, "message_length ");
-								--table.insert(sql, "message_status, ");
-								--table.insert(sql, "message_priority, ");
-								table.insert(sql, ") ");
-								table.insert(sql, "VALUES ");
-								table.insert(sql, "( ");
-								table.insert(sql, "'"..voicemail_message_uuid.."', ");
-								table.insert(sql, "'"..domain_uuid.."', ");
-								table.insert(sql, "'"..row.voicemail_uuid_copy.."', ");
-								table.insert(sql, "'"..start_epoch.."', ");
-								table.insert(sql, "'"..caller_id_name.."', ");
-								table.insert(sql, "'"..caller_id_number.."', ");
-								if (storage_type == "base64") then
-									table.insert(sql, "'"..message_base64.."', ");
-								end
-								table.insert(sql, "'"..message_length.."' ");
-								--table.insert(sql, "'"..message_status.."', ");
-								--table.insert(sql, "'"..message_priority.."' ");
-								table.insert(sql, ") ");
-								sql = table.concat(sql, "\n");
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-								if (storage_type == "base64") then
-									array = explode("://", database["system"]);
-									local luasql = require "luasql.postgres";
-									local env = assert (luasql.postgres());
-									local db = env:connect(array[2]);
-									res, serr = db:execute(sql);
-									db:close();
-									env:close();
-								else
-									dbh:query(sql);
-								end
-							end
-
-						--get saved and new message counts
-							sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-								WHERE domain_uuid = ']] .. domain_uuid ..[['
-								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
-								AND (message_status is null or message_status = '') ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
-								new_messages = result["new_messages"];
-							end);
-							sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
-								WHERE domain_uuid = ']] .. domain_uuid ..[['
-								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
-								AND message_status = 'saved' ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
-								saved_messages = result["saved_messages"];
-							end);
-
-						--get the voicemail_id
-							sql = [[SELECT voicemail_id FROM v_voicemails
-								WHERE voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[[']];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
-								voicemail_id_copy = result["voicemail_id"];
-							end);
-
-						--make sure the voicemail directory exists
-							mkdir(voicemail_dir.."/"..voicemail_id_copy);
-
-						--copy the voicemail to each destination
-							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
-							end
-
-						--set the message waiting event
-							if (tonumber(message_length) > 2) then
-								local event = freeswitch.Event("message_waiting");
-								event:addHeader("MWI-Messages-Waiting", "yes");
-								event:addHeader("MWI-Message-Account", "sip:"..voicemail_id_copy.."@"..domain_name);
-								event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
-								event:fire();
-							end
-
-						--send the email with the voicemail recording attached
-							if (tonumber(message_length) > 2) then
-								send_email(voicemail_id_copy, voicemail_message_uuid);
-							end
-					end
-
-				--remove initial recording file
-					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-					end
-
-			else
-				--voicemail not enabled or does not exist
-					referred_by = session:getVariable("sip_h_Referred-By");
-					if (referred_by) then
-						referred_by = referred_by:match('[%d]+');
-						session:transfer(referred_by, "XML", context);
-					end
-			end
-	end
-
---close the database connection
-	dbh:release();
-
---notes
-	--record the video
-		--records audio only
-			--result = session:execute("set", "enable_file_write_buffering=false");
-			--mkdir(voicemail_dir.."/"..voicemail_id);
-			--session:recordFile("/tmp/recording.fsv", 200, 200, 200);
-		--records audio and video
-			--result = session:execute("record_fsv", "file.fsv");
-			--freeswitch.consoleLog("notice", "[voicemail] SQL: " .. result .. "\n");
-
-	--play the video recording
-		--plays the video
-			--result = session:execute("play_fsv", "/tmp/recording.fsv");
-		--plays the file but without the video
-			--dtmf = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "/tmp/recording.fsv", "", "\\d+");
-		--freeswitch.consoleLog("notice", "[voicemail] SQL: " .. result .. "\n");
-
-	--callback (works with DTMF)
-		--http://wiki.freeswitch.org/wiki/Mod_fsv
-		--mkdir(voicemail_dir.."/"..voicemail_id);
-		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs) 
-		--session:sayPhrase(macro_name [,macro_data] [,language]);
-		--session:sayPhrase("voicemail_menu", "1:2:3:#", default_language);
-		--session:streamFile("directory/dir-to_select_entry.wav"); --works with setInputCallback
-		--session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
-		--session:say("12345", default_language, "number", "pronounced");
-
-		--speak
-			--session:set_tts_parms("flite", "kal");
-			--session:speak("Please say the name of the person you're trying to contact");
-
-	--callback (execute and executeString does not work with DTMF)
-		--session:execute(api_string);
-		--session:executeString("playback "..mySound);
-
-	--uuid_video_refresh
-		--uuid_video_refresh,<uuid>,Send video refresh.,mod_commands
-		--may be used to clear video buffer before using record_fsv
+?>
