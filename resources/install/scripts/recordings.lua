@@ -24,8 +24,8 @@
 
 --set the variables
 	pin_number = "";
-	max_tries = "3";
-	digit_timeout = "3000";
+	max_tries = 3;
+	digit_timeout = 3000;
 	sounds_dir = "";
 	recordings_dir = "";
 	file_name = "";
@@ -280,12 +280,15 @@ if ( session:ready() ) then
 
 	--if the pin number is provided then require it
 		if (pin_number) then
+			freeswitch.consoleLog("notice", "[recordings] pin_number: ".. pin_number .. "\n");
 			min_digits = string.len(pin_number);
 			max_digits = string.len(pin_number)+1;
 			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 			if (digits == pin_number) then
 				--pin is correct
+				freeswitch.consoleLog("notice", "[recordings] pin_number: correct \n");
 			else
+				freeswitch.consoleLog("notice", "[recordings] pin_number: incorrect \n");
 				session:streamFile("phrase:voicemail_fail_auth:#");
 				session:hangup("NORMAL_CLEARING");
 				return;
