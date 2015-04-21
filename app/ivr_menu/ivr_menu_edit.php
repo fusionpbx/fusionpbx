@@ -215,9 +215,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$_SESSION['message'] = $text['message-update'];
 				}
 
-			//synchronize the xml config
-				save_dialplan_xml();
-
 			//add the ivr menu options
 				if (($action == "add" && permission_exists('ivr_menu_add')) || ($action == "update" && permission_exists('ivr_menu_edit'))) {
 					require_once "resources/classes/database.php";
@@ -246,6 +243,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$action == "update";
 					}
 				}
+
+			//synchronize the xml config
+				save_dialplan_xml();
 
 			//clear the cache
 				$cache = new cache;
