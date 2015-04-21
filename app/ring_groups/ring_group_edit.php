@@ -439,19 +439,6 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (if_group("superadmin")) {
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-context']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\" required='required'>\n";
-		echo "<br />\n";
-		echo $text['description-enter-context']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-strategy']."\n";
@@ -705,6 +692,19 @@ else {
 	echo $text['description-skip_active']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (if_group("superadmin")) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\" required='required'>\n";
+		echo "<br />\n";
+		echo $text['description-enter-context']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
