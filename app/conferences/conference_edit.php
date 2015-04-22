@@ -211,8 +211,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_group = '2';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-				$_SESSION["message"] = $text['confirm-add'];
-
+				//add the message
+					$_SESSION["message"] = $text['confirm-add'];
 			} //if ($action == "add")
 
 			if ($action == "update") {
@@ -267,8 +267,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 					$db->query($sql);
 
-				$_SESSION["message"] = $text['confirm-update'];
-
+				//add the message
+					$_SESSION["message"] = $text['confirm-update'];
 			} //if ($action == "update")
 
 			//save the xml

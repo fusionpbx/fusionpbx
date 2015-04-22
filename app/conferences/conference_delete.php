@@ -38,55 +38,57 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//get the id
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
+	}
 
-if (strlen($id)>0) {
+//require the id
+	if (strlen($id) > 0) {
 
-	//get the dialplan uuid
-		$sql = "select * from v_conferences ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_uuid = '$id' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-			$dialplan_uuid = $row['dialplan_uuid'];
-		}
+		//get the dialplan uuid
+			$sql = "select * from v_conferences ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and conference_uuid = '$id' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+				$dialplan_uuid = $row['dialplan_uuid'];
+			}
 
-	//delete conference
-		$sql = "delete from v_conferences ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete conference
+			$sql = "delete from v_conferences ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and conference_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 
-	//delete the dialplan entry
-		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//delete the dialplan entry
+			$sql = "delete from v_dialplans ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$db->query($sql);
+			unset($sql);
 
-	//delete the dialplan details
-		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//delete the dialplan details
+			$sql = "delete from v_dialplan_details ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$db->query($sql);
+			unset($sql);
 
-	//syncrhonize configuration
-		save_dialplan_xml();
+		//syncrhonize configuration
+			save_dialplan_xml();
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
 
-	//clear the cache
-		$cache = new cache;
-		$cache->delete("dialplan:".$_SESSION["context"]);
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$_SESSION["context"]);
 
-}
+	}
 
 //redirect the browser
 	$_SESSION["message"] = $text['confirm-delete'];
