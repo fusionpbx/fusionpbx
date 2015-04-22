@@ -347,8 +347,6 @@
 
 				--loop through the voicemail destinations
 					for key,row in pairs(destinations) do
-						--get a new uuid
-							voicemail_message_uuid = api:execute("create_uuid");
 						--save the message to the voicemail messages
 							if (tonumber(message_length) > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
@@ -370,7 +368,7 @@
 								table.insert(sql, ") ");
 								table.insert(sql, "VALUES ");
 								table.insert(sql, "( ");
-								table.insert(sql, "'"..voicemail_message_uuid.."', ");
+								table.insert(sql, "'"..uuid.."', ");
 								table.insert(sql, "'"..domain_uuid.."', ");
 								table.insert(sql, "'"..row.voicemail_uuid_copy.."', ");
 								table.insert(sql, "'"..start_epoch.."', ");
