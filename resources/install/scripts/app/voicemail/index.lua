@@ -435,7 +435,7 @@
 
 						--copy the voicemail to each destination
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
+								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..uuid.."."..vm_message_ext);
 							end
 
 						--set the message waiting event
@@ -449,7 +449,7 @@
 
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
-								send_email(voicemail_id_copy, voicemail_message_uuid);
+								send_email(voicemail_id_copy, uuid);
 							end
 					end
 
