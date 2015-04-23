@@ -149,20 +149,26 @@
 				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
-				if (vm_message_ext == "mp3") then
-					--make the recording
-						--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
-						result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
-					--convert the wav to an mp3
-						--apt-get install lame
-						resample = "/usr/bin/lame -b 32 --resample 8 -m s "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3";
-						session:execute("system", resample);
-					--delete the wav file
-						if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
-							os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
-						end
-				else
+				shout_exists = trim(api:execute("module_exists", "mod_shout"));
+				freeswitch.consoleLog("notice", "shout exists: " .. shout_exists .. "\n");
+				if (shout_exists == "true") then
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+				else
+					if (vm_message_ext == "mp3") then
+						--make the recording
+							--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+						--convert the wav to an mp3
+							--apt-get install lame
+							resample = "/usr/bin/lame -b 32 --resample 8 -m s "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3";
+							session:execute("system", resample);
+						--delete the wav file
+							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
+								os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+							end
+					else
+						result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+					end
 				end
 			end
 			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
