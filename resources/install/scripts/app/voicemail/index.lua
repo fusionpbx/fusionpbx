@@ -346,7 +346,15 @@
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
 				--loop through the voicemail destinations
+					y = 1;
 					for key,row in pairs(destinations) do
+						--determine uuid
+							if (y == 1) then
+								voicemail_message_uuid = uuid;
+							else 
+								voicemail_message_uuid = api:execute("create_uuid");
+							end
+							y = y + 1;
 						--save the message to the voicemail messages
 							if (tonumber(message_length) > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
@@ -368,7 +376,7 @@
 								table.insert(sql, ") ");
 								table.insert(sql, "VALUES ");
 								table.insert(sql, "( ");
-								table.insert(sql, "'"..uuid.."', ");
+								table.insert(sql, "'"..voicemail_message_uuid.."', ");
 								table.insert(sql, "'"..domain_uuid.."', ");
 								table.insert(sql, "'"..row.voicemail_uuid_copy.."', ");
 								table.insert(sql, "'"..start_epoch.."', ");
@@ -435,7 +443,7 @@
 
 						--copy the voicemail to each destination
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..uuid.."."..vm_message_ext);
+								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
 							end
 
 						--set the message waiting event
@@ -449,14 +457,9 @@
 
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
-								send_email(voicemail_id_copy, uuid);
+								send_email(voicemail_id_copy, voicemail_message_uuid);
 							end
-					end
-
-				--remove initial recording file
-					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-					end
+					end --for
 
 			else
 				--voicemail not enabled or does not exist

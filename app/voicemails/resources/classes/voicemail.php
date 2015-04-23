@@ -300,7 +300,7 @@
 								$message_decoded = base64_decode($row['message_base64']);
 								file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
 								$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
-								$file_mime = finfo_file($finfo, $path.'/msg_'.$this->voicemail_message_uuid.'.???');
+								$file_mime = finfo_file($finfo, $path.'/msg_'.$this->voicemail_message_uuid.'.ext');
 								finfo_close($finfo);
 								switch ($file_mime) {
 									case 'audio/x-wav':
