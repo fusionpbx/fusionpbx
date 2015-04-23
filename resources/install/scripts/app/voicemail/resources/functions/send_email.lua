@@ -76,7 +76,7 @@
 									dofile(scripts_dir.."/resources/functions/base64.lua");
 
 								--set the voicemail message path
-									message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+									message_location = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 
 								--save the recording to the file system
 									if (string.len(row["message_base64"]) > 32) then
@@ -187,10 +187,5 @@
 						db_voicemail_uuid = '';
 				end
 			end
-			if (storage_type == "base64") then
-				--delete voicemail recording file
-				if (file_exists(file)) then
-					os.remove(file);
-				end
-			end
+			
 	end

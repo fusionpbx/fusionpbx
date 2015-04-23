@@ -149,29 +149,36 @@
 				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
-				shout_exists = trim(api:execute("module_exists", "mod_shout"));
-				freeswitch.consoleLog("notice", "shout exists: " .. shout_exists .. "\n");
-				if (shout_exists == "true") then
-					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
-				else
-					if (vm_message_ext == "mp3") then
-						--make the recording
-							--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
-						--convert the wav to an mp3
-							--apt-get install lame
-							resample = "/usr/bin/lame -b 32 --resample 8 -m s "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3";
-							session:execute("system", resample);
-						--delete the wav file
-							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
-								os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
-							end
+				if (vm_message_ext == "mp3") then
+					shout_exists = trim(api:execute("module_exists", "mod_shout"));
+					if (shout_exists == "true") then
+						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
+						--record in mp3 directly
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, silence_threshold, silence_seconds);
 					else
-						result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+						--create initial wav recording
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+						--use lame to encode, if available
+							if (file_exists("/usr/bin/lame")) then
+								freeswitch.consoleLog("notice", "using lame for mp3 encoding\n");
+								--convert the wav to an mp3 (lame required)
+									resample = "/usr/bin/lame -b 32 --resample 8 -m s "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3";
+									session:execute("system", resample);
+								--delete the wav file, if mp3 exists
+									if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
+										os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+									else 
+										vm_message_ext = "wav";
+									end
+							else 
+								freeswitch.consoleLog("notice", "neither mod_shout or lame found, defaulting to wav\n");
+								vm_message_ext = "wav";
+							end
 					end
+				else
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
 				end
 			end
-			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
 		--stop epoch
 			stop_epoch = os.time();
