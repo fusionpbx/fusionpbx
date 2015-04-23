@@ -43,8 +43,29 @@ require_once "resources/check_auth.php";
 	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
-			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']))) {
-				$fd = fopen($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']), "rb");
+			$recording_uuid = check_str($_GET['id']);
+			$path = $_SESSION['switch']['recordings']['dir'];
+			//get recording details from db
+			$sql = "select recording_filename, recording_base64 from v_recordings ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and recording_uuid = '".$recording_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			if (count($result) > 0) {
+				foreach($result as &$row) {
+					$recording_filename = $row['recording_filename'];
+					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
+						$recording_decoded = base64_decode($row['recording_base64']);
+						file_put_contents($path.'/'.$recording_filename, $recording_decoded);
+					}
+					break;
+				}
+			}
+			unset ($sql, $prep_statement, $result, $recording_decoded);
+
+			if (file_exists($path.'/'.$recording_filename)) {
+				$fd = fopen($path.'/'.$recording_filename, "rb");
 				if ($_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
@@ -52,7 +73,7 @@ require_once "resources/check_auth.php";
 					header("Content-Description: File Transfer");
 				}
 				else {
-					$file_ext = substr(base64_decode($_GET['filename']), -3);
+					$file_ext = substr($recording_filename, -3);
 					if ($file_ext == "wav") {
 						header("Content-Type: audio/x-wav");
 					}
@@ -60,12 +81,17 @@ require_once "resources/check_auth.php";
 						header("Content-Type: audio/mpeg");
 					}
 				}
-				header('Content-Disposition: attachment; filename="'.base64_decode($_GET['filename']).'"');
+				header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				header("Content-Length: " . filesize($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename'])));
+				header("Content-Length: " . filesize($path.'/'.$recording_filename));
 				ob_clean();
 				fpassthru($fd);
+			}
+
+			//if base64, remove temp recording file
+			if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
+				@unlink($path.'/'.$recording_filename);
 			}
 		}
 		exit;
@@ -73,13 +99,15 @@ require_once "resources/check_auth.php";
 
 //upload the recording
 	if (permission_exists('recording_upload')) {
-		if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recording_upload')) {
-			if ($_POST['type'] == 'rec') {
+		if ($_POST['submit'] == "Upload" && $_POST['type'] == 'rec') {
+			if (is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
 				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
-				$savemsg = $text['message-uploaded']." ".$_SESSION['switch']['recordings']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-				//system('chmod -R 744 '.$_SESSION['switch']['recordings']['dir'].'*');
 				unset($_POST['txtCommand']);
+
+				$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($_FILES['ulfile']['name']);
 			}
+			header("Location: recordings.php");
+			exit;
 		}
 	}
 
@@ -92,16 +120,25 @@ require_once "resources/check_auth.php";
 		exit;
 	}
 
-//build a list of recordings
-	$config_recording_list = '|';
-	$i = 0;
-	$sql = "select * from v_recordings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+//get existing recordings
+	$sql = "select recording_uuid, recording_filename, recording_base64 from v_recordings ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$config_recording_list .= $row['recording_filename']."|";
+		$array_recordings[$row['recording_uuid']] = $row['recording_filename'];
+		$array_base64_exists[$row['recording_uuid']] = ($row['recording_base64'] != '') ? true : false;
+		//if not base64, convert back to local files and remove base64 from db
+		if ($_SESSION['recordings']['storage_type']['text'] != 'base64' && $row['recording_base64'] != '') {
+			if (!file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename'])) {
+				$recording_decoded = base64_decode($row['recording_base64']);
+				file_put_contents($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename'], $recording_decoded);
+				$sql = "update v_recordings set recording_base64 = null where domain_uuid = '".$domain_uuid."' and recording_uuid = '".$row['recording_uuid']."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+		}
 	}
 	unset ($prep_statement);
 
@@ -110,9 +147,9 @@ require_once "resources/check_auth.php";
 		if ($dh = opendir($_SESSION['switch']['recordings']['dir'].'/')) {
 			while (($file = readdir($dh)) !== false) {
 				if (filetype($_SESSION['switch']['recordings']['dir']."/".$file) == "file") {
-					if (strpos($config_recording_list, "|".$file) === false) {
-						//echo "The $file was not found<br/>";
-						//file not found add it to the database
+
+					if (!in_array($file, $array_recordings)) {
+						//file not found, add it to the database
 						$a_file = explode("\.", $file);
 						$recording_uuid = uuid();
 						$sql = "insert into v_recordings ";
@@ -122,28 +159,58 @@ require_once "resources/check_auth.php";
 						$sql .= "recording_filename, ";
 						$sql .= "recording_name, ";
 						$sql .= "recording_description ";
+						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+							$sql .= ", recording_base64 ";
+						}
 						$sql .= ")";
 						$sql .= "values ";
 						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$recording_uuid', ";
-						$sql .= "'$file', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$recording_uuid."', ";
+						$sql .= "'".$file."', ";
 						$sql .= "'".$a_file[0]."', ";
 						$sql .= "'' ";
+						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+							$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$file));
+							$sql .= ", '".$recording_base64."' ";
+						}
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
+					else {
+						//file found, check if base64 present
+						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+							$found_recording_uuid = array_search($file, $array_recordings);
+							if (!$array_base64_exists[$found_recording_uuid]) {
+								$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$file));
+								$sql = "update v_recordings set ";
+								$sql .= "recording_base64 = '".$recording_base64."' ";
+								$sql .= "where domain_uuid = '".$domain_uuid."' ";
+								$sql .= "and recording_uuid = '".$found_recording_uuid."' ";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
+						}
+					}
+
+					//if base64, remove local file
+					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$file)) {
+						@unlink($_SESSION['switch']['recordings']['dir'].'/'.$file);
+					}
+
 				}
-			}
+			} //while
 			closedir($dh);
-		}
-	}
+		} //if
+	} //if
+
 
 //add paging
 	require_once "resources/paging.php";
 
 //include the header
+	$document['title'] = $text['title'];
 	require_once "resources/header.php";
 
 //begin the content
@@ -172,8 +239,8 @@ require_once "resources/check_auth.php";
 	}
 
 	$sql = "select * from v_recordings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	if (strlen($order_by)> 0) { $sql .= "order by ".$order_by." ".$order." "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -188,9 +255,9 @@ require_once "resources/check_auth.php";
 	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_recordings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by." ".$order : "recording_name asc")." ";
+	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -244,9 +311,9 @@ require_once "resources/check_auth.php";
 					case "mp3" : $recording_type = "audio/mpeg"; break;
 					case "ogg" : $recording_type = "audio/ogg"; break;
 				}
-				echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+				echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&id=".$row['recording_uuid']."\" type='".$recording_type."'></audio>";
 				echo "<span id='recording_button_".$row['recording_uuid']."' onclick=\"recording_play('".$row['recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&id=".$row['recording_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 			}
 			else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
