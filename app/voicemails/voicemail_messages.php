@@ -45,12 +45,14 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 		$voicemail_uuid = check_str($_REQUEST["id"]);
 	}
 
+//required class
+	require_once "app/voicemails/resources/classes/voicemail.php";
+
 //download the message
 	if (check_str($_REQUEST["action"]) == "download") {
 		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
 		$voicemail_id = check_str($_REQUEST["id"]);
 		$voicemail_uuid = check_str($_REQUEST["voicemail_uuid"]);
-		//require_once "resources/classes/voicemail.php";
 		if ($voicemail_message_uuid != '' && $voicemail_id != '' && $voicemail_uuid != '') {
 			$voicemail = new voicemail;
 			$voicemail->db = $db;
@@ -70,7 +72,6 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	$order = check_str($_GET["order"]);
 
 //get the voicemail
-	require_once "app/voicemails/resources/classes/voicemail.php";
 	$vm = new voicemail;
 	$vm->db = $db;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
@@ -80,6 +81,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	$voicemails = $vm->messages();
 
 //additional includes
+	$document['title'] = $text['title-voicemail_messages'];
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 

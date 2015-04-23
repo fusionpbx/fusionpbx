@@ -277,15 +277,57 @@
 			//clear the cache
 				session_cache_limiter('public');
 
-			//prepare and stream the file
+			//set source folder path
 				$path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+
+			//prepare base64 content from db, if enabled
+				if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+					$sql = "select message_base64 from ";
+					$sql .= "v_voicemail_messages as m, ";
+					$sql .= "v_voicemails as v ";
+					$sql .= "where ";
+					$sql .= "m.voicemail_uuid = v.voicemail_uuid ";
+					$sql .= "and v.voicemail_id = '".$this->voicemail_id."' ";
+					$sql .= "and m.voicemail_uuid = '".$this->voicemail_uuid."' ";
+					$sql .= "and m.domain_uuid = '".$this->domain_uuid."' ";
+					$sql .= "and m.voicemail_message_uuid = '".$this->voicemail_message_uuid."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					if (count($result) > 0) {
+						foreach($result as &$row) {
+							if ($row['message_base64'] != '') {
+								$message_decoded = base64_decode($row['message_base64']);
+								file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
+								$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
+								$file_mime = finfo_file($finfo, $path.'/msg_'.$this->voicemail_message_uuid.'.???');
+								finfo_close($finfo);
+								switch ($file_mime) {
+									case 'audio/x-wav':
+									case 'audio/wav':
+										$file_ext = 'wav';
+										break;
+									case 'audio/mpeg':
+									case 'audio/mp3':
+										$file_ext = 'mp3';
+										break;
+								}
+								rename($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
+							}
+							break;
+						}
+					}
+					unset ($sql, $prep_statement, $result, $message_decoded);
+				}
+
+			//prepare and stream the file
 				if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.wav')) {
 					$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.wav';
 				}
 				if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
 					$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.mp3';
 				}
-				if (file_exists($file_path)) {
+				if ($file_path != '') {
 					$fd = fopen($file_path, "rb");
 					if ($_GET['t'] == "bin") {
 						header("Content-Type: application/force-download");
@@ -306,7 +348,7 @@
 							header("Content-Type: audio/wav");
 						}
 						if ($file_ext == "mp3") {
-							header("Content-Type: audio/mp3");
+							header("Content-Type: audio/mpeg");
 						}
 					}
 					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -314,6 +356,12 @@
 					header("Content-Length: " . filesize($file_path));
 					fpassthru($fd);
 				}
+
+			//if base64, remove temp file
+				if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+					@unlink($path.'/msg_'.$this->voicemail_message_uuid.'.'.$file_ext);
+				}
+
 		} // download
 	}
 
