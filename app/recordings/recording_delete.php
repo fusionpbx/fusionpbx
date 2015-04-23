@@ -66,7 +66,9 @@ if (strlen($id)>0) {
 		unset($sql);
 
 	//delete the recording
-		unlink($_SESSION['switch']['recordings']['dir']."/".$filename);
+		if (file_exists($_SESSION['switch']['recordings']['dir']."/".$filename)) {
+			@unlink($_SESSION['switch']['recordings']['dir']."/".$filename);
+		}
 }
 
 //redirect the user

@@ -21,12 +21,12 @@ $text['title']['fr-fr'] = "Guides Vocaux";
 $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Ustawienia konta";
 
-$text['message-uploaded']['en-us'] = "Uploaded file to";
-$text['message-uploaded']['es-cl'] = "Archivo subido a";
-$text['message-uploaded']['pt-pt'] = "Ficheiro carregado para";
-$text['message-uploaded']['fr-fr'] = "Fichier téléchargé";
-$text['message-uploaded']['pt-br'] = "Arquivo carregado para";
-$text['message-uploaded']['pl'] = "Wyślij plik do";
+$text['message-uploaded']['en-us'] = "File Uploaded";
+$text['message-uploaded']['es-cl'] = "Subida de Archivos";
+$text['message-uploaded']['pt-pt'] = "Arquivo Enviado";
+$text['message-uploaded']['fr-fr'] = "Fichier Téléchargé";
+$text['message-uploaded']['pt-br'] = "Arquivo Enviado";
+$text['message-uploaded']['pl'] = "Dodany Plik";
 
 $text['message-update']['en-us'] = "Update Complete";
 $text['message-update']['es-cl'] = "Actualización Completada";
