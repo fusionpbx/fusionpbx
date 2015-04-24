@@ -1000,20 +1000,44 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				if (count($result) > 0) {
 					$options[] = "<optgroup label='Recordings'>";
 					foreach ($result as &$row) {
-						$name = $row["recording_name"];
-						$filename = $row["recording_filename"];
+						$recording_name = $row["recording_name"];
+						$recording_filename = $row["recording_filename"];
+						$path_mod = ($_SESSION['recordings']['storage_type']['text'] != 'base64') ? $_SESSION['switch']['recordings']['dir'] : null;
 						if ($select_type == "dialplan") {
-							$selected = ($select_value == "lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "lua:streamfile.lua ".$filename) ? true : false;
-							$options[] = "<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
+							$execute_method = 'lua:';
 						}
-						if ($select_type == "ivr") {
-							$selected = ($select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename || $select_value == "menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename) ? true : false;
-							$options[] = "<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$filename."' ".(($selected) ? "selected='selected'" : null).">".$name."</option>";
+						else if ($select_type == "ivr") {
+							$execute_method = 'menu-exec-app:lua ';
 						}
+						$selected = (
+							$select_value == $execute_method."streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename ||
+							$select_value == $execute_method."streamfile.lua ".$recording_filename
+							) ? true : false;
+						$options[] = "<option value='".$execute_method."streamfile.lua ".$path_mod.$recording_filename."' ".(($selected) ? "selected='selected'" : null).">".$recording_name."</option>";
 						if ($selected) { $selection_found = true; }
 					}
 					$options[] = "</optgroup>";
 				}
+			}
+		}
+
+	//phrases
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/phrases/app_config.php")) {
+			if ($select_type == "dialplan" || $select_type == "ivr") {
+				$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) > 0) {
+					$options[] = "<optgroup label='Phrases'>";
+					foreach ($result as &$row) {
+						$selected = ($select_value == "phrase:".$row["phrase_name"].".".$domain_uuid) ? true : false;
+						$options[] = "<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>";
+						if ($selected) { $selection_found = true; }
+					}
+					$options[] = "</optgroup>";
+				}
+				unset ($prep_statement);
 			}
 		}
 
