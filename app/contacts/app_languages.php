@@ -1470,12 +1470,12 @@ $text['header-contact-edit']['pl'] = "Kontakt";
 $text['header-contact-edit']['uk'] = "Контакт";
 $text['header-contact-edit']['sv-se'] = "Kontakt";
 
-$text['header-contact-add']['en-us'] = "Contact Add";
-$text['header-contact-add']['es-cl'] = "Agregar Contacto";
-$text['header-contact-add']['pt-pt'] = "Adicionar Contacto";
-$text['header-contact-add']['fr-fr'] = "Ajouter Contact";
-$text['header-contact-add']['pt-br'] = "Adicionar contato";
-$text['header-contact-add']['pl'] = "Dodaj kontakt";
+$text['header-contact-add']['en-us'] = "Contact";
+$text['header-contact-add']['es-cl'] = "Contacto";
+$text['header-contact-add']['pt-pt'] = "Contacto";
+$text['header-contact-add']['fr-fr'] = "Contact";
+$text['header-contact-add']['pt-br'] = "Contato";
+$text['header-contact-add']['pl'] = "Kontakt";
 $text['header-contact-add']['uk'] = "Додавання контакта";
 $text['header-contact-add']['sv-se'] = "Lägg Till Kontakt";
 
