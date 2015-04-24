@@ -2,6 +2,68 @@
 	script_name = argv[0];
 	file_name = argv[1];
 
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
+
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
+--get the variables
+	domain_name = session:getVariable("domain_name");
+	domain_uuid = session:getVariable("domain_uuid");
+
+--get the sounds dir, language, dialect and voice
+	sounds_dir = session:getVariable("sounds_dir");
+	default_language = session:getVariable("default_language");
+	default_dialect = session:getVariable("default_dialect");
+	default_voice = session:getVariable("default_voice");
+	if (not default_language) then default_language = 'en'; end
+	if (not default_dialect) then default_dialect = 'us'; end
+	if (not default_voice) then default_voice = 'callie'; end
+
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+	storage_type = "";
+	storage_path = "";
+	if (settings['recordings'] ~= nil) then
+		if (settings['recordings']['storage_type'] ~= nil) then
+			if (settings['recordings']['storage_type']['text'] ~= nil) then
+				storage_type = settings['recordings']['storage_type']['text'];
+			end
+		end
+		if (settings['recordings']['storage_path'] ~= nil) then
+			if (settings['recordings']['storage_path']['text'] ~= nil) then
+				storage_path = settings['recordings']['storage_path']['text'];
+				storage_path = storage_path:gsub("${domain_name}", domain_name);
+				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+			end
+		end
+	end
+	temp_dir = "";
+	if (settings['server'] ~= nil) then
+		if (settings['server']['temp'] ~= nil) then
+			if (settings['server']['temp']['dir'] ~= nil) then
+				temp_dir = settings['server']['temp']['dir'];
+			end
+		end
+	end
+
+--set the recordings directory
+	if (domain_count > 1) then
+		recordings_dir = recordings_dir .. "/"..domain_name;
+	end
+
+--check if a file exists
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
+
 --define the on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
@@ -28,10 +90,59 @@
 		end
 	end
 
---stream the file
-	session:answer();
+--parse file name
+	file_name_only = file_name:match("([^/]+)$");
+
+--if base64, get from db, create temp file
+	if (storage_type == "base64") then
+		freeswitch.consoleLog("notice", "detected base64.\n");
+		if (not file_exists(recordings_dir.."/"..file_name_only)) then
+			sql = [[SELECT * FROM v_recordings 
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND recording_filename = ']].. file_name_only.. [[' ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(row)
+				--add functions
+					dofile(scripts_dir.."/resources/functions/base64.lua");
+				--add the path to filename
+					file_name = recordings_dir.."/"..file_name_only;
+				--save the recording to the file system
+					if (string.len(row["recording_base64"]) > 32) then
+						local file = io.open(file_name, "w");
+						file:write(base64.decode(row["recording_base64"]));
+						file:close();
+					end
+			end);
+		else 
+			file_name = recordings_dir.."/"..file_name_only;
+		end
+	end 
+
+--adjust file path
+	if (not file_exists(file_name)) then 
+		freeswitch.consoleLog("notice", "file " .. file_name .. " doesn't exist.\n");
+		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only)) then
+			freeswitch.consoleLog("notice", "file " .. file_name_only .. " found in sounds.\n");
+			file_name = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only;
+		elseif (file_exists(recordings_dir.."/"..file_name_only)) then
+			freeswitch.consoleLog("notice", "file " .. file_name_only .. " found in recordings.\n");
+			file_name = recordings_dir.."/"..file_name_only;
+		end
+	end
+
+--stream file if exists
 	if (session:ready()) then
+		session:answer();
 		session:sleep(1000);
 		session:setInputCallback("on_dtmf", "");
 		session:streamFile(file_name);
+	end
+
+--if base64, remove temp file (increases responsiveness when files remain local)
+	if (storage_type == "base64") then
+		if (file_exists(file_name)) then
+			--os.remove(file_name);
+		end 
 	end

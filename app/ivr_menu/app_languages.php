@@ -441,7 +441,7 @@ $text['description-extension']['fr-fr'] = "Choisir le numéro d'extension.";
 $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dispositivo";
 $text['description-extension']['pl'] = "Wprowadź numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 
-$text['description-exit_sound']['en-us'] = "Played when leaving the menu.";
+$text['description-exit_sound']['en-us'] = "Played when leaving the menu, after selecting an option.";
 $text['description-exit_sound']['es-cl'] = "Reproducir cuando se deje el menú.";
 $text['description-exit_sound']['pt-pt'] = "É tocado quando se abandona o menu.";
 $text['description-exit_sound']['fr-fr'] = "Joué lorsque l'on quitte ce menu.";
