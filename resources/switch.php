@@ -290,7 +290,6 @@ function build_menu() {
 }
 
 
-
 function event_socket_create($host, $port, $password) {
 	$fp = fsockopen($host, $port, $errno, $errdesc, 3);
 	socket_set_blocking($fp,false);
@@ -346,7 +345,7 @@ function event_socket_request($fp, $cmd) {
 			usleep(50); //allow time for reponse
 
 			//prevent an endless loop //optional because of script timeout
-			if ($i > 8000) { break; }
+			if ($i > 30000) { break; }
 
 			if ($content_length > 0) { //is content_length set
 				//stop reading if all content has been read.
