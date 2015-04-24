@@ -190,10 +190,16 @@
 	end
 
 --parse file names
-	greet_long_file_name_only = ivr_menu_greet_long:match("([^/]+)$");
-	greet_short_file_name_only = ivr_menu_greet_short:match("([^/]+)$");
-	invalid_sound_file_name_only = ivr_menu_invalid_sound:match("([^/]+)$");
-	exit_sound_file_name_only = ivr_menu_exit_sound:match("([^/]+)$");
+	greet_long_file_name = ivr_menu_greet_long:match("([^/]+)$");
+	greet_short_file_name = ivr_menu_greet_short:match("([^/]+)$");
+	invalid_sound_file_name = ivr_menu_invalid_sound:match("([^/]+)$");
+	exit_sound_file_name = ivr_menu_exit_sound:match("([^/]+)$");
+
+--prevent nil concatenation errors
+	if (greet_long_file_name == nil) then greet_long_file_name = ""; end
+	if (greet_short_file_name == nil) then greet_short_file_name = ""; end
+	if (invalid_sound_file_name == nil) then invalid_sound_file_name = ""; end
+	if (exit_sound_file_name == nil) then exit_sound_file_name = ""; end
 
 --get the recordings from the database
 	ivr_menu_greet_long_is_base64 = false;
@@ -203,10 +209,10 @@
 	if (storage_type == "base64") then
 		--greet long
 			if (string.len(ivr_menu_greet_long) > 1) then
-				if (not file_exists(recordings_dir.."/"..greet_long_file_name_only)) then
+				if (not file_exists(recordings_dir.."/"..greet_long_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..greet_long_file_name_only..[[' ]];
+						AND recording_filename = ']]..greet_long_file_name..[[' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 					end
@@ -214,7 +220,7 @@
 						--add functions
 							dofile(scripts_dir.."/resources/functions/base64.lua");
 						--add the path to filename
-							ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name_only;
+							ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
 							ivr_menu_greet_long_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -227,10 +233,10 @@
 			end
 		--greet short
 			if (string.len(ivr_menu_greet_short) > 1) then
-				if (not file_exists(recordings_dir.."/"..greet_short_file_name_only)) then
+				if (not file_exists(recordings_dir.."/"..greet_short_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..greet_short_file_name_only..[[' ]];
+						AND recording_filename = ']]..greet_short_file_name..[[' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 					end
@@ -238,7 +244,7 @@
 						--add functions
 							dofile(scripts_dir.."/resources/functions/base64.lua");
 						--add the path to filename
-							ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name_only;
+							ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
 							ivr_menu_greet_short_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -251,10 +257,10 @@
 			end
 		--invalid sound
 			if (string.len(ivr_menu_invalid_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..invalid_sound_file_name_only)) then
+				if (not file_exists(recordings_dir.."/"..invalid_sound_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..invalid_sound_file_name_only..[[' ]];
+						AND recording_filename = ']]..invalid_sound_file_name..[[' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 					end
@@ -262,7 +268,7 @@
 						--add functions
 							dofile(scripts_dir.."/resources/functions/base64.lua");
 						--add the path to filename
-							ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name_only;
+							ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
 							ivr_menu_invalid_sound_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -275,10 +281,10 @@
 			end
 		--exit sound
 			if (string.len(ivr_menu_exit_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..exit_sound_file_name_only)) then
+				if (not file_exists(recordings_dir.."/"..exit_sound_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..exit_sound_file_name_only..[[' ]];
+						AND recording_filename = ']]..exit_sound_file_name..[[' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 					end
@@ -286,7 +292,7 @@
 						--add functions
 							dofile(scripts_dir.."/resources/functions/base64.lua");
 						--add the path to filename
-							ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name_only;
+							ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
 							ivr_menu_exit_sound_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -308,19 +314,19 @@
 --adjust file paths
 	--greet long
 		if (not file_exists(ivr_menu_greet_long)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name_only)) then
-				ivr_menu_greet_long = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name_only;
-			elseif (file_exists(recordings_dir.."/"..greet_long_file_name_only)) then
-				ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name_only;
+			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name)) then
+				ivr_menu_greet_long = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name;
+			elseif (file_exists(recordings_dir.."/"..greet_long_file_name)) then
+				ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
 			end
 		end
 	--greet short
 		if (string.len(ivr_menu_greet_short) > 1) then
 			if (not file_exists(ivr_menu_greet_short)) then
-				if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name_only)) then
-					ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name_only;
-				elseif (file_exists(recordings_dir.."/"..greet_short_file_name_only)) then
-					ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name_only;
+				if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name)) then
+					ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name;
+				elseif (file_exists(recordings_dir.."/"..greet_short_file_name)) then
+					ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
 				end
 			end
 		else
@@ -328,18 +334,18 @@
 		end
 	--invalid sound
 		if (not file_exists(ivr_menu_invalid_sound)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name_only)) then
-				ivr_menu_invalid_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name_only;
-			elseif (file_exists(recordings_dir.."/"..invalid_sound_file_name_only)) then
-				ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name_only;
+			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name)) then
+				ivr_menu_invalid_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name;
+			elseif (file_exists(recordings_dir.."/"..invalid_sound_file_name)) then
+				ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
 			end
 		end
 	--exit sound
 		if (not file_exists(ivr_menu_exit_sound)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name_only)) then
-				ivr_menu_exit_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name_only;
-			elseif (file_exists(recordings_dir.."/"..exit_sound_file_name_only)) then
-				ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name_only;
+			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name)) then
+				ivr_menu_exit_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name;
+			elseif (file_exists(recordings_dir.."/"..exit_sound_file_name)) then
+				ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
 			end
 		end
 
