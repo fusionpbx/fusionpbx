@@ -95,7 +95,6 @@
 
 --if base64, get from db, create temp file
 	if (storage_type == "base64") then
-		freeswitch.consoleLog("notice", "detected base64.\n");
 		if (not file_exists(recordings_dir.."/"..file_name_only)) then
 			sql = [[SELECT * FROM v_recordings 
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -122,12 +121,9 @@
 
 --adjust file path
 	if (not file_exists(file_name)) then 
-		freeswitch.consoleLog("notice", "file " .. file_name .. " doesn't exist.\n");
 		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only)) then
-			freeswitch.consoleLog("notice", "file " .. file_name_only .. " found in sounds.\n");
 			file_name = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only;
 		elseif (file_exists(recordings_dir.."/"..file_name_only)) then
-			freeswitch.consoleLog("notice", "file " .. file_name_only .. " found in recordings.\n");
 			file_name = recordings_dir.."/"..file_name_only;
 		end
 	end
