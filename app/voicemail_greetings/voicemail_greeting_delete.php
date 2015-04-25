@@ -38,31 +38,31 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
+if (count($_GET) > 0) {
+	$voicemail_greeting_uuid = check_str($_GET["id"]);
 	$voicemail_id = check_str($_GET["voicemail_id"]);
 }
 
-if (strlen($id)>0) {
+if (strlen($voicemail_greeting_uuid) > 0) {
 	//get the greeting filename
-		$sql = "select * from v_voicemail_greetings ";
-		$sql .= "where voicemail_greeting_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$sql .= "and voicemail_id = '$voicemail_id' ";
+		$sql = "select greeting_filename from v_voicemail_greetings ";
+		$sql .= "where voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
+		$sql .= "and domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and voicemail_id = '".$voicemail_id."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$greeting_name = $row["greeting_name"];
+			$greeting_filename = $row["greeting_filename"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 
 	//delete recording from the database
 		$sql = "delete from v_voicemail_greetings ";
-		$sql .= "where voicemail_greeting_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$sql .= "and voicemail_id = '$voicemail_id' ";
+		$sql .= "where voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
+		$sql .= "and domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and voicemail_id = '".$voicemail_id."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
@@ -71,7 +71,9 @@ if (strlen($id)>0) {
 		$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 	//delete the recording file
-		unlink($v_greeting_dir."/".$greeting_name);
+		if (file_exists($v_greeting_dir."/".$greeting_filename)) {
+			@unlink($v_greeting_dir."/".$greeting_filename);
+		}
 }
 
 //redirect the user

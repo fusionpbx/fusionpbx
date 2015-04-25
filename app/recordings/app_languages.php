@@ -140,12 +140,12 @@ $text['header']['fr-fr'] = "Télécharger Enregistrement";
 $text['header']['pt-br'] = "Carregadr gravações";
 $text['header']['pl'] = "Wyślij nagranie";
 
-$text['description-recording']['en-us'] = "Recording Name. example: recording_x";
-$text['description-recording']['es-cl'] = "Nombre de la grabación. ejemplo: grabacion_x";
-$text['description-recording']['pt-pt'] = "Nome da gravação. exemplo: recording_x";
-$text['description-recording']['fr-fr'] = "Nom de l'enregistrement. exemple: enregistrement_x";
-$text['description-recording']['pt-br'] = "Nome da gravação: exemplo: recording_x";
-$text['description-recording']['pl'] = "Nazwa nagrania, przykład: nagranie_x";
+$text['description-recording']['en-us'] = "A name for the recording (not parsed).";
+$text['description-recording']['es-cl'] = "Nombre de la grabación.";
+$text['description-recording']['pt-pt'] = "Nome da gravação.";
+$text['description-recording']['fr-fr'] = "Nom de l'enregistrement (non parsé).";
+$text['description-recording']['pt-br'] = "Nome da gravação:";
+$text['description-recording']['pl'] = "Nazwa nagrania.";
 
 $text['description-file']['en-us'] = "Name of the file. example.wav";
 $text['description-file']['es-cl'] = "Nombre del archivo. ejemplo.wav";
@@ -161,12 +161,12 @@ $text['description-description']['fr-fr'] = "Vous pouvez entrer ici une descript
 $text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
 $text['description-description']['pl'] = "Tutaj możesz wpisać opis w celach informacyjnych.";
 
-$text['description']['en-us'] = "To make a recording dial *732 or you can make a 16bit 8khz/16khz Mono WAV file then copy it to the following directory then refresh the page to play it back. Click on the \'Filename\' to download it or the \'Recording Name\' to play the audio.";
-$text['description']['es-cl'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo. Click en el 'Nombre de archivo' para descargarlo o el 'Nombre de grabación' para reproducirlo.";
-$text['description']['pt-pt'] = "Para fazer uma gravação marque *732 ou crie um ficheiro WAV de 16bit 8khz/16khz e copie-o para a seguinte directoria e actualize a página para o ouvir. Clique em \'Filename\' para descarregá-lo ou em \'Recording Name\' para ouvir o áudio.";
+$text['description']['en-us'] = "Dial *732 to create a recording, or (for best results) upload a 16bit 8khz/16khz mono WAV file.";
+$text['description']['es-cl'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo.";
+$text['description']['pt-pt'] = "Para fazer uma gravação marque *732 ou crie um ficheiro WAV de 16bit 8khz/16khz e copie-o para a seguinte directoria e actualize a página para o ouvir.";
 $text['description']['fr-fr'] = "Pour créer un guide vocal, composer le *732 ou créer un fichier audio WAV 16bit 8khz/16khz Mono et ensuite le copier dans le répertoire qui suit. Rafraîchir ensuite cette page pour le voir apparaitre.";
 $text['description']['pt-br'] = "Editar informações da conta.";
-$text['description']['pl'] = "Aby stworzyć nagranie wybierz *732 z klawiatury telefonu lub stwórz plik audio w formacie  WAV o następujących parametrach: 16bit 8khz/16khz Mono, a następnie skopiuj go do odpowiedniego  katalogu i odśwież, aby go odsłuchać. Kliknij na \’Filename\’, aby pobrać plik lub na \’Recording Name\’, aby odsłuchać.";
+$text['description']['pl'] = "Aby stworzyć nagranie wybierz *732 z klawiatury telefonu lub stwórz plik audio w formacie  WAV o następujących parametrach: 16bit 8khz/16khz Mono, a następnie skopiuj go do odpowiedniego  katalogu i odśwież, aby go odsłuchać.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";

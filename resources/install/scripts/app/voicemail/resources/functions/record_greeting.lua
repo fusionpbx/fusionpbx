@@ -24,16 +24,18 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --define a function to record the greeting
-	function record_greeting()
+	function record_greeting(greeting_id)
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 
-		--Choose a greeting between 1 and 9
-			if (session:ready()) then
-				dtmf_digits = '';
-				greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
-				freeswitch.consoleLog("notice", "[voicemail] greeting_id: " .. greeting_id .. "\n");
+		--choose a greeting between 1 and 9
+			if (greeting_id == nil) then
+				if (session:ready()) then
+					dtmf_digits = '';
+					greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+					freeswitch.consoleLog("notice", "[voicemail] greeting_id: " .. greeting_id .. "\n");
+				end
 			end
 
 		--validate the greeting_id
@@ -53,7 +55,11 @@
 					end
 
 				--store the voicemail greeting
-					if (storage_type == "base64") then
+					if (storage_type == "http_cache") then
+						freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
+						storage_path = storage_path:gsub("${domain_name}", domain_name);
+						session:execute("record", storage_path .."/"..recording_name);
+					else 
 						--prepare to record the greeting
 							if (session:ready()) then
 								max_len_seconds = 30;
@@ -61,96 +67,10 @@
 								silence_seconds = 5;
 								mkdir(voicemail_dir.."/"..voicemail_id);
 								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-								result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
+								result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", max_len_seconds, silence_threshold, silence_seconds);
 								--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 							end
-
-						--include the base64 function
-							dofile(scripts_dir.."/resources/functions/base64.lua");
-
-						--show the storage type
-							--freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
-
-						--base64 encode the file
-							local f = io.open(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "rb");
-							local file_content = f:read("*all");
-							f:close();
-							greeting_base64 = base64.encode(file_content);
-
-						--delete the previous recording
-							sql = "delete from v_voicemail_greetings ";
-							sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-							sql = sql .. "and voicemail_id = '".. voicemail_id .."'";
-							sql = sql .. "and greeting_id = '".. greeting_id .."'";
-							dbh:query(sql);
-
-						--get a new uuid
-							voicemail_greeting_uuid = api:execute("create_uuid");
-
-						--save the message to the voicemail messages
-							local array = {}
-							table.insert(array, "INSERT INTO v_voicemail_greetings ");
-							table.insert(array, "(");
-							table.insert(array, "voicemail_greeting_uuid, ");
-							table.insert(array, "domain_uuid, ");
-							table.insert(array, "voicemail_id, ");
-							table.insert(array, "greeting_id, ");
-							if (storage_type == "base64") then
-								table.insert(array, "greeting_base64, ");
-							end
-							table.insert(array, "greeting_name ");
-							table.insert(array, ") ");
-							table.insert(array, "VALUES ");
-							table.insert(array, "( ");
-							table.insert(array, "'"..voicemail_greeting_uuid.."', ");
-							table.insert(array, "'"..domain_uuid.."', ");
-							table.insert(array, "'"..voicemail_id.."', ");
-							table.insert(array, "'"..greeting_id.."', ");
-							if (storage_type == "base64") then
-								table.insert(array, "'"..greeting_base64.."', ");
-							end
-							table.insert(array, "'greeting_"..greeting_id..".wav' ");
-							table.insert(array, ") ");
-							sql = table.concat(array, "\n");
-							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-							end
-							if (storage_type == "base64") then
-								array = explode("://", database["system"]);
-								local luasql = require "luasql.postgres";
-								local env = assert (luasql.postgres());
-								local db = env:connect(array[2]);
-								res, serr = db:execute(sql);
-								db:close();
-								env:close();
-							else
-								dbh:query(sql);
-							end
-					elseif (storage_type == "http_cache") then
-						freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
-						storage_path = storage_path:gsub("${domain_name}", domain_name);
-						session:execute("record", storage_path .."/"..recording_name);
-					else
-						--prepare to record the greeting
-						if (session:ready()) then
-							max_len_seconds = 30;
-							silence_threshold = 30;
-							silence_seconds = 5;
-							mkdir(voicemail_dir.."/"..voicemail_id);
-							-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
-							--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
-						end
 					end
-
-				--use the new greeting
-					local array = {}
-					table.insert(array, "update v_voicemails ");
-					table.insert(array, "set greeting_id = '".. greeting_id .."' ");
-					table.insert(array, "where domain_uuid = '".. domain_uuid .."' ");
-					table.insert(array, "and voicemail_id = '".. voicemail_id .."' ");
-					sql = table.concat(array, "\n");
-					dbh:query(sql);
 
 				--play the greeting
 					--if (session:ready()) then
@@ -162,11 +82,7 @@
 				--option to play, save, and re-record the greeting
 					if (session:ready()) then
 						timeouts = 0;
-						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-						if (storage_type == "base64") then
-							--delete the greeting
-							os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-						end
+						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", greeting_id);
 					end
 			else
 				--invalid greeting_id
@@ -186,4 +102,12 @@
 						end
 					end
 			end
+			
+		--clean up any tmp greeting files
+			for gid = 1, 9, 1 do
+				if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..gid..".tmp.wav")) then
+					os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..gid..".tmp.wav");
+				end
+			end
+			
 	end

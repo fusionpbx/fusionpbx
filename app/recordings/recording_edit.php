@@ -39,42 +39,32 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//set the action as an add or an update
+//get recording id
 	if (isset($_REQUEST["id"])) {
-		$action = "update";
 		$recording_uuid = check_str($_REQUEST["id"]);
-	}
-	else {
-		$action = "add";
 	}
 
 //get the form value and set to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$recording_filename = check_str($_POST["recording_filename"]);
+		$recording_filename_original = check_str($_POST["recording_filename_original"]);
 		$recording_name = check_str($_POST["recording_name"]);
-		//$recording_uuid = check_str($_POST["recording_uuid"]);
 		$recording_description = check_str($_POST["recording_description"]);
 
 		//clean the recording filename and name
 		$recording_filename = str_replace(" ", "_", $recording_filename);
 		$recording_filename = str_replace("'", "", $recording_filename);
-		$recording_name = str_replace(" ", "_", $recording_name);
 		$recording_name = str_replace("'", "", $recording_name);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
-
-	$msg = '';
-	if ($action == "update") {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+	//get recording uuid to edit
 		$recording_uuid = check_str($_POST["recording_uuid"]);
-	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
+		$msg = '';
 		if (strlen($recording_filename) == 0) { $msg .= $text['label-edit-file']."<br>\n"; }
 		if (strlen($recording_name) == 0) { $msg .= $text['label-edit-recording']."<br>\n"; }
-		//if (strlen($recording_uuid) == 0) { $msg .= "Please provide: recording_uuid<br>\n"; }
-		//if (strlen($recording_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -88,72 +78,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//add or update the database
+	//update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('recording_add')) {
-			$recording_uuid = uuid();
-			$sql = "insert into v_recordings ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "recording_uuid, ";
-			$sql .= "recording_filename, ";
-			$sql .= "recording_name, ";
-			$sql .= "recording_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$recording_uuid', ";
-			$sql .= "'$recording_filename', ";
-			$sql .= "'$recording_name', ";
-			$sql .= "'$recording_description' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: recordings.php");
-			return;
-		} //if ($action == "add")
-
-		if ($action == "update" && permission_exists('recording_edit')) {
-			//get the original filename
-				$sql = "select * from v_recordings ";
-				$sql .= "where recording_uuid = '$recording_uuid' ";
-				$sql .= "and domain_uuid = '$domain_uuid' ";
-				//echo "sql: ".$sql."<br />\n";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$recording_filename_orig = $row["recording_filename"];
-					break; //limit to 1 row
-				}
-				unset ($prep_statement);
-
+		if (permission_exists('recording_edit')) {
 			//if file name is not the same then rename the file
-				if ($recording_filename != $recording_filename_orig) {
-					//echo "orig: ".$_SESSION['switch']['recordings']['dir'].'/'.$recording_filename_orig."<br />\n";
-					//echo "new: ".$_SESSION['switch']['recordings']['dir'].'/'.$recording_filename."<br />\n";
-					rename($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename_orig, $_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
+				if ($recording_filename != $recording_filename_original) {
+					rename($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename_original, $_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
 				}
 
 			//update the database with the new data
 				$sql = "update v_recordings set ";
-				$sql .= "domain_uuid = '$domain_uuid', ";
-				$sql .= "recording_filename = '$recording_filename', ";
-				$sql .= "recording_name = '$recording_name', ";
-				//$sql .= "recording_uuid = '$recording_uuid', ";
-				$sql .= "recording_description = '$recording_description' ";
-				$sql .= "where domain_uuid = '$domain_uuid'";
-				$sql .= "and recording_uuid = '$recording_uuid'";
+				$sql .= "domain_uuid = '".$domain_uuid."', ";
+				$sql .= "recording_filename = '".$recording_filename."', ";
+				$sql .= "recording_name = '".$recording_name."', ";
+				$sql .= "recording_description = '".$recording_description."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."'";
+				$sql .= "and recording_uuid = '".$recording_uuid."'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
 			header("Location: recordings.php");
 			return;
-		} //if ($action == "update")
+		} //if (permission_exists('recording_edit')) {
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -161,16 +108,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$recording_uuid = $_GET["id"];
 		$sql = "select * from v_recordings ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and recording_uuid = '$recording_uuid' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and recording_uuid = '".$recording_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$domain_uuid = $row["domain_uuid"];
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
-			//$recording_uuid = $row["recording_uuid"];
 			$recording_description = $row["recording_description"];
 			break; //limit to 1 row
 		}
@@ -178,30 +123,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the header
+	$document['title'] = $text['title-edit'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
+	echo "<table border='0' cellpadding='0' cellspacing='0' align='right'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-add']."</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-edit']."</b></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
+	echo "<td nowrap='nowrap'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='recordings.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
+
+	echo "<b>".$text['title-edit']."</b>\n";
+	echo "<br /><br />\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-recording_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_name' maxlength='255' value=\"$recording_name\">\n";
 	echo "<br />\n";
 	echo $text['description-recording']."\n";
@@ -214,6 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"$recording_filename\">\n";
+	echo "    <input type='hidden' name='recording_filename_original' value=\"$recording_filename\">\n";
 	echo "<br />\n";
 	echo $text['message-file']."\n";
 	echo "</td>\n";
@@ -231,9 +178,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='recording_uuid' value='$recording_uuid'>\n";
-	}
+	echo "			<input type='hidden' name='recording_uuid' value='".$recording_uuid."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -241,7 +186,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-
 
 //include the footer
 	require_once "resources/footer.php";
