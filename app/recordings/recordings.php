@@ -39,6 +39,12 @@ require_once "resources/check_auth.php";
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//define order by default
+	if ($order_by == '') {
+		$order_by = "recording_name";
+		$order = "asc";
+	}
+
 //download the recordings
 	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		session_cache_limiter('public');
@@ -99,13 +105,12 @@ require_once "resources/check_auth.php";
 
 //upload the recording
 	if (permission_exists('recording_upload')) {
-		if ($_POST['submit'] == "Upload" && $_POST['type'] == 'rec') {
-			if (is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
-				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
-				unset($_POST['txtCommand']);
+		if ($_POST['submit'] == $text['button-upload'] && $_POST['type'] == 'rec' && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
+			$recording_filename = str_replace(" ", "_", $_FILES['ulfile']['name']);
+			$recording_filename = str_replace("'", "", $recording_filename);
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
 
-				$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($_FILES['ulfile']['name']);
-			}
+			$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($recording_filename);
 			header("Location: recordings.php");
 			exit;
 		}
@@ -150,7 +155,7 @@ require_once "resources/check_auth.php";
 
 					if (!in_array($file, $array_recordings)) {
 						//file not found, add it to the database
-						$a_file = explode("\.", $file);
+						$a_file = explode('.', $file);
 						$recording_uuid = uuid();
 						$sql = "insert into v_recordings ";
 						$sql .= "(";
@@ -214,29 +219,23 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<b>".$text['title']."</b>";
-	echo "			<br /><br />\n";
-	echo "			".stripslashes($text['description'])."\n";
-	echo "			<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>";
-	echo "<br /><br />\n";
-
 	if (permission_exists('recording_upload')) {
-		echo "<b>".$text['header']."</b>";
-		echo "<br><br>";
-		echo "<form action='' method='post' enctype='multipart/form-data' name='frmUpload'>\n";
-		echo "<input name='type' type='hidden' value='rec'>\n";
-		echo "".$text['label-upload']."\n";
-		echo "<input name='ulfile' type='file' class='formfld fileinput' style='width: 260px;' id='ulfile'>\n";
-		echo "<input name='submit' type='submit'  class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
-		echo "</form>";
-		echo "<br><br>\n";
+		echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>\n";
+		echo "	<tr>\n";
+		echo "		<td nowrap='nowrap'>\n";
+		echo "			<form action='' method='post' enctype='multipart/form-data' name='frmUpload'>\n";
+		echo "			<input name='type' type='hidden' value='rec'>\n";
+		echo "			<input name='ulfile' type='file' class='formfld fileinput' style='width: 260px;' id='ulfile'>\n";
+		echo "			<input name='submit' type='submit'  class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
+		echo "			</form>";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "</table>";
 	}
+	echo "<b>".$text['title']."</b>";
+	echo "<br /><br />\n";
+	echo $text['description']."\n";
+	echo "<br /><br />\n";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -248,7 +247,7 @@ require_once "resources/check_auth.php";
 	unset ($prep_statement, $result, $sql);
 
 	$rows_per_page = 100;
-	$param = "";
+	$param = "&order_by=".$order_by."&order=".$order;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
@@ -256,7 +255,7 @@ require_once "resources/check_auth.php";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by." ".$order : "recording_name asc")." ";
+	$sql .= "order by ".$order_by." ".$order." ";
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -272,56 +271,53 @@ require_once "resources/check_auth.php";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
-	echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
-	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
 	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
 		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
 	}
+	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
+	//calculate colspan for progress bar
+	$colspan = 5; //max
+	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') { $colspan = $colspan - 2; }
+	if (!(permission_exists('recording_edit') || permission_exists('recording_delete'))) { $colspan = $colspan - 1; }
+
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename']);
-				$tmp_filesize = byte_convert($tmp_filesize);
-			}
-
 			//playback progress bar
-			echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='5'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
-
+			if (permission_exists('recording_play')) {
+				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+			}
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo 		$row['recording_name'];
-			echo 	"</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		\n";
-			echo $row['recording_filename'];
-			echo "	  </a>";
-			echo "	</td>\n";
-			if (strlen($row['recording_filename']) > 0) {
-				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
-				$recording_file_path = $row['recording_filename'];
-				$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
-				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
-				switch ($recording_file_ext) {
-					case "wav" : $recording_type = "audio/wav"; break;
-					case "mp3" : $recording_type = "audio/mpeg"; break;
-					case "ogg" : $recording_type = "audio/ogg"; break;
-				}
-				echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&id=".$row['recording_uuid']."\" type='".$recording_type."'></audio>";
-				echo "<span id='recording_button_".$row['recording_uuid']."' onclick=\"recording_play('".$row['recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&id=".$row['recording_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
-			}
-			else {
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				echo "&nbsp;";
-			}
-			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_name']."</td>\n";
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_filename']."</td>\n";
+				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$row['recording_filename']);
+				$tmp_filesize = byte_convert($tmp_filesize);
 				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+			}
+			if (permission_exists('recording_play') || permission_exists('recording_download')) {
+				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+				if (permission_exists('recording_play')) {
+					$recording_file_path = $row['recording_filename'];
+					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
+					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+					switch ($recording_file_ext) {
+						case "wav" : $recording_type = "audio/wav"; break;
+						case "mp3" : $recording_type = "audio/mpeg"; break;
+						case "ogg" : $recording_type = "audio/ogg"; break;
+					}
+					echo "<audio id='recording_audio_".$row['recording_uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['recording_uuid']."')\" onended=\"recording_reset('".$row['recording_uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&id=".$row['recording_uuid']."\" type='".$recording_type."'></audio>";
+					echo "<span id='recording_button_".$row['recording_uuid']."' onclick=\"recording_play('".$row['recording_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+				}
+				if (permission_exists('recording_download')) {
+					echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&id=".$row['recording_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+				}
+				echo "	</td>\n";
 			}
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -334,20 +330,14 @@ require_once "resources/check_auth.php";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = ($c) ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
 	echo "</table>\n";
+	echo "<br />\n";
 
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<br><br>\n";
 
 //include the footer

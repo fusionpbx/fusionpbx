@@ -185,7 +185,13 @@
 						message_waiting(id, domain_uuid);
 					--clear the variable
 						db_voicemail_uuid = '';
+				elseif (storage_type == "base64") then
+					--delete voicemail recording file
+						if (file_exists(file)) then
+							os.remove(file);
+						end
 				end
+				
 			end
 			
 	end

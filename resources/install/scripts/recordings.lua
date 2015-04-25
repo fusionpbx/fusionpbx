@@ -154,7 +154,7 @@
 		--delete the previous recording
 			sql = "delete from v_recordings ";
 			sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-			sql = sql .. "and recording_name = '".. recording_name .."'";
+			sql = sql .. "and recording_filename = '".. recording_name .."'";
 			dbh:query(sql);
 
 		--get a new uuid
