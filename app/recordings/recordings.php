@@ -111,8 +111,11 @@ require_once "resources/check_auth.php";
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
 
 			$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($recording_filename);
-			header("Location: recordings.php");
-			exit;
+
+			//set the file name to be inserted as the recording description
+				$recording_description = base64_encode($_FILES['ulfile']['name']);
+				header("Location: recordings.php?rd=".$recording_description);
+				exit;
 		}
 	}
 
@@ -150,13 +153,14 @@ require_once "resources/check_auth.php";
 //add recordings to the database
 	if (is_dir($_SESSION['switch']['recordings']['dir'].'/')) {
 		if ($dh = opendir($_SESSION['switch']['recordings']['dir'].'/')) {
-			while (($file = readdir($dh)) !== false) {
-				if (filetype($_SESSION['switch']['recordings']['dir']."/".$file) == "file") {
+			while (($recording_filename = readdir($dh)) !== false) {
+				if (filetype($_SESSION['switch']['recordings']['dir']."/".$recording_filename) == "file") {
 
-					if (!in_array($file, $array_recordings)) {
-						//file not found, add it to the database
-						$a_file = explode('.', $file);
+					if (!in_array($recording_filename, $array_recordings)) {
+						//file not found in db, add it
 						$recording_uuid = uuid();
+						$recording_name = ucwords(str_replace('_', ' ', pathinfo($recording_filename, PATHINFO_FILENAME)));
+						$recording_description = check_str(base64_decode($_GET['rd']));
 						$sql = "insert into v_recordings ";
 						$sql .= "(";
 						$sql .= "domain_uuid, ";
@@ -172,11 +176,11 @@ require_once "resources/check_auth.php";
 						$sql .= "(";
 						$sql .= "'".$domain_uuid."', ";
 						$sql .= "'".$recording_uuid."', ";
-						$sql .= "'".$file."', ";
-						$sql .= "'".$a_file[0]."', ";
-						$sql .= "'' ";
+						$sql .= "'".$recording_filename."', ";
+						$sql .= "'".$recording_name."', ";
+						$sql .= "'".$recording_description."' ";
 						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-							$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$file));
+							$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename));
 							$sql .= ", '".$recording_base64."' ";
 						}
 						$sql .= ")";
@@ -184,11 +188,11 @@ require_once "resources/check_auth.php";
 						unset($sql);
 					}
 					else {
-						//file found, check if base64 present
+						//file found in db, check if base64 present
 						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-							$found_recording_uuid = array_search($file, $array_recordings);
+							$found_recording_uuid = array_search($recording_filename, $array_recordings);
 							if (!$array_base64_exists[$found_recording_uuid]) {
-								$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$file));
+								$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename));
 								$sql = "update v_recordings set ";
 								$sql .= "recording_base64 = '".$recording_base64."' ";
 								$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -200,8 +204,8 @@ require_once "resources/check_auth.php";
 					}
 
 					//if base64, remove local file
-					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$file)) {
-						@unlink($_SESSION['switch']['recordings']['dir'].'/'.$file);
+					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename)) {
+						@unlink($_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
 					}
 
 				}
