@@ -41,9 +41,10 @@ require_once "resources/check_auth.php";
 	$language = new text;
 	$text = $language->get();
 
-//request profile
+//get the HTTP values asn set as variables
 	$sip_profile_name = trim($_REQUEST["profile"]);
 	$show = trim($_REQUEST["show"]);
+	if ($show != "all") { $show = ''; }
 
 //define variables
 	$c = 0;
