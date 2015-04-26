@@ -369,9 +369,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' class='formfld' onchange=\"if (this.selectedIndex == 2) { changeToInput(getElementById('phrase_detail_data')); }\">\n";
-	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
+	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+		echo "			<option value='execute'>".$text['label-play']."</option>\n";
+	}
+	else {
+		echo "			<option value='play-file'>".$text['label-play']."</option>\n";
+	}
 	if (if_group("superadmin")) {
-		echo "		<option value='execute'>".$text['label-execute']."</option>\n";
+		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
@@ -379,49 +384,42 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "			<option value=''></option>\n";
 	//recordings
-		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
-			$tmp_selected = false;
-			$files = Array();
-			echo "	<optgroup label='Recordings'>\n";
-			while($file = readdir($dh)) {
-				if($file != "." && $file != ".." && $file[0] != '.') {
-					if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
-						//this is a directory
-					}
-					else {
-						if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_short) > 0) {
-							$tmp_selected = true;
-							echo "<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
-						}
-						else {
-							echo "<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
-						}
-					}
+		$sql = "select * from v_recordings ";
+		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+		$sql .= "order by recording_name asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$tmp_selected = false;
+		if (count($recordings) > 0) {
+			echo "<optgroup label='Recordings'>\n";
+			foreach ($recordings as &$row) {
+				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+					echo "	<option value='lua(streamfile.lua ".$row["recording_filename"].")'>".$row["recording_name"]."</option>\n";
+				}
+				else {
+					echo "	<option value='".$row["recording_filename"]."'>".$row["recording_name"]."</option>\n";
 				}
 			}
-			closedir($dh);
-			echo "	</optgroup>\n";
+			echo "</optgroup>\n";
 		}
+		unset($sql, $prep_statement, $recordings);
 	//sounds
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 		if (count($dir_array) > 0) {
-			echo "		<optgroup label='Sounds'>\n";
+			echo "<optgroup label='Sounds'>\n";
 			foreach ($dir_array as $key => $value) {
 				if (strlen($value) > 0) {
-					if (substr($ivr_menu_greet_long, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-						$ivr_menu_greet_long = substr($ivr_menu_greet_long, 71);
-					}
-					if ($ivr_menu_greet_long == $key) {
-						$tmp_selected = true;
-						echo "<option value='$key' selected='selected'>$key</option>\n";
+					if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+						echo "	<option value='lua(streamfile.lua ".$key.")'>".$key."</option>\n";
 					}
 					else {
-						echo "<option value='$key'>$key</option>\n";
+						echo "	<option value='".$key."'>".$key."</option>\n";
 					}
 				}
 			}
-			echo "		</optgroup>\n";
+			echo "</optgroup>\n";
 		}
 	echo "		</select>\n";
 	echo "	</td>\n";
