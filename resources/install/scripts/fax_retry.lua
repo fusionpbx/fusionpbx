@@ -59,6 +59,27 @@
 		return c;
 	end
 
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+	storage_type = "";
+	storage_path = "";
+	if (settings['fax'] ~= nil) then
+		if (settings['fax']['storage_type'] ~= nil) then
+			if (settings['fax']['storage_type']['text'] ~= nil) then
+				storage_type = settings['fax']['storage_type']['text'];
+			end
+		end
+		if (settings['fax']['storage_path'] ~= nil) then
+			if (settings['fax']['storage_path']['text'] ~= nil) then
+				storage_path = settings['fax']['storage_path']['text'];
+				storage_path = storage_path:gsub("${domain_name}", domain_name);
+				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+			end
+		end
+	end
+
 -- show all channel variables
 	--dat = env:serialize()
 	--freeswitch.consoleLog("INFO","info:\n" .. dat .. "\n")
@@ -93,7 +114,7 @@
 	fax_bad_rows = env:getHeader("fax_bad_rows");
 	fax_transfer_rate = env:getHeader("fax_transfer_rate");
 	accountcode = env:getHeader("accountcode");
-
+	sip_to_user = env:getHeader("sip_to_user");
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
@@ -110,7 +131,7 @@
 	if (not fax_busy_attempts) then
 		fax_busy_attempts = 0;
 	end
-	--we got a busy signal....  hack we should really check sip_term_cause
+	--we got a busy signal.... may want to check the sip_term_cause
 	if (not fax_success) then
 		fax_success = "0";
 		fax_result_code = 2;
@@ -276,13 +297,88 @@
 	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
+--add the fax files
+	if (fax_success ~= nil) then
+		if (fax_success =="1") then
+			if (storage_type == "base64") then
+				--include the base64 function
+					dofile(scripts_dir.."/resources/functions/base64.lua");
+	
+				--base64 encode the file
+					local f = io.open(fax_file, "rb");
+					local file_content = f:read("*all");
+					f:close();
+					fax_base64 = base64.encode(file_content);
+			end
+
+			local sql = {}
+			table.insert(sql, "insert into v_fax_files ");
+			table.insert(sql, "(");
+			table.insert(sql, "fax_file_uuid, ");
+			table.insert(sql, "fax_uuid, ");
+			table.insert(sql, "fax_mode, ");
+			if (sip_to_user ~= nil) then
+				table.insert(sql, "fax_destination, ");
+			end
+			table.insert(sql, "fax_file_type, ");
+			table.insert(sql, "fax_file_path, ");
+			table.insert(sql, "fax_caller_id_name, ");
+			table.insert(sql, "fax_caller_id_number, ");
+			table.insert(sql, "fax_date, ");
+			table.insert(sql, "fax_epoch, ");
+			if (storage_type == "base64") then
+				table.insert(sql, "fax_base64, ");
+			end
+			table.insert(sql, "domain_uuid");
+			table.insert(sql, ") ");
+			table.insert(sql, "values ");
+			table.insert(sql, "(");
+			table.insert(sql, "'" .. uuid .. "', ");
+			table.insert(sql, "'" .. fax_uuid .. "', ");
+			table.insert(sql, "'tx', ");
+			if (sip_to_user ~= nil) then
+				table.insert(sql, "'" .. sip_to_user .. "', ");
+			end
+			table.insert(sql, "'tif', ");
+			table.insert(sql, "'" .. fax_file .. "', ");
+			table.insert(sql, "'" .. origination_caller_id_name .. "', ");
+			table.insert(sql, "'" .. origination_caller_id_number .. "', ");
+			if (database["type"] == "sqlite") then
+				table.insert(sql, "'"..os.date("%Y-%m-%d %X").."', ");
+			else
+				table.insert(sql, "now(), ");
+			end
+			table.insert(sql, "'" .. os.time() .. "', ");
+			if (storage_type == "base64") then
+				table.insert(sql, "'" .. fax_base64 .. "', ");
+			end
+			table.insert(sql, "'" .. domain_uuid .. "'");
+			table.insert(sql, ")");
+			sql = table.concat(sql, "\n");
+			--if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+			--end
+			if (storage_type == "base64") then
+				array = explode("://", database["system"]);
+				local luasql = require "luasql.postgres";
+				local env = assert (luasql.postgres());
+				local dbh = env:connect(array[2]);
+				res, serr = dbh:execute(sql);
+				dbh:close();
+				env:close();
+			else
+				result = dbh:query(sql);
+			end
+		end
+	end
+
+
 -- send the selected variables to the console
 	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
 	end
 	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
 	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
-	freeswitch.consoleLog("INFO","fax_file: \"" .. fax_file .. "\"\n");
 	freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
 	--freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
 	freeswitch.consoleLog("INFO","fax_retry_attempts: " .. fax_retry_attempts.. "\n");
@@ -436,9 +532,9 @@
 		email_address = email_address:gsub("\\,", ",");
 
 		freeswitch.email("",
-							"",
-							"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
-							email_message_success ,
-							fax_file
-						);
+				"",
+				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
+				email_message_success ,
+				fax_file
+			);
 	end
