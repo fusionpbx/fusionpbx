@@ -303,7 +303,7 @@
 			if (storage_type == "base64") then
 				--include the base64 function
 					dofile(scripts_dir.."/resources/functions/base64.lua");
-	
+
 				--base64 encode the file
 					local f = io.open(fax_file, "rb");
 					local file_content = f:read("*all");
@@ -372,7 +372,6 @@
 		end
 	end
 
-
 -- send the selected variables to the console
 	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
@@ -400,7 +399,6 @@
 
 --to keep the originate command shorter these are things we always send. One place to adjust for all.
 	originate_same = "for_fax=1,absolute_codec_string='PCMU,PCMA',accountcode='"..accountcode.."',mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
-
 
 		if (fax_retry_attempts < fax_retry_limit) then 
 
