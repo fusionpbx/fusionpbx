@@ -112,7 +112,7 @@ if ($domains_processed == 1) {
 				}
 				$fout = fopen($config,"w");
 				$tmp = "\n";
-				$tmp .= "--switch directories\n";
+				$tmp .= "--set the variables\n";
 				if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
 					$tmp .= "	sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
 				}
@@ -127,6 +127,13 @@ if ($domains_processed == 1) {
 				}
 				if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
 					$tmp .= "	voicemail_dir = \"".$_SESSION['switch']['voicemail']['dir']."\";\n";
+				}
+				$tmp .= "	php_dir = \"".PHP_BINDIR."\";\n";
+				if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
+					$tmp .= "	php_bin = \"php.exe\";\n";
+				}
+				else {
+					$tmp .= "	php_bin = \"php\";\n";
 				}
 				$tmp .= "\n";
 				$tmp .= "--database information\n";
