@@ -135,6 +135,7 @@ if ($domains_processed == 1) {
 				else {
 					$tmp .= "	php_bin = \"php\";\n";
 				}
+				$tmp .= "	document_root = \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."\";\n";
 				$tmp .= "\n";
 				$tmp .= "--database information\n";
 				$tmp .= "	database = {}\n";
