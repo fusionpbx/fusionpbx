@@ -60,7 +60,7 @@ if (defined('STDIN')) {
 		$domain_name = $_REQUEST["domain"];
 		$fax_email = $_REQUEST["email"];
 		$fax_extension = $_REQUEST["extension"];
-		$fax_name = $_REQUEST["name"];
+		$fax_file = $_REQUEST["name"];
 		$fax_messages = $_REQUEST["messages"];
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
@@ -77,7 +77,7 @@ if (defined('STDIN')) {
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][3]);
-		$fax_name = $tmp_array[1];
+		$fax_file = $tmp_array[1];
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][4]);
@@ -113,6 +113,10 @@ if (defined('STDIN')) {
 	echo "mailto_adress is ".$mailto_address."\n";
 	echo "fax_email is ".$fax_email."\n";
 
+//get the fax name from the full path and file name also works with the file name only.
+	$array = explode("/", $fax_file);
+	$fax_name = $array[count($array)-1];
+	unset($array);
 
 //used for debug
 	echo "fax_email $fax_email\n";
