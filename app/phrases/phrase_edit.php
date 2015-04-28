@@ -477,7 +477,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<td class='vtable'>".$phrase_detail_data."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align: left;'>";
-			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".$phrase_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".$phrase_uuid."&a=delete&lang=".$phrase_language."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}

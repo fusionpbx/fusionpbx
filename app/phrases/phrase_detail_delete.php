@@ -43,6 +43,7 @@ else {
 //get values
 	$phrase_detail_uuid = check_str($_GET["pdid"]);
 	$phrase_uuid = check_str($_GET["pid"]);
+	$phrase_language = check_str($_GET["lang"]);
 
 //delete the detail entry
 	if ($phrase_detail_uuid != '' && $phrase_uuid != '') {
