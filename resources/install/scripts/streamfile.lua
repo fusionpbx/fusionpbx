@@ -134,7 +134,7 @@
 		session:answer();
 		slept = session:getVariable("slept");
 		if (slept == nil or slept == "false") then 
-			freeswitch.consoleLog("notice", "[ivr_menu] sleeping....\n");
+			freeswitch.consoleLog("notice", "[ivr_menu] sleeping (1s)\n");
 			session:sleep(1000);
 			if (slept == "false") then 
 				session:setVariable("slept", "true");
