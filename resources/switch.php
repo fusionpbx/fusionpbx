@@ -1001,7 +1001,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					foreach ($result as &$row) {
 						$recording_name = $row["recording_name"];
 						$recording_filename = $row["recording_filename"];
-						$path_mod = ($_SESSION['recordings']['storage_type']['text'] != 'base64') ? $_SESSION['switch']['recordings']['dir'] : null;
+						$path_mod = ($_SESSION['recordings']['storage_type']['text'] != 'base64') ? $_SESSION['switch']['recordings']['dir']."/" : null;
 						if ($select_type == "dialplan") {
 							$execute_method = 'lua:';
 						}

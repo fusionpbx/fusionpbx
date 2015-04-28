@@ -70,12 +70,27 @@ $text['label-structure']['fr-fr'] = "Structure";
 $text['label-structure']['pt-br'] = "Estrutura";
 $text['label-structure']['pl'] = "Struktura";
 
+$text['label-sounds']['en-us'] = "Sounds";
+$text['label-sounds']['es-cl'] = "Sonidos";
+$text['label-sounds']['pt-pt'] = "Sons";
+$text['label-sounds']['fr-fr'] = "Sons";
+$text['label-sounds']['pt-br'] = "Áudios";
+$text['label-sounds']['pl'] = "Dzwięki";
+$text['label-sounds']['sv-se'] = "Ljud";
+
 $text['label-say']['en-us'] = "Say";
 $text['label-say']['es-cl'] = "Decir";
 $text['label-say']['pt-pt'] = "Dizer";
 $text['label-say']['fr-fr'] = "Dire";
 $text['label-say']['pt-br'] = "Dizer";
 $text['label-say']['pl'] = "Powiedz";
+
+$text['label-recordings']['en-us'] = "Recordings";
+$text['label-recordings']['es-cl'] = "Grabaciones";
+$text['label-recordings']['pt-pt'] = "Gravações";
+$text['label-recordings']['fr-fr'] = "Guides Vocaux";
+$text['label-recordings']['pt-br'] = "Configurações da Conta";
+$text['label-recordings']['pl'] = "Ustawienia konta";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";

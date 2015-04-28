@@ -98,6 +98,56 @@ if ($domains_processed == 1) {
 			} //if
 		} //if
 
+	//if base64, convert existing incompatible phrases
+		if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+			$sql = "select phrase_detail_uuid, phrase_detail_data ";
+			$sql .= "from v_phrase_details where phrase_detail_function = 'play-file' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (count($result) > 0) {
+				foreach ($result as &$row) {
+					$phrase_detail_uuid = $row['phrase_detail_uuid'];
+					$phrase_detail_data = $row['phrase_detail_data'];
+					//update function and data to be base64 compatible
+						$phrase_detail_data = "lua(streamfile.lua ".$phrase_detail_data.")";
+						$sql = "update v_phrase_details set ";
+						$sql .= "phrase_detail_function = 'execute', ";
+						$sql .= "phrase_detail_data = '".$phrase_detail_data."' ";
+						$sql .= "where phrase_detail_uuid = '".$phrase_detail_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+				}
+			}
+			unset($sql, $prep_statement, $result, $row);
+		}
+	//if not base64, revert base64 phrases to standard method
+		else if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+			$sql = "select phrase_detail_uuid, phrase_detail_data ";
+			$sql .= "from v_phrase_details where ";
+			$sql .= "phrase_detail_function = 'execute' ";
+			$sql .= "and phrase_detail_data like 'lua(streamfile.lua %)' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (count($result) > 0) {
+				foreach ($result as &$row) {
+					$phrase_detail_uuid = $row['phrase_detail_uuid'];
+					$phrase_detail_data = $row['phrase_detail_data'];
+					//update function and data to use standard method
+						$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $phrase_detail_data);
+						$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
+						$sql = "update v_phrase_details set ";
+						$sql .= "phrase_detail_function = 'play-file', ";
+						$sql .= "phrase_detail_data = '".$phrase_detail_data."' ";
+						$sql .= "where phrase_detail_uuid = '".$phrase_detail_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+				}
+			}
+			unset($sql, $prep_statement, $result, $row);
+		}
+
 }
 
 ?>
