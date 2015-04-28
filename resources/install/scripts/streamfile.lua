@@ -67,6 +67,7 @@
 --define the on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
+			session:setVariable("dtmf_digits", obj['digit']);
 			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
 			if (obj['digit'] == "*") then
 				return("false"); --return to previous
@@ -131,7 +132,14 @@
 --stream file if exists
 	if (session:ready()) then
 		session:answer();
-		session:sleep(1000);
+		slept = session:getVariable("slept");
+		if (slept == nil or slept == "false") then 
+			freeswitch.consoleLog("notice", "[ivr_menu] sleeping....\n");
+			session:sleep(1000);
+			if (slept == "false") then 
+				session:setVariable("slept", "true");
+			end
+		end
 		session:setInputCallback("on_dtmf", "");
 		session:streamFile(file_name);
 	end
