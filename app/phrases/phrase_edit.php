@@ -138,14 +138,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "'".$phrase_detail_uuid."', ";
 						$sql .= "'".$phrase_uuid."', ";
 						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$_POST['phrase_detail_order']."', ";
-						$sql .= "'".$_POST['phrase_detail_tag']."', ";
-						$sql .= "'".$_POST['phrase_detail_pattern']."', ";
-						$sql .= "'".$_POST['phrase_detail_function']."', ";
-						$sql .= "'".$_POST['phrase_detail_data']."', ";
-						$sql .= "'".$_POST['phrase_detail_method']."', ";
-						$sql .= "'".$_POST['phrase_detail_type']."', ";
-						$sql .= "'".$_POST['phrase_detail_group']."' ";
+						$sql .= "'".check_str($_POST['phrase_detail_order'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_tag'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_pattern'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_data'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_method'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_type'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_group'])."' ";
 						$sql .= ") ";
 						//echo $sql."<br><br>";
 						$db->exec(check_sql($sql));
@@ -206,14 +206,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "'".$phrase_detail_uuid."', ";
 						$sql .= "'".$phrase_uuid."', ";
 						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$_POST['phrase_detail_order']."', ";
-						$sql .= "'".$_POST['phrase_detail_tag']."', ";
-						$sql .= "'".$_POST['phrase_detail_pattern']."', ";
-						$sql .= "'".$_POST['phrase_detail_function']."', ";
-						$sql .= "'".$_POST['phrase_detail_data']."', ";
-						$sql .= "'".$_POST['phrase_detail_method']."', ";
-						$sql .= "'".$_POST['phrase_detail_type']."', ";
-						$sql .= "'".$_POST['phrase_detail_group']."' ";
+						$sql .= "'".check_str($_POST['phrase_detail_order'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_tag'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_pattern'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_function'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_data'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_method'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_type'])."', ";
+						$sql .= "'".check_str($_POST['phrase_detail_group'])."' ";
 						$sql .= ") ";
 						//echo $sql."<br><br>";
 						$db->exec(check_sql($sql));
@@ -244,7 +244,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$phrase_uuid = $_GET["id"];
+		$phrase_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_phrases ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and phrase_uuid = '".$phrase_uuid."' ";
@@ -265,6 +265,136 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 	if ($action == 'add') { $document['title'] = $text['title-add_phrase']; }
 	if ($action == 'update') { $document['title'] = $text['title-edit_phrase']; }
+
+//js to control action form input
+	echo "<script type='text/javascript'>\n";
+
+	echo "function load_action_options(selected_index) {\n";
+	echo "	var obj_action = document.getElementById('phrase_detail_data');\n";
+	echo "	if (selected_index == 0 || selected_index == 1) {\n";
+	echo "		if (obj_action.type == 'text') {\n";
+	echo "			action_to_select();\n";
+	echo "			var obj_action = document.getElementById('phrase_detail_data');\n";
+	echo "			obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			clear_action_options();\n";
+	echo "		}\n";
+	echo "	}\n";
+	if (if_group("superadmin")) {
+		echo "	else {\n";
+		echo "		document.getElementById('phrase_detail_data_switch').style.display='none';\n";
+		echo "		obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
+		echo "	}\n";
+	}
+	echo "	if (selected_index == 0) {\n"; //play
+	echo "		obj_action.options[obj_action.options.length] = new Option('', '');\n"; //blank option
+	//recordings
+		$sql = "select * from v_recordings ";
+		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+		$sql .= "order by recording_name asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$tmp_selected = false;
+		if (count($recordings) > 0) {
+			echo "var opt_group = document.createElement('optgroup');\n";
+			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
+			foreach ($recordings as &$row) {
+				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"lua(streamfile.lua ".$row["recording_filename"].")\"));\n";
+				}
+				else {
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$row["recording_filename"]."\"));\n";
+				}
+			}
+			echo "obj_action.appendChild(opt_group);\n";
+		}
+		unset($sql, $prep_statement, $recordings);
+	//sounds
+		$dir_path = $_SESSION['switch']['sounds']['dir'];
+		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+		if (count($dir_array) > 0) {
+			echo "var opt_group = document.createElement('optgroup');\n";
+			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
+			foreach ($dir_array as $key => $value) {
+				if (strlen($value) > 0) {
+					if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+						echo "opt_group.appendChild(new Option(\"".$key."\", \"lua(streamfile.lua ".$key.")\"));\n";
+					}
+					else {
+						echo "opt_group.appendChild(new Option(\"".$key."\", \"".$key."\"));\n";
+					}
+				}
+			}
+			echo "obj_action.appendChild(opt_group);\n";
+		}
+	echo "	}\n";
+	echo "	else if (selected_index == 1) {\n"; //pause
+	echo "		obj_action.options[obj_action.options.length] = new Option('', '');\n"; //blank option
+	for ($s = 0.1; $s <= 5; $s = $s + 0.1) {
+		echo "	obj_action.options[obj_action.options.length] = new Option('".$s."s', 'sleep(".($s * 1000).")');\n";
+	}
+	echo "	}\n";
+	if (if_group("superadmin")) {
+		echo "	else if (selected_index == 2) {\n"; //execute
+		echo "		action_to_input();\n";
+		echo "	}\n";
+	}
+	echo "}\n";
+
+	echo "function clear_action_options() {\n";
+	echo "	var len, groups, par;\n";
+	echo "	sel = document.getElementById('phrase_detail_data');\n";
+	echo "	groups = sel.getElementsByTagName('optgroup');\n";
+	echo "	len = groups.length;\n";
+	echo "	for (var i=len; i; i--) {\n";
+	echo "		sel.removeChild( groups[i-1] );\n";
+	echo "	}\n";
+	echo "	len = sel.options.length;\n";
+	echo "	for (var i=len; i; i--) {\n";
+	echo "		par = sel.options[i-1].parentNode;\n";
+	echo "		par.removeChild( sel.options[i-1] );\n";
+	echo "	}\n";
+	echo "}\n";
+
+	if (if_group("superadmin")) {
+		echo "function action_to_input() {\n";
+		echo "	obj = document.getElementById('phrase_detail_data');\n";
+		echo "	tb = document.createElement('INPUT');\n";
+		echo "	tb.type = 'text';\n";
+		echo "	tb.name = obj.name;\n";
+		echo "	tb.id = obj.id;\n";
+		echo "	tb.value = obj.options[obj.selectedIndex].value;\n";
+		echo "	tb.className = 'formfld';\n";
+		echo "	tb_width = (document.getElementById('phrase_detail_function').selectedIndex == 2) ? '300px' : '267px';\n";
+		echo "	tb.setAttribute('style', 'width: '+tb_width+'; min-width: '+tb_width+'; max-width: '+tb_width+';');\n";
+		echo "	obj.parentNode.insertBefore(tb, obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "	if (document.getElementById('phrase_detail_function').selectedIndex != 2) {\n";
+		echo "		tb.setAttribute('style', 'width: 263px; min-width: 263px; max-width: 263px;');\n";
+		echo "		document.getElementById('phrase_detail_data_switch').style.display='';\n";
+		echo "	}\n";
+		echo "	else {\n";
+		echo "		tb.focus();\n";
+		echo "	}\n";
+		echo "}\n";
+
+		echo "function action_to_select() {\n";
+		echo "	obj = document.getElementById('phrase_detail_data');\n";
+		echo "	sb = document.createElement('SELECT');\n";
+		echo "	sb.name = obj.name;\n";
+		echo "	sb.id = obj.id;\n";
+		echo "	sb.className = 'formfld';\n";
+		echo "	sb.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
+		echo "	sb.setAttribute('onchange', 'action_to_input();');\n";
+		echo "	obj.parentNode.insertBefore(sb, obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "	document.getElementById('phrase_detail_data_switch').style.display='none';\n";
+		echo "	clear_action_options();\n";
+		echo "}\n";
+	}
+	echo "</script>\n";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
@@ -304,37 +434,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 280px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
-		echo "</script>\n";
-		echo "\n";
-	}
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
@@ -355,9 +454,27 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
 		foreach($result as $field) {
+			//clean up output for display
+			if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 19) == 'lua(streamfile.lua ') {
+					$phrase_detail_function = $text['label-play'];
+					$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $field['phrase_detail_data']);
+					$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
+				}
+			}
+			if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
+				$phrase_detail_function = $text['label-pause'];
+				$phrase_detail_data = str_replace('sleep(', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
+				$phrase_detail_data = ($phrase_detail_data / 1000).'s'; // seconds
+			}
+			if ($field['phrase_detail_function'] == 'play-file') {
+				$phrase_detail_function = $text['label-play'];
+				$phrase_detail_data = $field['phrase_detail_data'];
+			}
 			echo "<tr>\n";
-			echo "	<td class='vtable'>".$field['phrase_detail_function']."&nbsp;</td>\n";
-			echo "	<td class='vtable'>".$field['phrase_detail_data']."&nbsp;</td>\n";
+			echo "	<td class='vtable'>".$phrase_detail_function."&nbsp;</td>\n";
+			echo "	<td class='vtable'>".$phrase_detail_data."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align: left;'>";
 			echo 		"<a href='phrase_detail_delete.php?pdid=".$field['phrase_detail_uuid']."&pid=".$phrase_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
@@ -368,60 +485,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($sql, $result);
 	echo "<tr>\n";
 	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_function' class='formfld' onchange=\"if (this.selectedIndex == 2) { changeToInput(getElementById('phrase_detail_data')); }\">\n";
+	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-		echo "			<option value='execute'>".$text['label-play']."</option>\n";
+		echo "		<option value='execute'>".$text['label-play']."</option>\n";
 	}
 	else {
-		echo "			<option value='play-file'>".$text['label-play']."</option>\n";
+		echo "		<option value='play-file'>".$text['label-play']."</option>\n";
 	}
+	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
 	if (if_group("superadmin")) {
-		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
+		echo "		<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
-	echo "			<option value=''></option>\n";
-	//recordings
-		$sql = "select * from v_recordings ";
-		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-		$sql .= "order by recording_name asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		$tmp_selected = false;
-		if (count($recordings) > 0) {
-			echo "<optgroup label='Recordings'>\n";
-			foreach ($recordings as &$row) {
-				if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					echo "	<option value='lua(streamfile.lua ".$row["recording_filename"].")'>".$row["recording_name"]."</option>\n";
-				}
-				else {
-					echo "	<option value='".$row["recording_filename"]."'>".$row["recording_name"]."</option>\n";
-				}
-			}
-			echo "</optgroup>\n";
-		}
-		unset($sql, $prep_statement, $recordings);
-	//sounds
-		$dir_path = $_SESSION['switch']['sounds']['dir'];
-		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($dir_array) > 0) {
-			echo "<optgroup label='Sounds'>\n";
-			foreach ($dir_array as $key => $value) {
-				if (strlen($value) > 0) {
-					if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-						echo "	<option value='lua(streamfile.lua ".$key.")'>".$key."</option>\n";
-					}
-					else {
-						echo "	<option value='".$key."'>".$key."</option>\n";
-					}
-				}
-			}
-			echo "</optgroup>\n";
-		}
-	echo "		</select>\n";
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
+	if (if_group("superadmin")) {
+		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
+	}
+	echo "		<script>load_action_options(0);</script>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable'>\n";
 	echo "		<select name='phrase_detail_order' class='formfld'>\n";
