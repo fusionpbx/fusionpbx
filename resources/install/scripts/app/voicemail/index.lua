@@ -58,19 +58,6 @@
 
 --if the session exists
 	if (session ~= nil) then
-		--answer the session
-			if (session:ready()) then
-				session:answer();
-			end
-
-		--unset bind meta app
-			session:execute("unbind_meta_app", "");
-
-		--set the callback function
-			if (session:ready()) then
-				session:setVariable("playback_terminators", "#");
-				session:setInputCallback("on_dtmf", "");
-			end
 
 		--get session variables
 			context = session:getVariable("context");
@@ -189,6 +176,23 @@
 						end
 						if (voicemail_attach_file == nil) then
 							voicemail_attach_file = "true";
+						end
+						
+					--valid voicemail
+						if (voicemail_uuid ~= nil) then
+						--answer the session
+							if (session:ready()) then
+								session:answer();
+							end
+
+						--unset bind meta app
+							session:execute("unbind_meta_app", "");
+
+						--set the callback function
+							if (session:ready()) then
+								session:setVariable("playback_terminators", "#");
+								session:setInputCallback("on_dtmf", "");
+							end
 						end
 				end
 			end
@@ -467,6 +471,8 @@
 					if (referred_by) then
 						referred_by = referred_by:match('[%d]+');
 						session:transfer(referred_by, "XML", context);
+					else
+						session:hangup("NO_ANSWER");
 					end
 			end
 	end
