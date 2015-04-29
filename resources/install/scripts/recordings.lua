@@ -106,6 +106,7 @@
 			if (recording_slots) then
 				min_digits = 1;
 				max_digits = 20;
+				session:sleep(1000);
 				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
 				recording_name = recording_prefix..recording_number..".wav";
 			end
