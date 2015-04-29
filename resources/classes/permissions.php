@@ -35,13 +35,14 @@
 				 * Add a permission
 				 * @var string $permission
 				 */
-				public function add($permission) {
+				public function add($permission, $type = '') {
 					if (!$this->exists($permission)) {
 						//set the ordinal number
 							$i = count($_SESSION["permissions"])+1;
 
 						//set the permission
 							$_SESSION["permissions"][$i]["permission_name"] = $permission;
+							$_SESSION["permissions"][$i]["permission_type"] = "temp";
 					}
 				}
 
@@ -49,11 +50,20 @@
 				 * Remove the permission
 				 * @var string $permission
 				 */
-				public function delete($permission) {
+				public function delete($permission, $type = '') {
 					if ($this->exists($permission)) {
 						foreach($_SESSION["permissions"] as $key => $row) {
 							if ($row['permission_name'] == $permission) {
-								unset($_SESSION["permissions"][$key]);
+								if ($row['permission_name'] == $permission) {
+									if ($type == 'temp') {
+										if ($row['permission_type'] == "temp") {
+											unset($_SESSION["permissions"][$key]);
+										}
+									}
+									else {
+										unset($_SESSION["permissions"][$key]);
+									}
+								}
 								break;
 							}
 						}
