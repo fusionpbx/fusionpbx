@@ -375,7 +375,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					//add the dialplan permission
-						$permission = "dialplan_delete";
+						$permission = "dialplan_edit";
 						$p = new permissions;
 						$p->add($permission, 'temp');
 
@@ -400,16 +400,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				} //add or update the dialplan if the destination number is set
 				else {
-
 					//remove empty dialplan details from POST array so doesn't attempt to insert below
 					unset($_POST["dialplan_details"]);
-
 				}
 
 			//get the destination_uuid
 				if (strlen($dialplan_response['uuid']) > 0) {
 					$_POST["dialplan_uuid"] = $dialplan_response['uuid'];
 				}
+
+			//add the dialplan permission
+				$permission = "dialplan_edit";
+				$p = new permissions;
+				$p->add($permission, 'temp');
 
 			//save the destination
 				$orm = new orm;
@@ -420,6 +423,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$orm->save($_POST);
 				$message = $orm->message;
 				$destination_response = $orm->message;
+
+			//remove the temporary permission
+				$p->delete($permission, 'temp');
 
 			//get the destination_uuid
 				if (strlen($destination_response['uuid']) > 0) {
