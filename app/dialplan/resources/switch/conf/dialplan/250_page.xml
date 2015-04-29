@@ -5,6 +5,7 @@
 			<action application="set" data="caller_id_number=" />
 			<action application="set" data="pin_number=" />
 			<action application="set" data="extension_list=101-103,105" />
+			<action application="set" data="set api_hangup_hook=conference page-${destination_number} kick all" />
 			<action application="lua" data="page.lua" />
 		</condition>
 	</extension>
