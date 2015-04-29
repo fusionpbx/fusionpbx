@@ -33,7 +33,7 @@
 
 				/**
 				 * Add a permission
-				 * @var string $permission		the permission name
+				 * @var string $permission
 				 */
 				public function add($permission) {
 					if (!$this->exists($permission)) {
@@ -47,24 +47,22 @@
 
 				/**
 				 * Remove the permission
-				 * @var string $permission		the permission name
+				 * @var string $permission
 				 */
 				public function delete($permission) {
 					if (!$this->exists($permission)) {
-						$x = 0;
-						foreach($_SESSION["permissions"] as $row) {
+						foreach($_SESSION["permissions"] as $key => $row) {
 							if ($row['permission_name'] == $permission) {
-								unset($_SESSION["permissions"][$x]);
+								unset($_SESSION["permissions"][$key]);
 								break;
 							}
-							$x++;
 						}
 					}
 				}
 
 				/**
 				 * Check to see if the permission exists
-				 * @var string $permission		the permission name
+				 * @var string $permission
 				 */
 				function exists($permission) {
 					//set default false
