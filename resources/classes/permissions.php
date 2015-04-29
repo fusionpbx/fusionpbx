@@ -51,14 +51,13 @@
 				 */
 				public function delete($permission) {
 					if (!$this->exists($permission)) {
-						//$x = 0;
-						foreach($_SESSION["permissions"] as &$row) {
+						$x = 0;
+						foreach($_SESSION["permissions"] as $row) {
 							if ($row['permission_name'] == $permission) {
-								unset($row);
-								//unset($_SESSION["permissions"][$x]);
+								unset($_SESSION["permissions"][$x]);
 								break;
 							}
-							//$x++;
+							$x++;
 						}
 					}
 				}
