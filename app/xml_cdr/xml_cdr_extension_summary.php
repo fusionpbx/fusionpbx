@@ -138,11 +138,11 @@ require_once "resources/require.php";
 		switch ($quick_select) {
 			case 1: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; break; //last 7 days
 			case 2: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; break; //last hour
-			case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00.000' "; break; //today
-			case 4: $sql .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59.999' "; break; //yesterday
-			case 5: $sql .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00.000' "; break; //this week
-			case 6: $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00.000' "; break; //this month
-			case 7: $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00.000' "; break; //this year
+        case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' "; break; //today
+        case 4: $sql .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' "; break; //yesterday
+        case 5: $sql .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' "; break; //this week
+        case 6: $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' "; break; //this month
+        case 7: $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' "; break; //this year
 		}
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
