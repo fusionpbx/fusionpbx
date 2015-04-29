@@ -68,7 +68,6 @@ else {
 		//delete dialplan and details
 			$dialplans_deleted = 0;
 			foreach ($dialplan_uuids as $dialplan_uuid) {
-
 				//delete child data
 					$sql = "delete from v_dialplan_details ";
 					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";

@@ -92,10 +92,8 @@ require_once "resources/header.php";
 		$dialplan_name = str_replace(' ', '_', $dialplan_name);
 		$dialplan_name = str_replace('/', '', $dialplan_name);
 
-
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
-
 
 	//process main dialplan entry
 		if ($action == "add") {
@@ -453,6 +451,11 @@ require_once "resources/header.php";
 //get existing data to pre-populate form
 	if ($dialplan_uuid != '' && $_POST["persistformvar"] != "true") {
 
+		//add the dialplan permission
+			$permission = "dialplan_edit";
+			$p = new permissions;
+			$p->add($permission, 'temp');
+
 		//get main dialplan entry
 			$orm = new orm;
 			$orm->name('dialplans');
@@ -471,6 +474,9 @@ require_once "resources/header.php";
 				$dialplan_description = $row["dialplan_description"];
 			}
 			unset ($prep_statement);
+
+		//remove the temporary permission
+			$p->delete($permission, 'temp');
 
 		//get dialplan detail conditions
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data from v_dialplan_details ";
