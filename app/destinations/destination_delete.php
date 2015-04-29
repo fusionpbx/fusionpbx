@@ -49,6 +49,11 @@ else {
 		exit;
 	}
 
+//add the dialplan permission
+	$permission = "dialplan_delete";
+	$p = new permissions;
+	$p->add($permission, 'temp');
+
 //get the dialplan_uuid
 	$orm = new orm;
 	$orm->name('destinations');
@@ -62,6 +67,9 @@ else {
 		$destination_context = $row["destination_context"];
 	}
 	unset ($prep_statement);
+
+//remove the temporary permission
+	$p->delete($permission, 'temp');
 
 //start the atomic transaction
 	$db->beginTransaction();

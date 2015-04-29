@@ -374,6 +374,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							unset($sql);
 						}
 
+					//add the dialplan permission
+						$permission = "dialplan_delete";
+						$p = new permissions;
+						$p->add($permission, 'temp');
+
 					//save the dialplan
 						$orm = new orm;
 						$orm->name('dialplans');
@@ -382,6 +387,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						$orm->save($dialplan);
 						$dialplan_response = $orm->message;
+
+					//remove the temporary permission
+						$p->delete($permission, 'temp');
 
 					//synchronize the xml config
 						save_dialplan_xml();
