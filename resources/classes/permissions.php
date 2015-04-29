@@ -50,7 +50,7 @@
 				 * @var string $permission
 				 */
 				public function delete($permission) {
-					if (!$this->exists($permission)) {
+					if ($this->exists($permission)) {
 						foreach($_SESSION["permissions"] as $key => $row) {
 							if ($row['permission_name'] == $permission) {
 								unset($_SESSION["permissions"][$key]);
