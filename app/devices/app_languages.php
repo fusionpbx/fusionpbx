@@ -873,6 +873,15 @@ $text['label-dial_dtmf']['pl'] = "Wybierz ton DTMF";
 $text['label-dial_dtmf']['uk'] = "";
 $text['label-dial_dtmf']['sv-se'] = "Ring DTMF";
 
+$text['label-device']['en-us'] = "Device";
+$text['label-device']['es-cl'] = "Dispositivo";
+$text['label-device']['pt-pt'] = "Dispositivo";
+$text['label-device']['fr-fr'] = "Equipement";
+$text['label-device']['pt-br'] = "Dispositivo";
+$text['label-device']['pl'] = "Urządzenia";
+$text['label-device']['uk'] = "Пристрої";
+$text['label-device']['sv-se'] = "Enheter";
+
 $text['label-device_vendor']['en-us'] = "Vendor";
 $text['label-device_vendor']['es-cl'] = "Proveedor";
 $text['label-device_vendor']['pt-pt'] = "Fabricante";
