@@ -22,6 +22,7 @@
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
+ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -181,6 +182,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "and domain_uuid = '".$domain_uuid."' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
+
+					// update billing, if installed
+						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+							$sql = "update v_billings set ";
+							$sql .= "type_value = '".$domain_name."' ";
+							$sql .= "where type_value = '".$original_domain_name."' ";
+							$sql .= "and domain_uuid = '".$domain_uuid."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
 
 					// rename switch/storage/voicemail/default/[domain] (folder)
 						if ( isset($_SESSION['switch']['voicemail']['dir']) && file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$original_domain_name) ) {
