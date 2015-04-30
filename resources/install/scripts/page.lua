@@ -51,7 +51,7 @@ if ( session:ready() ) then
 		sounds_dir = session:getVariable("sounds_dir");
 		destinations = session:getVariable("destinations");
 		if (destinations == nil) then
-			destinations = session:getVariable("extension_list");
+			destinations = session:getVariable("extension_list");	
 		end
 		destination_table = explode(",",destinations);
 		caller_id_name = session:getVariable("caller_id_name");
@@ -129,7 +129,7 @@ if ( session:ready() ) then
 		sub_table = explode("-",value);
 		for destination=sub_table[1],sub_table[2] do
 			--get the destination required for number-alias
-			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
+			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");	 
 
 			--prevent calling the user that initiated the page
 			if (sip_from_user ~= destination) then
@@ -172,7 +172,12 @@ if ( session:ready() ) then
 
 	--send main call to the conference room
 	if (destination_count > 0) then
-		session:execute("conference", "page-"..destination_number.."@page+flags{endconf}");
+		if (session:getVariable("moderator") ~= nil and session:getVariable("moderator") == "true") then
+			moderator_flag = ",moderator";
+		else
+			moderator_flag = "";
+		end
+		session:execute("conference", "page-"..destination_number.."@page+flags{endconf"..moderator_flag.."}");
 	else
 		session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 	end
