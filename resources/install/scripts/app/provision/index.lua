@@ -1,0 +1,163 @@
+--	Part of FusionPBX
+--	Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	All rights reserved.
+--
+--	Redistribution and use in source and binary forms, with or without
+--	modification, are permitted provided that the following conditions are met:
+--
+--	1. Redistributions of source code must retain the above copyright notice,
+--	  this list of conditions and the following disclaimer.
+--
+--	2. Redistributions in binary form must reproduce the above copyright
+--	  notice, this list of conditions and the following disclaimer in the
+--	  documentation and/or other materials provided with the distribution.
+--
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+--	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+--	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+--	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+--	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+--	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+--	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+--	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+--	POSSIBILITY OF SUCH DAMAGE.
+
+--define explode
+	function explode ( seperator, str )
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
+	end
+
+--set the defaults
+	max_tries = 3;
+	digit_timeout = 5000;
+	max_retries = 3;
+	tries = 0;
+	profile = "internal";
+
+--include config.lua
+	--scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	--dofile(scripts_dir.."/resources/functions/config.lua");
+	--dofile(config());
+
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
+--answer
+	--session:answer();
+
+--sleep
+	--session:sleep(500);
+
+--get the domain_uuid
+	domain_uuid = session:getVariable("domain_uuid");
+
+--get the action
+	action = session:getVariable("action");
+
+--set the sounds path for the language, dialect and voice
+	default_language = session:getVariable("default_language");
+	default_dialect = session:getVariable("default_dialect");
+	default_voice = session:getVariable("default_voice");
+	if (not default_language) then default_language = 'en'; end
+	if (not default_dialect) then default_dialect = 'us'; end
+	if (not default_voice) then default_voice = 'callie'; end
+
+--get the user id
+	min_digits = 2;
+	max_digits = 20;
+	--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
+	user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
+
+--get the user password
+	min_digits = 2;
+	max_digits = 20;
+	--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+	password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
+	--password = session:play("phrase:voicemail_fail_auth:#");
+
+--get the user and domain name from the user argv user@domain
+	sip_from_uri = session:getVariable("sip_from_uri");
+	user_table = explode("@",sip_from_uri);
+	user = user_table[1];
+	domain = user_table[2];
+
+--show the phone that will be overiddent
+	freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. " [69]\n");
+	freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
+	freeswitch.consoleLog("NOTICE", "[provision] domain: ".. domain .. "\n");
+
+--get the device uuid for the phone that will have its configuration overriden
+	sql = [[SELECT * FROM v_device_lines ]];
+	sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
+	sql = sql .. [[AND server_address = ']]..domain..[[' ]];
+	--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+	freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+	dbh:query(sql, function(row)
+		device_uuid = row.device_uuid;
+		freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "[81]\n");
+	end);
+
+--get the device uuid of the mobile provision
+	--if (user_id and password) then
+		sql = [[SELECT * FROM v_device_settings ]];
+		sql = sql .. [[WHERE device_setting_subcategory = ']]..user_id..[[' ]];
+		sql = sql .. [[AND device_setting_value = ']]..password..[[' ]]
+		--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. " [90]\n");
+		found = 'false';
+		dbh:query(sql, function(row)
+			alternate_device_uuid = row.device_uuid;
+			found = 'true';
+			freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. alternate_device_uuid .. "\n");
+		end);
+	--end
+
+--authentication failed
+	if (found == 'false') then
+		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
+	end 
+
+freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. " [105]\n");
+
+--add the ovveride to the device uuid (login)
+	if (action == "login") then
+		if (alternate_device_uuid ~= nil) then
+			sql = [[UPDATE v_devices SET device_model = ']]..alternate_device_uuid..[[']];
+			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			dbh:query(sql);
+		end
+	end
+
+--remove the ovveride to the device uuid (logout)
+	if (action == "logout") then
+		if (alternate_device_uuid ~= nil) then
+			sql = [[UPDATE v_devices SET device_model = null ]];
+			sql = sql .. [[WHERE device_model = ']]..device_uuid..[[' ]];
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			dbh:query(sql);
+		end
+	end
+
+--found the device send a sync command
+	if (found == 'true') then
+		--create the event notify object
+			local event = freeswitch.Event('NOTIFY');
+		--add the headers
+			event:addHeader('profile', profile);
+			event:addHeader('user', user);
+			event:addHeader('host', domain);
+			event:addHeader('content-type', 'application/simple-message-summary');
+		--check sync
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		--send the event
+			event:fire();
+	end
