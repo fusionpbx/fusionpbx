@@ -73,15 +73,17 @@
 --get the user id
 	min_digits = 2;
 	max_digits = 20;
-	--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
-	user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
+	user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
+	--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
 
 --get the user password
 	min_digits = 2;
 	max_digits = 20;
-	--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-	password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
-	--password = session:play("phrase:voicemail_fail_auth:#");
+	password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+	--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
+
+--failed authentication
+	--result = session:play("phrase:voicemail_fail_auth:#");
 
 --get the user and domain name from the user argv user@domain
 	sip_from_uri = session:getVariable("sip_from_uri");
@@ -105,11 +107,12 @@
 		freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "[81]\n");
 	end);
 
+
 --get the device uuid of the mobile provision
 	--if (user_id and password) then
-		sql = [[SELECT * FROM v_device_settings ]];
-		sql = sql .. [[WHERE device_setting_subcategory = ']]..user_id..[[' ]];
-		sql = sql .. [[AND device_setting_value = ']]..password..[[' ]]
+		sql = [[SELECT * FROM v_devices ]];
+		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
+		sql = sql .. [[AND device_password = ']]..password..[[' ]]
 		--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
 		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. " [90]\n");
 		found = 'false';
@@ -125,7 +128,8 @@
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 	end 
 
-freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. " [105]\n");
+--send the action to the log
+	freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. " [105]\n");
 
 --add the ovveride to the device uuid (login)
 	if (action == "login") then
