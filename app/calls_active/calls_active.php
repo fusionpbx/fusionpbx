@@ -37,13 +37,11 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-$conference_name = trim($_REQUEST["c"]);
-$tmp_conference_name = str_replace("_", " ", $conference_name);
-
-require_once "resources/header.php";
 $document['title'] = $text['title'];
+require_once "resources/header.php";
+?>
 
-?><script type="text/javascript">
+<script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
 	f.xmlHttp = null;
@@ -79,7 +77,7 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 }
 
 var requestTime = function() {
-	var url = 'calls_active_inc.php?c=<?php echo trim($_REQUEST["c"]); ?>';
+	var url = 'calls_active_inc.php<?php if (isset($_REQUEST["debug"])) { echo "?debug"; }?>';
 	new loadXmlHttp(url, 'ajax_reponse');
 	setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1500);
 }
@@ -89,6 +87,12 @@ if (window.addEventListener) {
 }
 else if (window.attachEvent) {
 	window.attachEvent('onload', requestTime);
+}
+
+function hangup(uuid) {
+	if (confirm("<?php echo $text['confirm-hangup']?>")) {
+		send_cmd('calls_exec.php?cmd=uuid_kill%20'+uuid);
+	}
 }
 
 function send_cmd(url) {
@@ -102,63 +106,31 @@ function send_cmd(url) {
 	xmlhttp.send(null);
 	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
 }
-
-var record_count = 0;
-var cmd;
-var destination;
 </script>
 
 <?php
+echo "<b>".$text['title']."</b>";
+echo "<br><br>\n";
+echo $text['description']."\n";
+echo "<br><br>\n";
 
-
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-echo "	<tr>\n";
-echo "	<td align='left'>";
-echo "		<b>".$text['title']."</b>";
-echo "		<br><br>\n";
-echo "		".$text['description']."\n";
-echo "		<br><br>\n";
-echo "	</td>\n";
-echo "	<td align='right' valign='top'>\n";
-
-echo "		<table>\n";
-echo "		<td align='left' valign='middle'>\n";
-echo "			<div id=\"form_label\">\n";
-echo "			<div id=\"url\"></div>\n";
-echo "		</td>\n";
-echo "		<td align='left' valign='middle'>\n";
-echo "			<div id=\"form_label\"></div><input type=\"text\" class=\"formfld\" style=\"width: 100%;\" id=\"form_value\" name=\"form_value\" />\n";
-echo "		</td>\n";
-echo "		</tr>\n";
-echo "		</table>\n";
-
-echo "	</td>\n";
-echo "	</tr>\n";
-echo "</table>\n";
-
-echo "<div id=\"ajax_reponse\"></div>\n";
-echo "<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
+echo "<div id='ajax_reponse'></div>\n";
+echo "<div id='time_stamp' style='visibility:hidden'>".date('Y-m-d-s')."</div>\n";
 echo "<br><br><br>";
 
-echo "<script type=\"text/javascript\">\n";
-echo "<!--\n";
-echo "function get_transfer_cmd(uuid) {\n";
-echo "	destination = document.getElementById('form_value').value;\n";
-echo "	cmd = \"uuid_transfer \"+uuid+\" -bleg \"+destination+\" xml ".trim($_SESSION['user_context'])."\";\n";
-echo "	return escape(cmd);\n";
-echo "}\n";
-echo "\n";
-echo "function get_park_cmd(uuid) {\n";
-echo "	cmd = \"uuid_transfer \"+uuid+\" -bleg *6000 xml ".trim($_SESSION['user_context'])."\";\n";
-echo "	return escape(cmd);\n";
-echo "}\n";
-echo "\n";
-echo "function get_record_cmd(uuid, prefix, name) {\n";
-echo "	cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";\n";
-echo "	return escape(cmd);\n";
-echo "}\n";
-echo "-->\n";
-echo "</script>\n";
-
 require_once "resources/footer.php";
+
+/*
+// deprecated functions for this page
+
+	function get_park_cmd(uuid, context) {
+		cmd = \"uuid_transfer \"+uuid+\" -bleg *6000 xml \"+context;
+		return escape(cmd);
+	}
+
+	function get_record_cmd(uuid, prefix, name) {
+		cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
+		return escape(cmd);
+	}
+*/
 ?>
