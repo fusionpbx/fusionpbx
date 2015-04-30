@@ -378,6 +378,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$p = new permissions;
 						$p->add("dialplan_edit", 'temp');
 						$p->add("dialplan_detail_edit", 'temp');
+
 					//save the dialplan
 						$orm = new orm;
 						$orm->name('dialplans');
