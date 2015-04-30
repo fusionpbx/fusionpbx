@@ -201,7 +201,7 @@ include "root.php";
 										$device_description = $row["device_description"];
 								}
 							}
-	
+
 						//find a template that was defined on another phone and use that as the default.
 							if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
@@ -304,10 +304,10 @@ include "root.php";
 					if ($prep_statement_3) {
 						$prep_statement_3->execute();
 						$row = $prep_statement_3->fetch();
-						$device_model = $row["device_model"];
-						if (is_uuid($device_model)) {
-							//overide the original device_uuid
-								$device_uuid = $device_model;
+						$device_uuid_alternate = $row["device_uuid_alternate"];
+						if (is_uuid($device_uuid_alternate)) {
+							//override the original device_uuid
+								$device_uuid = $device_uuid_alternate;
 							//get the new devices information
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_uuid = '".$device_uuid."' ";
