@@ -103,10 +103,37 @@
 	--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
 	freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 	dbh:query(sql, function(row)
-		device_uuid = row.device_uuid;
-		freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "[81]\n");
-	end);
+		--set the default
+			authorized = 'false';
 
+		--get device uuid
+			device_uuid = row.device_uuid;
+			freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "\n");
+
+		--remove the previous alternate device uuid
+			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
+			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			dbh:query(sql);
+
+		--get the device line info user_id and server_address
+			sql = [[SELECT * FROM v_device_lines ]];
+			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			dbh:query(sql, function(row)
+				--create the event notify object
+					local event = freeswitch.Event('NOTIFY');
+				--add the headers
+					event:addHeader('profile', profile);
+					event:addHeader('user', row.user_id);
+					event:addHeader('host', row.server_address);
+					event:addHeader('content-type', 'application/simple-message-summary');
+				--check sync
+					event:addHeader('event-string', 'check-sync;reboot=true');
+				--send the event
+					event:fire();
+			end);
+	end);
 
 --get the device uuid of the mobile provision
 	--if (user_id and password) then
@@ -114,27 +141,29 @@
 		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
 		sql = sql .. [[AND device_password = ']]..password..[[' ]]
 		--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
-		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. " [90]\n");
-		found = 'false';
+		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+		authorized = 'false';
 		dbh:query(sql, function(row)
-			alternate_device_uuid = row.device_uuid;
-			found = 'true';
-			freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. alternate_device_uuid .. "\n");
+			--get the altnerat device_uuid
+				device_uuid_alternate = row.device_uuid;
+				freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. device_uuid_alternate .. "\n");
+			--authorize the user
+				authorized = 'true';			
 		end);
 	--end
 
 --authentication failed
-	if (found == 'false') then
+	if (authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 	end 
 
 --send the action to the log
-	freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. " [105]\n");
+	freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. "\n");
 
 --add the ovveride to the device uuid (login)
 	if (action == "login") then
-		if (alternate_device_uuid ~= nil) then
-			sql = [[UPDATE v_devices SET device_model = ']]..alternate_device_uuid..[[']];
+		if (device_uuid_alternate ~= nil) then
+			sql = [[UPDATE v_devices SET device_uuid_alternate = ']]..device_uuid_alternate..[[']];
 			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
 			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 			dbh:query(sql);
@@ -143,16 +172,16 @@
 
 --remove the ovveride to the device uuid (logout)
 	if (action == "logout") then
-		if (alternate_device_uuid ~= nil) then
-			sql = [[UPDATE v_devices SET device_model = null ]];
-			sql = sql .. [[WHERE device_model = ']]..device_uuid..[[' ]];
+		if (device_uuid_alternate ~= nil) then
+			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
+			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
 			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 			dbh:query(sql);
 		end
 	end
 
 --found the device send a sync command
-	if (found == 'true') then
+	if (authorized == 'true') then
 		--create the event notify object
 			local event = freeswitch.Event('NOTIFY');
 		--add the headers
