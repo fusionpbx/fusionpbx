@@ -38,9 +38,8 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//echo PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/config.php";
-//exit;
-include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
+//include theme config for button images
+	include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
 
 $switch_cmd = 'fifo list';
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

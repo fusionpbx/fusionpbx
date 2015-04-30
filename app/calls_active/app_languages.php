@@ -16,14 +16,6 @@ $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Ustawienia konta";
 $text['title']['sv-se'] = "Aktiva samtal";
 
-$text['label-transfer']['en-us'] = "Transfer To";
-$text['label-transfer']['es-cl'] = "Transferir a";
-$text['label-transfer']['fr-fr'] = "Transférer à";
-$text['label-transfer']['pt-pt'] = "Transferir Para";
-$text['label-transfer']['pt-br'] = "Tranferência";
-$text['label-transfer']['pl'] = "Transferowanie";
-$text['label-transfer']['sv-se'] = "Överför till";
-
 $text['label-time']['en-us'] = "Time";
 $text['label-time']['es-cl'] = "Tiempo";
 $text['label-time']['fr-fr'] = "Temps";
@@ -120,10 +112,10 @@ $text['label-message']['pt-br'] = "Mensagem";
 $text['label-message']['pl'] = "Wiadomość";
 $text['label-message']['sv-se'] = "Meddelande";
 
-$text['label-hangup']['en-us'] = "hangup";
-$text['label-hangup']['es-cl'] = "terminar";
-$text['label-hangup']['fr-fr'] = "raccrocher";
-$text['label-hangup']['pt-pt'] = "terminar";
+$text['label-hangup']['en-us'] = "Hangup";
+$text['label-hangup']['es-cl'] = "Terminar";
+$text['label-hangup']['fr-fr'] = "Raccrocher";
+$text['label-hangup']['pt-pt'] = "Terminar";
 $text['label-hangup']['pt-br'] = "Desligar";
 $text['label-hangup']['pl'] = "Zakończ rozmowę";
 $text['label-hangup']['sv-se'] = "Avsluta";

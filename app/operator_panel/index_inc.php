@@ -372,7 +372,7 @@ foreach ($activity as $extension => $ext) {
 	$block .= "	</tr>";
 	$block .= "</table>";
 
-	if (isset($_GET['debug'])) {
+	if (if_group("superadmin") && isset($_GET['debug'])) {
 		$block .= "<span style='font-size: 10px;'>";
 		$block .= "From ID<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: maroon'>".$extension."</strong><br>";
 		$block .= "uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['uuid'] ? 'blue' : 'black').";'>".$ext['uuid']."</strong><br>";
@@ -430,7 +430,7 @@ else {
 }
 echo "<br><br>";
 
-if (isset($_GET['debug'])) {
+if (if_group("superadmin") && isset($_GET['debug'])) {
 	echo '$activity<br>';
 	echo "<textarea style='width: 100%; height: 600px; overflow: scroll;' onfocus='refresh_stop();' onblur='refresh_start();'>";
 	print_r($activity);
