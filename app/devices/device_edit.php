@@ -294,6 +294,8 @@ require_once "resources/require.php";
 			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			$device_label = $row["device_label"];
+			$device_username = $row["device_username"];
+			$device_password = $row["device_password"];
 			$device_vendor = $row["device_vendor"];
 			$device_model = $row["device_model"];
 			$device_firmware_version = $row["device_firmware_version"];
@@ -1030,23 +1032,13 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_username']."\n";
+	echo "	".$text['label-device']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_username' maxlength='255' value=\"$device_username\">\n";
+	echo "	<input class='formfld' type='text' name='device_username' maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
+	echo "	<input class='formfld' type='text' name='device_password' onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
 	echo "<br />\n";
-	echo $text['description-device_username']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_password']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_password' maxlength='255' value=\"$device_password\">\n";
-	echo "<br />\n";
-	echo $text['description-device_password']."\n";
+	echo $text['description-device']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
