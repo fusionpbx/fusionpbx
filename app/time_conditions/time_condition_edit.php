@@ -452,9 +452,11 @@ require_once "resources/header.php";
 	if ($dialplan_uuid != '' && $_POST["persistformvar"] != "true") {
 
 		//add the dialplan permission
-			$permission = "dialplan_edit";
 			$p = new permissions;
-			$p->add($permission, 'temp');
+			$p->add("dialplan_add", 'temp');
+			$p->add("dialplan_detail_add", 'temp');
+			$p->add("dialplan_edit", 'temp');
+			$p->add("dialplan_detail_edit", 'temp');
 
 		//get main dialplan entry
 			$orm = new orm;
@@ -476,7 +478,10 @@ require_once "resources/header.php";
 			unset ($prep_statement);
 
 		//remove the temporary permission
-			$p->delete($permission, 'temp');
+			$p->delete("dialplan_add", 'temp');
+			$p->delete("dialplan_detail_add", 'temp');
+			$p->delete("dialplan_edit", 'temp');
+			$p->delete("dialplan_detail_edit", 'temp');
 
 		//get dialplan detail conditions
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data from v_dialplan_details ";
