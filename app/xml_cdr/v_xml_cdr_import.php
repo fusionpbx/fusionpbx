@@ -265,7 +265,6 @@
 							$db2->sql = $sql_rate;
 							$db2->result = $db2->execute();
 //							print_r($db2->result);
-							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):'USD');
 							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
