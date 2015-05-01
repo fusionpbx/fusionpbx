@@ -205,11 +205,11 @@ else {
 	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	//echo th_order_by('fax_uuid', $text['label-fax_uuid'], $order_by, $order);
-	//echo th_order_by('fax_mode', $text['label-fax_mode'], $order_by, $order);
+	echo "<th width=''>".$text['table-file']."</th>\n";
+	echo "<th width='10%'>".$text['table-view']."</th>\n";
 	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
 	//echo th_order_by('fax_file_type', $text['label-fax_file_type'], $order_by, $order);
-	echo th_order_by('fax_file_path', $text['label-fax_file_path'], $order_by, $order);
+	//echo th_order_by('fax_file_path', $text['label-fax_file_path'], $order_by, $order);
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order);
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
@@ -219,21 +219,90 @@ else {
 	echo "<tr>\n";
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			//if (permission_exists('fax_file_edit')) {
-			//	$tr_link = "href='fax_file_edit.php?id=".$row['fax_file_uuid']."'";
-			//}
+			$file = basename($row['fax_file_path']);
+			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
+				$file_name = substr($file, 0, (strlen($file) -4));
+			}
+			$file_ext = $row['fax_file_type'];
+
+			//decode the base64
+			if (strlen($row['fax_base64']) > 0) {
+				if ($_REQUEST['box'] == 'inbox') {
+					if (!file_exists($dir_fax_inbox.'/'.$file)) {
+						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));
+					}
+				}
+				if ($_REQUEST['box'] == 'sent') {
+					if (!file_exists($dir_fax_sent.'/'.$file)) {
+						//decode the base64
+						file_put_contents($dir_fax_sent.'/'.$file, base64_decode($row['fax_base64']));
+					}
+				}
+				
+			}
+			//convert the tif to pdf
+			if (!file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
+				if ($_REQUEST['box'] == 'inbox') {
+					chdir($dir_fax_inbox);
+					if (is_file("/usr/local/bin/tiff2pdf")) {
+						exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
+					}
+					if (is_file("/usr/bin/tiff2pdf")) {
+						exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
+					}
+				}
+				if ($_REQUEST['box'] == 'sent') {
+					chdir($dir_fax_sent);
+					if (is_file("/usr/local/bin/tiff2pdf")) {
+						exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
+					}
+					if (is_file("/usr/bin/tiff2pdf")) {
+						exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
+					}
+				}
+			}
+
 			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_uuid']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_mode']."&nbsp;</td>\n";
+			echo "<tr>\n";
+			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
+			if ($_REQUEST['box'] == 'inbox') {
+				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+			}
+			if ($_REQUEST['box'] == 'sent') {
+				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+			}
+			echo "    	$file_name";
+			echo "	  </a>";
+			echo "  </td>\n";
+			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
+			if ($_REQUEST['box'] == 'inbox') {
+				$dir_fax = $dir_fax_inbox;
+				$type = "fax_inbox";
+			}
+			if ($_REQUEST['box'] == 'sent') {
+				$dir_fax = $dir_fax_sent;
+				$type = "fax_sent";
+			}
+			if (file_exists($dir_fax.'/'.$file_name.".pdf")) {
+				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=$type&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+				echo "    	PDF";
+				echo "	  </a>";
+			}
+			else {
+				echo "&nbsp;\n";
+			}
+			echo "  </td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".basename($row['fax_file_path'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>PDF&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_number']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_file_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".basename($row['fax_file_path'])."&nbsp;</td>\n";
+			
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_caller_id_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_caller_id_number']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime($row['fax_date']))."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_epoch']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_base64']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' style='width: 23px;'>";
+			echo "	<td>";
 			//if (permission_exists('fax_file_edit')) {
 			//	echo "<a href='fax_file_edit.php?id=".$row['fax_file_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			//}
