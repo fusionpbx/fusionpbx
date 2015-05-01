@@ -395,7 +395,7 @@ else {
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['default_setting_value']);
 			}
-			else if (substr_count(strtolower($subcategory), '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
 			else {

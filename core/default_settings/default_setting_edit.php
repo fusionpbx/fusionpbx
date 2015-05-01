@@ -403,7 +403,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "		</select>\n";
 	}
-	elseif (substr_count(strtolower($subcategory), '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld' type='password' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$default_setting_value."\">\n";
 	}
 	elseif (
