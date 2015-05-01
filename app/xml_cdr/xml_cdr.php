@@ -602,7 +602,11 @@ else {
 				if ($sell_price){
 					$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
 				}
+				else {
+					$price = 0;
+				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($price,6)." $billing_currency</td>\n";
+				unset ($sell_price, $price);
 			}
 			if (permission_exists("xml_cdr_pdd")) {
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
