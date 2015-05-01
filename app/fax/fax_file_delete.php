@@ -82,10 +82,10 @@ if (strlen($id) > 0) {
 		unset($sql);
 
 	//set the type
-		if ($fax_mode == 'rx';
+		if ($fax_mode == 'rx') {
 			$type = 'inbox';
 		}
-		if ($fax_mode == 'tx';
+		if ($fax_mode == 'tx') {
 			$type = 'sent';
 		}
 
