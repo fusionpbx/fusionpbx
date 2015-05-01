@@ -38,6 +38,10 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//get the HTTP values and set as variables
+	$show = trim($_REQUEST["show"]);
+	if ($show != "all") { $show = ''; }
+
 //include theme config for button images
 	include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
 
@@ -67,6 +71,33 @@ else {
 		//set the array
 			$results = json_decode($json, "true");
 
+		//define js function call var
+			$onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
+
+		//show content
+			echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
+			echo "	<tr>";
+			echo "		<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
+			echo "			<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
+			echo "		</td>";
+			echo "		<td valign='top' nowrap='nowrap'>";
+			if (permission_exists('call_active_all')) {
+				if ($show == "all") {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"document.location='calls_active.php';\" value='".$text['button-back']."' ".$onhover_pause_refresh.">\n";
+				}
+				else {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"document.location='calls_active.php?show=all';\" value='".$text['button-show_all']."' ".$onhover_pause_refresh.">\n";
+				}
+			}
+			echo "		</td>";
+			echo "	</tr>";
+			echo "</table>";
+
+			echo "<b>".$text['title']."</b>";
+			echo "<br><br>\n";
+			echo $text['description']."\n";
+			echo "<br><br>\n";
+
 		//set the alternating color for each row
 			$c = 0;
 			$row_style["0"] = "row_style0";
@@ -79,6 +110,9 @@ else {
 			echo "<tr>\n";
 			echo "<th>".$text['label-profile']."</th>\n";
 			echo "<th>".$text['label-created']."</th>\n";
+			if ($show == 'all') {
+				echo "<th>".$text['label-domain']."</th>\n";
+			}
 			echo "<th>".$text['label-number']."</th>\n";
 			echo "<th>".$text['label-cid-name']."</th>\n";
 			echo "<th>".$text['label-cid-number']."</th>\n";
@@ -90,6 +124,14 @@ else {
 			echo "</tr>\n";
 
 			foreach ($results["rows"] as $row) {
+				//determine show all
+					if (!($show == 'all' && permission_exists('call_active_all'))) {
+						$foreign_call = true;
+						foreach ($row as $key => $value) {
+							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
+						}
+						if ($foreign_call) { continue; }
+					}
 				//set the php variables
 					foreach ($row as $key => $value) {
 						$$key = $value;
@@ -108,12 +150,32 @@ else {
 					$tmp_number = $temp_array[0];
 					$tmp_number = str_replace("sip:", "", $tmp_number);
 
+				//get the domain
+					if ($show == 'all') {
+						if (substr_count($presence_id, '@') > 0) {
+							$presence_id_array = explode('@', $presence_id);
+							$domain_name = $presence_id_array[1];
+						}
+						else if ($context != '') {
+							if (substr_count($context, '@') > 0) {
+								$context_array = explode('@', $context);
+								$domain_name = $context_array[1];
+							}
+							else {
+								$domain_name = $context;
+							}
+						}
+					}
+
 				//remove the '+' because it breaks the call recording
 					$cid_num = str_replace("+", "", $cid_num);
 
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
+				if ($show == 'all') {
+					echo "<td valign='top' class='".$row_style[$c]."'>".$domain_name."&nbsp;</td>\n";
+				}
 				echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_number."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$cid_name."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$cid_num."&nbsp;</td>\n";
