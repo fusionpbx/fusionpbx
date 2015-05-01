@@ -93,7 +93,7 @@ $text['label-duration']['es-cl'] = "Duración";
 $text['label-duration']['pt-pt'] = "Duração";
 $text['label-duration']['fr-fr'] = "Durée";
 $text['label-duration']['pt-br'] = "Duração";
-$text['label-duration']['pl'] = "Czas trwania";
+$text['label-duration']['pl'] = "Czas oczekiwania";
 $text['label-duration']['sv-se'] = "Samtalstid";
 
 $text['label-destination_number']['en-us'] = "Destination Number";
@@ -157,7 +157,7 @@ $text['description-queue']['es-cl'] = "Utilice esta página para monitorear la a
 $text['description-queue']['pt-pt'] = "Utilize esta página para monitorizar a actividade da fila.";
 $text['description-queue']['fr-fr'] = "Utiliser cette page pour superviser l'activité des files d'attente.";
 $text['description-queue']['pt-br'] = "Lista de chamada na fila";
-$text['description-queue']['pl'] = "Aktualna lista rozmówców w kolejce jest poniżej .";
+$text['description-queue']['pl'] = "Aktualna lista oczekujących rozmówców w kolejce.";
 $text['description-queue']['sv-se'] = "Använd denna sida för att monitorera kö aktivitet";
 
 $text['description-active_queues']['en-us'] = "List all the queues that are currently active with one or more callers.";

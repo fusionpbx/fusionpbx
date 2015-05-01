@@ -769,7 +769,7 @@ $text['button-advanced']['es-cl'] = "Avanzado";
 $text['button-advanced']['pt-pt'] = "Avançadas";
 $text['button-advanced']['fr-fr'] = "Afficher les Paramètres Avancés";
 $text['button-advanced']['pt-br'] = "Avançar";
-$text['button-advanced']['pl'] = "Zaawansowany";
+$text['button-advanced']['pl'] = "Zaawansowane";
 $text['button-advanced']['uk'] = "Додатково";
 $text['button-advanced']['sv-se'] = "Avancerat";
 

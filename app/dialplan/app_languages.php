@@ -194,7 +194,7 @@ $text['option-never']['es-cl'] = "Nunca";
 $text['option-never']['pt-pt'] = "Nunca";
 $text['option-never']['fr-fr'] = "Jamais";
 $text['option-never']['pt-br'] = "Nunca";
-$text['option-never']['pl'] = "Nugdy";
+$text['option-never']['pl'] = "Nigdy";
 $text['option-never']['uk'] = "Ніколи";
 $text['option-never']['sv-se'] = "Aldrig";
 

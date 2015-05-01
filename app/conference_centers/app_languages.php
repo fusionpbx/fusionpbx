@@ -613,7 +613,7 @@ $text['description-conference-centers']['es-cl'] = "Los Centros de Conferencias 
 $text['description-conference-centers']['pt-pt'] = "Centros de Conferência são um grupo de salas de conferência. Podem ser organizadas por custo, por localização ou por outro critétio.";
 $text['description-conference-centers']['fr-fr'] = "Ce sont des groupes de salles de conférences. Pouvant être organisés par centre de coût, lieu géographique, ou tout autre critère.";
 $text['description-conference-centers']['pt-br'] = "Centros de conferência são um grupo de salas de conferência. Podem ser organizadas por custo, por localização ou por outro critétio. ";
-$text['description-conference-centers']['pl'] = "'Centra konferencyjne składają się z pokoi konferencyjnych. Mogą one być przypisane do konkretnych centrów kosztów, do rejonów geograficznych lub do innych grup.";
+$text['description-conference-centers']['pl'] = "'Centra konferencyjne składają się z pokoi konferencyjnych. Mogą one być przypisane do konkretnych centrów kosztów, rejonów geograficznych lub do innych grup.";
 $text['description-conference-centers']['sv-se'] = "Konferenscenter är en grupp med konferensrum. De kan sorteras på kostnadscenter, geografisk placering eller andra kriterier.";
 
 $text['description-conference-center']['en-us'] = "Conference Center is used to setup one or more conference rooms with a name, extension number, a required pin number length, and a description.";
