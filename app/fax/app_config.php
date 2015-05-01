@@ -115,6 +115,24 @@
 		$apps[$x]['permissions'][$y]['name'] = "fax_log_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_file_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_file_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_file_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_file_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
 	//schema details
 		$y = 0; //table array index
@@ -344,11 +362,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_date';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_epoch';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "bigint";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_base64';
