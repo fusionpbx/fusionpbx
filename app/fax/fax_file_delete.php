@@ -49,11 +49,11 @@ if (strlen($id) > 0) {
 	//get the fax file data
 		$sql = "select * from v_fax_files ";
 		$sql .= "where fax_file_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$fax_uuid = $row["fax_uuid"];
 			$fax_mode = $row["fax_mode"];
 			$fax_file_path = $row["fax_file_path"];
@@ -79,7 +79,7 @@ if (strlen($id) > 0) {
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		unset($sql);
+		unset($prep_statement);
 
 	//set the type
 		if ($fax_mode == 'rx') {
