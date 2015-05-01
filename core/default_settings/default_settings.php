@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -376,7 +376,8 @@ else {
 			else {
 				echo $row['default_setting_subcategory'];
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_name']."</td>\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
 
 			$category = $row['default_setting_category'];
@@ -388,6 +389,7 @@ else {
 				$sub_prep_statement = $db->prepare(check_sql($sql));
 				$sub_prep_statement->execute();
 				$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement, $sql);
 				foreach ($sub_result as &$sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -208,7 +208,7 @@ if (sizeof($_REQUEST) > 1) {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
 
 			$category = $row['domain_setting_category'];
 			$subcategory = $row['domain_setting_subcategory'];
@@ -227,13 +227,11 @@ if (sizeof($_REQUEST) > 1) {
 			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['domain_setting_value']);
 			}
-			elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
+			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+				echo "		".str_repeat('*', strlen($row['domain_setting_value']));
 			}
-			elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
-			} else {
-				echo "		".substr($row['domain_setting_value'],0,58);
+			else {
+				echo "		".htmlspecialchars($row['domain_setting_value']);
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
@@ -243,7 +241,7 @@ if (sizeof($_REQUEST) > 1) {
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {
-				echo 	"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('domain_setting_delete')) {
 				echo "<a href='domain_settings.php?domain_uuid=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

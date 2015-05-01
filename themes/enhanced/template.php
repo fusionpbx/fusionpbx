@@ -112,10 +112,14 @@ if (
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		-webkit-box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		-moz-box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
 		<?php
+		if ($_SESSION['theme']['login_shadow_color']['text'] != '') {
+			?>
+			-webkit-box-shadow: 0 1px 20px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			-moz-box-shadow: 0 1px 20px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			box-shadow: 0 1px 20px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			<?php
+		}
 	}
 	?>
 }
@@ -133,11 +137,17 @@ DIV#footer {
 	left: 0;
 	right: 0;
 	height: 20px;
-	-khtml-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
-	-moz-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
-	filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['footer_opacity']['text']); ?>);
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=<?php echo $_SESSION['theme']['footer_opacity']['text']; ?>);
-	opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+	<?php
+	if ($_SESSION['theme']['footer_opacity']['text'] != '') {
+		?>
+		-khtml-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+		-moz-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+		filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['footer_opacity']['text']); ?>);
+		filter: progid:DXImageTransform.Microsoft.Alpha(opacity=<?php echo $_SESSION['theme']['footer_opacity']['text']; ?>);
+		opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+		<?php
+	}
+	?>
 	text-align: center;
 	vertical-align: middle;
 	padding-bottom: 0;
@@ -564,16 +574,28 @@ legend {
 		)) { ?>
 		background-color: #FFFFFF;
 		background-attachment: fixed;
-		opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
-		filter:alpha(opacity=<?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? (100 * (float) $_SESSION['theme']['body_opacity']['text']) : "93"; ?>);
-		-moz-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
-		-khtml-opacity: <?php echo ($_SESSION['theme']['body_opacity']['text'] != '') ? $_SESSION['theme']['body_opacity']['text'] : "0.93"; ?>;
+		<?php
+		if ($_SESSION['theme']['body_opacity']['text'] != '') {
+			?>
+			opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
+			filter:alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['body_opacity']['text'])?>);
+			-moz-opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
+			-khtml-opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
+			<?php
+		}
+		?>
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		-webkit-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		-moz-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		<?php
+		if ($_SESSION['theme']['login_shadow_color']['text'] != '') {
+			?>
+			-webkit-box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			-moz-box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			<?php
+		}
+		?>
 		padding: 20px;
 	<?php } else { ?>
 		padding: 10px;
@@ -590,9 +612,15 @@ legend {
 		-moz-border-radius: 4px;
 		border-radius: 4px;
 		padding: 4px;
-		-webkit-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		-moz-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		<?php
+		if ($_SESSION['theme']['login_shadow_color']['text'] != '') {
+			?>
+			-webkit-box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			-moz-box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			box-shadow: 0 1px 4px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			<?php
+		}
+		?>
 	}
 
 	.menu_bg {
@@ -697,9 +725,15 @@ legend {
 		-webkit-border-radius: 0 0 3px 3px;
 		-moz-border-radius: 0 0 3px 3px;
 		border-radius: 0 0 3px 3px;
-		-webkit-box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		-moz-box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
-		box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		<?php
+		if ($_SESSION['theme']['login_shadow_color']['text'] != '') {
+			?>
+			-webkit-box-shadow: 0 2px 3px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			-moz-box-shadow: 0 2px 3px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			box-shadow: 0 2px 3px <?php echo $_SESSION['theme']['login_shadow_color']['text']?>;
+			<?php
+		}
+		?>
 	}
 
 	#menu a:hover{
@@ -888,8 +922,8 @@ legend {
 		-moz-border-radius: 1px;
 		border-radius: 1px;
 		font-size: 12px;
-		color: <?php echo $_SESSION['theme']['domain_color']['text']; ?>;
-		text-shadow: 0 0 2px #fff;
+		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#000'; ?>;
+		<?php echo ($_SESSION['theme']['domain_shadow_color']['text'] != '') ? 'text-shadow: 0 0 2px '.$_SESSION['theme']['domain_shadow_color']['text'].';' : null; ?>
 	}
 
 	#domain_selector_domain:hover {

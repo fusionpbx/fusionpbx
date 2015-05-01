@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -411,6 +411,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$category == "theme" && $subcategory == "login_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
