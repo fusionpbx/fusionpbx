@@ -395,15 +395,8 @@ else {
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['default_setting_value']);
 			}
-			else if ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
-				echo "		";
-				for ($d = 1; $d <= strlen($row['default_setting_value']); $d++) { echo "*"; }
-				echo "&nbsp;\n";
-			}
-			else if ($category == "provision" && $subcategory == "password" && $name == "var" ) {
-				echo "		";
-				for ($d = 1; $d <= strlen($row['default_setting_value']); $d++) { echo "*"; }
-				echo "&nbsp;\n";
+			else if (substr_count(strtolower($subcategory), '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
+				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
 			else {
 				echo "		".htmlspecialchars($row['default_setting_value']);
