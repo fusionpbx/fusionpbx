@@ -37,7 +37,6 @@
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
-				$sql .= "where default_setting_enabled = 'true' ";
 				try {
 					$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
 					$prep_statement->execute();
@@ -53,23 +52,26 @@
 				}
 				//set the settings as a session
 				foreach ($result as $row) {
-					$name = $row['default_setting_name'];
-					$category = $row['default_setting_category'];
-					$subcategory = $row['default_setting_subcategory'];
-					if (strlen($subcategory) == 0) {
-						if ($name == "array") {
-							$_SESSION[$category][] = $row['default_setting_value'];
+					if ($row['default_setting_enabled'] == 'true') {
+						$name = $row['default_setting_name'];
+						$category = $row['default_setting_category'];
+						$subcategory = $row['default_setting_subcategory'];
+						if (strlen($subcategory) == 0) {
+							if ($name == "array") {
+								$_SESSION[$category][] = $row['default_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$name] = $row['default_setting_value'];
+							}
 						}
 						else {
-							$_SESSION[$category][$name] = $row['default_setting_value'];
-						}
-					} else {
-						if ($name == "array") {
-							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+							if ($name == "array") {
+								$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+								$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+							}
 						}
 					}
 				}
@@ -110,7 +112,8 @@
 							else {
 								$_SESSION[$category][$name] = $row['domain_setting_value'];
 							}
-						} else {
+						}
+						else {
 							//$$category[$subcategory][$name] = $row['domain_setting_value'];
 							if ($name == "array") {
 								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
@@ -127,7 +130,6 @@
 					$sql = "select * from v_user_settings ";
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
-					$sql .= "and user_setting_enabled = 'true' ";
 					try {
 						$prep_statement = $db->prepare($sql . " order by user_setting_order asc ");
 						$prep_statement->execute();
@@ -139,25 +141,28 @@
 					if ($prep_statement) {
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						foreach ($result as $row) {
-							$name = $row['user_setting_name'];
-							$category = $row['user_setting_category'];
-							$subcategory = $row['user_setting_subcategory'];
-							if (strlen($row['user_setting_value']) > 0) {
-								if (strlen($subcategory) == 0) {
-									//$$category[$name] = $row['domain_setting_value'];
-									if ($name == "array") {
-										$_SESSION[$category][] = $row['user_setting_value'];
+							if ($row['user_setting_enabled'] == 'true') {
+								$name = $row['user_setting_name'];
+								$category = $row['user_setting_category'];
+								$subcategory = $row['user_setting_subcategory'];
+								if (strlen($row['user_setting_value']) > 0) {
+									if (strlen($subcategory) == 0) {
+										//$$category[$name] = $row['domain_setting_value'];
+										if ($name == "array") {
+											$_SESSION[$category][] = $row['user_setting_value'];
+										}
+										else {
+											$_SESSION[$category][$name] = $row['user_setting_value'];
+										}
 									}
 									else {
-										$_SESSION[$category][$name] = $row['user_setting_value'];
-									}
-								} else {
-									//$$category[$subcategory][$name] = $row['domain_setting_value'];
-									if ($name == "array") {
-										$_SESSION[$category][$subcategory][] = $row['user_setting_value'];
-									}
-									else {
-										$_SESSION[$category][$subcategory][$name] = $row['user_setting_value'];
+										//$$category[$subcategory][$name] = $row['domain_setting_value'];
+										if ($name == "array") {
+											$_SESSION[$category][$subcategory][] = $row['user_setting_value'];
+										}
+										else {
+											$_SESSION[$category][$subcategory][$name] = $row['user_setting_value'];
+										}
 									}
 								}
 							}
@@ -295,7 +300,8 @@
 								else {
 									$_SESSION[$category][$name] = $row['default_setting_value'];
 								}
-							} else {
+							}
+							else {
 								if ($name == "array") {
 									$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 								}
