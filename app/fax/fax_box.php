@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,9 @@ else {
 
 //get fax extension
 	if (strlen($_GET['id']) > 0) {
-		$fax_uuid = check_str($_GET["id"]);
+		if (is_uuid($_GET["id"])) {
+			$fax_uuid = $_GET["id"];
+		}
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select * from v_fax ";
