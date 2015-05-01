@@ -152,12 +152,12 @@ require_once "resources/paging.php";
 					echo "		<a href='fax_send.php?id=".$row['fax_uuid']."'>".$text['label-new']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_inbox_view')) {
-					$remote = ($row['fax_email_connection_host'] != '' && $row['fax_email_connection_mailbox'] != '') ? "_remote" : null;
+					$file = ($row['fax_email_connection_host'] != '' && $row['fax_email_connection_mailbox'] != '') ? "fax_box_remote.php" : "fax_files.php";
 					$box = ($row['fax_email_connection_host'] != '' && $row['fax_email_connection_mailbox'] != '') ? $row['fax_email_connection_mailbox'] : 'inbox';
-					echo "		<a href='fax_box".$remote.".php?id=".$row['fax_uuid']."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
+					echo "		<a href='".$file."?id=".$row['fax_uuid']."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
-					echo "		<a href='fax_box.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
+					echo "		<a href='fax_files.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_log_view')) {
 					echo "		<a href='fax_logs.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
