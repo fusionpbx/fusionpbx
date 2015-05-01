@@ -236,7 +236,6 @@ else {
 				}
 			}
 			unset($prep_statement, $result);
-
 		//limit the number of results
 			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
 				$num_rows = $_SESSION['cdr']['limit']['numeric'];
