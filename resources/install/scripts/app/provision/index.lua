@@ -91,12 +91,12 @@
 	user = user_table[1];
 	domain = user_table[2];
 
---show the phone that will be overiddent
+--show the phone that will be overridden
 	freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. " [69]\n");
 	freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
 	freeswitch.consoleLog("NOTICE", "[provision] domain: ".. domain .. "\n");
 
---get the device uuid for the phone that will have its configuration overriden
+--get the device uuid for the phone that will have its configuration overridden
 	sql = [[SELECT * FROM v_device_lines ]];
 	sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
 	sql = sql .. [[AND server_address = ']]..domain..[[' ]];
@@ -136,7 +136,7 @@
 	end);
 
 --get the device uuid of the mobile provision
-	--if (user_id and password) then
+	if (user_id and password) then
 		sql = [[SELECT * FROM v_devices ]];
 		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
 		sql = sql .. [[AND device_password = ']]..password..[[' ]]
@@ -148,34 +148,31 @@
 				device_uuid_alternate = row.device_uuid;
 				freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. device_uuid_alternate .. "\n");
 			--authorize the user
-				authorized = 'true';			
+				authorized = 'true';
 		end);
-	--end
+	end
 
 --authentication failed
 	if (authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 	end 
 
---send the action to the log
-	freeswitch.consoleLog("NOTICE", "[provision] action: ".. action .. "\n");
-
---add the ovveride to the device uuid (login)
-	if (action == "login") then
+--add the override to the device uuid (login)
+	if (authorized == 'true' and action == "login") then
 		if (device_uuid_alternate ~= nil) then
 			sql = [[UPDATE v_devices SET device_uuid_alternate = ']]..device_uuid_alternate..[[']];
 			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 			dbh:query(sql);
 		end
 	end
 
---remove the ovveride to the device uuid (logout)
-	if (action == "logout") then
+--remove the override to the device uuid (logout)
+	if (authorized == 'true' and action == "logout") then
 		if (device_uuid_alternate ~= nil) then
 			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
 			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 			dbh:query(sql);
 		end
 	end
