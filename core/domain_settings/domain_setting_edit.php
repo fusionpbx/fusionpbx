@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -429,16 +429,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "		</select>\n";
 	}
-	elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
-		echo "	<input class='formfld' type='password' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['domain_setting_value']."\">\n";
-	}
-	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
+	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld' type='password' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['domain_setting_value']."\">\n";
 	}
 	elseif (
 		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
+		$category == "theme" && $subcategory == "login_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
