@@ -23,6 +23,9 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--set the debug options
+	debug["sql"] = false;
+
 --define explode
 	function explode ( seperator, str )
 		local pos, arr = 0, {}
@@ -82,9 +85,6 @@
 	password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 	--password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
 
---failed authentication
-	--result = session:play("phrase:voicemail_fail_auth:#");
-
 --get the user and domain name from the user argv user@domain
 	sip_from_uri = session:getVariable("sip_from_uri");
 	user_table = explode("@",sip_from_uri);
@@ -92,7 +92,7 @@
 	domain = user_table[2];
 
 --show the phone that will be overridden
-	freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. " [69]\n");
+	freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. "\n");
 	freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
 	freeswitch.consoleLog("NOTICE", "[provision] domain: ".. domain .. "\n");
 
@@ -100,12 +100,11 @@
 	sql = [[SELECT * FROM v_device_lines ]];
 	sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
 	sql = sql .. [[AND server_address = ']]..domain..[[' ]];
-	--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
-	freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+	sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+	if (debug["sql"]) then
+		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+	end
 	dbh:query(sql, function(row)
-		--set the default
-			authorized = 'false';
-
 		--get device uuid
 			device_uuid = row.device_uuid;
 			freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "\n");
@@ -113,36 +112,24 @@
 		--remove the previous alternate device uuid
 			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
 			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
-			dbh:query(sql);
+			sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+			if (debug["sql"]) then
+				--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			end
+			--dbh:query(sql);
 
-		--get the device line info user_id and server_address
-			sql = [[SELECT * FROM v_device_lines ]];
-			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
-			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
-			dbh:query(sql, function(row)
-				--create the event notify object
-					local event = freeswitch.Event('NOTIFY');
-				--add the headers
-					event:addHeader('profile', profile);
-					event:addHeader('user', row.user_id);
-					event:addHeader('host', row.server_address);
-					event:addHeader('content-type', 'application/simple-message-summary');
-				--check sync
-					event:addHeader('event-string', 'check-sync;reboot=true');
-				--send the event
-					event:fire();
-			end);
 	end);
 
 --get the device uuid of the mobile provision
-	if (user_id and password) then
+	authorized = 'false';
+	if (user_id ~= '' and password ~= '') then
 		sql = [[SELECT * FROM v_devices ]];
 		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
 		sql = sql .. [[AND device_password = ']]..password..[[' ]]
-		--sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
-		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
-		authorized = 'false';
+		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+		end
 		dbh:query(sql, function(row)
 			--get the altnerat device_uuid
 				device_uuid_alternate = row.device_uuid;
@@ -162,7 +149,10 @@
 		if (device_uuid_alternate ~= nil) then
 			sql = [[UPDATE v_devices SET device_uuid_alternate = ']]..device_uuid_alternate..[[']];
 			sql = sql .. [[WHERE device_uuid = ']]..device_uuid..[[' ]];
-			--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			end
 			dbh:query(sql);
 		end
 	end
@@ -172,7 +162,10 @@
 		if (device_uuid_alternate ~= nil) then
 			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
 			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
-			--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+			end
 			dbh:query(sql);
 		end
 	end
