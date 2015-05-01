@@ -338,7 +338,7 @@ $text['description-menus']['es-cl'] = "Se usa para personalizar uno o más menú
 $text['description-menus']['pt-pt'] = "Utilizado para customizar um ou mais menus.";
 $text['description-menus']['fr-fr'] = "Personnaliser un ou plusieurs menus.";
 $text['description-menus']['pt-br'] = "Utilize para customizar um ou mais menus";
-$text['description-menus']['pl'] = "Używane do konfiguracji jednej lub kilku list menu.";
+$text['description-menus']['pl'] = "Używany jest do konfiguracji jednej lub kilku list menu.";
 $text['description-menus']['uk'] = "Використовується для налаштування одного або декількох меню.";
 $text['description-menus']['sv-se'] = "Används för att anpassa en eller flera menyer.";
 

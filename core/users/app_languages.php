@@ -28,7 +28,7 @@ $text['title-group_permissions']['en-us'] = "Group Permissions";
 $text['title-group_permissions']['es-cl'] = "Permisos de Grupo";
 $text['title-group_permissions']['pt-pt'] = "Permissões do Grupo";
 $text['title-group_permissions']['fr-fr'] = "Permissions du Groupe";
-$text['title-group_permissions']['pl'] = "Uprawnienia grupy";
+$text['title-group_permissions']['pl'] = "Uprawnienia grupy:";
 $text['title-group_permissions']['uk'] = "";
 $text['title-group_permissions']['sv-se'] = "Grupp Rättigheter";
 
@@ -36,7 +36,7 @@ $text['title-group_members']['en-us'] = "Group Members";
 $text['title-group_members']['es-cl'] = "Miembros del Grupo";
 $text['title-group_members']['pt-pt'] = "Membros do Grupo";
 $text['title-group_members']['fr-fr'] = "Membres du Groupe";
-$text['title-group_members']['pl'] = "Członkowie grupy";
+$text['title-group_members']['pl'] = "Członkowie grupy:";
 $text['title-group_members']['uk'] = "";
 $text['title-group_members']['sv-se'] = "Grupp Medlemmar";
 
@@ -44,7 +44,7 @@ $text['title-group_manager']['en-us'] = "Group Manager";
 $text['title-group_manager']['es-cl'] = "Administración de Grupo";
 $text['title-group_manager']['pt-pt'] = "Gestão de Grupos";
 $text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
-$text['title-group_manager']['pl'] = "Menedżer grupy";
+$text['title-group_manager']['pl'] = "Menedżer grup";
 $text['title-group_manager']['uk'] = "";
 $text['title-group_manager']['sv-se'] = "Grupp Inställningar";
 
@@ -295,6 +295,7 @@ $text['label-search']['fr-fr'] = "Recherche...";
 $text['label-search']['nl-nl'] = "";
 $text['label-search']['pt-br'] = "Pesquisa...";
 $text['label-search']['pl'] = "Szukaj ...";
+$text['label-search']['sv-se'] = "Sök ...";
 
 $text['label-permission_permissions']['en-us'] = "Permissions";
 $text['label-permission_permissions']['es-cl'] = "Permisos";
@@ -516,7 +517,7 @@ $text['header-group_manager']['en-us'] = "Group Manager";
 $text['header-group_manager']['es-cl'] = "Administración de Grupo";
 $text['header-group_manager']['pt-pt'] = "Gestão de Grupos";
 $text['header-group_manager']['fr-fr'] = "Gestion de Groupe";
-$text['header-group_manager']['pl'] = "Menadżer  grupy";
+$text['header-group_manager']['pl'] = "Menadżer  grup";
 $text['header-group_manager']['uk'] = "";
 $text['header-group_manager']['sv-se'] = "Grupp Inställningar";
 
@@ -588,7 +589,7 @@ $text['description-group_permissions']['en-us'] = "Assign permissions for this g
 $text['description-group_permissions']['es-cl'] = "Asigne permisos para este grupo.";
 $text['description-group_permissions']['pt-pt'] = "Atribua permissões para este grupo.";
 $text['description-group_permissions']['fr-fr'] = "Assigner des permissions à ce groupe.";
-$text['description-group_permissions']['pl'] = "Przypisywanie uprawnień dla tej grupy.";
+$text['description-group_permissions']['pl'] = "Przypisywanie uprawnień tej grupie.";
 $text['description-group_permissions']['uk'] = "Призначення дозволів для цієї групи.";
 $text['description-group_permissions']['sv-se'] = "Tilldela rättigheter till denna grupp.";
 

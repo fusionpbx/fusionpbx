@@ -39,7 +39,7 @@ $text['message-add-options']['en-us'] = "Select the gateway to use with this out
 $text['message-add-options']['es-cl'] = "Seleccione una pasarela para utilizar con esta regla de salida.";
 $text['message-add-options']['pt-pt'] = "Seleccione o gateway para usar nesta rota de saída.";
 $text['message-add-options']['fr-fr'] = "Choisir la passerelle utilisée par cette route sortante.";
-$text['message-add-options']['pl'] = "Wybierz Bramę Wyjściową przez którą zostanie przesłaną rozmowa wychodząca.";
+$text['message-add-options']['pl'] = "Wybierz Bramę Wyjściową przez którą zostanie przesłana rozmowa wychodząca.";
 $text['message-add-options']['uk'] = "Виберіть шлюз для цього вихідного маршруту";
 
 $text['label-true']['en-us'] = "True";
@@ -402,7 +402,7 @@ $text['description-limit']['en-us'] = "Enter limit to restrict the number of out
 $text['description-limit']['es-cl'] = "Ingrese un límite para restringir el número de llamadas salientes.";
 $text['description-limit']['pt-pt'] = "Introduza o limite máximo de número de chamadas de saída.";
 $text['description-limit']['fr-fr'] = "Choisir une limite afin de limiter le noombre d'appel sortants.";
-$text['description-limit']['pl'] = "Wprowadź limit ograniczyć liczbę połączeń wychodzących.";
+$text['description-limit']['pl'] = "Wprowadź limit aby ograniczyć liczbę połączeń wychodzących.";
 $text['description-limit']['uk'] = "Введіть обмеження кількість вихідних дзвінків.";
 
 $text['description-enter-prefix']['en-us'] = "Enter a prefix number to add to the beginning of the destination number.";

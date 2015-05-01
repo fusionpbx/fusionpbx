@@ -53,7 +53,7 @@ $text['table-minutes']['es-cl'] = "Minutos";
 $text['table-minutes']['pt-pt'] = "Minutos";
 $text['table-minutes']['fr-fr'] = "Minutes";
 $text['table-minutes']['pt-br'] = "Minutos";
-$text['table-minutes']['pl'] = "Minuty";
+$text['table-minutes']['pl'] = "Ilość minut";
 $text['table-minutes']['sv-se'] = "Minuter";
 
 $text['table-hours']['en-us'] = "Hours";
@@ -324,7 +324,7 @@ $text['label-source']['es-cl'] = "Origen";
 $text['label-source']['pt-pt'] = "Origem";
 $text['label-source']['fr-fr'] = "Origine";
 $text['label-source']['pt-br'] = "Origem";
-$text['label-source']['pl'] = "Prezentowany numer";
+$text['label-source']['pl'] = "Numer prezentowany";
 $text['label-source']['sv-se'] = "Källa";
 
 $text['label-remote_media_ip']['en-us'] = "Remote Media IP";
@@ -476,7 +476,7 @@ $text['label-include_internal']['es-cl'] = "Incluya Interna";
 $text['label-include_internal']['pt-pt'] = "Incluir Interno";
 $text['label-include_internal']['fr-fr'] = "Inclure Interne";
 $text['label-include_internal']['pt-br'] = "Incluir interno";
-$text['label-include_internal']['pl'] = "Zawieraj rozmowy wewnętrzne";
+$text['label-include_internal']['pl'] = "Uwzględnij rozmowy wewnętrzne";
 $text['label-include_internal']['sv-se'] = "Inkludera Interna";
 
 $text['label-inbound_duration']['en-us'] = "Inbound Duration";
@@ -675,7 +675,7 @@ $text['label-call-statistics-description']['es-cl'] = "Estadísticas de los regi
 $text['label-call-statistics-description']['pt-pt'] = "As estatisticas sobre o detalhe das chamadas resumem as informações acerca chamada.";
 $text['label-call-statistics-description']['fr-fr'] = "Résumé de l'historique des appels.";
 $text['label-call-statistics-description']['pt-br'] = "As estatisticas sobre o detalhe das chamadas resumem as informações sobre a chamada ";
-$text['label-call-statistics-description']['pl'] = "Statustyki wykazu rozmów. Podsumowanie informacji o połączeniach ";
+$text['label-call-statistics-description']['pl'] = "Statystyki wykazu rozmów podsumowują  informacje o wszystkich rozmowach.";
 $text['label-call-statistics-description']['sv-se'] = "Detaljerad Samtals-statistik summerar samtalsinformationen.";
 
 $text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
@@ -683,7 +683,7 @@ $text['label-call-statistics']['es-cl'] = "Estadísticas de ñps  detalles de gr
 $text['label-call-statistics']['pt-pt'] = "Estatísticas do Registo Detalhado de Chamadas";
 $text['label-call-statistics']['fr-fr'] = "Statistiques sur l'historique des appels";
 $text['label-call-statistics']['pt-br'] = "Estatisticas do registro detalhado das chamadas";
-$text['label-call-statistics']['pl'] = "Statustyki wykazu rozmów";
+$text['label-call-statistics']['pl'] = "Statystyki wykazu rozmów";
 $text['label-call-statistics']['sv-se'] = "Detaljerad Samtals-statistik";
 
 $text['label-call-flow-5']['en-us'] = "Call Flow: Times";
@@ -875,7 +875,7 @@ $text['description']['es-cl'] = "Los registros de detalle de llamadas (CDR) cont
 $text['description']['pt-pt'] = "O registo detalhado de chamadas mostra informações detalhadas sobre as chamadas.";
 $text['description']['fr-fr'] = "Ici se trouve l'historique des tous les appels passés sur cette plateforme. En Anglais: Call Detail Records (CDR).";
 $text['description']['pt-br'] = "Editar informações da conta.";
-$text['description']['pl'] = "Wykaz rozmów pokazuje szczegółowe informacje o rozmowach.";
+$text['description']['pl'] = "Wykaz rozmów prezentuje szczegółowe informacje o zrealizowanych rozmowach.";
 $text['description']['sv-se'] = "Detaljerad Samtalsinformation (CDR) är detaljerad information från samtalen.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";

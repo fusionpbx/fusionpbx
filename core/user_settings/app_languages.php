@@ -9,6 +9,7 @@ $text['title-user_dashboard']['pl'] = "Panel użytkowników";
 $text['title-user_dashboard']['he'] = "ממשק משתמש";
 $text['title-user_dashboard']['uk'] = "Панель користувача";
 $text['title-user_dashboard']['sv-se'] = "Användarpanel";
+$text['title-user_dashboard']['de-at'] = "Benutzer-Übersichtsseite";
 
 $text['title-user-settings']['en-us'] = "User Information";
 $text['title-user-settings']['es-cl'] = "Información de Usuario";
@@ -19,6 +20,7 @@ $text['title-user-settings']['pl'] = "Informacje o użytkowniku";
 $text['title-user-settings']['he'] = "פרטי משתמש";
 $text['title-user-settings']['uk'] = "Інформація про користувача";
 $text['title-user-settings']['sv-se'] = "Användarinformation";
+$text['title-user-settings']['de-at'] = "Benutzerinformationen";
 
 $text['title']['en-us'] = "Account Settings";
 $text['title']['es-cl'] = "Configuración de Cuenta";
@@ -29,6 +31,7 @@ $text['title']['pl'] = "Ustawienia konta";
 $text['title']['he'] = "הגדרת חשבון";
 $text['title']['uk'] = "Параметри облікового запису";
 $text['title']['sv-se'] = "Kontoinställningar";
+$text['title']['de-at'] = "Kontoeinstellungen";
 
 $text['table2-title']['en-us'] = "Additional Info";
 $text['table2-title']['es-cl'] = "Información Adicional";
@@ -39,6 +42,7 @@ $text['table2-title']['pl'] = "Informacje dodatkowe ";
 $text['table2-title']['he'] = "פרטים נוספים";
 $text['table2-title']['uk'] = "Додаткова інформація";
 $text['table2-title']['sv-se'] = "Ytterligare Information";
+$text['table2-title']['de-at'] = "Zusätzliche Informationen";
 
 $text['table-tools']['en-us'] = "Tools";
 $text['table-tools']['es-cl'] = "Herramientas";
@@ -49,6 +53,7 @@ $text['table-tools']['pl'] = "Narzędzia";
 $text['table-tools']['he'] = "כלים";
 $text['table-tools']['uk'] = "Налаштування";
 $text['table-tools']['sv-se'] = "Verktyg";
+$text['table-tools']['de-at'] = "Funktionen";
 
 $text['table-title']['en-us'] = "User Info";
 $text['table-title']['es-cl'] = "Información de Usuario";
@@ -59,6 +64,7 @@ $text['table-title']['pl'] = "Informacje o użytkowniku";
 $text['table-title']['he'] = "פרטי משתמש";
 $text['table-title']['uk'] = "Інформація про користувача";
 $text['table-title']['sv-se'] = "Användarinformation";
+$text['table-title']['de-at'] = "Benutzerinformationen";
 
 $text['table-extension']['en-us'] = "Extension";
 $text['table-extension']['es-cl'] = "Extensión";
@@ -69,6 +75,7 @@ $text['table-extension']['pl'] = "Numer wewnętrzny";
 $text['table-extension']['he'] = "שלוחה";
 $text['table-extension']['uk'] = "Розширення (Extention)";
 $text['table-extension']['sv-se'] = "Anknytning";
+$text['table-extension']['de-at'] = "Durchwahl";
 
 $text['table-description']['en-us'] = "Description";
 $text['table-description']['es-cl'] = "Descripción";
@@ -79,6 +86,7 @@ $text['table-description']['pl'] = "Opis";
 $text['table-description']['he'] = "תיאור";
 $text['table-description']['uk'] = "Опис";
 $text['table-description']['sv-se'] = "Beskrivning";
+$text['table-description']['de-at'] = "Beschreibung";
 
 $text['message-reset_link_sent']['en-us'] = "Password Reset Link Sent";
 $text['message-reset_link_sent']['es-cl'] = "Restablecer Contraseña de Conexión Enviados";
@@ -89,6 +97,7 @@ $text['message-reset_link_sent']['pl'] = "Link do resetowania hasla zostal wysla
 $text['message-reset_link_sent']['he'] = "קישור לאיפוס סיסמה נשלח";
 $text['message-reset_link_sent']['uk'] = "Посилання на скидання пароля відправлено";
 $text['message-reset_link_sent']['sv-se'] = "Återställnings Länk för Lösenord Skickat";
+$text['message-reset_link_sent']['de-at'] = "Link zum Zurücksetzen des Passworts gesendet";
 
 $text['message-password_reset']['en-us'] = "Password Reset";
 $text['message-password_reset']['es-cl'] = "Restablecer Contraseña";
@@ -99,6 +108,7 @@ $text['message-password_reset']['pl'] = "Resetowanie hasła";
 $text['message-password_reset']['he'] = "איפוס סיסמה";
 $text['message-password_reset']['uk'] = "Скинути пароль";
 $text['message-password_reset']['sv-se'] = "Återställning Av Lösenord";
+$text['message-password_reset']['de-at'] = "Passwort zurücksetzen";
 
 $text['message-invalid_username_mismatch_passwords']['en-us'] = "Invalid Username and/or Mismatched Passwords";
 $text['message-invalid_username_mismatch_passwords']['es-cl'] = "Nombre de usuario válido y/o contraseñas no coincidentes";
@@ -109,6 +119,7 @@ $text['message-invalid_username_mismatch_passwords']['pl'] = "Nieprawidłowa naz
 $text['message-invalid_username_mismatch_passwords']['he'] = "שם משתמש או סיסמה  לא נכונים";
 $text['message-invalid_username_mismatch_passwords']['uk'] = "Неправильні ім’я користувача та/або пароль";
 $text['message-invalid_username_mismatch_passwords']['sv-se'] = "Ogiltig Användarnamn och / eller Felaktigt Lösenord";
+$text['message-invalid_username_mismatch_passwords']['de-at'] = "Falscher Benutzername und/oder Nichtübereinstimmung der Passwörter";
 
 $text['message-invalid_email']['en-us'] = "Invalid Email Address";
 $text['message-invalid_email']['es-cl'] = "Dirección no válida de correo electrónico";
@@ -119,6 +130,7 @@ $text['message-invalid_email']['pl'] = "Nieprawidłowy adres email";
 $text['message-invalid_email']['he'] = "כתובת דואר מייל לא תקינה";
 $text['message-invalid_email']['uk'] = "Некоректна адреса E-Mail";
 $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
+$text['message-invalid_email']['de-at'] = "Ungültige E-Mail-Adresse";
 
 $text['login-message_dismiss']['en-us'] = "Dismiss";
 $text['login-message_dismiss']['es-cl'] = "Despedir";
@@ -129,6 +141,7 @@ $text['login-message_dismiss']['pl'] = "Odrzuć";
 $text['login-message_dismiss']['he'] = "משוחרר";
 $text['login-message_dismiss']['uk'] = "Звільнити";
 $text['login-message_dismiss']['sv-se'] = "Avvisa";
+$text['login-message_dismiss']['de-at'] = "Verwerfen";
 
 $text['login-message_attention']['en-us'] = "Attention!";
 $text['login-message_attention']['es-cl'] = "¡Atención!";
@@ -139,6 +152,7 @@ $text['login-message_attention']['pl'] = "Uwaga";
 $text['login-message_attention']['he'] = "!שים לב";
 $text['login-message_attention']['uk'] = "Увага!";
 $text['login-message_attention']['sv-se'] = "Observera!";
+$text['login-message_attention']['de-at'] = "Achtung!";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de Voz";
@@ -149,6 +163,7 @@ $text['label-voicemail']['pl'] = "Poczta głosowa";
 $text['label-voicemail']['he'] = "תיבה קולית";
 $text['label-voicemail']['uk'] = "Голосова пошта";
 $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
+$text['label-voicemail']['de-at'] = "Sprachnachricht";
 
 $text['label-view-messages']['en-us'] = "View Messages";
 $text['label-view-messages']['es-cl'] = "Ver mensajes";
@@ -159,6 +174,7 @@ $text['label-view-messages']['pl'] = "Przegląd wiadomości";
 $text['label-view-messages']['he'] = "ראה הודעות";
 $text['label-view-messages']['uk'] = "Переглянути повідомлення";
 $text['label-view-messages']['sv-se'] = "Se Meddelanden";
+$text['label-view-messages']['de-at'] = "Nachrichten anzeigen";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
@@ -169,6 +185,7 @@ $text['label-username']['pl'] = "Użytkownik";
 $text['label-username']['he'] = "שם משתמש";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['sv-se'] = "Användarnamn";
+$text['label-username']['de-at'] = "Benutzername";
 
 $text['label-user_language']['en-us'] = "Language";
 $text['label-user_language']['es-cl'] = "Lengua";
@@ -179,6 +196,7 @@ $text['label-user_language']['pl'] = "Język";
 $text['label-user_language']['he'] = "שפה";
 $text['label-user_language']['uk'] = "Мова";
 $text['label-user_language']['sv-se'] = "Språk";
+$text['label-user_language']['de-at'] = "Sprache";
 
 $text['label-time']['en-us'] = "Time Zone";
 $text['label-time']['es-cl'] = "Zona Horaria";
@@ -189,6 +207,7 @@ $text['label-time']['pl'] = "Strefa czasowa";
 $text['label-time']['he'] = "אזור זמן";
 $text['label-time']['uk'] = "Часовий пояс";
 $text['label-time']['sv-se'] = "Tidszon";
+$text['label-time']['de-at'] = "Zeitzone";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -199,6 +218,7 @@ $text['label-status']['pl'] = "Status";
 $text['label-status']['he'] = "סטטוס";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
+$text['label-status']['de-at'] = "Status";
 
 $text['label-reset_password']['en-us'] = "Reset Password";
 $text['label-reset_password']['es-cl'] = "Restablecer contraseña";
@@ -209,6 +229,7 @@ $text['label-reset_password']['pl'] = "Resetowanie hasla";
 $text['label-reset_password']['he'] = "אפס סיסמה";
 $text['label-reset_password']['uk'] = "Скинути пароль";
 $text['label-reset_password']['sv-se'] = "Återställ Lösenord";
+$text['label-reset_password']['de-at'] = "Passwort zurücksetzen";
 
 $text['label-reset_link']['en-us'] = "Password Reset Link";
 $text['label-reset_link']['es-cl'] = "Password Reset Enlace";
@@ -219,6 +240,7 @@ $text['label-reset_link']['pl'] = "Link do resetowania hasla";
 $text['label-reset_link']['he'] = "קישור לאיפוס סיסמה";
 $text['label-reset_link']['uk'] = "Посилання на скидання пароля";
 $text['label-reset_link']['sv-se'] = "Länk för Återställning av Lösenord";
+$text['label-reset_link']['de-at'] = "Link zum Zurücksetzen des Passworts";
 
 $text['label-repeat_password']['en-us'] = "Repeat Password";
 $text['label-repeat_password']['es-cl'] = "Repita la Contraseña";
@@ -229,6 +251,7 @@ $text['label-repeat_password']['pl'] = "Wpisz ponownie hasło ";
 $text['label-repeat_password']['he'] = "חזור על הסיסמה";
 $text['label-repeat_password']['uk'] = "Повторіть пароль";
 $text['label-repeat_password']['sv-se'] = "Repetera Lösenord";
+$text['label-repeat_password']['de-at'] = "Passwort wiederholen";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -239,6 +262,7 @@ $text['label-password']['pl'] = "Hasło";
 $text['label-password']['he'] = "סיסמה";
 $text['label-password']['uk'] = "Пароль";
 $text['label-password']['sv-se'] = "Lösenord";
+$text['label-password']['de-at'] = "Passwort";
 
 $text['label-new_password']['en-us'] = "New Password";
 $text['label-new_password']['es-cl'] = "Nueva Contraseña";
@@ -249,6 +273,7 @@ $text['label-new_password']['pl'] = "Nowe haslo";
 $text['label-new_password']['he'] = "סיסמה חדשה";
 $text['label-new_password']['uk'] = "Новий пароль";
 $text['label-new_password']['sv-se'] = "Nytt Lösenord";
+$text['label-new_password']['de-at'] = "Neues Passwort";
 
 $text['label-followme']['en-us'] = "Follow Me";
 $text['label-followme']['es-cl'] = "Sígueme";
@@ -259,6 +284,7 @@ $text['label-followme']['pl'] = "Podążaj za mną";
 $text['label-followme']['he'] = "עקוב אחרי";
 $text['label-followme']['uk'] = "Follow Me";
 $text['label-followme']['sv-se'] = "Följ Mig";
+$text['label-followme']['de-at'] = "Follow Me";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -269,6 +295,7 @@ $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['he'] = "שלוחה";
 $text['label-extension']['uk'] = "Розширення (Extention)";
 $text['label-extension']['sv-se'] = "Anknytning";
+$text['label-extension']['de-at'] = "Durchwahl";
 
 $text['label-email_address']['en-us'] = "Email Address";
 $text['label-email_address']['es-cl'] = "Dirección de Correo Electrónico";
@@ -279,6 +306,7 @@ $text['label-email_address']['pl'] = "Adres email";
 $text['label-email_address']['he'] = "כתובת מייל";
 $text['label-email_address']['uk'] = "Адреси E-Mail";
 $text['label-email_address']['sv-se'] = "E-postadress";
+$text['label-email_address']['de-at'] = "E-Mail-Adresse";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -289,6 +317,7 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['he'] = "תחום";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
+$text['label-domain']['de-at'] = "Domain";
 
 $text['label-dnd']['en-us'] = "Do Not Disturb";
 $text['label-dnd']['es-cl'] = "No Molestar";
@@ -299,6 +328,7 @@ $text['label-dnd']['pl'] = "Nie przeszkadzaj (DND)";
 $text['label-dnd']['he'] = "לא להפריע";
 $text['label-dnd']['uk'] = "Не турбувати";
 $text['label-dnd']['sv-se'] = "Stör Ej";
+$text['label-dnd']['de-at'] = "Nicht stören";
 
 $text['label-confirm-password']['en-us'] = "Confirm Password";
 $text['label-confirm-password']['es-cl'] = "Confirmar Contraseña";
@@ -309,6 +339,7 @@ $text['label-confirm-password']['pl'] = "Potwierdź hasło";
 $text['label-confirm-password']['he'] = "אשר סיסמה";
 $text['label-confirm-password']['uk'] = "Підтвердіть пароль";
 $text['label-confirm-password']['sv-se'] = "Verifiera Lösenord";
+$text['label-confirm-password']['de-at'] = "Passwort bestätigen";
 
 $text['label-cancel']['en-us'] = "Cancel";
 $text['label-cancel']['es-cl'] = "Cancelar";
@@ -319,6 +350,7 @@ $text['label-cancel']['pl'] = "Anuluj";
 $text['label-cancel']['he'] = "בטל";
 $text['label-cancel']['uk'] = "Відмінити";
 $text['label-cancel']['sv-se'] = "Avbryt";
+$text['label-cancel']['de-at'] = "Abbrechen";
 
 $text['label-callforward']['en-us'] = "Call Forward";
 $text['label-callforward']['es-cl'] = "Desvío de Llamadas";
@@ -329,6 +361,7 @@ $text['label-callforward']['pl'] = "Przekierowanie rozmowy";
 $text['label-callforward']['he'] = "עקוב אחרי";
 $text['label-callforward']['uk'] = "Переадресація дзвінків";
 $text['label-callforward']['sv-se'] = "Vidarekoppling";
+$text['label-callforward']['de-at'] = "Anrufweiterleitung";
 
 $text['header-user_dashboard']['en-us'] = "User Dashboard";
 $text['header-user_dashboard']['es-cl'] = "Dashboard Usuario";
@@ -339,6 +372,7 @@ $text['header-user_dashboard']['pl'] = "Panel użytkowników";
 $text['header-user_dashboard']['he'] = "ממשק משתמש";
 $text['header-user_dashboard']['uk'] = "Панель користувача";
 $text['header-user_dashboard']['sv-se'] = "Användarpanel";
+$text['header-user_dashboard']['de-at'] = "Benutzer-Übersichtsseite";
 
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
@@ -349,6 +383,7 @@ $text['description-user_language']['pl'] = "Wybierz język";
 $text['description-user_language']['he'] = "בחר שפה";
 $text['description-user_language']['uk'] = "Виберіть мову";
 $text['description-user_language']['sv-se'] = "Välj Språk";
+$text['description-user_language']['de-at'] = "Sprache auswählen";
 
 $text['description-user_dashboard']['en-us'] = "Quickly access information and tools related to your account.";
 $text['description-user_dashboard']['es-cl'] = "Acceso rápido a la información y herramientas relacionadas con su cuenta.";
@@ -359,6 +394,7 @@ $text['description-user_dashboard']['pl'] = "Szybki dostęp do informacji i narz
 $text['description-user_dashboard']['he'] = "מידע מהיר וגישה לכלים הקשורים לחשבון שלך ";
 $text['description-user_dashboard']['uk'] = "Швидкий доступ до інформації та інструментів  вашого облікового запису.";
 $text['description-user_dashboard']['sv-se'] = "Snabb tillgång till information och verktyg för ditt konto.";
+$text['description-user_dashboard']['de-at'] = "Schneller Zugriff auf Kontoinformationen und -funktionen";
 
 $text['description-timezone']['en-us'] = "Select the default time zone.";
 $text['description-timezone']['es-cl'] = "Seleccione la zona horaria predeterminada.";
@@ -369,6 +405,7 @@ $text['description-timezone']['pl'] = "Wybierz domyślną strefę czasową";
 $text['description-timezone']['he'] = "בחר את ברירת המחדל עבור אזור הזמן ";
 $text['description-timezone']['uk'] = "Виберіть часовий пояс за замовчуванням";
 $text['description-timezone']['sv-se'] = "Välj standardtidszon";
+$text['description-timezone']['de-at'] = "Standardzeitzone auswählen";
 
 $text['description-status']['en-us'] = "Select a user status.";
 $text['description-status']['es-cl'] = "Seleccione el estado del usuario.";
@@ -379,6 +416,7 @@ $text['description-status']['pl'] = "Wybierz status użytkownika";
 $text['description-status']['he'] = "בחר את סטטוס המשתמש";
 $text['description-status']['uk'] = "Виберіть статус користувача";
 $text['description-status']['sv-se'] = "Välj en användarstatus.";
+$text['description-status']['de-at'] = "Benutzerstatus auswählen";
 
 $text['description']['en-us'] = "Edit account information.";
 $text['description']['es-cl'] = "Editar configuración de la cuenta.";
@@ -389,6 +427,7 @@ $text['description']['pl'] = "Edytuj informacje o koncie";
 $text['description']['he'] = "ערוך את פרטי החשבון";
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['sv-se'] = "Redigera kontoinformation.";
+$text['description']['de-at'] = "Kontoinformationen bearbeiten";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completa";
@@ -399,6 +438,7 @@ $text['confirm-update']['pl'] = "Aktualizacja zakonczona";
 $text['confirm-update']['he'] = "עידכון הושלם";
 $text['confirm-update']['uk'] = "Оновлення завершено";
 $text['confirm-update']['sv-se'] = "Uppdatering Klar";
+$text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 
 $text['confirm-password']['en-us'] = "Passwords did not match.";
 $text['confirm-password']['es-cl'] = "Las contraseñas no coinciden.";
@@ -409,6 +449,7 @@ $text['confirm-password']['pl'] = "Hasła nie sa takie same";
 $text['confirm-password']['he'] = "סיסמאות לא תואמות";
 $text['confirm-password']['uk'] = "Паролі не співпадають";
 $text['confirm-password']['sv-se'] = "Lösenorden matchar inte.";
+$text['confirm-password']['de-at'] = "Die Passwörter stimmen nicht überein";
 
 $text['check-onbreak-status']['en-us'] = "On Break";
 $text['check-onbreak-status']['es-cl'] = "En Pausa";
@@ -419,6 +460,7 @@ $text['check-onbreak-status']['pl'] = "Na przerwie";
 $text['check-onbreak-status']['he'] = "בהפסקה";
 $text['check-onbreak-status']['uk'] = "На перерві";
 $text['check-onbreak-status']['sv-se'] = "På Rast";
+$text['check-onbreak-status']['de-at'] = "Pause";
 
 $text['check-loggedout-status']['en-us'] = "Logged Out";
 $text['check-loggedout-status']['es-cl'] = "Desconectado";
@@ -429,6 +471,7 @@ $text['check-loggedout-status']['pl'] = "Wylogowany";
 $text['check-loggedout-status']['he'] = "התנתק";
 $text['check-loggedout-status']['uk'] = "Вийшов";
 $text['check-loggedout-status']['sv-se'] = "Utloggad";
+$text['check-loggedout-status']['de-at'] = "Abgemeldet";
 
 $text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
 $text['check-do-not-disturb-status']['es-cl'] = "No molestar";
@@ -439,6 +482,7 @@ $text['check-do-not-disturb-status']['pl'] = "Nie przeszkadzaj (DND)";
 $text['check-do-not-disturb-status']['he'] = "לא להפריע";
 $text['check-do-not-disturb-status']['uk'] = "Не турбувати";
 $text['check-do-not-disturb-status']['sv-se'] = "Stör Ej";
+$text['check-do-not-disturb-status']['de-at'] = "Nicht stören";
 
 $text['check-available-status']['en-us'] = "Available";
 $text['check-available-status']['es-cl'] = "Disponible";
@@ -449,6 +493,7 @@ $text['check-available-status']['pl'] = "Dostępny";
 $text['check-available-status']['he'] = "זמין";
 $text['check-available-status']['uk'] = "Доступний";
 $text['check-available-status']['sv-se'] = "Tillgänglig";
+$text['check-available-status']['de-at'] = "Erreichbar";
 
 $text['check-available-ondemand-status']['en-us'] = "Available (On Demand)";
 $text['check-available-ondemand-status']['es-cl'] = "Disponible (A Pedido)";
@@ -459,6 +504,7 @@ $text['check-available-ondemand-status']['pl'] = "Dostepny (na żądanie)";
 $text['check-available-ondemand-status']['he'] = "(זמין(ע״פ דרישה";
 $text['check-available-ondemand-status']['uk'] = "Доступний (на вимогу)";
 $text['check-available-ondemand-status']['sv-se'] = "Tillgänglig (På Begäran)";
+$text['check-available-ondemand-status']['de-at'] = "Erreichbar (bei Bedarf)";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -469,6 +515,7 @@ $text['button-save']['pl'] = "Zachowaj";
 $text['button-save']['he'] = "שמור";
 $text['button-save']['uk'] = "Зберегти";
 $text['button-save']['sv-se'] = "Spara";
+$text['button-save']['de-at'] = "Speichern";
 
 $text['button-reset']['en-us'] = "Reset";
 $text['button-reset']['es-cl'] = "Reajustar";
@@ -479,6 +526,7 @@ $text['button-reset']['pl'] = "Resetuj";
 $text['button-reset']['he'] = "אפס";
 $text['button-reset']['uk'] = "Скинути";
 $text['button-reset']['sv-se'] = "Återställ";
+$text['button-reset']['de-at'] = "Zurücksetzen";
 
 $text['button-login']['en-us'] = "Login";
 $text['button-login']['es-cl'] = "Ingresar";
@@ -489,6 +537,7 @@ $text['button-login']['pl'] = "Użytkownik";
 $text['button-login']['he'] = "כניסה";
 $text['button-login']['uk'] = "Логін";
 $text['button-login']['sv-se'] = "Logga In";
+$text['button-login']['de-at'] = "Anmelden";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -499,5 +548,6 @@ $text['button-back']['pl'] = "Wróć";
 $text['button-back']['he'] = "חזרה";
 $text['button-back']['uk'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
+$text['button-back']['de-at'] = "Zurück ";
 
 ?>
