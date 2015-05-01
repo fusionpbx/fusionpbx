@@ -13,8 +13,8 @@ $text['title']['es-cl'] = "Llamadas Activas";
 $text['title']['fr-fr'] = "Communications Actives";
 $text['title']['pt-pt'] = "Chamadas Ativas";
 $text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pl'] = "Ustawienia konta";
-$text['title']['sv-se'] = "Aktiva samtal";
+$text['title']['pl'] = "Aktywne Rozmowy";
+$text['title']['sv-se'] = "Aktiva Samtal";
 
 $text['label-time']['en-us'] = "Time";
 $text['label-time']['es-cl'] = "Tiempo";
@@ -55,6 +55,20 @@ $text['label-secure']['pt-pt'] = "Seguro";
 $text['label-secure']['pt-br'] = "Seguro";
 $text['label-secure']['pl'] = "Bezpieczny";
 $text['label-secure']['sv-se'] = "Skydda";
+
+$text['label-refresh_pause']['en-us'] = "Pause Refresh";
+$text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
+$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
+$text['label-refresh_pause']['fr-fr'] = "Pause Actualiser";
+$text['label-refresh_pause']['pt-br'] = "Pausar atualizaÃ§Ã£o";
+$text['label-refresh_pause']['pl'] = "Pauzuj odÅ›wieÅ¼anie";
+
+$text['label-refresh_enable']['en-us'] = "Enable Refresh";
+$text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
+$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
+$text['label-refresh_enable']['fr-fr'] = "Activer Actualiser";
+$text['label-refresh_enable']['pt-br'] = "Habilitar atualizaÃ§Ã£o";
+$text['label-refresh_enable']['pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['es-cl'] = "Perfil";
@@ -128,6 +142,13 @@ $text['label-ext']['pt-br'] = "Extensão";
 $text['label-ext']['pl'] = "Numer wewnętrzny";
 $text['label-ext']['sv-se'] = "Ank";
 
+$text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['es-cl'] = "Dominio";
+$text['label-domain']['pt-pt'] = "Domínio";
+$text['label-domain']['fr-fr'] = "Domaine";
+$text['label-domain']['pt-br'] = "Dominio";
+$text['label-domain']['pl'] = "Domena";
+
 $text['label-destination']['en-us'] = "Dest";
 $text['label-destination']['es-cl'] = "Destino";
 $text['label-destination']['fr-fr'] = "Dest";
@@ -181,7 +202,7 @@ $text['description-2']['es-cl'] = "Utilice este menú para ver todas las extensi
 $text['description-2']['fr-fr'] = "Voir toutes les extensions, superviser et interagir avec les Communications Actives.";
 $text['description-2']['pt-pt'] = "Utilize este menu para ver todas as extensões, monitorizar e interagir com as chamadas activas.";
 $text['description-2']['pt-br'] = "A informação contem a origem, destino, duração e outros detalhes úteis da chamada.";
-$text['description-2']['pl'] = "Użyj tej opcji, aby zobaczyć wszystkie numery wewnętrzne i monitorować interakcję z aktywnymi połączeniami.";
+$text['description-2']['pl'] = "Użyj tej opcji, aby zobaczyć wszystkie numery wewnętrzne i monitorować interakcję z aktywnymi rozmowami.";
 $text['description-2']['sv-se'] = "Använd detta för att se alla anknytningar och monitorera och hantera aktiva samtal.";
 
 $text['description']['en-us'] = "Use this to monitor and interact with the active calls.";
@@ -189,7 +210,7 @@ $text['description']['es-cl'] = "Utilice este menú para monitorear e interactua
 $text['description']['fr-fr'] = "Superviser et interagir avec les Communications Actives.";
 $text['description']['pt-pt'] = "Utilize este menu para monitorizar e interagir com as chamadas activas.";
 $text['description']['pt-br'] = "Editar informações da conta.";
-$text['description']['pl'] = "Użyć tej opcji do monitorowania i interakcji z aktywnymi połączeniami.";
+$text['description']['pl'] = "Użyć tej opcji do monitorowania i interakcji z aktywnymi rozmowami.";
 $text['description']['sv-se'] = "Använd detta för att monitorera och hantera aktiva samtal.";
 
 $text['confirm-socket']['en-us'] = "Connection to Event Socket failed.";
@@ -197,7 +218,7 @@ $text['confirm-socket']['es-cl'] = "Conexión con socket fallida.";
 $text['confirm-socket']['fr-fr'] = "la Connexion au Event Socket a échoué.";
 $text['confirm-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
 $text['confirm-socket']['pt-br'] = "A conexão ao evento socket falhou";
-$text['confirm-socket']['pl'] = "Polaczenie do  Event Socket  nie powiodło się";
+$text['confirm-socket']['pl'] = "Polaczenie do  Event Socket nie powiodło się";
 $text['confirm-socket']['sv-se'] = "Anslutning till 'Event Socket' misslyckades";
 
 $text['confirm-hangup']['en-us'] = "Do you really want to hangup this call?";
@@ -248,4 +269,17 @@ $text['check-available-on-demand-status']['pt-br'] = "Disponível (A pedido)";
 $text['check-available-on-demand-status']['pl'] = "Dostępny (na żądanie)";
 $text['check-available-on-demand-status']['sv-se'] = "Anträffbar (På Begäran) ";
 
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['pt-br'] = "Mostrar Todos";
+$text['button-show_all']['pl'] = "Pokaż Wszystkie";
+
+$text['button-back']['en-us'] = "Back";
+$text['button-back']['es-cl'] = "Volver";
+$text['button-back']['pt-pt'] = "Voltar";
+$text['button-back']['fr-fr'] = "Retour";
+$text['button-back']['pt-br'] = "Voltar";
+$text['button-back']['pl'] = "Wróć";
 ?>

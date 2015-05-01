@@ -103,9 +103,6 @@ require_once "resources/check_auth.php";
 			window.attachEvent('onload', requestTime);
 		}
 
-		var record_count = 0;
-		var destination;
-
 	//refresh controls
 		function refresh_stop() {
 			clearInterval(interval_timer_id);
@@ -122,15 +119,10 @@ require_once "resources/check_auth.php";
 
 	</script>
 
-	<?php
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "	<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<div id=\"ajax_reponse\"></div>\n";
-	echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
+<?php
+	echo "<div id='ajax_reponse'></div>\n";
+	echo "<div id='time_stamp' style='visibility:hidden'>".date('Y-m-d-s')."</div>\n";
+	echo "<br><br><br>";
 
 //get the footer
 	require_once "resources/footer.php";

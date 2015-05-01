@@ -41,7 +41,7 @@ require_once "resources/check_auth.php";
 	$language = new text;
 	$text = $language->get();
 
-//get the HTTP values asn set as variables
+//get the HTTP values and set as variables
 	$sip_profile_name = trim($_REQUEST["profile"]);
 	$show = trim($_REQUEST["show"]);
 	if ($show != "all") { $show = ''; }
@@ -122,7 +122,7 @@ require_once "resources/check_auth.php";
 			}
 
 		//show the registrations
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
+			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
 			echo "	<b>".$text['header-registrations'].": ".count($registrations)."</b>\n";
@@ -144,7 +144,7 @@ require_once "resources/check_auth.php";
 			echo "</table>\n";
 			echo "<br />\n";
 
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
+			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
 			echo "	<th>".$text['label-agent']."</th>\n";
