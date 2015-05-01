@@ -46,7 +46,7 @@ else {
 	}
 
 if (strlen($id) > 0) {
-	//get the dialplan data
+	//get the fax file data
 		$sql = "select * from v_fax_files ";
 		$sql .= "where fax_file_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
@@ -57,6 +57,19 @@ if (strlen($id) > 0) {
 			$fax_uuid = $row["fax_uuid"];
 			$fax_mode = $row["fax_mode"];
 			$fax_file_path = $row["fax_file_path"];
+			$fax_file_type = $row["fax_file_type"];
+		}
+		unset($prep_statement);
+
+	//get the fax file data
+		$sql = "select * from v_fax_files ";
+		$sql .= "where fax_uuid = '$fax_uuid' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$fax_extension = $row["fax_extension"];
 		}
 		unset($prep_statement);
 
@@ -76,14 +89,24 @@ if (strlen($id) > 0) {
 			$type = 'sent';
 		}
 
-	//delete the file
-		if (file_exists($fax_file_path)) {
-			unlink($fax_file_path);
+	//set the fax directory
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
+		$file = basename($row['fax_file_path']);
+		$file_ext = substr($file, -3);
+		$dir_fax = $fax_dir.'/'.$fax_extension.'/'.$type;
+		if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
+			$file_name = substr($file, 0, (strlen($file) -4));
 		}
-		else {
-			str_replace("temp/", $type."/", $file);
-			unlink($fax_file_path);
+
+	//if the file does not exist then remove temp/ out of the path
+		if (!file_exists($fax_file_path)) {
+			$file = str_replace("temp/", $type."/", $file);
 		}
+
+	//delete the files
+		unlink($dir_fax.'/'.$file_name.'.tif');
+		unlink($dir_fax.'/'.$file_name.'.pdf');
+
 }
 
 //redirect the user
