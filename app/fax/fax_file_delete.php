@@ -59,5 +59,4 @@ if (strlen($id)>0) {
 	$_SESSION['message'] = $text['message-delete'];
 	header('Location: fax_files.php');
 
-
 ?>

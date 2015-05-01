@@ -33,6 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
+
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
@@ -134,10 +135,10 @@ else {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top'>\n";
-	if ($_REQUEST['box'] == 'inbox') {
+	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 		echo "			<b>".$text['header-inbox'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
 	}
-	if ($_REQUEST['box'] == 'sent') {
+	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
 		echo "			<b>".$text['header-sent'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
 	}
 	echo "		</td>\n";
@@ -227,12 +228,12 @@ else {
 
 			//decode the base64
 			if (strlen($row['fax_base64']) > 0) {
-				if ($_REQUEST['box'] == 'inbox') {
+				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 					if (!file_exists($dir_fax_inbox.'/'.$file)) {
 						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));
 					}
 				}
-				if ($_REQUEST['box'] == 'sent') {
+				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
 					if (!file_exists($dir_fax_sent.'/'.$file)) {
 						//decode the base64
 						file_put_contents($dir_fax_sent.'/'.$file, base64_decode($row['fax_base64']));
@@ -242,7 +243,7 @@ else {
 			}
 			//convert the tif to pdf
 			if (!file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
-				if ($_REQUEST['box'] == 'inbox') {
+				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 					chdir($dir_fax_inbox);
 					if (is_file("/usr/local/bin/tiff2pdf")) {
 						exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
@@ -251,7 +252,7 @@ else {
 						exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
 					}
 				}
-				if ($_REQUEST['box'] == 'sent') {
+				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
 					chdir($dir_fax_sent);
 					if (is_file("/usr/local/bin/tiff2pdf")) {
 						exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
@@ -265,10 +266,10 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "<tr>\n";
 			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
-			if ($_REQUEST['box'] == 'inbox') {
+			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
 				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
 			}
-			if ($_REQUEST['box'] == 'sent') {
+			if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
 				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
 			}
 			echo "    	$file_name";
@@ -277,14 +278,17 @@ else {
 			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 			if ($_REQUEST['box'] == 'inbox') {
 				$dir_fax = $dir_fax_inbox;
-				$type = "fax_inbox";
 			}
 			if ($_REQUEST['box'] == 'sent') {
 				$dir_fax = $dir_fax_sent;
-				$type = "fax_sent";
 			}
 			if (file_exists($dir_fax.'/'.$file_name.".pdf")) {
-				echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=$type&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
+					echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+				}
+				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
+					echo "	  <a href=\"fax_box.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+				}
 				echo "    	PDF";
 				echo "	  </a>";
 			}
@@ -296,7 +300,6 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."'>PDF&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_number']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_file_type']."&nbsp;</td>\n";
-			
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_caller_id_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_caller_id_number']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date("F d Y H:i:s", strtotime($row['fax_date']))."&nbsp;</td>\n";
