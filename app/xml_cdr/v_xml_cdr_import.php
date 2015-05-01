@@ -249,6 +249,7 @@
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
+				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
 
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
@@ -256,7 +257,7 @@
 							$destination_number_serie = number_series($destination_number);
 							$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
 							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN ($destination_number_serie) AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
-							$sql_user_rate = "SELECT currency, connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC limit 1";
+							$sql_user_rate = "SELECT v_lcr.currency, connect_increment, talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 							if ($debug) {
 								echo "sql_rate: $sql_rate\n";
 								echo "sql_user_rate: $sql_user_rate\n";
@@ -289,7 +290,8 @@
 					case "inbound":
 							$callee_number = check_str(urldecode($row->caller_profile->destination_number));
 							$callee_number_serie = number_series($callee_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".$callee_number_serie.") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
@@ -316,7 +318,7 @@
 					case "local":
 							$destination_number = check_str(urldecode($xml->variables->lcr_query_digits));
 							$destination_number_serie = number_series($destination_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='local' AND v_lcr.digits IN (".$destination_number_serie.") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.currency, connect_increment, talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
@@ -353,7 +355,6 @@
 				$database->fields['call_sell'] = check_str($call_sell);
 
 				$db2->table = "v_xml_cdr";
-				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
 
 				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode' LIMIT 1";
 				$db2->result = $db2->execute();
