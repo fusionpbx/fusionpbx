@@ -46,9 +46,9 @@ else {
 
 //get fax extension
 	if (strlen($_GET['id']) > 0) {
-		if (is_uuid($_GET["id"])) {
-			$fax_uuid = $_GET["id"];
-		}
+		//get the key
+		$fax_uuid = check_str($_REQUEST["id"]);
+
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select * from v_fax ";
