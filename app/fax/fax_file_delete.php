@@ -41,22 +41,53 @@ else {
 	}
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
+	if (is_uuid($_GET["id"])) {
+		$id = $_GET["id"];
 	}
 
-if (strlen($id)>0) {
+if (strlen($id) > 0) {
+	//get the dialplan data
+		$sql = "select * from v_fax_files ";
+		$sql .= "where fax_file_uuid = '$id' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$fax_uuid = $row["fax_uuid"];
+			$fax_mode = $row["fax_mode"];
+			$fax_file_path = $row["fax_file_path"];
+		}
+		unset($prep_statement);
+
 	//delete fax_file
 		$sql = "delete from v_fax_files ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and fax_file_uuid = '$id' ";
+		$sql .= "where fax_file_uuid = '$id' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
+
+	//set the type
+		if ($fax_mode == 'rx';
+			$type = 'inbox';
+		}
+		if ($fax_mode == 'tx';
+			$type = 'sent';
+		}
+
+	//delete the file
+		if (file_exists($fax_file_path)) {
+			unlink($fax_file_path);
+		}
+		else {
+			str_replace("temp/", $type."/", $file);
+			unlink($fax_file_path);
+		}
 }
 
 //redirect the user
 	$_SESSION['message'] = $text['message-delete'];
-	header('Location: fax_files.php');
+	header('Location: fax_files.php?id='.$id.'&box='.$type);
 
 ?>
