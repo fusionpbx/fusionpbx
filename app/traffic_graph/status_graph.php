@@ -71,71 +71,68 @@ require_once "resources/header.php";
 $document['title'] = $text['title-traffic_graph'];
 
 ?>
-<table cellpadding='0' cellspacing='0' border='0' width='100%'>
-<tr>
-<td align='left' valign='top'>
-	<p class="pgtitle"><b><?php echo $text['header-traffic_graph']?></b></p>
-</td>
-<td align='right' valign='top'>
-	<form name="form1" action="status_graph.php" method="get" style="">
-	<?php echo $text['label-interface']?>:
-	<select name="interface" class="formfld" style="width:100px; z-index: -10;" onchange="document.form1.submit()">
-	<option value=''></option>
-	<?php
-// run netstat to determine interface info
-	exec("netstat -i", $result_array);
-	//exec("netstat -i -nWb -f link", $result_array);
-
-//show the result array
-	//echo "<pre>\n";
-	//print_r($result_array);
-	//echo "</pre>\n";
-
-//parse the data into a named array
-	$x = 0;
-	foreach ($result_array as $key => $value) {
-		if ($value != "Kernel Interface table") {
-			if ($x == 0) {
-				//get the names of the values
-					$interface_name_info = preg_split("/\s+/", $result_array[1]);
-			}
-			else {
-				//get the values
-					$interface_value_info = preg_split("/\s+/", $result_array[$key]);
-				//list all the interfaces
-					if ($interface == $interface_value_info[0]) {
-						echo "<option value='".$interface_value_info[0]."' selected='selected'>".$interface_value_info[0]."</option>";
+<table cellpadding='0' cellspacing='0' border='0' align='right'>
+	<tr>
+		<td>
+			<?php
+			// run netstat to determine interface info
+				exec("netstat -i", $result_array);
+			//parse the data into a named array
+				$x = 0;
+				foreach ($result_array as $key => $value) {
+					if ($value != "Kernel Interface table") {
+						if ($x != 0) {
+							//get the values
+								$interface_info = preg_split("/\s+/", $result_array[$key]);
+							//list all the interfaces
+								$options[] = "<option value='".$interface_info[0]."' ".(($interface == $interface_info[0]) ? "selected='selected'" : null).">".htmlspecialchars($interface_info[0])."</option>";
+							//auto-select first interface
+								if ($interface == '') { $interface = $interface_info[0]; }
+						}
+						$x++;
 					}
-					else {
-						echo "<option value='".$interface_value_info[0]."'>".htmlspecialchars($interface_value_info[0])."</option>";
-					}
-			}
-			$x++;
-		}
-	}
-	?>
-	</select>
-	<input type='hidden' name='width' value='<?php echo $width; ?>'>
-	<input type='hidden' name='height' value='<?php echo $height; ?>'>
-	</form>
-</td>
-</tr>
+				}
+			//output form, if interfaces exist'
+				if (sizeof($options)) {
+					?>
+					<form name="form1" action="status_graph.php" method="get" style="">
+					<strong><?php echo $text['label-interface']?></strong>&nbsp;&nbsp;
+					<select name="interface" class="formfld" style="width: 100px; z-index: -10;" onchange="document.form1.submit()">
+						<?php echo implode("\n", $options); ?>
+					</select>
+					<input type='hidden' name='width' value='<?php echo $width; ?>'>
+					<input type='hidden' name='height' value='<?php echo $height; ?>'>
+					</form>
+					<?php
+				}
+			?>
+		</td>
+	</tr>
 </table>
-
+<b><?php echo $text['header-traffic_graph']?></b>
+<br><br>
 <?php echo $text['description-traffic_graph']?>
-
-<br />
-<br />
-<br />
-<br />
+<br><br>
 
 <div align="center">
-	<object data="svg_graph.php?interface=<?php echo $interface; ?>" type="image/svg+xml" width="<?php echo $width; ?>" height="<?php echo $height; ?>">
-		<param name="src" value="svg_graph.php?interface=<?php echo $interface; ?>" />
-		<?php echo $text['description-no_svg']?>
-	</object>
+	<br><br>
+	<?php
+	if (sizeof($options) > 0) {
+		?>
+		<object data="svg_graph.php?interface=<?php echo $interface; ?>" type="image/svg+xml" width="<?php echo $width; ?>" height="<?php echo $height; ?>">
+			<param name="src" value="svg_graph.php?interface=<?php echo $interface; ?>" />
+			<?php echo $text['description-no_svg']?>
+		</object>
+		<?php
+	}
+	else {
+		echo "<br><br><br><br><br>";
+		echo $text['message-no_interfaces_found'];
+		echo "<br><br><br><br><br>";
+	}
+	?>
 </div>
-<br><br>
+<br><br><br>
 
 <?php
 require_once "resources/footer.php";

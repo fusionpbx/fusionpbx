@@ -8,6 +8,14 @@ $text['title-traffic_graph']['pt-br'] = "Gráfico de tráfego";
 $text['title-traffic_graph']['pl'] = "Wykres przesyłu danych";
 $text['title-traffic_graph']['sv-se'] = "Trafik Graf";
 
+$text['message-no_interfaces_found']['en-us'] = "No interfaces found.";
+$text['message-no_interfaces_found']['es-cl'] = "Sin interfaces encontrados.";
+$text['message-no_interfaces_found']['pt-pt'] = "Sem interfaces encontrados.";
+$text['message-no_interfaces_found']['fr-fr'] = "Aucune interface trouvé.";
+$text['message-no_interfaces_found']['pt-br'] = "Sem interfaces encontrados.";
+$text['message-no_interfaces_found']['pl'] = "Nie znaleziono interfejsy.";
+$text['message-no_interfaces_found']['sv-se'] = "Inga gränssnitt hittades.";
+
 $text['label-interface']['en-us'] = "Interface";
 $text['label-interface']['es-cl'] = "Interfaz";
 $text['label-interface']['pt-pt'] = "Interface";
