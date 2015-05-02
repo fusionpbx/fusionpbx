@@ -77,6 +77,7 @@
 						$json = json_encode($xml);
 						$sip_profile = json_decode($json, true);
 						$sip_profile_name = $sip_profile['@attributes']['name'];
+						$sip_profile_enabled = $sip_profile['@attributes']['enabled'];
 						//echo "sip profile name: ".$sip_profile_name."\n";
 
 						if ($sip_profile_name != "{v_sip_profile_name}") {
@@ -101,53 +102,56 @@
 									$sip_profile_description .= '';
 								}
 
-							//add the sip profile
-								$sip_profile_uuid = uuid();
-								$sql = "insert into v_sip_profiles";
-								$sql .= "(";
-								$sql .= "sip_profile_uuid, ";
-								$sql .= "sip_profile_name, ";
-								$sql .= "sip_profile_description ";
-								$sql .= ") ";
-								$sql .= "values ";
-								$sql .= "( ";
-								$sql .= "'".check_str($sip_profile_uuid)."', ";
-								$sql .= "'".check_str($sip_profile_name)."', ";
-								$sql .= "'".check_str($sip_profile_description)."' ";
-								$sql .= ")";
-								//echo $sql."\n\n";
-								$db->exec(check_sql($sql));
-								unset($sql);
+						//add the sip profile if it is not false
+							if ($sip_profile_enabled != "false") {
+								//insert the sip profile name, description
+									$sip_profile_uuid = uuid();
+									$sql = "insert into v_sip_profiles";
+									$sql .= "(";
+									$sql .= "sip_profile_uuid, ";
+									$sql .= "sip_profile_name, ";
+									$sql .= "sip_profile_description ";
+									$sql .= ") ";
+									$sql .= "values ";
+									$sql .= "( ";
+									$sql .= "'".check_str($sip_profile_uuid)."', ";
+									$sql .= "'".check_str($sip_profile_name)."', ";
+									$sql .= "'".check_str($sip_profile_description)."' ";
+									$sql .= ")";
+									//echo $sql."\n\n";
+									$db->exec(check_sql($sql));
+									unset($sql);
 
-							//add the sip profile settings
-								foreach ($sip_profile['settings']['param'] as $row) {
-									//get the name and value pair
-										$sip_profile_setting_name = $row['@attributes']['name'];
-										$sip_profile_setting_value = $row['@attributes']['value'];
-										$sip_profile_setting_enabled = $row['@attributes']['enabled'];
-										if ($sip_profile_setting_enabled != "false") { $sip_profile_setting_enabled = "true"; }
-										//echo "name: $name value: $value\n";
-									//add the profile settings into the database
-										$sip_profile_setting_uuid = uuid();
-										$sql = "insert into v_sip_profile_settings ";
-										$sql .= "(";
-										$sql .= "sip_profile_setting_uuid, ";
-										$sql .= "sip_profile_uuid, ";
-										$sql .= "sip_profile_setting_name, ";
-										$sql .= "sip_profile_setting_value, ";
-										$sql .= "sip_profile_setting_enabled ";
-										$sql .= ") ";
-										$sql .= "values ";
-										$sql .= "( ";
-										$sql .= "'".check_str($sip_profile_setting_uuid)."', ";
-										$sql .= "'".check_str($sip_profile_uuid)."', ";
-										$sql .= "'".check_str($sip_profile_setting_name)."', ";
-										$sql .= "'".check_str($sip_profile_setting_value)."', ";
-										$sql .= "'".$sip_profile_setting_enabled."' ";
-										$sql .= ")";
-										//echo $sql."\n\n";
-										$db->exec(check_sql($sql));
-								}
+								//add the sip profile settings
+									foreach ($sip_profile['settings']['param'] as $row) {
+										//get the name and value pair
+											$sip_profile_setting_name = $row['@attributes']['name'];
+											$sip_profile_setting_value = $row['@attributes']['value'];
+											$sip_profile_setting_enabled = $row['@attributes']['enabled'];
+											if ($sip_profile_setting_enabled != "false") { $sip_profile_setting_enabled = "true"; }
+											//echo "name: $name value: $value\n";
+										//add the profile settings into the database
+											$sip_profile_setting_uuid = uuid();
+											$sql = "insert into v_sip_profile_settings ";
+											$sql .= "(";
+											$sql .= "sip_profile_setting_uuid, ";
+											$sql .= "sip_profile_uuid, ";
+											$sql .= "sip_profile_setting_name, ";
+											$sql .= "sip_profile_setting_value, ";
+											$sql .= "sip_profile_setting_enabled ";
+											$sql .= ") ";
+											$sql .= "values ";
+											$sql .= "( ";
+											$sql .= "'".check_str($sip_profile_setting_uuid)."', ";
+											$sql .= "'".check_str($sip_profile_uuid)."', ";
+											$sql .= "'".check_str($sip_profile_setting_name)."', ";
+											$sql .= "'".check_str($sip_profile_setting_value)."', ";
+											$sql .= "'".$sip_profile_setting_enabled."' ";
+											$sql .= ")";
+											//echo $sql."\n\n";
+											$db->exec(check_sql($sql));
+									}
+							}
 						}
 					}
 

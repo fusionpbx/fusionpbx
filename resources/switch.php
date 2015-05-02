@@ -2766,6 +2766,7 @@ if (!function_exists('save_sip_profile_xml')) {
 
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles ";
+			$sql .= "where sip_profile_enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll();
