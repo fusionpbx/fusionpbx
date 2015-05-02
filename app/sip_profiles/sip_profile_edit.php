@@ -71,8 +71,9 @@ else {
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$sip_profile_name = check_str($_POST["sip_profile_name"]);
-		$sip_profile_description = check_str($_POST["sip_profile_description"]);
 		$sip_profile_hostname = check_str($_POST["sip_profile_hostname"]);
+		$sip_profile_description = check_str($_POST["sip_profile_description"]);
+		$sip_profile_enabled = check_str($_POST["sip_profile_enabled"]);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -107,7 +108,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "sip_profile_uuid, ";
 					$sql .= "sip_profile_name, ";
 					$sql .= "sip_profile_hostname, ";
-					$sql .= "sip_profile_description ";
+					$sql .= "sip_profile_description, ";
+					$sql .= "sip_profile_enabled ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
@@ -119,7 +121,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						$sql .= "null, ";
 					}
-					$sql .= "'$sip_profile_description' ";
+					$sql .= "'$sip_profile_description', ";
+					$sql .= "'$sip_profile_enabled' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -135,7 +138,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						$sql .= "sip_profile_hostname = null, ";
 					}
-					$sql .= "sip_profile_description = '$sip_profile_description' ";
+					$sql .= "sip_profile_description = '$sip_profile_description', ";
+					$sql .= "sip_profile_enabled = '$sip_profile_enabled' ";
 					$sql .= "where sip_profile_uuid = '$sip_profile_uuid'";
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -173,6 +177,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$sip_profile_name = $row["sip_profile_name"];
 			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_description = $row["sip_profile_description"];
+			$sip_profile_enabled = $row["sip_profile_enabled"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -223,6 +228,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='sip_profile_enabled'>\n";
+	echo "    	<option value='true' ".(($sip_profile_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "    	<option value='false' ".(($sip_profile_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -231,6 +250,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {

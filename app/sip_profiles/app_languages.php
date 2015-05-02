@@ -79,6 +79,15 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['sv-se'] = "Tillagd";
 
+$text['label-true']['en-us'] = "True";
+$text['label-true']['es-cl'] = "Verdadero";
+$text['label-true']['pt-pt'] = "Sim";
+$text['label-true']['fr-fr'] = "Oui";
+$text['label-true']['pt-br'] = "Sim";
+$text['label-true']['pl'] = "Tak";
+$text['label-true']['uk'] = "Так";
+$text['label-true']['sv-se'] = "Sann";
+
 $text['label-setting_value']['en-us'] = "Value";
 $text['label-setting_value']['es-cl'] = "Valor";
 $text['label-setting_value']['pt-pt'] = "Valor";
@@ -125,6 +134,24 @@ $text['label-hostname']['fr-fr'] = "Nom d'hôte";
 $text['label-hostname']['pt-br'] = "Hostname";
 $text['label-hostname']['pl'] = "Nazwa hosta";
 $text['label-hostname']['sv-se'] = "Hostname";
+
+$text['label-false']['en-us'] = "False";
+$text['label-false']['es-cl'] = "Falso";
+$text['label-false']['pt-pt'] = "Não";
+$text['label-false']['fr-fr'] = "Non";
+$text['label-false']['pt-br'] = "Não";
+$text['label-false']['pl'] = "Nie";
+$text['label-false']['uk'] = "Ні";
+$text['label-false']['sv-se'] = "Falsk";
+
+$text['label-enabled']['en-us'] = "Enabled";
+$text['label-enabled']['es-cl'] = "Activado";
+$text['label-enabled']['pt-pt'] = "Habilitada";
+$text['label-enabled']['fr-fr'] = "Actif";
+$text['label-enabled']['pt-br'] = "Habilitado";
+$text['label-enabled']['pl'] = "Numer wew włączony?";
+$text['label-enabled']['uk'] = "Включено";
+$text['label-enabled']['sv-se'] = "Aktiverad";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -234,6 +261,13 @@ $text['description-hostname']['fr-fr'] = "Entrer le nom de l'hôte / du switch."
 $text['description-hostname']['pt-br'] = "Insira o hostname";
 $text['description-hostname']['pl'] = "Wprowadź nazwę hosta / PBXu.";
 $text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
+
+$text['description-enabled']['en-us'] = "Control the state of the profile.";
+$text['description-enabled']['pt-pt'] = "Controlar o estado do perfil.";
+$text['description-enabled']['fr-fr'] = "Contrôler l'état du profil.";
+$text['description-enabled']['pt-br'] = "Controlar o estado do perfil.";
+$text['description-enabled']['pl'] = "Kontroluj stan profilu.";
+$text['description-enabled']['sv-se'] = "Styr tillståndet i profilen.";
 
 $text['description-description']['en-us'] = "Enter the description.";
 $text['description-description']['es-cl'] = "Ingrese una descripción.";

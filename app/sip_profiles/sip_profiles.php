@@ -104,8 +104,9 @@ require_once "resources/paging.php";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('sip_profile_name', $text['label-name'], $order_by, $order);
-	echo "<th align='left' >".$text['label-hostname']."</th>\n";
-	echo "<th align='left' width='60%'>".$text['label-description']."</th>\n";
+	echo "<th align='left'>".$text['label-hostname']."</th>\n";
+	echo "<th align='left'>".$text['label-enabled']."</th>\n";
+	echo "<th align='left' width='50%'>".$text['label-description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('sip_profile_add')) {
 		echo "<a href='sip_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -126,6 +127,7 @@ require_once "resources/paging.php";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_hostname']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['sip_profile_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('sip_profile_edit')) {
@@ -142,7 +144,7 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='4' align='left'>\n";
+	echo "<td colspan='5' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33%' nowrap>&nbsp;</td>\n";
