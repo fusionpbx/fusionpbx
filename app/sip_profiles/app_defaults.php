@@ -85,7 +85,7 @@
 								case "internal":
 									$sip_profile_description = "The Internal profile by default requires registration which is used by the endpoints. ";
 									$sip_profile_description .= "By default the Internal profile binds to port 5060. ";
-									break; 
+									break;
 								case "internal-ipv6":
 									$sip_profile_description = "The Internal IPV6 profile binds to the IP version 6 address and is similar to the Internal profile.\n";
 									break;
@@ -181,4 +181,13 @@
 		}
 	}
 
+//if empty, set sip_profile_enabled = true
+	if ($domains_processed == 1) {
+		$sql = "update v_sip_profiles set ";
+		$sql .= "sip_profile_enabled = 'true' ";
+		$sql .= "where sip_profile_enabled is null ";
+		$sql .= "or sip_profile_enabled = '' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+	}
 ?>
