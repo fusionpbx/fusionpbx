@@ -365,6 +365,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 
+//get the sip profiles
+	$sql = "select sip_profile_name from v_sip_profiles ";
+	$sql .= "order by sip_profile_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$sip_profiles = $prep_statement->fetchAll();
+	unset ($prep_statement, $sql);
+
 //set defaults
 	if (strlen($enabled) == 0) { $enabled = "true"; }
 	if (strlen($register) == 0) { $register = "true"; }
@@ -831,8 +839,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-profile']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (strlen($profile) == 0) { $profile = "external"; }
-	echo "	<input class='formfld' type='text' name='profile' maxlength='255' value=\"$profile\" required='required' >\n";
+	echo "	<select class='formfld' name='profile' required='required'>\n";
+	foreach ($sip_profiles as $row) {
+		$sip_profile_name = $row["sip_profile_name"];
+		if ($profile == $sip_profile_name) {
+			echo "	<option value='$sip_profile_name' selected='selected'>".$sip_profile_name."</option>\n";
+		}
+		else {
+			echo "	<option value='$sip_profile_name'>".$sip_profile_name."</option>\n";
+		}
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-profile']."\n";
 	echo "</td>\n";
