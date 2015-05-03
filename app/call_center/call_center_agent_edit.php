@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,10 +49,12 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$agent_name = check_str($_POST["agent_name"]);
 		$agent_type = check_str($_POST["agent_type"]);
 		$agent_call_timeout = check_str($_POST["agent_call_timeout"]);
+		$agent_id = check_str($_POST["agent_id"]);
+		$agent_password = check_str($_POST["agent_password"]);
 		$agent_contact = check_str($_POST["agent_contact"]);
 		$agent_status = check_str($_POST["agent_status"]);
 		//$agent_logout = check_str($_POST["agent_logout"]);
@@ -200,6 +202,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "agent_name, ";
 				$sql .= "agent_type, ";
 				$sql .= "agent_call_timeout, ";
+				$sql .= "agent_id, ";
+				$sql .= "agent_password, ";
 				$sql .= "agent_contact, ";
 				$sql .= "agent_status, ";
 				//$sql .= "agent_logout, ";
@@ -216,6 +220,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$agent_name', ";
 				$sql .= "'$agent_type', ";
 				$sql .= "'$agent_call_timeout', ";
+				$sql .= "'$agent_id', ";
+				$sql .= "'$agent_password', ";
 				$sql .= "'$agent_contact', ";
 				$sql .= "'$agent_status', ";
 				//$sql .= "'$agent_logout', ";
@@ -241,6 +247,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "agent_name = '$agent_name', ";
 			$sql .= "agent_type = '$agent_type', ";
 			$sql .= "agent_call_timeout = '$agent_call_timeout', ";
+			$sql .= "agent_id = '$agent_id', ";
+			$sql .= "agent_password = '$agent_password', ";
 			$sql .= "agent_contact = '$agent_contact', ";
 			$sql .= "agent_status = '$agent_status', ";
 			//$sql .= "agent_logout = '$agent_logout', ";
@@ -277,6 +285,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$agent_name = $row["agent_name"];
 			$agent_type = $row["agent_type"];
 			$agent_call_timeout = $row["agent_call_timeout"];
+			$agent_id = $row["agent_id"];
+			$agent_password = $row["agent_password"];
 			$agent_contact = $row["agent_contact"];
 			$agent_status = $row["agent_status"];
 			//$agent_logout = $row["agent_logout"];
@@ -328,7 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -361,7 +371,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -372,7 +382,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -383,7 +393,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-agent_id']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='number' name='agent_id' maxlength='255' min='1' step='1' value='$agent_id'>\n";
+	echo "<br />\n";
+	echo $text['description-agent_id']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-agent_password']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='number' name='agent_password' maxlength='255' min='1' step='1' value='$agent_password'>\n";
+	echo "<br />\n";
+	echo $text['description-agent_password']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -397,7 +429,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -433,7 +465,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-no_answer_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -444,7 +476,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-max_no_answer']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -455,7 +487,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-wrap_up_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -466,7 +498,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-reject_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -477,7 +509,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-busy_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -489,7 +521,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	/*
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-agent_logout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -515,4 +547,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //footer
 	require_once "resources/footer.php";
+
 ?>
