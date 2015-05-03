@@ -644,6 +644,24 @@ $text['label-call_timeout']['pl'] = "Limit czasu rozmowy";
 $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['uk'] = "Тайм-аут дзвінка";
 
+$text['label-agent_id']['en-us'] = "Agent ID";
+$text['label-agent_id']['es-cl'] = "";
+$text['label-agent_id']['pt-pt'] = "";
+$text['label-agent_id']['fr-fr'] = "";
+$text['label-agent_id']['pt-br'] = "";
+$text['label-agent_id']['pl'] = "";
+$text['label-agent_id']['sv-se'] = "";
+$text['label-agent_id']['uk'] = "";
+
+$text['label-agent_password']['en-us'] = "Agent Password";
+$text['label-agent_password']['es-cl'] = "";
+$text['label-agent_password']['pt-pt'] = "";
+$text['label-agent_password']['fr-fr'] = "";
+$text['label-agent_password']['pt-br'] = "";
+$text['label-agent_password']['pl'] = "";
+$text['label-agent_password']['sv-se'] = "";
+$text['label-agent_password']['uk'] = "";
+
 $text['label-busy_delay_time']['en-us'] = "Busy Delay Time";
 $text['label-busy_delay_time']['es-cl'] = "Tiempo de espera para ocupado";
 $text['label-busy_delay_time']['pt-pt'] = "Tempo de espera para ocupado";
@@ -1032,6 +1050,24 @@ $text['description-call_timeout']['pt-br'] = "Insira o tempo final da chamada";
 $text['description-call_timeout']['pl'] = "Wpisz limit czasu rozmowy";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['uk'] = "";
+
+$text['description-agent_id']['en-us'] = "Enter the agent ID.";
+$text['description-agent_id']['es-cl'] = "";
+$text['description-agent_id']['pt-pt'] = "";
+$text['description-agent_id']['fr-fr'] = "";
+$text['description-agent_id']['pt-br'] = "";
+$text['description-agent_id']['pl'] = "";
+$text['description-agent_id']['sv-se'] = "";
+$text['description-agent_id']['uk'] = "";
+
+$text['description-agent_password']['en-us'] = "Enter the agent password.";
+$text['description-agent_password']['es-cl'] = "";
+$text['description-agent_password']['pt-pt'] = "";
+$text['description-agent_password']['fr-fr'] = "";
+$text['description-agent_password']['pt-br'] = "";
+$text['description-agent_password']['pl'] = "";
+$text['description-agent_password']['sv-se'] = "";
+$text['description-agent_password']['uk'] = "";
 
 $text['description-call_center_queues']['en-us'] = "List of queues for the call center.";
 $text['description-call_center_queues']['es-cl'] = "Lista de Colas de Centro de Llamados.";
