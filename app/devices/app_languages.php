@@ -99,6 +99,15 @@ $text['message-maximum_devices']['pl'] = "Maksymalna ilość urządzeń:";
 $text['message-maximum_devices']['uk'] = "Максимальна кількість пристроїв";
 $text['message-maximum_devices']['sv-se'] = "Max Antal Enheter";
 
+$text['message-duplicate_username']['en-us'] = "Duplicate Username Detected";
+$text['message-duplicate_username']['es-cl'] = "Duplicar nombre de usuario Detectado";
+$text['message-duplicate_username']['pt-pt'] = "Duplicate usuário Detectado";
+$text['message-duplicate_username']['fr-fr'] = "Duplicate Nom d'utilisateur détecté";
+$text['message-duplicate_username']['pt-br'] = "Duplicate usuário Detectado";
+$text['message-duplicate_username']['pl'] = "Wykryto duplikat Nazwa użytkownika";
+$text['message-duplicate_username']['uk'] = "Дублікат Ім'я користувача Виявлено";
+$text['message-duplicate_username']['sv-se'] = "Duplicera Användarnamn upptäckt";
+
 $text['message-duplicate']['en-us'] = "Duplicate Detected";
 $text['message-duplicate']['es-cl'] = "duplicar detectado";
 $text['message-duplicate']['pt-pt'] = "Detectado um duplicado";
