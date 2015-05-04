@@ -478,12 +478,10 @@ require_once "resources/require.php";
 
 						if (duplicate_username == false) {
 							document.getElementById('frm').submit();
-							return false;
 						}
 					});
 				}
 			});
-			return false;
 		}
 	</script>
 <?php

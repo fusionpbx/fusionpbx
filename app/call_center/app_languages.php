@@ -342,6 +342,15 @@ $text['message-maximum_queues']['pl'] = "Maksymalna ilość kolejek:";
 $text['message-maximum_queues']['sv-se'] = "Max Antal Kö:er:";
 $text['message-maximum_queues']['uk'] = "Максимальна кількість черг:";
 
+$text['message-duplicate_agent_id']['en-us'] = "Duplicate Agent ID Detected";
+$text['message-duplicate_agent_id']['es-cl'] = "Duplicar ID de Agente detectada";
+$text['message-duplicate_agent_id']['pt-pt'] = "Duplicar Agent ID Detectado";
+$text['message-duplicate_agent_id']['fr-fr'] = "Dupliquer Agent ID détecté";
+$text['message-duplicate_agent_id']['pt-br'] = "Duplicar Agent ID Detectado";
+$text['message-duplicate_agent_id']['pl'] = "Duplikat Wykryto Agenta ID";
+$text['message-duplicate_agent_id']['uk'] = "Повторювані Ідентифікатор агента Виявлено";
+$text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
+
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
 $text['message-delete']['pt-pt'] = "Remoção Efectuada";
