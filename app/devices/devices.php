@@ -209,8 +209,7 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			$device_mac_address = substr($row['device_mac_address'], 0,2).'-'.substr($row['device_mac_address'], 2,2).'-'.substr($row['device_mac_address'], 4,2).'-'.substr($row['device_mac_address'], 6,2).'-'.substr($row['device_mac_address'], 8,2).'-'.substr($row['device_mac_address'], 10,2);
-			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a>" : $device_mac_address;
+			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".format_mac($row['device_mac_address'])."</a>" : format_mac($row['device_mac_address']);
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";

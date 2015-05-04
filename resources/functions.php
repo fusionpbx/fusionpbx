@@ -1266,4 +1266,22 @@ function number_pad($number,$n) {
 		}
 	}
 
+//mac detection
+	if (!function_exists('is_mac')) {
+		function is_mac($str) {
+			return (preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1) ? true : false;
+		}
+	}
+
+//format mac address
+	if (!function_exists('format_mac')) {
+		function format_mac($str, $delim = '-', $case = 'lower') {
+			if (is_mac($str)) {
+				$str = join($delim, str_split($str, 2));
+				$str = ($case == 'upper') ? strtoupper($str) : strtolower($str);
+			}
+			return $str;
+		}
+	}
+
 ?>
