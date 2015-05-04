@@ -109,6 +109,7 @@ else {
 	echo "<tr>\n";
 	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
 	echo th_order_by('agent_name', $text['label-agent_name'], $order_by, $order);
+	echo th_order_by('agent_id', $text['label-agent_id'], $order_by, $order);
 	echo th_order_by('agent_type', $text['label-type'], $order_by, $order);
 	echo th_order_by('agent_call_timeout', $text['label-call_timeout'], $order_by, $order);
 	echo th_order_by('agent_contact', $text['label-contact'], $order_by, $order);
@@ -139,6 +140,7 @@ else {
 				echo $row['agent_name'];
 			}
 			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_id']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_call_timeout']."&nbsp;</td>\n";
 			$agent_contact = $row['agent_contact'];
