@@ -39,6 +39,34 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//check for duplicates
+	if ($_GET["check"] == 'duplicate') {
+		//agent id
+			if ($_GET["agent_id"] != '') {
+				$sql = "select ";
+				$sql .= "agent_name ";
+				$sql .= "from ";
+				$sql .= "v_call_center_agents ";
+				$sql .= "where ";
+				$sql .= "agent_id = '".check_str($_GET["agent_id"])."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				if ($_GET["agent_uuid"] != '') {
+					$sql .= " and call_center_agent_uuid <> '".check_str($_GET["agent_uuid"])."' ";
+				}
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['agent_name'] != '') {
+						echo $text['message-duplicate_agent_id'].((if_group("superadmin")) ? ": ".$row["agent_name"] : null);
+					}
+				}
+				unset($prep_statement);
+			}
+
+		exit;
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -318,8 +346,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$document['title'] = $text['title-call_center_agent_edit'];
 	}
 
+//javascript to check for duplicates
+	?>
+	<script language="javascript">
+		function check_duplicates() {
+			//check agent id
+				var agent_id = document.getElementById('agent_id').value;
+				$("#duplicate_agent_id_response").load("call_center_agent_edit.php?check=duplicate&agent_id="+agent_id+"&agent_uuid=<?php echo $call_center_agent_uuid;?>", function() {
+					var duplicate_agent_id = false;
+					if ($("#duplicate_agent_id_response").html() != '') {
+						$('#agent_id').addClass('formfld_highlight_bad');
+						display_message($("#duplicate_agent_id_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
+						duplicate_agent_id = true;
+					}
+					else {
+						$("#duplicate_agent_id_response").html('');
+						$('#agent_id').removeClass('formfld_highlight_bad');
+						duplicate_agent_id = false;
+					}
+
+					if (duplicate_agent_id == false) {
+						document.getElementById('frm').submit();
+					}
+				});
+		}
+	</script>
+
+<?php
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm' action='' onsubmit='check_duplicates(); return false;'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
@@ -330,7 +385,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_agents.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -397,7 +452,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-agent_id']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_id' maxlength='255' min='1' step='1' value='$agent_id'>\n";
+	echo "  <input class='formfld' type='number' name='agent_id' id='agent_id' maxlength='255' min='1' step='1' value='$agent_id'>\n";
+	echo "	<div style='display: none;' id='duplicate_agent_id_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-agent_id']."\n";
 	echo "</td>\n";
@@ -538,7 +594,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='call_center_agent_uuid' value='$call_center_agent_uuid'>\n";
 	}
 	echo "			<br />";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
