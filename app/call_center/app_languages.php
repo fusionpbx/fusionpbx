@@ -16,6 +16,7 @@ $text['title-call_center_queues_edit']['pt-br'] = "Editar fila de call center";
 $text['title-call_center_queues_edit']['pl'] = "";
 $text['title-call_center_queues_edit']['sv-se'] = "";
 $text['title-call_center_queues_edit']['uk'] = "";
+$text['title-call_center_queues_edit']['fr-fr'] = "";
 
 $text['title-call_center_queues_add']['es-cl'] = "Agregar Cola de Centro de Llamados";
 $text['title-call_center_queues_add']['pt-pt'] = "Adicionar Fila de Call Center";
@@ -24,6 +25,7 @@ $text['title-call_center_queues_add']['pt-br'] = "Adicionar fila de call center"
 $text['title-call_center_queues_add']['pl'] = "";
 $text['title-call_center_queues_add']['sv-se'] = "";
 $text['title-call_center_queues_add']['uk'] = "";
+$text['title-call_center_queues_add']['fr-fr'] = "";
 
 $text['title-call_center_queues']['en-us'] = "Call Center Queues";
 $text['title-call_center_queues']['es-cl'] = "Colas de Centro de Llamados";
@@ -36,17 +38,21 @@ $text['title-call_center_queues']['uk'] = "Черги кол-центра";
 
 $text['title-call_center_queue_edit']['en-us'] = "Call Center Queue";
 $text['title-call_center_queue_edit']['fr-fr'] = "Editer une Queue";
-$text['title-call_center_queue_edit']['pt-br'] = "";
+$text['title-call_center_queue_edit']['pt-br'] = "Call Center Queue";
 $text['title-call_center_queue_edit']['pl'] = "Kolejka w Call Center ";
 $text['title-call_center_queue_edit']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_edit']['uk'] = "Черга кол-центра";
+$text['title-call_center_queue_edit']['es-cl'] = "Centro de llamadas de cola";
+$text['title-call_center_queue_edit']['pt-pt'] = "Call Center Queue";
 
 $text['title-call_center_queue_add']['en-us'] = "Call Center Queue";
 $text['title-call_center_queue_add']['fr-fr'] = "Ajouter une Queue";
-$text['title-call_center_queue_add']['pt-br'] = "";
+$text['title-call_center_queue_add']['pt-br'] = "Call Center Queue";
 $text['title-call_center_queue_add']['pl'] = "Kolejka w Call Center ";
 $text['title-call_center_queue_add']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_add']['uk'] = "Черга кол-центра";
+$text['title-call_center_queue_add']['es-cl'] = "Centro de llamadas de cola";
+$text['title-call_center_queue_add']['pt-pt'] = "Call Center Queue";
 
 $text['title-call_center_agents']['en-us'] = "Call Center Agents";
 $text['title-call_center_agents']['es-cl'] = "Agentes de Centro de Llamados";
@@ -199,6 +205,7 @@ $text['option-ptring']['pt-br'] = "PTRing";
 $text['option-ptring']['pl'] = "pt-ring";
 $text['option-ptring']['sv-se'] = "pt-ring";
 $text['option-ptring']['uk'] = "pt-ring";
+$text['option-ptring']['es-cl'] = "pt-ring";
 
 $text['option-on_break']['en-us'] = "On Break";
 $text['option-on_break']['es-cl'] = "En Pausa";
@@ -479,15 +486,6 @@ $text['label-status']['pl'] = "Status";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk'] = "Статус";
 
-$text['label-default_status']['en-us'] = "Default Status";
-$text['label-default_status']['es-cl'] = "Estado Predeterminado";
-$text['label-default_status']['pt-pt'] = "Estado Predeterminado";
-$text['label-default_status']['fr-fr'] = "Statut Prédéterminée";
-$text['label-default_status']['pt-br'] = "Estado Predeterminado";
-$text['label-default_status']['pl'] = "z góry określony status";
-$text['label-default_status']['sv-se'] = "i förväg fastställda status";
-$text['label-default_status']['uk'] = "Статус за замовчуванням";
-
 $text['label-reject_delay_time']['en-us'] = "Reject Delay Time";
 $text['label-reject_delay_time']['es-cl'] = "Tiempo de Espera para Rechazar";
 $text['label-reject_delay_time']['pt-pt'] = "Tempo de espera para rejeitar";
@@ -597,13 +595,22 @@ $text['label-discard_abandoned_after']['sv-se'] = "Uteslut Ej Besvarat Efter";
 $text['label-discard_abandoned_after']['uk'] = "";
 
 $text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "descripción";
+$text['label-description']['es-cl'] = "Descripción";
 $text['label-description']['pt-pt'] = "Descrição";
 $text['label-description']['fr-fr'] = "Description";
 $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk'] = "Опис";
+
+$text['label-default_status']['en-us'] = "Default Status";
+$text['label-default_status']['es-cl'] = "Estado Predeterminado";
+$text['label-default_status']['pt-pt'] = "Estado Predeterminado";
+$text['label-default_status']['fr-fr'] = "Statut Prédéterminée";
+$text['label-default_status']['pt-br'] = "Estado Predeterminado";
+$text['label-default_status']['pl'] = "z góry określony status";
+$text['label-default_status']['sv-se'] = "i förväg fastställda status";
+$text['label-default_status']['uk'] = "Статус за замовчуванням";
 
 $text['label-contact']['en-us'] = "Contact";
 $text['label-contact']['es-cl'] = "Contacto";
@@ -624,16 +631,22 @@ $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
 $text['label-caller_id_name_prefix']['uk'] = "";
 
 $text['label-caller_announce_sound']['en-us'] = "Announce Sound";
-$text['label-caller_announce_sound']['pt-br'] = "";
+$text['label-caller_announce_sound']['pt-br'] = "Som Anuncie";
 $text['label-caller_announce_sound']['pl'] = "Zapowiedź głośowa";
 $text['label-caller_announce_sound']['sv-se'] = "Meddelande Ljud";
 $text['label-caller_announce_sound']['uk'] = "";
+$text['label-caller_announce_sound']['es-cl'] = "El sonido anuncian";
+$text['label-caller_announce_sound']['pt-pt'] = "Som Anuncie";
+$text['label-caller_announce_sound']['fr-fr'] = "Annoncer Sonore";
 
 $text['label-caller_announce_frequency']['en-us'] = "Announce Frequency";
-$text['label-caller_announce_frequency']['pt-br'] = "";
+$text['label-caller_announce_frequency']['pt-br'] = "o Frequency Anuncie";
 $text['label-caller_announce_frequency']['pl'] = "Częstotliwość zapowiedzi";
 $text['label-caller_announce_frequency']['sv-se'] = "Meddelande Frekvens";
 $text['label-caller_announce_frequency']['uk'] = "";
+$text['label-caller_announce_frequency']['es-cl'] = "La frecuencia anuncian";
+$text['label-caller_announce_frequency']['pt-pt'] = "o Frequency Anuncie";
+$text['label-caller_announce_frequency']['fr-fr'] = "Annoncer Fréquence";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['es-cl'] = "Timeout de Llamada";
@@ -644,24 +657,6 @@ $text['label-call_timeout']['pl'] = "Limit czasu rozmowy";
 $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['uk'] = "Тайм-аут дзвінка";
 
-$text['label-agent_id']['en-us'] = "Agent ID";
-$text['label-agent_id']['es-cl'] = "";
-$text['label-agent_id']['pt-pt'] = "";
-$text['label-agent_id']['fr-fr'] = "";
-$text['label-agent_id']['pt-br'] = "";
-$text['label-agent_id']['pl'] = "";
-$text['label-agent_id']['sv-se'] = "";
-$text['label-agent_id']['uk'] = "";
-
-$text['label-agent_password']['en-us'] = "Agent Password";
-$text['label-agent_password']['es-cl'] = "";
-$text['label-agent_password']['pt-pt'] = "";
-$text['label-agent_password']['fr-fr'] = "";
-$text['label-agent_password']['pt-br'] = "";
-$text['label-agent_password']['pl'] = "";
-$text['label-agent_password']['sv-se'] = "";
-$text['label-agent_password']['uk'] = "";
-
 $text['label-busy_delay_time']['en-us'] = "Busy Delay Time";
 $text['label-busy_delay_time']['es-cl'] = "Tiempo de espera para ocupado";
 $text['label-busy_delay_time']['pt-pt'] = "Tempo de espera para ocupado";
@@ -670,6 +665,15 @@ $text['label-busy_delay_time']['pt-br'] = "Tempo de espera para ocupado";
 $text['label-busy_delay_time']['pl'] = "Zajęty - opóznienie czasowe";
 $text['label-busy_delay_time']['sv-se'] = "Fördröjning vid Upptaget";
 $text['label-busy_delay_time']['uk'] = "";
+
+$text['label-agent_password']['en-us'] = "Agent Password";
+$text['label-agent_password']['es-cl'] = "Agente de Password";
+$text['label-agent_password']['pt-pt'] = "Agente Senha";
+$text['label-agent_password']['fr-fr'] = "Agent Mot de passe";
+$text['label-agent_password']['pt-br'] = "Agente Senha";
+$text['label-agent_password']['pl'] = "Środek Hasło";
+$text['label-agent_password']['sv-se'] = "Środek Hasło";
+$text['label-agent_password']['uk'] = "";
 
 $text['label-agent_name']['en-us'] = "Agent Name";
 $text['label-agent_name']['es-cl'] = "Nombre de Agente";
@@ -688,6 +692,15 @@ $text['label-agent_logout']['pt-br'] = "Logout do agente ";
 $text['label-agent_logout']['pl'] = "Agent wylogowany";
 $text['label-agent_logout']['sv-se'] = "Agent Logga Ut";
 $text['label-agent_logout']['uk'] = "";
+
+$text['label-agent_id']['en-us'] = "Agent ID";
+$text['label-agent_id']['es-cl'] = "Agente de identidad";
+$text['label-agent_id']['pt-pt'] = "Identidade Agent";
+$text['label-agent_id']['fr-fr'] = "Identification Agent";
+$text['label-agent_id']['pt-br'] = "Identidade Agent";
+$text['label-agent_id']['pl'] = "Tożsamość agenta";
+$text['label-agent_id']['sv-se'] = "Agent Identitet";
+$text['label-agent_id']['uk'] = "";
 
 $text['label-agent']['en-us'] = "Agent";
 $text['label-agent']['es-cl'] = "Agente";
@@ -849,6 +862,7 @@ $text['description-tier_rule_wait_multiply_level']['pt-br'] = "Defina a regra de
 $text['description-tier_rule_wait_multiply_level']['pl'] = "Ustaw regułę poziomów – czas oczekiwania w wielu poziomach (TAK lub NIE)";
 $text['description-tier_rule_wait_multiply_level']['sv-se'] = "Välj om 'kunskaps-regel vänt-tid' multiply nivå skall vara sann eller ej.";
 $text['description-tier_rule_wait_multiply_level']['uk'] = "";
+$text['description-tier_rule_wait_multiply_level']['es-cl'] = "Ajuste el nivel de espera multiplicar regla de nivel de verdadero o falso.";
 
 $text['description-tier_rule_no_agent_no_wait']['en-us'] = "Enter the tier rule no agent no wait.";
 $text['description-tier_rule_no_agent_no_wait']['es-cl'] = "Introduzca la regla de nivel sin agente sin espera.";
@@ -952,7 +966,7 @@ $text['description-music_on_hold']['uk'] = "";
 $text['description-max_wait_time_with_no_agent_time_reached']['en-us'] = "Enter the max wait time with no agent time reached.";
 $text['description-max_wait_time_with_no_agent_time_reached']['es-cl'] = "Introduzca el tiempo máximo de espera sin agente alcanzado.";
 $text['description-max_wait_time_with_no_agent_time_reached']['pt-pt'] = "Introduza o tempo máximo de espera atingido sem agente.";
-$text['description-max_wait_time_with_no_agent_time_reached']['fr-fr'] = "";
+$text['description-max_wait_time_with_no_agent_time_reached']['fr-fr'] = " Entrez le temps d'attente maximum avec un rien de temps de l'agent atteint.";
 $text['description-max_wait_time_with_no_agent_time_reached']['pt-br'] = "Insira o tempo máximo de espera atingido sem o agente";
 $text['description-max_wait_time_with_no_agent_time_reached']['pl'] = "Wprowadź maks upłyniety czas oczekiwania bez agenta";
 $text['description-max_wait_time_with_no_agent_time_reached']['sv-se'] = "Ange max vänt-tid när 'Utan Agent Tids-gräns' är nådd. ";
@@ -1006,7 +1020,7 @@ $text['description-discard_abandoned_after']['uk'] = "";
 $text['description-description']['en-us'] = "Enter a description, if desired.";
 $text['description-description']['es-cl'] = "Ingrese una descripción, opcional.";
 $text['description-description']['pt-pt'] = "Introduza uma descrição, se desejar.";
-$text['description-description']['fr-fr'] = "";
+$text['description-description']['fr-fr'] = "Entrez une description, si vous le souhaitez.";
 $text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
 $text['description-description']['pl'] = "Wpisz opis (opcjonalne)";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
@@ -1031,16 +1045,22 @@ $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Call
 $text['description-caller_id_name_prefix']['uk'] = "";
 
 $text['description-caller_announce_sound']['en-us'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
-$text['description-caller_announce_sound']['pt-br'] = "";
+$text['description-caller_announce_sound']['pt-br'] = "Um som para tocar a uma cada vez chamador anunciar segundos de som. Precisa o caminho completo para o arquivo wav. ";
 $text['description-caller_announce_sound']['pl'] = "Dźwięk odtwarzany dzwoniącemu, który zostaje odtworzony cyklicznie. Wymagana jest pełna ścieżka do pliku.";
 $text['description-caller_announce_sound']['sv-se'] = "Ett ljud som spelas upp efter varje 'meddelande ljud sekunder'. Behöver hela sökvägen till WAV filen.";
 $text['description-caller_announce_sound']['uk'] = "";
+$text['description-caller_announce_sound']['es-cl'] = " Translate from: English Un sonido jugar a un cada persona que llama anunciar segundos de sonido. Necesita la ruta completa al archivo wav.";
+$text['description-caller_announce_sound']['pt-pt'] = "Um som para tocar a uma cada vez chamador anunciar segundos de som. Precisa o caminho completo para o arquivo wav.";
+$text['description-caller_announce_sound']['fr-fr'] = " Un son à jouer à un appelant chaque annoncer secondes sonores. Besoins le chemin complet vers le fichier wav.";
 
 $text['description-caller_announce_frequency']['en-us'] = "How often should we play the announce sound. Enter a number in seconds";
-$text['description-caller_announce_frequency']['pt-br'] = "";
+$text['description-caller_announce_frequency']['pt-br'] = "Com que freqüência devemos reproduzir o som anunciar. Digite um número em segundos";
 $text['description-caller_announce_frequency']['pl'] = "Wprowadź wartość w sekundach jak często ma być odtwarzany dźwięk powitania.";
 $text['description-caller_announce_frequency']['sv-se'] = "Hur ofta skall meddelandet spelas upp. Ange ett värde i sekunder.";
 $text['description-caller_announce_frequency']['uk'] = "";
+$text['description-caller_announce_frequency']['es-cl'] = "¿Con qué frecuencia deberíamos reproducir el sonido anunciar. Introduzca un número en segundos.";
+$text['description-caller_announce_frequency']['pt-pt'] = "Com que freqüência devemos reproduzir o som anunciar. Digite um número em segundos";
+$text['description-caller_announce_frequency']['fr-fr'] = " Combien de fois devrions-nous jouer le son annonce. Entrez un nombre dans secondes.";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['es-cl'] = "Introduzca el timeout de la llamada.";
@@ -1050,24 +1070,6 @@ $text['description-call_timeout']['pt-br'] = "Insira o tempo final da chamada";
 $text['description-call_timeout']['pl'] = "Wpisz limit czasu rozmowy";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['uk'] = "";
-
-$text['description-agent_id']['en-us'] = "Enter the agent ID.";
-$text['description-agent_id']['es-cl'] = "";
-$text['description-agent_id']['pt-pt'] = "";
-$text['description-agent_id']['fr-fr'] = "";
-$text['description-agent_id']['pt-br'] = "";
-$text['description-agent_id']['pl'] = "";
-$text['description-agent_id']['sv-se'] = "";
-$text['description-agent_id']['uk'] = "";
-
-$text['description-agent_password']['en-us'] = "Enter the agent password.";
-$text['description-agent_password']['es-cl'] = "";
-$text['description-agent_password']['pt-pt'] = "";
-$text['description-agent_password']['fr-fr'] = "";
-$text['description-agent_password']['pt-br'] = "";
-$text['description-agent_password']['pl'] = "";
-$text['description-agent_password']['sv-se'] = "";
-$text['description-agent_password']['uk'] = "";
 
 $text['description-call_center_queues']['en-us'] = "List of queues for the call center.";
 $text['description-call_center_queues']['es-cl'] = "Lista de Colas de Centro de Llamados.";
@@ -1105,6 +1107,15 @@ $text['description-busy_delay_time']['pl'] = "Wprowadź wartość czasowego opó
 $text['description-busy_delay_time']['sv-se'] = "Ange Agent Upptagen Fördröjnings-tid.";
 $text['description-busy_delay_time']['uk'] = "";
 
+$text['description-agent_password']['en-us'] = "Enter the agent password.";
+$text['description-agent_password']['es-cl'] = "Introduzca la contraseña de agente.";
+$text['description-agent_password']['pt-pt'] = "Digite a senha do agente.";
+$text['description-agent_password']['fr-fr'] = "Entrez le mot de passe de l'agent.";
+$text['description-agent_password']['pt-br'] = "Digite a senha do agente.";
+$text['description-agent_password']['pl'] = "Wprowadź hasło agenta.";
+$text['description-agent_password']['sv-se'] = "Ange agenten lösenord.";
+$text['description-agent_password']['uk'] = "";
+
 $text['description-agent_name']['en-us'] = "Select the agent name.";
 $text['description-agent_name']['es-cl'] = "Seleccione el nombre del agente.";
 $text['description-agent_name']['pt-pt'] = "Seleccione o nome dos agentes.";
@@ -1122,6 +1133,15 @@ $text['description-agent_logout']['pt-br'] = "Insira o tempo de login automatico
 $text['description-agent_logout']['pl'] = "Wprowadź czas po, którym agent zostanie automatycznie wylogowany (w formacie 00:00). Wymagany jest serwis który egzekwuje czas wylogowania.";
 $text['description-agent_logout']['sv-se'] = "Ange Automatisk utläggning av Agent i 00:00 format. Kräver en tjänst för att genomföra utloggningen.";
 $text['description-agent_logout']['uk'] = "";
+
+$text['description-agent_id']['en-us'] = "Enter the agent ID.";
+$text['description-agent_id']['es-cl'] = "Introduzca el ID de agente.";
+$text['description-agent_id']['pt-pt'] = "Digite o ID do agente.";
+$text['description-agent_id']['fr-fr'] = "Saisissez l'ID de l'agent.";
+$text['description-agent_id']['pt-br'] = "Digite o ID do agente.";
+$text['description-agent_id']['pl'] = "Wprowadź identyfikator agenta.";
+$text['description-agent_id']['sv-se'] = "Ange agent-ID.";
+$text['description-agent_id']['uk'] = "";
 
 $text['description-agent']['en-us'] = "Select the agent name.";
 $text['description-agent']['es-cl'] = "Seleccione el nombre del agente.";
