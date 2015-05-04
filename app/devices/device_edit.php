@@ -40,28 +40,60 @@ require_once "resources/require.php";
 	$language = new text;
 	$text = $language->get();
 
-//check duplicate mac address
-	if ($_GET["mac"] != '' && $_GET["mac"] != "000000000000") {
-		$sql = "select ";
-		$sql .= "d2.domain_name ";
-		$sql .= "from ";
-		$sql .= "v_devices as d1, ";
-		$sql .= "v_domains as d2 ";
-		$sql .= "where ";
-		$sql .= "d1.domain_uuid = d2.domain_uuid and ";
-		$sql .= "d1.device_mac_address = '".check_str($_GET["mac"])."' ";
-		if ($_GET["id"] != '') {
-			$sql .= " and d1.device_uuid <> '".check_str($_GET["id"])."' ";
-		}
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['domain_name'] != '') {
-				echo $text['message-duplicate'].((if_group("superadmin") && $_SESSION["domain_name"] != $row["domain_name"]) ? ": ".$row["domain_name"] : null);
+//check for duplicates
+	if ($_GET["check"] == 'duplicate') {
+		//mac address
+			if ($_GET["mac"] != '' && $_GET["mac"] != "000000000000") {
+				$sql = "select ";
+				$sql .= "d2.domain_name ";
+				$sql .= "from ";
+				$sql .= "v_devices as d1, ";
+				$sql .= "v_domains as d2 ";
+				$sql .= "where ";
+				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
+				$sql .= "d1.device_mac_address = '".check_str($_GET["mac"])."' ";
+				if ($_GET["device_uuid"] != '') {
+					$sql .= " and d1.device_uuid <> '".check_str($_GET["device_uuid"])."' ";
+				}
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['domain_name'] != '') {
+						echo $text['message-duplicate'].((if_group("superadmin") && $_SESSION["domain_name"] != $row["domain_name"]) ? ": ".$row["domain_name"] : null);
+					}
+				}
+				unset($prep_statement);
 			}
-		}
-		unset($prep_statement);
+
+		//username
+			if ($_GET['username'] != '') {
+				$sql = "select ";
+				$sql .= "d2.domain_name, ";
+				$sql .= "d1.device_mac_address ";
+				$sql .= "from ";
+				$sql .= "v_devices as d1, ";
+				$sql .= "v_domains as d2 ";
+				$sql .= "where ";
+				$sql .= "d1.domain_uuid = d2.domain_uuid and ";
+				$sql .= "d1.device_username = '".check_str($_GET["username"])."' ";
+				if ($_GET['domain_uuid'] != '') {
+					$sql .= "and d2.domain_uuid = '".check_str($_GET['domain_uuid'])."' ";
+				}
+				if ($_GET['device_uuid'] != '') {
+					$sql .= "and d1.device_uuid <> '".check_str($_GET["device_uuid"])."' ";
+				}
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['domain_name'] != '') {
+						echo $text['message-duplicate_username'].((if_group("superadmin")) ? ": ".format_mac($row['device_mac_address']).(($_SESSION["domain_name"] != $row["domain_name"]) ? " (".$row["domain_name"].")" : null) : null);
+					}
+				}
+				unset($prep_statement);
+			}
+
 		exit;
 	}
 
@@ -267,14 +299,14 @@ require_once "resources/require.php";
 							if ($action == "add") {
 								//save the message to a session variable
 									$_SESSION['message'] = $text['message-add'];
-								//redirect the browser
-									header("Location: device_edit.php?id=$device_uuid");
-									exit;
 							}
 							if ($action == "update") {
 								//save the message to a session variable
 									$_SESSION['message'] = $text['message-update'];
 							}
+							//redirect the browser
+								header("Location: device_edit.php?id=$device_uuid");
+								exit;
 						}
 					}
 
@@ -409,28 +441,54 @@ require_once "resources/require.php";
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-		function check_mac_duplicate(mac_addr, device_uuid_to_ignore) {
-			if (mac_addr != '') {
-				check_url = "device_edit.php?mac="+mac_addr+"&id="+device_uuid_to_ignore;
-				$("#duplicate_mac_response").load(check_url, function() {
-					if ($("#duplicate_mac_response").html() != '') {
-						$('#device_mac_address').addClass('formfld_highlight_bad');
-						display_message($("#duplicate_mac_response").html(), 'negative');
-					}
-					else {
-						$('#device_mac_address').removeClass('formfld_highlight_bad');
-						document.getElementById('frm').submit();
-					}
-				});
-			}
-			else {
-				$('#frm').submit();
-			}
+		function check_duplicates() {
+			//check mac
+			var mac_addr = document.getElementById('device_mac_address').value;
+			$("#duplicate_mac_response").load("device_edit.php?check=duplicate&mac="+mac_addr+"&device_uuid=<?php echo $device_uuid;?>", function() {
+				var duplicate_mac = false;
+
+				if ($("#duplicate_mac_response").html() != '') {
+					$('#device_mac_address').addClass('formfld_highlight_bad');
+					display_message($("#duplicate_mac_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
+					duplicate_mac = true;
+				}
+				else {
+					$("#duplicate_mac_response").html('');
+					$('#device_mac_address').removeClass('formfld_highlight_bad');
+					duplicate_mac = false;
+				}
+
+				//check username
+				if (duplicate_mac == false) {
+					var username = document.getElementById('device_username').value;
+					var domain_uuid = document.getElementById('domain_uuid').value;
+					$("#duplicate_username_response").load("device_edit.php?check=duplicate&username="+username+"&domain_uuid="+domain_uuid+"&device_uuid=<?php echo $device_uuid;?>", function() {
+						var duplicate_username = false;
+
+						if ($("#duplicate_username_response").html() != '') {
+							$('#device_username').addClass('formfld_highlight_bad');
+							display_message($("#duplicate_username_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
+							duplicate_username = true;
+						}
+						else {
+							$("#duplicate_username_response").html('');
+							$('#device_username').removeClass('formfld_highlight_bad');
+							duplicate_username = false;
+						}
+
+						if (duplicate_username == false) {
+							document.getElementById('frm').submit();
+							return false;
+						}
+					});
+				}
+			});
+			return false;
 		}
 	</script>
 <?php
 //show the content
-	echo "<form method='post' name='frm' id='frm' action='' onsubmit=\"check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."'); return false;\">\n";
+	echo "<form method='post' name='frm' id='frm' action='' onsubmit='check_duplicates(); return false;'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
@@ -455,7 +513,6 @@ require_once "resources/require.php";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" required=\"required\">\n";
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo "	<div style='display: none;' id='duplicate_mac_found'></div>\n";
 	echo "<br />\n";
 	echo $text['description-device_mac_address']."\n";
 	echo "</td>\n";
@@ -1035,8 +1092,9 @@ require_once "resources/require.php";
 	echo "	".$text['label-device']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_username' maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
-	echo "	<input class='formfld' type='text' name='device_password' onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
+	echo "	<input class='formfld' type='text' name='device_username' id='device_username' maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
+	echo "	<input class='formfld' type='text' name='device_password' id='device_password' onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
+	echo "	<div style='display: none;' id='duplicate_username_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-device']."\n";
 	echo "</td>\n";
@@ -1047,7 +1105,7 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_vendor']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\" required=\"required\">\n";
+	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
 	echo "<br />\n";
 	echo $text['description-device_vendor']."\n";
 	echo "</td>\n";
@@ -1081,7 +1139,7 @@ require_once "resources/require.php";
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
+		echo "    <select class='formfld' name='domain_uuid' id='domain_uuid'>\n";
 		if (strlen($domain_uuid) == 0) {
 			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
