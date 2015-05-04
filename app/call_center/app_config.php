@@ -144,7 +144,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_password";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z+
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_contact";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
