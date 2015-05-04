@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="user_status" number="*23" continue="false" app_uuid="feb0ee6e-0ea5-41fc-a9c1-189daf2d4161">
+	<extension name="agent_status" number="*23" continue="false" app_uuid="feb0ee6e-0ea5-41fc-a9c1-189daf2d4161">
 		<condition field="destination_number" expression="^\*23$">
 			<action application="set" data="agent_id="/>
 			<action application="lua" data="app.lua user_status"/>
