@@ -304,6 +304,9 @@
 								$xml .= "      <variable name=\"hold_music\" value=\"" . $row['hold_music'] . "\"/>\n";
 							}
 							$xml .= "      <variable name=\"toll_allow\" value=\"" . $row['toll_allow'] . "\"/>\n";
+							if (strlen($row['call_timeout']) > 0) {
+								$xml .= "      <variable name=\"call_timeout\" value=\"" . $row['call_timeout'] . "\"/>\n";
+							}
 							if (strlen($switch_account_code) > 0) {
 								$xml .= "      <variable name=\"accountcode\" value=\"" . $switch_account_code . "\"/>\n";
 							}
