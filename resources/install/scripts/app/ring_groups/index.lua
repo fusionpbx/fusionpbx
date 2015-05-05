@@ -130,6 +130,7 @@
 				WHERE 
 					d.ring_group_uuid = r.ring_group_uuid 
 					AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
+					AND r.domain_uuid = ']]..domain_uuid..[[' 
 					AND r.ring_group_enabled = 'true' 
 				ORDER BY 
 					d.destination_delay, d.destination_number asc 
