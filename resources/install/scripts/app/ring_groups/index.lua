@@ -1,6 +1,6 @@
 --	ring_groups.lua
 --	Part of FusionPBX
---	Copyright (C) 2010-2014 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
