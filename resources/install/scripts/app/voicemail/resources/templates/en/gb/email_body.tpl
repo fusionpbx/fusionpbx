@@ -28,6 +28,16 @@ ${account}@${domain_name}
 ${caller_id_number}
 </td>
 </tr>
+<!--
+<tr>
+<td style="color: #333; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
+<strong>Received</strong>
+</td>
+<td style="color: #666; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
+${message_date}
+</td>
+</tr>
+-->
 <tr>
 <td style="color: #333; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
 <strong>Message</strong>
