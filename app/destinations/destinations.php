@@ -178,7 +178,7 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".format_phone($row['destination_number'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_enabled'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['destination_description']."&nbsp;</td>\n";
