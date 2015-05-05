@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -251,7 +251,7 @@
 								else
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
@@ -260,7 +260,7 @@
 											else
 												--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
 												user_id = trim(api:execute("user_data", user .. "@" .. domain_name .. " attr id"));
-												dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
+												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
@@ -339,7 +339,7 @@
 							directory_visible = row.directory_visible;
 							directory_exten_visible = row.directory_exten_visible;
 							limit_max = row.limit_max;
-							--call_timeout = row.call_timeout;
+							call_timeout = row.call_timeout;
 							limit_destination = row.limit_destination;
 							sip_force_contact = row.sip_force_contact;
 							sip_force_expires = row.sip_force_expires;
@@ -401,7 +401,7 @@
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
-							--table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
+							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
 							if (string.len(call_group) > 0) then
