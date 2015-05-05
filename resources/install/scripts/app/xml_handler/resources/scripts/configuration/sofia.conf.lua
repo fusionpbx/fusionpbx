@@ -82,7 +82,7 @@
 			sql = "select p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
 			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
-			sql = sql .. "and s.sip_profile_enabled = 'true' ";
+			sql = sql .. "and p.sip_profile_enabled = 'true' ";
 			sql = sql .. "and (p.sip_profile_hostname = '" .. hostname.. "' or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
 			sql = sql .. "and p.sip_profile_uuid = s.sip_profile_uuid ";
 			sql = sql .. "order by p.sip_profile_name asc ";
