@@ -2,7 +2,7 @@
 	<extension name="agent_status" number="*22" continue="false" app_uuid="2eb032c5-c79d-4096-ac90-8a47fe40f411">
 		<condition field="destination_number" expression="^\*22$">
 			<action application="set" data="agent_id=${sip_from_user}"/>
-			<action application="lua" data="app.lua user_status"/>
+			<action application="lua" data="app.lua agent_status"/>
 		</condition>
 	</extension>
 </context>
