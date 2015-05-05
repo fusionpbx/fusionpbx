@@ -367,6 +367,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
+	$sql .= "where sip_profile_enabled = 'true' ";
 	$sql .= "order by sip_profile_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
