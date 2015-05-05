@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -102,6 +102,7 @@ if ($_GET['a'] == "download") {
 
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
+	$sql .= "where sip_profile_enabled = 'true' ";
 	$sql .= "order by sip_profile_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
