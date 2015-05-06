@@ -120,7 +120,7 @@
 
 	end);
 
---get the device uuid of the mobile provision
+--get the alternate device uuid using the device username and password
 	authorized = 'false';
 	if (user_id ~= '' and password ~= '') then
 		sql = [[SELECT * FROM v_devices ]];
@@ -131,7 +131,7 @@
 			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 		end
 		dbh:query(sql, function(row)
-			--get the altnerat device_uuid
+			--get the alternate device_uuid
 				device_uuid_alternate = row.device_uuid;
 				freeswitch.consoleLog("NOTICE", "[provision] alternate device_uuid: ".. device_uuid_alternate .. "\n");
 			--authorize the user
