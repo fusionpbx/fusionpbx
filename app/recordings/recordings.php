@@ -49,26 +49,33 @@ require_once "resources/check_auth.php";
 	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
-			$recording_uuid = check_str($_GET['id']);
 			$path = $_SESSION['switch']['recordings']['dir'];
-			//get recording details from db
-			$sql = "select recording_filename, recording_base64 from v_recordings ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and recording_uuid = '".$recording_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result) > 0) {
-				foreach($result as &$row) {
-					$recording_filename = $row['recording_filename'];
-					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
-						$recording_decoded = base64_decode($row['recording_base64']);
-						file_put_contents($path.'/'.$recording_filename, $recording_decoded);
+
+			//if from recordings, get recording details from db
+				$recording_uuid = check_str($_GET['id']); //recordings
+				if ($recording_uuid != '') {
+					$sql = "select recording_filename, recording_base64 from v_recordings ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and recording_uuid = '".$recording_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					if (count($result) > 0) {
+						foreach($result as &$row) {
+							$recording_filename = $row['recording_filename'];
+							if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
+								$recording_decoded = base64_decode($row['recording_base64']);
+								file_put_contents($path.'/'.$recording_filename, $recording_decoded);
+							}
+							break;
+						}
 					}
-					break;
+					unset ($sql, $prep_statement, $result, $recording_decoded);
 				}
-			}
-			unset ($sql, $prep_statement, $result, $recording_decoded);
+			//if from xml_cdr, use file system
+				else {
+					$recording_filename = base64_decode($_GET['filename']); //xml_cdr
+				}
 
 			if (file_exists($path.'/'.$recording_filename)) {
 				$fd = fopen($path.'/'.$recording_filename, "rb");
