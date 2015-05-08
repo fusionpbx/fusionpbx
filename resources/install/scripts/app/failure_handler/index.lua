@@ -89,22 +89,22 @@
 						end
 					end
 
-			elseif (originate_disposition == "ALLOTTED_TIMEOUT") then
+			elseif (originate_disposition == "NO_ANSWER") then
 
-				--handle ALLOTTED_TIMEOUT ( NO ANSWER )
+				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");
 				if (forward_no_answer_enabled == "true") then
 					forward_no_answer_destination = session:getVariable("forward_no_answer_destination");
 					if (forward_no_answer_destination == nil) then
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding no answer to hangup\n");
-						session:hangup("ALLOTTED_TIMEOUT");
+						session:hangup("NO_ANSWER");
 					else
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding no answer to: " .. forward_no_answer_destination .. "\n");
 						session:transfer(forward_no_answer_destination, "XML", context);
 					end
 				end
 				if (debug["info"] ) then
-					freeswitch.consoleLog("NOTICE", "[failure_handler] - ALLOTTED_TIMEOUT\n");
+					freeswitch.consoleLog("NOTICE", "[failure_handler] - NO_ANSWER\n");
 				end
 
 			elseif (originate_disposition == "USER_NOT_REGISTERED") then
