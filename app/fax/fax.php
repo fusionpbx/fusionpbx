@@ -153,7 +153,7 @@ require_once "resources/paging.php";
 				}
 				if (permission_exists('fax_inbox_view')) {
 					if ($row['fax_email_connection_host'] != '') {
-						$file = "fax_box_remote.php";
+						$file = "fax_files_remote.php";
 						$box = $row['fax_email_connection_mailbox'];
 					}
 					else {
