@@ -523,11 +523,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
 				if ($result_count > 1) {
-					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
 					if (permission_exists('group_member_delete') || if_group("superadmin")) {
+						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
 						echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "	</td>\n";
 					}
-					echo "	</td>\n";
 				}
 				echo "</tr>\n";
 				$assigned_groups[] = $field['group_uuid'];
@@ -538,8 +538,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	unset($sql, $prep_statement, $result, $result_count);
 
 	$sql = "select * from v_groups ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "or domain_uuid is null ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	if (sizeof($assigned_groups) > 0) {
 		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
@@ -551,12 +550,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	if ($result_count > 0) {
 		echo "<br />\n";
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
-		echo "<option value=''></option>\n";
+		echo "	<option value=''></option>\n";
 		foreach($result as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
-				echo "<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
 		echo "</select>";
