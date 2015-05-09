@@ -91,7 +91,7 @@ else {
 	}
 
 //redirect the user
-	$_SESSION["message"] = $text['confirm-delete'];
+	$_SESSION["message"] = $text['message-delete'];
 	header("Location: fax.php");
 	return;
 

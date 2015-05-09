@@ -187,11 +187,13 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<th width='30%'>".$text['label-email_received']."</th>\n";
-	echo "		<th width='60%'>".$text['label-email-fax']."</th>\n";
-	echo "		<th width='10%'>".$text['label-email_size']."</th>\n";
+	echo "		<th>".$text['label-fax_caller_id_name']."</th>\n";
+	echo "		<th>".$text['label-fax_caller_id_number']."</th>\n";
+	echo "		<th>".$text['table-file']."</th>\n";
+	echo "		<th>".$text['label-email_size']."</th>\n";
+	echo "		<th>".$text['label-email_received']."</th>\n";
 	if (permission_exists('fax_inbox_delete')) {
-		echo "		<td class='list_control_icons'>&nbsp;</td>\n";
+		echo "		<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
 	}
 	echo "	</tr>";
 
@@ -202,19 +204,24 @@ else {
 		foreach ($emails as $email_id) {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 			$attachment = parse_attachments($connection, $email_id, FT_UID);
-
-			echo "<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='?id=".$fax_uuid."&email_id=".$email_id."&download'>".$attachment[0]['filename']."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".byte_convert(strlen($attachment[0]['attachment']))."</td>\n";
+			$file_name = $attachment[0]['filename'];
+			$caller_id_name = substr($file_name, 0, strpos($file_name, '-'));
+			$caller_id_number = (is_numeric($caller_id_name)) ? format_phone((int) $caller_id_name) : null;
+			echo "	<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_name."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_number."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'><a href='?id=".$fax_uuid."&email_id=".$email_id."&download'>".$file_name."</a></td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".byte_convert(strlen($attachment[0]['attachment']))."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
 			if (permission_exists('fax_inbox_delete')) {
-				echo "	<td class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a></td>\n";
+				echo "		<td style='width: 25px;' class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a></td>\n";
 			}
-			echo "</tr>\n";
+			echo "	</tr>\n";
 // 			$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
 // 			if ($fax_message == '') {
 // 				$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
 // 			}
+			$c = ($c) ? 0 : 1;
 		}
 
 	}

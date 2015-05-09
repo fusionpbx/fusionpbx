@@ -160,13 +160,13 @@ $text['message-delete']['pt-br'] = "Remoção Efetuada";
 $text['message-delete']['pl'] = "Usunięto poprawnie";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
 
-$text['message-confirm-delete']['en-us'] = "Are you sure you want to delete this?";
-$text['message-confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['message-confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
-$text['message-confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['message-confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['message-confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['message-confirm-delete']['sv-se'] = "Vill du verkligen radera detta?";
+$text['confirm-delete']['en-us'] = "Are you sure you want to delete this?";
+$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
+$text['confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
+$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
+$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
+$text['confirm-delete']['sv-se'] = "Vill du verkligen radera detta?";
 
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
 $text['message-cannot_connect']['es-cl'] = "Error de Conexión";
@@ -1351,14 +1351,6 @@ $text['confirm-ext']['pt-br'] = "Por favor, forneça uma extensão única.";
 $text['confirm-ext']['pl'] = "Proszę wprowadzić numer wewnętrzny";
 $text['confirm-ext']['sv-se'] = "Por favor indique: Extensión ";
 $text['confirm-ext']['es-cl'] = "";
-
-$text['confirm-delete']['en-us'] = "Delete Complete";
-$text['confirm-delete']['es-cl'] = "Eliminación Completada";
-$text['confirm-delete']['pt-pt'] = "Remoção Efectuada";
-$text['confirm-delete']['fr-fr'] = "Supprimé";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Borttagning slutförd";
 
 $text['confirm-copy-info']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy-info']['es-cl'] = "¿Desea realmente copiar esto?";

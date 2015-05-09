@@ -42,20 +42,19 @@ else {
 
 //get the id
 	if (isset($_REQUEST["id"])) {
-		$id = check_str($_REQUEST["id"]);
+		$fax_file_uuid = check_str($_REQUEST["id"]);
 	}
 
 //validate the id
-	if (strlen($id) > 0) {
+	if (strlen($fax_file_uuid) > 0) {
 		//get the fax file data
 			$sql = "select * from v_fax_files ";
-			$sql .= "where fax_file_uuid = '$id' ";
-			//echo $sql."\n";
+			$sql .= "where fax_file_uuid = '".$fax_file_uuid."' ";
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$domain_uuid = $row["domain_uuid"];
 				$fax_uuid = $row["fax_uuid"];
 				$fax_mode = $row["fax_mode"];
 				$fax_file_path = $row["fax_file_path"];
@@ -63,57 +62,42 @@ else {
 			}
 			unset($prep_statement);
 
-		//get the fax file data
-			$sql = "select * from v_fax_files ";
-			$sql .= "where fax_uuid = '$fax_uuid' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$fax_extension = $row["fax_extension"];
-			}
-			unset($prep_statement);
-
-		//delete fax_file
-			$sql = "delete from v_fax_files ";
-			$sql .= "where fax_file_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($prep_statement);
-
 		//set the type
-			if ($fax_mode == 'rx') {
-				$type = 'inbox';
+			if ($fax_mode == 'rx') { $type = 'inbox'; }
+			if ($fax_mode == 'tx') { $type = 'sent'; }
+
+		//delete fax file(s)
+			if (substr_count($fax_file_path, '/temp/') > 0) {
+				$fax_file_path = str_replace('/temp/', '/'.$type.'/', $fax_file_path);
 			}
-			if ($fax_mode == 'tx') {
-				$type = 'sent';
+			if (file_exists($fax_file_path)) {
+				@unlink($fax_file_path);
+			}
+			if ($fax_file_type == 'tif') {
+				$fax_file_path = str_replace('.tif', '.pdf', $fax_file_path);
+				if (file_exists($fax_file_path)) {
+					@unlink($fax_file_path);
+				}
+			}
+			else if ($fax_file_type == 'pdf') {
+				$fax_file_path = str_replace('.pdf', '.tif', $fax_file_path);
+				if (file_exists($fax_file_path)) {
+					@unlink($fax_file_path);
+				}
 			}
 
-		//set the fax directory
-			$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
-			$file = basename($row['fax_file_path']);
-			$file_ext = substr($file, -3);
-			$dir_fax = $fax_dir.'/'.$fax_extension.'/'.$type;
-			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
-				$file_name = substr($file, 0, (strlen($file) -4));
-			}
+		//delete fax file record
+			$sql = "delete from v_fax_files ";
+			$sql .= "where fax_file_uuid = '".$fax_file_uuid."' ";
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($prep_statement);
 
-		//if the file does not exist then remove temp/ out of the path
-			if (!file_exists($fax_file_path)) {
-				$file = str_replace("temp/", $type."/", $file);
-			}
-
-		//delete the files
-			unlink($dir_fax.'/'.$file_name.'.tif');
-			unlink($dir_fax.'/'.$file_name.'.pdf');
+		$_SESSION['message'] = $text['message-delete'];
 	}
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
 	header('Location: fax_files.php?id='.$fax_uuid.'&box='.$type);
 
 ?>

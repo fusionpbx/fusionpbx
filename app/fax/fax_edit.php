@@ -151,7 +151,7 @@ else {
 			$db->exec(check_sql($sql));
 
 		//redirect the browser
-			$_SESSION["message"] = $text['confirm-delete'];
+			$_SESSION["message"] = $text['message-delete'];
 			header("Location: fax_edit.php?id=".$fax_uuid);
 			return;
 	}
@@ -767,7 +767,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".$field['username']."</td>\n";
 						echo "			<td>\n";
-						echo "				<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "				<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						echo "			</td>\n";
 						echo "		</tr>\n";
 						$assigned_user_uuids[] = $field['user_uuid'];

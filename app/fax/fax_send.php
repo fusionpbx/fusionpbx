@@ -196,14 +196,17 @@ if (!$included) {
 		//set resolution
 		switch ($fax_resolution) {
 			case 'fine':
-				$gs_r = '204x196'; $gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
+				$gs_r = '204x196';
+				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
 				break;
 			case 'superfine':
-				$gs_r = '408x391';	$gs_g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
+				$gs_r = '408x391';
+				$gs_g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
 				break;
 			case 'normal':
 			default:
-				$gs_r = '204x98'; $gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
+				$gs_r = '204x98';
+				$gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
 				break;
 		}
 
@@ -573,7 +576,7 @@ if (!$included) {
 		if (!$included) {
 			//redirect the browser
 			$_SESSION["message"] = $response;
-			header("Location: fax_box.php?id=".$fax_uuid."&box=sent");
+			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
 			exit;
 		}
 
