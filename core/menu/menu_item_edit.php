@@ -41,15 +41,14 @@ else {
 //get the menu_uuid
 	$menu_uuid = check_str($_REQUEST["id"]);
 	$menu_item_uuid = check_str($_REQUEST['menu_item_uuid']);
-	$group_name = check_str($_REQUEST['group_name']);
+	$group_uuid_name = check_str($_REQUEST['group_uuid_name']);
+	$menu_item_group_uuid = check_str($_REQUEST['menu_item_group_uuid']);
 
-//delete the group from the user
-	if ($_REQUEST["a"] == "delete" && permission_exists("menu_delete")) {
+//delete the group from the menu item
+	if ($_REQUEST["a"] == "delete" && permission_exists("menu_delete") && $menu_item_group_uuid != '') {
 		//delete the group from the users
 			$sql = "delete from v_menu_item_groups  ";
-			$sql .= "where menu_uuid = '".$menu_uuid."' ";
-			$sql .= "and menu_item_uuid = '".$menu_item_uuid."' ";
-			$sql .= "and group_name = '".$group_name."' ";
+			$sql .= "where menu_item_group_uuid = '".$menu_item_group_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
 			$_SESSION["message"] = $text['message-delete'];
@@ -211,7 +210,10 @@ else {
 				}
 
 			//add a group to the menu
-				if ($_REQUEST["a"] != "delete" && strlen($group_name) > 0 && permission_exists('menu_add')) {
+				if ($_REQUEST["a"] != "delete" && strlen($group_uuid_name) > 0 && permission_exists('menu_add')) {
+					$group_data = explode('|', $group_uuid_name);
+					$group_uuid = $group_data[0];
+					$group_name = $group_data[1];
 					//add the group to the menu
 						if (strlen($menu_item_uuid) > 0) {
 							$menu_item_group_uuid = uuid();
@@ -220,14 +222,16 @@ else {
 							$sql_insert .= "menu_item_group_uuid, ";
 							$sql_insert .= "menu_uuid, ";
 							$sql_insert .= "menu_item_uuid, ";
-							$sql_insert .= "group_name ";
+							$sql_insert .= "group_name, ";
+							$sql_insert .= "group_uuid ";
 							$sql_insert .= ")";
 							$sql_insert .= "values ";
 							$sql_insert .= "(";
 							$sql_insert .= "'".$menu_item_group_uuid."', ";
 							$sql_insert .= "'".$menu_uuid."', ";
 							$sql_insert .= "'".$menu_item_uuid."', ";
-							$sql_insert .= "'".$group_name."' ";
+							$sql_insert .= "'".$group_name."', ";
+							$sql_insert .= "'".$group_uuid."' ";
 							$sql_insert .= ")";
 							$db->exec($sql_insert);
 						}
@@ -270,14 +274,21 @@ else {
 					}
 				}
 
-			//redirect the user
+			//set response message
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
 				}
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header("Location: menu_edit.php?id=".$menu_uuid);
+
+			//redirect the user
+				if ($_REQUEST['submit'] == $text['button-add']) {
+					header("Location: menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$menu_item_uuid."&menu_uuid=".$menu_uuid);
+				}
+				else {
+					header("Location: menu_edit.php?id=".$menu_uuid);
+				}
 				return;
 		} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -383,53 +394,78 @@ else {
 	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
 
-	echo "<table width='52%'>\n";
-	$sql = "SELECT * FROM v_menu_item_groups ";
-	$sql .= "where menu_uuid=:menu_uuid ";
-	$sql .= "and menu_item_uuid=:menu_item_uuid ";
+	//group list
+	$sql = "select ";
+	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "from ";
+	$sql .= "	v_menu_item_groups as mig, ";
+	$sql .= "	v_groups as g ";
+	$sql .= "where ";
+	$sql .= "	mig.group_uuid = g.group_uuid ";
+	$sql .= "	and (";
+	$sql .= "		g.domain_uuid = :domain_uuid ";
+	$sql .= "		or g.domain_uuid is null ";
+	$sql .= "	) ";
+	$sql .= "	and mig.menu_uuid = :menu_uuid ";
+	$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
+	$sql .= "order by ";
+	$sql .= "	g.domain_uuid desc, ";
+	$sql .= "	g.group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 	$prep_statement->bindParam(':menu_uuid', $menu_uuid);
 	$prep_statement->bindParam(':menu_item_uuid', $menu_item_uuid);
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
-	foreach($result as $field) {
-		if (strlen($field['group_name']) > 0) {
-			echo "<tr>\n";
-			echo "	<td class='vtable'>".$field['group_name']."</td>\n";
-			echo "	<td>\n";
-			if (permission_exists('group_member_delete') || if_group("superadmin")) {
-				echo "		<a href='menu_item_edit.php?id=".$field['menu_uuid']."&group_name=".$field['group_name']."&menu_item_uuid=".$menu_item_uuid."&menu_item_parent_uuid=".$menu_item_parent_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+	if ($result_count > 0) {
+		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+		foreach($result as $field) {
+			if (strlen($field['group_name']) > 0) {
+				echo "<tr>\n";
+				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
+				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+				echo "	</td>\n";
+				if (permission_exists('group_member_delete') || if_group("superadmin")) {
+					echo "	<td class='list_control_icons' style='width: 25px;'>";
+					echo 		"<a href='menu_item_edit.php?id=".$field['menu_uuid']."&menu_item_group_uuid=".$field['menu_item_group_uuid']."&menu_item_uuid=".$menu_item_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo "	</td>";
+				}
+				echo "</tr>\n";
+				$assigned_groups[] = $field['group_uuid'];
 			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			$assigned_groups[] = $field['group_name'];
 		}
+		echo "</table>\n";
 	}
-	echo "</table>\n";
+	unset($sql, $prep_statement, $result, $result_count);
 
-	echo "<br />\n";
-	$sql = "SELECT * FROM v_groups ";
+	//group select
+	$sql = "select * from v_groups ";
 	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	$sql .= "order by group_name asc ";
+	if (sizeof($assigned_groups) > 0) {
+		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
+	}
+	$sql .= "order by domain_uuid desc, group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
-	echo "<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-		if (!in_array($field['group_name'], $assigned_groups)) {
-			if ($field['group_name'] == "superadmin" && if_group("superadmin")) {
-				echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n"; //only show the superadmin group to other users in the superadmin group
-			}
-			else {
-				echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n";
+	$result_count = count($result);
+	if ($result_count > 0) {
+		echo "<br />\n";
+		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+		echo "	<option value=''></option>\n";
+		foreach($result as $field) {
+			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
+			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
+			if (!in_array($field["group_uuid"], $assigned_groups)) {
+				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
+		echo "</select>";
+		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
 	}
-	echo "</select>";
-	echo "<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	unset($sql, $result);
+	unset($sql, $prep_statement, $result);
+
 	echo "		</td>";
 	echo "	</tr>";
 

@@ -65,24 +65,26 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					$menu_item_title = $row2[menu_item_title];
 					$menu_item_link = $row2[menu_item_link];
 				//get the groups that have been assigned to the menu
-					$sql = "";
-					$sql .= "select group_name from v_menu_item_groups ";
-					$sql .= "where menu_uuid = '$menu_uuid' ";
-					$sql .= "and menu_item_uuid = '".$menu_item_uuid."' ";
+					$sql = "select ";
+					$sql .= "	g.group_name, g.domain_uuid as group_domain_uuid ";
+					$sql .= "from ";
+					$sql .= "	v_menu_item_groups as mig, ";
+					$sql .= "	v_groups as g ";
+					$sql .= "where ";
+					$sql .= "	mig.group_uuid = g.group_uuid ";
+					$sql .= "	and mig.menu_uuid = '".$menu_uuid."' ";
+					$sql .= "	and mig.menu_item_uuid = '".$menu_item_uuid."' ";
+					$sql .= "order by ";
+					$sql .= "	g.domain_uuid desc, ";
+					$sql .= "	g.group_name asc ";
 					$sub_prep_statement = $db->prepare(check_sql($sql));
 					$sub_prep_statement->execute();
 					$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-					$group_list = "";
-					$x = 0;
+					unset($group_list);
 					foreach ($sub_result as &$sub_row) {
-						if ($x == 0) {
-							$group_list = $sub_row["group_name"];
-						}
-						else {
-							$group_list .= ", ".$sub_row["group_name"];
-						}
-						$x++;
+						$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
+					$group_list = implode(', ', $group_list);
 					unset ($sub_prep_statement);
 				//display the main body of the list
 					switch ($menu_item_category) {
@@ -226,23 +228,26 @@ else {
 			$menu_item_protected = $row['menu_item_protected'];
 
 		//get the groups that have been assigned to the menu
-			$sql = "select group_name from v_menu_item_groups ";
-			$sql .= "where menu_uuid = '$menu_uuid' ";
-			$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+			$sql = "select ";
+			$sql .= "	g.group_name, g.domain_uuid as group_domain_uuid ";
+			$sql .= "from ";
+			$sql .= "	v_menu_item_groups as mig, ";
+			$sql .= "	v_groups as g ";
+			$sql .= "where ";
+			$sql .= "	mig.group_uuid = g.group_uuid ";
+			$sql .= "	and mig.menu_uuid = '".$menu_uuid."' ";
+			$sql .= "	and mig.menu_item_uuid = '".$menu_item_uuid."' ";
+			$sql .= "order by ";
+			$sql .= "	g.domain_uuid desc, ";
+			$sql .= "	g.group_name asc ";
 			$sub_prep_statement = $db->prepare(check_sql($sql));
 			$sub_prep_statement->execute();
 			$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$group_list = "";
-			$x = 0;
+			unset($group_list);
 			foreach ($sub_result as &$sub_row) {
-				if ($x == 0) {
-					$group_list = $sub_row["group_name"];
-				}
-				else {
-					$group_list .= ", ".$sub_row["group_name"];
-				}
-				$x++;
+				$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 			}
+			$group_list = implode(', ', $group_list);
 			unset ($sub_prep_statement);
 
 		//add the type link based on the typd of the menu
