@@ -119,4 +119,64 @@
 		unset($prep_statement);
 	}
 
+//if menu item group uuid is missing, generate and populate
+	if ($domains_processed == 1) {
+		$sql = "select menu_uuid, menu_item_uuid, group_name ";
+		$sql .= "from v_menu_item_groups where menu_item_group_uuid is null";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset($prep_statement);
+		if ($result_count > 0) {
+			foreach($result as $field) {
+				$menu_item_group_uuid = uuid();
+				$sql = "update v_menu_item_groups ";
+				$sql .= "set menu_item_group_uuid = '".$menu_item_group_uuid."' ";
+				$sql .= "where ";
+				$sql .= "menu_uuid = '".$field['menu_uuid']."' ";
+				$sql .= "and menu_item_uuid = '".$field['menu_item_uuid']."' ";
+				$sql .= "and group_name = '".$field['group_name']."' ";
+				$sql .= "and menu_item_group_uuid is null ";
+				$count = $db->exec(check_sql($sql));
+				unset($sql);
+			}
+		}
+	}
+
+//if group uuids are missing, populate with global group uuids
+	if ($domains_processed == 1) {
+		$sql = "select menu_item_group_uuid, group_name ";
+		$sql .= "from v_menu_item_groups where group_uuid is null";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset($prep_statement);
+		if ($result_count > 0) {
+			foreach($result as $field) {
+				//note menu item group uuid
+					$menu_item_group_uuid = $field['menu_item_group_uuid'];
+					$group_name = $field['group_name'];
+				//get global group uuid
+					$sql = "select group_uuid from v_groups ";
+					$sql .= "where domain_uuid is null ";
+					$sql .= "and group_name = '".$group_name."' ";
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+					$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					$sub_result_count = count($sub_result);
+					unset ($prep_statement);
+				//set group uuid
+					if ($sub_result_count > 0) {
+						$sql = "update v_menu_item_groups ";
+						$sql .= "set group_uuid = '".$sub_result['group_uuid']."' ";
+						$sql .= "where menu_item_group_uuid = '".$menu_item_group_uuid."' ";
+						$count = $db->exec(check_sql($sql));
+						unset($sql);
+					}
+			} //foreach
+		} //if
+	} //if
+
 ?>
