@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,34 +38,32 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$menu_uuid = check_str($_GET["menu_uuid"]);
-}
+//set the variables
+	if (count($_GET)>0) {
+		$id = check_str($_GET["id"]);
+		$menu_uuid = check_str($_GET["menu_uuid"]);
+	}
 
 if (strlen($id)>0) {
 	//start the database transaction
 		$db->beginTransaction();
 
 	//delete the menu
-		$sql = "";
-		$sql .= "delete from v_menus ";
+		$sql = "delete from v_menus ";
 		$sql .= "where menu_uuid = '$menu_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 
 	//delete the items in the menu
-		$sql = "";
-		$sql .= "delete from v_menu_items ";
+		$sql = "delete from v_menu_items ";
 		$sql .= "where menu_uuid = '$menu_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 
 	//delete the menu permissions
-		$sql = "";
-		$sql .= "delete from v_menu_item_groups ";
+		$sql = "delete from v_menu_item_groups ";
 		$sql .= "where menu_uuid = '$menu_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
