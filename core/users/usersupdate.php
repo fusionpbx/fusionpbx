@@ -388,11 +388,6 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$user_status = $row["user_status"];
 	}
 
-	//get the groups the user is a member of
-	//group_members function defined in config.php
-	$group_members = group_members($db, $user_uuid);
-
-
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_edit'];
@@ -497,9 +492,22 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td class='vncellreq' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
 
-	$sql = "SELECT * FROM v_group_users ";
-	$sql .= "where domain_uuid=:domain_uuid ";
-	$sql .= "and user_uuid=:user_uuid ";
+	$sql = "select ";
+	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "from ";
+	$sql .= "	v_group_users as gu, ";
+	$sql .= "	v_groups as g ";
+	$sql .= "where ";
+	$sql .= "	gu.group_uuid = g.group_uuid ";
+	$sql .= "	and (";
+	$sql .= "		g.domain_uuid = :domain_uuid ";
+	$sql .= "		or g.domain_uuid is null ";
+	$sql .= "	) ";
+	$sql .= "	and gu.domain_uuid = :domain_uuid ";
+	$sql .= "	and gu.user_uuid = :user_uuid ";
+	$sql .= "order by ";
+	$sql .= "	g.domain_uuid desc, ";
+	$sql .= "	g.group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 	$prep_statement->bindParam(':user_uuid', $user_uuid);
@@ -507,13 +515,15 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
 	if ($result_count > 0) {
-		echo "<table width='30%'>\n";
+		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		foreach($result as $field) {
 			if (strlen($field['group_name']) > 0) {
 				echo "<tr>\n";
-				echo "	<td class='vtable'>".$field['group_name']."</td>\n";
+				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
+				echo ($field['group_domain_uuid'] == '') ? "<i>".$field['group_name']."</i>" : $field['group_name']."@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'];
+				echo "	</td>\n";
 				if ($result_count > 1) {
-					echo "	<td>\n";
+					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
 					if (permission_exists('group_member_delete') || if_group("superadmin")) {
 						echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 					}
@@ -527,13 +537,13 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	}
 	unset($sql, $prep_statement, $result, $result_count);
 
-	$sql = "SELECT * FROM v_groups ";
+	$sql = "select * from v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "or domain_uuid is null ";
 	if (sizeof($assigned_groups) > 0) {
 		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
-	$sql .= "order by group_name asc ";
+	$sql .= "order by domain_uuid desc, group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -546,7 +556,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
-				echo "<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name']."</option>\n";
+				echo "<option value='".$field['group_uuid']."|".$field['group_name']."' ".(($field['domain_uuid'] == '') ? "style='font-style: italic;'" : null).">".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
 		echo "</select>";
