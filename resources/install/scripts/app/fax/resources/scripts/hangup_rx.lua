@@ -305,9 +305,6 @@
 			table.insert(sql, "fax_file_uuid, ");
 			table.insert(sql, "fax_uuid, ");
 			table.insert(sql, "fax_mode, ");
-			if (sip_to_user ~= nil) then
-				table.insert(sql, "fax_destination, ");
-			end
 			table.insert(sql, "fax_file_type, ");
 			table.insert(sql, "fax_file_path, ");
 			if (caller_id_name ~= nil) then
@@ -328,9 +325,6 @@
 			table.insert(sql, "'" .. uuid .. "', ");
 			table.insert(sql, "'" .. fax_uuid .. "', ");
 			table.insert(sql, "'rx', ");
-			if (sip_to_user ~= nil) then
-				table.insert(sql, "'" .. sip_to_user .. "', ");
-			end
 			table.insert(sql, "'tif', ");
 			table.insert(sql, "'" .. fax_file .. "', ");
 			if (caller_id_name ~= nil) then
