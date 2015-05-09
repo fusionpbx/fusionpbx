@@ -520,7 +520,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			if (strlen($field['group_name']) > 0) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-				echo ($field['group_domain_uuid'] == '') ? "<i>".$field['group_name']."</i>" : $field['group_name']."@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'];
+				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
 				if ($result_count > 1) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
@@ -556,7 +556,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
-				echo "<option value='".$field['group_uuid']."|".$field['group_name']."' ".(($field['domain_uuid'] == '') ? "style='font-style: italic;'" : null).">".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+				echo "<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
 		echo "</select>";
