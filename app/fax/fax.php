@@ -152,8 +152,14 @@ require_once "resources/paging.php";
 					echo "		<a href='fax_send.php?id=".$row['fax_uuid']."'>".$text['label-new']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_inbox_view')) {
-					$file = ($row['fax_email_connection_host'] != '' && $row['fax_email_connection_mailbox'] != '') ? "fax_box_remote.php" : "fax_files.php";
-					$box = ($row['fax_email_connection_host'] != '' && $row['fax_email_connection_mailbox'] != '') ? $row['fax_email_connection_mailbox'] : 'inbox';
+					if ($row['fax_email_connection_host'] != '') {
+						$file = "fax_box_remote.php";
+						$box = $row['fax_email_connection_mailbox'];
+					}
+					else {
+						$file = "fax_files.php";
+						$box = 'inbox';
+					}
 					echo "		<a href='".$file."?id=".$row['fax_uuid']."&box=".$box."'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
@@ -169,7 +175,7 @@ require_once "resources/paging.php";
 					echo "<a href='fax_edit.php?id=".$row['fax_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>";
+					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";

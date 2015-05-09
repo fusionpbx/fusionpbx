@@ -340,6 +340,7 @@
 				table.insert(sql, "'" .. sip_to_user .. "', ");
 			end
 			table.insert(sql, "'tif', ");
+			fax_file = string.gsub(fax_file, '/temp/', '/sent/');
 			table.insert(sql, "'" .. fax_file .. "', ");
 			table.insert(sql, "'" .. origination_caller_id_name .. "', ");
 			table.insert(sql, "'" .. origination_caller_id_number .. "', ");
