@@ -59,22 +59,25 @@ require_once "resources/require.php";
 	}
 
 //get the values from http and set as variables
-	$username = check_str($_POST["username"]);
-	$password = check_str($_POST["password"]);
-	$confirmpassword = check_str($_POST["confirmpassword"]);
-	$group_uuid_name = check_str($_POST["group_uuid_name"]);
-	$user_email = check_str($_POST["user_email"]);
-	$contact_organization = check_str($_POST["contact_organization"]);
-	$contact_name_given = check_str($_POST["contact_name_given"]);
-	$contact_name_family = check_str($_POST["contact_name_family"]);
+	if (sizeof($_POST) > 0) {
+		$username = check_str($_POST["username"]);
+		$password = check_str($_POST["password"]);
+		$confirmpassword = check_str($_POST["confirmpassword"]);
+		$group_uuid_name = check_str($_POST["group_uuid_name"]);
+		$user_email = check_str($_POST["user_email"]);
+		$contact_organization = check_str($_POST["contact_organization"]);
+		$contact_name_given = check_str($_POST["contact_name_given"]);
+		$contact_name_family = check_str($_POST["contact_name_family"]);
 
-if ($group_uuid_name != '') {
-	$group_data = explode('|', $group_uuid_name);
-	$group_uuid = $group_data[0];
-	$group_name = $group_data[1];
-}
+		if ($group_uuid_name != '') {
+			$group_data = explode('|', $group_uuid_name);
+			$group_uuid = $group_data[0];
+			$group_name = $group_data[1];
+		}
+	}
 
-if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
+
+if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 
 	$msg = '';
 
@@ -93,10 +96,10 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 		$msg .= $text['message-required'].$text['label-username']."<br>\n";
 	}
 	else {
-		$sql = "SELECT * FROM v_users ";
-		$sql .= "WHERE username = '$username' ";
+		$sql = "select * from v_users ";
+		$sql .= "where username = '$username' ";
 		if ($_SESSION["user"]["unique"]["text"] != "global") {
-			$sql .= "AND domain_uuid = '$domain_uuid' ";
+			$sql .= "and domain_uuid = '$domain_uuid' ";
 		}
 		//$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -310,25 +313,29 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='$user_email'></td>";
 	echo "	</tr>";
+
 	echo "	<tr>";
 	echo "		<td class='vncellreq' valign='top'>".$text['label-group']."</td>";
 	echo "		<td class='vtable'>";
-	$sql = "SELECT * FROM v_groups ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "or domain_uuid is null ";
-	$sql .= "order by group_name asc ";
+
+	$sql = "select * from v_groups ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "order by domain_uuid desc, group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 	$prep_statement->execute();
-	echo "			<select name=\"group_uuid_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
-	echo "				<option value=\"\"></option>\n";
+	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	echo "			<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+	echo "				<option value=''></option>\n";
 	foreach($result as $field) {
 		if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; } //only show the superadmin group to other superadmins
 		if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-		echo "			<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name']."</option>\n";
+		echo "			<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 	}
 	echo "			</select>";
-	unset($sql, $result);
+	unset($sql, $prep_statement, $result);
+
 	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
