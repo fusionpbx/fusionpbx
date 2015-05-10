@@ -402,17 +402,12 @@ else {
 	$sql .= "	v_groups as g ";
 	$sql .= "where ";
 	$sql .= "	mig.group_uuid = g.group_uuid ";
-	$sql .= "	and (";
-	$sql .= "		g.domain_uuid = :domain_uuid ";
-	$sql .= "		or g.domain_uuid is null ";
-	$sql .= "	) ";
 	$sql .= "	and mig.menu_uuid = :menu_uuid ";
 	$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
 	$sql .= "order by ";
 	$sql .= "	g.domain_uuid desc, ";
 	$sql .= "	g.group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 	$prep_statement->bindParam(':menu_uuid', $menu_uuid);
 	$prep_statement->bindParam(':menu_item_uuid', $menu_item_uuid);
 	$prep_statement->execute();
@@ -441,9 +436,8 @@ else {
 
 	//group select
 	$sql = "select * from v_groups ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	if (sizeof($assigned_groups) > 0) {
-		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
+		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
