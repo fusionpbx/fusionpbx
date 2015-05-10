@@ -73,17 +73,29 @@ else {
 	$superadmins = superadmin_list($db);
 
 //get the users' group(s) from the database
-	$sql = "select * from v_group_users ";
+	$sql = "select ";
+	$sql .= "	gu.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "from ";
+	$sql .= "	v_group_users as gu, ";
+	$sql .= "	v_groups as g ";
+	$sql .= "where ";
+	$sql .= "	gu.group_uuid = g.group_uuid ";
 	if (!(permission_exists('user_all') && $_GET['showall'] == 'true')) {
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "	and (";
+		$sql .= "		g.domain_uuid = '".$domain_uuid."' ";
+		$sql .= "		or g.domain_uuid is null ";
+		$sql .= "	) ";
+		$sql .= "	and gu.domain_uuid = '".$domain_uuid."' ";
 	}
-	$sql .= "order by group_name asc ";
+	$sql .= "order by ";
+	$sql .= "	g.domain_uuid desc, ";
+	$sql .= "	g.group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	if (count($result) > 0) {
 		foreach($result as $row) {
-			$user_groups[$row['user_uuid']][] = $row['group_name'];
+			$user_groups[$row['user_uuid']][] = $row['group_name'].(($row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['group_domain_uuid']]['domain_name'] : null);
 		}
 	}
 	unset ($sql, $prep_statement);
@@ -161,7 +173,7 @@ else {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo "<th>".$text['label-group']."</th>\n";
+	echo "<th>".$text['label-groups']."</th>\n";
 	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
