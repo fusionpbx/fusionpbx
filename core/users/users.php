@@ -49,10 +49,11 @@ else {
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
 		if ($_GET['showall'] == 'true') {
+			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='index.php';\">\n";
 			echo "<input type='hidden' name='showall' value='true'>";
 		}
 		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='?showall=true';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='index.php?showall=true';\">\n";
 		}
 	}
 	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
