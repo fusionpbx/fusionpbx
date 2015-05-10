@@ -88,16 +88,18 @@ else {
 	}
 
 //get the groups users
-	$sql = "select u.user_uuid, u.username, g.group_user_uuid, g.domain_uuid, g.group_uuid ";
-	$sql .= "from v_group_users as g, v_users as u ";
-	$sql .= "where g.user_uuid = u.user_uuid ";
+	$sql = "select u.user_uuid, u.username, gu.group_user_uuid, gu.domain_uuid, gu.group_uuid ";
+	$sql .= "from v_group_users as gu, v_users as u, v_domains as d ";
+	$sql .= "where gu.user_uuid = u.user_uuid ";
+	$sql .= "and gu.domain_uuid = d.domain_uuid ";
 	if ($domain_uuid != '') {
-		$sql .= "and g.domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and gu.domain_uuid = '".$domain_uuid."' ";
 	}
 	if (!permission_exists('user_all')) {
 		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	}
-	$sql .= "and g.group_uuid = '".$group_uuid."' ";
+	$sql .= "and gu.group_uuid = '".$group_uuid."' ";
+	$sql .= "order by d.domain_name asc, u.username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
