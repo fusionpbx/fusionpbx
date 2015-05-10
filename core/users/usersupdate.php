@@ -279,17 +279,28 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			}
 		}
 
-	//change domain_uuid in group users and user settings tables
+	//change domain_uuid in group users and user settings tables, and unassign any foreign domain groups
 		if (permission_exists('user_domain')) {
 			$sql = "update v_group_users set ";
 			$sql .= "domain_uuid = '".$domain_uuid."' ";
 			$sql .= "where user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
+			unset($sql);
 
 			$sql = "update v_user_settings set ";
 			$sql .= "domain_uuid = '".$domain_uuid."' ";
 			$sql .= "where user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
+			unset($sql);
+
+			$sql = "delete from v_group_users where ";
+			$sql .= "domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$sql .= "and group_uuid not in (";
+			$sql .= "	select group_uuid from v_groups where domain_uuid = '".$domain_uuid."' or domain_uuid is null ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 		}
 
 	//sql update
@@ -321,11 +332,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		else {
 			$sql .= "contact_uuid = '".$contact_uuid."' ";
 		}
-		$sql .= "where 1 = 1 ";
+		$sql .= "where ";
 		if (!permission_exists('user_domain')) {
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$sql .= "domain_uuid = '".$domain_uuid."' and ";
 		}
-		$sql .= "and user_uuid = '".$user_uuid."' ";
+		$sql .= "user_uuid = '".$user_uuid."' ";
 		$db->exec(check_sql($sql));
 
 
