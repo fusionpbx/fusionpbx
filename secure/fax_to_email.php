@@ -113,16 +113,16 @@ if (defined('STDIN')) {
 	echo "mailto_adress is ".$mailto_address."\n";
 	echo "fax_email is ".$fax_email."\n";
 
-//get the fax name from the full path and file name also works with the file name only.
+//get the fax file name (only) if a full path
 	$array = explode("/", $fax_file);
-	$fax_name = $array[count($array)-1];
+	$fax_file_only = $array[count($array)-1];
+	$fax_file_name = pathinfo($fax_file_only, PATHINFO_FILENAME);
 	unset($array);
 
 //used for debug
 	echo "fax_email $fax_email\n";
 	echo "fax_extension $fax_extension\n";
-	echo "fax_name $fax_name\n";
-	echo "cd $dir_fax; /usr/bin/tiff2png ".$dir_fax.'/'.$fax_name.".png\n";
+	echo "fax_name $fax_file_only\n";
 
 //get the fax details from the database
 	$sql = "select * from v_domains ";
@@ -165,31 +165,73 @@ if (defined('STDIN')) {
 //convert the tif to a pdf
 	//Ubuntu: apt-get install libtiff-tools
 	$fax_file_warning = "";
-	if (file_exists($dir_fax.'/'.$fax_name.".tif")) {
-		if (!file_exists($dir_fax.'/'.$fax_name.".pdf")) {
-			$tmp_tiff2pdf = exec("which tiff2pdf");
-			if (strlen($tmp_tiff2pdf) == 0) {$tmp_tiff2pdf = "/usr/bin/tiff2pdf"; }
-			if (strlen($tmp_tiff2pdf) > 0) {
-				$cmd = "cd ".$dir_fax."; ".$tmp_tiff2pdf." -f -o ".$fax_name.".pdf ".$dir_fax.'/'.$fax_name.".tif";
-				echo $cmd."\n";
-				exec($cmd);
-			}
+	if (file_exists($dir_fax.'/'.$fax_file_name.".tif")) {
+		if (!file_exists($dir_fax.'/'.$fax_file_name.".pdf")) {
+			//define temp directory
+				$dir_fax_temp = str_replace('/inbox', '/temp', $dir_fax);
+				if (!is_dir($dir_fax_temp)) {
+					mkdir($dir_fax_temp,0774,true);
+					chmod($dir_fax_temp,0774);
+				}
+			//enter fax directory
+				chdir($dir_fax);
+			//get fax resolution (ppi, W & H)
+				$resp = exec("tiffinfo ".$fax_file_name.".tif | grep 'Resolution:'");
+				$resp_array = explode(' ', trim($resp));
+				$ppi_w = (int) $resp_array[1];
+				$ppi_h = (int) $resp_array[2];
+				unset($resp_array);
+				$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
+			//get page dimensions/size (pixels/inches, W & H)
+				$resp = exec("tiffinfo ".$fax_file_name.".tif | grep 'Image Width:'");
+				$resp_array = explode(' ', trim($resp));
+				$pix_w = $resp_array[2];
+				$pix_h = $resp_array[5];
+				unset($resp_array);
+				$gs_g = $pix_w.'x'.$pix_h; //used by ghostscript
+				$page_width = $pix_w / $ppi_w;
+				$page_height = $pix_h / $ppi_h;
+				if ($page_width > 8.4 && $page_height > 13) {
+					$page_width = 8.5;
+					$page_height = 14;
+					$page_size = 'legal';
+				}
+				else if ($page_width > 8.4 && $page_height < 12) {
+					$page_width = 8.5;
+					$page_height = 11;
+					$page_size = 'letter';
+				}
+				else if ($page_width < 8.4 && $page_height > 11) {
+					$page_width = 8.3;
+					$page_height = 11.7;
+					$page_size = 'a4';
+				}
+			//generate pdf (a work around, as tiff2pdf improperly inverts the colors)
+				$cmd_tif2pdf = "tiff2pdf -i -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$fax_file_name.".pdf ".$dir_fax.'/'.$fax_file_name.".tif";
+				exec($cmd_tif2pdf);
+				chdir($dir_fax_temp);
+				$cmd_pdf2tif = "gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_file_name."_temp.tif -- ".$fax_file_name.".pdf -c quit";
+				exec($cmd_pdf2tif); //convert pdf to tif
+				@unlink($dir_fax_temp.'/'.$fax_file_name.".pdf");
+				$cmd_tif2pdf = "tiff2pdf -i -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$fax_file_name.".pdf ".$dir_fax_temp.'/'.$fax_file_name."_temp.tif";
+				exec($cmd_tif2pdf);
+				@unlink($dir_fax_temp.'/'.$fax_file_name."_temp.tif");
 		}
 	}
 	else {
 		$fax_file_warning = " Fax image not available on server.";
-		echo "$fax_file_warning<br>";
+		echo $fax_file_warning."<br>";
 	}
 
 //forward the fax
-	if (strpos($fax_name,'#') !== false) {
-		$tmp = explode("#",$fax_name);
+	if (strpos($fax_file_name,'#') !== false) {
+		$tmp = explode("#",$fax_file_name);
 		$fax_forward_number = $tmp[0];
 	}
 
 	echo "fax_forward_number is $fax_forward_number\n";
 	if (strlen($fax_forward_number) > 0) {
-		if (file_exists($dir_fax."/".$fax_name.".tif")) {
+		if (file_exists($dir_fax."/".$fax_file_name.".tif")) {
 			//get the event socket information
 				$sql = "select * from v_settings ";
 				$prep_statement = $db->prepare(check_sql($sql));
@@ -207,7 +249,7 @@ if (defined('STDIN')) {
 				if ($fp) {
 					//prepare the fax originate command
 						$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_forward_number);
-						$fax_file = $dir_fax."/".$fax_name.".tif";
+						$fax_file = $dir_fax."/".$fax_file_name.".tif";
 						if (count($route_array) == 0) {
 							//send the internal call to the registered extension
 								$fax_uri = "user/".$fax_forward_number."@".$domain_name;
@@ -236,17 +278,17 @@ if (defined('STDIN')) {
 	}
 
 //send the email
-	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_name.".tif")) {
+	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_file_name.".tif")) {
 		//prepare the message
-			$tmp_subject = (($fax_email_inbound_subject_tag != '') ? "[".$fax_email_inbound_subject_tag."]" : "Fax Received").": ".$fax_name;
+			$tmp_subject = (($fax_email_inbound_subject_tag != '') ? "[".$fax_email_inbound_subject_tag."]" : "Fax Received").": ".$fax_file_name;
 
 			$tmp_text_html = "<br><strong>Fax Received</strong><br><br>";
-			$tmp_text_html .= "Name: ".$fax_name."<br>";
+			$tmp_text_html .= "Name: ".$fax_file_name."<br>";
 			$tmp_text_html .= "Extension: ".$fax_extension."<br>";
 			$tmp_text_html .= "Messages: ".$fax_messages."<br>";
 			$tmp_text_html .= $fax_file_warning."<br>";
 			if ($fax_relay == 'yes') {
-				$tmp_subject = "Fax Received for Relay: ".$fax_name;
+				$tmp_subject = "Fax Received for Relay: ".$fax_file_name;
 				$tmp_text_html .= "<br>This message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.<br>";
 			}
 			$tmp_text_plain = strip_tags(str_replace("<br>", "\n", $tmp_text_html));
@@ -289,12 +331,12 @@ if (defined('STDIN')) {
 			echo "tmp_subject: $tmp_subject\n";
 
 		//add the attachments
-			if (strlen($fax_name) > 0) {
-				if (file_exists($dir_fax.'/'.$fax_name.".pdf")) {
-					$mail->AddAttachment($dir_fax.'/'.$fax_name.'.pdf'); // pdf attachment
+			if (strlen($fax_file_name) > 0) {
+				if (file_exists($dir_fax.'/'.$fax_file_name.".pdf")) {
+					$mail->AddAttachment($dir_fax.'/'.$fax_file_name.'.pdf'); // pdf attachment
 				}
 				else {
-					$mail->AddAttachment($dir_fax.'/'.$fax_name.'.tif'); // tif attachment
+					$mail->AddAttachment($dir_fax.'/'.$fax_file_name.'.tif'); // tif attachment
 				}
 				//$filename='fax.tif'; $encoding = "base64"; $type = "image/tif";
 				//$mail->AddStringAttachment(base64_decode($strfax),$filename,$encoding,$type);
@@ -323,7 +365,7 @@ if (defined('STDIN')) {
 	//        failed_fax_emails.sh - this is created when we have a email we need to re-send.  At the time it is created, an at job is created to execute it in 3 minutes time,
 	//            this allows us to try sending the email again at that time.  If the file exists but there is no at job this is because there are no longer any emails queued
 	//            as we have successfully sent them all.
-	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_name.".tif")) {
+	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_file_name.".tif")) {
 		if (stristr(PHP_OS, 'WIN')) {
 			//not compatible with windows
 		}
@@ -332,12 +374,12 @@ if (defined('STDIN')) {
 			if ($email_status == 'ok') {
 				// log the success
 					$fp = fopen($fax_to_email_queue_dir."/emailed_faxes.log", "a");
-					fwrite($fp, $fax_name." received on ".$fax_extension." emailed to ".$fax_email." ".$fax_messages."\n");
+					fwrite($fp, $fax_file_name." received on ".$fax_extension." emailed to ".$fax_email." ".$fax_messages."\n");
 					fclose($fp);
 			} else {
 				// create an instruction log to email messages once the connection to the mail server has been restored
 					$fp = fopen($fax_to_email_queue_dir."/failed_fax_emails.log", "a");
-					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email=$fax_email extension=$fax_extension name=$fax_name messages='$fax_messages' retry=yes\n");
+					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email='".$fax_email."' extension=".$fax_extension." name='".$dir_fax.'/'.$fax_file_only."' messages='".$fax_messages."' domain=".$domain_name." caller_id_name='".$caller_id_name."' caller_id_number=".$caller_id_number." retry=true\n");
 					fclose($fp);
 				// create a script to do the delayed mailing
 					$fp = fopen($_SESSION['server']['temp']['dir']."/failed_fax_emails.sh", "w");
