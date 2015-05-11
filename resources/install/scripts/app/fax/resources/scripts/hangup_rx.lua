@@ -110,6 +110,7 @@
 	sip_to_user = env:getHeader("sip_to_user");
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
+	fax_remote_station_id = env:getHeader("fax_remote_station_id");
 	fax_document_total_pages = env:getHeader("fax_document_total_pages");
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 	fax_file = env:getHeader("fax_file");
@@ -177,16 +178,18 @@
 	cmd = cmd .. "email='"..fax_email.."' ";
 	cmd = cmd .. "extension="..fax_extension.." ";
 	cmd = cmd .. "name='"..fax_file.."' "; 
-	cmd = cmd .. "messages='result: "..fax_result_text.."' ";
-	cmd = cmd .. "sender: "; --fax_remote_station_id.." "
-	cmd = cmd .. "pages:"..fax_document_total_pages.." ";
-	cmd = cmd .. "domain="..domain_name.." "
+	cmd = cmd .. "messages='result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages.."' ";
+	cmd = cmd .. "domain="..domain_name.." ";
+	cmd = cmd .. "caller_id_name='";
 	if (caller_id_name ~= nil) then
-		cmd = cmd .. "caller_id_name='"..caller_id_name.."' ";
+		cmd = cmd .. caller_id_name;
 	end
+	cmd = cmd .. "' ";
+	cmd = cmd .. "caller_id_number=";
 	if (caller_id_number ~= nil) then
-		cmd = cmd .. "caller_id_number="..caller_id_number.." ";
+		cmd = cmd .. caller_id_number;
 	end
+	cmd = cmd .. " ";
 	if (string.len(fax_forward_number) > 0) then
 		cmd = cmd .. "fax_relay=true ";
 	end
