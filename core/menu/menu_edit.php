@@ -96,9 +96,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'".$menu_uuid."', ";
-				$sql .= "'$menu_name', ";
-				$sql .= "'$menu_language', ";
-				$sql .= "'$menu_description' ";
+				$sql .= "'".$menu_name."', ";
+				$sql .= "'".$menu_language."', ";
+				$sql .= "'".$menu_description."' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -108,6 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$menu = new menu;
 				$menu->db = $db;
 				$menu->menu_uuid = $menu_uuid;
+				$menu->menu_language = $menu_language;
 				$menu->restore();
 
 			//redirect the user back to the main menu
@@ -119,10 +120,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "update") {
 			//update the menu
 				$sql = "update v_menus set ";
-				$sql .= "menu_name = '$menu_name', ";
-				$sql .= "menu_language = '$menu_language', ";
-				$sql .= "menu_description = '$menu_description' ";
-				$sql .= "where menu_uuid = '$menu_uuid'";
+				$sql .= "menu_name = '".$menu_name."', ";
+				$sql .= "menu_language = '".$menu_language."', ";
+				$sql .= "menu_description = '".$menu_description."' ";
+				$sql .= "where menu_uuid = '".$menu_uuid."'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -173,7 +174,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu.php'\" value='".$text['button-back']."'>\n";
-	if (permission_exists('menu_restore') && $action == "update" && $menu_uuid == 'b4750c3f-2a86-b00d-b7d0-345c14eca286') {
+	if (permission_exists('menu_restore') && $action == "update") {
 		echo "	<input type='button' class='btn' value='".$text['button-restore_default']."' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
