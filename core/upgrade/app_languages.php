@@ -48,6 +48,14 @@ $text['message-upgrade_svn']['pt-br'] = "Fonte de arquivos atualizados";
 $text['message-upgrade_svn']['pl'] = "Aktualizacja plików źródłowych powiodła się";
 $text['message-upgrade_svn']['sv-se'] = "Källfiler Uppdaterade";
 
+$text['message-upgrade_svn_scripts']['en-us'] = "Source Files and Scripts Updated";
+$text['message-upgrade_svn_scripts']['es-cl'] = "Fuente archivos actualizados";
+$text['message-upgrade_svn_scripts']['pt-pt'] = "Fonte arquivos atualizados";
+$text['message-upgrade_svn_scripts']['fr-fr'] = "Source Fichiers mis à jour";
+$text['message-upgrade_svn_scripts']['pt-br'] = "Fonte de arquivos atualizados";
+$text['message-upgrade_svn_scripts']['pl'] = "Aktualizacja plików źródłowych powiodła się";
+$text['message-upgrade_svn_scripts']['sv-se'] = "Källfiler Uppdaterade";
+
 $text['message-upgrade_schema']['en-us'] = "Schema Verified";
 $text['message-upgrade_schema']['es-cl'] = "Esquema Verified";
 $text['message-upgrade_schema']['pt-pt'] = "Esquema Verificado";
@@ -256,13 +264,13 @@ $text['header-database_type']['pt-br'] = "Tipo de base de dados";
 $text['header-database_type']['pl'] = "Rodzaj bazy danych";
 $text['header-database_type']['sv-se'] = "Databas Typ";
 
-$text['description-upgrade_svn']['en-us'] = "Updates FusionPBX source files from the Subversion respository.";
-$text['description-upgrade_svn']['es-cl'] = "Archivos de origen Actualizaciones FusionPBX del repositorio Subversion.";
-$text['description-upgrade_svn']['pt-pt'] = "Arquivos de origem Atualizações FusionPBX do repositório Subversion.";
-$text['description-upgrade_svn']['fr-fr'] = "Fichiers sources des mises à jour FusionPBX du respository Subversion.";
+$text['description-upgrade_svn']['en-us'] = "Updates FusionPBX source files and scripts from the respository.";
+$text['description-upgrade_svn']['es-cl'] = "Archivos de origen Actualizaciones FusionPBX del repositorio.";
+$text['description-upgrade_svn']['pt-pt'] = "Arquivos de origem Atualizações FusionPBX do repositório.";
+$text['description-upgrade_svn']['fr-fr'] = "Fichiers sources des mises à jour FusionPBX du respository.";
 $text['description-upgrade_svn']['pt-br'] = "Arquivos de atualização";
-$text['description-upgrade_svn']['pl'] = "Uaktualnia pliki źródłowe FusionPBX z przechowalni Subversion.";
-$text['description-upgrade_svn']['sv-se'] = "Uppdaterar FusionPBX källfiler från Subversion respository .";
+$text['description-upgrade_svn']['pl'] = "Uaktualnia pliki źródłowe FusionPBX z przechowalni.";
+$text['description-upgrade_svn']['sv-se'] = "Uppdaterar FusionPBX källfiler från respository.";
 
 $text['description-upgrade_schema']['en-us'] = "Checks to ensure table and field integrity in the database.";
 $text['description-upgrade_schema']['es-cl'] = "Los cheques para asegurar mesa y campo de integridad en la base de datos.";
