@@ -41,7 +41,13 @@
 					$sql = "delete from v_menu_item_groups ";
 					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
 					$sql .= "and menu_item_uuid in ( ";
-					$sql .= "	select menu_item_uuid from v_menu_items where menu_item_protected <> 'true' or menu_item_protected is null ";
+					$sql .= "	select menu_item_uuid ";
+					$sql .= "	from v_menu_items ";
+					$sql .= "	where menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "	and ( ";
+					$sql .= " 		menu_item_protected <> 'true' ";
+					$sql .= "		or menu_item_protected is null ";
+					$sql .= "	) ";
 					$sql .= ") ";
 					$db->exec(check_sql($sql));
 				//remove existing unprotected menu items
@@ -194,6 +200,7 @@
 							foreach ($sub_row['groups'] as $group) {
 								$sql = "select count(*) as count from v_menu_item_groups ";
 								$sql .= "where menu_item_uuid = '".$sub_row['uuid']."' ";
+								$sql .= "and menu_uuid = '".$this->menu_uuid."' ";
 								$sql .= "and group_name = '".$group."' ";
 								$sql .= "and group_uuid = '".$group_uuids[$group]."' ";
 								//echo $sql."<br>";
