@@ -173,10 +173,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu.php'\" value='".$text['button-back']."'>\n";
-	if (permission_exists('menu_restore') && $action == "update") {
-		echo "	<input type='button' class='btn' value='".$text['button-restore_all']."' onclick=\"document.location.href='menu_restore_all_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
-	}
-	if (permission_exists('menu_restore') && $action == "update") {
+	if (permission_exists('menu_restore') && $action == "update" && $menu_uuid == 'b4750c3f-2a86-b00d-b7d0-345c14eca286') {
 		echo "	<input type='button' class='btn' value='".$text['button-restore_default']."' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
 	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

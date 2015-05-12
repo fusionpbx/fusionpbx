@@ -17,8 +17,6 @@ $apps[$x]['menu'][0]['path'] = "/core/user_settings/user_edit.php";
 $apps[$x]['menu'][0]['groups'][] = "user";
 $apps[$x]['menu'][0]['groups'][] = "admin";
 $apps[$x]['menu'][0]['groups'][] = "superadmin";
-$apps[$x]['menu'][0]['groups'][] = "user";
-$apps[$x]['menu'][0]['groups'][] = "admin";
 
 $apps[$x]['menu'][1]['title']['en-us'] = "User Dashboard";
 $apps[$x]['menu'][1]['title']['es-cl'] = "Dashboard Usuario";
@@ -34,6 +32,8 @@ $apps[$x]['menu'][1]['uuid'] = "92c8ffdb-3c82-4f08-aec0-82421ec41bb5";
 $apps[$x]['menu'][1]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 $apps[$x]['menu'][1]['category'] = "internal";
 $apps[$x]['menu'][1]['path'] = "/core/user_settings/user_dashboard.php";
+$apps[$x]['menu'][1]['groups'][] = "user";
+$apps[$x]['menu'][1]['groups'][] = "admin";
 $apps[$x]['menu'][1]['groups'][] = "superadmin";
 
 ?>
