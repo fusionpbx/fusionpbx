@@ -121,21 +121,32 @@
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the ring group destinations
-			sql = [[SELECT 
-					r.ring_group_strategy, r.ring_group_timeout_app, 
-					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, 
-					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
-				FROM 
-					v_ring_groups as r, v_ring_group_destinations as d
-				WHERE 
+			sql = [[
+				select 
+					r.ring_group_strategy, r.ring_group_timeout_app, d.destination_number, 
+					d.destination_delay, d.destination_timeout, d.destination_prompt, 
+					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, 
+					r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
+				from 
+					v_ring_groups as r, v_ring_group_destinations as d, v_extensions as e
+				where 
 					d.ring_group_uuid = r.ring_group_uuid 
-					AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
-					AND r.domain_uuid = ']]..domain_uuid..[[' 
-					AND r.ring_group_enabled = 'true' 
-				ORDER BY 
-					d.destination_delay, d.destination_number asc 
-				]];
-				--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+					and (
+						d.destination_number = e.extension 
+						or d.destination_number = e.number_alias
+					)
+					and (
+						e.do_not_disturb = 'false'
+						or e.do_not_disturb is null
+					)
+					and d.ring_group_uuid = ']]..ring_group_uuid..[[' 
+					and e.domain_uuid = ']]..domain_uuid..[['
+					and r.domain_uuid = ']]..domain_uuid..[['
+					and r.ring_group_enabled = 'true' 
+				order by 
+					d.destination_delay asc, d.destination_number asc 
+				]]
+			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 			destinations = {};
 			x = 1;
 			assert(dbh:query(sql, function(row)
