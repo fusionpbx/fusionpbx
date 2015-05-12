@@ -105,26 +105,9 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 				//display the content of the list
 					$tr_link = (permission_exists('menu_edit')) ? "href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."'" : null;
 					echo "<tr ".$tr_link.">\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>";
-					echo "  <table cellpadding='0' cellspacing='0' border='0'>";
-					echo "  <tr>";
-					echo "      <td nowrap>";
-					$i=0;
-					while($i < $menu_item_level){
-						echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
-						$i++;
-					}
-					echo "       ".$menu_item_title."&nbsp;";
-
-					echo "      </td>";
-					echo "  </tr>";
-					echo "  </table>";
-					echo "</td>";
-					//echo "<td valign='top'>".$menu_item_link."&nbsp;</td>";
+					echo "<td valign='top' class='".$row_style[$c]." ".(($menu_item_category != 'internal') ? "tr_link_void" : null)."' style='padding-left: ".($menu_item_level * 25)."px;' nowrap>".$menu_item_title."&nbsp;</td>";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_category."&nbsp;</td>";
-					//echo "<td valign='top'>".$row[menu_item_description]."</td>";
-					//echo "<td valign='top'>".$row[menu_item_order]."&nbsp;</td>";
 					if ($menu_item_protected == "true") {
 						echo "<td valign='top' class='".$row_style[$c]."' style='text-align: center;'><strong>".$text['label-true']."</strong> &nbsp;</td>";
 					}
