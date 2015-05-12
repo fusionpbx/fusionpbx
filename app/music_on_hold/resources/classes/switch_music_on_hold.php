@@ -138,18 +138,13 @@ include "root.php";
 		public function xml() {
 			//build the list of categories
 				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
-			//default category
-				if (defined("GLOB_BRACE")) {
-					$array = glob($music_on_hold_dir."/{8000,16000,32000,48000}", GLOB_ONLYDIR|GLOB_BRACE);
-				}
-				else {
-					$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
-					$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
-					$array_3 = glob($music_on_hold_dir."/32000".$class_name.".php", GLOB_ONLYDIR);
-					$array_4 = glob($music_on_hold_dir."/48000".$class_name.".php", GLOB_ONLYDIR);
-					$array = array_merge((array)$array_1,(array)$array_2,(array)$array_3,(array)$array_4);
-					unset($array_1,$array_2,$array_3,$array_4);
-				}
+			//default category (note: GLOB_BRACE doesn't work on some systems)
+				$array_1 = glob($music_on_hold_dir."/8000".$class_name.".php", GLOB_ONLYDIR);
+				$array_2 = glob($music_on_hold_dir."/16000".$class_name.".php", GLOB_ONLYDIR);
+				$array_3 = glob($music_on_hold_dir."/32000".$class_name.".php", GLOB_ONLYDIR);
+				$array_4 = glob($music_on_hold_dir."/48000".$class_name.".php", GLOB_ONLYDIR);
+				$array = array_merge((array)$array_1,(array)$array_2,(array)$array_3,(array)$array_4);
+				unset($array_1,$array_2,$array_3,$array_4);
 			//other categories
 				if (count($_SESSION['domains']) > 1) {
 					$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
