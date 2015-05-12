@@ -48,16 +48,11 @@
 				spl_autoload_register(array($this, 'loader'));
 			}
 			private function loader($class_name) {
-				//use glob to check "/resources/classes", "/{core,app}/*/resources/classes";
-					if (defined("GLOB_BRACE")) {
-						$results = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "{/*/*,}/resources/classes/".$class_name.".php", GLOB_BRACE);
-					}
-					else {
-						$array_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-						$array_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-						$results = array_merge((array)$array_1,(array)$array_2);
-						unset($array_1, $array_2);
-					}
+				//use glob to get classes (note: GLOB_BRACE doesn't work on some systems)
+					$results1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
+					$results2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
+					$results = array_merge((array)$results1,(array)$results2);
+					unset($results1, $results2);
 
 				//include the class
 					foreach ($results as &$class_file) {

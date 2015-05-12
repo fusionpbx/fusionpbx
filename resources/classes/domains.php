@@ -46,11 +46,11 @@
 					$prep_statement->execute();
 				}
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				//unset the previous settings
+				//unset all settings
 				foreach ($result as $row) {
 					unset($_SESSION[$row['default_setting_category']]);
 				}
-				//set the settings as a session
+				//set the enabled settings as a session
 				foreach ($result as $row) {
 					if ($row['default_setting_enabled'] == 'true') {
 						$name = $row['default_setting_name'];
@@ -99,7 +99,7 @@
 							unset($_SESSION[$category][$subcategory]);
 						}
 					}
-					//set the settings as a session
+					//set the enabled settings as a session
 					foreach ($result as $row) {
 						$name = $row['domain_setting_name'];
 						$category = $row['domain_setting_category'];
@@ -220,8 +220,11 @@
 			//get the PROJECT PATH
 				include "root.php";
 
-			//get the list of installed apps from the core and app directories
-				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_{config,menu}.php",GLOB_BRACE);
+			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
+				$config_list1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
+				$config_list2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
+				$config_list = array_merge((array)$config_list1, (array)$config_list2);
+				unset($config_list1,$config_list2);
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					include($config_path);
