@@ -122,6 +122,15 @@
 	if (fax_uri == nil) then
 		fax_uri = "";
 	end
+	if (fax_remote_station_id == nil) then
+		fax_remote_station_id = "";
+	end
+	if (caller_id_name == nil) then
+		caller_id_name = env:getHeader("Caller-Caller-ID-Name");
+	end
+	if (caller_id_number == nil) then
+		caller_id_number = env:getHeader("Caller-Caller-ID-Number");
+	end
 
 --set default values
 	if (not fax_success) then
