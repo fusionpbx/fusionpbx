@@ -49,10 +49,10 @@
 			}
 			private function loader($class_name) {
 				//use glob to get classes (note: GLOB_BRACE doesn't work on some systems)
-					$results1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-					$results2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-					$results = array_merge((array)$results1,(array)$results2);
-					unset($results1, $results2);
+					$results_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
+					$results_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
+					$results = array_merge((array)$results_1,(array)$results_2);
+					unset($results_1, $results_2);
 
 				//include the class
 					foreach ($results as &$class_file) {

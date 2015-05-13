@@ -221,10 +221,10 @@
 				include "root.php";
 
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
-				$config_list1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
-				$config_list2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
-				$config_list = array_merge((array)$config_list1, (array)$config_list2);
-				unset($config_list1,$config_list2);
+				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
+				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
+				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
+				unset($config_list_1,$config_list_2);
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					include($config_path);
