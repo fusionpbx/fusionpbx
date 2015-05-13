@@ -264,7 +264,7 @@ $text['header-database_type']['pt-br'] = "Tipo de base de dados";
 $text['header-database_type']['pl'] = "Rodzaj bazy danych";
 $text['header-database_type']['sv-se'] = "Databas Typ";
 
-$text['description-upgrade_svn']['en-us'] = "Updates FusionPBX source files and scripts from the respository.";
+$text['description-upgrade_svn']['en-us'] = "Updates FusionPBX source files from the respository.";
 $text['description-upgrade_svn']['es-cl'] = "Archivos de origen Actualizaciones FusionPBX del repositorio.";
 $text['description-upgrade_svn']['pt-pt'] = "Arquivos de origem Atualizações FusionPBX do repositório.";
 $text['description-upgrade_svn']['fr-fr'] = "Fichiers sources des mises à jour FusionPBX du respository.";
