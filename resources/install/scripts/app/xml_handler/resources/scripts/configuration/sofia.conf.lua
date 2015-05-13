@@ -127,7 +127,7 @@
 								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
 
 								if (string.len(field.username) > 0) then
-									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);;
+									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);
 								end
 								if (string.len(field.distinct_to) > 0) then
 									table.insert(xml, [[							<param name="distinct-to" value="]] .. field.distinct_to .. [["/>]]);
@@ -136,7 +136,7 @@
 									table.insert(xml, [[							<param name="auth-username" value="]] .. field.auth_username .. [["/>]]);
 								end
 								if (string.len(field.password) > 0) then
-									table.insert(xml, [[							<param name="password" value="]] .. field.password .. [["/>]]);;
+									table.insert(xml, [[							<param name="password" value="]] .. field.password .. [["/>]]);
 								end
 								if (string.len(field.realm) > 0) then
 									table.insert(xml, [[							<param name="realm" value="]] .. field.realm .. [["/>]]);
