@@ -24,7 +24,7 @@
 			<control action="hangup" digits=""/>
 		</group>
 		<group name="moderator">
-			<control action="mute" digits="#"/>
+			<control action="mute" digits=""/>
 			<control action="deaf mute" digits="*"/>
 			<control action="energy up" digits="9"/>
 			<control action="energy equ" digits="8"/>
@@ -38,6 +38,20 @@
 			<control action="hangup" digits=""/>
 			<control action="execute_application" digits="0" data="lua app/conference_center/resources/scripts/mute.lua non_moderator"/>
 			<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>
+		</group>
+		<group name="page">
+			<control action="mute" digits="0"/>
+			<control action="deaf mute" digits=""/>
+			<control action="energy up" digits="9"/>
+			<control action="energy equ" digits="8"/>
+			<control action="energy dn" digits="7"/>
+			<control action="vol talk up" digits="3"/>
+			<control action="vol talk zero" digits="2"/>
+			<control action="vol talk dn" digits="1"/>
+			<control action="vol listen up" digits="6"/>
+			<control action="vol listen zero" digits="5"/>
+			<control action="vol listen dn" digits="4"/>
+			<control action="hangup" digits=""/>
 		</group>
 	</caller-controls>
 
@@ -263,8 +277,8 @@
 			<param name="rate" value="8000"/>
 			<param name="interval" value="20"/>
 			<param name="energy-level" value="300"/>
-			<param name="caller-controls" value="default"/>
-			<param name="moderator-controls" value="default"/>
+			<param name="caller-controls" value="page"/>
+			<param name="moderator-controls" value="moderator"/>
 			<!--<param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/>-->
 			<param name="muted-sound" value="conference/conf-muted.wav"/>
 			<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
