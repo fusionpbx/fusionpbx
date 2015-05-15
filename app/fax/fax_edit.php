@@ -215,7 +215,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//escape the commas with a backslash and remove the spaces
 		$fax_email = str_replace(" ", "", $fax_email);
-		$fax_email = str_replace(",", "\\,", $fax_email);
 
 	//set the $php_bin
 		//if (file_exists(PHP_BINDIR."/php")) { $php_bin = 'php'; }
@@ -573,9 +572,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //replace the dash with a space
 	$fax_name = str_replace("-", " ", $fax_name);
-
-//remove the backslash
-	$fax_email = str_replace("\\", "", $fax_email);
 
 //set the dialplan_uuid
 	if (strlen($dialplan_uuid) == 0) {
