@@ -1,4 +1,3 @@
---	ring_groups.lua
 --	Part of FusionPBX
 --	Copyright (C) 2010-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -154,13 +153,22 @@
 				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
 				if (user_exists == "true") then
-					row['user_exists'] = "true";
+					--add user_exists true or false to the row array
+						row['user_exists'] = "true";
+					--handle do_not_disturb
+						cmd = "user_data ".. row.destination_number .."@" ..leg_domain_name.." var do_not_disturb";
+						if (api:executeString(cmd) ~= "true") then
+							--add the row to the destinations array
+							destinations[x] = row;
+						end
 				else
-					external = "true";
-					row['user_exists'] = "false";
+					--set the values
+						external = "true";
+						row['user_exists'] = "false";
+					--add the row to the destinations array
+						destinations[x] = row;
 				end
-				row['domain_name'] = leg_domain_name;
-				destinations[x] = row;
+				row['domain_name'] = leg_domain_name;				
 				x = x + 1;
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
