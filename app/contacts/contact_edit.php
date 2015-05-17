@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -338,6 +338,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td valign='top' width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
+		if (permission_exists('contact_time_add')) {
+			//detect timer state (and start time)
+			$sql = "select ";
+			$sql .= "time_start ";
+			$sql .= "from v_contact_times ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$sql .= "and time_start is not null ";
+			$sql .= "and time_stop is null ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			if ($result['time_start'] != '') {
+				$time_start = $result['time_start'];
+				$btn_mod = "style='background-color: #a00; background-image: none;'";
+			}
+			unset ($sql, $prep_statement, $result);
+			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".$time_start."'" : null)." onclick=\"window.open('contact_timer.php?contact_uuid=".$contact_uuid."','contact_time_".$contact_uuid."','width=300, height=350, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
+		}
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".$contact_uuid."&type=download'\" value='".$text['button-vcard']."'>\n";
 	}
@@ -706,6 +726,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('contact_extension_view')) { require "contact_extensions.php"; }
 		if (permission_exists('contact_relation_view')) { require "contact_relations.php"; }
 		if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
+		if (permission_exists('contact_time_view')) { require "contact_times.php"; }
 		if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
 		echo "</td>\n";
 	}

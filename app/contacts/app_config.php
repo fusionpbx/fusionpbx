@@ -169,6 +169,20 @@
 		$apps[$x]['permissions'][$y]['name'] = "contact_extension_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'contact_time_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'contact_time_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'contact_time_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'contact_time_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
 
 	//schema details
 		$y = 0; //table array index
@@ -697,6 +711,51 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "url_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the URL description.";
+		$z++;
+
+		$y = 9; //table array index
+		$apps[$x]['db'][$y]['table'] = 'v_contact_times';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'contact_time_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'contact_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_contact';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'contact_uuid';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'user_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_users';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'user_uuid';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'time_start';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Start';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'time_stop';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Stop';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'time_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Description';
 		$z++;
 
 ?>
