@@ -125,7 +125,7 @@ else {
 	echo "	else {";
 	echo "		div_times.style.height = div_times.scrollHeight + 1; ";
 	echo "	}";
-	//echo "	alert('offsetHeight = '+div_times.offsetHeight+', scrollHeight = '+div_times.scrollHeight+', clientHeight = '+div_times.clientHeight);";
+
 	echo "	if (div_times.scrollHeight > div_times.clientHeight) {";
 	echo "		td_filler.style.display = ''; ";
 	echo "	}";
