@@ -254,33 +254,42 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			}
 
 		DIV.timer_running {
+			vertical-align: middle;
+			padding-top: 7px;
+			line-height: 50px;
 			width: 100%;
-			height: 60px;
+			height: 53px;
 			text-align: center;
 			background-color: #222;
 			font-size: 50px;
 			color: #3a9eef;
-			-webkit-box-shadow: 0px 0px 5px #3a9eef;
-			-moz-box-shadow: 0px 0px 5px #3a9eef;
+			-webkit-text-shadow: 0px 0px 5px #3a9eef;
+			-moz-text-shadow: 0px 0px 5px #3a9eef;
 			text-shadow: 0px 0px 5px #3a9eef;
 			font-weight: bold;
+			letter-spacing: -0.01em;
 			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
-			padding-top: 7px;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
 			border-radius: 4px;
 			}
 
 		DIV.timer_stopped {
+			vertical-align: middle;
+			padding-top: 7px;
+			line-height: 50px;
 			width: 100%;
-			height: 60px;
+			height: 53px;
 			text-align: center;
 			background-color: #222;
 			font-size: 50px;
 			color: #888;
+			-webkit-text-shadow: 0px 0px 5px #000;
+			-moz-text-shadow: 0px 0px 5px #000;
+			text-shadow: 0px 0px 5px #000;
 			font-weight: bold;
+			letter-spacing: -0.01em;
 			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
-			padding-top: 7px;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
 			border-radius: 4px;
