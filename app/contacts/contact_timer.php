@@ -81,7 +81,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}
-		header("contact_timer.php?contact_uuid=".$contact_uuid);
+		header("Location: contact_timer.php?contact_uuid=".$contact_uuid);
 	}
 
 //get contact details
