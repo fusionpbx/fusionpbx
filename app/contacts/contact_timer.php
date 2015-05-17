@@ -146,7 +146,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
 <head>
-	<title>Timer: <?php echo $contact; ?></title>
+	<title><?php echo $text['label-time_timer']; ?>: <?php echo $contact; ?></title>
 	<style>
 		body {
 			color: #5f5f5f;
@@ -297,71 +297,25 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 	</style>
 
+	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 	<script type="text/javascript">
-		//ajax for refresh
-		var refresh = 1500;
-		var source_url = 'contact_timer_inc.php?domain_uuid=<?php echo $domain_uuid; ?>&contact_uuid=<?php echo $contact_uuid; ?>&contact_time_uuid=<?php echo $contact_time_uuid; ?>';
-		var interval_timer_id;
+		$(document).ready(function(){
+			//ajax for refresh
+			var refresh = 1500;
+			var source_url = 'contact_timer_inc.php?domain_uuid=<?php echo $domain_uuid; ?>&contact_uuid=<?php echo $contact_uuid; ?>&contact_time_uuid=<?php echo $contact_time_uuid; ?>';
 
-		function loadXmlHttp(url, id) {
-			var f = this;
-			f.xmlHttp = null;
-			/*@cc_on @*/ // used here and below, limits try/catch to those IE browsers that both benefit from and support it
-			/*@if(@_jscript_version >= 5) // prevents errors in old browsers that barf on try/catch & problems in IE if Active X disabled
-			try {f.ie = window.ActiveXObject}catch(e){f.ie = false;}
-			@end @*/
-			if (window.XMLHttpRequest&&!f.ie||/^http/.test(window.location.href))
-				f.xmlHttp = new XMLHttpRequest(); // Firefox, Opera 8.0+, Safari, others, IE 7+ when live - this is the standard method
-			else if (/(object)|(function)/.test(typeof createRequest))
-				f.xmlHttp = createRequest(); // ICEBrowser, perhaps others
-			else {
-				f.xmlHttp = null;
-				 // Internet Explorer 5 to 6, includes IE 7+ when local //
-				/*@cc_on @*/
-				/*@if(@_jscript_version >= 5)
-				try{f.xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");}
-				catch (e){try{f.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");}catch(e){f.xmlHttp=null;}}
-				@end @*/
-			}
-			if(f.xmlHttp != null){
-				f.el = document.getElementById(id);
-				f.xmlHttp.open("GET",url,true);
-				f.xmlHttp.onreadystatechange = function(){f.stateChanged();};
-				f.xmlHttp.send(null);
-			}
-		}
-
-		loadXmlHttp.prototype.stateChanged=function () {
-		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-			//this.el.innerHTML = this.xmlHttp.responseText;
-			document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
-			if (document.getElementById('title_script')) {
-				eval(document.getElementById('title_script').innerHTML);
-			}
-		}
-
-		<? if ($timer_state == 'running') { ?>
-			var requestTime = function() {
-				var url = source_url;
-				new loadXmlHttp(url, 'ajax_reponse');
-				refresh_start();
-			}
-
-			if (window.addEventListener) {
-				window.addEventListener('load', requestTime, false);
-			}
-			else if (window.attachEvent) {
-				window.attachEvent('onload', requestTime);
-			}
-		<? } ?>
-
-	//refresh controls
-		function refresh_start() {
-			interval_timer_id = setInterval( function() {
-				url = source_url;
-				new loadXmlHttp(url, 'ajax_reponse');
-			}, refresh);
-		}
+			var ajax_get = function () {
+				$.ajax({
+					url: source_url, success: function(response){
+						$("#ajax_reponse").html(response);
+					}
+				});
+				setTimeout(ajax_get, refresh);
+			};
+			<? if ($timer_state == 'running') { ?>
+				ajax_get();
+			<? } ?>
+		});
 
 	//set window title to time when timer is running
 		function set_title(title_text) {
