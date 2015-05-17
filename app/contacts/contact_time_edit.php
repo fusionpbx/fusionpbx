@@ -97,7 +97,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= ") ";
 			$sql .= "values ";
 			$sql .= "( ";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
+			$sql .= "'".$domain_uuid."', ";
 			$sql .= "'".$contact_time_uuid."', ";
 			$sql .= "'".$contact_uuid."', ";
 			$sql .= "'".$_SESSION["user"]["user_uuid"]."', ";
@@ -121,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "time_description = '".$time_description."' ";
 			$sql .= "where ";
 			$sql .= "contact_time_uuid = '".$contact_time_uuid."' ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and contact_uuid = '".$contact_uuid."' ";
 			$sql .= "and user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
 			$db->exec(check_sql($sql));
@@ -140,11 +140,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql = "select ct.*, u.username ";
 		$sql .= "from v_contact_times as ct, v_users as u ";
 		$sql .= "where ct.user_uuid = u.user_uuid ";
-		$sql .= "and ct.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and ct.domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and ct.contact_uuid = '".$contact_uuid."' ";
+		$sql .= "and ct.user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
 		$sql .= "and contact_time_uuid = '".$contact_time_uuid."' ";
-		$sql .= "order by ct.time_start desc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
