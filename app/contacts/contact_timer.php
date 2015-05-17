@@ -33,11 +33,11 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$text = $language->get();
 
 //get contact uuid
+	$domain_uuid = check_str($_REQUEST['domain_uuid']);
 	$contact_uuid = check_str($_REQUEST['contact_uuid']);
 
 //get posted variables & set time status
 	if (sizeof($_POST) > 0) {
-		$domain_uuid = check_str($_POST['domain_uuid']);
 		$contact_time_uuid = check_str($_POST['contact_time_uuid']);
 		$contact_uuid = check_str($_POST['contact_uuid']);
 		$time_action = check_str($_POST['time_action']);
@@ -81,7 +81,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}
-		header("Location: contact_timer.php?contact_uuid=".$contact_uuid);
+		header("Location: contact_timer.php?domain_uuid=".$domain_uuid."&contact_uuid=".$contact_uuid);
 	}
 
 //get contact details
@@ -91,7 +91,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$sql .= "contact_name_family, ";
 	$sql .= "contact_nickname ";
 	$sql .= "from v_contacts ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and contact_uuid = '".$contact_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -112,7 +112,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$sql .= "contact_time_uuid, ";
 	$sql .= "time_description ";
 	$sql .= "from v_contact_times ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
 	$sql .= "and contact_uuid = '".$contact_uuid."' ";
 	$sql .= "and time_start is not null ";
@@ -291,7 +291,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<script type="text/javascript">
 		//ajax for refresh
 		var refresh = 1500;
-		var source_url = 'contact_timer_inc.php?contact_uuid=<?php echo $contact_uuid; ?>&contact_time_uuid=<?php echo $contact_time_uuid; ?>';
+		var source_url = 'contact_timer_inc.php?domain_uuid=<?php echo $domain_uuid; ?>&contact_uuid=<?php echo $contact_uuid; ?>&contact_time_uuid=<?php echo $contact_time_uuid; ?>';
 		var interval_timer_id;
 
 		function loadXmlHttp(url, id) {
@@ -372,7 +372,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<div id='ajax_reponse' class='timer_<?php echo $timer_state;?>'>00:00:00</div>
 	<br>
 	<form name='frm' id='frm' method='post' action=''>
-	<input type='hidden' name='domain_uuid' value="<?php echo $_SESSION['domain_uuid']; ?>">
+	<input type='hidden' name='domain_uuid' value="<?php echo $domain_uuid; ?>">
 	<input type='hidden' name='contact_time_uuid' value="<?php echo $contact_time_uuid; ?>">
 	<input type='hidden' name='contact_uuid' value="<?php echo $contact_uuid; ?>">
 	<input type='hidden' name='time_action' value="<?php echo $timer_action; ?>">

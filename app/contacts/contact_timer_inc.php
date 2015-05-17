@@ -29,6 +29,7 @@ require_once "resources/check_auth.php";
 if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 //get contact and time uuids
+	$domain_uuid = check_str($_REQUEST['domain_uuid']);
 	$contact_uuid = check_str($_REQUEST['contact_uuid']);
 	$contact_time_uuid = check_str($_REQUEST['contact_time_uuid']);
 
@@ -36,7 +37,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	$sql = "select ";
 	$sql .= "time_start ";
 	$sql .= "from v_contact_times ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and contact_time_uuid = '".$contact_time_uuid."' ";
 	$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
 	$sql .= "and contact_uuid = '".$contact_uuid."' ";
