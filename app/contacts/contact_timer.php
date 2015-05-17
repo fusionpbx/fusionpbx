@@ -253,20 +253,37 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			border-right: 3px solid #e5e9f0;
 			}
 
-		DIV.timer {
+		DIV.timer_running {
 			width: 100%;
 			height: 60px;
 			text-align: center;
 			background-color: #222;
 			font-size: 50px;
-			color: #c00;
+			color: #3a9eef;
+			-webkit-box-shadow: 0px 0px 5px #3a9eef;
+			-moz-box-shadow: 0px 0px 5px #3a9eef;
+			text-shadow: 0px 0px 5px #3a9eef;
 			font-weight: bold;
 			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
 			padding-top: 7px;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
 			border-radius: 4px;
+			}
 
+		DIV.timer_stopped {
+			width: 100%;
+			height: 60px;
+			text-align: center;
+			background-color: #222;
+			font-size: 50px;
+			color: #888;
+			font-weight: bold;
+			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
+			padding-top: 7px;
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			border-radius: 4px;
 			}
 
 	</style>
@@ -352,7 +369,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<br><br>
 	<strong><a href="javascript:void(0);" onclick="window.opener.location.href='contact_edit.php?id=<?php echo $contact_uuid; ?>';"><?php echo $contact; ?></a></strong>
 	<br><br>
-	<div id='ajax_reponse' class='timer' <?php echo ($timer_state == 'stopped') ? "style='color: #888;'" : null; ?>>00:00:00</div>
+	<div id='ajax_reponse' class='timer_<?php echo $timer_state;?>'>00:00:00</div>
 	<br>
 	<form name='frm' id='frm' method='post' action=''>
 	<input type='hidden' name='domain_uuid' value="<?php echo $_SESSION['domain_uuid']; ?>">
