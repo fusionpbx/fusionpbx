@@ -353,10 +353,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 			if ($result['time_start'] != '') {
 				$time_start = $result['time_start'];
-				$btn_mod = "style='background-color: #a00; background-image: none;'";
+				$btn_mod = "style='background-color: #3693df; background-image: none;'";
 			}
 			unset ($sql, $prep_statement, $result);
-			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".$time_start."'" : null)." onclick=\"window.open('contact_timer.php?contact_uuid=".$contact_uuid."','contact_time_".$contact_uuid."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
+			echo "	<input type='button' class='btn' ".$btn_mod." alt='".$text['button-timer']."' ".(($time_start != '') ? "title='".$time_start."'" : null)." onclick=\"window.open('contact_timer.php?domain_uuid=".$domain_uuid."&contact_uuid=".$contact_uuid."','contact_time_".$contact_uuid."','width=300, height=375, top=30, left='+(screen.width - 350)+', menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no');\" value='".$text['button-timer']."'>\n";
 		}
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".$contact_uuid."&type=download'\" value='".$text['button-vcard']."'>\n";
