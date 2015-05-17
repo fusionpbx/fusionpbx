@@ -27,6 +27,24 @@ $text['title-contacts']['pl'] = "Kontakty";
 $text['title-contacts']['uk'] = "Контакти";
 $text['title-contacts']['sv-se'] = "Kontakter";
 
+$text['title-contact_time_edit']['en-us'] = "Time Edit";
+$text['title-contact_time_edit']['es-cl'] = "Tiempo de Redacción";
+$text['title-contact_time_edit']['pt-pt'] = "Tempo Editar";
+$text['title-contact_time_edit']['fr-fr'] = "Modifier Temps";
+$text['title-contact_time_edit']['pt-br'] = "Tempo Editar";
+$text['title-contact_time_edit']['pl'] = "Czas Edycja";
+$text['title-contact_time_edit']['uk'] = "час Редагувати";
+$text['title-contact_time_edit']['sv-se'] = "Redigera Tid";
+
+$text['title-contact_time_add']['en-us'] = "Time Add";
+$text['title-contact_time_add']['es-cl'] = "Tiempo Agregar";
+$text['title-contact_time_add']['pt-pt'] = "Time Adicionar";
+$text['title-contact_time_add']['fr-fr'] = "Ajouter Temps";
+$text['title-contact_time_add']['pt-br'] = "Time Adicionar";
+$text['title-contact_time_add']['pl'] = "Czas Dodawania";
+$text['title-contact_time_add']['uk'] = "час додавання";
+$text['title-contact_time_add']['sv-se'] = "Time Lägg";
+
 $text['title-contact_setting_edit']['en-us'] = "Contact Setting Edit";
 $text['title-contact_setting_edit']['es-cl'] = "Configuraciones de contacto";
 $text['title-contact_setting_edit']['pt-pt'] = "Definições do Contacto";
@@ -592,6 +610,69 @@ $text['label-true']['pt-br'] = "Sim";
 $text['label-true']['pl'] = "Tak";
 $text['label-true']['uk'] = "Так";
 $text['label-true']['sv-se'] = "Sann";
+
+$text['label-time_user']['en-us'] = "User";
+$text['label-time_user']['es-cl'] = "Usuario";
+$text['label-time_user']['pt-pt'] = "Usuário";
+$text['label-time_user']['fr-fr'] = "Utilisateur";
+$text['label-time_user']['pt-br'] = "Usuário";
+$text['label-time_user']['pl'] = "Użytkownik";
+$text['label-time_user']['uk'] = "Користувач";
+$text['label-time_user']['sv-se'] = "Användare";
+
+$text['label-time_timer']['en-us'] = "Timer";
+$text['label-time_timer']['es-cl'] = "Timer";
+$text['label-time_timer']['pt-pt'] = "Cronômetro";
+$text['label-time_timer']['fr-fr'] = "Minuteur";
+$text['label-time_timer']['pt-br'] = "Cronômetro";
+$text['label-time_timer']['pl'] = "Regulator Czasowy";
+$text['label-time_timer']['uk'] = "таймер";
+$text['label-time_timer']['sv-se'] = "Timer";
+
+$text['label-time_time']['en-us'] = "Time";
+$text['label-time_time']['es-cl'] = "Tiempo";
+$text['label-time_time']['pt-pt'] = "Tempo";
+$text['label-time_time']['fr-fr'] = "Temps";
+$text['label-time_time']['pt-br'] = "Tempo";
+$text['label-time_time']['pl'] = "Czas";
+$text['label-time_time']['uk'] = "час";
+$text['label-time_time']['sv-se'] = "Tid";
+
+$text['label-time_duration']['en-us'] = "Duration";
+$text['label-time_duration']['es-cl'] = "Duración";
+$text['label-time_duration']['pt-pt'] = "Duração";
+$text['label-time_duration']['fr-fr'] = "Durée";
+$text['label-time_duration']['pt-br'] = "Duração";
+$text['label-time_duration']['pl'] = "Czas Trwania";
+$text['label-time_duration']['uk'] = "тривалість";
+$text['label-time_duration']['sv-se'] = "Varaktighet";
+
+$text['label-time_stop']['en-us'] = "Stop";
+$text['label-time_stop']['es-cl'] = "Deténgase";
+$text['label-time_stop']['pt-pt'] = "Pare";
+$text['label-time_stop']['fr-fr'] = "Stop";
+$text['label-time_stop']['pt-br'] = "Pare";
+$text['label-time_stop']['pl'] = "Stop";
+$text['label-time_stop']['uk'] = "стоп";
+$text['label-time_stop']['sv-se'] = "Stanna";
+
+$text['label-time_start']['en-us'] = "Start";
+$text['label-time_start']['es-cl'] = "Comienzo";
+$text['label-time_start']['pt-pt'] = "Começo";
+$text['label-time_start']['fr-fr'] = "Début";
+$text['label-time_start']['pt-br'] = "Começo";
+$text['label-time_start']['pl'] = "Początek";
+$text['label-time_start']['uk'] = "початок";
+$text['label-time_start']['sv-se'] = "Start";
+
+$text['label-time_description']['en-us'] = "Description";
+$text['label-time_description']['es-cl'] = "Descripción";
+$text['label-time_description']['pt-pt'] = "Descrição";
+$text['label-time_description']['fr-fr'] = "Description";
+$text['label-time_description']['pt-br'] = "Descrição";
+$text['label-time_description']['pl'] = "Opis";
+$text['label-time_description']['uk'] = "Опис";
+$text['label-time_description']['sv-se'] = "Beskrivning";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['es-cl'] = "Texto";
@@ -1355,6 +1436,33 @@ $text['header-contact_url-add']['pl'] = "Dodaj kontakt URL ";
 $text['header-contact_url-add']['uk'] = "";
 $text['header-contact_url-add']['sv-se'] = "Lägg Till Kontakt URL";
 
+$text['header_contact_times']['en-us'] = "Times";
+$text['header_contact_times']['es-cl'] = "Veces";
+$text['header_contact_times']['pt-pt'] = "Vezes";
+$text['header_contact_times']['fr-fr'] = "Fois";
+$text['header_contact_times']['pt-br'] = "Vezes";
+$text['header_contact_times']['pl'] = "Czasy";
+$text['header_contact_times']['uk'] = "раз";
+$text['header_contact_times']['sv-se'] = "Gånger";
+
+$text['header-contact_time_edit']['en-us'] = "Time Edit";
+$text['header-contact_time_edit']['es-cl'] = "Tiempo de Redacción";
+$text['header-contact_time_edit']['pt-pt'] = "Tempo Editar";
+$text['header-contact_time_edit']['fr-fr'] = "Modifier Temps";
+$text['header-contact_time_edit']['pt-br'] = "Tempo Editar";
+$text['header-contact_time_edit']['pl'] = "Czas Edycja";
+$text['header-contact_time_edit']['uk'] = "час Редагувати";
+$text['header-contact_time_edit']['sv-se'] = "Redigera Tid";
+
+$text['header-contact_time_add']['en-us'] = "Time Add";
+$text['header-contact_time_add']['es-cl'] = "Tiempo Agregar";
+$text['header-contact_time_add']['pt-pt'] = "Time Adicionar";
+$text['header-contact_time_add']['fr-fr'] = "Ajouter Temps";
+$text['header-contact_time_add']['pt-br'] = "Time Adicionar";
+$text['header-contact_time_add']['pl'] = "Czas Dodawania";
+$text['header-contact_time_add']['uk'] = "час додавання";
+$text['header-contact_time_add']['sv-se'] = "Time Lägg";
+
 $text['header-contact_setting_edit']['en-us'] = "Contact Setting Edit";
 $text['header-contact_setting_edit']['es-cl'] = "Configuraciones de contacto";
 $text['header-contact_setting_edit']['pt-pt'] = "Definições do Contacto";
@@ -1487,6 +1595,15 @@ $text['description-url_primary']['pt-br'] = "Definir como principal URL para est
 $text['description-url_primary']['pl'] = "Ustaw jako podstawowy adres URL dla tego kontaktu.";
 $text['description-url_primary']['uk'] = "";
 $text['description-url_primary']['sv-se'] = "Ställ in som primär URL för denna kontakt.";
+
+$text['description_timer']['en-us'] = "Stop the Timer before closing the window, if desired.";
+$text['description_timer']['es-cl'] = "Detenga el temporizador antes de cerrar la ventana, si se desea.";
+$text['description_timer']['pt-pt'] = "Parar o temporizador antes de fechar a janela, se desejar.";
+$text['description_timer']['fr-fr'] = "Arrêter le retardateur avant la fermeture de la fenêtre, si désiré.";
+$text['description_timer']['pt-br'] = "Parar o temporizador antes de fechar a janela, se desejar.";
+$text['description_timer']['pl'] = "Zatrzymac samowyzwalacz przed zamknieciem okna, w razie potrzeby.";
+$text['description_timer']['uk'] = "Зупинити таймер перед закриттям вікна, якщо це необхідно.";
+$text['description_timer']['sv-se'] = "Stoppa timer innan du stänger fönstret, om så önskas.";
 
 $text['description-shared_import']['en-us'] = "Share contacts with other users on the domain.";
 $text['description-shared_import']['es-cl'] = "Comparte estos contactos con otros usuarios en el dominio.";
@@ -2088,6 +2205,42 @@ $text['button-upload']['pt-br'] = "Submeter";
 $text['button-upload']['pl'] = "Wyślij";
 $text['button-upload']['uk'] = "Завантажити";
 $text['button-upload']['sv-se'] = "Ladda Upp";
+
+$text['button-time']['en-us'] = "Time";
+$text['button-time']['es-cl'] = "Tiempo";
+$text['button-time']['pt-pt'] = "Tempo";
+$text['button-time']['fr-fr'] = "Temps";
+$text['button-time']['pt-br'] = "Tempo";
+$text['button-time']['pl'] = "Czas";
+$text['button-time']['uk'] = "час";
+$text['button-time']['sv-se'] = "Tid";
+
+$text['button-timer']['en-us'] = "Timer";
+$text['button-timer']['es-cl'] = "Timer";
+$text['button-timer']['pt-pt'] = "Cronômetro";
+$text['button-timer']['fr-fr'] = "Minuteur";
+$text['button-timer']['pt-br'] = "Cronômetro";
+$text['button-timer']['pl'] = "Regulator Czasowy";
+$text['button-timer']['uk'] = "таймер";
+$text['button-timer']['sv-se'] = "Timer";
+
+$text['button-stop']['en-us'] = "Stop";
+$text['button-stop']['es-cl'] = "Deténgase";
+$text['button-stop']['pt-pt'] = "Pare";
+$text['button-stop']['fr-fr'] = "Stop";
+$text['button-stop']['pt-br'] = "Pare";
+$text['button-stop']['pl'] = "Stop";
+$text['button-stop']['uk'] = "стоп";
+$text['button-stop']['sv-se'] = "Stanna";
+
+$text['button-start']['en-us'] = "Start";
+$text['button-start']['es-cl'] = "Comienzo";
+$text['button-start']['pt-pt'] = "Começo";
+$text['button-start']['fr-fr'] = "Début";
+$text['button-start']['pt-br'] = "Começo";
+$text['button-start']['pl'] = "Początek";
+$text['button-start']['uk'] = "початок";
+$text['button-start']['sv-se'] = "Start";
 
 $text['button-sign_out']['en-us'] = "Sign Out";
 $text['button-sign_out']['es-cl'] = "Desconectar";

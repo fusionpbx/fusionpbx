@@ -1286,4 +1286,11 @@ function number_pad($number,$n) {
 		}
 	}
 
+//transparent gif
+	if (!function_exists('img_spacer')) {
+		function img_spacer($width = '1px', $height = '1px', $border = 'none') {
+			return "<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='width: ".$width."; height: ".$height."; border: ".$border.";'>";
+		}
+	}
+
 ?>
