@@ -62,7 +62,7 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th id='filler' style='display: none; padding: 0px;'>".img_spacer('21px', '1px', 'none')."</th>\n";
+	echo "<th id='th_filler' style='display: none; padding: 0px;'>".img_spacer('21px', '1px', 'none')."</th>\n";
 	echo "<th width='20%'>".$text['label-time_user']."</th>\n";
 	echo "<th width='20%'>".$text['label-time_start']."</th>\n";
 	echo "<th width='20%'>".$text['label-time_duration']."</th>\n";
@@ -79,8 +79,8 @@ else {
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	echo "<div id='contact_times' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
-	echo "<table class='tr_hover' style='width: 100%; direction: ltr; padding-left: 1px' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<div id='div_contact_times' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
+	echo "<table id='table_contact_times' class='tr_hover' style='width: 100%; direction: ltr;' border='0' cellpadding='0' cellspacing='0'>\n";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			if (permission_exists('contact_time_edit')) {
@@ -116,8 +116,9 @@ else {
 	echo "</div>\n";
 
 	echo "<script>";
-	echo "	var div_times = document.getElementById('contact_times');";
-	echo "	var td_filler = document.getElementById('filler');";
+	echo "	var div_times = document.getElementById('div_contact_times');";
+	echo "	var table_times = document.getElementById('table_contact_times');";
+	echo "	var th_filler = document.getElementById('th_filler');";
 
 	echo "	if (div_times.offsetHeight > 200) { ";
 	echo "		div_times.style.height = 200; ";
@@ -127,10 +128,12 @@ else {
 	echo "	}";
 
 	echo "	if (div_times.scrollHeight > div_times.clientHeight) {";
-	echo "		td_filler.style.display = ''; ";
+	echo "		th_filler.style.display = ''; ";
+	echo "		table_times.style.paddingLeft = 1;";
 	echo "	}";
 	echo "	else {";
-	echo "		td_filler.style.display = 'none'; ";
+	echo "		th_filler.style.display = 'none'; ";
+	echo "		table_times.style.paddingLeft = 0;";
 	echo "	}";
 	echo "</script>\n";
 

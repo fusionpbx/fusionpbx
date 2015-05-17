@@ -162,6 +162,15 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			font-family: arial;
 			}
 
+		a {
+			color: #004083;
+			width: 100%;
+			}
+
+		a:hover {
+			color: #5082ca;
+			}
+
 		form {
 			margin: 0;
 			}
@@ -336,37 +345,37 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	</script>
 </head>
 <body>
-<img src='resources/images/icon_timer.png' style='width: 24px; height: 24px; border: none; margin-left: 15px;' alt="<?php echo $text['label-time_timer']; ?>" align='right'>
-<b><?php echo $text['label-time_timer']; ?></b>
-<br><br>
-<?php echo $text['description_timer']; ?>
-<br><br>
-<strong style='color: #000;'><?php echo $contact; ?></strong>
-<br><br>
-<div id='ajax_reponse' class='timer' <?php echo ($timer_state == 'stopped') ? "style='color: #888;'" : null; ?>>00:00:00</div>
-<br>
-<form name='frm' id='frm' method='post' action=''>
-<input type='hidden' name='domain_uuid' value="<?php echo $_SESSION['domain_uuid']; ?>">
-<input type='hidden' name='contact_time_uuid' value="<?php echo $contact_time_uuid; ?>">
-<input type='hidden' name='contact_uuid' value="<?php echo $contact_uuid; ?>">
-<input type='hidden' name='time_action' value="<?php echo $timer_action; ?>">
-<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
-	<tr>
-		<td class='vncell' style='text-align: center; padding: 10px;'>
-			<?php echo $text['label-description']; ?>
-			<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo $time_description; ?></textarea>
-			<? if ($timer_state == 'stopped') { ?><script>document.getElementById('timer_description').focus();</script><? } ?>
-		</td>
-	</tr>
-</table>
-<br>
-<center>
-<? if ($timer_state == 'running') { ?>
-	<input type='submit' class='btn' value="<?php echo $text['button-stop']; ?>">
-<? } else if ($timer_state == 'stopped') { ?>
-	<input type='submit' class='btn' value="<?php echo $text['button-start']; ?>">
-<? } ?>
-</center>
-</form>
+	<img src='resources/images/icon_timer.png' style='width: 24px; height: 24px; border: none; margin-left: 15px;' alt="<?php echo $text['label-time_timer']; ?>" align='right'>
+	<b><?php echo $text['label-time_timer']; ?></b>
+	<br><br>
+	<?php echo $text['description_timer']; ?>
+	<br><br>
+	<strong><a href="javascript:void(0);" onclick="window.opener.location.href='contact_edit.php?id=<?php echo $contact_uuid; ?>';"><?php echo $contact; ?></a></strong>
+	<br><br>
+	<div id='ajax_reponse' class='timer' <?php echo ($timer_state == 'stopped') ? "style='color: #888;'" : null; ?>>00:00:00</div>
+	<br>
+	<form name='frm' id='frm' method='post' action=''>
+	<input type='hidden' name='domain_uuid' value="<?php echo $_SESSION['domain_uuid']; ?>">
+	<input type='hidden' name='contact_time_uuid' value="<?php echo $contact_time_uuid; ?>">
+	<input type='hidden' name='contact_uuid' value="<?php echo $contact_uuid; ?>">
+	<input type='hidden' name='time_action' value="<?php echo $timer_action; ?>">
+	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
+		<tr>
+			<td class='vncell' style='text-align: center; padding: 10px;'>
+				<?php echo $text['label-description']; ?>
+				<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo $time_description; ?></textarea>
+				<? if ($timer_state == 'stopped') { ?><script>document.getElementById('timer_description').focus();</script><? } ?>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<center>
+	<? if ($timer_state == 'running') { ?>
+		<input type='submit' class='btn' value="<?php echo $text['button-stop']; ?>">
+	<? } else if ($timer_state == 'stopped') { ?>
+		<input type='submit' class='btn' value="<?php echo $text['button-start']; ?>">
+	<? } ?>
+	</center>
+	</form>
 </body>
 </html>
