@@ -127,10 +127,10 @@ include "root.php";
 		}
 
 		function render() {
-			
+
 			//debug
 				$debug = $_REQUEST['debug']; // array
-			
+
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
 				$device_template = $this->device_template;
@@ -256,7 +256,7 @@ include "root.php";
 								"HW GXV3175"=>"grandstream/gxv3175",
 								"Wget/1.11.3"=>"konftel/kt300ip"
 								);
-	
+
 							foreach ($template_list as $key=>$val){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $val;
@@ -264,7 +264,7 @@ include "root.php";
 								}
 							}
 							unset($template_list);
-	
+
 						//mac address does not exist in the table so add it
 							if (strlen($domain_uuid) > 0) {
 								$device_uuid = uuid();
@@ -382,6 +382,22 @@ include "root.php";
 				//create a mac address with back slashes for backwards compatability
 					$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
+				//get the contacts array and add to the template engine
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
+						//get contacts from the database
+							$sql = "select * ";
+							$sql .= "from v_contacts ";
+							$sql .= "where domain_uuid = '".$domain_uuid."' ";
+							$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							unset ($prep_statement, $sql);
+
+						//assign the contacts array
+							$view->assign("contacts", $contacts);
+					}
+
 				//get the provisioning information from device lines table
 					if (strlen($device_uuid) > 0) {
 						//get the device lines array
@@ -400,7 +416,7 @@ include "root.php";
 									$register_expires = $row['register_expires'];
 									$sip_transport = strtolower($row['sip_transport']);
 									$sip_port = $row['sip_port'];
-		
+
 								//set defaults
 									if (strlen($register_expires) == 0) { $register_expires = "120"; }
 									if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
@@ -412,7 +428,7 @@ include "root.php";
 											$sip_port = "506".($line_number + 1);
 										}
 									}
-		
+
 								//set a lines array index is the line number
 									$lines[$line_number]['register_expires'] = $register_expires;
 									$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
@@ -423,7 +439,7 @@ include "root.php";
 									$lines[$line_number]['auth_id'] = $row["auth_id"];
 									$lines[$line_number]['user_id'] = $row["user_id"];
 									$lines[$line_number]['password'] = $row["password"];
-		
+
 								//assign the variables
 									$view->assign("server_address_".$line_number, $row["server_address"]);
 									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
@@ -459,7 +475,7 @@ include "root.php";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		
+
 						//rebuild the array to allow profile keys to be overridden by keys assigned to this device
 							$x = 0;
 							$previous_category = '';
