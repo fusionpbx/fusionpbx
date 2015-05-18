@@ -389,7 +389,7 @@ include "root.php";
 							$sql .= "from v_contacts ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
-							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 							unset ($prep_statement, $sql);
