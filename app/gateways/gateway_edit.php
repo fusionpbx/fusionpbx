@@ -237,6 +237,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
+
+				//add new gateway to session variable
+					if ($enabled == 'true') {
+						$_SESSION['gateways'][$gateway_uuid] = $gateway;
+					}
+
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('gateway_edit')) {
@@ -277,6 +283,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "where gateway_uuid = '$gateway_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
+
+				//update gateway session variable
+					if ($enabled == 'true') {
+						$_SESSION['gateways'][$gateway_uuid] = $gateway;
+					}
+					else {
+						unset($_SESSION['gateways'][$gateway_uuid]);
+					}
+
 			} //if ($action == "update")
 
 			//remove xml file (if any) if not enabled
