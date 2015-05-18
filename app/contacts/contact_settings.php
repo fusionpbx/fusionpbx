@@ -106,7 +106,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".ucwords($row['contact_setting_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['contact_setting_description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' nowrap>";
+			echo "	<td class='list_control_icons' nowrap='nowrap'>";
 			if (permission_exists('contact_setting_edit')) {
 				echo "<a href='contact_setting_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
