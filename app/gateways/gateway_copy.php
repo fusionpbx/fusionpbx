@@ -147,6 +147,11 @@ else {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
+//add new gateway to session variable
+	if ($enabled == 'true') {
+		$_SESSION['gateways'][$gateway_uuid] = $gateway;
+	}
+
 //synchronize the xml config
 	save_gateway_xml();
 

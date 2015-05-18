@@ -55,6 +55,9 @@ if (strlen($_GET["id"])>0) {
 		}
 		unset ($prep_statement);
 
+	//remove gateway from session variable
+		unset($_SESSION['gateways'][$gateway_uuid]);
+
 	//delete the xml file
 		if ($_SESSION['switch']['sip_profiles']['dir'] != '') {
 			$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";

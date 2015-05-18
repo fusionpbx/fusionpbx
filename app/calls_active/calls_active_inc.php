@@ -170,6 +170,13 @@ else {
 				//remove the '+' because it breaks the call recording
 					$cid_num = str_replace("+", "", $cid_num);
 
+				//replace gateway uuid with name
+					if (sizeof($_SESSION['gateways']) > 0) {
+						foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
+							$application_data = str_replace($gateway_uuid, $gateway_name, $application_data);
+						}
+					}
+
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
