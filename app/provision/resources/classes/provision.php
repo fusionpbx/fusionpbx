@@ -385,10 +385,11 @@ include "root.php";
 				//get the contacts array and add to the template engine
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
 						//get contacts from the database
-							$sql = "select * ";
+							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and c.contact_uuid = p.contact_uuid ";
+							$sql .= "p.phone_type_voice = '1' ";
 							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
