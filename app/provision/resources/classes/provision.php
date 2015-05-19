@@ -386,9 +386,10 @@ include "root.php";
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
 						//get contacts from the database
 							$sql = "select * ";
-							$sql .= "from v_contacts ";
+							$sql .= "from v_contacts as c, v_contact_phones as p ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
-							$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+							$sql .= "and c.contact_uuid = p.contact_uuid ";
+							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
