@@ -389,7 +389,7 @@ include "root.php";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and c.contact_uuid = p.contact_uuid ";
-							$sql .= "p.phone_type_voice = '1' ";
+							$sql .= "and p.phone_type_voice = '1' ";
 							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
