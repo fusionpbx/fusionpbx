@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- $Revision: 1.2 $  $Date: 2004/12/21 18:28:05 $ -->
 <directory>
 	<item_list>
+		{assign var=x value=1}
 		{foreach $contacts as $row}
 		<item>
 			{if $row.contact_name_given != ""}
@@ -15,7 +15,7 @@
 			{else}
 			<ct>{$row.phone_extension}</ct>
 			{/if}
-			<sd>1</sd>
+			<sd>{$x}</sd>
 			<rt>7</rt>
 			<dc/>
 			<ad>0</ad>
@@ -23,6 +23,7 @@
 			<bw>0</bw>
 			<bb>0</bb>
 		</item>
+		{assign var=x value=$x+1}
 		{/foreach}
 	</item_list>
 </directory>
