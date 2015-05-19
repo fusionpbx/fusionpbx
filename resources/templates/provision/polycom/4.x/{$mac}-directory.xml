@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- $Revision: 1.2 $  $Date: 2004/12/21 18:28:05 $ -->
+<directory>
+	<item_list>
+		{foreach $contacts as $row}
+		<item>
+			{if $row.contact_name_given != ""}
+			<ln>{$row.contact_name_family}</ln>
+			<fn>{$row.contact_name_given}</fn>
+			{else}
+			<ln>{$row.contact_organization}</ln>
+			{/if}
+			{if $row.phone_number != ""}
+			<ct>{$row.phone_number}</ct>
+			{else}
+			<ct>{$row.phone_extension}</ct>
+			{/if}
+			<sd>1</sd>
+			<rt>7</rt>
+			<dc/>
+			<ad>0</ad>
+			<ar>0</ar>
+			<bw>0</bw>
+			<bb>0</bb>
+		</item>
+		{/foreach}
+	</item_list>
+</directory>
