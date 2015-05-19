@@ -387,7 +387,7 @@ include "root.php";
 						//get contacts from the database
 							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
-							$sql .= "where domain_uuid = '".$domain_uuid."' ";
+							$sql .= "where c.domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and c.contact_uuid = p.contact_uuid ";
 							$sql .= "and p.phone_type_voice = '1' ";
 							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
