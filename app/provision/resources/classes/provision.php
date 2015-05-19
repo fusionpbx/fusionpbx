@@ -383,7 +383,7 @@ include "root.php";
 					$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
 				//get the contacts array and add to the template engine
-					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['polycom_directory']['boolean'] == "true") {
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
