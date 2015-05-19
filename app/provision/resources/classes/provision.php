@@ -225,7 +225,7 @@ include "root.php";
 					}
 					else {
 						//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
-							$template_list=array(  
+							$template_list=array(
 								"Linksys/SPA-2102"=>"linksys/spa2102",
 								"Linksys/SPA-3102"=>"linksys/spa3102",
 								"Linksys/SPA-9212"=>"linksys/spa921",
@@ -403,9 +403,9 @@ include "root.php";
 				//get the provisioning information from device lines table
 					if (strlen($device_uuid) > 0) {
 						//get the device lines array
-							$sql = "SELECT * FROM v_device_lines ";
-							$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-							//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
+							$sql = "select * from v_device_lines ";
+							$sql .= "where device_uuid = '".$device_uuid."' ";
+							$sql .= "and (enabled = 'true' or enabled is null or enabled = '') ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
