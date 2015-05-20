@@ -72,6 +72,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_dial_string";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_password";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
 		$y = 0; //table array index
