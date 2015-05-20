@@ -279,11 +279,11 @@ else {
 				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$password."', ";
-				$sql_insert .= "'".$line_number."' ";
-				$sql_insert .= "'".$_SESSION['provision']['line_sip_port']['numeric']."' ";
-				$sql_insert .= "'".$_SESSION['provision']['line_sip_transport']['text']."' ";
-				$sql_insert .= "'".$_SESSION['provision']['line_register_expires']['numeric']."' ";
-				$sql_insert .= "'true', ";
+				$sql_insert .= "'".$line_number."', ";
+				$sql_insert .= "'".$_SESSION['provision']['line_sip_port']['numeric']."', ";
+				$sql_insert .= "'".$_SESSION['provision']['line_sip_transport']['text']."', ";
+				$sql_insert .= "'".$_SESSION['provision']['line_register_expires']['numeric']."', ";
+				$sql_insert .= "'true' ";
 				$sql_insert .= ")";
 				//echo $sql_insert."<br />\n";
 				$db->exec($sql_insert);
