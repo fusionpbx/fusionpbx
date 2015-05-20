@@ -263,7 +263,11 @@ else {
 				$sql_insert .= "user_id, ";
 				$sql_insert .= "auth_id, ";
 				$sql_insert .= "password, ";
-				$sql_insert .= "line_number ";
+				$sql_insert .= "line_number, ";
+				$sql_insert .= "sip_port, ";
+				$sql_insert .= "sip_transport, ";
+				$sql_insert .= "register_expires, ";
+				$sql_insert .= "enabled ";
 				$sql_insert .= ") ";
 				$sql_insert .= "values ";
 				$sql_insert .= "(";
@@ -276,6 +280,10 @@ else {
 				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$password."', ";
 				$sql_insert .= "'".$line_number."' ";
+				$sql_insert .= "'".$_SESSION['provision']['line_sip_port']['numeric']."' ";
+				$sql_insert .= "'".$_SESSION['provision']['line_sip_transport']['text']."' ";
+				$sql_insert .= "'".$_SESSION['provision']['line_register_expires']['numeric']."' ";
+				$sql_insert .= "'true', ";
 				$sql_insert .= ")";
 				//echo $sql_insert."<br />\n";
 				$db->exec($sql_insert);
