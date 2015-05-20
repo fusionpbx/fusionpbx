@@ -363,6 +363,9 @@ require_once "resources/require.php";
 	$device_lines[$x]['auth_id'] = '';
 	$device_lines[$x]['password'] = '';
 	$device_lines[$x]['enabled'] = '';
+	$device_lines[$x]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
+	$device_lines[$x]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
+	$device_lines[$x]['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric'];
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
