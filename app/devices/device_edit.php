@@ -649,9 +649,11 @@ require_once "resources/require.php";
 			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\">\n";
 			echo "			</td>\n";
 
-			echo "			<td align='left'>\n";
-			echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['password']."\">\n";
-			echo "			</td>\n";
+			if (permission_exists('device_line_password')) {
+				echo "			<td align='left'>\n";
+				echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['password']."\">\n";
+				echo "			</td>\n";
+			}
 
 			echo "			<td align='left'>\n";
 			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][sip_port]' maxlength='255' min='0' max='65535' step='1' value=\"".$row['sip_port']."\">\n";
