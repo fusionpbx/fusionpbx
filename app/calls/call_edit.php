@@ -311,21 +311,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->destination_prompt_5 = $destination_prompt_5;
 			$follow_me->destination_timeout_5 = $destination_timeout_5;
 
-			if ($follow_me_enabled == "true") {
-				if ($follow_me_action == "add") {
-					$follow_me_uuid = uuid();
+			if ($follow_me_action == "add") {
+				$follow_me_uuid = uuid();
 
-					$sql = "update v_extensions set ";
-					$sql .= "follow_me_uuid = '$follow_me_uuid' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and extension_uuid = '$extension_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+				$sql = "update v_extensions set ";
+				$sql .= "follow_me_uuid = '$follow_me_uuid' ";
+				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "and extension_uuid = '$extension_uuid' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-					$follow_me->follow_me_uuid = $follow_me_uuid;
-					$follow_me->add();
-					$follow_me->set();
-				}
+				$follow_me->follow_me_uuid = $follow_me_uuid;
+				$follow_me->add();
+				$follow_me->set();
 			}
 			if ($follow_me_action == "update") {
 				$follow_me->follow_me_uuid = $follow_me_uuid;
