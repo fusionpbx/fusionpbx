@@ -585,7 +585,9 @@ require_once "resources/require.php";
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-display_name']."</td>\n";
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-user_id']."</td>\n";
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-auth_id']."</td>\n";
-	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-password']."</td>\n";
+	if (permission_exists('device_line_password')) {
+		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-password']."</td>\n";
+	}
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-sip_port']."</td>\n";
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-sip_transport']."</td>\n";
 	echo "				<td class='vtable' nowrap='nowrap'>".$text['label-register_expires']."</td>\n";
