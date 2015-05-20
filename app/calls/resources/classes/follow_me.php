@@ -316,12 +316,13 @@ include "root.php";
 				}
 				unset ($prep_statement);
 
+			//add follow me
+				if (strlen($follow_me_uuid) == 0) {
+					$this->add();
+				}
+
 			//is follow me enabled
 				if ($this->follow_me_enabled == "true") {
-					//add follow me
-						if (strlen($follow_me_uuid) == 0) {
-							$this->add();
-						}
 					//set the extension dial string
 						$sql = "select * from v_follow_me_destinations ";
 						$sql .= "where follow_me_uuid = '".$this->follow_me_uuid."' ";
