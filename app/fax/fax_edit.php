@@ -106,6 +106,7 @@ else {
 		$fax_extension = check_str($_POST["fax_extension"]);
 		$fax_accountcode = check_str($_POST["accountcode"]);
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
+		$fax_prefix = check_str($_POST["fax_prefix"]);
 		$fax_email = check_str($_POST["fax_email"]);
 		$fax_email_connection_type = check_str($_POST["fax_email_connection_type"]);
 		$fax_email_connection_host = check_str($_POST["fax_email_connection_host"]);
@@ -130,9 +131,9 @@ else {
 			$fax_forward_number = str_replace("-", "", $fax_forward_number);
 		}
 		if (strripos($fax_forward_number, '$1') === false) {
-			$fax_prefix = ''; //not found
+			$forward_prefix = ''; //not found
 		} else {
-			$fax_prefix = $fax_forward_number.'#'; //found
+			$forward_prefix = $forward_prefix.$fax_forward_number.'#'; //found
 		}
 		$fax_description = check_str($_POST["fax_description"]);
 	}
@@ -251,6 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_extension, ";
 					$sql .= "accountcode, ";
 					$sql .= "fax_destination_number, ";
+					$sql .= "fax_prefix, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
@@ -281,6 +283,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_extension', ";
 					$sql .= "'$fax_accountcode', ";
 					$sql .= "'$fax_destination_number', ";
+					if (strlen($fax_prefix) > 0) {
+						$sql .= "'$fax_prefix', ";
+					}
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
@@ -320,6 +325,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_extension = '$fax_extension', ";
 					$sql .= "accountcode = '$fax_accountcode', ";
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
+					if (strlen($fax_prefix) > 0) {
+						$sql .= "fax_prefix = '$fax_prefix', ";
+					}
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
@@ -439,10 +447,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan_detail_tag = 'action'; //condition, action, antiaction
 							$dialplan_detail_type = 'rxfax';
 							if (count($_SESSION["domains"]) > 1) {
-								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$fax_prefix.'${last_fax}.tif';
+								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
 							}
 							else {
-								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$fax_prefix.'${last_fax}.tif';
+								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
 							}
 							$dialplan_detail_order = '090';
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -481,10 +489,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//update dialplan detail action
 						if (count($_SESSION["domains"]) > 1) {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$fax_prefix.'${last_fax}.tif';
+							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
 						}
 						else {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$fax_prefix.'${last_fax}.tif';
+							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
 						}
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
@@ -549,6 +557,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_extension = $row["fax_extension"];
 			$fax_accountcode = $row["accountcode"];
 			$fax_destination_number = $row["fax_destination_number"];
+			$fax_prefix = $row["fax_prefix"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
 			$fax_email_connection_type = $row["fax_email_connection_type"];
@@ -601,7 +610,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "	<td align='left' width='30%' valign='top' nowrap><b>".$text['header-fax_server_settings']."</b><br><br></td>\n";
+	echo "	<td align='left' width='30%' valign='top' nowrap='nowrap'><b>".$text['header-fax_server_settings']."</b><br><br></td>\n";
 	echo "	<td width='70%' valign='top' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt=\"".$text['button-back']."\" onclick=\"window.location='fax.php'\" value=\"".$text['button-back']."\">\n";
 	if ((if_group("admin") || if_group("superadmin")) && $action == "update") {
@@ -614,7 +623,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (if_group("user")) {
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -628,7 +637,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else { //admin, superadmin, etc
 
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -639,7 +648,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-extension']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -651,7 +660,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'='nowrap='nowrap''>\n";
 			echo "    ".$text['label-accountcode']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -686,7 +695,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination-number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -697,7 +706,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-fax_prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_prefix' maxlength='255' value=\"$fax_prefix\">\n";
+		echo "<br />\n";
+		echo " ".$text['description-fax_prefix']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -711,7 +731,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-caller-id-name']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
@@ -722,7 +742,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-caller-id-number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -733,7 +753,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-forward']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -797,7 +817,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-description']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -851,7 +871,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_type']."\n";
 			echo "</td>\n";
 			echo "<td width='70%' class='vtable' align='left'>\n";
@@ -865,10 +885,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_server']."\n";
 			echo "</td>\n";
-			echo "<td class='vtable' style='white-space: nowrap;' align='left'>\n";
+			echo "<td class='vtable' style='white-space: nowrap='nowrap';' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"$fax_email_connection_host\">&nbsp;:&nbsp;";
 			echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
 			echo "<br />\n";
@@ -877,7 +897,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_security']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -892,7 +912,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_validate']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -906,7 +926,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_username']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -917,7 +937,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_password']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -928,7 +948,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_mailbox']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
@@ -941,7 +961,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</table>\n";
 
 		echo "		</td>";
-		echo "		<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+		echo "		<td style='white-space: nowrap='nowrap';'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "		<td width='50%' valign='top'>";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -953,7 +973,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</tr>\n";
 
 			echo "<tr>\n";
-			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+			echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_inbound_subject_tag']."\n";
 			echo "</td>\n";
 			echo "<td width='70%' class='vtable' align='left'>\n";
@@ -973,7 +993,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</tr>\n";
 
 				echo "<tr>\n";
-				echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+				echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	".$text['label-email_outbound_subject_tag']."\n";
 				echo "</td>\n";
 				echo "<td width='70%' class='vtable' align='left'>\n";
@@ -984,7 +1004,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</tr>\n";
 
 				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	".$text['label-email_outbound_authorized_senders']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left' valign='top'>\n";

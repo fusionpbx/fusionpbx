@@ -185,6 +185,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxname";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
