@@ -932,7 +932,13 @@ if ($action == 'update') {
 			foreach ($preset as $preset_name => $preset_variables) {
 				$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
 				$preset_group_id = ($checked) ? $current_presets[$preset_number] : $preset_group_id = $preset_number * 5 + 100;
-				echo "<input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' onclick=\"alternate_destination_required();\" ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$text['label-preset_'.$preset_name]."</a><br>\n";
+				if ($text['label-preset_'.$preset_name]) > 0) {
+					$label_preset_name = $text['label-preset_'.$preset_name];
+				}
+				else {
+					$label_preset_name = ucwords(str_replace(array("-", "_"), " ", $preset_name));
+				}
+				echo "<input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' onclick=\"alternate_destination_required();\" ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$label_preset_name."</a><br>\n";
 				echo "<div id='preset_fields_".$preset_group_id."' style='display: none; margin: 4px 0px 0px 20px;'>";
 				echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px; margin-bottom: 10px;'>\n";
 				echo "		<tr>\n";
