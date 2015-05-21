@@ -464,6 +464,14 @@ $text['label-fax_destination']['pt-br'] = "Destino";
 $text['label-fax_destination']['pl'] = "Destynacja";
 $text['label-fax_destination']['sv-se'] = "Destination";
 
+$text['label-fax_prefix']['en-us'] = "Prefix";
+$text['label-fax_prefix']['es-cl'] = "Prefijo";
+$text['label-fax_prefix']['pt-pt'] = "Prefixo";
+$text['label-fax_prefix']['fr-fr'] = "Préfixe";
+$text['label-fax_prefix']['pt-br'] = "Prefixo";
+$text['label-fax_prefix']['pl'] = "Prefiks";
+$text['label-fax_prefix']['sv-se'] = "Prefix";
+
 $text['label-fax_date']['en-us'] = "Date";
 $text['label-fax_date']['es-cl'] = "Fecha";
 $text['label-fax_date']['pt-pt'] = "Data";
@@ -1279,6 +1287,14 @@ $text['description-destination-number']['fr-fr'] = "Entrez le numéro de téléc
 $text['description-destination-number']['pt-br'] = "Insira o número de faz para onde pretende enviar";
 $text['description-destination-number']['pl'] = "Wprowadź numer faksu docelowego.";
 $text['description-destination-number']['sv-se'] = "Ange fax destinations-nummer.";
+
+$text['description-fax_prefix']['en-us'] = "Enter a prefix number to add to the beginning of the FAX destination number.";
+$text['description-fax_prefix']['es-cl'] = "Introduzca un número de prefijo para añadir al principio del número de destino de fax.";
+$text['description-fax_prefix']['pt-pt'] = "Introduza um número de prefixo para adicionar ao início do número de fax de destino.";
+$text['description-fax_prefix']['fr-fr'] = "Entrez un numéro de préfixe à ajouter au début du numéro de destination de FAX.";
+$text['description-fax_prefix']['pt-br'] = "Introduza um número de prefixo para adicionar ao início do número de fax de destino.";
+$text['description-fax_prefix']['pl'] = "Wprowadź prefiks , aby dodać do początku numer faksu.";
+$text['description-fax_prefix']['sv-se'] = "Ange ett prefix för att lägga till i början av FAX destinationsnumret.";
 
 $text['description-caller-id-number']['en-us'] = "Enter the Caller ID number here.";
 $text['description-caller-id-number']['es-cl'] = "Ingrese el número de Caller ID aquí.";
