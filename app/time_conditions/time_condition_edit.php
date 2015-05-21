@@ -932,7 +932,7 @@ if ($action == 'update') {
 			foreach ($preset as $preset_name => $preset_variables) {
 				$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
 				$preset_group_id = ($checked) ? $current_presets[$preset_number] : $preset_group_id = $preset_number * 5 + 100;
-				if (str_len($text['label-preset_'.$preset_name]) > 0) {
+				if (strlen($text['label-preset_'.$preset_name]) > 0) {
 					$label_preset_name = $text['label-preset_'.$preset_name];
 				}
 				else {
