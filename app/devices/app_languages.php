@@ -999,6 +999,15 @@ $text['label-device_label']['pl'] = "Etykieta";
 $text['label-device_label']['uk'] = "";
 $text['label-device_label']['sv-se'] = "Etikett";
 
+$text['label-device_alternate']['en-us'] = "Alternate";
+$text['label-device_alternate']['es-cl'] = "Suplente";
+$text['label-device_alternate']['pt-pt'] = "Alternado";
+$text['label-device_alternate']['fr-fr'] = "Alterné";
+$text['label-device_alternate']['pt-br'] = "Alternado";
+$text['label-device_alternate']['pl'] = "Alternatywny";
+$text['label-device_alternate']['uk'] = "заступник";
+$text['label-device_alternate']['sv-se'] = "Alternate";
+
 $text['label-device_key_value']['en-us'] = "Value";
 $text['label-device_key_value']['es-cl'] = "Valor";
 $text['label-device_key_value']['pt-pt'] = "Valor";
