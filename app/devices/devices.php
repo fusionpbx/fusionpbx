@@ -170,8 +170,7 @@ else {
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
+		$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		unset ($prep_statement, $sql);
 
 	$c = 0;
@@ -186,8 +185,8 @@ else {
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
-	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
+	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
@@ -201,7 +200,7 @@ else {
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
+	if (count($devices) > 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -213,8 +212,8 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_provision_enable']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_provision_enable']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_edit')) {
