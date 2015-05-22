@@ -223,12 +223,14 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
 			if ($device_alternate) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 				if (strlen($row['device_uuid_alternate']) > 0) {
-					echo "	<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$text['label-true']."</a>\n";
+					echo "		<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$text['label-true']."</a>\n";
 				}
 				else {
-					echo "	".$text['label-false']."\n";
+					echo "		".$text['label-false']."\n";
 				}
+				echo "	</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
