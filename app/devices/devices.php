@@ -177,6 +177,14 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+	//alternate_found
+	$device_alternate = false;
+	foreach($devices as $row) {
+		if (strlen($row['device_uuid_alternate']) > 0) {
+			$device_alternate = true;
+			break;
+		}
+	}
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($_GET['showall'] && permission_exists('device_all')) {
@@ -184,6 +192,9 @@ else {
 	}
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
+	if ($device_alternate) {
+		echo th_order_by('device_template', $text['label-device_alternate'], $order_by, $order);
+	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
 	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
@@ -211,6 +222,14 @@ else {
 			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".format_mac($row['device_mac_address'])."</a>" : format_mac($row['device_mac_address']);
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
+			if ($device_alternate) {
+				if (strlen($row['device_uuid_alternate']) > 0) {
+					echo "	<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$text['label-true']."</a>\n";
+				}
+				else {
+					echo "	".$text['label-false']."\n";
+				}
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_provision_enable']]."&nbsp;</td>\n";
