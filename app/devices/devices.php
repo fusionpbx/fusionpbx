@@ -193,7 +193,7 @@ else {
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
 	if ($device_alternate) {
-		echo th_order_by('device_template', $text['label-device_alternate'], $order_by, $order);
+		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order);
 	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
