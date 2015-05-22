@@ -201,7 +201,7 @@ else {
 	echo "<tr>\n";
 
 	if (count($devices) > 0) {
-		foreach($result as $row) {
+		foreach($devices as $row) {
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('device_all')) {
@@ -226,7 +226,7 @@ else {
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $devices, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
