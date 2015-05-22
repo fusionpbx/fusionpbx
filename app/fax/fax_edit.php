@@ -283,9 +283,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_extension', ";
 					$sql .= "'$fax_accountcode', ";
 					$sql .= "'$fax_destination_number', ";
-					if (strlen($fax_prefix) > 0) {
-						$sql .= "'$fax_prefix', ";
-					}
+					$sql .= "'$fax_prefix', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
@@ -325,9 +323,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_extension = '$fax_extension', ";
 					$sql .= "accountcode = '$fax_accountcode', ";
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
-					if (strlen($fax_prefix) > 0) {
-						$sql .= "fax_prefix = '$fax_prefix', ";
-					}
+					$sql .= "fax_prefix = '$fax_prefix', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
 					if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
