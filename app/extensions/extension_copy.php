@@ -70,6 +70,8 @@ else {
 		$limit_max = $row["limit_max"];
 		$limit_destination = $row["limit_destination"];
 		$user_context = $row["user_context"];
+		$missed_call_app = $row["missed_call_app"];
+		$missed_call_data = $row["missed_call_data"];
 		$toll_allow = $row["toll_allow"];
 		$call_timeout = $row["call_timeout"];
 		$call_group = $row["call_group"];
@@ -110,6 +112,8 @@ else {
 	$sql .= "limit_max, ";
 	$sql .= "limit_destination, ";
 	$sql .= "user_context, ";
+	$sql .= "missed_call_app, ";
+	$sql .= "missed_call_data, ";
 	$sql .= "toll_allow, ";
 	$sql .= "call_timeout, ";
 	$sql .= "call_group, ";
@@ -145,6 +149,8 @@ else {
 	if (strlen($limit_max) > 0) { $sql .= "'$limit_max', "; } else { $sql .= "null, "; }
 	$sql .= "'$limit_destination', ";
 	$sql .= "'$user_context', ";
+	$sql .= "'$missed_call_app', ";
+	$sql .= "'$missed_call_data', ";
 	$sql .= "'$toll_allow', ";
 	if (strlen($call_timeout) > 0) { $sql .= "'$call_timeout', "; } else { $sql .= "null, "; }
 	$sql .= "'$call_group', ";

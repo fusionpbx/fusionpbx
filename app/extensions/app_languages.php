@@ -252,6 +252,15 @@ $text['label-user_context']['pl'] = "Kontekst";
 $text['label-user_context']['uk'] = "Контекст";
 $text['label-user_context']['sv-se'] = "Sammanhang";
 
+$text['label-url']['en-us'] = "URL";
+$text['label-url']['es-cl'] = "URL";
+$text['label-url']['pt-pt'] = "URL";
+$text['label-url']['fr-fr'] = "URL";
+$text['label-url']['pt-br'] = "URL";
+$text['label-url']['pl'] = "URL";
+$text['label-url']['uk'] = "URL";
+$text['label-url']['sv-se'] = "URL";
+
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
 $text['label-true']['pt-pt'] = "Sim";
@@ -269,6 +278,15 @@ $text['label-toll_allow']['pt-br'] = "Permissões";
 $text['label-toll_allow']['pl'] = "Zezwalaj na drogie/szczególwe połaczenia";
 $text['label-toll_allow']['uk'] = "";
 $text['label-toll_allow']['sv-se'] = "Toll Allow";
+
+$text['label-text']['en-us'] = "Text";
+$text['label-text']['es-cl'] = "Texto";
+$text['label-text']['pt-pt'] = "Texto";
+$text['label-text']['fr-fr'] = "texte";
+$text['label-text']['pt-br'] = "Texto";
+$text['label-text']['pl'] = "Tekst";
+$text['label-text']['uk'] = "текст";
+$text['label-text']['sv-se'] = "Text";
 
 $text['label-sip_force_expires']['en-us'] = "SIP Force Expires";
 $text['label-sip_force_expires']['es-cl'] = "Forzado SIP Expira";
@@ -405,6 +423,15 @@ $text['label-mwi_account']['pl'] = "Konto powiadomienia oczekującej poczty gło
 $text['label-mwi_account']['uk'] = "";
 $text['label-mwi_account']['sv-se'] = "MWI Konto";
 
+$text['label-missed_call']['en-us'] = "Missed Call";
+$text['label-missed_call']['es-cl'] = "Llamada Perdida";
+$text['label-missed_call']['pt-pt'] = "Chamada Perdida";
+$text['label-missed_call']['fr-fr'] = "Appel Manqué";
+$text['label-missed_call']['pt-br'] = "Chamada Perdida";
+$text['label-missed_call']['pl'] = "Nieodebrane Połączenie";
+$text['label-missed_call']['uk'] = "пропущений Дзвінок";
+$text['label-missed_call']['sv-se'] = "Missat Samtal";
+
 $text['label-line']['en-us'] = "Line";
 $text['label-line']['pt-pt'] = "Linha";
 $text['label-line']['fr-fr'] = "Ligne";
@@ -485,6 +512,15 @@ $text['label-emergency_caller_id_name']['pt-br'] = "Nome de emergência do disca
 $text['label-emergency_caller_id_name']['pl'] = "Prezentacja nazwy dzwoniącego (emergency)";
 $text['label-emergency_caller_id_name']['uk'] = "";
 $text['label-emergency_caller_id_name']['sv-se'] = "Nöd Namnvisning";
+
+$text['label-email']['en-us'] = "Email";
+$text['label-email']['es-cl'] = "Email";
+$text['label-email']['pt-pt'] = "Email";
+$text['label-email']['fr-fr'] = "Courriel";
+$text['label-email']['pt-br'] = "Email";
+$text['label-email']['pl'] = "Email";
+$text['label-email']['uk'] = "Електронна пошта";
+$text['label-email']['sv-se'] = "E-post";
 
 $text['label-effective_caller_id_number']['en-us'] = "Effective Caller ID Number";
 $text['label-effective_caller_id_number']['es-cl'] = "Número de Caller ID Efectivo";
@@ -872,6 +908,15 @@ $text['description-mwi_account']['pt-br'] = "Conta MWI com utilizador@dominio do
 $text['description-mwi_account']['pl'] = "Konto powiadomienia oczekującej uzytkownik@domena  moitorowanej poczty głosowej";
 $text['description-mwi_account']['uk'] = "";
 $text['description-mwi_account']['sv-se'] = "MWI konto med user@domain för den röstbrevlåda som skall monitoreras.";
+
+$text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
+$text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";
+$text['description-missed_call']['pt-pt'] = "Selecione o tipo de notificação e digite o destino apropriado.";
+$text['description-missed_call']['fr-fr'] = "Sélectionnez le type de notification, et entrez la destination appropriée.";
+$text['description-missed_call']['pt-br'] = "Selecione o tipo de notificação e digite o destino apropriado.";
+$text['description-missed_call']['pl'] = "Wybierz typ powiadomienia, i wpisz odpowiednie miejsce przeznaczenia.";
+$text['description-missed_call']['uk'] = "Виберіть тип повідомлення, і ввести відповідний пункт призначення.";
+$text['description-missed_call']['sv-se'] = "Välj typ anmälan, och ange lämplig destination.";
 
 $text['description-limit_max']['en-us'] = "Enter the max number of outgoing calls for this user.";
 $text['description-limit_max']['es-cl'] = "Ingrese el número máximo de llamadas salientes para este usuario.";
