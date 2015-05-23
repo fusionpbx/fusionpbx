@@ -121,6 +121,8 @@ else {
 			$user_context = check_str($_POST["user_context"]);
 			$range = check_str($_POST["range"]);
 			$autogen_users = check_str($_POST["autogen_users"]);
+			$missed_call_app = check_str($_POST["missed_call_app"]);
+			$missed_call_data = check_str($_POST["missed_call_data"]);
 			$toll_allow = check_str($_POST["toll_allow"]);
 			$call_timeout = check_str($_POST["call_timeout"]);
 			$call_group = check_str($_POST["call_group"]);
@@ -136,6 +138,7 @@ else {
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
+
 	}
 
 //delete the user from the v_extension_users
@@ -345,6 +348,43 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
+		//prep missed call values for db insert/update
+			switch ($missed_call_app) {
+				case 'email':
+					$missed_call_data = str_replace(';',',',$missed_call_data);
+					$missed_call_data = str_replace(' ','',$missed_call_data);
+					if (substr_count($missed_call_data, ',') > 0) {
+						$missed_call_data_array = explode(',', $missed_call_data);
+						foreach ($missed_call_data_array as $array_index => $email_address) {
+							if (!valid_email($email_address)) { unset($missed_call_data_array[$array_index]); }
+						}
+						echo "<pre>".print_r($missed_call_data_array, true)."</pre><br><br>";
+						if (sizeof($missed_call_data_array) > 0) {
+							$missed_call_data = implode(',', $missed_call_data_array);
+						}
+						else {
+							unset($missed_call_app, $missed_call_data);
+						}
+						echo "Multiple Emails = ".$missed_call_data;
+					}
+					else {
+						echo "Single Email = ".$missed_call_data."<br>";
+						if (!valid_email($missed_call_data)) {
+							echo "Invalid Email<br><br>";
+							unset($missed_call_app, $missed_call_data);
+						}
+					}
+					break;
+				case 'text':
+					$missed_call_data = str_replace('-','',$missed_call_data);
+					$missed_call_data = str_replace('.','',$missed_call_data);
+					$missed_call_data = str_replace('(','',$missed_call_data);
+					$missed_call_data = str_replace(')','',$missed_call_data);
+					$missed_call_data = str_replace(' ','',$missed_call_data);
+					if (!is_numeric($missed_call_data)) { unset($missed_call_app, $missed_call_data); }
+					break;
+			}
+
 		//add the extension to the database
 			if ($action == "add" && permission_exists('extension_add')) {
 				$user_email = '';
@@ -394,6 +434,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "limit_max, ";
 							$sql .= "limit_destination, ";
 							$sql .= "user_context, ";
+							if (permission_exists('extension_missed_call')) {
+								$sql .= "missed_call_app, ";
+								$sql .= "missed_call_data, ";
+							}
 							if (permission_exists('extension_toll')) {
 								$sql .= "toll_allow, ";
 							}
@@ -448,6 +492,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$limit_max', ";
 							$sql .= "'$limit_destination', ";
 							$sql .= "'$user_context', ";
+							if (permission_exists('extension_missed_call')) {
+								$sql .= "'$missed_call_app', ";
+								$sql .= "'$missed_call_data', ";
+							}
 							if (permission_exists('extension_toll')) {
 								$sql .= "'$toll_allow', ";
 							}
@@ -588,6 +636,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "limit_max = '$limit_max', ";
 					$sql .= "limit_destination = '$limit_destination', ";
 					$sql .= "user_context = '$user_context', ";
+					if (permission_exists('extension_missed_call')) {
+						$sql .= "missed_call_app = '$missed_call_app', ";
+						$sql .= "missed_call_data = '$missed_call_data', ";
+					}
 					if (permission_exists('extension_toll')) {
 						$sql .= "toll_allow = '$toll_allow', ";
 					}
@@ -769,6 +821,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$limit_max = $row["limit_max"];
 			$limit_destination = $row["limit_destination"];
 			$user_context = $row["user_context"];
+			$missed_call_app = $row["missed_call_app"];
+			$missed_call_data = $row["missed_call_data"];
 			$toll_allow = $row["toll_allow"];
 			$call_timeout = $row["call_timeout"];
 			$call_group = $row["call_group"];
@@ -1522,6 +1576,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_local_after_email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_missed_call')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-missed_call']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='missed_call_app' id='missed_call_app' onchange=\"if (this.selectedIndex != 0) { document.getElementById('missed_call_data').style.display = ''; document.getElementById('missed_call_data').focus(); } else { document.getElementById('missed_call_data').style.display='none'; }\">\n";
+		echo "		<option value=''></option>\n";
+		echo "    	<option value='email' ".(($missed_call_app == "email" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
+		//echo "    	<option value='text' ".(($missed_call_app == "text" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		//echo "    	<option value='url' ".(($missed_call_app == "url" && $missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
+		echo "    </select>\n";
+		$missed_call_data = ($missed_call_app == 'text') ? format_phone($missed_call_data) : $missed_call_data;
+		echo "    <input class='formfld' type='text' name='missed_call_data' id='missed_call_data' maxlength='255' value=\"$missed_call_data\" style='min-width: 200px; width: 200px; ".(($missed_call_app == '' || $missed_call_data == '') ? "display: none;" : null)."'>\n";
+		echo "<br />\n";
+		echo $text['description-missed_call']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
