@@ -19,9 +19,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Copyright (C) 2008-2015 All Rights Reserved.
 
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -534,7 +531,7 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -660,7 +657,7 @@ require_once "resources/require.php";
 			}
 
 			echo "			<td align='left'>\n";
-			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][sip_port]' maxlength='255' min='0' max='65535' step='1' value=\"".$row['sip_port']."\">\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\">\n";
 			echo "			</td>\n";
 
 			echo "			<td align='left'>\n";
@@ -673,7 +670,7 @@ require_once "resources/require.php";
 			echo "			</td>\n";
 
 			echo "			<td align='left'>\n";
-			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][register_expires]' maxlength='255' min='1' max='65535' step='1' value=\"".$row['register_expires']."\">\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\">\n";
 			echo "			</td>\n";
 
 			echo "			<td align='left'>\n";
