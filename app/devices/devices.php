@@ -88,16 +88,16 @@ else {
 		unset($sql, $prep_statement, $row);
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_devices ";
+		$sql = "select count(*) as num_rows from v_devices as d ";
 		if ($_GET['showall'] && permission_exists('device_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
 		} else {
 			$sql .= "where (";
-			$sql .= "	domain_uuid = '$domain_uuid' ";
+			$sql .= "	d.domain_uuid = '$domain_uuid' ";
 			if (permission_exists('device_all')) {
-				$sql .= "	or domain_uuid is null ";
+				$sql .= "	or d.domain_uuid is null ";
 			}
 			$sql .= ") ";
 			if (strlen($search) > 0) {
@@ -106,12 +106,12 @@ else {
 		}
 		if (strlen($search) > 0) {
 			$sql .= "(";
-			$sql .= "	device_mac_address like '%".$search."%' ";
-			$sql .= "	or device_label like '%".$search."%' ";
-			$sql .= "	or device_vendor like '%".$search."%' ";
-			$sql .= "	or device_provision_enable like '%".$search."%' ";
-			$sql .= "	or device_template like '%".$search."%' ";
-			$sql .= "	or device_description like '%".$search."%' ";
+			$sql .= "	d.device_mac_address like '%".$search."%' ";
+			$sql .= "	or d.device_label like '%".$search."%' ";
+			$sql .= "	or d.device_vendor like '%".$search."%' ";
+			$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+			$sql .= "	or d.device_template like '%".$search."%' ";
+			$sql .= "	or d.device_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		$prep_statement = $db->prepare($sql);
@@ -135,17 +135,22 @@ else {
 		$offset = $rows_per_page * $page;
 
 	//get the list
-		$sql = "select * from v_devices ";
+		$sql = "select d.*, d2.device_label as alternate_label ";
+		$sql .= "from v_devices as d, v_devices as d2 ";
 		if ($_GET['showall'] && permission_exists('device_all')) {
 			if (strlen($search) > 0) {
 				$sql .= "where ";
 			}
 		} else {
 			$sql .= "where (";
-			$sql .= "	domain_uuid = '$domain_uuid' ";
+			$sql .= "	d.domain_uuid = '$domain_uuid' ";
 			if (permission_exists('device_all')) {
-				$sql .= "	or domain_uuid is null ";
+				$sql .= "	or d.domain_uuid is null ";
 			}
+			$sql .= ") ";
+			$sql .= "and ( ";
+			$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
+			$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
 			$sql .= ") ";
 			if (strlen($search) > 0) {
 				$sql .= "and ";
@@ -153,16 +158,16 @@ else {
 		}
 		if (strlen($search) > 0) {
 			$sql .= "(";
-			$sql .= "	device_mac_address like '%".$search."%' ";
-			$sql .= "	or device_label like '%".$search."%' ";
-			$sql .= "	or device_vendor like '%".$search."%' ";
-			$sql .= "	or device_provision_enable like '%".$search."%' ";
-			$sql .= "	or device_template like '%".$search."%' ";
-			$sql .= "	or device_description like '%".$search."%' ";
+			$sql .= "	d.device_mac_address like '%".$search."%' ";
+			$sql .= "	or d.device_label like '%".$search."%' ";
+			$sql .= "	or d.device_vendor like '%".$search."%' ";
+			$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+			$sql .= "	or d.device_template like '%".$search."%' ";
+			$sql .= "	or d.device_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		if (strlen($order_by) == 0) {
-			$sql .= "order by device_label, device_description asc ";
+			$sql .= "order by d.device_label, d.device_description asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
@@ -225,10 +230,7 @@ else {
 			if ($device_alternate) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 				if (strlen($row['device_uuid_alternate']) > 0) {
-					echo "		<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$text['label-true']."</a>\n";
-				}
-				else {
-					echo "		".$text['label-false']."\n";
+					echo "		<a href='device_edit.php?id=".$row['device_uuid_alternate']."' alt=''>".$row['alternate_label']."</a>\n";
 				}
 				echo "	</td>\n";
 			}
