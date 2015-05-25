@@ -40,9 +40,6 @@ include "root.php";
 
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-		//do nothing
-	}
-	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//original directory
 	}
 	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
