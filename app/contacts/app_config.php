@@ -285,13 +285,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the notes.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "created";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_mod_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Date when the contact was created.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "created_by";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_mod_user";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The user that created the contact.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 
 		$y = 1; //table array index
 		$apps[$x]['db'][$y]['table'] = "v_contact_addresses";
