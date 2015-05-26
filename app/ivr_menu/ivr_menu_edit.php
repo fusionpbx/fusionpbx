@@ -952,7 +952,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-exit_sound']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<select name='ivr_menu_exit_sound' class='formfld' style='width: 350px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null)." required='required'>\n";
+		echo "<select name='ivr_menu_exit_sound' class='formfld' style='width: 350px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
