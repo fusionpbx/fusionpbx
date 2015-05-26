@@ -133,7 +133,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_category, ";
 			$sql .= "contact_role, ";
 			$sql .= "contact_time_zone, ";
-			$sql .= "contact_note ";
+			$sql .= "contact_note, ";
+			$sql .= "last_mod_date, ";
+			$sql .= "last_mod_user ";
 			$sql .= ") ";
 			$sql .= "values ";
 			$sql .= "( ";
@@ -151,7 +153,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'".$contact_category."', ";
 			$sql .= "'".$contact_role."', ";
 			$sql .= "'".$contact_time_zone."', ";
-			$sql .= "'".$contact_note."' ";
+			$sql .= "'".$contact_note."', ";
+			$sql .= "now(), ";
+			$sql .= "'".$_SESSION['username']."' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -216,7 +220,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_category = '".$contact_category."', ";
 			$sql .= "contact_role = '".$contact_role."', ";
 			$sql .= "contact_time_zone = '".$contact_time_zone."', ";
-			$sql .= "contact_note = '".$contact_note."' ";
+			$sql .= "contact_note = '".$contact_note."', ";
+			$sql .= "last_mod_date = now(), ";
+			$sql .= "last_mod_user = '".$_SESSION['username']."' ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and contact_uuid = '".$contact_uuid."' ";
 			$db->exec(check_sql($sql));

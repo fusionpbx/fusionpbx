@@ -47,9 +47,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the primary id for the contact
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -60,10 +61,11 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_note_uuid = check_str($_POST["contact_note_uuid"]);
-	}
+	//get the primary id for the contact note
+		$msg = '';
+		if ($action == "update") {
+			$contact_note_uuid = check_str($_POST["contact_note_uuid"]);
+		}
 
 	//check for all required data
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
