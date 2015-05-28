@@ -263,8 +263,9 @@
 						--freeswitch.consoleLog("notice", "[conference center] <conference_start_epoch> sql: " .. sql .. "\n");
 
 					--set the conference_recording
-						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
+conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
 
+						freeswitch.consoleLog("notice", "[conference center] conference_recording: "..conference_recording.."\n");
 					--conference has ended set the end_epoch
 						local sql = {}
 						table.insert(sql, "update v_conference_sessions set ");
@@ -410,8 +411,10 @@
 			session:setHangupHook("session_hangup_hook");
 
 		--add the domain to the recording directory
+			freeswitch.consoleLog("notice", "[conference center] domain_count: " .. domain_count .. "\n");
 			if (domain_count > 1) then
 				recordings_dir = recordings_dir.."/"..domain_name;
+				freeswitch.consoleLog("notice", "[conference center] recordings_dir: " .. recordings_dir .. "\n");
 			end
 
 		--sounds
@@ -655,10 +658,11 @@
 				--set the recording variable
 					if (conference_session_uuid ~= nil) then
 						if (record == "true") then
-							recordings_dir = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch);
-							mkdir(recordings_dir);
-							recording = recordings_dir.."/"..conference_session_uuid;
+							recordings_dir2 = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch);
+							mkdir(recordings_dir2);
+							recording = recordings_dir2.."/"..conference_session_uuid;
 							session:execute("set","recording="..recording);
+							session:execute("set","conference_session_uuid="..conference_session_uuid);
 						end
 					end
 
@@ -671,14 +675,14 @@
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							--response = api:executeString(cmd);
 						--record the conference when it exists
-							if (conference_exists) then
-								--send a command to record the conference
-									if (not file_exists(recording..".wav")) then
-										cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
-										--freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
-										response = api:executeString(cmd);
-									end
-							end
+--							if (conference_exists) then
+--								--send a command to record the conference
+--									if (not file_exists(recording..".wav")) then
+--										cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
+--										--freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
+--										response = api:executeString(cmd);
+--									end
+--							end
 					end
 
 				--announce the caller
@@ -721,11 +725,15 @@
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-members_in_conference.wav");
 					end
 
+				if (record == "true") then
+					cmd="sched_api (+5 none lua app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." )";
+					api:executeString(cmd);
+				end
 				--send the call to the conference
+					
 					cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
 					freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 					session:execute("conference", cmd);
 			end
 		end
 	end
-
