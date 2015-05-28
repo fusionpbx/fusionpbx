@@ -137,27 +137,22 @@ else {
 	//get the list
 		$sql = "select d.*, d2.device_label as alternate_label ";
 		$sql .= "from v_devices as d, v_devices as d2 ";
+		$sql .= "where ( ";
+		$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
+		$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
+		$sql .= ") ";
 		if ($_GET['showall'] && permission_exists('device_all')) {
-			if (strlen($search) > 0) {
-				$sql .= "where ";
-			}
+			//echo __line__."<br \>\n";
 		} else {
-			$sql .= "where (";
+			$sql .= "and (";
 			$sql .= "	d.domain_uuid = '$domain_uuid' ";
 			if (permission_exists('device_all')) {
 				$sql .= "	or d.domain_uuid is null ";
 			}
 			$sql .= ") ";
-			$sql .= "and ( ";
-			$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
-			$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
-			$sql .= ") ";
-			if (strlen($search) > 0) {
-				$sql .= "and ";
-			}
 		}
 		if (strlen($search) > 0) {
-			$sql .= "(";
+			$sql .= "and (";
 			$sql .= "	d.device_mac_address like '%".$search."%' ";
 			$sql .= "	or d.device_label like '%".$search."%' ";
 			$sql .= "	or d.device_vendor like '%".$search."%' ";
