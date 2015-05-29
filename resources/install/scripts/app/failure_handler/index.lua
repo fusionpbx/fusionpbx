@@ -42,10 +42,16 @@
 				headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
 
 				subject = "Missed Call from ${caller_id_name} <${caller_id_number}>";
-				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${sip_to_user}<br />";
+				subject = subject:gsub("${caller_id_name}", caller_id_name);
+				subject = subject:gsub("${caller_id_number}", caller_id_number);
+				subject = subject:gsub("${sip_to_user}", sip_to_user);
+				subject = subject:gsub("${dialed_user}", dialed_user);
+
+				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${sip_to_user} ext ${dialed_user}";
 				body = body:gsub("${caller_id_name}", caller_id_name);
 				body = body:gsub("${caller_id_number}", caller_id_number);
 				body = body:gsub("${sip_to_user}", sip_to_user);
+				body = body:gsub("${dialed_user}", dialed_user);;
 
 				body = body:gsub(" ", "&nbsp;");
 				body = body:gsub("%s+", "");
@@ -56,7 +62,7 @@
 				body = body:gsub([["]], "&#34;");
 				body = trim(body);
 
-				cmd = "luarun email.lua "..mail_to.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+				cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
 				end
@@ -78,6 +84,7 @@
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
 		sip_to_user = session:getVariable("sip_to_user");
+		dialed_user = session:getVariable("dialed_user");
 		missed_call_app = session:getVariable("missed_call_app");
 		missed_call_data = session:getVariable("missed_call_data");
 
