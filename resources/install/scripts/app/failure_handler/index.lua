@@ -30,6 +30,7 @@
 --include config.lua
 	dofile(scripts_dir .. "/resources/functions/config.lua");
 	dofile(scripts_dir .. "/resources/functions/explode.lua");
+	dofile(scripts_dir .. "/resources/functions/trim.lua");
 
 --check the missed calls
 	function missed()
