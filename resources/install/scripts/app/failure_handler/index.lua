@@ -32,6 +32,8 @@
 	dofile(scripts_dir .. "/resources/functions/explode.lua");
 	dofile(scripts_dir .. "/resources/functions/trim.lua");
 
+
+
 --check the missed calls
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -66,6 +68,7 @@
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
 				end
+				api = freeswitch.API();
 				result = api:executeString(cmd);
 			end
 		end
