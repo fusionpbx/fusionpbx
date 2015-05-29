@@ -177,11 +177,6 @@
 				freeswitch.consoleLog("NOTICE", "[failure_handler] - CALL_REJECT - hangup()\n");
 				session:hangup();
 
-			elseif (originate_disposition == "Originator Cancel" and hangup_on_call_reject =="true") then
-
-				--send missed call notification
-				missed();
-
 			end
 		end
 	end
