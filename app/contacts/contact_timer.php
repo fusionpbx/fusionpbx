@@ -260,14 +260,14 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			width: 100%;
 			height: 53px;
 			text-align: center;
-			background-color: #222;
+			background-color: #2C9DE8;
 			font-size: 50px;
-			color: #3a9eef;
-			-webkit-text-shadow: 0px 0px 5px #3a9eef;
-			-moz-text-shadow: 0px 0px 5px #3a9eef;
-			text-shadow: 0px 0px 5px #3a9eef;
+			color: #FFFFFF;
+			/*-webkit-text-shadow: 0px 0px 5px #000;*/
+			/*-moz-text-shadow: 0px 0px 5px #000;*/
+			/*text-shadow: 0px 0px 5px #000;*/
 			font-weight: bold;
-			letter-spacing: -0.01em;
+			letter-spacing: -0.05em;
 			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
@@ -281,14 +281,14 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 			width: 100%;
 			height: 53px;
 			text-align: center;
-			background-color: #222;
+			background-color: #2C9DE8;
 			font-size: 50px;
-			color: #888;
-			-webkit-text-shadow: 0px 0px 5px #000;
-			-moz-text-shadow: 0px 0px 5px #000;
-			text-shadow: 0px 0px 5px #000;
+			color: #FFFFFF;
+			/*-webkit-text-shadow: 0px 0px 5px #000;*/
+			/*-moz-text-shadow: 0px 0px 5px #000;*/
+			/*text-shadow: 0px 0px 5px #000;*/
 			font-weight: bold;
-			letter-spacing: -0.01em;
+			letter-spacing: -0.05em;
 			font-family: "Courier New",Courier,"Lucida Sans Typewriter","Lucida Typewriter",monospace;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
