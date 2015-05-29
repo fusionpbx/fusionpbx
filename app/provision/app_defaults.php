@@ -101,31 +101,62 @@
 			$array[$x]['default_setting_value'] = '*97';
 			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'line_sip_port';
+			$array[$x]['default_setting_name'] = 'numeric';
+			$array[$x]['default_setting_value'] = '5060';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'line_sip_transport';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = 'tcp';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'line_register_expires';
+			$array[$x]['default_setting_name'] = 'numeric';
+			$array[$x]['default_setting_value'] = '80';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
 
-		//iterate and add each, if necessary
-			foreach ($array as $index => $default_settings) {
+		//get an array of the default settings
+			$sql = "select * from v_default_settings ";
+			$sql .= "where default_setting_category = 'provision' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset ($prep_statement, $sql);
 
-			//add provision default settings
-				$sql = "select count(*) as num_rows from v_default_settings ";
-				$sql .= "where default_setting_category = 'provision' ";
-				$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-				$prep_statement = $db->prepare($sql);
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					unset($prep_statement);
-					if ($row['num_rows'] == 0) {
-
-						$orm = new orm;
-						$orm->name('default_settings');
-						$orm->save($array[$index]);
-						$message = $orm->message;
-						//print_r($message);
+		//find the missing default settings
+			$x = 0;
+			foreach ($array as $setting) {
+				$found = false;
+				$missing[$x] = $setting;
+				foreach ($default_settings as $row) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+						$found = true;
+						//remove items from the array that were found
+						unset($missing[$x]);
 					}
-					unset($row);
 				}
-
+				$x++;
 			}
+
+		//add the missing default settings
+			foreach ($missing as $row) {
+				//add the default settings
+				$orm = new orm;
+				$orm->name('default_settings');
+				$orm->save($row);
+				$message = $orm->message;
+				unset($orm);
+				//print_r($message);
+			}
+			unset($missing);
 
 		//move the dynamic provision variables that from v_vars table to v_default_settings
 			if (count($_SESSION['provision']) == 0) {
