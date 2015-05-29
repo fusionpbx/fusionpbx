@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2015
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -24,22 +24,61 @@
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 
 --debug
-	debug["info"] = false;
+	debug["info"] = true;
 	debug["sql"] = false;
 
 --include config.lua
 	dofile(scripts_dir .. "/resources/functions/config.lua");
 	dofile(scripts_dir .. "/resources/functions/explode.lua");
 
+--check the missed calls
+	function missed()
+		if (missed_call_app ~= nil and missed_call_data ~= nil) then
+			if (missed_call_app == "email") then
+				headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
+				headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
+				headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
+				headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+
+				subject = "Missed Call from ${caller_id_name} <${caller_id_number}>";
+				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${sip_to_user}<br />";
+				body = body:gsub("${caller_id_name}", caller_id_name);
+				body = body:gsub("${caller_id_number}", caller_id_number);
+				body = body:gsub("${sip_to_user}", sip_to_user);
+
+				body = body:gsub(" ", "&nbsp;");
+				body = body:gsub("%s+", "");
+				body = body:gsub("&nbsp;", " ");
+				body = body:gsub("\n", "");
+				body = body:gsub("\n", "");
+				body = body:gsub("'", "&#39;");
+				body = body:gsub([["]], "&#34;");
+				body = trim(body);
+
+				cmd = "luarun email.lua "..mail_to.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+				end
+				result = api:executeString(cmd);
+			end
+		end
+	end
+
 --handle originate_disposition
 	if (session ~= nil and session:ready()) then
-		context = session:getVariable("context");
-		domain_name = session:getVariable("domain_name");
 		uuid = session:getVariable("uuid");
+		domain_uuid = session:getVariable("domain_uuid");
+		domain_name = session:getVariable("domain_name");
+		context = session:getVariable("context");
 		originate_disposition = session:getVariable("originate_disposition");
 		originate_causes = session:getVariable("originate_causes");
 		hangup_on_subscriber_absent = session:getVariable("hangup_on_subscriber_absent");
 		hangup_on_call_reject = session:getVariable("hangup_on_call_reject");
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
+		sip_to_user = session:getVariable("sip_to_user");
+		missed_call_app = session:getVariable("missed_call_app");
+		missed_call_data = session:getVariable("missed_call_data");
 
 		if (debug["info"] == true) then
 			freeswitch.consoleLog("INFO", "[failure_handler] originate_causes: " .. tostring(originate_causes) .. "\n");
@@ -82,6 +121,9 @@
 									session:transfer(forward_busy_destination, "XML", context);
 								end
 							else
+								--send missed call notification
+								missed();
+
 								--handle USER_BUSY - hangup
 								freeswitch.consoleLog("NOTICE", "[failure_handler] forward on busy with empty destination: hangup(USER_BUSY)\n");
 								session:hangup("USER_BUSY");
@@ -102,12 +144,17 @@
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding no answer to: " .. forward_no_answer_destination .. "\n");
 						session:transfer(forward_no_answer_destination, "XML", context);
 					end
+				else
+					--send missed call notification
+					missed();
 				end
 				if (debug["info"] ) then
 					freeswitch.consoleLog("NOTICE", "[failure_handler] - NO_ANSWER\n");
 				end
 
 			elseif (originate_disposition == "USER_NOT_REGISTERED") then
+				--send missed call notification
+				missed();
 
 				--handle USER_NOT_REGISTERED
 				if (debug["info"] ) then
@@ -115,16 +162,25 @@
 				end
 
 			elseif (originate_disposition == "SUBSCRIBER_ABSENT" and hangup_on_subscriber_absent == "true") then
+				--send missed call notification
+				missed();
 
 				--handle SUBSCRIBER_ABSENT
 				freeswitch.consoleLog("NOTICE", "[failure_handler] - SUBSCRIBER_ABSENT - hangup(UNALLOCATED_NUMBER)\n");
 				session:hangup("UNALLOCATED_NUMBER");
 
 			elseif (originate_disposition == "CALL_REJECTED" and hangup_on_call_reject =="true") then
+				--send missed call notification
+				missed();
 
 				--handle CALL_REJECT
 				freeswitch.consoleLog("NOTICE", "[failure_handler] - CALL_REJECT - hangup()\n");
 				session:hangup();
+
+			elseif (originate_disposition == "Originator Cancel" and hangup_on_call_reject =="true") then
+
+				--send missed call notification
+				missed();
 
 			end
 		end

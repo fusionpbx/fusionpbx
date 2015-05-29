@@ -227,6 +227,8 @@
 								outbound_caller_id_number = row.outbound_caller_id_number;
 								emergency_caller_id_name = row.emergency_caller_id_name;
 								emergency_caller_id_number = row.emergency_caller_id_number;
+								missed_call_app = row.missed_call_app;
+								missed_call_data = row.missed_call_data;
 								directory_full_name = row.directory_full_name;
 								directory_visible = row.directory_visible;
 								directory_exten_visible = row.directory_exten_visible;
@@ -335,6 +337,8 @@
 							outbound_caller_id_number = row.outbound_caller_id_number;
 							emergency_caller_id_name = row.emergency_caller_id_name;
 							emergency_caller_id_number = row.emergency_caller_id_number;
+							missed_call_app = row.missed_call_app;
+							missed_call_data = row.missed_call_data;
 							directory_full_name = row.directory_full_name;
 							directory_visible = row.directory_visible;
 							directory_exten_visible = row.directory_exten_visible;
@@ -437,6 +441,12 @@
 							end
 							if (string.len(emergency_caller_id_number) > 0) then
 								table.insert(xml, [[								<variable name="emergency_caller_id_number" value="]] .. emergency_caller_id_number .. [["/>]]);
+							end
+							if (string.len(missed_call_app) > 0) then
+								table.insert(xml, [[								<variable name="missed_call_app" value="]] .. missed_call_app .. [["/>]]);
+							end
+							if (string.len(missed_call_data) > 0) then
+								table.insert(xml, [[								<variable name="missed_call_data" value="]] .. missed_call_data .. [["/>]]);
 							end
 							if (string.len(directory_full_name) > 0) then
 								table.insert(xml, [[								<variable name="directory_full_name" value="]] .. directory_full_name .. [["/>]]);
