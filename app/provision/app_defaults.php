@@ -120,7 +120,7 @@
 			$array[$x]['default_setting_subcategory'] = 'line_register_expires';
 			$array[$x]['default_setting_name'] = 'numeric';
 			$array[$x]['default_setting_value'] = '80';
-			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_enabled'] = 'true';
 			$array[$x]['default_setting_description'] = '';
 
 		//get an array of the default settings
