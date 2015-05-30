@@ -242,7 +242,7 @@
 						$_SESSION["domain_name"] = $row['domain_name'];
 					}
 					else {
-						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+						if (mb_strtolower($row['domain_name']) == mb_strtolower($domain_array[0]) || mb_strtolower($row['domain_name']) == mb_strtolower('www.'.$domain_array[0])) {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
