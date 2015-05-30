@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '3.8.3';
+			return '3.9.0';
 		}
 	}
 
