@@ -80,7 +80,7 @@
 
 	table.insert(xml, [[				<profile name="default">]]);
 	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="" />]]);
+	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
 	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
 	table.insert(xml, [[					<param name="rate" value="8000"/>]]);
 	table.insert(xml, [[					<param name="interval" value="20"/>]]);
@@ -108,7 +108,7 @@
 
 	table.insert(xml, [[				<profile name="wideband">]]);
 	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="" />]]);
+	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
 	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
 	table.insert(xml, [[					<param name="rate" value="16000"/>]]);
 	table.insert(xml, [[					<param name="interval" value="20"/>]]);
@@ -136,7 +136,7 @@
 
 	table.insert(xml, [[				<profile name="ultrawideband">]]);
 	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="" />]]);
+	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
 	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
 	table.insert(xml, [[					<param name="rate" value="32000"/>]]);
 	table.insert(xml, [[					<param name="interval" value="20"/>]]);
@@ -164,7 +164,7 @@
 
 	table.insert(xml, [[				<profile name="cdquality">]]);
 	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="" />]]);
+	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
 	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
 	table.insert(xml, [[					<param name="rate" value="48000"/>]]);
 	table.insert(xml, [[					<param name="interval" value="20"/>]]);
@@ -227,7 +227,7 @@
 	table.insert(xml, [[				<profile name="wait-mod">]]);
 	--table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
 	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="wait-mod" />]]);
+	table.insert(xml, [[					<param name="conference-flags" value="wait-mod,livearray-sync" />]]);
 	table.insert(xml, [[					<param name="rate" value="8000"/>]]);
 	table.insert(xml, [[					<param name="interval" value="20"/>]]);
 	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);

@@ -367,6 +367,10 @@
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="directory">]]);
 							table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
+							table.insert(xml, [[            <params>]]);
+							table.insert(xml, [[                    <param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[                    <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[            </params>]]);
 							table.insert(xml, [[			<groups>]]);
 							table.insert(xml, [[				<group name="default">]]);
 							table.insert(xml, [[					<users>]]);
@@ -400,6 +404,10 @@
 								table.insert(xml, [[							<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
 							end
 							table.insert(xml, [[								<param name="dial-string" value="]] .. dial_string .. [["/>]]);
+							table.insert(xml, [[                                                            <param name="verto-context" value="]] .. user_context .. [["/>]]);
+							table.insert(xml, [[                                                            <param name="verto-dialplan" value="XML"/>]]);
+							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
 							table.insert(xml, [[							</params>]]);
 							table.insert(xml, [[							<variables>]]);
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
