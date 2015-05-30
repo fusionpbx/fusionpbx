@@ -673,15 +673,6 @@
 							--cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							--response = api:executeString(cmd);
-						--record the conference when it exists
---							if (conference_exists) then
---								--send a command to record the conference
---									if (not file_exists(recording..".wav")) then
---										cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
---										--freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
---										response = api:executeString(cmd);
---									end
---							end
 					end
 
 				--announce the caller
@@ -729,7 +720,6 @@
 						api:executeString(cmd);
 					end
 				--send the call to the conference
-					
 					cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
 					freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 					session:execute("conference", cmd);
