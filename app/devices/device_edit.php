@@ -1205,6 +1205,8 @@ require_once "resources/require.php";
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	} else {
+		echo "	<input type='hidden' name='domain_uuid' id='domain_uuid' value=\"".$_SESSION['domain_uuid']."\">\n";
 	}
 
 	echo "<tr>\n";
