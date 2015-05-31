@@ -514,7 +514,12 @@ else {
 					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'bridge';
+					if ($gateway_type != "transfer") {
+						$dialplan_detail_type = 'transfer';
+					}
+					else {
+						$dialplan_detail_type = 'bridge';
+					}
 					$dialplan_detail_data = $action_data;
 					$dialplan_detail_order = '070';
 					$dialplan_detail_group = '0';
