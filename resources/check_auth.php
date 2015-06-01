@@ -64,7 +64,7 @@ require_once "resources/require.php";
 							$domain_name = $username_array[count($username_array) -1];
 							$_SESSION['domain_name'] = $domain_name;
 							foreach ($_SESSION['domains'] as $row) {
-								if (mb_strtolower($row['domain_name']) == mb_strtolower($domain_name)) {
+								if (lower_case($row['domain_name']) == lower_case($domain_name)) {
 									$_SESSION['domain_uuid'] = $row['domain_uuid'];
 									break;
 								}
@@ -79,7 +79,7 @@ require_once "resources/require.php";
 				//set the domain information
 					if (strlen($domain_name) > 0) {
 						foreach ($_SESSION['domains'] as &$row) {
-							if (mb_strtolower($row['domain_name']) == mb_strtolower($domain_name)) {
+							if (lower_case($row['domain_name']) == lower_case($domain_name)) {
 								//set the domain session variables
 									$domain_uuid = $row["domain_uuid"];
 									$_SESSION["domain_uuid"] = $row["domain_uuid"];

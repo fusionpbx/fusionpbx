@@ -1293,4 +1293,23 @@ function number_pad($number,$n) {
 		}
 	}
 
+//lower case
+	function lower_case($string) {
+		if (function_exists('mb_strtolower')) {
+			return mb_strtolower($string, 'UTF-8');
+		}
+		else {
+			return strtolower($string);
+		}
+	}
+
+//upper case
+	function upper_case($string) {
+		if (function_exists('mb_strtoupper')) {
+			return mb_strtoupper($string, 'UTF-8');
+		}
+		else {
+			return strtoupper($string);
+		}
+	}
 ?>
