@@ -152,7 +152,7 @@ require_once "resources/paging.php";
 					echo "		<a href='fax_send.php?id=".$row['fax_uuid']."'>".$text['label-new']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_inbox_view')) {
-					if ($row['fax_email_connection_host'] != '') {
+					if ($row['fax_email_inbound_subject_tag'] != '') {
 						$file = "fax_files_remote.php";
 						$box = $row['fax_email_connection_mailbox'];
 					}
