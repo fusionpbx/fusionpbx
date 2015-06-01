@@ -107,6 +107,7 @@ if (sizeof($result) != 0) {
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
 		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
+			print_r(imap_errors());
 			continue; // try next account
 		}
 
@@ -203,7 +204,6 @@ if (sizeof($result) != 0) {
 
 					//reset variables
 					unset($fax_numbers);
-
 				}
 
 				//delete email
@@ -212,15 +212,12 @@ if (sizeof($result) != 0) {
 				}
 			}
 			unset($authorized_senders);
-
 		}
 
 		//close account connection
 		imap_close($connection);
 	}
-
 }
-
 
 //functions used above
 function load_default_settings() {
@@ -312,4 +309,5 @@ function load_domain_settings($domain_uuid) {
 		}
 	}
 }
+
 ?>
