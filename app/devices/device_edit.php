@@ -1123,17 +1123,6 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_vendor']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
-	echo "<br />\n";
-	echo $text['description-device_vendor']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_uuid_alternate']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
@@ -1152,8 +1141,18 @@ require_once "resources/require.php";
 		echo "	</table>\n";
 		unset($label);
 	}
-
 	echo $text['description-device_uuid_alternate']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_vendor']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
+	echo "<br />\n";
+	echo $text['description-device_vendor']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
