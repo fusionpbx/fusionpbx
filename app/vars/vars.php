@@ -149,7 +149,7 @@ else {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
-			echo "	<td valign='top' align='left' class='row_stylebg'>".$row['var_hostname']."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_hostname']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
 			echo "	</td>\n";
