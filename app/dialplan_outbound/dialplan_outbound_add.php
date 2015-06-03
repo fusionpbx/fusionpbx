@@ -514,7 +514,7 @@ else {
 					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					if ($gateway_type != "transfer") {
+					if ($gateway_type == "transfer") {
 						$dialplan_detail_type = 'transfer';
 					}
 					else {
