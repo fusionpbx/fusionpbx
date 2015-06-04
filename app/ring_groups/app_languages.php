@@ -254,6 +254,14 @@ $text['label-skip_active']['pt-br'] = "Pular ativação";
 $text['label-skip_active']['pl'] = "Pomiń aktywne";
 $text['label-skip_active']['sv-se'] = "Hoppa Över Aktiva";
 
+$text['label-distinctive_ring']['en-us'] = "Distinctive Ring";
+$text['label-distinctive_ring']['es-cl'] = "";
+$text['label-distinctive_ring']['fr-fr'] = "";
+$text['label-distinctive_ring']['pt-pt'] = "";
+$text['label-distinctive_ring']['pt-br'] = "";
+$text['label-distinctive_ring']['pl'] = "";
+$text['label-distinctive_ring']['sv-se'] = ""
+
 $text['label-ringback']['en-us'] = "Ring Back";
 $text['label-ringback']['es-cl'] = "Tono de retorno";
 $text['label-ringback']['fr-fr'] = "Type de tonalité de sonnerie";
@@ -485,6 +493,14 @@ $text['description-skip_active']['pt-pt'] = "Ir destinos com ligações ativas."
 $text['description-skip_active']['pt-br'] = "Pular destinos de ligação ativa";
 $text['description-skip_active']['pl'] = "Pomiń destynacje w przypadku aktywnej rozmowy.";
 $text['description-skip_active']['sv-se'] = "Hoppa över destinationer med aktiva samtal.";
+
+$text['description-distinctive_ring']['en-us'] = "Select a sound for a distinctive ring.";
+$text['description-distinctive_ring']['es-cl'] = "";
+$text['description-distinctive_ring']['fr-fr'] = "";
+$text['description-distinctive_ring']['pt-pt'] = "";
+$text['description-distinctive_ring']['pt-br'] = "";
+$text['description-distinctive_ring']['pl'] = "";
+$text['description-distinctive_ring']['sv-se'] = "";
 
 $text['description-ringback']['en-us'] = "Defines what the caller will hear while the destination is being called.";
 $text['description-ringback']['es-cl'] = "Define lo que va a escuchar quien llama mientras el destino es llamado.";
