@@ -250,12 +250,12 @@ else {
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'>";
+	echo "		<td align='left' valign='top' nowrap='nowrap'>";
 	echo "			<b>".$text['header-default_settings']."</b>";
 	echo "			<br><br>";
 	echo "			".$text['description-default_settings'];
 	echo "		</td>\n";
-	echo "		<td width='50%' align='right' valign='top'>";
+	echo "		<td align='right' valign='top' nowrap='nowrap'>";
 	echo "			<input type='text' name='search' id='default_setting_search' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' placeholder=\"".$text['label-search']."\" value=\"".$search."\" onkeyup='setting_search();'>\n";
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
