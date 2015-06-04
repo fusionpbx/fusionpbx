@@ -2,7 +2,7 @@
 
 $text['title-notifications']['en-us'] = "Notifications";
 $text['title-notifications']['es-cl'] = "Notificaciones";
-$text['title-notifications']['pt-pt'] = "Notificações";
+$text['title-notifications']['pt-pt'] = "Notificaes";
 $text['title-notifications']['fr-fr'] = "Notifications";
 $text['title-notifications']['pt-br'] = "NotificaÃ§Ãµes";
 $text['title-notifications']['pl'] = "Powiadomienia";
