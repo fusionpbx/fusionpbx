@@ -91,7 +91,7 @@
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
 	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
 	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
@@ -119,7 +119,7 @@
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
 	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
 	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
@@ -147,7 +147,7 @@
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
 	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
 	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
@@ -175,7 +175,7 @@
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
 	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
 	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
@@ -212,7 +212,7 @@
 	table.insert(xml, [[					<param name="moderator-controls" value="moderator"/>]]);
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
 	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
 	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
@@ -237,7 +237,7 @@
 	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
 	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
 	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="$${hold_music}"/>]]);
+	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
 	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
 	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
 	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
