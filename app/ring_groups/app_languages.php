@@ -260,7 +260,7 @@ $text['label-distinctive_ring']['fr-fr'] = "";
 $text['label-distinctive_ring']['pt-pt'] = "";
 $text['label-distinctive_ring']['pt-br'] = "";
 $text['label-distinctive_ring']['pl'] = "";
-$text['label-distinctive_ring']['sv-se'] = ""
+$text['label-distinctive_ring']['sv-se'] = "";
 
 $text['label-ringback']['en-us'] = "Ring Back";
 $text['label-ringback']['es-cl'] = "Tono de retorno";
