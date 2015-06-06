@@ -24,7 +24,7 @@
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 
 --debug
-	debug["info"] = true;
+	debug["info"] = false;
 	debug["sql"] = false;
 
 --include config.lua

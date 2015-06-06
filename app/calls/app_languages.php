@@ -243,6 +243,7 @@ $text['label-cid-number-prefix']['pt-br'] = "Número do discador";
 $text['label-cid-number-prefix']['pl'] = "Prefiks prezentacji numeru dzwoniącego";
 $text['label-cid-number-prefix']['sv-se'] = "Nummerpresentation ";
 $text['label-cid-number-prefix']['uk'] = "Caller ID Номер";
+$text['label-cid-number-prefix']['fr-fr'] = "CID Nombre Préfixe";
 
 $text['label-cid-name-prefix']['en-us'] = "Caller ID Name";
 $text['label-cid-name-prefix']['es-cl'] = "Nombre de Caller ID";
@@ -274,7 +275,7 @@ $text['label-call-forward']['uk'] = "Переадресація";
 $text['description-on-busy']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
 $text['description-on-busy']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
 $text['description-on-busy']['pt-pt'] = "Se ativado, ele substitui o valor de correio de voz que permite em extensão.";
-$text['description-on-busy']['fr-fr'] = "Se il est activé, il remplace la valeur de la messagerie vocale permettant en extension.";
+$text['description-on-busy']['fr-fr'] = "Remplace la messagerie vocale si activé.";
 $text['description-on-busy']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione.";
 $text['description-on-busy']['pt-br'] = "Se ativado, substitui o valor do correio de voz permitindo uma extensão quando estiver ocupado";
 $text['description-on-busy']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
@@ -284,7 +285,7 @@ $text['description-on-busy']['uk'] = "";
 $text['description-no_answer']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
 $text['description-no_answer']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
 $text['description-no_answer']['pt-pt'] = "Se ativado, ele substitui o valor de correio de voz que permite em extensão.";
-$text['description-no_answer']['fr-fr'] = "Se il est activé, il remplace la valeur de la messagerie vocale permettant en extension.";
+$text['description-no_answer']['fr-fr'] = "Remplace la messagerie vocale si activé.";
 $text['description-no_answer']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione.";
 $text['description-no_answer']['pt-br'] = "Se ativado, substitui o valor do correio de voz permitindo uma extensão quando estiver chamando";
 $text['description-no_answer']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
@@ -298,6 +299,7 @@ $text['description-cid-number-prefix']['pt-br'] = "Defina o número do prefixo";
 $text['description-cid-number-prefix']['pl'] = "Prefiks prezentacji numeru dzwoniącego.";
 $text['description-cid-number-prefix']['sv-se'] = "Ange nummerpresentation prefix. ";
 $text['description-cid-number-prefix']['uk'] = "";
+$text['description-cid-number-prefix']['fr-fr'] = "Définir un préfixe sur le nombre d'ID d'appelant.";
 
 $text['description-cid-name-prefix']['en-us'] = "Set the caller ID name prefix.";
 $text['description-cid-name-prefix']['es-cl'] = "Configure el prefijo de nombre de caller ID";
@@ -367,6 +369,7 @@ $text['ckeck-simultaneous']['pt-br'] = "Simultâneo";
 $text['ckeck-simultaneous']['pl'] = "";
 $text['ckeck-simultaneous']['sv-se'] = "";
 $text['ckeck-simultaneous']['uk'] = "";
+$text['ckeck-simultaneous']['fr-fr'] = "";
 
 $text['ckeck-sequence']['es-cl'] = "secuencia";
 $text['ckeck-sequence']['pt-pt'] = "sequência";
@@ -374,6 +377,7 @@ $text['ckeck-sequence']['pt-br'] = "Sequência";
 $text['ckeck-sequence']['pl'] = "";
 $text['ckeck-sequence']['sv-se'] = "";
 $text['ckeck-sequence']['uk'] = "";
+$text['ckeck-sequence']['fr-fr'] = "";
 
 $text['ckeck-false']['es-cl'] = "Falso";
 $text['ckeck-false']['pt-pt'] = "Não";
@@ -388,6 +392,7 @@ $text['check-true']['pt-br'] = "";
 $text['check-true']['pl'] = "Tak";
 $text['check-true']['sv-se'] = "Sann ";
 $text['check-true']['uk'] = "Так";
+$text['check-true']['fr-fr'] = "";
 
 $text['check-simultaneous']['en-us'] = "simultaneous";
 $text['check-simultaneous']['fr-fr'] = "simultanément";
@@ -408,6 +413,7 @@ $text['check-false']['pt-br'] = "";
 $text['check-false']['pl'] = "Nie";
 $text['check-false']['sv-se'] = "Falsk ";
 $text['check-false']['uk'] = "Ні";
+$text['check-false']['fr-fr'] = "";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";

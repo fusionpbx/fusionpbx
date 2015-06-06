@@ -17,7 +17,7 @@ $text['title-module_edit']['fr-fr'] = "Editer le Module";
 $text['title-module_edit']['pt-br'] = "Editar Módulo";
 $text['title-module_edit']['he'] = "";
 $text['title-module_edit']['pl'] = "Edytuj moduł";
-$text['title-module_edit']['uk'] = "Редагувати модуль";
+$text['title-module_edit']['uk'] = "Редагування модуля";
 $text['title-module_edit']['sv-se'] = "Editera Modul";
 
 $text['title-module_add']['en-us'] = "Module Add";
@@ -27,7 +27,7 @@ $text['title-module_add']['fr-fr'] = "Ajouter un Module";
 $text['title-module_add']['pt-br'] = "Módulo Adicionado";
 $text['title-module_add']['he'] = "";
 $text['title-module_add']['pl'] = "Dodaj moduł";
-$text['title-module_add']['uk'] = "Додати модуль";
+$text['title-module_add']['uk'] = "Додавання модуля";
 $text['title-module_add']['sv-se'] = "Lägg Till Modul";
 
 $text['option-true']['en-us'] = "True";
@@ -57,7 +57,7 @@ $text['message-update']['fr-fr'] = "Mis à jour";
 $text['message-update']['pt-br'] = "Atualização Efetuada";
 $text['message-update']['he'] = "עידכון הושלם";
 $text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "Оновлення завершено";
+$text['message-update']['uk'] = "Оновлено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 
 $text['message-required']['en-us'] = "Please provide: ";
@@ -97,7 +97,7 @@ $text['label-unload_module']['fr-fr'] = "Décharger le Module";
 $text['label-unload_module']['pt-br'] = "Desativar Módulo";
 $text['label-unload_module']['he'] = "";
 $text['label-unload_module']['pl'] = "Wyłącz moduł";
-$text['label-unload_module']['uk'] = "";
+$text['label-unload_module']['uk'] = "Вивантажити модуль";
 $text['label-unload_module']['sv-se'] = "Ladda av Modul";
 
 $text['label-stopped']['en-us'] = "Stopped";
@@ -127,7 +127,7 @@ $text['label-status']['fr-fr'] = "Statut";
 $text['label-status']['pt-br'] = "Estado";
 $text['label-status']['he'] = "סטטוס";
 $text['label-status']['pl'] = "Status";
-$text['label-status']['uk'] = "Статус";
+$text['label-status']['uk'] = "Стан";
 $text['label-status']['sv-se'] = "Status";
 
 $text['label-start']['en-us'] = "Start";
@@ -187,7 +187,7 @@ $text['label-load_module']['fr-fr'] = "charger le Module";
 $text['label-load_module']['pt-br'] = "Carregar Módulo";
 $text['label-load_module']['he'] = "";
 $text['label-load_module']['pl'] = "Włącz moduł";
-$text['label-load_module']['uk'] = "";
+$text['label-load_module']['uk'] = "Завантажити модуль";
 $text['label-load_module']['sv-se'] = "Ladda Modul";
 
 $text['label-label']['en-us'] = "Label";
@@ -227,7 +227,7 @@ $text['label-default_enabled']['fr-fr'] = "Activé par Défaut";
 $text['label-default_enabled']['pt-br'] = "Habilitado ";
 $text['label-default_enabled']['he'] = "";
 $text['label-default_enabled']['pl'] = "Włączony domyślnie";
-$text['label-default_enabled']['uk'] = "Включено значення за замовчуванням";
+$text['label-default_enabled']['uk'] = "Включено типові значення";
 $text['label-default_enabled']['sv-se'] = "Aktiverad som Standard";
 
 $text['label-action']['en-us'] = "Action";
@@ -257,7 +257,7 @@ $text['header-module_edit']['fr-fr'] = "Editer le Module";
 $text['header-module_edit']['pt-br'] = "Editar Módulo";
 $text['header-module_edit']['he'] = "";
 $text['header-module_edit']['pl'] = "Edytuj moduł";
-$text['header-module_edit']['uk'] = "Редагувати модуль";
+$text['header-module_edit']['uk'] = "Редагування модуля";
 $text['header-module_edit']['sv-se'] = "Editera Modul";
 
 $text['header-module_add']['en-us'] = "Module Add";
@@ -267,7 +267,7 @@ $text['header-module_add']['fr-fr'] = "Ajouter un Module";
 $text['header-module_add']['pt-br'] = "Adicionar Módulo";
 $text['header-module_add']['he'] = "";
 $text['header-module_add']['pl'] = "Dodaj moduł";
-$text['header-module_add']['uk'] = "Додати модуль";
+$text['header-module_add']['uk'] = "Додавання модуля";
 $text['header-module_add']['sv-se'] = "Lägg Till Modul";
 
 $text['description-modules']['en-us'] = "Modules extend the features of the system. Use this page to enable or disable modules.";

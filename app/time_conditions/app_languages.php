@@ -7,7 +7,7 @@ $text['title-time-conditions']['fr-fr'] = "Conditions Temporelles";
 $text['title-time-conditions']['pt-br'] = "Condições temporarias";
 $text['title-time-conditions']['pl'] = "Warunki czasowe";
 $text['title-time-conditions']['sv-se'] = "Tidsstyrning";
-$text['title-time-conditions']['uk'] = "Часові усмови";
+$text['title-time-conditions']['uk'] = "Часові умови";
 
 $text['message-update']['en-us'] = "Update Complete";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -430,7 +430,7 @@ $text['label-conditions']['fr-fr'] = "état";
 $text['label-conditions']['pt-br'] = "Condição";
 $text['label-conditions']['pl'] = "Warunki";
 $text['label-conditions']['sv-se'] = "Villkor";
-$text['label-conditions']['uk'] = "";
+$text['label-conditions']['uk'] = "Умови";
 
 $text['label-condition_value']['en-us'] = "Value";
 $text['label-condition_value']['es-cl'] = "Valor";
@@ -439,7 +439,7 @@ $text['label-condition_value']['fr-fr'] = "Valeur";
 $text['label-condition_value']['pt-br'] = "Valor";
 $text['label-condition_value']['pl'] = "Wartość";
 $text['label-condition_value']['sv-se'] = "Värde";
-$text['label-condition_value']['uk'] = "";
+$text['label-condition_value']['uk'] = "Значення";
 
 $text['label-condition_range']['en-us'] = "Range";
 $text['label-condition_range']['es-cl'] = "Rango";
@@ -457,7 +457,7 @@ $text['label-condition_parameter']['fr-fr'] = "Paramètre";
 $text['label-condition_parameter']['pt-br'] = "Parâmetro";
 $text['label-condition_parameter']['pl'] = "Parametr";
 $text['label-condition_parameter']['sv-se'] = "Parameter";
-$text['label-condition_parameter']['uk'] = "";
+$text['label-condition_parameter']['uk'] = "Параметр";
 
 $text['label-condition']['en-us'] = "Condition";
 $text['label-condition']['es-cl'] = "Condiciones";
@@ -466,7 +466,7 @@ $text['label-condition']['fr-fr'] = "état";
 $text['label-condition']['pt-br'] = "Condições";
 $text['label-condition']['pl'] = "Warunek";
 $text['label-condition']['sv-se'] = "Villkor";
-$text['label-condition']['uk'] = "";
+$text['label-condition']['uk'] = "Умова";
 
 $text['label-alternate-destination']['en-us'] = "Alternate Destination";
 $text['label-alternate-destination']['es-cl'] = "Destino Alternativo";

@@ -97,7 +97,7 @@ $text['option-usring']['fr-fr'] = "us-ring";
 $text['option-usring']['pt-br'] = "USRing";
 $text['option-usring']['pl'] = "us-ring";
 $text['option-usring']['sv-se'] = "us-ring";
-$text['option-usring']['uk'] = "";
+$text['option-usring']['uk'] = "us-ring ";
 
 $text['option-ukring']['en-us'] = "uk-ring";
 $text['option-ukring']['es-cl'] = "uk-ring";
@@ -106,7 +106,7 @@ $text['option-ukring']['fr-fr'] = "uk-ring";
 $text['option-ukring']['pt-br'] = "UKRing";
 $text['option-ukring']['pl'] = "uk-ring";
 $text['option-ukring']['sv-se'] = "uk-ring";
-$text['option-ukring']['uk'] = "";
+$text['option-ukring']['uk'] = "uk-ring ";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Si";

@@ -209,7 +209,7 @@ function load_extensions() {
 						$x++;
 					}
 				}
-			//if no extension has been assigned then setting user_context will still need to be set
+			//if no extension has been assigned then setting the user_context will still need to be set
 				if (strlen($_SESSION['user_context']) == 0) {
 					if (count($_SESSION['domains']) == 1) {
 						$_SESSION['user_context'] = "default";

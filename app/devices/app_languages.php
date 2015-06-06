@@ -8,6 +8,7 @@ $text['title-profiles']['pt-br'] = "Perfis";
 $text['title-profiles']['pl'] = "Profile";
 $text['title-profiles']['uk'] = "Профілі";
 $text['title-profiles']['sv-se'] = "Profiler";
+$text['title-profiles']['ro'] = "Profiluri";
 
 $text['title-profile']['en-us'] = "Profile";
 $text['title-profile']['es-cl'] = "Perfil";
@@ -17,6 +18,7 @@ $text['title-profile']['pt-br'] = "Perfil";
 $text['title-profile']['pl'] = "Profil";
 $text['title-profile']['uk'] = "Профіль";
 $text['title-profile']['sv-se'] = "Profil";
+$text['title-profile']['ro'] = "Profil";
 
 $text['title-devices']['en-us'] = "Devices";
 $text['title-devices']['es-cl'] = "Dispositivos";
@@ -26,6 +28,7 @@ $text['title-devices']['pt-br'] = "Dispositivos";
 $text['title-devices']['pl'] = "Urządzenia";
 $text['title-devices']['uk'] = "Пристрої";
 $text['title-devices']['sv-se'] = "Enheter";
+$text['title-devices']['ro'] = "Dispozitive";
 
 $text['title-device_keys']['en-us'] = "Device Keys";
 $text['title-device_keys']['es-cl'] = "Teclas de Dispositivos";
@@ -35,6 +38,7 @@ $text['title-device_keys']['pt-br'] = "Teclas do dispositivo";
 $text['title-device_keys']['pl'] = "Klucze urządzenia";
 $text['title-device_keys']['uk'] = "";
 $text['title-device_keys']['sv-se'] = "Enhets Knappar";
+$text['title-device_keys']['ro'] = "";
 
 $text['title-device_key']['en-us'] = "Device Key";
 $text['title-device_key']['es-cl'] = "Clave del dispositivo";
@@ -44,15 +48,17 @@ $text['title-device_key']['pt-br'] = "Tecla do dispositivo";
 $text['title-device_key']['pl'] = "Klucz urządzenia";
 $text['title-device_key']['uk'] = "";
 $text['title-device_key']['sv-se'] = "Enhets Knapp";
+$text['title-device_key']['ro'] = "";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['es-cl'] = "Global";
 $text['select-global']['pt-pt'] = "Global";
-$text['select-global']['fr-fr'] = "Mondial";
+$text['select-global']['fr-fr'] = "Global";
 $text['select-global']['pt-br'] = "Global";
 $text['select-global']['pl'] = "Globalny";
 $text['select-global']['uk'] = "";
 $text['select-global']['sv-se'] = "Global";
+$text['select-global']['ro'] = "Global";
 
 $text['message_device']['en-us'] = "Enter the new MAC Address.";
 $text['message_device']['es-cl'] = "Introduzca la nueva dirección MAC.";
@@ -62,15 +68,17 @@ $text['message_device']['pt-br'] = "Insira um novo endereço MAC";
 $text['message_device']['pl'] = "Wpisz nowy adres MAC";
 $text['message_device']['uk'] = "Введіть нову MAC адресу";
 $text['message_device']['sv-se'] = "Fyll i den nya MAC-adressen.";
+$text['message_device']['ro'] = "Introduceți adresa MAC nouă";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mise à Jour Complète";
+$text['message-update']['fr-fr'] = "Mise à jour effectuée";
 $text['message-update']['pt-br'] = "Atualização Efetuada";
 $text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "Оновлення завершено";
+$text['message-update']['uk'] = "Оновлено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
+$text['message-update']['ro'] = "Actualizare completă";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor indique: ";
@@ -80,6 +88,7 @@ $text['message-required']['pt-br'] = "Por favor Indique:";
 $text['message-required']['pl'] = "Wpisz:";
 $text['message-required']['uk'] = "Будь ласка, вкажіть:";
 $text['message-required']['sv-se'] = "Var god uppge:";
+$text['message-required']['ro'] = "";
 
 $text['message-message']['en-us'] = "Message";
 $text['message-message']['es-cl'] = "Mensaje";
@@ -89,6 +98,7 @@ $text['message-message']['pt-br'] = "Mensagem";
 $text['message-message']['pl'] = "Wiadomość";
 $text['message-message']['uk'] = "Повідомлення";
 $text['message-message']['sv-se'] = "Meddelande";
+$text['message-message']['ro'] = "Mesaj";
 
 $text['message-maximum_devices']['en-us'] = "Maximum Devices:";
 $text['message-maximum_devices']['es-cl'] = "Dispositivos Máximo Permitido:";
@@ -98,51 +108,57 @@ $text['message-maximum_devices']['pt-br'] = "Dispositivo máximo permitido";
 $text['message-maximum_devices']['pl'] = "Maksymalna ilość urządzeń:";
 $text['message-maximum_devices']['uk'] = "Максимальна кількість пристроїв";
 $text['message-maximum_devices']['sv-se'] = "Max Antal Enheter";
+$text['message-maximum_devices']['ro'] = "";
 
 $text['message-duplicate_username']['en-us'] = "Duplicate Username Detected";
 $text['message-duplicate_username']['es-cl'] = "Duplicar nombre de usuario Detectado";
 $text['message-duplicate_username']['pt-pt'] = "Duplicate usuário Detectado";
-$text['message-duplicate_username']['fr-fr'] = "Duplicate Nom d'utilisateur détecté";
+$text['message-duplicate_username']['fr-fr'] = "Doublons de nom d'utilisateur détectés";
 $text['message-duplicate_username']['pt-br'] = "Duplicate usuário Detectado";
 $text['message-duplicate_username']['pl'] = "Wykryto duplikat Nazwa użytkownika";
-$text['message-duplicate_username']['uk'] = "Дублікат Ім'я користувача Виявлено";
+$text['message-duplicate_username']['uk'] = "Виявлено дублікат імені користувача";
 $text['message-duplicate_username']['sv-se'] = "Duplicera Användarnamn upptäckt";
+$text['message-duplicate_username']['ro'] = "Nume utilizator duplicat";
 
 $text['message-duplicate']['en-us'] = "Duplicate Detected";
 $text['message-duplicate']['es-cl'] = "duplicar detectado";
 $text['message-duplicate']['pt-pt'] = "Detectado um duplicado";
-$text['message-duplicate']['fr-fr'] = "dupliquer détecté";
+$text['message-duplicate']['fr-fr'] = "Donblons détectés";
 $text['message-duplicate']['pt-br'] = "Detectado uma dubplicidade";
 $text['message-duplicate']['pl'] = "Wykryto duplikat";
 $text['message-duplicate']['uk'] = "Знайдено дублікат";
 $text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
+$text['message-duplicate']['ro'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
 $text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Suppression Complète";
+$text['message-delete']['fr-fr'] = "Suppression effectuée";
 $text['message-delete']['pt-br'] = "Remoção Efetuada";
 $text['message-delete']['pl'] = "Usunięto poprawnie";
 $text['message-delete']['uk'] = "Видалено";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
+$text['message-delete']['ro'] = "Ștergere completă";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completada";
 $text['message-copy']['pt-pt'] = "Cópia Efectuada";
-$text['message-copy']['fr-fr'] = "Copié";
+$text['message-copy']['fr-fr'] = "Copie effectuée";
 $text['message-copy']['pt-br'] = "Cópia Efetuada";
 $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
+$text['message-copy']['ro'] = "Copiere completă";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completo";
 $text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajout Complet";
+$text['message-add']['fr-fr'] = "Ajout effectué";
 $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['uk'] = "Додано";
 $text['message-add']['sv-se'] = "Tillagd";
+$text['message-add']['ro'] = "Adăugare completă";
 
 $text['label-zero_sp_touch']['en-us'] = "Zero-Sp-Touch";
 $text['label-zero_sp_touch']['es-cl'] = "Zero-Sp-Touch";
@@ -152,6 +168,7 @@ $text['label-zero_sp_touch']['pt-br'] = "Zero-Sp-Touch ";
 $text['label-zero_sp_touch']['pl'] = "Zero-sp-touch";
 $text['label-zero_sp_touch']['uk'] = "";
 $text['label-zero_sp_touch']['sv-se'] = "Zero-Sp-Touch";
+$text['label-zero_sp_touch']['ro'] = "";
 
 $text['label-xml_phonebook']['en-us'] = "XML Phonebook";
 $text['label-xml_phonebook']['es-cl'] = "Agenda telefónica XML";
@@ -161,6 +178,7 @@ $text['label-xml_phonebook']['pt-br'] = "Agenda telefônica XML";
 $text['label-xml_phonebook']['pl'] = "Książka telefoniczna XML";
 $text['label-xml_phonebook']['uk'] = "";
 $text['label-xml_phonebook']['sv-se'] = "XML Telefonbok";
+$text['label-xml_phonebook']['ro'] = "Agendă XML";
 
 $text['label-xml_group']['en-us'] = "XML Group";
 $text['label-xml_group']['es-cl'] = "Grupo XML";
@@ -170,6 +188,7 @@ $text['label-xml_group']['pt-br'] = "Grupo XML";
 $text['label-xml_group']['pl'] = "Grupa XML";
 $text['label-xml_group']['uk'] = "";
 $text['label-xml_group']['sv-se'] = "XML Grupp";
+$text['label-xml_group']['ro'] = "Grup XML";
 
 $text['label-xml_browser']['en-us'] = "XML Browser";
 $text['label-xml_browser']['es-cl'] = "Navegador XML";
@@ -179,6 +198,7 @@ $text['label-xml_browser']['pt-br'] = "Navagador XML";
 $text['label-xml_browser']['pl'] = "Przeglądarka XML";
 $text['label-xml_browser']['uk'] = "";
 $text['label-xml_browser']['sv-se'] = "XML Browser";
+$text['label-xml_browser']['ro'] = "Navigator XML";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de voz";
@@ -188,6 +208,7 @@ $text['label-voicemail']['pt-br'] = "Correio de Voz";
 $text['label-voicemail']['pl'] = "Poczta głosowa";
 $text['label-voicemail']['uk'] = "Голосова пошта";
 $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
+$text['label-voicemail']['ro'] = "Mesagerie vocală";
 
 $text['label-value']['en-us'] = "Value";
 $text['label-value']['es-cl'] = "Valor";
@@ -197,15 +218,17 @@ $text['label-value']['pt-br'] = "Valor";
 $text['label-value']['pl'] = "Wartość";
 $text['label-value']['uk'] = "Значення";
 $text['label-value']['sv-se'] = "Värde";
+$text['label-value']['ro'] = "Valoare";
 
 $text['label-user_id']['en-us'] = "User ID";
 $text['label-user_id']['es-cl'] = "ID de usuario";
 $text['label-user_id']['pt-pt'] = "ID do utilizador";
-$text['label-user_id']['fr-fr'] = "Usager ID";
+$text['label-user_id']['fr-fr'] = "Identifiant d'utilisateur";
 $text['label-user_id']['pt-br'] = "ID do Utilizador";
 $text['label-user_id']['pl'] = "ID użytkownika";
 $text['label-user_id']['uk'] = "";
 $text['label-user_id']['sv-se'] = "Användar ID";
+$text['label-user_id']['ro'] = "ID Utilizator";
 
 $text['label-url_record']['en-us'] = "URL Record";
 $text['label-url_record']['es-cl'] = "URL Record";
@@ -215,6 +238,7 @@ $text['label-url_record']['pt-br'] = "URL do Registro";
 $text['label-url_record']['pl'] = "Wpis URL";
 $text['label-url_record']['uk'] = "";
 $text['label-url_record']['sv-se'] = "URL Post";
+$text['label-url_record']['ro'] = "Înregistrare URL";
 
 $text['label-url']['en-us'] = "URL";
 $text['label-url']['es-cl'] = "URL";
@@ -224,6 +248,7 @@ $text['label-url']['pt-br'] = "URL";
 $text['label-url']['pl'] = "URL";
 $text['label-url']['uk'] = "";
 $text['label-url']['sv-se'] = "URL";
+$text['label-url']['ro'] = "URL";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['es-cl'] = "Tipo";
@@ -233,6 +258,7 @@ $text['label-type']['pt-br'] = "Tipo";
 $text['label-type']['pl'] = "Typ";
 $text['label-type']['uk'] = "Тип";
 $text['label-type']['sv-se'] = "Typ";
+$text['label-type']['ro'] = "Tip";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -242,6 +268,7 @@ $text['label-true']['pt-br'] = "Sim";
 $text['label-true']['pl'] = "Tak";
 $text['label-true']['uk'] = "Так";
 $text['label-true']['sv-se'] = "Sann";
+$text['label-true']['ro'] = "";
 
 $text['label-transfer']['en-us'] = "Transfer";
 $text['label-transfer']['es-cl'] = "Transferencia";
@@ -251,6 +278,7 @@ $text['label-transfer']['pt-br'] = "Tranferência";
 $text['label-transfer']['pl'] = "Transferowanie";
 $text['label-transfer']['uk'] = "";
 $text['label-transfer']['sv-se'] = "Överför";
+$text['label-transfer']['ro'] = "Transfer";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Instrumentos";
@@ -260,6 +288,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['sv-se'] = "Verktyg";
+$text['label-tools']['ro'] = "";
 
 $text['label-switch_account_up']['en-us'] = "Switch Account Up";
 $text['label-switch_account_up']['es-cl'] = "Cambie Cuenta Up";
@@ -269,6 +298,7 @@ $text['label-switch_account_up']['pt-br'] = "Habilitar conta";
 $text['label-switch_account_up']['pl'] = "Przenieś konto do góry";
 $text['label-switch_account_up']['uk'] = "";
 $text['label-switch_account_up']['sv-se'] = "Switch Konto Igång";
+$text['label-switch_account_up']['ro'] = "";
 
 $text['label-switch_account_down']['en-us'] = "Switch Account Down";
 $text['label-switch_account_down']['es-cl'] = "Cambie la cuenta de Down";
@@ -278,6 +308,7 @@ $text['label-switch_account_down']['pt-br'] = "Desabilitar conta";
 $text['label-switch_account_down']['pl'] = "Przenieś konto do dół";
 $text['label-switch_account_down']['uk'] = "";
 $text['label-switch_account_down']['sv-se'] = "Switch Konto Avstängd";
+$text['label-switch_account_down']['ro'] = "";
 
 $text['label-subcategory']['en-us'] = "Subcategory";
 $text['label-subcategory']['es-cl'] = "Subcategoría";
@@ -287,6 +318,7 @@ $text['label-subcategory']['pt-br'] = "Subcategoria";
 $text['label-subcategory']['pl'] = "Podkategoria";
 $text['label-subcategory']['uk'] = "";
 $text['label-subcategory']['sv-se'] = "Under-kategori";
+$text['label-subcategory']['ro'] = "Subcategorie";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -296,24 +328,27 @@ $text['label-status']['pt-br'] = "Estado";
 $text['label-status']['pl'] = "Status";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
+$text['label-status']['ro'] = "Stare";
 
 $text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
 $text['label-speed_dial_active']['es-cl'] = "Speed ??Dial activo";
 $text['label-speed_dial_active']['pt-pt'] = "Discagem Rápida Ativa";
-$text['label-speed_dial_active']['fr-fr'] = "Speed ??Dial active";
+$text['label-speed_dial_active']['fr-fr'] = "Numérotation Abrégée Active";
 $text['label-speed_dial_active']['pt-br'] = "Discagem rápida ativa";
 $text['label-speed_dial_active']['pl'] = "Szybkie wybieranie aktywne";
 $text['label-speed_dial_active']['uk'] = "Швидкий набір активовано";
 $text['label-speed_dial_active']['sv-se'] = "Kortnummer Aktiv";
+$text['label-speed_dial_active']['ro'] = "";
 
 $text['label-speed_dial']['en-us'] = "Speed Dial";
 $text['label-speed_dial']['es-cl'] = "Speed Dial";
 $text['label-speed_dial']['pt-pt'] = "Discagem Rápida";
-$text['label-speed_dial']['fr-fr'] = "Speed Dial";
+$text['label-speed_dial']['fr-fr'] = "Numérotation Abrégée";
 $text['label-speed_dial']['pt-br'] = "Discagem rápida";
 $text['label-speed_dial']['pl'] = "Szybkie wybieranie";
 $text['label-speed_dial']['uk'] = "Швидкий набір";
 $text['label-speed_dial']['sv-se'] = "Kortnummer";
+$text['label-speed_dial']['ro'] = "";
 
 $text['label-sms']['en-us'] = "SMS";
 $text['label-sms']['es-cl'] = "SMS";
@@ -323,6 +358,7 @@ $text['label-sms']['pt-br'] = "SMS";
 $text['label-sms']['pl'] = "SMS";
 $text['label-sms']['uk'] = "SMS";
 $text['label-sms']['sv-se'] = "SMS";
+$text['label-sms']['ro'] = "SMS";
 
 $text['label-sip_transport']['en-us'] = "Transport";
 $text['label-sip_transport']['es-cl'] = "Transporte";
@@ -332,6 +368,7 @@ $text['label-sip_transport']['pt-br'] = "Transporte";
 $text['label-sip_transport']['pl'] = "Transport ";
 $text['label-sip_transport']['uk'] = "Транспорт";
 $text['label-sip_transport']['sv-se'] = "Transport";
+$text['label-sip_transport']['ro'] = "Transport";
 
 $text['label-sip_port']['en-us'] = "Port";
 $text['label-sip_port']['es-cl'] = "puerto";
@@ -341,6 +378,7 @@ $text['label-sip_port']['pt-br'] = "Porto";
 $text['label-sip_port']['pl'] = "Port";
 $text['label-sip_port']['uk'] = "Порт";
 $text['label-sip_port']['sv-se'] = "Port";
+$text['label-sip_port']['ro'] = "Port";
 
 $text['label-shared_line']['en-us'] = "Shared Line";
 $text['label-shared_line']['es-cl'] = "Línea compartida";
@@ -350,6 +388,7 @@ $text['label-shared_line']['pt-br'] = "Linha compartilhada ";
 $text['label-shared_line']['pl'] = "Linia dzielona";
 $text['label-shared_line']['uk'] = "";
 $text['label-shared_line']['sv-se'] = "Delad Linje";
+$text['label-shared_line']['ro'] = "";
 
 $text['label-settings']['en-us'] = "Settings";
 $text['label-settings']['es-cl'] = "Configuración";
@@ -359,6 +398,7 @@ $text['label-settings']['pt-br'] = "Definições";
 $text['label-settings']['pl'] = "Ustawienia";
 $text['label-settings']['uk'] = "Налаштування";
 $text['label-settings']['sv-se'] = "Inställningar";
+$text['label-settings']['ro'] = "Setări";
 
 $text['label-server_address']['en-us'] = "Server Address";
 $text['label-server_address']['es-cl'] = "Dirección de servidor";
@@ -368,24 +408,27 @@ $text['label-server_address']['pt-br'] = "Endereço do servidor";
 $text['label-server_address']['pl'] = "Adres serwera (registrar)";
 $text['label-server_address']['uk'] = "";
 $text['label-server_address']['sv-se'] = "Serveradress";
+$text['label-server_address']['ro'] = "Adresă server";
 
 $text['label-register_expires']['en-us'] = "Register Expires";
 $text['label-register_expires']['es-cl'] = "Registro Expira";
 $text['label-register_expires']['pt-pt'] = "Expiração do Registo";
-$text['label-register_expires']['fr-fr'] = "S'inscrire Expire";
+$text['label-register_expires']['fr-fr'] = "Délai d'expiration de l'enregistrement";
 $text['label-register_expires']['pt-br'] = "Registro expirado";
 $text['label-register_expires']['pl'] = "Rejestracja wygasa";
 $text['label-register_expires']['uk'] = "";
 $text['label-register_expires']['sv-se'] = "Registrering Utgår";
+$text['label-register_expires']['ro'] = "";
 
 $text['label-redirect']['en-us'] = "Redirect";
 $text['label-redirect']['es-cl'] = "Redirigir";
 $text['label-redirect']['pt-pt'] = "Redirecionar";
-$text['label-redirect']['fr-fr'] = "Réorienter";
+$text['label-redirect']['fr-fr'] = "Transferer";
 $text['label-redirect']['pt-br'] = "Redirecionar";
 $text['label-redirect']['pl'] = "Przekierowanie";
 $text['label-redirect']['uk'] = "Перенаправлення";
 $text['label-redirect']['sv-se'] = "Omdirigera";
+$text['label-redirect']['ro'] = "";
 
 $text['label-redial']['en-us'] = "Redial";
 $text['label-redial']['es-cl'] = "Redial";
@@ -395,15 +438,17 @@ $text['label-redial']['pt-br'] = "Remarcar";
 $text['label-redial']['pl'] = "Ponownw wybieranie";
 $text['label-redial']['uk'] = "Повторний набір";
 $text['label-redial']['sv-se'] = "Återuppringning";
+$text['label-redial']['ro'] = "";
 
 $text['label-record']['en-us'] = "Record";
 $text['label-record']['es-cl'] = "Registro";
 $text['label-record']['pt-pt'] = "Registo";
-$text['label-record']['fr-fr'] = "Record";
+$text['label-record']['fr-fr'] = "Enregistrer";
 $text['label-record']['pt-br'] = "Registro";
 $text['label-record']['pl'] = "Nagrywanie";
 $text['label-record']['uk'] = "Запис";
 $text['label-record']['sv-se'] = "Spela In";
+$text['label-record']['ro'] = "";
 
 $text['label-public_hold']['en-us'] = "Public Hold";
 $text['label-public_hold']['es-cl'] = "Hold Pública";
@@ -413,6 +458,7 @@ $text['label-public_hold']['pt-br'] = "Espera Pública";
 $text['label-public_hold']['pl'] = "Publiczne on hold";
 $text['label-public_hold']['uk'] = "";
 $text['label-public_hold']['sv-se'] = "Gemensam Vänt";
+$text['label-public_hold']['ro'] = "";
 
 $text['label-programmable']['en-us'] = "Programmable";
 $text['label-programmable']['es-cl'] = "Programable";
@@ -422,6 +468,7 @@ $text['label-programmable']['pt-br'] = "Programável";
 $text['label-programmable']['pl'] = "Programowalny";
 $text['label-programmable']['uk'] = "Програмується";
 $text['label-programmable']['sv-se'] = "Programmerbar";
+$text['label-programmable']['ro'] = "";
 
 $text['label-profile_name']['en-us'] = "Name";
 $text['label-profile_name']['es-cl'] = "Nombre";
@@ -431,6 +478,7 @@ $text['label-profile_name']['pt-br'] = "Nome";
 $text['label-profile_name']['pl'] = "Nazwa";
 $text['label-profile_name']['uk'] = "Назва";
 $text['label-profile_name']['sv-se'] = "Namn";
+$text['label-profile_name']['ro'] = "Nume";
 
 $text['label-profile_enabled']['en-us'] = "Enabled";
 $text['label-profile_enabled']['es-cl'] = "Activado";
@@ -440,6 +488,7 @@ $text['label-profile_enabled']['pt-br'] = "Ativado";
 $text['label-profile_enabled']['pl'] = "Włączony";
 $text['label-profile_enabled']['uk'] = "Включено";
 $text['label-profile_enabled']['sv-se'] = "Aktiverad";
+$text['label-profile_enabled']['ro'] = "";
 
 $text['label-profile_domain']['en-us'] = "Domain";
 $text['label-profile_domain']['es-cl'] = "Dominio";
@@ -449,6 +498,7 @@ $text['label-profile_domain']['pt-br'] = "Domínio";
 $text['label-profile_domain']['pl'] = "Domena";
 $text['label-profile_domain']['uk'] = "Домен";
 $text['label-profile_domain']['sv-se'] = "Domän";
+$text['label-profile_domain']['ro'] = "Domeniu";
 
 $text['label-profile_description']['en-us'] = "Description";
 $text['label-profile_description']['es-cl'] = "Descripción";
@@ -458,6 +508,7 @@ $text['label-profile_description']['pt-br'] = "Descrição";
 $text['label-profile_description']['pl'] = "Opis";
 $text['label-profile_description']['uk'] = "Опис";
 $text['label-profile_description']['sv-se'] = "Beskrivning";
+$text['label-profile_description']['ro'] = "Descriere";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['es-cl'] = "Perfil";
@@ -467,6 +518,7 @@ $text['label-profile']['pt-br'] = "Perfil";
 $text['label-profile']['pl'] = "Profil";
 $text['label-profile']['uk'] = "";
 $text['label-profile']['sv-se'] = "Profil";
+$text['label-profile']['ro'] = "Profil";
 
 $text['label-private']['en-us'] = "Private";
 $text['label-private']['es-cl'] = "Privado";
@@ -476,6 +528,7 @@ $text['label-private']['pt-br'] = "Privado";
 $text['label-private']['pl'] = "Prywatny";
 $text['label-private']['uk'] = "Опис";
 $text['label-private']['sv-se'] = "Privat";
+$text['label-private']['ro'] = "Privat";
 
 $text['label-presence_watcher']['en-us'] = "Presence Watcher";
 $text['label-presence_watcher']['es-cl'] = "Presencia Watcher";
@@ -485,6 +538,7 @@ $text['label-presence_watcher']['pt-br'] = "Presença Acompanhada";
 $text['label-presence_watcher']['pl'] = "Obserwujacy";
 $text['label-presence_watcher']['uk'] = "";
 $text['label-presence_watcher']['sv-se'] = "Närvaro Hantering";
+$text['label-presence_watcher']['ro'] = "";
 
 $text['label-presence']['en-us'] = "Presence";
 $text['label-presence']['es-cl'] = "Presencia";
@@ -494,6 +548,7 @@ $text['label-presence']['pt-br'] = "Presença";
 $text['label-presence']['pl'] = "Dostępności kontaktu";
 $text['label-presence']['uk'] = "";
 $text['label-presence']['sv-se'] = "Närvaro";
+$text['label-presence']['ro'] = "Prezență";
 
 $text['label-prefix']['en-us'] = "Prefix";
 $text['label-prefix']['es-cl'] = "Prefijo";
@@ -503,6 +558,7 @@ $text['label-prefix']['pt-br'] = "Prefixo";
 $text['label-prefix']['pl'] = "Prefiks";
 $text['label-prefix']['uk'] = "Префікс";
 $text['label-prefix']['sv-se'] = "Prefix";
+$text['label-prefix']['ro'] = "Prefix";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -512,6 +568,7 @@ $text['label-password']['pt-br'] = "Senha";
 $text['label-password']['pl'] = "Hasło";
 $text['label-password']['uk'] = "Пароль";
 $text['label-password']['sv-se'] = "Lösenord";
+$text['label-password']['ro'] = "Parolă";
 
 $text['label-paging']['en-us'] = "Paging";
 $text['label-paging']['es-cl'] = "Paging";
@@ -881,15 +938,7 @@ $text['label-dial_dtmf']['pt-br'] = "Marque DTMF";
 $text['label-dial_dtmf']['pl'] = "Wybierz ton DTMF";
 $text['label-dial_dtmf']['uk'] = "";
 $text['label-dial_dtmf']['sv-se'] = "Ring DTMF";
-
-$text['label-device']['en-us'] = "Device";
-$text['label-device']['es-cl'] = "Dispositivo";
-$text['label-device']['pt-pt'] = "Dispositivo";
-$text['label-device']['fr-fr'] = "Equipement";
-$text['label-device']['pt-br'] = "Dispositivo";
-$text['label-device']['pl'] = "Urządzenia";
-$text['label-device']['uk'] = "Пристрої";
-$text['label-device']['sv-se'] = "Enheter";
+$text['label-dial_dtmf']['ro'] = "";
 
 $text['label-device_vendor']['en-us'] = "Vendor";
 $text['label-device_vendor']['es-cl'] = "Proveedor";
@@ -1016,6 +1065,7 @@ $text['label-device_key_value']['pt-br'] = "Valor";
 $text['label-device_key_value']['pl'] = "Wartość";
 $text['label-device_key_value']['uk'] = "";
 $text['label-device_key_value']['sv-se'] = "Värde";
+$text['label-device_key_value']['ro'] = "";
 
 $text['label-device_key_type']['en-us'] = "Type";
 $text['label-device_key_type']['es-cl'] = "Tipo";
@@ -1025,6 +1075,7 @@ $text['label-device_key_type']['pt-br'] = "Tipo";
 $text['label-device_key_type']['pl'] = "Typ";
 $text['label-device_key_type']['uk'] = "";
 $text['label-device_key_type']['sv-se'] = "Typ";
+$text['label-device_key_type']['ro'] = "";
 
 $text['label-device_key_line']['en-us'] = "Line";
 $text['label-device_key_line']['es-cl'] = "Línea";
@@ -1034,6 +1085,7 @@ $text['label-device_key_line']['pt-br'] = "Linha";
 $text['label-device_key_line']['pl'] = "Linia";
 $text['label-device_key_line']['uk'] = "";
 $text['label-device_key_line']['sv-se'] = "Linje";
+$text['label-device_key_line']['ro'] = "";
 
 $text['label-device_key_label']['en-us'] = "Label";
 $text['label-device_key_label']['es-cl'] = "Etiqueta";
@@ -1043,15 +1095,17 @@ $text['label-device_key_label']['pt-br'] = "Etiqueta";
 $text['label-device_key_label']['pl'] = "Etykieta";
 $text['label-device_key_label']['uk'] = "";
 $text['label-device_key_label']['sv-se'] = "Etikett";
+$text['label-device_key_label']['ro'] = "";
 
 $text['label-device_key_id']['en-us'] = "Key";
 $text['label-device_key_id']['es-cl'] = "Clave";
 $text['label-device_key_id']['pt-pt'] = "Tecla";
-$text['label-device_key_id']['fr-fr'] = "Clés";
+$text['label-device_key_id']['fr-fr'] = "Touche";
 $text['label-device_key_id']['pt-br'] = "Tecla";
 $text['label-device_key_id']['pl'] = "Key ";
 $text['label-device_key_id']['uk'] = "";
 $text['label-device_key_id']['sv-se'] = "Knapp";
+$text['label-device_key_id']['ro'] = "";
 
 $text['label-device_key_extension']['en-us'] = "Extension";
 $text['label-device_key_extension']['es-cl'] = "Extensión";
@@ -1061,6 +1115,7 @@ $text['label-device_key_extension']['pt-br'] = "Extensão";
 $text['label-device_key_extension']['pl'] = "Numer wewnętrzny";
 $text['label-device_key_extension']['uk'] = "Розширення";
 $text['label-device_key_extension']['sv-se'] = "Anknytning";
+$text['label-device_key_extension']['ro'] = "";
 
 $text['label-device_key_category']['en-us'] = "Category";
 $text['label-device_key_category']['es-cl'] = "Categoría";
@@ -1070,15 +1125,17 @@ $text['label-device_key_category']['pt-br'] = "Categoria";
 $text['label-device_key_category']['pl'] = "Kategoria";
 $text['label-device_key_category']['uk'] = "Категорія";
 $text['label-device_key_category']['sv-se'] = "Kategori";
+$text['label-device_key_category']['ro'] = "";
 
 $text['label-device_firmware_version']['en-us'] = "Firmware";
 $text['label-device_firmware_version']['es-cl'] = "Versión de Firmware";
 $text['label-device_firmware_version']['pt-pt'] = "Versão do Firmware";
-$text['label-device_firmware_version']['fr-fr'] = "Version Firmware";
+$text['label-device_firmware_version']['fr-fr'] = "Logiciel";
 $text['label-device_firmware_version']['pt-br'] = "Versão do Firmware";
 $text['label-device_firmware_version']['pl'] = "Oprogramowanie";
 $text['label-device_firmware_version']['uk'] = "";
 $text['label-device_firmware_version']['sv-se'] = "Mjukvara";
+$text['label-device_firmware_version']['ro'] = "";
 
 $text['label-device_description']['en-us'] = "Description";
 $text['label-device_description']['es-cl'] = "Descripción";
@@ -1088,6 +1145,17 @@ $text['label-device_description']['pt-br'] = "Descrição";
 $text['label-device_description']['pl'] = "Opis";
 $text['label-device_description']['uk'] = "Опис";
 $text['label-device_description']['sv-se'] = "Beskrivning";
+$text['label-device_description']['ro'] = "";
+
+$text['label-device']['en-us'] = "Device";
+$text['label-device']['es-cl'] = "Dispositivo";
+$text['label-device']['pt-pt'] = "Dispositivo";
+$text['label-device']['fr-fr'] = "Equipement";
+$text['label-device']['pt-br'] = "Dispositivo";
+$text['label-device']['pl'] = "Urządzenia";
+$text['label-device']['uk'] = "Пристрої";
+$text['label-device']['sv-se'] = "Enheter";
+$text['label-device']['ro'] = "";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -1097,6 +1165,7 @@ $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['uk'] = "Опис";
 $text['label-description']['sv-se'] = "Beskrivning";
+$text['label-description']['ro'] = "";
 
 $text['label-conference']['en-us'] = "Conference";
 $text['label-conference']['es-cl'] = "Conferencia";
@@ -1106,6 +1175,7 @@ $text['label-conference']['pt-br'] = "Conferência";
 $text['label-conference']['pl'] = "Konferencja";
 $text['label-conference']['uk'] = "Конференція";
 $text['label-conference']['sv-se'] = "Konferens";
+$text['label-conference']['ro'] = "";
 
 $text['label-category']['en-us'] = "Category";
 $text['label-category']['es-cl'] = "Categoría";
@@ -1115,15 +1185,17 @@ $text['label-category']['pt-br'] = "Categoria";
 $text['label-category']['pl'] = "Kategoria";
 $text['label-category']['uk'] = "Категорія";
 $text['label-category']['sv-se'] = "Kategori";
+$text['label-category']['ro'] = "";
 
 $text['label-call_return']['en-us'] = "Call Return";
 $text['label-call_return']['es-cl'] = "Devolución de llamada";
 $text['label-call_return']['pt-pt'] = "Chamada de retorno";
-$text['label-call_return']['fr-fr'] = "Retour d'appel";
+$text['label-call_return']['fr-fr'] = "Renvoi d'appel";
 $text['label-call_return']['pt-br'] = "Chamada de retorno";
 $text['label-call_return']['pl'] = "Oddzwanianie";
 $text['label-call_return']['uk'] = "";
 $text['label-call_return']['sv-se'] = "Tillbakaringning";
+$text['label-call_return']['ro'] = "";
 
 $text['label-call_pickup']['en-us'] = "Call Pickup";
 $text['label-call_pickup']['es-cl'] = "Captura de llamadas";
@@ -1133,15 +1205,17 @@ $text['label-call_pickup']['pt-br'] = "Captura de chamada";
 $text['label-call_pickup']['pl'] = "Przejmowanie połączeń (Call Pickup)";
 $text['label-call_pickup']['uk'] = "";
 $text['label-call_pickup']['sv-se'] = "Plocka Samtal";
+$text['label-call_pickup']['ro'] = "";
 
 $text['label-call_park']['en-us'] = "Call Park";
 $text['label-call_park']['es-cl'] = "Aparcado de llamadas";
 $text['label-call_park']['pt-pt'] = "Parqueamento de chamada";
-$text['label-call_park']['fr-fr'] = "Mise en garde";
+$text['label-call_park']['fr-fr'] = "Mise en attente";
 $text['label-call_park']['pt-br'] = "Parqueamento de chamada";
 $text['label-call_park']['pl'] = "Parkowanie rozmów";
 $text['label-call_park']['uk'] = "";
 $text['label-call_park']['sv-se'] = "Parkera Samtal";
+$text['label-call_park']['ro'] = "";
 
 $text['label-call_agent']['en-us'] = "Call Agent";
 $text['label-call_agent']['es-cl'] = "Llame Agente";
@@ -1151,6 +1225,7 @@ $text['label-call_agent']['pt-br'] = "Call Agent";
 $text['label-call_agent']['pl'] = "Call Agent ";
 $text['label-call_agent']['uk'] = "";
 $text['label-call_agent']['sv-se'] = "Agent Samtal";
+$text['label-call_agent']['ro'] = "";
 
 $text['label-button']['en-us'] = "Button";
 $text['label-button']['es-cl'] = "Botón";
@@ -1160,24 +1235,27 @@ $text['label-button']['pt-br'] = "Botão";
 $text['label-button']['pl'] = "Przycisk";
 $text['label-button']['uk'] = "Кнопка";
 $text['label-button']['sv-se'] = "Knapp";
+$text['label-button']['ro'] = "";
 
 $text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
 $text['label-broadsoft_phonebook']['es-cl'] = "Broadsoft agenda telefónica";
 $text['label-broadsoft_phonebook']['pt-pt'] = "Lista Telefónica Broadsoft";
-$text['label-broadsoft_phonebook']['fr-fr'] = "Broadsoft annuaire";
+$text['label-broadsoft_phonebook']['fr-fr'] = "Annuaire Broadsoft";
 $text['label-broadsoft_phonebook']['pt-br'] = "Lista Telefonica Broadsoft";
 $text['label-broadsoft_phonebook']['pl'] = "Ksiażka telefoniczna Broadsoft";
 $text['label-broadsoft_phonebook']['uk'] = "";
 $text['label-broadsoft_phonebook']['sv-se'] = "Broadsoft Telefonbok";
+$text['label-broadsoft_phonebook']['ro'] = "";
 
 $text['label-broadsoft_group']['en-us'] = "Broadsoft Group";
 $text['label-broadsoft_group']['es-cl'] = "Broadsoft Grupo";
 $text['label-broadsoft_group']['pt-pt'] = "Grupo Broadsoft";
-$text['label-broadsoft_group']['fr-fr'] = "Broadsoft Groupe";
+$text['label-broadsoft_group']['fr-fr'] = "Groupe Broadsoft";
 $text['label-broadsoft_group']['pt-br'] = "Grupo Broadsoft";
 $text['label-broadsoft_group']['pl'] = "Grupa Broadsoft";
 $text['label-broadsoft_group']['uk'] = "";
 $text['label-broadsoft_group']['sv-se'] = "Broadsoft Group";
+$text['label-broadsoft_group']['ro'] = "";
 
 $text['label-blf_xfer']['en-us'] = "BLF Xfer";
 $text['label-blf_xfer']['es-cl'] = "BLF Xfer";
@@ -1187,6 +1265,7 @@ $text['label-blf_xfer']['pt-br'] = "BLF Xfer";
 $text['label-blf_xfer']['pl'] = "BLF Xfer ";
 $text['label-blf_xfer']['uk'] = "";
 $text['label-blf_xfer']['sv-se'] = "BLF Xfer";
+$text['label-blf_xfer']['ro'] = "";
 
 $text['label-blf_list']['en-us'] = "BLF List";
 $text['label-blf_list']['es-cl'] = "Lista BLF";
@@ -1196,6 +1275,7 @@ $text['label-blf_list']['pt-br'] = "Lista BLF";
 $text['label-blf_list']['pl'] = "Lista BLF";
 $text['label-blf_list']['uk'] = "";
 $text['label-blf_list']['sv-se'] = "BLF List";
+$text['label-blf_list']['ro'] = "";
 
 $text['label-blf']['en-us'] = "BLF";
 $text['label-blf']['es-cl'] = "BLF";
@@ -1205,6 +1285,7 @@ $text['label-blf']['pt-br'] = "BLF";
 $text['label-blf']['pl'] = "Dostępności kontaktu (BLF)";
 $text['label-blf']['uk'] = "";
 $text['label-blf']['sv-se'] = "BLF";
+$text['label-blf']['ro'] = "";
 
 $text['label-automata']['en-us'] = "automata";
 $text['label-automata']['es-cl'] = "automata";
@@ -1214,6 +1295,7 @@ $text['label-automata']['pt-br'] = "Automata";
 $text['label-automata']['pl'] = "automaty";
 $text['label-automata']['uk'] = "";
 $text['label-automata']['sv-se'] = "Automata";
+$text['label-automata']['ro'] = "";
 
 $text['label-auto_answer']['en-us'] = "Auto Answer";
 $text['label-auto_answer']['es-cl'] = "Respuesta Automática";
@@ -1223,15 +1305,17 @@ $text['label-auto_answer']['pt-br'] = "Resposta Automática";
 $text['label-auto_answer']['pl'] = "Automatyczne odebranie rozmowy";
 $text['label-auto_answer']['uk'] = "";
 $text['label-auto_answer']['sv-se'] = "Svara Automatiskt";
+$text['label-auto_answer']['ro'] = "";
 
 $text['label-auth_id']['en-us'] = "Auth ID";
 $text['label-auth_id']['es-cl'] = "Auth ID";
 $text['label-auth_id']['pt-pt'] = "Auth ID";
-$text['label-auth_id']['fr-fr'] = "Auth ID";
+$text['label-auth_id']['fr-fr'] = "Identifiant d'authentification";
 $text['label-auth_id']['pt-br'] = "Autenticação ID";
 $text['label-auth_id']['pl'] = "ID uwierzytelniania";
 $text['label-auth_id']['uk'] = "";
 $text['label-auth_id']['sv-se'] = "Auth ID";
+$text['label-auth_id']['ro'] = "";
 
 $text['label-action_url']['en-us'] = "Action URL";
 $text['label-action_url']['es-cl'] = "URL Acción";
@@ -1241,6 +1325,7 @@ $text['label-action_url']['pt-br'] = "URL Ação";
 $text['label-action_url']['pl'] = "URL operacji";
 $text['label-action_url']['uk'] = "";
 $text['label-action_url']['sv-se'] = "Action URL";
+$text['label-action_url']['ro'] = "";
 
 $text['label-acd']['en-us'] = "ACD";
 $text['label-acd']['es-cl'] = "ACD";
@@ -1250,6 +1335,7 @@ $text['label-acd']['pt-br'] = "ACD";
 $text['label-acd']['pl'] = "ACD";
 $text['label-acd']['uk'] = "";
 $text['label-acd']['sv-se'] = "ACD";
+$text['label-acd']['ro'] = "";
 
 $text['header-profiles']['en-us'] = "Profiles";
 $text['header-profiles']['es-cl'] = "Perfiles";
@@ -1259,6 +1345,7 @@ $text['header-profiles']['pt-br'] = "Perfis";
 $text['header-profiles']['pl'] = "Profile";
 $text['header-profiles']['uk'] = "Профіль";
 $text['header-profiles']['sv-se'] = "Profiler";
+$text['header-profiles']['ro'] = "";
 
 $text['header-profile']['en-us'] = "Profile";
 $text['header-profile']['es-cl'] = "Perfil";
@@ -1268,6 +1355,7 @@ $text['header-profile']['pt-br'] = "Perfil";
 $text['header-profile']['pl'] = "Profil";
 $text['header-profile']['uk'] = "Профіль";
 $text['header-profile']['sv-se'] = "Profil";
+$text['header-profile']['ro'] = "";
 
 $text['header-devices']['en-us'] = "Devices";
 $text['header-devices']['es-cl'] = "Dispositivos";
@@ -1277,6 +1365,7 @@ $text['header-devices']['pt-br'] = "Dispositivos";
 $text['header-devices']['pl'] = "Urządzenia";
 $text['header-devices']['uk'] = "Пристрої";
 $text['header-devices']['sv-se'] = "Enheter";
+$text['header-devices']['ro'] = "";
 
 $text['header-device']['en-us'] = "Device";
 $text['header-device']['es-cl'] = "Dispositivo";
@@ -1286,15 +1375,17 @@ $text['header-device']['pt-br'] = "Dispositivo";
 $text['header-device']['pl'] = "Urządzenie";
 $text['header-device']['uk'] = "";
 $text['header-device']['sv-se'] = "Enhet";
+$text['header-device']['ro'] = "";
 
 $text['description-value']['en-us'] = "Enter the value of this setting.";
 $text['description-value']['es-cl'] = "Introduzca el valor de esta configuración.";
 $text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
-$text['description-value']['fr-fr'] = "Entrez la valeur de ce paramètre.";
+$text['description-value']['fr-fr'] = "Entrez la valeur de ce réglage.";
 $text['description-value']['pt-br'] = "Insira o valor da variável";
 $text['description-value']['pl'] = "Wprowadź wartość tego ustawienia";
 $text['description-value']['uk'] = "Введіть значенння змінної";
 $text['description-value']['sv-se'] = "Fyll i variabel värde.";
+$text['description-value']['ro'] = "";
 
 $text['description-user_id']['en-us'] = "Enter the user ID.";
 $text['description-user_id']['es-cl'] = "Ingrese el ID de usuario.";
@@ -1304,15 +1395,17 @@ $text['description-user_id']['pt-br'] = "Introduza o ID do utilizador";
 $text['description-user_id']['pl'] = "Wprowadź identyfikator użytkownika";
 $text['description-user_id']['uk'] = "";
 $text['description-user_id']['sv-se'] = "Fyll i användar ID.";
+$text['description-user_id']['ro'] = "";
 
 $text['description-type']['en-us'] = "Enter the setting type (ie. uuid, name, var, dir, etc).";
 $text['description-type']['es-cl'] = "Introduzca el tipo de ajuste (ie. uuid, name, var, dir, etc).";
 $text['description-type']['pt-pt'] = "Introduza o tipo de definição (ex: uuid, name, var, dir, etc).";
-$text['description-type']['fr-fr'] = "Entrer le type du paramètre (ie. uuid, nom, var, dir, etc).";
+$text['description-type']['fr-fr'] = "Entrer le type du réglage (ie. uuid, nom, var, dir, etc).";
 $text['description-type']['pt-br'] = "Introduza o tipo de definição (ex:uuid,name,var,dir,etc)";
 $text['description-type']['pl'] = "Wprowadź rodzaj ustawienia (np. uuid, name, var, dir)";
 $text['description-type']['uk'] = "";
 $text['description-type']['sv-se'] = "Fyll i inställnings typ (ie. uuid, name, var, dir, etc).";
+$text['description-type']['ro'] = "";
 
 $text['description-subcategory']['en-us'] = "Enter the subcategory.";
 $text['description-subcategory']['es-cl'] = "Introduzca la subcategoría.";
@@ -1322,6 +1415,7 @@ $text['description-subcategory']['pt-br'] = "Introduza a subcategoria";
 $text['description-subcategory']['pl'] = "Wprowadź podkategorię";
 $text['description-subcategory']['uk'] = "";
 $text['description-subcategory']['sv-se'] = "Fyll i under-kategori";
+$text['description-subcategory']['ro'] = "";
 
 $text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
 $text['description-sip_transport']['es-cl'] = "Introduzca el transporte del protocolo SIP.";
@@ -1331,6 +1425,7 @@ $text['description-sip_transport']['pt-br'] = "Introduza o protocolo de transpor
 $text['description-sip_transport']['pl'] = "Wprowadź protokół transportu SIP";
 $text['description-sip_transport']['uk'] = "";
 $text['description-sip_transport']['sv-se'] = "Fyll i SIP transport protokoll.";
+$text['description-sip_transport']['ro'] = "";
 
 $text['description-sip_port']['en-us'] = "Enter the SIP port.";
 $text['description-sip_port']['es-cl'] = "Introduzca el puerto SIP.";
@@ -1340,6 +1435,7 @@ $text['description-sip_port']['pt-br'] = "Introduza a porta SIP";
 $text['description-sip_port']['pl'] = "Wprowadź port SIP";
 $text['description-sip_port']['uk'] = "";
 $text['description-sip_port']['sv-se'] = "Fyll i SIP port.";
+$text['description-sip_port']['ro'] = "";
 
 $text['description-server_address']['en-us'] = "Select a server address.";
 $text['description-server_address']['es-cl'] = "Seleccione una dirección de servidor.";
@@ -1349,24 +1445,27 @@ $text['description-server_address']['pt-br'] = "Selecione um endereço de servid
 $text['description-server_address']['pl'] = "Wybierz adres serwera (registrar)";
 $text['description-server_address']['uk'] = "";
 $text['description-server_address']['sv-se'] = "Välj en server-adress.";
+$text['description-server_address']['ro'] = "";
 
 $text['description-register_expires']['en-us'] = "Enter the expire time for the SIP registration.";
 $text['description-register_expires']['es-cl'] = "Introduzca el tiempo se ha cumplido para el registro SIP.";
 $text['description-register_expires']['pt-pt'] = "Introduza ao fim de quanto tempo expira o registro SIP.";
-$text['description-register_expires']['fr-fr'] = "Entrez la date d'expiration de l'enregistrement SIP.";
+$text['description-register_expires']['fr-fr'] = "Entrez la durée d'expiration de l'enregistrement SIP.";
 $text['description-register_expires']['pt-br'] = "Introduza ao fim ";
 $text['description-register_expires']['pl'] = "Wprowadź czas wygaśnięcia rejestracji SIP";
 $text['description-register_expires']['uk'] = "";
 $text['description-register_expires']['sv-se'] = "Fyll i 'expire' tiden för SIP registreringen.";
+$text['description-register_expires']['ro'] = "";
 
 $text['description-profiles']['en-us'] = "Define a set of keys as a profile.  Any changes to the profile effect all devices assigned to the profile.";
 $text['description-profiles']['es-cl'] = "Definir un conjunto de claves como un perfil. Cualquier cambio en el perfil de efectos todos los dispositivos asignados al perfil.";
 $text['description-profiles']['pt-pt'] = "Defina um conjunto de chaves como um perfil. Quaisquer mudanças no perfil de todos os dispositivos de efeito atribuído ao perfil.";
-$text['description-profiles']['fr-fr'] = "Définir un ensemble de touches comme un profil. Toute modification apportée à l'effet de profil tous les appareils affectés au profil.";
+$text['description-profiles']['fr-fr'] = "Définir un ensemble de touches comme un profil. Toute modification apportée au profil sera effective sur tous les appareils affectés au profil.";
 $text['description-profiles']['pt-br'] = "Defina um conjunto de chaves como um perfil. Quaisquer mudanças no perfil de todos os dispositivos de efeito atribuido ao perfil.";
 $text['description-profiles']['pl'] = "Zdefiniuj zestaw kluczy jako profil. Jakiekolwiek zmiany w tym profilu wpłyną na wszystkie urządzenia przypisane do tego profilu.";
 $text['description-profiles']['uk'] = "";
 $text['description-profiles']['sv-se'] = "Definiera en uppsättning knappar som en profil. Eventuella ändringar i profilen påverkar alla enheter som tilldelats profilen.";
+$text['description-profiles']['ro'] = "";
 
 $text['description-profile_name']['en-us'] = "Enter a name to identify this profile.";
 $text['description-profile_name']['es-cl'] = "Introduzca un nombre para identificar este perfil.";
@@ -1376,6 +1475,7 @@ $text['description-profile_name']['pt-br'] = "Digite um nome para identificar es
 $text['description-profile_name']['pl'] = "Wpisz nazwę aby zidentyfikować ten profil";
 $text['description-profile_name']['uk'] = "";
 $text['description-profile_name']['sv-se'] = "Fyll i ett namn för att identifiera denna profil.";
+$text['description-profile_name']['ro'] = "";
 
 $text['description-profile_enabled']['en-us'] = "Select the current state of this profile.";
 $text['description-profile_enabled']['es-cl'] = "Seleccione el estado actual de este perfil.";
@@ -1385,33 +1485,37 @@ $text['description-profile_enabled']['pt-br'] = "Selecione o estado atual deste 
 $text['description-profile_enabled']['pl'] = "Wybierz obecny status profilu";
 $text['description-profile_enabled']['uk'] = "";
 $text['description-profile_enabled']['sv-se'] = "Välj status för denna profil.";
+$text['description-profile_enabled']['ro'] = "";
 
 $text['description-profile_description']['en-us'] = "Additional details about this profile.";
 $text['description-profile_description']['es-cl'] = "Detalles adicionales acerca de este perfil.";
 $text['description-profile_description']['pt-pt'] = "Detalhes adicionais sobre este perfil.";
-$text['description-profile_description']['fr-fr'] = "Des détails supplémentaires sur ce profil.";
+$text['description-profile_description']['fr-fr'] = "Entrez des détails supplémentaires sur ce profil.";
 $text['description-profile_description']['pt-br'] = "Detalhes adicionais sobre este perfil";
 $text['description-profile_description']['pl'] = "Dodatkowe szczegóły tego profilu";
 $text['description-profile_description']['uk'] = "";
 $text['description-profile_description']['sv-se'] = "Ytterligare detaljer för denna profil.";
+$text['description-profile_description']['ro'] = "";
 
 $text['description-profile2']['en-us'] = "Select a Key Profile and/or define custom keys below.";
 $text['description-profile2']['es-cl'] = "Seleccione un perfil de llave y / o definir teclas personalizadas a continuación.";
 $text['description-profile2']['pt-pt'] = "Selecione um perfil Key e / ou definir chaves personalizados abaixo.";
-$text['description-profile2']['fr-fr'] = "Sélectionnez un profil à clé et / ou définir des touches personnalisées ci-dessous.";
+$text['description-profile2']['fr-fr'] = "Sélectionnez un profil de touche et / ou définir des touches personnalisées ci-dessous.";
 $text['description-profile2']['pt-br'] = "Selecione um perfil chave e/ou defina chaves personalizadas abaixo.";
 $text['description-profile2']['pl'] = "Wybierz Główny  Profil i / lub zdefiniuj własne klucze poniżej";
 $text['description-profile2']['uk'] = "";
 $text['description-profile2']['sv-se'] = "Välj en Knapp-profil och / eller definiera anpassade knappar nedan.";
+$text['description-profile2']['ro'] = "";
 
 $text['description-profile']['en-us'] = "Define the settings for this profile.";
 $text['description-profile']['es-cl'] = "Definir la configuración de este perfil.";
 $text['description-profile']['pt-pt'] = "Defina as configurações para este perfil.";
-$text['description-profile']['fr-fr'] = "Définir les paramètres de ce profil.";
+$text['description-profile']['fr-fr'] = "Définissez les paramètres de ce profil.";
 $text['description-profile']['pt-br'] = "Defina as configurações para este perfil";
 $text['description-profile']['pl'] = "Zdefiniuj ustawienia tego profilu";
 $text['description-profile']['uk'] = "";
 $text['description-profile']['sv-se'] = "Definiera inställningar för denna profil.";
+$text['description-profile']['ro'] = "";
 
 $text['description-password']['en-us'] = "Enter the password.";
 $text['description-password']['es-cl'] = "Ingrese una contraseña.";
@@ -1421,6 +1525,7 @@ $text['description-password']['pt-br'] = "Introduza a senha";
 $text['description-password']['pl'] = "Wpisz hasło";
 $text['description-password']['uk'] = "";
 $text['description-password']['sv-se'] = "Fyll i lösenord.";
+$text['description-password']['ro'] = "";
 
 $text['description-outbound_proxy']['en-us'] = "Enter the outbound proxy.";
 $text['description-outbound_proxy']['es-cl'] = "Ingrese un proxy de salida";
@@ -1430,33 +1535,37 @@ $text['description-outbound_proxy']['pt-br'] = "Introduza o outbound proxy";
 $text['description-outbound_proxy']['pl'] = "Wprowadź wychodzący serwer proxy";
 $text['description-outbound_proxy']['uk'] = "";
 $text['description-outbound_proxy']['sv-se'] = "Fyll i utgående proxy.";
+$text['description-outbound_proxy']['ro'] = "";
 
 $text['description-line_number']['en-us'] = "Select a line number.";
 $text['description-line_number']['es-cl'] = "Seleccione un número de línea.";
 $text['description-line_number']['pt-pt'] = "Selecciona um número.";
-$text['description-line_number']['fr-fr'] = "Choisir un numéro de ligne.";
+$text['description-line_number']['fr-fr'] = "Sélectionnez un numéro de ligne.";
 $text['description-line_number']['pt-br'] = "Selecione um número";
 $text['description-line_number']['pl'] = "Wybierz numer lini";
 $text['description-line_number']['uk'] = "";
 $text['description-line_number']['sv-se'] = "Välj ett linje nummer.";
+$text['description-line_number']['ro'] = "";
 
 $text['description-extension']['en-us'] = "Assign the extension and line numbers to the device.";
 $text['description-extension']['es-cl'] = "Asignar la etensión y números de línea al dispositivo";
 $text['description-extension']['pt-pt'] = "Atribuir a extensão e números ao dispositivo.";
-$text['description-extension']['fr-fr'] = "Assigner l'extension et le nombre de lignes à l'équipement.";
+$text['description-extension']['fr-fr'] = "Assigner l'extension et les numéro de lignes à l'équipement.";
 $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dispositivo";
 $text['description-extension']['pl'] = "Przypisz do urządzenia numer linii oraz numery wewnętrzne ";
 $text['description-extension']['uk'] = "";
 $text['description-extension']['sv-se'] = "Tilldela anknytning och linje nummer till enheten.";
+$text['description-extension']['ro'] = "";
 
 $text['description-enabled']['en-us'] = "Set the status of this default setting.";
 $text['description-enabled']['es-cl'] = "Ajuste el estado de la configuración predeterminada.";
 $text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
-$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paramètre";
+$text['description-enabled']['fr-fr'] = "Choisir l'état de ce réglage";
 $text['description-enabled']['pt-br'] = "Escolha o estado desta definição ";
 $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "";
 $text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
+$text['description-enabled']['ro'] = "";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -1466,6 +1575,7 @@ $text['description-domain']['pt-br'] = "";
 $text['description-domain']['pl'] = "";
 $text['description-domain']['uk'] = "";
 $text['description-domain']['sv-se'] = "";
+$text['description-domain']['ro'] = "";
 
 $text['description-display_name']['en-us'] = "Enter the display name.";
 $text['description-display_name']['es-cl'] = "Ingrese un nombre para mostrar.";
@@ -1475,6 +1585,7 @@ $text['description-display_name']['pt-br'] = "Introduza o nome no visor";
 $text['description-display_name']['pl'] = "Wprowadź wyświetlaną nazwę";
 $text['description-display_name']['uk'] = "";
 $text['description-display_name']['sv-se'] = "Fyll i display namn.";
+$text['description-display_name']['ro'] = "";
 
 $text['description-devices']['en-us'] = "Devices are endpoints that register to one or more extensions. They are added to the list manually or automatically when the device requests the provisioning information over HTTP/HTTPS.";
 $text['description-devices']['es-cl'] = "Dispositivos son terminales que registran una o más extensiones. Se agregan a la lista manual o automáticamente cuando el dispositivo solicita información de provisionamiento vía HTTP/HTTPS.";
@@ -1484,6 +1595,7 @@ $text['description-devices']['pt-br'] = "Os dispositivos são endpoints que regi
 $text['description-devices']['pl'] = "Urządzenia to telefony VoIP rejestrujące się do jednego lub wielu numerów wewnętrznych. Są one dodawane do listy ręcznie lub automatycznie w momencie, gdy urządzenie zażąda konfiguracji poprzez protokół HTTP/HTTPS.";
 $text['description-devices']['uk'] = "";
 $text['description-devices']['sv-se'] = "Enheter är ändpunkter som registrerar till en eller flera anknytningar. De läggs till i listan manuellt eller automatiskt när enheten provisionerar sig via HTTP / HTTPS. ";
+$text['description-devices']['ro'] = "";
 
 $text['description-device_vendor']['en-us'] = "Enter the vendor name.";
 $text['description-device_vendor']['es-cl'] = "Ingrese el nombre del proveedor";
@@ -1493,6 +1605,7 @@ $text['description-device_vendor']['pt-br'] = "Introduza o nome do fabricante";
 $text['description-device_vendor']['pl'] = "Wprowadź nazwę producenta";
 $text['description-device_vendor']['uk'] = "";
 $text['description-device_vendor']['sv-se'] = "Fyll i tillverkar-namn.";
+$text['description-device_vendor']['ro'] = "";
 
 $text['description-device_time_zone']['en-us'] = "Enter the time zone.";
 $text['description-device_time_zone']['es-cl'] = "Ingrese una zona horaria.";
@@ -1502,6 +1615,7 @@ $text['description-device_time_zone']['pt-br'] = "Introduza o fuso horário";
 $text['description-device_time_zone']['pl'] = "Wprowadź sterfę czasową";
 $text['description-device_time_zone']['uk'] = "";
 $text['description-device_time_zone']['sv-se'] = "Fyll i tidszon.";
+$text['description-device_time_zone']['ro'] = "";
 
 $text['description-device_template']['en-us'] = "Select a template.";
 $text['description-device_template']['es-cl'] = "Seleccione una plantilla.";
@@ -1511,6 +1625,7 @@ $text['description-device_template']['pt-br'] = "Selecione um template";
 $text['description-device_template']['pl'] = "Wybierz szablon";
 $text['description-device_template']['uk'] = "";
 $text['description-device_template']['sv-se'] = "Välj en mall.";
+$text['description-device_template']['ro'] = "";
 
 $text['description-device_provision_enable']['en-us'] = "Enable or disable provisioning for this device.";
 $text['description-device_provision_enable']['es-cl'] = "Active o desactive el provisionamiento para este dispositivo.";
@@ -1520,6 +1635,7 @@ $text['description-device_provision_enable']['pt-br'] = "Ative ou desative o pro
 $text['description-device_provision_enable']['pl'] = "Włącz lub wyłącz automatyczna konfiguracje tego urządzenia";
 $text['description-device_provision_enable']['uk'] = "";
 $text['description-device_provision_enable']['sv-se'] = "Aktivera eller av-aktivera provisionerna för denna enhet.";
+$text['description-device_provision_enable']['ro'] = "";
 
 $text['description-device_model']['en-us'] = "Enter the model name or number.";
 $text['description-device_model']['es-cl'] = "Ingrese el nombre o número de modelo";
@@ -1529,6 +1645,7 @@ $text['description-device_model']['pt-br'] = "Insira o nome do modelo ou número
 $text['description-device_model']['pl'] = "Wprowadź nazwę modelu lub jego numer";
 $text['description-device_model']['uk'] = "";
 $text['description-device_model']['sv-se'] = "Fyll i modell beteckning eller nummer.";
+$text['description-device_model']['ro'] = "";
 
 $text['description-device_mac_address']['en-us'] = "Enter the MAC address.";
 $text['description-device_mac_address']['es-cl'] = "Ingrese la dirección MAC";
@@ -1538,6 +1655,7 @@ $text['description-device_mac_address']['pt-br'] = "Insria o endereço MAC";
 $text['description-device_mac_address']['pl'] = "Wprowadź adres MAC";
 $text['description-device_mac_address']['uk'] = "";
 $text['description-device_mac_address']['sv-se'] = "Fyll i MAC-adress.";
+$text['description-device_mac_address']['ro'] = "";
 
 $text['description-device_label']['en-us'] = "Enter the device label.";
 $text['description-device_label']['es-cl'] = "Ingrese la etiqueta del dispositivo";
@@ -1547,6 +1665,7 @@ $text['description-device_label']['pt-br'] = "Insira a identificação do dispos
 $text['description-device_label']['pl'] = "Wprowadź etykietę urządzenia";
 $text['description-device_label']['uk'] = "";
 $text['description-device_label']['sv-se'] = "Fyll i enhets beteckning.";
+$text['description-device_label']['ro'] = "";
 
 $text['description-device_key_value']['en-us'] = "Enter the value.";
 $text['description-device_key_value']['es-cl'] = "Introduzca el valor.";
@@ -1556,6 +1675,7 @@ $text['description-device_key_value']['pt-br'] = "Insira o valor";
 $text['description-device_key_value']['pl'] = "Wprowadź wartość";
 $text['description-device_key_value']['uk'] = "";
 $text['description-device_key_value']['sv-se'] = "Fyll i värdet.";
+$text['description-device_key_value']['ro'] = "";
 
 $text['description-device_key_type']['en-us'] = "Select the type of key.";
 $text['description-device_key_type']['es-cl'] = "Seleccione el tipo de clave.";
@@ -1565,6 +1685,7 @@ $text['description-device_key_type']['pt-br'] = "Selecione o tipo de tecla";
 $text['description-device_key_type']['pl'] = "Wybierz rodzaj klucza";
 $text['description-device_key_type']['uk'] = "";
 $text['description-device_key_type']['sv-se'] = "Väl typ av knapp.";
+$text['description-device_key_type']['ro'] = "";
 
 $text['description-device_key_line']['en-us'] = "Select the line number.";
 $text['description-device_key_line']['es-cl'] = "Seleccione el número de línea.";
@@ -1574,6 +1695,7 @@ $text['description-device_key_line']['pt-br'] = "Selecione o número da linha";
 $text['description-device_key_line']['pl'] = "Wybierz numer lini";
 $text['description-device_key_line']['uk'] = "";
 $text['description-device_key_line']['sv-se'] = "Välj linje nummer.";
+$text['description-device_key_line']['ro'] = "";
 
 $text['description-device_key_label']['en-us'] = "Enter the label.";
 $text['description-device_key_label']['es-cl'] = "Introduzca la etiqueta.";
@@ -1583,6 +1705,7 @@ $text['description-device_key_label']['pt-br'] = "Insira um identificador";
 $text['description-device_key_label']['pl'] = "Wprowadź etykietę";
 $text['description-device_key_label']['uk'] = "";
 $text['description-device_key_label']['sv-se'] = "Fyll i beteckning.";
+$text['description-device_key_label']['ro'] = "";
 
 $text['description-device_key_extension']['en-us'] = "Enter the extension.";
 $text['description-device_key_extension']['es-cl'] = "Introduzca la extensión.";
@@ -1592,6 +1715,7 @@ $text['description-device_key_extension']['pt-br'] = "Insira uma extensão";
 $text['description-device_key_extension']['pl'] = "Wprowadź numer wewnętrzny";
 $text['description-device_key_extension']['uk'] = "";
 $text['description-device_key_extension']['sv-se'] = "Fyll i anknytning.";
+$text['description-device_key_extension']['ro'] = "";
 
 $text['description-device_key_category']['en-us'] = "Select the category.";
 $text['description-device_key_category']['es-cl'] = "Seleccione la categoría.";
@@ -1601,6 +1725,7 @@ $text['description-device_key_category']['pt-br'] = "Selecione a categoria";
 $text['description-device_key_category']['pl'] = "Wybierz kategorię";
 $text['description-device_key_category']['uk'] = "";
 $text['description-device_key_category']['sv-se'] = "Välj kategori.";
+$text['description-device_key_category']['ro'] = "";
 
 $text['description-device_key']['en-us'] = "Select the key.";
 $text['description-device_key']['es-cl'] = "Seleccione la clave.";
@@ -1610,6 +1735,7 @@ $text['description-device_key']['pt-br'] = "Selecione a tecla";
 $text['description-device_key']['pl'] = "Wybierz klucz";
 $text['description-device_key']['uk'] = "";
 $text['description-device_key']['sv-se'] = "Välj knapp.";
+$text['description-device_key']['ro'] = "";
 
 $text['description-device_firmware_version']['en-us'] = "Enter the firmware version.";
 $text['description-device_firmware_version']['es-cl'] = "Ingrese la versión de firmware";
@@ -1619,6 +1745,7 @@ $text['description-device_firmware_version']['pt-br'] = "Insira a versão do fir
 $text['description-device_firmware_version']['pl'] = "Wprowadź wersję oprogramowania";
 $text['description-device_firmware_version']['uk'] = "";
 $text['description-device_firmware_version']['sv-se'] = "Fyll i mjukvara version.";
+$text['description-device_firmware_version']['ro'] = "";
 
 $text['description-device_description']['en-us'] = "Enter the description.";
 $text['description-device_description']['es-cl'] = "Ingrese una descripción";
@@ -1628,6 +1755,7 @@ $text['description-device_description']['pt-br'] = "Insira uma descrição";
 $text['description-device_description']['pl'] = "Wprowadź opis";
 $text['description-device_description']['uk'] = "";
 $text['description-device_description']['sv-se'] = "Fyll i beskrivning.";
+$text['description-device_description']['ro'] = "";
 
 $text['description-device']['en-us'] = "The following information is used to provision endpoints.";
 $text['description-device']['es-cl'] = "La siguiente información es utilizada para provisonar los terminales";
@@ -1637,6 +1765,7 @@ $text['description-device']['pt-br'] = "A seguinte informação é usada para pr
 $text['description-device']['pl'] = "Poniższe informacje są używane do automatycznej konfiguracji telefonów VoIP.";
 $text['description-device']['uk'] = "";
 $text['description-device']['sv-se'] = "Följande används för att provisionera ändpunkter.";
+$text['description-device']['ro'] = "";
 
 $text['description-description']['en-us'] = "Enter a description, if desired.";
 $text['description-description']['es-cl'] = "Introduzca una descripción, si se desea.";
@@ -1646,6 +1775,7 @@ $text['description-description']['pt-br'] = "Insira a descrição, caso desejar"
 $text['description-description']['pl'] = "Wprowadź opis (opcjonalne)";
 $text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
+$text['description-description']['ro'] = "";
 
 $text['description-category']['en-us'] = "Enter the category.";
 $text['description-category']['es-cl'] = "Introduzca la categoría.";
@@ -1655,6 +1785,7 @@ $text['description-category']['pt-br'] = "Descrição";
 $text['description-category']['pl'] = "Wprowadź kategorię";
 $text['description-category']['uk'] = "Опис";
 $text['description-category']['sv-se'] = "Beskrivning";
+$text['description-category']['ro'] = "";
 
 $text['description-auth_id']['en-us'] = "Enter the auth ID.";
 $text['description-auth_id']['es-cl'] = "Ingrese el auth ID.";
@@ -1664,6 +1795,7 @@ $text['description-auth_id']['pt-br'] = "Insira o autenticador ID";
 $text['description-auth_id']['pl'] = "Wprowadź identyfikator uwierzytelniania";
 $text['description-auth_id']['uk'] = "";
 $text['description-auth_id']['sv-se'] = "Fyll i auth ID.";
+$text['description-auth_id']['ro'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -1673,6 +1805,7 @@ $text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
 $text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
 $text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
+$text['confirm-delete']['ro'] = "";
 
 $text['confirm-copy']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
@@ -1682,6 +1815,7 @@ $text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
 $text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
 $text['confirm-copy']['uk'] = "";
 $text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
+$text['confirm-copy']['ro'] = "";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['es-cl'] = "Ver";
@@ -1691,15 +1825,17 @@ $text['button-view']['pt-br'] = "Visualizar";
 $text['button-view']['pl'] = "Widok";
 $text['button-view']['uk'] = "";
 $text['button-view']['sv-se'] = "Visa";
+$text['button-view']['ro'] = "";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
 $text['button-show_all']['pt-pt'] = "Mostrar Todos";
-$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['fr-fr'] = "Tout Montrer";
 $text['button-show_all']['pt-br'] = "Mostrar todos";
 $text['button-show_all']['pl'] = "Pokaż wszystkie";
 $text['button-show_all']['uk'] = "";
 $text['button-show_all']['sv-se'] = "Visa Allt";
+$text['button-show_all']['ro'] = "";
 
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['es-cl'] = "Buscar";
@@ -1709,6 +1845,7 @@ $text['button-search']['pt-br'] = "Pesquisar";
 $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['uk'] = "Пошук";
 $text['button-search']['sv-se'] = "Sök";
+$text['button-search']['ro'] = "";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -1718,6 +1855,7 @@ $text['button-save']['pt-br'] = "Salvar";
 $text['button-save']['pl'] = "Zachowaj";
 $text['button-save']['uk'] = "Зберегти";
 $text['button-save']['sv-se'] = "Spara";
+$text['button-save']['ro'] = "Salvează";
 
 $text['button-profiles']['en-us'] = "Profiles";
 $text['button-profiles']['es-cl'] = "Perfiles";
@@ -1727,6 +1865,7 @@ $text['button-profiles']['pt-br'] = "Perfis";
 $text['button-profiles']['pl'] = "Profile";
 $text['button-profiles']['uk'] = "";
 $text['button-profiles']['sv-se'] = "Profiler";
+$text['button-profiles']['ro'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
@@ -1736,6 +1875,7 @@ $text['button-edit']['pt-br'] = "Editar";
 $text['button-edit']['pl'] = "Edytuj";
 $text['button-edit']['uk'] = "Редагувати";
 $text['button-edit']['sv-se'] = "Editera";
+$text['button-edit']['ro'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['es-cl'] = "Eliminar";
@@ -1745,6 +1885,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['uk'] = "Видалити";
 $text['button-delete']['sv-se'] = "Ta Bort";
+$text['button-delete']['ro'] = "";
 
 $text['button-copy']['en-us'] = "Copy";
 $text['button-copy']['es-cl'] = "Copiar";
@@ -1754,6 +1895,7 @@ $text['button-copy']['pt-br'] = "Copiar";
 $text['button-copy']['pl'] = "Kopiuj";
 $text['button-copy']['uk'] = "";
 $text['button-copy']['sv-se'] = "Kopiera";
+$text['button-copy']['ro'] = "";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -1763,6 +1905,7 @@ $text['button-back']['pt-br'] = "Voltar";
 $text['button-back']['pl'] = "Wróć";
 $text['button-back']['uk'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
+$text['button-back']['ro'] = "Înapoi";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['es-cl'] = "Agregar";
@@ -1772,5 +1915,6 @@ $text['button-add']['pt-br'] = "Adicionar";
 $text['button-add']['pl'] = "Dodaj";
 $text['button-add']['uk'] = "Додати";
 $text['button-add']['sv-se'] = "Lägg Till";
+$text['button-add']['ro'] = "";
 
 ?>
