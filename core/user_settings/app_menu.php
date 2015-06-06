@@ -2,14 +2,15 @@
 
 $apps[$x]['menu'][0]['title']['en-us'] = "Account Settings";
 $apps[$x]['menu'][0]['title']['es-cl'] = "Config de Cuenta";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Confs du Compte";
+$apps[$x]['menu'][0]['title']['fr-fr'] = "Configuration du Compte";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Configurações da Conta";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Configurações da Conta";
 $apps[$x]['menu'][0]['title']['pl'] = "Ustawienia konta";
 $apps[$x]['menu'][0]['title']['he'] = "הגדרת חשבון";
-$apps[$x]['menu'][0]['title']['uk'] = "Параметри облікового запису";
+$apps[$x]['menu'][0]['title']['uk'] = "Обліковий запис";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Kontoinställningar";
 $apps[$x]['menu'][0]['title']['de-at'] = "Kontoeinstellungen";
+$apps[$x]['menu'][0]['title']['ro'] = "Setări cont";
 $apps[$x]['menu'][0]['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
 $apps[$x]['menu'][0]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 $apps[$x]['menu'][0]['category'] = "internal";
@@ -28,6 +29,7 @@ $apps[$x]['menu'][1]['title']['he'] = "ממשק משתמש";
 $apps[$x]['menu'][1]['title']['uk'] = "Панель користувача";
 $apps[$x]['menu'][1]['title']['sv-se'] = "Användarpanel";
 $apps[$x]['menu'][1]['title']['de-at'] = "Benutzer-Übersichtsseite";
+$apps[$x]['menu'][1]['title']['ro'] = "Panou control utilizator";
 $apps[$x]['menu'][1]['uuid'] = "92c8ffdb-3c82-4f08-aec0-82421ec41bb5";
 $apps[$x]['menu'][1]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 $apps[$x]['menu'][1]['category'] = "internal";

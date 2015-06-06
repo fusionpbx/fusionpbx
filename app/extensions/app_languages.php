@@ -8,6 +8,7 @@ $text['title-extensions']['pt-br'] = "Extensões";
 $text['title-extensions']['pl'] = "Numery wewnętrzne";
 $text['title-extensions']['uk'] = "Розширення";
 $text['title-extensions']['sv-se'] = "Anknytningar";
+$text['title-extensions']['ro'] = "Extensii";
 
 $text['title-extension-edit']['en-us'] = "Extension";
 $text['title-extension-edit']['es-cl'] = "Extensión";
@@ -17,6 +18,7 @@ $text['title-extension-edit']['pt-br'] = "Extensão";
 $text['title-extension-edit']['pl'] = "Numer wewnętrzny";
 $text['title-extension-edit']['uk'] = "Розширення";
 $text['title-extension-edit']['sv-se'] = "Anknytning";
+$text['title-extension-edit']['ro'] = "Extensie";
 
 $text['title-extension-add']['en-us'] = "Extension Add";
 $text['title-extension-add']['es-cl'] = "Agregar Extensión";
@@ -26,15 +28,17 @@ $text['title-extension-add']['pt-br'] = "Adicionar extensão";
 $text['title-extension-add']['pl'] = "Dodaj numer wewnętrzny";
 $text['title-extension-add']['uk'] = "Додавання розширення";
 $text['title-extension-add']['sv-se'] = "Lägg Till Anknytning";
+$text['title-extension-add']['ro'] = "Adăugare extensie";
 
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
 $text['option-voicemail_file_listen']['pt-pt'] = "Ouça Link (login requerido)";
-$text['option-voicemail_file_listen']['fr-fr'] = "Écouter Link (Connexion requise)";
+$text['option-voicemail_file_listen']['fr-fr'] = "Lien d'écoute (Connexion requise)";
 $text['option-voicemail_file_listen']['pt-br'] = "Arquivo Voicemail";
 $text['option-voicemail_file_listen']['pl'] = "Link do odsłuchu (po zalogowaniu)";
 $text['option-voicemail_file_listen']['uk'] = "Посилання на прослуховування (Входити обов’язково)";
 $text['option-voicemail_file_listen']['sv-se'] = "Lyssna-länk (Måste Logga In)";
+$text['option-voicemail_file_listen']['ro'] = "";
 
 $text['option-voicemail_file_link']['en-us'] = "Download Link (No Login Required)";
 $text['option-voicemail_file_link']['es-cl'] = "Enlace de descarga (No se requiere conexión)";
@@ -44,6 +48,7 @@ $text['option-voicemail_file_link']['pt-br'] = "Link para download (Não é nece
 $text['option-voicemail_file_link']['pl'] = "Link do pobrania (logowanie nie jest wymagane)";
 $text['option-voicemail_file_link']['uk'] = "Посилання на завантаження (Входити не обов’язково)";
 $text['option-voicemail_file_link']['sv-se'] = "Nedladdnings-länk (Ingen Inloggning Krävs)";
+$text['option-voicemail_file_link']['ro'] = "";
 
 $text['option-voicemail_file_attach']['en-us'] = "Audio File Attachment";
 $text['option-voicemail_file_attach']['es-cl'] = "Archivo Adjunto Audio";
