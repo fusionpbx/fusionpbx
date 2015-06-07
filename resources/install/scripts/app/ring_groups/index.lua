@@ -122,7 +122,7 @@
 		--get the ring group destinations
 			sql = [[
 				SELECT 
-						r.ring_group_strategy, r.ring_group_timeout_app, 
+						r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring, 
 						d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, 
 						r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
 				FROM 
