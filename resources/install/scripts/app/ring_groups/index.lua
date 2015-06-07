@@ -168,7 +168,7 @@
 					--add the row to the destinations array
 						destinations[x] = row;
 				end
-				row['domain_name'] = leg_domain_name;				
+				row['domain_name'] = leg_domain_name;
 				x = x + 1;
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
@@ -210,6 +210,7 @@
 					ring_group_timeout_data = row.ring_group_timeout_data;
 					ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
 					ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
+					ring_group_distinctive_ring = row.ring_group_distinctive_ring;
 					ring_group_ringback = row.ring_group_ringback;
 					ring_group_skip_active = row.ring_group_skip_active;
 					destination_number = row.destination_number;
@@ -266,6 +267,11 @@
 						uuids = uuids ..",".. new_uuid;
 					end
 					session:execute("set", "uuids="..uuids);
+
+				--export the ringback
+					if (ring_group_distinctive_ring ~= nil) then
+						session:execute("export", ring_group_distinctive_ring);
+					end
 
 				--set confirm
 					if (ring_group_strategy == "simultaneous" 
