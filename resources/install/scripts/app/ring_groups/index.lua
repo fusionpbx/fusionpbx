@@ -270,7 +270,7 @@
 
 				--export the ringback
 					if (ring_group_distinctive_ring ~= nil) then
-						session:execute("export", ring_group_distinctive_ring);
+						session:execute("export", "sip_h_Alert-Info="..ring_group_distinctive_ring);
 					end
 
 				--set confirm
