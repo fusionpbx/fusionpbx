@@ -578,7 +578,7 @@ else {
 	echo "	".$text['label-distinctive_ring']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='ring_group_distinctive_ring' maxlength='255' min='0' step='1' value='$ring_group_distinctive_ring'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_distinctive_ring' maxlength='255' value='$ring_group_distinctive_ring'>\n";
 	echo "<br />\n";
 	echo $text['description-distinctive_ring']." \n";
 	echo "</td>\n";
