@@ -1312,4 +1312,5 @@ function number_pad($number,$n) {
 			return strtoupper($string);
 		}
 	}
+
 ?>
