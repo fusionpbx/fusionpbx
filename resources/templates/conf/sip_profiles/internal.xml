@@ -368,5 +368,8 @@
 		-->
 		<param name="renegotiate-codec-on-hold" value="true" enabled="false"/>
 
+		<!-- Periodically send an packet to all registered endpoints that are behind NAT -->
+		<param name="registration-thread-frequency" value="30"/>
+		<param name="nat-options-ping" value="true"/>
 	</settings>
 </profile>
