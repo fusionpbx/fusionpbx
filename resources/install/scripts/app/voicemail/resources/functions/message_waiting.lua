@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -25,29 +25,53 @@
 
 --voicemail count if zero new messages set the mwi to no
 	function message_waiting(voicemail_id, domain_uuid)
-		sql = [[SELECT count(*) as message_count FROM v_voicemail_messages as m, v_voicemails as v
-			WHERE v.domain_uuid = ']] .. domain_uuid ..[['
-			AND v.voicemail_uuid = m.voicemail_uuid
-			AND v.voicemail_id = ']] .. voicemail_id ..[['
-			AND (m.message_status is null or m.message_status = '') ]];
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-		end
-		status = dbh:query(sql, function(row)
-			--send the message waiting event
+		--initialize the array and add the voicemail_id
+		 	local accounts = {}
+			table.insert(accounts, voicemail_id);
+		--get the voicemail id and all related mwi accounts
+			sql = [[SELECT extension, number_alias from v_extensions 
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND (mwi_account = ']]..voicemail_id..[[' or mwi_account = ']]..voicemail_id..[[@]]..domain_name..[[')]];
+			--if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			--end
+			status = dbh:query(sql, function(row)
+				if (string.len(row["number_alias"]) > 0) then
+					table.insert(accounts, row["number_alias"]);
+				else
+					table.insert(accounts, row["extension"]);
+				end
+			end);
+
+		--get the message count
+			sql = [[SELECT count(*) as message_count FROM v_voicemail_messages as m, v_voicemails as v
+				WHERE v.domain_uuid = ']] .. domain_uuid ..[['
+				AND v.voicemail_uuid = m.voicemail_uuid
+				AND v.voicemail_id = ']] .. voicemail_id ..[[' 
+				AND (m.message_status is null or m.message_status = '') ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(row)
+				message_count = row["message_count"];
+			end);
+
+		--send the message waiting event
+			for key,value in pairs(accounts) do 
 				local event = freeswitch.Event("message_waiting");
-				if (row["message_count"] == "0") then
-					--freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. row["message_count"] .. " no messages\n");
+				if (message_count == "0") then
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..value.."@"..domain_name.." messages: " .. message_count .. " no messages\n");
+					end
 					event:addHeader("MWI-Messages-Waiting", "no");
 				else
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. message_count .. " \n");
+					end
 					event:addHeader("MWI-Messages-Waiting", "yes");
 				end
-				event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-				event:addHeader("MWI-Voice-Message", row["message_count"].."/0 ("..row["message_count"].."/0)");
+				event:addHeader("MWI-Message-Account", "sip:"..value.."@"..domain_name);
+				event:addHeader("MWI-Voice-Message", message_count.."/0 ("..message_count.."/0)");
 				event:fire();
-			--log to console
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. row["message_count"] .. " \n");
-				end
-		end);
+			end
 	end
