@@ -105,7 +105,7 @@
 			end
 
 		--build the XML string from the database
-			if (source == "database") then
+			if (source == "database") or (load_balancing) then
 				--database connection
 					if (continue) then
 						--connect to the database
