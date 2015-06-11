@@ -450,13 +450,9 @@
 								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
 							end
 
-						--set the message waiting event
+						--send the message waiting event
 							if (tonumber(message_length) > 2) then
-								local event = freeswitch.Event("message_waiting");
-								event:addHeader("MWI-Messages-Waiting", "yes");
-								event:addHeader("MWI-Message-Account", "sip:"..voicemail_id_copy.."@"..domain_name);
-								event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
-								event:fire();
+								message_waiting(voicemail_id_copy, domain_uuid);
 							end
 
 						--send the email with the voicemail recording attached
