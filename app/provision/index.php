@@ -173,8 +173,8 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 	else {
 		//get the domain_name
-			//$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			//$domain_name = $domain_array[0];
+			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			$domain_name = $domain_array[0];
 
 		//get the domain_uuid
 			$sql = "SELECT * FROM v_domains ";
