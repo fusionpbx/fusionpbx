@@ -8,6 +8,7 @@ $text['title-user_manager']['pl'] = "Menedżer użytkowników";
 $text['title-user_manager']['uk'] = "Користувачі";
 $text['title-user_manager']['sv-se'] = "Användar Inställningar";
 $text['title-user_manager']['ro'] = "";
+$text['title-user_manager']['de-at'] = "Benutzerverwaltung";
 
 $text['title-user_edit']['en-us'] = "User";
 $text['title-user_edit']['es-cl'] = "Editar Usuario";
@@ -17,6 +18,7 @@ $text['title-user_edit']['pl'] = "Użytkownik";
 $text['title-user_edit']['uk'] = "Користувач";
 $text['title-user_edit']['sv-se'] = "Användare";
 $text['title-user_edit']['ro'] = "Utilizator";
+$text['title-user_edit']['de-at'] = "Benutzer";
 
 $text['title-user_add']['en-us'] = "User";
 $text['title-user_add']['es-cl'] = "Agregar Usuario";
@@ -26,6 +28,7 @@ $text['title-user_add']['pl'] = "Użytkownik";
 $text['title-user_add']['uk'] = "Користувач";
 $text['title-user_add']['sv-se'] = "Användare";
 $text['title-user_add']['ro'] = "Utilizator";
+$text['title-user_add']['de-at'] = "Benutzer";
 
 $text['title-group_permissions']['en-us'] = "Group Permissions";
 $text['title-group_permissions']['es-cl'] = "Permisos de Grupo";
@@ -35,6 +38,7 @@ $text['title-group_permissions']['pl'] = "Uprawnienia grupy:";
 $text['title-group_permissions']['uk'] = "Привілеї групи";
 $text['title-group_permissions']['sv-se'] = "Grupp Rättigheter";
 $text['title-group_permissions']['ro'] = "Permisiuni grup";
+$text['title-group_permissions']['de-at'] = "Gruppenberechtigung";
 
 $text['title-group_members']['en-us'] = "Group Members";
 $text['title-group_members']['es-cl'] = "Miembros del Grupo";
@@ -44,6 +48,7 @@ $text['title-group_members']['pl'] = "Członkowie grupy:";
 $text['title-group_members']['uk'] = "Учасники групи";
 $text['title-group_members']['sv-se'] = "Grupp Medlemmar";
 $text['title-group_members']['ro'] = "Membri grup";
+$text['title-group_members']['de-at'] = "Gruppenmitglieder";
 
 $text['title-group_manager']['en-us'] = "Group Manager";
 $text['title-group_manager']['es-cl'] = "Administración de Grupo";
@@ -53,6 +58,7 @@ $text['title-group_manager']['pl'] = "Menedżer grup";
 $text['title-group_manager']['uk'] = "Групи";
 $text['title-group_manager']['sv-se'] = "Grupp Inställningar";
 $text['title-group_manager']['ro'] = "";
+$text['title-group_manager']['de-at'] = "Gruppenverwaltung";
 
 $text['title-group_edit']['en-us'] = "Edit Group";
 $text['title-group_edit']['es-cl'] = "Editar Grupo";
@@ -62,6 +68,7 @@ $text['title-group_edit']['pl'] = "Edycja grupy";
 $text['title-group_edit']['uk'] = "Редагувати групу";
 $text['title-group_edit']['sv-se'] = "Editera Grupp";
 $text['title-group_edit']['ro'] = "Editare grup";
+$text['title-group_edit']['de-at'] = "Gruppe ändern";
 
 $text['title-group_add']['en-us'] = "Add Group";
 $text['title-group_add']['es-cl'] = "Agregar Grupo";
@@ -71,6 +78,7 @@ $text['title-group_add']['pl'] = "Dodaj grupę";
 $text['title-group_add']['uk'] = "Додати групу";
 $text['title-group_add']['sv-se'] = "Lägg Till Grupp";
 $text['title-group_add']['ro'] = "Adăugare grup";
+$text['title-group_add']['de-at'] = "Gruppe hinzufügen";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
@@ -80,6 +88,7 @@ $text['option-true']['pl'] = "Tak";
 $text['option-true']['uk'] = "Так";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['ro'] = "";
+$text['option-true']['de-at'] = "Ein";
 
 $text['option-on_break']['en-us'] = "On Break";
 $text['option-on_break']['es-cl'] = "En Pausa";
@@ -89,6 +98,7 @@ $text['option-on_break']['pl'] = "Na przerwie";
 $text['option-on_break']['uk'] = "На перерві";
 $text['option-on_break']['sv-se'] = "På Rast";
 $text['option-on_break']['ro'] = "În pauză";
+$text['option-on_break']['de-at'] = "In Pause";
 
 $text['option-logged_out']['en-us'] = "Logged Out";
 $text['option-logged_out']['es-cl'] = "Desconectado";
@@ -98,6 +108,7 @@ $text['option-logged_out']['pl'] = "Wylogowany";
 $text['option-logged_out']['uk'] = "Вийшов";
 $text['option-logged_out']['sv-se'] = "Utloggad";
 $text['option-logged_out']['ro'] = "";
+$text['option-logged_out']['de-at'] = "Abgemeldet";
 
 $text['option-global']['en-us'] = "Global";
 $text['option-global']['es-cl'] = "Global";
@@ -107,6 +118,7 @@ $text['option-global']['pl'] = "Ogólny";
 $text['option-global']['uk'] = "Глобально";
 $text['option-global']['sv-se'] = "Global";
 $text['option-global']['ro'] = "Global";
+$text['option-global']['de-at'] = "Global";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "Falso";
@@ -116,6 +128,7 @@ $text['option-false']['pl'] = "Nie";
 $text['option-false']['uk'] = "Ні";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['ro'] = "";
+$text['option-false']['de-at'] = "Aus";
 
 $text['option-do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['option-do_not_disturb']['es-cl'] = "No Molestar";
@@ -125,6 +138,7 @@ $text['option-do_not_disturb']['pl'] = "Nie przeszkadzaj (DND)";
 $text['option-do_not_disturb']['uk'] = "Не турбувати";
 $text['option-do_not_disturb']['sv-se'] = "Stör Ej";
 $text['option-do_not_disturb']['ro'] = "";
+$text['option-do_not_disturb']['de-at'] = "Bitte nicht stören";
 
 $text['option-available_on_demand']['en-us'] = "Available (On Demand)";
 $text['option-available_on_demand']['es-cl'] = "Disponible (A Pedido)";
@@ -134,6 +148,7 @@ $text['option-available_on_demand']['pl'] = "Dostępny (na żądanie)";
 $text['option-available_on_demand']['uk'] = "Доступний (на вимогу)";
 $text['option-available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['option-available_on_demand']['ro'] = "";
+$text['option-available_on_demand']['de-at'] = "Verfügbar (auf Anfrage)";
 
 $text['option-available']['en-us'] = "Available";
 $text['option-available']['es-cl'] = "Disponible";
@@ -143,6 +158,7 @@ $text['option-available']['pl'] = "Dostępny";
 $text['option-available']['uk'] = "Доступний";
 $text['option-available']['sv-se'] = "Tillgänglig";
 $text['option-available']['ro'] = "";
+$text['option-available']['de-at'] = "Verfügbar";
 
 $text['message-username_exists']['en-us'] = "Username Already Exists";
 $text['message-username_exists']['es-cl'] = "Ya existe Nombre de usuario";
@@ -152,6 +168,7 @@ $text['message-username_exists']['pl'] = "Nazwa użytkownika już istnieje";
 $text['message-username_exists']['uk'] = "Користувач вже існує";
 $text['message-username_exists']['sv-se'] = "Användarnamnet Existerar Redan";
 $text['message-username_exists']['ro'] = "";
+$text['message-username_exists']['de-at'] = "Benutzername existiert bereits";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -161,6 +178,7 @@ $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['uk'] = "Оновлено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['ro'] = "Actualizare completă";
+$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
 
 $text['message-restore']['en-us'] = "Restore Completed";
 $text['message-restore']['es-cl'] = "Restauración Completada";
@@ -170,6 +188,7 @@ $text['message-restore']['pl'] = "Przywrócenie zakończone";
 $text['message-restore']['uk'] = "Відновлено";
 $text['message-restore']['sv-se'] = "Återställning Klar";
 $text['message-restore']['ro'] = "";
+$text['message-restore']['de-at'] = "Widerherstellung durchgeführt";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor indique: ";
@@ -179,6 +198,7 @@ $text['message-required']['pl'] = "Wpisz:";
 $text['message-required']['uk'] = "Будь ласка, вкажіть:";
 $text['message-required']['sv-se'] = "Var god uppge:";
 $text['message-required']['ro'] = "";
+$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
 
 $text['message-password_mismatch']['en-us'] = "Password Mismatch";
 $text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
@@ -188,6 +208,7 @@ $text['message-password_mismatch']['pl'] = "Wprowadzone hasła nie są takie sam
 $text['message-password_mismatch']['uk'] = "Паролі не співпадають";
 $text['message-password_mismatch']['sv-se'] = "Lösenordet Stämmer Inte";
 $text['message-password_mismatch']['ro'] = "";
+$text['message-password_mismatch']['de-at'] = "Passwörter stimmen nicht überein.";
 
 $text['message-password_blank']['en-us'] = "Invalid Password";
 $text['message-password_blank']['es-cl'] = "Contraseña No Válida";
@@ -197,6 +218,7 @@ $text['message-password_blank']['pl'] = "Nieprawidłowe hasło";
 $text['message-password_blank']['uk'] = "Неправильний пароль";
 $text['message-password_blank']['sv-se'] = "Ogiltigt Lösenord";
 $text['message-password_blank']['ro'] = "";
+$text['message-password_blank']['de-at'] = "Falsches Passwort";
 
 $text['message-new_group_name']['en-us'] = "Enter a Name for the new Group...";
 $text['message-new_group_name']['es-cl'] = "Introduzca un Nombre para el nuevo Grupo...";
@@ -206,6 +228,7 @@ $text['message-new_group_name']['pl'] = "Wprowadź nazwę nowej grupy";
 $text['message-new_group_name']['uk'] = "Введіть назву нової групи";
 $text['message-new_group_name']['sv-se'] = "Ange ett Namn för den nya Gruppen...";
 $text['message-new_group_name']['ro'] = "";
+$text['message-new_group_name']['de-at'] = "Geben Sie den Namen der neuen Gruppe an...";
 
 $text['message-new_group_description']['en-us'] = "Enter a Description for the new Group...";
 $text['message-new_group_description']['es-cl'] = "Introduzca una Descripción para el nuevo Grupo...";
@@ -215,6 +238,7 @@ $text['message-new_group_description']['pl'] = "Wprowadź opis nowej grupy";
 $text['message-new_group_description']['uk'] = "Введіть опис нової групи";
 $text['message-new_group_description']['sv-se'] = "Ange en Beskrivning för den nya Gruppen...";
 $text['message-new_group_description']['ro'] = "";
+$text['message-new_group_description']['de-at'] = "Geben Sie eine Beschreiben für die neue Gruppe an...";
 
 $text['message-maximum_users']['en-us'] = "Maximum Users:";
 $text['message-maximum_users']['es-cl'] = "Usuarios Máximo Permitido:";
@@ -224,6 +248,7 @@ $text['message-maximum_users']['pl'] = "Maks ilość użytkowników";
 $text['message-maximum_users']['uk'] = "Максимальна кількість користувачів";
 $text['message-maximum_users']['sv-se'] = "Max Antal Användare:";
 $text['message-maximum_users']['ro'] = "";
+$text['message-maximum_users']['de-at'] = "Maximale Anzahl an Benutzern:";
 
 $text['message-group_exists']['en-us'] = "Group Already Exists";
 $text['message-group_exists']['es-cl'] = "El Grupo ya Existe";
@@ -233,6 +258,7 @@ $text['message-group_exists']['pl'] = "Grupa już istnieje";
 $text['message-group_exists']['uk'] = "Група вже існує";
 $text['message-group_exists']['sv-se'] = "Gruppen Existerar Redan";
 $text['message-group_exists']['ro'] = "";
+$text['message-group_exists']['de-at'] = "Gruppe existiert bereits";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
@@ -242,6 +268,7 @@ $text['message-delete']['pl'] = "Usunięto poprawnie";
 $text['message-delete']['uk'] = "Видалено";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
 $text['message-delete']['ro'] = "Ștergere completă";
+$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
 
 $text['message-default_system_group']['en-us'] = "Default system groups cannot be edited or deleted.";
 $text['message-default_system_group']['es-cl'] = "Grupos predeterminados del sistema no pueden ser editados o eliminados.";
@@ -251,6 +278,7 @@ $text['message-default_system_group']['pl'] = "Domyślne grupy systemowe nie mog
 $text['message-default_system_group']['uk'] = "Системні групи за замовчуванням не можна редагувати або видаляти";
 $text['message-default_system_group']['sv-se'] = "Standard system grupper kan inte redigeras eller tas bort.";
 $text['message-default_system_group']['ro'] = "";
+$text['message-default_system_group']['de-at'] = "Systemgruppen können nicht bearbeitet oder gelöscht werden.";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completada";
@@ -260,6 +288,7 @@ $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['ro'] = "Copiere completă";
+$text['message-copy']['de-at'] = "Kopieren erfolgreich";
 
 $text['message-cannot_delete_own_account']['en-us'] = "You cannot delete your own user account. Please login as a different user, then try again.";
 $text['message-cannot_delete_own_account']['es-cl'] = "No se puede eliminar su propia cuenta de usuario. Por favor, iniciar sesión como un usuario diferente, vuelva a intentarlo.";
@@ -269,6 +298,7 @@ $text['message-cannot_delete_own_account']['pl'] = "Nie można usunąć własneg
 $text['message-cannot_delete_own_account']['uk'] = "Ви не можете видалити власний обліковий запис. Будь ласка, увійдіть під іншим користувачем, потім повторіть спробу.";
 $text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt egna användarkonto. Logg ain som en annan användare och försök igen.";
 $text['message-cannot_delete_own_account']['ro'] = "";
+$text['message-cannot_delete_own_account']['de-at'] = "Sie können nicht ihren eigenen Benutzer löschen. Bitte melden Sie sich mit einem anderen Benutzer an und versuchen Sie es erneut.";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
@@ -278,6 +308,7 @@ $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['uk'] = "Додано";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['ro'] = "Adăugare completă";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de usuario";
@@ -287,6 +318,7 @@ $text['label-username']['pl'] = "Użytkownik";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['ro'] = "Utilizator";
+$text['label-username']['de-at'] = "Benutzername";
 
 $text['label-user_language']['en-us'] = "Language";
 $text['label-user_language']['es-cl'] = "Lengua";
@@ -296,6 +328,7 @@ $text['label-user_language']['pl'] = "Język";
 $text['label-user_language']['uk'] = "Мова";
 $text['label-user_language']['sv-se'] = "Språk";
 $text['label-user_language']['ro'] = "Limbă";
+$text['label-user_language']['de-at'] = "Sprache";
 
 $text['label-user_info']['en-us'] = "User Info";
 $text['label-user_info']['es-cl'] = "Información de Usuario";
@@ -305,6 +338,7 @@ $text['label-user_info']['pl'] = "Informacje o użytkowniku";
 $text['label-user_info']['uk'] = "Інформація про користувача";
 $text['label-user_info']['sv-se'] = "Användar Info";
 $text['label-user_info']['ro'] = "";
+$text['label-user_info']['de-at'] = "Benutzer Information";
 
 $text['label-time_zone']['en-us'] = "Time Zone";
 $text['label-time_zone']['es-cl'] = "Zona Horaria";
@@ -314,6 +348,7 @@ $text['label-time_zone']['pl'] = "Strefa czasowa";
 $text['label-time_zone']['uk'] = "Часовий пояс";
 $text['label-time_zone']['sv-se'] = "Tidszon";
 $text['label-time_zone']['ro'] = "";
+$text['label-time_zone']['de-at'] = "Zeitzone";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -323,6 +358,7 @@ $text['label-status']['pl'] = "Status";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['ro'] = "Stare";
+$text['label-status']['de-at'] = "Status";
 
 $text['label-search']['en-us'] = "Search...";
 $text['label-search']['es-cl'] = "Buscar...";
@@ -334,6 +370,7 @@ $text['label-search']['pl'] = "Szukaj ...";
 $text['label-search']['sv-se'] = "Sök ...";
 $text['label-search']['ro'] = "";
 $text['label-search']['uk'] = "Результати пошуку";
+$text['label-search']['de-at'] = "Suche...";
 
 $text['label-permission_permissions']['en-us'] = "Permissions";
 $text['label-permission_permissions']['es-cl'] = "Permisos";
@@ -343,6 +380,7 @@ $text['label-permission_permissions']['pl'] = "Uprawnienia";
 $text['label-permission_permissions']['uk'] = "Привілеї";
 $text['label-permission_permissions']['sv-se'] = "Rättigheter";
 $text['label-permission_permissions']['ro'] = "";
+$text['label-permission_permissions']['de-at'] = "Berechtigungen";
 
 $text['label-permission_description']['en-us'] = "Description";
 $text['label-permission_description']['es-cl'] = "Descripción";
@@ -352,6 +390,7 @@ $text['label-permission_description']['pl'] = "Opis";
 $text['label-permission_description']['uk'] = "Опис";
 $text['label-permission_description']['sv-se'] = "Beskrivning";
 $text['label-permission_description']['ro'] = "";
+$text['label-permission_description']['de-at'] = "Beschreibung";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -361,6 +400,7 @@ $text['label-password']['pl'] = "Hasło";
 $text['label-password']['uk'] = "Пароль";
 $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['ro'] = "Parolă";
+$text['label-password']['de-at'] = "Passwort";
 
 $text['label-last_name']['en-us'] = "Last Name";
 $text['label-last_name']['es-cl'] = "Apellido";
@@ -370,6 +410,7 @@ $text['label-last_name']['pl'] = "Nazwisko";
 $text['label-last_name']['uk'] = "Прізвище";
 $text['label-last_name']['sv-se'] = "Efternamn";
 $text['label-last_name']['ro'] = "";
+$text['label-last_name']['de-at'] = "Nachname";
 
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['es-cl'] = "Grupos";
@@ -379,6 +420,7 @@ $text['label-groups']['pl'] = "Grupy";
 $text['label-groups']['uk'] = "Групи";
 $text['label-groups']['sv-se'] = "Grupper";
 $text['label-groups']['ro'] = "";
+$text['label-groups']['de-at'] = "Gruppen";
 
 $text['label-group_tools']['en-us'] = "Tools";
 $text['label-group_tools']['es-cl'] = "Instrumentos";
@@ -388,6 +430,7 @@ $text['label-group_tools']['pl'] = "Narzędzia";
 $text['label-group_tools']['uk'] = "Інструменти";
 $text['label-group_tools']['sv-se'] = "Verktyg";
 $text['label-group_tools']['ro'] = "";
+$text['label-group_tools']['de-at'] = "Werkzeug";
 
 $text['label-group_protected']['en-us'] = "Protected";
 $text['label-group_protected']['es-cl'] = "Protegido";
@@ -397,6 +440,7 @@ $text['label-group_protected']['pl'] = "Zabezpieczony";
 $text['label-group_protected']['uk'] = "Захищено";
 $text['label-group_protected']['sv-se'] = "Skyddad";
 $text['label-group_protected']['ro'] = "";
+$text['label-group_protected']['de-at'] = "Geschützt";
 
 $text['label-group_permissions']['en-us'] = "Permissions";
 $text['label-group_permissions']['es-cl'] = "Permisos";
@@ -406,6 +450,7 @@ $text['label-group_permissions']['pl'] = "Uprawnienia";
 $text['label-group_permissions']['uk'] = "Дозволи";
 $text['label-group_permissions']['sv-se'] = "Rättigheter";
 $text['label-group_permissions']['ro'] = "";
+$text['label-group_permissions']['de-at'] = "Berechtigungen";
 
 $text['label-group_name']['en-us'] = "Name";
 $text['label-group_name']['es-cl'] = "Nombre";
@@ -415,6 +460,7 @@ $text['label-group_name']['pl'] = "Nazwa";
 $text['label-group_name']['uk'] = "Назва";
 $text['label-group_name']['sv-se'] = "Namn";
 $text['label-group_name']['ro'] = "";
+$text['label-group_name']['de-at'] = "Name";
 
 $text['label-group_members']['en-us'] = "Members";
 $text['label-group_members']['es-cl'] = "Miembros";
@@ -424,6 +470,7 @@ $text['label-group_members']['pl'] = "Członkowie";
 $text['label-group_members']['uk'] = "Учасники";
 $text['label-group_members']['sv-se'] = "Medlemmar";
 $text['label-group_members']['ro'] = "";
+$text['label-group_members']['de-at'] = "Mitglieder";
 
 $text['label-group_description']['en-us'] = "Description";
 $text['label-group_description']['es-cl'] = "Descripción";
@@ -433,6 +480,7 @@ $text['label-group_description']['pl'] = "Opis";
 $text['label-group_description']['uk'] = "Опис";
 $text['label-group_description']['sv-se'] = "Beskrivning";
 $text['label-group_description']['ro'] = "";
+$text['label-group_description']['de-at'] = "Beschreibung";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['es-cl'] = "Grupo";
@@ -442,6 +490,7 @@ $text['label-group']['pl'] = "Grupa";
 $text['label-group']['uk'] = "Група";
 $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['ro'] = "";
+$text['label-group']['de-at'] = "Gruppe";
 
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['es-cl'] = "Global";
@@ -451,6 +500,7 @@ $text['label-global']['pl'] = "Ogólny";
 $text['label-global']['uk'] = "Глобально";
 $text['label-global']['sv-se'] = "Global";
 $text['label-global']['ro'] = "";
+$text['label-global']['de-at'] = "Global";
 
 $text['label-first_name']['en-us'] = "First Name";
 $text['label-first_name']['es-cl'] = "Nombre";
@@ -460,6 +510,7 @@ $text['label-first_name']['pl'] = "Imię";
 $text['label-first_name']['uk'] = "Ім’я";
 $text['label-first_name']['sv-se'] = "Förnamn";
 $text['label-first_name']['ro'] = "";
+$text['label-first_name']['de-at'] = "Vorname";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activo";
@@ -469,6 +520,7 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['ro'] = "";
+$text['label-enabled']['de-at'] = "An";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "Email";
@@ -478,6 +530,7 @@ $text['label-email']['pl'] = "Email";
 $text['label-email']['uk'] = "Електронна пошта";
 $text['label-email']['sv-se'] = "E-post";
 $text['label-email']['ro'] = "";
+$text['label-email']['de-at'] = "Email";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -487,6 +540,7 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['ro'] = "Domeniu";
+$text['label-domain']['de-at'] = "Domain";
 
 $text['label-contact']['en-us'] = "Contact";
 $text['label-contact']['es-cl'] = "Contacto";
@@ -496,6 +550,7 @@ $text['label-contact']['pl'] = "Kontakt";
 $text['label-contact']['uk'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['ro'] = "";
+$text['label-contact']['de-at'] = "Kontakt";
 
 $text['label-confirm_password']['en-us'] = "Confirm Password";
 $text['label-confirm_password']['es-cl'] = "Confirme Contraseña";
@@ -505,6 +560,7 @@ $text['label-confirm_password']['pl'] = "Potwierdź hasło";
 $text['label-confirm_password']['uk'] = "Повторити пароль";
 $text['label-confirm_password']['sv-se'] = "Bekräfta Lösenord";
 $text['label-confirm_password']['ro'] = "";
+$text['label-confirm_password']['de-at'] = "Passwort bestätigen";
 
 $text['label-company_name']['en-us'] = "Company Name";
 $text['label-company_name']['es-cl'] = "Nombre de la Compañia";
@@ -514,6 +570,7 @@ $text['label-company_name']['pl'] = "Nazwa firmy";
 $text['label-company_name']['uk'] = "Назва компанії";
 $text['label-company_name']['sv-se'] = "Företags Namn";
 $text['label-company_name']['ro'] = "";
+$text['label-company_name']['de-at'] = "Firmenname";
 
 $text['label-api_key']['en-us'] = "API Key";
 $text['label-api_key']['es-cl'] = "API Key";
@@ -523,6 +580,7 @@ $text['label-api_key']['pl'] = "Klucz API";
 $text['label-api_key']['uk'] = "Ключ API";
 $text['label-api_key']['sv-se'] = "API Nyckel";
 $text['label-api_key']['ro'] = "";
+$text['label-api_key']['de-at'] = "API Key";
 
 $text['label-additional_info']['en-us'] = "Additional Info";
 $text['label-additional_info']['es-cl'] = "Información Adicional";
@@ -532,6 +590,7 @@ $text['label-additional_info']['pl'] = "Dodatkowe informacje";
 $text['label-additional_info']['uk'] = "Додаткова інформація";
 $text['label-additional_info']['sv-se'] = "Ytterligare Info";
 $text['label-additional_info']['ro'] = "";
+$text['label-additional_info']['de-at'] = "Zusätzliche Information";
 
 $text['header-user_manager']['en-us'] = "User Manager";
 $text['header-user_manager']['es-cl'] = "Administración de Usuario";
@@ -541,6 +600,7 @@ $text['header-user_manager']['pl'] = "Menadżer użytkowników";
 $text['header-user_manager']['uk'] = "Користувачі";
 $text['header-user_manager']['sv-se'] = "Användar Inställningar";
 $text['header-user_manager']['ro'] = "";
+$text['header-user_manager']['de-at'] = "Benutzerverwaltung";
 
 $text['header-user_edit']['en-us'] = "User";
 $text['header-user_edit']['es-cl'] = "Editar Usuario";
@@ -550,6 +610,7 @@ $text['header-user_edit']['pl'] = "Użytkownik";
 $text['header-user_edit']['uk'] = "Користувач";
 $text['header-user_edit']['sv-se'] = "Användare";
 $text['header-user_edit']['ro'] = "";
+$text['header-user_edit']['de-at'] = "Benutzer";
 
 $text['header-user_add']['en-us'] = "User";
 $text['header-user_add']['es-cl'] = "Agregar Usuario";
@@ -559,6 +620,7 @@ $text['header-user_add']['pl'] = "Użytkownik";
 $text['header-user_add']['uk'] = "Користувач";
 $text['header-user_add']['sv-se'] = "Användare";
 $text['header-user_add']['ro'] = "";
+$text['header-user_add']['de-at'] = "Benutzer";
 
 $text['header-group_permissions']['en-us'] = "Group Permissions: ";
 $text['header-group_permissions']['es-cl'] = "Permisos de Grupo: ";
@@ -568,6 +630,7 @@ $text['header-group_permissions']['pl'] = "Uprawnienia grupy";
 $text['header-group_permissions']['uk'] = "Привілеї групи:";
 $text['header-group_permissions']['sv-se'] = "Grupp Rättigheter";
 $text['header-group_permissions']['ro'] = "";
+$text['header-group_permissions']['de-at'] = "Gruppenberechtigungen:";
 
 $text['header-group_members']['en-us'] = "Group Members: ";
 $text['header-group_members']['es-cl'] = "Miembros de Grupo: ";
@@ -577,6 +640,7 @@ $text['header-group_members']['pl'] = "Członkowie grupy:";
 $text['header-group_members']['uk'] = "Учасники групи: ";
 $text['header-group_members']['sv-se'] = "Grupp Medlemmar:";
 $text['header-group_members']['ro'] = "";
+$text['header-group_members']['de-at'] = "Gruppenmitglieder:";
 
 $text['header-group_manager']['en-us'] = "Group Manager";
 $text['header-group_manager']['es-cl'] = "Administración de Grupo";
@@ -586,6 +650,7 @@ $text['header-group_manager']['pl'] = "Menadżer  grup";
 $text['header-group_manager']['uk'] = "Групи";
 $text['header-group_manager']['sv-se'] = "Grupp Inställningar";
 $text['header-group_manager']['ro'] = "";
+$text['header-group_manager']['de-at'] = "Gruppenverwaltung";
 
 $text['header-group_edit']['en-us'] = "Edit Group";
 $text['header-group_edit']['es-cl'] = "Editar Grupo";
@@ -595,6 +660,7 @@ $text['header-group_edit']['pl'] = "Edycja grupy";
 $text['header-group_edit']['uk'] = "Редагувати групу";
 $text['header-group_edit']['sv-se'] = "Editera Grupp";
 $text['header-group_edit']['ro'] = "";
+$text['header-group_edit']['de-at'] = "Gruppe bearbeiten";
 
 $text['header-group_add']['en-us'] = "Add Group";
 $text['header-group_add']['es-cl'] = "Agregar Grupo";
@@ -604,6 +670,7 @@ $text['header-group_add']['pl'] = "Dodaj grupę";
 $text['header-group_add']['uk'] = "Додати групу";
 $text['header-group_add']['sv-se'] = "Lägg Till Grupp";
 $text['header-group_add']['ro'] = "";
+$text['header-group_add']['de-at'] = "Gruppe hinzufügen";
 
 $text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-user_manager']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";
@@ -613,6 +680,7 @@ $text['description-user_manager']['pl'] = "Dodaj, edytuj, usuń i wyszukaj użyt
 $text['description-user_manager']['uk'] = "Додавання, редагування, видалення та пошук користувачів";
 $text['description-user_manager']['sv-se'] = "Lägg Till, editera, ta bort och sök användare.";
 $text['description-user_manager']['ro'] = "";
+$text['description-user_manager']['de-at'] = "Benutzer anlegen, editieren, löschen und suchen.";
 
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
@@ -622,6 +690,7 @@ $text['description-user_language']['pl'] = "Wybierz język";
 $text['description-user_language']['uk'] = "Виберіть мову";
 $text['description-user_language']['sv-se'] = "Välj Språk";
 $text['description-user_language']['ro'] = "Selecție limbă";
+$text['description-user_language']['de-at'] = "Sprache auswählen";
 
 $text['description-user_edit']['en-us'] = "Edit user information and group membership. ";
 $text['description-user_edit']['es-cl'] = "Editar información del usuario y pertenencia al grupo. ";
@@ -631,6 +700,7 @@ $text['description-user_edit']['pl'] = "Edytuj informacje o użytkowniku i przyn
 $text['description-user_edit']['uk'] = "Змініть інформацію користувача і членство в групі.";
 $text['description-user_edit']['sv-se'] = "Meditera användarinformation och grupp medlemskap.";
 $text['description-user_edit']['ro'] = "";
+$text['description-user_edit']['de-at'] = "Benutzerinformationen und Gruppen verwalten.";
 
 $text['description-user_add']['en-us'] = "To add a user, please fill out this form completely. All fields are required. ";
 $text['description-user_add']['es-cl'] = "Para agregar un usuario, por favor llene completamente el siguiente formulario. Todos los campos son obligatorios. ";
@@ -640,6 +710,7 @@ $text['description-user_add']['pl'] = "Aby dodać użytkownika, wypełnij ten fo
 $text['description-user_add']['uk'] = "Щоб додати користувача, будь ласка, заповніть цю форму повністю. Всі поля обов'язкові для заповнення.";
 $text['description-user_add']['sv-se'] = "För att lägga till en användare, fyll i hela detta formulär. Alla fält måste fyllas i.";
 $text['description-user_add']['ro'] = "";
+$text['description-user_add']['de-at'] = "Um einen Benutzer anzulegen, füllen Sie bitte dieses Formular komplett aus. Alle Felder sind erforderlich.";
 
 $text['description-time_zone']['en-us'] = "Select the default time zone.";
 $text['description-time_zone']['es-cl'] = "Seleccione la zona horaria por defecto.";
@@ -649,6 +720,7 @@ $text['description-time_zone']['pl'] = "Wybierz domyślną strefę czasową";
 $text['description-time_zone']['uk'] = "Виберіть часовий пояс за замовчуванням.";
 $text['description-time_zone']['sv-se'] = "Välj standard tidszon";
 $text['description-time_zone']['ro'] = "";
+$text['description-time_zone']['de-at'] = "Wählen Sie die Standard Zeitzone";
 
 $text['description-status']['en-us'] = "Set the user's presence.";
 $text['description-status']['es-cl'] = "Configure la presencia del usuario.";
@@ -658,6 +730,7 @@ $text['description-status']['pl'] = "Wybierz status użytkownika";
 $text['description-status']['uk'] = "Виберіть статус користувача";
 $text['description-status']['sv-se'] = "Välj en användarstatus.";
 $text['description-status']['ro'] = "Selectați starea utilizatorului";
+$text['description-status']['de-at'] = "Benutzerstatus auswählen";
 
 $text['description-group_permissions']['en-us'] = "Assign permissions for this group.";
 $text['description-group_permissions']['es-cl'] = "Asigne permisos para este grupo.";
@@ -667,6 +740,7 @@ $text['description-group_permissions']['pl'] = "Przypisywanie uprawnień tej gru
 $text['description-group_permissions']['uk'] = "Призначення привілеїв для цієї групи.";
 $text['description-group_permissions']['sv-se'] = "Tilldela rättigheter till denna grupp.";
 $text['description-group_permissions']['ro'] = "";
+$text['description-group_permissions']['de-at'] = "Ordnen Sie Berechtigungen für diese Gruppe zu.";
 
 $text['description-group_edit']['en-us'] = "Edit the properties of the group.";
 $text['description-group_edit']['es-cl'] = "Editar las propiedades del grupo.";
@@ -676,6 +750,7 @@ $text['description-group_edit']['pl'] = "Edytuj właściwości grupy.";
 $text['description-group_edit']['uk'] = "Зміна властивостей групи.";
 $text['description-group_edit']['sv-se'] = "Editera inställningar för gruppen.";
 $text['description-group_edit']['ro'] = "";
+$text['description-group_edit']['de-at'] = "Bearbeiten Sie die Eigenschaften dieser Gruppe";
 
 $text['description-group_add']['en-us'] = "Create a new user group.";
 $text['description-group_add']['es-cl'] = "Crear un nuevo grupo de usuarios.";
@@ -685,6 +760,7 @@ $text['description-group_add']['pl'] = "Utwórz nową grupę użytkowników.";
 $text['description-group_add']['uk'] = "Створити нову групу користувачів.";
 $text['description-group_add']['sv-se'] = "Skapa en ny användargrupp.";
 $text['description-group_add']['ro'] = "";
+$text['description-group_add']['de-at'] = "Legen Sie einen neue Gruppe an.";
 
 $text['description-enabled']['en-us'] = "Set the status of this account.";
 $text['description-enabled']['es-cl'] = "Indique el estaso de esta cuenta.";
@@ -694,6 +770,7 @@ $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "Вкажіть стан цього облікового запису.";
 $text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
 $text['description-enabled']['ro'] = "";
+$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
 
 $text['description-contact_view']['en-us'] = "View";
 $text['description-contact_view']['es-cl'] = "Ver";
@@ -703,6 +780,7 @@ $text['description-contact_view']['pl'] = "Widok";
 $text['description-contact_view']['uk'] = "Перегляд";
 $text['description-contact_view']['sv-se'] = "Granska";
 $text['description-contact_view']['ro'] = "";
+$text['description-contact_view']['de-at'] = "Ansicht";
 
 $text['description-contact']['en-us'] = "Assign a contact to this user account.";
 $text['description-contact']['es-cl'] = "Asignar un contacto a este usuario.";
@@ -712,6 +790,7 @@ $text['description-contact']['pl'] = "Wybierz numer";
 $text['description-contact']['uk'] = "Призначити контакт в цей обліковий запис користувача.";
 $text['description-contact']['sv-se'] = "Tilldela en kontakt till detta konto.";
 $text['description-contact']['ro'] = "";
+$text['description-contact']['de-at'] = "Weisen Sie diesem Benutzer einen Kontakt zu.";
 
 $text['description-api_key']['en-us'] = "Enter the API key is often a UUID. The API key should be 128 bit or greater.";
 $text['description-api_key']['es-cl'] = "Indique la API key.";
@@ -721,6 +800,7 @@ $text['description-api_key']['pl'] = "Wprowadź klucz API, który jest często U
 $text['description-api_key']['uk'] = "Введіть ключ API, зазвичай UUID. Ключ API повинен бути 128 біт або більше.";
 $text['description-api_key']['sv-se'] = "Ange API nyckel (ofta UUID). API nyckeln borde vara 128 bit eller mer.";
 $text['description-api_key']['ro'] = "";
+$text['description-api_key']['de-at'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -730,6 +810,7 @@ $text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
 $text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['ro'] = "";
+$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
@@ -739,6 +820,7 @@ $text['button-show_all']['pl'] = "Pokaż wszystkie";
 $text['button-show_all']['uk'] = "Показати всі";
 $text['button-show_all']['sv-se'] = "Visa Allt";
 $text['button-show_all']['ro'] = "";
+$text['button-show_all']['de-at'] = "Alle anzeigen";
 
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['es-cl'] = "Buscar";
@@ -748,6 +830,7 @@ $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['uk'] = "Пошук";
 $text['button-search']['sv-se'] = "Sök";
 $text['button-search']['ro'] = "";
+$text['button-search']['de-at'] = "Suchen";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -757,6 +840,7 @@ $text['button-save']['pl'] = "Zachowaj";
 $text['button-save']['uk'] = "Зберегти";
 $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['ro'] = "Salvează";
+$text['button-save']['de-at'] = "Speichern";
 
 $text['button-restore']['en-us'] = "Restore Default";
 $text['button-restore']['es-cl'] = "Restaurar Predeterminados";
@@ -766,6 +850,7 @@ $text['button-restore']['pl'] = "Przywróć ustawienia domyślne";
 $text['button-restore']['uk'] = "Відновити типові значення";
 $text['button-restore']['sv-se'] = "Aktivera Standard Inställningar";
 $text['button-restore']['ro'] = "";
+$text['button-restore']['de-at'] = "Zurücksetzen";
 
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['es-cl'] = "Generar";
@@ -775,6 +860,7 @@ $text['button-generate']['pl'] = "Generuj";
 $text['button-generate']['uk'] = "Згенерувати";
 $text['button-generate']['sv-se'] = "Generera";
 $text['button-generate']['ro'] = "";
+$text['button-generate']['de-at'] = "Generieren";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
@@ -784,6 +870,7 @@ $text['button-edit']['pl'] = "Edytuj";
 $text['button-edit']['uk'] = "Редагувати";
 $text['button-edit']['sv-se'] = "Editera";
 $text['button-edit']['ro'] = "";
+$text['button-edit']['de-at'] = "Bearbeiten";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['es-cl'] = "Eliminar";
@@ -793,6 +880,7 @@ $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['uk'] = "Видалити";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['ro'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-create_account']['en-us'] = "Create Account";
 $text['button-create_account']['es-cl'] = "Crear Cuenta";
@@ -802,6 +890,7 @@ $text['button-create_account']['pl'] = "Załóż konto";
 $text['button-create_account']['uk'] = "Створити обліковий запис";
 $text['button-create_account']['sv-se'] = "Skapa Konto";
 $text['button-create_account']['ro'] = "";
+$text['button-create_account']['de-at'] = "Konto hinzufügen";
 
 $text['button-copy']['en-us'] = "Copy";
 $text['button-copy']['es-cl'] = "Copiar";
@@ -811,6 +900,7 @@ $text['button-copy']['pl'] = "Kopiuj";
 $text['button-copy']['uk'] = "Копіювати";
 $text['button-copy']['sv-se'] = "Kopiera";
 $text['button-copy']['ro'] = "";
+$text['button-copy']['de-at'] = "Kopieren";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -820,6 +910,7 @@ $text['button-back']['pl'] = "Wróć";
 $text['button-back']['uk'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['ro'] = "Înapoi";
+$text['button-back']['de-at'] = "Zurück";
 
 $text['button-add_member']['en-us'] = "Add Member";
 $text['button-add_member']['es-cl'] = "Agregar Miembro";
@@ -829,6 +920,7 @@ $text['button-add_member']['pl'] = "Dodaj członka";
 $text['button-add_member']['uk'] = "Додати учасника";
 $text['button-add_member']['sv-se'] = "Lägg Till Medlem";
 $text['button-add_member']['ro'] = "";
+$text['button-add_member']['de-at'] = "Mitglied hinzufügen";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['es-cl'] = "Agregar";
@@ -838,5 +930,6 @@ $text['button-add']['pl'] = "Dodaj";
 $text['button-add']['uk'] = "Додати";
 $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['ro'] = "";
+$text['button-add']['de-at'] = "Hinzufügen";
 
 ?>

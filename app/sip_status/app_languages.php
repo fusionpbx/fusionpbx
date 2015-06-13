@@ -8,6 +8,7 @@ $text['title-status']['pt-br'] = "Estado";
 $text['title-status']['pl'] = "Status ";
 $text['title-status']['sv-se'] = "Status";
 $text['title-status']['uk'] = "Стан";
+$text['title-status']['de-at'] = "Status";
 
 $text['title-sofia-status-profile']['en-us'] = "sofia status profile";
 $text['title-sofia-status-profile']['es-cl'] = "perfil de estado sofia";
@@ -17,6 +18,7 @@ $text['title-sofia-status-profile']['pt-br'] = "Perfil associado ao estado do m�
 $text['title-sofia-status-profile']['pl'] = "Status profilu sofia";
 $text['title-sofia-status-profile']['sv-se'] = "sofia status profil";
 $text['title-sofia-status-profile']['uk'] = "sofia status profile ";
+$text['title-sofia-status-profile']['de-at'] = "sofia status profile";
 
 $text['title-sofia-status']['en-us'] = "sofia status";
 $text['title-sofia-status']['es-cl'] = "estado sofia";
@@ -26,6 +28,7 @@ $text['title-sofia-status']['pt-br'] = "Estado do módulo Sofia";
 $text['title-sofia-status']['pl'] = "status sofi";
 $text['title-sofia-status']['sv-se'] = "sofia status";
 $text['title-sofia-status']['uk'] = "sofia status ";
+$text['title-sofia-status']['de-at'] = "sofia status";
 
 $text['title-sip-status']['en-us'] = "SIP Status";
 $text['title-sip-status']['es-cl'] = "SIP Estado";
@@ -35,6 +38,7 @@ $text['title-sip-status']['pt-br'] = "Estado SIP";
 $text['title-sip-status']['pl'] = "Status SIP";
 $text['title-sip-status']['sv-se'] = "SIP Status";
 $text['title-sip-status']['uk'] = "Стан SIP";
+$text['title-sip-status']['de-at'] = "SIP Status";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['es-cl'] = "Tipo";
@@ -44,6 +48,7 @@ $text['label-type']['pt-br'] = "Tipo";
 $text['label-type']['pl'] = "Typ";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk'] = "Тип";
+$text['label-type']['de-at'] = "Typ";
 
 $text['label-state']['en-us'] = "State";
 $text['label-state']['es-cl'] = "Estado";
@@ -53,6 +58,7 @@ $text['label-state']['pt-br'] = "Estado";
 $text['label-state']['pl'] = "Status";
 $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk'] = "Стан";
+$text['label-state']['de-at'] = "Status";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
@@ -62,6 +68,7 @@ $text['label-name']['pt-br'] = "Nome";
 $text['label-name']['pl'] = "Nazwa";
 $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk'] = "Назва";
+$text['label-name']['de-at'] = "Name";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
@@ -71,6 +78,7 @@ $text['label-message']['pt-br'] = "Mensagem";
 $text['label-message']['pl'] = "Wiadomość";
 $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk'] = "Повідомлення";
+$text['label-message']['de-at'] = "Nachricht";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -80,6 +88,7 @@ $text['label-data']['pt-br'] = "Data";
 $text['label-data']['pl'] = "Dane";
 $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk'] = "Дані";
+$text['label-data']['de-at'] = "Daten";
 
 $text['header-sip-status']['en-us'] = "SIP Status";
 $text['header-sip-status']['es-cl'] = "SIP Estado";
@@ -89,6 +98,7 @@ $text['header-sip-status']['pt-br'] = "SIP Estado";
 $text['header-sip-status']['pl'] = "Status SIP";
 $text['header-sip-status']['sv-se'] = "SIP Status";
 $text['header-sip-status']['uk'] = "Стан SIP";
+$text['header-sip-status']['de-at'] = "SIP Status";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
@@ -98,6 +108,7 @@ $text['error-event-socket']['pt-br'] = "A conexão do evento socket falhou";
 $text['error-event-socket']['pl'] = "Połączenie do “Event Socket” nie powiodło się";
 $text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckades.";
 $text['error-event-socket']['uk'] = "Помилка підключення до сокета подій";
+$text['error-event-socket']['de-at'] = "Connection to Event Socket failed.";
 
 $text['button-stop']['en-us'] = "Stop";
 $text['button-stop']['es-cl'] = "Detener";
@@ -107,6 +118,7 @@ $text['button-stop']['pt-br'] = "Pausar Broadcast";
 $text['button-stop']['pl'] = "Zatrzymaj";
 $text['button-stop']['sv-se'] = "Stoppa";
 $text['button-stop']['uk'] = "Зупинити ";
+$text['button-stop']['de-at'] = "Stopp";
 
 $text['button-start']['en-us'] = "Start";
 $text['button-start']['es-cl'] = "Iniciar";
@@ -116,6 +128,7 @@ $text['button-start']['pt-br'] = "Iniciar";
 $text['button-start']['pl'] = "Start";
 $text['button-start']['sv-se'] = "Starta";
 $text['button-start']['uk'] = "Запустити";
+$text['button-start']['de-at'] = "Start";
 
 $text['button-restart']['en-us'] = "Restart";
 $text['button-restart']['es-cl'] = "Reanudar";
@@ -125,6 +138,7 @@ $text['button-restart']['pt-br'] = "Reiniciar";
 $text['button-restart']['pl'] = "Restartuj";
 $text['button-restart']['sv-se'] = "Starta Om";
 $text['button-restart']['uk'] = "Перезапустити";
+$text['button-restart']['de-at'] = "Neu starten";
 
 $text['button-rescan']['en-us'] = "Rescan";
 $text['button-rescan']['es-cl'] = "Vuelva a Explorar";
@@ -134,6 +148,7 @@ $text['button-rescan']['pt-br'] = "Digite novamente";
 $text['button-rescan']['pl'] = "Przeskanuj";
 $text['button-rescan']['sv-se'] = "Sök Igen";
 $text['button-rescan']['uk'] = "Пересканувати";
+$text['button-rescan']['de-at'] = "Neu scannen";
 
 $text['button-reload_xml']['en-us'] = "Reload XML";
 $text['button-reload_xml']['es-cl'] = "Actualizar XML";
@@ -143,6 +158,7 @@ $text['button-reload_xml']['pt-br'] = "Carregar novamente XML";
 $text['button-reload_xml']['pl'] = "Przeładuj XML";
 $text['button-reload_xml']['sv-se'] = "Ladda Om XML";
 $text['button-reload_xml']['uk'] = "Перезагрузити XML";
+$text['button-reload_xml']['de-at'] = "XML neu laden";
 
 $text['button-reload_acl']['en-us'] = "Reload ACL";
 $text['button-reload_acl']['es-cl'] = "Actualizar ACL";
@@ -152,6 +168,7 @@ $text['button-reload_acl']['pt-br'] = "Carregar novamente ACL";
 $text['button-reload_acl']['pl'] = "Przeładuj  listę kontroli dostępu";
 $text['button-reload_acl']['sv-se'] = "Ladda Om ACL";
 $text['button-reload_acl']['uk'] = "Перезагрузити ACL ";
+$text['button-reload_acl']['de-at'] = "ACL neu laden";
 
 $text['button-registrations']['en-us'] = "Registrations";
 $text['button-registrations']['es-cl'] = "Inscripciones";
@@ -161,6 +178,7 @@ $text['button-registrations']['pt-br'] = "Inscrições";
 $text['button-registrations']['pl'] = "Rejestracje";
 $text['button-registrations']['sv-se'] = "Registreringar";
 $text['button-registrations']['uk'] = "Реєстрації";
+$text['button-registrations']['de-at'] = "Registrierungen";
 
 $text['button-refresh']['en-us'] = "Refresh";
 $text['button-refresh']['es-cl'] = "Refrescar";
@@ -170,6 +188,7 @@ $text['button-refresh']['pt-br'] = "Atualizar";
 $text['button-refresh']['pl'] = "Odśwież";
 $text['button-refresh']['uk'] = "Оновити";
 $text['button-refresh']['sv-se'] = "Uppdatera";
+$text['button-refresh']['de-at'] = "Aktualisieren";
 
 $text['button-flush_registrations']['en-us'] = "Flush Registrations";
 $text['button-flush_registrations']['es-cl'] = "Inscripciones Flush";
@@ -179,6 +198,7 @@ $text['button-flush_registrations']['pt-br'] = "Nivelar Inscrições ";
 $text['button-flush_registrations']['pl'] = "Wyrejestruj";
 $text['button-flush_registrations']['sv-se'] = "'Flush' Registreringar";
 $text['button-flush_registrations']['uk'] = "Скинути реєстрації";
+$text['button-flush_registrations']['de-at'] = "Registrierungen verwerfen";
 
 $text['button-flush_memcache']['en-us'] = "Flush Memcache";
 $text['button-flush_memcache']['es-cl'] = "Memcache Flush";
@@ -188,5 +208,6 @@ $text['button-flush_memcache']['pt-br'] = "Nivelar memória cache";
 $text['button-flush_memcache']['pl'] = "Opróżnij pamięć podręczną (memcache)";
 $text['button-flush_memcache']['sv-se'] = "Flush Memcache ";
 $text['button-flush_memcache']['uk'] = "Скинути кеш";
+$text['button-flush_memcache']['de-at'] = "Memcache leeren";
 
 ?>
