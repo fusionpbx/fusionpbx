@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['pt-br'] = "Condições temporarias";
 $apps[$x]['menu'][0]['title']['pl'] = "Warunki czasowe";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Tidsstyrning";
 $apps[$x]['menu'][0]['title']['uk'] = "Часові умови";
+$apps[$x]['menu'][0]['title']['de-at'] = "Zeitvorgaben";
 $apps[$x]['menu'][0]['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
 $apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 $apps[$x]['menu'][0]['category'] = "internal";

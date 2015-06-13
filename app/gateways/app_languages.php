@@ -9,6 +9,7 @@ $text['title-gateways']['pl'] = "Bramy wyjściowe (gateways)";
 $text['title-gateways']['uk'] = "Шлюзи";
 $text['title-gateways']['sv-se'] = "Gateways";
 $text['title-gateways']['ro'] = "";
+$text['title-gateways']['de-at'] = "Gateways";
 
 $text['title-gateway']['en-us'] = "Gateway";
 $text['title-gateway']['es-cl'] = "Pasarela";
@@ -19,6 +20,7 @@ $text['title-gateway']['pl'] = "Brama wyjściowa (gateway)";
 $text['title-gateway']['uk'] = "Шлюз";
 $text['title-gateway']['sv-se'] = "Gateway";
 $text['title-gateway']['ro'] = "";
+$text['title-gateway']['de-at'] = "Gateway";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['es-cl'] = "Global";
@@ -29,6 +31,7 @@ $text['select-global']['pl'] = "Globalny";
 $text['select-global']['uk'] = "Global";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['ro'] = "Global";
+$text['select-global']['de-at'] = "Global";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -39,6 +42,7 @@ $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['uk'] = "Оновлення завершено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['ro'] = "Actualizare completă";
+$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor ingrese: ";
@@ -49,6 +53,7 @@ $text['message-required']['pl'] = "Wpisz:";
 $text['message-required']['uk'] = "Будь ласка, вкажіть:";
 $text['message-required']['sv-se'] = "Var god uppge:";
 $text['message-required']['ro'] = "";
+$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
 
 $text['message-maximum_gateways']['en-us'] = "Maximum Gateways:";
 $text['message-maximum_gateways']['es-cl'] = "Gateways Máximo Permitido:";
@@ -59,6 +64,7 @@ $text['message-maximum_gateways']['pl'] = "Maksymalna ilość bram wyjściowych"
 $text['message-maximum_gateways']['uk'] = "Максимальна кількість шлюзів";
 $text['message-maximum_gateways']['sv-se'] = "Max antal Gateways:";
 $text['message-maximum_gateways']['ro'] = "";
+$text['message-maximum_gateways']['de-at'] = "Maximale Anzahl an Gateways:";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
@@ -69,6 +75,7 @@ $text['message-delete']['pl'] = "Usunięto poprawnie";
 $text['message-delete']['uk'] = "Видалено";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
 $text['message-delete']['ro'] = "Ștergere completă";
+$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completada";
@@ -79,6 +86,7 @@ $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['ro'] = "Copiere completă";
+$text['message-copy']['de-at'] = "Erfolgreich kopiert";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
@@ -89,6 +97,7 @@ $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['uk'] = "Додано";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['ro'] = "Adăugare completă";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
@@ -99,6 +108,7 @@ $text['label-username']['pl'] = "Użytkownik";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['ro'] = "Utilizator";
+$text['label-username']['de-at'] = "Benutzername";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -109,6 +119,7 @@ $text['label-true']['pl'] = "Tak";
 $text['label-true']['uk'] = "Так";
 $text['label-true']['sv-se'] = "Sann";
 $text['label-true']['ro'] = "";
+$text['label-true']['de-at'] = "Ein";
 
 $text['label-supress_cng']['en-us'] = "Supress CNG";
 $text['label-supress_cng']['es-cl'] = "Suprimir CNG";
@@ -119,6 +130,7 @@ $text['label-supress_cng']['pl'] = "Ztłum/wyłącz CNG (calling tones)";
 $text['label-supress_cng']['uk'] = "Supress CNG";
 $text['label-supress_cng']['sv-se'] = "Göm CNG";
 $text['label-supress_cng']['ro'] = "";
+$text['label-supress_cng']['de-at'] = "CNG unterdrücken";
 
 $text['label-status-stopped']['en-us'] = "Stopped";
 $text['label-status-stopped']['es-cl'] = "Detenido";
@@ -129,6 +141,7 @@ $text['label-status-stopped']['pl'] = "Zatrzymany";
 $text['label-status-stopped']['uk'] = "Зупинено";
 $text['label-status-stopped']['sv-se'] = "Stoppad";
 $text['label-status-stopped']['ro'] = "Oprit";
+$text['label-status-stopped']['de-at'] = "Gestoppt";
 
 $text['label-status-running']['en-us'] = "Running";
 $text['label-status-running']['es-cl'] = "Corriendo";
@@ -139,6 +152,7 @@ $text['label-status-running']['pl'] = "Uruchomiony";
 $text['label-status-running']['uk'] = "Запущено";
 $text['label-status-running']['sv-se'] = "I drift";
 $text['label-status-running']['ro'] = "";
+$text['label-status-running']['de-at'] = "Aktiv";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -149,6 +163,7 @@ $text['label-status']['pl'] = "Status";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['sv-se'] = "Status";
 $text['label-status']['ro'] = "Stare";
+$text['label-status']['de-at'] = "Status";
 
 $text['label-state']['en-us'] = "State";
 $text['label-state']['es-cl'] = "Estado";
@@ -159,6 +174,7 @@ $text['label-state']['pl'] = "Stan";
 $text['label-state']['uk'] = "Стан";
 $text['label-state']['sv-se'] = "Status";
 $text['label-state']['ro'] = "";
+$text['label-state']['de-at'] = "Status";
 
 $text['label-sip_cid_type']['en-us'] = "Sip CID Type";
 $text['label-sip_cid_type']['es-cl'] = "Tipo de Caller ID SIP ";
@@ -169,6 +185,7 @@ $text['label-sip_cid_type']['pl'] = "Typ SIP CID";
 $text['label-sip_cid_type']['uk'] = "Sip CID Type";
 $text['label-sip_cid_type']['sv-se'] = "Sip CID Typ";
 $text['label-sip_cid_type']['ro'] = "";
+$text['label-sip_cid_type']['de-at'] = "SIP CID Type";
 
 $text['label-retry_seconds']['en-us'] = "Retry Seconds";
 $text['label-retry_seconds']['es-cl'] = "Tiempo de reconexión";
@@ -179,6 +196,7 @@ $text['label-retry_seconds']['pl'] = "Ponowna  próba  {sek)";
 $text['label-retry_seconds']['uk'] = "Retry Seconds ";
 $text['label-retry_seconds']['sv-se'] = "Retry sekunder";
 $text['label-retry_seconds']['ro'] = "";
+$text['label-retry_seconds']['de-at'] = "Retry Seconds";
 
 $text['label-register_transport']['en-us'] = "Register Transport";
 $text['label-register_transport']['es-cl'] = "Transporte de Registro";
@@ -189,6 +207,7 @@ $text['label-register_transport']['pl'] = "Protokół transportu SIP 'Register'"
 $text['label-register_transport']['uk'] = "Транспорт для реєстрації";
 $text['label-register_transport']['sv-se'] = "Register Transport";
 $text['label-register_transport']['ro'] = "";
+$text['label-register_transport']['de-at'] = "Register Transport";
 
 $text['label-register_proxy']['en-us'] = "Register Proxy";
 $text['label-register_proxy']['es-cl'] = "Proxy de Registro";
@@ -199,6 +218,7 @@ $text['label-register_proxy']['pl'] = "Serwer proxy rejestracji";
 $text['label-register_proxy']['uk'] = "Проксі для реєстрації";
 $text['label-register_proxy']['sv-se'] = "Register Proxy";
 $text['label-register_proxy']['ro'] = "";
+$text['label-register_proxy']['de-at'] = "Register Proxy";
 
 $text['label-register']['en-us'] = "Register";
 $text['label-register']['es-cl'] = "Registrar";
@@ -209,6 +229,7 @@ $text['label-register']['pl'] = "Rejestracja";
 $text['label-register']['uk'] = "Реєстрація";
 $text['label-register']['sv-se'] = "Register";
 $text['label-register']['ro'] = "";
+$text['label-register']['de-at'] = "Register";
 
 $text['label-realm']['en-us'] = "Realm";
 $text['label-realm']['es-cl'] = "Reino";
@@ -219,6 +240,7 @@ $text['label-realm']['pl'] = "Realm (domena)";
 $text['label-realm']['uk'] = "";
 $text['label-realm']['sv-se'] = "Realm";
 $text['label-realm']['ro'] = "";
+$text['label-realm']['de-at'] = "Realm";
 
 $text['label-proxy']['en-us'] = "Proxy";
 $text['label-proxy']['es-cl'] = "Proxy";
@@ -229,6 +251,7 @@ $text['label-proxy']['pl'] = "Proxy";
 $text['label-proxy']['uk'] = "Проксі";
 $text['label-proxy']['sv-se'] = "Proxy";
 $text['label-proxy']['ro'] = "";
+$text['label-proxy']['de-at'] = "Proxy";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['es-cl'] = "Perfil";
@@ -239,6 +262,7 @@ $text['label-profile']['pl'] = "Profil";
 $text['label-profile']['uk'] = "Профіль";
 $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['ro'] = "Profil";
+$text['label-profile']['de-at'] = "Profil";
 
 $text['label-ping']['en-us'] = "Ping";
 $text['label-ping']['es-cl'] = "Ping";
@@ -249,6 +273,7 @@ $text['label-ping']['pl'] = "Ping";
 $text['label-ping']['uk'] = "Пінг";
 $text['label-ping']['sv-se'] = "Ping";
 $text['label-ping']['ro'] = "Ping";
+$text['label-ping']['de-at'] = "Ping";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -259,6 +284,7 @@ $text['label-password']['pl'] = "Hasło";
 $text['label-password']['uk'] = "Пароль";
 $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['ro'] = "Parolă";
+$text['label-password']['de-at'] = "Passwort";
 
 $text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
 $text['label-outbound_proxy']['es-cl'] = "Proxy de Salida";
@@ -269,6 +295,7 @@ $text['label-outbound_proxy']['pl'] = "Wychodzący serwer proxy";
 $text['label-outbound_proxy']['uk'] = "Вихідний проксі";
 $text['label-outbound_proxy']['sv-se'] = "Utgående Proxy";
 $text['label-outbound_proxy']['ro'] = "";
+$text['label-outbound_proxy']['de-at'] = "Outbound Proxy";
 
 $text['label-gateway']['en-us'] = "Gateway";
 $text['label-gateway']['es-cl'] = "Pasarela";
@@ -279,6 +306,7 @@ $text['label-gateway']['pl'] = "Brama wyjściowa ";
 $text['label-gateway']['uk'] = "Шлюз";
 $text['label-gateway']['sv-se'] = "Gateway";
 $text['label-gateway']['ro'] = "";
+$text['label-gateway']['de-at'] = "Gateway";
 
 $text['label-from_user']['en-us'] = "From User";
 $text['label-from_user']['es-cl'] = "From User";
@@ -289,6 +317,7 @@ $text['label-from_user']['pl'] = "Od użytkownika (from user)";
 $text['label-from_user']['uk'] = "Від користувача";
 $text['label-from_user']['sv-se'] = "From User";
 $text['label-from_user']['ro'] = "";
+$text['label-from_user']['de-at'] = "From User";
 
 $text['label-from_domain']['en-us'] = "From Domain";
 $text['label-from_domain']['es-cl'] = "From Domain";
@@ -299,6 +328,7 @@ $text['label-from_domain']['pl'] = "Z domeny (from domain)";
 $text['label-from_domain']['uk'] = "З домену";
 $text['label-from_domain']['sv-se'] = "From Domain";
 $text['label-from_domain']['ro'] = "";
+$text['label-from_domain']['de-at'] = "From Domain";
 
 $text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
@@ -309,6 +339,7 @@ $text['label-false']['pl'] = "Nie";
 $text['label-false']['uk'] = "Ні";
 $text['label-false']['sv-se'] = "Falsk";
 $text['label-false']['ro'] = "";
+$text['label-false']['de-at'] = "Aus";
 
 $text['label-extension_in_contact']['en-us'] = "Extension In Contact";
 $text['label-extension_in_contact']['es-cl'] = "Extensión en Contacto";
@@ -319,6 +350,7 @@ $text['label-extension_in_contact']['pl'] = "Numer wewnętrzny w SIP 'Contact'";
 $text['label-extension_in_contact']['uk'] = "Розширення у контакта";
 $text['label-extension_in_contact']['sv-se'] = "Anknytning In Contact";
 $text['label-extension_in_contact']['ro'] = "";
+$text['label-extension_in_contact']['de-at'] = "Extension In Contact";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -329,6 +361,7 @@ $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['uk'] = "Розширення";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['ro'] = "Extensie";
+$text['label-extension']['de-at'] = "Durchwahl";
 
 $text['label-expire_seconds']['en-us'] = "Expire Seconds";
 $text['label-expire_seconds']['es-cl'] = "Tiempo de expiración";
@@ -339,6 +372,7 @@ $text['label-expire_seconds']['pl'] = "Czas wygaśnięcia w SIP 'Expire'";
 $text['label-expire_seconds']['uk'] = "";
 $text['label-expire_seconds']['sv-se'] = "Utgår Sekunder";
 $text['label-expire_seconds']['ro'] = "";
+$text['label-expire_seconds']['de-at'] = "Expire Seconds";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activado";
@@ -349,6 +383,7 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['ro'] = "";
+$text['label-enabled']['de-at'] = "An";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -359,6 +394,7 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['ro'] = "Domeniu";
+$text['label-domain']['de-at'] = "Domain";
 
 $text['label-distinct_to']['en-us'] = "Distinct To";
 $text['label-distinct_to']['es-cl'] = "Distinct_To";
@@ -369,6 +405,7 @@ $text['label-distinct_to']['pl'] = "Wyodrębnj do";
 $text['label-distinct_to']['uk'] = "";
 $text['label-distinct_to']['sv-se'] = "Distinct To";
 $text['label-distinct_to']['ro'] = "";
+$text['label-distinct_to']['de-at'] = "Distinct To";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -379,6 +416,7 @@ $text['label-description']['pl'] = "Opis";
 $text['label-description']['uk'] = "Опис";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['ro'] = "";
+$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-context']['en-us'] = "Context";
 $text['label-context']['es-cl'] = "Contexto";
@@ -389,6 +427,7 @@ $text['label-context']['pl'] = "Kontekst";
 $text['label-context']['uk'] = "Контекст";
 $text['label-context']['sv-se'] = "Context";
 $text['label-context']['ro'] = "";
+$text['label-context']['de-at'] = "Kontext";
 
 $text['label-codec_prefs']['en-us'] = "Codec Preferences";
 $text['label-codec_prefs']['es-cl'] = "Lista de Codecs";
@@ -399,6 +438,7 @@ $text['label-codec_prefs']['pl'] = "Preferencja kodeków";
 $text['label-codec_prefs']['uk'] = "";
 $text['label-codec_prefs']['sv-se'] = "Codec Preferences";
 $text['label-codec_prefs']['ro'] = "Preferințe codec";
+$text['label-codec_prefs']['de-at'] = "Bevorzugte Codecs";
 
 $text['label-channels']['en-us'] = "Channels";
 $text['label-channels']['es-cl'] = "Canales";
@@ -409,6 +449,7 @@ $text['label-channels']['pl'] = "Kanały";
 $text['label-channels']['uk'] = "Канали";
 $text['label-channels']['sv-se'] = "Kanaler";
 $text['label-channels']['ro'] = "Canale";
+$text['label-channels']['de-at'] = "Kanäle";
 
 $text['label-caller_id_in_from']['en-us'] = "Caller ID In From";
 $text['label-caller_id_in_from']['es-cl'] = "Caller ID In From";
@@ -419,6 +460,7 @@ $text['label-caller_id_in_from']['pl'] = "Prezentacja w SIP 'From'";
 $text['label-caller_id_in_from']['uk'] = "Caller ID In From ";
 $text['label-caller_id_in_from']['sv-se'] = "Caller ID In From";
 $text['label-caller_id_in_from']['ro'] = "";
+$text['label-caller_id_in_from']['de-at'] = "Caller ID In From";
 
 $text['label-auth_username']['en-us'] = "Auth Username";
 $text['label-auth_username']['es-cl'] = "Auth Username";
@@ -429,6 +471,7 @@ $text['label-auth_username']['pl'] = "Nazwa użytkownika (login)";
 $text['label-auth_username']['uk'] = "Auth Username ";
 $text['label-auth_username']['sv-se'] = "Auth Username";
 $text['label-auth_username']['ro'] = "";
+$text['label-auth_username']['de-at'] = "Auth Benutzername";
 
 $text['label-action-stop']['en-us'] = "Stop";
 $text['label-action-stop']['es-cl'] = "Detener";
@@ -439,6 +482,7 @@ $text['label-action-stop']['pl'] = "Stop";
 $text['label-action-stop']['uk'] = "Зупинити";
 $text['label-action-stop']['sv-se'] = "Stopp";
 $text['label-action-stop']['ro'] = "";
+$text['label-action-stop']['de-at'] = "Stop";
 
 $text['label-action-start']['en-us'] = "Start";
 $text['label-action-start']['es-cl'] = "Inicio";
@@ -449,6 +493,7 @@ $text['label-action-start']['pl'] = "Start";
 $text['label-action-start']['uk'] = "Запустити";
 $text['label-action-start']['sv-se'] = "Start";
 $text['label-action-start']['ro'] = "";
+$text['label-action-start']['de-at'] = "Start";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -459,6 +504,7 @@ $text['label-action']['pl'] = "Operacja";
 $text['label-action']['uk'] = "Дія";
 $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['ro'] = "";
+$text['label-action']['de-at'] = "Aktion";
 
 $text['description-username']['en-us'] = "Enter the username here.";
 $text['description-username']['es-cl'] = "Ingrese el nombre de usuario aquí";
@@ -469,6 +515,7 @@ $text['description-username']['pl'] = "Wprowadź nazwę użytkownika";
 $text['description-username']['uk'] = "Введіть ім’я користувача";
 $text['description-username']['sv-se'] = "Ange användarnamn här.";
 $text['description-username']['ro'] = "";
+$text['description-username']['de-at'] = "Geben Sie den Benutzernamen an.";
 
 $text['description-supress_cng']['en-us'] = "Enter the supress-cng";
 $text['description-supress_cng']['es-cl'] = "Para ahorrar ancho de banda RTP, no se envía RTP para el silencio";
@@ -479,6 +526,7 @@ $text['description-supress_cng']['pl'] = "Wprowadź  ztłumienie/wyłączenie CN
 $text['description-supress_cng']['uk'] = "";
 $text['description-supress_cng']['sv-se'] = "Ange 'supress-cng'";
 $text['description-supress_cng']['ro'] = "";
+$text['description-supress_cng']['de-at'] = "Komfort Geräusch Generator unterdrücken";
 
 $text['description-sip_cid_type']['en-us'] = "Enter the sip cid type: none, pid, and rpid.";
 $text['description-sip_cid_type']['es-cl'] = "Ingrese el tipo de caller id sip: none (utiliza campo From de cabecera), pid (P-Asserted-Identity header) o rpid (remote-Party-ID header).";
@@ -489,6 +537,7 @@ $text['description-sip_cid_type']['pl'] = "Wprowadź typ prezentacji (np. none, 
 $text['description-sip_cid_type']['uk'] = "";
 $text['description-sip_cid_type']['sv-se'] = "Ange sip cid type: none, pid, and rpid";
 $text['description-sip_cid_type']['ro'] = "";
+$text['description-sip_cid_type']['de-at'] = "Geben Sie SIP CID type an: none, pid, rpid.";
 
 $text['description-retry_seconds']['en-us'] = "Enter the retry-seconds here.";
 $text['description-retry_seconds']['es-cl'] = "Ingrese el tiempo de reconexión en segundos.";
@@ -499,6 +548,7 @@ $text['description-retry_seconds']['pl'] = " Wprowadź wartość ponownej  prób
 $text['description-retry_seconds']['uk'] = "";
 $text['description-retry_seconds']['sv-se'] = "Ange 'retry-sekunder' här.";
 $text['description-retry_seconds']['ro'] = "";
+$text['description-retry_seconds']['de-at'] = "Geben Sie an, nach welcher Zeit die Registrierung erneut versucht werden soll (nach fehlgeschlagenem Register)";
 
 $text['description-register_transport']['en-us'] = "Choose whether to register-transport.";
 $text['description-register_transport']['es-cl'] = "Seleccione el tipo de transporte de registro.";
@@ -509,6 +559,7 @@ $text['description-register_transport']['pl'] = "Opcja  protokołu transportu SI
 $text['description-register_transport']['uk'] = "";
 $text['description-register_transport']['sv-se'] = "Välj om registrera transport eller ej.";
 $text['description-register_transport']['ro'] = "";
+$text['description-register_transport']['de-at'] = "Wählen Sie ob register-transport verwendet werden soll.";
 
 $text['description-register_proxy']['en-us'] = "Enter the register proxy here.";
 $text['description-register_proxy']['es-cl'] = "Ingrese el proxy de registro aquí";
@@ -519,6 +570,7 @@ $text['description-register_proxy']['pl'] = "Wprowadź serwer rejestracji proxy"
 $text['description-register_proxy']['uk'] = "Введіть проксі для реєстрації";
 $text['description-register_proxy']['sv-se'] = "Ange 'register proxy' här.";
 $text['description-register_proxy']['ro'] = "";
+$text['description-register_proxy']['de-at'] = "Geben Sie den Register Proxy hier an.";
 
 $text['description-register']['en-us'] = "Choose whether to register.";
 $text['description-register']['es-cl'] = "Seleccione si desea registrar";
@@ -529,6 +581,7 @@ $text['description-register']['pl'] = "Wybierz czy wynagana jest rejestracja";
 $text['description-register']['uk'] = "";
 $text['description-register']['sv-se'] = "Välj om du vill registrera.";
 $text['description-register']['ro'] = "";
+$text['description-register']['de-at'] = "Wählen Sie ob dieses Gateway registriert werden soll.";
 
 $text['description-realm']['en-us'] = "Enter the realm here.";
 $text['description-realm']['es-cl'] = "Ingrese el reino aquí";
@@ -539,6 +592,7 @@ $text['description-realm']['pl'] = "Wprowadź nazwe domeny (realm)";
 $text['description-realm']['uk'] = "";
 $text['description-realm']['sv-se'] = "Ange 'realm' här.";
 $text['description-realm']['ro'] = "";
+$text['description-realm']['de-at'] = "Geben Sie den Realm hier an.";
 
 $text['description-proxy']['en-us'] = "Enter the domain or IP address of the proxy.";
 $text['description-proxy']['es-cl'] = "Ingrese el dominio o dirección IP del proxy.";
@@ -549,6 +603,7 @@ $text['description-proxy']['pl'] = "Wprowadź nazwę domeny lub adres IP serwera
 $text['description-proxy']['uk'] = "Введіть назву домену або IP адресу проксі";
 $text['description-proxy']['sv-se'] = "Ange domän eller IP adress för proxy:n här.";
 $text['description-proxy']['ro'] = "";
+$text['description-proxy']['de-at'] = "Geben Sie die Domain oder die IP Adresse des Proxies an.";
 
 $text['description-profile']['en-us'] = "Enter the profile here.";
 $text['description-profile']['es-cl'] = "Ingrese el perfil aquí.";
@@ -559,6 +614,7 @@ $text['description-profile']['pl'] = "Zdefiniuj ustawienia tego profilu";
 $text['description-profile']['uk'] = "Введіть профіль";
 $text['description-profile']['sv-se'] = "Definiera inställningar för denna profil.";
 $text['description-profile']['ro'] = "";
+$text['description-profile']['de-at'] = "Definieren Sie die Einstellungen für dieses Profil.";
 
 $text['description-ping']['en-us'] = "Enter the ping interval here in seconds.";
 $text['description-ping']['es-cl'] = "Ingrese el intervalo de ping en segundos aquí.";
@@ -569,6 +625,7 @@ $text['description-ping']['pl'] = "Wprowadź interwał PING (sek)";
 $text['description-ping']['uk'] = "Введіть інтервал пінгування в секундах.";
 $text['description-ping']['sv-se'] = "Ange interval för ping i sekunder.";
 $text['description-ping']['ro'] = "";
+$text['description-ping']['de-at'] = "Geben Sie das Ping Interval in Sekunden an.";
 
 $text['description-password']['en-us'] = "Enter the password here.";
 $text['description-password']['es-cl'] = "Ingrese la contraseña aquí";
@@ -579,6 +636,7 @@ $text['description-password']['pl'] = "Wpisz hasło";
 $text['description-password']['uk'] = "Введіть пароль";
 $text['description-password']['sv-se'] = "Fyll i lösenord.";
 $text['description-password']['ro'] = "";
+$text['description-password']['de-at'] = "Geben Sie das Passwort ein.";
 
 $text['description-outbound_proxy']['en-us'] = "Enter the outbound proxy here.";
 $text['description-outbound_proxy']['es-cl'] = "Ingrese un proxy de salida aquí";
@@ -589,6 +647,7 @@ $text['description-outbound_proxy']['pl'] = "Wprowadź wychodzący serwer proxy"
 $text['description-outbound_proxy']['uk'] = "Введіть вихідний проксі";
 $text['description-outbound_proxy']['sv-se'] = "Fyll i utgående proxy.";
 $text['description-outbound_proxy']['ro'] = "";
+$text['description-outbound_proxy']['de-at'] = "Geben Sie den Outbound Proxy ein.";
 
 $text['description-gateway-name']['en-us'] = "Enter the gateway name here.";
 $text['description-gateway-name']['es-cl'] = "Ingrese el nombre de la pasarela aquí";
@@ -599,6 +658,7 @@ $text['description-gateway-name']['pl'] = "Wprowadź nazwę bramy wyjściowej";
 $text['description-gateway-name']['uk'] = "Введіть назву шлюзу";
 $text['description-gateway-name']['sv-se'] = "Ange gateway namn här.";
 $text['description-gateway-name']['ro'] = "";
+$text['description-gateway-name']['de-at'] = "Geben Sie den Gateway Namen hier ein.";
 
 $text['description-gateway-edit']['en-us'] = "Defines a connections to a SIP Provider or another SIP server.";
 $text['description-gateway-edit']['es-cl'] = "Define una conexión con un proveedor SIP u otro servidor SIP.";
@@ -609,6 +669,7 @@ $text['description-gateway-edit']['pl'] = "Zdefiniuj  połączenia do operatora 
 $text['description-gateway-edit']['uk'] = "Визначає підключення до провайдера SIP або іншого SIP-сервера.";
 $text['description-gateway-edit']['sv-se'] = "Definierar anslutning till en SIP Provider eller annan SIP -server.";
 $text['description-gateway-edit']['ro'] = "";
+$text['description-gateway-edit']['de-at'] = "Definiert eine Verbindung zu einem SIP Provider oder einem anderen SIP Server.";
 
 $text['description-gateway']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 $text['description-gateway']['es-cl'] = "Las pasarelas proveen acceso a otras redes de voz. Pueden ser provedores u otro sistema que requiera registo SIP.";
@@ -619,6 +680,7 @@ $text['description-gateway']['pl'] = "Bramy wyjściowe zapewniają dostęp do in
 $text['description-gateway']['uk'] = "";
 $text['description-gateway']['sv-se'] = "Gateways ger tillgång till andra röstnätverk. Dessa kan vara telefoni leverantörer eller andra system som kräver SIP registrering.";
 $text['description-gateway']['ro'] = "";
+$text['description-gateway']['de-at'] = "Gateways ermöglichen die Verbindung in andere Sprachnetze. Gateways können Voice over IP Provider oder andere Systeme sein, die eine SIP Registrierung voraussetzen.";
 
 $text['description-from_user']['en-us'] = "Enter the from-user here.";
 $text['description-from_user']['pt-pt'] = "Introduza o from-user aqui.";
@@ -628,6 +690,7 @@ $text['description-from_user']['pl'] = "Wprowadź SIP 'from user'";
 $text['description-from_user']['uk'] = "";
 $text['description-from_user']['sv-se'] = "Ange 'from-user' här.";
 $text['description-from_user']['ro'] = "";
+$text['description-from_user']['de-at'] = "Geben Sie den From-User hier an.";
 
 $text['description-from_domain']['en-us'] = "Enter the from-domain here.";
 $text['description-from_domain']['es-cl'] = "Parte dominio de cabecera SIP";
@@ -638,6 +701,7 @@ $text['description-from_domain']['pl'] = "Wprowadź SIP 'from-domain'";
 $text['description-from_domain']['uk'] = "";
 $text['description-from_domain']['sv-se'] = "Ange 'from-domain' här.";
 $text['description-from_domain']['ro'] = "";
+$text['description-from_domain']['de-at'] = "Geben Sie die From-Domain hier an.";
 
 $text['description-extension_in_contact']['en-us'] = "Enter the Extension In Contact";
 $text['description-extension_in_contact']['es-cl'] = "Ingrese la extensión en contacto.";
@@ -648,6 +712,7 @@ $text['description-extension_in_contact']['pl'] = "Wprowadź numer wewnętrzny w
 $text['description-extension_in_contact']['uk'] = "";
 $text['description-extension_in_contact']['sv-se'] = "Ange 'Extension In Contact'";
 $text['description-extension_in_contact']['ro'] = "";
+$text['description-extension_in_contact']['de-at'] = "Geben Sie die Extension in Contact hier an.";
 
 $text['description-extension']['en-us'] = "Enter the extension here.";
 $text['description-extension']['es-cl'] = "Ingrese la extensión aquí";
@@ -658,6 +723,7 @@ $text['description-extension']['pl'] = "Wprowadź alfanumeryczny numer wewnętrz
 $text['description-extension']['uk'] = "Введіть розширення";
 $text['description-extension']['sv-se'] = "Ange anknytningen här.";
 $text['description-extension']['ro'] = "";
+$text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
 
 $text['description-expire_seconds']['en-us'] = "Enter the expire-seconds here.";
 $text['description-expire_seconds']['es-cl'] = "Ingrese el tiempo de expiración en segundos.";
@@ -668,6 +734,7 @@ $text['description-expire_seconds']['pl'] = "Wprowadź czas wygaśnięcia (sek)"
 $text['description-expire_seconds']['uk'] = "";
 $text['description-expire_seconds']['sv-se'] = "Ange 'expire-seconds' här.";
 $text['description-expire_seconds']['ro'] = "";
+$text['description-expire_seconds']['de-at'] = "Geben Sie an, nach wie vielen Sekunden die Registrierung des Gateways erneuert werden soll.";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the Gateway";
 $text['description-enabled']['es-cl'] = "Activar o Desactivar la Pasarela";
@@ -678,6 +745,7 @@ $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "";
 $text['description-enabled']['sv-se'] = "Aktivera eller In-aktivera Gateway";
 $text['description-enabled']['ro'] = "";
+$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -688,6 +756,7 @@ $text['description-domain']['pl'] = "";
 $text['description-domain']['uk'] = "";
 $text['description-domain']['sv-se'] = "";
 $text['description-domain']['ro'] = "";
+$text['description-domain']['de-at'] = "";
 
 $text['description-distinct_to']['en-us'] = "Enter the distinct_to here.";
 $text['description-distinct_to']['es-cl'] = "Ingrese el distinct_to aquí.";
@@ -698,6 +767,7 @@ $text['description-distinct_to']['pl'] = "Wprowadź wartość 'wyodrębnj do'";
 $text['description-distinct_to']['uk'] = "";
 $text['description-distinct_to']['sv-se'] = "Ange 'distinct_to' här. ";
 $text['description-distinct_to']['ro'] = "";
+$text['description-distinct_to']['de-at'] = "Geben Sie den Distinct To hier an.";
 
 $text['description-description']['en-us'] = "Enter the description of the gateway here.";
 $text['description-description']['es-cl'] = "Ingrese la descripción de la pasarela aquí.";
@@ -708,6 +778,7 @@ $text['description-description']['pl'] = "Wprowadź opis bramy wyjściowej";
 $text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
 $text['description-description']['sv-se'] = "Ange en beskrivning för gateway:en här.";
 $text['description-description']['ro'] = "";
+$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
 
 $text['description-context']['en-us'] = "Enter the context here.";
 $text['description-context']['es-cl'] = "Ingrese el contexto aquí";
@@ -718,6 +789,7 @@ $text['description-context']['pl'] = "Wprowadź kontekst";
 $text['description-context']['uk'] = "";
 $text['description-context']['sv-se'] = "Ange 'context' här.";
 $text['description-context']['ro'] = "";
+$text['description-context']['de-at'] = "Geben Sie den Kontext hier an.";
 
 $text['description-codec_prefs']['en-us'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
 $text['description-codec_prefs']['es-cl'] = "Ingrese el listado de codecs a utilizar. Ej: PCMA,PCMU,G722";
@@ -728,6 +800,7 @@ $text['description-codec_prefs']['pl'] = "Wprowadź listę preferencji kodeków 
 $text['description-codec_prefs']['uk'] = "";
 $text['description-codec_prefs']['sv-se'] = "Ange codec preferenser som en lista . Ex : PCMA , PCMU , G722";
 $text['description-codec_prefs']['ro'] = "";
+$text['description-codec_prefs']['de-at'] = "Geben Sie hier die Liste der bevorzugten Codecs an. (z.B. PCMA,PCMU,G722)";
 
 $text['description-channels']['en-us'] = "Maximum number of simultaneous channels available in the gateway.";
 $text['description-channels']['es-cl'] = "Número máximo de canales simultaneos disponibles en la pasarela.";
@@ -738,6 +811,7 @@ $text['description-channels']['pl'] = "Maksymalna ilość kanałów głosowych d
 $text['description-channels']['uk'] = "";
 $text['description-channels']['sv-se'] = "Max antal samtidiga kanaler för gateway.";
 $text['description-channels']['ro'] = "";
+$text['description-channels']['de-at'] = "Maximale Anzahl gleichzeitiger Gespräche möglich mit diesem Gateway.";
 
 $text['description-caller_id_in_from']['en-us'] = "Enter the caller-id-in-from.";
 $text['description-caller_id_in_from']['es-cl'] = "Ingrese la parte caller-id-in-from de la cabecera SIP";
@@ -748,6 +822,7 @@ $text['description-caller_id_in_from']['pl'] = "Wprowadź SIP 'caller-id-in-from
 $text['description-caller_id_in_from']['uk'] = "";
 $text['description-caller_id_in_from']['sv-se'] = "Ange 'caller-id-in-from'.";
 $text['description-caller_id_in_from']['ro'] = "";
+$text['description-caller_id_in_from']['de-at'] = "Geben Sie Caller ID in From an.";
 
 $text['description-auth_username']['en-us'] = "Enter the auth-username here.";
 $text['description-auth_username']['es-cl'] = "Ingrese el auth-username aquí";
@@ -758,6 +833,7 @@ $text['description-auth_username']['pl'] = "Wprowadź nazwe użytkownika (login)
 $text['description-auth_username']['uk'] = "";
 $text['description-auth_username']['sv-se'] = "Ange 'uth-username' här.";
 $text['description-auth_username']['ro'] = "";
+$text['description-auth_username']['de-at'] = "Geben Sie den Auth Benutzernamen hier an.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -768,6 +844,7 @@ $text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
 $text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['ro'] = "";
+$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
 
 $text['confirm-copy']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
@@ -778,6 +855,7 @@ $text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
 $text['confirm-copy']['uk'] = "Ви дійсно бажаєте це копіювати?";
 $text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
 $text['confirm-copy']['ro'] = "";
+$text['confirm-copy']['de-at'] = "Wollen Sie das wirdklich kopieren?";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['es-cl'] = "Ver";
@@ -788,6 +866,7 @@ $text['button-view']['pl'] = "Widok";
 $text['button-view']['uk'] = "Перегляд";
 $text['button-view']['sv-se'] = "Visa";
 $text['button-view']['ro'] = "";
+$text['button-view']['de-at'] = "Ansicht";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -798,6 +877,7 @@ $text['button-save']['pl'] = "Zachowaj";
 $text['button-save']['uk'] = "Зберегти";
 $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['ro'] = "Salvează";
+$text['button-save']['de-at'] = "Speichern";
 
 $text['button-refresh']['en-us'] = "Refresh";
 $text['button-refresh']['es-cl'] = "Refrescar";
@@ -808,6 +888,7 @@ $text['button-refresh']['pl'] = "Odśwież";
 $text['button-refresh']['uk'] = "Оновити";
 $text['button-refresh']['sv-se'] = "Uppdatera";
 $text['button-refresh']['ro'] = "";
+$text['button-refresh']['de-at'] = "Aktualisieren";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
@@ -818,6 +899,7 @@ $text['button-edit']['pl'] = "Edytuj";
 $text['button-edit']['uk'] = "Редагувати";
 $text['button-edit']['sv-se'] = "Editera";
 $text['button-edit']['ro'] = "";
+$text['button-edit']['de-at'] = "Bearbeiten";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['es-cl'] = "Eliminar";
@@ -828,6 +910,7 @@ $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['uk'] = "Видалити";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['ro'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-copy']['en-us'] = "Copy";
 $text['button-copy']['es-cl'] = "Copiar";
@@ -838,6 +921,7 @@ $text['button-copy']['pl'] = "Kopiuj";
 $text['button-copy']['uk'] = "Копіювати";
 $text['button-copy']['sv-se'] = "Kopiera";
 $text['button-copy']['ro'] = "";
+$text['button-copy']['de-at'] = "Kopieren";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -848,6 +932,7 @@ $text['button-back']['pl'] = "Wróć";
 $text['button-back']['uk'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['ro'] = "Înapoi";
+$text['button-back']['de-at'] = "Zurück";
 
 $text['button-advanced']['en-us'] = "Advanced";
 $text['button-advanced']['es-cl'] = "Avanzado";
@@ -858,6 +943,7 @@ $text['button-advanced']['pl'] = "Zaawansowane";
 $text['button-advanced']['uk'] = "Додатково";
 $text['button-advanced']['sv-se'] = "Avancerat";
 $text['button-advanced']['ro'] = "";
+$text['button-advanced']['de-at'] = "Erweitert";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['es-cl'] = "Agregar";
@@ -868,5 +954,6 @@ $text['button-add']['pl'] = "Dodaj";
 $text['button-add']['uk'] = "Додати";
 $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['ro'] = "";
+$text['button-add']['de-at'] = "Hinzufügen";
 
 ?>
