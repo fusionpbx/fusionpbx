@@ -270,6 +270,8 @@
 
 				--export the ringback
 					if (ring_group_distinctive_ring ~= nil) then
+						ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", session:getVariable("local_ip_v4"));
+						ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${domain_name}", session:getVariable("domain_name"));
 						session:execute("export", "sip_h_Alert-Info="..ring_group_distinctive_ring);
 					end
 
