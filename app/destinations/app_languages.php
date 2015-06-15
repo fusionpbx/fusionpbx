@@ -317,7 +317,7 @@ $text['label-carrier']['pl'] = "Nazwa operatora";
 $text['label-carrier']['sv-se'] = "Operatör";
 $text['label-carrier']['uk'] = "Назва оператора";
 $text['label-carrier']['ro'] = "";
-$text['label-carrier']['de-at'] = "Betreiber Name";
+$text['label-carrier']['de-at'] = "Provider Name";
 
 $text['label-account_code']['en-us'] = "Account Code";
 $text['label-account_code']['es-cl'] = "Código de Cuenta";
@@ -394,7 +394,7 @@ $text['description-fax_uuid']['pl'] = "Wybierz destynację faksu aby włączyć 
 $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera fax deteketering.";
 $text['description-fax_uuid']['uk'] = "Виберіть  номер для факсу, щоб дозволити його виявлення";
 $text['description-fax_uuid']['ro'] = "";
-$text['description-fax_uuid']['de-at'] = "Wählen Sie Fax Erkennung um diese für eingehende Anrufe zu aktivieren.";
+$text['description-fax_uuid']['de-at'] = "Wählen Sie einen Fax Server um Faxerkennung für eingehende Anrufe zu aktivieren.";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -515,7 +515,7 @@ $text['description-carrier']['pl'] = "Wpisz nazwę operatora. Może ona być pom
 $text['description-carrier']['sv-se'] = "Ange operatörens namn. Detta används för att hålla reda på debitering.";
 $text['description-carrier']['uk'] = "Введіть назву оператора. Використовується для тарифікації";
 $text['description-carrier']['ro'] = "";
-$text['description-carrier']['de-at'] = "Geben Sie den Betreibernamen an. Dies wird für das Abrechnungsmodul verwendet.";
+$text['description-carrier']['de-at'] = "Geben Sie den Providernamen an. Dies wird für das Abrechnungsmodul verwendet.";
 
 $text['description-account_code']['en-us'] = "Enter account code.";
 $text['description-account_code']['es-cl'] = "Ingrese el código de cuenta.";
@@ -559,7 +559,7 @@ $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['sv-se'] = "Sök";
 $text['button-search']['uk'] = "Пошук";
 $text['button-search']['ro'] = "";
-$text['button-search']['de-at'] = "Suche";
+$text['button-search']['de-at'] = "Suchen";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";

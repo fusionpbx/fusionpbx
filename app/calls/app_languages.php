@@ -150,7 +150,7 @@ $text['label-enable']['pt-br'] = "Ativar";
 $text['label-enable']['pl'] = "Włącz";
 $text['label-enable']['sv-se'] = "Aktivera ";
 $text['label-enable']['uk'] = "";
-$text['label-enable']['de-at'] = "Einschalten";
+$text['label-enable']['de-at'] = "Aktivieren";
 
 $text['label-dnd']['en-us'] = "Do Not Disturb";
 $text['label-dnd']['es-cl'] = "No Molestar";
@@ -170,7 +170,7 @@ $text['label-disabled']['pt-br'] = "Inválido";
 $text['label-disabled']['pl'] = "Wyłączony";
 $text['label-disabled']['sv-se'] = "Inaktiverad ";
 $text['label-disabled']['uk'] = "Відключено";
-$text['label-disabled']['de-at'] = "Ausgeschaltet";
+$text['label-disabled']['de-at'] = "Inaktiv";
 
 $text['label-disable']['en-us'] = "Disable";
 $text['label-disable']['es-cl'] = "Desactivar";
@@ -180,7 +180,7 @@ $text['label-disable']['pt-br'] = "Desativado";
 $text['label-disable']['pl'] = "Wyłącz";
 $text['label-disable']['sv-se'] = "Inaktivera ";
 $text['label-disable']['uk'] = "Відключити";
-$text['label-disable']['de-at'] = "Ausschalten";
+$text['label-disable']['de-at'] = "Deaktivieren";
 
 $text['label-destinations']['en-us'] = "Destinations";
 $text['label-destinations']['es-cl'] = "Destinos";
@@ -230,7 +230,7 @@ $text['label-destination_prompt']['pt-br'] = "Prompt";
 $text['label-destination_prompt']['pl'] = "Potwierdź aby odebrac rozmowę";
 $text['label-destination_prompt']['sv-se'] = "Verifiering ";
 $text['label-destination_prompt']['uk'] = "";
-$text['label-destination_prompt']['de-at'] = "Aufforderung";
+$text['label-destination_prompt']['de-at'] = "Nachfragen";
 
 $text['label-destination_number']['en-us'] = "Destination";
 $text['label-destination_number']['es-cl'] = "Destino";
@@ -290,7 +290,7 @@ $text['label-call-prompt']['pt-br'] = "Prompt chamada";
 $text['label-call-prompt']['pl'] = "Potwierdź przed odebraniem rozmowy";
 $text['label-call-prompt']['sv-se'] = "Samtals Verifiering ";
 $text['label-call-prompt']['uk'] = "";
-$text['label-call-prompt']['de-at'] = "Ruf Aufforderung";
+$text['label-call-prompt']['de-at'] = "Nachfragen";
 
 $text['label-call-forward']['en-us'] = "Call Forward";
 $text['label-call-forward']['es-cl'] = "Reenvio de Llamadas";
@@ -311,7 +311,7 @@ $text['description-on-busy']['pt-br'] = "Se ativado, substitui o valor do correi
 $text['description-on-busy']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
 $text['description-on-busy']['sv-se'] = "Om aktiverad, så tar den överhand framför röstbrevlåda hos anknytningen. ";
 $text['description-on-busy']['uk'] = "";
-$text['description-on-busy']['de-at'] = "";
+$text['description-on-busy']['de-at'] = "Falls aktiv, wird der Wert 'Mailbox eingeschaltet' in der Nebenstelle überschrieben";
 
 $text['description-no_answer']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
 $text['description-no_answer']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
@@ -322,7 +322,7 @@ $text['description-no_answer']['pt-br'] = "Se ativado, substitui o valor do corr
 $text['description-no_answer']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
 $text['description-no_answer']['sv-se'] = "Om aktiverad, så tar den överhand framför röstbrevlåda hos anknytningen. ";
 $text['description-no_answer']['uk'] = "";
-$text['description-no_answer']['de-at'] = "";
+$text['description-no_answer']['de-at'] = "Falls aktiv, wird der Wert 'Mailbox eingeschaltet' in der Nebenstelle überschrieben";
 
 $text['description-cid-number-prefix']['en-us'] = "Set the caller ID number prefix.";
 $text['description-cid-number-prefix']['es-cl'] = "Configure el prefijo de número de caller ID.";
@@ -332,7 +332,7 @@ $text['description-cid-number-prefix']['pl'] = "Prefiks prezentacji numeru dzwon
 $text['description-cid-number-prefix']['sv-se'] = "Ange nummerpresentation prefix. ";
 $text['description-cid-number-prefix']['uk'] = "";
 $text['description-cid-number-prefix']['fr-fr'] = "Définir un préfixe sur le nombre d'ID d'appelant.";
-$text['description-cid-number-prefix']['de-at'] = "";
+$text['description-cid-number-prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Nummer)";
 
 $text['description-cid-name-prefix']['en-us'] = "Set the caller ID name prefix.";
 $text['description-cid-name-prefix']['es-cl'] = "Configure el prefijo de nombre de caller ID";
@@ -342,7 +342,7 @@ $text['description-cid-name-prefix']['pt-br'] = "Defina o nome do discador";
 $text['description-cid-name-prefix']['pl'] = "Prefiks prezentacji nazwy dzwoniącego.";
 $text['description-cid-name-prefix']['sv-se'] = "Ange namnpresentation prefix. ";
 $text['description-cid-name-prefix']['uk'] = "";
-$text['description-cid-name-prefix']['de-at'] = "";
+$text['description-cid-name-prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)";
 
 $text['description-call-prompt']['en-us'] = "Prompt to accept the call for external destinations.";
 $text['description-call-prompt']['es-cl'] = "Preguntar para aceptar un llamado para destinos externos";
@@ -352,7 +352,7 @@ $text['description-call-prompt']['pt-br'] = "Aceiter chamada para destinos exter
 $text['description-call-prompt']['pl'] = "Zapytaj czy akceptować rozmowę do zewnętrznych destynacji.";
 $text['description-call-prompt']['sv-se'] = "Kräv verifiering för att ta emot samtal för externa destinationer. ";
 $text['description-call-prompt']['uk'] = "";
-$text['description-call-prompt']['de-at'] = "";
+$text['description-call-prompt']['de-at'] = "Nachfragen, ob der Anruf auch wirklich durchgestellt werden soll.";
 
 $text['description-3']['en-us'] = "The following list the extensions that have been assigned to this user account.";
 $text['description-3']['es-cl'] = "El siguiente listado muestra las extensiones que han sido asignadas a esta cuenta de usuario.";
@@ -362,7 +362,7 @@ $text['description-3']['pt-br'] = "Utilize os campos para filtrar a informação
 $text['description-3']['pl'] = "Widoczne są numery wewnętrzne przypisane to danego konta użytkownika.";
 $text['description-3']['sv-se'] = "Följande listar anknytningar som har knytets mot användarkontot. ";
 $text['description-3']['uk'] = "";
-$text['description-3']['de-at'] = "Benutzen Sie die Felder um Informationen betreffend spezifischer Anrufe zu filtern.";
+$text['description-3']['de-at'] = "Nachfolgend werden alle Nebenstellen aufgelistet, die diesem Benutzerkonto zugeordnet sind.";
 
 $text['description-2']['en-us'] = "Use the links to configure call forward follow me, or do not disturb.";
 $text['description-2']['es-cl'] = "Utilice los links para configurar reenvio de llamada, sígueme o no Molestar.";
@@ -372,7 +372,7 @@ $text['description-2']['pt-br'] = "A informação contem a origem, destino, dura
 $text['description-2']['pl'] = "Za pomocą poniższych linków można skonfigurować przekierowania, usługę „Podążaj z mną” lub „Nie przeszkadzać” (DnD).";
 $text['description-2']['sv-se'] = "Använd länkarna för att konfigurera Vidarekoppling, Följ Mig och Stör Ej. ";
 $text['description-2']['uk'] = "";
-$text['description-2']['de-at'] = "Die Information beinhaltet Quelle, Ziel, Dauer und andere nützliche Details.";
+$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Weiterleitung, Bitte Folgen oder Bitte nicht stören zu konfigurieren.";
 
 $text['description']['en-us'] = "Directs incoming calls for extension:";
 $text['description']['es-cl'] = "Dirige las llamadas entrantes hacia una extensión:";
@@ -382,7 +382,7 @@ $text['description']['pt-br'] = "Editar informações da conta.";
 $text['description']['pl'] = "Kieruj rozmowy przychodzące na numer wewnętrzny:";
 $text['description']['sv-se'] = "Styr inkommande samtal för anknytning: ";
 $text['description']['uk'] = "Керування вхідними дзвінками для розширення";
-$text['description']['de-at'] = "Kontoinformationen bearbeiten";
+$text['description']['de-at'] = "Leitet eingehende Gespräche für die Nebenstelle:";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completa";

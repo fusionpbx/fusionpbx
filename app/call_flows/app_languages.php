@@ -8,7 +8,7 @@ $text['title-call_flows']['pt-br'] = "Fluxo de chamadas";
 $text['title-call_flows']['pl'] = "Przepływ rozmów";
 $text['title-call_flows']['sv-se'] = "Samtalsflöden";
 $text['title-call_flows']['uk'] = "Потоки дзвінків";
-$text['title-call_flows']['de-at'] = "Anruf Abläufe";
+$text['title-call_flows']['de-at'] = "Anruf Steuerung";
 
 $text['title-call_flow-edit']['en-us'] = "Call Flow";
 $text['title-call_flow-edit']['es-cl'] = "Flujo de Llamada";
@@ -18,7 +18,7 @@ $text['title-call_flow-edit']['pt-br'] = "Fluxo de chamada";
 $text['title-call_flow-edit']['pl'] = "Przepływ rozmów";
 $text['title-call_flow-edit']['sv-se'] = "Samtalsflöde";
 $text['title-call_flow-edit']['uk'] = "Потік дзвінків";
-$text['title-call_flow-edit']['de-at'] = "Anruf Ablauf";
+$text['title-call_flow-edit']['de-at'] = "Anruf Steuerung";
 
 $text['title-call_flow-add']['en-us'] = "Call Flow Add";
 $text['title-call_flow-add']['es-cl'] = "Agregar Flujo de Llamada";
@@ -28,7 +28,7 @@ $text['title-call_flow-add']['pt-br'] = "Adicionar fluxo de chamada";
 $text['title-call_flow-add']['pl'] = "Dodaj przepływ rozmów";
 $text['title-call_flow-add']['sv-se'] = "Lägg Till Samtalsflöde";
 $text['title-call_flow-add']['uk'] = "";
-$text['title-call_flow-add']['de-at'] = "Anruf Ablauf hinzufügen";
+$text['title-call_flow-add']['de-at'] = "Anruf Steuerung hinzufügen";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualizar Completado";
@@ -158,7 +158,7 @@ $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk'] = "Розширення (Extention)";
-$text['label-extension']['de-at'] = "Durchwahl";
+$text['label-extension']['de-at'] = "Nebenstelle";
 
 $text['label-destination_label']['en-us'] = "Destination Label";
 $text['label-destination_label']['es-cl'] = "Etiqueta de Destino";
@@ -228,7 +228,7 @@ $text['header-call_flows']['pt-br'] = "Fluxo de chamadas";
 $text['header-call_flows']['pl'] = "Przepływ rozmów";
 $text['header-call_flows']['sv-se'] = "Samtalsflöden";
 $text['header-call_flows']['uk'] = "Потоки дзвінків";
-$text['header-call_flows']['de-at'] = "Anruf Abläufe";
+$text['header-call_flows']['de-at'] = "Anruf Steuerung";
 
 $text['header-call_flow-edit']['en-us'] = "Call Flow";
 $text['header-call_flow-edit']['es-cl'] = "Flujo de Llamada";
@@ -238,7 +238,7 @@ $text['header-call_flow-edit']['pt-br'] = "Fluxo de chamada";
 $text['header-call_flow-edit']['pl'] = "Przepływ rozmów";
 $text['header-call_flow-edit']['sv-se'] = "Samtalsflöde";
 $text['header-call_flow-edit']['uk'] = "Потік дзвінка";
-$text['header-call_flow-edit']['de-at'] = "Anruf Ablauf";
+$text['header-call_flow-edit']['de-at'] = "Anruf Steuerung";
 
 $text['header-call_flow-add']['en-us'] = "Call Flow Add";
 $text['header-call_flow-add']['es-cl'] = "Agregar Flujo de Llamada";
@@ -248,7 +248,7 @@ $text['header-call_flow-add']['pt-br'] = "Adicionar fluxo de chamada";
 $text['header-call_flow-add']['pl'] = "Dodaj przepływ rozmów";
 $text['header-call_flow-add']['sv-se'] = "Lägg Till Samtalsflöde";
 $text['header-call_flow-add']['uk'] = "Потоки дзвінків";
-$text['header-call_flow-add']['de-at'] = "Anruf Ablauf hinzufügen";
+$text['header-call_flow-add']['de-at'] = "Anruf Steuerung hinzufügen";
 
 $text['description-status']['en-us'] = "Select the status.";
 $text['description-status']['es-cl'] = "Seleccione el estado.";
@@ -348,7 +348,7 @@ $text['description-call_flows']['pt-br'] = "Para chamadas direta entre dois dest
 $text['description-call_flows']['pl'] = "Kieruj rozmowy bezpośrednio pomiędzy dwoma destynacjami poprzez prowadzenie specjalnego kodu.";
 $text['description-call_flows']['sv-se'] = "Samtal mellan två destinationer genom att ringa en funktionskod.";
 $text['description-call_flows']['uk'] = "";
-$text['description-call_flows']['de-at'] = "Leiten Sie Anrufe zwischen zwei Zielen um indem Sie einen Stern-Code Wählen.";
+$text['description-call_flows']['de-at'] = "Leiten Sie Anrufe zwischen zwei Zielen um indem Sie einen Stern-Code wählen.";
 
 $text['description-alternate_label']['en-us'] = "Enter the alternate destination label.";
 $text['description-alternate_label']['es-cl'] = "Ingrese la etiqueta de destino alternativo.";

@@ -208,7 +208,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Werkzeug";
+$text['label-tools']['de-at'] = "Funktionen";
 
 $text['label-to']['en-us'] = "To";
 $text['label-to']['es-cl'] = "Final";
@@ -478,7 +478,7 @@ $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk'] = "Розширення (Extention)";
-$text['label-extension']['de-at'] = "Durchwahl";
+$text['label-extension']['de-at'] = "Nebenstelle";
 
 $text['label-exit-sound']['en-us'] = "Exit Sound";
 $text['label-exit-sound']['es-cl'] = "Sonido de salida";
@@ -488,7 +488,7 @@ $text['label-exit-sound']['pt-br'] = "Desligar som";
 $text['label-exit-sound']['pl'] = "Dźwięk przy wyjściu";
 $text['label-exit-sound']['sv-se'] = "Avslutningsljud";
 $text['label-exit-sound']['uk'] = "Мелодія при виході";
-$text['label-exit-sound']['de-at'] = "Ausgangs Ton";
+$text['label-exit-sound']['de-at'] = "Ton bei verlassen";
 
 $text['label-enter-sound']['en-us'] = "Enter Sound";
 $text['label-enter-sound']['es-cl'] = "Sonido de entrada";
@@ -498,7 +498,7 @@ $text['label-enter-sound']['pt-br'] = "Insira um som";
 $text['label-enter-sound']['pl'] = "Dźwięk przy wejściu";
 $text['label-enter-sound']['sv-se'] = "Startljud";
 $text['label-enter-sound']['uk'] = "Мелодія при вході";
-$text['label-enter-sound']['de-at'] = "Eingangs Ton";
+$text['label-enter-sound']['de-at'] = "Ton bei eintreten";
 
 $text['label-end']['en-us'] = "End";
 $text['label-end']['es-cl'] = "Fin";
@@ -628,7 +628,7 @@ $text['description-users']['pt-br'] = "Atribuir usuários adicionais como admini
 $text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako administratorów tego pokoju konferencyjnego.";
 $text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
 $text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
-$text['description-users']['de-at'] = "";
+$text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
 
 $text['description-schedule']['en-us'] = "Set a start and stop date/time for this room.";
 $text['description-schedule']['es-cl'] = "Establezca un inicio y parada de fecha/hora para esta sala.";
@@ -638,7 +638,7 @@ $text['description-schedule']['pt-br'] = "Defnir inicio e fim (Data/Hora) para e
 $text['description-schedule']['pl'] = "Ustaw czas i datę rozpoczęcia i zakończenia rozmowy w tym pokoju.";
 $text['description-schedule']['sv-se'] = "Sätt en start och stopp datum/tid för detta rum.";
 $text['description-schedule']['uk'] = "Встановіть час початку/завершення для цієї кімнати.";
-$text['description-schedule']['de-at'] = "";
+$text['description-schedule']['de-at'] = "Setzen Sie ein/e Start/Stopp Datum/Zeit für diesen Raum";
 
 $text['description-room-name']['en-us'] = "Enter a name for the conference room.";
 $text['description-room-name']['es-cl'] = "Introduzca un nombre para la sala de conferencias.";
@@ -648,7 +648,7 @@ $text['description-room-name']['pt-br'] = "Digite um nome para a sala de confer�
 $text['description-room-name']['pl'] = "";
 $text['description-room-name']['sv-se'] = "Ange namn för detta konferensrum";
 $text['description-room-name']['uk'] = "Введіть назву конференц-залу.";
-$text['description-room-name']['de-at'] = "";
+$text['description-room-name']['de-at'] = "Geben Sie einen Namen für diesen Konferenzraum an.";
 
 $text['description-profile']['en-us'] = "Conference Profile is a collection of settings for the conference center.";
 $text['description-profile']['es-cl'] = "El Perfil de Conferencia es una colección de ajustes para el centro de conferencia.";
@@ -658,7 +658,7 @@ $text['description-profile']['pt-br'] = "Defina as configurações para este per
 $text['description-profile']['pl'] = "Zdefiniuj ustawienia tego profilu";
 $text['description-profile']['sv-se'] = "Konferensprofil är en samling av inställningar för konferens centret.";
 $text['description-profile']['uk'] = "Профіль конференції є колекція налаштувань для конференц-центру.";
-$text['description-profile']['de-at'] = "Definieren Sie die Einstellungen für dieses Profil.";
+$text['description-profile']['de-at'] = "Das Konferenz Profil ist eine Ansammlung von Einstellungen für die Konferenz Zentrale.";
 
 $text['description-pin-length']['en-us'] = "Enter the minimum PIN length.";
 $text['description-pin-length']['es-cl'] = "Ingrese el largo de PIN requerido.";
@@ -668,7 +668,7 @@ $text['description-pin-length']['pt-br'] = "Insira o tamanho do código PIN";
 $text['description-pin-length']['pl'] = "Wprowadź minimalną długość numeru PIN";
 $text['description-pin-length']['sv-se'] = "Ange minimum PIN längd.";
 $text['description-pin-length']['uk'] = "Введіть мінімальну довжину PIN-коду.";
-$text['description-pin-length']['de-at'] = "";
+$text['description-pin-length']['de-at'] = "Geben sie die minimale PIN länge an.";
 
 $text['description-participant-pin']['en-us'] = "Pin number for the participants.";
 $text['description-participant-pin']['es-cl'] = "Número PIN para participantes";
@@ -678,7 +678,7 @@ $text['description-participant-pin']['pt-br'] = "Número PIN";
 $text['description-participant-pin']['pl'] = "Numer PIN dla uczestników";
 $text['description-participant-pin']['sv-se'] = "PIN kod för deltagare";
 $text['description-participant-pin']['uk'] = "PIN-код для учасників.";
-$text['description-participant-pin']['de-at'] = "";
+$text['description-participant-pin']['de-at'] = "PIN Nummer für Teilnehmer.";
 
 $text['description-name']['en-us'] = "Enter the conference center name.";
 $text['description-name']['es-cl'] = "Ingrese el nombre del centro de conferencia";
@@ -688,7 +688,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['sv-se'] = "Ange namn på konferenscenter.";
 $text['description-name']['uk'] = "Введіть назву конференц-ценру";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Konferenz Zentrale an.";
 
 $text['description-moderator-pin']['en-us'] = "Pin number for the moderators.";
 $text['description-moderator-pin']['es-cl'] = "Número PIN para moderadores";
@@ -698,7 +698,7 @@ $text['description-moderator-pin']['pt-br'] = "Número PIN para os usuários";
 $text['description-moderator-pin']['pl'] = "Numer PIN dla moderatorów";
 $text['description-moderator-pin']['sv-se'] = "PIN kod för moderator.";
 $text['description-moderator-pin']['uk'] = "PIN-код для  модераторів.";
-$text['description-moderator-pin']['de-at'] = "";
+$text['description-moderator-pin']['de-at'] = "PIN Nummer für Moderatoren.";
 
 $text['description-greeting']['en-us'] = "Select the greeting that is played before joining the conference room.";
 $text['description-greeting']['es-cl'] = "Seleccione el saludo que se juega antes de unirse a la sala de conferencias.";
@@ -708,7 +708,7 @@ $text['description-greeting']['pt-br'] = "Selecione a mensagem que será exibida
 $text['description-greeting']['pl'] = "Wybierz powitanie odtwarzane przed wejściem do pokoju konferencyjnego.";
 $text['description-greeting']['sv-se'] = "Välj hälsningsmeddelande som skall spelas upp före anslutning till konferensrummet.";
 $text['description-greeting']['uk'] = "Виберіть привітання, яке грає до вступу в конференц-зал.";
-$text['description-greeting']['de-at'] = "";
+$text['description-greeting']['de-at'] = "Wählen Sie die Begrüßung für den Konferenzraum.";
 
 $text['description-extension']['en-us'] = "Enter the conference center extension number.";
 $text['description-extension']['es-cl'] = "Ingrese el número de extensión del centro de conferencia";
@@ -718,7 +718,7 @@ $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dis
 $text['description-extension']['pl'] = "Wprowadź alfanumeryczny numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 $text['description-extension']['sv-se'] = "Ange konferenscenter anknytningsnummer.";
 $text['description-extension']['uk'] = "Введіть номер розширення конференц-центру.";
-$text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
+$text['description-extension']['de-at'] = "Geben Sie eine Nebenstelle für die Konferenz Zentrale an.";
 
 $text['description-enabled']['en-us'] = "Select whether to enable or disable the conference center.";
 $text['description-enabled']['es-cl'] = "Indique si desea activar o desactivar el centro de conferencia.";
@@ -728,7 +728,7 @@ $text['description-enabled']['pt-br'] = "Escolha o estado desta definição";
 $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['sv-se'] = "Välj om konferenscenter skall vara aktiv eller ej.";
 $text['description-enabled']['uk'] = "Виберіть, щоб включити або відключити конференц-центр.";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
+$text['description-enabled']['de-at'] = "Wählen Sie ob die Konferenz Zentrale Ein- oder Ausgeschaltet werden soll.";
 
 $text['description-description']['en-us'] = "Enter the description.";
 $text['description-description']['es-cl'] = "Ingrese una descripción";
@@ -748,7 +748,7 @@ $text['description-conference-sessions']['pt-br'] = "Logs das sessões de confer
 $text['description-conference-sessions']['pl'] = "Sesje Konferencyjne są to logi o rozmowach konferencyjnych.";
 $text['description-conference-sessions']['sv-se'] = "Konferenssessioner är detaljerad log om konferenserna.";
 $text['description-conference-sessions']['uk'] = "Сесії конференції є даних журналу про конференції.";
-$text['description-conference-sessions']['de-at'] = "";
+$text['description-conference-sessions']['de-at'] = "Konferenz Sitzungen sind Protokolle der letzten Konferenzen.";
 
 $text['description-conference-session-details']['en-us'] = "Conference Sessions are log details of the conferences calls.";
 $text['description-conference-session-details']['es-cl'] = "Las Sesiones de Conferencia son un registro detallado de las llamadas de conferencia";
@@ -758,7 +758,7 @@ $text['description-conference-session-details']['pt-br'] = "Logs das sessões de
 $text['description-conference-session-details']['pl'] = "Sesje Konferencyjne są to logi o rozmowach konferencyjnych.";
 $text['description-conference-session-details']['sv-se'] = "Konferenssessioner är detaljerad log om konferenserna.";
 $text['description-conference-session-details']['uk'] = "Сесії конференції є відомості з журналу викликів конференцій.";
-$text['description-conference-session-details']['de-at'] = "";
+$text['description-conference-session-details']['de-at'] = "Konferenz Sitzungen sind Protokolle der letzten Konferenzen.";
 
 $text['description-conference-centers']['en-us'] = "Conference Centers are a group of conference rooms. They can be organized by cost center, geographically, or other criteria.";
 $text['description-conference-centers']['es-cl'] = "Los Centros de Conferencias son un grupo de salas de conferencias. Estas se organizan por centro de costo, geográficamente u otro criterio.";
@@ -768,7 +768,7 @@ $text['description-conference-centers']['pt-br'] = "Centros de conferência são
 $text['description-conference-centers']['pl'] = "'Centra konferencyjne składają się z pokoi konferencyjnych. Mogą one być przypisane do konkretnych centrów kosztów, rejonów geograficznych lub do innych grup.";
 $text['description-conference-centers']['sv-se'] = "Konferenscenter är en grupp med konferensrum. De kan sorteras på kostnadscenter, geografisk placering eller andra kriterier.";
 $text['description-conference-centers']['uk'] = "Конференц-центри є група конференц-залів. Вони можуть бути організовані МВЗ, географічно або інших критеріїв.";
-$text['description-conference-centers']['de-at'] = "";
+$text['description-conference-centers']['de-at'] = "Konferenz Zentralen gruppieren mehrere Konferenzräume. Diese können über diverse Kriterien organisiert werden.";
 
 $text['description-conference-center']['en-us'] = "Conference Center is used to setup one or more conference rooms with a name, extension number, a required pin number length, and a description.";
 $text['description-conference-center']['es-cl'] = "El Centro de Conferencia se usa para configurar una o más salas con un nombre, número de extensión, un largo de número pin requerido y una descripción.";
@@ -778,7 +778,7 @@ $text['description-conference-center']['pt-br'] = "Centro de conferência é usa
 $text['description-conference-center']['pl'] = "Centrum Konferencyjne jest używane do tworzenia pokoi konferencyjnych. Każdy z nich otrzymuje numer wewnętrzny, nazwę, numer PIN oraz opis.";
 $text['description-conference-center']['sv-se'] = "Konferenscenter används för att sätt aupp en eller fler konferensrum med ett namn, anknytningsnummer, PIN kod och en beskrivning.";
 $text['description-conference-center']['uk'] = "Конференц-центр використовується для установки одного або декількох конференц-залів з ім'ям, додатковий номер, в необхідної довжини контактний номер та опис.";
-$text['description-conference-center']['de-at'] = "";
+$text['description-conference-center']['de-at'] = "Konferenz Zentralen gruppieren mehrere Konferenzräume. Diese können über diverse Kriterien organisiert werden.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -808,7 +808,7 @@ $text['button-sessions']['pt-br'] = "Sessões";
 $text['button-sessions']['pl'] = "Sesje";
 $text['button-sessions']['sv-se'] = "Sessioner";
 $text['button-sessions']['uk'] = "Сесії";
-$text['button-sessions']['de-at'] = "Session";
+$text['button-sessions']['de-at'] = "Sitzungen";
 
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['es-cl'] = "Buscar";
@@ -818,7 +818,7 @@ $text['button-search']['pt-br'] = "Pesquisar";
 $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['sv-se'] = "Sök";
 $text['button-search']['uk'] = "Пошук";
-$text['button-search']['de-at'] = "Suche";
+$text['button-search']['de-at'] = "Suchen";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";

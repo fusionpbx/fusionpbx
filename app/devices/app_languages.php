@@ -75,7 +75,7 @@ $text['message_device']['pl'] = "Wpisz nowy adres MAC";
 $text['message_device']['uk'] = "Введіть нову MAC адресу";
 $text['message_device']['sv-se'] = "Fyll i den nya MAC-adressen.";
 $text['message_device']['ro'] = "Introduceți adresa MAC nouă";
-$text['message_device']['de-at'] = "Geben Sie die neue MAC Adresse an.";
+$text['message_device']['de-at'] = "Geben Sie die neue MAC Adresse ein.";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -825,7 +825,7 @@ $text['label-keypad_lock']['pt-br'] = "Bloqueio de teclado";
 $text['label-keypad_lock']['pl'] = "Blokada klawiatury";
 $text['label-keypad_lock']['uk'] = "";
 $text['label-keypad_lock']['sv-se'] = "Knapplås";
-$text['label-keypad_lock']['de-at'] = "Tastenfeld sperren";
+$text['label-keypad_lock']['de-at'] = "Tastenfeld Sperre";
 
 $text['label-key_event']['en-us'] = "Key Event";
 $text['label-key_event']['es-cl'] = "Evento clave";
@@ -865,7 +865,7 @@ $text['label-hot_desking']['pt-br'] = "Hot Desking";
 $text['label-hot_desking']['pl'] = "Hot Desking ";
 $text['label-hot_desking']['uk'] = "";
 $text['label-hot_desking']['sv-se'] = "Hot Desking";
-$text['label-hot_desking']['de-at'] = "";
+$text['label-hot_desking']['de-at'] = "Hot Desking";
 
 $text['label-hold']['en-us'] = "Hold";
 $text['label-hold']['es-cl'] = "Mantener";
@@ -1562,7 +1562,7 @@ $text['description-subcategory']['pl'] = "Wprowadź podkategorię";
 $text['description-subcategory']['uk'] = "";
 $text['description-subcategory']['sv-se'] = "Fyll i under-kategori";
 $text['description-subcategory']['ro'] = "";
-$text['description-subcategory']['de-at'] = "Geben Sie die Unterkategorie an";
+$text['description-subcategory']['de-at'] = "Geben Sie die Unterkategorie an.";
 
 $text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
 $text['description-sip_transport']['es-cl'] = "Introduzca el transporte del protocolo SIP.";
@@ -2035,7 +2035,7 @@ $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['uk'] = "Пошук";
 $text['button-search']['sv-se'] = "Sök";
 $text['button-search']['ro'] = "";
-$text['button-search']['de-at'] = "Suche";
+$text['button-search']['de-at'] = "Suchen";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";

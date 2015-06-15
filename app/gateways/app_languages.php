@@ -196,7 +196,7 @@ $text['label-retry_seconds']['pl'] = "Ponowna  próba  {sek)";
 $text['label-retry_seconds']['uk'] = "Retry Seconds ";
 $text['label-retry_seconds']['sv-se'] = "Retry sekunder";
 $text['label-retry_seconds']['ro'] = "";
-$text['label-retry_seconds']['de-at'] = "Retry Seconds";
+$text['label-retry_seconds']['de-at'] = "Sekunden bis erneuten Versuch";
 
 $text['label-register_transport']['en-us'] = "Register Transport";
 $text['label-register_transport']['es-cl'] = "Transporte de Registro";
@@ -361,7 +361,7 @@ $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['uk'] = "Розширення";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['ro'] = "Extensie";
-$text['label-extension']['de-at'] = "Durchwahl";
+$text['label-extension']['de-at'] = "Nebenstelle";
 
 $text['label-expire_seconds']['en-us'] = "Expire Seconds";
 $text['label-expire_seconds']['es-cl'] = "Tiempo de expiración";
@@ -526,7 +526,7 @@ $text['description-supress_cng']['pl'] = "Wprowadź  ztłumienie/wyłączenie CN
 $text['description-supress_cng']['uk'] = "";
 $text['description-supress_cng']['sv-se'] = "Ange 'supress-cng'";
 $text['description-supress_cng']['ro'] = "";
-$text['description-supress_cng']['de-at'] = "Komfort Geräusch Generator unterdrücken";
+$text['description-supress_cng']['de-at'] = "Komfort Geräusch Generator unterdrücken.";
 
 $text['description-sip_cid_type']['en-us'] = "Enter the sip cid type: none, pid, and rpid.";
 $text['description-sip_cid_type']['es-cl'] = "Ingrese el tipo de caller id sip: none (utiliza campo From de cabecera), pid (P-Asserted-Identity header) o rpid (remote-Party-ID header).";
@@ -811,7 +811,7 @@ $text['description-channels']['pl'] = "Maksymalna ilość kanałów głosowych d
 $text['description-channels']['uk'] = "";
 $text['description-channels']['sv-se'] = "Max antal samtidiga kanaler för gateway.";
 $text['description-channels']['ro'] = "";
-$text['description-channels']['de-at'] = "Maximale Anzahl gleichzeitiger Gespräche möglich mit diesem Gateway.";
+$text['description-channels']['de-at'] = "Maximale Anzahl gleichzeitiger Gespräche möglich zu diesem Gateway.";
 
 $text['description-caller_id_in_from']['en-us'] = "Enter the caller-id-in-from.";
 $text['description-caller_id_in_from']['es-cl'] = "Ingrese la parte caller-id-in-from de la cabecera SIP";

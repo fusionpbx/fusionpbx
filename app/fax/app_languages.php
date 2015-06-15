@@ -952,7 +952,7 @@ $text['description-user-add']['fr-fr'] = "Ajouter les usagers pouvant utiliser c
 $text['description-user-add']['pt-br'] = "Atribuir aos usuários que podem gerenciar esta extensão de fax";
 $text['description-user-add']['pl'] = "Przypisz użytkowników, którzy mogą zarządzać ustawieniami  faksu ";
 $text['description-user-add']['sv-se'] = "Tilldela de användare som kan managera denna fax anknytning.";
-$text['description-user-add']['de-at'] = "";
+$text['description-user-add']['de-at'] = "Wählen Sie die Benutzer aus, die diese Fax Nebenstelle verwalten können.";
 
 $text['description-pin']['en-us'] = "Enter the PIN number here.";
 $text['description-pin']['es-cl'] = "Ingrese el número PIN aquí.";
@@ -961,7 +961,7 @@ $text['description-pin']['fr-fr'] = "Choisir un code d'identification.";
 $text['description-pin']['pt-br'] = "Insira aqui o código do PIN";
 $text['description-pin']['pl'] = "Wprowadź numer PIN";
 $text['description-pin']['sv-se'] = "Ange PIN kod här.";
-$text['description-pin']['de-at'] = "";
+$text['description-pin']['de-at'] = "Geben Sie hier die PIN Nummer an.";
 
 $text['description-name']['en-us'] = "Enter the name here.";
 $text['description-name']['es-cl'] = "Ingrese el nombre aquí.";
@@ -970,7 +970,7 @@ $text['description-name']['fr-fr'] = "Choisir un nom.";
 $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę ";
 $text['description-name']['sv-se'] = "Ange Namn här.";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-at'] = "Geben Sie den Namen an";
 
 $text['description-info']['en-us'] = "Enter the description here.";
 $text['description-info']['es-cl'] = "Ingrese una descripción aquí.";
@@ -979,7 +979,7 @@ $text['description-info']['fr-fr'] = "Entrez la description ici.";
 $text['description-info']['pt-br'] = "Inisra uma descrição";
 $text['description-info']['pl'] = "Wprowadź opis";
 $text['description-info']['sv-se'] = "Ange beskrivning här.";
-$text['description-info']['de-at'] = "";
+$text['description-info']['de-at'] = "Geben Sie eine Beschreibung an.";
 
 $text['description-forward-number']['en-us'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
 $text['description-forward-number']['es-cl'] = "Ingrese el número de desvío aquí. Utilizado para desviar el fax a una extensión registrada o un número externo.";
@@ -988,7 +988,7 @@ $text['description-forward-number']['fr-fr'] = "Choisir un numéro de renvoi en 
 $text['description-forward-number']['pt-br'] = "Inisra aqui o número de encaminhamento. Utilize para encaminhar o fax para uma extensão registrada ou número externo";
 $text['description-forward-number']['pl'] = "Wprowadź numer przekierowania. Służy on do przekazania faksu do zarejestrowanego numeru wewnętrznego lub numeru zewnętrznego";
 $text['description-forward-number']['sv-se'] = "Ange vidarekopplingsnumret här. Används för att vidarebefordra fax till en registrerad anknytning eller externt nummer.";
-$text['description-forward-number']['de-at'] = "";
+$text['description-forward-number']['de-at'] = "Geben Sie eine Nebenstelle oder externe Nummer ein, auf die eingehende Faxe weitergeleitet werden sollen.";
 
 $text['description-fax_uuid']['en-us'] = "FAX server primary key";
 $text['description-fax_uuid']['es-cl'] = "Seleccione el destino de fax para activar su detección";
@@ -997,7 +997,7 @@ $text['description-fax_uuid']['fr-fr'] = "Insérer la destination Fax afin d'act
 $text['description-fax_uuid']['pt-br'] = "Selecione o destino de FAX para ativar a detecção de FAX";
 $text['description-fax_uuid']['pl'] = "Wybierz destynację faksu aby włączyć wykrywanie faksu.";
 $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera fax deteketering.";
-$text['description-fax_uuid']['de-at'] = "Wählen Sie Fax Erkennung um diese für eingehende Anrufe zu aktivieren.";
+$text['description-fax_uuid']['de-at'] = "Primärschlüssel des Fax Servers";
 
 $text['description-fax_uri']['en-us'] = "";
 $text['description-fax_uri']['es-cl'] = "";
@@ -1078,7 +1078,7 @@ $text['description-fax_prefix']['fr-fr'] = "Entrez un préfixe pour être utilis
 $text['description-fax_prefix']['pt-br'] = "Digite um prefixo para ser usado quando o envio de um fax.";
 $text['description-fax_prefix']['pl'] = "Wprowadź prefiks ma być używany podczas wysyłania faksu.";
 $text['description-fax_prefix']['sv-se'] = "Ange ett prefix som ska användas när du skickar ett fax.";
-$text['description-fax_prefix']['de-at'] = "";
+$text['description-fax_prefix']['de-at'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll.";
 
 $text['description-fax_number']['en-us'] = "Fax destination number";
 $text['description-fax_number']['es-cl'] = "Número de destino de fax";
@@ -1087,7 +1087,7 @@ $text['description-fax_number']['fr-fr'] = "Fax numéro de destination";
 $text['description-fax_number']['pt-br'] = "Número de fax de destino";
 $text['description-fax_number']['pl'] = "";
 $text['description-fax_number']['sv-se'] = "Fax destinationsnummer";
-$text['description-fax_number']['de-at'] = "";
+$text['description-fax_number']['de-at'] = "Fax Zielnummer";
 
 $text['description-fax_mode']['en-us'] = "RX means receive and TX means transmit.";
 $text['description-fax_mode']['es-cl'] = "Medios RX reciben y TX significa Transmisión.";
@@ -1096,7 +1096,7 @@ $text['description-fax_mode']['fr-fr'] = "Moyens de recevoir et RX TX signifie t
 $text['description-fax_mode']['pt-br'] = "Meios RX receber e TX significa Transmitir.";
 $text['description-fax_mode']['pl'] = "";
 $text['description-fax_mode']['sv-se'] = "RX betyder mottagning och TX betyder sändning.";
-$text['description-fax_mode']['de-at'] = "";
+$text['description-fax_mode']['de-at'] = "RX bedeutet empfangen und TX bedeutet senden.";
 
 $text['description-fax_log']['en-us'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
 $text['description-fax_log']['es-cl'] = "Los detalles para el envío y recepción de faxes se incluyen si fax se ha realizado correctamente, ECM (Modo de Corrección de Errores), número de reintentos, número de destino, fecha, etc.";
@@ -1105,7 +1105,7 @@ $text['description-fax_log']['fr-fr'] = "Les détails pour envoyer et recevoir u
 $text['description-fax_log']['pt-br'] = "Os detalhes para o envio e recebimento de um fax estão incluídos se fax foi bem-sucedida, ECM (Modo de correção de erros), número de repetições, número de destino, data, etc.";
 $text['description-fax_log']['pl'] = "Szczegóły dotyczące wysyłania i odbierania faksów zawierają: czy wysłanie faksu się powiodło, ECM (Error Correction Mode), liczba prób, numer docelowy, data, itp.";
 $text['description-fax_log']['sv-se'] = "Detaljerna för att skicka och ta emot ett fax ingår huruvida fax lyckades, ECM ( Error Correction Mode ), antal försök, destinationsnummer, datum, etc.";
-$text['description-fax_log']['de-at'] = "";
+$text['description-fax_log']['de-at'] = "Die angeführten Details für gesendete und empfangende Faxe sind entweder Fax erfolgreich gesendet, ECM (Error Correction Mode), Anzahl der Versuche, Zielnummer, Datum, etc...";
 
 $text['description-fax_local_station_id']['en-us'] = "";
 $text['description-fax_local_station_id']['es-cl'] = "";
@@ -1141,7 +1141,7 @@ $text['description-fax_files']['fr-fr'] = "Choisir un fichier à télécharger p
 $text['description-fax_files']['pt-br'] = "Selecione a pasta para enviar por Fax";
 $text['description-fax_files']['pl'] = "Wybierz plik/pliki faksu do wyslania";
 $text['description-fax_files']['sv-se'] = "Välj filerna som skall laddas upp och sedan faxas iväg.";
-$text['description-fax_files']['de-at'] = "";
+$text['description-fax_files']['de-at'] = "Wählen Sie die Datei-/en zum senden.";
 
 $text['description-fax_file_type']['en-us'] = "TIF / PDF";
 $text['description-fax_file_type']['es-cl'] = "TIF / PDF";
@@ -1150,7 +1150,7 @@ $text['description-fax_file_type']['fr-fr'] = "TIF / PDF";
 $text['description-fax_file_type']['pt-br'] = "TIF / PDF";
 $text['description-fax_file_type']['pl'] = "TIF / PDF";
 $text['description-fax_file_type']['sv-se'] = "TIF / PDF";
-$text['description-fax_file_type']['de-at'] = "";
+$text['description-fax_file_type']['de-at'] = "TIF / PDF";
 
 $text['description-fax_file_path']['en-us'] = "";
 $text['description-fax_file_path']['es-cl'] = "";
@@ -1168,7 +1168,7 @@ $text['description-fax_file']['fr-fr'] = "Fichiers FAX";
 $text['description-fax_file']['pt-br'] = "Arquivos FAX";
 $text['description-fax_file']['pl'] = "Pliki faks";
 $text['description-fax_file']['sv-se'] = "Faxfiler";
-$text['description-fax_file']['de-at'] = "";
+$text['description-fax_file']['de-at'] = "FAX Dateien";
 
 $text['description-fax_epoch']['en-us'] = "";
 $text['description-fax_epoch']['es-cl'] = "";
@@ -1258,7 +1258,7 @@ $text['description-fax-subject']['fr-fr'] = "Entrez l'objet de la feuille de cou
 $text['description-fax-subject']['pt-br'] = "Insira um assunto oara a folha de rosto (opcional)";
 $text['description-fax-subject']['pl'] = "Wprowadź temat na stronie tytułowej (opcjonalnie).";
 $text['description-fax-subject']['sv-se'] = "Ange ett ämne för försättsbladet (frivilligt).";
-$text['description-fax-subject']['de-at'] = "";
+$text['description-fax-subject']['de-at'] = "Geben Sie einen Betreff für das Deckblatt an (optional).";
 
 $text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover sheet (optional).";
 $text['description-fax-sender']['es-cl'] = "Introduzca el nombre del remitente para la portada (opcional).";
@@ -1267,7 +1267,7 @@ $text['description-fax-sender']['fr-fr'] = "Entrez le nom de l'expéditeur pour 
 $text['description-fax-sender']['pt-br'] = "Digite o nome do remente para a folha de rosto (opcional)";
 $text['description-fax-sender']['pl'] = "Wpisz nazwę nadawcy na stronie tytułowej (opcjonalnie).";
 $text['description-fax-sender']['sv-se'] = "Ange sändarens namn för försättsbladet (frivilligt).";
-$text['description-fax-sender']['de-at'] = "";
+$text['description-fax-sender']['de-at'] = "Geben Sie den Namen des Senders für das Deckblatt an (optional).";
 
 $text['description-fax-resolution']['en-us'] = "Select the transmission quality.";
 $text['description-fax-resolution']['es-cl'] = "Seleccione la calidad de la transmisión.";
@@ -1276,7 +1276,7 @@ $text['description-fax-resolution']['fr-fr'] = "Sélectionnez la qualité de tra
 $text['description-fax-resolution']['pt-br'] = "Selecione a quantidade para transmissão";
 $text['description-fax-resolution']['pl'] = "Wybierz jakość transmisji";
 $text['description-fax-resolution']['sv-se'] = "Välj transmission quality.";
-$text['description-fax-resolution']['de-at'] = "";
+$text['description-fax-resolution']['de-at'] = "Wählen Sie die Übertragungsqualität.";
 
 $text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover sheet (optional).";
 $text['description-fax-recipient']['es-cl'] = "Introduzca el nombre del destinatario de la portada (opcional).";
@@ -1285,7 +1285,7 @@ $text['description-fax-recipient']['fr-fr'] = "Entrez le nom du destinataire de 
 $text['description-fax-recipient']['pt-br'] = "Digite o nome do destinatário para a folha de rosto (opcional)";
 $text['description-fax-recipient']['pl'] = "Wpisz nazwę odbiorcy na stronie tytułowej (opcjonalnie).";
 $text['description-fax-recipient']['sv-se'] = "Ange mottagarens namn för försättsbladet (frivilligt).";
-$text['description-fax-recipient']['de-at'] = "";
+$text['description-fax-recipient']['de-at'] = "Geben Sie den Namen des Empfängers für das Deckblatt an (optional).";
 
 $text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
 $text['description-fax-page-size']['es-cl'] = "Seleccione el tamaño de página de transmitir.";
@@ -1294,7 +1294,7 @@ $text['description-fax-page-size']['fr-fr'] = "Sélectionnez le format de page �
 $text['description-fax-page-size']['pt-br'] = "Selecione o tamanho da página";
 $text['description-fax-page-size']['pl'] = "Wybierz rozmiar strony do transmisji.";
 $text['description-fax-page-size']['sv-se'] = "Välj sidornas storlek att skicka.";
-$text['description-fax-page-size']['de-at'] = "";
+$text['description-fax-page-size']['de-at'] = "Wählen Sie die Seitengröße aus.";
 
 $text['description-fax-number']['en-us'] = "Enter the recipient fax number(s).";
 $text['description-fax-number']['es-cl'] = "Introduzca el número(s) de fax del destinatario.";
@@ -1303,7 +1303,7 @@ $text['description-fax-number']['fr-fr'] = "Entrez le numéro(s) de fax du desti
 $text['description-fax-number']['pt-br'] = "Digite o número de fax do destinatário";
 $text['description-fax-number']['pl'] = "Wprowadź numer (y) faksu odbiorcy.";
 $text['description-fax-number']['sv-se'] = "Ange mottagarens fax nummer.";
-$text['description-fax-number']['de-at'] = "";
+$text['description-fax-number']['de-at'] = "Geben Sie die Zielnummern für das Fax ein.";
 
 $text['description-fax-message']['en-us'] = "Enter a message for the cover sheet (optional).";
 $text['description-fax-message']['es-cl'] = "Escriba un mensaje para la portada (opcional).";
@@ -1312,7 +1312,7 @@ $text['description-fax-message']['fr-fr'] = "Entrez un message pour la feuille d
 $text['description-fax-message']['pt-br'] = "Digite uma mensagem para a folha de rosto (opcional)";
 $text['description-fax-message']['pl'] = "Wpisz wiadomość na stronie tytułowej (opcjonalnie).";
 $text['description-fax-message']['sv-se'] = "Ange ett meddelande för för försättsbladet (frivilligt).";
-$text['description-fax-message']['de-at'] = "";
+$text['description-fax-message']['de-at'] = "Geben Sie eine Nachricht für das Deckblatt an (optional).";
 
 $text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
 $text['description-fax-header']['es-cl'] = "Aparece debajo del logotipo en la cabecera de la portada (opcional).";
@@ -1321,7 +1321,7 @@ $text['description-fax-header']['fr-fr'] = "Affiché sous le logo dans l'en-têt
 $text['description-fax-header']['pt-br'] = "Exibir logo abaixo no cabeçalho da folha de rosto(opcional)";
 $text['description-fax-header']['pl'] = "Wyświetlane pod logo w nagłówku stroniy tytułowej (opcjonalnie).";
 $text['description-fax-header']['sv-se'] = "Visas under loggan i Huvudet på försättsbladet (frivilligt).";
-$text['description-fax-header']['de-at'] = "";
+$text['description-fax-header']['de-at'] = "Wird unter dem Logo am Deckblatt angezeigt (optional).";
 
 $text['description-fax-footer']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
 $text['description-fax-footer']['es-cl'] = "Se muestra en el pie de página de la portada (opcional).";
@@ -1330,7 +1330,7 @@ $text['description-fax-footer']['fr-fr'] = "Affiché dans le bas de la feuille d
 $text['description-fax-footer']['pt-br'] = "Exibir no rodapé da folha de rosto (opcional)";
 $text['description-fax-footer']['pl'] = "Wyświetlany w stopce na stronie tytułowej (opcjonalnie).";
 $text['description-fax-footer']['sv-se'] = "Visas i foten av försättsbladet (frivilligt).";
-$text['description-fax-footer']['de-at'] = "";
+$text['description-fax-footer']['de-at'] = "Wird in der Fußzeile auf dem Deckblatt angezeigt (optional).";
 
 $text['description-extension']['en-us'] = "Enter the fax extension here.";
 $text['description-extension']['es-cl'] = "Ingrese la extensión de fax aquí.";
@@ -1339,7 +1339,7 @@ $text['description-extension']['fr-fr'] = "Choisir un numéro d'extension.";
 $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dispositivo";
 $text['description-extension']['pl'] = "Wprowadź alfanumeryczny numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 $text['description-extension']['sv-se'] = "Ange fax-anknytningen här.";
-$text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
+$text['description-extension']['de-at'] = "Geben Sie die Fax Nebenstelle hier an.";
 
 $text['description-email_outbound_subject_tag']['en-us'] = "Set the email subject tag for outbound faxes.";
 $text['description-email_outbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes salientes.";
@@ -1348,7 +1348,7 @@ $text['description-email_outbound_subject_tag']['fr-fr'] = "Réglez le tag objet
 $text['description-email_outbound_subject_tag']['pt-br'] = "Definir identificador para email com assunto Fax de saída";
 $text['description-email_outbound_subject_tag']['pl'] = "Ustaw znacznik tematu e-mail dla faksów wychodzących.";
 $text['description-email_outbound_subject_tag']['sv-se'] = "Ange E-post ämne för utgående fax.";
-$text['description-email_outbound_subject_tag']['de-at'] = "";
+$text['description-email_outbound_subject_tag']['de-at'] = "Geben Sie den Email Betreff für ausgehende Faxe an.";
 
 $text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
 $text['description-email_outbound_authorized_senders']['es-cl'] = "Definir la dirección de correo electrónico(es) pueden enviar faxes a través de este servidor.";
@@ -1357,7 +1357,7 @@ $text['description-email_outbound_authorized_senders']['fr-fr'] = "Définir l'ad
 $text['description-email_outbound_authorized_senders']['pt-br'] = "Defina um endereço de email com permissões para enviar fax através deste servidor";
 $text['description-email_outbound_authorized_senders']['pl'] = "Określ adres e-mail (y) dopuszczone do wysyłania faksów za pośrednictwem tego serwera.";
 $text['description-email_outbound_authorized_senders']['sv-se'] = "Definiera E-postadresser som får sända fax genom denna server.";
-$text['description-email_outbound_authorized_senders']['de-at'] = "";
+$text['description-email_outbound_authorized_senders']['de-at'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen.";
 
 $text['description-email_inbound_subject_tag']['en-us'] = "Set the email subject tag for inbound faxes.";
 $text['description-email_inbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes entrantes.";
@@ -1366,7 +1366,7 @@ $text['description-email_inbound_subject_tag']['fr-fr'] = "Réglez le tag objet 
 $text['description-email_inbound_subject_tag']['pt-br'] = "Defina um identificador para fax recebido";
 $text['description-email_inbound_subject_tag']['pl'] = "Ustaw znacznik tematu e-mail dla faksów przychodzących.";
 $text['description-email_inbound_subject_tag']['sv-se'] = "Välj E-post ämne för inkommande fax.";
-$text['description-email_inbound_subject_tag']['de-at'] = "";
+$text['description-email_inbound_subject_tag']['de-at'] = "Setzen Sie den Email Betreff für eingehende Faxe.";
 
 $text['description-email_connection_validate']['en-us'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
 $text['description-email_connection_validate']['es-cl'] = "Activar la validación del certificado del servidor.<br>(Seleccione 'Falso' para certificados con firma.)";
@@ -1375,7 +1375,7 @@ $text['description-email_connection_validate']['fr-fr'] = "Activer la validation
 $text['description-email_connection_validate']['pt-br'] = "Habilitar validação do certificado do servidor.(Selecione 'Não' para os certificados auto-assinados)";
 $text['description-email_connection_validate']['pl'] = "Włącz sprawdzanie poprawności certyfikatu serwera.";
 $text['description-email_connection_validate']['sv-se'] = "Aktivera server certifikat validering (Select 'False' for self-signed certificates.) ";
-$text['description-email_connection_validate']['de-at'] = "";
+$text['description-email_connection_validate']['de-at'] = "Server Zertifikat Validierung einschalten. (Wählen Sie 'Aus' für selbst signierte Zertifikate)";
 
 $text['description-email_connection_username']['en-us'] = "Enter the authentication username.";
 $text['description-email_connection_username']['es-cl'] = "Introduzca el nombre de usuario de autenticación.";
@@ -1384,7 +1384,7 @@ $text['description-email_connection_username']['fr-fr'] = "Entrez le nom d'utili
 $text['description-email_connection_username']['pt-br'] = "Digite o nome de usuário de autenticação";
 $text['description-email_connection_username']['pl'] = "Wpisz nazwę użytkownika (login)";
 $text['description-email_connection_username']['sv-se'] = "Ange autentiserings användarnamn.";
-$text['description-email_connection_username']['de-at'] = "";
+$text['description-email_connection_username']['de-at'] = "Geben Sie den Benutzernamen ein.";
 
 $text['description-email_connection_type']['en-us'] = "Select the type of connection.";
 $text['description-email_connection_type']['es-cl'] = "Seleccione el tipo de conexión.";
@@ -1393,7 +1393,7 @@ $text['description-email_connection_type']['fr-fr'] = "Sélectionnez le type de 
 $text['description-email_connection_type']['pt-br'] = "Selecione o tipo de conexão";
 $text['description-email_connection_type']['pl'] = "Wybierz typ połączenia";
 $text['description-email_connection_type']['sv-se'] = "Välj typen av förbindelse.";
-$text['description-email_connection_type']['de-at'] = "";
+$text['description-email_connection_type']['de-at'] = "Wählen Sie den Verbindungstyp.";
 
 $text['description-email_connection_server']['en-us'] = "Enter the host address and port.";
 $text['description-email_connection_server']['es-cl'] = "Introduzca la dirección de host y el puerto.";
@@ -1402,7 +1402,7 @@ $text['description-email_connection_server']['fr-fr'] = "Entrez l'adresse hôte 
 $text['description-email_connection_server']['pt-br'] = "Digite o endereço de host e porta";
 $text['description-email_connection_server']['pl'] = "Wpisz adres IP hosta i port.";
 $text['description-email_connection_server']['sv-se'] = "Ange host adress och port";
-$text['description-email_connection_server']['de-at'] = "";
+$text['description-email_connection_server']['de-at'] = "Geben Sie Server Addresse und Port an.";
 
 $text['description-email_connection_security']['en-us'] = "Select the required security.";
 $text['description-email_connection_security']['es-cl'] = "Seleccione la seguridad requerida.";
@@ -1411,7 +1411,7 @@ $text['description-email_connection_security']['fr-fr'] = "Sélectionnez la séc
 $text['description-email_connection_security']['pt-br'] = "Selecione o nivel de segurança";
 $text['description-email_connection_security']['pl'] = "Wybierz wymagane zabezpieczenia";
 $text['description-email_connection_security']['sv-se'] = "Välj önskad säkerhet.";
-$text['description-email_connection_security']['de-at'] = "";
+$text['description-email_connection_security']['de-at'] = "Wählen Sie die nötige Verschlüsselung.";
 
 $text['description-email_connection_password']['en-us'] = "Enter the authentication password.";
 $text['description-email_connection_password']['es-cl'] = "Introduzca la contraseña de autenticación.";
@@ -1420,7 +1420,7 @@ $text['description-email_connection_password']['fr-fr'] = "Entrez le mot de pass
 $text['description-email_connection_password']['pt-br'] = "Digite a senha de autenticação";
 $text['description-email_connection_password']['pl'] = "Wprowadź hasło uwierzytelniania.";
 $text['description-email_connection_password']['sv-se'] = "Ange autentiserings-lösenordet.";
-$text['description-email_connection_password']['de-at'] = "";
+$text['description-email_connection_password']['de-at'] = "Geben Sie das Passwort ein.";
 
 $text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to monitor.";
 $text['description-email_connection_mailbox']['es-cl'] = "Escriba el nombre de la carpeta remota para monitorear.";
@@ -1429,7 +1429,7 @@ $text['description-email_connection_mailbox']['fr-fr'] = "Entrez le nom du dossi
 $text['description-email_connection_mailbox']['pt-br'] = "Digite o nome da pasta remota para monitoramento";
 $text['description-email_connection_mailbox']['pl'] = "Wpisz nazwę zdalnego folderu  monitorowanego.";
 $text['description-email_connection_mailbox']['sv-se'] = "Ange fjärrmapp-namnet för att övervaka.";
-$text['description-email_connection_mailbox']['de-at'] = "";
+$text['description-email_connection_mailbox']['de-at'] = "Geben Sie den Email Ordner an, der überwacht werden soll (optional).";
 
 $text['description-email']['en-us'] = "Enter a delivery address for inbound faxes.";
 $text['description-email']['es-cl'] = "Ingrese la dirección de email para enviar el fax.";
@@ -1438,7 +1438,7 @@ $text['description-email']['fr-fr'] = "Choisir un courriel où envoyer le Fax.";
 $text['description-email']['pt-br'] = "Insira o endereço de email para enviar o fax";
 $text['description-email']['pl'] = "Podaj email,  na który będą wysyłane faksy przychodzące.";
 $text['description-email']['sv-se'] = "Ange en adress för inkommande fax.";
-$text['description-email']['de-at'] = "";
+$text['description-email']['de-at'] = "Geben Sie eine Zustelladdresse für eingehende Faxe ein.";
 
 $text['description-destination-number']['en-us'] = "Enter the fax destination number.";
 $text['description-destination-number']['es-cl'] = "Ingrese el número de fax de destino.";
@@ -1447,7 +1447,7 @@ $text['description-destination-number']['fr-fr'] = "Entrez le numéro de téléc
 $text['description-destination-number']['pt-br'] = "Insira o número de faz para onde pretende enviar";
 $text['description-destination-number']['pl'] = "Wprowadź numer faksu docelowego.";
 $text['description-destination-number']['sv-se'] = "Ange fax destinations-nummer.";
-$text['description-destination-number']['de-at'] = "";
+$text['description-destination-number']['de-at'] = "Geben Sie die Fax Zielnummer ein.";
 
 $text['description-caller-id-number']['en-us'] = "Enter the Caller ID number here.";
 $text['description-caller-id-number']['es-cl'] = "Ingrese el número de Caller ID aquí.";
@@ -1456,7 +1456,7 @@ $text['description-caller-id-number']['fr-fr'] = "Choisir le numéro affiché en
 $text['description-caller-id-number']['pt-br'] = "Aplicável se o provedor permitir o envio do número do originador das chamadas. Omissão: 0000000000";
 $text['description-caller-id-number']['pl'] = "Wprowadź prezentację numeru dzwoniącego (faksu)";
 $text['description-caller-id-number']['sv-se'] = "Ange nummerpresentationen här.";
-$text['description-caller-id-number']['de-at'] = "";
+$text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
 
 $text['description-caller-id-name']['en-us'] = "Enter the Caller ID name here.";
 $text['description-caller-id-name']['es-cl'] = "Ingrese el nombre de Caller ID aquí.";
@@ -1465,7 +1465,7 @@ $text['description-caller-id-name']['fr-fr'] = "Choisir le nom affiché en entê
 $text['description-caller-id-name']['pt-br'] = "Aplicar se o provedor";
 $text['description-caller-id-name']['pl'] = "Wprowadź prezentację nazwę dzwoniącego (faksu)";
 $text['description-caller-id-name']['sv-se'] = "Ange namnpresentationen här.";
-$text['description-caller-id-name']['de-at'] = "";
+$text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein.";
 
 $text['description-advanced_settings']['en-us'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
 $text['description-advanced_settings']['es-cl'] = "Configure las opciones de abajo para permitir que la bandeja de entrada remota y funcionalidad-Email-a-Fax.";
@@ -1474,7 +1474,7 @@ $text['description-advanced_settings']['fr-fr'] = "Configurez les paramètres ci
 $text['description-advanced_settings']['pt-br'] = "Defina as configurações abaixo para permitir caixa de entrada de fax remota";
 $text['description-advanced_settings']['pl'] = "Skonfiguruj te ustawienia, aby właczyć zdalną skrzynkę odbiorczą oraz funkcję 'Email-to-Fax '.";
 $text['description-advanced_settings']['sv-se'] = "Konfigurera inställningarna nedan för att aktivera Remote Inbox och E-post-Till-Fax funktionalitet.";
-$text['description-advanced_settings']['de-at'] = "";
+$text['description-advanced_settings']['de-at'] = "Konfigurieren Sie die Einstellungen unten um ein Externes Email Postfach und/oder die Email-to-Fax Funktion zu aktivieren.";
 
 $text['description-3']['en-us'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
 $text['description-3']['es-cl'] = "Instalar LibreOffice de apoyo adicional de formato de archivo (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, ...). Ver el estado de una transmisión de fax en la página de llamadas activas, el Visor de registro, o por ver los resultados en la consola del switch.";
@@ -1483,7 +1483,7 @@ $text['description-3']['fr-fr'] = "Installer LibreOffice pour un soutien supplé
 $text['description-3']['pt-br'] = "Utilize os campos para filtrar a informação sobre os registos de chamadas desejados.";
 $text['description-3']['pl'] = "Zainstaluj LibreOffice w celu dodatkowego wsparcia formatu plików (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, itp). Obserwuj status transmisji faksu na stronie Aktywnych Połączeń, w Podglądzie Logów  lub przeglądając wyniki w konsoli.";
 $text['description-3']['sv-se'] = "Installera Libreoffice för ytterligare supporterade filformat (doc, docx, xls, xlsx, ODT, OTT, RTF, etc.). Visa status för en faxöverföring på sidan Aktiva samtal, i Log Viewer, eller genom att titta på resultaten i switch console.";
-$text['description-3']['de-at'] = "Benutzen Sie die Felder um Informationen betreffend spezifischer Anrufe zu filtern.";
+$text['description-3']['de-at'] = "LibreOffice muss installiert sein um weitere Dateiformate zu unterstützen (doc, docx, xls, xlsx, odt, ott, rtf, etc...). Den Status der Fax Übertragung können Sie auf der Seite Aktive Gespräche, in den Logs oder in der Switch Konsole beobachten.";
 
 $text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
 $text['description-2']['es-cl'] = "Para enviar un fax, cargar un archivo <strong>PDF</strong> o <strong>TIF</strong>.  Para generar una hoja de presentación, escriba un asunto y / o mensaje a continuación.";
@@ -1492,7 +1492,7 @@ $text['description-2']['fr-fr'] = "Pour envoyer un fax, télécharger un fichier
 $text['description-2']['pt-br'] = "A informação contem a origem, destino, duração e outros detalhes úteis da chamada.";
 $text['description-2']['pl'] = "Aby wysłać faks, prześlij go w pliku PDF lub TIF.  Aby stworzyć okładkę, wpisz poniżej Tytuł oraz treść wiadomości.";
 $text['description-2']['sv-se'] = "Om du vill skicka ett fax, ladda upp en PDF eller TIF -fil. För att generera ett försättsblad, ange ett Ämne och / eller meddelande nedan.";
-$text['description-2']['de-at'] = "Die Information beinhaltet Quelle, Ziel, Dauer und andere nützliche Details.";
+$text['description-2']['de-at'] = "Um ein Fax zu senden, laden Sie eine PDF oder eine TIF Datei hoch. Um ein Deckblatt zu generieren, geben Sie einen Betreff und/oder eine Nachricht unten an.";
 
 $text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después dirija el tráfico entrante a esta.'";
@@ -1501,7 +1501,7 @@ $text['description']['fr-fr'] = "Afin de recevoir un Fax, configurer une extensi
 $text['description']['pt-br'] = "Editar informações da conta.";
 $text['description']['pl'] = "Aby otrzymać faks, skonfiguruj jego numer wewnętrzny, a następnie przesyłaj na niego rozmowy.";
 $text['description']['sv-se'] = "För att ta emot fax, gör en fax anknytning och vidarebefordra sedan inkommande till den.";
-$text['description']['de-at'] = "Kontoinformationen bearbeiten";
+$text['description']['de-at'] = "Um ein Fax zu empfangen konfigurieren Sie eine Fax Nebenstelle und leiten eingehende Gespräche auf diese Nebenstelle um.";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completada";
@@ -1528,7 +1528,7 @@ $text['confirm-ext']['pt-br'] = "Por favor, forneça uma extensão única.";
 $text['confirm-ext']['pl'] = "Proszę wprowadzić numer wewnętrzny";
 $text['confirm-ext']['sv-se'] = "Por favor indique: Extensión ";
 $text['confirm-ext']['es-cl'] = "";
-$text['confirm-ext']['de-at'] = "";
+$text['confirm-ext']['de-at'] = "Bitte geben Sie eine Nebenstelle an.";
 
 $text['confirm-delete']['en-us'] = "Are you sure you want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";

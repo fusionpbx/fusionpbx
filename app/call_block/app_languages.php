@@ -10,7 +10,7 @@ $text['title-call-block']['pl'] = "Blokowanie rozmów";
 $text['title-call-block']['sv-se'] = "Blockera Samtal";
 $text['title-call-block']['uk'] = "Блокування дзвінків";
 $text['title-call-block']['ro'] = "Blocare apel";
-$text['title-call-block']['de-at'] = "Anruf Blocker";
+$text['title-call-block']['de-at'] = "Sperrlisten";
 
 $text['prompt-block_recent_name']['en-us'] = "Block Recent Call - Edit the Name, if desired...";
 $text['prompt-block_recent_name']['es-cl'] = "Bloqueo de llamadas recientes - Edite el nombre, si lo desea...";
@@ -34,7 +34,7 @@ $text['label-update-complete']['pl'] = "Zaktualizowano poprawnie";
 $text['label-update-complete']['sv-se'] = "Uppdatering Klar";
 $text['label-update-complete']['uk'] = "Оновлено";
 $text['label-update-complete']['ro'] = "Actualizare completă";
-$text['label-update-complete']['de-at'] = "Aktialisierung abgeschlossen";
+$text['label-update-complete']['de-at'] = "Aktualisierung abgeschlossen";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -178,7 +178,7 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['ro'] = "";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-at'] = "Aktiv";
 
 $text['label-edit-note']['en-us'] = "Block calls from a number. Edit the name and enable/disable below.";
 $text['label-edit-note']['es-cl'] = "Bloquea llamadas desde un número. Edite el nombre y active/desactive abajo.";
@@ -202,7 +202,7 @@ $text['label-edit-edit']['pl'] = "Blokowanie rozmów";
 $text['label-edit-edit']['sv-se'] = "Blockera Samtal";
 $text['label-edit-edit']['uk'] = "Блокування дзвінків";
 $text['label-edit-edit']['ro'] = "Blocare apel";
-$text['label-edit-edit']['de-at'] = "Anruf Blocker";
+$text['label-edit-edit']['de-at'] = "Sperrlisten";
 
 $text['label-edit-add-recent']['en-us'] = "Recent Calls";
 $text['label-edit-add-recent']['es-cl'] = "Llamadas Recientes";
@@ -226,7 +226,7 @@ $text['label-edit-add']['pl'] = "Blokowaie rozmów";
 $text['label-edit-add']['sv-se'] = "Blockera Samtal";
 $text['label-edit-add']['uk'] = "Блокування дзвінків";
 $text['label-edit-add']['ro'] = "Blocare apel";
-$text['label-edit-add']['de-at'] = "Anruf Blocker";
+$text['label-edit-add']['de-at'] = "Sperrlisten";
 
 $text['label-duration']['en-us'] = "Duration";
 $text['label-duration']['es-cl'] = "Duración";
@@ -250,7 +250,7 @@ $text['label-delete-complete']['pl'] = "Usunięto poprawnie";
 $text['label-delete-complete']['sv-se'] = "Borttagning Klar";
 $text['label-delete-complete']['uk'] = "Видалено";
 $text['label-delete-complete']['ro'] = "Ștergere completă";
-$text['label-delete-complete']['de-at'] = "Löschen Abgeschlossen";
+$text['label-delete-complete']['de-at'] = "Erfolgreich gelöscht";
 
 $text['label-date-added']['en-us'] = "Date Added";
 $text['label-date-added']['es-cl'] = "Fecha de ingreso";
@@ -310,7 +310,7 @@ $text['label-add-note']['pl'] = "Blokowanie połączeń z danego numeru. Wybierz
 $text['label-add-note']['sv-se'] = "Blockera samtal från ett nummer. Välj antingen ett nummer från listan ovan eller fyll i nummer, namn och aktivera nedan.";
 $text['label-add-note']['uk'] = "Блокувати дзвінки з номера. Або вибрати номер зі списку вище або введіть номер, ім'я і включити нижче.";
 $text['label-add-note']['ro'] = "";
-$text['label-add-note']['de-at'] = "Blockiert Anrufe von einer Nummer. Wählen Sie eine Nummer von der Liste oder geben Sie eine Nummer und Name ein. Aktivieren Sie den Blocker unten.";
+$text['label-add-note']['de-at'] = "Blockiert Anrufe von einer Nummer. Wählen Sie eine Nummer von der Liste oder geben Sie eine Nummer und einen Name ein. Aktivieren Sie die Sperrliste unten.";
 
 $text['label-add-complete']['en-us'] = "Add Complete";
 $text['label-add-complete']['es-cl'] = "Agregar Completo";
@@ -322,7 +322,7 @@ $text['label-add-complete']['pl'] = "Dodano poprawnie";
 $text['label-add-complete']['sv-se'] = "Tillagd";
 $text['label-add-complete']['uk'] = "Додано";
 $text['label-add-complete']['ro'] = "Adăugare completă";
-$text['label-add-complete']['de-at'] = "Hinzufügen erfolgreich";
+$text['label-add-complete']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -358,7 +358,7 @@ $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['sv-se'] = "Skriv in namnet.";
 $text['description-name']['uk'] = "Введіть назву меню";
 $text['description-name']['ro'] = "Introduceți numele";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-at'] = "Geben Sie den Namen an";
 
 $text['description-enable']['en-us'] = "Set to true to enable call blocking for this number.";
 $text['description-enable']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
@@ -382,7 +382,7 @@ $text['description-call-block']['pl'] = "Lista numerów, z których rozmowy są 
 $text['description-call-block']['sv-se'] = "En lista med nummer för blockering av samtal.";
 $text['description-call-block']['uk'] = "Список номерів, з яких блокуються дзвінки.";
 $text['description-call-block']['ro'] = "";
-$text['description-call-block']['de-at'] = "Eine Liste von Nummern von welchen die Anrufe blockiert werden sollen.";
+$text['description-call-block']['de-at'] = "Eine Liste von Nummern die blockiert werden sollen.";
 
 $text['description-action']['en-us'] = "Set an action for calls from this number.";
 $text['description-action']['es-cl'] = "Configurar una acción para llamadas desde este número.";
