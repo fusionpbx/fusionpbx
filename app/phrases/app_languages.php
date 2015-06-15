@@ -18,7 +18,7 @@ $text['title-edit_phrase']['pt-br'] = "Editar frase";
 $text['title-edit_phrase']['pl'] = "Edytuj zwrot";
 $text['title-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['title-edit_phrase']['uk'] = "Редагувати фразу";
-$text['title-edit_phrase']['de-at'] = "";
+$text['title-edit_phrase']['de-at'] = "Phrasen bearbeiten";
 
 $text['title-add_phrase']['en-us'] = "Add Phrase";
 $text['title-add_phrase']['es-cl'] = "Añadir Frase";
@@ -28,7 +28,7 @@ $text['title-add_phrase']['pt-br'] = "Adicionar frase";
 $text['title-add_phrase']['pl'] = "Dodaj zwrot";
 $text['title-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['title-add_phrase']['uk'] = "Додати фразу";
-$text['title-add_phrase']['de-at'] = "";
+$text['title-add_phrase']['de-at'] = "Phrasen hinzufügen";
 
 $text['message-update']['en-us'] = "Update Complete";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -68,7 +68,7 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -88,7 +88,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Werkzeug";
+$text['label-tools']['de-at'] = "Funktionen";
 
 $text['label-structure']['en-us'] = "Structure";
 $text['label-structure']['es-cl'] = "Estructura";
@@ -98,7 +98,7 @@ $text['label-structure']['pt-br'] = "Estrutura";
 $text['label-structure']['pl'] = "Struktura";
 $text['label-structure']['sv-se'] = "Struktur";
 $text['label-structure']['uk'] = "Структура";
-$text['label-structure']['de-at'] = "";
+$text['label-structure']['de-at'] = "Struktur";
 
 $text['label-sounds']['en-us'] = "Sounds";
 $text['label-sounds']['es-cl'] = "Sonidos";
@@ -118,7 +118,7 @@ $text['label-say']['pt-br'] = "Dizer";
 $text['label-say']['pl'] = "Powiedz";
 $text['label-say']['sv-se'] = "Säg";
 $text['label-say']['uk'] = "Вимовити";
-$text['label-say']['de-at'] = "";
+$text['label-say']['de-at'] = "Sagen";
 
 $text['label-recordings']['en-us'] = "Recordings";
 $text['label-recordings']['es-cl'] = "Grabaciones";
@@ -128,7 +128,7 @@ $text['label-recordings']['pt-br'] = "Configurações da Conta";
 $text['label-recordings']['pl'] = "Ustawienia konta";
 $text['label-recordings']['sv-se'] = "Inspelningar";
 $text['label-recordings']['uk'] = "записи";
-$text['label-recordings']['de-at'] = "";
+$text['label-recordings']['de-at'] = "Aufnahmen";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -158,7 +158,7 @@ $text['label-order']['pt-br'] = "Ordenação";
 $text['label-order']['pl'] = "Kolejność";
 $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['uk'] = "Порядок";
-$text['label-order']['de-at'] = "";
+$text['label-order']['de-at'] = "Reihenfolge";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
@@ -188,7 +188,7 @@ $text['label-function']['pt-br'] = "Função";
 $text['label-function']['pl'] = "Funkcja";
 $text['label-function']['sv-se'] = "Funktion";
 $text['label-function']['uk'] = "Функція";
-$text['label-function']['de-at'] = "";
+$text['label-function']['de-at'] = "Funktion";
 
 $text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
@@ -208,7 +208,7 @@ $text['label-execute']['pt-br'] = "Executar";
 $text['label-execute']['pl'] = "Wykonaj";
 $text['label-execute']['sv-se'] = "Utför";
 $text['label-execute']['uk'] = "Виконати";
-$text['label-execute']['de-at'] = "";
+$text['label-execute']['de-at'] = "Ausführen";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activado";
@@ -228,7 +228,7 @@ $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "";
+$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -248,7 +248,7 @@ $text['header_phrases']['pt-br'] = "Gravações";
 $text['header_phrases']['pl'] = "Zwroty";
 $text['header_phrases']['sv-se'] = "Fraser";
 $text['header_phrases']['uk'] = "Фрази";
-$text['header_phrases']['de-at'] = "";
+$text['header_phrases']['de-at'] = "Phrasen";
 
 $text['header-edit_phrase']['en-us'] = "Edit Phrase";
 $text['header-edit_phrase']['es-cl'] = "Editar Frase";
@@ -258,7 +258,7 @@ $text['header-edit_phrase']['pt-br'] = "Editar frase";
 $text['header-edit_phrase']['pl'] = "Edytuj zwrot";
 $text['header-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['header-edit_phrase']['uk'] = "Редагувати фразу";
-$text['header-edit_phrase']['de-at'] = "";
+$text['header-edit_phrase']['de-at'] = "Phrasen bearbeiten";
 
 $text['header-add_phrase']['en-us'] = "Add Phrase";
 $text['header-add_phrase']['es-cl'] = "Añadir Frase";
@@ -268,7 +268,7 @@ $text['header-add_phrase']['pt-br'] = "Adicionar frase";
 $text['header-add_phrase']['pl'] = "Dodaj zwrot";
 $text['header-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['header-add_phrase']['uk'] = "Додати фразу";
-$text['header-add_phrase']['de-at'] = "";
+$text['header-add_phrase']['de-at'] = "Phrasen hinzufügen";
 
 $text['description-structure']['en-us'] = "Define the various components that make up the phrase.";
 $text['description-structure']['es-cl'] = "Definir los diversos componentes que componen la frase.";
@@ -278,7 +278,7 @@ $text['description-structure']['pt-br'] = "Definir os vários componentes que co
 $text['description-structure']['pl'] = "Zdefiniuj różne elementy, które składają się na zwrot.";
 $text['description-structure']['sv-se'] = "Definera de olika komponenterna som utgör frasen.";
 $text['description-structure']['uk'] = "Вкажіть компоненти з яких складається фраза";
-$text['description-structure']['de-at'] = "";
+$text['description-structure']['de-at'] = "Definieren Sie die einzelnen Komponenten und fügen Sie diese zu einer Phrase zusammen";
 
 $text['description-phrases']['en-us'] = "Create phrases of audio files to be played in sequence.";
 $text['description-phrases']['es-cl'] = "Crear frases de archivos de audio para ser jugados en secuencia.";
@@ -288,7 +288,7 @@ $text['description-phrases']['pt-br'] = "Criar frases de arquivos de áudio para
 $text['description-phrases']['pl'] = "Stwórz zwroty z plików audio do odtwarzania w kolejności. ";
 $text['description-phrases']['sv-se'] = "Skapa fraser med ljudfiler som skall spelas upp i ordning.";
 $text['description-phrases']['uk'] = "Створення фраз з аудіофайлів, які будуть відтворені у послідовності.";
-$text['description-phrases']['de-at'] = "";
+$text['description-phrases']['de-at'] = "Stellen Sie Phrasen aus Audiodateien zusammen, welche sequenziell abgespielt werden.";
 
 $text['description-name']['en-us'] = "Name for the phrase (Example: 'xyz_audio')";
 $text['description-name']['es-cl'] = "Nombre de la grabación. ejemplo: grabacion_x";
@@ -298,7 +298,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę zwrotu.";
 $text['description-name']['sv-se'] = "Namn på frasen (Exempel: 'xyz_audio')";
 $text['description-name']['uk'] = "Назва фрази";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Phrase an (Bsp: 'xyz_audio')";
 
 $text['description-language']['en-us'] = "Language used in the phrase.";
 $text['description-language']['es-cl'] = "El lenguaje utilizado en la frase.";
@@ -318,7 +318,7 @@ $text['description-enabled']['pt-br'] = "Escolha o estado desta definição";
 $text['description-enabled']['pl'] = "Ustaw status zwrotu.";
 $text['description-enabled']['sv-se'] = "Välj status på frasen.";
 $text['description-enabled']['uk'] = "Вкажіть статус для фрази";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
+$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Phrase.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -358,7 +358,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";

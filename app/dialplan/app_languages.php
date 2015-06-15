@@ -438,7 +438,7 @@ $text['optgroup-condition_or_regex']['pt-br'] = "Condições ou expressões regu
 $text['optgroup-condition_or_regex']['pl'] = "Warunek lub wyrażenie regularne";
 $text['optgroup-condition_or_regex']['uk'] = "Умова або регулярний вираз";
 $text['optgroup-condition_or_regex']['sv-se'] = "Tillstånd eller Regex";
-$text['optgroup-condition_or_regex']['de-at'] = "Bedingung oder Regulärer Ausdruc";
+$text['optgroup-condition_or_regex']['de-at'] = "Bedingung oder Regulärer Ausdruck";
 
 $text['optgroup-applications']['en-us'] = "Applications";
 $text['optgroup-applications']['es-cl'] = "Aplicaciiones";
@@ -498,7 +498,7 @@ $text['message-copy']['pt-br'] = "Cópia Efetuada";
 $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
-$text['message-copy']['de-at'] = "Kopieren erfolgreich";
+$text['message-copy']['de-at'] = "Erfolgreich kopiert";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
@@ -508,7 +508,7 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['uk'] = "Додано";
 $text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['de-at'] = "Hinzufügen erfolgreich";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-value']['en-us'] = "Value";
 $text['label-value']['es-cl'] = "Valor";
@@ -528,7 +528,7 @@ $text['label-type']['pt-br'] = "Tipo";
 $text['label-type']['pl'] = "Typ";
 $text['label-type']['uk'] = "Тип";
 $text['label-type']['sv-se'] = "Typ";
-$text['label-type']['de-at'] = "Type";
+$text['label-type']['de-at'] = "Typ";
 
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['es-cl'] = "Etiqueta";
@@ -847,7 +847,7 @@ $text['description-time_conditions']['pt-br'] = "As condições temporárias enc
 $text['description-time_conditions']['pl'] = "Warunki czasowe przesyłają rozmowy w oparciu o wcześniej zdefiniowane warunki . Za pomocą warunków czasowych możesz przesłać rozmowy do menu zapowiedzi głosowych (IVR), numerów zewnętrznych, skryptów lub innych miejsc docelowych.";
 $text['description-time_conditions']['uk'] = "Маршрут дзвінків буде залежати від часу. Можна використовувати для переадресації на голосове меню (IVR), на зовнішні номери, сценарії, або інші напрямки.";
 $text['description-time_conditions']['sv-se'] = "Tidsvillkor styr samtal baserat på tidsvillkor. Du kan använda Tidsvillkor för att skicka samtal till IVR Meny, Externa nummer, Script eller andra destinationer.";
-$text['description-time_conditions']['de-at'] = "Zeitliche Bedingungen routen Anrufe basierend auf zeitlichen gegebenheiten. Sie können Zeitliche Bedingungen nutzen um IVR Menüs, Skripte und andere Destinationen  zu erreichen.";
+$text['description-time_conditions']['de-at'] = "Zeitliche Bedingungen routen Anrufe basierend auf zeitlichen Vorgaben. Sie können Zeitliche Bedingungen nutzen um IVR Menüs, Skripte und andere Destinationen  zu erreichen.";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queues']['es-cl'] = "Las colas se utilizan para configurar líneas de espera para quienes llaman. También conocidas como colas FIFO.";
@@ -857,7 +857,7 @@ $text['description-queues']['pt-br'] = "As filas são utilizadas para configurar
 $text['description-queues']['pl'] = "Kolejki są używane do konfiguracji linii oczekiwania dla wielu jednoczesnych rozmówców. Znane one są również jako kolejki FIFO.";
 $text['description-queues']['uk'] = "Черги використовуються для встановлення очікування на лінії для тих, хто дзвонить. Також відомо як черги FIFO. ";
 $text['description-queues']['sv-se'] = "Kö används för att kö:a inkommande samtal. Även känd som FIFO (Firts In First Out) Kö.";
-$text['description-queues']['de-at'] = "";
+$text['description-queues']['de-at'] = "Warteschlangen werden benutzt um Anrufer zu reihen. Der erste Anrufer wird auch zuerst bedient.";
 
 $text['description-outbound_routes']['en-us'] = "Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.";
 $text['description-outbound_routes']['es-cl'] = "Dirija llamadas salientes a una pasarela, TDM, enum y más. Cuando una llamada coincide con las condiciones la llamada saliente es dirijida.";
@@ -867,7 +867,7 @@ $text['description-outbound_routes']['pt-br'] = "Encaminhamento de chamadas exte
 $text['description-outbound_routes']['pl'] = "Kiedy rozmowa wychodząca spełnia odpowiednie warunki zostaje przesłana do Bram Wychodzących, łączy TDM, ENUM lub innych. ";
 $text['description-outbound_routes']['uk'] = "Спрямовує вихідні дзвінки на шлюзи, TDM, ENUM на інше, якщо дзвінок відповідає умовам вихідної маршрутизації.";
 $text['description-outbound_routes']['sv-se'] = "Styr utgående samtal till Gateways, tdm, enum mm. När ett samtal matchar villkoren så styrs samtalet till utgående route.";
-$text['description-outbound_routes']['de-at'] = "";
+$text['description-outbound_routes']['de-at'] = "Ausgehende Anrufe zu gateways, tdm, enum und andere routen wenn die Bedingung erfüllt ist.";
 
 $text['description-inbound_routes']['en-us'] = "Route incoming calls to destinations based on one or more conditions. It can send incoming calls to an IVR Menu, Call Group, Extension, External Number, Script. Order is important when an anti-action is used or when there are multiple conditions that match.";
 $text['description-inbound_routes']['es-cl'] = "Dirija llamadas entrantes a destinos basado en una o más condiciones. Puede enviar llamadas entrantes a un IVR, Grupo de llamadas, Extensión, Número externo o un Script. El orden es importante cuando se utiliza una anti-acción, o cuando existen múltiples condiciones que coinciden.";
@@ -877,7 +877,7 @@ $text['description-inbound_routes']['pt-br'] = "Encaminhamento de chamadas de en
 $text['description-inbound_routes']['pl'] = "Przesyłaj polaczenia przychodzące do różnych miejsc na podstawie jednego lub kilku warunków. Można je wysyłać do menu Zapowiedzi Głosowych (IVR), grupy odbiorców, numerów wewnętrznych i zewnętrznych lub skryptów. Kolejność warunków jest istotna, kiedy anti-action jest zdefiniowane lub kiedy jest wiele warunków do spełnienia.";
 $text['description-inbound_routes']['uk'] = "Направляє вхідні дзвінки відповідно до умов. Можна спрямувати вхідні дзвінки на голосове меню (IVR), групу, розширення, зовнішній номер, сценарій. Порядок важливий якщо використовується анти-дія або за наявності декількох умов, які співпадають.";
 $text['description-inbound_routes']['sv-se'] = "Styr inkommande samtal till destinationer baserat på ett eller fler villkor. Den kan styra samtal till IVR Meny, Ring Grupp, Anknytning, Externt Nummer, Script. Ordningen är viktig när en anti-aktion används eller när flera villkor matchar.";
-$text['description-inbound_routes']['de-at'] = "";
+$text['description-inbound_routes']['de-at'] = "Eingehende Anrufe anhand Bedingungen routen. Anrufe können an IVR Menüs, Rufgruppen, Nebenstellen, externe Nummern oder Skripte gesendet werden. Die Reihenfolge ist entscheidend, wenn eine Anti-Aktion gesetzt ist oder wenn mehrere Bedingungen angelegt wurden.";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -897,7 +897,7 @@ $text['description-dialplan_manager-superadmin']['pt-br'] = "O Dialplan é usado
 $text['description-dialplan_manager-superadmin']['pl'] = "Dialplan przesyła rozmowy w oparciu o wcześniej zdefiniowane warunki i kontekst. Za pomocą dialplanu możesz przesłać rozmowy do menu zapowiedzi głosowych (IVR), numerów zewnętrznych, skryptów lub innych miejsc docelowych.";
 $text['description-dialplan_manager-superadmin']['uk'] = "Маршрутизація використовується для визначення напрямку дзвінка відповідно до умов і контексту. Можна спрямувати виклики на шлюзи, автоматичне обслуговування, зовнішні номери, сценарії або інші напрямки. ";
 $text['description-dialplan_manager-superadmin']['sv-se'] = "Nummerplanen används för att koppla samtal baserat på villkor och Context. Du kan använda nummerplanen för att skicka samtal till Gateways, IVR, Externa Nummer, Script eller andra destinationer.";
-$text['description-dialplan_manager-superadmin']['de-at'] = "";
+$text['description-dialplan_manager-superadmin']['de-at'] = "Der Wählplan wird für die Anrufsteuerung basierend auf Bedingungen und Kontext benutzt. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, Automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 
 $text['description-dialplan_manager']['en-us'] = "The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.";
 $text['description-dialplan_manager']['es-cl'] = "El plan de marcado provee una vista de los códigos distintivos, así como también el menú IVR, Conferencias, Colas y otros destinos.";
@@ -927,7 +927,7 @@ $text['description-default_dialplan']['pt-br'] = "O dialplan é utilizado para c
 $text['description-default_dialplan']['pl'] = "Domyślny dialplan jest używany do przesyłania rozmów w oparciu o wcześniej zdefiniowane warunki i kontekst. Za pomocą dialplanu możesz przesłać rozmowy do Bram Wyjściowych, menu zapowiedzi głosowych (IVR), numerów zewnętrznych, skryptów lub innych miejsc docelowych.";
 $text['description-default_dialplan']['uk'] = "Маршрутизація за замовчуванням використовується для визначення напрямку дзвінка відповідно до умов і контексту. Можна спрямувати виклики на шлюзи, автоматичне обслуговування, зовнішні номери, сценарії або інші напрямки. ";
 $text['description-default_dialplan']['sv-se'] = "Standard Nummerplanen används för att koppla samtal baserat på villkor och Context. Du kan använda nummerplanen för att skicka samtal till Gateways, IVR, Externa Nummer, Script eller andra destinationer.";
-$text['description-default_dialplan']['de-at'] = "";
+$text['description-default_dialplan']['de-at'] = "Der Standard Wählplan wird für Anruf Ziele basierend auf Bedingungen und Kontext verwendet. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, Automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.";
 $text['description-conditions_and_actions']['es-cl'] = "Las siguientes condiciones, acciones y anti-acciones son usadas en el plan de marcado para dirigir el flujo de llamado. Cada una es procesada en el orden dado. Puede utilizar tantas condiciones, acciones o anti-acciones como necesite.";
@@ -937,7 +937,7 @@ $text['description-conditions_and_actions']['pt-br'] = "As seguintes condições
 $text['description-conditions_and_actions']['pl'] = "Następujące warunki, akcje i anty-akcje są używane przez dialplan do przesyłania rozmów. Każdy z nich jest wykonywany we wcześniej zdefiniowanej kolejności. Użyj tyle warunków, akcji lub anty-akcji ile jest potrzebne do osiągniecia żądanego końcowego przeznaczenia.";
 $text['description-conditions_and_actions']['uk'] = "Наступні умови, дії і анти-дії в маршрутизації направляють потік дзвінка. Вони обробляються в заданому порядку. Використовуйте їх як завгодно.";
 $text['description-conditions_and_actions']['sv-se'] = "Följande villkor, aktioner och anti-aktioner används i nummerplanen för samtalsflöden. Varje utförs i ordning. Använd så många villkor, aktioner eller anti-aktioner som behövs.";
-$text['description-conditions_and_actions']['de-at'] = "Die folgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan für direkte call flows benutzt. Jede wird in der angegebenen Reihenfolge abgearbeitet. Verwenden Sie so viele Bedingungen, Aktionen und Anti-aktionen wie Sie benötigen.";
+$text['description-conditions_and_actions']['de-at'] = "Die folgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan für direkte Anruf Steuerung benutzt. Jede wird in der angegebenen Reihenfolge abgearbeitet. Verwenden Sie so viele Bedingungen, Aktionen und Anti-aktionen wie Sie benötigen.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -957,7 +957,7 @@ $text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
 $text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
 $text['confirm-copy']['uk'] = "Ви дійсно бажаєте це скопіювати?";
 $text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
-$text['confirm-copy']['de-at'] = "Wollen Sie das wirdklich kopieren?";
+$text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
 
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['es-cl'] = "Buscar";
@@ -967,7 +967,7 @@ $text['button-search']['pt-br'] = "Pesquisar";
 $text['button-search']['pl'] = "Wyszukaj";
 $text['button-search']['uk'] = "Пошук";
 $text['button-search']['sv-se'] = "Sök";
-$text['button-search']['de-at'] = "Suche";
+$text['button-search']['de-at'] = "Suchen";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";

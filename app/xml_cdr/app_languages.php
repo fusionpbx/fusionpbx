@@ -28,7 +28,7 @@ $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Wykaz rozmów";
 $text['title']['sv-se'] = "Detaljerad Samtalsinformation";
 $text['title']['uk'] = "Параметри облікового запису";
-$text['title']['de-at'] = "Kontoeinstellungen";
+$text['title']['de-at'] = "Meine Gespräche";
 
 $text['table-time']['en-us'] = "Time";
 $text['table-time']['es-cl'] = "Tiempo";
@@ -337,7 +337,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Werkzeug";
+$text['label-tools']['de-at'] = "Funktionen";
 
 $text['label-to']['en-us'] = "To";
 $text['label-to']['es-cl'] = "Final";
@@ -846,7 +846,7 @@ $text['label-call-statistics-description']['pt-br'] = "As estatisticas sobre o d
 $text['label-call-statistics-description']['pl'] = "Statystyki wykazu rozmów podsumowują  informacje o wszystkich rozmowach.";
 $text['label-call-statistics-description']['sv-se'] = "Detaljerad Samtals-statistik summerar samtalsinformationen.";
 $text['label-call-statistics-description']['uk'] = "";
-$text['label-call-statistics-description']['de-at'] = "Einzelgesprächs Nachweis Statistiken fassen alle Anrufinformationen zusammen.";
+$text['label-call-statistics-description']['de-at'] = "Anruf Statistiken fassen alle Anrufinformationen zusammen.";
 
 $text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
 $text['label-call-statistics']['es-cl'] = "Estadísticas de ñps  detalles de grabación de llamadas";
@@ -856,7 +856,7 @@ $text['label-call-statistics']['pt-br'] = "Estatisticas do registro detalhado da
 $text['label-call-statistics']['pl'] = "Statystyki wykazu rozmów";
 $text['label-call-statistics']['sv-se'] = "Detaljerad Samtals-statistik";
 $text['label-call-statistics']['uk'] = "";
-$text['label-call-statistics']['de-at'] = "Einzelgesprächs Nachweis Statistiken";
+$text['label-call-statistics']['de-at'] = "Anruf Statistiken";
 
 $text['label-call-flow-5']['en-us'] = "Call Flow: Times";
 $text['label-call-flow-5']['es-cl'] = "Flujos de llamada: Tiempos";
@@ -866,7 +866,7 @@ $text['label-call-flow-5']['pt-br'] = "Fluxo de chamada: Tempo";
 $text['label-call-flow-5']['pl'] = "Przepływ rozmów: Czasy";
 $text['label-call-flow-5']['sv-se'] = "Samtals Flöden: Tider";
 $text['label-call-flow-5']['uk'] = "";
-$text['label-call-flow-5']['de-at'] = "Anruf Ablauf: Zeiten";
+$text['label-call-flow-5']['de-at'] = "Anruf Steuerung: Zeiten";
 
 $text['label-call-flow-4']['en-us'] = "Call Flow: Caller Profile";
 $text['label-call-flow-4']['es-cl'] = "Flujos de llamada: Perfil de quien llama";
@@ -876,7 +876,7 @@ $text['label-call-flow-4']['pt-br'] = "Fluxo de chamada: Perfil do discador";
 $text['label-call-flow-4']['pl'] = "Przepływ rozmów: Profil dzwoniącego";
 $text['label-call-flow-4']['sv-se'] = "Samtals Flöden: Samtals Profil";
 $text['label-call-flow-4']['uk'] = "";
-$text['label-call-flow-4']['de-at'] = "Anruf Ablauf: Anrufer Profil";
+$text['label-call-flow-4']['de-at'] = "Anruf Steuerung: Anrufer Profil";
 
 $text['label-call-flow-3']['en-us'] = "Call Flow: Extension: Application";
 $text['label-call-flow-3']['es-cl'] = "Flujos de llamada: Extensión: Aplicación";
@@ -886,7 +886,7 @@ $text['label-call-flow-3']['pt-br'] = "Fluxo de chamada: Extensão Aplicação";
 $text['label-call-flow-3']['pl'] = "Przepływ rozmów: Aplikacje i numery wew";
 $text['label-call-flow-3']['sv-se'] = "Samtals Flöden: Anknytning: Applikation";
 $text['label-call-flow-3']['uk'] = "";
-$text['label-call-flow-3']['de-at'] = "Anruf Ablauf: Nebenstelle: Applikation";
+$text['label-call-flow-3']['de-at'] = "Anruf Steuerung: Nebenstelle: Applikation";
 
 $text['label-call-flow-2']['en-us'] = "Call Flow: Extension: Attributes";
 $text['label-call-flow-2']['es-cl'] = "Flujos de llamada: Extensión: Atributos";
@@ -896,7 +896,7 @@ $text['label-call-flow-2']['pt-br'] = "Fluxo de chamada: Extensão: Atributos ";
 $text['label-call-flow-2']['pl'] = "Przepływ rozmów: Atrybuty i numery wew";
 $text['label-call-flow-2']['sv-se'] = "Samtals Flöden: Anknytning: Attribut";
 $text['label-call-flow-2']['uk'] = "";
-$text['label-call-flow-2']['de-at'] = "Anruf Ablauf: Nebenstelle: Attribute";
+$text['label-call-flow-2']['de-at'] = "Anruf Steuerung: Nebenstelle: Attribute";
 
 $text['label-call-flow']['en-us'] = "Call Flow: Attributes";
 $text['label-call-flow']['es-cl'] = "Flujos de llamada: Atributos";
@@ -906,7 +906,7 @@ $text['label-call-flow']['pt-br'] = "Fluxo de chamada: Atributos ";
 $text['label-call-flow']['pl'] = "Przepływ rozmów: Atrybuty";
 $text['label-call-flow']['sv-se'] = "Samtals Flöden: Attribut";
 $text['label-call-flow']['uk'] = "";
-$text['label-call-flow']['de-at'] = "Anruf Ablauf: Attribute";
+$text['label-call-flow']['de-at'] = "Anruf Steuerung: Attribute";
 
 $text['label-busy']['en-us'] = "Busy";
 $text['label-busy']['es-cl'] = "Ocupado";
@@ -1026,7 +1026,7 @@ $text['description_search']['pt-br'] = "Atenção: origem, destino e identifica�
 $text['description_search']['pl'] = "Uwaga: Następujące pola: numer dzwoniącego i odbiorcy rozmowy, prezentacja numeru oraz nazwy wspierają gwiazdkę (‘*’) jako symbol wieloznaczny.";
 $text['description_search']['sv-se'] = "Notera : Källa, Destination och Nummerpresentation ( CID ) Namn fält stödjer användningen av en asterisk ( ' * ' ) som jokertecken.";
 $text['description_search']['uk'] = "";
-$text['description_search']['de-at'] = "Achtung: Quelle, Ziel und Anruferkennung (CID) Name Felder unterstützen die Verwendung von Stern ('*') als Wildcard Zeichen.";
+$text['description_search']['de-at'] = "Info: Quelle, Ziel und Anruferkennung (CID) Name Felder unterstützen die Verwendung von Stern ('*') als Wildcard Zeichen.";
 
 $text['description-7']['en-us'] = "Call variables, call flow, timing information, and other useful call details.";
 $text['description-7']['es-cl'] = "variables de llamada, flujo, información temporal y otros detalles útiles.";

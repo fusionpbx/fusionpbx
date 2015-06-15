@@ -163,7 +163,7 @@ $text['label-voicemail_password']['pt-br'] = "Senha do correio de voz";
 $text['label-voicemail_password']['pl'] = "Hasło poczty głosowej";
 $text['label-voicemail_password']['uk'] = "Пароль на голосову пошту";
 $text['label-voicemail_password']['sv-se'] = "Röstbrevlåda Lösenord";
-$text['label-voicemail_password']['de-at'] = "Voicemail Passwort";
+$text['label-voicemail_password']['de-at'] = "Mailbox Passwort";
 
 $text['label-voicemail_mail_to']['en-us'] = "Voicemail Mail To";
 $text['label-voicemail_mail_to']['es-cl'] = "Enviar correo de voz a";
@@ -173,7 +173,7 @@ $text['label-voicemail_mail_to']['pt-br'] = "Enviar correio de voz para";
 $text['label-voicemail_mail_to']['pl'] = "Wyślij pocztę głosową na email";
 $text['label-voicemail_mail_to']['uk'] = "Надсилати голосову пошту на E-Mail";
 $text['label-voicemail_mail_to']['sv-se'] = "Röstbrevlåda E-post Till";
-$text['label-voicemail_mail_to']['de-at'] = "Voicemail E-Mail";
+$text['label-voicemail_mail_to']['de-at'] = "Mailbox E-Mail";
 
 $text['label-voicemail_local_after_email']['en-us'] = "Voicemail Keep Local";
 $text['label-voicemail_local_after_email']['es-cl'] = "Mantener Mensaje de Voz despues de enviar por Email";
@@ -183,7 +183,7 @@ $text['label-voicemail_local_after_email']['pt-br'] = "Manter mensagem de correi
 $text['label-voicemail_local_after_email']['pl'] = "Zachowaj na dysku pocztę głosową ";
 $text['label-voicemail_local_after_email']['uk'] = "Залишати голосову пошту локально";
 $text['label-voicemail_local_after_email']['sv-se'] = "Röstbrevlåda Behåll Lokalt";
-$text['label-voicemail_local_after_email']['de-at'] = "Voicemail am Server behalten";
+$text['label-voicemail_local_after_email']['de-at'] = "Mailbox Nachricht am Server behalten";
 
 $text['label-voicemail_file']['en-us'] = "Voicemail File";
 $text['label-voicemail_file']['es-cl'] = "Correo de Voz Archivo";
@@ -193,7 +193,7 @@ $text['label-voicemail_file']['pt-br'] = "Arquivo Voicemail";
 $text['label-voicemail_file']['pl'] = "Plik poczty głosowej";
 $text['label-voicemail_file']['uk'] = "Файл голосової пошти";
 $text['label-voicemail_file']['sv-se'] = "Röstbrevlåda Fil";
-$text['label-voicemail_file']['de-at'] = "Voicemail Datei";
+$text['label-voicemail_file']['de-at'] = "Mailbox Nachricht Datei";
 
 $text['label-voicemail_enabled']['en-us'] = "Voicemail Enabled";
 $text['label-voicemail_enabled']['es-cl'] = "Correo de Voz Activado";
@@ -203,7 +203,7 @@ $text['label-voicemail_enabled']['pt-br'] = "Correio de voz habilitado";
 $text['label-voicemail_enabled']['pl'] = "Włączona poczta głosowa";
 $text['label-voicemail_enabled']['uk'] = "Голосову пошту включено";
 $text['label-voicemail_enabled']['sv-se'] = "Röstbrevlåda Aktiverad";
-$text['label-voicemail_enabled']['de-at'] = "Voicemail eingeschaltet";
+$text['label-voicemail_enabled']['de-at'] = "Mailbox eingeschaltet";
 
 $text['label-user_record_outbound']['en-us'] = "Outbound";
 $text['label-user_record_outbound']['es-cl'] = "Salida";
@@ -483,7 +483,7 @@ $text['label-missed_call']['pt-br'] = "Chamada Perdida";
 $text['label-missed_call']['pl'] = "Nieodebrane Połączenie";
 $text['label-missed_call']['uk'] = "пропущений Дзвінок";
 $text['label-missed_call']['sv-se'] = "Missat Samtal";
-$text['label-missed_call']['de-at'] = "Verpasste Anrufe";
+$text['label-missed_call']['de-at'] = "Verpasster Anruf";
 
 $text['label-line']['en-us'] = "Line";
 $text['label-line']['pt-pt'] = "Linha";
@@ -543,7 +543,7 @@ $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['uk'] = "Розширення";
 $text['label-extension']['sv-se'] = "Anknytning";
-$text['label-extension']['de-at'] = "Durchwahl";
+$text['label-extension']['de-at'] = "Nebenstelle";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activado";
@@ -803,7 +803,7 @@ $text['description-voicemail_password']['pt-br'] = "Introduza uma senha númeric
 $text['description-voicemail_password']['pl'] = "Dodaj numeryczne hasło poczty głosowej ";
 $text['description-voicemail_password']['uk'] = "";
 $text['description-voicemail_password']['sv-se'] = "Ange det numeriska röstbrevlåde-lösenordet här.";
-$text['description-voicemail_password']['de-at'] = "Geben Sie das numerische Voicemail Passwort an.";
+$text['description-voicemail_password']['de-at'] = "Geben Sie das numerische Mailbox Passwort an.";
 
 $text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to (optional).";
 $text['description-voicemail_mail_to']['es-cl'] = "Ingrese una dirección de correo electrónico para enviar el correo de voz (opcional).";
@@ -813,7 +813,7 @@ $text['description-voicemail_mail_to']['pt-br'] = "Insira o endereço de email p
 $text['description-voicemail_mail_to']['pl'] = "Dodaj adres email na który będą wysyłane pliki poczty głosowej";
 $text['description-voicemail_mail_to']['uk'] = "";
 $text['description-voicemail_mail_to']['sv-se'] = "Ange E-post adressen för röstbrevlådan (valfritt).";
-$text['description-voicemail_mail_to']['de-at'] = "Geben Sie die Email Adresse an, an die Ihre Voicemail Nachricht gesendet werden soll (optional).";
+$text['description-voicemail_mail_to']['de-at'] = "Geben Sie die Email Adresse an, an die Ihre Mailbox Nachricht gesendet werden soll (optional).";
 
 $text['description-voicemail_local_after_email']['en-us'] = "Choose whether to keep the voicemail in the system after sending the email notification.";
 $text['description-voicemail_local_after_email']['es-cl'] = "Escoja si desea mantener el buzón de voz en el sistema después de enviar la notificación por correo electrónico.";
@@ -823,7 +823,7 @@ $text['description-voicemail_local_after_email']['pt-br'] = "Selecione de desjea
 $text['description-voicemail_local_after_email']['pl'] = "Wybierz czy zachować plik poczty głosowej na dysku po wysłaniu go e-mailem.";
 $text['description-voicemail_local_after_email']['uk'] = "";
 $text['description-voicemail_local_after_email']['sv-se'] = "Välj om du vill behålla röstmeddelande i systemet efter att e-postmeddelandet skickats.";
-$text['description-voicemail_local_after_email']['de-at'] = "Wählen Sie ob die Voicemail Nachricht am Server gespeichert werden soll, sobald die Nachricht per Mail versendet worden ist.";
+$text['description-voicemail_local_after_email']['de-at'] = "Wählen Sie ob die Mailbox Nachricht am Server gespeichert werden soll, sobald die Nachricht per Mail versendet worden ist.";
 
 $text['description-voicemail_file']['en-us'] = "Select a listening option to include with the email notification.";
 $text['description-voicemail_file']['es-cl'] = "Seleccione qué opción de escucha para incluir en la notificación de correo electrónico.";
@@ -833,7 +833,7 @@ $text['description-voicemail_file']['pt-br'] = "Selecione dentre as opções qua
 $text['description-voicemail_file']['pl'] = "Wybierz opcje odsłuchania poczty głosowej w wysłanym e-mailu.";
 $text['description-voicemail_file']['uk'] = "";
 $text['description-voicemail_file']['sv-se'] = "Välj ett alternativ för avlyssning i e-postmeddelandet.";
-$text['description-voicemail_file']['de-at'] = "Wählen Sie eine Option für die Voicemail Benachrichtigung.";
+$text['description-voicemail_file']['de-at'] = "Wählen Sie eine Option für die Mailbox Benachrichtigung.";
 
 $text['description-voicemail_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
 $text['description-voicemail_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
@@ -843,7 +843,7 @@ $text['description-voicemail_enabled']['pt-br'] = "Habilitar/Desabilitar o corre
 $text['description-voicemail_enabled']['pl'] = "Włącz/wyłącz pocztę głosowa.";
 $text['description-voicemail_enabled']['uk'] = "";
 $text['description-voicemail_enabled']['sv-se'] = "Aktivera/Inaktivera röstbrevlåda för denna anknytning.";
-$text['description-voicemail_enabled']['de-at'] = "Voicemail für diese Nebenstelle Ein- oder Ausschalten.";
+$text['description-voicemail_enabled']['de-at'] = "Mailbox für diese Nebenstelle Ein- oder Ausschalten.";
 
 $text['description-user_record']['en-us'] = "Choose whether to record local, inbound, outbound, or all.";
 $text['description-user_record']['es-cl'] = "Seleccione entrantes, salientes o para grabar todas las llamadas.";
@@ -863,7 +863,7 @@ $text['description-user_list']['pt-br'] = "Atribua os utilizadores que estão as
 $text['description-user_list']['pl'] = "Przypisz użytkowników do tego numeru wewnętrznego";
 $text['description-user_list']['uk'] = "";
 $text['description-user_list']['sv-se'] = "Tilldela användare till denna anknytning.";
-$text['description-user_list']['de-at'] = "Weisen Sie Benutzer dieser Nebenstelle zu.";
+$text['description-user_list']['de-at'] = "Weisen Sie dieser Nebenstelle Benutzer zu.";
 
 $text['description-user_context']['en-us'] = "Enter the user context here.";
 $text['description-user_context']['es-cl'] = "Ingrese el contexto de usuario aquí.";
@@ -873,7 +873,7 @@ $text['description-user_context']['pt-br'] = "Insira o contexto do utilizador aq
 $text['description-user_context']['pl'] = "Wpisz kontekst użytkownika.";
 $text['description-user_context']['uk'] = "";
 $text['description-user_context']['sv-se'] = "Ange 'user context' här.";
-$text['description-user_context']['de-at'] = "Geben Sie den Benutzer Kontext.";
+$text['description-user_context']['de-at'] = "Geben Sie den Benutzer Kontext an.";
 
 $text['description-toll_allow']['en-us'] = "Enter the toll allow value here.  (Examples: domestic,international,local)";
 $text['description-toll_allow']['es-cl'] = "Ingrese el tipo de tarifa especial a permitir (ej: doméstica, internacional, local).";
@@ -913,7 +913,7 @@ $text['description-sip_bypass_media']['pt-br'] = "Selecione caso deseja enviar v
 $text['description-sip_bypass_media']['pl'] = "Wybierz, czy wysłać strumień głosu bezpośrednio miedzy urządzeniami SIP lub w trybie transparent proxy";
 $text['description-sip_bypass_media']['uk'] = "";
 $text['description-sip_bypass_media']['sv-se'] = "Välj om media strömmen skall skickas 'point to point' eller i 'ransparent proxy mode'.";
-$text['description-sip_bypass_media']['de-at'] = "Wählen Sie ob Mediendaten direkt von Endgerät zu Endgerät über tragen werden sollen.";
+$text['description-sip_bypass_media']['de-at'] = "Wählen Sie ob Mediendaten direkt von Endgerät zu Endgerät übertragen werden sollen.";
 
 $text['description-range']['en-us'] = "Enter the number of extensions to create. Increments each extension by 1.";
 $text['description-range']['es-cl'] = "Ingrese la cantidad de extensiones a crear. Incrementa cada extensión en 1";
@@ -953,7 +953,7 @@ $text['description-outbound_caller_id_number-select']['pt-br'] = "Escolha o núm
 $text['description-outbound_caller_id_number-select']['pl'] = "Wybierz numer prezentowany w rozmowach wychodzących (na zewnątrz systemu)";
 $text['description-outbound_caller_id_number-select']['uk'] = "";
 $text['description-outbound_caller_id_number-select']['sv-se'] = "Välj det externa (publikt) nummervisningen här.";
-$text['description-outbound_caller_id_number-select']['de-at'] = "Wählen Sie die externe Anruferkennung.";
+$text['description-outbound_caller_id_number-select']['de-at'] = "Wählen Sie die externe Anruferkennung (Nummer).";
 
 $text['description-outbound_caller_id_number-custom']['en-us'] = "Enter the external (public) caller ID number here.";
 $text['description-outbound_caller_id_number-custom']['es-cl'] = "Ingrese el número de caller ID externo (público) aquí.";
@@ -973,7 +973,7 @@ $text['description-outbound_caller_id_name-select']['pt-br'] = "Escolha o nome e
 $text['description-outbound_caller_id_name-select']['pl'] = "Wybierz nazwę prezentowaną w rozmowach wychodzących (na zewnątrz systemu)";
 $text['description-outbound_caller_id_name-select']['uk'] = "";
 $text['description-outbound_caller_id_name-select']['sv-se'] = "Välj det externa (publikt) namnvisningen här.";
-$text['description-outbound_caller_id_name-select']['de-at'] = "Wählen Sie die externe Anruferkennung.";
+$text['description-outbound_caller_id_name-select']['de-at'] = "Wählen Sie die externe Anruferkennung (Name).";
 
 $text['description-outbound_caller_id_name-custom']['en-us'] = "Enter the external (public) caller ID name here.";
 $text['description-outbound_caller_id_name-custom']['es-cl'] = "Ingrese el el nombre de Caller ID externo (público) aquí.";
@@ -983,7 +983,7 @@ $text['description-outbound_caller_id_name-custom']['pt-br'] = "Insira o nome ex
 $text['description-outbound_caller_id_name-custom']['pl'] = "Wpisz nazwę prezentowaną w rozmowach wychodzących (na zewnątrz systemu)";
 $text['description-outbound_caller_id_name-custom']['uk'] = "";
 $text['description-outbound_caller_id_name-custom']['sv-se'] = "Ange det externa (publikt) namnvisningen här.";
-$text['description-outbound_caller_id_name-custom']['de-at'] = "Geben Sie die externe Anruferkennung (Nummer) hier an.";
+$text['description-outbound_caller_id_name-custom']['de-at'] = "Geben Sie die externe Anruferkennung (Name) hier an.";
 
 $text['description-number_alias']['en-us'] = "If the extension is numeric then number alias is optional.";
 $text['description-number_alias']['es-cl'] = "Si la extensión es numérica, entonces el alias numérico es opcional";
@@ -1013,7 +1013,7 @@ $text['description-mwi_account']['pt-br'] = "Conta MWI com utilizador@dominio do
 $text['description-mwi_account']['pl'] = "Konto powiadomienia oczekującej uzytkownik@domena  moitorowanej poczty głosowej";
 $text['description-mwi_account']['uk'] = "";
 $text['description-mwi_account']['sv-se'] = "MWI konto med user@domain för den röstbrevlåda som skall monitoreras.";
-$text['description-mwi_account']['de-at'] = "MWI Benutzer (user@domain) der Voicemail.";
+$text['description-mwi_account']['de-at'] = "MWI Benutzer (user@domain) der Mailbox.";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
 $text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";
@@ -1083,7 +1083,7 @@ $text['description-enabled']['pt-br'] = "Escolha o estado desta definição";
 $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "";
 $text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
+$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Nebenstelle.";
 
 $text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID number here.";
 $text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID de emergencia aquí.";
@@ -1143,7 +1143,7 @@ $text['description-directory_visible']['pt-br'] = "Escolha se deseja ou não ocu
 $text['description-directory_visible']['pl'] = "Wybierz czy ukryć imię i nazwisko w książce telefonicznej.";
 $text['description-directory_visible']['uk'] = "";
 $text['description-directory_visible']['sv-se'] = "Välj om namn skall gömas i katalogen.";
-$text['description-directory_visible']['de-at'] = "Wählen Sie ob Name im Verzeichnis angegeben werden soll.";
+$text['description-directory_visible']['de-at'] = "Wählen Sie ob der Name im Verzeichnis angegeben werden soll.";
 
 $text['description-directory_full_name']['en-us'] = "Enter the first name followed by the last name.";
 $text['description-directory_full_name']['es-cl'] = "Ingrese el nombre seguido del apellido.";
@@ -1153,7 +1153,7 @@ $text['description-directory_full_name']['pt-br'] = "Insira o primeiro nome segu
 $text['description-directory_full_name']['pl'] = "Wprowadź imię i nazwisko";
 $text['description-directory_full_name']['uk'] = "";
 $text['description-directory_full_name']['sv-se'] = "Ange förnamn följt av efternamn.";
-$text['description-directory_full_name']['de-at'] = "Geben Sie den Vornamen und Nachnamen an.";
+$text['description-directory_full_name']['de-at'] = "Geben Sie zuerst den Vornamen und dann den Nachnamen an.";
 
 $text['description-directory_exten_visible']['en-us'] = "Select whether announce the extension when calling the directory.";
 $text['description-directory_exten_visible']['es-cl'] = "Seleccione si desea mostrar la extensión cuando se llame al directorio.";
@@ -1193,7 +1193,7 @@ $text['description-cidr']['pt-br'] = "Insira o CIDR ";
 $text['description-cidr']['pl'] = "Wpisz CIDR";
 $text['description-cidr']['uk'] = "";
 $text['description-cidr']['sv-se'] = "Ange CIDR här.";
-$text['description-cidr']['de-at'] = "Geben Sie hier die Beschränkung der IP Adresse an (z.B. 123.123.123.123/32)";
+$text['description-cidr']['de-at'] = "Geben Sie hier die Beschränkung der IP Adresse an (z.B. 1.2.3.4/32)";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['es-cl'] = "Ingrese el tiempo de espera de llamada.";
@@ -1322,7 +1322,7 @@ $text['button-calls']['fr-fr'] = "Call Control";
 $text['button-calls']['uk'] = "Керування дзвінками";
 $text['button-calls']['pl'] = "Kontrola rozmów";
 $text['button-calls']['sv-se'] = "Samtals Kontroll";
-$text['button-calls']['de-at'] = "Call Control";
+$text['button-calls']['de-at'] = "Anruf Steuerung";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
