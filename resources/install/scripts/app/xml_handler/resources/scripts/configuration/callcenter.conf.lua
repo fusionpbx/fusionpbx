@@ -94,15 +94,15 @@
 						table.insert(xml, [[                                    <param name="moh-sound" value="local_stream://default"/>]]);
 					else
 						if (string.sub(queue_moh_sound, 0, 15) == 'local_stream://') then
-								table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
+							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
 						elseif (string.sub(queue_moh_sound, 0, 2) == '${' and string.sub(queue_moh_sound, -5) == 'ring}') then
-								table.insert(xml, [[                                    <param name="moh-sound" value="tone_stream://]]..queue_moh_sound..[[;loops=-1"/>]]);
+							table.insert(xml, [[                                    <param name="moh-sound" value="tone_stream://]]..queue_moh_sound..[[;loops=-1"/>]]);
 						else
-								table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
+							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
 						end
 					end
 					if (queue_record_template ~= nil) then
-							table.insert(xml, [[                                    <param name="record-template" value="]]..queue_record_template..[["/>]]);
+						table.insert(xml, [[                                    <param name="record-template" value="]]..queue_record_template..[["/>]]);
 					end
 					if (queue_time_base_score ~= nil) then
 						table.insert(xml, [[                                    <param name="time-base-score" value="]]..queue_time_base_score..[["/>]]);
