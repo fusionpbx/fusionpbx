@@ -91,7 +91,7 @@
 					table.insert(xml, [[                            <queue name="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
 					if (string.len(queue_moh_sound) == 0) then
-						table.insert(xml, [[                                    <param name="moh-sound" value=local_stream://default"/>]]);
+						table.insert(xml, [[                                    <param name="moh-sound" value="local_stream://default"/>]]);
 					else
 						if (string.sub(queue_moh_sound, 0, 15) == 'local_stream://') then
 								table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
