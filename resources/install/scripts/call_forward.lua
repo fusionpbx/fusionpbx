@@ -254,6 +254,7 @@
 					sql = sql .. "dial_string = '"..dial_string.."', ";
 					sql = sql .. "do_not_disturb = 'false', ";
 				else
+					sql = sql .. "forward_all_destination = null, ";
 					sql = sql .. "dial_string = null, ";
 				end
 				sql = sql .. "forward_all_enabled = '"..forward_all_enabled.."' ";
