@@ -149,13 +149,16 @@
 
 		--get the agents
 				table.insert(xml, [[                    <agents>]]);
-				sql = "select * from v_call_center_agents ";
+				sql = "select * from v_call_center_agents as a, v_domains as d ";
+				sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 				end
 				x = 0;
 				dbh:query(sql, function(row)
 					--get the values from the database and set as variables
+						domain_uuid = row.domain_uuid;
+						domain_name = row.domain_name;
 						agent_name = row.agent_name;
 						agent_type = row.agent_type;
 						agent_call_timeout = row.agent_call_timeout;
@@ -239,13 +242,16 @@
 				table.insert(xml, [[                    </agents>]]);
 
 		--get the tiers
-				sql = "select * from v_call_center_tiers ";
+				sql = "select * from v_call_center_tiers as t, v_domains as d ";
+				sql = sql .. "where d.domain_uuid = t.domain_uuid; ";
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 				end
 				table.insert(xml, [[                    <tiers>]]);
 				dbh:query(sql, function(row)
 					--get the values from the database and set as variables
+						domain_uuid = row.domain_uuid;
+						domain_name = row.domain_name;
 						agent_name = row.agent_name;
 						queue_name = row.queue_name;
 						tier_level = row.tier_level;
