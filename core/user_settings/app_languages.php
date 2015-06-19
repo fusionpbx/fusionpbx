@@ -12,6 +12,7 @@ $text['title-user_dashboard']['sv-se'] = "Användarpanel";
 $text['title-user_dashboard']['de-at'] = "Benutzer-Übersichtsseite";
 $text['title-user_dashboard']['ro'] = "Panou control utilizator";
 $text['title-user_dashboard']['fa'] = "";
+$text['title-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
 $text['title-user-settings']['en-us'] = "User Information";
 $text['title-user-settings']['es-cl'] = "Información de Usuario";
@@ -25,6 +26,7 @@ $text['title-user-settings']['sv-se'] = "Användarinformation";
 $text['title-user-settings']['de-at'] = "Benutzerinformationen";
 $text['title-user-settings']['ro'] = "Informații utilizator";
 $text['title-user-settings']['fa'] = "";
+$text['title-user-settings']['ar-eg'] = "معلومات المستخدم";
 
 $text['title']['en-us'] = "Account Settings";
 $text['title']['es-cl'] = "Configuración de Cuenta";
@@ -38,6 +40,7 @@ $text['title']['sv-se'] = "Kontoinställningar";
 $text['title']['de-at'] = "Kontoeinstellungen";
 $text['title']['ro'] = "Setări cont";
 $text['title']['fa'] = "";
+$text['title']['ar-eg'] = "إعداد الحساب";
 
 $text['table2-title']['en-us'] = "Additional Info";
 $text['table2-title']['es-cl'] = "Información Adicional";
@@ -51,6 +54,7 @@ $text['table2-title']['sv-se'] = "Ytterligare Information";
 $text['table2-title']['de-at'] = "Zusätzliche Informationen";
 $text['table2-title']['ro'] = "Informații adiționale";
 $text['table2-title']['fa'] = "";
+$text['table2-title']['ar-eg'] = "معلومات اضافيه";
 
 $text['table-tools']['en-us'] = "Tools";
 $text['table-tools']['es-cl'] = "Herramientas";
@@ -64,6 +68,7 @@ $text['table-tools']['sv-se'] = "Verktyg";
 $text['table-tools']['de-at'] = "Funktionen";
 $text['table-tools']['ro'] = "Utilitare";
 $text['table-tools']['fa'] = "ابزارها";
+$text['table-tools']['ar-eg'] = "الادوات";
 
 $text['table-title']['en-us'] = "User Info";
 $text['table-title']['es-cl'] = "Información de Usuario";
@@ -77,6 +82,7 @@ $text['table-title']['sv-se'] = "Användarinformation";
 $text['table-title']['de-at'] = "Benutzerinformationen";
 $text['table-title']['ro'] = "Informații Utilizator";
 $text['table-title']['fa'] = "اطلاعات کاربر";
+$text['table-title']['ar-eg'] = "معلومات المستخدم";
 
 $text['table-extension']['en-us'] = "Extension";
 $text['table-extension']['es-cl'] = "Extensión";
@@ -90,6 +96,7 @@ $text['table-extension']['sv-se'] = "Anknytning";
 $text['table-extension']['de-at'] = "Durchwahl";
 $text['table-extension']['ro'] = "Extensie";
 $text['table-extension']['fa'] = "";
+$text['table-extension']['ar-eg'] = "";
 
 $text['table-description']['en-us'] = "Description";
 $text['table-description']['es-cl'] = "Descripción";
@@ -103,6 +110,7 @@ $text['table-description']['sv-se'] = "Beskrivning";
 $text['table-description']['de-at'] = "Beschreibung";
 $text['table-description']['ro'] = "Descriere";
 $text['table-description']['fa'] = "";
+$text['table-description']['ar-eg'] = "الوصف";
 
 $text['message-reset_link_sent']['en-us'] = "Password Reset Link Sent";
 $text['message-reset_link_sent']['es-cl'] = "Restablecer Contraseña de Conexión Enviados";
@@ -116,6 +124,7 @@ $text['message-reset_link_sent']['sv-se'] = "Återställnings Länk för Löseno
 $text['message-reset_link_sent']['de-at'] = "Link zum Zurücksetzen des Passworts gesendet";
 $text['message-reset_link_sent']['ro'] = "Link pentru resetare parolă trimis";
 $text['message-reset_link_sent']['fa'] = "";
+$text['message-reset_link_sent']['ar-eg'] = "";
 
 $text['message-password_reset']['en-us'] = "Password Reset";
 $text['message-password_reset']['es-cl'] = "Restablecer Contraseña";
@@ -129,6 +138,7 @@ $text['message-password_reset']['sv-se'] = "Återställning Av Lösenord";
 $text['message-password_reset']['de-at'] = "Passwort zurücksetzen";
 $text['message-password_reset']['ro'] = "Resetare parolă";
 $text['message-password_reset']['fa'] = "";
+$text['message-password_reset']['ar-eg'] = "";
 
 $text['message-invalid_username_mismatch_passwords']['en-us'] = "Invalid Username and/or Mismatched Passwords";
 $text['message-invalid_username_mismatch_passwords']['es-cl'] = "Nombre de usuario válido y/o contraseñas no coincidentes";
@@ -142,6 +152,7 @@ $text['message-invalid_username_mismatch_passwords']['sv-se'] = "Ogiltig Använd
 $text['message-invalid_username_mismatch_passwords']['de-at'] = "Falscher Benutzername und/oder Nichtübereinstimmung der Passwörter";
 $text['message-invalid_username_mismatch_passwords']['ro'] = "Nume utilizator invalid si/sau nepotrivire parole";
 $text['message-invalid_username_mismatch_passwords']['fa'] = "";
+$text['message-invalid_username_mismatch_passwords']['ar-eg'] = "";
 
 $text['message-invalid_email']['en-us'] = "Invalid Email Address";
 $text['message-invalid_email']['es-cl'] = "Dirección no válida de correo electrónico";
@@ -155,6 +166,7 @@ $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
 $text['message-invalid_email']['de-at'] = "Ungültige E-Mail-Adresse";
 $text['message-invalid_email']['ro'] = "Adresă Email invalidă";
 $text['message-invalid_email']['fa'] = "";
+$text['message-invalid_email']['ar-eg'] = "";
 
 $text['login-message_dismiss']['en-us'] = "Dismiss";
 $text['login-message_dismiss']['es-cl'] = "Despedir";
@@ -168,6 +180,7 @@ $text['login-message_dismiss']['sv-se'] = "Avvisa";
 $text['login-message_dismiss']['de-at'] = "Verwerfen";
 $text['login-message_dismiss']['ro'] = "Renunță";
 $text['login-message_dismiss']['fa'] = "";
+$text['login-message_dismiss']['ar-eg'] = "";
 
 $text['login-message_attention']['en-us'] = "Attention!";
 $text['login-message_attention']['es-cl'] = "¡Atención!";
@@ -181,6 +194,7 @@ $text['login-message_attention']['sv-se'] = "Observera!";
 $text['login-message_attention']['de-at'] = "Achtung!";
 $text['login-message_attention']['ro'] = "Atenție!";
 $text['login-message_attention']['fa'] = "";
+$text['login-message_attention']['ar-eg'] = "";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de Voz";
@@ -194,6 +208,7 @@ $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-voicemail']['de-at'] = "Sprachnachricht";
 $text['label-voicemail']['ro'] = "Mesagerie vocală";
 $text['label-voicemail']['fa'] = "";
+$text['label-voicemail']['ar-eg'] = "";
 
 $text['label-view-messages']['en-us'] = "View Messages";
 $text['label-view-messages']['es-cl'] = "Ver mensajes";
@@ -207,6 +222,7 @@ $text['label-view-messages']['sv-se'] = "Se Meddelanden";
 $text['label-view-messages']['de-at'] = "Nachrichten anzeigen";
 $text['label-view-messages']['ro'] = "Afișare Mesaje";
 $text['label-view-messages']['fa'] = "";
+$text['label-view-messages']['ar-eg'] = "";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
@@ -220,6 +236,7 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['de-at'] = "Benutzername";
 $text['label-username']['ro'] = "Utilizator";
 $text['label-username']['fa'] = "";
+$text['label-username']['ar-eg'] = "";
 
 $text['label-user_language']['en-us'] = "Language";
 $text['label-user_language']['es-cl'] = "Lengua";
@@ -233,6 +250,7 @@ $text['label-user_language']['sv-se'] = "Språk";
 $text['label-user_language']['de-at'] = "Sprache";
 $text['label-user_language']['ro'] = "Limbă";
 $text['label-user_language']['fa'] = "";
+$text['label-user_language']['ar-eg'] = "اللغه";
 
 $text['label-time']['en-us'] = "Time Zone";
 $text['label-time']['es-cl'] = "Zona Horaria";
@@ -246,6 +264,7 @@ $text['label-time']['sv-se'] = "Tidszon";
 $text['label-time']['de-at'] = "Zeitzone";
 $text['label-time']['ro'] = "Zonă fus orar";
 $text['label-time']['fa'] = "";
+$text['label-time']['ar-eg'] = "";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -259,6 +278,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['ro'] = "Stare";
 $text['label-status']['fa'] = "";
+$text['label-status']['ar-eg'] = "";
 
 $text['label-reset_password']['en-us'] = "Reset Password";
 $text['label-reset_password']['es-cl'] = "Restablecer contraseña";
@@ -272,6 +292,7 @@ $text['label-reset_password']['sv-se'] = "Återställ Lösenord";
 $text['label-reset_password']['de-at'] = "Passwort zurücksetzen";
 $text['label-reset_password']['ro'] = "Resetare parolă";
 $text['label-reset_password']['fa'] = "";
+$text['label-reset_password']['ar-eg'] = "";
 
 $text['label-reset_link']['en-us'] = "Password Reset Link";
 $text['label-reset_link']['es-cl'] = "Password Reset Enlace";
@@ -285,6 +306,7 @@ $text['label-reset_link']['sv-se'] = "Länk för Återställning av Lösenord";
 $text['label-reset_link']['de-at'] = "Link zum Zurücksetzen des Passworts";
 $text['label-reset_link']['ro'] = "Link resetare parolă";
 $text['label-reset_link']['fa'] = "";
+$text['label-reset_link']['ar-eg'] = "";
 
 $text['label-repeat_password']['en-us'] = "Repeat Password";
 $text['label-repeat_password']['es-cl'] = "Repita la Contraseña";
@@ -298,6 +320,7 @@ $text['label-repeat_password']['sv-se'] = "Repetera Lösenord";
 $text['label-repeat_password']['de-at'] = "Passwort wiederholen";
 $text['label-repeat_password']['ro'] = "Repetare parolă";
 $text['label-repeat_password']['fa'] = "";
+$text['label-repeat_password']['ar-eg'] = "";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -311,6 +334,7 @@ $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['de-at'] = "Passwort";
 $text['label-password']['ro'] = "Parolă";
 $text['label-password']['fa'] = "";
+$text['label-password']['ar-eg'] = "";
 
 $text['label-new_password']['en-us'] = "New Password";
 $text['label-new_password']['es-cl'] = "Nueva Contraseña";
@@ -324,6 +348,7 @@ $text['label-new_password']['sv-se'] = "Nytt Lösenord";
 $text['label-new_password']['de-at'] = "Neues Passwort";
 $text['label-new_password']['ro'] = "Parolă nouă";
 $text['label-new_password']['fa'] = "";
+$text['label-new_password']['ar-eg'] = "";
 
 $text['label-followme']['en-us'] = "Follow Me";
 $text['label-followme']['es-cl'] = "Sígueme";
@@ -337,6 +362,7 @@ $text['label-followme']['sv-se'] = "Följ Mig";
 $text['label-followme']['de-at'] = "Follow Me";
 $text['label-followme']['ro'] = "Urmează-mă";
 $text['label-followme']['fa'] = "";
+$text['label-followme']['ar-eg'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -350,6 +376,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['de-at'] = "Durchwahl";
 $text['label-extension']['ro'] = "Extensie";
 $text['label-extension']['fa'] = "";
+$text['label-extension']['ar-eg'] = "";
 
 $text['label-email_address']['en-us'] = "Email Address";
 $text['label-email_address']['es-cl'] = "Dirección de Correo Electrónico";
@@ -363,6 +390,7 @@ $text['label-email_address']['sv-se'] = "E-postadress";
 $text['label-email_address']['de-at'] = "E-Mail-Adresse";
 $text['label-email_address']['ro'] = "Adresă email";
 $text['label-email_address']['fa'] = "";
+$text['label-email_address']['ar-eg'] = "";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -376,6 +404,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['ro'] = "Domeniu";
 $text['label-domain']['fa'] = "";
+$text['label-domain']['ar-eg'] = "";
 
 $text['label-dnd']['en-us'] = "Do Not Disturb";
 $text['label-dnd']['es-cl'] = "No Molestar";
@@ -389,6 +418,7 @@ $text['label-dnd']['sv-se'] = "Stör Ej";
 $text['label-dnd']['de-at'] = "Nicht stören";
 $text['label-dnd']['ro'] = "Nu deranjați";
 $text['label-dnd']['fa'] = "";
+$text['label-dnd']['ar-eg'] = "";
 
 $text['label-confirm-password']['en-us'] = "Confirm Password";
 $text['label-confirm-password']['es-cl'] = "Confirmar Contraseña";
@@ -402,6 +432,7 @@ $text['label-confirm-password']['sv-se'] = "Verifiera Lösenord";
 $text['label-confirm-password']['de-at'] = "Passwort bestätigen";
 $text['label-confirm-password']['ro'] = "Confirmare parolă";
 $text['label-confirm-password']['fa'] = "";
+$text['label-confirm-password']['ar-eg'] = "";
 
 $text['label-cancel']['en-us'] = "Cancel";
 $text['label-cancel']['es-cl'] = "Cancelar";
@@ -415,6 +446,7 @@ $text['label-cancel']['sv-se'] = "Avbryt";
 $text['label-cancel']['de-at'] = "Abbrechen";
 $text['label-cancel']['ro'] = "Anulează";
 $text['label-cancel']['fa'] = "";
+$text['label-cancel']['ar-eg'] = "";
 
 $text['label-callforward']['en-us'] = "Call Forward";
 $text['label-callforward']['es-cl'] = "Desvío de Llamadas";
@@ -428,6 +460,7 @@ $text['label-callforward']['sv-se'] = "Vidarekoppling";
 $text['label-callforward']['de-at'] = "Anrufweiterleitung";
 $text['label-callforward']['ro'] = "Redirecționare apel";
 $text['label-callforward']['fa'] = "";
+$text['label-callforward']['ar-eg'] = "";
 
 $text['header-user_dashboard']['en-us'] = "User Dashboard";
 $text['header-user_dashboard']['es-cl'] = "Dashboard Usuario";
@@ -441,6 +474,7 @@ $text['header-user_dashboard']['sv-se'] = "Användarpanel";
 $text['header-user_dashboard']['de-at'] = "Benutzer-Übersichtsseite";
 $text['header-user_dashboard']['ro'] = "Panou control utilizator";
 $text['header-user_dashboard']['fa'] = "";
+$text['header-user_dashboard']['ar-eg'] = "";
 
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
@@ -454,6 +488,7 @@ $text['description-user_language']['sv-se'] = "Välj Språk";
 $text['description-user_language']['de-at'] = "Sprache auswählen";
 $text['description-user_language']['ro'] = "Selecție limbă";
 $text['description-user_language']['fa'] = "";
+$text['description-user_language']['ar-eg'] = "";
 
 $text['description-user_dashboard']['en-us'] = "Quickly access information and tools related to your account.";
 $text['description-user_dashboard']['es-cl'] = "Acceso rápido a la información y herramientas relacionadas con su cuenta.";
@@ -467,6 +502,7 @@ $text['description-user_dashboard']['sv-se'] = "Snabb tillgång till information
 $text['description-user_dashboard']['de-at'] = "Schneller Zugriff auf Kontoinformationen und -funktionen";
 $text['description-user_dashboard']['ro'] = "Acces rapid la informații și utilitare pentru contul Dvs.";
 $text['description-user_dashboard']['fa'] = "";
+$text['description-user_dashboard']['ar-eg'] = "";
 
 $text['description-timezone']['en-us'] = "Select the default time zone.";
 $text['description-timezone']['es-cl'] = "Seleccione la zona horaria predeterminada.";
@@ -480,6 +516,7 @@ $text['description-timezone']['sv-se'] = "Välj standardtidszon";
 $text['description-timezone']['de-at'] = "Standardzeitzone auswählen";
 $text['description-timezone']['ro'] = "Selectați un fus orar implicit";
 $text['description-timezone']['fa'] = "";
+$text['description-timezone']['ar-eg'] = "";
 
 $text['description-status']['en-us'] = "Select a user status.";
 $text['description-status']['es-cl'] = "Seleccione el estado del usuario.";
@@ -493,6 +530,7 @@ $text['description-status']['sv-se'] = "Välj en användarstatus.";
 $text['description-status']['de-at'] = "Benutzerstatus auswählen";
 $text['description-status']['ro'] = "Selectați starea utilizatorului";
 $text['description-status']['fa'] = "";
+$text['description-status']['ar-eg'] = "";
 
 $text['description']['en-us'] = "Edit account information.";
 $text['description']['es-cl'] = "Editar configuración de la cuenta.";
@@ -506,6 +544,7 @@ $text['description']['sv-se'] = "Redigera kontoinformation.";
 $text['description']['de-at'] = "Kontoinformationen bearbeiten";
 $text['description']['ro'] = "Editare cont";
 $text['description']['fa'] = "";
+$text['description']['ar-eg'] = "";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completa";
@@ -519,6 +558,7 @@ $text['confirm-update']['sv-se'] = "Uppdatering Klar";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['ro'] = "Actualizare completă";
 $text['confirm-update']['fa'] = "";
+$text['confirm-update']['ar-eg'] = "";
 
 $text['confirm-password']['en-us'] = "Passwords did not match.";
 $text['confirm-password']['es-cl'] = "Las contraseñas no coinciden.";
@@ -532,6 +572,7 @@ $text['confirm-password']['sv-se'] = "Lösenorden matchar inte.";
 $text['confirm-password']['de-at'] = "Die Passwörter stimmen nicht überein";
 $text['confirm-password']['ro'] = "Parolele nu se potrivesc";
 $text['confirm-password']['fa'] = "";
+$text['confirm-password']['ar-eg'] = "";
 
 $text['check-onbreak-status']['en-us'] = "On Break";
 $text['check-onbreak-status']['es-cl'] = "En Pausa";
@@ -545,6 +586,7 @@ $text['check-onbreak-status']['sv-se'] = "På Rast";
 $text['check-onbreak-status']['de-at'] = "Pause";
 $text['check-onbreak-status']['ro'] = "În pauză";
 $text['check-onbreak-status']['fa'] = "";
+$text['check-onbreak-status']['ar-eg'] = "";
 
 $text['check-loggedout-status']['en-us'] = "Logged Out";
 $text['check-loggedout-status']['es-cl'] = "Desconectado";
@@ -558,6 +600,7 @@ $text['check-loggedout-status']['sv-se'] = "Utloggad";
 $text['check-loggedout-status']['de-at'] = "Abgemeldet";
 $text['check-loggedout-status']['ro'] = "";
 $text['check-loggedout-status']['fa'] = "";
+$text['check-loggedout-status']['ar-eg'] = "";
 
 $text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
 $text['check-do-not-disturb-status']['es-cl'] = "No molestar";
@@ -571,6 +614,7 @@ $text['check-do-not-disturb-status']['sv-se'] = "Stör Ej";
 $text['check-do-not-disturb-status']['de-at'] = "Nicht stören";
 $text['check-do-not-disturb-status']['ro'] = "Nu deranjați";
 $text['check-do-not-disturb-status']['fa'] = "";
+$text['check-do-not-disturb-status']['ar-eg'] = "";
 
 $text['check-available-status']['en-us'] = "Available";
 $text['check-available-status']['es-cl'] = "Disponible";
@@ -584,6 +628,7 @@ $text['check-available-status']['sv-se'] = "Tillgänglig";
 $text['check-available-status']['de-at'] = "Erreichbar";
 $text['check-available-status']['ro'] = "Disponibil";
 $text['check-available-status']['fa'] = "";
+$text['check-available-status']['ar-eg'] = "متاح";
 
 $text['check-available-ondemand-status']['en-us'] = "Available (On Demand)";
 $text['check-available-ondemand-status']['es-cl'] = "Disponible (A Pedido)";
@@ -597,6 +642,7 @@ $text['check-available-ondemand-status']['sv-se'] = "Tillgänglig (På Begäran)
 $text['check-available-ondemand-status']['de-at'] = "Erreichbar (bei Bedarf)";
 $text['check-available-ondemand-status']['ro'] = "Disponibil (la cerere)";
 $text['check-available-ondemand-status']['fa'] = "";
+$text['check-available-ondemand-status']['ar-eg'] = "متاح (تحت الطلب";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -610,6 +656,7 @@ $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['de-at'] = "Speichern";
 $text['button-save']['ro'] = "Salvează";
 $text['button-save']['fa'] = "";
+$text['button-save']['ar-eg'] = "حفظ";
 
 $text['button-reset']['en-us'] = "Reset";
 $text['button-reset']['es-cl'] = "Reajustar";
@@ -623,6 +670,7 @@ $text['button-reset']['sv-se'] = "Återställ";
 $text['button-reset']['de-at'] = "Zurücksetzen";
 $text['button-reset']['ro'] = "Inițializare";
 $text['button-reset']['fa'] = "";
+$text['button-reset']['ar-eg'] = "مسح";
 
 $text['button-login']['en-us'] = "Login";
 $text['button-login']['es-cl'] = "Ingresar";
@@ -636,6 +684,7 @@ $text['button-login']['sv-se'] = "Logga In";
 $text['button-login']['de-at'] = "Anmelden";
 $text['button-login']['ro'] = "Autentificare";
 $text['button-login']['fa'] = "";
+$text['button-login']['ar-eg'] = "";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -649,5 +698,6 @@ $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['de-at'] = "Zurück ";
 $text['button-back']['ro'] = "Înapoi";
 $text['button-back']['fa'] = "";
+$text['button-back']['ar-eg'] = "رجوع";
 
 ?>
