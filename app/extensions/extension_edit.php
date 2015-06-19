@@ -358,19 +358,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						foreach ($missed_call_data_array as $array_index => $email_address) {
 							if (!valid_email($email_address)) { unset($missed_call_data_array[$array_index]); }
 						}
-						echo "<pre>".print_r($missed_call_data_array, true)."</pre><br><br>";
+						//echo "<pre>".print_r($missed_call_data_array, true)."</pre><br><br>";
 						if (sizeof($missed_call_data_array) > 0) {
 							$missed_call_data = implode(',', $missed_call_data_array);
 						}
 						else {
 							unset($missed_call_app, $missed_call_data);
 						}
-						echo "Multiple Emails = ".$missed_call_data;
+						//echo "Multiple Emails = ".$missed_call_data;
 					}
 					else {
-						echo "Single Email = ".$missed_call_data."<br>";
+						//echo "Single Email = ".$missed_call_data."<br>";
 						if (!valid_email($missed_call_data)) {
-							echo "Invalid Email<br><br>";
+							//echo "Invalid Email<br><br>";
 							unset($missed_call_app, $missed_call_data);
 						}
 					}
