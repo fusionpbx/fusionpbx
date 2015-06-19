@@ -432,7 +432,7 @@ $text['label-confirm-password']['sv-se'] = "Verifiera Lösenord";
 $text['label-confirm-password']['de-at'] = "Passwort bestätigen";
 $text['label-confirm-password']['ro'] = "Confirmare parolă";
 $text['label-confirm-password']['fa'] = "";
-$text['label-confirm-password']['ar-eg'] = "";
+$text['label-confirm-password']['ar-eg'] = "تاكيد كلمة السر";
 
 $text['label-cancel']['en-us'] = "Cancel";
 $text['label-cancel']['es-cl'] = "Cancelar";
@@ -446,7 +446,7 @@ $text['label-cancel']['sv-se'] = "Avbryt";
 $text['label-cancel']['de-at'] = "Abbrechen";
 $text['label-cancel']['ro'] = "Anulează";
 $text['label-cancel']['fa'] = "";
-$text['label-cancel']['ar-eg'] = "";
+$text['label-cancel']['ar-eg'] = "الغاء";
 
 $text['label-callforward']['en-us'] = "Call Forward";
 $text['label-callforward']['es-cl'] = "Desvío de Llamadas";
@@ -488,7 +488,7 @@ $text['description-user_language']['sv-se'] = "Välj Språk";
 $text['description-user_language']['de-at'] = "Sprache auswählen";
 $text['description-user_language']['ro'] = "Selecție limbă";
 $text['description-user_language']['fa'] = "";
-$text['description-user_language']['ar-eg'] = "";
+$text['description-user_language']['ar-eg'] = "اختيار الغة";
 
 $text['description-user_dashboard']['en-us'] = "Quickly access information and tools related to your account.";
 $text['description-user_dashboard']['es-cl'] = "Acceso rápido a la información y herramientas relacionadas con su cuenta.";
@@ -544,7 +544,7 @@ $text['description']['sv-se'] = "Redigera kontoinformation.";
 $text['description']['de-at'] = "Kontoinformationen bearbeiten";
 $text['description']['ro'] = "Editare cont";
 $text['description']['fa'] = "";
-$text['description']['ar-eg'] = "";
+$text['description']['ar-eg'] = "تعديل بيانات الحساب";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completa";
@@ -558,7 +558,7 @@ $text['confirm-update']['sv-se'] = "Uppdatering Klar";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['ro'] = "Actualizare completă";
 $text['confirm-update']['fa'] = "";
-$text['confirm-update']['ar-eg'] = "";
+$text['confirm-update']['ar-eg'] = "تم التحديث";
 
 $text['confirm-password']['en-us'] = "Passwords did not match.";
 $text['confirm-password']['es-cl'] = "Las contraseñas no coinciden.";
@@ -614,7 +614,7 @@ $text['check-do-not-disturb-status']['sv-se'] = "Stör Ej";
 $text['check-do-not-disturb-status']['de-at'] = "Nicht stören";
 $text['check-do-not-disturb-status']['ro'] = "Nu deranjați";
 $text['check-do-not-disturb-status']['fa'] = "";
-$text['check-do-not-disturb-status']['ar-eg'] = "";
+$text['check-do-not-disturb-status']['ar-eg'] = "عدم الازعاج";
 
 $text['check-available-status']['en-us'] = "Available";
 $text['check-available-status']['es-cl'] = "Disponible";
@@ -642,7 +642,7 @@ $text['check-available-ondemand-status']['sv-se'] = "Tillgänglig (På Begäran)
 $text['check-available-ondemand-status']['de-at'] = "Erreichbar (bei Bedarf)";
 $text['check-available-ondemand-status']['ro'] = "Disponibil (la cerere)";
 $text['check-available-ondemand-status']['fa'] = "";
-$text['check-available-ondemand-status']['ar-eg'] = "متاح (تحت الطلب";
+$text['check-available-ondemand-status']['ar-eg'] = "(متاح ( تحت الطلب";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -670,7 +670,7 @@ $text['button-reset']['sv-se'] = "Återställ";
 $text['button-reset']['de-at'] = "Zurücksetzen";
 $text['button-reset']['ro'] = "Inițializare";
 $text['button-reset']['fa'] = "";
-$text['button-reset']['ar-eg'] = "مسح";
+$text['button-reset']['ar-eg'] = "إعادة تعيين";
 
 $text['button-login']['en-us'] = "Login";
 $text['button-login']['es-cl'] = "Ingresar";
@@ -684,7 +684,7 @@ $text['button-login']['sv-se'] = "Logga In";
 $text['button-login']['de-at'] = "Anmelden";
 $text['button-login']['ro'] = "Autentificare";
 $text['button-login']['fa'] = "";
-$text['button-login']['ar-eg'] = "";
+$text['button-login']['ar-eg'] = "دخول";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
