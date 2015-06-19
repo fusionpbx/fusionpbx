@@ -100,6 +100,8 @@ else {
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
 			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
+			$ring_group_missed_call_app = check_str($_POST["ring_group_missed_call_app"]);
+			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -180,6 +182,47 @@ else {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
+				//prep missed call values for db insert/update
+					switch ($ring_group_missed_call_app) {
+						case 'email':
+							$ring_group_missed_call_data = str_replace(';',',',$ring_group_missed_call_data);
+							$ring_group_missed_call_data = str_replace(' ','',$ring_group_missed_call_data);
+							if (substr_count($ring_group_missed_call_data, ',') > 0) {
+								$ring_group_missed_call_data_array = explode(',', $ring_group_missed_call_data);
+								foreach ($ring_group_missed_call_data_array as $array_index => $email_address) {
+									if (!valid_email($email_address)) { unset($ring_group_missed_call_data_array[$array_index]); }
+								}
+								//echo "<pre>".print_r($ring_group_missed_call_data_array, true)."</pre><br><br>";
+								if (sizeof($ring_group_missed_call_data_array) > 0) {
+									$ring_group_missed_call_data = implode(',', $ring_group_missed_call_data_array);
+								}
+								else {
+									unset($ring_group_missed_call_app, $ring_group_missed_call_data);
+								}
+								//echo "Multiple Emails = ".$ring_group_missed_call_data;
+							}
+							else {
+								//echo "Single Email = ".$ring_group_missed_call_data."<br>";
+								if (!valid_email($ring_group_missed_call_data)) {
+									//echo "Invalid Email<br><br>";
+									unset($ring_group_missed_call_app, $ring_group_missed_call_data);
+								}
+							}
+							break;
+						case 'text':
+							$ring_group_missed_call_data = str_replace('-','',$ring_group_missed_call_data);
+							$ring_group_missed_call_data = str_replace('.','',$ring_group_missed_call_data);
+							$ring_group_missed_call_data = str_replace('(','',$ring_group_missed_call_data);
+							$ring_group_missed_call_data = str_replace(')','',$ring_group_missed_call_data);
+							$ring_group_missed_call_data = str_replace(' ','',$ring_group_missed_call_data);
+							if (!is_numeric($ring_group_missed_call_data)) { unset($ring_group_missed_call_app, $ring_group_missed_call_data); }
+							break;
+					}
+					if (permission_exists('ring_group_missed_call') && $ring_group_missed_call_app != '' && $ring_group_missed_call_data != '') {
+						$_POST["ring_group_missed_call_app"] = $ring_group_missed_call_app;
+						$_POST["ring_group_missed_call_data"] = $ring_group_missed_call_data;
+					}
+
 				//set the app and data
 					$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
 					$ring_group_timeout_app = array_shift($ring_group_timeout_array);
@@ -344,6 +387,8 @@ else {
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
 			$ring_group_skip_active = $row["ring_group_skip_active"];
+			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
+			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -705,6 +750,26 @@ else {
 	echo $text['description-skip_active']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('ring_group_missed_call')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-missed_call']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='ring_group_missed_call_app' id='ring_group_missed_call_app' onchange=\"if (this.selectedIndex != 0) { document.getElementById('ring_group_missed_call_data').style.display = ''; document.getElementById('ring_group_missed_call_data').focus(); } else { document.getElementById('ring_group_missed_call_data').style.display='none'; }\">\n";
+		echo "		<option value=''></option>\n";
+		echo "    	<option value='email' ".(($ring_group_missed_call_app == "email" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
+		//echo "    	<option value='text' ".(($ring_group_missed_call_app == "text" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		//echo "    	<option value='url' ".(($ring_group_missed_call_app == "url" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
+		echo "    </select>\n";
+		$ring_group_missed_call_data = ($ring_group_missed_call_app == 'text') ? format_phone($ring_group_missed_call_data) : $ring_group_missed_call_data;
+		echo "    <input class='formfld' type='text' name='ring_group_missed_call_data' id='ring_group_missed_call_data' maxlength='255' value=\"$ring_group_missed_call_data\" style='min-width: 200px; width: 200px; ".(($ring_group_missed_call_app == '' || $ring_group_missed_call_data == '') ? "display: none;" : null)."'>\n";
+		echo "<br />\n";
+		echo $text['description-missed_call']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (if_group("superadmin")) {
 		echo "<tr>\n";

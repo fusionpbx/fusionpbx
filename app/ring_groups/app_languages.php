@@ -268,6 +268,16 @@ $text['label-user_list']['sv-se'] = "Användar-lista";
 $text['label-user_list']['uk'] = "Список користувачів";
 $text['label-user_list']['de-at'] = "Benutzer Liste";
 
+$text['label-url']['en-us'] = "URL";
+$text['label-url']['es-cl'] = "URL";
+$text['label-url']['pt-pt'] = "URL";
+$text['label-url']['fr-fr'] = "URL";
+$text['label-url']['pt-br'] = "URL";
+$text['label-url']['pl'] = "URL";
+$text['label-url']['uk'] = "URL";
+$text['label-url']['sv-se'] = "URL";
+$text['label-url']['de-at'] = "URL";
+
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
 $text['label-tools']['fr-fr'] = "Outils";
@@ -297,6 +307,16 @@ $text['label-timeout']['pl'] = "Przekroczenie czasu oczekiwania (timeout)";
 $text['label-timeout']['sv-se'] = "Tidsgräns";
 $text['label-timeout']['uk'] = "Таймаут";
 $text['label-timeout']['de-at'] = "Time-Out";
+
+$text['label-text']['en-us'] = "Text";
+$text['label-text']['es-cl'] = "Texto";
+$text['label-text']['pt-pt'] = "Texto";
+$text['label-text']['fr-fr'] = "texte";
+$text['label-text']['pt-br'] = "Texto";
+$text['label-text']['pl'] = "Tekst";
+$text['label-text']['uk'] = "текст";
+$text['label-text']['sv-se'] = "Text";
+$text['label-text']['de-at'] = "Text";
 
 $text['label-strategy']['en-us'] = "Strategy";
 $text['label-strategy']['es-cl'] = "Estrategia";
@@ -358,6 +378,16 @@ $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk'] = "Назва";
 $text['label-name']['de-at'] = "Name";
 
+$text['label-missed_call']['en-us'] = "Missed Call";
+$text['label-missed_call']['es-cl'] = "Llamada Perdida";
+$text['label-missed_call']['pt-pt'] = "Chamada Perdida";
+$text['label-missed_call']['fr-fr'] = "Appel Manqué";
+$text['label-missed_call']['pt-br'] = "Chamada Perdida";
+$text['label-missed_call']['pl'] = "Nieodebrane Połączenie";
+$text['label-missed_call']['uk'] = "пропущений Дзвінок";
+$text['label-missed_call']['sv-se'] = "Missat Samtal";
+$text['label-missed_call']['de-at'] = "Verpasster Anruf";
+
 $text['label-forward_destination']['en-us'] = "Number";
 $text['label-forward_destination']['es-cl'] = "Número";
 $text['label-forward_destination']['fr-fr'] = "Numéro";
@@ -387,6 +417,16 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['de-at'] = "An";
+
+$text['label-email']['en-us'] = "Email";
+$text['label-email']['es-cl'] = "Email";
+$text['label-email']['pt-pt'] = "Email";
+$text['label-email']['fr-fr'] = "Courriel";
+$text['label-email']['pt-br'] = "Email";
+$text['label-email']['pl'] = "Email";
+$text['label-email']['uk'] = "Електронна пошта";
+$text['label-email']['sv-se'] = "E-post";
+$text['label-email']['de-at'] = "Email";
 
 $text['label-duration']['en-us'] = "Duration";
 $text['label-duration']['es-cl'] = "Duración";
@@ -646,6 +686,16 @@ $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['sv-se'] = "Ange ett namn.";
 $text['description-name']['uk'] = "Введіть назву меню";
 $text['description-name']['de-at'] = "Geben Sie einen Namen an.";
+
+$text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
+$text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";
+$text['description-missed_call']['pt-pt'] = "Selecione o tipo de notificação e digite o destino apropriado.";
+$text['description-missed_call']['fr-fr'] = "Sélectionnez le type de notification, et entrez la destination appropriée.";
+$text['description-missed_call']['pt-br'] = "Selecione o tipo de notificação e digite o destino apropriado.";
+$text['description-missed_call']['pl'] = "Wybierz typ powiadomienia, i wpisz odpowiednie miejsce przeznaczenia.";
+$text['description-missed_call']['uk'] = "Виберіть тип повідомлення, і ввести відповідний пункт призначення.";
+$text['description-missed_call']['sv-se'] = "Välj typ anmälan, och ange lämplig destination.";
+$text['description-missed_call']['de-at'] = "Wählen Sie den Benachrichtigungstyp und geben Sie das entsprechende Ziel an.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
 $text['description-extension']['es-cl'] = "Introduzca el número de extensión.";
