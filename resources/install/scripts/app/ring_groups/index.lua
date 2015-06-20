@@ -98,10 +98,13 @@
 	sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
 	status = dbh:query(sql, function(row)
 		domain_uuid = row["domain_uuid"];
+		ring_group_name = row["ring_group_name"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
+		ring_group_missed_call_app = row["ring_group_missed_call_app"];
+		ring_group_missed_call_data = row["ring_group_missed_call_data"];
 	end);
 
 --set the caller id
@@ -112,6 +115,48 @@
 			if (string.len(ring_group_cid_number_prefix) > 0) then
 				session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 			end
+	end
+
+--check the missed calls
+	function missed()
+		if (missed_call_app ~= nil and missed_call_data ~= nil) then
+			if (missed_call_app == "email") then
+				headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
+				headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
+				headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
+				headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+
+				subject = "Missed Call from ${caller_id_name} <${caller_id_number}> ${ring_group_name}";
+				subject = subject:gsub("${caller_id_name}", caller_id_name);
+				subject = subject:gsub("${caller_id_number}", caller_id_number);
+				subject = subject:gsub("${sip_to_user}", sip_to_user);
+				subject = subject:gsub("${destination_number}", destination_number);
+				subject = subject:gsub("${ring_group_name}", ring_group_name);
+
+				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${destination_number}  ${ring_group_name}";
+				body = body:gsub("${caller_id_name}", caller_id_name);
+				body = body:gsub("${caller_id_number}", caller_id_number);
+				body = body:gsub("${sip_to_user}", sip_to_user);
+				body = body:gsub("${destination_number}", destination_number);
+				body = body:gsub("${ring_group_name}", ring_group_name);
+
+				body = body:gsub(" ", "&nbsp;");
+				body = body:gsub("%s+", "");
+				body = body:gsub("&nbsp;", " ");
+				body = body:gsub("\n", "");
+				body = body:gsub("\n", "");
+				body = body:gsub("'", "&#39;");
+				body = body:gsub([["]], "&#34;");
+				body = trim(body);
+
+				cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+				end
+				api = freeswitch.API();
+				result = api:executeString(cmd);
+			end
+		end
 	end
 
 --process the ring group
@@ -522,17 +567,26 @@
 								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
 								or session:getVariable("originate_disposition") == "USER_BUSY"
 								or session:getVariable("originate_disposition") == "failure") then
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+									--send missed call notification
+										missed();
+									--execute the time out action
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							end
 						else
 							if (ring_group_timeout_app ~= nil) then
-								session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								--send missed call notification
+									missed();
+								--execute the time out action
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							else
 								sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 								sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
 								--freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
 								dbh:query(sql, function(row)
-									session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+									--send missed call notification
+										missed();
+									--execute the time out action
+										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
 								end);
 							end
 						end

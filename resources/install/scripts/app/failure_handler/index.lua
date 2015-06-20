@@ -32,8 +32,6 @@
 	dofile(scripts_dir .. "/resources/functions/explode.lua");
 	dofile(scripts_dir .. "/resources/functions/trim.lua");
 
-
-
 --check the missed calls
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -53,7 +51,7 @@
 				body = body:gsub("${caller_id_name}", caller_id_name);
 				body = body:gsub("${caller_id_number}", caller_id_number);
 				body = body:gsub("${sip_to_user}", sip_to_user);
-				body = body:gsub("${dialed_user}", dialed_user);;
+				body = body:gsub("${dialed_user}", dialed_user);
 
 				body = body:gsub(" ", "&nbsp;");
 				body = body:gsub("%s+", "");
