@@ -88,7 +88,7 @@ $text['table-file']['pt-br'] = "Nome da pasta (Download)";
 $text['table-file']['pl'] = "Nazwa pliku (do pobrania)";
 $text['table-file']['sv-se'] = "Fil Namn (Nedladdning)";
 $text['table-file']['de-at'] = "Dateiname (Download)";
-$text['table-file']['ro'] = "Nume fișier (descărcare)";
+$text['table-file']['ro'] = "Nume fișier (clic pentru descărcare)";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
@@ -238,7 +238,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['de-at'] = "Werkzeug";
-$text['label-tools']['ro'] = "Utilitare";
+$text['label-tools']['ro'] = "Căsuță Fax";
 
 $text['label-sent']['en-us'] = "Sent";
 $text['label-sent']['es-cl'] = "Enviado";
@@ -278,7 +278,7 @@ $text['label-new']['pt-br'] = "Nova";
 $text['label-new']['pl'] = "Nowy";
 $text['label-new']['sv-se'] = "Nytt";
 $text['label-new']['de-at'] = "Neu";
-$text['label-new']['ro'] = "Noi";
+$text['label-new']['ro'] = "Nou";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
