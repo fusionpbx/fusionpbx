@@ -103,18 +103,18 @@
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
-		ring_group_missed_call_app = row["ring_group_missed_call_app"];
-		ring_group_missed_call_data = row["ring_group_missed_call_data"];
+		missed_call_app = row["ring_group_missed_call_app"];
+		missed_call_data = row["ring_group_missed_call_data"];
 	end);
 
 --set the caller id
 	if (session:ready()) then
-			if (string.len(ring_group_cid_name_prefix) > 0) then
-				session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
-			end
-			if (string.len(ring_group_cid_number_prefix) > 0) then
-				session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
-			end
+		if (string.len(ring_group_cid_name_prefix) > 0) then
+			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+		end
+		if (string.len(ring_group_cid_number_prefix) > 0) then
+			session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
+		end
 	end
 
 --check the missed calls
@@ -129,15 +129,11 @@
 				subject = "Missed Call from ${caller_id_name} <${caller_id_number}> ${ring_group_name}";
 				subject = subject:gsub("${caller_id_name}", caller_id_name);
 				subject = subject:gsub("${caller_id_number}", caller_id_number);
-				subject = subject:gsub("${sip_to_user}", sip_to_user);
-				subject = subject:gsub("${destination_number}", destination_number);
 				subject = subject:gsub("${ring_group_name}", ring_group_name);
 
-				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${destination_number}  ${ring_group_name}";
+				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${ring_group_name}";
 				body = body:gsub("${caller_id_name}", caller_id_name);
 				body = body:gsub("${caller_id_number}", caller_id_number);
-				body = body:gsub("${sip_to_user}", sip_to_user);
-				body = body:gsub("${destination_number}", destination_number);
 				body = body:gsub("${ring_group_name}", ring_group_name);
 
 				body = body:gsub(" ", "&nbsp;");
@@ -167,18 +163,18 @@
 		--get the ring group destinations
 			sql = [[
 				SELECT 
-						r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring, 
-						d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, 
-						r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
+					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring, 
+					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, 
+					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
 				FROM 
-						v_ring_groups as r, v_ring_group_destinations as d
+					v_ring_groups as r, v_ring_group_destinations as d
 				WHERE 
-						d.ring_group_uuid = r.ring_group_uuid 
-						AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
-						AND r.domain_uuid = ']]..domain_uuid..[[' 
-						AND r.ring_group_enabled = 'true' 
+					d.ring_group_uuid = r.ring_group_uuid 
+					AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
+					AND r.domain_uuid = ']]..domain_uuid..[[' 
+					AND r.ring_group_enabled = 'true' 
 				ORDER BY 
-						d.destination_delay, d.destination_number asc 
+					d.destination_delay, d.destination_number asc 
 				]];
 			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 			destinations = {};
