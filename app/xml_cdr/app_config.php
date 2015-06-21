@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "XML CDR";
 		$apps[$x]['uuid'] = "4a085c51-7635-ff03-f67b-86e834422848";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
