@@ -287,16 +287,6 @@
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($result as $field) {
-					$sql2 = "select * from v_menu_languages ";
-					$sql2 .= "where menu_language = 'en-us' ";
-					$sql2 .= "and menu_item_uuid = '".$field['menu_item_uuid']."' ";
-					$prep_statement2 = $db->prepare(check_sql($sql2));
-					$prep_statement2->execute();
-					$result2 = $prep_statement2->fetchAll(PDO::FETCH_NAMED);
-					foreach($result2 as $field2) {
-						$menu_icon_name=$field2['menu_item_title'];
-					}
-					unset($prep_statement2, $sql2, $result2);
 
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
@@ -459,6 +449,145 @@
 					unset($sql, $result_2);
 					$db_menu_sub .="</ul>\n";
 					return $db_menu_sub;
+				}
+				unset($prep_statement_2, $sql);
+			}
+
+		//create the menu array
+			function menu_array($sql, $menu_item_level) {
+
+				$db = $this->db;
+				$db_menu_full = '';
+
+				if (!isset($_SESSION['groups'])) {
+					$_SESSION['groups'][0]['group_name'] = 'public';
+				}
+
+				if (strlen($sql) == 0) { //default sql for base of the menu
+					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid ";
+					$sql .= "from v_menu_items as i, v_menu_languages as l ";
+					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
+					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
+					$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and i.menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and i.menu_item_parent_uuid is null ";
+					$sql .= "and i.menu_item_uuid in ";
+					$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and ( ";
+					if (!isset($_SESSION['groups'])) {
+						$sql .= "group_name = 'public' ";
+					}
+					else {
+						$x = 0;
+						foreach($_SESSION['groups'] as $row) {
+							if ($x == 0) {
+								$sql .= "group_name = '".$row['group_name']."' ";
+							}
+							else {
+								$sql .= "or group_name = '".$row['group_name']."' ";
+							}
+							$x++;
+						}
+					}
+					$sql .= ") ";
+					$sql .= "and menu_item_uuid is not null ";
+					$sql .= ") ";
+					$sql .= "order by i.menu_item_order asc ";
+				}
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+				$x = 0;
+				foreach($result as $row) {
+					//add the row to the array
+						$a[$x] = $row;
+
+					//add the sub menus to the array
+						$menu_item_level = 0;
+						if (strlen($row['menu_item_uuid']) > 0) {
+							$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $row['menu_item_uuid']);
+						}
+
+					//increment the row number
+						$x++;
+				} //end for each
+
+				unset($prep_statement, $sql, $result);
+				return $a;
+			}
+
+		//create the sub menus
+			function menu_child_array($menu_item_level, $menu_item_uuid) {
+
+				$db = $this->db;
+				$menu_item_level = $menu_item_level+1;
+
+				if (count($_SESSION['groups']) == 0) {
+					$_SESSION['groups'][0]['group_name'] = 'public';
+				}
+
+				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql .= "from v_menu_items as i, v_menu_languages as l ";
+				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
+				$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
+				$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
+				$sql .= "and i.menu_uuid = '".$this->menu_uuid."' ";
+				$sql .= "and i.menu_item_parent_uuid = '$menu_item_uuid' ";
+				$sql .= "and i.menu_item_uuid in ";
+				$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
+				$sql .= "and ( ";
+				if (count($_SESSION['groups']) == 0) {
+					$sql .= "group_name = 'public' ";
+				}
+				else {
+					$x = 0;
+					foreach($_SESSION['groups'] as $row) {
+						if ($x == 0) {
+							$sql .= "group_name = '".$row['group_name']."' ";
+						}
+						else {
+							$sql .= "or group_name = '".$row['group_name']."' ";
+						}
+						$x++;
+					}
+				}
+				$sql .= ") ";
+				$sql .= ") ";
+				$sql .= "order by l.menu_item_title, i.menu_item_order asc ";
+				$prep_statement_2 = $db->prepare($sql);
+				$prep_statement_2->execute();
+				$result_2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+				if (count($result_2) > 0) {
+					foreach($result_2 as $row) {
+						//set the variables
+							$menu_item_link = $row['menu_item_link'];
+							$menu_item_category = $row['menu_item_category'];
+							$menu_item_uuid = $row['menu_item_uuid'];
+							$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
+
+						//add the row to the array
+							$a[$x] = $row;
+
+						//prepare the protected menus
+							if ($row['menu_item_protected'] == "true") {
+								$a[$x]['menu_item_title'] = $row['menu_item_title'];
+							}
+							else {
+								$a[$x]['menu_item_title'] = $row['menu_language_title'];
+							}
+
+						//get sub menu for children
+							if (strlen($menu_item_uuid) > 0) {
+								$a[$x]['menu_items'] = $this->menu_child_array($menu_item_level, $menu_item_uuid);
+								//$str_child_menu = 
+							}
+
+						//increment the row
+							$x++;
+					}
+					unset($sql, $result_2);
+					return $a;
 				}
 				unset($prep_statement_2, $sql);
 			}
