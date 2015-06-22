@@ -449,7 +449,7 @@ $text['label-provisioning']['pl'] = "Automatyczna konfiguracja urządzeń";
 $text['label-provisioning']['uk'] = "";
 $text['label-provisioning']['sv-se'] = "Enhet Provisionering";
 $text['label-provisioning']['de-at'] = "Endgeräte Bereitstellung";
-$text['label-provisioning']['ro'] = "Provizionare echipament";
+$text['label-provisioning']['ro'] = "Autoconfigurare echipament";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -603,7 +603,7 @@ $text['label-enabled']['pl'] = "Numer wew włączony?";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['de-at'] = "An";
-$text['label-enabled']['ro'] = "Activat";
+$text['label-enabled']['ro'] = "Activ";
 
 $text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 $text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
@@ -713,7 +713,7 @@ $text['label-dial_string']['pl'] = "Opcje polecenia DIAL";
 $text['label-dial_string']['uk'] = "";
 $text['label-dial_string']['sv-se'] = "Ringa Sträng";
 $text['label-dial_string']['de-at'] = "Wahl Zeichenkette";
-$text['label-dial_string']['ro'] = "";
+$text['label-dial_string']['ro'] = "Secvență de apelare";
 
 $text['label-device_template']['en-us'] = "Template";
 $text['label-device_template']['pt-pt'] = "Template";
@@ -768,7 +768,7 @@ $text['label-call_timeout']['pl'] = "Limit czasu rozmowy";
 $text['label-call_timeout']['uk'] = "";
 $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['de-at'] = "Abwurfzeit";
-$text['label-call_timeout']['ro'] = "";
+$text['label-call_timeout']['ro'] = "Timp de expirare apel";
 
 $text['label-call_group']['en-us'] = "Call Group";
 $text['label-call_group']['es-cl'] = "Llamar a Grupo";
@@ -911,7 +911,7 @@ $text['description-voicemail_file']['pl'] = "Wybierz opcje odsłuchania poczty g
 $text['description-voicemail_file']['uk'] = "";
 $text['description-voicemail_file']['sv-se'] = "Välj ett alternativ för avlyssning i e-postmeddelandet.";
 $text['description-voicemail_file']['de-at'] = "Wählen Sie eine Option für die Mailbox Benachrichtigung.";
-$text['description-voicemail_file']['ro'] = "Selectați o opțiunea de a asculta mesajul vocal în notificarea prin email.";
+$text['description-voicemail_file']['ro'] = "Selectați o opțiune de a asculta mesajul vocal în notificarea prin email.";
 
 $text['description-voicemail_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
 $text['description-voicemail_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
@@ -977,7 +977,7 @@ $text['description-sip_force_expires']['pl'] = "Aby zapobiec zastałym rejestrac
 $text['description-sip_force_expires']['uk'] = "";
 $text['description-sip_force_expires']['sv-se'] = "För att förhindra inaktuella registreringar ”SIP Force expires” kan åsidosätta ”klient expire”.";
 $text['description-sip_force_expires']['de-at'] = "Um abgelaufene Registrierungen zu vermeiden kann SIP Force expires hier überschrieben werden.";
-$text['description-sip_force_expires']['ro'] = "";
+$text['description-sip_force_expires']['ro'] = "Pentru a preveni înregistrările agățate SIP Force Expire poate suprascrie opțiunea Expire a clientului.";
 
 $text['description-sip_force_contact']['en-us'] = "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.";
 $text['description-sip_force_contact']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
@@ -988,7 +988,7 @@ $text['description-sip_force_contact']['pl'] = "Wybierz, czy nadpisać SIP „Co
 $text['description-sip_force_contact']['uk'] = "";
 $text['description-sip_force_contact']['sv-se'] = "Välj om 'contact port' skall skrivas om eller om både 'contact IP och Port' skall skrivas om.";
 $text['description-sip_force_contact']['de-at'] = "Wählen Sie ob contact Port oder contact IP und Port überschrieben werden sollen.";
-$text['description-sip_force_contact']['ro'] = "";
+$text['description-sip_force_contact']['ro'] = "Alegeți dacă rescrieți portul sau rescrieți IP-ul și portul.";
 
 $text['description-sip_bypass_media']['en-us'] = "Choose whether to send the media stream point to point or in transparent proxy mode.";
 $text['description-sip_bypass_media']['es-cl'] = "Seleccione si desea enviar el flujo de medios punto a punto o en modo proxy de transporte.";
@@ -1307,7 +1307,7 @@ $text['description-cidr']['pl'] = "Wpisz CIDR";
 $text['description-cidr']['uk'] = "";
 $text['description-cidr']['sv-se'] = "Ange CIDR här.";
 $text['description-cidr']['de-at'] = "Geben Sie hier die Beschränkung der IP Adresse an (z.B. 1.2.3.4/32)";
-$text['description-cidr']['ro'] = "Introduceți în format CIDR aici.";
+$text['description-cidr']['ro'] = "Introduceți adresa în format CIDR aici.";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['es-cl'] = "Ingrese el tiempo de espera de llamada.";
@@ -1318,7 +1318,7 @@ $text['description-call_timeout']['pl'] = "Wpisz limit czasu rozmowy";
 $text['description-call_timeout']['uk'] = "";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['de-at'] = "Geben Sie die Abwurfzeit an.";
-$text['description-call_timeout']['ro'] = "";
+$text['description-call_timeout']['ro'] = "Introduceți timpul de expirare pentru apel.";
 
 $text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";
 $text['description-call_group']['es-cl'] = "Ingrese el grupo a llamar aquí. Los grupos disponible de forma predeterminada son: ventas, soporte, facturación.";
@@ -1329,7 +1329,7 @@ $text['description-call_group']['pl'] = "Tutaj wprowadź grupę rozmówców uży
 $text['description-call_group']['uk'] = "";
 $text['description-call_group']['sv-se'] = "Ange användarens ring grupp här. Grupper som är tillgängliga från start: sales, support, billing.";
 $text['description-call_group']['de-at'] = "Geben Sie eine Rufgruppe an. Standardgruppen: sales, support, billing.";
-$text['description-call_group']['ro'] = "Introduceți grupul de apel din care face parte utilizatorul. Grupurile disponibile implicit sunt vânzări, suport și plăți.";
+$text['description-call_group']['ro'] = "Introduceți grupul de apelare din care face parte utilizatorul. Grupurile disponibile implicit sunt vânzări, suport și plăți.";
 
 $text['description-auth_acl']['en-us'] = "Enter the Auth ACL here.";
 $text['description-auth_acl']['es-cl'] = "Ingrese el ACL de autenticación aquí";
