@@ -26,7 +26,7 @@ $text['title-user-settings']['sv-se'] = "Användarinformation";
 $text['title-user-settings']['de-at'] = "Benutzerinformationen";
 $text['title-user-settings']['ro'] = "Informații utilizator";
 $text['title-user-settings']['fa'] = "";
-$text['title-user-settings']['ar-eg'] = "معلومات المستخدم";
+$text['title-user-settings']['ar-eg'] = "بيانات المستخدم";
 
 $text['title']['en-us'] = "Account Settings";
 $text['title']['es-cl'] = "Configuración de Cuenta";
@@ -82,7 +82,7 @@ $text['table-title']['sv-se'] = "Användarinformation";
 $text['table-title']['de-at'] = "Benutzerinformationen";
 $text['table-title']['ro'] = "Informații Utilizator";
 $text['table-title']['fa'] = "اطلاعات کاربر";
-$text['table-title']['ar-eg'] = "معلومات المستخدم";
+$text['table-title']['ar-eg'] = "بيانات المستخدم";
 
 $text['table-extension']['en-us'] = "Extension";
 $text['table-extension']['es-cl'] = "Extensión";
@@ -180,7 +180,7 @@ $text['login-message_dismiss']['sv-se'] = "Avvisa";
 $text['login-message_dismiss']['de-at'] = "Verwerfen";
 $text['login-message_dismiss']['ro'] = "Renunță";
 $text['login-message_dismiss']['fa'] = "";
-$text['login-message_dismiss']['ar-eg'] = "";
+$text['login-message_dismiss']['ar-eg'] = "تجاهل";
 
 $text['login-message_attention']['en-us'] = "Attention!";
 $text['login-message_attention']['es-cl'] = "¡Atención!";
@@ -194,7 +194,7 @@ $text['login-message_attention']['sv-se'] = "Observera!";
 $text['login-message_attention']['de-at'] = "Achtung!";
 $text['login-message_attention']['ro'] = "Atenție!";
 $text['login-message_attention']['fa'] = "";
-$text['login-message_attention']['ar-eg'] = "";
+$text['login-message_attention']['ar-eg'] = "برجاء الملاحظة";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de Voz";
@@ -264,7 +264,7 @@ $text['label-time']['sv-se'] = "Tidszon";
 $text['label-time']['de-at'] = "Zeitzone";
 $text['label-time']['ro'] = "Zonă fus orar";
 $text['label-time']['fa'] = "";
-$text['label-time']['ar-eg'] = "";
+$text['label-time']['ar-eg'] = "منطقة التوقيت";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -278,7 +278,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['ro'] = "Stare";
 $text['label-status']['fa'] = "";
-$text['label-status']['ar-eg'] = "";
+$text['label-status']['ar-eg'] = "الحالة";
 
 $text['label-reset_password']['en-us'] = "Reset Password";
 $text['label-reset_password']['es-cl'] = "Restablecer contraseña";
@@ -348,7 +348,7 @@ $text['label-new_password']['sv-se'] = "Nytt Lösenord";
 $text['label-new_password']['de-at'] = "Neues Passwort";
 $text['label-new_password']['ro'] = "Parolă nouă";
 $text['label-new_password']['fa'] = "";
-$text['label-new_password']['ar-eg'] = "";
+$text['label-new_password']['ar-eg'] = "كلمة سر جديدة";
 
 $text['label-followme']['en-us'] = "Follow Me";
 $text['label-followme']['es-cl'] = "Sígueme";
@@ -362,7 +362,7 @@ $text['label-followme']['sv-se'] = "Följ Mig";
 $text['label-followme']['de-at'] = "Follow Me";
 $text['label-followme']['ro'] = "Urmează-mă";
 $text['label-followme']['fa'] = "";
-$text['label-followme']['ar-eg'] = "";
+$text['label-followme']['ar-eg'] = "خدمة اتبعني";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -460,7 +460,7 @@ $text['label-callforward']['sv-se'] = "Vidarekoppling";
 $text['label-callforward']['de-at'] = "Anrufweiterleitung";
 $text['label-callforward']['ro'] = "Redirecționare apel";
 $text['label-callforward']['fa'] = "";
-$text['label-callforward']['ar-eg'] = "";
+$text['label-callforward']['ar-eg'] = "تحويل المكالمات";
 
 $text['header-user_dashboard']['en-us'] = "User Dashboard";
 $text['header-user_dashboard']['es-cl'] = "Dashboard Usuario";
@@ -474,7 +474,7 @@ $text['header-user_dashboard']['sv-se'] = "Användarpanel";
 $text['header-user_dashboard']['de-at'] = "Benutzer-Übersichtsseite";
 $text['header-user_dashboard']['ro'] = "Panou control utilizator";
 $text['header-user_dashboard']['fa'] = "";
-$text['header-user_dashboard']['ar-eg'] = "";
+$text['header-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
@@ -502,7 +502,7 @@ $text['description-user_dashboard']['sv-se'] = "Snabb tillgång till information
 $text['description-user_dashboard']['de-at'] = "Schneller Zugriff auf Kontoinformationen und -funktionen";
 $text['description-user_dashboard']['ro'] = "Acces rapid la informații și utilitare pentru contul Dvs.";
 $text['description-user_dashboard']['fa'] = "";
-$text['description-user_dashboard']['ar-eg'] = "";
+$text['description-user_dashboard']['ar-eg'] = "دخول سريع للمعلومات و الادوات الخاصة بحسابك";
 
 $text['description-timezone']['en-us'] = "Select the default time zone.";
 $text['description-timezone']['es-cl'] = "Seleccione la zona horaria predeterminada.";
@@ -516,7 +516,7 @@ $text['description-timezone']['sv-se'] = "Välj standardtidszon";
 $text['description-timezone']['de-at'] = "Standardzeitzone auswählen";
 $text['description-timezone']['ro'] = "Selectați un fus orar implicit";
 $text['description-timezone']['fa'] = "";
-$text['description-timezone']['ar-eg'] = "";
+$text['description-timezone']['ar-eg'] = "اختيار منطقة التوقيت";
 
 $text['description-status']['en-us'] = "Select a user status.";
 $text['description-status']['es-cl'] = "Seleccione el estado del usuario.";
@@ -530,7 +530,7 @@ $text['description-status']['sv-se'] = "Välj en användarstatus.";
 $text['description-status']['de-at'] = "Benutzerstatus auswählen";
 $text['description-status']['ro'] = "Selectați starea utilizatorului";
 $text['description-status']['fa'] = "";
-$text['description-status']['ar-eg'] = "";
+$text['description-status']['ar-eg'] = "اختيار حالة للمستخدم";
 
 $text['description']['en-us'] = "Edit account information.";
 $text['description']['es-cl'] = "Editar configuración de la cuenta.";
@@ -572,7 +572,7 @@ $text['confirm-password']['sv-se'] = "Lösenorden matchar inte.";
 $text['confirm-password']['de-at'] = "Die Passwörter stimmen nicht überein";
 $text['confirm-password']['ro'] = "Parolele nu se potrivesc";
 $text['confirm-password']['fa'] = "";
-$text['confirm-password']['ar-eg'] = "";
+$text['confirm-password']['ar-eg'] = "كلمات السر غير متطابقة";
 
 $text['check-onbreak-status']['en-us'] = "On Break";
 $text['check-onbreak-status']['es-cl'] = "En Pausa";
@@ -586,7 +586,7 @@ $text['check-onbreak-status']['sv-se'] = "På Rast";
 $text['check-onbreak-status']['de-at'] = "Pause";
 $text['check-onbreak-status']['ro'] = "În pauză";
 $text['check-onbreak-status']['fa'] = "";
-$text['check-onbreak-status']['ar-eg'] = "";
+$text['check-onbreak-status']['ar-eg'] = " (في استراحة (لا يعمل";
 
 $text['check-loggedout-status']['en-us'] = "Logged Out";
 $text['check-loggedout-status']['es-cl'] = "Desconectado";
@@ -600,7 +600,7 @@ $text['check-loggedout-status']['sv-se'] = "Utloggad";
 $text['check-loggedout-status']['de-at'] = "Abgemeldet";
 $text['check-loggedout-status']['ro'] = "";
 $text['check-loggedout-status']['fa'] = "";
-$text['check-loggedout-status']['ar-eg'] = "";
+$text['check-loggedout-status']['ar-eg'] = "تم الخروخ";
 
 $text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
 $text['check-do-not-disturb-status']['es-cl'] = "No molestar";
