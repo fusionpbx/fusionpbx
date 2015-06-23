@@ -781,6 +781,17 @@ $text['label-call_group']['sv-se'] = "Ring Grupp";
 $text['label-call_group']['de-at'] = "Rufgruppe";
 $text['label-call_group']['ro'] = "Grup apelare";
 
+$text['label-call_screen_enabled']['en-us'] = "Call Screen";
+$text['label-call_screen_enabled']['es-cl'] = "";
+$text['label-call_screen_enabled']['pt-pt'] = "";
+$text['label-call_screen_enabled']['fr-fr'] = "";
+$text['label-call_screen_enabled']['pt-br'] = "";
+$text['label-call_screen_enabled']['pl'] = "";
+$text['label-call_screen_enabled']['uk'] = "";
+$text['label-call_screen_enabled']['sv-se'] = "";
+$text['label-call_screen_enabled']['de-at'] = "";
+$text['label-call_screen_enabled']['ro'] = "";
+
 $text['label-bypass_media_after_bridge']['en-us'] = "Bypass Media After Bridge";
 $text['label-bypass_media_after_bridge']['es-cl'] = "Después de la omisión de medios puente";
 $text['label-bypass_media_after_bridge']['pt-pt'] = "Depois de Ponte de mídia Bypass";
@@ -1319,6 +1330,17 @@ $text['description-call_timeout']['uk'] = "";
 $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['de-at'] = "Geben Sie die Abwurfzeit an.";
 $text['description-call_timeout']['ro'] = "Introduceți timpul de expirare pentru apel.";
+
+$text['description-call_screen_enabled']['en-us'] = "Choose whether to enable or disable call screening.";
+$text['description-call_screen_enabled']['es-cl'] = "";
+$text['description-call_screen_enabled']['pt-pt'] = "";
+$text['description-call_screen_enabled']['fr-fr'] = "";
+$text['description-call_screen_enabled']['pt-br'] = "";
+$text['description-call_screen_enabled']['pl'] = "";
+$text['description-call_screen_enabled']['uk'] = "";
+$text['description-call_screen_enabled']['sv-se'] = "";
+$text['description-call_screen_enabled']['de-at'] = "";
+$text['description-call_screen_enabled']['ro'] = "";
 
 $text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";
 $text['description-call_group']['es-cl'] = "Ingrese el grupo a llamar aquí. Los grupos disponible de forma predeterminada son: ventas, soporte, facturación.";
