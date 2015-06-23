@@ -42,6 +42,8 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_toll";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_call_screen";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_enabled";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";

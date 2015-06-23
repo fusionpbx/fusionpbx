@@ -314,51 +314,6 @@
 						continue = false;
 					end
 
-				--outbound hot desking - get the extension variables
-					if (continue) then
-						sql = "SELECT * FROM v_extensions WHERE dial_domain = '" .. domain_name .. "' and dial_user = '" .. user .. "' and enabled = 'true' ";
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-						end
-						dbh:query(sql, function(row)
-							--get the values from the database
-							extension_uuid = row.extension_uuid;
-							domain_uuid = row.domain_uuid;
-							sip_from_user = row.extension;
-							call_group = row.call_group;
-							user_record = row.user_record;
-							hold_music = row.hold_music;
-							toll_allow = row.toll_allow;
-							accountcode = row.accountcode;
-							user_context = row.user_context;
-							effective_caller_id_name = row.effective_caller_id_name;
-							effective_caller_id_number = row.effective_caller_id_number;
-							outbound_caller_id_name = row.outbound_caller_id_name;
-							outbound_caller_id_number = row.outbound_caller_id_number;
-							emergency_caller_id_name = row.emergency_caller_id_name;
-							emergency_caller_id_number = row.emergency_caller_id_number;
-							missed_call_app = row.missed_call_app;
-							missed_call_data = row.missed_call_data;
-							directory_full_name = row.directory_full_name;
-							directory_visible = row.directory_visible;
-							directory_exten_visible = row.directory_exten_visible;
-							limit_max = row.limit_max;
-							call_timeout = row.call_timeout;
-							limit_destination = row.limit_destination;
-							sip_force_contact = row.sip_force_contact;
-							sip_force_expires = row.sip_force_expires;
-							nibble_account = row.nibble_account;
-							sip_bypass_media = row.sip_bypass_media;
-							forward_all_enabled = row.forward_all_enabled;
-							forward_all_destination = row.forward_all_destination;
-							forward_busy_enabled = row.forward_busy_enabled;
-							forward_busy_destination = row.forward_busy_destination;
-							forward_no_answer_enabled = row.forward_no_answer_enabled;
-							forward_no_answer_destination = row.forward_no_answer_destination;
-							do_not_disturb = row.do_not_disturb;
-						end);
-					end
-
 				--set the xml array and then concatenate the array to a string
 					if (continue and password) then
 						--build the xml
@@ -418,6 +373,9 @@
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
+							end
+							if (string.len(call_screen_enabled) > 0) then
+								table.insert(xml, [[								<variable name="call_screen_enabled" value="]] .. call_screen_enabled .. [["/>]]);
 							end
 							if (string.len(user_record) > 0) then
 								table.insert(xml, [[								<variable name="user_record" value="]] .. user_record .. [["/>]]);
