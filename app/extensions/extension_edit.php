@@ -876,7 +876,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
-	if (strlen($call_screen_enabled == 0)) { $call_screen_enabled = 'false'; }
+	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
 
 //begin the page content
 	require_once "resources/header.php";
