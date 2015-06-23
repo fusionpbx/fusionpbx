@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2015
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -26,15 +26,28 @@
 	max_tries = "3";
 	digit_timeout = "5000";
 
+--check if a file exists
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
+
 --run if the session is ready
 	if ( session:ready() ) then
 		--answer the call
 			session:answer();
 
+		--add short delay before playing the audio
+			--session:sleep(1000);
+
 		--get the variables
+			uuid = session:getVariable("uuid");
+			domain_name = session:getVariable("domain_name");
 			context = session:getVariable("context");
 			sounds_dir = session:getVariable("sounds_dir");
 			destination_number = session:getVariable("destination_number");
+			caller_id_number = session:getVariable("caller_id_number");
+			record_ext = session:getVariable("record_ext");
 
 		--confirm or not to confirm
 			if (session:getVariable("confirm")) then
@@ -52,6 +65,12 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--if the screen file is found then set confirm to true
+			call_screen_file = "/tmp/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
+			if (file_exists(call_screen_file)) then
+				confirm = "true";
+			end
+
 		--confirm the calls
 			--prompt for digits
 				if (confirm == "true") then
@@ -60,7 +79,16 @@
 					--get the digit
 						min_digits = 1;
 						max_digits = 1;
-						digit = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-accept_reject_voicemail.wav", "", "\\d+");
+						digit = '';
+						if (file_exists(call_screen_file)) then
+							max_tries = 1;
+							digit_timeout = 500;
+							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", call_screen_file, "", "\\d+");
+						end
+						if (string.len(digit) == 0) then
+							max_tries = 3;
+							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-accept_reject_voicemail.wav", "", "\\d+");
+						end
 					--process the response
 						if (digit == "1") then
 							--freeswitch.consoleLog("NOTICE", "[confirm] accept\n");
