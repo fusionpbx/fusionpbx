@@ -36,7 +36,6 @@ else {
 
 //detect billing app
 	$billing_app_exists = file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php");
-
 	if ($billing_app_exists) {
 		require_once "app/billing/resources/functions/currency.php";
 		require_once "app/billing/resources/functions/rating.php";
@@ -126,6 +125,7 @@ else {
 			$toll_allow = check_str($_POST["toll_allow"]);
 			$call_timeout = check_str($_POST["call_timeout"]);
 			$call_group = check_str($_POST["call_group"]);
+			$call_screen_enabled = check_str($_POST["call_screen_enabled"]);
 			$user_record = check_str($_POST["user_record"]);
 			$hold_music = check_str($_POST["hold_music"]);
 			$auth_acl = check_str($_POST["auth_acl"]);
@@ -138,7 +138,6 @@ else {
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
-
 	}
 
 //delete the user from the v_extension_users
@@ -445,6 +444,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "call_timeout, ";
 							}
 							$sql .= "call_group, ";
+							$sql .= "call_screen_enabled, ";
 							$sql .= "user_record, ";
 							$sql .= "hold_music, ";
 							$sql .= "auth_acl, ";
@@ -503,6 +503,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "'$call_timeout', ";
 							}
 							$sql .= "'$call_group', ";
+							$sql .= "'$call_screen_enabled', ";
 							$sql .= "'$user_record', ";
 							$sql .= "'$hold_music', ";
 							$sql .= "'$auth_acl', ";
@@ -647,6 +648,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "call_timeout = '$call_timeout', ";
 					}
 					$sql .= "call_group = '$call_group', ";
+					$sql .= "call_screen_enabled = '$call_screen_enabled', ";
 					$sql .= "user_record = '$user_record', ";
 					$sql .= "hold_music = '$hold_music', ";
 					$sql .= "auth_acl = '$auth_acl', ";
@@ -826,6 +828,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$toll_allow = $row["toll_allow"];
 			$call_timeout = $row["call_timeout"];
 			$call_group = $row["call_group"];
+			$call_screen_enabled = $row["call_screen_enabled"];
 			$user_record = $row["user_record"];
 			$hold_music = $row["hold_music"];
 			$auth_acl = $row["auth_acl"];
@@ -873,6 +876,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
+	if (strlen($call_screen_enabled == 0)) { $call_screen_enabled = 'false'; }
 
 //begin the page content
 	require_once "resources/header.php";
