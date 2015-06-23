@@ -216,6 +216,7 @@
 							--variables
 								sip_from_user = row.extension;
 								call_group = row.call_group;
+								call_screen_enabled = row.call_screen_enabled;
 								user_record = row.user_record;
 								hold_music = row.hold_music;
 								toll_allow = row.toll_allow;
