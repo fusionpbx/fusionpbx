@@ -1095,6 +1095,181 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
+	if ($action == "update") {
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-provisioning']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "		<input type='hidden' name='device_line_uuid' id='device_line_uuid' value=''>";
+			echo "		<table>\n";
+			echo "			<tr>\n";
+			echo "				<td class='vtable'>\n";
+			echo "					".$text['label-line']."&nbsp;\n";
+			echo "				</td>\n";
+			echo "				<td class='vtable'>\n";
+			echo "					".$text['label-device_mac_address']."&nbsp;\n";
+			echo "				</td>\n";
+			echo "				<td class='vtable'>\n";
+			echo "					".$text['label-device_template']."&nbsp;\n";
+			echo "				</td>\n";
+
+			echo "				<td>\n";
+			//if (permission_exists('device_edit')) {
+			//	echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			//}
+			//if (permission_exists('device_delete')) {
+			//	echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			//}
+			echo "				</td>\n";
+			echo "			</tr>\n";
+
+			$sql = "SELECT d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+			$sql .= "FROM v_device_lines as l, v_devices as d ";
+			$sql .= "WHERE l.user_id = '".$extension."' ";
+			$sql .= "AND l.domain_uuid = '".$domain_uuid."' ";
+			$sql .= "AND l.device_uuid = d.device_uuid ";
+			$sql .= "ORDER BY l.line_number, d.device_mac_address asc ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			foreach($result as $row) {
+				$device_mac_address = $row['device_mac_address'];
+				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+				echo "		<tr>\n";
+				echo "			<td class='vtable'>".$row['line_number']."</td>\n";
+				echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a></td>\n";
+				echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
+				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
+				echo "			<td>\n";
+				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".$row['device_line_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+				echo "			</td>\n";
+				echo "		</tr>\n";
+			}
+
+			echo "		<tr>\n";
+			echo "		<td class='vtable'>";
+			echo "			<select id='line_number' name='line_number' class='formfld' style='width: auto;' onchange=\"$onchange\">\n";
+			echo "			<option value=''></option>\n";
+			for ($n = 1; $n <=30; $n++) {
+				echo "		<option value='".$n."'>".$n."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+
+			echo "		<td class='vtable'>";
+			echo "			<table border='0' cellpadding='1' cellspacing='0'>\n";
+			echo "			<tr>\n";
+			echo "			<td id=\"cell_device_mac_address_1\" nowrap='nowrap'>\n";
+			?>
+			<script>
+			var Objs;
+			function changeToInput_device_mac_address(obj){
+				tb=document.createElement('INPUT');
+				tb.type='text';
+				tb.name=obj.name;
+				tb.className='formfld';
+				tb.setAttribute('id', 'device_mac_address');
+				tb.setAttribute('style', 'width: 80%;');
+				tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
+				tb.value=obj.options[obj.selectedIndex].value;
+				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
+				tbb=document.createElement('INPUT');
+				tbb.setAttribute('class', 'btn');
+				tbb.setAttribute('style', 'margin-left: 4px;');
+				tbb.type='button';
+				tbb.value=$("<div />").html('&#9665;').text();
+				tbb.objs=[obj,tb,tbb];
+				tbb.onclick=function(){ replace_device_mac_address(this.objs); }
+				obj.parentNode.insertBefore(tb,obj);
+				obj.parentNode.insertBefore(tbb,obj);
+				obj.parentNode.removeChild(obj);
+				replace_device_mac_address(this.objs);
+			}
+
+			function replace_device_mac_address(obj){
+				obj[2].parentNode.insertBefore(obj[0],obj[2]);
+				obj[0].parentNode.removeChild(obj[1]);
+				obj[0].parentNode.removeChild(obj[2]);
+				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'visible';
+			}
+			</script>
+			<?php
+			$sql = "SELECT * FROM v_devices ";
+			$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+			$sql .= "ORDER BY device_mac_address asc ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 180px;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
+			echo "					<option value=''></option>\n";
+			if (count($result) > 0) {
+				foreach($result as $field) {
+					if (strlen($field["device_mac_address"]) > 0) {
+						if ($field_current_value == $field["device_mac_address"]) {
+							echo "					<option value=\"".$field["device_mac_address"]."\" selected=\"selected\">".$field["device_mac_address"]."</option>\n";
+						}
+						else {
+							echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$field['device_model']." ".$field['device_description']."</option>\n";
+						}
+					}
+				}
+			}
+			unset($sql, $result, $result_count);
+			echo "				</select>\n";
+			echo "				<input type='button' id='btn_select_to_input_device_mac_address' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_device_mac_address(document.getElementById(\"device_mac_address\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
+			echo "	</td>\n";
+			echo "	</tr>\n";
+			echo "	</table>\n";
+
+			echo "		</td>\n";
+			echo "		<td class='vtable'>";
+			$device = new device;
+			$template_dir = $device->get_template_dir();
+			echo "<select id='device_template' name='device_template' class='formfld'>\n";
+			echo "<option value=''></option>\n";
+			if($dh = opendir($template_dir)) {
+				while($dir = readdir($dh)) {
+					if($file != "." && $dir != ".." && $dir[0] != '.') {
+						if(is_dir($template_dir . "/" . $dir)) {
+							echo "<optgroup label='$dir'>";
+							if($dh_sub = opendir($template_dir.'/'.$dir)) {
+								while($dir_sub = readdir($dh_sub)) {
+									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
+											if ($device_template == $dir."/".$dir_sub) {
+												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+											}
+											else {
+												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+											}
+										}
+									}
+								}
+								closedir($dh_sub);
+							}
+							echo "</optgroup>";
+						}
+					}
+				}
+				closedir($dh);
+			}
+			echo "</select>\n";
+			echo "		</td>\n";
+			echo "		<td>\n";
+			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+			echo "		</td>\n";
+			echo "		</table>\n";
+			echo "		<br />\n";
+			echo $text['description-provisioning']."\n";
+
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+	}
+
 	if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1338,181 +1513,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-limit_destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	if ($action == "update") {
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-provisioning']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "		<input type='hidden' name='device_line_uuid' id='device_line_uuid' value=''>";
-			echo "		<table>\n";
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$text['label-line']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$text['label-device_mac_address']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$text['label-device_template']."&nbsp;\n";
-			echo "				</td>\n";
-
-			echo "				<td>\n";
-			//if (permission_exists('device_edit')) {
-			//	echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			//}
-			//if (permission_exists('device_delete')) {
-			//	echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			//}
-			echo "				</td>\n";
-			echo "			</tr>\n";
-
-			$sql = "SELECT d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
-			$sql .= "FROM v_device_lines as l, v_devices as d ";
-			$sql .= "WHERE l.user_id = '".$extension."' ";
-			$sql .= "AND l.domain_uuid = '".$domain_uuid."' ";
-			$sql .= "AND l.device_uuid = d.device_uuid ";
-			$sql .= "ORDER BY l.line_number, d.device_mac_address asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			foreach($result as $row) {
-				$device_mac_address = $row['device_mac_address'];
-				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-				echo "		<tr>\n";
-				echo "			<td class='vtable'>".$row['line_number']."</td>\n";
-				echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a></td>\n";
-				echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
-				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
-				echo "			<td>\n";
-				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".$row['device_line_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
-				echo "			</td>\n";
-				echo "		</tr>\n";
-			}
-
-			echo "		<tr>\n";
-			echo "		<td class='vtable'>";
-			echo "			<select id='line_number' name='line_number' class='formfld' style='width: auto;' onchange=\"$onchange\">\n";
-			echo "			<option value=''></option>\n";
-			for ($n = 1; $n <=30; $n++) {
-				echo "		<option value='".$n."'>".$n."</option>\n";
-			}
-			echo "			</select>\n";
-			echo "		</td>\n";
-
-			echo "		<td class='vtable'>";
-			echo "			<table border='0' cellpadding='1' cellspacing='0'>\n";
-			echo "			<tr>\n";
-			echo "			<td id=\"cell_device_mac_address_1\" nowrap='nowrap'>\n";
-			?>
-			<script>
-			var Objs;
-			function changeToInput_device_mac_address(obj){
-				tb=document.createElement('INPUT');
-				tb.type='text';
-				tb.name=obj.name;
-				tb.className='formfld';
-				tb.setAttribute('id', 'device_mac_address');
-				tb.setAttribute('style', 'width: 80%;');
-				tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
-				tb.value=obj.options[obj.selectedIndex].value;
-				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
-				tbb=document.createElement('INPUT');
-				tbb.setAttribute('class', 'btn');
-				tbb.setAttribute('style', 'margin-left: 4px;');
-				tbb.type='button';
-				tbb.value=$("<div />").html('&#9665;').text();
-				tbb.objs=[obj,tb,tbb];
-				tbb.onclick=function(){ replace_device_mac_address(this.objs); }
-				obj.parentNode.insertBefore(tb,obj);
-				obj.parentNode.insertBefore(tbb,obj);
-				obj.parentNode.removeChild(obj);
-				replace_device_mac_address(this.objs);
-			}
-
-			function replace_device_mac_address(obj){
-				obj[2].parentNode.insertBefore(obj[0],obj[2]);
-				obj[0].parentNode.removeChild(obj[1]);
-				obj[0].parentNode.removeChild(obj[2]);
-				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'visible';
-			}
-			</script>
-			<?php
-			$sql = "SELECT * FROM v_devices ";
-			$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
-			$sql .= "ORDER BY device_mac_address asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 180px;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
-			echo "					<option value=''></option>\n";
-			if (count($result) > 0) {
-				foreach($result as $field) {
-					if (strlen($field["device_mac_address"]) > 0) {
-						if ($field_current_value == $field["device_mac_address"]) {
-							echo "					<option value=\"".$field["device_mac_address"]."\" selected=\"selected\">".$field["device_mac_address"]."</option>\n";
-						}
-						else {
-							echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$field['device_model']." ".$field['device_description']."</option>\n";
-						}
-					}
-				}
-			}
-			unset($sql, $result, $result_count);
-			echo "				</select>\n";
-			echo "				<input type='button' id='btn_select_to_input_device_mac_address' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_device_mac_address(document.getElementById(\"device_mac_address\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
-			echo "	</td>\n";
-			echo "	</tr>\n";
-			echo "	</table>\n";
-
-			echo "		</td>\n";
-			echo "		<td class='vtable'>";
-			$device = new device;
-			$template_dir = $device->get_template_dir();
-			echo "<select id='device_template' name='device_template' class='formfld'>\n";
-			echo "<option value=''></option>\n";
-			if($dh = opendir($template_dir)) {
-				while($dir = readdir($dh)) {
-					if($file != "." && $dir != ".." && $dir[0] != '.') {
-						if(is_dir($template_dir . "/" . $dir)) {
-							echo "<optgroup label='$dir'>";
-							if($dh_sub = opendir($template_dir.'/'.$dir)) {
-								while($dir_sub = readdir($dh_sub)) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-											}
-											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
-											}
-										}
-									}
-								}
-								closedir($dh_sub);
-							}
-							echo "</optgroup>";
-						}
-					}
-				}
-				closedir($dh);
-			}
-			echo "</select>\n";
-			echo "		</td>\n";
-			echo "		<td>\n";
-			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-			echo "		</td>\n";
-			echo "		</table>\n";
-			echo "		<br />\n";
-			echo $text['description-provisioning']."\n";
-
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
-	}
 
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 		echo "<tr>\n";
