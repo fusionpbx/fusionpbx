@@ -40,6 +40,8 @@ include "root.php";
 		private $dial_string;
 		public $accountcode;
 		public $forward_caller_id_uuid;
+		public $outbound_caller_id_name;
+		public $outbound_caller_id_number;
 
 		public function set() {
 			//set the global variable
@@ -56,6 +58,8 @@ include "root.php";
 					foreach ($result as &$row) {
 						$this->extension = $row["extension"];
 						$this->accountcode = $row["accountcode"];
+						$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
+						$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 					}
 				}
 				unset ($prep_statement);
@@ -90,6 +94,12 @@ include "root.php";
 								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";
 							}
 						}
+					}
+					else{
+						$dial_string .= ",outbound_caller_id_name=".$this->outbound_caller_id_name;
+						$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
+						$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
+						$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
 					}
 
 					$dial_string .= "}";
