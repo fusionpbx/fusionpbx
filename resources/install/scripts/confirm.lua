@@ -23,7 +23,6 @@
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
 --set variables
-	max_tries = "3";
 	digit_timeout = "5000";
 
 --check if a file exists
@@ -81,12 +80,11 @@
 						max_digits = 1;
 						digit = '';
 						if (file_exists(call_screen_file)) then
-							max_tries = 1;
-							digit_timeout = 500;
-							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", call_screen_file, "", "\\d+");
+							max_tries = "1";
+							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file, "", "\\d+");
 						end
 						if (string.len(digit) == 0) then
-							max_tries = 3;
+							max_tries = "3";
 							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-accept_reject_voicemail.wav", "", "\\d+");
 						end
 					--process the response

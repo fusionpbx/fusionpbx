@@ -417,7 +417,7 @@
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
 										if (y == 0) then
-											square = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",ignore_early_media=true,";
+											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",ignore_early_media=true,";
 										end
 										if (r.dialplan_detail_type == "set") then
 											--session:execute("eval", dialplan_detail_data);
@@ -511,14 +511,14 @@
 									if (reply == "0 total.") then
 										--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 												session:execute("bridge", dial_string);
 											else
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
 												session:execute("bridge", dial_string);
 											end
 									else
@@ -528,14 +528,14 @@
 										else
 											--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 												session:execute("bridge", dial_string);
 											else
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
 												session:execute("bridge", dial_string);
 											end
 										end
