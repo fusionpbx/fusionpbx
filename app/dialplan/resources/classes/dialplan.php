@@ -252,6 +252,7 @@ include "root.php";
 			}
 
 			public function import() {
+				global $db;
 				if (strlen($this->xml) > 0) {
 					//replace the variables
 						$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
@@ -283,6 +284,8 @@ include "root.php";
 						//dialplan entry already exists do nothing
 					}
 					else {
+						//start the transaction
+							$db->beginTransaction();
 						//get the attributes
 							$this->dialplan_uuid = uuid();
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
@@ -370,6 +373,8 @@ include "root.php";
 								$order = $order + 5;
 								$x++;
 							}
+						//end the transaction
+							$db->commit();
 					}
 			}
 
