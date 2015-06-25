@@ -116,7 +116,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "caller_id_name=$2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
