@@ -81,6 +81,7 @@
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
+		$db->beginTransaction();
 		foreach($result as $field) {
 			//get the menu_uuid
 				$menu_uuid = $field['menu_uuid'];
@@ -116,6 +117,7 @@
 						}
 				}
 		}
+		$db->commit();
 		unset($prep_statement);
 	}
 
@@ -129,6 +131,7 @@
 		$result_count = count($result);
 		unset($prep_statement);
 		if ($result_count > 0) {
+			$db->beginTransaction();
 			foreach($result as $field) {
 				$menu_item_group_uuid = uuid();
 				$sql = "update v_menu_item_groups ";
@@ -141,6 +144,7 @@
 				$count = $db->exec(check_sql($sql));
 				unset($sql);
 			}
+			$db->commit();
 		}
 	}
 

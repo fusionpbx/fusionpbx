@@ -54,6 +54,7 @@ if ($domains_processed == 1) {
 				$tmp[$x]['group_name'] = 'agent';
 				$tmp[$x]['group_description'] = 'Call Center Agent Group';
 				$tmp[$x]['group_protected'] = 'false';
+				$db->beginTransaction();
 				foreach($tmp as $row) {
 					if (strlen($row['group_name']) > 0) {
 						$sql = "insert into v_groups ";
@@ -76,6 +77,7 @@ if ($domains_processed == 1) {
 						unset($sql);
 					}
 				}
+				$db->commit();
 			}
 			unset($prep_statement, $sub_result);
 		}
@@ -131,6 +133,7 @@ if ($domains_processed == 1) {
 		if ($prep_statement) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$db->beginTransaction();
 			foreach($result as $row) {
 				if (strlen($row['group_name']) > 0) {
 					//get the group_uuid
@@ -149,6 +152,7 @@ if ($domains_processed == 1) {
 						unset($sql);
 				}
 			}
+			$db->commit();
 			unset ($prep_statement);
 		}
 
@@ -161,6 +165,8 @@ if ($domains_processed == 1) {
 		$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		unset ($prep_statement);
 		if ($sub_result['count'] > 0) {
+			//begin the transaction
+				$db->beginTransaction();
 			//send output
 				if ($display_type == "text") {
 					echo "	Users:	set enabled=true\n";
@@ -170,6 +176,8 @@ if ($domains_processed == 1) {
 				$sql .= "user_enabled = 'true' ";
 				$db->exec($sql);
 				unset($sql);
+			//end the transaction
+				$db->commit();
 		}
 }
 
