@@ -310,9 +310,9 @@
 		<param name="challenge-realm" value="auto_to"/>
 		<param name="disable-rtp-auto-adjust" value="true" enabled="false"/>
 		<!-- on inbound calls make the uuid of the session equal to the sip call id of that call -->
-		<param name="inbound-use-callid-as-uuid" value="true" enabled="false"/>
+		<!-- <param name="inbound-use-callid-as-uuid" value="false" enabled="false"/> -->
 		<!-- on outbound calls set the callid to match the uuid of the session -->
-		<param name="outbound-use-uuid-as-callid" value="true" enabled="false"/>
+		<!-- <param name="outbound-use-uuid-as-callid" value="false" enabled="false"/> -->
 		<!-- set to false disable this feature -->
 		<param name="rtp-autofix-timing" value="false" enabled="false"/>
 
@@ -369,7 +369,7 @@
 		<param name="renegotiate-codec-on-hold" value="true" enabled="false"/>
 
 		<!-- Periodically send an packet to all registered endpoints that are behind NAT -->
-		<param name="registration-thread-frequency" value="30"/>
-		<param name="nat-options-ping" value="true"/>
+		<param name="registration-thread-frequency" value="30"  enabled="false"/>
+		<param name="nat-options-ping" value="true" enabled="false"/>
 	</settings>
 </profile>
