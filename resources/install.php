@@ -1068,6 +1068,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$x++;
 		$tmp[$x]['group_name'] = 'agent';
 		$tmp[$x]['group_description'] = 'Call Center Agent Group';
+		$db_tmp->beginTransaction();
 		foreach($tmp as $row) {
 			$sql = "insert into v_groups ";
 			$sql .= "(";
@@ -1088,6 +1089,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 			unset($sql);
 		}
 		unset($tmp);
+		$db_tmp->commit();
 
 	//add a user and then add the user to the superadmin group
 		//prepare the values
@@ -1229,7 +1231,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$sql .= "'$menu_description' ";
 		$sql .= ");";
 		if ($v_debug) {
-				fwrite($fp, $sql."\n");
+			fwrite($fp, $sql."\n");
 		}
 		$db->exec(check_sql($sql));
 		unset($sql);

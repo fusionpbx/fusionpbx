@@ -70,7 +70,7 @@
 						$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
 						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
 						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						echo $sql;
+						//echo $sql;
 						$prep_statement = $this->db->prepare($sql);
 						if ($prep_statement) {
 							$prep_statement->execute();

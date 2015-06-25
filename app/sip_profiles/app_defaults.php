@@ -69,6 +69,7 @@
 					else {
 						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml';
 					}
+					$db->beginTransaction();
 					$xml_files = glob($sip_profile_dir);
 					foreach ($xml_files as &$xml_file) {
 						//load the sip profile xml and save it into an array
@@ -154,6 +155,7 @@
 							}
 						}
 					}
+					$db->commit();
 
 					//save the sip profile xml
 					save_sip_profile_xml();
@@ -163,26 +165,6 @@
 				}
 				unset($prep_statement);
 			}
-		}
-
-//if there is more than one domain then disable the force domains sip profile settings
-	if ($domains_processed == 1) {
-		if (count($_SESSION['domains']) > 1) {
-			//disable force domains
-				$sql = "update v_sip_profile_settings set ";
-				$sql .= "sip_profile_setting_enabled = 'false' ";
-				$sql .= "where sip_profile_setting_name = 'force-register-domain'";
-				$sql .= "or sip_profile_setting_name = 'force-subscription-domain'";
-				$sql .= "or sip_profile_setting_name = 'force-register-db-domain'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-			//save the sip profile xml
-				save_sip_profile_xml();
-
-			//apply settings reminder
-				$_SESSION["reload_xml"] = true;
-		}
 	}
 
 //if empty, set sip_profile_enabled = true
