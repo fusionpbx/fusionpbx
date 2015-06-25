@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -298,7 +298,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-			//syncrhonize the configuration
+			//get the dialplan_uuid
+				$sql = "select * from v_call_center_queues ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and call_center_queue_uuid = '$call_center_queue_uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$dialplan_uuid = $row["dialplan_uuid"];
+				}
+				unset ($prep_statement);
+
+			//dialplan add or update
+				$c = new call_center;
+				$c->db = $db;
+				$c->domain_uuid = $_SESSION['domain_uuid'];
+				$c->dialplan_uuid = $dialplan_uuid;
+				$c->queue_name = $queue_name;
+				$c->queue_cid_prefix = $queue_cid_prefix;
+				$c->queue_timeout_action = $queue_timeout_action;
+				$c->queue_description = $queue_description;
+				$c->destination_number = $queue_extension;
+				$a = $c->dialplan();
+
+			//synchronize the configuration
 				save_call_center_xml();
 
 			//clear the cache
@@ -973,4 +997,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 require_once "resources/footer.php";
+
 ?>
