@@ -315,7 +315,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
-			if ($default_setting_value == $key) {
+			if ($default_setting_value == $value) {
 				echo "		<option value='$value' selected='selected'>$value</option>\n";
 			}
 			else {
