@@ -8,7 +8,7 @@ $text['title-call_center_tier_edit']['pt-br'] = "Editar nivel do call center";
 $text['title-call_center_tier_edit']['pl'] = "Poziom w Call Center ";
 $text['title-call_center_tier_edit']['sv-se'] = "Call Center Kunskap";
 $text['title-call_center_tier_edit']['uk'] = "Рівень кол-центра";
-$text['title-call_center_tier_edit']['de-at'] = "Callcenter Rang";
+$text['title-call_center_tier_edit']['de-at'] = "Callcenter Ebene";
 
 $text['title-call_center_queues_edit']['es-cl'] = "Editar Cola de Centro de Llamados";
 $text['title-call_center_queues_edit']['pt-pt'] = "Editar Fila de Call Center";
@@ -68,7 +68,7 @@ $text['title-call_center_agents']['pt-br'] = "Agentes do call center";
 $text['title-call_center_agents']['pl'] = "Agenci w Call Center";
 $text['title-call_center_agents']['sv-se'] = "Call Center Agenter";
 $text['title-call_center_agents']['uk'] = "Оператори кол-центра";
-$text['title-call_center_agents']['de-at'] = "Telefonansprechpartner";
+$text['title-call_center_agents']['de-at'] = "Callcenter Agenten";
 
 $text['title-call_center_agent_status']['en-us'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['es-cl'] = "Estado de Agente de Centro de Llamados";
@@ -78,7 +78,7 @@ $text['title-call_center_agent_status']['pt-br'] = "Estado do agente call center
 $text['title-call_center_agent_status']['pl'] = "Status agentów w Call Center";
 $text['title-call_center_agent_status']['sv-se'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['uk'] = "Статус оператора кол-центра";
-$text['title-call_center_agent_status']['de-at'] = "Telefonansprechpartner Status";
+$text['title-call_center_agent_status']['de-at'] = "Callcenter Agenten Status";
 
 $text['title-call_center_agent_edit']['en-us'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['es-cl'] = "Editar Agente de Centro de Llamados";
@@ -88,7 +88,7 @@ $text['title-call_center_agent_edit']['pt-br'] = "Editar agente do call center";
 $text['title-call_center_agent_edit']['pl'] = "Agent w Call Center";
 $text['title-call_center_agent_edit']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['uk'] = "Оператор кол-центра";
-$text['title-call_center_agent_edit']['de-at'] = "Telefonansprechpartner";
+$text['title-call_center_agent_edit']['de-at'] = "Callcenter Agenten";
 
 $text['title-call_center_agent_add']['en-us'] = "Call Center Agent";
 $text['title-call_center_agent_add']['es-cl'] = "Agregar Agente de Centro de Llamados";
@@ -98,7 +98,7 @@ $text['title-call_center_agent_add']['pt-br'] = "Adicionar agente ao call center
 $text['title-call_center_agent_add']['pl'] = "Agent w Call Center";
 $text['title-call_center_agent_add']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_add']['uk'] = "Оператор кол-центра";
-$text['title-call_center_agent_add']['de-at'] = "Telefonansprechpartner";
+$text['title-call_center_agent_add']['de-at'] = "Callcenter Agenten";
 
 $text['option-usring']['en-us'] = "us-ring";
 $text['option-usring']['es-cl'] = "us-ring";
@@ -138,7 +138,7 @@ $text['option-top_down']['pt-br'] = "De cima para baixo";
 $text['option-top_down']['pl'] = "Z góry na dół";
 $text['option-top_down']['sv-se'] = "Uppifrån Ned";
 $text['option-top_down']['uk'] = "";
-$text['option-top_down']['de-at'] = "";
+$text['option-top_down']['de-at'] = "Absteigend";
 
 $text['option-system']['en-us'] = "System";
 $text['option-system']['es-cl'] = "Sistema";
@@ -148,7 +148,7 @@ $text['option-system']['pt-br'] = "Sistema";
 $text['option-system']['pl'] = "System";
 $text['option-system']['sv-se'] = "System";
 $text['option-system']['uk'] = "Система";
-$text['option-system']['de-at'] = "";
+$text['option-system']['de-at'] = "System";
 
 $text['option-sequentially_by_next_agent_order']['en-us'] = "Sequentially By Next Agent Order";
 $text['option-sequentially_by_next_agent_order']['es-cl'] = "Secuencialmente por orden del próximo agente";
@@ -158,7 +158,7 @@ $text['option-sequentially_by_next_agent_order']['pt-br'] = "Sequencialmente pel
 $text['option-sequentially_by_next_agent_order']['pl'] = "Kolejno dp każdego następnego agenta";
 $text['option-sequentially_by_next_agent_order']['sv-se'] = "Sekventiellt genom nästa Agent ordning";
 $text['option-sequentially_by_next_agent_order']['uk'] = "Послідовно до наступного оператора за порядком";
-$text['option-sequentially_by_next_agent_order']['de-at'] = "";
+$text['option-sequentially_by_next_agent_order']['de-at'] = "Sequentielle Reihung, nächster Agent";
 
 $text['option-sequentially_by_agent_order']['en-us'] = "Sequentially By Agent Order";
 $text['option-sequentially_by_agent_order']['es-cl'] = "Secuencialmente por orden de los agentes";
@@ -168,7 +168,7 @@ $text['option-sequentially_by_agent_order']['pt-br'] = "Sequencialmente pela ord
 $text['option-sequentially_by_agent_order']['pl'] = "Kolejno dp każdego agenta";
 $text['option-sequentially_by_agent_order']['sv-se'] = "Sekventiellt genom Agent ordning";
 $text['option-sequentially_by_agent_order']['uk'] = "";
-$text['option-sequentially_by_agent_order']['de-at'] = "";
+$text['option-sequentially_by_agent_order']['de-at'] = "Sequentielle Reihung, Agent";
 
 $text['option-rsring']['en-us'] = "rs-ring";
 $text['option-rsring']['es-cl'] = "rs-ring";
@@ -188,7 +188,7 @@ $text['option-round_robin']['pt-br'] = "Round Robin";
 $text['option-round_robin']['pl'] = "Round Robin ";
 $text['option-round_robin']['sv-se'] = "Round Robin (Cirkulär)";
 $text['option-round_robin']['uk'] = "";
-$text['option-round_robin']['de-at'] = "";
+$text['option-round_robin']['de-at'] = "Reihum-Methode";
 
 $text['option-ring_all']['en-us'] = "Ring All";
 $text['option-ring_all']['es-cl'] = "Sonar todos";
@@ -198,7 +198,7 @@ $text['option-ring_all']['pt-br'] = "Tocar em todos";
 $text['option-ring_all']['pl'] = "Dzwonią wszyscy";
 $text['option-ring_all']['sv-se'] = "Ring på Alla";
 $text['option-ring_all']['uk'] = "Дзвонити всім";
-$text['option-ring_all']['de-at'] = "";
+$text['option-ring_all']['de-at'] = "Alle läuten";
 
 $text['option-random']['en-us'] = "Random";
 $text['option-random']['es-cl'] = "Aleatorio";
@@ -208,7 +208,7 @@ $text['option-random']['pt-br'] = "Aleatório";
 $text['option-random']['pl'] = "Przypadkowo";
 $text['option-random']['sv-se'] = "Slumpvis";
 $text['option-random']['uk'] = "Випадково";
-$text['option-random']['de-at'] = "";
+$text['option-random']['de-at'] = "Zufall";
 
 $text['option-queue']['en-us'] = "Queue";
 $text['option-queue']['es-cl'] = "Cola";
@@ -218,7 +218,7 @@ $text['option-queue']['pt-br'] = "Fila";
 $text['option-queue']['pl'] = "KOlejka";
 $text['option-queue']['sv-se'] = "Kö";
 $text['option-queue']['uk'] = "Черга";
-$text['option-queue']['de-at'] = "";
+$text['option-queue']['de-at'] = "Warteschlange";
 
 $text['option-ptring']['en-us'] = "pt-ring";
 $text['option-ptring']['pt-pt'] = "pt-ring";
@@ -248,7 +248,7 @@ $text['option-no_change']['pt-br'] = "Não modificar";
 $text['option-no_change']['pl'] = "Bez zmian";
 $text['option-no_change']['sv-se'] = "Ändra Ej";
 $text['option-no_change']['uk'] = "Без змін";
-$text['option-no_change']['de-at'] = "";
+$text['option-no_change']['de-at'] = "Keine Änderung";
 
 $text['option-longest_idle_agent']['en-us'] = "Longest Idle Agent";
 $text['option-longest_idle_agent']['es-cl'] = "Agente desocupado por más tiempo";
@@ -258,7 +258,7 @@ $text['option-longest_idle_agent']['pt-br'] = "Agente desocupado há mais tempo"
 $text['option-longest_idle_agent']['pl'] = "Najdlużej bezczynny agent";
 $text['option-longest_idle_agent']['sv-se'] = "Agent Längst Ledig";
 $text['option-longest_idle_agent']['uk'] = "";
-$text['option-longest_idle_agent']['de-at'] = "";
+$text['option-longest_idle_agent']['de-at'] = "Agent mit der höchsten Wartezeit";
 
 $text['option-logged_out']['en-us'] = "Logged Out";
 $text['option-logged_out']['es-cl'] = "Desconectado";
@@ -338,7 +338,7 @@ $text['option-agent_with_least_talk_time']['pt-br'] = "Agente com o menor tempo 
 $text['option-agent_with_least_talk_time']['pl'] = "Agent z najkrótszym czasem rozmowy";
 $text['option-agent_with_least_talk_time']['sv-se'] = "Agent med minst taltid";
 $text['option-agent_with_least_talk_time']['uk'] = "Оператор з найменшим часом розмови";
-$text['option-agent_with_least_talk_time']['de-at'] = "";
+$text['option-agent_with_least_talk_time']['de-at'] = "Agent mit geringster Sprechzeit";
 
 $text['option-agent_with_fewest_calls']['en-us'] = "Agent With Fewest Calls";
 $text['option-agent_with_fewest_calls']['es-cl'] = "Agente con menor número de llamadas";
@@ -348,7 +348,7 @@ $text['option-agent_with_fewest_calls']['pt-br'] = "Agente com o menor número d
 $text['option-agent_with_fewest_calls']['pl'] = "Agent z najmniejszą ilością rozmów";
 $text['option-agent_with_fewest_calls']['sv-se'] = "Agent med minst antal samtal";
 $text['option-agent_with_fewest_calls']['uk'] = "Оператор з найменшою кількістю дзвінків";
-$text['option-agent_with_fewest_calls']['de-at'] = "";
+$text['option-agent_with_fewest_calls']['de-at'] = "Agent mit wenigsten Anrufen";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -378,7 +378,7 @@ $text['message-maximum_queues']['pt-br'] = "Máximo de filas permitido";
 $text['message-maximum_queues']['pl'] = "Maksymalna ilość kolejek:";
 $text['message-maximum_queues']['sv-se'] = "Max Antal Kö:er:";
 $text['message-maximum_queues']['uk'] = "Максимальна кількість черг:";
-$text['message-maximum_queues']['de-at'] = "";
+$text['message-maximum_queues']['de-at'] = "Maximale Warteschlangen:";
 
 $text['message-duplicate_agent_id']['en-us'] = "Duplicate Agent ID Detected";
 $text['message-duplicate_agent_id']['es-cl'] = "Duplicar ID de Agente detectada";
@@ -388,7 +388,7 @@ $text['message-duplicate_agent_id']['pt-br'] = "Duplicar Agent ID Detectado";
 $text['message-duplicate_agent_id']['pl'] = "Duplikat Wykryto Agenta ID";
 $text['message-duplicate_agent_id']['uk'] = "Повторювані Ідентифікатор агента Виявлено";
 $text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
-$text['message-duplicate_agent_id']['de-at'] = "";
+$text['message-duplicate_agent_id']['de-at'] = "Doppelte Agenten ID";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
@@ -408,7 +408,7 @@ $text['message-copy']['pt-br'] = "Cópia Efetuada";
 $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['uk'] = "Скопійовано";
-$text['message-copy']['de-at'] = "Kopieren erfolgreich";
+$text['message-copy']['de-at'] = "Erfolgreich kopiert";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Adición Completada";
@@ -418,7 +418,7 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-wrap_up_time']['en-us'] = "Wrap Up Time";
 $text['label-wrap_up_time']['es-cl'] = "Tiempo de Preparación";
@@ -428,7 +428,7 @@ $text['label-wrap_up_time']['pt-br'] = "Tempo de preparação";
 $text['label-wrap_up_time']['pl'] = "Dostępny czas po zakończeniu rozmowy";
 $text['label-wrap_up_time']['sv-se'] = "'Wrap Up' Tid";
 $text['label-wrap_up_time']['uk'] = "";
-$text['label-wrap_up_time']['de-at'] = "";
+$text['label-wrap_up_time']['de-at'] = "Nachbereitungszeit";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['es-cl'] = "Tipo";
@@ -438,7 +438,7 @@ $text['label-type']['pt-br'] = "Tipo";
 $text['label-type']['pl'] = "Typ";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "";
+$text['label-type']['de-at'] = "Typ";
 
 $text['label-timeout_action']['en-us'] = "Timeout Action";
 $text['label-timeout_action']['es-cl'] = "Acción de Timeout";
@@ -448,7 +448,7 @@ $text['label-timeout_action']['pt-br'] = "Ação de tempo limite";
 $text['label-timeout_action']['pl'] = "Następny krok po upływie limitu czasowego";
 $text['label-timeout_action']['sv-se'] = "Timeout Åtgärd";
 $text['label-timeout_action']['uk'] = "";
-$text['label-timeout_action']['de-at'] = "";
+$text['label-timeout_action']['de-at'] = "Aktion bei Abwurf";
 
 $text['label-time_base_score']['en-us'] = "Time Base Score";
 $text['label-time_base_score']['es-cl'] = "Puntuación basada en tiempo";
@@ -458,7 +458,7 @@ $text['label-time_base_score']['pt-br'] = "Pontuação baseada no tempo";
 $text['label-time_base_score']['pl'] = "Wynik oparty na czasie";
 $text['label-time_base_score']['sv-se'] = "Tidsbaserat Resultat";
 $text['label-time_base_score']['uk'] = "";
-$text['label-time_base_score']['de-at'] = "";
+$text['label-time_base_score']['de-at'] = "Taktgeber Punkte";
 
 $text['label-tiers']['en-us'] = "Tiers";
 $text['label-tiers']['es-cl'] = "Niveles de Centro de Llamados";
@@ -468,7 +468,7 @@ $text['label-tiers']['pt-br'] = "Niveis do call center";
 $text['label-tiers']['pl'] = "Poziomy";
 $text['label-tiers']['sv-se'] = "Kunskap";
 $text['label-tiers']['uk'] = "";
-$text['label-tiers']['de-at'] = "";
+$text['label-tiers']['de-at'] = "Ebenen";
 
 $text['label-tier_rules_apply']['en-us'] = "Tier Rules Apply";
 $text['label-tier_rules_apply']['es-cl'] = "Aplicar Reglas de Nivel";
@@ -478,7 +478,7 @@ $text['label-tier_rules_apply']['pt-br'] = "Aplicar regas de nivel";
 $text['label-tier_rules_apply']['pl'] = "Zastosuj zasadę poziomów";
 $text['label-tier_rules_apply']['sv-se'] = "Kunskap Regler Gäller";
 $text['label-tier_rules_apply']['uk'] = "";
-$text['label-tier_rules_apply']['de-at'] = "";
+$text['label-tier_rules_apply']['de-at'] = "Ebenen Regeln werden angewendet";
 
 $text['label-tier_rule_wait_second']['en-us'] = "Tier Rule Wait Second";
 $text['label-tier_rule_wait_second']['es-cl'] = "Regla de nível segundo de espera";
@@ -488,7 +488,7 @@ $text['label-tier_rule_wait_second']['pt-br'] = "Regra de segundo nivel de esper
 $text['label-tier_rule_wait_second']['pl'] = "Poziomowa zasada czekania";
 $text['label-tier_rule_wait_second']['sv-se'] = "Kunskap Regel Väntetid i Sekunder";
 $text['label-tier_rule_wait_second']['uk'] = "";
-$text['label-tier_rule_wait_second']['de-at'] = "";
+$text['label-tier_rule_wait_second']['de-at'] = "Ebenen Regel Wartezeit";
 
 $text['label-tier_rule_wait_multiply_level']['en-us'] = "Tier Rule Wait Multiply Level";
 $text['label-tier_rule_wait_multiply_level']['es-cl'] = "Regla de nivel multiplicar nivel de espera";
@@ -498,7 +498,7 @@ $text['label-tier_rule_wait_multiply_level']['pt-br'] = "Regra de espera multipl
 $text['label-tier_rule_wait_multiply_level']['pl'] = "Poziomowa zasada przemnożenia";
 $text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskap Regel Väntetid Multipla Värden";
 $text['label-tier_rule_wait_multiply_level']['uk'] = "";
-$text['label-tier_rule_wait_multiply_level']['de-at'] = "";
+$text['label-tier_rule_wait_multiply_level']['de-at'] = "Ebenen Regel Wartezeit Multiplikator";
 
 $text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
 $text['label-tier_rule_no_agent_no_wait']['es-cl'] = "Regla de nivel No espera Sin Agente";
@@ -508,7 +508,7 @@ $text['label-tier_rule_no_agent_no_wait']['pt-br'] = "Regra de nivel sem espera 
 $text['label-tier_rule_no_agent_no_wait']['pl'] = "Zasada poziomowa - nie ma agentów, nie ma czekania";
 $text['label-tier_rule_no_agent_no_wait']['sv-se'] = "Kunskap Regel Ingen Agent Ingen Väntan";
 $text['label-tier_rule_no_agent_no_wait']['uk'] = "";
-$text['label-tier_rule_no_agent_no_wait']['de-at'] = "";
+$text['label-tier_rule_no_agent_no_wait']['de-at'] = "Ebenen Regel kein Agent nicht warten";
 
 $text['label-tier_position']['en-us'] = "Tier Position";
 $text['label-tier_position']['es-cl'] = "Posición de Nivel";
@@ -518,7 +518,7 @@ $text['label-tier_position']['pt-br'] = "Nivel da posição";
 $text['label-tier_position']['pl'] = "Pozycja poziomu";
 $text['label-tier_position']['sv-se'] = "Kunskap Position";
 $text['label-tier_position']['uk'] = "";
-$text['label-tier_position']['de-at'] = "";
+$text['label-tier_position']['de-at'] = "Ebenen Position";
 
 $text['label-tier_level']['en-us'] = "Tier Level";
 $text['label-tier_level']['es-cl'] = "Nivel";
@@ -528,7 +528,7 @@ $text['label-tier_level']['pt-br'] = "Nivel da camada";
 $text['label-tier_level']['pl'] = "Tier Level ";
 $text['label-tier_level']['sv-se'] = "Kunskap Nivå";
 $text['label-tier_level']['uk'] = "";
-$text['label-tier_level']['de-at'] = "";
+$text['label-tier_level']['de-at'] = "Ebenen Level";
 
 $text['label-strategy']['en-us'] = "Strategy";
 $text['label-strategy']['es-cl'] = "Estrategia";
@@ -558,7 +558,7 @@ $text['label-reject_delay_time']['pt-br'] = "Tempo de espera para rejeitar";
 $text['label-reject_delay_time']['pl'] = "Odrzuć opóznienie czasowe";
 $text['label-reject_delay_time']['sv-se'] = "Fördröjning vid Neka";
 $text['label-reject_delay_time']['uk'] = "";
-$text['label-reject_delay_time']['de-at'] = "";
+$text['label-reject_delay_time']['de-at'] = "Verzögerung verwerfen";
 
 $text['label-record_template']['en-us'] = "Record";
 $text['label-record_template']['es-cl'] = "Guardar";
@@ -568,7 +568,7 @@ $text['label-record_template']['pt-br'] = "Gravar";
 $text['label-record_template']['pl'] = "Nagrywanie";
 $text['label-record_template']['sv-se'] = "Spela In";
 $text['label-record_template']['uk'] = "Запис";
-$text['label-record_template']['de-at'] = "";
+$text['label-record_template']['de-at'] = "Aufnehmen";
 
 $text['label-queue_name']['en-us'] = "Queue Name";
 $text['label-queue_name']['es-cl'] = "Nombre de Cola";
@@ -578,7 +578,7 @@ $text['label-queue_name']['pt-br'] = "Nome da fila";
 $text['label-queue_name']['pl'] = "Nazwa kolejki";
 $text['label-queue_name']['sv-se'] = "Kö Namn";
 $text['label-queue_name']['uk'] = "Назва черги";
-$text['label-queue_name']['de-at'] = "";
+$text['label-queue_name']['de-at'] = "Warteschlange Name";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['es-cl'] = "Opciones";
@@ -598,7 +598,7 @@ $text['label-no_answer_delay_time']['pt-br'] = "Sem resposta, atraso temporário
 $text['label-no_answer_delay_time']['pl'] = "Opóźnienie odebrania rozmowy";
 $text['label-no_answer_delay_time']['sv-se'] = "Fördröjning vid ej svar";
 $text['label-no_answer_delay_time']['uk'] = "";
-$text['label-no_answer_delay_time']['de-at'] = "";
+$text['label-no_answer_delay_time']['de-at'] = "Keine Antwort Verzögerung";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Música en Espera";
@@ -608,7 +608,7 @@ $text['label-music_on_hold']['pt-br'] = "Música de espera";
 $text['label-music_on_hold']['pl'] = "Muzyka na czekanie";
 $text['label-music_on_hold']['sv-se'] = "Väntmusik";
 $text['label-music_on_hold']['uk'] = "Мелодія на утримуванні";
-$text['label-music_on_hold']['de-at'] = "";
+$text['label-music_on_hold']['de-at'] = "Haltemusik";
 
 $text['label-max_wait_time_with_no_agent_time_reached']['en-us'] = "Max Wait Time with No Agent Time Reached";
 $text['label-max_wait_time_with_no_agent_time_reached']['es-cl'] = "Tiempo máximo de espera sin agente obtenido";
@@ -1188,7 +1188,7 @@ $text['description-caller_announce_frequency']['uk'] = "";
 $text['description-caller_announce_frequency']['es-cl'] = "¿Con qué frecuencia deberíamos reproducir el sonido anunciar. Introduzca un número en segundos.";
 $text['description-caller_announce_frequency']['pt-pt'] = "Com que freqüência devemos reproduzir o som anunciar. Digite um número em segundos";
 $text['description-caller_announce_frequency']['fr-fr'] = " Combien de fois devrions-nous jouer le son annonce. Entrez un nombre dans secondes.";
-$text['description-caller_announce_frequency']['de-at'] = "";
+$text['description-caller_announce_frequency']['de-at'] = "Wie oft soll der Anmeldeton in Sekunden abgespielt werden.";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['es-cl'] = "Introduzca el timeout de la llamada.";
@@ -1208,7 +1208,7 @@ $text['description-call_center_queues']['pt-br'] = "Lista de filas do call cente
 $text['description-call_center_queues']['pl'] = "Lista kolejek w Call Center";
 $text['description-call_center_queues']['sv-se'] = "Lista med kö:er för Call Center";
 $text['description-call_center_queues']['uk'] = "";
-$text['description-call_center_queues']['de-at'] = "";
+$text['description-call_center_queues']['de-at'] = "Liste der Callcenter Warteschlangen";
 
 $text['description-call_center_agents']['en-us'] = "List of call center agents.";
 $text['description-call_center_agents']['es-cl'] = "Lista de Agentes de Centro de Llamados.";
@@ -1218,7 +1218,7 @@ $text['description-call_center_agents']['pt-br'] = "Lista de agentes do call cen
 $text['description-call_center_agents']['pl'] = "Lista agentów w Call Center";
 $text['description-call_center_agents']['sv-se'] = "Lista med Call Center Agenter";
 $text['description-call_center_agents']['uk'] = "";
-$text['description-call_center_agents']['de-at'] = "";
+$text['description-call_center_agents']['de-at'] = "Liste der Callcenter Agenten";
 
 $text['description-call_center_agent_status']['en-us'] = "List all the call center agents with the option to change the status of one or more agents.";
 $text['description-call_center_agent_status']['es-cl'] = "Lista todos los agentes del Centro de Llamados con la opción de modificar el estado de uno o más agentes.";
@@ -1238,7 +1238,7 @@ $text['description-busy_delay_time']['pt-br'] = "Insira o tempo de resposta do a
 $text['description-busy_delay_time']['pl'] = "Wprowadź wartość czasowego opóźnienia w przypadku, gdy agent jest zajęty.";
 $text['description-busy_delay_time']['sv-se'] = "Ange Agent Upptagen Fördröjnings-tid.";
 $text['description-busy_delay_time']['uk'] = "";
-$text['description-busy_delay_time']['de-at'] = "";
+$text['description-busy_delay_time']['de-at'] = "Geben Sie eine Wartezeit für den Agenten an.";
 
 $text['description-agent_password']['en-us'] = "Enter the agent password.";
 $text['description-agent_password']['es-cl'] = "Introduzca la contraseña de agente.";
@@ -1248,7 +1248,7 @@ $text['description-agent_password']['pt-br'] = "Digite a senha do agente.";
 $text['description-agent_password']['pl'] = "Wprowadź hasło agenta.";
 $text['description-agent_password']['sv-se'] = "Ange agenten lösenord.";
 $text['description-agent_password']['uk'] = "";
-$text['description-agent_password']['de-at'] = "";
+$text['description-agent_password']['de-at'] = "Wählen Sie ein Agenten Passwort";
 
 $text['description-agent_name']['en-us'] = "Select the agent name.";
 $text['description-agent_name']['es-cl'] = "Seleccione el nombre del agente.";
@@ -1258,7 +1258,7 @@ $text['description-agent_name']['pt-br'] = "Selecione o nome dos agentes";
 $text['description-agent_name']['pl'] = "Wybierz nazwę agenta.";
 $text['description-agent_name']['sv-se'] = "Välj Agent namn.";
 $text['description-agent_name']['uk'] = "Виберіть ім’я оператора";
-$text['description-agent_name']['de-at'] = "";
+$text['description-agent_name']['de-at'] = "Wählen Sie einen Agentennamen.";
 
 $text['description-agent_logout']['en-us'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
 $text['description-agent_logout']['es-cl'] = "Introduzca el tiempo de desconexión automático de agente en formato 00:00. Requiere un servicio para forzar la desconexión.";
@@ -1278,7 +1278,7 @@ $text['description-agent_id']['pt-br'] = "Digite o ID do agente.";
 $text['description-agent_id']['pl'] = "Wprowadź identyfikator agenta.";
 $text['description-agent_id']['sv-se'] = "Ange agent-ID.";
 $text['description-agent_id']['uk'] = "";
-$text['description-agent_id']['de-at'] = "";
+$text['description-agent_id']['de-at'] = "Wählen Sie eine Agenten ID.";
 
 $text['description-agent']['en-us'] = "Select the agent name.";
 $text['description-agent']['es-cl'] = "Seleccione el nombre del agente.";
@@ -1288,7 +1288,7 @@ $text['description-agent']['pt-br'] = "Selecione o nome do agente";
 $text['description-agent']['pl'] = "Wybierz nazwe agenta.";
 $text['description-agent']['sv-se'] = "Välj Agent namnet.";
 $text['description-agent']['uk'] = "Виберіть ім’я оператора";
-$text['description-agent']['de-at'] = "";
+$text['description-agent']['de-at'] = "Wählen Sie einen Agentennamen.";
 
 $text['description-abandoned_resume_allowed']['en-us'] = "Set the abandoned resume allowed to true or false.";
 $text['description-abandoned_resume_allowed']['es-cl'] = "Defina el permiso para permitir la continuación de abandono a verdadero o falso.";
@@ -1338,7 +1338,7 @@ $text['button-update_status']['pt-br'] = "Estado da atualização";
 $text['button-update_status']['pl'] = "Zaktualizuj status";
 $text['button-update_status']['sv-se'] = "Uppdatera Status";
 $text['button-update_status']['uk'] = "Оновити статус";
-$text['button-update_status']['de-at'] = "";
+$text['button-update_status']['de-at'] = "Status Aktualisieren";
 
 $text['button-tiers']['en-us'] = "Tiers";
 $text['button-tiers']['es-cl'] = "Niveles";
@@ -1348,7 +1348,7 @@ $text['button-tiers']['pt-br'] = "Niveis ";
 $text['button-tiers']['pl'] = "Poziomy";
 $text['button-tiers']['sv-se'] = "Kunskap";
 $text['button-tiers']['uk'] = "Рівні";
-$text['button-tiers']['de-at'] = "";
+$text['button-tiers']['de-at'] = "Ebenen";
 
 $text['button-stop']['en-us'] = "Stop";
 $text['button-stop']['es-cl'] = "Detener";
@@ -1368,7 +1368,7 @@ $text['button-status']['pt-br'] = "Estado";
 $text['button-status']['pl'] = "Status";
 $text['button-status']['sv-se'] = "Status";
 $text['button-status']['uk'] = "Статус";
-$text['button-status']['de-at'] = "";
+$text['button-status']['de-at'] = "Status";
 
 $text['button-start']['en-us'] = "Start";
 $text['button-start']['es-cl'] = "Iniciar";
@@ -1428,7 +1428,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-copy']['en-us'] = "Copy";
 $text['button-copy']['es-cl'] = "Copiar";
@@ -1458,7 +1458,7 @@ $text['button-agents']['pt-br'] = "Agentes";
 $text['button-agents']['pl'] = "Agenci";
 $text['button-agents']['sv-se'] = "Agenter";
 $text['button-agents']['uk'] = "Оператори";
-$text['button-agents']['de-at'] = "";
+$text['button-agents']['de-at'] = "Agenten";
 
 $text['button-advanced']['en-us'] = "Advanced";
 $text['button-advanced']['es-cl'] = "Avanzadas";
