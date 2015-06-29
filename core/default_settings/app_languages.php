@@ -86,7 +86,7 @@ $text['message-settings_reloaded']['pt-br'] = "Configurações Reloaded";
 $text['message-settings_reloaded']['pl'] = "Ustawienia Reloaded";
 $text['message-settings_reloaded']['sv-se'] = "Inställningar Reloaded";
 $text['message-settings_reloaded']['uk'] = "налаштування Reloaded";
-$text['message-settings_reloaded']['de-at'] = "";
+$text['message-settings_reloaded']['de-at'] = "Einstellungen neu geladen";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor indique: ";
@@ -141,7 +141,7 @@ $text['message-copy_failed']['pt-br'] = "Nenhuma configuração selecionada ou d
 $text['message-copy_failed']['pl'] = "Nie zaznaczono ustawień lub domena jest niepoprawna";
 $text['message-copy_failed']['sv-se'] = "Ingen inställning markerad eller ogiltig domän.";
 $text['message-copy_failed']['uk'] = "";
-$text['message-copy_failed']['de-at'] = "";
+$text['message-copy_failed']['de-at'] = "Keine Einstellungen ausgewählt oder ungültige Domain";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completado";
@@ -152,7 +152,7 @@ $text['message-copy']['pt-br'] = "Cópia Efetuada";
 $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['uk'] = "Скопійовано";
-$text['message-copy']['de-at'] = "Kopieren erfolgreich";
+$text['message-copy']['de-at'] = "Erfolgreich kopiert";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
@@ -163,7 +163,7 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-value']['en-us'] = "Value";
 $text['label-value']['es-cl'] = "Valor";
@@ -185,7 +185,7 @@ $text['label-type']['pt-br'] = "Tipo";
 $text['label-type']['pl'] = "Typ";
 $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "";
+$text['label-type']['de-at'] = "Typ";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -207,7 +207,7 @@ $text['label-superfine']['pt-br'] = "Resumido";
 $text['label-superfine']['pl'] = "Najlepsza";
 $text['label-superfine']['sv-se'] = "Superfin";
 $text['label-superfine']['uk'] = "";
-$text['label-superfine']['de-at'] = "";
+$text['label-superfine']['de-at'] = "Superfein";
 
 $text['label-subcategory']['en-us'] = "Subcategory";
 $text['label-subcategory']['es-cl'] = "Subcategoría";
@@ -229,7 +229,7 @@ $text['label-select']['pt-br'] = "Selecionar";
 $text['label-select']['pl'] = "Wybierz";
 $text['label-select']['sv-se'] = "Välj";
 $text['label-select']['uk'] = "";
-$text['label-select']['de-at'] = "";
+$text['label-select']['de-at'] = "Auswählen";
 
 $text['label-search']['en-us'] = "Search...";
 $text['label-search']['es-cl'] = "Buscar...";
@@ -240,7 +240,7 @@ $text['label-search']['pt-br'] = "Pesquisa...";
 $text['label-search']['pl'] = "Szukaj ...";
 $text['label-search']['sv-se'] = "Sök ...";
 $text['label-search']['uk'] = "Результати пошуку";
-$text['label-search']['de-at'] = "";
+$text['label-search']['de-at'] = "Suche...";
 
 $text['label-order']['en-us'] = "Order";
 $text['label-order']['es-cl'] = "Orden";
@@ -251,7 +251,7 @@ $text['label-order']['pt-br'] = "Ordenação";
 $text['label-order']['pl'] = "Kolejność";
 $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['uk'] = "Інше";
-$text['label-order']['de-at'] = "";
+$text['label-order']['de-at'] = "Reihenfolge";
 
 $text['label-normal']['en-us'] = "Normal";
 $text['label-normal']['es-cl'] = "Normal";
@@ -284,7 +284,7 @@ $text['label-fine']['pt-br'] = "Agradável ";
 $text['label-fine']['pl'] = "Dobry";
 $text['label-fine']['sv-se'] = "Fin";
 $text['label-fine']['uk'] = "";
-$text['label-fine']['de-at'] = "";
+$text['label-fine']['de-at'] = "Fein";
 
 $text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
@@ -317,7 +317,7 @@ $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "";
+$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-category']['en-us'] = "Category";
 $text['label-category']['es-cl'] = "Categoría";
@@ -328,7 +328,7 @@ $text['label-category']['pt-br'] = "Categoria";
 $text['label-category']['pl'] = "Kategoria";
 $text['label-category']['sv-se'] = "Kategori";
 $text['label-category']['uk'] = "Категорія";
-$text['label-category']['de-at'] = "";
+$text['label-category']['de-at'] = "Kategorie";
 
 $text['header-default_settings']['en-us'] = "Default Settings";
 $text['header-default_settings']['es-cl'] = "Condiciones Predeterminadas";
@@ -339,7 +339,7 @@ $text['header-default_settings']['pt-br'] = "Configurações";
 $text['header-default_settings']['pl'] = "Ustawienia domyślne";
 $text['header-default_settings']['sv-se'] = "Standard Inställningar";
 $text['header-default_settings']['uk'] = "";
-$text['header-default_settings']['de-at'] = "";
+$text['header-default_settings']['de-at'] = "Standard Einstellungen";
 
 $text['header-default_setting-edit']['en-us'] = "Default Setting";
 $text['header-default_setting-edit']['es-cl'] = "Configuraciones Predeterminadas";
@@ -350,7 +350,7 @@ $text['header-default_setting-edit']['pt-br'] = "Configurações";
 $text['header-default_setting-edit']['pl'] = "Ustawienie domyślne";
 $text['header-default_setting-edit']['sv-se'] = "Standard Inställning";
 $text['header-default_setting-edit']['uk'] = "";
-$text['header-default_setting-edit']['de-at'] = "";
+$text['header-default_setting-edit']['de-at'] = "Standard Einstellungen";
 
 $text['header-default_setting-add']['en-us'] = "Default Setting Add";
 $text['header-default_setting-add']['es-cl'] = "Agregar Configuración Predeterminada";
@@ -361,7 +361,7 @@ $text['header-default_setting-add']['pt-br'] = "Adicionar configurações";
 $text['header-default_setting-add']['pl'] = "Dodaj ustawienie domyślne";
 $text['header-default_setting-add']['sv-se'] = "Lägg Till Standard Inställning";
 $text['header-default_setting-add']['uk'] = "";
-$text['header-default_setting-add']['de-at'] = "";
+$text['header-default_setting-add']['de-at'] = "Standard Einstellungen hinzufügen";
 
 $text['description-value']['en-us'] = "Enter the value of this setting.";
 $text['description-value']['es-cl'] = "Ingrese el valor de esta configuración";
@@ -405,7 +405,7 @@ $text['description-order']['pt-br'] = "Defina a ordem (indice) para este element
 $text['description-order']['pl'] = "Wybierz kolejność.";
 $text['description-order']['sv-se'] = "Ställ in ordningen (index) för detta element.";
 $text['description-order']['uk'] = "";
-$text['description-order']['de-at'] = "Wählen Sie die Reihenfolge.";
+$text['description-order']['de-at'] = "Wählen Sie die Reihenfolge (Index) für das Array Element.";
 
 $text['description-enabled']['en-us'] = "Set the status of this default setting.";
 $text['description-enabled']['es-cl'] = "Ingrese el estado de esta configuración.";
@@ -438,7 +438,7 @@ $text['description-default_settings']['pt-br'] = "Configurações comuns a todos
 $text['description-default_settings']['pl'] = "Ustawienia stosowane dla wszystkich domen.";
 $text['description-default_settings']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_settings']['uk'] = "Налаштування використовується для всіх доменів";
-$text['description-default_settings']['de-at'] = "";
+$text['description-default_settings']['de-at'] = "Einstellungen für alle Domains.";
 
 $text['description-default_setting-edit']['en-us'] = "Settings used for all domains.";
 $text['description-default_setting-edit']['es-cl'] = "Configuraciones usadas para todos los dominios.";
@@ -449,7 +449,7 @@ $text['description-default_setting-edit']['pt-br'] = "Configurações comuns a t
 $text['description-default_setting-edit']['pl'] = "Ustawienia stosowane dla wszystkich domen.";
 $text['description-default_setting-edit']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-edit']['uk'] = "Налаштування використовується для всіх доменів";
-$text['description-default_setting-edit']['de-at'] = "";
+$text['description-default_setting-edit']['de-at'] = "Einstellungen für alle Domains.";
 
 $text['description-default_setting-add']['en-us'] = "Settings used for all domains.";
 $text['description-default_setting-add']['es-cl'] = "Configuraciones usadas para todos los dominios.";
@@ -460,7 +460,7 @@ $text['description-default_setting-add']['pt-br'] = "Configurações comuns a to
 $text['description-default_setting-add']['pl'] = "Ustawienia stosowane dla wszystkich domen.";
 $text['description-default_setting-add']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-add']['uk'] = "Налаштування використовується для всіх доменів";
-$text['description-default_setting-add']['de-at'] = "";
+$text['description-default_setting-add']['de-at'] = "Einstellungen für alle Domains.";
 
 $text['description-category']['en-us'] = "Enter the category.";
 $text['description-category']['es-cl'] = "Ingrese la categoría.";
@@ -471,7 +471,7 @@ $text['description-category']['pt-br'] = "Descrição";
 $text['description-category']['pl'] = "Wprowadź kategorię";
 $text['description-category']['sv-se'] = "Ange Kategori.";
 $text['description-category']['uk'] = "Опис";
-$text['description-category']['de-at'] = "Beschreibung";
+$text['description-category']['de-at'] = "Geben Sie die Kategorie an.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -515,7 +515,7 @@ $text['button-paste']['pt-br'] = "Colar";
 $text['button-paste']['pl'] = "Wklej";
 $text['button-paste']['sv-se'] = "Klistra In";
 $text['button-paste']['uk'] = "Вставити";
-$text['button-paste']['de-at'] = "";
+$text['button-paste']['de-at'] = "Einfügen";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
@@ -537,7 +537,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-copy']['en-us'] = "Copy";
 $text['button-copy']['es-cl'] = "Copiar";
