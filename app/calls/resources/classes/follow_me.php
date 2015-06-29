@@ -416,10 +416,15 @@ include "root.php";
 							}
 							else {
 								$dial_string .= "[";
-								$dial_string .= "outbound_caller_id_name=".$this->outbound_caller_id_name;
-								$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
-								$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
-								$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+								if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true"){
+									$dial_string .= "outbound_caller_id_name=".$this->outbound_caller_id_name;
+									$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
+									$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
+									$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+								}
+								else{
+									$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number";
+								}
 								$dial_string .= ",presence_id=".$this->extension."@".$_SESSION['domain_name'];
 								if ($row["follow_me_prompt"] == "1") {
 									$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
