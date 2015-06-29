@@ -96,7 +96,7 @@ include "root.php";
 						}
 					}
 					else{
-						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true"){
+						if ($_SESSION['cdr']['call_forward_fix']['boolean'] == "true"){
 							$dial_string .= ",outbound_caller_id_name=".$this->outbound_caller_id_name;
 							$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
 							$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
