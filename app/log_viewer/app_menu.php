@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['pt-br'] = "Visualizar Log";
 $apps[$x]['menu'][0]['title']['pl'] = "Podgląd logów";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Log Viewer ";
 $apps[$x]['menu'][0]['title']['uk'] = "Логи";
+$apps[$x]['menu'][0]['title']['de-at'] = "Log Datei";
 $apps[$x]['menu'][0]['uuid'] = "781ebbec-a55a-9d60-f7bb-f54ab2ee4e7e";
 $apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 $apps[$x]['menu'][0]['category'] = "internal";

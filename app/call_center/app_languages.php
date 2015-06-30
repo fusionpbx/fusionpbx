@@ -1228,7 +1228,7 @@ $text['description-call_center_agent_status']['pt-br'] = "Listar com todas as ch
 $text['description-call_center_agent_status']['pl'] = "Wybierz wszystkich agentów call center, którzy mają uprawnienia do zmiany statusu jednego bądź wielu agentów.";
 $text['description-call_center_agent_status']['sv-se'] = "Lista med alla Call Center Agenter med möjlighet att ändra status på en eller flera agenter.";
 $text['description-call_center_agent_status']['uk'] = "";
-$text['description-call_center_agent_status']['de-at'] = "";
+$text['description-call_center_agent_status']['de-at'] = "Liste aller Callcenter Agenten mit der Option, den Status der Agenten zu ändern.";
 
 $text['description-busy_delay_time']['en-us'] = "Enter the agent busy delay time.";
 $text['description-busy_delay_time']['es-cl'] = "Introduzca el tiempo de espera de agente ocupado.";
