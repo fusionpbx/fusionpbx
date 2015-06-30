@@ -54,6 +54,19 @@
 		return c;
 	end
 
+-- set channel variables to lua variables
+	domain_uuid = env:getHeader("domain_uuid");
+	domain_name = env:getHeader("domain_name");
+
+--get the domain_uuid using the domain name required for multi-tenant
+	if (domain_name ~= nil) then
+		sql = "SELECT domain_uuid FROM v_domains ";
+		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
+		status = dbh:query(sql, function(rows)
+			domain_uuid = rows["domain_uuid"];
+		end);
+	end
+
 --settings
 	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
@@ -93,8 +106,6 @@
 	--variable_fax_transfer_rate: 14400
 
 -- set channel variables to lua variables
-	domain_uuid = env:getHeader("domain_uuid");
-	domain_name = env:getHeader("domain_name");
 	fax_uuid = env:getHeader("fax_uuid");
 	uuid = env:getHeader("uuid");
 	fax_success = env:getHeader("fax_success");
