@@ -90,7 +90,7 @@
 
 		--get the dialplan and related details
 			sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-			if (call_context == "public") then
+			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
 			else
 				sql = sql .. "where (d.dialplan_context = '" .. call_context .. "' or d.dialplan_context = '${domain_name}') ";
