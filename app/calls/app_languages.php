@@ -8,7 +8,7 @@ $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Rozmowy";
 $text['title']['sv-se'] = "Samtal ";
 $text['title']['uk'] = "Дзвінки";
-$text['title']['de-at'] = "Bitte Folgen";
+$text['title']['de-at'] = "Anrufe";
 
 $text['table-tools']['en-us'] = "Tools";
 $text['table-tools']['es-cl'] = "Herramientas";
@@ -130,7 +130,7 @@ $text['label-follow-me']['pt-br'] = "Siga-me";
 $text['label-follow-me']['pl'] = "Podążaj za mną";
 $text['label-follow-me']['sv-se'] = "Följ Mig ";
 $text['label-follow-me']['uk'] = "";
-$text['label-follow-me']['de-at'] = "Bitte Folgen";
+$text['label-follow-me']['de-at'] = "Follow Me";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activo";
@@ -372,7 +372,7 @@ $text['description-2']['pt-br'] = "A informação contem a origem, destino, dura
 $text['description-2']['pl'] = "Za pomocą poniższych linków można skonfigurować przekierowania, usługę „Podążaj z mną” lub „Nie przeszkadzać” (DnD).";
 $text['description-2']['sv-se'] = "Använd länkarna för att konfigurera Vidarekoppling, Följ Mig och Stör Ej. ";
 $text['description-2']['uk'] = "";
-$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Weiterleitung, Bitte Folgen oder Bitte nicht stören zu konfigurieren.";
+$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Weiterleitung, Follow Me oder Bitte nicht stören zu konfigurieren.";
 
 $text['description']['en-us'] = "Directs incoming calls for extension:";
 $text['description']['es-cl'] = "Dirige las llamadas entrantes hacia una extensión:";
