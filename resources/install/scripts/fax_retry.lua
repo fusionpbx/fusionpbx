@@ -59,27 +59,6 @@
 		return c;
 	end
 
---settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
-	settings = settings(domain_uuid);
-	storage_type = "";
-	storage_path = "";
-	if (settings['fax'] ~= nil) then
-		if (settings['fax']['storage_type'] ~= nil) then
-			if (settings['fax']['storage_type']['text'] ~= nil) then
-				storage_type = settings['fax']['storage_type']['text'];
-			end
-		end
-		if (settings['fax']['storage_path'] ~= nil) then
-			if (settings['fax']['storage_path']['text'] ~= nil) then
-				storage_path = settings['fax']['storage_path']['text'];
-				storage_path = storage_path:gsub("${domain_name}", domain_name);
-				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
-				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
-			end
-		end
-	end
-
 -- show all channel variables
 	--dat = env:serialize()
 	--freeswitch.consoleLog("INFO","info:\n" .. dat .. "\n")
@@ -157,6 +136,27 @@
 		status = dbh:query(sql, function(rows)
 			domain_uuid = rows["domain_uuid"];
 		end);
+	end
+
+--settings
+	dofile(scripts_dir.."/resources/functions/settings.lua");
+	settings = settings(domain_uuid);
+	storage_type = "";
+	storage_path = "";
+	if (settings['fax'] ~= nil) then
+		if (settings['fax']['storage_type'] ~= nil) then
+			if (settings['fax']['storage_type']['text'] ~= nil) then
+				storage_type = settings['fax']['storage_type']['text'];
+			end
+		end
+		if (settings['fax']['storage_path'] ~= nil) then
+			if (settings['fax']['storage_path']['text'] ~= nil) then
+				storage_path = settings['fax']['storage_path']['text'];
+				storage_path = storage_path:gsub("${domain_name}", domain_name);
+				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+			end
+		end
 	end
 
 --be sure accountcode is not empty
