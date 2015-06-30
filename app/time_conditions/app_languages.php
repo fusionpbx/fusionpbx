@@ -8,7 +8,7 @@ $text['title-time-conditions']['pt-br'] = "Condições temporarias";
 $text['title-time-conditions']['pl'] = "Warunki czasowe";
 $text['title-time-conditions']['sv-se'] = "Tidsstyrning";
 $text['title-time-conditions']['uk'] = "Часові умови";
-$text['title-time-conditions']['de-at'] = "Zeitvorgaben";
+$text['title-time-conditions']['de-at'] = "Zeitschaltung";
 
 $text['message-update']['en-us'] = "Update Complete";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -408,7 +408,7 @@ $text['label-enabled']['pt-br'] = "Habilitado";
 $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-at'] = "Aktiv";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -538,7 +538,7 @@ $text['header-time_conditions']['pt-br'] = "Condições Temporarias";
 $text['header-time_conditions']['pl'] = "Warunki czasowe";
 $text['header-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['header-time_conditions']['uk'] = "Часові умови";
-$text['header-time_conditions']['de-at'] = "Zeitvorgaben";
+$text['header-time_conditions']['de-at'] = "Zeitschaltung";
 
 $text['description-time_conditions']['en-us'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
 $text['description-time_conditions']['es-cl'] = "Ruta dinámicamente llama a un menú IVR, números externos, guiones u otros destinos basados en las condiciones de tiempo.";
@@ -548,7 +548,7 @@ $text['description-time_conditions']['pt-br'] = "As condições temporárias enc
 $text['description-time_conditions']['pl'] = "Przesyłaj rozmowy dynamicznie do menu zapowiedzi głosowych (IVR), numerów zewnętrznych, skryptów lub innych miejsc na podstawie warunków czasowych.";
 $text['description-time_conditions']['sv-se'] = "Styr samtal dynamiskt till IVR Meny, externa nummer, script eller andra destinationer baserat på tidsvillkor.";
 $text['description-time_conditions']['uk'] = "Маршрут дзвінків буде залежати від часу. Можна використовувати для переадресації на голосове меню (IVR), на зовнішні номери, сценарії, або інші напрямки.";
-$text['description-time_conditions']['de-at'] = "Zeitliche Bedingungen routen Anrufe basierend auf zeitlichen gegebenheiten. Sie können Zeitliche Bedingungen nutzen um IVR Menüs, Skripte und andere Destinationen  zu erreichen.";
+$text['description-time_conditions']['de-at'] = "Zeitschaltungen routen Anrufe basierend auf zeitlichen gegebenheiten. Sie können Zeitschaltungen nutzen um Automatische Vermittlungen, Skripte und andere Destinationen  zu erreichen.";
 
 $text['description-template']['en-us'] = "The templates provides a list of preset time conditions.";
 $text['description-template']['es-cl'] = "Las plantillas ofrecen una lista de condiciones preestablecidas.";
@@ -558,7 +558,7 @@ $text['description-template']['pt-br'] = "Os templates oferecem uma lista de con
 $text['description-template']['pl'] = "Szablony zawierają listę zaprogramowanych warunków czasowych.";
 $text['description-template']['sv-se'] = "Mallarna ger en lista med förinställda tidsförhållanden.";
 $text['description-template']['uk'] = "";
-$text['description-template']['de-at'] = "Die Vorlagen bieten eine Liste von Voreingestellten Zeitvorgaben.";
+$text['description-template']['de-at'] = "Die Vorlagen bieten eine Liste von Voreingestellten Zeitschaltungen.";
 
 $text['description-settings']['en-us'] = "Define custom conditions necessary to execute the destination selected above.";
 $text['description-settings']['es-cl'] = "Definir las condiciones personalizados necesarios para ejecutar el destino seleccionado anteriormente.";
@@ -598,7 +598,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę warunku";
 $text['description-name']['sv-se'] = "Skriv in namnet på tidsstyrningen.";
 $text['description-name']['uk'] = "Введіть назву меню";
-$text['description-name']['de-at'] = "Geben Sie den Namen der Zeitvorgabe ein.";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Zeitschaltung ein.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
 $text['description-extension']['es-cl'] = "Introduzca un número de extensión.";

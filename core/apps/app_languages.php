@@ -98,7 +98,7 @@ $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "";
+$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-category']['en-us'] = "Category";
 $text['label-category']['es-cl'] = "Categoría";
@@ -108,7 +108,7 @@ $text['label-category']['pt-br'] = "Categoria";
 $text['label-category']['pl'] = "Kategoria";
 $text['label-category']['sv-se'] = "Kategori";
 $text['label-category']['uk'] = "Категорія";
-$text['label-category']['de-at'] = "";
+$text['label-category']['de-at'] = "Kategorie";
 
 $text['header-apps']['en-us'] = "App Manager";
 $text['header-apps']['es-cl'] = "Administrador de Aplicaciones";
@@ -118,7 +118,7 @@ $text['header-apps']['pt-br'] = "Gerenciador de aplicações";
 $text['header-apps']['pl'] = "Menedżer aplikacji";
 $text['header-apps']['sv-se'] = "App Inställningar";
 $text['header-apps']['uk'] = "Керування додатками";
-$text['header-apps']['de-at'] = "";
+$text['header-apps']['de-at'] = "App Verwaltung";
 
 $text['header-app-edit']['en-us'] = "App Edit";
 $text['header-app-edit']['es-cl'] = "Editar Aplicaciones";
@@ -128,7 +128,7 @@ $text['header-app-edit']['pt-br'] = "Editar aplicação";
 $text['header-app-edit']['pl'] = "Edytuj aplikację ";
 $text['header-app-edit']['sv-se'] = "Ändra App";
 $text['header-app-edit']['uk'] = "Редагувати додаток";
-$text['header-app-edit']['de-at'] = "";
+$text['header-app-edit']['de-at'] = "Applikation bearbeiten";
 
 $text['description-apps']['en-us'] = "Manage the applications that are installed.";
 $text['description-apps']['es-cl'] = "Administre las aplicaciones instaladas.";
@@ -138,7 +138,7 @@ $text['description-apps']['pt-br'] = "Gerenciar aplicações instaladas";
 $text['description-apps']['pl'] = "Zarządzajnie zainstalowanymi aplikacjami.";
 $text['description-apps']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-apps']['uk'] = "Керування встановленими додатками";
-$text['description-apps']['de-at'] = "";
+$text['description-apps']['de-at'] = "Verwalten Sie die installierten Applikationen";
 
 $text['description-app-edit']['en-us'] = "Manage the applications that are installed.";
 $text['description-app-edit']['es-cl'] = "Administre las aplicaciones instaladas.";
@@ -148,7 +148,7 @@ $text['description-app-edit']['pt-br'] = "Gerenciar aplicações instaladas";
 $text['description-app-edit']['pl'] = "Zarządzajnie zainstalowanymi aplikacjami.";
 $text['description-app-edit']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-app-edit']['uk'] = "Керування встановленими додатками";
-$text['description-app-edit']['de-at'] = "";
+$text['description-app-edit']['de-at'] = "Verwalten Sie die installierten Applikationen";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -188,7 +188,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";

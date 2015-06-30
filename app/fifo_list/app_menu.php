@@ -10,6 +10,7 @@ $apps[$x]['menu'][0]['title']['pt-br'] = "Filas ativas";
 $apps[$x]['menu'][0]['title']['pl'] = "Aktywne kolejki";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Aktiva Köer";
 $apps[$x]['menu'][0]['title']['uk'] = "Активні черги";
+$apps[$x]['menu'][0]['title']['de-at'] = "Aktive Warteschlangen";
 $apps[$x]['menu'][0]['uuid'] = "450f1225-9187-49ac-a119-87bc26025f7d";
 $apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 $apps[$x]['menu'][0]['category'] = "internal";

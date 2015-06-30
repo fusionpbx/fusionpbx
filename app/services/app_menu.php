@@ -9,6 +9,7 @@ $apps[$x]['menu'][0]['title']['pl'] = "Serwisy";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Tjänster";
 $apps[$x]['menu'][0]['title']['ro'] = "Servicii";
 $apps[$x]['menu'][0]['title']['uk'] = "Служби";
+$apps[$x]['menu'][0]['title']['de-at'] = "Services";
 $apps[$x]['menu'][0]['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
 $apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 $apps[$x]['menu'][0]['category'] = "internal";
