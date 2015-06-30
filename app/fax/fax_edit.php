@@ -616,7 +616,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	if (if_group("user")) {
+	if (!permission_exists('fax_extension_delete')) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
