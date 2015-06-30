@@ -141,7 +141,7 @@ $text['label-supress_cng']['pl'] = "Ztłum/wyłącz CNG (calling tones)";
 $text['label-supress_cng']['uk'] = "Supress CNG";
 $text['label-supress_cng']['sv-se'] = "Göm CNG";
 $text['label-supress_cng']['ro'] = "";
-$text['label-supress_cng']['de-at'] = "CNG unterdrücken";
+$text['label-supress_cng']['de-at'] = "KGG unterdrücken";
 $text['label-supress_cng']['ar-eg'] = "";
 
 $text['label-status-stopped']['en-us'] = "Stopped";
@@ -417,7 +417,7 @@ $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['ro'] = "";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-at'] = "Aktiv";
 $text['label-enabled']['ar-eg'] = "";
 
 $text['label-domain']['en-us'] = "Domain";
