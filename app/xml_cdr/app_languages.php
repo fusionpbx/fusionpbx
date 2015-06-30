@@ -347,7 +347,7 @@ $text['label-to']['pt-br'] = "Final";
 $text['label-to']['pl'] = "Do";
 $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk'] = "До";
-$text['label-to']['de-at'] = "An";
+$text['label-to']['de-at'] = "Bis";
 
 $text['label-summary']['en-us'] = "Summary";
 $text['label-summary']['es-cl'] = "Sumario";
