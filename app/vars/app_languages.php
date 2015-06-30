@@ -28,7 +28,7 @@ $text['title-variable_edit']['pt-br'] = "Editar Variável ";
 $text['title-variable_edit']['pl'] = "Zmienna";
 $text['title-variable_edit']['uk'] = "Змінна";
 $text['title-variable_edit']['sv-se'] = "Variabel";
-$text['title-variable_edit']['de-at'] = "";
+$text['title-variable_edit']['de-at'] = "Variable";
 
 $text['title-variable_add']['en-us'] = "Variable";
 $text['title-variable_add']['pt-pt'] = "Adicionar Variável";
@@ -37,7 +37,7 @@ $text['title-variable_add']['pt-br'] = "Adicionar Variável ";
 $text['title-variable_add']['pl'] = "Zmienna";
 $text['title-variable_add']['uk'] = "Змінна";
 $text['title-variable_add']['sv-se'] = "Variabel";
-$text['title-variable_add']['de-at'] = "";
+$text['title-variable_add']['de-at'] = "Variable";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
@@ -97,7 +97,7 @@ $text['message-add']['pt-br'] = "Criação Efetuada";
 $text['message-add']['pl'] = "Dodano poprawnie";
 $text['message-add']['uk'] = "Додано";
 $text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['de-at'] = "";
+$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-value']['en-us'] = "Value";
 $text['label-value']['es-cl'] = "Valor";
@@ -117,7 +117,7 @@ $text['label-order']['pt-br'] = "Ordenação";
 $text['label-order']['pl'] = "Kolejność";
 $text['label-order']['uk'] = "Інше";
 $text['label-order']['sv-se'] = "Ordning";
-$text['label-order']['de-at'] = "";
+$text['label-order']['de-at'] = "Reihenfolge";
 
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
@@ -145,7 +145,7 @@ $text['label-enabled']['pt-br'] = "Habilitado";
 $text['label-enabled']['pl'] = "Włączony";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-at'] = "Aktiv";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -155,7 +155,7 @@ $text['label-description']['pt-br'] = "Descrição";
 $text['label-description']['pl'] = "Opis";
 $text['label-description']['uk'] = "Опис";
 $text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['de-at'] = "";
+$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-codec_information']['en-us'] = "Codec Information";
 $text['label-codec_information']['es-cl'] = "Informatión de Codec";
@@ -165,7 +165,7 @@ $text['label-codec_information']['pt-br'] = "Informações sobre o Codec";
 $text['label-codec_information']['pl'] = "Informacja o kodekach";
 $text['label-codec_information']['uk'] = "Інформація про кодек";
 $text['label-codec_information']['sv-se'] = "Codec Information";
-$text['label-codec_information']['de-at'] = "";
+$text['label-codec_information']['de-at'] = "Codec Information";
 
 $text['label-category']['en-us'] = "Category";
 $text['label-category']['es-cl'] = "Categoria";
@@ -175,7 +175,7 @@ $text['label-category']['pt-br'] = "Categoria";
 $text['label-category']['pl'] = "Kategoria";
 $text['label-category']['uk'] = "Категорія";
 $text['label-category']['sv-se'] = "Kategori";
-$text['label-category']['de-at'] = "";
+$text['label-category']['de-at'] = "Kategorie";
 
 $text['header-variables_advanced']['en-us'] = "Switch Variables: Advanced";
 $text['header-variables_advanced']['es-cl'] = "Variables de Switch: Avanzadas";
@@ -185,7 +185,7 @@ $text['header-variables_advanced']['pt-br'] = "Variáveis do Softswitch: Avança
 $text['header-variables_advanced']['pl'] = "Zamień zmienne (zaawansowane)";
 $text['header-variables_advanced']['uk'] = "Задання змінних: Додатково";
 $text['header-variables_advanced']['sv-se'] = "Switch Variabler: Avancerat";
-$text['header-variables_advanced']['de-at'] = "";
+$text['header-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
 
 $text['header-variables']['en-us'] = "Switch Variables";
 $text['header-variables']['es-cl'] = "Variables de Switch";
@@ -195,7 +195,7 @@ $text['header-variables']['pt-br'] = "Variáveis do Softswitch ";
 $text['header-variables']['pl'] = "Zmienne PBXu";
 $text['header-variables']['uk'] = "Задання змінних";
 $text['header-variables']['sv-se'] = "Switch Variabler";
-$text['header-variables']['de-at'] = "";
+$text['header-variables']['de-at'] = "Switch Variablen";
 
 $text['header-variable_edit']['en-us'] = "Variable";
 $text['header-variable_edit']['es-cl'] = "Editar Variable";
@@ -205,7 +205,7 @@ $text['header-variable_edit']['pt-br'] = "Editar variável";
 $text['header-variable_edit']['pl'] = "Zmienna";
 $text['header-variable_edit']['uk'] = "Змінна";
 $text['header-variable_edit']['sv-se'] = "Variabel";
-$text['header-variable_edit']['de-at'] = "";
+$text['header-variable_edit']['de-at'] = "Variable";
 
 $text['header-hostname']['en-us'] = "Hostname";
 $text['header-hostname']['pt-pt'] = "Hostname";
@@ -213,7 +213,7 @@ $text['header-hostname']['fr-fr'] = "Nom d'hôte";
 $text['header-hostname']['pl'] = "Nazwa hosta";
 $text['header-hostname']['uk'] = "Назва хоста";
 $text['header-hostname']['sv-se'] = "Hostname";
-$text['header-hostname']['de-at'] = "";
+$text['header-hostname']['de-at'] = "Hostname";
 
 $text['description-variables_advanced']['en-us'] = "Define preprocessor variables here. Can be accessed in the xml configuration with $.";
 $text['description-variables_advanced']['es-cl'] = "Defina variables de preprocesador aquí. Pueden ser accesadas en la configuración XML con $.";
@@ -223,7 +223,7 @@ $text['description-variables_advanced']['pt-br'] = "Defina as variáveis aqui. P
 $text['description-variables_advanced']['pl'] = "Tutaj zdefiniuj zmienne preprocesora. Mogą być dostępne w konfiguracji xml z $.";
 $text['description-variables_advanced']['uk'] = "Задайте змінні препроцесора тут. Вони будуть доступними в конфігурації XML з символом $.";
 $text['description-variables_advanced']['sv-se'] = "Definiera preprocessor variabler här. Kan nås i xml konfigurationen med $.";
-$text['description-variables_advanced']['de-at'] = "";
+$text['description-variables_advanced']['de-at'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
 
 $text['description-variables']['en-us'] = "Define preprocessor variables here.";
 $text['description-variables']['es-cl'] = "Defina variables de procesador aquí.";
@@ -233,7 +233,7 @@ $text['description-variables']['pt-br'] = "Defina as variáveis aqui:";
 $text['description-variables']['pl'] = "Tutaj zdefiniuj zmienne preprocesora";
 $text['description-variables']['uk'] = "Задайте змінні препроцесора тут.";
 $text['description-variables']['sv-se'] = "Definiera preprocessor variabler här.";
-$text['description-variables']['de-at'] = "";
+$text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen.";
 
 $text['description-value']['en-us'] = "Enter the variable value.";
 $text['description-value']['es-cl'] = "Ingrese el valor de la variable.";
@@ -253,7 +253,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę zmiennej";
 $text['description-name']['uk'] = "Введіть назву змінної";
 $text['description-name']['sv-se'] = "Skriv in namnet på menyn.";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-at'] = "Geben Sie den Namen der Variable an.";
 
 $text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
 $text['description-hostname']['pt-pt'] = "Introduza o hostname";
@@ -261,7 +261,7 @@ $text['description-hostname']['fr-fr'] = "Entrer le nom de l'hôte / du switch."
 $text['description-hostname']['pl'] = "Wprowadź nazwę hosta / PBXu";
 $text['description-hostname']['uk'] = "Введіть назву хоста / switchname.";
 $text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
-$text['description-hostname']['de-at'] = "";
+$text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an.";
 
 $text['description-category']['en-us'] = "Select the category.";
 $text['description-category']['es-cl'] = "Seleccione la categoría.";
@@ -321,7 +321,7 @@ $text['button-delete']['pt-br'] = "Remover";
 $text['button-delete']['pl'] = "Usuń";
 $text['button-delete']['uk'] = "Видалити";
 $text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['de-at'] = "";
+$text['button-delete']['de-at'] = "Löschen";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
