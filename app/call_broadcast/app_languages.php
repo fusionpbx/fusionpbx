@@ -98,7 +98,7 @@ $text['label-has-been']['pt-br'] = "Foi inicializada";
 $text['label-has-been']['pl'] = "rozpoczęto";
 $text['label-has-been']['sv-se'] = "har startat";
 $text['label-has-been']['uk'] = "було запущено";
-$text['label-has-been']['de-at'] = "gestartet";
+$text['label-has-been']['de-at'] = "bereits gestartet";
 
 $text['label-destination']['en-us'] = "Destination Number";
 $text['label-destination']['es-cl'] = "Número de Destino";
@@ -198,7 +198,7 @@ $text['description-timeout']['pt-br'] = "";
 $text['description-timeout']['pl'] = "Ilość milisekund oczekiwania po odtworzeniu nagrania lub potwierdzenia makro.";
 $text['description-timeout']['sv-se'] = "";
 $text['description-timeout']['uk'] = "";
-$text['description-timeout']['de-at'] = "";
+$text['description-timeout']['de-at'] = "Geben Sie das absolute Time-Out in Sekunden an.";
 
 $text['description-phone']['en-us'] = "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name";
 $text['description-phone']['es-cl'] = "Opcional, definir una lista de números de telefono, uno por línea en el siguiente formato:  123-123-1234 | Apellido, Nombre";
@@ -257,7 +257,7 @@ $text['description-caller-id-number']['pt-br'] = "Aplicável se o provedor permi
 $text['description-caller-id-number']['pl'] = "Zastosowane w przypadku jeżeli operator zezwala na prezentację numeru. Standardowo prezentacja jest w formacie: 0000000000";
 $text['description-caller-id-number']['sv-se'] = "Gäller om leverantör tillåter att Caller ID nummer skickas. Standard: 0000000000";
 $text['description-caller-id-number']['uk'] = "Стосується, якщо постачальник, дозволяє надсилати номер абонента (Caller ID номер). За замовчуванням: 0000000000";
-$text['description-caller-id-number']['de-at'] = "";
+$text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
 
 $text['description-caller-id-name']['en-us'] = "Applicable if the provider allow the Caller ID Name to be set. default: anonymous";
 $text['description-caller-id-name']['es-cl'] = "Applicable si el proveedor permite enviar el número de origen. Por defecto: 0000000000";
@@ -267,7 +267,7 @@ $text['description-caller-id-name']['pt-br'] = "Aplicar se o provedor ";
 $text['description-caller-id-name']['pl'] = "Zastosowane w przypadku jeżeli operator zezwala na prezentację nazwy. Standardowo prezentacja jest w formacie: 0000000000";
 $text['description-caller-id-name']['sv-se'] = "Gäller om leverantör tillåter att Caller ID namn skickas. Standard: anonymous";
 $text['description-caller-id-name']['uk'] = "Стосується, якщо постачальник, дозволяє надсилати ім’я абонента (Caller ID Ім’я). За замовчуванням: anonymous";
-$text['description-caller-id-name']['de-at'] = "";
+$text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein.";
 
 $text['description-avmd']['en-us'] = "Select whether to enable or disable the detection of voicemail messaging and answering machine systems.";
 $text['description-avmd']['es-cl'] = "Seleccione si desea activar o desactivar la detección de sistemas de contestador automático de mensajes de correo de voz y.";
@@ -277,7 +277,7 @@ $text['description-avmd']['pt-br'] = "Selecione se deseja ativar ou desativar a 
 $text['description-avmd']['pl'] = "Wybierz, czy chcesz włączyć lub wyłączyć wykrywanie wiadomości poczty głosowej lub innych systemów automatycznego odbierania rozmów.";
 $text['description-avmd']['sv-se'] = "Välj om deteketering av röstbrevlåda skall användas.";
 $text['description-avmd']['uk'] = "Виберіть, чи слід включити або відключити виявлення повідомлень голосової пошти і систему автовідповідача.";
-$text['description-avmd']['de-at'] = "";
+$text['description-avmd']['de-at'] = "Wählen Sie ob die Erkennung von Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completa";

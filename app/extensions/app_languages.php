@@ -602,7 +602,7 @@ $text['label-enabled']['pt-br'] = "Habilitado";
 $text['label-enabled']['pl'] = "Numer wew włączony?";
 $text['label-enabled']['uk'] = "Включено";
 $text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['de-at'] = "An";
+$text['label-enabled']['de-at'] = "Aktiv";
 $text['label-enabled']['ro'] = "Activ";
 
 $text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
@@ -770,6 +770,17 @@ $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['de-at'] = "Abwurfzeit";
 $text['label-call_timeout']['ro'] = "Timp de expirare apel";
 
+$text['label-call_screen_enabled']['en-us'] = "Call Screen";
+$text['label-call_screen_enabled']['es-cl'] = "";
+$text['label-call_screen_enabled']['pt-pt'] = "";
+$text['label-call_screen_enabled']['fr-fr'] = "";
+$text['label-call_screen_enabled']['pt-br'] = "";
+$text['label-call_screen_enabled']['pl'] = "";
+$text['label-call_screen_enabled']['uk'] = "";
+$text['label-call_screen_enabled']['sv-se'] = "";
+$text['label-call_screen_enabled']['de-at'] = "Anruf Anzeige";
+$text['label-call_screen_enabled']['ro'] = "";
+
 $text['label-call_group']['en-us'] = "Call Group";
 $text['label-call_group']['es-cl'] = "Llamar a Grupo";
 $text['label-call_group']['pt-pt'] = "Grupo";
@@ -780,17 +791,6 @@ $text['label-call_group']['uk'] = "";
 $text['label-call_group']['sv-se'] = "Ring Grupp";
 $text['label-call_group']['de-at'] = "Rufgruppe";
 $text['label-call_group']['ro'] = "Grup apelare";
-
-$text['label-call_screen_enabled']['en-us'] = "Call Screen";
-$text['label-call_screen_enabled']['es-cl'] = "";
-$text['label-call_screen_enabled']['pt-pt'] = "";
-$text['label-call_screen_enabled']['fr-fr'] = "";
-$text['label-call_screen_enabled']['pt-br'] = "";
-$text['label-call_screen_enabled']['pl'] = "";
-$text['label-call_screen_enabled']['uk'] = "";
-$text['label-call_screen_enabled']['sv-se'] = "";
-$text['label-call_screen_enabled']['de-at'] = "";
-$text['label-call_screen_enabled']['ro'] = "";
 
 $text['label-bypass_media_after_bridge']['en-us'] = "Bypass Media After Bridge";
 $text['label-bypass_media_after_bridge']['es-cl'] = "Después de la omisión de medios puente";
@@ -1339,7 +1339,7 @@ $text['description-call_screen_enabled']['pt-br'] = "";
 $text['description-call_screen_enabled']['pl'] = "";
 $text['description-call_screen_enabled']['uk'] = "";
 $text['description-call_screen_enabled']['sv-se'] = "";
-$text['description-call_screen_enabled']['de-at'] = "";
+$text['description-call_screen_enabled']['de-at'] = "Wählen Sie ob die Anruf Anzeige Ein- oder Ausgeschaltet werden soll.";
 $text['description-call_screen_enabled']['ro'] = "";
 
 $text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";
