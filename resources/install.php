@@ -1231,12 +1231,12 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$sql .= "'$menu_description' ";
 		$sql .= ");";
 		if ($v_debug) {
-				fwrite($fp, $sql."\n");
+			fwrite($fp, $sql."\n");
 		}
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		//add the menu items
+	//add the menu items
 		require_once "resources/classes/menu.php";
 		$menu = new menu;
 		$menu->db = $db;
@@ -1244,7 +1244,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$menu->restore();
 		unset($menu);
 
-		//setup the switch config directory if it exists
+	//setup the switch config directory if it exists
 		if (file_exists($switch_conf_dir) && $switch_conf_dir != "/conf") {
 			if ($v_debug) {
 				fwrite($fp, "switch_base_dir: ".$install_switch_base_dir."\n");
