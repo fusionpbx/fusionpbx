@@ -2547,12 +2547,15 @@ if (!function_exists('save_sip_profile_xml')) {
 				return;
 			}
 
+		// make profile dir if needed
+			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
+			if (!is_readable($profile_dir)) { mkdir($profile_dir,0775,true); }
+
 		//get the global variables
 			global $db, $domain_uuid;
 
 		//get the sip profiles from the database
-			$sql = "select * from v_sip_profiles ";
-			$sql .= "where sip_profile_enabled = 'true' ";
+			$sql = "select * from v_sip_profiles";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll();
@@ -2560,8 +2563,17 @@ if (!function_exists('save_sip_profile_xml')) {
 			unset ($prep_statement, $sql);
 			if ($result_count > 0) {
 				foreach($result as $row) {
-					$sip_profile_uuid = $row['sip_profile_uuid'];
-					$sip_profile_name = $row['sip_profile_name'];
+					$sip_profile_uuid    = $row['sip_profile_uuid'];
+					$sip_profile_name    = $row['sip_profile_name'];
+					$sip_profile_enabled = $row['sip_profile_enabled'];
+
+					if ($sip_profile_enabled == 'false') {
+						$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
+						if ($fout) {
+							fclose($fout);
+						}
+						continue;
+					}
 
 					//get the xml sip profile template
 						if ($sip_profile_name == "internal" || $sip_profile_name == "external" || $sip_profile_name == "internal-ipv6") {
@@ -2589,14 +2601,14 @@ if (!function_exists('save_sip_profile_xml')) {
 						$file_contents = str_replace("{v_sip_profile_settings}", $sip_profile_settings, $file_contents);
 
 					//write the XML config file
-						if (is_readable($_SESSION['switch']['conf']['dir']."/sip_profiles/")) {
-							$fout = fopen($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile_name.".xml","w");
+						if (is_readable($profile_dir.'/')) {
+							$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
 							fwrite($fout, $file_contents);
 							fclose($fout);
 						}
 
 					//if the directory does not exist then create it
-						if (!is_readable($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile_name)) { mkdir($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile_name,0775,true); }
+						if (!is_readable($profile_dir.'/'.$sip_profile_name)) { mkdir($profile_dir.'/'.$sip_profile_name,0775,true); }
 
 				} //end foreach
 				unset($sql, $result, $row_count);
