@@ -1745,7 +1745,7 @@ EOL;
 			$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 			if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
 				while (false !== ($dir_name = readdir($handle))) {
-					if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && is_readable($theme_dir.'/'.$dir_name)) {
+					if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && $dir_name != ".git" && is_readable($theme_dir.'/'.$dir_name)) {
 						$dir_label = str_replace('_', ' ', $dir_name);
 						$dir_label = str_replace('-', ' ', $dir_label);
 						if ($dir_name == $install_template_name) {
