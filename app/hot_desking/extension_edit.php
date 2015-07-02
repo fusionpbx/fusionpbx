@@ -94,12 +94,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		else {
 			//if the user_context was not set then set the default value
 			if (strlen($user_context) == 0) {
-				if (count($_SESSION["domains"]) > 1) {
-					$user_context = $_SESSION['domain_name'];
-				}
-				else {
-					$user_context = "default";
-				}
+				$user_context = $_SESSION['domain_name'];
 			}
 		}
 
