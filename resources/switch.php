@@ -211,12 +211,7 @@ function load_extensions() {
 				}
 			//if no extension has been assigned then setting the user_context will still need to be set
 				if (strlen($_SESSION['user_context']) == 0) {
-					if (count($_SESSION['domains']) == 1) {
-						$_SESSION['user_context'] = "default";
-					}
-					else {
-						$_SESSION['user_context'] = $_SESSION['domain_name'];
-					}
+					$_SESSION['user_context'] = $_SESSION['domain_name'];
 				}
 		}
 	}
@@ -1906,12 +1901,7 @@ function save_dialplan_xml() {
 	global $db, $domain_uuid;
 
 	//get the context based from the domain_uuid
-		if (count($_SESSION['domains']) == 1) {
-			$user_context = "default";
-		}
-		else {
-			$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
-		}
+		$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
 
 	//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
 		$dialplan_list = glob($_SESSION['switch']['dialplan']['dir'] . "/*/*v_dialplan*.xml");
