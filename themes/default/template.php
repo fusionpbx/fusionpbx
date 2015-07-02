@@ -694,8 +694,9 @@ if (strlen($_SESSION['message']) > 0) {
 			if ($file != "." AND $file != ".."){
 				$new_path = $dir.'/'.$file;
 				$level = explode('/',$new_path);
-				if (substr($new_path, -4) == ".svn") {
-					//ignore .svn dir and subdir
+				if (substr($new_path, -4) == ".svn" ||
+					substr($new_path, -4) == ".git") {
+					//ignore .svn and .git dir and subdir
 				}
 				elseif (substr($new_path, -3) == ".db") {
 					//ignore .db files
