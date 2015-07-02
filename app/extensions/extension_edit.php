@@ -849,7 +849,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//get the voicemails
 				$sql = "select * from v_voicemails ";
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and voicemail_id = '".((is_numeric($extension)) ? $extension : $number_alias)."' ";
+				$sql .= "and voicemail_id = '".((is_numeric($number_alias)) ? $number_alias : $extension)."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);

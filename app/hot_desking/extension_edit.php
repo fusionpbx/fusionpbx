@@ -134,11 +134,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql = "update v_voicemails set ";
 						$sql .= "voicemail_password = '$vm_password' ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
-						if (is_numeric($extension)) {
-							$sql .= "and voicemail_id = '$extension'";
+						if (is_numeric($number_alias)) {
+							$sql .= "and voicemail_id = '$number_alias'";
 						}
 						else {
-							$sql .= "and voicemail_id = '$number_alias'";
+							$sql .= "and voicemail_id = '$extension'";
 						}
 						$db->exec(check_sql($sql));
 						unset($sql);
@@ -181,11 +181,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//get the voicemail data
 			$sql = "select * from v_voicemails ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			if (is_numeric($extension)) {
-				$sql .= "and voicemail_id = '$extension' ";
+			if (is_numeric($number_alias)) {
+				$sql .= "and voicemail_id = '$number_alias' ";
 			}
 			else {
-				$sql .= "and voicemail_id = '$number_alias' ";
+				$sql .= "and voicemail_id = '$extension' ";
 			}
 			//$sql .= "and voicemail_enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
