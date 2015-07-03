@@ -58,7 +58,7 @@ if (sizeof($_POST) > 0) {
 		if (sizeof($response_source_update) > 0) {
 			$_SESSION["response_source_update"] = $response_source_update;
 			foreach ($response_source_update as $response_line) {
-				if (substr_count($response_line, "Updated to revision") > 0 || substr_count($response_line, "At revision") > 0) {
+				if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 					$update_failed = false;
 				}
 			}
@@ -78,7 +78,7 @@ if (sizeof($_POST) > 0) {
 							substr_count($file_path_source, '/..') == 0 &&
 							substr_count($file_path_source, '/.') == 0 &&
 							substr_count($file_path_source, '/.svn') == 0 &&
-							substr_count($file_path_source, '/.git') == 0 &&
+							substr_count($file_path_source, '/.git') == 0
 							) {
 							$file_path_target = str_replace($scripts_dir_source, $scripts_dir_target, $file_path_source);
 							if ($file_path_target != $scripts_dir_target.'/resources/config.lua') {
