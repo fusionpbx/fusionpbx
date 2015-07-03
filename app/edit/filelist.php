@@ -55,12 +55,13 @@ else {
 		$htmlfilelist = '';
 		$dirlist = opendir($dir);
 		$dir_array = array();
-		while (false !== ($file = readdir($dirlist))) { 
+		while (false !== ($file = readdir($dirlist))) {
 			if ($file != "." AND $file != ".."){
 				$newpath = $dir.'/'.$file;
 				$level = explode('/',$newpath);
-				if (substr($newpath, -4) == ".svn") {
-					//ignore .svn dir and subdir
+				if (substr($newpath, -4) == ".svn" ||
+					substr($newpath, -4) == ".git") {
+					//ignore .svn and .git dir and subdir
 				}
 				elseif (substr($newpath, -3) == ".db") {
 					//ignore .db files
@@ -243,7 +244,7 @@ if ($_SESSION["app"]["edit"]["dir"] == "grammar") {
 	echo recur_dir($_SESSION['switch']['grammar']['dir']);
 }
 if ($_SESSION["app"]["edit"]["dir"] == "provision") {
-	
+
 	switch (PHP_OS) {
 	case "Linux":
 		if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
