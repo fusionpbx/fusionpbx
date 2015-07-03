@@ -78,7 +78,7 @@ if (sizeof($_POST) > 0) {
 							substr_count($file_path_source, '/..') == 0 &&
 							substr_count($file_path_source, '/.') == 0 &&
 							substr_count($file_path_source, '/.svn') == 0 &&
-							substr_count($file_path_source, '/.git') == 0 &&
+							substr_count($file_path_source, '/.git') == 0
 							) {
 							$file_path_target = str_replace($scripts_dir_source, $scripts_dir_target, $file_path_source);
 							if ($file_path_target != $scripts_dir_target.'/resources/config.lua') {
