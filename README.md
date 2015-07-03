@@ -39,7 +39,6 @@ These options support the project and cover any kind of help you might need from
 
 Software Requirements
 --------------------------------------
-
 - [Debian Jessie](http://cdimage.debian.org/debian-cd/8.1.0/amd64/iso-cd/debian-8.1.0-amd64-netinst.iso) - Recommended 
 This is the distribution recommended by the FreeSwitch team
 - Fusion will also install on Debian Wheezy, Ubuntu 10.10 LTS and is known to work on FreeBSD
@@ -48,15 +47,21 @@ This is the distribution recommended by the FreeSwitch team
 
 Community
 --------------------------------------
-
 We have a pretty thriving community if you know how to get to us:
 
 - [IRC](http://webchat.freenode.net/) in the fusionpbx channel
 - [Twitter](http://twitter.com/fusionpbx) 
 - [Website](http://fusionpbx.com)
 
+Contributing
+---------------------------------------
+It's easy to contribute to FusionPBX the only thing we ask before accepting your pull request is that you sign a Contributor License Agreement. 
+We ask that you sign the Contributor License Agreement for the following reasons:
+1. It protects FusionPBX by you gauranteeing that your contributions are yours to contribute and not the property of an employer or something found on the web.
+2. It protects you from using code that belongs to others that is subject unfriendly licensing.
 
-###How to Install FusionPBX  COMING SOON
+
+How to Install FusionPBX  COMING SOON
 ----------------------------
 ```bash
 cd /usr/src
