@@ -32,7 +32,7 @@ require_once "resources/check_auth.php";
 
 //check the permission
 if (
-	!permission_exists('upgrade_svn') &&
+	!permission_exists('upgrade_source') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_apps') &&
 	!permission_exists('menu_restore') &&
@@ -50,15 +50,15 @@ if (sizeof($_POST) > 0) {
 
 	$do = $_POST['do'];
 
-	// run svn update
-	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
-		$cmd = "svn up /var/www/fusionpbx";
-		exec($cmd, $response_svn_update);
+	// run source update
+	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+		chdir("/var/www/fusionpbx/");
+		exec("git pull", $response_source_update);
 		$update_failed = true;
-		if (sizeof($response_svn_update) > 0) {
-			$_SESSION["response_svn_update"] = $response_svn_update;
-			foreach ($response_svn_update as $response_line) {
-				if (substr_count($response_line, "Updated to revision") > 0 || substr_count($response_line, "At revision") > 0) {
+		if (sizeof($response_source_update) > 0) {
+			$_SESSION["response_source_update"] = $response_source_update;
+			foreach ($response_source_update as $response_line) {
+				if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 					$update_failed = false;
 				}
 			}
@@ -66,7 +66,7 @@ if (sizeof($_POST) > 0) {
 		if ($update_failed) {
 			$_SESSION["message_delay"] = 3500;
 			$_SESSION["message_mood"] = 'negative';
-			$response_message = $text['message-upgrade_svn_failed'];
+			$response_message = $text['message-upgrade_source_failed'];
 		}
 		else {
 			//update scripts folder, if allowed (default)
@@ -77,7 +77,8 @@ if (sizeof($_POST) > 0) {
 						if (
 							substr_count($file_path_source, '/..') == 0 &&
 							substr_count($file_path_source, '/.') == 0 &&
-							substr_count($file_path_source, '/.svn') == 0
+							substr_count($file_path_source, '/.svn') == 0 &&
+							substr_count($file_path_source, '/.git') == 0
 							) {
 							$file_path_target = str_replace($scripts_dir_source, $scripts_dir_target, $file_path_source);
 							if ($file_path_target != $scripts_dir_target.'/resources/config.lua') {
@@ -87,10 +88,10 @@ if (sizeof($_POST) > 0) {
 							}
 						}
 					}
-					$response_message = $text['message-upgrade_svn_scripts'];
+					$response_message = $text['message-upgrade_source_scripts'];
 				}
 				else {
-					$response_message = $text['message-upgrade_svn'];
+					$response_message = $text['message-upgrade_source'];
 				}
 		}
 	}
@@ -153,16 +154,16 @@ echo "<br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
-if (permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
+if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		".$text['label-upgrade_svn'];
+	echo "		".$text['label-upgrade_source'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_svn'>";
-	echo "			<input type='checkbox' class='formfld' name='do[svn]' id='do_svn' value='1'>";
-	echo "			".$text['description-upgrade_svn'];
+	echo "		<label for='do_source'>";
+	echo "			<input type='checkbox' class='formfld' name='do[source]' id='do_source' value='1'>";
+	echo "			".$text['description-upgrade_source'];
 	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -267,16 +268,16 @@ echo "<br><br>";
 echo "</form>\n";
 
 
-// output result of svn update
-if (sizeof($_SESSION["response_svn_update"]) > 0) {
+// output result of source update
+if (sizeof($_SESSION["response_source_update"]) > 0) {
 	echo "<br />";
-	echo "<b>".$text['header-svn_update_results']."</b>";
+	echo "<b>".$text['header-source_update_results']."</b>";
 	echo "<br /><br />";
 	echo "<pre>";
-	echo implode("\n", $_SESSION["response_svn_update"]);
+	echo implode("\n", $_SESSION["response_source_update"]);
 	echo "</pre>";
 	echo "<br /><br />";
-	unset($_SESSION["response_svn_update"]);
+	unset($_SESSION["response_source_update"]);
 }
 
 
