@@ -57,6 +57,7 @@ Contributing
 ---------------------------------------
 It's easy to contribute to FusionPBX the only thing we ask before accepting your pull request is that you sign a Contributor License Agreement. 
 We ask that you sign the Contributor License Agreement for the following reasons:
+
 1. It protects FusionPBX by you gauranteeing that your contributions are yours to contribute and not the property of an employer or something found on the web.
 2. It protects you from using code that belongs to others that is subject unfriendly licensing.
 
