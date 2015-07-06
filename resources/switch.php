@@ -322,9 +322,7 @@ function event_socket_request($fp, $cmd) {
 		}
 		fputs($fp, "\n"); //second line feed to end the headers
 
-		usleep(100); //allow time for reponse
-
-		$response = "";
+		$response = '';
 		$i = 0;
 		$content_length = 0;
 		while (!feof($fp)) {
@@ -342,16 +340,15 @@ function event_socket_request($fp, $cmd) {
 				}
 			}
 
-			usleep(50); //allow time for reponse
-
-			//prevent an endless loop //optional because of script timeout
-			if ($i > 30000) { break; }
-
 			if ($content_length > 0) { //is content_length set
 				//stop reading if all content has been read.
 				if (strlen($response) >= $content_length) {
 					break;
 				}
+			}
+			else {
+				//prevent an endless loop
+				if ($i > 300000) { break; }	
 			}
 			$i++;
 		}
@@ -362,6 +359,8 @@ function event_socket_request($fp, $cmd) {
 		echo "no handle";
 	}
 }
+
+
 
 
 function event_socket_request_cmd($cmd) {
