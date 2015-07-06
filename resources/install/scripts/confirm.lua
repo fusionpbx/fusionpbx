@@ -65,9 +65,11 @@
 			if (not default_voice) then default_voice = 'callie'; end
 
 		--if the screen file is found then set confirm to true
-			call_screen_file = "/tmp/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
-			if (file_exists(call_screen_file)) then
-				confirm = "true";
+			if (domain_name ~= nil) then
+				call_screen_file = "/tmp/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
+				if (file_exists(call_screen_file)) then
+					confirm = "true";
+				end
 			end
 
 		--confirm the calls
