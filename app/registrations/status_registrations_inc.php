@@ -111,13 +111,9 @@ require_once "resources/check_auth.php";
 						if (count($_SESSION["domains"]) > 1) {
 							if (!(permission_exists('registration_all') && $show == "all")) {
 								if ($registrations[$x]['sip-auth-realm'] == $_SESSION['domain_name']) {}
+								elseif ($user_array[1] == $_SESSION['domain_name']){}
 								else {
-									$tmp = explode('@', $registrations[$x]['user'], 2);
-									if($tmp[1] == $_SESSION['domain_name']){}
-									else {
-										unset($registrations[$x]);
-									}
-									unset($tmp);
+									unset($registrations[$x]);
 								}
 							}
 						}
