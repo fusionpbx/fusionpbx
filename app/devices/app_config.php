@@ -399,6 +399,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_vendor';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the vendor.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
