@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 		$s->execute();
 		$device_keys = $s->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($device_keys as &$row) {
-			$sql = "update v_device_lines ";
+			$sql = "update v_device_keys ";
 			$sql .= "set device_key_vendor = '".$row["device_vendor"]."' ";
 			$sql .= "where device_key_uuid = '".$row["device_key_uuid"]."';\n ";
 			$db->exec(check_sql($sql));
