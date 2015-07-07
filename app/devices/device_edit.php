@@ -835,17 +835,23 @@ require_once "resources/require.php";
 				echo "	</select>\n";
 				echo "</td>\n";
 
-				echo "<td align='left'>\n";
+				echo "<td align='left' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
+				if (strlen($row['device_key_vendor']) > 0) {
+					$device_key_vendor = $row['device_key_vendor'];
+				}
+				else {
+					$device_key_vendor = $device_vendor;
+				}
 				?>
-
+				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
 				<?php $selected = "selected='selected'"; ?>
 				<?php $found = false; ?>
-				<select class='formfld' name='device_keys[<?php echo $x; ?>][device_key_type]'>
+				<select class='formfld' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();" >
 				<option value=''></option>
 				<?php
-				if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Aastra'>"; }
+				if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Aastra'>"; }
 					?>
 					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
 					<option value='blfxfer' <?php if ($row['device_key_type'] == "blfxfer") { echo $selected;$found=true; } ?>><?php echo $text['label-blf_xfer'] ?></option>
@@ -854,16 +860,16 @@ require_once "resources/require.php";
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
-				if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Cisco'>"; }
+				if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Cisco'>"; }
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='disabled' <?php if ($row['device_key_type'] == "disabled") { echo $selected;$found=true; } ?>><?php echo $text['label-disabled'] ?></option>
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
-				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Grandstream'>"; }
+				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Grandstream'>"; }
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='shared line' <?php if ($row['device_key_type'] == "shared line") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
@@ -882,8 +888,8 @@ require_once "resources/require.php";
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
-				if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Polycom'>"; }
+				if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Polycom'>"; }
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
@@ -891,8 +897,8 @@ require_once "resources/require.php";
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
-				if (strtolower($device_vendor) == "snom" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Snom'>"; }
+				if (strtolower($device_vendor) == "snom" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Snom'>"; }
 					?>
 					<option value='none' <?php if ($row['device_key_type'] == "none") { echo $selected;$found=true; } ?>><?php echo $text['label-none'] ?></option>
 					<option value='url' <?php if ($row['device_key_type'] == "url") { echo $selected;$found=true; } ?>><?php echo $text['label-action_url'] ?></option>
@@ -919,8 +925,8 @@ require_once "resources/require.php";
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
-				if (strtolower($device_vendor) == "yealink" || strlen($device_vendor) == 0) {
-					if (strlen($device_vendor) == 0) { echo "<optgroup label='Yealink'>"; }
+				if (strtolower($device_vendor) == "yealink" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Yealink'>"; }
 					?>
 					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-na'] ?></option>
 					<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
