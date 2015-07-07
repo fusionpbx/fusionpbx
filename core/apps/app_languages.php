@@ -31,6 +31,7 @@ $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['uk'] = "Оновлення завершено";
 $text['message-update']['de-at'] = "Aktualisierung durchgeführt";
+$text['message-update']['zh-cn'] = "更新完成";
 
 $text['message-message']['en-us'] = "Message";
 $text['message-message']['es-cl'] = "Mensaje";
