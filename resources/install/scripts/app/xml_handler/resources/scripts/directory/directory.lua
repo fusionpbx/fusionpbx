@@ -281,8 +281,8 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						if tonumber(user) == nil then
-   							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
+						if number_alias and #number_alias > 0 then
+							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
 						else
 							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
 						end
