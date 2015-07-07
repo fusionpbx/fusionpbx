@@ -67,8 +67,10 @@ We ask that you sign the Contributor License Agreement for the following reasons
 * [The Quick Way](https://github.com/Fusionpbx/opensource/blob/master/sign-cla.md) - Step by step instructions to contribute to FusionPBX with links to our CLA and how to submit pull requests.
 * [The FusionPBX Contribution Site](https://github.com/Fusionpbx/opensource) - The full repo with more information for the curious.
 
-How to Install FusionPBX  COMING SOON
+How to Install FusionPBX
 ----------------------------
+* As root do the following:
+
 ```bash
 cd /usr/src
 ```
@@ -76,7 +78,7 @@ cd /usr/src
 apt-get install wget
 ```
 ```bash
-wget http://COMINGSOON/fusionpbx/fusionpbx-scripts/install/ubuntu/install_fusionpbx.sh
+wget https://raw.githubusercontent.com/fusionpbx/fusionpbx-scripts/master/install/ubuntu/install_fusionpbx.sh
 ```
 ```bash
 chmod 755 install_fusionpbx.sh
