@@ -381,6 +381,7 @@ require_once "resources/require.php";
 	$sql = "SELECT * FROM v_device_keys ";
 	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "ORDER by ";
+	$sql .= "device_key_vendor asc, ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
 	$sql .= "WHEN 'memory' THEN 2 ";
@@ -733,24 +734,50 @@ require_once "resources/require.php";
 			echo "	</tr>";
 		}
 
-		//custom keys
+		$vendor_count = 0;
+		foreach($device_keys as $row) {
+			if ($previous_vendor != $row['device_key_vendor']) {
+				$previous_vendor = $row['device_key_vendor'];
+				$vendor_count++;
+			}
+		}
+
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-keys']."</td>";
 		echo "		<td class='vtable' align='left'>";
 		echo "			<table border='0' cellpadding='0' cellspacing='3'>\n";
-		echo "			<tr>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
-		echo "				<td>&nbsp;</td>\n";
-		echo "			</tr>\n";
+		if ($vendor_count == 0) {
+			echo "			<tr>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+			echo "				<td>&nbsp;</td>\n";
+			echo "			</tr>\n";
+		}
 
 		$x = 0;
 		foreach($device_keys as $row) {
+			//set the column names
+				if ($previous_device_key_vendor != $row['device_key_vendor']) {
+					echo "			<tr>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+					if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
+						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
+					} else {
+						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+					}
+					echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+					echo "				<td>&nbsp;</td>\n";
+					echo "			</tr>\n";
+				}
 			//determine whether to hide the element
 				if (strlen($device_key_uuid) == 0) {
 					$element['hidden'] = false;
@@ -851,7 +878,7 @@ require_once "resources/require.php";
 				<option value=''></option>
 				<?php
 				if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Aastra'>"; }
+					echo "<optgroup label='Aastra'>";
 					?>
 					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
 					<option value='blfxfer' <?php if ($row['device_key_type'] == "blfxfer") { echo $selected;$found=true; } ?>><?php echo $text['label-blf_xfer'] ?></option>
@@ -861,7 +888,7 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Cisco'>"; }
+					echo "<optgroup label='Cisco'>";
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='disabled' <?php if ($row['device_key_type'] == "disabled") { echo $selected;$found=true; } ?>><?php echo $text['label-disabled'] ?></option>
@@ -869,7 +896,7 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Grandstream'>"; }
+					echo "<optgroup label='Grandstream'>";
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='shared line' <?php if ($row['device_key_type'] == "shared line") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
@@ -889,7 +916,7 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Polycom'>"; }
+					echo "<optgroup label='Polycom'>";
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 					<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
@@ -898,7 +925,7 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "snom" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Snom'>"; }
+					echo "<optgroup label='Snom'>";
 					?>
 					<option value='none' <?php if ($row['device_key_type'] == "none") { echo $selected;$found=true; } ?>><?php echo $text['label-none'] ?></option>
 					<option value='url' <?php if ($row['device_key_type'] == "url") { echo $selected;$found=true; } ?>><?php echo $text['label-action_url'] ?></option>
@@ -926,7 +953,7 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "yealink" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					if (strlen($device_vendor) == 0 || strlen($device_username) > 0) { echo "<optgroup label='Yealink'>"; }
+					echo "<optgroup label='Yealink'>";
 					?>
 					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-na'] ?></option>
 					<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
@@ -1014,6 +1041,8 @@ require_once "resources/require.php";
 				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
+			//set the previous vendor
+				$previous_device_key_vendor = $row['device_key_vendor'];
 			//increment the array key
 				$x++;
 		}
