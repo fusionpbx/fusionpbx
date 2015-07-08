@@ -316,7 +316,6 @@ include "root.php";
 									$prep_statement_4->execute();
 									$row = $prep_statement_4->fetch();
 									$device_label = $row["device_label"];
-									$device_vendor = strtolower($row["device_vendor"]);
 									$device_firmware_version = $row["device_firmware_version"];
 									$device_provision_enable = $row["device_provision_enable"];
 									//keep the original template
