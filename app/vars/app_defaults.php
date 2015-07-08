@@ -80,7 +80,7 @@ EOD;
 
 			$country_list = <<<EOD
 [
-{"country":"Afghanistan","countrycode":"93","exitcode":"00","isocode":"AF"} 		
+{"country":"Afghanistan","countrycode":"93","exitcode":"00","isocode":"AF"}
 ,{"country":"Albania","countrycode":"355","exitcode":"00","isocode":"AL"}
 ,{"country":"Algeria","countrycode":"213","exitcode":"00","isocode":"DZ"}
 ,{"country":"American Samoa","countrycode":"1","exitcode":"011","isocode":"AS"}
@@ -321,18 +321,16 @@ EOD;
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
-
 				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-
 				if ( count($result)> 0) {
 					$country_iso = $result[0]["value"];
 				}
 			}
-
 			unset($prep_statement, $sql, $result);
 
-			if ( $country_iso===NULL )
+			if ( $country_iso===NULL ) {
 				return;
+			}
 
 			$countries = json_decode($country_list, true);
 
@@ -380,7 +378,7 @@ EOD;
 					$sql .= ");";
 					$db->exec(check_sql($sql));
 					unset($sql, $row);
-					$x++;				
+					$x++;
 				}
 			}
 			unset($prep_statement, $sql);
@@ -393,7 +391,6 @@ EOD;
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-
 				if ($row['num_rows'] == 0) {
 					$sql = "insert into v_vars ";
 					$sql .= "(";
@@ -417,7 +414,7 @@ EOD;
 					$sql .= ");";
 					$db->exec(check_sql($sql));
 					unset($sql, $row);
-					$x++;				
+					$x++;
 				}
 			}
 			unset($prep_statement, $sql);
@@ -430,7 +427,6 @@ EOD;
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-
 				if ($row['num_rows'] == 0) {
 					$sql = "insert into v_vars ";
 					$sql .= "(";
@@ -459,7 +455,7 @@ EOD;
 			}
 			unset($prep_statement, $sql);
 
-			unset($countries);				
+			unset($countries);
 		}
 	}
 
@@ -559,7 +555,7 @@ EOD;
 					}
 			}
 
-//set country code variables				
+		//set country code variables
 			set_country_vars($db, $x);
 
 		//save the vars.xml file
