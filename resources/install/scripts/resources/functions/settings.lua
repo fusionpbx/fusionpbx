@@ -52,6 +52,7 @@
 		--get the default settings
 			sql = "SELECT * FROM v_default_settings ";
 			sql = sql .. "WHERE default_setting_enabled = 'true' ";
+			sql = sql .. "AND default_setting_value is null ";
 			sql = sql .. "ORDER BY default_setting_category, default_setting_subcategory ASC";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "SQL: " .. sql .. "\n");
@@ -100,6 +101,7 @@
 				sql = "SELECT * FROM v_domain_settings ";
 				sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
 				sql = sql .. "AND domain_setting_enabled = 'true' ";
+				sql = sql .. "AND domain_setting_value is null ";
 				sql = sql .. "ORDER BY domain_setting_category, domain_setting_subcategory ASC ";
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
