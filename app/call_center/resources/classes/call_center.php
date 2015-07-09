@@ -165,6 +165,7 @@
 						$action_array = explode(":",$this->queue_timeout_action);
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $action_array[0];
 						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = substr($this->queue_timeout_action, strlen($action_array[0])+1, strlen($this->queue_timeout_action));
 						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
