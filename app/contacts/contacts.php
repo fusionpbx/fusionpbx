@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -53,7 +54,8 @@ else {
 
 //retrieve current user's assigned groups (uuids)
 	foreach ($_SESSION['groups'] as $group_data) {
-		$user_group_uuids[] = $group_data['group_uuid'];
+		if (strlen($group_data['group_uuid'])>0)
+			$user_group_uuids[] = $group_data['group_uuid'];
 	}
 	//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
