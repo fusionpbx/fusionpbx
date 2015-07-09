@@ -70,7 +70,6 @@
 						$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
 						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
 						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						//echo $sql;
 						$prep_statement = $this->db->prepare($sql);
 						if ($prep_statement) {
 							$prep_statement->execute();
@@ -80,13 +79,7 @@
 								$dialplan_name = $row['dialplan_name'];
 								$dialplan_description = $row['dialplan_description'];
 							}
-							else {
-								$this->dialplan_uuid = "";
-							}
 							unset($prep_statement);
-						}
-						else {
-							$this->dialplan_uuid = "";
 						}
 					}
 
@@ -94,6 +87,9 @@
 					$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 					if (strlen($this->dialplan_uuid) > 0) {
 						$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
+					}
+					else {
+						$this->dialplan_uuid = uuid();
 					}
 					$dialplan["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
