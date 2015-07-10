@@ -114,28 +114,28 @@ if ($domains_processed == 1) {
 				$tmp = "\n";
 				$tmp .= "--set the variables\n";
 				if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
-					$tmp .= "	sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
+					$tmp .= "	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n";
 				}
 				if (strlen($_SESSION['switch']['db']['dir']) > 0) {
-					$tmp .= "	database_dir = \"".$_SESSION['switch']['db']['dir']."\";\n";
+					$tmp .= "	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n";
 				}
 				if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-					$tmp .= "	recordings_dir = \"".$recordings_dir."\";\n";
+					$tmp .= "	recordings_dir = [[".$recordings_dir."]];\n";
 				}
 				if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
-					$tmp .= "	storage_dir = \"".$_SESSION['switch']['storage']['dir']."\";\n";
+					$tmp .= "	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n";
 				}
 				if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
-					$tmp .= "	voicemail_dir = \"".$_SESSION['switch']['voicemail']['dir']."\";\n";
+					$tmp .= "	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n";
 				}
-				$tmp .= "	php_dir = \"".PHP_BINDIR."\";\n";
+				$tmp .= "	php_dir = [[".PHP_BINDIR."]];\n";
 				if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 					$tmp .= "	php_bin = \"php.exe\";\n";
 				}
 				else {
 					$tmp .= "	php_bin = \"php\";\n";
 				}
-				$tmp .= "	document_root = \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."\";\n";
+				$tmp .= "	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n";
 				$tmp .= "\n";
 				$tmp .= "--database information\n";
 				$tmp .= "	database = {}\n";
@@ -166,7 +166,7 @@ if ($domains_processed == 1) {
 				$tmp .= "\n";
 				$tmp .= "--additional info\n";
 				$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
-				$tmp .= "	temp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
+				$tmp .= "	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n";
 				if (isset($_SESSION['domain']['dial_string']['text'])) {
 					$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
 				}
