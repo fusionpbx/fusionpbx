@@ -48,6 +48,19 @@
 		$insert_time=$insert_count=0;
 	}
 
+	function xml_cdr_log($msg) {
+		global $debug;
+		if (!$debug) {
+			return;
+		}
+		$fp = fopen($_SESSION['server']['temp']['dir'].'/xml_cdr.log', 'a+');
+		if (!$fp) {
+			return;
+		}
+		fwrite($fp, $msg);
+		fclose($fp);
+	}
+
 //increase limits
 	set_time_limit(3600);
 	ini_set('memory_limit', '256M');
@@ -66,48 +79,28 @@
 		//set global variable
 			global $debug;
 
-		//fix the xml by escaping the contents of <sip_full_from>
-			preg_match("/<sip_full_from>(.*)<\/sip_full_from>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
-
-		//fix the xml by escaping the contents of <sip_full_to>
-			preg_match("/<sip_full_to>(.*)<\/sip_full_to>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
-
-		//fix the xml by escaping the contents of <caller_id>
-			preg_match("/<caller_id>(.*)<\/caller_id>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
-
-		//fix the xml by escaping the contents of <sip_invite_record_route>
-			preg_match("/<sip_invite_record_route>(.*)<\/sip_invite_record_route>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
-
-		//fix the xml by escaping the contents of <sip_Remote-Party-ID>
-			preg_match("/<sip_Remote-Party-ID>(.*)<\/sip_Remote-Party-ID>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
-
-		//fix the xml by escaping the contents of <sip_P-Preferred-Identity>
-			preg_match("/<sip_P-Preferred-Identity>(.*)<\/sip_P-Preferred-Identity>/", $xml_string, $matches);
-			$match_result = str_replace("<", "&lt;", $matches[1]);
-			$match_result = str_replace(">", "&gt;", $match_result);
-			$xml_string = str_replace($matches[1], $match_result, $xml_string);
+		//fix the xml by escaping the contents of <sip_full_XXX>
+			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/", 
+				function ($matches) {
+					var_dump($matches);
+					return '<' . $matches[1] . '>' .
+						str_replace(">", "&gt;", 
+							str_replace("<", "&lt;", $matches[2])
+						) .
+					'</' . $matches[1] . '>';
+				},
+				$xml_string
+			);
 
 		//parse the xml to get the call detail record info
 			try {
+				xml_cdr_log($xml_string);
 				$xml = simplexml_load_string($xml_string);
+				xml_cdr_log("\nxml load done\n");
 			}
 			catch(Exception $e) {
 				echo $e->getMessage();
+				xml_cdr_log("\nfail loadxml: " . $e->getMessage() . "\n");
 			}
 
 		//prepare the database object
@@ -199,6 +192,8 @@
 		//get the domain values from the xml
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
 			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
+
+			xml_cdr_log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
 
 		//get the domain_uuid with the domain_name
 			if (strlen($domain_uuid) == 0) {
@@ -500,6 +495,7 @@
 			if ($debug){
 				print_r ($_POST["cdr"]);
 			}
+
 		//authentication for xml cdr http post
 			if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && strlen($_SESSION["xml_cdr"]["username"]) == 0) {
 				//get the contents of xml_cdr.conf.xml
@@ -558,6 +554,7 @@
 				$leg = "b";
 			}
 
+			xml_cdr_log("process cdr via post\n");
 		//parse the xml and insert the data into the db
 			process_xml_cdr($db, $leg, $xml_string);
 	}
@@ -598,9 +595,7 @@
 		ob_end_clean(); //clean the buffer
 		$time = "\n\n$insert_count inserts in: ".number_format($insert_time,5). " seconds.\n";
 		$time .= "Other processing time: ".number_format((microtime(true)-$time5-$insert_time),5). " seconds.\n";
-		$fp = fopen($_SESSION['server']['temp']['dir'].'/xml_cdr.log', 'w');
-		fwrite($fp, $content.$time);
-		fclose($fp);
+		xml_cdr_log($content.$time);
 	}
 
 ?>
