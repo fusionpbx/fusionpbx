@@ -82,7 +82,6 @@
 		//fix the xml by escaping the contents of <sip_full_XXX>
 			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/", 
 				function ($matches) {
-					var_dump($matches);
 					return '<' . $matches[1] . '>' .
 						str_replace(">", "&gt;", 
 							str_replace("<", "&lt;", $matches[2])
