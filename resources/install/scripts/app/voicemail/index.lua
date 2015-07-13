@@ -447,7 +447,11 @@
 
 						--copy the voicemail to each destination
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
+								local src = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
+								local dst = voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext
+								if src ~= dst then
+									copy(src, dst)
+								end
 							end
 
 						--send the message waiting event
