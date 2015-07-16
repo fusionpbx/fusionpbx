@@ -82,14 +82,10 @@ if ( session:ready() ) then
 	end
 
 	--set conference flags
-	if (mute) then
-		if (mute == "false") then
-			flags = "flags{}";
-		else
-			flags = "flags{mute}";
-		end
-	else
+	if (mute == "true") then
 		flags = "flags{mute}";
+	else
+		flags = "flags{}";
 	end
 
 	--if the pin number is provided then require it
@@ -129,7 +125,7 @@ if ( session:ready() ) then
 		sub_table = explode("-",value);
 		for destination=sub_table[1],sub_table[2] do
 			--get the destination required for number-alias
-			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");	 
+			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
 
 			--prevent calling the user that initiated the page
 			if (sip_from_user ~= destination) then
@@ -139,7 +135,7 @@ if ( session:ready() ) then
 					destination_status = "show channels like "..destination.."@";
 					reply = trim(api:executeString(destination_status));
 					if (reply == "0 total.") then
-						--freeswitch.consoleLog("NOTICE", "destination "..destination.." available\n");
+						freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
 						if (destination == tonumber(sip_from_user)) then
 							--this destination is the caller that initated the page
 						else
@@ -172,12 +168,12 @@ if ( session:ready() ) then
 
 	--send main call to the conference room
 	if (destination_count > 0) then
-		if (session:getVariable("moderator") ~= nil and session:getVariable("moderator") == "true") then
+		if (session:getVariable("moderator") == "true") then
 			moderator_flag = ",moderator";
 		else
 			moderator_flag = "";
 		end
-		session:execute("conference", "page-"..destination_number.."@page+flags{endconf"..moderator_flag.."}");
+		session:execute("conference", "page-"..destination_number.."%"..domain_name.."@page+flags{endconf"..moderator_flag.."}");
 	else
 		session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 	end
