@@ -67,6 +67,8 @@ if ( session:ready() ) then
 		if (not default_dialect) then default_dialect = 'us'; end
 		if (not default_voice) then default_voice = 'callie'; end
 
+	local conf_name = "page-"..destination_number.."%"..domain_name.."@page"
+
 	if (caller_id_name) then
 		--caller id name provided do nothing
 	else
@@ -140,7 +142,7 @@ if ( session:ready() ) then
 							--this destination is the caller that initated the page
 						else
 							--originate the call
-							cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+							cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conf_name.."+"..flags.." inline";
 							api:executeString(cmd_string);
 							destination_count = destination_count + 1;
 						end
@@ -155,7 +157,7 @@ if ( session:ready() ) then
 								--this destination is the caller that initated the page
 							else
 								--originate the call
-								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:" ..conf_name"+"..flags.." inline";
 								api:executeString(cmd_string);
 								destination_count = destination_count + 1;
 							end
@@ -173,7 +175,7 @@ if ( session:ready() ) then
 		else
 			moderator_flag = "";
 		end
-		session:execute("conference", "page-"..destination_number.."%"..domain_name.."@page+flags{endconf"..moderator_flag.."}");
+		session:execute("conference", conf_name.."+flags{endconf"..moderator_flag.."}");
 	else
 		session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 	end
