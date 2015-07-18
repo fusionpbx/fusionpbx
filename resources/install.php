@@ -47,16 +47,9 @@ require_once "resources/functions.php";
 //set the default time zone
 	date_default_timezone_set('UTC');
 
-//get the domain
-	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-	$domain_name = $domain_array[0];
-
 //if the config file exists then disable the install page
 	$config_exists = false;
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-		$config_exists = true;
-	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-		//original directory
 		$config_exists = true;
 	} elseif (file_exists("/etc/fusionpbx/config.php")) {
 		//linux
@@ -86,6 +79,7 @@ require_once "resources/functions.php";
 	$db_host = $_POST["db_host"];
 	$db_port = $_POST["db_port"];
 	$db_name = $_POST["db_name"];
+	$domain_name = $_POST["domain_name"];
 	$db_username = $_POST["db_username"];
 	$db_password = $_POST["db_password"];
 	$db_create_username = $_POST["db_create_username"];
@@ -97,6 +91,12 @@ require_once "resources/functions.php";
 	$install_switch_base_dir = $_POST["install_switch_base_dir"];
 	$install_default_country = $_POST["install_default_country"];
 	$install_template_name = $_POST["install_template_name"];
+
+	if(!$domain_name){
+	//get the domain
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+		$domain_name = $domain_array[0];
+	}
 
 //clean up the values
 	if (strlen($install_switch_base_dir) > 0) {
@@ -813,7 +813,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
 				}
-					$file_contents = file_get_contents($filename);
+				$file_contents = file_get_contents($filename);
 
 				//replace \r\n with \n then explode on \n
 					$file_contents = str_replace("\r\n", "\n", $file_contents);
@@ -1236,7 +1236,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		//add the menu items
+	//add the menu items
 		require_once "resources/classes/menu.php";
 		$menu = new menu;
 		$menu->db = $db;
@@ -1764,6 +1764,17 @@ EOL;
 		echo "	</td>\n";
 		echo "	</tr>\n";
 
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "		Domain name\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "		<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"$domain_name\"><br />\n";
+		echo "		Enter the default domain name. \n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
@@ -1816,6 +1827,7 @@ EOL;
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
+		echo "			<input type='hidden' name='domain_name' value='$domain_name'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
@@ -1931,6 +1943,7 @@ EOL;
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
+		echo "			<input type='hidden' name='domain_name' value='$domain_name'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
@@ -2044,6 +2057,7 @@ EOL;
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
+		echo "			<input type='hidden' name='domain_name' value='$domain_name'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
