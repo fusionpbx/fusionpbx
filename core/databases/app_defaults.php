@@ -101,49 +101,54 @@ if ($domains_processed == 1) {
 			}
 
 		//config.lua
-			if (strlen($db_type) > 0) {
-				if (is_dir("/etc/fusionpbx")){
-					$config = "/etc/fusionpbx/config.lua";
-				} elseif (is_dir("/usr/local/etc/fusionpbx")){
-					$config = "/usr/local/etc/fusionpbx/config.lua";
-				}
-				else {
-					$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
-				}
-				$fout = fopen($config,"w");
-				$tmp = "\n";
-				$tmp .= "--set the variables\n";
-				if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
-					$tmp .= "	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n";
-				}
-				if (strlen($_SESSION['switch']['db']['dir']) > 0) {
-					$tmp .= "	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n";
-				}
-				if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-					$tmp .= "	recordings_dir = [[".$recordings_dir."]];\n";
-				}
-				if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
-					$tmp .= "	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n";
-				}
-				if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
-					$tmp .= "	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n";
-				}
-				$tmp .= "	php_dir = [[".PHP_BINDIR."]];\n";
-				if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
-					$tmp .= "	php_bin = \"php.exe\";\n";
-				}
-				else {
-					$tmp .= "	php_bin = \"php\";\n";
-				}
-				$tmp .= "	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n";
-				$tmp .= "\n";
+			if (is_dir("/etc/fusionpbx")){
+				$config = "/etc/fusionpbx/config.lua";
+			} elseif (is_dir("/usr/local/etc/fusionpbx")){
+				$config = "/usr/local/etc/fusionpbx/config.lua";
+			}
+			else {
+				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+			}
+			$fout = fopen($config,"w");
+			$tmp = "\n";
+			$tmp .= "--set the variables\n";
+			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
+				$tmp .= "	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n";
+			}
+			if (strlen($_SESSION['switch']['db']['dir']) > 0) {
+				$tmp .= "	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n";
+			}
+			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+				$tmp .= "	recordings_dir = [[".$recordings_dir."]];\n";
+			}
+			if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
+				$tmp .= "	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n";
+			}
+			if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+				$tmp .= "	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n";
+			}
+			$tmp .= "	php_dir = [[".PHP_BINDIR."]];\n";
+			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
+				$tmp .= "	php_bin = \"php.exe\";\n";
+			}
+			else {
+				$tmp .= "	php_bin = \"php\";\n";
+			}
+			$tmp .= "	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n";
+			$tmp .= "\n";
+
+			if ((strlen($db_type) > 0) || (strlen($dsn_name) > 0)) {
 				$tmp .= "--database information\n";
 				$tmp .= "	database = {}\n";
 				$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
 				$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
 				$tmp .= "	database[\"path\"] = \"".$db_path."\";\n";
 
-				if ($db_type == "pgsql") {
+				if (strlen($dsn_name) > 0) {
+					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
+					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
+				}
+				elseif ($db_type == "pgsql") {
 					if ($db_host == "localhost") { $db_host = "127.0.0.1"; }
 					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
 					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
@@ -153,37 +158,31 @@ if ($domains_processed == 1) {
 					$tmp .= "	database[\"switch\"] = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 				}
 				elseif ($db_type == "mysql") {
-					if (strlen($dsn_name) > 0) {
-						$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
-						$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
-					}
-					else {
-						$tmp .= "	database[\"system\"] = \"\";\n";
-						$tmp .= "	database[\"switch\"] = \"\";\n";
-					}
-				}
-
-				$tmp .= "\n";
-				$tmp .= "--additional info\n";
-				$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
-				$tmp .= "	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n";
-				if (isset($_SESSION['domain']['dial_string']['text'])) {
-					$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
+					$tmp .= "	database[\"system\"] = \"\";\n";
+					$tmp .= "	database[\"switch\"] = \"\";\n";
 				}
 				$tmp .= "\n";
-				$tmp .= "--include local.lua\n";
-				$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
-				$tmp .= "	if (file_exists(\"/etc/fusionpbx/local.lua\")) then\n";
-				$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
-				$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
-				$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
-				$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
-				$tmp .= "		dofile(scripts_dir..\"/resources/local.lua\");\n";
-				$tmp .= "	end\n";
-				fwrite($fout, $tmp);
-				unset($tmp);
-				fclose($fout);
 			}
+
+			$tmp .= "--additional info\n";
+			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
+			$tmp .= "	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n";
+			if (isset($_SESSION['domain']['dial_string']['text'])) {
+				$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
+			}
+			$tmp .= "\n";
+			$tmp .= "--include local.lua\n";
+			$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
+			$tmp .= "	if (file_exists(\"/etc/fusionpbx/local.lua\")) then\n";
+			$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
+			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
+			$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
+			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
+			$tmp .= "		dofile(scripts_dir..\"/resources/local.lua\");\n";
+			$tmp .= "	end\n";
+			fwrite($fout, $tmp);
+			unset($tmp);
+			fclose($fout);
 	}
 }
 ?>
