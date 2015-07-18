@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2014
+	Copyright (C) 2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -36,6 +36,7 @@
 			 * define the variables
 			 */
 			public $domain_uuid;
+			public $call_center_queue_uuid;
 			public $dialplan_uuid;
 			public $queue_name;
 			public $queue_description;
@@ -74,10 +75,22 @@
 						if ($prep_statement) {
 							$prep_statement->execute();
 							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-							if (strlen($row['dialplan_uuid']) > 0) {
-								$this->dialplan_uuid = $row['dialplan_uuid'];
+							if (is_array($row)) {
+								//results found
 								$dialplan_name = $row['dialplan_name'];
 								$dialplan_description = $row['dialplan_description'];
+							}
+							else {
+								//no results
+								unset($this->dialplan_uuid);
+								$sql = "update v_call_center_queues ";
+								$sql .= "set dialplan_uuid = null ";
+								$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
+								$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+								//echo $sql."<br />\n";
+								//exit;
+								$this->db->exec($sql);
+								unset($sql);
 							}
 							unset($prep_statement);
 						}
@@ -192,9 +205,22 @@
 				//save the dialplan
 					$orm = new orm;
 					$orm->name('dialplans');
-					$orm->uuid($this->dialplan_uuid);
+					if (strlen($this->dialplan_uuid) > 0) {
+						$orm->uuid($this->dialplan_uuid);
+					}
 					$orm->save($dialplan);
 					$dialplan_response = $orm->message;
+
+				//if new dialplan uuid then update the call center queue
+					if (strlen($this->dialplan_uuid) == 0) {
+						$this->dialplan_uuid = $dialplan_response['uuid'];
+						$sql = "update v_call_center_queues ";
+						$sql .= "set dialplan_uuid = '".$this->dialplan_uuid."' ";
+						$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
+						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+						$this->db->exec($sql);
+						unset($sql);
+					}
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
