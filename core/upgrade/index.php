@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,28 +70,18 @@ if (sizeof($_POST) > 0) {
 		}
 		else {
 			//update scripts folder, if allowed (default)
-				if ($_SESSION['switch']['scripts_update']['boolean'] != 'false' && $_SESSION['switch']['scripts']['dir'] != '') {
-					$scripts_dir_target = $_SESSION['switch']['scripts']['dir'];
-					$scripts_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
-					foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($scripts_dir_source)) as $file_path_source) {
-						if (
-							substr_count($file_path_source, '/..') == 0 &&
-							substr_count($file_path_source, '/.') == 0 &&
-							substr_count($file_path_source, '/.svn') == 0 &&
-							substr_count($file_path_source, '/.git') == 0
-							) {
-							$file_path_target = str_replace($scripts_dir_source, $scripts_dir_target, $file_path_source);
-							if ($file_path_target != $scripts_dir_target.'/resources/config.lua') {
-								//echo $file_path_source.' ---> '.$file_path_target.'<br>';
-								copy($file_path_source, $file_path_target);
-								chmod($file_path_target, 0755);
-							}
-						}
-					}
-					$response_message = $text['message-upgrade_source_scripts'];
+				if ($_SESSION['switch']['scripts']['dir'] != '') {
+					//copy the files and directories from resources/install
+						$install = new install;
+						$install->domain_uuid = $domain_uuid;
+						$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
+						$install->copy_scripts();
+					//set the message
+						$response_message = $text['message-upgrade_source_scripts'];
 				}
 				else {
-					$response_message = $text['message-upgrade_source'];
+					//set the message
+						$response_message = $text['message-upgrade_source'];
 				}
 		}
 	}
