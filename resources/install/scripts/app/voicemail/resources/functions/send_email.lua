@@ -143,26 +143,24 @@
 					body = body:gsub("&nbsp;", " ");
 					body = body:gsub("\n", "");
 					body = body:gsub("\n", "");
-					body = body:gsub("'", "&#39;");
-					body = body:gsub([["]], "&#34;");
 					body = trim(body);
 
 				--send the email
 					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 					if (voicemail_file == "attach") then
-						if (voicemail_local_after_email == "false") then
-							delete = "true";
-						else
-							delete = "false";
-						end
-						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." "..headers.." '"..subject.."' '"..body.."' '"..file.."' "..delete;
+						freeswitch.email("",
+							"",
+							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
+							body,
+							file
+							);
 					else
-						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." "..headers.." '"..subject.."' '"..body.."'";
+						freeswitch.email("",
+							"",
+							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
+							body
+							);
 					end
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
-					end
-					result = api:executeString(cmd);
 			end
 
 		--whether to keep the voicemail message and details local after email
