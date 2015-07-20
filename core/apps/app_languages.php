@@ -9,6 +9,7 @@ $text['title-apps']['pl'] = "Menedżer aplikacji";
 $text['title-apps']['sv-se'] = "App Inställningar";
 $text['title-apps']['uk'] = "Керування додатками";
 $text['title-apps']['de-at'] = "App Verwaltung";
+$text['title-apps']['zh-cn'] = "App 管理员";
 
 $text['title-app-edit']['en-us'] = "App Edit";
 $text['title-app-edit']['es-cl'] = "Editar Aplicaciones";
@@ -19,6 +20,7 @@ $text['title-app-edit']['pl'] = "Edytuj aplikację ";
 $text['title-app-edit']['sv-se'] = "Ändra App";
 $text['title-app-edit']['uk'] = "Редагувати додаток";
 $text['title-app-edit']['de-at'] = "Applikationen Editieren";
+$text['title-app-edit']['zh-cn'] = "App 编辑";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
@@ -29,6 +31,7 @@ $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['uk'] = "Оновлення завершено";
 $text['message-update']['de-at'] = "Aktualisierung durchgeführt";
+$text['message-update']['zh-cn'] = "更新完成";
 
 $text['message-message']['en-us'] = "Message";
 $text['message-message']['es-cl'] = "Mensaje";
