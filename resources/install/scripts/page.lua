@@ -157,7 +157,7 @@ if ( session:ready() ) then
 								--this destination is the caller that initated the page
 							else
 								--originate the call
-								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:" ..conf_name"+"..flags.." inline";
+								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conf_name.."+"..flags.." inline";
 								api:executeString(cmd_string);
 								destination_count = destination_count + 1;
 							end
