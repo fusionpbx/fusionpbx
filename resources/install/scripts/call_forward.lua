@@ -209,6 +209,8 @@
 			if (session:ready() and enabled == "true") then
 				--set forward_all_enabled
 					forward_all_enabled = "true";
+				--say the destination number
+					session:say(forward_all_destination, default_language, "number", "iterated");
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 			end
