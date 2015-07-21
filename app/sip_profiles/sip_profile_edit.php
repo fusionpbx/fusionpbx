@@ -161,6 +161,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//redirect the browser
 				$_SESSION["message"] = $text['message-update'];
 				header("Location: sip_profiles.php");
+
+				//save the sip profile xml
+				save_sip_profile_xml();
+				//apply settings reminder
+				$_SESSION["reload_xml"] = true;
+
 				return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

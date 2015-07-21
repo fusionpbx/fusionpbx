@@ -1038,8 +1038,9 @@ function number_pad($number,$n) {
 				if ($file != '.' && $file != '..') {
 					$newpath = $dir.'/'.$file;
 					$level = explode('/',$newpath);
-					if (substr($newpath, -4) == ".svn") {
-						//ignore .svn dir and subdir
+					if (substr($newpath, -4) == ".svn" ||
+						substr($newpath, -4) == ".git") {
+						//ignore .svn and .git dir and subdir
 					}
 					else {
 						if (is_dir($newpath)) { //directories

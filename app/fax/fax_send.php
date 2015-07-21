@@ -29,6 +29,8 @@
 
 if (!isset($included)) { $included = false; }
 
+if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
+
 if (!$included) {
 
 	include "root.php";
@@ -95,6 +97,22 @@ if (!$included) {
 	//set the fax directory
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 
+}
+
+function correct_path($p) {
+	global $IS_WINDOWS;
+	if ($IS_WINDOWS) {
+		return str_replace('/', '\\', $p);
+	}
+	return $p;
+}
+
+function gs_cmd($args) {
+	global $IS_WINDOWS;
+	if ($IS_WINDOWS) {
+		return 'gswin32c '.$args;
+	}
+	return 'gs '.$args;
 }
 
 //get the fax extension
@@ -260,11 +278,17 @@ if (!$included) {
 				//convert uploaded pdf to tif
 				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
 					chdir($dir_fax_temp);
-					exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit"); //convert pdf to tif
+
+					//convert pdf to tif
+					$cmd = gs_cmd("-q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
+					// echo($cmd . "<br/>\n");
+					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
 				}
 
-				$tif_page_count = exec("tiffinfo ".$dir_fax_temp.'/'.$fax_name.".tif | grep \"Page Number\" | grep -c \"P\"");
+				$cmd = "tiffinfo ".correct_path($dir_fax_temp.'/'.$fax_name).".tif | grep \"Page Number\" | grep -c \"P\"";
+				// echo($cmd . "<br/>\n");
+				$tif_page_count = exec($cmd);
 				if ($tif_page_count != '') {
 					$fax_page_count += $tif_page_count;
 				}
@@ -433,7 +457,9 @@ if (!$included) {
 			//convert pdf to tif, add to array of pages, delete pdf
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf')) {
 				chdir($dir_fax_temp);
-				exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid."_cover.tif -- ".$fax_instance_uuid."_cover.pdf -c quit");
+				$cmd = gs_cmd("-q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
+				// echo($cmd . "<br/>\n");
+				exec($cmd);
 				if (is_array($tif_files) && sizeof($tif_files) > 0) {
 					array_unshift($tif_files, $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.tif');
 				}
@@ -448,19 +474,46 @@ if (!$included) {
 		if (is_array($tif_files) && sizeof($tif_files) > 0) {
 			$cmd = "tiffcp -c none ";
 			foreach ($tif_files as $tif_file) {
-				$cmd .= $tif_file.' ';
+				$cmd .= correct_path($tif_file) . ' ';
 			}
-			$cmd .= $dir_fax_temp.'/'.$fax_instance_uuid.'.tif';
+			$cmd .= correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+			//echo($cmd . "<br/>\n");
 			exec($cmd);
+
 			foreach ($tif_files as $tif_file) {
 				@unlink($tif_file);
 			}
+
 			//generate pdf (a work around, as tiff2pdf was improperly inverting the colors)
-			exec("tiff2pdf -u i -p ".$fax_page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif");
+			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
+				' -w '.$page_width.
+				' -l '.$page_height.
+				' -f -o '.
+				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
+				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+			// echo($cmd . "<br/>\n");
+			exec($cmd);
+
 			chdir($dir_fax_temp);
-			exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid."_temp.tif -- ".$fax_instance_uuid.".pdf -c quit"); //convert pdf to tif
+
+			//convert pdf to tif
+			$cmd = gs_cmd('-q -sDEVICE=tiffg3 -r'.$gs_r.' -g'.$gs_g.' -dNOPAUSE -sOutputFile='.
+				correct_path($fax_instance_uuid.'_temp.tif').
+				' -- '.$fax_instance_uuid.'.pdf -c quit');
+			// echo($cmd . "<br/>\n");
+			exec($cmd);
+
 			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
-			exec("tiff2pdf -u i -p ".$fax_page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
+
+			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
+				' -w '.$page_width.
+				' -l '.$page_height.
+				' -f -o '.
+				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
+				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'_temp.tif');
+			// echo($cmd . "<br/>\n");
+			exec($cmd);
+
 			@unlink($dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
 		}
 		else {
@@ -568,9 +621,12 @@ if (!$included) {
 		sleep(5);
 
 		//move the generated tif (and pdf) files to the sent directory
-		exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
+			copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		}
+
 		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
-			exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
+			copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
 
 		if (!$included) {

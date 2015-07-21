@@ -272,6 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//update the call center queue
 				$sql = "update v_call_center_queues set ";
 				$sql .= "queue_name = '$queue_name', ";
+				$sql .= "dialplan_uuid = '$dialplan_uuid', ";
 				$sql .= "queue_extension = '$queue_extension', ";
 				$sql .= "queue_strategy = '$queue_strategy', ";
 				$sql .= "queue_moh_sound = '$queue_moh_sound', ";
@@ -314,7 +315,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$c = new call_center;
 				$c->db = $db;
 				$c->domain_uuid = $_SESSION['domain_uuid'];
+				$c->call_center_queue_uuid = $call_center_queue_uuid;
 				$c->dialplan_uuid = $dialplan_uuid;
+				$c->queue_name = $queue_name;
 				$c->queue_name = $queue_name;
 				$c->queue_cid_prefix = $queue_cid_prefix;
 				$c->queue_timeout_action = $queue_timeout_action;
@@ -329,7 +332,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$cache = new cache;
 				$cache->delete("memcache delete dialplan:".$_SESSION["context"]);
 
-			$_SESSION["message"] = $text['message-update'];
+			//set the update message
+				$_SESSION["message"] = $text['message-update'];
 		} //if ($action == "update")
 
 	//add agent/tier to queue

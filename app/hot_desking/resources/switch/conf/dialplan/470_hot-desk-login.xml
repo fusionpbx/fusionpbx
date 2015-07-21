@@ -1,8 +1,0 @@
-<context name="{v_context}">
-	<extension name="hot-desk-login" number="*072" continue="false" app_uuid="89aec992-e3bb-43a1-a64b-ca70800e30fd" enabled="false">
-		<condition field="destination_number" expression="^\*072$" >
-			<action application="set" data="direction=in" />
-			<action application="lua" data="dial_string.lua" />
-		</condition>
-	</extension>
-</context>

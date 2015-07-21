@@ -24,14 +24,31 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set all lines to enabled (true) where null or empty string
+
 if ($domains_processed == 1) {
-	$sql = "update v_device_lines set ";
-	$sql .= "enabled = 'true' ";
-	$sql .= "where enabled is null ";
-	$sql .= "or enabled = '' ";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	//set all lines to enabled (true) where null or empty string
+		$sql = "update v_device_lines set ";
+		$sql .= "enabled = 'true' ";
+		$sql .= "where enabled is null ";
+		$sql .= "or enabled = '' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+	//set the device key vendor
+		$sql = "select * from v_device_keys as k, v_devices as d ";
+		$sql .= "where d.device_uuid = k.device_uuid  ";
+		$sql .= "and k.device_uuid is not null ";
+		$sql .= "and k.device_key_vendor is null ";
+		$s = $db->prepare($sql);
+		$s->execute();
+		$device_keys = $s->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($device_keys as &$row) {
+			$sql = "update v_device_keys ";
+			$sql .= "set device_key_vendor = '".$row["device_vendor"]."' ";
+			$sql .= "where device_key_uuid = '".$row["device_key_uuid"]."';\n ";
+			$db->exec(check_sql($sql));
+		}
+		unset($device_keys, $sql);
 }
 
 ?>

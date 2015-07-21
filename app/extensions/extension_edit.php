@@ -474,9 +474,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$extension_uuid', ";
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
-							if (permission_exists('extension_password')) {
-								$sql .= "'$password', ";
-							}
+							$sql .= "'$password', ";
 							if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 								$sql .= "'$accountcode', ";
 							}
