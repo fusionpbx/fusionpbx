@@ -1,8 +1,0 @@
-<context name="{v_context}">
-	<extension name="hot-desk-logout" number="*073" continue="false" app_uuid="97e920d9-dddc-458f-bae0-837a48c3f401" enabled="false">
-		<condition field="destination_number" expression="^\*073$" >
-			<action application="set" data="direction=out" />
-			<action application="lua" data="dial_string.lua" />
-		</condition>
-	</extension>
-</context>

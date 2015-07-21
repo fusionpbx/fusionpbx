@@ -562,7 +562,7 @@ require_once "resources/header.php";
 		$time_condition_vars["week"] = $text['label-week-of-year'];
 		$time_condition_vars["mweek"] = $text['label-week-of-month'];
 		$time_condition_vars["hour"] = $text['label-hour-of-day'];
-		$time_condition_vars["minute"] = $text['label-minute-of-hour'];
+		//$time_condition_vars["minute"] = $text['label-minute-of-hour'];
 		//$time_condition_vars["minute-of-day"] = $text['label-minute-of-day'];
 		$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
 		$time_condition_vars["date-time"] = $text['label-date-and-time'];
@@ -682,13 +682,6 @@ require_once "resources/header.php";
 						for (h = 0; h <= 23; h++) {
 							sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
 							sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
-						}
-						break;
-
-					case 'minute': //minutes of hour
-						for (m = 0; m <= 59; m++) {
-							sel_start.options[sel_start.options.length] = new Option(pad(m, 2), m); //pad function defined below
-							sel_stop.options[sel_stop.options.length] = new Option(pad(m, 2), m);
 						}
 						break;
 

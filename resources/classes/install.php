@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2014
+	Copyright (C) 2010-2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -35,16 +35,18 @@ include "root.php";
 		var $switch_scripts_dir;
 		var $switch_sounds_dir;
 
-		//$option '-n' --no-clobber
-		public function recursive_copy($src, $dst, $option = '') {
+		//$options '-n' --no-clobber
+		public function recursive_copy($src, $dst, $options = '') {
 			if (file_exists('/bin/cp')) {
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
 					//copy -R recursive, preserve attributes for SUN
-					exec ('cp -Rp '.$src.'/* '.$dst);
+					$cmd = 'cp -Rp '.$src.'/* '.$dst;
 				} else {
 					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-					exec ('cp -RLp '.$option.' '.$src.'/* '.$dst);
+					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
 				}
+				exec ($cmd);
+				//echo $cmd."\n";
 			}
 			else {
 				$dir = opendir($src);
@@ -58,6 +60,23 @@ include "root.php";
 						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 					}
 				}
+				$scripts_dir_target = $_SESSION['switch']['scripts']['dir'];
+				$scripts_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
+				foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($src)) as $file_path_source) {
+					if (
+					substr_count($file_path_source, '/..') == 0 &&
+					substr_count($file_path_source, '/.') == 0 &&
+					substr_count($file_path_source, '/.svn') == 0 &&
+					substr_count($file_path_source, '/.git') == 0
+					) {
+						if ($dst != $src.'/resources/config.lua') {
+							//echo $file_path_source.' ---> '.$dst.'<br>';
+							copy($file_path_source, $dst);
+							chmod($dst, 0755);
+						}
+					}
+				}
+
 				while(false !== ($file = readdir($dir))) {
 					if (($file != '.') && ($file != '..')) {
 						if (is_dir($src.'/'.$file)) {
@@ -65,7 +84,7 @@ include "root.php";
 						}
 						else {
 							//copy only missing files -n --no-clobber
-								if ($option == '-n') {
+								if (strpos($options,'-n') !== false) {
 									if (!file_exists($dst.'/'.$file)) {
 										copy($src.'/'.$file, $dst.'/'.$file);
 										//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
@@ -126,12 +145,10 @@ include "root.php";
 						}
 					}
 				//copy resources/templates/conf to the freeswitch conf dir
-				// added /examples/ into the string
 					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
 						$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						
 						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 					}
 					$dst_dir = $this->switch_conf_dir;
@@ -152,7 +169,7 @@ include "root.php";
 				}
 				$dst_dir = $this->switch_scripts_dir;
 				if (is_readable($this->switch_scripts_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir, "-n");
+					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
 					unset($src_dir, $dst_dir);
 				}
 				chmod($dst_dir, 0774);

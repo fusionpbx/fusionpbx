@@ -254,7 +254,7 @@
 								else
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. extension .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
@@ -360,10 +360,10 @@
 								table.insert(xml, [[							<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
 							end
 							table.insert(xml, [[								<param name="dial-string" value="]] .. dial_string .. [["/>]]);
-							table.insert(xml, [[                                                            <param name="verto-context" value="]] .. user_context .. [["/>]]);
-							table.insert(xml, [[                                                            <param name="verto-dialplan" value="XML"/>]]);
-							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-methods" value="verto"/>]]);
-							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[								<param name="verto-context" value="]] .. user_context .. [["/>]]);
+							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
+							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
 							table.insert(xml, [[							</params>]]);
 							table.insert(xml, [[							<variables>]]);
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);

@@ -371,12 +371,18 @@ require_once "resources/require.php";
 			echo "	</select>\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' align='left'>\n";
+			echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
+			if (strlen($row['device_key_vendor']) > 0) {
+				$device_key_vendor = $row['device_key_vendor'];
+			}
+			else {
+				$device_key_vendor = $device_vendor;
+			}
 			?>
-
+			<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
 			<?php $selected = "selected='selected'"; ?>
 			<?php $found = false; ?>
-			<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
+			<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();">
 			<option value=''></option>
 			<?php
 			if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0) {

@@ -316,7 +316,6 @@ include "root.php";
 									$prep_statement_4->execute();
 									$row = $prep_statement_4->fetch();
 									$device_label = $row["device_label"];
-									$device_vendor = strtolower($row["device_vendor"]);
 									$device_firmware_version = $row["device_firmware_version"];
 									$device_provision_enable = $row["device_provision_enable"];
 									//keep the original template
@@ -466,7 +465,7 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
-							//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
+							$sql .= "AND (device_key_vendor = '".$device_vendor."' or device_key_vendor is null) ";
 							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
@@ -793,8 +792,9 @@ include "root.php";
 								if ($file != "." AND $file != ".."){
 									$new_path = $dir.'/'.$file;
 									$level = explode('/',$new_path);
-									if (substr($new_path, -4) == ".svn") {
-										//ignore .svn dir and subdir
+									if (substr($new_path, -4) == ".svn" ||
+										substr($new_path, -4) == ".git") {
+										//ignore .svn and .git dir and subdir
 									}
 									elseif (substr($new_path, -3) == ".db") {
 										//ignore .db files

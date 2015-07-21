@@ -236,6 +236,7 @@ else {
 				}
 			}
 			unset($prep_statement, $result);
+
 		//limit the number of results
 			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
 				$num_rows = $_SESSION['cdr']['limit']['numeric'];
@@ -268,11 +269,9 @@ else {
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "accountcode, ";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
-		$sql .= "accountcode, ";
 		$sql .= "call_sell, ";
-		$sql .= "xml, ";
-		$sql .= "json, ";
 	}
 	if (permission_exists("xml_cdr_pdd")) {
 		$sql .= "pdd_ms, ";

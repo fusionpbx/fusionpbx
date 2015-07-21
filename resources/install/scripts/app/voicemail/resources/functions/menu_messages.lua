@@ -49,6 +49,7 @@
 					elseif (message_status == "saved") then
 						sql = sql .. [[AND message_status = 'saved' ]];
 					end
+					sql = sql .. [[ORDER BY created_epoch desc;]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 					end
