@@ -77,100 +77,115 @@ else {
 		$dialplan_description = check_str($_POST["dialplan_description"]);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-
-	$msg = '';
-	if ($action == "update") {
-		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+//get the list of applications
+	if (count($_SESSION['switch']['applications']) == 0) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$result = event_socket_request($fp, 'api show application');
+			$_SESSION['switch']['applications'] = explode("\n\n", $result);
+			$_SESSION['switch']['applications'] = explode("\n", $_SESSION['switch']['applications'][0]);
+			unset($result);
+			unset($fp);
+		} else {
+			$_SESSION['switch']['applications'] = Array();
+		}
 	}
 
-	//check for all required data
-		if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
-		if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
-		if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
+//process and save the data
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		$msg = '';
+		if ($action == "update") {
+			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		}
 
-	//remove the invalid characters from the dialplan name
-		$dialplan_name = $_POST["dialplan_name"];
-		$dialplan_name = str_replace(" ", "_", $dialplan_name);
-		$dialplan_name = str_replace("/", "", $dialplan_name);
-
-	//build the array
-		if (strlen($row["dialplan_uuid"]) > 0) {
-			$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
-		}
-		if (isset($_POST["domain_uuid"])) {
-			$array['domain_uuid'] = $_POST['domain_uuid'];
-		}
-		else {
-			$array['domain_uuid'] = $_SESSION['domain_uuid'];
-		}
-		$array['dialplan_name'] = $dialplan_name;
-		$array['dialplan_number'] = $_POST["dialplan_number"];
-		$array['dialplan_context'] = $_POST["dialplan_context"];
-		$array['dialplan_continue'] = $_POST["dialplan_continue"];
-		$array['dialplan_order'] = $_POST["dialplan_order"];
-		$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
-		$array['dialplan_description'] = $_POST["dialplan_description"];
-		$x = 0;
-		foreach ($_POST["dialplan_details"] as $row) {
-			if (strlen($row["dialplan_detail_tag"]) > 0) {
-				if (strlen($row["dialplan_detail_uuid"]) > 0) {
-					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
-				}
-				$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
-				$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-				$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-				$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-				$array['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
-				$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-				$array['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
-				$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+		//check for all required data
+			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
+			if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
+			if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
 			}
-			$x++;
-		}
 
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			$orm = new orm;
-			$orm->name('dialplans');
-			$orm->uuid($dialplan_uuid);
-			$orm->save($array);
-			//$message = $orm->message;
-		}
+		//remove the invalid characters from the dialplan name
+			$dialplan_name = $_POST["dialplan_name"];
+			$dialplan_name = str_replace(" ", "_", $dialplan_name);
+			$dialplan_name = str_replace("/", "", $dialplan_name);
 
-	//clear the cache
-		$cache = new cache;
-		$cache->delete("dialplan:".$dialplan_context);
+		//build the array
+			if (strlen($row["dialplan_uuid"]) > 0) {
+				$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			}
+			if (isset($_POST["domain_uuid"])) {
+				$array['domain_uuid'] = $_POST['domain_uuid'];
+			}
+			else {
+				$array['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
+			$array['dialplan_name'] = $dialplan_name;
+			$array['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplan_context'] = $_POST["dialplan_context"];
+			$array['dialplan_continue'] = $_POST["dialplan_continue"];
+			$array['dialplan_order'] = $_POST["dialplan_order"];
+			$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplan_description'] = $_POST["dialplan_description"];
+			$x = 0;
+			foreach ($_POST["dialplan_details"] as $row) {
+				if (strlen($row["dialplan_detail_tag"]) > 0) {
+					if (strlen($row["dialplan_detail_uuid"]) > 0) {
+						$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+					}
+					$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
+					$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+					$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+					$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+					$array['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
+					$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+					$array['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
+					$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+				}
+				$x++;
+			}
 
-	//synchronize the xml config
-		save_dialplan_xml();
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				$orm = new orm;
+				$orm->name('dialplans');
+				$orm->uuid($dialplan_uuid);
+				$orm->save($array);
+				//$message = $orm->message;
+			}
 
-	//set the message
-		if ($action == "add") {
-			$_SESSION['message'] = $text['message-add'];
-		}
-		else if ($action == "update") {
-			$_SESSION['message'] = $text['message-update'];
-		}
-		header("Location: ?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
-		exit;
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$dialplan_context);
 
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		//synchronize the xml config
+			save_dialplan_xml();
+
+		//set the message
+			if ($action == "add") {
+				$_SESSION['message'] = $text['message-add'];
+			}
+			else if ($action == "update") {
+				$_SESSION['message'] = $text['message-update'];
+			}
+			header("Location: ?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
+			exit;
+
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -508,18 +523,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//display the results
 			if ($result_count > 0) {
 
-				//get the list of applications
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$result = event_socket_request($fp, 'api show application');
-						$installed_app = explode("\n\n", $result);
-						$installed_app = explode("\n", $installed_app[0]);
-						unset($result);
-						unset($fp);
-					} else {
-						$installed_app = Array();
-					}
-
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px;'>\n";
 
 				$x = 0;
@@ -641,7 +644,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							//}
 							//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 								echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
-								foreach ($installed_app as $row) {
+								foreach ($_SESSION['switch']['applications'] as $row) {
 									if (strlen($row) > 0) {
 										$application = explode(",", $row);
 										if ($application[0] != "name" && stristr($application[0], "[") != true) {
@@ -772,7 +775,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</table>";
 
 			} //end if results
-
 
 	} //end if update
 
