@@ -300,6 +300,14 @@
 						delimiter = ":_:";
 					end
 
+				--leg delay settings
+					if (ring_group_strategy == "enterprise") then
+						delay_name = "originate_delay_start";
+						destination_delay = destination_delay * 1000;
+					else
+						delay_name = "leg_delay_start";
+					end
+
 				--create a new uuid and add it to the uuid list
 					new_uuid = api:executeString("create_uuid");
 					if (string.len(uuids) == 0) then
@@ -370,24 +378,24 @@
 								reply = trim(api:executeString(cmd));
 								--freeswitch.consoleLog("notice", "[ring group] reply "..cmd.." " .. reply .. "\n");
 								if (reply == "0 total.") then
-									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 								else
 									if (string.find(reply, domain_name)) then
 										--active call
 									else
-										dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+										dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 									end
 								end
 							else
 								--look inside the reply to check for the correct domain_name
-									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 							end
 						else
-							dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+							dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 						end
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
-						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]" .. row.destination_number;
+						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
 						--external number
 						y = 0;
@@ -417,7 +425,7 @@
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
 										if (y == 0) then
-											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",ignore_early_media=true,";
+											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",ignore_early_media=true,";
 										end
 										if (r.dialplan_detail_type == "set") then
 											--session:execute("eval", dialplan_detail_data);
