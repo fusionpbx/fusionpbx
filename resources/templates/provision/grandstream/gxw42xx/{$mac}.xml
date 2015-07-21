@@ -1190,7 +1190,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P747>{#server_address_2}</P747>
+<P747>{$server_address_2}</P747>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->

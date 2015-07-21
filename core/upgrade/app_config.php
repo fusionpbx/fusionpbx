@@ -20,7 +20,7 @@
 
 	//permission details
 		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = "upgrade_svn";
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_source";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "71051909-81ff-4301-9997-52b11206b3a6";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;

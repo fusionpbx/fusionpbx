@@ -31,13 +31,11 @@
 
 			--Please enter your id followed by
 				if (name == "voicemail_id") then
-					table.insert(actions, {app="streamFile",data="voicemail/vm-enter_id.wav"});
-					table.insert(actions, {app="streamFile",data="digits/pound.wav"});
+					table.insert(actions, {app="streamFile",data="phrase:voicemail_enter_id:#"});
 				end
 			 --Please enter your id followed by
 				if (name == "voicemail_password") then
-					table.insert(actions, {app="streamFile",data="voicemail/vm-enter_pass.wav"});
-					table.insert(actions, {app="streamFile",data="digits/pound.wav"});
+					table.insert(actions, {app="streamFile",data="phrase:voicemail_enter_pass:#"});
 				end
 			--the person at extension 101 is not available record your message at the tone press any key or stop talking to end the recording
 				if (name == "person_not_available_record_message") then
@@ -74,25 +72,11 @@
 				end
 			--You have zero new messages
 				if (name == "new_messages") then
-					table.insert(actions, {app="streamFile",data="voicemail/vm-you_have.wav"});
-					table.insert(actions, {app="say.number.pronounced",data=param});
-					table.insert(actions, {app="streamFile",data="voicemail/vm-new.wav"});
-					if (param == "1") then
-						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
-					else
-						table.insert(actions, {app="streamFile",data="voicemail/vm-messages.wav"});
-					end
+					table.insert(actions, {app="streamFile",data="phrase:voicemail_message_count:" .. param .. ":new"})
 				end
 			--You have zero saved messages
 				if (name == "saved_messages") then
-					table.insert(actions, {app="streamFile",data="voicemail/vm-you_have.wav"});
-					table.insert(actions, {app="say.number.pronounced",data=param});
-					table.insert(actions, {app="streamFile",data="voicemail/vm-saved.wav"});
-					if (param == "1") then
-						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
-					else
-						table.insert(actions, {app="streamFile",data="voicemail/vm-messages.wav"});
-					end
+					table.insert(actions, {app="streamFile",data="phrase:voicemail_message_count:" .. param .. ":saved"})
 				end
 			--To listen to new messages press 1
 				if (name == "listen_to_new_messages") then
@@ -276,11 +260,15 @@
 						timeout = 100;
 					--loop through the action and data
 						for key, row in pairs(actions) do
-							--freeswitch.consoleLog("notice", "[voicemail] app: " .. row.app .. " data: " .. row.data .. "\n");
+							-- freeswitch.consoleLog("notice", "[voicemail] app: " .. row.app .. " data: " .. row.data .. "\n");
 							if (session:ready()) then
 								if (string.len(dtmf_digits) == 0) then
 									if (row.app == "streamFile") then
-										session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+										if string.find(row.data, ':', nil, true) then
+											session:streamFile(row.data);
+										else
+											session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+										end
 									elseif (row.app == "playback") then
 										session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
 									elseif (row.app == "tone_stream") then

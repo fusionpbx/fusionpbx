@@ -61,13 +61,13 @@
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] == 0) {
 					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					else {
-						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					$db->beginTransaction();
 					$xml_files = glob($sip_profile_dir);
