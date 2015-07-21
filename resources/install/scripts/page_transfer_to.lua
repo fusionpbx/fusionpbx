@@ -1,6 +1,8 @@
 local api = freeswitch.API()
 local uuid = argv[1]
 
+assert(uuid and #uuid > 0, "No A-Leg uuid provided")
+
 freeswitch.consoleLog("NOTICE", "[page_enter_to] session " .. tostring(uuid) .. "\n");
 
 local other_leg_uuid = api:executeString("uuid_getvar "..uuid.." signal_bond")
