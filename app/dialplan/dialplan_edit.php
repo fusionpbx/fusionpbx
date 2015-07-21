@@ -508,6 +508,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//display the results
 			if ($result_count > 0) {
 
+				//get the list of applications
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$result = event_socket_request($fp, 'api show application');
+						$installed_app = explode("\n\n", $result);
+						$installed_app = explode("\n", $installed_app[0]);
+						unset($result);
+						unset($fp);
+					} else {
+						$installed_app = Array();
+					}
+
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px;'>\n";
 
 				$x = 0;
@@ -629,12 +641,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							//}
 							//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 								echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
-								//get the list of applications
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-								$result = event_socket_request($fp, 'api show application');
-								$tmp = explode("\n\n", $result);
-								$tmp = explode("\n", $tmp[0]);
-								foreach ($tmp as $row) {
+								foreach ($installed_app as $row) {
 									if (strlen($row) > 0) {
 										$application = explode(",", $row);
 										if ($application[0] != "name" && stristr($application[0], "[") != true) {
