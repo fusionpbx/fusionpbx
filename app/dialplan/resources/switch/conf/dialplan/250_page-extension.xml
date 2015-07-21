@@ -1,11 +1,55 @@
 <context name="{v_context}">
 	<extension name="page-extension" number="*8[ext]" continue="false" app_uuid="1b224444-de8b-448d-b2d1-19feaac3effa">
-		<condition field="destination_number" expression="^\*8(\d{2,7})$">
+		<condition field="destination_number" expression="^\*8(\d{2,7})$" break="on-true">
 			<action application="set" data="extension_list=$1"/>
+			<action application="set" data="page_extension=page-*8$1%${domain_name}" inline="true"/>
+			<action application="set" data="page_allow_access=true"/>
 			<action application="set" data="pin_number={v_pin_number}"/>
 			<action application="set" data="mute=true"/>
-			<action application="set" data="moderator=false" />
+			<action application="set" data="moderator=false"/>
+			<action application="bind_digit_action" data="page,*#,exec:execute_extension,page_add_begin XML ${domain_name}"/>
+			<action application="digit_action_set_realm" data="page"/>
 			<action application="lua" data="page.lua"/>
+		</condition>
+		<condition field="destination_number" expression="^page_add_begin$" break="on-true">
+			<action application="set" data="api_result=${conference(${page_extension} unmute ${conference_member_id} quiet)}"/>
+			<action application="bind_digit_action" data="page-xfer,*0,api:lua,page_transfer_to.lua ${uuid}"/>
+			<action application="bind_digit_action" data="page-xfer,*#,api:lua,unbridge.lua ${uuid}"/>
+			<action application="bind_digit_action" data="none,NONE,api:sleep,1"/>
+			<action application="set" data="continue_on_fail=true"/>
+			<action application="execute_extension" data="page_enter_number"/>
+		</condition>
+		<condition field="destination_number" expression="^page_add_end$" break="on-true">
+			<action application="digit_action_set_realm" data="page"/>
+			<action application="set" data="api_result=${conference(${page_extension} mute ${conference_member_id})}"/>
+		</condition>
+		<condition field="destination_number" expression="^page_enter_number$" break="on-true">
+			<action application="digit_action_set_realm" data="none"/>
+			<action application="read" data="2 11 'tone_stream://%(10000,0,350,440)' target_num 30000 #"/>
+			<action application="execute_extension" data="page_bridge_${target_num}"/>
+		</condition>
+		<condition field="destination_number" expression="^page_bridge_$" break="on-true">
+			<action application="execute_extension" data="page_add_end"/>
+		</condition>
+		<condition field="destination_number" expression="^page_bridge_\*$" break="on-true">
+			<action application="execute_extension" data="page_add_end"/>
+		</condition>
+		<condition field="destination_number" expression="^page_bridge_(\d{2,7})$" break="on-true">
+			<action application="digit_action_set_realm" data="page-xfer"/>
+			<action application="bridge" data="{page_allow_access=true,page_extension=${page_extension}}user/$1@${domain_name}"/>
+			<action application="execute_extension" data="page_enter_number"/>
+		</condition>
+		<condition field="destination_number" expression="^page_bridge_" break="on-true">
+			<action application="playback" data="voicemail/vm-that_was_an_invalid_ext.wav"/>
+			<action application="execute_extension" data="page_enter_number"/>
+		</condition>
+		<condition field="${page_allow_access}" expression="^true$" break="on-false"/>
+		<condition field="destination_number" expression="^page_enter_to$" break="on-true">
+			<action application="unbind_meta_app" data=""/>
+			<action application="bind_digit_action" data="page,*#,exec:execute_extension,page_add_begin XML ${domain_name}"/>
+			<action application="digit_action_set_realm" data="page"/>
+			<action application="answer" data=""/>
+			<action application="conference" data="${page_extension}@page"/>
 		</condition>
 	</extension>
 </context>
