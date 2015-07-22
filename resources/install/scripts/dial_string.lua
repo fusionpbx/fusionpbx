@@ -34,9 +34,7 @@
 	db_extension_uuid = "";
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");

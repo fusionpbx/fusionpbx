@@ -32,9 +32,7 @@
 	debug["sql"] = false;
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --general functions
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
