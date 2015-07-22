@@ -52,6 +52,9 @@
 		--get the default settings
 			sql = "SELECT * FROM v_default_settings ";
 			sql = sql .. "WHERE default_setting_enabled = 'true' ";
+			sql = sql .. "AND default_setting_category is not null ";
+			sql = sql .. "AND default_setting_subcategory is not null ";
+			sql = sql .. "AND default_setting_name is not null ";
 			sql = sql .. "AND default_setting_value is not null ";
 			sql = sql .. "ORDER BY default_setting_category, default_setting_subcategory ASC";
 			if (debug["sql"]) then
@@ -68,14 +71,19 @@
 					value = row.default_setting_value;
 
 				--add the category array
-					if (previous_category ~= category) then
+					if (array[category] == nil) then
 						array[category] = {}
 					end
 
 				--add the subcategory array
-					if (previous_subcategory ~= subcategory) then
+					if (array[category][subcategory] == nil) then
 						array[category][subcategory] = {}
 						x = 1;
+					end
+
+				--add the subcategory array
+					if (array[category][subcategory][name] == nil) then
+						array[category][subcategory][name] = {}
 					end
 
 				--set the name and value
@@ -83,7 +91,9 @@
 						array[category][subcategory][x] = {}
 						array[category][subcategory][x] = value;
 					else
-						array[category][subcategory][name] = value;
+						if (value ~= nil) then
+							array[category][subcategory][name] = value;
+						end
 					end
 
 				--set the previous category
@@ -101,6 +111,9 @@
 				sql = "SELECT * FROM v_domain_settings ";
 				sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
 				sql = sql .. "AND domain_setting_enabled = 'true' ";
+				sql = sql .. "AND domain_setting_category is not null ";
+				sql = sql .. "AND domain_setting_subcategory is not null ";
+				sql = sql .. "AND domain_setting_name is not null ";
 				sql = sql .. "AND domain_setting_value is not null ";
 				sql = sql .. "ORDER BY domain_setting_category, domain_setting_subcategory ASC ";
 				if (debug["sql"]) then
@@ -115,14 +128,19 @@
 						value = row.domain_setting_value;
 					
 					--add the category array
-						array[category] = {}
-
-					--add the subcategory array
-						array[category][subcategory] = {}
+						if (array[category] == nil) then
+							array[category] = {}
+						end
 	
 					--add the subcategory array
-						if (previous_subcategory ~= subcategory) then
+						if (array[category][subcategory] == nil) then
+							array[category][subcategory] = {}
 							x = 1;
+						end
+	
+					--add the subcategory array
+						if (array[category][subcategory][name] == nil) then
+							array[category][subcategory][name] = {}
 						end
 
 					--set the name and value
@@ -130,7 +148,9 @@
 							array[category][subcategory][x] = {}
 							array[category][subcategory][x] = value;
 						else
-							array[category][subcategory][name] = value;
+							if (value ~= nil) then
+								array[category][subcategory][name] = value;
+							end
 						end
 
 					--set the previous category
@@ -147,5 +167,6 @@
 	end
 
 --example use
-	--result = array['email']['smtp_host']['var'];
+	--array = settings(domain_uuid);
+	--result = array['domain']['template']['name'];
 	--freeswitch.consoleLog("notice", result .. "\n");
