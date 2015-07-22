@@ -23,7 +23,7 @@
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	require "resources.functions.config";
 
 --set variables
 	max_tries = "3";
