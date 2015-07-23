@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -236,8 +236,8 @@ if ($db_type == "pgsql") {
 	if (strlen($_SESSION["domain_uuid"]) == 0) {
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-		//natural sort domains into array
-			$sql = "select domain_name from v_domains";
+		//get the domains from the database
+			$sql = "select * from v_domains";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -246,21 +246,21 @@ if ($db_type == "pgsql") {
 					$domain_names[] = $row['domain_name'];
 				}
 			}
-			unset($result, $prep_statement);
+			unset($prep_statement);
+		//put the domains in natural order
 			natsort($domain_names);
-		//get the domains in the natural sort order
-			$n = 1;
-			$sql = "select * from v_domains order by case ";
+		//build the domains array in the correct order
 			foreach ($domain_names as $dn) {
-				$sql .= "when domain_name = '".$dn."' then ".$n." ";
-				$n++;
+				foreach ($result as $row) {
+					if ($row['domain_name'] == $dn) {
+						$domains[] = $row;
+					}
+				}
 			}
-			$sql .= "else ".$n." end ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				if (count($result) == 1) {
+			unset($result);
+
+			foreach($domains as $row) {
+				if (count($domains) == 1) {
 					$_SESSION["domain_uuid"] = $row["domain_uuid"];
 					$_SESSION["domain_name"] = $row['domain_name'];
 				}
@@ -274,7 +274,7 @@ if ($db_type == "pgsql") {
 				$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
 				$_SESSION['domains'][$row['domain_uuid']]['domain_description'] = $row['domain_description'];
 			}
-			unset($result, $prep_statement);
+			unset($domains, $prep_statement);
 	}
 
 //get the software name
