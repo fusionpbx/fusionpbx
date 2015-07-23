@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -57,9 +57,6 @@ else {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
-						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_description'] = $row['domain_description'];
 					}
 				}
 				unset($result, $prep_statement);
