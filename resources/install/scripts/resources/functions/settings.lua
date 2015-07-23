@@ -131,13 +131,13 @@
 						if (array[category] == nil) then
 							array[category] = {}
 						end
-	
+
 					--add the subcategory array
 						if (array[category][subcategory] == nil) then
 							array[category][subcategory] = {}
 							x = 1;
 						end
-	
+
 					--add the subcategory array
 						if (array[category][subcategory][name] == nil) then
 							array[category][subcategory][name] = {}
