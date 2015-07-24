@@ -706,7 +706,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "</form>";
 
-	if ($action == "update") {
+	if (permission_exists('domain_setting_edit') && $action == "update") {
 		require "domain_settings.php";
 	}
 
