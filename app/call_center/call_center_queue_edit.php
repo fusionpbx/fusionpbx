@@ -272,7 +272,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//update the call center queue
 				$sql = "update v_call_center_queues set ";
 				$sql .= "queue_name = '$queue_name', ";
-				$sql .= "dialplan_uuid = '$dialplan_uuid', ";
 				$sql .= "queue_extension = '$queue_extension', ";
 				$sql .= "queue_strategy = '$queue_strategy', ";
 				$sql .= "queue_moh_sound = '$queue_moh_sound', ";
