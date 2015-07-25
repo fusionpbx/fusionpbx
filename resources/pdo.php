@@ -241,12 +241,11 @@ if ($db_type == "pgsql") {
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
-				foreach($result as $row) {
-					$domain_names[] = $row['domain_name'];
-				}
+			foreach($result as $row) {
+				$domain_names[] = $row['domain_name'];
 			}
 			unset($prep_statement);
+
 		//put the domains in natural order
 			natsort($domain_names);
 		//build the domains array in the correct order
@@ -270,9 +269,7 @@ if ($db_type == "pgsql") {
 						$_SESSION["domain_name"] = $row["domain_name"];
 					}
 				}
-				$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-				$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
-				$_SESSION['domains'][$row['domain_uuid']]['domain_description'] = $row['domain_description'];
+				$_SESSION['domains'][$row['domain_uuid']] = $row;
 			}
 			unset($domains, $prep_statement);
 	}
