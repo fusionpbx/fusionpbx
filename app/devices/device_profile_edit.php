@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2013 All Rights Reserved.
+	Copyright (C) 2008-2015 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -183,17 +183,16 @@ require_once "resources/require.php";
 	$x = "999";
 
 //get device keys
-	$sql = "select * from v_device_keys ";
-	$sql .= "where device_profile_uuid = '".$device_profile_uuid."' ";
-	$sql .= "order by ";
-	$sql .= "case device_key_category ";
-	$sql .= "	when 'line' then 1 ";
-	$sql .= "	when 'memory' then 2 ";
-	$sql .= "	when 'programmable' then 3 ";
-	$sql .= "	when 'expansion' then 4 ";
-	$sql .= "else ";
-	$sql .= "	100 ";
-	$sql .= "end, ";
+	$sql = "SELECT * FROM v_device_keys ";
+	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+	$sql .= "ORDER by ";
+	$sql .= "device_key_vendor asc, ";
+	$sql .= "CASE device_key_category ";
+	$sql .= "WHEN 'line' THEN 1 ";
+	$sql .= "WHEN 'memory' THEN 2 ";
+	$sql .= "WHEN 'programmable' THEN 3 ";
+	$sql .= "WHEN 'expansion' THEN 4 ";
+	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
 		$sql .= "device_key_id asc ";
 	}
@@ -273,23 +272,49 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	$vendor_count = 0;
+	foreach($device_keys as $row) {
+		if ($previous_vendor != $row['device_key_vendor']) {
+			$previous_vendor = $row['device_key_vendor'];
+			$vendor_count++;
+		}
+	}
+
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-keys']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "			<tr>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
-	echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
-	echo "				<td>&nbsp;</td>\n";
-	echo "			</tr>\n";
-
+	echo "			<table border='0' cellpadding='0' cellspacing='3'>\n";
+	if ($vendor_count == 0) {
+		echo "			<tr>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+		echo "				<td>&nbsp;</td>\n";
+		echo "			</tr>\n";
+	}
 	$x = 0;
 	foreach($device_keys as $row) {
+		//set the column names
+			if ($previous_device_key_vendor != $row['device_key_vendor']) {
+				echo "			<tr>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+				if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
+					echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
+				} else {
+					echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+				}
+				echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+				echo "				<td>&nbsp;</td>\n";
+				echo "			</tr>\n";
+			}
 		//determine whether to hide the element
 			if (strlen($device_key_uuid) == 0) {
 				$element['hidden'] = false;
@@ -304,9 +329,9 @@ require_once "resources/require.php";
 				echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
 			}
 		//show all the rows in the array
-			echo "			<tr>\n";
-			echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	<select class='formfld' style='width: auto;' name='device_keys[".$x."][device_key_category]'>\n";
+			echo "<tr>\n";
+			echo "<td valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	<select class='formfld' name='device_keys[".$x."][device_key_category]'>\n";
 			echo "	<option value=''></option>\n";
 			if ($row['device_key_category'] == "line") {
 				echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
@@ -362,8 +387,8 @@ require_once "resources/require.php";
 			echo "	</select>\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
+			echo "<td valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
 			echo "	<option value=''></option>\n";
 			for ($i = 1; $i <= 99; $i++) {
 				echo "	<option value='".$i."' ".(($row['device_key_id'] == $i) ? "selected='selected'" : null).">".$i."</option>\n";
@@ -371,7 +396,7 @@ require_once "resources/require.php";
 			echo "	</select>\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
+			echo "<td align='left' nowrap='nowrap'>\n";
 			if (strlen($row['device_key_vendor']) > 0) {
 				$device_key_vendor = $row['device_key_vendor'];
 			}
@@ -517,7 +542,7 @@ require_once "resources/require.php";
 
 			<?php
 			echo "</td>\n";
-			echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "<td class='' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	<select class='formfld' style='width: 45px;' name='device_keys[".$x."][device_key_line]'>\n";
 			echo "		<option value=''></option>\n";
 			for ($l = 0; $l <= 12; $l++) {
@@ -526,24 +551,28 @@ require_once "resources/require.php";
 			echo "	</select>\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' align='left'>\n";
+			echo "<td class='' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' align='left'>\n";
+			echo "<td class='' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
 			echo "</td>\n";
 
-			echo "<td class='vtable' align='left'>\n";
+			echo "<td class='' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
 			echo "</td>\n";
 
-			echo "				<td nowrap='nowrap'>\n";
+			echo "<td nowrap='nowrap'>\n";
 			if (strlen($row['device_key_uuid']) > 0) {
-				echo "					<a href='device_key_delete.php?device_profile_uuid=".$row['device_profile_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				if (permission_exists('device_key_delete')) {
+					echo "					<a href='device_key_delete.php?device_profile_uuid=".$row['device_profile_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				}
 			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
+		//set the previous vendor
+			$previous_device_key_vendor = $row['device_key_vendor'];
 		//increment the array key
 			$x++;
 	}
