@@ -565,7 +565,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 		//upgrade the domains
-			require_once "core/upgrade/upgrade_domains.php";
+			if (permission_exists('upgrade_apps') || if_group("superadmin")) {
+				require_once "core/upgrade/upgrade_domains.php";
+			}
 
 		//clear the domains session array to update it
 			unset($_SESSION["domains"]);
