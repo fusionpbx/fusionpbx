@@ -37,7 +37,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "domain_select";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-
 		$apps[$x]['permissions'][$y]['name'] = "domain_setting_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "4fa7e90b-6d6c-12d4-712f-62857402b801";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
