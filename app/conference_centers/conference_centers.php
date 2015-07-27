@@ -69,7 +69,7 @@ else {
 	echo "<br /><br />\n";
 
 	//prepare to page the results
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 			//show all extensions
 			$sql = "select count(*) as num_rows from v_conference_centers ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -103,7 +103,7 @@ else {
 		$offset = $rows_per_page * $page;
 
 	//get the list
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 			//show all extensions
 			$sql = "select * from v_conference_centers ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
