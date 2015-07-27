@@ -354,7 +354,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (if_group("superadmin")) {
+	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 		echo "<script>\n";
 		echo "var Objs;\n";
 		echo "\n";
@@ -385,7 +385,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</script>\n";
 		echo "\n";
 	}
-	echo "	<select name='conference_center_greeting' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+
+	echo "	<select name='conference_center_greeting' class='formfld' ".((permission_exists('conference_center_add') || permission_exists('conference_center_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option></option>\n";
 	//recordings
 		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
@@ -438,7 +439,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	//select
 		if (strlen($conference_center_greeting) > 0) {
-			if (if_group("superadmin")) {
+			if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 				if (!$tmp_selected) {
 					echo "<optgroup label='selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting)) {
