@@ -329,16 +329,16 @@
 						or ring_group_strategy == "sequence"
 						or ring_group_strategy == "rollover") then
 							session:execute("set", "group_confirm_key=exec");
-							session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
+							session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
 					end
 
 				--determine confirm prompt
 					if (destination_prompt == nil) then
 						group_confirm = "confirm=false,";
 					elseif (destination_prompt == "1") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
 					elseif (destination_prompt == "2") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
 					else
 						group_confirm = "confirm=false,";
 					end
