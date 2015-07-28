@@ -29,7 +29,6 @@ require_once "root.php";
 require_once "resources/require.php";
 
 //preferences
-	$v_menu_tab_show = false;
 	$v_path_show = true;
 
 //get user defined variables
@@ -84,63 +83,7 @@ require_once "resources/require.php";
 		}
 	}
 
-/*
-function v_settings() {
-	global $db, $domain_uuid;
 
-	//get the program directory
-		$program_dir = '';
-		$doc_root = $_SERVER["DOCUMENT_ROOT"];
-		$doc_root = str_replace ("\\", "/", $doc_root);
-		$doc_root_array = explode("/", $doc_root);
-		$doc_root_array_count = count($doc_root_array);
-		$x = 0;
-		foreach ($doc_root_array as $value) {
-			$program_dir = $program_dir.$value."/";
-			if (($doc_root_array_count-3) == $x) {
-				break;
-			}
-			$x++;
-		}
-		$program_dir = rtrim($program_dir, "/");
-
-	//get the domains variables
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and domain_setting_enabled = 'true' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$name = $row['domain_setting_name'];
-				$settings_array[$name] = $row['domain_setting_value'];
-			}
-		}
-
-	//get the server variables
-		$sql = "select * from v_server_settings ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and domain_setting_enabled = 'true' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$name = $row['server_setting_name'];
-				$settings_array[$name] = $row['server_setting_value'];
-			}
-		}
-
-	//return the results
-		return $settings_array;
-}
-//update the settings
-//$settings_array = v_settings();
-foreach($settings_array as $name => $value) {
-	$$name = $value;
-}
-*/
 
 //get the event socket information
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
@@ -222,73 +165,6 @@ function load_extensions() {
 	}
 }
 load_extensions();
-
-function build_menu() {
-	global $v_menu_tab_show;
-
-	if ($v_menu_tab_show) {
-		global $config;
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].'/fusionpbx')){ $relative_url = $_SERVER["DOCUMENT_ROOT"].'/fusionpbx'; } else { $relative_url = '/'; }
-
-		$tab_array = array();
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/setting_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Settings"), $menu_selected, $relative_url."/setting_edit.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/dialplans.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/dialplans.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/dialplan_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/dialplan_details_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Dialplan"), $menu_selected, $relative_url."/dialplans.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/extensions.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/extension_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Extensions"), $menu_selected, $relative_url."/extensions.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/fax.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/fax_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/hunt_group.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/hunt_group_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/hunt_group_destinations.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/hunt_group_destinations_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/auto_attendant.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/auto_attendant_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/auto_attendant_options_edit.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/modules.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/recordings.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/recording_edit.php") { $menu_selected = true; }
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/gateways.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/gateway_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Gateways"), $menu_selected, $relative_url."/gateways.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_profiles.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_profile_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Profiles"), $menu_selected, $relative_url."/sip_profiles.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_status.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Status"), $menu_selected, $relative_url."/sip_status.php");
-		unset($menu_selected);
-
-		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/vars.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Vars"), $menu_selected, $relative_url."/vars.php");
-		unset($menu_selected);
-	}
-}
-
 
 function event_socket_create($host, $port, $password) {
 	$fp = fsockopen($host, $port, $errno, $errdesc, 3);
