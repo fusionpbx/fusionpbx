@@ -83,8 +83,6 @@ require_once "resources/require.php";
 		}
 	}
 
-
-
 //get the event socket information
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
 		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
@@ -189,7 +187,6 @@ function event_socket_create($host, $port, $password) {
 	}
 } //end function
 
-
 function event_socket_request($fp, $cmd) {
 	if ($fp) {
 		$cmd_array = explode("\n",$cmd);
@@ -235,9 +232,6 @@ function event_socket_request($fp, $cmd) {
 		echo "no handle";
 	}
 }
-
-
-
 
 function event_socket_request_cmd($cmd) {
 	global $db, $domain_uuid, $host;
@@ -1486,7 +1480,6 @@ function save_gateway_xml() {
 
 }
 
-
 function save_module_xml() {
 	global $config, $db, $domain_uuid;
 
@@ -1644,19 +1637,6 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	}
 	return $bridge_array;
 	unset ($prep_statement);
-}
-
-function email_validate($strEmail){
-   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-   // search email text for regular exp matches
-   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
-
-   if (count($matches) == 0) {
-	return 0;
-   }
-   else {
-	return 1;
-   }
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
@@ -2092,7 +2072,6 @@ function save_dialplan_xml() {
 		} //end if (is_dir($_SESSION['switch']['dialplan']['dir']))
 }
 
-
 if (!function_exists('phone_letter_to_number')) {
 	function phone_letter_to_number($tmp) {
 		$tmp = strtolower($tmp);
@@ -2106,7 +2085,6 @@ if (!function_exists('phone_letter_to_number')) {
 		if ($tmp == "w" | $tmp == "x" | $tmp == "y" | $tmp == "z") { return 9; }
 	}
 }
-
 
 if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
