@@ -28,61 +28,6 @@
 require_once "root.php";
 require_once "resources/require.php";
 
-//preferences
-	$v_path_show = true;
-
-//get user defined variables
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/vars/app_config.php")) {
-		if (strlen($_SESSION['user_defined_variables']) == 0) {
-			$sql = "select * from v_vars ";
-			$sql .= "where var_cat = 'Defaults' and var_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($result as &$row) {
-				switch ($row["var_name"]) {
-					case "domain":
-						//not allowed to override this value
-						break;
-					case "domain_name":
-						//not allowed to override this value
-						break;
-					case "domain_uuid":
-						//not allowed to override this value
-						break;
-					case "username":
-						//not allowed to override this value
-						break;
-					case "groups":
-						//not allowed to override this value
-						break;
-					case "menu":
-						//not allowed to override this value
-						break;
-					case "template_name":
-						//not allowed to override this value
-						break;
-					case "template_content":
-						//not allowed to override this value
-						break;
-					case "extension_array":
-						//not allowed to override this value
-						break;
-					case "user_extension_array":
-						//not allowed to override this value
-						break;
-					case "user_array":
-						//not allowed to override this value
-						break;
-					default:
-						$_SESSION[$row["var_name"]] = $row["var_value"];
-				}
-			}
-			//when this value is cleared it will re-read the user defined variables
-			$_SESSION["user_defined_variables"] = "set";
-		}
-	}
-
 //get the event socket information
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
 		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
