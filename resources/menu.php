@@ -65,7 +65,7 @@ require_once "resources/require.php";
 		$menu = new menu;
 		$menu->db = $db;
 		$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
-		$v_menu .= $menu->build_html("", "main");
+		$v_menu .= $menu->build_html();
 		unset($menu);
 
 		$v_menu .= "</div>\n";
