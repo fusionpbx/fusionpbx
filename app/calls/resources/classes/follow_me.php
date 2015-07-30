@@ -39,6 +39,7 @@ include "root.php";
 		public $accountcode;
 		public $follow_me_enabled;
 		public $follow_me_caller_id_uuid;
+		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
 		private $extension;
@@ -90,7 +91,8 @@ include "root.php";
 					$sql .= "cid_number_prefix, ";
 				}
 				$sql .= "follow_me_caller_id_uuid, ";
-				$sql .= "follow_me_enabled ";
+				$sql .= "follow_me_enabled, ";
+				$sql .= "follow_me_ignore_busy ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -106,7 +108,8 @@ include "root.php";
 				else {
 					$sql .= 'null, ';
 				}
-				$sql .= "'$this->follow_me_enabled' ";
+				$sql .= "'$this->follow_me_enabled', ";
+				$sql .= "'$this->follow_me_ignore_busy' ";
 				$sql .= ")";
 				if ($v_debug) {
 					echo $sql."<br />";
@@ -122,6 +125,7 @@ include "root.php";
 			//update follow me table
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
+				$sql .= "follow_me_ignore_busy = '$this->follow_me_ignore_busy', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
 				if (strlen($this->follow_me_caller_id_uuid) > 0) {
 					$sql .= "follow_me_caller_id_uuid = '$this->follow_me_caller_id_uuid', ";
@@ -276,8 +280,11 @@ include "root.php";
 					$prep_statement_2 = $db->prepare(check_sql($sql));
 					$prep_statement_2->execute();
 					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-					$dial_string = "{fail_on_single_reject=USER_BUSY";
-					$dial_string .= ",instant_ringback=true";
+					$dial_string = "{";
+					if ($this->follow_me_ignore_busy != 'true') {
+						$dial_string .= "fail_on_single_reject=USER_BUSY,";
+					}
+					$dial_string .= "instant_ringback=true,";
 					$dial_string .= ",ignore_early_media=true";
 					$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
@@ -375,7 +382,7 @@ include "root.php";
 							if (is_numeric($row["follow_me_destination"])) {
 								if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
 									$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-									$dial_string .= $bridge[0].",";
+									$dial_string .= $bridge[0];
 								}
 								elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
 									$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];

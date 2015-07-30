@@ -101,6 +101,17 @@ $text['label-on-busy']['sv-se'] = "Vid Upptaget ";
 $text['label-on-busy']['uk'] = "Якщо зайнято";
 $text['label-on-busy']['de-at'] = "Bei Besetzt";
 
+$text['label-ignore-busy']['en-us'] = "Ignore Busy";
+$text['label-ignore-busy']['es-cl'] = "";
+$text['label-ignore-busy']['pt-pt'] = "";
+$text['label-ignore-busy']['fr-fr'] = "";
+$text['label-ignore-busy']['it-it'] = "";
+$text['label-ignore-busy']['pt-br'] = "";
+$text['label-ignore-busy']['pl'] = "";
+$text['label-ignore-busy']['sv-se'] = "";
+$text['label-ignore-busy']['uk'] = "";
+$text['label-ignore-busy']['de-at'] = "";
+
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
 $text['label-number']['pt-pt'] = "Número";
