@@ -85,7 +85,7 @@ else {
 			if (if_group("superadmin")) {
 				$accountcode = $_POST["accountcode"];
 			}
-			else if (if_group("admin") && $billing_app_exists) {
+			elseif (if_group("admin") && $billing_app_exists) {
 				$sql_accountcode = "SELECT COUNT(*) as count FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."' AND type_value='".$_POST["accountcode"]."'";
 				$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
 				$prep_statement_accountcode->execute();
@@ -881,7 +881,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 	$document['title'] = $text['title-extension-edit'];
 	}
-	else if ($action == "add") {
+	elseif ($action == "add") {
 		$document['title'] = $text['title-extension-add'];
 	}
 
