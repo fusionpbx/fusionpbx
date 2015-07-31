@@ -328,7 +328,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//set the default user context
-		if (if_group("superadmin")) {
+		if (permission_exists("extension_user_context")) {
 			//allow a user assigned to super admin to change the user_context
 		}
 		else {
@@ -634,7 +634,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "directory_exten_visible = '$directory_exten_visible', ";
 					$sql .= "limit_max = '$limit_max', ";
 					$sql .= "limit_destination = '$limit_destination', ";
-					$sql .= "user_context = '$user_context', ";
+					if (permission_exists("extension_context")) {
+						$sql .= "user_context = '$user_context', ";
+					}
 					if (permission_exists('extension_missed_call')) {
 						$sql .= "missed_call_app = '$missed_call_app', ";
 						$sql .= "missed_call_data = '$missed_call_data', ";
