@@ -2226,7 +2226,7 @@ if (!function_exists('save_call_center_xml')) {
 					}
 
 				//get the contents of the template
-					$file_contents = file_get_contents($path."/autoload_configs/callcenter.conf.xml");
+					$file_contents = file_get_contents($path."/autoload_configs/callcenter.conf.xml.noload");
 
 				//add the Call Center Queues, Agents and Tiers to the XML config
 					$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
