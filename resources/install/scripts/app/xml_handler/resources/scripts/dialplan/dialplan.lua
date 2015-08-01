@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -60,17 +60,6 @@
 						domain_uuid = domains[domain_name];
 					end
 			end
-
-	
-		--get the domain name
-			function get_domain_name(domains, domain_uuid)
-				for key,value in ipairs(domains) do
-					if (value.domain_uuid == domain_uuid) then
-						return value.domain_name;
-					end
-				end
-			  	return nil;
-			end	
 
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
@@ -252,12 +241,11 @@
 							condition = ""; --prevents duplicate time conditions
 						end
 					end
-					
-					if (call_context == "public") then
+
+					if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
-									--domain_name = get_domain_name(domains, domain_uuid);
 									domain_name = domains[domain_uuid];
 									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
