@@ -42,6 +42,7 @@ $apps[$x]['menu'][2]['title']['pt-br'] = "Extensão do sumário";
 $apps[$x]['menu'][2]['title']['pl'] = "Podsumowanie numerów wewnętrznych";
 $apps[$x]['menu'][2]['title']['sv-se'] = "Anknytnings Summering";
 $apps[$x]['menu'][2]['title']['de-at'] = "Nebenstellen Statistik";
+$apps[$x]['menu'][2]['title']['he'] = "סיכום שלוחות";
 $apps[$x]['menu'][2]['uuid'] = "4e45a3c1-6db5-417f-9abb-1d30a4fd0bf2";
 $apps[$x]['menu'][2]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 $apps[$x]['menu'][2]['category'] = "internal";

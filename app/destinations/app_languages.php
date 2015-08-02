@@ -12,6 +12,7 @@ $text['title-destinations']['ro'] = "Destinații";
 $text['title-destinations']['de-at'] = "Kopfnummern";
 $text['title-destinations']['fa'] = "";
 $text['title-destinations']['ar-eg'] = "جهات الأتصال";
+$text['title-destinations']['he'] = "יעדים";
 
 $text['title-destination-edit']['en-us'] = "Destination";
 $text['title-destination-edit']['es-cl'] = "Editar Destino";
@@ -25,6 +26,7 @@ $text['title-destination-edit']['ro'] = "Destinație";
 $text['title-destination-edit']['de-at'] = "Kopfnummer";
 $text['title-destination-edit']['fa'] = "";
 $text['title-destination-edit']['ar-eg'] = "جهه الأتصال";
+$text['title-destination-edit']['he'] = "יעד";
 
 $text['title-destination-add']['en-us'] = "Destination";
 $text['title-destination-add']['es-cl'] = "Agregar Destino";
@@ -38,6 +40,7 @@ $text['title-destination-add']['ro'] = "Destinație";
 $text['title-destination-add']['de-at'] = "Kopfnummer";
 $text['title-destination-add']['fa'] = "";
 $text['title-destination-add']['ar-eg'] = "جهه الأتصال";
+$text['title-destination-add']['he'] = "יעד";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['es-cl'] = "Global";
@@ -51,6 +54,7 @@ $text['select-global']['ro'] = "Global";
 $text['select-global']['de-at'] = "Global";
 $text['select-global']['fa'] = "عمومی";
 $text['select-global']['ar-eg'] = "";
+$text['select-global']['he'] = "כללי";
 
 $text['option-type_outbound']['en-us'] = "Outbound";
 $text['option-type_outbound']['es-cl'] = "Saliente";
@@ -64,6 +68,7 @@ $text['option-type_outbound']['ro'] = "";
 $text['option-type_outbound']['de-at'] = "Ausgehend";
 $text['option-type_outbound']['fa'] = "خروجی";
 $text['option-type_outbound']['ar-eg'] = "صادر";
+$text['option-type_outbound']['he'] = "יוצא";
 
 $text['option-type_inbound']['en-us'] = "Inbound";
 $text['option-type_inbound']['es-cl'] = "Entrante";
@@ -77,6 +82,7 @@ $text['option-type_inbound']['ro'] = "";
 $text['option-type_inbound']['de-at'] = "Eingehend";
 $text['option-type_inbound']['fa'] = "ورودی";
 $text['option-type_inbound']['ar-eg'] = "وارد";
+$text['option-type_inbound']['he'] = "נכנס";
 
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completa";
@@ -90,6 +96,7 @@ $text['message-update']['ro'] = "Actualizare completă";
 $text['message-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['message-update']['fa'] = "بروز رسانی انجام شد";
 $text['message-update']['ar-eg'] = "اكتمال التحديث";
+$text['message-update']['he'] = "עידכון הושלם";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor ingrese: ";
@@ -103,6 +110,7 @@ $text['message-required']['ro'] = "";
 $text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
 $text['message-required']['fa'] = "";
 $text['message-required']['ar-eg'] = "من فضلك أدخل";
+$text['message-required']['he'] = "נא ספק";
 
 $text['message-maximum_destinations']['en-us'] = "Maximum Destinations:";
 $text['message-maximum_destinations']['es-cl'] = "Destinos Máximo Permitido:";
@@ -116,6 +124,7 @@ $text['message-maximum_destinations']['ro'] = "";
 $text['message-maximum_destinations']['de-at'] = "Maximale Anzahl an Kopfnummern:";
 $text['message-maximum_destinations']['fa'] = "";
 $text['message-maximum_destinations']['ar-eg'] = "الحد الأقصي لجهات الأتصال";
+$text['message-maximum_destinations']['he'] = "מקסימיום יעדים";
 
 $text['message-duplicate']['en-us'] = "Duplicate detected";
 $text['message-duplicate']['es-cl'] = "Duplicar detectado";
@@ -129,6 +138,7 @@ $text['message-duplicate']['ro'] = "";
 $text['message-duplicate']['de-at'] = "bereits vorhanden";
 $text['message-duplicate']['fa'] = "مورد تکراری";
 $text['message-duplicate']['ar-eg'] = "";
+$text['message-duplicate']['he'] = "זוהתה כפילות";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completa";
@@ -142,6 +152,7 @@ $text['message-delete']['ro'] = "Ștergere completă";
 $text['message-delete']['de-at'] = "Erfolgreich gelöscht";
 $text['message-delete']['fa'] = "حذف انجام شد";
 $text['message-delete']['ar-eg'] = "تم المسح";
+$text['message-delete']['he'] = "המחיקה הושלמה";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completo";
@@ -155,6 +166,7 @@ $text['message-add']['ro'] = "Adăugare completă";
 $text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 $text['message-add']['fa'] = "";
 $text['message-add']['ar-eg'] = "تمت الأضافة";
+$text['message-add']['he'] = "הוספה הושלמה";
 
 $text['label-true']['en-us'] = "True";
 $text['label-true']['es-cl'] = "Verdadero";
@@ -168,6 +180,7 @@ $text['label-true']['ro'] = "";
 $text['label-true']['de-at'] = "Ein";
 $text['label-true']['fa'] = "";
 $text['label-true']['ar-eg'] = "صحيح";
+$text['label-true']['he'] = "חיובי";
 
 $text['label-monthly_price_buy']['en-us'] = "Monthly buy price";
 $text['label-monthly_price_buy']['es-cl'] = "Precio mensual de compra";
@@ -181,6 +194,7 @@ $text['label-monthly_price_buy']['ro'] = "";
 $text['label-monthly_price_buy']['de-at'] = "Monatlicher Einkaufspreis";
 $text['label-monthly_price_buy']['fa'] = "";
 $text['label-monthly_price_buy']['ar-eg'] = "";
+$text['label-monthly_price_buy']['he'] = "קנייה חודשית";
 
 $text['label-monthly_price']['en-us'] = "Monthly selling price";
 $text['label-monthly_price']['es-cl'] = "Precio mensual de venta";
@@ -194,6 +208,7 @@ $text['label-monthly_price']['ro'] = "";
 $text['label-monthly_price']['de-at'] = "Monatlicher Verkaufspreis";
 $text['label-monthly_price']['fa'] = "";
 $text['label-monthly_price']['ar-eg'] = "";
+$text['label-monthly_price']['he'] = "מכירה חודשית";
 
 $text['label-fax_uuid']['en-us'] = "Fax Detection";
 $text['label-fax_uuid']['es-cl'] = "Detección de Fax";
@@ -207,6 +222,7 @@ $text['label-fax_uuid']['ro'] = "";
 $text['label-fax_uuid']['de-at'] = "Fax Erkennung";
 $text['label-fax_uuid']['fa'] = "آشکارسازی فاکس";
 $text['label-fax_uuid']['ar-eg'] = "";
+$text['label-fax_uuid']['he'] = "זיהוי פקסים";
 
 $text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
@@ -220,6 +236,7 @@ $text['label-false']['ro'] = "";
 $text['label-false']['de-at'] = "Aus";
 $text['label-false']['fa'] = "";
 $text['label-false']['ar-eg'] = "خطأ";
+$text['label-false']['he'] = "לא חוקי";
 
 $text['label-domain-name']['en-us'] = "Domain Name";
 $text['label-domain-name']['es-cl'] = "Nombre de Dominio";
@@ -233,6 +250,7 @@ $text['label-domain-name']['ro'] = "";
 $text['label-domain-name']['de-at'] = "Domain Name";
 $text['label-domain-name']['fa'] = "اسم دامین";
 $text['label-domain-name']['ar-eg'] = "اسم النطاق";
+$text['label-domain-name']['he'] = "שם דומיין";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -246,6 +264,7 @@ $text['label-domain']['ro'] = "Domeniu";
 $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['fa'] = "";
 $text['label-domain']['ar-eg'] = "النطاق";
+$text['label-domain']['he'] = "תחום";
 
 $text['label-detail_action']['en-us'] = "Actions";
 $text['label-detail_action']['es-cl'] = "Accións";
@@ -259,6 +278,7 @@ $text['label-detail_action']['ro'] = "";
 $text['label-detail_action']['de-at'] = "Aktionen";
 $text['label-detail_action']['fa'] = "";
 $text['label-detail_action']['ar-eg'] = "الأفعال";
+$text['label-detail_action']['he'] = "פעולות";
 
 $text['label-destination_type']['en-us'] = "Type";
 $text['label-destination_type']['es-cl'] = "Tipo";
@@ -272,6 +292,7 @@ $text['label-destination_type']['ro'] = "";
 $text['label-destination_type']['de-at'] = "Typ";
 $text['label-destination_type']['fa'] = "";
 $text['label-destination_type']['ar-eg'] = "النوع";
+$text['label-destination_type']['he'] = "סוג";
 
 $text['label-destination_number']['en-us'] = "Destination";
 $text['label-destination_number']['es-cl'] = "Destino";
@@ -285,6 +306,7 @@ $text['label-destination_number']['ro'] = "";
 $text['label-destination_number']['de-at'] = "Ziel";
 $text['label-destination_number']['fa'] = "";
 $text['label-destination_number']['ar-eg'] = "جهه الأتصال";
+$text['label-destination_number']['he'] = "יעד";
 
 $text['label-destination_enabled']['en-us'] = "Enabled";
 $text['label-destination_enabled']['es-cl'] = "Activado";
@@ -298,6 +320,7 @@ $text['label-destination_enabled']['ro'] = "";
 $text['label-destination_enabled']['de-at'] = "Ein";
 $text['label-destination_enabled']['fa'] = "";
 $text['label-destination_enabled']['ar-eg'] = "مفعل";
+$text['label-destination_enabled']['he'] = "מופעל";
 
 $text['label-destination_description']['en-us'] = "Description";
 $text['label-destination_description']['es-cl'] = "Descripción";
@@ -311,6 +334,7 @@ $text['label-destination_description']['ro'] = "";
 $text['label-destination_description']['de-at'] = "Beschreibung";
 $text['label-destination_description']['fa'] = "";
 $text['label-destination_description']['ar-eg'] = "الوصف";
+$text['label-destination_description']['he'] = "תאור";
 
 $text['label-destination_context']['en-us'] = "Context";
 $text['label-destination_context']['es-cl'] = "Contexto";
@@ -324,6 +348,7 @@ $text['label-destination_context']['ro'] = "";
 $text['label-destination_context']['de-at'] = "Kontext";
 $text['label-destination_context']['fa'] = "";
 $text['label-destination_context']['ar-eg'] = "";
+$text['label-destination_context']['he'] = "תוכן";
 
 $text['label-destination_cid_name_prefix']['en-us'] = "Caller ID Name Prefix";
 $text['label-destination_cid_name_prefix']['es-cl'] = "Prefijo de Nombre de Caller ID";
@@ -337,6 +362,7 @@ $text['label-destination_cid_name_prefix']['ro'] = "";
 $text['label-destination_cid_name_prefix']['de-at'] = "Anruferkennung (Name) Präfix";
 $text['label-destination_cid_name_prefix']['fa'] = "";
 $text['label-destination_cid_name_prefix']['ar-eg'] = "";
+$text['label-destination_cid_name_prefix']['he'] = "";
 
 $text['label-destination_caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-destination_caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -350,6 +376,7 @@ $text['label-destination_caller_id_number']['ro'] = "";
 $text['label-destination_caller_id_number']['de-at'] = "Anruferkennung (Nummer)";
 $text['label-destination_caller_id_number']['fa'] = "";
 $text['label-destination_caller_id_number']['ar-eg'] = "رقم المتصل";
+$text['label-destination_caller_id_number']['he'] = "";
 
 $text['label-destination_caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-destination_caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -363,6 +390,7 @@ $text['label-destination_caller_id_name']['ro'] = "";
 $text['label-destination_caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['label-destination_caller_id_name']['fa'] = "";
 $text['label-destination_caller_id_name']['ar-eg'] = "اسم المتصل";
+$text['label-destination_caller_id_name']['he'] = "";
 
 $text['label-carrier']['en-us'] = "Carrier name";
 $text['label-carrier']['es-cl'] = "Nombre del carrier";
@@ -376,6 +404,7 @@ $text['label-carrier']['ro'] = "";
 $text['label-carrier']['de-at'] = "Provider Name";
 $text['label-carrier']['fa'] = "";
 $text['label-carrier']['ar-eg'] = "";
+$text['label-carrier']['he'] = "שם מפעיל";
 
 $text['label-account_code']['en-us'] = "Account Code";
 $text['label-account_code']['es-cl'] = "Código de Cuenta";
@@ -389,6 +418,7 @@ $text['label-account_code']['ro'] = "";
 $text['label-account_code']['de-at'] = "Account Code";
 $text['label-account_code']['fa'] = "";
 $text['label-account_code']['ar-eg'] = "";
+$text['label-account_code']['he'] = "קוד חשבון";
 
 $text['header-destinations']['en-us'] = "Destinations";
 $text['header-destinations']['es-cl'] = "Destinos";
@@ -402,6 +432,7 @@ $text['header-destinations']['ro'] = "";
 $text['header-destinations']['de-at'] = "Ziele";
 $text['header-destinations']['fa'] = "";
 $text['header-destinations']['ar-eg'] = "جهات الأتصال";
+$text['header-destinations']['he'] = "יעדים";
 
 $text['header-destination-edit']['en-us'] = "Destination";
 $text['header-destination-edit']['es-cl'] = "Editar Destino";
@@ -415,6 +446,7 @@ $text['header-destination-edit']['ro'] = "";
 $text['header-destination-edit']['de-at'] = "Ziel";
 $text['header-destination-edit']['fa'] = "";
 $text['header-destination-edit']['ar-eg'] = "جهه الأتصال";
+$text['header-destination-edit']['he'] = "יעד";
 
 $text['header-destination-add']['en-us'] = "Destination";
 $text['header-destination-add']['es-cl'] = "Agregar Destino";
@@ -428,6 +460,7 @@ $text['header-destination-add']['ro'] = "";
 $text['header-destination-add']['de-at'] = "Ziel";
 $text['header-destination-add']['fa'] = "";
 $text['header-destination-add']['ar-eg'] = "جهه الأتصال";
+$text['header-destination-add']['he'] = "יעד";
 
 $text['description-monthly_price_buy']['en-us'] = "Enter monthly price you pay for this destination (only when inbound)";
 $text['description-monthly_price_buy']['es-cl'] = "Ingrese el precio mensual que usted paga por este destino (sólo entrante)";
@@ -441,6 +474,7 @@ $text['description-monthly_price_buy']['ro'] = "";
 $text['description-monthly_price_buy']['de-at'] = "Geben Sie den monatlichen Einkaufspreis für dieses Ziel an (nur wenn eingehend)";
 $text['description-monthly_price_buy']['fa'] = "";
 $text['description-monthly_price_buy']['ar-eg'] = "";
+$text['description-monthly_price_buy']['he'] = "";
 
 $text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";
 $text['description-monthly_price']['es-cl'] = "Ingrese el precio mensual a cobrar por este destino (sólo entrante)";
@@ -454,6 +488,7 @@ $text['description-monthly_price']['ro'] = "";
 $text['description-monthly_price']['de-at'] = "Geben Sie den monatlichen Verkaufspreis für dieses Ziel an (nur wenn eingehend)";
 $text['description-monthly_price']['fa'] = "";
 $text['description-monthly_price']['ar-eg'] = "";
+$text['description-monthly_price']['he'] = "";
 
 $text['description-fax_uuid']['en-us'] = "Select the fax destination to enable fax detection. ";
 $text['description-fax_uuid']['es-cl'] = "Seleccione el destino de fax para activar su detección";
@@ -467,6 +502,7 @@ $text['description-fax_uuid']['ro'] = "";
 $text['description-fax_uuid']['de-at'] = "Wählen Sie einen Fax Server um Faxerkennung für eingehende Anrufe zu aktivieren.";
 $text['description-fax_uuid']['fa'] = "";
 $text['description-fax_uuid']['ar-eg'] = "";
+$text['description-fax_uuid']['he'] = "";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -480,6 +516,7 @@ $text['description-domain']['ro'] = "";
 $text['description-domain']['de-at'] = "";
 $text['description-domain']['fa'] = "";
 $text['description-domain']['ar-eg'] = "";
+$text['description-domain']['he'] = "";
 
 $text['description-destinations']['en-us'] = "Inbound destinations are the DID/DDI, DNIS or Alias for inbound calls.";
 $text['description-destinations']['es-cl'] = "Destinos entrantes son los DID/DDI, DNIS o un alias para llamadas entrantes";
@@ -493,6 +530,7 @@ $text['description-destinations']['ro'] = "";
 $text['description-destinations']['de-at'] = "Kopfnummern sind DID/DDI, DNIS oder alternative Nummern für eingehende Anrufe";
 $text['description-destinations']['fa'] = "";
 $text['description-destinations']['ar-eg'] = "";
+$text['description-destinations']['he'] = "";
 
 $text['description-destination_type']['en-us'] = "Select the type.";
 $text['description-destination_type']['es-cl'] = "Seleccione el tipo.";
@@ -506,6 +544,7 @@ $text['description-destination_type']['ro'] = "";
 $text['description-destination_type']['de-at'] = "Wählen Sie den Typ.";
 $text['description-destination_type']['fa'] = "";
 $text['description-destination_type']['ar-eg'] = "اختر النوع";
+$text['description-destination_type']['he'] = "בחר את הסוג";
 
 $text['description-destination_number']['en-us'] = "Enter the destination.";
 $text['description-destination_number']['es-cl'] = "Ingrese el destino.";
@@ -519,6 +558,7 @@ $text['description-destination_number']['ro'] = "";
 $text['description-destination_number']['de-at'] = "Geben Sie das Ziel an.";
 $text['description-destination_number']['fa'] = "";
 $text['description-destination_number']['ar-eg'] = "أدخل جهه الأتصال";
+$text['description-destination_number']['he'] = "הכנס יעד";
 
 $text['description-destination_enabled']['en-us'] = "Set the current status of this destination.";
 $text['description-destination_enabled']['es-cl'] = "Configure el estado actual de este destino";
@@ -532,6 +572,7 @@ $text['description-destination_enabled']['ro'] = "";
 $text['description-destination_enabled']['de-at'] = "Setzen Sie den derzeitigen Status des Ziels.";
 $text['description-destination_enabled']['fa'] = "";
 $text['description-destination_enabled']['ar-eg'] = "";
+$text['description-destination_enabled']['he'] = "";
 
 $text['description-destination_description']['en-us'] = "Enter a description for this destination (optional).";
 $text['description-destination_description']['es-cl'] = "Ingrese una descripción para este destino (opcional)";
@@ -545,6 +586,7 @@ $text['description-destination_description']['ro'] = "";
 $text['description-destination_description']['de-at'] = "Geben Sie eine Beschreibung für dieses Ziel an (optional).";
 $text['description-destination_description']['fa'] = "";
 $text['description-destination_description']['ar-eg'] = "";
+$text['description-destination_description']['he'] = "";
 
 $text['description-destination_context']['en-us'] = "Enter the context.";
 $text['description-destination_context']['es-cl'] = "Ingrese el contexto";
@@ -558,6 +600,7 @@ $text['description-destination_context']['ro'] = "";
 $text['description-destination_context']['de-at'] = "Geben Sie den Kontext an.";
 $text['description-destination_context']['fa'] = "";
 $text['description-destination_context']['ar-eg'] = "";
+$text['description-destination_context']['he'] = "";
 
 $text['description-destination_cid_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 $text['description-destination_cid_name_prefix']['es-cl'] = "Configurar el prefijo del nombre de Caller ID.";
@@ -571,6 +614,7 @@ $text['description-destination_cid_name_prefix']['ro'] = "";
 $text['description-destination_cid_name_prefix']['de-at'] = "Geben Sie ein Präfix für die Anruferkennung (Name) an.";
 $text['description-destination_cid_name_prefix']['fa'] = "";
 $text['description-destination_cid_name_prefix']['ar-eg'] = "";
+$text['description-destination_cid_name_prefix']['he'] = "";
 
 $text['description-destination_caller_id_number']['en-us'] = "Enter the caller ID number.";
 $text['description-destination_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID";
@@ -584,6 +628,7 @@ $text['description-destination_caller_id_number']['ro'] = "";
 $text['description-destination_caller_id_number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) an.";
 $text['description-destination_caller_id_number']['fa'] = "";
 $text['description-destination_caller_id_number']['ar-eg'] = "أدخل رقم المتصل";
+$text['description-destination_caller_id_number']['he'] = "";
 
 $text['description-destination_caller_id_name']['en-us'] = "Enter the caller ID name.";
 $text['description-destination_caller_id_name']['es-cl'] = "Ingrese el nombre de caller ID";
@@ -597,6 +642,7 @@ $text['description-destination_caller_id_name']['ro'] = "";
 $text['description-destination_caller_id_name']['de-at'] = "Geben Sie die Anruferkennung (Name) an.";
 $text['description-destination_caller_id_name']['fa'] = "";
 $text['description-destination_caller_id_name']['ar-eg'] = "أدخل اسم المتصل";
+$text['description-destination_caller_id_name']['he'] = "";
 
 $text['description-carrier']['en-us'] = "Enter the carrier name. This is use to keep track incase billing";
 $text['description-carrier']['es-cl'] = "Introduzca el nombre del carrier. Esto se utiliza para realizar un seguimiento en caso de facturación";
@@ -610,6 +656,7 @@ $text['description-carrier']['ro'] = "";
 $text['description-carrier']['de-at'] = "Geben Sie den Providernamen an. Dies wird für das Abrechnungsmodul verwendet.";
 $text['description-carrier']['fa'] = "";
 $text['description-carrier']['ar-eg'] = "";
+$text['description-carrier']['he'] = "";
 
 $text['description-account_code']['en-us'] = "Enter account code.";
 $text['description-account_code']['es-cl'] = "Ingrese el código de cuenta.";
@@ -623,6 +670,7 @@ $text['description-account_code']['ro'] = "";
 $text['description-account_code']['de-at'] = "Geben Sie einen Account Code an.";
 $text['description-account_code']['fa'] = "";
 $text['description-account_code']['ar-eg'] = "";
+$text['description-account_code']['he'] = "הכנס קוד חשבון";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -636,6 +684,7 @@ $text['confirm-delete']['ro'] = "";
 $text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete']['fa'] = "";
 $text['confirm-delete']['ar-eg'] = "";
+$text['confirm-delete']['he'] = "";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
@@ -649,6 +698,7 @@ $text['button-show_all']['ro'] = "";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['fa'] = "";
 $text['button-show_all']['ar-eg'] = "أظهر الكل";
+$text['button-show_all']['he'] = "הצג הכל";
 
 $text['button-search']['en-us'] = "Search";
 $text['button-search']['es-cl'] = "Buscar";
@@ -662,6 +712,7 @@ $text['button-search']['ro'] = "";
 $text['button-search']['de-at'] = "Suchen";
 $text['button-search']['fa'] = "";
 $text['button-search']['ar-eg'] = "بحث";
+$text['button-search']['he'] = "חיפוש";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -675,6 +726,7 @@ $text['button-save']['ro'] = "Salvează";
 $text['button-save']['de-at'] = "Speichern";
 $text['button-save']['fa'] = "";
 $text['button-save']['ar-eg'] = "حفظ";
+$text['button-save']['he'] = "שמור";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
@@ -688,6 +740,7 @@ $text['button-edit']['ro'] = "";
 $text['button-edit']['de-at'] = "Bearbeiten";
 $text['button-edit']['fa'] = "";
 $text['button-edit']['ar-eg'] = "تعديل";
+$text['button-edit']['he'] = "ערוך";
 
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['es-cl'] = "Eliminar";
@@ -701,6 +754,7 @@ $text['button-delete']['ro'] = "";
 $text['button-delete']['de-at'] = "Löschen";
 $text['button-delete']['fa'] = "";
 $text['button-delete']['ar-eg'] = "مسح";
+$text['button-delete']['he'] = "מחק";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
@@ -714,6 +768,7 @@ $text['button-back']['ro'] = "Înapoi";
 $text['button-back']['de-at'] = "Zurück";
 $text['button-back']['fa'] = "";
 $text['button-back']['ar-eg'] = "رجوع";
+$text['button-back']['he'] = "חזרה";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['es-cl'] = "Agregar";
@@ -727,6 +782,7 @@ $text['button-add']['ro'] = "";
 $text['button-add']['de-at'] = "Hinzufügen";
 $text['button-add']['fa'] = "";
 $text['button-add']['ar-eg'] = "اضافة";
+$text['button-add']['he'] = "הוספה";
 
 $text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
 $text['billing-warning']['es-cl'] = "Si está utilizando la aplicación de facturación fusionpbx, asegúrese de agregar lasvariables accountcode y carrier";
@@ -740,5 +796,6 @@ $text['billing-warning']['ro'] = "";
 $text['billing-warning']['de-at'] = "Wenn Sie die Fusionpbx Abrechnung verwenden, stellen Sie sicher, dass Account Code und Betreiber Variablen gesetzt sind.";
 $text['billing-warning']['fa'] = "";
 $text['billing-warning']['ar-eg'] = "";
+$text['billing-warning']['he'] = "";
 
 ?>
