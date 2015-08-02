@@ -11,6 +11,7 @@ $apps[$x]['menu'][0]['title']['uk'] = "Блокування дзвінків";
 $apps[$x]['menu'][0]['title']['ro'] = "Blocare apel";
 $apps[$x]['menu'][0]['title']['de-at'] = "Sperrlisten";
 $apps[$x]['menu'][0]['title']['ar-eg'] = "حظر المكالمات";
+$apps[$x]['menu'][0]['title']['he'] = "חסימת מספר";
 $apps[$x]['menu'][0]['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
 $apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 $apps[$x]['menu'][0]['category'] = "internal";

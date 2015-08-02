@@ -13,6 +13,7 @@ $apps[$x]['menu'][0]['title']['pt-br'] = "Servidor de Fax";
 $apps[$x]['menu'][0]['title']['pl'] = "Serwer faksowy";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Fax Server";
 $apps[$x]['menu'][0]['title']['ro'] = "Server Fax";
+$apps[$x]['menu'][0]['title']['he'] = "שרת פקסים";
 $apps[$x]['menu'][0]['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
 $apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 $apps[$x]['menu'][0]['category'] = "internal";
