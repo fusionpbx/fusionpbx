@@ -66,35 +66,21 @@
 			 */
 			public function dialplan() {
 
-				//check to see if the dialplan exists
+				//delete previous dialplan
 					if (strlen($this->dialplan_uuid) > 0) {
-						$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
+						//delete the previous dialplan
+						$sql = "delete from v_dialplans ";
 						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
 						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$prep_statement = $this->db->prepare($sql);
-						if ($prep_statement) {
-							$prep_statement->execute();
-							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-							if (is_array($row)) {
-								//results found
-								$dialplan_name = $row['dialplan_name'];
-								$dialplan_description = $row['dialplan_description'];
-							}
-							else {
-								//no results
-								unset($this->dialplan_uuid);
-								$sql = "update v_call_center_queues ";
-								$sql .= "set dialplan_uuid = null ";
-								$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
-								$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-								//echo $sql."<br />\n";
-								//exit;
-								$this->db->exec($sql);
-								unset($sql);
-							}
-							unset($prep_statement);
-						}
+						$this->db->exec($sql);
+
+						$sql = "delete from v_dialplan_details ";
+						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
+						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+						$this->db->exec($sql);
+						unset($sql);
 					}
+					unset($prep_statement);
 
 				//build the dialplan array
 					$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
@@ -181,20 +167,6 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 
-				//delete the previous dialplan
-					if(strlen($this->dialplan_uuid) > 0) {
-						$sql = "delete from v_dialplans ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-
-						$sql = "delete from v_dialplan_details ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-						unset($sql);
-					}
-
 				//add the dialplan permission
 					$p = new permissions;
 					$p->add("dialplan_add", 'temp');
@@ -205,22 +177,17 @@
 				//save the dialplan
 					$orm = new orm;
 					$orm->name('dialplans');
-					if (strlen($this->dialplan_uuid) > 0) {
-						$orm->uuid($this->dialplan_uuid);
-					}
 					$orm->save($dialplan);
 					$dialplan_response = $orm->message;
+					$this->dialplan_uuid = $dialplan_response['uuid'];
 
 				//if new dialplan uuid then update the call center queue
-					if (strlen($this->dialplan_uuid) == 0) {
-						$this->dialplan_uuid = $dialplan_response['uuid'];
-						$sql = "update v_call_center_queues ";
-						$sql .= "set dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-						unset($sql);
-					}
+					$sql = "update v_call_center_queues ";
+					$sql .= "set dialplan_uuid = '".$this->dialplan_uuid."' ";
+					$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
+					$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+					$this->db->exec($sql);
+					unset($sql);
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
