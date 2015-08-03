@@ -27,90 +27,158 @@
 //process this only one time
 if ($domains_processed == 1) {
 
-	//ensure that the language code is set
-		$sql = "select count(*) as num_rows from v_default_settings ";
-		$sql .= "where default_setting_category = 'domain' ";
-		$sql .= "and default_setting_subcategory = 'language' ";
-		$sql .= "and default_setting_name = 'code' ";
+	//define array of settings
+		$x = 0;
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'language';
+		$array[$x]['default_setting_name'] = 'code';
+		$array[$x]['default_setting_value'] = 'en-us';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_length';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '10';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Sets the default length for system generated passwords.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_strength';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '4';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_auth';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_from';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_from_name';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_host';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_username';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_password';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
+		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+
+	//get an array of the default settings
+		$sql = "select * from v_default_settings ";
 		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "insert into v_default_settings ";
-				$sql .= "(";
-				$sql .= "default_setting_uuid, ";
-				$sql .= "default_setting_category, ";
-				$sql .= "default_setting_subcategory, ";
-				$sql .= "default_setting_name, ";
-				$sql .= "default_setting_value, ";
-				$sql .= "default_setting_enabled, ";
-				$sql .= "default_setting_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'domain', ";
-				$sql .= "'language', ";
-				$sql .= "'code', ";
-				$sql .= "'en-us', ";
-				$sql .= "'true', ";
-				$sql .= "'' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		$prep_statement->execute();
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset ($prep_statement, $sql);
+
+	//find the missing default settings
+		$x = 0;
+		foreach ($array as $setting) {
+			$found = false;
+			$missing[$x] = $setting;
+			foreach ($default_settings as $row) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+					$found = true;
+					//remove items from the array that were found
+					unset($missing[$x]);
+				}
 			}
-			unset($prep_statement, $row);
+			$x++;
 		}
 
-	//ensure that the default password length and strength are set
-		$sql = "select count(*) as num_rows from v_default_settings ";
-		$sql .= "where ( ";
-		$sql .= "default_setting_category = 'security' ";
-		$sql .= "and default_setting_subcategory = 'password_length' ";
-		$sql .= "and default_setting_name = 'var' ";
-		$sql .= ") or ( ";
-		$sql .= "default_setting_category = 'security' ";
-		$sql .= "and default_setting_subcategory = 'password_strength' ";
-		$sql .= "and default_setting_name = 'var' ";
-		$sql .= ") ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
+	//add the missing default settings
+		foreach ($missing as $row) {
+			//add the default settings
+			$orm = new orm;
+			$orm->name('default_settings');
+			$orm->save($row);
+			$message = $orm->message;
+			unset($orm);
+			//print_r($message);
+		}
+		unset($missing);
+
+	//move the dynamic provision variables that from v_vars table to v_default_settings
+		if (count($_SESSION['provision']) == 0) {
+			$sql = "select * from v_vars ";
+			$sql .= "where var_cat = 'Provision' ";
+			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "insert into v_default_settings ";
-				$sql .= "( ";
-				$sql .= "default_setting_uuid, ";
-				$sql .= "default_setting_category, ";
-				$sql .= "default_setting_subcategory, ";
-				$sql .= "default_setting_name, ";
-				$sql .= "default_setting_value, ";
-				$sql .= "default_setting_enabled, ";
-				$sql .= "default_setting_description ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "( ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'security', ";
-				$sql .= "'password_length', ";
-				$sql .= "'var', ";
-				$sql .= "'10', ";
-				$sql .= "'true', ";
-				$sql .= "'Sets the default length for system generated passwords.' ";
-				$sql .= "), ( ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'security', ";
-				$sql .= "'password_strength', ";
-				$sql .= "'var', ";
-				$sql .= "'4', ";
-				$sql .= "'true', ";
-				$sql .= "'Sets the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters' ";
-				$sql .= ") ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				//set the variable
+					$var_name = check_str($row['var_name']);
+				//remove the 'v_' prefix from the variable name
+					if (substr($var_name, 0, 2) == "v_") {
+						$var_name = substr($var_name, 2);
+					}
+				//add the provision variable to the default settings table
+					$sql = "insert into v_default_settings ";
+					$sql .= "(";
+					$sql .= "default_setting_uuid, ";
+					$sql .= "default_setting_category, ";
+					$sql .= "default_setting_subcategory, ";
+					$sql .= "default_setting_name, ";
+					$sql .= "default_setting_value, ";
+					$sql .= "default_setting_enabled, ";
+					$sql .= "default_setting_description ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'provision', ";
+					$sql .= "'".$var_name."', ";
+					$sql .= "'var', ";
+					$sql .= "'".check_str($row['var_value'])."', ";
+					$sql .= "'".check_str($row['var_enabled'])."', ";
+					$sql .= "'".check_str($row['var_description'])."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 			}
-			unset($prep_statement, $row);
+			unset($prep_statement);
+			//delete the provision variables from system -> variables
+			//$sql = "delete from v_vars ";
+			//$sql .= "where var_cat = 'Provision' ";
+			//echo $sql ."\n";
+			//$db->exec(check_sql($sql));
+			//echo "$var_name $var_value \n";
 		}
 
 	//populate the languages table, if necessary
@@ -282,19 +350,19 @@ if ($domains_processed == 1) {
 			unset($prep_statement, $row);
 		}
 
-//set the sip_profiles directory for older installs
-	if (isset($_SESSION['switch']['gateways']['dir'])) {
-		$orm = new orm;
-		$orm->name('default_settings');
-		$orm->uuid($_SESSION['switch']['gateways']['uuid']);
-		$array['default_setting_category'] = 'switch';
-		$array['default_setting_subcategory'] = 'sip_profiles';
-		$array['default_setting_name'] = 'dir';
-		//$array['default_setting_value'] = '';
-		//$array['default_setting_enabled'] = 'true';
-		$orm->save($array);
-		unset($array);
-	}
+	//set the sip_profiles directory for older installs
+		if (isset($_SESSION['switch']['gateways']['dir'])) {
+			$orm = new orm;
+			$orm->name('default_settings');
+			$orm->uuid($_SESSION['switch']['gateways']['uuid']);
+			$array['default_setting_category'] = 'switch';
+			$array['default_setting_subcategory'] = 'sip_profiles';
+			$array['default_setting_name'] = 'dir';
+			//$array['default_setting_value'] = '';
+			//$array['default_setting_enabled'] = 'true';
+			$orm->save($array);
+			unset($array);
+		}
 }
 
 ?>
