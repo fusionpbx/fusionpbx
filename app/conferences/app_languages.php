@@ -1,10 +1,10 @@
 <?php
 
 	//conferences
-	$text['title']['en-us'] = "Conferences";
-	$text['title']['es-cl'] = "Conferencias";
-	$text['title']['pt-pt'] = "Conferências";
-	$text['title']['fr-fr'] = "Conférences";
+	$text['title-conferences']['en-us'] = "Conferences";
+	$text['title-conferences']['es-cl'] = "Conferencias";
+	$text['title-conferences']['pt-pt'] = "Conferências";
+	$text['title-conferences']['fr-fr'] = "Conférences";
 
 	$text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
 	$text['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso pin (opcional).";

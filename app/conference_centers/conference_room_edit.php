@@ -512,7 +512,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
+	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference_rooms']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
 	if (strlen($meeting_uuid) > 0) {
@@ -526,7 +526,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference-name']."</td>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference_name']."</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
 	foreach ($conference_centers as &$row) {
@@ -558,7 +558,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td class='vtable' align='left'>";
 	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
 	echo "			<br />\n";
-	echo "			".$text['description-moderator-pin']."\n";
+	echo "			".$text['description-moderator_pin']."\n";
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -681,7 +681,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('conference_room_wait_mod')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-wait-for-moderator']."</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-wait_for_moderator']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='wait_mod'>\n";
 		echo "	<option value=''></option>\n";

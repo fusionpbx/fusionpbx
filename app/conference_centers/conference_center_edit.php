@@ -312,7 +312,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference-center']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_center']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('conference_active_advanced_view')) {
@@ -323,7 +323,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<br />";
-	echo $text['description-conference-center']."\n";
+	echo $text['description-conference_center']."\n";
 	echo "<br /><br />\n";
 
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
