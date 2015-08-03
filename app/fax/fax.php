@@ -48,7 +48,7 @@ require_once "resources/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['title']."</span>";
+	echo "			<span class=\"title\">".$text['title-fax']."</span>";
 	echo "			<br /><br />\n";
 	echo "			".$text['description']."\n";
 	echo "		</td>\n";

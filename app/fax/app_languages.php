@@ -1,5 +1,16 @@
 <?php
 
+$text['title-fax']['en-us'] = "Fax Server";
+$text['title-fax']['es-cl'] = "Servidor de Fax";
+$text['title-fax']['pt-pt'] = "Servidor de Fax";
+$text['title-fax']['fr-fr'] = "Serveur de Fax";
+$text['title-fax']['pt-br'] = "Configurações da Conta";
+$text['title-fax']['pl'] = "Serwer faksowy";
+$text['title-fax']['sv-se'] = "Fax Server";
+$text['title-fax']['de-at'] = "Fax Server";
+$text['title-fax']['ro'] = "Server Fax";
+$text['title-fax']['he'] = "הגדרת חשבון";
+
 $text['title-fax_logs']['en-us'] = "Fax Logs";
 $text['title-fax_logs']['es-cl'] = "Registros de fax";
 $text['title-fax_logs']['pt-pt'] = "Logs de fax";
@@ -43,17 +54,6 @@ $text['title-fax_file']['sv-se'] = "Faxfilen";
 $text['title-fax_file']['de-at'] = "Fax Datei";
 $text['title-fax_file']['ro'] = "Fișier Fax";
 $text['title-fax_file']['he'] = "";
-
-$text['title']['en-us'] = "Fax Server";
-$text['title']['es-cl'] = "Servidor de Fax";
-$text['title']['pt-pt'] = "Servidor de Fax";
-$text['title']['fr-fr'] = "Serveur de Fax";
-$text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pl'] = "Serwer faksowy";
-$text['title']['sv-se'] = "Fax Server";
-$text['title']['de-at'] = "Fax Server";
-$text['title']['ro'] = "Server Fax";
-$text['title']['he'] = "הגדרת חשבון";
 
 $text['table-view']['en-us'] = "View";
 $text['table-view']['es-cl'] = "Ver";

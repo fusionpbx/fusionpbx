@@ -54,12 +54,12 @@ else {
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-sessions']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_sessions']."</b></td>\n";
 	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'></td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-conference-sessions']."<br /><br />\n";
+	echo "			".$text['description-conference_sessions']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

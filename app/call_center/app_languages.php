@@ -100,6 +100,17 @@ $text['title-call_center_agent_add']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_add']['uk'] = "Оператор кол-центра";
 $text['title-call_center_agent_add']['de-at'] = "Callcenter Agenten";
 
+$text['title-call_center']['en-us'] = "Call Center";
+$text['title-call_center']['es-cl'] = "Centro de Llamadas";
+$text['title-call_center']['fr-fr'] = "Centre d'appel";
+$text['title-call_center']['fr-ca'] = "Centre d' appels";
+$text['title-call_center']['pt-pt'] = "Centro de Chamadas";
+$text['title-call_center']['pt-br'] = "Centro de chamadas";
+$text['title-call_center']['pl'] = "Call Center ";
+$text['title-call_center']['sv-se'] = "Call Center";
+$text['title-call_center']['uk'] = "Кол-центр";
+$text['title-call_center']['de-at'] = "Callcenter";
+
 $text['option-usring']['en-us'] = "us-ring";
 $text['option-usring']['es-cl'] = "us-ring";
 $text['option-usring']['pt-pt'] = "us-ring";

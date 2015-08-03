@@ -55,7 +55,7 @@ else {
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference-centers']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_centers']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	if (permission_exists('conference_active_advanced_view')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
@@ -65,7 +65,7 @@ else {
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<br />\n";
-	echo $text['description-conference-centers']."\n";
+	echo $text['description-conference_centers']."\n";
 	echo "<br /><br />\n";
 
 	//prepare to page the results
