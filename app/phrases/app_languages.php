@@ -1,14 +1,14 @@
 <?php
 
-$text['title_phrases']['en-us'] = "Phrases";
-$text['title_phrases']['es-cl'] = "Grabaciones";
-$text['title_phrases']['pt-pt'] = "Gravações";
-$text['title_phrases']['fr-fr'] = "Guides Vocaux";
-$text['title_phrases']['pt-br'] = "Gravações";
-$text['title_phrases']['pl'] = "Zwroty";
-$text['title_phrases']['sv-se'] = "Fraser";
-$text['title_phrases']['uk'] = "Фрази";
-$text['title_phrases']['de-at'] = "Phrasen";
+$text['title-phrases']['en-us'] = "Phrases";
+$text['title-phrases']['es-cl'] = "Grabaciones";
+$text['title-phrases']['pt-pt'] = "Gravações";
+$text['title-phrases']['fr-fr'] = "Guides Vocaux";
+$text['title-phrases']['pt-br'] = "Gravações";
+$text['title-phrases']['pl'] = "Zwroty";
+$text['title-phrases']['sv-se'] = "Fraser";
+$text['title-phrases']['uk'] = "Фрази";
+$text['title-phrases']['de-at'] = "Phrasen";
 
 $text['title-edit_phrase']['en-us'] = "Edit Phrase";
 $text['title-edit_phrase']['es-cl'] = "Editar Frase";
