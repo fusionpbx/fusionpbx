@@ -1,15 +1,15 @@
 <?php
 
-$text['title-time-conditions']['en-us'] = "Time Conditions";
-$text['title-time-conditions']['es-cl'] = "Condiciones Temporales";
-$text['title-time-conditions']['pt-pt'] = "Condições Temporais";
-$text['title-time-conditions']['fr-fr'] = "Conditions Temporelles";
-$text['title-time-conditions']['pt-br'] = "Condições temporarias";
-$text['title-time-conditions']['pl'] = "Warunki czasowe";
-$text['title-time-conditions']['sv-se'] = "Tidsstyrning";
-$text['title-time-conditions']['uk'] = "Часові умови";
-$text['title-time-conditions']['de-at'] = "Zeitschaltung";
-$text['title-time-conditions']['he'] = "";
+$text['title-time_conditions']['en-us'] = "Time Conditions";
+$text['title-time_conditions']['es-cl'] = "Condiciones Temporales";
+$text['title-time_conditions']['pt-pt'] = "Condições Temporais";
+$text['title-time_conditions']['fr-fr'] = "Conditions Temporelles";
+$text['title-time_conditions']['pt-br'] = "Condições temporarias";
+$text['title-time_conditions']['pl'] = "Warunki czasowe";
+$text['title-time_conditions']['sv-se'] = "Tidsstyrning";
+$text['title-time_conditions']['uk'] = "Часові умови";
+$text['title-time_conditions']['de-at'] = "Zeitschaltung";
+$text['title-time_conditions']['he'] = "";
 
 $text['message-update']['en-us'] = "Update Complete";
 $text['message-update']['es-cl'] = "Actualización Completada";

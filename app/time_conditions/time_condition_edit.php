@@ -785,7 +785,7 @@ echo "<form method='post' name='frm' action='' onsubmit=\"return check_submit();
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
 echo "		<td align='left' valign='top'>\n";
-echo "			<span class='title'>".$text['title-time-conditions']."</span>";
+echo "			<span class='title'>".$text['title-time_conditions']."</span>";
 echo "			<br /><br />\n";
 echo "			".$text['description-time_conditions']."\n";
 echo "		</td>\n";
