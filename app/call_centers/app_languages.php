@@ -1,5 +1,16 @@
 <?php
 
+$text['title-call_centers']['en-us'] = "Call Center";
+$text['title-call_centers']['es-cl'] = "Centro de Llamadas";
+$text['title-call_centers']['fr-fr'] = "Centre d'appel";
+$text['title-call_centers']['fr-ca'] = "Centre d' appels";
+$text['title-call_centers']['pt-pt'] = "Centro de Chamadas";
+$text['title-call_centers']['pt-br'] = "Centro de chamadas";
+$text['title-call_centers']['pl'] = "Call Center ";
+$text['title-call_centers']['sv-se'] = "Call Center";
+$text['title-call_centers']['uk'] = "Кол-центр";
+$text['title-call_centers']['de-at'] = "Callcenter";
+
 $text['title-call_center_tier_edit']['en-us'] = "Call Center Tier";
 $text['title-call_center_tier_edit']['es-cl'] = "Editar Nivel de Centro de Llamados";
 $text['title-call_center_tier_edit']['pt-pt'] = "Editar Nível do Call Center";
