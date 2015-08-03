@@ -243,7 +243,7 @@ require_once "resources/check_auth.php";
 		echo "	</tr>\n";
 		echo "</table>";
 	}
-	echo "<b>".$text['title']."</b>";
+	echo "<b>".$text['title-recordings']."</b>";
 	echo "<br /><br />\n";
 	echo $text['description']."\n";
 	echo "<br /><br />\n";
