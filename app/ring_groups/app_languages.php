@@ -1,15 +1,15 @@
 <?php
 
-$text['title']['en-us'] = "Ring Groups";
-$text['title']['es-cl'] = "Grupo de llamado";
-$text['title']['fr-fr'] = "Groupes de Sonnerie";
-$text['title']['pt-pt'] = "Grupos";
-$text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pl'] = "Grupy odbiorców rozmów";
-$text['title']['sv-se'] = "Ringgrupper";
-$text['title']['uk'] = "Групи";
-$text['title']['de-at'] = "Rufgruppen";
-$text['title']['he'] = "קבוצות חיוג";
+$text['title-ring_groups']['en-us'] = "Ring Groups";
+$text['title-ring_groups']['es-cl'] = "Grupo de llamado";
+$text['title-ring_groups']['fr-fr'] = "Groupes de Sonnerie";
+$text['title-ring_groups']['pt-pt'] = "Grupos";
+$text['title-ring_groups']['pt-br'] = "Configurações da Conta";
+$text['title-ring_groups']['pl'] = "Grupy odbiorców rozmów";
+$text['title-ring_groups']['sv-se'] = "Ringgrupper";
+$text['title-ring_groups']['uk'] = "Групи";
+$text['title-ring_groups']['de-at'] = "Rufgruppen";
+$text['title-ring_groups']['he'] = "קבוצות חיוג";
 
 $text['option-usring']['en-us'] = "us-ring";
 $text['option-usring']['es-cl'] = "us-ring";
