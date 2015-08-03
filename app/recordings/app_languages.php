@@ -20,15 +20,15 @@ $text['title-add']['sv-se'] = "Lägg Till Inspelning";
 $text['title-add']['uk'] = "Додати запис";
 $text['title-add']['de-at'] = "Aufnahmen hinzufügen";
 
-$text['title']['en-us'] = "Recordings";
-$text['title']['es-cl'] = "Grabaciones";
-$text['title']['pt-pt'] = "Gravações";
-$text['title']['fr-fr'] = "Guides Vocaux";
-$text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pl'] = "Nagrywanie rozmów";
-$text['title']['sv-se'] = "Inspelningar";
-$text['title']['uk'] = "Записи";
-$text['title']['de-at'] = "Aufnahmen";
+$text['title-recordings']['en-us'] = "Recordings";
+$text['title-recordings']['es-cl'] = "Grabaciones";
+$text['title-recordings']['pt-pt'] = "Gravações";
+$text['title-recordings']['fr-fr'] = "Guides Vocaux";
+$text['title-recordings']['pt-br'] = "Configurações da Conta";
+$text['title-recordings']['pl'] = "Nagrywanie rozmów";
+$text['title-recordings']['sv-se'] = "Inspelningar";
+$text['title-recordings']['uk'] = "Записи";
+$text['title-recordings']['de-at'] = "Aufnahmen";
 
 $text['message-uploaded']['en-us'] = "File Uploaded";
 $text['message-uploaded']['es-cl'] = "Subida de Archivos";
