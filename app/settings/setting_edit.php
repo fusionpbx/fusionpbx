@@ -76,13 +76,6 @@ else {
 		$xml_rpc_auth_user = check_str($_POST["xml_rpc_auth_user"]);
 		$xml_rpc_auth_pass = check_str($_POST["xml_rpc_auth_pass"]);
 		//$admin_pin = check_str($_POST["admin_pin"]);
-		//$smtp_host = check_str($_POST["smtp_host"]);
-		//$smtp_secure = check_str($_POST["smtp_secure"]);
-		//$smtp_auth = check_str($_POST["smtp_auth"]);
-		//$smtp_username = check_str($_POST["smtp_username"]);
-		//$smtp_password = check_str($_POST["smtp_password"]);
-		//$smtp_from = check_str($_POST["smtp_from"]);
-		//$smtp_from_name = check_str($_POST["smtp_from_name"]);
 		$mod_shout_decoder = check_str($_POST["mod_shout_decoder"]);
 		$mod_shout_volume = check_str($_POST["mod_shout_volume"]);
 	}
@@ -100,13 +93,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($xml_rpc_auth_user) == 0) { $msg .= "Please provide: XML RPC Auth User<br>\n"; }
 		//if (strlen($xml_rpc_auth_pass) == 0) { $msg .= "Please provide: XML RPC Auth Password<br>\n"; }
 		//if (strlen($admin_pin) == 0) { $msg .= "Please provide: Admin PIN Number<br>\n"; }
-		//if (strlen($smtp_host) == 0) { $msg .= "Please provide: SMTP Host<br>\n"; }
-		//if (strlen($smtp_secure) == 0) { $msg .= "Please provide: SMTP Secure<br>\n"; }
-		//if (strlen($smtp_auth) == 0) { $msg .= "Please provide: SMTP Auth<br>\n"; }
-		//if (strlen($smtp_username) == 0) { $msg .= "Please provide: SMTP Username<br>\n"; }
-		//if (strlen($smtp_password) == 0) { $msg .= "Please provide: SMTP Password<br>\n"; }
-		//if (strlen($smtp_from) == 0) { $msg .= "Please provide: SMTP From<br>\n"; }
-		//if (strlen($smtp_from_name) == 0) { $msg .= "Please provide: SMTP From Name<br>\n"; }
 		//if (strlen($mod_shout_decoder) == 0) { $msg .= "Please provide: Mod Shout Decoder<br>\n"; }
 		//if (strlen($mod_shout_volume) == 0) { $msg .= "Please provide: Mod Shout Volume<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -305,119 +291,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-xml-rpc-pw']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	/*
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP Host\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='smtp_host' maxlength='255' value=\"$smtp_host\">\n";
-	echo "<br />\n";
-	echo "Enter the SMTP host address. TLS example: smtp.gmail.com:587\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP Secure\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='smtp_secure'>\n";
-	echo "    <option value=''></option>\n";
-	if ($smtp_secure == "none") {
-	echo "    <option value='none' SELECTED >none</option>\n";
-	}
-	else {
-	echo "    <option value='none'>none</option>\n";
-	}
-	if ($smtp_secure == "tls") {
-	echo "    <option value='tls' SELECTED >tls</option>\n";
-	}
-	else {
-	echo "    <option value='tls'>tls</option>\n";
-	}
-	if ($smtp_secure == "ssl") {
-	echo "    <option value='ssl' SELECTED >ssl</option>\n";
-	}
-	else {
-	echo "    <option value='ssl'>ssl</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "Select the SMTP security. None, TLS, SSL\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP Auth\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='smtp_auth'>\n";
-	echo "    <option value=''></option>\n";
-	if ($smtp_auth == "true") {
-	echo "    <option value='true' SELECTED >true</option>\n";
-	}
-	else {
-	echo "    <option value='true'>true</option>\n";
-	}
-	if ($smtp_auth == "false") {
-	echo "    <option value='false' SELECTED >false</option>\n";
-	}
-	else {
-	echo "    <option value='false'>false</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "Use SMTP Authentication true or false.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP Username\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='smtp_username' maxlength='255' value=\"$smtp_username\">\n";
-	echo "<br />\n";
-	echo "Enter the SMTP authentication username.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP Password\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='smtp_password' id='smtp_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$smtp_password\">\n";
-	echo "<br />\n";
-	echo "Enter the SMTP authentication password.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP From\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='smtp_from' maxlength='255' value=\"$smtp_from\">\n";
-	echo "<br />\n";
-	echo "Enter the SMTP From email address.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    SMTP From Name\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='smtp_from_name' maxlength='255' value=\"$smtp_from_name\">\n";
-	echo "<br />\n";
-	echo "Enter the SMTP From Name.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	*/
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
