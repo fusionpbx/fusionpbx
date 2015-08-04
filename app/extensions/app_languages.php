@@ -39,6 +39,19 @@ $text['title-extension-add']['de-at'] = "Nebenstelle hinzufügen";
 $text['title-extension-add']['ar-eg'] = "إضافة رقم داخلي";
 $text['title-extension-add']['he'] = "הוספת שלוחה";
 
+$text['title-call_groups']['en-us'] = "Call Groups";
+$text['title-call_groups']['es-cl'] = "Llamar a Grupo";
+$text['title-call_groups']['pt-pt'] = "Grupo";
+$text['title-call_groups']['fr-fr'] = "Groupe d'appel";
+$text['title-call_groups']['pt-br'] = "Grupo";
+$text['title-call_groups']['pl'] = "Grupa odbiorców rozmowy";
+$text['title-call_groups']['uk'] = "";
+$text['title-call_groups']['sv-se'] = "Ring Grupp";
+$text['title-call_groups']['de-at'] = "Rufgruppe";
+$text['title-call_groups']['ro'] = "Grup apelare";
+$text['title-call_groups']['ar-eg'] = "";
+$text['title-call_groups']['he'] = "קבוצת חיוג";
+
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
 $text['option-voicemail_file_listen']['pt-pt'] = "Ouça Link (login requerido)";
