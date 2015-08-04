@@ -20,6 +20,20 @@
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para chamar várias extensões.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "ring_groups";
+		$apps[$x]['destinations'][$y]['name'] = "ring_groups";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and ring_group_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "ring_group_extension asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "ring_group_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "ring_group_extension";
+		$apps[$x]['destinations'][$y]['field']['description'] = "ring_group_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_view";

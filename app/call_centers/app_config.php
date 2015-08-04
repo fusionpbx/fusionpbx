@@ -19,6 +19,21 @@
 		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes dispon%uFFFDveis.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "call_centers";
+		$apps[$x]['destinations'][$y]['name'] = "call_centers";
+		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_description as  description from v_call_center_queues";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "queue_name asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "queue_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
+		$apps[$x]['destinations'][$y]['field']['description'] = "queue_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_queue_view";

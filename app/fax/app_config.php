@@ -20,6 +20,19 @@
 		$apps[$x]['description']['pt-pt'] = "Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "fax";
+		$apps[$x]['destinations'][$y]['name'] = "fax";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "fax_extension asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "fax_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "fax_extension";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view";

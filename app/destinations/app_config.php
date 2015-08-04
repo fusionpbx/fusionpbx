@@ -20,6 +20,22 @@
 		$apps[$x]['description']['pt-pt'] = "Utilizado para definir os números de destino externos.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "destinations";
+		$apps[$x]['destinations'][$y]['name'] = "destinations";
+		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_description as description from v_destinations ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and destination_type = 'outbound' destination_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "destination_uuid";
+		$apps[$x]['destinations'][$y]['field']['context'] = "destination_context";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "destination_number";
+		$apps[$x]['destinations'][$y]['field']['description'] = "destination_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "destination_view";

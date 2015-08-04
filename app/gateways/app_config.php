@@ -20,6 +20,25 @@
 		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "gateways";
+		$apps[$x]['destinations'][$y]['name'] = "gateways";
+		$apps[$x]['destinations'][$y]['sql'] = "select g.gateway_uuid as uuid, g.gateway as name, d.domain_name from v_gateways as g ";
+		$apps[$x]['destinations'][$y]['sql'] .= "inner join v_domains as d on g.domain_uuid = d.domain_uuid ";
+		$apps[$x]['destinations'][$y]['where'] = "where g.domain_uuid = '${domain_uuid}' and g.enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "gateway asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "gateway_uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "gateway";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "gateway_uuid";
+		$apps[$x]['destinations'][$y]['field']['description'] = "description";
+		$apps[$x]['destinations'][$y]['select_value']['call_center_contact'] = "sofia/gateway/\${destination}/";
+		$apps[$x]['destinations'][$y]['select_value']['bridge'] = "sofia/gateway/\${destination}/";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:sofia/gateway/\${destination}/";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge sofia/gateway/\${destination}/";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}@\${domain_name} \${description}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_view";

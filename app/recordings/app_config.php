@@ -20,6 +20,22 @@
 		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "recordings";
+		$apps[$x]['destinations'][$y]['name'] = "recordings";
+		$apps[$x]['destinations'][$y]['sql'] = "select recording_uuid as uuid, recording_name as name, recording_filename as destination, recording_description as description from v_recordings";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "recording_name asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "recording_uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "recording_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "recording_filename";
+		$apps[$x]['destinations'][$y]['field']['description'] = "recording_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "lua:streamfile.lua \${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:lua streamfile.lua \${destination}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "recording_view";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "e4290fd2-3ccc-a758-1714-660d38453104";
