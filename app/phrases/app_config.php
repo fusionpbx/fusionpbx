@@ -21,6 +21,19 @@
 		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "phrases";
+		$apps[$x]['destinations'][$y]['name'] = "phrases";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and phrase_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "phrase_name asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "phrase_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "phrase_name";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "phrase:\${destination}.\${domain_uuid}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:phrase \${destination}.\${domain_uuid}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "phrase_view";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "a5caa6dc-a6d7-41c3-a484-e556ffd0d2ff";

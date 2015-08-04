@@ -19,6 +19,20 @@
 		$apps[$x]['description']['pt-pt'] = "Conferências é usado para configurar salas de conferências com um nome, descrição e número de pin opcional.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "conferences";
+		$apps[$x]['destinations'][$y]['name'] = "conferences";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and conference_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "conference_name asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "conference_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "conference_extension";
+		$apps[$x]['destinations'][$y]['field']['description'] = "conference_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "conference_view";

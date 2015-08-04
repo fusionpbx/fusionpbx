@@ -20,6 +20,22 @@
 		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
 		$apps[$x]['description']['pt-br'] = "";
 
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "time_conditions";
+		$apps[$x]['destinations'][$y]['name'] = "time_conditions";
+		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_description as description from v_dialplans ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_number asc";
+		$apps[$x]['destinations'][$y]['field']['context'] = "dialplan_context";
+		$apps[$x]['destinations'][$y]['field']['name'] = "dialplan_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "dialplan_number";
+		$apps[$x]['destinations'][$y]['field']['description'] = "dialplan_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "time_condition_view";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
