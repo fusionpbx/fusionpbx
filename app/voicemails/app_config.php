@@ -16,7 +16,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "voicemails";
 		$apps[$x]['destinations'][$y]['name'] = "voicemails";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and voicemail_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and voicemail_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "voicemail_id asc ";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "voicemail_id";
 		$apps[$x]['destinations'][$y]['field']['description'] = "voicemail_description";

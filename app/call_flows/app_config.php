@@ -24,7 +24,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_name asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";

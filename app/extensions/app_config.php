@@ -25,7 +25,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "extension asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "extension";
