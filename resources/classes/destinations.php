@@ -25,10 +25,10 @@ class destinations {
 	}
 
 	/**
-	 * Get a specific item from the cache
-	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
+	 * Get the destination array
+	 * @var null
 	 */
-	public function array() {
+	public function get_array() {
 
 		//get the array from the app_config.php files
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -105,8 +105,9 @@ class destinations {
 	 * @var string $destination_value - current value
 	 */
 	public function select($destination_type, $destination_name, $destination_value) {
+
 		//get the array
-			$destinations = $this->array();
+			$destinations = $this->get_array();
 
 		//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name);
@@ -208,7 +209,7 @@ class destinations {
 			return $response;
 	}
 	//$obj = new destinations;
-	//echo $obj->select('dialplan', 'example' 'value');
+	//echo $obj->select('dialplan', 'example', 'value');
 
 }
 
