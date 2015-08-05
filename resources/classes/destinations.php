@@ -30,6 +30,9 @@ class destinations {
 	 */
 	public function get_array() {
 
+		//set the global variables
+			global($db);
+
 		//get the array from the app_config.php files
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 			$x = 0;
@@ -208,9 +211,8 @@ class destinations {
 		//return the formatted destinations
 			return $response;
 	}
-	//$obj = new destinations;
-	//echo $obj->select('dialplan', 'example', 'value');
-
 }
+//$obj = new destinations;
+//echo $obj->select('dialplan', 'example', 'value');
 
 ?>
