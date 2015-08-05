@@ -25,7 +25,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and ivr_menu_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "ivr_menu_extension";
