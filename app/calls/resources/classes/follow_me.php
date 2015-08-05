@@ -285,7 +285,7 @@ include "root.php";
 						$dial_string .= "fail_on_single_reject=USER_BUSY,";
 					}
 					$dial_string .= "instant_ringback=true,";
-					$dial_string .= ",ignore_early_media=true";
+					$dial_string .= "ignore_early_media=true";
 					$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
