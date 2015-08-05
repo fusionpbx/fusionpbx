@@ -31,7 +31,7 @@ class destinations {
 	public function get_array() {
 
 		//set the global variables
-			global($db);
+			global $db;
 
 		//get the array from the app_config.php files
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
