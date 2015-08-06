@@ -110,7 +110,7 @@ class destinations {
 	public function select($destination_type, $destination_name, $destination_value) {
 
 		//get the array
-			$destinations = $this->get_array();
+			$switch['destinations'] = $this->get_array();
 
 		//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name);
@@ -165,7 +165,7 @@ class destinations {
 
 			//print_r($switch);
 			$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
-			foreach ($switch[destinations] as $row) {
+			foreach ($switch['destinations'] as $row) {
 
 				$name = $row['name'];
 				$label = $row['label'];
