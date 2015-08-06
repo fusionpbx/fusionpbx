@@ -77,14 +77,11 @@ class destinations {
 					$result = $statement->fetchAll(PDO::FETCH_NAMED);
 					unset($statement);
 
-					$switch['destinations'][$x]['result']['sql'] = $sql;
-					$switch['destinations'][$x]['result']['data'] = $result;
+					$this->destinations[$x]['result']['sql'] = $sql;
+					$this->destinations[$x]['result']['data'] = $result;
 				}
 				$x++;
 			}
-
-		//return the destination array
-			$this->destinations = $switch['destinations'];
 	}
 
 	/**
@@ -158,6 +155,7 @@ class destinations {
 
 			//print_r($switch);
 			$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
+			$response .= "			<option value=''></option>\n";
 			foreach ($this->destinations as $row) {
 
 				$name = $row['name'];
