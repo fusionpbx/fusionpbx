@@ -41,7 +41,7 @@
 		$apps[$x]['destinations'][$y]['sql']['pgsql'] = "select distinct(unnest(string_to_array(call_group, ','))) as destination from v_extensions ";
 		$apps[$x]['destinations'][$y]['sql']['sqlite'] = "select distinct(call_group) as destination from v_extensions";
 		$apps[$x]['destinations'][$y]['sql']['mysql'] = "select distinct(call_group) as destination from v_extensions";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '${domain_uuid}' and call_group <> '' and enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_group <> '' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['destination']['name'] = "destination";
