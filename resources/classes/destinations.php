@@ -83,7 +83,7 @@ class destinations {
 					if (isset($row['sql'])) {
 						$sql .= "order by ".trim($row['order_by']);
 					}
-					$sql = str_replace("\${domain_name}", $_SESSION['domain_uuid'], $sql);
+					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
 					$sql = trim($sql);
 					$statement = $db->prepare($sql);
 					$statement->execute();
