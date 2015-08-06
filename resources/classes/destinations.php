@@ -3,35 +3,22 @@
 /**
  * destinations
  *
- * @method array get the destinations
+ * @method get_array get the destinations
+ * @method select build the html select
  */
 class destinations {
+
+	/**
+	 * destinations array
+	 */
+	public $destinations;
 
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		//place holder
-	}
-
-	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
-	}
-
-	/**
-	 * Get the destination array
-	 * @var null
-	 */
-	public function get_array() {
-
 		//set the global variables
-			global $db;
+			global $db, $db_type;
 
 		//get the array from the app_config.php files
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -43,19 +30,19 @@ class destinations {
 			$i = 0;
 			foreach ($apps as $x => &$app) {
 				foreach ($app['destinations'] as &$row) {
-					$switch[destinations][] = $row;
+					$this->destinations[] = $row;
 				}
 			}
 
 		//put the array in order
-			foreach ($switch[destinations] as $row) {
+			foreach ($this->destinations as $row) {
 				$option_groups[] = $row['label'];
 			}
-			array_multisort($option_groups, SORT_ASC, $switch[destinations]);
+			array_multisort($option_groups, SORT_ASC, $this->destinations);
 
 		//add the sql and data to the array
 			$x = 0;
-			foreach ($switch[destinations] as $row) {
+			foreach ($this->destinations as $row) {
 				if ($row['type'] = 'sql') {
 					if (isset($row['sql'])) {
 						if (is_array($row['sql'])) {
@@ -97,20 +84,26 @@ class destinations {
 			}
 
 		//return the destination array
-			return $switch['destinations'];
-
+			$this->destinations = $switch['destinations'];
 	}
 
 	/**
-	 * Get a specific item from the cache
+	 * Called when there are no references to a particular object
+	 * unset the variables used in the class
+	 */
+	public function __destruct() {
+		foreach ($this as $key => $value) {
+			unset($this->$key);
+		}
+	}
+
+	/**
+	 * Get the destination menu
 	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
 	 * @var string $destination_name - current name
 	 * @var string $destination_value - current value
 	 */
 	public function select($destination_type, $destination_name, $destination_value) {
-
-		//get the array
-			$switch['destinations'] = $this->get_array();
 
 		//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name);
@@ -165,7 +158,7 @@ class destinations {
 
 			//print_r($switch);
 			$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
-			foreach ($switch['destinations'] as $row) {
+			foreach ($this->destinations as $row) {
 
 				$name = $row['name'];
 				$label = $row['label'];
@@ -179,7 +172,7 @@ class destinations {
 
 				$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
 				foreach ($row['result']['data'] as $data) {
-					$select_value = $row['select_value']['dialplan'];
+					$select_value = $row['select_value'][$destination_type];
 					$select_label = $row['select_label'];
 					foreach ($row['field'] as $key => $value) {
 						if ($key == 'destination' and is_array($value)){
@@ -198,7 +191,8 @@ class destinations {
 					$select_value = str_replace("\${context}", $_SESSION['context'], $select_value); //to do: context can come from the array
 					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
 					$select_label = str_replace("\${context}", $_SESSION['context'], $select_label);
-					$response .= "			<option value='".$select_value."'>".trim($select_label)."</option>\n";
+					if ($select_value == $destination_value) { $selected = "selected='selected' "; } else { $selected = ''; }
+					$response .= "			<option value='".$select_value."' $selected>".trim($select_label)."</option>\n";
 				}
 				$response .= "		</optgroup>\n";
 				unset($text);
@@ -212,7 +206,14 @@ class destinations {
 			return $response;
 	}
 }
-//$obj = new destinations;
-//echo $obj->select('dialplan', 'example', 'value');
+/*
+$obj = new destinations;
+echo $obj->select('ivr', 'example1', 'menu-exec-app:transfer 32 XML voip.fusionpbx.com');
+echo $obj->select('ivr', 'example2', '');
+echo $obj->select('ivr', 'example3', '');
+echo $obj->select('ivr', 'example4', '');
+echo $obj->select('ivr', 'example5', '');
+echo $obj->select('ivr', 'example6', '');
+*/
 
 ?>
