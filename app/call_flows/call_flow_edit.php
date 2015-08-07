@@ -354,6 +354,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_flow_uuid = check_str($_GET["id"]);
@@ -554,7 +557,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	//show the destination list
 	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
-	switch_select_destination("dialplan", $destination_label, "call_flow_destination", $select_value, "", $call_flow_data);
+	//switch_select_destination("dialplan", $destination_label, "call_flow_destination", $select_value, "", $call_flow_data);
+	echo $destination->select('dialplan', 'call_flow_destination', $select_value);
 	unset($select_value);
 	echo "<br />\n";
 	echo $text['description-destination']."\n";
@@ -577,12 +581,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-alternate_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
 	$select_value = '';
 	if (strlen($call_flow_anti_app.$call_flow_anti_data) > 0) {
 		$select_value = $call_flow_anti_app.':'.$call_flow_anti_data;
 	}
-	switch_select_destination("dialplan", $alternate_destination_label, "call_flow_alternate_destination", $select_value, "", $call_flow_anti_data);
+	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);
 	unset($select_value);
 	echo "<br />\n";
 	echo $text['description-alternate_destination']."\n";
