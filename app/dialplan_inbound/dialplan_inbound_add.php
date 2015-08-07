@@ -743,6 +743,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		return;
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+$destination = new destinations;
+
 ?>
 
 <script type="text/javascript">
@@ -1018,10 +1021,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-	switch_select_destination("dialplan", "", "action_1", $action_1, "", "");
-
+	echo $destination->select('dialplan', 'action_1', $action_1);
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1034,10 +1034,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-action_2']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-
-		//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-		switch_select_destination("dialplan", "", "action_2", $action_2, "", "");
-
+		echo $destination->select('dialplan', 'action_2', $action_2);
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

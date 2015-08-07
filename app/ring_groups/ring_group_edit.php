@@ -592,7 +592,6 @@ else {
 	echo "	".$text['label-timeout_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	//switch_select_destination("dialplan", "", "ring_group_timeout_action", $ring_group_timeout_action, "", "");
 	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action);
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";

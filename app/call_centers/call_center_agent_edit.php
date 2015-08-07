@@ -300,6 +300,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$call_center_agent_uuid = $_GET["id"];
@@ -475,10 +478,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-	switch_select_destination("call_center_contact", "", "agent_contact", $agent_contact, "width: 350px;", "");
-
+	echo $destination->select('call_center_contact', 'agent_contact', $agent_contact);
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
 	echo "</td>\n";
