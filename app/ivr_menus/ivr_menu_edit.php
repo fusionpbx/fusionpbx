@@ -474,6 +474,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</optgroup>\n";
 		}
 	//sounds
+		/*
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 		if (count($dir_array) > 0) {
@@ -494,6 +495,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			echo "</optgroup>\n";
 		}
+		*/
 	//select
 		if (if_group("superadmin")) {
 			if (!$tmp_selected) {
@@ -571,6 +573,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 
 	//sounds
+		/*
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 		if (count($dir_array) > 0) {
@@ -591,6 +594,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			echo "</optgroup>\n";
 		}
+		*/
 	//select
 		if (if_group("superadmin")) {
 			if (!$tmp_selected && strlen($ivr_menu_greet_short) > 0) {
