@@ -284,7 +284,7 @@
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open("/tmp/callcenter.conf.xml", "w"));
+				local file = assert(io.open(temp_dir .. "/callcenter.conf.xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end

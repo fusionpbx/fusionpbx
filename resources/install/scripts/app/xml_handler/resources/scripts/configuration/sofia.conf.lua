@@ -261,7 +261,7 @@
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open("/tmp/sofia.conf.xml", "w"));
+				local file = assert(io.open(temp_dir .. "/sofia.conf.xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end
