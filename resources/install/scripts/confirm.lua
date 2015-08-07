@@ -83,7 +83,7 @@
 						digit = '';
 						if (file_exists(call_screen_file)) then
 							max_tries = "1";
-							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file, "", "\\d+");
+							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file:gsub("\\","/"), "", "\\d+");
 						end
 						if (string.len(digit) == 0) then
 							max_tries = "3";

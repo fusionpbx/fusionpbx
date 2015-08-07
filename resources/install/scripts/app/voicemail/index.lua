@@ -142,11 +142,12 @@
 					end
 				end
 			end
-			temp_dir = "";
-			if (settings['server'] ~= nil) then
-				if (settings['server']['temp'] ~= nil) then
-					if (settings['server']['temp']['dir'] ~= nil) then
-						temp_dir = settings['server']['temp']['dir'];
+			if (not temp_dir) or (#temp_dir == 0) then
+				if (settings['server'] ~= nil) then
+					if (settings['server']['temp'] ~= nil) then
+						if (settings['server']['temp']['dir'] ~= nil) then
+							temp_dir = settings['server']['temp']['dir'];
+						end
 					end
 				end
 			end

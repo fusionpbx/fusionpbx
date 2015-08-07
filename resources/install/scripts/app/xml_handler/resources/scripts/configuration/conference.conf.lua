@@ -103,7 +103,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]]..temp_dir .. [[/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="wideband">]]);
@@ -131,7 +131,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]]..temp_dir .. [[/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="ultrawideband">]]);
@@ -159,7 +159,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]]..temp_dir .. [[/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="cdquality">]]);
@@ -187,7 +187,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]]..temp_dir .. [[/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="sla">]]);
