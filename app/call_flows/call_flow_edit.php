@@ -556,8 +556,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$select_value = $call_flow_app.':'.$call_flow_data;
 	}
 	//show the destination list
-	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
-	//switch_select_destination("dialplan", $destination_label, "call_flow_destination", $select_value, "", $call_flow_data);
 	echo $destination->select('dialplan', 'call_flow_destination', $select_value);
 	unset($select_value);
 	echo "<br />\n";

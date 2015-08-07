@@ -187,7 +187,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($voicemail_option_action.$voicemail_option_param) > 0) {
 		$tmp_select_value = $voicemail_option_action.':'.$voicemail_option_param;
 	}
-	//switch_select_destination("ivr", $voicemail_options_label, "voicemail_option_param", $tmp_select_value, "width: 350px;", $voicemail_option_action);
 	echo $destination->select('ivr', 'voicemail_option_param', $tmp_select_value);
 	unset($tmp_select_value);
 

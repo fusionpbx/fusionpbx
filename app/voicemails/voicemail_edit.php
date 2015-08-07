@@ -398,7 +398,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "  <input class='formfld' style='width:70px' type='text' name='voicemail_options[".$c."][voicemail_option_digits]' maxlength='255' value='".$voicemail_option_digits."'>\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		//switch_select_destination("ivr", $voicemail_options_label, 'voicemail_options['.$c.'][voicemail_option_param]', $tmp_select_value, "width:175px", $voicemail_option_action);
 		echo $destination->select('ivr', 'voicemail_options['.$c.'][voicemail_option_param]', '');
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
