@@ -215,6 +215,7 @@
 								auth_acl = row.auth_acl;
 							--variables
 								sip_from_user = row.extension;
+								sip_from_number = (#number_alias > 0) and number_alias or row.extension;
 								call_group = row.call_group;
 								call_screen_enabled = row.call_screen_enabled;
 								user_record = row.user_record;
@@ -371,7 +372,7 @@
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
-							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
+							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_number .. [["/>]]);
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
 							end
