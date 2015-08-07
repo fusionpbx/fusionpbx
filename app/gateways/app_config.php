@@ -21,7 +21,6 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		/*
 		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "gateways";
@@ -30,16 +29,14 @@
 		$apps[$x]['destinations'][$y]['sql'] .= "inner join v_domains as d on g.domain_uuid = d.domain_uuid ";
 		$apps[$x]['destinations'][$y]['where'] = "where g.domain_uuid = '\${domain_uuid}' and g.enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "gateway asc";
-		$apps[$x]['destinations'][$y]['field']['uuid'] = "gateway_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "gateway";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "gateway_uuid";
 		$apps[$x]['destinations'][$y]['field']['description'] = "description";
-		$apps[$x]['destinations'][$y]['select_value']['call_center_contact'] = "sofia/gateway/\${destination}/";
-		$apps[$x]['destinations'][$y]['select_value']['bridge'] = "sofia/gateway/\${destination}/";
-		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:sofia/gateway/\${destination}/";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge sofia/gateway/\${destination}/";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "sofia/gateway/\${destination}/";
+		//$apps[$x]['destinations'][$y]['select_value']['bridge'] = "sofia/gateway/\${destination}/";
+		//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:sofia/gateway/\${destination}/";
+		//$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge sofia/gateway/\${destination}/";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}@\${domain_name} \${description}";
-		*/
 
 	//permission details
 		$y = 0;

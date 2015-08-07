@@ -478,7 +478,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo $destination->select('call_center_contact', 'agent_contact', $agent_contact);
+	echo $destination->select('user_contact', 'agent_contact', $agent_contact);
 	echo "<br />\n";
 	echo $text['description-contact']."\n";
 	echo "</td>\n";
