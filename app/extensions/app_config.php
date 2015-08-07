@@ -30,7 +30,7 @@
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "description";
-		$apps[$x]['destinations'][$y]['select_value']['call_center_contact'] = "user/\${destination}@\${domain_name}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "user/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
