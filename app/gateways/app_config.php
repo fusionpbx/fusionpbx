@@ -21,6 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
+		/*
 		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "gateways";
@@ -38,6 +39,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:sofia/gateway/\${destination}/";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge sofia/gateway/\${destination}/";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}@\${domain_name} \${description}";
+		*/
 
 	//permission details
 		$y = 0;
