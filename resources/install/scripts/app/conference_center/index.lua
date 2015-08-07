@@ -589,7 +589,7 @@
 							max_len_seconds = 5;
 							silence_threshold = "500";
 							silence_secs = "3";
-							session:recordFile("/tmp/conference-"..uuid..".wav", max_len_seconds, silence_threshold, silence_secs);
+							session:recordFile(temp_dir .. "/conference-"..uuid..".wav", max_len_seconds, silence_threshold, silence_secs);
 					end
 
 				--play a message that the conference is being a recorded
@@ -678,7 +678,7 @@
 				--announce the caller
 					if (announce == "true") then
 						--announce the caller - play the recording
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play /tmp/conference-"..uuid..".wav";
+							cmd = "conference "..meeting_uuid.."-"..domain_name.." play " .. temp_dir .. "/conference-"..uuid..".wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 						--play has entered the conference

@@ -66,7 +66,7 @@
 
 		--if the screen file is found then set confirm to true
 			if (domain_name ~= nil) then
-				call_screen_file = "/tmp/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
+				call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
 				if (file_exists(call_screen_file)) then
 					confirm = "true";
 				end
