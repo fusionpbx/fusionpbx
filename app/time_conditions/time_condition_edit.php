@@ -848,10 +848,8 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "		</tr>";
 	echo "		<tr>";
 	echo "			<td colspan='4' style='padding-top: 10px;'>";
-	//					switch_select_destination("dialplan", '', "dialplan_action[".$group_id."]", $dialplan_action, 'width: 300px;', '');
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
-
 	echo "			</td>";
 	echo "		</tr>";
 	echo "	</table>";
@@ -951,7 +949,6 @@ if ($action == 'update') {
 				echo "		</tr>";
 				echo "		<tr>";
 				echo "			<td colspan='4' style='padding-top: 10px;'>";
-				//					switch_select_destination("dialplan", $text['label-select_destination'], "dialplan_action[".$preset_group_id."]", $dialplan_action, 'width: 300px;', '', 'alternate_destination_required();');
 				echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_action);
 				echo "			</td>";
 				echo "		</tr>";
@@ -1020,7 +1017,6 @@ if ($action == 'update') {
 		echo "			<td>";
 		echo "				<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });\" value='".$text['button-advanced']."'>\n";
 		echo "				<span id='default_preset_destination' style=' display: none;'>";
-		//						switch_select_destination("dialplan", $text['label-select_default_destination'], "default_preset_action", $dialplan_action, 'width: 300px;', '', 'alternate_destination_required();');
 		echo 				$destination->select('dialplan', 'default_preset_action', $dialplan_action);
 		echo "				</span>";
 		echo "			</td>";
@@ -1037,7 +1033,6 @@ echo "<td id='td_alt_dest' class='vncell' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-alternate-destination']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-//		switch_select_destination("dialplan", ' ', "dialplan_anti_action", $dialplan_anti_action, 'width: 300px;', '');
 echo 				$destination->select('dialplan', 'dialplan_anti_action', $dialplan_anti_action);
 echo "</td>\n";
 echo "</tr>\n";
