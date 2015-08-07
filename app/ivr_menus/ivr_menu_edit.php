@@ -321,7 +321,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
 
 //get the recordings
-	$sql = "select * from v_recordings ";
+	$sql = "select recording_name, recording_filename from v_recordings ";
 	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 	$sql .= "order by recording_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
