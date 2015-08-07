@@ -655,7 +655,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$label = explode("XML", $data);
 			$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 			$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-			$destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
+			echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
 			echo "					</td>\n";
 			echo "					<td class='list_control_icons' style='width: 25px;'>";
 			if (strlen($row['destination_uuid']) > 0) {

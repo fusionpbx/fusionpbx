@@ -678,7 +678,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='$ivr_menu_option_digits'>\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		$destination->select('ivr', 'ivr_menu_options['.$c.'][ivr_menu_option_param]', $destination_action);
+		echo $destination->select('ivr', 'ivr_menu_options['.$c.'][ivr_menu_option_param]', $destination_action);
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='ivr_menu_options[".$c."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
@@ -733,7 +733,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-exit_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$destination->select('dialplan', 'ivr_menu_exit_action', $ivr_menu_exit_action);
+	echo $destination->select('dialplan', 'ivr_menu_exit_action', $ivr_menu_exit_action);
 	echo "	<br />\n";
 	echo "	".$text['description-exit_action']."\n";
 	echo "</td>\n";

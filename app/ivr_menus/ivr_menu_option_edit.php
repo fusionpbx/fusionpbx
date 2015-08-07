@@ -282,7 +282,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($ivr_menu_option_action.$ivr_menu_option_param) > 0) {
 		$destination_action = $ivr_menu_option_action.':'.$ivr_menu_option_param;
 	}
-	$destination->select('ivr', 'ivr_menu_option_param', $destination_action);
+	echo $destination->select('ivr', 'ivr_menu_option_param', $destination_action);
 	unset($destination_action);
 
 	echo "<br />\n";
