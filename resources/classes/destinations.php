@@ -168,32 +168,34 @@ class destinations {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
-				foreach ($row['result']['data'] as $data) {
-					$select_value = $row['select_value'][$destination_type];
-					$select_label = $row['select_label'];
-					foreach ($row['field'] as $key => $value) {
-						if ($key == 'destination' and is_array($value)){
-							if ($value['type'] == 'csv') {
-								$array = explode($value['delimiter'], $data[$key]);
-								$select_value = str_replace("\${destination}", $array[0], $select_value);
-								$select_label = str_replace("\${destination}", $array[0], $select_label);
+				if (count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+					$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
+					foreach ($row['result']['data'] as $data) {
+						$select_value = $row['select_value'][$destination_type];
+						$select_label = $row['select_label'];
+						foreach ($row['field'] as $key => $value) {
+							if ($key == 'destination' and is_array($value)){
+								if ($value['type'] == 'csv') {
+									$array = explode($value['delimiter'], $data[$key]);
+									$select_value = str_replace("\${destination}", $array[0], $select_value);
+									$select_label = str_replace("\${destination}", $array[0], $select_label);
+								}
+							}
+							else {
+								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
+								$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
 							}
 						}
-						else {
-							$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-							$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
-						}
+						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
+						$select_value = str_replace("\${context}", $_SESSION['context'], $select_value); //to do: context can come from the array
+						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
+						$select_label = str_replace("\${context}", $_SESSION['context'], $select_label);
+						if ($select_value == $destination_value) { $selected = "selected='selected' "; } else { $selected = ''; }
+						$response .= "			<option value='".$select_value."' $selected>".trim($select_label)."</option>\n";
 					}
-					$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
-					$select_value = str_replace("\${context}", $_SESSION['context'], $select_value); //to do: context can come from the array
-					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
-					$select_label = str_replace("\${context}", $_SESSION['context'], $select_label);
-					if ($select_value == $destination_value) { $selected = "selected='selected' "; } else { $selected = ''; }
-					$response .= "			<option value='".$select_value."' $selected>".trim($select_label)."</option>\n";
+					$response .= "		</optgroup>\n";
+					unset($text);
 				}
-				$response .= "		</optgroup>\n";
-				unset($text);
 			}
 			$response .= "	</select>\n";
 			if (if_group("superadmin")) {
@@ -206,6 +208,7 @@ class destinations {
 }
 /*
 $obj = new destinations;
+//$destinations = $obj->destinations;
 echo $obj->select('ivr', 'example1', 'menu-exec-app:transfer 32 XML voip.fusionpbx.com');
 echo $obj->select('ivr', 'example2', '');
 echo $obj->select('ivr', 'example3', '');
