@@ -82,6 +82,24 @@ class destinations {
 				}
 				$x++;
 			}
+			$this->destinations[$x]['type'] = 'array';
+			$this->destinations[$x]['label'] = 'other';
+			$this->destinations[$x]['name'] = 'dialplan';
+			$this->destinations[$x]['result']['field']['name'] = "name";
+			$this->destinations[$x]['result']['field']['destination'] = "destination";
+			$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
+			$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
+			$this->destinations[$x]['select_label'] = "\$name";
+			$y = 0;
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'check_voicemail';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
+			$y++;
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'company_directory';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
+			$y++;
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'record';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
+			$y++;
 	}
 
 	/**
