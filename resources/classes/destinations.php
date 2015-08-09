@@ -85,8 +85,8 @@ class destinations {
 			$this->destinations[$x]['type'] = 'array';
 			$this->destinations[$x]['label'] = 'other';
 			$this->destinations[$x]['name'] = 'dialplan';
-			$this->destinations[$x]['result']['field']['name'] = "name";
-			$this->destinations[$x]['result']['field']['destination'] = "destination";
+			$this->destinations[$x]['field']['name'] = "name";
+			$this->destinations[$x]['field']['destination'] = "destination";
 			$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
 			$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 			$this->destinations[$x]['select_label'] = "\$name";
