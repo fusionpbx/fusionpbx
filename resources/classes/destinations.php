@@ -91,12 +91,15 @@ class destinations {
 			$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 			$this->destinations[$x]['select_label'] = "\${name}";
 			$y = 0;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
 			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
 			$y++;
@@ -201,7 +204,13 @@ class destinations {
 							}
 							else {
 								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-								$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+								if (strlen($data['label']) == 0) {
+									$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+								}
+								else {
+									$label = $data['label'];
+									$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+								}
 							}
 						}
 						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
