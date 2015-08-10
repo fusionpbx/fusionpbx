@@ -98,6 +98,36 @@ $text['title-other']['sv-se'] = "Annat";
 $text['title-other']['uk'] = "Інший";
 $text['title-other']['de-at'] = "Hochladen";
 
+$text['option-check_voicemail']['en-us'] = "Check Voicemail";
+$text['option-check_voicemail']['es-cl'] = "Compruebe el correo de voz";
+$text['option-check_voicemail']['pt-pt'] = "Verifique Voicemail";
+$text['option-check_voicemail']['fr-fr'] = "Vérifiez la messagerie vocale";
+$text['option-check_voicemail']['pt-br'] = "Verifique Voicemail";
+$text['option-check_voicemail']['pl'] = "Sprawdź pocztę głosową";
+$text['option-check_voicemail']['sv-se'] = "Kontrollera röstbrevlådan";
+$text['option-check_voicemail']['uk'] = "Перевірте голосову пошту";
+$text['option-check_voicemail']['de-at'] = "überprüfen Sie Voicemail";
+
+$text['option-company_directory']['en-us'] = "Company Directory";
+$text['option-company_directory']['es-cl'] = "Directorio de la empresa";
+$text['option-company_directory']['pt-pt'] = "Directório de Empresas";
+$text['option-company_directory']['fr-fr'] = "Annuaire de l'entreprise";
+$text['option-company_directory']['pt-br'] = "Directório de Empresas";
+$text['option-company_directory']['pl'] = "katalog Firm";
+$text['option-company_directory']['sv-se'] = "Företagskatalog";
+$text['option-company_directory']['uk'] = "Каталог компаній";
+$text['option-company_directory']['de-at'] = "Firmenverzeichnis";
+
+$text['option-record']['en-us'] = "Record";
+$text['option-record']['es-cl'] = "Registro";
+$text['option-record']['pt-pt'] = "Registro";
+$text['option-record']['fr-fr'] = "Enregistrement";
+$text['option-record']['pt-br'] = "Registro";
+$text['option-record']['pl'] = "Rekord";
+$text['option-record']['sv-se'] = "Spela";
+$text['option-record']['uk'] = "Запис";
+$text['option-record']['de-at'] = "Aufzeichnung";
+
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['es-cl'] = "Global";
 $text['select-global']['pt-pt'] = "Global";
