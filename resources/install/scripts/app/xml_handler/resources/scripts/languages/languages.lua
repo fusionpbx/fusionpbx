@@ -192,7 +192,7 @@
 
 					--send the xml to the console
 						if (debug["xml_string"]) then
-							local file = assert(io.open("/tmp/xml_handler-" .. language .. ".xml", "w"));
+							local file = assert(io.open(temp_dir .. "/xml_handler-" .. language .. ".xml", "w"));
 							file:write(XML_STRING);
 							file:close();
 						end

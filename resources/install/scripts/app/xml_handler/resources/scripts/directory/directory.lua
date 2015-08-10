@@ -495,7 +495,7 @@
 
 						--send the xml to the console
 							if (debug["xml_string"]) then
-								local file = assert(io.open("/tmp/" .. user .. "@" .. domain_name .. ".xml", "w"));
+								local file = assert(io.open(temp_dir .. "/" .. user .. "@" .. domain_name .. ".xml", "w"));
 								file:write(XML_STRING);
 								file:close();
 							end
