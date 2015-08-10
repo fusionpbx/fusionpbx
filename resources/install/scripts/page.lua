@@ -67,7 +67,7 @@ if ( session:ready() ) then
 		if (not default_dialect) then default_dialect = 'us'; end
 		if (not default_voice) then default_voice = 'callie'; end
 
-	local conf_name = "page-"..destination_number.."%"..domain_name.."@page"
+	local conf_name = "page-"..destination_number.."-"..domain_name.."@page"
 
 	if (caller_id_name) then
 		--caller id name provided do nothing
