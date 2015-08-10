@@ -31,13 +31,15 @@
 	debug["sql"] = false;
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --add the function
-	require "resources.functions.explode";
+	dofile(scripts_dir.."/resources/functions/explode.lua");
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --check if the session is ready
@@ -147,7 +149,7 @@
 				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 			else
-				require "resources.functions.database_handle";
+				dofile(scripts_dir.."/resources/functions/database_handle.lua");
 				dbh = database_handle('switch');
 			end
 

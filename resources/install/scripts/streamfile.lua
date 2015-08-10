@@ -3,10 +3,12 @@
 	file_name = argv[1];
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --get the variables
@@ -23,7 +25,7 @@
 	if (not default_voice) then default_voice = 'callie'; end
 
 --settings
-	require "resources.functions.settings";
+	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -59,7 +61,10 @@
 	end
 
 --check if a file exists
-	require "resources.functions.file_exists";
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
 
 --define the on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
@@ -102,7 +107,7 @@
 			end
 			status = dbh:query(sql, function(row)
 				--add functions
-					require "resources.functions.base64";
+					dofile(scripts_dir.."/resources/functions/base64.lua");
 				--add the path to filename
 					file_name = recordings_dir.."/"..file_name_only;
 				--save the recording to the file system

@@ -19,8 +19,8 @@
 --	the Initial Developer. All Rights Reserved.
 
 --add functions
-	require "resources.functions.file_exists";
-	require "resources.functions.trim";
+	dofile(scripts_dir.."/resources/functions/file_exists.lua");
+	dofile(scripts_dir.."/resources/functions/trim.lua");
 
 --set the api object
 	api = freeswitch.API();

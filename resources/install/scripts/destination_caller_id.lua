@@ -25,14 +25,18 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
---define the trim function
-	require "resources.functions.trim"
+--add a trim function
+	function trim (s)
+		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+	end
 
 --get the variables
 	domain_name = session:getVariable("domain_name");

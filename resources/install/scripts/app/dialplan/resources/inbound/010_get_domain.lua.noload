@@ -32,7 +32,7 @@
 	end
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --get the cache
@@ -64,7 +64,7 @@
 
 	else
 		--add the function
-			require "resources.functions.explode";
+			dofile(scripts_dir.."/resources/functions/explode.lua");
 
 		--parse the cache
 			array = explode("&", cache);

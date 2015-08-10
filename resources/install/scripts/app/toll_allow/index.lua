@@ -26,7 +26,7 @@
 --debug
 	debug["toll_type"] = false
 	
-	require "resources.functions.explode";
+	dofile(scripts_dir.."/resources/functions/explode.lua");
 
 --create the api object and get variables
 	api = freeswitch.API()
