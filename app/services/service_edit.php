@@ -221,6 +221,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<option value='file'>file</option>\n";
 	}
+	if ($service_type == "svc") {
+		echo "	<option value='svc' selected='selected'>svc</option>\n";
+	}
+	else {
+		echo "	<option value='svc'>svc</option>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-type']."\n";

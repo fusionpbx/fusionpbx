@@ -34,6 +34,18 @@ else {
 	exit;
 }
 
+global $IS_WINDOWS;
+
+if ($IS_WINDOWS == null) {
+	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
+}
+
+$HAS_WIN_SVC = false;
+if($IS_WINDOWS){
+	require_once "resources/classes/lib_win.php";
+	$HAS_WIN_SVC = class_exists('win_service');
+}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -63,13 +75,28 @@ if (strlen($_GET["a"]) > 0) {
 	}
 	unset ($prep_statement);
 
-	if ($_GET["a"] == "stop") {
-		$_SESSION["message"] = $text['message-stopping'].': '.$service_name;
-		shell_exec($service_cmd_stop);
+	if($service_type == 'svc'){
+		if($HAS_WIN_SVC){
+			$svc = new win_service($service_data);
+			if ($_GET["a"] == "stop") {
+				$_SESSION["message"] = $text['message-stopping'].': '.$service_name;
+				$svc->stop();
+			}
+			if ($_GET["a"] == "start") {
+				$_SESSION["message"] = $text['message-starting'].': '.$service_name;
+				$svc->start();
+			}
+		}
 	}
-	if ($_GET["a"] == "start") {
-		$_SESSION["message"] = $text['message-starting'].': '.$service_name;
-		shell_exec($service_cmd_start);
+	else {
+		if ($_GET["a"] == "stop") {
+			$_SESSION["message"] = $text['message-stopping'].': '.$service_name;
+			shell_exec($service_cmd_stop);
+		}
+		if ($_GET["a"] == "start") {
+			$_SESSION["message"] = $text['message-starting'].': '.$service_name;
+			shell_exec($service_cmd_start);
+		}
 	}
 	header("Location: services.php");
 	return;
@@ -152,42 +179,69 @@ if (strlen($_GET["a"]) > 0) {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
-				$pid = file_get_contents($row[service_data]);
-				if (is_process_running($pid)) {
+			$service_running = false;
+
+			if ($row[service_type] == "svc") {
+				if ($HAS_WIN_SVC) {
+					$service_data = $row[service_data];
+					$svc = new win_service($service_data);
+					$svc_state = $svc->state() or $svc->last_error();
+					if(!$svc_state){
+						$svc_state = 'NOT_INSTALL';
+					}
+					$service_running = (($svc_state == 'RUNNING') || ($svc_state == 'START_PENDING'));
+
+					echo "<strong>$svc_state</strong>";
+
+					echo "</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+					if ($svc_state == 'NOT_INSTALL') {
+						echo "<strong>$svc_state</strong>";
+					}
+					else {
+						if ($service_running) {
+							echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
+						}
+						else {
+							echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
+						}
+					}
+				}
+				else{
+					echo "<strong>UNSUPPORT</strong>";
+					echo "</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+					echo "<strong>UNSUPPORT</strong>";
+				}
+			}
+			else {
+				if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
+					$pid = file_get_contents($row[service_data]);
+					$service_running = is_process_running($pid);
+				}
+				if ($row[service_type] == "file") {
+					$service_data = $row[service_data];
+					$service_running = file_exists($service_data);
+				}
+
+				if ($service_running) {
 					echo "<strong>".$text['label-running']."</strong>";
 				}
 				else {
 					echo "<strong>".$text['label-stopped']."</strong>";
 				}
-			}
-			if ($row[service_type] == "file") {
-				$service_data = $row[service_data];
-				if (file_exists($service_data)) {
-					echo "<strong>".$text['label-running']."</strong>";
-				}
-				else {
-					echo "<strong>".$text['label-stopped']."</strong>";
-				}
-			}
-			echo "</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
-				if (is_process_running($pid)) {
+
+				echo "</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				if ($service_running) {
 					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
 				}
 				else {
 					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
 				}
 			}
-			if ($row[service_type] == "file") {
-				if (file_exists($service_data)) {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
-				}
-				else {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
-				}
-			}
+
+
 			echo "</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row[service_description]."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
