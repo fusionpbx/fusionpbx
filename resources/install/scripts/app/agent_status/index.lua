@@ -6,7 +6,7 @@
 	debug["sql"] = true;
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --set the api

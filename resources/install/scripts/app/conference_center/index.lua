@@ -37,19 +37,19 @@
 	debug["sql"] = false;
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --prepare the api object
 	api = freeswitch.API();
 
 --general functions
-	require "resources.functions.base64";
-	require "resources.functions.trim";
-	require "resources.functions.file_exists";
-	require "resources.functions.explode";
-	require "resources.functions.format_seconds";
-	require "resources.functions.mkdir";
+	dofile(scripts_dir.."/resources/functions/base64.lua");
+	dofile(scripts_dir.."/resources/functions/trim.lua");
+	dofile(scripts_dir.."/resources/functions/file_exists.lua");
+	dofile(scripts_dir.."/resources/functions/explode.lua");
+	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
+	dofile(scripts_dir.."/resources/functions/mkdir.lua");
 
 --get the session variables
 	uuid = session:getVariable("uuid");
@@ -153,7 +153,7 @@
 			end_epoch = os.time();
 
 		--connect to the database
-			require "resources.functions.database_handle";
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
 
 		--get the conference sessions

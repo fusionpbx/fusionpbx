@@ -27,8 +27,10 @@
 	domain_name = argv[1];
 	wakeup_number = argv[2];
 
---define the trim function
-	require "resources.functions.trim";
+--add the trim function
+	function trim(s)
+		return s:gsub("^%s+", ""):gsub("%s+$", "")
+	end
 
 --add is_numeric
 	function is_numeric(text)

@@ -25,7 +25,9 @@
 
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --get the argv values
 	script_name = argv[0];

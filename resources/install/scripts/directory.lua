@@ -34,14 +34,21 @@
 	search_count = 0;
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
+
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --settings
-	require "resources.functions.settings";
+	dofile(scripts_dir.."/resources/functions/settings.lua");
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -151,8 +158,16 @@
 		end
 	end
 
---define the explode function
-	require "resources.functions.explode"
+--define explode
+	function explode ( seperator, str ) 
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
+	end
 
 --define a function to convert dialpad letters to numbers
 	function dialpad_to_digit(letter)
@@ -185,11 +200,16 @@
 		return count
 	end
 
---define the trim function
-	require "resources.functions.trim"
+--define trim
+	function trim (s)
+		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+	end
 
 --check if a file exists
-	require "resources.functions.file_exists"
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
 
 --define select_entry function 
 	function select_entry()
@@ -248,7 +268,7 @@
 								end
 								status = dbh:query(sql, function(field)
 									--add functions
-										require "resources.functions.base64";
+										dofile(scripts_dir.."/resources/functions/base64.lua");
 
 									--set the voicemail message path
 										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";

@@ -28,10 +28,12 @@ digit_timeout = "5000";
 extension = argv[1];
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --add the file_exists function
-	require "resources.functions.file_exists";
+	dofile(scripts_dir.."/resources/functions/file_exists.lua");
 
 --connect to the database
 	if (file_exists(database_dir.."/core.db")) then
@@ -39,7 +41,7 @@ extension = argv[1];
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 		freeswitch.consoleLog("NOTICE", "[eavesdrop] using core.db\n");
 	else
-		require "resources.functions.database_handle";
+		dofile(scripts_dir.."/resources/functions/database_handle.lua");
 		dbh = database_handle('switch');
 		freeswitch.consoleLog("NOTICE", "[eavesdrop] using freeswitch db\n");
 

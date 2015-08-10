@@ -52,7 +52,7 @@
 								end
 								status = dbh:query(sql, function(row)
 									--add functions
-										require "resources.functions.base64";
+										dofile(scripts_dir.."/resources/functions/base64.lua");
 
 									--set the voicemail message path
 										greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;

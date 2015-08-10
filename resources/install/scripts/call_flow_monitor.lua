@@ -32,14 +32,16 @@
 	debug["sql"] = false;
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --general functions
-	require "resources.functions.file_exists";
-	require "resources.functions.mkdir";
+	dofile(scripts_dir.."/resources/functions/file_exists.lua");
+	dofile(scripts_dir.."/resources/functions/mkdir.lua");
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --make sure the scripts/run dir exists
