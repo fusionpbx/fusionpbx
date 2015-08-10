@@ -57,7 +57,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	local sql = nil
 
 --define the functions
-	require "resources.functions.trim";
+	dofile(scripts_dir.."/resources/functions/trim.lua");
 
 --define the logger function
 	local function logger(level, log, data)
@@ -88,7 +88,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	--if not cached then get the information from the database
 	if (cache == "-ERR NOT FOUND") then
 		--connect to the database
-			require "resources.functions.database_handle";
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
 
 		--log if not connect 
@@ -123,7 +123,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	else
 		--get from memcache
 			--add the function
-				require "resources.functions.explode";
+				dofile(scripts_dir.."/resources/functions/explode.lua");
 
 			--parse the cache
 				array = explode("&", cache);

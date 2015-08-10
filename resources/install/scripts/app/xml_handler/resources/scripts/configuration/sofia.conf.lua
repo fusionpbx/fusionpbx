@@ -36,7 +36,7 @@
 	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
 
 		--connect to the database
-			require "resources.functions.database_handle";
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
 
 		--exits the script if we didn't connect properly

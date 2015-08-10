@@ -31,11 +31,16 @@
 	local file = assert(io.open(tmp_file, "w"));
 	file:write("remove this file to stop the script");
 
---define the trim function
-	require "resources.functions.trim"
+--add the trim function
+	function trim(s)
+		return s:gsub("^%s+", ""):gsub("%s+$", "")
+	end
 
 --check if a file exists
-	require "resources.functions.file_exists"
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
 
 --create the api object
 	api = freeswitch.API();

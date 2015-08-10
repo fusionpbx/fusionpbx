@@ -33,11 +33,21 @@
 	uuid = argv[1];
 	timeout = argv[2];
 
---define the trim function
-	require "resources.functions.trim";
+--add a trim function
+	function trim (s)
+		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+	end
 
---define the explode function
-	require "resources.functions.explode";
+--add the explode function
+	function explode ( seperator, str ) 
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
+	end
 
 --prepare the api
 	api = freeswitch.API();

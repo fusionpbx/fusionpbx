@@ -29,14 +29,18 @@
 	outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --prepare the api object
 	api = freeswitch.API();
 
---define the trim function
-	require "resources.functions.trim";
+--add the trim function
+	function trim(s)
+		if (s) then
+			return s:gsub("^%s+", ""):gsub("%s+$", "")
+		end
+	end
 
 --get the cache
 	cache = trim(api:execute("memcache", "get app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name));
@@ -80,7 +84,7 @@
 		end));
 	else
 		--add the function
-			require "resources.functions.explode";
+			dofile(scripts_dir.."/resources/functions/explode.lua");
 
 		--define the array/table and variables
 			local var = {}
