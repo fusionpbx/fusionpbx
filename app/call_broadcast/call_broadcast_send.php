@@ -46,7 +46,7 @@ function cmd_async($cmd) {
 	//windows
 	if (stristr(PHP_OS, 'WIN')) {
 		$descriptorspec = array(
-			0 => array("pipe", "r"),   // stdin
+			0 => array("pipe", "r"),  // stdin
 			1 => array("pipe", "w"),  // stdout
 			2 => array("pipe", "w")   // stderr
 		);
@@ -176,12 +176,7 @@ function cmd_async($cmd) {
 						$origination_url = "{".$channel_variables."}".$bridge_array[0];
 
 					//get the context
-						if (count($_SESSION["domains"]) > 1) {
-							$context =  $_SESSION['domain_name'];
-						}
-						else {
-							$context = "default";
-						}
+						$context =  $_SESSION['domain_name'];
 
 					//set the command
 						$cmd = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
