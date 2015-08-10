@@ -170,7 +170,8 @@
 								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
-									sql = sql .. "AND expires > unix_timestamp(NOW())";
+									now = os.time();
+									sql = sql .. "AND expires > "..now;
 								else
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
