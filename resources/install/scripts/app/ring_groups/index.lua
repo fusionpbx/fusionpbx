@@ -28,12 +28,12 @@
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --include functions
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+	require "resources.functions.trim";
+	require "resources.functions.explode";
 
 --get the variables
 	domain_name = session:getVariable("domain_name");

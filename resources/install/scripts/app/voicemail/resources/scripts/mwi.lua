@@ -39,23 +39,18 @@
 --only run the script a single time 
 	runonce = true
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");
 
---add the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
+--define the trim function
+	require "resources.functions.trim";
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists";
 
 --create the api object
 	api = freeswitch.API();

@@ -2,10 +2,8 @@
 --debug
 	debug["sql"] = false;
 
---define trim
-	function trim (s)
-		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-	end
+--define the trim function
+	require "resources.functions.trim";
 
 --get the domain_uuid
 	if (domain_uuid == nil) then

@@ -20,7 +20,7 @@
 --connect to the database
 	--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 	dbh = freeswitch.Dbh("sqlite://"..database_dir.."/park.db");
-	--dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	--require "resources.functions.database_handle";
 	--dbh = database_handle('system');
 
 --exits the script if we didn't connect properly
@@ -38,21 +38,11 @@
 	park_timeout_seconds = session:getVariable("park_timeout_seconds");
 	park_music = session:getVariable("park_music");
 
---add the explode function
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+--define the trim function
+	require "resources.functions.trim";
 
---add the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
+--define the explode function
+	require "resources.functions.explode";
 
 --if park_timeout_seconds is not defined set the timeout to 5 minutes
 	if (not park_timeout_seconds) then

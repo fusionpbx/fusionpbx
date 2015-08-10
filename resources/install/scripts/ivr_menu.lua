@@ -35,7 +35,7 @@
 	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --get the variables
@@ -47,7 +47,7 @@
 	domain_uuid = session:getVariable("domain_uuid");
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -83,16 +83,11 @@
 --set default variable(s)
 	tries = 0;
 
---add the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
+--define the trim function
+	require "resources.functions.trim"
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists"
 
 --prepare the api object
 	api = freeswitch.API();
@@ -216,7 +211,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
 							ivr_menu_greet_long_is_base64 = true;
@@ -240,7 +235,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
 							ivr_menu_greet_short_is_base64 = true;
@@ -264,7 +259,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
 							ivr_menu_invalid_sound_is_base64 = true;
@@ -288,7 +283,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
 							ivr_menu_exit_sound_is_base64 = true;

@@ -37,21 +37,21 @@
 	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
 --add functions
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+	require "resources.functions.mkdir";
+	require "resources.functions.explode";
 
 --initialize the recordings
 	api = freeswitch.API();
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -124,7 +124,7 @@
 		--begin recording
 			if (storage_type == "base64") then
 				--include the base64 function
-					dofile(scripts_dir.."/resources/functions/base64.lua");
+					require "resources.functions.base64";
 
 				--make the directory
 					mkdir(recordings_dir);

@@ -2,9 +2,9 @@
 	require "resources.functions.config";
 
 --additional includes
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
+	require "resources.functions.file_exists";
+	require "resources.functions.trim";
+	require "resources.functions.mkdir";
 
 --get the argv values
 	script_name = argv[0];

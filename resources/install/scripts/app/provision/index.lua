@@ -26,16 +26,8 @@
 --set the debug options
 	debug["sql"] = false;
 
---define explode
-	function explode ( seperator, str )
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+--define the explode function
+	require "resources.functions.explode";
 
 --set the defaults
 	max_tries = 3;
@@ -45,7 +37,7 @@
 	profile = "internal";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --answer

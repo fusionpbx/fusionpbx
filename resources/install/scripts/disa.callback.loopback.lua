@@ -30,7 +30,7 @@
 	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 	api = freeswitch.API();
