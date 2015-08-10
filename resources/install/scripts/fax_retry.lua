@@ -31,33 +31,17 @@
 	api = freeswitch.API();
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --define the explode function
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+	require "resources.functions.explode";
 
 --array count
-	function count(t)
-		c = 0;
-		for k,v in pairs(t) do
-  			c = c+1;
-		end
-		return c;
-	end
+	require "resources.functions.count";
 
 -- show all channel variables
 	--dat = env:serialize()
@@ -141,7 +125,7 @@
 	end
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -304,7 +288,7 @@
 		if (fax_success =="1") then
 			if (storage_type == "base64") then
 				--include the base64 function
-					dofile(scripts_dir.."/resources/functions/base64.lua");
+					require "resources.functions.base64";
 
 				--base64 encode the file
 					local f = io.open(fax_file, "rb");
