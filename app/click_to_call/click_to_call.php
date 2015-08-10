@@ -73,12 +73,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				$sip_auto_answer = '';
 		}
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
-		if (strlen($_SESSION['context']) > 0) {
-			$context = $_SESSION['context'];
-		}
-		else {
-			$context = 'default';
-		}
+		$context = $_SESSION['context'];
 
 		//workaround for TBDialout on Thunderbird
 		//seems it can only handle the first %NUM%
