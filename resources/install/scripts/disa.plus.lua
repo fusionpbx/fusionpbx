@@ -31,19 +31,29 @@ digit_timeout = "5000";
 	debug["sql"] = true;
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 	api = freeswitch.API();
 
---define the trim function
-	require "resources.functions.trim";
+function trim (s)
+	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end
 
---define the explode function
-	require "resources.functions.explode";
+function explode ( seperator, str ) 
+	local pos, arr = 0, {}
+	for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+		table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+		pos = sp + 1 -- jump past current divider
+	end
+	table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+	return arr
+end
 
 if ( session:ready() ) then
 	session:answer( );

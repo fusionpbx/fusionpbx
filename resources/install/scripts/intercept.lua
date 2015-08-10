@@ -32,14 +32,16 @@
 	debug["sql"] = false;
 
 --include config.lua
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --connect to the database
 	if (file_exists(database_dir.."/core.db")) then
 		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 	else
-		require "resources.functions.database_handle";
+		dofile(scripts_dir.."/resources/functions/database_handle.lua");
 		dbh = database_handle('switch');
 	end
 
@@ -47,7 +49,7 @@
 	api = freeswitch.API();
 
 --add the function
-	require "resources.functions.trim";
+	dofile(scripts_dir.."/resources/functions/trim.lua");
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());

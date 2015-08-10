@@ -25,10 +25,10 @@
 	debug["sql"] = false;
 
 --general functions
-	require "resources.functions.config";
-	require "resources.functions.explode";
-	require "resources.functions.trim";
-	-- require "resources.functions.file_exists";
+	dofile(scripts_dir .. "/resources/functions/config.lua");
+	dofile(scripts_dir .. "/resources/functions/explode.lua");
+	dofile(scripts_dir.."/resources/functions/trim.lua");
+	--dofile(scripts_dir.."/resources/functions/file_exists.lua");
 
 --create the api object
 	api = freeswitch.API();

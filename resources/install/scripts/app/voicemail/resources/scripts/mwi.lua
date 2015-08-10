@@ -24,7 +24,9 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --include the lua script
-	require "resources.functions.config";
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --define general settings
 	sleep = 300;
@@ -39,18 +41,23 @@
 --only run the script a single time 
 	runonce = true
 --connect to the database
-	require "resources.functions.database_handle";
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");
 
---define the trim function
-	require "resources.functions.trim";
+--add the trim function
+	function trim(s)
+		return s:gsub("^%s+", ""):gsub("%s+$", "")
+	end
 
 --check if a file exists
-	require "resources.functions.file_exists";
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
 
 --create the api object
 	api = freeswitch.API();

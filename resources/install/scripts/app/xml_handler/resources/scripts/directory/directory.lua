@@ -109,7 +109,7 @@
 				--database connection
 					if (continue) then
 						--connect to the database
-							require "resources.functions.database_handle";
+							dofile(scripts_dir.."/resources/functions/database_handle.lua");
 							dbh = database_handle('system');
 
 						--exits the script if we didn't connect properly
@@ -154,14 +154,14 @@
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
-								require "resources.functions.file_exists";
+								dofile(scripts_dir.."/resources/functions/file_exists.lua");
 
 							--connect to the switch database
 								if (file_exists(database_dir.."/core.db")) then
 									--dbh_switch = freeswitch.Dbh("core:core"); -- when using sqlite
 									dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 								else
-									require "resources.functions.database_handle";
+									dofile(scripts_dir.."/resources/functions/database_handle.lua");
 									dbh_switch = database_handle('switch');
 								end
 
