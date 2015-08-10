@@ -170,7 +170,8 @@
 								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
-									sql = sql .. "AND expires > unix_timestamp(NOW())";
+									now = os.time();
+									sql = sql .. "AND expires > "..now;
 								else
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
@@ -494,7 +495,7 @@
 
 						--send the xml to the console
 							if (debug["xml_string"]) then
-								local file = assert(io.open("/tmp/" .. user .. "@" .. domain_name .. ".xml", "w"));
+								local file = assert(io.open(temp_dir .. "/" .. user .. "@" .. domain_name .. ".xml", "w"));
 								file:write(XML_STRING);
 								file:close();
 							end
