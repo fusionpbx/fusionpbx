@@ -25,7 +25,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --exits the script if we didn't connect properly

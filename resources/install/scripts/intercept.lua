@@ -39,7 +39,7 @@
 		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 	else
-		dofile(scripts_dir.."/resources/functions/database_handle.lua");
+		require "resources.functions.database_handle";
 		dbh = database_handle('switch');
 	end
 
@@ -47,7 +47,7 @@
 	api = freeswitch.API();
 
 --add the function
-	dofile(scripts_dir.."/resources/functions/trim.lua");
+	require "resources.functions.trim";
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());

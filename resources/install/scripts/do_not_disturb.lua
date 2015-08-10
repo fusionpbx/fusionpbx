@@ -32,20 +32,10 @@
 	debug["sql"] = false;
 
 --define the trim function
-	function trim (s)
-		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-	end
+	require "resources.functions.trim";
 
 --define the explode function
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+	require "resources.functions.explode";
 
 --create the api object
 	api = freeswitch.API();
@@ -80,7 +70,7 @@
 			session:sleep(1000);
 
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--determine whether to update the dial string

@@ -31,7 +31,7 @@ extension = argv[1];
 	require "resources.functions.config";
 
 --add the file_exists function
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
+	require "resources.functions.file_exists";
 
 --connect to the database
 	if (file_exists(database_dir.."/core.db")) then
@@ -39,7 +39,7 @@ extension = argv[1];
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 		freeswitch.consoleLog("NOTICE", "[eavesdrop] using core.db\n");
 	else
-		dofile(scripts_dir.."/resources/functions/database_handle.lua");
+		require "resources.functions.database_handle";
 		dbh = database_handle('switch');
 		freeswitch.consoleLog("NOTICE", "[eavesdrop] using freeswitch db\n");
 

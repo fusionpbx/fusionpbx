@@ -82,4 +82,3 @@
 				end
 		end
 	end
---dofile(scripts_dir.."/app/voicemail/resources/functions/check_password.lua");

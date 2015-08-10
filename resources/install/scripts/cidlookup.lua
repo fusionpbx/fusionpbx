@@ -30,20 +30,10 @@
 	debug["sql"] = true;
 
 --define the trim function
-	function trim (s)
-		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-	end
+	require "resources.functions.trim"
 
 --define the explode function
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+	require "resources.functions.explode"
 
 --create the api object
 	api = freeswitch.API();
@@ -82,17 +72,17 @@
 	require "resources.functions.config";
 
 --check if the session is ready
-	
+
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
-	
+
 			if (database["type"] == "mysql") then
 				sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
 			else
 				sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
 			end
-	
+
 			sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
 			sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
 			sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."' AND v_destinations.destination_number='"..callee.."'";

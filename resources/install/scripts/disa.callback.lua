@@ -30,13 +30,13 @@
 	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 	api = freeswitch.API();
 
 --other libs
-	 dofile(scripts_dir.."/resources/functions/trim.lua");
+	require "resources.functions.trim";
 
 aleg_number = argv[1];
 bleg_number = argv[2];
