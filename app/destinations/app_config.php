@@ -25,7 +25,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
-		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_description as description from v_destinations ";
+		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_context as context, destination_description as description from v_destinations ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and destination_type = 'outbound' and destination_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "destination_uuid";
