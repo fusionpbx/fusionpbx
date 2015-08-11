@@ -6,7 +6,7 @@ function base64.encode(s)
 		local mime = require("mime");
 		return (mime.b64(s));
 	else
-		dofile(scripts_dir.."/resources/functions/base64_alex.lua");
+		require "resources.functions.base64_alex";
 		return base64.enc(s);
 	end
 end
@@ -17,7 +17,7 @@ function base64.decode(s)
 		local mime = require("mime");
 		return (mime.unb64(s));
 	else
-		dofile(scripts_dir.."/resources/functions/base64_alex.lua");
+		require "resources.functions.base64_alex";
 		return base64.dec(s);
 	end
 end

@@ -29,14 +29,12 @@
 	--then send presence terminate, and delete from the database
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
 	--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 	dbh = freeswitch.Dbh("sqlite://"..database_dir.."/park.db");
-	--dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	--require "resources.functions.database_handle";
 
 --get the argv values
 	script_name = argv[0];
@@ -50,10 +48,8 @@
 --prepare the api
 	api = freeswitch.API();
 
---add a trim function
-	function trim (s)
-		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-	end
+--define the trim function
+	require "resources.functions.trim";
 
 --monitor the parking lot if the call has hungup send a terminated event, and delete from the db
 	x = 0

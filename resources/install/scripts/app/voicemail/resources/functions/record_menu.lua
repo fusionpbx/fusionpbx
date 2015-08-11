@@ -83,7 +83,7 @@
 								--if base64, encode file
 									if (storage_type == "base64") then
 										--include the base64 function
-											dofile(scripts_dir.."/resources/functions/base64.lua");
+											require "resources.functions.base64";
 										--base64 encode the file
 											local f = io.open(real_file, "rb");
 											local file_content = f:read("*all");

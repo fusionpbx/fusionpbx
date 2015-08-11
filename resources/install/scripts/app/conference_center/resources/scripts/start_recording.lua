@@ -1,12 +1,10 @@
 --get the scripts directory and include the config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --additional includes
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
+	require "resources.functions.file_exists";
+	require "resources.functions.trim";
+	require "resources.functions.mkdir";
 
 --get the argv values
 	script_name = argv[0];
