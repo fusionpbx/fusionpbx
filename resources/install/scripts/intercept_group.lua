@@ -111,7 +111,7 @@
 			sql = sql .. "AND extension = '"..caller_id_number.."'";
 			status = dbh:query(sql, function(row)
 				call_group = row.call_group;
-				freeswitch.consoleLog("NOTICE", "result "..call_group.."\n");
+				freeswitch.consoleLog("NOTICE", "[intercept_group] call_group: "..call_group.."\n");
 			end);
 			call_groups = explode(",", call_group);
 
@@ -119,39 +119,32 @@
 			sql = "SELECT extension FROM v_extensions ";
 			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
 			sql = sql .. "AND (";
-			x = 0;
-			for key,call_group in pairs(call_groups) do
-				if (x == 0) then
-					if (string.len(call_group) > 0) then
+			for key,call_group in ipairs(call_groups) do
+				if (key == 1) then
+					if (#call_group > 0) then
 						sql = sql .. "call_group like '%"..call_group.."%' ";
 					else
 						sql = sql .. "call_group = '' ";
 					end
-				else
-					if (string.len(call_group) > 0) then
-						sql = sql .. "OR call_group like '%"..call_group.."%' ";
-					end
+				elseif (#call_group > 0) then
+					sql = sql .. "OR call_group like '%"..call_group.."%' ";
 				end
-				x = x + 1;
 			end
 			x = 0;
 			sql = sql .. ") ";
-			freeswitch.consoleLog("NOTICE", "result "..sql.."\n");
+			if (debug["sql"]) then
+				freeswitch.consoleLog("NOTICE", "[intercept_group] sql "..sql.."\n");
+			end
 			extensions = {}
 			status = dbh:query(sql, function(row)
 				extensions[x] = row.extension;
-				freeswitch.consoleLog("NOTICE", "result "..row.extension.."\n");
+				freeswitch.consoleLog("NOTICE", "[intercept_group] member "..row.extension.."\n");
 				x = x + 1;
 			end);
 
 		--connect to the database
-			if (file_exists(database_dir.."/core.db")) then
-				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
-				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-			else
-				dofile(scripts_dir.."/resources/functions/database_handle.lua");
-				dbh = database_handle('switch');
-			end
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			dbh = database_handle('switch');
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -159,7 +152,8 @@
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
 			sql = "SELECT call_uuid AS uuid, hostname, ip_addr FROM channels ";
-			sql = sql .. "WHERE callstate = 'RINGING' ";
+			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
+			sql = sql .. "AND direction = 'outbound' ";
 			sql = sql .. "AND (";
 			x = 0;
 			for key,extension in pairs(extensions) do
@@ -177,7 +171,7 @@
 			--end
 			sql = sql .. "limit 1 ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
+				freeswitch.consoleLog("NOTICE", "[intercept_group] sql "..sql.."\n");
 			end
 			dbh:query(sql, function(row)
 				--for key, val in pairs(row) do

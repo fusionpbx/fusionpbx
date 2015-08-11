@@ -122,7 +122,8 @@ if ( session:ready() ) then
 
 	--check the database to get the uuid of a ringing call
 		sql = "select call_uuid as uuid, hostname, callee_num, ip_addr from channels ";
-		sql = sql .. "where callstate = 'RINGING' ";
+		sql = sql .. "where callstate in ('RINGING', 'EARLY') ";
+		sql = sql .. "AND direction = 'outbound' ";
 		if (extension) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
 		else
