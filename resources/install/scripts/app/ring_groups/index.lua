@@ -449,6 +449,7 @@
 												dial_string = square .."]"..dialplan_detail_data;
 											end
 											bridge_match = true;
+											break;
 										end
 									--increment the value
 										y = y + 1;
