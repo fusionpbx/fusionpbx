@@ -25,7 +25,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "time_conditions";
 		$apps[$x]['destinations'][$y]['name'] = "time_conditions";
-		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_description as description from v_dialplans ";
+		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_context as context, dialplan_description as description from v_dialplans ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_number asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "dialplan_context";
