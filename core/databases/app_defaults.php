@@ -24,6 +24,22 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+global $IS_WINDOWS;
+
+if ($IS_WINDOWS == null) {
+	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
+}
+
+if (!function_exists('correct_path')) {
+	function correct_path($p) {
+		global $IS_WINDOWS;
+		if ($IS_WINDOWS) {
+			return str_replace('/', '\\', $p);
+		}
+		return $p;
+	}
+}
+
 //proccess this only one time
 if ($domains_processed == 1) {
 
@@ -113,28 +129,31 @@ if ($domains_processed == 1) {
 			$tmp = "\n";
 			$tmp .= "--set the variables\n";
 			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
-				$tmp .= "	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n";
+				$tmp .= correct_path("	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n");
 			}
 			if (strlen($_SESSION['switch']['db']['dir']) > 0) {
-				$tmp .= "	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n";
+				$tmp .= correct_path("	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n");
 			}
 			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-				$tmp .= "	recordings_dir = [[".$recordings_dir."]];\n";
+				$tmp .= correct_path("	recordings_dir = [[".$recordings_dir."]];\n");
 			}
 			if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
-				$tmp .= "	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n";
+				$tmp .= correct_path("	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n");
 			}
 			if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
-				$tmp .= "	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n";
+				$tmp .= correct_path("	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n");
 			}
-			$tmp .= "	php_dir = [[".PHP_BINDIR."]];\n";
+			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+				$tmp .= correct_path("	scripts_dir = [[".$_SESSION['switch']['scripts']['dir']."]];\n");
+			}
+			$tmp .= correct_path("	php_dir = [[".PHP_BINDIR."]];\n");
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 				$tmp .= "	php_bin = \"php.exe\";\n";
 			}
 			else {
 				$tmp .= "	php_bin = \"php\";\n";
 			}
-			$tmp .= "	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n";
+			$tmp .= correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 			$tmp .= "\n";
 
 			if ((strlen($db_type) > 0) || (strlen($dsn_name) > 0)) {
@@ -142,7 +161,7 @@ if ($domains_processed == 1) {
 				$tmp .= "	database = {}\n";
 				$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
 				$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
-				$tmp .= "	database[\"path\"] = \"".$db_path."\";\n";
+				$tmp .= correct_path("	database[\"path\"] = [[".$db_path."]];\n");
 
 				if (strlen($dsn_name) > 0) {
 					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
@@ -166,19 +185,19 @@ if ($domains_processed == 1) {
 
 			$tmp .= "--additional info\n";
 			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
-			$tmp .= "	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n";
+			$tmp .= correct_path("	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n");
 			if (isset($_SESSION['domain']['dial_string']['text'])) {
 				$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
 			}
 			$tmp .= "\n";
 			$tmp .= "--include local.lua\n";
-			$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
+			$tmp .= "	require(\"resources.functions.file_exists\");\n";
 			$tmp .= "	if (file_exists(\"/etc/fusionpbx/local.lua\")) then\n";
 			$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
 			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
 			$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
 			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
-			$tmp .= "		dofile(scripts_dir..\"/resources/local.lua\");\n";
+			$tmp .= "		require(\"resources.local\");\n";
 			$tmp .= "	end\n";
 			fwrite($fout, $tmp);
 			unset($tmp);

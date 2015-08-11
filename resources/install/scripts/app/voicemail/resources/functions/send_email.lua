@@ -52,7 +52,7 @@
 		--require the email address to send the email
 			if (string.len(voicemail_mail_to) > 2) then
 				--include languages file
-					dofile(scripts_dir.."/app/voicemail/app_languages.lua");
+					require "app.voicemail.app_languages";
 
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
@@ -73,7 +73,7 @@
 						--get the recordings from the database
 							if (storage_type == "base64") then
 								--add functions
-									dofile(scripts_dir.."/resources/functions/base64.lua");
+									require "resources.functions.base64";
 
 								--set the voicemail message path
 									message_location = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
