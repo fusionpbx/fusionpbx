@@ -28,12 +28,12 @@
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --include functions
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+	require "resources.functions.trim";
+	require "resources.functions.explode";
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -329,16 +329,16 @@
 						or ring_group_strategy == "sequence"
 						or ring_group_strategy == "rollover") then
 							session:execute("set", "group_confirm_key=exec");
-							session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
+							session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
 					end
 
 				--determine confirm prompt
 					if (destination_prompt == nil) then
 						group_confirm = "confirm=false,";
 					elseif (destination_prompt == "1") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
 					elseif (destination_prompt == "2") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
 					else
 						group_confirm = "confirm=false,";
 					end
