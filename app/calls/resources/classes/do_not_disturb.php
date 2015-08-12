@@ -66,7 +66,7 @@ include "root.php";
 				global $db;
 
 			//determine whether to update the dial string
-				$sql = "select * from v_extensions ";
+				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				if (strlen($this->extension_uuid) > 0) {
 					$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
@@ -83,7 +83,12 @@ include "root.php";
 							$this->extension_uuid = $row["extension_uuid"];
 						}
 						if (strlen($this->extension) == 0) {
-							$this->extension = $row["extension"];
+							if(strlen($row["number_alias"]) == 0) {
+								$this->extension = $row["extension"];
+							}
+							else {
+								$this->extension = $row["number_alias"];
+							}
 						}
 					}
 				}
