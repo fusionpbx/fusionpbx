@@ -28,9 +28,9 @@
 	debug["sql"] = false;
 
 --include config.lua
-	dofile(scripts_dir .. "/resources/functions/config.lua");
-	dofile(scripts_dir .. "/resources/functions/explode.lua");
-	dofile(scripts_dir .. "/resources/functions/trim.lua");
+	require "resources.functions.config";
+	require "resources.functions.explode";
+	require "resources.functions.trim";
 
 --check the missed calls
 	function missed()
