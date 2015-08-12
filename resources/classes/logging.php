@@ -67,17 +67,17 @@ class Logging
 		$log_file = $_SESSION['logging']['log']['logfile'];
 		$log_level = $_SESSION['logging']['log']['loglevel'];
 
-		if ($log_file) {
-			$this->lfile($log_file);
-			$this->lopen();
-		}
-		else {
-			$this->lopen();
+		if ($log_level !== $level) {
+			return;
 		}
 
-		if ($log_level === $level) {
-			$this->lwrite("[".strtoupper($level)."] ".$msg);
+		if ($log_file) {
+			$this->lfile($log_file);
 		}
+
+		$this->lopen();
+
+		$this->lwrite("[".strtoupper($level)."] ".$msg);
 
 		//close handle
 		$this->lclose();
