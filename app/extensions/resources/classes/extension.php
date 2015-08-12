@@ -91,11 +91,11 @@
 		public function voicemail() {
 
 			//determine the voicemail_id
-				if (is_numeric($this->extension)) {
-					$this->voicemail_id = $this->extension;
+				if (is_numeric($this->number_alias)) {
+					$this->voicemail_id = $this->number_alias;
 				}
 				else {
-					$this->voicemail_id = $this->number_alias;
+					$this->voicemail_id = $this->extension;
 				}
 
 			//update the voicemail settings
