@@ -127,6 +127,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
 			$follow_me_caller_id_uuid = check_str($_POST["follow_me_caller_id_uuid"]);
+			$follow_me_ignore_busy = check_str($_POST["follow_me_ignore_busy"]);
 
 			$destination_data_1 = check_str($_POST["destination_data_1"]);
 			$destination_delay_1 = check_str($_POST["destination_delay_1"]);
@@ -280,6 +281,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->cid_number_prefix = $cid_number_prefix;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
 			$follow_me->follow_me_caller_id_uuid = $follow_me_caller_id_uuid;
+			$follow_me->follow_me_ignore_busy = $follow_me_ignore_busy;
 
 			$follow_me->destination_data_1 = $destination_data_1;
 			$follow_me->destination_type_1 = $destination_type_1;
@@ -402,6 +404,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$cid_number_prefix = $row["cid_number_prefix"];
 			$follow_me_enabled = $row["follow_me_enabled"];
 			$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
+			$follow_me_ignore_busy = $row["follow_me_ignore_busy"];
 
 			$sql = "select * from v_follow_me_destinations ";
 			$sql .= "where follow_me_uuid = '$follow_me_uuid' ";
@@ -737,6 +740,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "		<tr>\n";
+	echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
+	echo 				$text['label-ignore-busy'];
+	echo "			</td>\n";
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<select class='formfld' name='follow_me_ignore_busy'>\n";
+	echo "					<option value='true' " . ($follow_me_ignore_busy == 'true' ? "selected='selected'" : '') . ">True</option>\n";
+	echo "					<option value='false'" . ($follow_me_ignore_busy == 'true' ? '' : "selected='selected'") . ">False</option>\n";
+	echo "				</select>\n";
+	echo "				<br> Interrupt call if one of destination are busy\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
 
 	if (permission_exists('follow_me_cid_name_prefix')) {
 		echo "<tr>\n";
