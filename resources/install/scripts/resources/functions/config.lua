@@ -16,7 +16,7 @@
 -- load config
 	function load_config()
 		local cfg = config()
-		if cfg:sub(1,1) == '//' then
+		if cfg:sub(1,1) == '/' then
 			dofile(cfg)
 		else
 			require(cfg)
