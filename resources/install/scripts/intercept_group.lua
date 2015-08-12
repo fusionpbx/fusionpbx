@@ -110,7 +110,7 @@
 			sql = sql .. "OR  number_alias = '"..caller_id_number.."')";
 			status = dbh:query(sql, function(row)
 				call_group = row.call_group;
-				freeswitch.consoleLog("NOTICE", "result "..call_group.."\n");
+				freeswitch.consoleLog("NOTICE", "[intercept_group] call_group: "..call_group.."\n");
 			end);
 			call_groups = explode(",", call_group);
 
@@ -135,7 +135,9 @@
 			end
 			x = 0;
 			sql = sql .. ") ";
-			freeswitch.consoleLog("NOTICE", "result "..sql.."\n");
+			if (debug["sql"]) then
+				freeswitch.consoleLog("NOTICE", "[intercept_group] sql "..sql.."\n");
+			end
 			extensions = {}
 			status = dbh:query(sql, function(row)
 				local member = row.extension
@@ -162,7 +164,8 @@
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
 			sql = "SELECT call_uuid AS uuid, hostname, ip_addr FROM channels ";
-			sql = sql .. "WHERE callstate = 'RINGING' ";
+			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
+			sql = sql .. "AND direction = 'outbound' ";
 			sql = sql .. "AND (";
 			x = 0;
 			for key,extension in pairs(extensions) do
@@ -180,7 +183,7 @@
 			--end
 			sql = sql .. "limit 1 ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
+				freeswitch.consoleLog("NOTICE", "[intercept_group] sql "..sql.."\n");
 			end
 			dbh:query(sql, function(row)
 				--for key, val in pairs(row) do
