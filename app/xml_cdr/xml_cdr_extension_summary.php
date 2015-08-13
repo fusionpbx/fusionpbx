@@ -92,11 +92,15 @@ require_once "resources/require.php";
 	$result_count = count($result);
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$extensions[$row['extension']]['domain_uuid'] = $row['domain_uuid'];
-			$extensions[$row['extension']]['extension'] = $row['extension'];
-			$extensions[$row['extension']]['extension_uuid'] = $row['extension_uuid'];
-			$extensions[$row['extension']]['number_alias'] = $row['number_alias'];
-			$extensions[$row['extension']]['description'] = $row['description'];
+			$ext = $row['extension'];
+			if(strlen($row['number_alias']) > 0) {
+				$ext = $row['number_alias'];
+			}
+			$extensions[$ext]['domain_uuid'] = $row['domain_uuid'];
+			$extensions[$ext]['extension'] = $row['extension'];
+			$extensions[$ext]['extension_uuid'] = $row['extension_uuid'];
+			$extensions[$ext]['number_alias'] = $row['number_alias'];
+			$extensions[$ext]['description'] = $row['description'];
 		}
 	}
 	unset ($sql, $prep_statement, $result, $row_count);
