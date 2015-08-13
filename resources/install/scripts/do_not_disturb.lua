@@ -78,20 +78,21 @@
 			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
 			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
 			end
 			status = dbh:query(sql, function(row)
 				extension = row.extension;
 				number_alias = row.number_alias;
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
-				--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
-				--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
+				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..row.extension.."\n");
+				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..row.accountcode.."\n");
 			end);
 
 		--set the dial string
 			if (enabled == "true") then
-				dial_string = "loopback/*99"..extension;	
+				local ep = (number_alias and #number_alias > 0) and number_alias or extension;
+				dial_string = "loopback/*99"..ep;
 			end
 
 		--set do not disturb
