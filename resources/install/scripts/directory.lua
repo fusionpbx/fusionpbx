@@ -128,11 +128,8 @@
 			sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice;
 	end
 
---get session variables
-	base_dir = session:getVariable("base_dir");
-
 --set the voicemail_dir
-	voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
+	voicemail_dir = settings['switch']['voicemail']['dir'].."/default/"..domain_name;
 	if (debug["info"]) then
 		freeswitch.consoleLog("notice", "[directory] voicemail_dir: " .. voicemail_dir .. "\n");
 	end
