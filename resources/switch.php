@@ -629,7 +629,8 @@ function extension_exists($extension) {
 	global $db, $domain_uuid;
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and extension = '$extension' ";
+	$sql .= "and (extension = '$extension' ";
+	$sql .= "or  number_alias = '$extension') ";
 	$sql .= "and enabled = 'true' ";
 	$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 	if (count($result) > 0) {
