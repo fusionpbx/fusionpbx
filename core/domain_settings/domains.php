@@ -190,53 +190,38 @@ else {
 	echo "</tr>\n";
 
 	if (count($domains) > 0) {
-
-		function get_child_domains($domain_parent_uuid) {
-			global $domains, $indent;
-			global $c, $row_style, $text, $v_link_label_edit, $v_link_label_delete;
-			foreach ($domains as $domain_uuid => $domain) {
-				if ($domain['parent_uuid'] == $domain_parent_uuid) {
-
-					$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
-					echo "<tr ".$tr_link.">\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
-					echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
-					if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
-						echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
-					}
-					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>";
-					if (permission_exists('domain_edit')) {
-						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
-					}
-					echo "	</td>";
-					echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
-					echo "	<td class='list_control_icons'>";
-					if (permission_exists('domain_edit')) {
-						echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
-					}
-					if (permission_exists('domain_delete')) {
-						if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
-							echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-						}
-						else {
-							echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
-						}
-					}
-					echo "	</td>\n";
-					echo "</tr>\n";
-					$c = ($c == 0) ? 1 : 0;
-
-					$indent++;
-					get_child_domains($domain_uuid);
-					$indent--;
+		global $c, $row_style, $text, $v_link_label_edit, $v_link_label_delete;
+		foreach ($domains as $domain_uuid => $domain) {
+			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
+			echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
+			if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
+				echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
+			}
+			echo "	</td>";
+			echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+			}
+			if (permission_exists('domain_delete')) {
+				if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
+					echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				}
+				else {
+					echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
 				}
 			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			$c = ($c == 0) ? 1 : 0;
 		}
-
-		$indent = 0;
-		get_child_domains();
-
 	} //end if results
 
 	echo "<tr>\n";
