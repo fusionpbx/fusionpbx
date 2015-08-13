@@ -165,7 +165,7 @@
 			call_hostname = "";
 			sql = "SELECT call_uuid AS uuid, hostname, ip_addr FROM channels ";
 			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
-			sql = sql .. "AND direction = 'outbound' ";
+			--sql = sql .. "AND direction = 'outbound' ";
 			sql = sql .. "AND (";
 			x = 0;
 			for key,extension in pairs(extensions) do
