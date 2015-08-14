@@ -41,8 +41,7 @@ extension = argv[1];
 	else
 		require "resources.functions.database_handle";
 		dbh = database_handle('switch');
-		freeswitch.consoleLog("NOTICE", "[eavesdrop] using freeswitch db\n");
-
+		freeswitch.consoleLog("NOTICE", "[eavesdrop] using the database\n");
 	end
 
 --exits the script if we didn't connect properly
