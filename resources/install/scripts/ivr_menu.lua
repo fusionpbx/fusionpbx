@@ -1,6 +1,6 @@
 --	ivr_menu.lua
 --	Part of FusionPBX
---	Copyright (C) 2012 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2012-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -83,6 +83,7 @@
 
 --set default variable(s)
 	tries = 0;
+	option_found = "false";
 
 --define the trim function
 	require "resources.functions.trim"
@@ -438,6 +439,9 @@
 				--execute
 					if (action) then
 						if (string.len(action) > 0) then
+							--option found
+								option_found = "true";
+
 							--send to the log
 								if (debug["action"]) then
 									freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
@@ -462,14 +466,16 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				if (string.len(digits) < 6) then
+				if (string.len(digits) < 6 and option_found == "false") then
 					--replace the $1 and the domain name
 						digits = digits:gsub("*", "");
 					--check to see if the user extension exists
 						cmd = "user_exists id ".. digits .." "..domain_name;
 						result = api:executeString(cmd);
-						freeswitch.consoleLog("NOTICE", "[ivr_menu] "..cmd.." "..result.."\n");
+						freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..cmd.." "..result.."\n");
 						if (result == "true") then
+							--log the action
+								freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..digits.." XML "..context.."\n");
 							--run the action
 								session:execute("transfer", digits.." XML "..context);
 						else
