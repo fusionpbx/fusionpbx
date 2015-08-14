@@ -45,6 +45,11 @@ function get_call_activity() {
 	//build the response
 		$x = 0;
 		foreach($extensions as &$row) {
+			$user = $row['extension'];
+			if (strlen($row['number_alias']) >0 ) {
+				$user = $row['number_alias'];
+			}
+
 			//add the extension details
 				$array[$x] = $row;
 
@@ -88,7 +93,7 @@ function get_call_activity() {
 					$presence = explode("@", $presence_id);
 					$presence_id = $presence[0];
 					$presence_domain = $presence[1];
-					if ($row['extension'] == $presence_id) {
+					if ($user == $presence_id) {
 						if ($presence_domain == $_SESSION['domain_name']) {
 							$found = true;
 							break;

@@ -38,6 +38,7 @@ include "root.php";
 		public $forward_all_destination;
 		public $forward_all_enabled;
 		private $dial_string;
+		private $toll_allow;
 		public $accountcode;
 		public $forward_caller_id_uuid;
 		public $outbound_caller_id_name;
@@ -58,6 +59,7 @@ include "root.php";
 					foreach ($result as &$row) {
 						$this->extension = $row["extension"];
 						$this->accountcode = $row["accountcode"];
+						$this->toll_allow = $row["toll_allow"];
 						$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
 						$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 					}
@@ -73,6 +75,7 @@ include "root.php";
 					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
 					$dial_string .= ",domain=".$_SESSION['domain_name'];
 					$dial_string .= ",extension_uuid=".$this->extension_uuid;
+					$dial_string .= ",toll_allow='".$this->toll_allow."'";
 					if (strlen($this->accountcode) > 0) {
 						$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 						$dial_string .= ",accountcode=".$this->accountcode;
@@ -140,7 +143,7 @@ include "root.php";
 				}
 				else {
 					$sql .= "forward_all_destination = '$this->forward_all_destination', ";
-					$sql .= "dial_string = '".$this->dial_string."', ";
+					$sql .= "dial_string = '".check_str($this->dial_string)."', ";
 					$sql .= "forward_all_enabled = 'true' ";
 				}
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";

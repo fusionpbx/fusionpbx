@@ -204,6 +204,7 @@ require_once "resources/header.php";
 
 	function refresh_start() {
 		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
+		refresh_stop();
 		interval_timer_id = setInterval( function() {
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;

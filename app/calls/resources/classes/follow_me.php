@@ -43,6 +43,7 @@ include "root.php";
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
 		private $extension;
+		private $toll_allow;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -247,6 +248,7 @@ include "root.php";
 					foreach ($result as &$row) {
 						$this->extension = $row["extension"];
 						$this->accountcode = $row["accountcode"];
+						$this->toll_allow = $row["toll_allow"];
 						$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
 						$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 					}
@@ -330,6 +332,7 @@ include "root.php";
 						$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 						$dial_string .= ",accountcode=".$this->accountcode;
 					}
+					$dial_string .= ",toll_allow='".$this->toll_allow."'";
 					$dial_string .= "}";
 					$x = 0;
 					foreach ($result as &$row) {
@@ -419,7 +422,7 @@ include "root.php";
 				}
 
 				$sql  = "update v_extensions set ";
-				$sql .= "dial_string = '".$dial_string."', ";
+				$sql .= "dial_string = '".check_str($dial_string)."', ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
