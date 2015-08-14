@@ -499,6 +499,7 @@
 
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then
+							x = 0;
 							for key, row in pairs(destinations) do
 								--set the values from the database as variables
 									user_exists = row.user_exists;
@@ -514,41 +515,30 @@
 								--set the timeout
 									session:execute("set", "call_timeout="..row.destination_timeout);
 
-								--check if the user is busy
-									extension_status = "show channels like "..destination_number.."@"..domain_name;
-									reply = trim(api:executeString(extension_status));
-									if (reply == "0 total.") then
-										--not found: user is available
-											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
-												session:execute("bridge", dial_string);
-											elseif (tonumber(destination_number) == nil) then
-												--sip uri
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
-												session:execute("bridge", dial_string);
-											else
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
-												session:execute("bridge", dial_string);
-											end
-									else
-										--look inside the reply to check for the correct domain_name
-										if string.find(reply, domain_name) then
-											--found: extension number is busy
-										else
-											--not found: user is available
-											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]user/" .. destination_number .. "@" .. domain_name;
-												session:execute("bridge", dial_string);
-											elseif (tonumber(destination_number) == nil) then
-												--sip uri
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
-												session:execute("bridge", dial_string);
-											else
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
-												session:execute("bridge", dial_string);
-											end
+								--if the timeout was reached go to the timeout action
+									if (x > 0) then
+										if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
+											or session:getVariable("originate_disposition") == "NO_ANSWER" 
+											or session:getVariable("originate_disposition") == "NO_USER_RESPONSE") then
+												break;
 										end
 									end
+
+								--send the call to the destination
+									if (user_exists == "true") then
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]user/" .. destination_number .. "@" .. domain_name;
+										session:execute("bridge", dial_string);
+									elseif (tonumber(destination_number) == nil) then
+										--sip uri
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
+										session:execute("bridge", dial_string);
+									else
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
+										session:execute("bridge", dial_string);
+									end
+
+								--increment the value of x
+									x = x + 1;
 							end
 						end
 
