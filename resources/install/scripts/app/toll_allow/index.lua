@@ -72,7 +72,7 @@
 		local ACCEPT_EMPTY_TOLL_ALLOW = false
 
 	--debug
-		debug["toll_type"] = true
+		debug["toll_type"] = false
 
 	require "resources.functions.explode";
 
