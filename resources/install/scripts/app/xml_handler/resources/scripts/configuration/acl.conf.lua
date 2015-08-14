@@ -33,9 +33,8 @@
 	]]
 
 --get the cache
-	hostname = trim(api:execute("switchname", ""));
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:acl.conf:" .. hostname));
+		XML_STRING = trim(api:execute("memcache", "get configuration:acl.conf"));
 	else
 		XML_STRING = "-ERR NOT FOUND";
 	end
@@ -104,18 +103,18 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:acl.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["acl.conf"]));
+			result = trim(api:execute("memcache", "set configuration:acl.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["acl.conf"]));
 
 		--send the xml to the console
-			--if (debug["xml_string"]) then
+			if (debug["xml_string"]) then
 				local file = assert(io.open(temp_dir .. "/acl.conf.xml", "w"));
 				file:write(XML_STRING);
 				file:close();
-			--end
+			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:acl.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:acl.conf source: database\n");
 			end
 	else
 		--replace the &#39 back to a single quote
