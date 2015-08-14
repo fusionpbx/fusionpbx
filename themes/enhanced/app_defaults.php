@@ -57,6 +57,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the visibility of the name of the domain currently being managed.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'logout_icon_visible';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'false';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the visibility of the logout icon.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'domain_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#000000';
