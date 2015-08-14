@@ -1570,7 +1570,7 @@ if (strlen($_SESSION['message']) > 0) {
 									}
 
 								//logout icon
-									if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible'] == "true") {
+									if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 										$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 										echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
 										unset($username_full);
