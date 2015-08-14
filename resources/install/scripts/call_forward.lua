@@ -133,6 +133,7 @@
 					forward_all_enabled = row.forward_all_enabled;
 					forward_all_destination = row.forward_all_destination;
 					follow_me_uuid = row.follow_me_uuid;
+					toll_allow = row.toll_allow or '';
 					--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
 					--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
 				end);
@@ -148,7 +149,7 @@
 			end
 
 		--get the forward destination
-			if (session:ready() and enabled == "true" or enabled == "toggle") then
+			if (session:ready() and (enabled == "true" or enabled == "toggle") ) then
 				if (string.len(forward_all_destination) == 0) then
 					forward_all_destination = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 				end
@@ -171,6 +172,7 @@
 				dial_string = dial_string .. ",sip_invite_domain="..domain_name;
 				dial_string = dial_string .. ",domain_name="..domain_name;
 				dial_string = dial_string .. ",domain="..domain_name;
+				dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
 				if (accountcode ~= nil) then
 					dial_string = dial_string .. ",accountcode="..accountcode;
 				end
@@ -241,7 +243,7 @@
 				sql = "update v_extensions set ";
 				if (enabled == "true") then
 					sql = sql .. "forward_all_destination = '"..forward_all_destination.."', ";
-					sql = sql .. "dial_string = '"..dial_string.."', ";
+					sql = sql .. "dial_string = '"..dial_string:gsub("'", "''").."', ";
 					sql = sql .. "do_not_disturb = 'false', ";
 				else
 					sql = sql .. "forward_all_destination = null, ";
