@@ -224,7 +224,9 @@ class destinations {
 				}
 			}
 			if (!$select_found) {
-				$response .= "			<option value='".$select_value."' selected='selected'>".trim($select_label)."</option>\n";
+				$destination_label = str_replace(":", " ", $destination_value);
+				$destination_label = str_replace("menu-exec-app:", " ", $destination_label);
+				$response .= "			<option value='".$destination_value."' selected='selected'>".trim($destination_label)."</option>\n";
 			}
 			$response .= "	</select>\n";
 			if (if_group("superadmin")) {
