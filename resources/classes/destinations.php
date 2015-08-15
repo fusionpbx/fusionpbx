@@ -190,7 +190,9 @@ class destinations {
 
 				if (count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
 					$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
+					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
+						$did = ($label2 == 'destinations') ? true : false;
 						$select_value = $row['select_value'][$destination_type];
 						$select_label = $row['select_label'];
 						foreach ($row['field'] as $key => $value) {
@@ -217,6 +219,7 @@ class destinations {
 						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
 						$select_label = str_replace("\${context}", $_SESSION['context'], $select_label);
 						if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
+						if ($did) { $select_label = format_phone(trim($select_label)); }
 						$response .= "			<option value='".$select_value."' ".$selected.">".trim($select_label)."</option>\n";
 					}
 					$response .= "		</optgroup>\n";
