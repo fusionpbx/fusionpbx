@@ -886,12 +886,14 @@ legend {
 	}
 
 	#logout_icon {
+		width: 28px;
+		height: 23px;
+		border: none;
 		filter: alpha(opacity=80);
 		opacity: 0.85;
 		-moz-opacity: 0.85;
 		-khtml-opacity: 0.85;
 		margin-left: 8px;
-		margin-right: 18px;
 	}
 
 	#logout_icon:hover {
@@ -903,6 +905,9 @@ legend {
 	}
 
 	#domain_selector_icon {
+		width: 28px;
+		height: 23px;
+		border: none;
 		filter: alpha(opacity=80);
 		opacity: 0.85;
 		-moz-opacity: 0.85;
@@ -1403,17 +1408,17 @@ SPAN.playback_progress_bar {
 						<a href='<?php echo $logo_link; ?>'><img src='<?php echo $logo; ?>' style='border: none; height: 30px;'></a>
 					</td>
 					<td width="100%"><!--{menu}--></td>
-					<td style='white-space: nowrap;'>
+					<td style='white-space: nowrap; padding-right: 18px;'>
 						<?php
 						//domain selector icon
 						if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-							echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+							echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_domain_selector.png' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
 						}
 
 						//logout icon
 						if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 							$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-							echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
+							echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_logout.png' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
 							unset($username_full);
 						}
 						?>
