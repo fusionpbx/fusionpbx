@@ -884,6 +884,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br><br>";
 	echo "</form>";
 
+//adjust form if outbound destination
+	if ($destination_type == 'outbound') {
+		echo "<script type='text/javascript'>type_control('outbound');</script>\n";
+	}
+
 //include the footer
 	require_once "resources/footer.php";
 
