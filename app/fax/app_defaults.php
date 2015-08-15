@@ -39,31 +39,53 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the default transmission quality of new faxes.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'variable';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'fax_enable_t38=true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable T.38';
+		$x++;
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'variable';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'fax_enable_t38_request=true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Send a T38 reinvite when a fax tone is detected.';
+		$x++;
 
-	//iterate and add each, if necessary
-		foreach ($array as $index => $default_settings) {
+	//get an array of the default settings
+		$sql = "select * from v_default_settings ";
+		$prep_statement = $db->prepare($sql);
+		$prep_statement->execute();
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset ($prep_statement, $sql);
 
-		//add theme default settings
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = 'fax' ";
-			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-			$sql .= "and default_setting_name = '".$default_settings['default_setting_name']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$orm = new orm;
-					$orm->name('default_settings');
-					$orm->save($array[$index]);
-					$message = $orm->message;
-					//print_r($message);
+	//find the missing default settings
+		$x = 0;
+		foreach ($array as $setting) {
+			$found = false;
+			$missing[$x] = $setting;
+			foreach ($default_settings as $row) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+					$found = true;
+					//remove items from the array that were found
+					unset($missing[$x]);
 				}
-				unset($row);
 			}
-
+			$x++;
 		}
+
+	//add the missing default settings
+		foreach ($missing as $row) {
+			//add the default settings
+			$orm = new orm;
+			$orm->name('default_settings');
+			$orm->save($row);
+			$message = $orm->message;
+			unset($orm);
+		}
+		unset($missing);
 
 }
 
