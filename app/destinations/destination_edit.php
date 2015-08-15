@@ -557,6 +557,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
 	echo "			document.getElementById('destination_context').value = '".$_SESSION['domain_name']."'";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
@@ -568,6 +569,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
 	echo "		}\n";
 	echo "		";
@@ -796,7 +798,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "add") { $destination_accountcode = $_SESSION['domain_name']; }
 	}
 
-	echo "<tr>\n";
+	echo "<tr id='tr_account_code'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-account_code']."\n";
 	echo "</td>\n";
