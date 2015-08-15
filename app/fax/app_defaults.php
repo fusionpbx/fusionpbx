@@ -49,7 +49,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'variable';
 		$array[$x]['default_setting_name'] = 'array';
-		$array[$x]['default_setting_value'] = 'fax_enable_t38_request=true';
+		$array[$x]['default_setting_value'] = 'fax_enable_t38_request=false';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Send a T38 reinvite when a fax tone is detected.';
 		$x++;
