@@ -129,7 +129,13 @@
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $data;
+						if (substr($data,0,8) == "inbound:") {
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = substr($data,8,strlen($data));
+						}
+						elseif (substr($data,0,9) == "outbound:") {}
+						else { 
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $data;
+						}
 						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 						$y++;
