@@ -135,6 +135,7 @@ else {
 		} else {
 			$forward_prefix = $forward_prefix.$fax_forward_number.'#'; //found
 		}
+		$fax_local = check_str($_POST["fax_local"]);
 		$fax_description = check_str($_POST["fax_description"]);
 	}
 

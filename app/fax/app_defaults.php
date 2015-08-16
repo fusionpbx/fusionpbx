@@ -53,7 +53,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Send a T38 reinvite when a fax tone is detected.';
 		$x++;
-
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'keep_local';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Keep the file after sending or receiving the fax.';
+		$x++;
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
 		$prep_statement = $db->prepare($sql);
