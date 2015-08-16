@@ -53,7 +53,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_auth';
 		$array[$x]['default_setting_name'] = 'var';
-		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
@@ -95,7 +95,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
 		$array[$x]['default_setting_name'] = 'var';
-		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
