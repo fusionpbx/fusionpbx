@@ -279,13 +279,19 @@
 	end
 	--needs to be fixed on operating systems that do not have sed or echo utilities.
 	number_dialed = api:execute("system", "/bin/echo -n "..fax_uri.." | sed -e s,.*/,,g");
-	--do not use apostrophies in message, they are not excaped and the mail will fail.
+	--do not use apostrophies in message, they are not escaped and the mail will fail.
 	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
 --add the fax files
 	if (fax_success ~= nil) then
 		if (fax_success =="1") then
+			if (settings['fax']['keep_local']['boolean'] ~= "nil") then
+				if (settings['fax']['keep_local']['boolean'] == "false") then
+					storage_type = "";
+				end
+			end
+
 			if (storage_type == "base64") then
 				--include the base64 function
 					require "resources.functions.base64";
@@ -521,4 +527,10 @@
 				email_message_success ,
 				fax_file
 			);
+
+		if (settings['fax']['keep_local']['boolean'] ~= "nil") then
+			if (settings['fax']['keep_local']['boolean'] == "false") then
+				os.remove(fax_file);
+			end
+		end
 	end
