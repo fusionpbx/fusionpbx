@@ -203,13 +203,31 @@ class destinations {
 								}
 							}
 							else {
-								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
-								if (strlen($data['label']) == 0) {
-									$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+								if (strpos($value,',') !== false) {
+									$keys = explode(",", $value);
+									foreach ($keys as $k) {
+										if (strlen($data[$k]) > 0) {
+											$select_value = str_replace("\${".$key."}", $data[$k], $select_value);
+											if (strlen($data['label']) == 0) {
+												$select_label = str_replace("\${".$key."}", $data[$k], $select_label);
+											}
+											else {
+												$label = $data['label'];
+												$select_label = str_replace("\${".$key."}", $text2['option-'.$label]."215", $select_label);
+											}
+										}
+									}
+
 								}
 								else {
-									$label = $data['label'];
-									$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
+									if (strlen($data['label']) == 0) {
+										$select_label = str_replace("\${".$key."}", $data[$key], $select_label);
+									}
+									else {
+										$label = $data['label'];
+										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+									}
 								}
 							}
 						}

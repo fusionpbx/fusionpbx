@@ -25,10 +25,11 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
+		$apps[$x]['destinations'][$y]['sql'] = "select extension, number_alias, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "extension asc";
+		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "extension";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "description";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "user/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
