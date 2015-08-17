@@ -100,7 +100,7 @@ echo "					</td>";
 if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				<td valign='top' nowrap='nowrap'>";
 	if (sizeof($_SESSION['user']['extensions']) > 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extensions'][0] : $_REQUEST['eavesdrop_dest'])."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : $_REQUEST['eavesdrop_dest'])."\">";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		foreach ($_SESSION['user']['extensions'] as $user_extension) {
@@ -109,7 +109,7 @@ if (permission_exists('operator_panel_eavesdrop')) {
 		echo "				</select>\n";
 	}
 	else if (sizeof($_SESSION['user']['extensions']) == 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extensions'][0]."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extension'][0]['destination']."\">";
 	}
 	echo "				</td>";
 }
@@ -219,7 +219,12 @@ foreach ($activity as $extension => $ext) {
 		$call_identifier = $ext['variable_bridge_uuid'];
 	}
 	else {
-		$call_identifier = $ext['call_uuid']; // transfer all other call types
+		if( $ext['call_uuid'] ) {
+			$call_identifier = $ext['call_uuid']; // transfer all other call types
+		}
+		else {
+			$call_identifier = $ext['uuid']; // e.g. voice menus
+		}
 	}
 
 	//determine extension draggable state
@@ -328,7 +333,7 @@ foreach ($activity as $extension => $ext) {
 		}
 		//eavesdrop
 		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$ext['destination']."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
 		}
 		//kill
 		if (permission_exists('operator_panel_kill') || in_array($extension, $_SESSION['user']['extensions'])) {
