@@ -1689,6 +1689,32 @@ $text['label-blf']['de-at'] = "BLF";
 $text['label-blf']['ar-eg'] = "";
 $text['label-blf']['he'] = "";
 
+$text['label-callers']['en-us'] = "Callers";
+$text['label-callers']['es-cl'] = "Llaamadas";
+$text['label-callers']['pt-pt'] = "";
+$text['label-callers']['fr-fr'] = "";
+$text['label-callers']['pt-br'] = "";
+$text['label-callers']['pl'] = "BLF Xfer ";
+$text['label-callers']['uk'] = "";
+$text['label-callers']['sv-se'] = "";
+$text['label-callers']['ro'] = "";
+$text['label-callers']['de-at'] = "";
+$text['label-callers']['ar-eg'] = "";
+$text['label-callers']['he'] = "";
+
+$text['label-xfer']['en-us'] = "Xfer";
+$text['label-xfer']['es-cl'] = "Xfer";
+$text['label-xfer']['pt-pt'] = "";
+$text['label-xfer']['fr-fr'] = "";
+$text['label-xfer']['pt-br'] = "";
+$text['label-xfer']['pl'] = "Xfer ";
+$text['label-xfer']['uk'] = "";
+$text['label-xfer']['sv-se'] = "";
+$text['label-xfer']['ro'] = "";
+$text['label-xfer']['de-at'] = "";
+$text['label-xfer']['ar-eg'] = "";
+$text['label-xfer']['he'] = "";
+
 $text['label-automata']['en-us'] = "automata";
 $text['label-automata']['es-cl'] = "automata";
 $text['label-automata']['pt-pt'] = "automata";
