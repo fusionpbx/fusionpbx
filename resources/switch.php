@@ -83,8 +83,13 @@ function load_extensions() {
 				if (count($result) > 0) {
 					$x = 0;
 					foreach($result as $row) {
+						$destination = $row['extension'];
+						if (strlen($row['number_alias']) > 0) {
+							$destination = $row['number_alias'];
+						}
 						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
+						$_SESSION['user']['extension'][$x]['destination'] = $destination;
 						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
