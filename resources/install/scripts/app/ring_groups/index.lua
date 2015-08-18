@@ -69,9 +69,8 @@
 	if (not default_voice) then default_voice = 'callie'; end
 
 --get record_ext
-	if (session:getVariable("record_ext")) then
-		record_ext = session:getVariable("record_ext");
-	else
+	record_ext = session:getVariable("record_ext");
+	if (not record_ext) then
 		record_ext = "wav";
 	end
 
@@ -491,11 +490,23 @@
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
-				--set bind meta app
-					session:execute("bind_meta_app", "1 ab s execute_extension::dx XML "..context);
-					session:execute("bind_meta_app", "2 ab s record_session::"..recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".wav");
-					session:execute("bind_meta_app", "3 ab s execute_extension::cf XML "..context);
-					session:execute("bind_meta_app", "4 ab s execute_extension::att_xfer XML "..context);
+					local bind_target = 'peer'
+					if session:getVariable("sip_authorized") == "true" then
+						bind_target = 'both'
+					end
+
+				--set bind digit action
+					local record_file = recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".".record_ext
+					local bindings = {
+						"local,*1,exec:execute_extension,dx XML " .. context,
+						"local,*2,exec:record_session," .. record_file,
+						"local,*3,exec:execute_extension,cf XML " .. context,
+						"local,*4,exec:execute_extension,att_xfer XML " .. context,
+					}
+					for _, str in ipairs(bindings) do
+						session:execute("bind_digit_action", str .. "," .. bind_target)
+					end
+					session:execute("digit_action_set_realm", "local")
 
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then
