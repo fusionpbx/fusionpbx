@@ -880,7 +880,7 @@ require_once "resources/require.php";
 				if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
 					echo "<optgroup label='Aastra'>";
 					?>
-<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
+					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
 					<option value='blfxfer' <?php if ($row['device_key_type'] == "blfxfer") { echo $selected;$found=true; } ?>><?php echo $text['label-blf_xfer'] ?></option>
 					<option value='callers' <?php if ($row['device_key_type'] == "callers") { echo $selected;$found=true; } ?>><?php echo $text['label-callers'] ?></option>
 
