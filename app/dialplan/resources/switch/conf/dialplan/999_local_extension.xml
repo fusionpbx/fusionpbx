@@ -9,7 +9,8 @@
 		<!--Allow transfer/record only for internal users-->
 		<condition field="${sip_authorized}" expression="true" break="never">
 			<action application="set" data="bind_target=both" inline="true"/>
-			<anti-action application="set" data="bind_target=peer" inline="true"/>
+			<!-- set to `peer` to prevent manipulate of call by callee -->
+			<anti-action application="set" data="bind_target=both" inline="true"/>
 		</condition>
 
 		<condition>

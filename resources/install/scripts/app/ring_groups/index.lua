@@ -490,10 +490,10 @@
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
-					local bind_target = 'peer'
-					if session:getVariable("sip_authorized") == "true" then
-						bind_target = 'both'
-					end
+					local bind_target = 'both'
+					-- if session:getVariable("sip_authorized") ~= "true" then
+					-- 	bind_target = 'peer'
+					-- end
 
 				--set bind digit action
 					local record_file = recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid.."."..record_ext
