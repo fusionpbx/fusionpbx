@@ -34,12 +34,11 @@
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
-				//find the file
+				//set the directory
 					$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
-					$xml_file = $xml_dir."/acl.conf.xml';
 
 				//load the xml and save it into an array
-					$xml_string = file_get_contents($xml_file);
+					$xml_string = file_get_contents($xml_dir."/acl.conf.xml");
 					$xml_object = simplexml_load_string($xml_string);
 					$json = json_encode($xml_object);
 					$conf_array = json_decode($json, true);
@@ -109,7 +108,7 @@
 					unset($prep_statement);
 
 				//rename the file
-					rename($xml_file, $xml_dir.'/acl.conf');
+					rename($xml_dir.'/acl.conf.xml', $xml_dir.'/acl.conf');
 			}
 		}
 
