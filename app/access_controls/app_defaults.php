@@ -35,15 +35,8 @@
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
 				//find the file
-					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs')) {
-						$xml_file = '/usr/share/examples/fusionpbx/resources/templates/conf/autload_configs/acl.conf.xml';
-					}
-					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/autoload_configs')) {
-						$xml_file = '/usr/local/share/fusionpbx/resources/templates/conf/autoload_configs/acl.conf.xml';
-					}
-					else {
-						$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/autoload_configs/acl.conf.xml';
-					}
+					$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+					$xml_file = $xml_dir."/acl.conf.xml';
 
 				//load the xml and save it into an array
 					$xml_string = file_get_contents($xml_file);
@@ -112,10 +105,14 @@
 								//echo $sql."\n";
 								$db->exec(check_sql($sql));
 						}
-				}
-				unset($prep_statement);
+					}
+					unset($prep_statement);
+
+				//rename the file
+					rename($xml_file, $xml_dir.'/acl.conf');
 			}
 		}
+
 	}
 
 ?>
