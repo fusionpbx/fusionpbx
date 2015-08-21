@@ -62,15 +62,18 @@
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
 
+		-- Make sance only for extensions with number_alias
+		--  true  - you should register with AuthID=Extension and UserID=Number Alias
+		--  false - you should register with AuthID=UserID=Extension
+				also in this case you need 2 records in memcache for one extension
+			local DIAL_STRING_BASED_ON_USERID = false
+
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
 				sip_auth_method = sip_auth_method:upper();
 			end
 
 			local from_user = params:getHeader("sip_from_user")
-			if from_user == '' then
-				from_user = user
-			end
 
 			-- verify from_user and number alias for this methods
 			local METHODS = {
@@ -306,7 +309,7 @@
 								else
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. sip_from_number .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
@@ -540,7 +543,7 @@
 							dbh:release();
 
 						--set the cache
-							local key = "directory:" .. sip_from_number .. "@" .. domain_name 
+							local key = "directory:" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name
 							if debug['cache'] then
 								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
 							end
