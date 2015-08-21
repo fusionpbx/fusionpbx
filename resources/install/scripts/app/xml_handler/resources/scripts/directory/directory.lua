@@ -65,7 +65,7 @@
 		-- Make sance only for extensions with number_alias
 		--  true  - you should register with AuthID=Extension and UserID=Number Alias
 		--  false - you should register with AuthID=UserID=Extension
-				also in this case you need 2 records in memcache for one extension
+		-- 	also in this case you need 2 records in memcache for one extension
 			local DIAL_STRING_BASED_ON_USERID = false
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
