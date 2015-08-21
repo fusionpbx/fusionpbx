@@ -743,6 +743,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("directory:".$extension."@".$user_context);
+					if (strlen($number_alias) > 0) {
+						$cache->delete("directory:".$number_alias."@".$user_context);
+					}
 			}
 
 		//show the action and redirect the user
