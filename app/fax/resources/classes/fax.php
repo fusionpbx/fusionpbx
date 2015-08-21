@@ -40,6 +40,7 @@
 			public $dialplan_uuid;
 			public $fax_name;
 			public $fax_description;
+			public $fax_extension;
 			public $destination_number;
 
 			/**
@@ -86,7 +87,7 @@
 					$dialplan["app_uuid"] = "24108154-4ac3-1db6-1551-4731703a4440";
 					$dialplan["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
-					$dialplan["dialplan_number"] = $this->destination_number;
+					$dialplan["dialplan_number"] = $this->fax_extension;
 					$dialplan["dialplan_context"] = $_SESSION['context'];
 					$dialplan["dialplan_continue"] = "false";
 					$dialplan["dialplan_order"] = "310";
@@ -158,10 +159,10 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "rxfax";
 					if (count($_SESSION["domains"]) > 1) {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->destination_number.'/inbox/${last_fax}.tif';
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
 					}
 					else {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->destination_number.'/inbox/${last_fax}.tif';
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/${last_fax}.tif';
 					}
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
@@ -221,8 +222,9 @@ $o = new fax;
 $c->domain_uuid = "";
 $c->dialplan_uuid = "";
 $c->fax_name = "";
-$c->fax_description = "";
+$c->fax_extension = $fax_extension;
 $c->destination_number = "";
+$c->fax_description = "";
 $c->dialplan();
 */
 
