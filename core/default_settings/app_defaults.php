@@ -52,8 +52,8 @@ if ($domains_processed == 1) {
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'session_rotate';
-		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '4';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Whether to regenerate the session ID.';
 		$x++;
