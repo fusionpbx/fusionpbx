@@ -101,7 +101,7 @@ else {
 	}
 
 //get the http post values and set them as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$fax_name = check_str($_POST["fax_name"]);
 		$fax_extension = check_str($_POST["fax_extension"]);
 		$fax_accountcode = check_str($_POST["accountcode"]);
@@ -372,7 +372,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$c->fax_name = $fax_name;
 				$c->fax_uuid = $fax_uuid;
 				$c->fax_description = $fax_description;
-				$c->destination_number = $fax_extension;
+				$c->destination_number = $fax_destination_number;
 				$a = $c->dialplan();
 
 			//redirect the browser
