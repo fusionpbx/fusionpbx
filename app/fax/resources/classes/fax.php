@@ -42,6 +42,7 @@
 			public $fax_description;
 			public $fax_extension;
 			public $destination_number;
+			private $forward_prefix;
 
 			/**
 			 * Called when the object is created
@@ -66,6 +67,20 @@
 			 * @var string $value	string to be cached
 			 */
 			public function dialplan() {
+
+				//normalize the fax forward number
+					if (strlen($this->fax_forward_number) > 3) {
+						//$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
+						$this->fax_forward_number = str_replace(" ", "", $this->fax_forward_number);
+						$this->fax_forward_number = str_replace("-", "", $this->fax_forward_number);
+					}
+
+				//set the forward prefix
+					if (strripos($this->fax_forward_number, '$1') === false) {
+						$this->forward_prefix = ''; //not found
+					} else {
+						$this->forward_prefix = $this->forward_prefix.$this->fax_forward_number.'#'; //found
+					}
 
 				//delete previous dialplan
 					if (strlen($this->dialplan_uuid) > 0) {
@@ -159,10 +174,10 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "rxfax";
 					if (count($_SESSION["domains"]) > 1) {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
 					}
 					else {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/${last_fax}.tif';
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
 					}
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
