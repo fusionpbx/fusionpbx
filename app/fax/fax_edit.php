@@ -372,6 +372,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$c->fax_name = $fax_name;
 				$c->fax_uuid = $fax_uuid;
 				$c->fax_extension = $fax_extension;
+				$c->fax_forward_number = $fax_forward_number;
 				$c->destination_number = $fax_destination_number;
 				$c->fax_description = $fax_description;
 				$a = $c->dialplan();

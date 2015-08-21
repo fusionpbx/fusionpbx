@@ -41,6 +41,7 @@
 			public $fax_name;
 			public $fax_description;
 			public $fax_extension;
+			public $fax_forward_number;
 			public $destination_number;
 			private $forward_prefix;
 
@@ -238,8 +239,9 @@ $c->domain_uuid = "";
 $c->dialplan_uuid = "";
 $c->fax_name = "";
 $c->fax_extension = $fax_extension;
-$c->destination_number = "";
-$c->fax_description = "";
+$c->fax_forward_number = $fax_forward_number;
+$c->destination_number = $fax_destination_number;
+$c->fax_description = $fax_description;
 $c->dialplan();
 */
 
