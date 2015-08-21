@@ -62,6 +62,20 @@
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
 
+			local sip_auth_method = params:getHeader("sip_auth_method")
+			if sip_auth_method then
+				sip_auth_method = sip_auth_method:upper();
+			end
+
+			local from_user = params:getHeader("sip_from_user")
+
+			-- verify from_user and number alias for this methods
+			local METHODS = {
+				-- _ANY_    = true,
+				REGISTER = true,
+				-- INVITE   = true,
+			}
+
 			if (user == nil) then
 				user = "";
 			end
@@ -249,6 +263,15 @@
 								forward_no_answer_enabled = row.forward_no_answer_enabled;
 								forward_no_answer_destination = row.forward_no_answer_destination;
 								do_not_disturb = row.do_not_disturb;
+
+							-- check matching UserID and AuthName
+								if sip_auth_method and (METHODS[sip_auth_method] or METHODS._ANY_) then
+									continue = (sip_from_user == user) and ((sip_from_number == user) or (sip_from_number == from_user))
+									if not continue then
+										XML_STRING = nil;
+										return 1;
+									end
+								end
 
 							--set the dial_string
 								if (string.len(row.dial_string) > 0) then
@@ -509,11 +532,17 @@
 					end
 			end
 
-		--disable registration for number-alias
-			if (params:getHeader("sip_auth_method") == "REGISTER") then
-				if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
-					XML_STRING = nil;
-				end
+			if XML_STRING and sip_auth_method and (METHODS[sip_auth_method] or METHODS._ANY_) then
+				--disable registration for number-alias
+					if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
+						XML_STRING = nil;
+					end
+				--disable registration for foreign number_alias
+					if from_user ~= user then
+						if (api:execute("user_data", from_user .. "@" .. domain_name .." attr id") ~= user) then
+							XML_STRING = nil;
+						end
+					end
 			end
 
 		--get the XML string from the cache
