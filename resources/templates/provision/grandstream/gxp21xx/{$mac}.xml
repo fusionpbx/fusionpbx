@@ -18,7 +18,7 @@
     <!-- SIP User ID -->
     <P35>{$user_id_1}</P35>
     <!-- Authenticate ID -->
-    <P36>{$user_id_1}</P36>
+    <P36>{$auth_id_1}</P36>
     <!-- Authenticate Password -->
     <P34>{$user_password_1}</P34>
     <!-- Display Name -->
