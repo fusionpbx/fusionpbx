@@ -49,7 +49,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = 1000;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
