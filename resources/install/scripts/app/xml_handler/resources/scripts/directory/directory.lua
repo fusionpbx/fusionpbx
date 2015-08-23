@@ -26,7 +26,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx> 
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set the default
 	continue = true;
@@ -192,7 +192,7 @@
 								end
 
 							--get the caller hostname
-								local_hostname = trim(api:execute("hostname", ""));
+								local_hostname = trim(api:execute("switchname", ""));
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
