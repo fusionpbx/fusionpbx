@@ -35,6 +35,7 @@ include "root.php";
 		public $domain_name;
 		public $extension_uuid;
 		private $extension;
+		private $number_alias;
 		public $forward_all_destination;
 		public $forward_all_enabled;
 		private $dial_string;
@@ -58,6 +59,7 @@ include "root.php";
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
 						$this->extension = $row["extension"];
+						$this->number_alias = $row["number_alias"];
 						$this->accountcode = $row["accountcode"];
 						$this->toll_allow = $row["toll_allow"];
 						$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
@@ -155,10 +157,10 @@ include "root.php";
 				unset($sql);
 
 			//delete extension from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete directory:".$this->extension."@".$this->domain_name;
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$cache = new cache;
+				$cache->delete("directory:".$this->extension."@".$this->domain_name);
+				if(strlen($this->number_alias) > 0){
+					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
 				}
 
 		} //function
