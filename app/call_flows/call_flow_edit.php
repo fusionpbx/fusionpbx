@@ -337,7 +337,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("memcache delete dialplan:".$call_flow_context);
+					$cache->delete("dialplan:".$call_flow_context);
 
 				//set the message
 					if ($action == "add") {
