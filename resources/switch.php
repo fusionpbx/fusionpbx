@@ -110,76 +110,22 @@ function load_extensions() {
 load_extensions();
 
 function event_socket_create($host, $port, $password) {
-	$fp = fsockopen($host, $port, $errno, $errdesc, 3);
-	socket_set_blocking($fp,false);
-
-	if (!$fp) {
-		//error "invalid handle<br />\n";
-		//echo "error number: ".$errno."<br />\n";
-		//echo "error description: ".$errdesc."<br />\n";
+	$esl = new EventSocket;
+	if ($esl->connect($host, $port, $password)) {
+		return $esl->reset_fp();
 	}
-	else {
-		//connected to the socket return the handle
-		while (!feof($fp)) {
-			$buffer = fgets($fp, 1024);
-			usleep(100); //allow time for reponse
-			if (trim($buffer) == "Content-Type: auth/request") {
-				 fputs($fp, "auth $password\n\n");
-				 break;
-			}
-		}
-		return $fp;
-	}
-} //end function
+	return false;
+}
 
 function event_socket_request($fp, $cmd) {
-	if ($fp) {
-		$cmd_array = explode("\n",$cmd);
-		foreach ($cmd_array as &$value) {
-		    fputs($fp, $value."\n");
-		}
-		fputs($fp, "\n"); //second line feed to end the headers
-
-		$response = '';
-		$i = 0;
-		$content_length = 0;
-		while (!feof($fp)) {
-			$buffer = fgets($fp, 4096);
-			if ($content_length > 0) {
-				$response .= $buffer;
-			}
-
-			if ($content_length == 0) { //if the content has length don't process again
-				if (strlen(trim($buffer)) > 0) { //run only if buffer has content
-					$array = explode(":", trim($buffer));
-					if ($array[0] == "Content-Length") {
-						$content_length = trim($array[1]);
-					}
-				}
-			}
-
-			if ($content_length > 0) { //is content_length set
-				//stop reading if all content has been read.
-				if (strlen($response) >= $content_length) {
-					break;
-				}
-			}
-			else {
-				//prevent an endless loop
-				if ($i > 300000) { break; }	
-			}
-			$i++;
-		}
-
-		return $response;
-	}
-	else {
-		echo "no handle";
-	}
+	$esl = new EventSocket($fp);
+	$result = $esl->request($cmd);
+	$esl->reset_fp();
+	return $result;
 }
 
 function event_socket_request_cmd($cmd) {
-	global $db, $domain_uuid, $host;
+	global $db;
 
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
 		$sql = "select * from v_settings ";
@@ -195,9 +141,13 @@ function event_socket_request_cmd($cmd) {
 		unset ($prep_statement);
 	}
 
-	$fp = event_socket_create($event_socket_ip_address, $event_socket_port, $event_socket_password);
-	$response = event_socket_request($fp, $cmd);
-	fclose($fp);
+	$esl = new EventSocket;
+	if (!$esl->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
+		return false;
+	}
+	$response = $esl->request($cmd);
+	$esl->close();
+	return $response;
 }
 
 function byte_convert($bytes, $decimals = 2) {
