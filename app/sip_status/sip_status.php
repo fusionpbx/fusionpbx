@@ -100,9 +100,18 @@ if ($_GET['a'] == "download") {
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+	if ($fp) {
+		$hostname = trim(event_socket_request($fp, 'api switchname'));
+	}
+
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
+	if ($hostname) {
+		$sql .= "and (sip_profile_hostname = '" . $hostname . "' ";
+		$sql .= "or sip_profile_hostname = '' ";
+		$sql .= "or sip_profile_hostname is null ) ";
+	}
 	$sql .= "order by sip_profile_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
