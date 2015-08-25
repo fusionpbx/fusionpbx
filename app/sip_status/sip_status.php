@@ -93,8 +93,8 @@ if ($_GET['a'] == "download") {
 	}
 
 //get the gateways
-	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name from v_gateways as g, v_domains as d ";
-	$sql .= "where d.domain_uuid = g.domain_uuid ";
+	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name ";
+	$sql .= "from v_gateways as g left outer join v_domains as d on d.domain_uuid = g.domain_uuid";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
