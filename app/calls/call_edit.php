@@ -379,7 +379,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//clear the cache
 		$cache = new cache;
-		$cache->delete("memcache delete directory:".$extension."@".$_SESSION['domain_name']);
+		$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
+		if(strlen($number_alias) > 0){
+			$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
+		}
 
 	//redirect the user
 		$_SESSION["message"] = $text['confirm-update'];
