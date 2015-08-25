@@ -329,7 +329,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//clear the cache
 				$cache = new cache;
-				$cache->delete("memcache delete dialplan:".$_SESSION["context"]);
+				$cache->delete("dialplan:".$_SESSION["context"]);
 
 			//set the update message
 				$_SESSION["message"] = $text['message-update'];
