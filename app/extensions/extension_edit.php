@@ -1234,7 +1234,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 180px;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
 			echo "					<option value=''></option>\n";
 			if (count($devices) > 0) {
-				foreach($result as $field) {
+				foreach($devices as $field) {
 					if (strlen($field["device_mac_address"]) > 0) {
 						if ($field_current_value == $field["device_mac_address"]) {
 							echo "					<option value=\"".$field["device_mac_address"]."\" selected=\"selected\">".$field["device_mac_address"]."</option>\n";
