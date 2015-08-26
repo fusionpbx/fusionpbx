@@ -68,7 +68,7 @@
 		-- 	also in this case you need 2 records in memcache for one extension
 			local DIAL_STRING_BASED_ON_USERID = false
 
-			local NUMBER_AS_PRESENCE_ID = true
+			local NUMBER_AS_PRESENCE_ID = false
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
