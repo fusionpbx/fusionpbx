@@ -582,7 +582,7 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 
 function extension_exists($extension) {
 	global $db, $domain_uuid;
-	$sql = "select * from v_extensions ";
+	$sql = "select 1 from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and (extension = '$extension' ";
 	$sql .= "or number_alias = '$extension') ";
@@ -594,6 +594,35 @@ function extension_exists($extension) {
 	else {
 		return false;
 	}
+}
+
+function extension_presence_id($extension, $number_alias = false) {
+	global $db, $domain_uuid;
+	if ($number_alias === false) {
+		$sql = "select extension, number_alias from v_extensions ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and (extension = '$extension' ";
+		$sql .= "or number_alias = '$extension') ";
+		$sql .= "and enabled = 'true' ";
+
+		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) == 0) {
+			return false;
+		}
+
+		foreach ($result as &$row) {
+			$extension = $row['extension'];
+			$number_alias = $row['number_alias'];
+			break;
+		}
+	}
+
+	if(strlen($number_alias) > 0) {
+		if($_SESSION['provision']['number_as_presence_id']['boolean'] === 'true') {
+			return $number_alias;
+		}
+	}
+	return $extension;
 }
 
 function get_recording_filename($id) {

@@ -43,6 +43,19 @@
 --include config.lua
 	require "resources.functions.config";
 
+--include config.lua
+	require "resources.functions.settings";
+
+	local function opt(t, ...)
+		if select('#', ...) == 0 then
+			return t
+		end
+		if type(t) ~= 'table' then
+			return nil
+		end
+		return opt(t[...], select(2, ...))
+	end
+
 --check if the session is ready
 	if (session:ready()) then
 		--answer the call
@@ -128,7 +141,7 @@
 				status = dbh:query(sql, function(row)
 					extension_uuid = row.extension_uuid;
 					extension = row.extension;
-					number_alias = row.number_alias;
+					number_alias = row.number_alias or '';
 					accountcode = row.accountcode;
 					forward_all_enabled = row.forward_all_enabled;
 					forward_all_destination = row.forward_all_destination;
@@ -157,16 +170,38 @@
 
 		--set the dial string
 			if (session:ready() and enabled == "true") then
+				local destination_extension, destination_number_alias
 				--used for number_alias to get the correct user
-				sql = "select * from v_extensions ";
+				sql = "select extension, number_alias from v_extensions ";
 				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
 				sql = sql .. "and number_alias = '"..forward_all_destination.."' ";
 				status = dbh:query(sql, function(row)
 					destination_user = row.extension;
+					destination_extension = row.extension;
+					destination_number_alias = row.number_alias or '';
 				end);
 
+				local presence_id
+				if destination_extension then
+					if (#destination_number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
+						presence_id = destination_number_alias
+					else
+						presence_id = destination_extension
+					end
+				elseif extension then
+					-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
+					-- $presence_id = extension_presence_id($this->extension, $this->number_alias);
+					if (#number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
+						presence_id = number_alias
+					else
+						presence_id = extension
+					end
+				else
+					presence_id = forward_all_destination
+				end
+
 				--set the dial_string
-				dial_string = "{presence_id="..forward_all_destination.."@"..domain_name;
+				dial_string = "{presence_id="..presence_id.."@"..domain_name;
 				dial_string = dial_string .. ",instant_ringback=true";
 				dial_string = dial_string .. ",domain_uuid="..domain_uuid;
 				dial_string = dial_string .. ",sip_invite_domain="..domain_name;

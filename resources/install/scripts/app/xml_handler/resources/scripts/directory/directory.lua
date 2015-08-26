@@ -68,6 +68,8 @@
 		-- 	also in this case you need 2 records in memcache for one extension
 			local DIAL_STRING_BASED_ON_USERID = false
 
+			local NUMBER_AS_PRESENCE_ID = true
+
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
 				sip_auth_method = sip_auth_method:upper();
@@ -309,7 +311,7 @@
 								else
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name .. "}${sofia_contact(" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
@@ -378,10 +380,10 @@
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="directory">]]);
 							table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-							table.insert(xml, [[            <params>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-methods" value="verto"/>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
-							table.insert(xml, [[            </params>]]);
+							table.insert(xml, [[			<params>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[			</params>]]);
 							table.insert(xml, [[			<groups>]]);
 							table.insert(xml, [[				<group name="default">]]);
 							table.insert(xml, [[					<users>]]);
