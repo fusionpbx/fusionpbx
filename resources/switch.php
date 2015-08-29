@@ -79,7 +79,7 @@ function load_extensions() {
 				$sql .= "	and e.enabled = 'true' ";
 				$sql .= "order by ";
 				$sql .= "	e.extension asc ";
-				$query = $pdo->query($sql);
+				$query = $db->query($sql);
 				if($query !== false) {
 					$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 					$x = 0;
