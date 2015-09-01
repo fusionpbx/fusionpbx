@@ -88,6 +88,17 @@ $text['option-rollover']['uk'] = "";
 $text['option-rollover']['de-at'] = "Überrollen";
 $text['option-rollover']['he'] = "";
 
+$text['option-random']['en-us'] = "Random";
+$text['option-random']['es-cl'] = "Aleatorio";
+$text['option-random']['pt-pt'] = "";
+$text['option-random']['fr-fr'] = "";
+$text['option-random']['pt-br'] = "";
+$text['option-random']['pl'] = "";
+$text['option-random']['sv-se'] = "";
+$text['option-random']['uk'] = "";
+$text['option-random']['de-at'] = "";
+$text['option-random']['he'] = "";
+
 $text['option-ptring']['en-us'] = "pt-ring";
 $text['option-ptring']['es-cl'] = "pt-ring";
 $text['option-ptring']['fr-fr'] = "Portugal";
