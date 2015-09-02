@@ -23,4 +23,7 @@ RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-registration.cfg$     app/provis
 RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-site.cfg$             app/provision/?mac=$1&file=site.cfg [QSA]
 RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-web.cfg$              app/provision/?mac=$1&file=web.cfg [QSA]
 
+#Escene
+RewriteRule     ^.*/provision/([A-Fa-f0-9]+)_Extern.xml$              app/provision/?ext=$1&file={$mac}_extern.xml [QSA]
+
 Options -Indexes

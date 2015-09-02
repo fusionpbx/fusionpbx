@@ -101,6 +101,9 @@ include "root.php";
 				case "00177d":
 					$device_vendor = "konftel";
 					break;
+				case "00268B":
+					$device_vendor = "escene";
+					break;
 				default:
 					$device_vendor = "";
 				}

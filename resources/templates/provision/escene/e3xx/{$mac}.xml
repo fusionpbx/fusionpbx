@@ -1,0 +1,57 @@
+<all>
+	<sipUsers>
+	{foreach $lines as $row}
+		{if $row.line_number neq ""}
+			{$line_expire_tmp=$line_expire_{$row.line_number}}
+			{if $line_expire_tmp==""} {$line_expire_tmp=$line_expire} {/if}
+			{if $line_expire_tmp==""} {$line_expire_tmp="3600"}  {/if}
+
+			{$line_subscribe_tmp=$line_subscribe_{$row.line_number}}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp="1800"}  {/if}
+
+		<sipUser id="{$row.line_number-1}"
+			EnableAccount="{($row.enabled=='true')?'1':'0'}"
+			Describe="MyLabel"
+			DomainName="{$row.server_address}"
+			UserName="{$row.display_name}"
+			UserNumber="{$row.user_id}"
+			approveName="{$row.auth_id}"
+			Password="{$row.password}"
+			ProxyServerAddress="{$row.outbound_proxy}{if $row.sip_port neq '5060'}:{$row.sip_port}{/if}"
+			SecondProxyServerAddress=""
+			PollingRegistrationTime="32"
+			RefreshTime="{$line_expire_tmp}"
+			Subscribe="{$line_subscribe_tmp}"
+			SecondDomainName=""
+			STUNAddress=""
+			STUNEnableFlag="0"
+			flag="0"
+			LinkUse="0"
+			PossessNumber="2"
+			SupportNumber="8"
+			RTPBegin="10000" RTPEND="10128"
+			AccountMode="0"
+			RegisterMethod="0"
+			BLAEnableFlag="0"
+			BLANum=""
+			AnonymousCall="0"
+			UserSessionTimerEnable="0"
+			SessionTimer="300"
+			AllowEventsEnable="0"
+			DNSSRVEnable="0"
+			RegisteredNAT="1"
+			RingFilename=""
+			KeepaliveEnable="1"
+			KeepaliveInterval="30"
+			AnonymousCallReject="0"
+			ProxyEnableFlag="0"
+			AutoAnsEnableFlag="0"
+			SessionTimerRefresher="0"
+			UserphoneEnable="0"
+			UserSessionTimerRefresher="0"
+		/>
+		{/if}
+	{/foreach}
+	</sipUsers>
+</all>
