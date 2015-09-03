@@ -661,6 +661,14 @@ include "root.php";
 					}
 					unset ($prep_statement);
 
+				//populate internal address book
+					$sql = "SELECT extension as , effective_caller_id_name, effective_caller_id_number, outbound_caller_id_name, outbound_caller_id_number, directory_full_name FROM v_extensions";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$internal_addressbook = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$view->assign("internal_addressbook",$internal_addressbook);
+					unset ($prep_statement);
+
 				//set the mac address in the correct format
 					switch (strtolower($device_vendor)) {
 					case "aastra":
