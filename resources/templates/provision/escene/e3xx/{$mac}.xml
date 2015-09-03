@@ -2,13 +2,10 @@
 	<sipUsers>
 	{foreach $lines as $row}
 		{if $row.line_number neq ""}
-			{$line_expire_tmp=$line_expire_{$row.line_number}}
-			{if $line_expire_tmp==""} {$line_expire_tmp=$line_expire} {/if}
-			{if $line_expire_tmp==""} {$line_expire_tmp="3600"}  {/if}
-
 			{$line_subscribe_tmp=$line_subscribe_{$row.line_number}}
 			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
-			{if $line_subscribe_tmp==""} {$line_subscribe_tmp="1800"}  {/if}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$row.register_expires}  {/if}
+			{if $line_subscribe_tmp<"120"} {$line_subscribe_tmp="120"} {/if}
 
 		<sipUser id="{$row.line_number-1}"
 			EnableAccount="{($row.enabled=='true')?'1':'0'}"
@@ -18,17 +15,17 @@
 			UserNumber="{$row.user_id}"
 			approveName="{$row.auth_id}"
 			Password="{$row.password}"
-			ProxyServerAddress="{$row.outbound_proxy}{if $row.sip_port neq '5060'}:{$row.sip_port}{/if}"
+			ProxyServerAddress="{if $row.outbound_proxy neq ''}{$row.outbound_proxy}{else}{$row.server_address}{/if}{if $row.sip_port neq '5060'}:{$row.sip_port}{/if}"
+			LinkUse="{if $row.sip_transport=='tcp'}1{elseif $row.sip_transport=='tls'}2{else}0{/if}"
+			PossessNumber="1"
 			SecondProxyServerAddress=""
 			PollingRegistrationTime="32"
-			RefreshTime="{$line_expire_tmp}"
+			RefreshTime="{$row.register_expires}"
 			Subscribe="{$line_subscribe_tmp}"
 			SecondDomainName=""
 			STUNAddress=""
 			STUNEnableFlag="0"
 			flag="0"
-			LinkUse="0"
-			PossessNumber="2"
 			SupportNumber="8"
 			RTPBegin="10000" RTPEND="10128"
 			AccountMode="0"
