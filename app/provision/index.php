@@ -50,7 +50,9 @@ The file name is fixed to `Account1_Extern.xml`.
 (Account1 is the first account you register)
 */
 	if(empty($mac) && !empty($ext)){
-		$device = device_by_ext($db, $ext);
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+		$domain_name = $domain_array[0];
+		$device = device_by_ext($db, $ext, $domain_name);
 		if(($device !== false)&&($device['device_vendor']=='escene')){
 			$mac = $device['device_mac_address'];
 		}
