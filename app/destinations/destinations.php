@@ -75,7 +75,7 @@ else {
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_destinations = $row['num_rows'];
+		$num_rows = $row['num_rows'];
 	}
 	else {
 		$num_rows = 0;
@@ -89,7 +89,7 @@ else {
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($total_destinations, $param, $rows_per_page);
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -118,13 +118,12 @@ else {
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$destinations = $prep_statement->fetchAll();
-	$destination_count = count($destination);
 	unset ($prep_statement, $sql);
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']." (".$total_destinations.")</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']." (".$num_rows.")</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
 	if (permission_exists('destination_all')) {
@@ -163,14 +162,14 @@ else {
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, '', '', $param);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('destination_add')) {
-		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
+		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $num_rows < $_SESSION['limit']['destinations']['numeric'])) {
 			echo "<a href='destination_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($destination_count > 0) {
+	if ($num_rows > 0) {
 		foreach($destinations as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
@@ -204,7 +203,7 @@ else {
 		echo "<td colspan='6' align='right'>\n";
 	}
 	if (permission_exists('destination_add')) {
-		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $total_destinations < $_SESSION['limit']['destinations']['numeric'])) {
+		if ($_SESSION['limit']['destinations']['numeric'] == '' || ($_SESSION['limit']['destinations']['numeric'] != '' && $num_rows < $_SESSION['limit']['destinations']['numeric'])) {
 			echo "<a href='destination_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
