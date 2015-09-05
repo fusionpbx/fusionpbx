@@ -86,7 +86,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	require_once "resources/paging.php";
 
 //show the content
-	echo "<b>".$text['title-voicemail_messages']." (".count($voicemails).")</b>";
+	echo "<b>".$text['title-voicemail_messages']."</b>";
 	echo "<br><br>";
 	echo $text['description-voicemail_message'];
 	echo "<br><br>";
