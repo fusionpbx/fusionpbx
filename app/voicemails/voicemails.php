@@ -57,11 +57,73 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_voicemails ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "	voicemail_id like '%".$search."%' ";
+		$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
+		$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
+		$sql .= " 	or voicemail_enabled like '%".$search."%' ";
+		$sql .= " 	or voicemail_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (!permission_exists('voicemail_delete')) {
+		$x = 0;
+		if (count($voicemail_uuids) > 0) {
+			$sql .= "and (";
+			foreach($voicemail_uuids as $row) {
+				if ($x == 0) {
+					$sql .= "voicemail_uuid = '".$row['voicemail_uuid']."' ";
+				}
+				else {
+					$sql .= " or voicemail_uuid = '".$row['voicemail_uuid']."'";
+				}
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			$sql .= "and voicemail_uuid is null ";
+		}
+	}
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = '0';
+		}
+	}
+
+//prepare to page the results
+	$rows_per_page = 150;
+	$param = "";
+	if ($search != '') { $param .= "&search=".$search; }
+	if ($order_by != '') { $param .= "&order_by=".$order_by."&order=".$order; }
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = str_replace('count(*) as num_rows', '*', $sql);
+	$sql .= ($order_by != '') ? "order by ".$order_by." ".$order." " : "order by voicemail_id asc ";
+	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'>";
-	echo "			<b>".$text['title-voicemails']."</b>";
+	echo "			<b>".$text['title-voicemails']." (".$num_rows.")</b>";
 	echo "			<br /><br />";
 	echo "			".$text['description-voicemail'];
 	echo "			<br /><br />";
@@ -75,74 +137,11 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_voicemails ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($search) > 0) {
-			$sql .= "and (";
-			$sql .= "	voicemail_id like '%".$search."%' ";
-			$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
-			$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
-			$sql .= " 	or voicemail_enabled like '%".$search."%' ";
-			$sql .= " 	or voicemail_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		if (!permission_exists('voicemail_delete')) {
-			$x = 0;
-			if (count($voicemail_uuids) > 0) {
-				$sql .= "and (";
-				foreach($voicemail_uuids as $row) {
-					if ($x == 0) {
-						$sql .= "voicemail_uuid = '".$row['voicemail_uuid']."' ";
-					}
-					else {
-						$sql .= " or voicemail_uuid = '".$row['voicemail_uuid']."'";
-					}
-					$x++;
-				}
-				$sql .= ")";
-			}
-			else {
-				$sql .= "and voicemail_uuid is null ";
-			}
-		}
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = 150;
-		$param = "";
-		if ($search != '') { $param .= "&search=".$search; }
-		if ($order_by != '') { $param .= "&order_by=".$order_by."&order=".$order; }
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = str_replace('count(*) as num_rows', '*', $sql);
-		$sql .= ($order_by != '') ? "order by ".$order_by." ".$order." " : "order by voicemail_id asc ";
-		$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	if ($result_count > 0) {
+	if ($num_rows > 0) {
 
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -165,7 +164,7 @@ else {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		foreach($result as $row) {
+		foreach($voicemails as $row) {
 			$tr_link = (permission_exists('voicemail_edit')) ? "href='voicemail_edit.php?id=".$row['voicemail_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -202,7 +201,7 @@ else {
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $voicemails, $row_count);
 
 		echo "<tr>\n";
 		echo "<td colspan='11' align='left'>\n";
