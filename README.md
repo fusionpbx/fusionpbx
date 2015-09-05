@@ -6,7 +6,7 @@ It provides the functionality your business needs and brings corporate-level pho
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
 
-- Multi-Tenancy
+- Multi-Tenant
 - Unlimited Extensions
 - Voicemail-to-Email
 - Music on Hold
@@ -25,7 +25,7 @@ We provide several avenues for you to get your system up and running on your own
 1. [Current Documentation](http://wiki.fusionpbx.com/index.php?title=Main_Page)
 2. [New Documentation](http://fusionpbx-docs.readthedocs.org/en/latest/) COMING SOON
 3. [How to Contribute](http://fusionpbx.com) COMING SOON
-4. [IRC](http://webchat.freenode.net/) in the fusionpbx channel
+4. [IRC](http://webchat.freenode.net/) in the #fusionpbx channel
 
 Commercial Support
 --------------------------------------
