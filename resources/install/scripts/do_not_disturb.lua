@@ -163,7 +163,7 @@
 					else
 						user_status = "Available";
 					end
-					sql = sql .. "update v_users set ";
+					sql = "update v_users set ";
 					sql = sql .. "user_status = '"..user_status.."' ";
 					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
 					sql = sql .. "and username = '"..row.user_uuid.."' ";
