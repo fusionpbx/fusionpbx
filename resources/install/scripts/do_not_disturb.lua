@@ -166,7 +166,7 @@
 					sql = "update v_users set ";
 					sql = sql .. "user_status = '"..user_status.."' ";
 					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-					sql = sql .. "and username = '"..row.user_uuid.."' ";
+					sql = sql .. "and user_uuid = '"..row.user_uuid.."' ";
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
 					end
