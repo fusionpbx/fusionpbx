@@ -1,6 +1,6 @@
 <?php
 
-$text['title-user_manager']['en-us'] = "User Manager";
+$text['title-user_manager']['en-us'] = "Users";
 $text['title-user_manager']['es-cl'] = "Administración de Usuarios";
 $text['title-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 $text['title-user_manager']['fr-fr'] = "Gestion des utilisateurs";
