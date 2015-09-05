@@ -127,7 +127,7 @@ require_once "resources/check_auth.php";
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
-			echo "	<b>".count($registrations)." ".$text['header-registrations']."</b>\n";
+			echo "	<b>".$text['header-registrations']." (".count($registrations).")</b>\n";
 			echo "</td>\n";
 			echo "<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
 			echo "	<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";

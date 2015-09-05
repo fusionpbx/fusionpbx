@@ -137,7 +137,7 @@ else {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<form method='post' action=''>";
 	echo "<tr>\n";
-	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$user_count." ".$text['header-user_manager']."</b></td>\n";
+	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
 		if ($_GET['showall'] == 'true') {
