@@ -86,7 +86,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	require_once "resources/paging.php";
 
 //show the content
-	echo "<b>".$text['title-voicemail_messages']."</b>";
+	echo "<b>".$text['title-voicemail_messages']." (".count($voicemails).")</b>";
 	echo "<br><br>";
 	echo $text['description-voicemail_message'];
 	echo "<br><br>";
@@ -185,17 +185,13 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 
 			$previous_voicemail_id = $field['voicemail_id'];
 			unset($sql, $result, $result_count);
-
 		}
-
 		echo "</table>";
 		echo "<br /><br />";
-
 	}
 	else {
 		echo "<br />".$text['message-messages_not_found']."<br /><br />";
 	}
-
 	echo "<br />";
 
 //autoplay message
