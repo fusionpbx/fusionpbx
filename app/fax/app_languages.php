@@ -1,6 +1,6 @@
 <?php
 
-$text['title-fax']['en-us'] = "Fax Server";
+$text['title-fax']['en-us'] = "Fax Servers";
 $text['title-fax']['es-cl'] = "Servidor de Fax";
 $text['title-fax']['pt-pt'] = "Servidor de Fax";
 $text['title-fax']['fr-fr'] = "Serveur de Fax";
