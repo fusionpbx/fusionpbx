@@ -50,10 +50,81 @@ else {
 	$document['title'] = $text['title-destinations'];
 	require_once "resources/paging.php";
 
+//get total destination count from the database
+	$sql = "select count(*) as num_rows from v_destinations ";
+	if ($_GET['showall'] && permission_exists('destination_all')) {
+		if (strlen($search) > 0) {
+			$sql .= "where ";
+		}
+	} else {
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		if (strlen($search) > 0) {
+			$sql .= "and ";
+		}
+	}
+	if (strlen($search) > 0) {
+		$sql .= "(";
+		$sql .= "	destination_type like '%".$search."%' ";
+		$sql .= " 	or destination_number like '%".$search."%' ";
+		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or destination_enabled like '%".$search."%' ";
+		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_destinations = $row['num_rows'];
+	}
+	else {
+		$num_rows = 0;
+	}
+
+//prepare to page the results
+	$rows_per_page = 150;
+	$param = "&search=".$search;
+	if ($_GET['showall'] && permission_exists('destination_all')) {
+		$param .= "&showall=true";
+	}
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($total_destinations, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select * from v_destinations ";
+	if ($_GET['showall'] && permission_exists('destination_all')) {
+		if (strlen($search) > 0) {
+			$sql .= " where ";
+		}
+	} else {
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (strlen($search) > 0) {
+			$sql .= " and ";
+		}
+	}
+	if (strlen($search) > 0) {
+		$sql .= " (";
+		$sql .= "	destination_type like '%".$search."%' ";
+		$sql .= " 	or destination_number like '%".$search."%' ";
+		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or destination_enabled like '%".$search."%' ";
+		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$destinations = $prep_statement->fetchAll();
+	$destination_count = count($destination);
+	unset ($prep_statement, $sql);
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']." (".$total_destinations.")</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
 	if (permission_exists('destination_all')) {
@@ -75,77 +146,6 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-
-	//get total destination count from the database
-		$sql = "select count(*) as num_rows from v_destinations ";
-		if ($_GET['showall'] && permission_exists('destination_all')) {
-			if (strlen($search) > 0) {
-				$sql .= "where ";
-			}
-		} else {
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			if (strlen($search) > 0) {
-				$sql .= "and ";
-			}
-		}
-		if (strlen($search) > 0) {
-			$sql .= "(";
-			$sql .= "	destination_type like '%".$search."%' ";
-			$sql .= " 	or destination_number like '%".$search."%' ";
-			$sql .= " 	or destination_context like '%".$search."%' ";
-			$sql .= " 	or destination_enabled like '%".$search."%' ";
-			$sql .= " 	or destination_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_destinations = $row['num_rows'];
-		}
-		else {
-			$num_rows = 0;
-		}
-
-	//prepare to page the results
-		$rows_per_page = 150;
-		$param = "&search=".$search;
-		if ($_GET['showall'] && permission_exists('destination_all')) {
-			$param .= "&showall=true";
-		}
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($total_destinations, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select * from v_destinations ";
-		if ($_GET['showall'] && permission_exists('destination_all')) {
-			if (strlen($search) > 0) {
-				$sql .= " where ";
-			}
-		} else {
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			if (strlen($search) > 0) {
-				$sql .= " and ";
-			}
-		}
-		if (strlen($search) > 0) {
-			$sql .= " (";
-			$sql .= "	destination_type like '%".$search."%' ";
-			$sql .= " 	or destination_number like '%".$search."%' ";
-			$sql .= " 	or destination_context like '%".$search."%' ";
-			$sql .= " 	or destination_enabled like '%".$search."%' ";
-			$sql .= " 	or destination_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$destination = $prep_statement->fetchAll();
-		$destination_count = count($destination);
-		unset ($prep_statement, $sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -171,7 +171,7 @@ else {
 	echo "</tr>\n";
 
 	if ($destination_count > 0) {
-		foreach($destination as $row) {
+		foreach($destinations as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('destination_all')) {
@@ -193,7 +193,7 @@ else {
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $destination, $row_count);
+		unset($sql, $destinations, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
