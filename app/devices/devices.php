@@ -33,6 +33,10 @@ else {
 	exit;
 }
 
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -148,10 +152,6 @@ else {
 			break;
 		}
 	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
