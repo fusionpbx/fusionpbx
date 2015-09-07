@@ -173,11 +173,10 @@
 			
 			assert(dbh:query(sql, function(row)
 				if (row.ring_group_strategy == "random") then
-					if (database["type"] == "postgresql") then
-						sql_order = 'random()'
-					end
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
+					else
+						sql_order = 'random()' --both postgresql and sqlite uses random() instead of rand()
 					end
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
