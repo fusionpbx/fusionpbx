@@ -158,36 +158,25 @@
 		--forward the ring group
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
-		--first we check what version of SQL are we using
-			sql = "SELECT version() as version";
-			assert(dbh:query(sql, function(row)
-				if (string.find(row.version, "PostgreSQL")) then
-					sql_verion = 'postgresql'
-				else
-					sql_verion = 'mysql'
-				end		
-			end));
-		
 		--get the strategy of the ring group, if random, we use random() to order the destinations
 			sql = [[
 					SELECT 
 						r.ring_group_strategy
 					FROM 
-						v_ring_groups as r, v_ring_group_destinations as d
+						v_ring_groups as r
 					WHERE 
-						d.ring_group_uuid = r.ring_group_uuid 
-						AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
+						ring_group_uuid = ']]..ring_group_uuid..[[' 
 						AND r.domain_uuid = ']]..domain_uuid..[[' 
 						AND r.ring_group_enabled = 'true'  
 					]];
-			
+
 			
 			assert(dbh:query(sql, function(row)
 				if (row.ring_group_strategy == "random") then
-					if (sql_verion == "postgresql") then
+					if (database["type"] == "postgresql") then
 						sql_order = 'random()'
 					end
-					if (sql_verion == "mysql") then
+					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
 					end
 				else
