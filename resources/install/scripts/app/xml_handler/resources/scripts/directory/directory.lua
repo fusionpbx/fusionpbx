@@ -74,6 +74,9 @@
 			end
 
 			local from_user = params:getHeader("sip_from_user")
+			if load_balancing and sip_auth_method == 'INVITE' then
+				from_user = user
+			end
 
 			-- verify from_user and number alias for this methods
 			local METHODS = {
