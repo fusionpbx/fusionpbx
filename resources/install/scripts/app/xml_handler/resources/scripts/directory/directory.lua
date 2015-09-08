@@ -316,18 +316,19 @@
 								if (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
+										local presence_id = user .. "@" .. domain_name;
+										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(" .. destination .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
-												--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
-												user_id = trim(api:execute("user_data", user .. "@" .. domain_name .. " attr id"));
-												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
+												local profile, proxy = "internal", database_hostname;
+												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
@@ -387,10 +388,10 @@
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="directory">]]);
 							table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-							table.insert(xml, [[            <params>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-methods" value="verto"/>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
-							table.insert(xml, [[            </params>]]);
+							table.insert(xml, [[			<params>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[			</params>]]);
 							table.insert(xml, [[			<groups>]]);
 							table.insert(xml, [[				<group name="default">]]);
 							table.insert(xml, [[					<users>]]);
