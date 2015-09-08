@@ -210,9 +210,15 @@
 									dbh_switch = database_handle('switch');
 								end
 
+							--get register name
+								local reg_user = dialed_extension
+								if not DIAL_STRING_BASED_ON_USERID then
+									reg_user = trim(api:execute("user_data", dialed_extension .. "@" .. domain_name .. " attr id"));
+								end
+
 							--get the destination hostname from the registration
 								sql = "SELECT hostname FROM registrations ";
-								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
+								sql = sql .. "WHERE reg_user = '"..reg_user.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
 									now = os.time();
