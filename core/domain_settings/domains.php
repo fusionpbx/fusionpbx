@@ -75,7 +75,7 @@ else {
 				$domain->db = $db;
 				$domain->set();
 
-			// on domain change, redirect user
+			//redirect the user
 				if ($_SESSION["login"]["destination"] != '') {
 					// to default, or domain specific, login destination
 					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
@@ -90,7 +90,6 @@ else {
 //includes
 	require_once "resources/header.php";
 	$document['title'] = $text['title-domains'];
-
 	require_once "resources/paging.php";
 
 //get the http values and set them as variables
@@ -99,24 +98,6 @@ else {
 		$order_by = check_str($_GET["order_by"]);
 		$order = check_str($_GET["order"]);
 	}
-
-//show the header and the search
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
-	echo "		<td width='50%' align='right' valign='top'>\n";
-	echo "			<form method='get' action=''>\n";
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
-	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "			</form>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' valign='top' colspan='2'>\n";
-	echo "			".$text['description-domains']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_domains ";
@@ -146,7 +127,7 @@ else {
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//get the  list
+//get the domains
 	$sql = "select * from v_domains ";
 	if (strlen($search) > 0) {
 		$sql .= "where (";
@@ -177,6 +158,24 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the header and the search
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
+	echo "		<td width='50%' align='right' valign='top'>\n";
+	echo "			<form method='get' action=''>\n";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</form>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' valign='top' colspan='2'>\n";
+	echo "			".$text['description-domains']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
@@ -190,7 +189,6 @@ else {
 	echo "</tr>\n";
 
 	if (count($domains) > 0) {
-		global $c, $row_style, $text, $v_link_label_edit, $v_link_label_delete;
 		foreach ($domains as $domain_uuid => $domain) {
 			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -245,4 +243,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
