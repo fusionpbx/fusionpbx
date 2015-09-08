@@ -92,7 +92,7 @@
 		--set the dial string
 			if (enabled == "true") then
 				local user = (number_alias and #number_alias > 0) and number_alias or extension;
-				dial_string = "loopback/*99"..user;
+				dial_string = "error/user_busy";
 			end
 
 		--set do not disturb
