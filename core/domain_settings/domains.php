@@ -131,8 +131,8 @@ else {
 	$sql = "select * from v_domains ";
 	if (strlen($search) > 0) {
 		$sql .= "where (";
-		$sql .= " 	domain_name like '%".$search."%' ";
-		$sql .= " 	or domain_description like '%".$search."%' ";
+		$sql .= "	domain_name like '%".$search."%' ";
+		$sql .= "	or domain_description like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
