@@ -24,15 +24,21 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local cache = require"resources.functions.cache"
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get dialplan:" .. call_context));
-	else
-		XML_STRING = "-ERR NOT FOUND";
+	XML_STRING, err = cache.get("dialplan:" .. call_context)
+
+	if debug['cache'] then
+		if XML_STRING then
+			freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
+		elseif err ~= 'NOT FOUND' then
+			freeswitch.consoleLog("notice", "[xml_handler] error get element form cache: " .. err .. "\n");
+		end
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if not XML_STRING then
 
 		--connect to the database
 			require "resources.functions.database_handle";
@@ -287,8 +293,9 @@
 			XML_STRING = table.concat(xml, "\n");
 
 		--set the cache
-			tmp = XML_STRING:gsub("\\", "\\\\");
-			result = trim(api:execute("memcache", "set dialplan:" .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
+			if cache.support() then
+				cache.set("dialplan:" .. call_context, XML_STRING, expire["dialplan"])
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -304,12 +311,5 @@
 
 		--close the database connection
 			dbh:release();
-	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
-		--send to the console
-			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
-			end
 	end
+
