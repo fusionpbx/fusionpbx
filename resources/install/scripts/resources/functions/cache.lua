@@ -56,7 +56,12 @@ end
 
 function Cache.del(key)
   local result, err = check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
-  if not result then return nil, err end
+  if not result then
+    if err == 'NOT FOUND' then
+      return true
+    end
+    return nil, err
+  end
   return result == '+OK'
 end
 
