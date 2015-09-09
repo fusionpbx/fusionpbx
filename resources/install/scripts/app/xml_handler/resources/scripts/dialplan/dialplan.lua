@@ -25,15 +25,16 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 	local cache = require"resources.functions.cache"
+	local log = require"resources.functions.log"["xml_handler"]
 
 --get the cache
 	XML_STRING, err = cache.get("dialplan:" .. call_context)
 
 	if debug['cache'] then
 		if XML_STRING then
-			freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
+			log.notice("dialplan:"..call_context.." source: memcache");
 		elseif err ~= 'NOT FOUND' then
-			freeswitch.consoleLog("notice", "[xml_handler] error get element form cache: " .. err .. "\n");
+			log.notice("error get element form cache: " .. err);
 		end
 	end
 
@@ -105,7 +106,7 @@
 			sql = sql .. "ELSE 100 END, ";
 			sql = sql .. "s.dialplan_detail_order asc ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				log.notice("SQL: " .. sql);
 			end
 			x = 0;
 			dbh:query(sql, function(row)
@@ -306,7 +307,7 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
+				log.notice("dialplan:"..call_context.." source: database");
 			end
 
 		--close the database connection
