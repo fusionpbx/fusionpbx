@@ -1,4 +1,5 @@
 require 'resources.config'
+require 'resources.functions.file_exists'
 require 'resources.functions.database_handle'
 
 local unpack = unpack or table.unpack
@@ -76,8 +77,8 @@ function Database:connected(sql)
 	return self._dbh and self._dbh:connected()
 end
 
-function Database.__self_test__()
-	local db = Database.new('system')
+function Database.__self_test__(name)
+	local db = Database.new(name or 'system')
 	assert(db:connected())
 
 	assert("1" == db:first_value("select 1 as v"))
