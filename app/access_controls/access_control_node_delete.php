@@ -33,6 +33,6 @@ else {
 
 //redirect the user
 	$_SESSION['message'] = $text['message-delete'];
-	header('Location: access_control_node_edit.php?id='.$access_control_uuid);
+	header('Location: access_control_edit.php?id='.$access_control_uuid);
 
 ?>
