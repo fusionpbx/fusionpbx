@@ -39,9 +39,9 @@
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
 			if (missed_call_app == "email") then
 				--set the sounds path for the language, dialect and voice
-					default_language = session:getVariable("default_language");
-					default_dialect = session:getVariable("default_dialect");
-					default_voice = session:getVariable("default_voice");
+					default_language = env:getHeader("default_language");
+					default_dialect = env:getHeader("default_dialect");
+					default_voice = env:getHeader("default_voice");
 					if (not default_language) then default_language = 'en'; end
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
