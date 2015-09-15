@@ -34,6 +34,8 @@
 --include functions
 	require "resources.functions.trim";
 	require "resources.functions.explode";
+	require "resources.functions.base64";
+	require "resources.functions.file_exists";
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -119,36 +121,61 @@
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
 			if (missed_call_app == "email") then
-				headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-				headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-				headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-				headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
+				--set the sounds path for the language, dialect and voice
+					default_language = session:getVariable("default_language");
+					default_dialect = session:getVariable("default_dialect");
+					default_voice = session:getVariable("default_voice");
+					if (not default_language) then default_language = 'en'; end
+					if (not default_dialect) then default_dialect = 'us'; end
+					if (not default_voice) then default_voice = 'callie'; end
 
-				subject = "Missed Call from ${caller_id_name} <${caller_id_number}> ${ring_group_name}";
-				subject = subject:gsub("${caller_id_name}", caller_id_name);
-				subject = subject:gsub("${caller_id_number}", caller_id_number);
-				subject = subject:gsub("${ring_group_name}", ring_group_name);
+				--prepare the files
+					file_subject = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
+					file_body = scripts_dir.."/app/missed_calls/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
+					if (not file_exists(file_subject)) then
+						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
+						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
+					end
 
-				body = "Missed Call from ${caller_id_name} <${caller_id_number}> to ${ring_group_name}";
-				body = body:gsub("${caller_id_name}", caller_id_name);
-				body = body:gsub("${caller_id_number}", caller_id_number);
-				body = body:gsub("${ring_group_name}", ring_group_name);
+				--prepare the headers
+					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
+					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
+					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
+					headers = headers..'"X-FusionPBX-Email-Type":"missed"}';
 
-				body = body:gsub(" ", "&nbsp;");
-				body = body:gsub("%s+", "");
-				body = body:gsub("&nbsp;", " ");
-				body = body:gsub("\n", "");
-				body = body:gsub("\n", "");
-				body = body:gsub("'", "&#39;");
-				body = body:gsub([["]], "&#34;");
-				body = trim(body);
+				--prepare the subject
+					local f = io.open(file_subject, "r");
+					local subject = f:read("*all");
+					f:close();
+					subject = subject:gsub("${caller_id_name}", caller_id_name);
+					subject = subject:gsub("${caller_id_number}", caller_id_number);
+					subject = subject:gsub("${ring_group_name}", ring_group_name);
+					subject = trim(subject);
+					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
-				cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
-				end
-				api = freeswitch.API();
-				result = api:executeString(cmd);
+				--prepare the body
+					local f = io.open(file_body, "r");
+					local body = f:read("*all");
+					f:close();
+					body = body:gsub("${caller_id_name}", caller_id_name);
+					body = body:gsub("${caller_id_number}", caller_id_number);
+					body = body:gsub("${ring_group_name}", ring_group_name);
+					body = body:gsub(" ", "&nbsp;");
+					body = body:gsub("%s+", "");
+					body = body:gsub("&nbsp;", " ");
+					body = body:gsub("\n", "");
+					body = body:gsub("\n", "");
+					body = body:gsub("'", "&#39;");
+					body = body:gsub([["]], "&#34;");
+					body = trim(body);
+
+				--send the email
+					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[missed call] cmd: " .. cmd .. "\n");
+					end
+					api = freeswitch.API();
+					result = api:executeString(cmd);
 			end
 		end
 	end
