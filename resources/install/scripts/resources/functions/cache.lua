@@ -51,11 +51,13 @@ end
 function Cache.set(key, value, expire)
   value = value:gsub("'", "&#39;"):gsub("\\", "\\\\")
   expire = expire and tostring(expire) or ""
-  return check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
+  local ok, err = check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
+  if not ok then return nil, err end
+  return ok == '+OK'
 end
 
 function Cache.del(key)
-  local result, err = check_error(api:execute("memcache", "set " .. key .. " '" .. value .. "' " .. expire))
+  local result, err = check_error(api:execute("memcache", "delete " .. key))
   if not result then
     if err == 'NOT FOUND' then
       return true
@@ -64,5 +66,24 @@ function Cache.del(key)
   end
   return result == '+OK'
 end
+
+function Cache._self_test()
+  assert(Cache.support())
+  Cache.del("a")
+
+  local ok, err = Cache.get("a")
+  assert(nil == ok)
+  assert(err == "NOT FOUND")
+  
+  local s = "hello \\ ' world"
+  assert(true == Cache.set("a", s))
+  assert(s == Cache.get("a"))
+
+  assert(true == Cache.del("a"))
+end
+
+-- if debug.self_test then
+--   Cache._self_test()
+-- end
 
 return Cache
