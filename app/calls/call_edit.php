@@ -63,7 +63,7 @@ else {
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and extension_uuid = '$extension_uuid' ";
-	if (!(if_group("admin") || if_group("superadmin"))) {
+	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		if (count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
