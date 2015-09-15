@@ -158,6 +158,31 @@
 		--forward the ring group
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
+		--get the strategy of the ring group, if random, we use random() to order the destinations
+			sql = [[
+					SELECT 
+						r.ring_group_strategy
+					FROM 
+						v_ring_groups as r
+					WHERE 
+						ring_group_uuid = ']]..ring_group_uuid..[[' 
+						AND r.domain_uuid = ']]..domain_uuid..[[' 
+						AND r.ring_group_enabled = 'true'  
+					]];
+
+			
+			assert(dbh:query(sql, function(row)
+				if (row.ring_group_strategy == "random") then
+					if (database["type"] == "mysql") then
+						sql_order = 'rand()'
+					else
+						sql_order = 'random()' --both postgresql and sqlite uses random() instead of rand()
+					end
+				else
+					sql_order='d.destination_delay, d.destination_number asc'
+				end		
+			end));
+		
 		--get the ring group destinations
 			sql = [[
 				SELECT 
@@ -172,7 +197,7 @@
 					AND r.domain_uuid = ']]..domain_uuid..[[' 
 					AND r.ring_group_enabled = 'true' 
 				ORDER BY 
-					d.destination_delay, d.destination_number asc 
+					]]..sql_order..[[
 				]];
 			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 			destinations = {};
@@ -289,6 +314,9 @@
 						delimiter = "|";
 					end
 					if (ring_group_strategy == "sequence") then
+						delimiter = "|";
+					end
+					if (ring_group_strategy == "random") then
 						delimiter = "|";
 					end
 					if (ring_group_strategy == "simultaneous") then
