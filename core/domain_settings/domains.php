@@ -87,6 +87,11 @@ else {
 		}
 	}
 
+//redirect the user
+	if (file_exists($_SERVER["DOCUMENT_ROOT"]."/app/domains/domains.php")) {
+		$href = '/app/domains/domains.php';
+	}
+
 //includes
 	require_once "resources/header.php";
 	$document['title'] = $text['title-domains'];
