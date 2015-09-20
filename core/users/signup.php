@@ -298,16 +298,16 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	echo "<table border='0' $tablewidth cellpadding='0' cellspacing='0'>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq' width='30%'>".$text['label-username']."</td>";
-	echo "		<td class='vtable' width='70%'><input style='display:none;' type='password' name='autocomplete'><input type='text' class='formfld' name='username' value='$username'></td>";
+	echo "		<td class='vtable' width='70%'><input style='display:none;' type='password' name='autocomplete'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-password']."</td>";
-	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' class='formfld' name='password' id='password' value='$password' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' class='formfld' autocomplete='off' name='password' id='password' value='$password' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-confirm_password']."</td>";
-	echo "		<td class='vtable'><input type='password' class='formfld' name='confirmpassword' id='confirmpassword' value='$confirmpassword' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' id='confirmpassword' value='$confirmpassword' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-email']."</td>";
