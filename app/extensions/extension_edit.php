@@ -982,7 +982,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "}\n";
 	echo "</script>";
 
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
+	echo "<input style='display:none;' type='password' name='autocomplete'>";
 	echo "<table width='100%' border='0' cellpdding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
@@ -1042,7 +1043,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-password']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$password\">\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$password\">\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
