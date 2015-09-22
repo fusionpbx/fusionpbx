@@ -27,6 +27,8 @@
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
+local log = require "resources.functions.log".ring_group
+
 --connect to the database
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
@@ -618,10 +620,23 @@
 							end
 							freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 							session:execute("bridge", app_data);
+							-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 						end
 
 					--timeout destination
 						if (app_data ~= nil) then
+							if ring_group_strategy == "enterprise"
+								and ( true
+									--- I see 2 errors here `failure` and `PICKED_OFF` 
+									--- but they be more. I think check `answered` is enough.
+									-- or session:getVariable("originate_disposition") == "failure"
+									-- or session:getVariable("originate_disposition") == "PICKED_OFF"
+								)
+								and session:answered() then
+									-- for enterprise calls when intercept we get "failure" but session answered
+									return
+							end
+
 							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
 								or session:getVariable("originate_disposition") == "NO_ANSWER" 
 								or session:getVariable("originate_disposition") == "NO_USER_RESPONSE" 
