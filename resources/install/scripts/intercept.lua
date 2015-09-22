@@ -48,6 +48,7 @@
 
 --add the function
 	require "resources.functions.trim";
+	require "resources.functions.channel_utils";
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
@@ -119,7 +120,7 @@ if ( session:ready() ) then
 		callee_num = '';
 
 	--check the database to get the uuid of a ringing call
-		sql = "select call_uuid as uuid, hostname, callee_num, ip_addr from channels ";
+		sql = "select uuid, call_uuid, hostname, callee_num, ip_addr from channels ";
 		sql = sql .. "where callstate in ('RINGING', 'EARLY') ";
 		--sql = sql .. "AND direction = 'outbound' ";
 		if (extension) then
@@ -132,11 +133,15 @@ if ( session:ready() ) then
 		if (debug["sql"]) then
 			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
 		end
-			dbh:query(sql, function(result)
+		dbh:query(sql, function(result)
 			--for key, val in pairs(result) do
 			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
 			--end
-			uuid = result.uuid;
+			if result.uuid == result.call_uuid then
+				uuid = channel_variable(result.uuid, 'ent_originate_aleg_uuid') or row.uuid
+			else
+				uuid = result.call_uuid;
+			end
 			call_hostname = result.hostname;
 			callee_num = result.callee_num;
 		end);
