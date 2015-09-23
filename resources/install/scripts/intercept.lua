@@ -138,7 +138,9 @@ if ( session:ready() ) then
 			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
 			--end
 			if result.uuid == result.call_uuid then
-				uuid = channel_variable(result.uuid, 'ent_originate_aleg_uuid') or row.uuid
+				uuid = channel_variable(result.uuid, 'ent_originate_aleg_uuid') or
+						channel_variable(result.uuid, 'cc_member_session_uuid') or
+						result.uuid
 			else
 				uuid = result.call_uuid;
 			end
