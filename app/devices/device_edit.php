@@ -217,7 +217,7 @@ require_once "resources/require.php";
 
 				//array cleanup
 					$x = 0;
-					unset($_POST["autocomplete"]);
+					//unset($_POST["autocomplete"]);
 					foreach ($_POST["device_lines"] as $row) {
 						//unset the empty row
 							if (strlen($row["line_number"]) == 0) {
