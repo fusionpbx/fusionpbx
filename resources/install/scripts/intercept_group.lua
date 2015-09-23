@@ -198,7 +198,9 @@
 				--	freeswitch.consoleLog("NOTICE", "row "..key.." "..val.."\n");
 				--end
 				if row.uuid == row.call_uuid then
-					uuid = channel_variable(row.uuid, 'ent_originate_aleg_uuid') or row.uuid
+					uuid = channel_variable(row.uuid, 'ent_originate_aleg_uuid') or
+							channel_variable(row.uuid, 'cc_member_session_uuid') or
+							row.uuid
 				else
 					uuid = row.call_uuid;
 				end
