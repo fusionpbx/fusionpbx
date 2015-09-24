@@ -3,9 +3,9 @@
 $apps[$x]['menu'][0]['title']['en-us'] = "Queues";
 $apps[$x]['menu'][0]['title']['es-cl'] = "Colas";
 $apps[$x]['menu'][0]['title']['es-mx'] = "Colas";
-$apps[$x]['menu'][0]['title']['de-de'] = "";
-$apps[$x]['menu'][0]['title']['de-ch'] = "";
-$apps[$x]['menu'][0]['title']['de-at'] = "";
+$apps[$x]['menu'][0]['title']['de-de'] = "Warteschlangen";
+$apps[$x]['menu'][0]['title']['de-ch'] = "Warteschlangen";
+$apps[$x]['menu'][0]['title']['de-at'] = "Warteschlangen";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Queues";
 $apps[$x]['menu'][0]['title']['fr-ca'] = "";
 $apps[$x]['menu'][0]['title']['fr-ch'] = "";
