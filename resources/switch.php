@@ -501,7 +501,8 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	global $db;
 
 	$destination_number = trim($destination_number);
-	if (is_numeric($destination_number)) {
+	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
+	if (count($matches) > 0) {
 		//not found, continue to process the function
 	}
 	else {
