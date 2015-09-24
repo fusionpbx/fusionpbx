@@ -32,9 +32,9 @@
 			sql = [[SELECT extension, number_alias from v_extensions 
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND (mwi_account = ']]..voicemail_id..[[' or mwi_account = ']]..voicemail_id..[[@]]..domain_name..[[')]];
-			--if (debug["sql"]) then
+			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-			--end
+			end
 			status = dbh:query(sql, function(row)
 				if (string.len(row["number_alias"]) > 0) then
 					table.insert(accounts, row["number_alias"]);
