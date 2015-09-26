@@ -132,7 +132,14 @@ if (defined('STDIN')) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$_SESSION["domain_uuid"] = $row["domain_uuid"];
+		//set the domain variables
+			$domain_uuid = $row["domain_uuid"];
+			$_SESSION["domain_uuid"] = $row["domain_uuid"];
+			$_SESSION["domain_name"] = $domain_name;
+		//set the setting arrays
+			$domain = new domains();
+			$domain->db = $db;
+			$domain->set();
 	}
 	unset ($prep_statement);
 
