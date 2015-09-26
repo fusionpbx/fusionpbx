@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "resources/require.php";
 
@@ -225,7 +226,7 @@ require_once "resources/require.php";
 						//$sql .= "and username='".$username."' ";
 					}
 					//$sql .= "and domain_uuid='".$domain_uuid."' ";
-					if ($_SESSION["user"]["unique"]["text"] == "global") {
+					if (($_SESSION["user"]["unique"]["text"] == "global") || (count($_SESSION["domains"]) <= 1)){
 						//unique username - global (example: email address)
 					}
 					else {
