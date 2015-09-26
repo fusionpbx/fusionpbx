@@ -471,21 +471,21 @@ else {
 				switch ($row['direction']) {
 					case "inbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' title='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' width='16' style='border: none;' title='".$text['label-inbound']." ".$text['label-missed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' title='".$text['label-inbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' width='16' style='border: none;' title='".$text['label-inbound']."'>\n";
 						break;
 					case "outbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' style='border: none;' title='".$text['label-outbound']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' width='16' style='border: none;' title='".$text['label-outbound']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' style='border: none;' title='".$text['label-outbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' width='16' style='border: none;' title='".$text['label-outbound']."'>\n";
 						break;
 					case "local" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' title='".$text['label-local']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' width='16' style='border: none;' title='".$text['label-local']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' title='".$text['label-local']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' width='16' style='border: none;' title='".$text['label-local']."'>\n";
 						break;
 					default:
 						echo "&nbsp;";
