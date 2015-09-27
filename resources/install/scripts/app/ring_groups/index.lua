@@ -12,7 +12,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -101,6 +101,7 @@ local log = require "resources.functions.log".ring_group
 	status = dbh:query(sql, function(row)
 		domain_uuid = row["domain_uuid"];
 		ring_group_name = row["ring_group_name"];
+		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
@@ -152,6 +153,9 @@ local log = require "resources.functions.log".ring_group
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${ring_group_name}", ring_group_name);
+					subject = subject:gsub("${ring_group_extension}", ring_group_extension);
+					subject = subject:gsub("${sip_to_user}", ring_group_name);
+					subject = subject:gsub("${dialed_user}", ring_group_extension);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -162,6 +166,9 @@ local log = require "resources.functions.log".ring_group
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${ring_group_name}", ring_group_name);
+					body = body:gsub("${ring_group_extension}", ring_group_extension);
+					body = body:gsub("${sip_to_user}", ring_group_name);
+					body = body:gsub("${dialed_user}", ring_group_extension);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
