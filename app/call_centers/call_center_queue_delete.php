@@ -87,9 +87,11 @@ if (strlen($id) > 0) {
 	//clear the cache
 		$cache = new cache;
 		$cache->delete("dialplan:".$_SESSION["context"]);
+		remove_config_from_cache('configuration:callcenter.conf');
 
 	//synchronize configuration
 		save_dialplan_xml();
+		save_call_center_xml();
 
 	//apply settings reminder
 		$_SESSION["reload_xml"] = true;
