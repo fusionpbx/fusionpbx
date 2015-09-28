@@ -264,6 +264,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//syncrhonize configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			$_SESSION["message"] = $text['message-add'];
 			header("Location: call_center_agents.php");
@@ -291,7 +292,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			//syncrhonize configuration
-			save_call_center_xml();
+				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			$_SESSION["message"] = $text['message-update'];
 			header("Location: call_center_agents.php");
