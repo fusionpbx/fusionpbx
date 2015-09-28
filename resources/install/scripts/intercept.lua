@@ -138,6 +138,8 @@
 			end
 
 		-- search parent hostname
+		call_hostname = hostname
+		--[[ parent and child have to be on same box so we do not search it
 			log.notice("Found parent channel try detect parent hostname")
 			local dbh = Database.new('switch')
 			local sql = "SELECT hostname FROM channels WHERE uuid='" .. parent_uuid .. "'"
@@ -148,6 +150,7 @@
 				log.notice("Can not find host name. Channels is dead?")
 				return true
 			end
+		--]]
 
 			if hostname == call_hostname then
 				log.notice("Found parent call on local machine. Do intercept....")
@@ -288,18 +291,22 @@
 						channel_variable(uuid, 'fifo_bridge_uuid') or
 						uuid
 
+					--[[ parent and child have to be on same box so we do not search it
 					if parent_uuid ~= uuid then
-						uuid = parent_uuid
 						local sql = "SELECT hostname FROM channels WHERE uuid='" .. uuid .. "'"
 						call_hostname = dbh:first_value(sql)
 					end
+					--]]
+
 					if call_hostname then
+						uuid = parent_uuid
 						if call_hostname ~= hostname then
 							log.noticef("Found parent call on remote machine `%s`.", call_hostname)
 						else
 							log.notice("Found parent call on local machine.")
 						end
 					end
+
 				else
 					log.noticef("Found child call on remote machine `%s`.", call_hostname)
 					-- we can not find parent on this box because channel on other box so we have to 
