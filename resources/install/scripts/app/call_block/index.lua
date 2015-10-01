@@ -180,7 +180,7 @@ This method causes the script to get its manadatory arguments directly from the 
 			dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 		end
 		session:setVariable("call_block", "block")
-		logger("W", "NOTICE", "number " .. found_cid_num .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
+		logger("W", "NOTICE", "number " .. found_cid_num .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"] .. " [" .. source .. "]")
 		if (found_action == "Reject") then
 			session:hangup("CALL_REJECTED")
 		end
