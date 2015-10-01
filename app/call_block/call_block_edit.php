@@ -160,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			} //if ($action == "add")
 
 			if ($action == "update") {
-				$sql = " select c.call_block_number, c.call_block_number_type d.domain_name from v_call_block as c ";
+				$sql = " select c.call_block_number, c.call_block_number_type, d.domain_name from v_call_block as c ";
 				$sql  .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
 				$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and c.call_block_uuid = '$call_block_uuid'";
@@ -170,16 +170,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$result = $prep_statement->fetchAll();
 				$result_count = count($result);
 				if ($result_count > 0) {
-					$call_block_number = $result[0]["call_block_number"];
-					$call_block_number_type = $result[0]["call_block_number_type"];
-					if(strlen($call_block_number_type)==0){
-						$call_block_number_type = 'caller';
+					$call_block_number_old = $result[0]["call_block_number"];
+					$call_block_number_type_old = $result[0]["call_block_number_type"];
+					if(strlen($call_block_number_type_old)==0){
+						$call_block_number_type_old = 'caller';
 					}
 					$domain_name = $result[0]["domain_name"];
 
 					//clear the cache
 					$cache = new cache;
-					$cache->delete("app:call_block:".$domain_name.":".$call_block_number_type.':'.$call_block_number);
+					$key = "app:call_block:".$domain_name.":".$call_block_number_type_old.':'.$call_block_number_old;
+					$cache->delete($key);
 				}
 				unset ($prep_statement, $sql);
 
