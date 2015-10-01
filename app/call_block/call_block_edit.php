@@ -80,6 +80,7 @@ else {
 	if (count($_POST)>0) {
 		$call_block_name = check_str($_POST["call_block_name"]);
 		$call_block_number = check_str($_POST["call_block_number"]);
+		$call_block_number_type = check_str($_POST["call_block_number_type"]);
 		$call_block_action = check_str($_POST["call_block_action"]);
 		$call_block_enabled = check_str($_POST["call_block_enabled"]);
 	}
@@ -132,6 +133,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "call_block_uuid, ";
 				$sql .= "call_block_name, ";
 				$sql .= "call_block_number, ";
+				$sql .= "call_block_number_type, ";
 				$sql .= "call_block_count, ";
 				$sql .= "call_block_action, ";
 				$sql .= "call_block_enabled, ";
@@ -143,6 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".uuid()."', ";
 				$sql .= "'$call_block_name', ";
 				$sql .= "'$call_block_number', ";
+				$sql .= "'$call_block_number_type', ";
 				$sql .= "0, ";
 				$sql .= "'$call_block_action', ";
 				$sql .= "'$call_block_enabled', ";
@@ -157,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			} //if ($action == "add")
 
 			if ($action == "update") {
-				$sql = " select c.call_block_number, d.domain_name from v_call_block as c ";
+				$sql = " select c.call_block_number, c.call_block_number_type d.domain_name from v_call_block as c ";
 				$sql  .= "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid ";
 				$sql .= "where c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and c.call_block_uuid = '$call_block_uuid'";
@@ -168,17 +171,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$result_count = count($result);
 				if ($result_count > 0) {
 					$call_block_number = $result[0]["call_block_number"];
+					$call_block_number_type = $result[0]["call_block_number_type"];
+					if(strlen($call_block_number_type)==0){
+						$call_block_number_type = 'caller';
+					}
 					$domain_name = $result[0]["domain_name"];
 
 					//clear the cache
 					$cache = new cache;
-					$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+					$cache->delete("app:call_block:".$domain_name.":".$call_block_number_type.':'.$call_block_number);
 				}
 				unset ($prep_statement, $sql);
 
 				$sql = "update v_call_block set ";
 				$sql .= "call_block_name = '$call_block_name', ";
 				$sql .= "call_block_number = '$call_block_number', ";
+				$sql .= "call_block_number_type = '$call_block_number_type', ";
 				$sql .= "call_block_action = '$call_block_action', ";
 				$sql .= "call_block_enabled = '$call_block_enabled' ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -205,6 +213,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
+			$call_block_number_type = $row["call_block_number_type"];
 			$call_block_action = $row["call_block_action"];
 			$blocked_call_destination = $row["blocked_call_destination"];
 			$call_block_enabled = $row["call_block_enabled"];
@@ -274,6 +283,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-number-type']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='call_block_number_type'>\n";
+	echo "		<option value='caller' ".(($call_block_number_type != "called") ? "selected" : null).">".$text['label-caller-number']."</option>\n";
+	echo "		<option value='called' ".(($call_block_number_type == "called") ? "selected" : null).">".$text['label-called-number']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-number-type']."\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

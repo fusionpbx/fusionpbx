@@ -392,6 +392,12 @@ $text['label-action']['de-at'] = "Aktion";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['he'] = "פעולה";
 
+$text['label-number-type']['en-us'] = "Number type";
+
+$text['label-caller-number']['en-us'] = "Caller number";
+
+$text['label-called-number']['en-us'] = "Called number";
+
 $text['description-number']['en-us'] = "Enter the exact number.";
 $text['description-number']['es-cl'] = "Ingrese el nú exacto.";
 $text['description-number']['pt-pt'] = "Introduza o número exacto.";
