@@ -35,6 +35,10 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+	local log = require "resources.functions.log".call_flow
+
+	local presence_in = require "resources.functions.presence_in"
+
 if (session:ready()) then
 	--get the variables
 		domain_name = session:getVariable("domain_name");
@@ -51,11 +55,9 @@ if (session:ready()) then
 		if (not default_voice) then default_voice = 'callie'; end
 
 	--get the extension list
-		sql = [[SELECT * FROM v_call_flows
-		where call_flow_uuid = ']]..call_flow_uuid..[[']]
-		--and call_flow_enabled = 'true' 
-		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
-		app_data = "";
+		sql = "SELECT * FROM v_call_flows where call_flow_uuid = '"..call_flow_uuid.."'"
+			-- .. "and call_flow_enabled = 'true'"
+		--log.notice("SQL: %s", sql);
 
 		x = 0;
 		dbh:query(sql, function(row)
@@ -68,17 +70,15 @@ if (session:ready()) then
 			call_flow_label = row.call_flow_label;
 			call_flow_anti_label = row.call_flow_anti_label;
 
-			if (string.len(call_flow_status) == 0) then
+			if #call_flow_status == 0 then
+				call_flow_status = "true";
+			end
+			if (call_flow_status == "true") then
 				app = row.call_flow_app;
 				data = row.call_flow_data
 			else
-				if (call_flow_status == "true") then
-					app = row.call_flow_app;
-					data = row.call_flow_data
-				else
-					app = row.call_flow_anti_app;
-					data = row.call_flow_anti_data
-				end
+				app = row.call_flow_anti_app;
+				data = row.call_flow_anti_data
 			end
 		end);
 
@@ -99,70 +99,34 @@ if (session:ready()) then
 			end
 
 		--feature code - toggle the status
-			if (string.len(call_flow_status) == 0) then
-				toggle = "false";
-			else
-				if (call_flow_status == "true") then
-					toggle = "false";
-				else
-					toggle = "true";
-				end
+			toggle = (call_flow_status == "true") and "false" or "true"
+
+		-- turn the lamp
+			presence_in.turn_lamp( toggle == "false",
+				call_flow_feature_code.."@"..domain_name,
+				call_flow_uuid
+			);
+
+			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_anti_label
+		--answer and play a tone
+			session:answer();
+			if #active_flow_label > 0 then
+				api = freeswitch.API();
+				reply = api:executeString("uuid_display "..session:get_uuid().." "..active_flow_label);
 			end
-			if (toggle == "true") then
-				--set the presence to terminated - turn the lamp off:
-					event = freeswitch.Event("PRESENCE_IN");
-					event:addHeader("proto", "sip");
-					event:addHeader("event_type", "presence");
-					event:addHeader("alt_event_type", "dialog");
-					event:addHeader("Presence-Call-Direction", "outbound");
-					event:addHeader("state", "Active (1 waiting)");
-					event:addHeader("from", call_flow_feature_code.."@"..domain_name);
-					event:addHeader("login", call_flow_feature_code.."@"..domain_name);
-					event:addHeader("unique-id", call_flow_uuid);
-					event:addHeader("answer-state", "terminated");
-					event:fire();
-				--answer and play a tone
-					session:answer();
-					if (string.len(call_flow_label) > 0) then
-						api = freeswitch.API();
-						reply = api:executeString("uuid_display "..session:get_uuid().." "..call_flow_label);
-					end
-					session:execute("sleep", "2000");
-					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
-				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_label..",status=true,uuid="..call_flow_uuid.."\n");
-			else
-				--set presence in - turn lamp on
-					event = freeswitch.Event("PRESENCE_IN");
-					event:addHeader("proto", "sip");
-					event:addHeader("login", call_flow_feature_code.."@"..domain_name);
-					event:addHeader("from", call_flow_feature_code.."@"..domain_name);
-					event:addHeader("status", "Active (1 waiting)");
-					event:addHeader("rpid", "unknown");
-					event:addHeader("event_type", "presence");
-					event:addHeader("alt_event_type", "dialog");
-					event:addHeader("event_count", "1");
-					event:addHeader("unique-id", call_flow_uuid);
-					event:addHeader("Presence-Call-Direction", "outbound")
-					event:addHeader("answer-state", "confirmed");
-					event:fire();
-				--answer and play a tone
-					session:answer();
-					if (string.len(call_flow_anti_label) > 0) then
-						api = freeswitch.API();
-						reply = api:executeString("uuid_display "..session:get_uuid().." "..call_flow_anti_label);
-					end
-					session:execute("sleep", "2000");
-					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
-				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
-			end
+			session:execute("sleep", "2000");
+			session:execute("playback", "tone_stream://%(200,0,500,600,700)");
+
+		--show in the console
+			log.noticef("label=%s,status=%s,uuid=%s", active_flow_label, toggle, call_flow_uuid);
+
+		--store in database
 			dbh:query("UPDATE v_call_flows SET call_flow_status = '"..toggle.."' WHERE call_flow_uuid = '"..call_flow_uuid.."'");
+
 		--hangup the call
 			session:hangup();
 	else 
-		--app_data
-			freeswitch.consoleLog("notice", "Call Flow: " .. app .. " " .. data .. "\n");
+		log.notice("execute " .. app .. " " .. data);
 
 		--exucute the application
 			session:execute(app, data);
