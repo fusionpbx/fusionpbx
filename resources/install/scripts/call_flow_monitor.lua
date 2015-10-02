@@ -38,9 +38,11 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
---connect to the database
 	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+
+	local log = require "resources.functions.log".call_flow_monitor
+
+	local presence_in = require "resources.functions.presence_in"
 
 --make sure the scripts/run dir exists
 	mkdir(scripts_dir .. "/run");
@@ -61,69 +63,52 @@
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");
+	file:close()
 
+	log.notice("Start")
 --monitor the call flows status
-	x = 0
+	local sql = "select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code," ..
+		"f.call_flow_status, f.call_flow_label, f.call_flow_anti_label "..
+		"from v_call_flows as f, v_domains as d " ..
+		"where f.domain_uuid = d.domain_uuid " -- and call_flow_enabled = 'true'
 	while true do
-		--get the extension list
-			sql = [[select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code, f.call_flow_status, f.call_flow_label, f.call_flow_anti_label
-			from v_call_flows as f, v_domains as d 
-			where f.domain_uuid = d.domain_uuid]]
-			--and call_flow_enabled = 'true'
+		-- debug print
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+				log.notice("SQL:" .. sql);
 			end
-			x = 0;
-			dbh:query(sql, function(row)
-				domain_name = row.domain_name;
-				call_flow_uuid = row.call_flow_uuid;
-				--call_flow_name = row.call_flow_name;
-				call_flow_extension = row.call_flow_extension;
-				call_flow_feature_code = row.call_flow_feature_code;
-				--call_flow_context = row.call_flow_context;
-				call_flow_status = row.call_flow_status;
-				--pin_number = row.call_flow_pin_number;
-				call_flow_label = row.call_flow_label;
-				call_flow_anti_label = row.call_flow_anti_label;
 
-				if (call_flow_status == "true") then
-					--set the presence to terminated - turn the lamp off:
-						event = freeswitch.Event("PRESENCE_IN");
-						event:addHeader("proto", "sip");
-						event:addHeader("event_type", "presence");
-						event:addHeader("alt_event_type", "dialog");
-						event:addHeader("Presence-Call-Direction", "outbound");
-						event:addHeader("state", "Active (1 waiting)");
-						event:addHeader("from", call_flow_feature_code.."@"..domain_name);
-						event:addHeader("login", call_flow_feature_code.."@"..domain_name);
-						event:addHeader("unique-id", call_flow_uuid);
-						event:addHeader("answer-state", "terminated");
-						event:fire();
-					--show in the console
-						if (debug["log"]) then
-							freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_label..",status=true,uuid="..call_flow_uuid.."\n");
-						end
-				else
-					--set presence in - turn lamp on
-						event = freeswitch.Event("PRESENCE_IN");
-						event:addHeader("proto", "sip");
-						event:addHeader("login", call_flow_feature_code.."@"..domain_name);
-						event:addHeader("from", call_flow_feature_code.."@"..domain_name);
-						event:addHeader("status", "Active (1 waiting)");
-						event:addHeader("rpid", "unknown");
-						event:addHeader("event_type", "presence");
-						event:addHeader("alt_event_type", "dialog");
-						event:addHeader("event_count", "1");
-						event:addHeader("unique-id", call_flow_uuid);
-						event:addHeader("Presence-Call-Direction", "outbound");
-						event:addHeader("answer-state", "confirmed");
-						event:fire();
-					--show in the console
-						if (debug["log"]) then
-							freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
-						end
-				end
-			end);
+		--connect to the database
+			local dbh = database_handle('system');
+
+		--get the extension list
+			if dbh:connected() then
+				dbh:query(sql, function(row)
+					local domain_name = row.domain_name;
+					local call_flow_uuid = row.call_flow_uuid;
+					--local call_flow_name = row.call_flow_name;
+					--local call_flow_extension = row.call_flow_extension;
+					local call_flow_feature_code = row.call_flow_feature_code;
+					--local call_flow_context = row.call_flow_context;
+					local call_flow_status = row.call_flow_status;
+					--local pin_number = row.call_flow_pin_number;
+					local call_flow_label = row.call_flow_label;
+					local call_flow_anti_label = row.call_flow_anti_label;
+
+					-- turn the lamp
+						presence_in.turn_lamp( call_flow_status == "false",
+							call_flow_feature_code.."@"..domain_name,
+							call_flow_uuid
+						);
+
+					if (debug["log"]) then
+						local label = (call_flow_status == "true") and call_flow_label or call_flow_anti_label
+						log.noticef("label=%s,status=%s,uuid=%s", label, call_flow_status, call_flow_uuid);
+					end
+				end);
+			end
+
+		-- release dbh
+			dbh:release()
 
 		--exit the loop when the file does not exist
 			if (not file_exists(run_file)) then
@@ -133,3 +118,5 @@
 		--sleep a moment to prevent using unecessary resources
 			freeswitch.msleep(sleep*1000);
 	end
+
+	log.notice("Stop")
