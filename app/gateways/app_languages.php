@@ -442,6 +442,15 @@ $text['label-expire_seconds']['de-at'] = "Expire Seconds";
 $text['label-expire_seconds']['ar-eg'] = "";
 $text['label-expire_seconds']['he'] = "";
 
+$text['label-hostname']['en-us'] = "Hostname";
+$text['label-hostname']['pt-pt'] = "Hostname";
+$text['label-hostname']['fr-fr'] = "Nom d'hôte";
+$text['label-hostname']['pt-br'] = "Hostname";
+$text['label-hostname']['pl'] = "Nazwa hosta";
+$text['label-hostname']['sv-se'] = "Hostname";
+$text['label-hostname']['uk'] = "Назва хоста";
+$text['label-hostname']['de-at'] = "Hostname";
+
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activado";
 $text['label-enabled']['pt-pt'] = "Habilitado";
@@ -869,6 +878,15 @@ $text['description-expire_seconds']['ro'] = "";
 $text['description-expire_seconds']['de-at'] = "Geben Sie an, nach wie vielen Sekunden die Registrierung des Gateways erneuert werden soll.";
 $text['description-expire_seconds']['ar-eg'] = "";
 $text['description-expire_seconds']['he'] = "";
+
+$text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
+$text['description-hostname']['pt-pt'] = "Introduza o hostname";
+$text['description-hostname']['fr-fr'] = "Entrer le nom de l'hôte / du switch.";
+$text['description-hostname']['pt-br'] = "Insira o hostname";
+$text['description-hostname']['pl'] = "Wprowadź nazwę hosta / PBXu.";
+$text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
+$text['description-hostname']['uk'] = "Введіть назву хоста / switchname.";
+$text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an.";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the Gateway";
 $text['description-enabled']['es-cl'] = "Activar o Desactivar la Pasarela";
