@@ -136,7 +136,7 @@ else {
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 	$rows_per_page = 150;
@@ -172,7 +172,7 @@ else {
 	echo "</tr>\n";
 
 	if ($num_rows > 0) {
-		foreach($result as $row) {
+		foreach($gateways as $row) {
 			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -184,7 +184,6 @@ else {
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["context"]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["hostname"]."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {
 					$response = switch_gateway_status($row["gateway_uuid"]);
@@ -213,6 +212,7 @@ else {
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 				}
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row["hostname"]."</td>\n";
 				if ($row["enabled"] == "true") {
 					echo "	<td valign='top' class='".$row_style[$c]."' style='align: center;'>".$text['label-true']."</td>\n";
 				}
@@ -232,11 +232,11 @@ else {
 			}
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $gateways, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='8' align='left'>\n";
+	echo "<td colspan='9' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
