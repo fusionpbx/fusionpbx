@@ -119,6 +119,7 @@
 								sql = "select * from v_gateways ";
 								sql = sql .. "where enabled = 'true' and profile = '"..sip_profile_name.."' ";
 							end
+							sql = sql .. "and (g.hostname = '" .. hostname.. "' or g.hostname is null or g.hostname = '') ";
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end

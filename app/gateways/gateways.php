@@ -159,6 +159,7 @@ else {
 		echo "<th>".$text['label-action']."</th>\n";
 		echo "<th>".$text['label-state']."</th>\n";
 	}
+	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
@@ -183,6 +184,7 @@ else {
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["context"]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["hostname"]."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {
 					$response = switch_gateway_status($row["gateway_uuid"]);
