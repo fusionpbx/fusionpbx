@@ -10,6 +10,16 @@ require "resources.functions.trim";
 
 local api = api or freeswitch.API();
 
+local function send_event(action, key)
+  -- we need send event only if we use load_balance=true
+  -- but since this option set only in directory we can not
+  -- check it here.
+  local event = freeswitch.Event("MEMCACHE", action);
+  event:addHeader("API-Command", "memcache");
+  event:addHeader("API-Command-Argument", action .. " " .. key);
+  event:fire()
+end
+
 local Cache = {}
 
 local function check_error(result)
@@ -57,6 +67,7 @@ function Cache.set(key, value, expire)
 end
 
 function Cache.del(key)
+  send_event('delete', key)
   local result, err = check_error(api:execute("memcache", "delete " .. key))
   if not result then
     if err == 'NOT FOUND' then
