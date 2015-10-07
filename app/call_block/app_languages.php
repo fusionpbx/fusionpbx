@@ -393,10 +393,46 @@ $text['label-action']['ar-eg'] = "";
 $text['label-action']['he'] = "פעולה";
 
 $text['label-number-type']['en-us'] = "Number type";
+$text['label-number-type']['es-cl'] = "";
+$text['label-number-type']['pt-pt'] = "";
+$text['label-number-type']['fr-fr'] = "";
+$text['label-number-type']['nl-nl'] = "";
+$text['label-number-type']['pt-br'] = "";
+$text['label-number-type']['pl'] = "";
+$text['label-number-type']['sv-se'] = "";
+$text['label-number-type']['uk'] = "";
+$text['label-number-type']['ro'] = "";
+$text['label-number-type']['de-at'] = "";
+$text['label-number-type']['ar-eg'] = "";
+$text['label-number-type']['he'] = "";
 
 $text['label-caller-number']['en-us'] = "Caller number";
+$text['label-caller-number']['es-cl'] = "";
+$text['label-caller-number']['pt-pt'] = "";
+$text['label-caller-number']['fr-fr'] = "";
+$text['label-caller-number']['nl-nl'] = "";
+$text['label-caller-number']['pt-br'] = "";
+$text['label-caller-number']['pl'] = "";
+$text['label-caller-number']['sv-se'] = "";
+$text['label-caller-number']['uk'] = "";
+$text['label-caller-number']['ro'] = "";
+$text['label-caller-number']['de-at'] = "";
+$text['label-caller-number']['ar-eg'] = "";
+$text['label-caller-number']['he'] = "";
 
 $text['label-called-number']['en-us'] = "Called number";
+$text['label-called-number']['es-cl'] = "";
+$text['label-called-number']['pt-pt'] = "";
+$text['label-called-number']['fr-fr'] = "";
+$text['label-called-number']['nl-nl'] = "";
+$text['label-called-number']['pt-br'] = "";
+$text['label-called-number']['pl'] = "";
+$text['label-called-number']['sv-se'] = "";
+$text['label-called-number']['uk'] = "";
+$text['label-called-number']['ro'] = "";
+$text['label-called-number']['de-at'] = "";
+$text['label-called-number']['ar-eg'] = "";
+$text['label-called-number']['he'] = "";
 
 $text['description-number']['en-us'] = "Enter the exact number.";
 $text['description-number']['es-cl'] = "Ingrese el nú exacto.";
