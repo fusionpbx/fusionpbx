@@ -97,7 +97,7 @@
 		<!-- extended info parsing -->
 		<param name="extended-info-parsing" value="true" enabled="false"/>
 
-		<param name="aggressive-nat-detection" value="true" enabled="false"/>
+		<param name="aggressive-nat-detection" value="true" enabled="true"/>
 		<!--
 		There are known issues (asserts and segfaults) when 100rel is enabled.
 		It is not recommended to enable 100rel at this time.
@@ -292,7 +292,7 @@
 		<param name="enable-3pcc" value="true" enabled="false"/>
 
 		<!-- use at your own risk or if you know what this does.-->
-		<param name="NDLB-force-rport" value="true" enabled="false"/>
+		<param name="NDLB-force-rport" value="safe" enabled="true"/>
 		<!--
 		Choose the realm challenge key. Default is auto_to if not set. 
 
