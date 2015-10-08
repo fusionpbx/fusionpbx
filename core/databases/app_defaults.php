@@ -189,7 +189,10 @@ if ($domains_processed == 1) {
 			$tmp .= "	expire[\"languages\"] = \"3600\";\n";
 			$tmp .= "	expire[\"sofia.conf\"] = \"3600\";\n";
 			$tmp .= "	expire[\"acl.conf\"] = \"3600\";\n";
-			$tmp .= "	load_balancing = false;\n";
+			$tmp .= "\n";
+			$tmp .= "--set xml_handler\n";
+			$tmp .= "	xml_handler = {}\n";
+			$tmp .= "	xml_handler[\"fs_path\"] = false;\n";
 			$tmp .= "\n";
 			$tmp .= "--set the debug options\n";
 			$tmp .= "	debug[\"params\"] = false;\n";
