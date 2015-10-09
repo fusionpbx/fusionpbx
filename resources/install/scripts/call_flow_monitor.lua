@@ -25,7 +25,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --set the time between loops in seconds
-	sleep = 300;
+	sleep = 60;
 
 --set the debug level
 	debug["log"] = false;
