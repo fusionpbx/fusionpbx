@@ -123,7 +123,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$detail_action = "add";
 						foreach ($result as $row) {
 							$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
-							$dialplan_detail_group = $row["dialplan_detail_group"];
 							$detail_action = "update";
 						}
 						unset ($prep_statement);
@@ -135,6 +134,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "where dialplan_detail_uuid = '".$dialplan_detail_uuid."' ";
 						}
 						else {
+							$dialplan_detail_uuid = uuid();
+							$dialplan_detail_group = 0;
 							$sql = "insert into v_dialplan_details ";
 							$sql .= "(";
 							$sql .= "domain_uuid, ";
@@ -149,7 +150,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".uuid()."', ";
+							$sql .= "'".$dialplan_detail_uuid."', ";
 							$sql .= "'".$dialplan_uuid."', ";
 							$sql .= "'action', ";
 							$sql .= "'set', ";
