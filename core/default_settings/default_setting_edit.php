@@ -93,7 +93,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
 			//update switch variables
-			if ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
+			if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
 				//get the action
 					$sql = "select * from v_vars ";
 					$sql .= "where var_name = 'timezone' ";
@@ -108,8 +108,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//update the timezone
 					if ($var_action == "update") {
-						$sql = "update from v_vars ";
-						$sql = "set var_value = '".$default_setting_value."' ";
+						$sql = "update v_vars ";
+						$sql .= "set var_value = '".$default_setting_value."' ";
 						$sql .= "where var_name = 'timezone' ";
 						$db->query($sql);
 						unset($sql);
@@ -121,6 +121,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$db->query($sql);
 						unset($sql);
 					}
+
+				//synchronize the configuration
+					save_var_xml();
 			}
 
 			if ($action == "add" && permission_exists('default_setting_add')) {
