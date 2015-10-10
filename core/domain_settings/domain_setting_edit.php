@@ -123,6 +123,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$detail_action = "add";
 						foreach ($result as $row) {
 							$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
+							$dialplan_detail_group = $row["dialplan_detail_group"];
 							$detail_action = "update";
 						}
 						unset ($prep_statement);
@@ -141,7 +142,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "dialplan_uuid, ";
 							$sql .= "dialplan_detail_tag, ";
 							$sql .= "dialplan_detail_type, ";
-							$sql .= "dialplan_detail_data ";
+							$sql .= "dialplan_detail_data, ";
+							$sql .= "dialplan_detail_inline, ";
+							$sql .= "dialplan_detail_group ";
 							$sql .= ") ";
 							$sql .= "values ";
 							$sql .= "(";
@@ -150,7 +153,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'".$dialplan_uuid."', ";
 							$sql .= "'action', ";
 							$sql .= "'set', ";
-							$sql .= "'timezone=".$domain_setting_value."' ";
+							$sql .= "'timezone=".$domain_setting_value."', ";
+							$sql .= "'true', ";
+							$sql .= "'".$dialplan_detail_group."' ";
 							$sql .= "); ";
 						}
 						$db->query($sql);
