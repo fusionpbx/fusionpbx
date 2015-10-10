@@ -116,7 +116,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 						$sql .= "and dialplan_detail_tag = 'action' ";
 						$sql .= "and dialplan_detail_type = 'set' ";
-						$sql .= "and dialplan_detail_data like 'timezone=%';
+						$sql .= "and dialplan_detail_data like 'timezone=%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
