@@ -1,0 +1,22 @@
+<CiscoIPPhoneMenu>
+	<Title>Speed Dials</Title>
+	<Prompt>Please choose...</Prompt>
+	<SoftKeyItem>
+		<Name>Dial</Name>
+		<URL>SoftKey:Select</URL>
+		<Position>1</Position>
+	</SoftKeyItem>
+	<MenuItem>
+		<Name>First Last Name (Ext) Type</Name>
+		<URL>Dial:5551231234#</URL>
+	</MenuItem>
+	<MenuItem>
+		<Name>First Last Name (Ext) Type</Name>
+		<URL>Dial:5551231234#</URL>
+	</MenuItem>
+	<SoftKeyItem>
+		<Name>Exit</Name>
+		<URL>SoftKey:Exit</URL>
+		<Position>4</Position>
+	</SoftKeyItem>
+</CiscoIPPhoneMenu>
