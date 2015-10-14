@@ -38,6 +38,7 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.explode";
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
+	require "resources.functions.explode";
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -443,12 +444,23 @@ local log = require "resources.functions.log".ring_group
 								cmd = "show channels like "..destination_number;
 								reply = trim(api:executeString(cmd));
 								--freeswitch.consoleLog("notice", "[ring group] reply "..cmd.." " .. reply .. "\n");
+								exploded_reply = {};
+								exploded_reply = explode(",",reply);
+
 								if (reply == "0 total.") then
 									dial_string = dial_string_to_user
 								else
-									if (string.find(reply, domain_name)) then
-										--active call
-									else
+									idle_extension=true;
+
+									if (exploded_reply ~= nil) then
+										for i,v in ipairs(exploded_reply) do											
+											if(v==destination_number.."@"..domain_name) then
+												idle_extension=false;
+											end
+										end
+									end
+
+									if(idle_extension) then
 										dial_string = dial_string_to_user;
 									end
 								end
