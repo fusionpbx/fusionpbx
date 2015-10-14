@@ -62,11 +62,16 @@
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
 
+		-- Do we need use proxy to make call to ext. reged on different FS
+		--   true - send call to FS where ext reged
+		--   false - send call directly to ext
+			local USE_FS_PATH = xml_handler and xml_handler.fs_path
+
 		-- Make sance only for extensions with number_alias
+		--  false - you should register with AuthID=UserID=Extension (default)
 		--  true  - you should register with AuthID=Extension and UserID=Number Alias
-		--  false - you should register with AuthID=UserID=Extension
 		-- 	also in this case you need 2 records in memcache for one extension
-			local DIAL_STRING_BASED_ON_USERID = false
+			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler.reg_as_number_alias
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
@@ -142,14 +147,14 @@
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				xml_handler["fs_path"] = false;
+				USE_FS_PATH = false;
 			else
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 			local loaded_from_db = false
 		--build the XML string from the database
-			if (source == "database") or (xml_handler["fs_path"]) then
+			if (source == "database") or (USE_FS_PATH) then
 				loaded_from_db = true
 				--database connection
 					if (continue) then
@@ -183,7 +188,7 @@
 
 				--if load balancing is set to true then get the hostname
 					if (continue) then
-						if (xml_handler["fs_path"]) then
+						if (USE_FS_PATH) then
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
@@ -232,9 +237,9 @@
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
-							--hostname was not found set xml_handler["fs_path"] to false to prevent a database_hostname concatenation error
+							--hostname was not found set USE_FS_PATH to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
-									xml_handler["fs_path"] = false;
+									USE_FS_PATH = false;
 								end
 
 							--close the database connection
@@ -323,7 +328,7 @@
 											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(" .. destination .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
-										if (xml_handler["fs_path"]) then
+										if (USE_FS_PATH) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
@@ -332,11 +337,11 @@
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(xml_handler["fs_path"]) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
 									--show debug informationa
-										if (xml_handler["fs_path"]) then
+										if (USE_FS_PATH) then
 											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
