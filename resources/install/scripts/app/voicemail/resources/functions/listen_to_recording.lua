@@ -31,6 +31,11 @@
 			max_digits = 1;
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
+		--set the callback function
+			if (session:ready()) then
+				session:setVariable("playback_terminators", "#");
+				session:setInputCallback("on_dtmf", "");
+			end
 		--set the display
 			if (session:ready()) then
 				reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
