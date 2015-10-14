@@ -24,15 +24,22 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local cache = require"resources.functions.cache"
+	local log = require"resources.functions.log"["xml_handler"]
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get dialplan:" .. call_context));
-	else
-		XML_STRING = "-ERR NOT FOUND";
+	XML_STRING, err = cache.get("dialplan:" .. call_context)
+
+	if debug['cache'] then
+		if XML_STRING then
+			log.notice("dialplan:"..call_context.." source: memcache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error get element form cache: " .. err);
+		end
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if not XML_STRING then
 
 		--connect to the database
 			require "resources.functions.database_handle";
@@ -99,7 +106,7 @@
 			sql = sql .. "ELSE 100 END, ";
 			sql = sql .. "s.dialplan_detail_order asc ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				log.notice("SQL: " .. sql);
 			end
 			x = 0;
 			dbh:query(sql, function(row)
@@ -287,8 +294,9 @@
 			XML_STRING = table.concat(xml, "\n");
 
 		--set the cache
-			tmp = XML_STRING:gsub("\\", "\\\\");
-			result = trim(api:execute("memcache", "set dialplan:" .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
+			if cache.support() then
+				cache.set("dialplan:" .. call_context, XML_STRING, expire["dialplan"])
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -299,17 +307,10 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
+				log.notice("dialplan:"..call_context.." source: database");
 			end
 
 		--close the database connection
 			dbh:release();
-	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
-		--send to the console
-			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
-			end
 	end
+

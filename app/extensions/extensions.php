@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,22 +49,6 @@ require_once "resources/header.php";
 $document['title'] = $text['title-extensions'];
 
 require_once "resources/paging.php";
-
-//show the content
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "  <tr>\n";
-	echo "	<td align='left'><b>".$text['header-extensions']."</b><br>\n";
-	echo "		".$text['description-extensions']."\n";
-	echo "	</td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='30%' align='right'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "  </tr>\n";
-	echo "</table>\n";
-	echo "<br />";
 
 //get total extension count from the database
 	$sql = "select count(*) as num_rows from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -128,9 +112,24 @@ require_once "resources/paging.php";
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
+
+//show the content
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+	echo "  <tr>\n";
+	echo "	<td align='left'><b>".$text['header-extensions']." (".$num_rows.")</b><br>\n";
+	echo "		".$text['description-extensions']."\n";
+	echo "	</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='30%' align='right'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</td>\n";
+	echo "		</form>\n";
+	echo "  </tr>\n";
+	echo "</table>\n";
+	echo "<br />";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -153,8 +152,8 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if ($num_rows > 0) {
+		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -181,7 +180,7 @@ require_once "resources/paging.php";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $extensions, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
@@ -204,7 +203,6 @@ require_once "resources/paging.php";
 
 	echo "</table>";
 	echo "<br><br>";
-
 
 //show the footer
 	require_once "resources/footer.php";

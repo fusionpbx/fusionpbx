@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -62,13 +62,21 @@
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
 
-		-- Make sance only for extensions with number_alias
-		--  true  - you should register with AuthID=Extension and UserID=Number Alias
-		--  false - you should register with AuthID=UserID=Extension
-		-- 	also in this case you need 2 records in memcache for one extension
-			local DIAL_STRING_BASED_ON_USERID = false
+		-- Do we need use proxy to make call to ext. reged on different FS
+		--   true - send call to FS where ext reged
+		--   false - send call directly to ext
+			local USE_FS_PATH = xml_handler and xml_handler["fs_path"]
 
-			local NUMBER_AS_PRESENCE_ID = false
+		-- Make sance only for extensions with number_alias
+		--  false - you should register with AuthID=UserID=Extension (default)
+		--  true  - you should register with AuthID=Extension and UserID=Number Alias
+		-- 	also in this case you need 2 records in memcache for one extension
+			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler["reg_as_number_alias"]
+
+		-- Use number as presence_id
+		-- When you have e.g. extension like `user-100` with number-alias `100`
+		-- by default presence_id is `user-100`. This option allow use `100` as presence_id
+			local NUMBER_AS_PRESENCE_ID = = xml_handler and xml_handler["number_as_presence_id"]
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
@@ -76,6 +84,9 @@
 			end
 
 			local from_user = params:getHeader("sip_from_user")
+			if load_balancing and sip_auth_method == 'INVITE' then
+				from_user = user
+			end
 
 			-- verify from_user and number alias for this methods
 			local METHODS = {
@@ -141,14 +152,14 @@
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				load_balancing = false;
+				USE_FS_PATH = false;
 			else
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 			local loaded_from_db = false
 		--build the XML string from the database
-			if (source == "database") or (load_balancing) then
+			if (source == "database") or (USE_FS_PATH) then
 				loaded_from_db = true
 				--database connection
 					if (continue) then
@@ -182,7 +193,7 @@
 
 				--if load balancing is set to true then get the hostname
 					if (continue) then
-						if (load_balancing) then
+						if (USE_FS_PATH) then
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
@@ -209,9 +220,15 @@
 									dbh_switch = database_handle('switch');
 								end
 
+							--get register name
+								local reg_user = dialed_extension
+								if not DIAL_STRING_BASED_ON_USERID then
+									reg_user = trim(api:execute("user_data", dialed_extension .. "@" .. domain_name .. " attr id"));
+								end
+
 							--get the destination hostname from the registration
 								sql = "SELECT hostname FROM registrations ";
-								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
+								sql = sql .. "WHERE reg_user = '"..reg_user.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
 									now = os.time();
@@ -225,9 +242,9 @@
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
-							--hostname was not found set load_balancing to false to prevent a database_hostname concatenation error
+							--hostname was not found set USE_FS_PATH to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
-									load_balancing = false;
+									USE_FS_PATH = false;
 								end
 
 							--close the database connection
@@ -241,10 +258,10 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
-						continue = false
+						continue = false;
 						dbh:query(sql, function(row)
 							--general
-								continue = true
+								continue = true;
 								domain_uuid = row.domain_uuid;
 								extension_uuid = row.extension_uuid;
 								extension = row.extension;
@@ -309,28 +326,29 @@
 								if (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
+										local presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
+										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name .. "}${sofia_contact(" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(" .. destination .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
-										if (load_balancing) then
+										if (USE_FS_PATH) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
-												--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
-												user_id = trim(api:execute("user_data", user .. "@" .. domain_name .. " attr id"));
-												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
+												local profile, proxy = "internal", database_hostname;
+												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(load_balancing) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
 									--show debug informationa
-										--if (load_balancing) then
-										--	freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
-										--end
+										if (USE_FS_PATH) then
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+										end
 								end
 						end);
 					end
@@ -490,7 +508,7 @@
 								table.insert(xml, [[								<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
 							end
 							if (string.len(sip_force_contact) > 0) then
-								table.insert(xml, [[								<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
+								table.insert(xml, [[								<variable name="sip-force-contact" value="]] .. sip_force_contact .. [["/>]]);
 							end
 							if (string.len(sip_force_expires) > 0) then
 								table.insert(xml, [[								<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);

@@ -1690,7 +1690,7 @@ $text['label-blf']['ar-eg'] = "";
 $text['label-blf']['he'] = "";
 
 $text['label-callers']['en-us'] = "Callers";
-$text['label-callers']['es-cl'] = "Llaamadas";
+$text['label-callers']['es-cl'] = "Llamadas";
 $text['label-callers']['pt-pt'] = "";
 $text['label-callers']['fr-fr'] = "";
 $text['label-callers']['pt-br'] = "";

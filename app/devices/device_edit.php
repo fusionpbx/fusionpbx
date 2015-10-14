@@ -217,6 +217,7 @@ require_once "resources/require.php";
 
 				//array cleanup
 					$x = 0;
+					//unset($_POST["autocomplete"]);
 					foreach ($_POST["device_lines"] as $row) {
 						//unset the empty row
 							if (strlen($row["line_number"]) == 0) {
@@ -502,6 +503,7 @@ require_once "resources/require.php";
 <?php
 //show the content
 	echo "<form method='post' name='frm' id='frm' action='' onsubmit='check_duplicates(); return false;'>\n";
+	//echo "<input style='display:none;' type='password' name='autocomplete'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
@@ -664,7 +666,7 @@ require_once "resources/require.php";
 
 			if (permission_exists('device_line_password')) {
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['password']."\">\n";
+				echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".$row['password']."\">\n";
 				echo "			</td>\n";
 			}
 
@@ -1153,8 +1155,8 @@ require_once "resources/require.php";
 	echo "	".$text['label-device']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_username' id='device_username' maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
-	echo "	<input class='formfld' type='text' name='device_password' id='device_password' onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
+	echo "	<input class='formfld' type='text' name='device_username' id='device_username' autocomplete=\"off\" maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
+	echo "	<input class='formfld' type='text' name='device_password' id='device_password' autocomplete=\"off\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
 	echo "	<div style='display: none;' id='duplicate_username_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-device']."\n";

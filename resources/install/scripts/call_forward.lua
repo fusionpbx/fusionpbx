@@ -291,15 +291,18 @@
 					freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
 				end
 				dbh:query(sql);
-			end
 
-		--clear the cache and hangup
-			if (session:ready()) then
 				--clear the cache
 					if (extension ~= nil) then
 						api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
+						if #number_alias > 0 then
+							api:execute("memcache", "delete directory:"..number_alias.."@"..domain_name);
+						end
 					end
+			end
 
+		-- hangup
+			if (session:ready()) then
 				--wait for the file to be written before proceeding
 					session:sleep(100);
 

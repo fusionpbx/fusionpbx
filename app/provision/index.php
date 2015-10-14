@@ -77,6 +77,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 				$domain_uuid = $row["domain_uuid"];
 			}
 			unset($result, $prep_statement);
+			$_SESSION['domain_uuid'] = $domain_uuid;
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -240,7 +241,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 			header('HTTP/1.0 401 Unauthorized');
 			header("Content-Type: text/plain");
-			echo 'Authorization Required';
+			header("Content-Length: 0");
 			exit;
 		} else {
 			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
@@ -251,7 +252,9 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 				usleep(rand(1000000,3000000));//1-3 seconds.
-				echo 'Authorization Required';
+				$content = 'Authorization Required';
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
 				exit;
 			}
 		}

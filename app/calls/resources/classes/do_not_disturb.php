@@ -96,7 +96,7 @@ include "root.php";
 
 			//set the dial string
 				if ($this->enabled == "true") {
-					$this->dial_string = "loopback/*99".$this->extension;
+					$this->dial_string = "error/user_busy";
 				}
 				else {
 					$this->dial_string = '';

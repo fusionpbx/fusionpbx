@@ -79,8 +79,9 @@ function load_extensions() {
 				$sql .= "	and e.enabled = 'true' ";
 				$sql .= "order by ";
 				$sql .= "	e.extension asc ";
-				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-				if (count($result) > 0) {
+				$query = $db->query($sql);
+				if($query !== false) {
+					$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 					$x = 0;
 					foreach($result as $row) {
 						$destination = $row['extension'];
@@ -500,7 +501,8 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	global $db;
 
 	$destination_number = trim($destination_number);
-	if (is_numeric($destination_number)) {
+	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
+	if (count($matches) > 0) {
 		//not found, continue to process the function
 	}
 	else {

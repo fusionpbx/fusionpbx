@@ -142,15 +142,17 @@ include "root.php";
 
 			//update the extension
 				$sql = "update v_extensions set ";
+				if (strlen($this->forward_all_destination) == 0) {
+					$sql .= "forward_all_destination = null, ";
+				}
+				else {
+					$sql .= "forward_all_destination = '$this->forward_all_destination', ";
+				}
 				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
-					if (strlen($this->forward_all_destination) == 0) {
-						$sql .= "forward_all_destination = null, ";
-					}
 					$sql .= "dial_string = null, ";
 					$sql .= "forward_all_enabled = 'false' ";
 				}
 				else {
-					$sql .= "forward_all_destination = '$this->forward_all_destination', ";
 					$sql .= "dial_string = '".check_str($this->dial_string)."', ";
 					$sql .= "forward_all_enabled = 'true' ";
 				}
