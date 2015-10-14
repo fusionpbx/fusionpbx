@@ -79,7 +79,7 @@
 			end
 
 			local from_user = params:getHeader("sip_from_user")
-			if load_balancing and sip_auth_method == 'INVITE' then
+			if USE_FS_PATH and sip_auth_method == 'INVITE' then
 				from_user = user
 			end
 
