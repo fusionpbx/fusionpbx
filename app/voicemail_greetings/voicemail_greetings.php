@@ -46,7 +46,7 @@ require_once "resources/check_auth.php";
 	}
 
 //deny access if the user extension is not assigned
-	if (!(if_group("superadmin") || if_group("admin"))) {
+	if (!permission_exists('voicemail_greeting_view')) {
 		if (!is_extension_assigned($voicemail_id)) {
 			echo "access denied";
 			return;

@@ -142,14 +142,14 @@
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				load_balancing = false;
+				xml_handler["fs_path"] = false;
 			else
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 			local loaded_from_db = false
 		--build the XML string from the database
-			if (source == "database") or (load_balancing) then
+			if (source == "database") or (xml_handler["fs_path"]) then
 				loaded_from_db = true
 				--database connection
 					if (continue) then
@@ -183,7 +183,7 @@
 
 				--if load balancing is set to true then get the hostname
 					if (continue) then
-						if (load_balancing) then
+						if (xml_handler["fs_path"]) then
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
@@ -232,9 +232,9 @@
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
-							--hostname was not found set load_balancing to false to prevent a database_hostname concatenation error
+							--hostname was not found set xml_handler["fs_path"] to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
-									load_balancing = false;
+									xml_handler["fs_path"] = false;
 								end
 
 							--close the database connection
@@ -323,7 +323,7 @@
 											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(" .. destination .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
-										if (load_balancing) then
+										if (xml_handler["fs_path"]) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
@@ -332,13 +332,13 @@
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(load_balancing) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(xml_handler["fs_path"]) .. "\n");
 										end
 
 									--show debug informationa
-										--if (load_balancing) then
-										--	freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
-										--end
+										if (xml_handler["fs_path"]) then
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+										end
 								end
 						end);
 					end
@@ -498,7 +498,7 @@
 								table.insert(xml, [[								<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
 							end
 							if (string.len(sip_force_contact) > 0) then
-								table.insert(xml, [[								<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
+								table.insert(xml, [[								<variable name="sip-force-contact" value="]] .. sip_force_contact .. [["/>]]);
 							end
 							if (string.len(sip_force_expires) > 0) then
 								table.insert(xml, [[								<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);

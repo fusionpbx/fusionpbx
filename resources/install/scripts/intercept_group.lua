@@ -35,10 +35,18 @@
 
 --add the function
 	require "resources.functions.explode";
+	require "resources.functions.trim";
+	require "resources.functions.channel_utils";
+
+--prepare the api object
+	api = freeswitch.API();
 
 --connect to the database
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
+
+--get the hostname
+	hostname = trim(api:execute("switchname", ""));
 
 --check if the session is ready
 	if ( session:ready() ) then
@@ -163,7 +171,7 @@
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
-			sql = "SELECT call_uuid AS uuid, hostname, ip_addr FROM channels ";
+			sql = "SELECT uuid, call_uuid, hostname, ip_addr FROM channels ";
 			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
 			--sql = sql .. "AND direction = 'outbound' ";
 			sql = sql .. "AND (";
@@ -189,14 +197,19 @@
 				--for key, val in pairs(row) do
 				--	freeswitch.consoleLog("NOTICE", "row "..key.." "..val.."\n");
 				--end
-				uuid = row.uuid;
+				if row.uuid == row.call_uuid then
+					uuid = channel_variable(row.uuid, 'ent_originate_aleg_uuid') or
+							channel_variable(row.uuid, 'cc_member_session_uuid') or
+							channel_variable(row.uuid, 'fifo_bridge_uuid') or
+							row.uuid
+				else
+					uuid = row.call_uuid;
+				end
 				call_hostname = row.hostname;
 				ip_addr = row.ip_addr;
 			end);
 	end
 
---get the hostname
-	hostname = freeswitch.getGlobalVariable("hostname");
 	freeswitch.consoleLog("NOTICE", "Hostname:"..hostname.."  Call Hostname:"..call_hostname.."\n");
 
 --intercept a call that is ringing

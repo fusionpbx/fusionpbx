@@ -462,7 +462,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "		<input type='txt' autocomplete='off' class='formfld' name='username' value='".$username."' required='required'>";
+		echo "		<input type='txt' class='formfld' name='username' value='".$username."' required='required'>";
 	}
 	else {
 		echo "		".$username;
@@ -472,7 +472,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-password']."</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-confirm_password']."</td>";
