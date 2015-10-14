@@ -65,13 +65,13 @@
 		-- Do we need use proxy to make call to ext. reged on different FS
 		--   true - send call to FS where ext reged
 		--   false - send call directly to ext
-			local USE_FS_PATH = xml_handler and xml_handler.fs_path
+			local USE_FS_PATH = xml_handler and xml_handler["fs_path"]
 
 		-- Make sance only for extensions with number_alias
 		--  false - you should register with AuthID=UserID=Extension (default)
 		--  true  - you should register with AuthID=Extension and UserID=Number Alias
 		-- 	also in this case you need 2 records in memcache for one extension
-			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler.reg_as_number_alias
+			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler["reg_as_number_alias"]
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
