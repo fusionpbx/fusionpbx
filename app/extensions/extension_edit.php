@@ -1258,13 +1258,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$template_dir = $device->get_template_dir();
 			echo "<select id='device_template' name='device_template' class='formfld'>\n";
 			echo "<option value=''></option>\n";
-			if($dh = opendir($template_dir)) {
-				while($dir = readdir($dh)) {
+			if (is_dir($template_dir)) {
+				$templates = scandir($template_dir);
+				foreach($templates as $dir) {
 					if($file != "." && $dir != ".." && $dir[0] != '.') {
 						if(is_dir($template_dir . "/" . $dir)) {
 							echo "<optgroup label='$dir'>";
-							if($dh_sub = opendir($template_dir.'/'.$dir)) {
-								while($dir_sub = readdir($dh_sub)) {
+							$dh_sub=$template_dir . "/" . $dir;
+							if(is_dir($dh_sub)) {
+								$templates_sub = scandir($dh_sub);
+								foreach($templates_sub as $dir_sub) {
 									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
 										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 											if ($device_template == $dir."/".$dir_sub) {
