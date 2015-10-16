@@ -555,32 +555,35 @@ require_once "resources/require.php";
 	echo "<select id='device_template' name='device_template' class='formfld'>\n";
 	echo "<option value=''></option>\n";
 
-	if ($dh = opendir($template_dir)) {
-		while($dir = readdir($dh)) {
-			if($file != "." && $dir != ".." && $dir[0] != '.') {
-				if(is_dir($template_dir . "/" . $dir)) {
-					echo "<optgroup label='$dir'>";
-					if($dh_sub = opendir($template_dir.'/'.$dir)) {
-						while($dir_sub = readdir($dh_sub)) {
-							if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-								if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-									if ($device_template == $dir."/".$dir_sub) {
-										echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-									}
-									else {
-										echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+	if (is_dir($template_dir)) {
+			$templates = scandir($template_dir);
+			foreach($templates as $dir) {
+				if($file != "." && $dir != ".." && $dir[0] != '.') {
+					if(is_dir($template_dir . "/" . $dir)) {
+						echo "<optgroup label='$dir'>";
+						$dh_sub=$template_dir . "/" . $dir;
+						if(is_dir($dh_sub)) {
+							$templates_sub = scandir($dh_sub);
+							foreach($templates_sub as $dir_sub) {
+								if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+									if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
+										if ($device_template == $dir."/".$dir_sub) {
+											echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+										}
+										else {
+											echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+										}
 									}
 								}
 							}
+							closedir($dh_sub);
 						}
-						closedir($dh_sub);
+						echo "</optgroup>";
 					}
-					echo "</optgroup>";
 				}
 			}
+			closedir($dh);
 		}
-		closedir($dh);
-	}
 	echo "</select>\n";
 	echo "<br />\n";
 	echo $text['description-device_template']."\n";
