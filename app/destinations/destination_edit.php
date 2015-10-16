@@ -369,7 +369,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (!permission_exists('destination_domain')) {
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							}
-							echo $sql."<br><br>";
+							//echo $sql."<br><br>";
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
