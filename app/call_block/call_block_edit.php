@@ -167,7 +167,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$result = $prep_statement->fetchAll();
 				$result_count = count($result);
 				if ($result_count > 0) {
-					$call_block_number = $result[0]["call_block_number"];
+					//set the domain_name
 					$domain_name = $result[0]["domain_name"];
 
 					//clear the cache
