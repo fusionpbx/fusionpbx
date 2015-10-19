@@ -78,9 +78,27 @@
 				sip_auth_method = sip_auth_method:upper();
 			end
 
+		-- Get UserID. If used UserID ~= AuthID then we have to disable `inbound-reg-force-matching-username`
+		-- on sofia profile and check UserID=Number-Alias and AuthID=Extension on register manually.
+		-- But in load balancing mode in proxy INVITE we have UserID equal to origin UserID but 
+		-- AuthID equal to callee AuthID. (e.g. 105 call to 100 and one FS forward call to other FS
+		-- then we have UserID=105 but AuthID=100).
+		-- Because we do not verify source of INVITE (FS or user device) we have to accept any UserID
+		-- for INVITE in such mode. So we just substitute correct UserID for check.
+		-- !!! NOTE !!! do not change USE_FS_PATH before this check.
 			local from_user = params:getHeader("sip_from_user")
 			if USE_FS_PATH and sip_auth_method == 'INVITE' then
 				from_user = user
+			end
+
+		-- Check eather we need build dial-string. Before request dial-string FusionPBX set `dialed_extension`
+		-- variable. So if we have no such variable we do not need build dial-string.
+			dialed_extension = params:getHeader("dialed_extension");
+			if (dialed_extension == nil) then
+				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
+				USE_FS_PATH = false;
+			else
+				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 			-- verify from_user and number alias for this methods
@@ -107,8 +125,9 @@
 		-- cleanup
 			XML_STRING = nil;
 
-		--get the cache
-			if (continue) then
+		-- get the cache. We can use cache only if we do not use `fs_path`
+		-- or we do not need dial-string. In other way we have to use database.
+			if (continue) and (not USE_FS_PATH) then
 				if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
 					if (domain_name) then
 						local key = "directory:" .. (from_user or user) .. "@" .. domain_name
@@ -142,15 +161,6 @@
 			--if (params:serialize() ~= nil) then
 			--	freeswitch.consoleLog("notice", "[xml_handler-directory.lua] Params:\n" .. params:serialize() .. "\n");
 			--end
-
-		--set the variable from the params
-			dialed_extension = params:getHeader("dialed_extension");
-			if (dialed_extension == nil) then
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				USE_FS_PATH = false;
-			else
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
-			end
 
 			local loaded_from_db = false
 		--build the XML string from the database
