@@ -558,11 +558,19 @@
 							dbh:release();
 
 						--set the cache
-							local key = "directory:" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name
+							local key = "directory:" .. sip_from_number .. "@" .. domain_name
 							if debug['cache'] then
 								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
 							end
 							result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+
+							if sip_from_number ~= sip_from_user then
+								key = "directory:" .. sip_from_user .. "@" .. domain_name
+								if debug['cache'] then
+									freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+								end
+								result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+							end
 
 						--send the xml to the console
 							if (debug["xml_string"]) then
