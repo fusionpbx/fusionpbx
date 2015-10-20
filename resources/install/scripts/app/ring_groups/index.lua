@@ -38,6 +38,7 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.explode";
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
+	require "resources.functions.explode";
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -443,12 +444,23 @@ local log = require "resources.functions.log".ring_group
 								cmd = "show channels like "..destination_number;
 								reply = trim(api:executeString(cmd));
 								--freeswitch.consoleLog("notice", "[ring group] reply "..cmd.." " .. reply .. "\n");
+								exploded_reply = {};
+								exploded_reply = explode(",",reply);
+
 								if (reply == "0 total.") then
 									dial_string = dial_string_to_user
 								else
-									if (string.find(reply, domain_name)) then
-										--active call
-									else
+									idle_extension=true;
+
+									if (exploded_reply ~= nil) then
+										for i,v in ipairs(exploded_reply) do											
+											if(v==destination_number.."@"..domain_name) then
+												idle_extension=false;
+											end
+										end
+									end
+
+									if(idle_extension) then
 										dial_string = dial_string_to_user;
 									end
 								end
@@ -626,36 +638,27 @@ local log = require "resources.functions.log".ring_group
 								app_data = app_data:gsub("%]", "}");
 							end
 							freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
+							-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 							session:execute("bridge", app_data);
 							-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 						end
 
 					--timeout destination
 						if (app_data ~= nil) then
-							if ring_group_strategy == "enterprise"
-								and ( true
-									--- I see 2 errors here `failure` and `PICKED_OFF` 
-									--- but they be more. I think check `answered` is enough.
-									-- or session:getVariable("originate_disposition") == "failure"
-									-- or session:getVariable("originate_disposition") == "PICKED_OFF"
-								)
-								and session:answered() then
-									-- for enterprise calls when intercept we get "failure" but session answered
-									return
-							end
-
-							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
+							if session:ready() and (
+								session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT" 
 								or session:getVariable("originate_disposition") == "NO_ANSWER" 
 								or session:getVariable("originate_disposition") == "NO_USER_RESPONSE" 
 								or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED" 
 								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE" 
 								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
 								or session:getVariable("originate_disposition") == "USER_BUSY"
-								or session:getVariable("originate_disposition") == "failure") then
-									--send missed call notification
-										missed();
-									--execute the time out action
-										session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								or session:getVariable("originate_disposition") == "failure"
+							) then
+								--send missed call notification
+									missed();
+								--execute the time out action
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							end
 						else
 							if (ring_group_timeout_app ~= nil) then

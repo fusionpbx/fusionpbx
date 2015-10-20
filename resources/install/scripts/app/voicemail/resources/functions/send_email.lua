@@ -131,6 +131,8 @@
 					body = body:gsub("${message_duration}", message_length_formatted);
 					body = body:gsub("${account}", id);
 					body = body:gsub("${domain_name}", domain_name);
+					body = body:gsub("${sip_to_user}", id);
+					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached'][default_language.."-"..default_dialect]);
 					elseif (voicemail_file == "link") then
