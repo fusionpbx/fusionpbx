@@ -45,12 +45,16 @@ function channel_evalute(uuid, cmd)
 	return result
 end
 
+local _switchname
 local function switchname()
+	if _switchname then return _switchname end
+
 	local result = api:executeString("switchname")
 
 	if result:sub(1, 4) == '-ERR' then return nil, result end
 	if result == '_undef_' then return false end
 
+	_switchname = result
 	return result
 end
 
