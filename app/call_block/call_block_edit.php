@@ -298,6 +298,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<option value='Busy'>".$text['label-busy']."</option>\n";
 	}
+	if ($action == "Hold") {
+		echo "	<option value='Hold' selected='selected'>".$text['label-hold']."</option>\n";
+	}
+	else {
+		echo "	<option value='Hold'>".$text['label-hold']."</option>\n";
+	}
 	call_block_get_extensions($extension);
 	echo "	</select>\n";
 	echo "<br />\n";
