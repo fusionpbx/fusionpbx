@@ -178,7 +178,7 @@ else {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by last_mod_date desc ";
+		$sql .= "order by case when last_mod_date is null then 1 else 0, last_mod_date desc ";
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
