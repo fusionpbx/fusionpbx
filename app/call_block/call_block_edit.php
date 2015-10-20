@@ -44,7 +44,7 @@ else {
 
 //define the call_block_get_extensions function
 	function call_block_get_extensions($select_extension) {
-		global $db;
+		global $db, $text;
 
 		//list voicemail
 		$sql = "select extension, user_context, description from v_extensions ";
@@ -55,12 +55,12 @@ else {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 
-		echo "<optgroup label='Voicemail'>\n";
+		echo "<optgroup label='".$text['label-voicemail']."'>\n";
 		foreach ($result as &$row) {
 			$extension = $row["extension"];
 			$context = $row["user_context"];
 			$description = $row["description"];
-			if ($extension == $select_extension) $selected = "SELECTED";
+			if ($extension == $select_extension) $selected = "selected='selected'";
 			echo "		<option value='Voicemail $context $extension' $selected>".$extension." ".$description."</option>\n";
 			$selected = "";
 		}
@@ -77,7 +77,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$call_block_name = check_str($_POST["call_block_name"]);
 		$call_block_number = check_str($_POST["call_block_number"]);
 		$call_block_action = check_str($_POST["call_block_action"]);

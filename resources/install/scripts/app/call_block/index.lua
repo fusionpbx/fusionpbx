@@ -177,15 +177,12 @@ This method causes the script to get its manadatory arguments directly from the 
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
 			if (found_action == "Reject") then
 				session:hangup("CALL_REJECTED")
-			end
-			if (found_action == "Busy") then
+			elseif (found_action == "Busy") then
 				session:hangup("USER_BUSY")
-			end
-			if (details[0] =="Hold") then
+			elseif (found_action =="Hold") then
 				session:setAutoHangup(false)
-				session:execute("transfer", "*9664 XML " .. details[1])
-			end
-			if (details[0] =="Voicemail") then
+				session:execute("transfer", "*9664")
+			elseif (details[0] =="Voicemail") then
 				session:setAutoHangup(false)
 				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
 			end
