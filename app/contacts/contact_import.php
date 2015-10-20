@@ -299,7 +299,7 @@ else {
 								$sql .= (($row['phone_type_text']) ? 1 : 0).", ";
 								$sql .= "'".$row['phone_label']."', ";
 								$sql .= "'".$row['phone_number']."', ";
-								$sql .= "'".$row['phone_description']."', ";
+								$sql .= "'".$row['phone_description']."' ";
 								$sql .= ")";
 								$db->exec(check_sql($sql));
 								unset($sql);
