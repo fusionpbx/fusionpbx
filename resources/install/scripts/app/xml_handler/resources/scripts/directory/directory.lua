@@ -76,7 +76,7 @@
 		-- Use number as presence_id
 		-- When you have e.g. extension like `user-100` with number-alias `100`
 		-- by default presence_id is `user-100`. This option allow use `100` as presence_id
-			local NUMBER_AS_PRESENCE_ID = = xml_handler and xml_handler["number_as_presence_id"]
+			local NUMBER_AS_PRESENCE_ID = xml_handler and xml_handler["number_as_presence_id"]
 
 			local sip_auth_method = params:getHeader("sip_auth_method")
 			if sip_auth_method then
