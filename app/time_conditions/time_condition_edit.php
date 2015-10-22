@@ -339,7 +339,7 @@ require_once "resources/header.php";
 					if ($is_preset) {
 						foreach ($_REQUEST['preset'] as $preset_number => $preset_group_id) {
 							if ($group_id == $preset_group_id) {
-								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {	
+								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
 									$sql .= "'".$domain_uuid."', ";
@@ -840,7 +840,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	global $text, $v_link_label_add;
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "  ".$text['label-settings'];
+	echo "	".$text['label-settings'];
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
