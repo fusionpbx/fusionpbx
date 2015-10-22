@@ -70,6 +70,8 @@ require_once "resources/header.php";
 
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
 		$dialplan_description = check_str($_POST["dialplan_description"]);
+		
+		
 	}
 
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -248,7 +250,17 @@ require_once "resources/header.php";
 			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 			//set group and order number
-			$dialplan_detail_group = $group_id;
+			
+			$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
+			
+			if($dialplan_detail_group_user!='') {
+				$dialplan_detail_group = $dialplan_detail_group_user;
+			} else {
+				$dialplan_detail_group = $group_id;
+			}
+
+			
+			
 			$dialplan_detail_order = 0;
 
 			foreach ($conditions as $cond_num => $cond_var) {
@@ -291,6 +303,7 @@ require_once "resources/header.php";
 					}
 
 					//add condition to query string
+					
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
 					$sql .= "'".$domain_uuid."', ";
@@ -332,7 +345,7 @@ require_once "resources/header.php";
 					if ($is_preset) {
 						foreach ($_REQUEST['preset'] as $preset_number => $preset_group_id) {
 							if ($group_id == $preset_group_id) {
-								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
+								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {	
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
 									$sql .= "'".$domain_uuid."', ";
@@ -361,6 +374,11 @@ require_once "resources/header.php";
 						$dialplan_action_app = $dialplan_action;
 						$dialplan_action_data = '';
 					}
+					
+					
+
+					
+
 
 					//add group action to query
 					$dialplan_detail_order += 10;
@@ -423,11 +441,11 @@ require_once "resources/header.php";
 		}
 
 	//execute query
-		if ($conditions_exist) {
+		if ($conditions_exist) {		
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}
-
+		
 	//commit the atomic transaction
 		$count = $db->exec("COMMIT;"); //returns affected rows
 
@@ -505,6 +523,7 @@ require_once "resources/header.php";
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			$result_count = count($result);
+	
 			unset ($prep_statement, $sql);
 
 		//load current conditions into array (combined by group), and retrieve action and anti-action
@@ -833,7 +852,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	global $text, $v_link_label_add;
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-settings'];
+	echo " ".$text['label-settings'];
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
@@ -846,12 +865,23 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "		<tr>";
 	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
 	echo "		</tr>";
+	echo "		</tr>";
+	echo "			<td class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
+	echo "		</tr>";
 	echo "		<tr>";
 	echo "			<td colspan='4' style='padding-top: 10px;'>";
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "			</td>";
 	echo "		</tr>";
+	echo "			<td class='vtable' style='width: 108px;'>".$text['label-group']."</td>\n";
+	echo "		</tr>";
+	
+	echo "		</tr>";
+	echo "		<td><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
+	echo "		</tr>";
+	
+	
 	echo "	</table>";
 	echo "	<br />";
 	echo "	".$text['description-settings'];
