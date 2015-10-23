@@ -1368,11 +1368,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
 			echo "	<option value=''></option>\n";
 			foreach ($destinations as &$row) {
-				if ($outbound_caller_id_name == $row["destination_caller_id_name"]) {
-					echo "		<option value='".$row["destination_caller_id_name"]."' selected='selected'>".$row["destination_caller_id_name"]."</option>\n";
+				$tmp = $row["destination_caller_id_name"];
+				if(strlen($tmp) == 0){
+					$tmp = $row["destination_description"];
 				}
-				else {
-					echo "		<option value='".$row["destination_caller_id_name"]."'>".$row["destination_caller_id_name"]."</option>\n";
+				if(strlen($tmp) > 0){
+					if ($outbound_caller_id_name == $tmp) {
+						echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+					}
+					else {
+						echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+					}
 				}
 			}
 			echo "		</select>\n";
@@ -1401,11 +1407,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
 			echo "	<option value=''></option>\n";
 			foreach ($destinations as &$row) {
-				if ($outbound_caller_id_number == $row["destination_caller_id_number"]) {
-					echo "		<option value='".$row["destination_caller_id_number"]."' selected='selected'>".$row["destination_caller_id_number"]."</option>\n";
+				$tmp = $row["destination_caller_id_number"];
+				if(strlen($tmp) == 0){
+					$tmp = $row["destination_number"];
 				}
-				else {
-					echo "		<option value='".$row["destination_caller_id_number"]."'>".$row["destination_caller_id_number"]."</option>\n";
+				if(strlen($tmp) > 0){
+					if ($outbound_caller_id_number == $tmp) {
+						echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+					}
+					else {
+						echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+					}
 				}
 			}
 			echo "		</select>\n";
