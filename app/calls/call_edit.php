@@ -611,7 +611,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('follow_me_cid_set')) {
 		echo "&nbsp;&nbsp;&nbsp;";
-		$sql_follow_me = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
 		$prep_statement_follow_me->execute();
 		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
@@ -621,7 +621,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='' disabled='disabled'></option>\n";
 			foreach ($result_follow_me as &$row_follow_me) {
 				$selected = $row_follow_me["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : '';
-				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($row_follow_me["destination_number"])." : ".$row_follow_me["destination_description"]."</option>\n";
+
+				$caller_id_number = $row_follow_me['destination_caller_id_number'];
+				if(strlen($caller_id_number) == 0){
+					$caller_id_number = $row_follow_me['destination_number'];
+				}
+				$caller_id_name = $row_follow_me['destination_caller_id_name'];
+				if(strlen($caller_id_name) == 0){
+					$caller_id_name = $row_follow_me['destination_description'];
+				}
+
+				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($caller_id_number)." : ".$caller_id_name."</option>\n";
 			}
 			echo "</select>\n";
 		}
