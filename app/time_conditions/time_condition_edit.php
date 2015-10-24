@@ -248,7 +248,14 @@ require_once "resources/header.php";
 			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 			//set group and order number
-			$dialplan_detail_group = $group_id;
+			
+			$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
+			if($dialplan_detail_group_user!='') {
+				$dialplan_detail_group = $dialplan_detail_group_user;
+			} else {
+				$dialplan_detail_group = $group_id;
+			}	
+					
 			$dialplan_detail_order = 0;
 
 			foreach ($conditions as $cond_num => $cond_var) {
@@ -846,12 +853,23 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "		<tr>";
 	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
 	echo "		</tr>";
+	echo "		</tr>";
+	echo "			<td class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
+	echo "		</tr>";
 	echo "		<tr>";
 	echo "			<td colspan='4' style='padding-top: 10px;'>";
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "			</td>";
 	echo "		</tr>";
+	echo "			<td class='vtable' style='width: 108px;'>".$text['label-group']."</td>\n";
+	echo "		</tr>";
+	
+	echo "		</tr>";
+	echo "		<td><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
+	echo "		</tr>";
+	
+	
 	echo "	</table>";
 	echo "	<br />";
 	echo "	".$text['description-settings'];
