@@ -843,7 +843,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "	".$text['label-settings'];
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0' style='margin: -2px;'>\n";
 	echo "		<tr>\n";
 	echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
 	echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
@@ -854,22 +854,16 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
 	echo "		</tr>";
 	echo "		</tr>";
-	echo "			<td class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
+	echo "			<td colspan='2' class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
+	echo "			<td colspan='2' class='vtable'>".$text['label-group']."</td>\n";
 	echo "		</tr>";
 	echo "		<tr>";
-	echo "			<td colspan='4' style='padding-top: 10px;'>";
+	echo "			<td colspan='2' style='padding-top: 3px;'>";
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "			</td>";
+	echo "			<td colspan='2' style='padding-top: 3px;'><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
 	echo "		</tr>";
-	echo "			<td class='vtable' style='width: 108px;'>".$text['label-group']."</td>\n";
-	echo "		</tr>";
-	
-	echo "		</tr>";
-	echo "		<td><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
-	echo "		</tr>";
-	
-	
 	echo "	</table>";
 	echo "	<br />";
 	echo "	".$text['description-settings'];
