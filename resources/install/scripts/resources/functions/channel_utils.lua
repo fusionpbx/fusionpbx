@@ -1,29 +1,7 @@
 require 'resources.config'
 require 'resources.functions.trim'
-require 'resources.functions.file_exists'
-require 'resources.functions.database_handle'
 
-local function create_dbh(name)
-	local dbh = assert(name)
-	if type(name) == 'string' then
-		if name == 'switch' and file_exists(database_dir.."/core.db") then
-			dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db")
-		else
-			dbh = database_handle(name)
-		end
-	end
-	assert(dbh:connected())
-	return dbh
-end
-
-local function dbh_fetch_all(dbh, sql)
-	local result = {}
-	local ok, err = dbh:query(sql, function(row)
-		result[#result + 1] = row
-	end)
-	if not ok then return nil, err end
-	return result
-end
+local Database = require 'resources.functions.database'
 
 local api = api or freeswitch.API()
 
@@ -60,7 +38,7 @@ end
 
 function channels_by_number(number, domain)
 	local hostname = assert(switchname())
-	local dbh = create_dbh('switch')
+	local dbh = Database.new('switch')
 
 	local full_number = number .. '@' .. (domain or '%')
 
@@ -74,7 +52,7 @@ function channels_by_number(number, domain)
 		full_number, full_number, full_number
 	)
 
-	local rows = assert(dbh_fetch_all(dbh, sql))
+	local rows = assert(dbh:fetch_all(sql))
 
 	dbh:release()
 	return rows
