@@ -42,14 +42,23 @@
 			end
 		--say the message number
 			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
+				if (string.len(dtmf_digits) == 0) then 
 					dtmf_digits = macro(session, "message_number", 1, 100, '');
 				end
 			end
 		--say the number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					session:say(message_number, default_language, "NUMBER", "pronounced");
+					session:say(message_number, default_language, "number", "pronounced");
+				end
+			end
+		--say the caller id number
+			if (session:ready() and caller_id_number ~= nil) then
+				if (vm_say_caller_id_number ~= nil) then
+					if (vm_say_caller_id_number == "true") then
+						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-message_from.wav");
+						session:say(caller_id_number, default_language, "name_spelled", "iterated");
+					end
 				end
 			end
 		--say the message date
@@ -58,10 +67,9 @@
 					if (current_time_zone ~= nil) then
 						session:execute("set", "timezone="..current_time_zone.."");
 					end
-					session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
+					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				end
 			end
-
 		--get the recordings from the database
 			if (storage_type == "base64") then
 				sql = [[SELECT * FROM v_voicemail_messages 
