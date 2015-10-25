@@ -73,6 +73,7 @@
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
+			vm_say_caller_id_number = session:getVariable("vm_say_caller_id_number");
 			vm_disk_quota = session:getVariable("vm-disk-quota");
 			if (not vm_disk_quota) then
 				vm_disk_quota = session:getVariable("vm_disk_quota");

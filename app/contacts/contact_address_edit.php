@@ -48,9 +48,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the contact uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -73,114 +74,125 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$address_label = ($address_label_custom != '') ? $address_label_custom : $address_label;
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the form data
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_address_uuid = check_str($_POST["contact_address_uuid"]);
-	}
+		//set the uuid
+			if ($action == "update") {
+				$contact_address_uuid = check_str($_POST["contact_address_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
 
-		//if primary, unmark other primary numbers
-		if ($address_primary) {
-			$sql = "update v_contact_addresses set address_primary = 0 ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
+				//update last modified
+				$sql = "update v_contacts set ";
+				$sql .= "last_mod_date = now(), ";
+				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and contact_uuid = '".$contact_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-		if ($action == "add") {
-			$contact_address_uuid = uuid();
-			$sql = "insert into v_contact_addresses ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "contact_address_uuid, ";
-			$sql .= "address_type, ";
-			$sql .= "address_label, ";
-			$sql .= "address_street, ";
-			$sql .= "address_extended, ";
-			$sql .= "address_community, ";
-			$sql .= "address_locality, ";
-			$sql .= "address_region, ";
-			$sql .= "address_postal_code, ";
-			$sql .= "address_country, ";
-			$sql .= "address_latitude, ";
-			$sql .= "address_longitude, ";
-			$sql .= "address_primary, ";
-			$sql .= "address_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$contact_address_uuid."', ";
-			$sql .= "'".$address_type."', ";
-			$sql .= "'".$address_label."', ";
-			$sql .= "'".$address_street."', ";
-			$sql .= "'".$address_extended."', ";
-			$sql .= "'".$address_community."', ";
-			$sql .= "'".$address_locality."', ";
-			$sql .= "'".$address_region."', ";
-			$sql .= "'".$address_postal_code."', ";
-			$sql .= "'".$address_country."', ";
-			$sql .= "'".$address_latitude."', ";
-			$sql .= "'".$address_longitude."', ";
-			$sql .= (($address_primary) ? 1 : 0).", ";
-			$sql .= "'".$address_description."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				//if primary, unmark other primary numbers
+				if ($address_primary) {
+					$sql = "update v_contact_addresses set address_primary = 0 ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_uuid = '".$contact_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "add")
+				if ($action == "add") {
+					$contact_address_uuid = uuid();
+					$sql = "insert into v_contact_addresses ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "contact_address_uuid, ";
+					$sql .= "address_type, ";
+					$sql .= "address_label, ";
+					$sql .= "address_street, ";
+					$sql .= "address_extended, ";
+					$sql .= "address_community, ";
+					$sql .= "address_locality, ";
+					$sql .= "address_region, ";
+					$sql .= "address_postal_code, ";
+					$sql .= "address_country, ";
+					$sql .= "address_latitude, ";
+					$sql .= "address_longitude, ";
+					$sql .= "address_primary, ";
+					$sql .= "address_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					$sql .= "'".$contact_uuid."', ";
+					$sql .= "'".$contact_address_uuid."', ";
+					$sql .= "'".$address_type."', ";
+					$sql .= "'".$address_label."', ";
+					$sql .= "'".$address_street."', ";
+					$sql .= "'".$address_extended."', ";
+					$sql .= "'".$address_community."', ";
+					$sql .= "'".$address_locality."', ";
+					$sql .= "'".$address_region."', ";
+					$sql .= "'".$address_postal_code."', ";
+					$sql .= "'".$address_country."', ";
+					$sql .= "'".$address_latitude."', ";
+					$sql .= "'".$address_longitude."', ";
+					$sql .= (($address_primary) ? 1 : 0).", ";
+					$sql .= "'".$address_description."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-		if ($action == "update") {
-			$sql = "update v_contact_addresses set ";
-			$sql .= "contact_uuid = '".$contact_uuid."', ";
-			$sql .= "address_type = '".$address_type."', ";
-			$sql .= "address_label = '".$address_label."', ";
-			$sql .= "address_street = '".$address_street."', ";
-			$sql .= "address_extended = '".$address_extended."', ";
-			$sql .= "address_community = '".$address_community."', ";
-			$sql .= "address_locality = '".$address_locality."', ";
-			$sql .= "address_region = '".$address_region."', ";
-			$sql .= "address_postal_code = '".$address_postal_code."', ";
-			$sql .= "address_country = '".$address_country."', ";
-			$sql .= "address_latitude = '".$address_latitude."', ";
-			$sql .= "address_longitude = '".$address_longitude."', ";
-			$sql .= "address_primary = ".(($address_primary) ? 1 : 0).", ";
-			$sql .= "address_description = '".$address_description."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and contact_address_uuid = '".$contact_address_uuid."'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+					$_SESSION["message"] = $text['message-add'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "add")
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				if ($action == "update") {
+					$sql = "update v_contact_addresses set ";
+					$sql .= "contact_uuid = '".$contact_uuid."', ";
+					$sql .= "address_type = '".$address_type."', ";
+					$sql .= "address_label = '".$address_label."', ";
+					$sql .= "address_street = '".$address_street."', ";
+					$sql .= "address_extended = '".$address_extended."', ";
+					$sql .= "address_community = '".$address_community."', ";
+					$sql .= "address_locality = '".$address_locality."', ";
+					$sql .= "address_region = '".$address_region."', ";
+					$sql .= "address_postal_code = '".$address_postal_code."', ";
+					$sql .= "address_country = '".$address_country."', ";
+					$sql .= "address_latitude = '".$address_latitude."', ";
+					$sql .= "address_longitude = '".$address_longitude."', ";
+					$sql .= "address_primary = ".(($address_primary) ? 1 : 0).", ";
+					$sql .= "address_description = '".$address_description."' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and contact_address_uuid = '".$contact_address_uuid."'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$_SESSION["message"] = $text['message-update'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {

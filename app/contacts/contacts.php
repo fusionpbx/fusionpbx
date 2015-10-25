@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,7 +55,8 @@ else {
 	foreach ($_SESSION['groups'] as $group_data) {
 		$user_group_uuids[] = $group_data['group_uuid'];
 	}
-	//add user's uuid to group uuid list to include private (non-shared) contacts
+
+//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //get contact sync sources
@@ -177,7 +178,10 @@ else {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+		$sql .= "order by last_mod_date desc ";
+		if ($db_type == "pgsql") {
+			$sql .= "nulls last ";
+		}
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));

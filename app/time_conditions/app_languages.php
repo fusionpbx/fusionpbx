@@ -583,6 +583,28 @@ $text['label-alternate-destination']['uk'] = "";
 $text['label-alternate-destination']['de-at'] = "Alternatives Ziel";
 $text['label-alternate-destination']['he'] = "";
 
+$text['label-group']['en-us'] = "Group";
+$text['label-group']['es-cl'] = "Grupo";
+$text['label-group']['pt-pt'] = "";
+$text['label-group']['fr-fr'] = "";
+$text['label-group']['pt-br'] = "";
+$text['label-group']['pl'] = "";
+$text['label-group']['sv-se'] = "";
+$text['label-group']['uk'] = "";
+$text['label-group']['de-at'] = "";
+$text['label-group']['he'] = "";
+
+$text['label-destination']['en-us'] = "Destination";
+$text['label-destination']['es-cl'] = "Destino";
+$text['label-destination']['pt-pt'] = "Destino";
+$text['label-destination']['fr-fr'] = "Destination";
+$text['label-destination']['pt-br'] = "";
+$text['label-destination']['pl'] = "Destynacja";
+$text['label-destination']['sv-se'] = "Destination";
+$text['label-destination']['uk'] = "";
+$text['label-destination']['de-at'] = "Ziel";
+$text['label-destination']['he'] = "";
+
 $text['header-time_conditions']['en-us'] = "Time Conditions";
 $text['header-time_conditions']['es-cl'] = "Condiciones de Tiempo";
 $text['header-time_conditions']['pt-pt'] = "Condições Temporais";

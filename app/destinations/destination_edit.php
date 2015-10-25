@@ -214,15 +214,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 						$dialplan_detail_order = 10;
 
-						//add the public condition
-							$y = 0;
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
 
@@ -369,7 +360,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (!permission_exists('destination_domain')) {
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							}
-							echo $sql."<br><br>";
+							//echo $sql."<br><br>";
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}

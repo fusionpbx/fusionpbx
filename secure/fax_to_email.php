@@ -40,6 +40,7 @@ if (defined('STDIN')) {
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "resources/require.php";
+	include "resources/classes/EventSocket.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
@@ -131,7 +132,14 @@ if (defined('STDIN')) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$_SESSION["domain_uuid"] = $row["domain_uuid"];
+		//set the domain variables
+			$domain_uuid = $row["domain_uuid"];
+			$_SESSION["domain_uuid"] = $row["domain_uuid"];
+			$_SESSION["domain_name"] = $domain_name;
+		//set the setting arrays
+			$domain = new domains();
+			$domain->db = $db;
+			$domain->set();
 	}
 	unset ($prep_statement);
 

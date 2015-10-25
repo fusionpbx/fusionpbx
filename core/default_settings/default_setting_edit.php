@@ -92,6 +92,38 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			// fix null
 			$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
+			//update switch timezone variables
+			if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
+				//get the action
+					$sql = "select * from v_vars ";
+					$sql .= "where var_name = 'timezone' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$var_action = "add";
+					foreach ($result as $row) {
+						$var_action = "update";
+					}
+					unset ($prep_statement);
+
+				//update the timezone
+					if ($var_action == "update") {
+						$sql = "update v_vars ";
+						$sql .= "set var_value = '".$default_setting_value."' ";
+						$sql .= "where var_name = 'timezone' ";
+					}
+					else {
+						$sql = "insert into v_vars ";
+						$sql .= "(var_uuid, var_name, var_value, var_cat, var_enabled) ";
+						$sql .= "values ('".uuid()."', 'timezone', '$default_setting_value', 'Defaults', 'true'); ";
+					}
+					$db->query($sql);
+					unset($sql);
+
+				//synchronize the configuration
+					save_var_xml();
+			}
+
 			if ($action == "add" && permission_exists('default_setting_add')) {
 				$sql = "insert into v_default_settings ";
 				$sql .= "(";

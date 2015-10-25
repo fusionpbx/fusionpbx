@@ -182,7 +182,25 @@ if ($domains_processed == 1) {
 				}
 				$tmp .= "\n";
 			}
-
+			$tmp .= "--set defaults\n";
+			$tmp .= "	expire = {}\n";
+			$tmp .= "	expire[\"directory\"] = \"3600\";\n";
+			$tmp .= "	expire[\"dialplan\"] = \"3600\";\n";
+			$tmp .= "	expire[\"languages\"] = \"3600\";\n";
+			$tmp .= "	expire[\"sofia.conf\"] = \"3600\";\n";
+			$tmp .= "	expire[\"acl.conf\"] = \"3600\";\n";
+			$tmp .= "\n";
+			$tmp .= "--set xml_handler\n";
+			$tmp .= "	xml_handler = {}\n";
+			$tmp .= "	xml_handler[\"fs_path\"] = false;\n";
+			$tmp .= "\n";
+			$tmp .= "--set the debug options\n";
+			$tmp .= "	debug[\"params\"] = false;\n";
+			$tmp .= "	debug[\"sql\"] = false;\n";
+			$tmp .= "	debug[\"xml_request\"] = false;\n";
+			$tmp .= "	debug[\"xml_string\"] = false;\n";
+			$tmp .= "	debug[\"cache\"] = false;\n";
+			$tmp .= "\n";
 			$tmp .= "--additional info\n";
 			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
 			$tmp .= correct_path("	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n");

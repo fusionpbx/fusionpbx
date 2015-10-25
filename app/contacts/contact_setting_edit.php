@@ -48,10 +48,13 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
-$domain_uuid = $_SESSION['domain_uuid'];
+//get the contact uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
+
+//set the session domain uuid as a variable
+	$domain_uuid = $_SESSION['domain_uuid'];
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
@@ -64,97 +67,110 @@ $domain_uuid = $_SESSION['domain_uuid'];
 		$contact_setting_description = check_str($_POST["contact_setting_description"]);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+//process the form data
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_setting_uuid = check_str($_POST["contact_setting_uuid"]);
-	}
+		//set the uuid
+			if ($action == "update") {
+				$contact_setting_uuid = check_str($_POST["contact_setting_uuid"]);
+			}
 
-	//check for all required data
-		//if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		//if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		//if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		//if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		//if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-		//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			$contact_setting_order = ($contact_setting_order != '') ? $contact_setting_order : 'null';
-
-			//add the domain
-				if ($action == "add" && permission_exists('domain_setting_add')) {
-					$sql = "insert into v_contact_settings ";
-					$sql .= "(";
-					$sql .= "contact_setting_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_setting_category, ";
-					$sql .= "contact_setting_subcategory, ";
-					$sql .= "contact_setting_name, ";
-					$sql .= "contact_setting_value, ";
-					$sql .= "contact_setting_order, ";
-					$sql .= "contact_setting_enabled, ";
-					$sql .= "contact_setting_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$contact_uuid', ";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$contact_setting_category', ";
-					$sql .= "'$contact_setting_subcategory', ";
-					$sql .= "'$contact_setting_name', ";
-					$sql .= "'$contact_setting_value', ";
-					$sql .= "$contact_setting_order, ";
-					$sql .= "'$contact_setting_enabled', ";
-					$sql .= "'$contact_setting_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "add")
-
-			//update the domain
-				if ($action == "update") {
-					$sql = "update v_contact_settings set ";
-					$sql .= "contact_setting_category = '$contact_setting_category', ";
-					$sql .= "contact_setting_subcategory = '$contact_setting_subcategory', ";
-					$sql .= "contact_setting_name = '$contact_setting_name', ";
-					$sql .= "contact_setting_value = '$contact_setting_value', ";
-					$sql .= "contact_setting_order = $contact_setting_order, ";
-					$sql .= "contact_setting_enabled = '$contact_setting_enabled', ";
-					$sql .= "contact_setting_description = '$contact_setting_description' ";
-					$sql .= "where contact_uuid = '$contact_uuid' ";
-					$sql .= "and contact_setting_uuid = '$contact_setting_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "update")
-
-			//redirect the browser
-				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
-				}
-				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
-				}
-				header("Location: contact_edit.php?id=".$contact_uuid);
+		//check for all required data
+			$msg = '';
+			//if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+			//if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+			//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+			//if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			//if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
+
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+
+				//set the order
+					$contact_setting_order = ($contact_setting_order != '') ? $contact_setting_order : 'null';
+
+				//update last modified
+					$sql = "update v_contacts set ";
+					$sql .= "last_mod_date = now(), ";
+					$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_uuid = '".$contact_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+				//add the domain
+					if ($action == "add" && permission_exists('domain_setting_add')) {
+						$sql = "insert into v_contact_settings ";
+						$sql .= "(";
+						$sql .= "contact_setting_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_setting_category, ";
+						$sql .= "contact_setting_subcategory, ";
+						$sql .= "contact_setting_name, ";
+						$sql .= "contact_setting_value, ";
+						$sql .= "contact_setting_order, ";
+						$sql .= "contact_setting_enabled, ";
+						$sql .= "contact_setting_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$contact_uuid', ";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$contact_setting_category', ";
+						$sql .= "'$contact_setting_subcategory', ";
+						$sql .= "'$contact_setting_name', ";
+						$sql .= "'$contact_setting_value', ";
+						$sql .= "$contact_setting_order, ";
+						$sql .= "'$contact_setting_enabled', ";
+						$sql .= "'$contact_setting_description' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					} //if ($action == "add")
+
+				//update the domain
+					if ($action == "update") {
+						$sql = "update v_contact_settings set ";
+						$sql .= "contact_setting_category = '$contact_setting_category', ";
+						$sql .= "contact_setting_subcategory = '$contact_setting_subcategory', ";
+						$sql .= "contact_setting_name = '$contact_setting_name', ";
+						$sql .= "contact_setting_value = '$contact_setting_value', ";
+						$sql .= "contact_setting_order = $contact_setting_order, ";
+						$sql .= "contact_setting_enabled = '$contact_setting_enabled', ";
+						$sql .= "contact_setting_description = '$contact_setting_description' ";
+						$sql .= "where contact_uuid = '$contact_uuid' ";
+						$sql .= "and contact_setting_uuid = '$contact_setting_uuid'";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					} //if ($action == "update")
+
+				//redirect the browser
+					if ($action == "update") {
+						$_SESSION["message"] = $text['message-update'];
+					}
+					if ($action == "add") {
+						$_SESSION["message"] = $text['message-add'];
+					}
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
