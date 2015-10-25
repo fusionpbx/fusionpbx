@@ -24,9 +24,7 @@
 --	Errol W Samuels <ewsamuels@gmail.com>
 
 --user defined variables
-	max_tries = "3";
-	digit_timeout = "5000";
-	extension = argv[1];
+	local extension = argv[1];
 
 -- we can use any number because other box should check sip_h_X_*** headers first
 	local pickup_number = '*8' -- extension and '**' or '*8'
@@ -58,15 +56,6 @@
 	local function make_proxy_call(destination, call_hostname)
 		destination = destination .. "@" .. domain_name
 		local profile, proxy = "internal", call_hostname;
-		local peer = CLASTER_PEERS and CLASTER_PEERS[call_hostname];
-		if peer then
-			if type(peer) == "string" then
-				proxy = peer;
-			else
-				profile = peer[1] or profile;
-				proxy = peer[2] or proxy;
-			end
-		end
 
 		local sip_auth_username = session:getVariable("sip_auth_username");
 		local sip_auth_password = api:execute("user_data", sip_auth_username .. "@" .. domain_name .." param password");
@@ -85,11 +74,14 @@
 		--sleep
 			session:sleep(500);
 		--get the user pin number
-			min_digits = 2;
-			max_digits = 20;
-			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+			local min_digits = 2;
+			local max_digits = 20;
+			local max_tries = "3";
+			local digit_timeout = "5000";
+			local digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
 		--validate the user pin number
-			pin_number_table = explode(",",pin_number);
+			local pin_number_table = explode(",",pin_number);
 			for index,pin_number in pairs(pin_number_table) do
 				if (digits == pin_number) then
 					--set the authorized pin number that was used
@@ -98,6 +90,7 @@
 						return true;
 				end
 			end
+
 		--if not authorized play a message and then hangup
 			session:streamFile("phrase:voicemail_fail_auth:#");
 			session:hangup("NORMAL_CLEARING");
@@ -138,7 +131,7 @@
 			end
 
 		-- search parent hostname
-		call_hostname = hostname
+			call_hostname = hostname
 		--[[ parent and child have to be on same box so we do not search it
 			log.notice("Found parent channel try detect parent hostname")
 			local dbh = Database.new('switch')
@@ -167,15 +160,15 @@
 -- return array of extensions for group
 	local function select_group_extensions()
 		-- connect to Fusion database
-			dbh = Database.new('system');
+			local dbh = Database.new('system');
 
 		--get the call groups the extension is a member of
-			sql = "SELECT call_group FROM v_extensions ";
+			local sql = "SELECT call_group FROM v_extensions ";
 			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
 			sql = sql .. "AND (extension = '"..caller_id_number.."'";
 			sql = sql .. "OR  number_alias = '"..caller_id_number.."')";
 			sql = sql .. "limit 1";
-			call_group = dbh:first_value(sql) or ''
+			local call_group = dbh:first_value(sql) or ''
 			log.noticef("call_group: `%s`", call_group);
 			call_groups = explode(",", call_group);
 
@@ -198,7 +191,7 @@
 				log.notice("sql "..sql);
 			end
 			local extensions = {}
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, function(row)
 				local member = row.extension
 				if row.number_alias and #row.number_alias > 0 then
 					member = row.number_alias
@@ -239,7 +232,9 @@
 			if not pin(pin_number) then
 				return
 			end
+	end
 
+	if ( session:ready() ) then
 		-- select intercept mode
 			if not extension then
 				log.notice("GROUP INTERCEPT")
@@ -250,15 +245,18 @@
 			end
 
 		--connect to FS database
-			dbh = Database.new('switch')
+			local dbh = Database.new('switch')
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
-			sql = "SELECT uuid, call_uuid, hostname, ip_addr FROM channels ";
+			sql = "SELECT uuid, call_uuid, hostname FROM channels ";
 			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
-			if not extension then
-				sql = sql .. "AND direction = 'outbound' ";
-			end
+			-- next check should prevent pickup call from extension
+			-- e.g. if extension 100 dial some cell phone and some one else dial *8
+			-- he can pickup this call.
+			-- if not extension then
+			-- 	sql = sql .. "AND direction = 'outbound' ";
+			-- end
 			sql = sql .. "AND (1=1 ";
 			for key,extension in pairs(extensions) do
 				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
@@ -274,11 +272,10 @@
 				-- for key, val in pairs(row) do
 				-- 	log.notice("row "..key.." "..val);
 				-- end
-				log.notice("-----------------------");
+				-- log.notice("-----------------------");
 				is_child = (row.uuid == row.call_uuid)
 				uuid = row.call_uuid;
 				call_hostname = row.hostname;
-				ip_addr = row.ip_addr;
 			end);
 
 			if is_child then
