@@ -46,6 +46,12 @@
 					dtmf_digits = macro(session, "message_number", 1, 100, '');
 				end
 			end
+		--say the number
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					session:say(message_number, default_language, "number", "pronounced");
+				end
+			end
 		--say the caller id number
 			if (session:ready() and caller_id_number ~= nil) then
 				if (vm_say_caller_id_number ~= nil) then
@@ -53,12 +59,6 @@
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-message_from.wav");
 						session:say(caller_id_number, default_language, "name_spelled", "iterated");
 					end
-				end
-			end
-		--say the number
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					session:say(message_number, default_language, "number", "pronounced");
 				end
 			end
 		--say the message date
