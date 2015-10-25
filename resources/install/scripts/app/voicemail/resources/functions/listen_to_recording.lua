@@ -40,6 +40,10 @@
 			if (session:ready()) then
 				reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
 			end
+		--say the caller id number
+			if (session:ready() and caller_id_number ~= nil) then
+				session:say(caller_id_number, default_language, "name_spelled", "iterated");
+			end
 		--say the message number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
@@ -49,7 +53,7 @@
 		--say the number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					session:say(message_number, default_language, "NUMBER", "pronounced");
+					session:say(message_number, default_language, "number", "pronounced");
 				end
 			end
 		--say the message date
@@ -58,7 +62,7 @@
 					if (current_time_zone ~= nil) then
 						session:execute("set", "timezone="..current_time_zone.."");
 					end
-					session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
+					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				end
 			end
 
