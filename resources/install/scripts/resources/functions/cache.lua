@@ -11,9 +11,6 @@ require "resources.functions.trim";
 local api = api or freeswitch.API();
 
 local function send_event(action, key)
-  -- we need send event only if we use load_balance=true
-  -- but since this option set only in directory we can not
-  -- check it here.
   local event = freeswitch.Event("MEMCACHE", action);
   event:addHeader("API-Command", "memcache");
   event:addHeader("API-Command-Argument", action .. " " .. key);
