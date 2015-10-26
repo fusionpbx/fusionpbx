@@ -186,6 +186,7 @@
 			end
 			sql = sql .. ") ";
 			sql = sql .. "and call_uuid is not null ";
+			sql = sql .. "and direction = 'outbound' ";
 			--if (domain_count > 1) then
 			--	sql = sql .. "and context = '"..context.."' ";
 			--end
