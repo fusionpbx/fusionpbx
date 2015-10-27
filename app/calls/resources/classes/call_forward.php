@@ -84,17 +84,27 @@ include "root.php";
 					}
 
 					if (strlen($this->forward_caller_id_uuid) > 0){
-						$sql_caller = "select destination_number, destination_description from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->forward_caller_id_uuid'";
+						$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->forward_caller_id_uuid'";
 						$prep_statement_caller = $db->prepare($sql_caller);
 						if ($prep_statement_caller) {
 							$prep_statement_caller->execute();
 							$row_caller = $prep_statement_caller->fetch(PDO::FETCH_ASSOC);
-							if (strlen($row_caller['destination_description']) > 0) {
-								$dial_string_caller_id_name = $row_caller['destination_description'];
+
+							$caller_id_number = $row_caller['destination_caller_id_number'];
+							if(strlen($caller_id_number) == 0){
+								$caller_id_number = $row_caller['destination_number'];
+							}
+							$caller_id_name = $row_caller['destination_caller_id_name'];
+							if(strlen($caller_id_name) == 0){
+								$caller_id_name = $row_caller['destination_description'];
+							}
+
+							if (strlen($caller_id_name) > 0) {
+								$dial_string_caller_id_name = $caller_id_name;
 								$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
 							}
-							if (strlen($row_caller['destination_number']) > 0) {
-								$dial_string_caller_id_number = $row_caller['destination_number'];
+							if (strlen($caller_id_number) > 0) {
+								$dial_string_caller_id_number = $caller_id_number;
 								$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
 								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";
 							}
