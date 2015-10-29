@@ -65,6 +65,7 @@
 		public $nibble_account;
 		public $mwi_account;
 		public $sip_bypass_media;
+		public $absolute_codec_string;
 		public $dial_string;
 		public $enabled;
 		public $description;
@@ -359,6 +360,9 @@
 								case "proxy-media":
 										$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 										break;
+							}
+							if (strlen($row['absolute_codec_string']) > 0) {
+								$xml .= "      <variable name=\"absolute_codec_string\" value=\"" . $row['absolute_codec_string'] . "\"/>\n";
 							}
 							if (strlen($row['forward_all_enabled']) > 0) {
 								$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . $row['forward_all_enabled'] . "\"/>\n";
