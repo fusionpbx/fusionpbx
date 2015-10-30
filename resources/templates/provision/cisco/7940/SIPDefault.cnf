@@ -121,7 +121,7 @@ time_format_24hr: "0"
 #services_url: "http://{$domain_name}/app/provision/?file=services.php"
 
 # URL for external Directory location
-#directory_url: "http://{$domain_name}/app/provision/?file=directory.php"
+directory_url: "http://{$domain_name}/app/provision/?file=directory.php"
 
 # URL for branding logo
 #logo_url: "http://{$domain_name}/app/provision/logo.bmp"
