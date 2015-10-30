@@ -468,6 +468,19 @@ $text['label-sip_bypass_media']['ro'] = "SIP Bypass Media";
 $text['label-sip_bypass_media']['ar-eg'] = "";
 $text['label-sip_bypass_media']['he'] = "";
 
+$text['label-absolute_codec_string']['en-us'] = "Absolute Codec String";
+$text['label-absolute_codec_string']['es-cl'] = "";
+$text['label-absolute_codec_string']['pt-pt'] = "";
+$text['label-absolute_codec_string']['fr-fr'] = "";
+$text['label-absolute_codec_string']['pt-br'] = "";
+$text['label-absolute_codec_string']['pl'] = "";
+$text['label-absolute_codec_string']['uk'] = "";
+$text['label-absolute_codec_string']['sv-se'] = "";
+$text['label-absolute_codec_string']['de-at'] = "";
+$text['label-absolute_codec_string']['ro'] = "";
+$text['label-absolute_codec_string']['ar-eg'] = "";
+$text['label-absolute_codec_string']['he'] = "";
+
 $text['label-rewrite_tls_contact_port']['en-us'] = "Rewrite TLS Contact Port";
 $text['label-rewrite_tls_contact_port']['es-cl'] = "Reescribir Contacto Puerto TLS";
 $text['label-rewrite_tls_contact_port']['pt-pt'] = "Reescreva Contacto Porto TLS";
@@ -1338,6 +1351,19 @@ $text['description-mwi_account']['de-at'] = "MWI Benutzer (user@domain) der Mail
 $text['description-mwi_account']['ro'] = "Contul MWI cu utilizator@domeniu al mesageriei vocale ce va fi monitorizat.";
 $text['description-mwi_account']['ar-eg'] = "";
 $text['description-mwi_account']['he'] = "";
+
+$text['description-absolute_codec_string']['en-us'] = "Absolute Codec String for the extension";
+$text['description-absolute_codec_string']['es-cl'] = "";
+$text['description-absolute_codec_string']['pt-pt'] = "";
+$text['description-absolute_codec_string']['fr-fr'] = "";
+$text['description-absolute_codec_string']['pt-br'] = "";
+$text['description-absolute_codec_string']['pl'] = "";
+$text['description-absolute_codec_string']['uk'] = "";
+$text['description-absolute_codec_string']['sv-se'] = "";
+$text['description-absolute_codec_string']['de-at'] = "";
+$text['description-absolute_codec_string']['ro'] = "";
+$text['description-absolute_codec_string']['ar-eg'] = "";
+$text['description-absolute_codec_string']['he'] = "";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
 $text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";

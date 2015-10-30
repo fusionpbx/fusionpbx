@@ -767,11 +767,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo 				$text['label-ignore-busy'];
 	echo "			</td>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<select class='formfld' name='follow_me_ignore_busy'>\n";
-	echo "					<option value='true' " . ($follow_me_ignore_busy == 'true' ? "selected='selected'" : '') . ">True</option>\n";
-	echo "					<option value='false'" . ($follow_me_ignore_busy == 'true' ? '' : "selected='selected'") . ">False</option>\n";
-	echo "				</select>\n";
-	echo "				<br> Interrupt call if one of destination are busy\n";
+	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+	echo "				<br />\n";
+	echo $text['description-ignore-busy']." \n";
+	//echo "				<br> Interrupt call if one of destination are busy\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 
