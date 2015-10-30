@@ -244,6 +244,7 @@
 								sip_force_expires = row.sip_force_expires;
 								nibble_account = row.nibble_account;
 								sip_bypass_media = row.sip_bypass_media;
+								absolute_codec_string = row.absolute_codec_string;
 								forward_all_enabled = row.forward_all_enabled;
 								forward_all_destination = row.forward_all_destination;
 								forward_busy_enabled = row.forward_busy_enabled;
@@ -445,9 +446,13 @@
 							if (string.len(nibble_account) > 0) then
 								table.insert(xml, [[								<variable name="nibble_account" value="]] .. nibble_account .. [["/>]]);
 							end
+							if (string.len(absolute_codec_string) > 0) then
+								table.insert(xml, [[								<variable name="absolute_codec_string" value="]] .. absolute_codec_string .. [["/>]]);
+							end
 							if (sip_bypass_media == "bypass-media") then
 								table.insert(xml, [[								<variable name="bypass_media" value="true"/>]]);
 							end
+							
 							if (sip_bypass_media == "bypass-media-after-bridge") then
 								table.insert(xml, [[								<variable name="bypass_media_after_bridge" value="true"/>]]);
 							end
