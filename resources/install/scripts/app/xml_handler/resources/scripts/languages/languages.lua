@@ -142,16 +142,25 @@
 							table.insert(xml, [[					</macro>]]);;
 						end
 						
+						require "resources.functions.settings";
+						settings = settings(domain_uuid);
+						lang_path = "/usr/local/freeswitch/conf/lang/";
+						if (settings['switch']['phrases'] ~= nil) then
+							if (settings['switch']['phrases']['dir'] ~= nil) then
+								lang_path = settings['switch']['phrases']['dir'];
+							end
+						end
+
 						--read root xml language file, parse included xml files
 							local xml_file_paths = {}
-							local file_handle = io.open("/usr/local/freeswitch/conf/lang/"..language.."/"..language..".xml", "r");
+							local file_handle = io.open(lang_path.."/"..language.."/"..language..".xml", "r");
 							if (file_handle ~= nil) then
 								for file_line in file_handle:lines() do
 									if (string.find(file_line, 'cmd="include" data="', 0, true) ~= nil) then
 										pos_beg = string.find(file_line, 'cmd="include" data="', 0, true) + 20;
 										pos_end = string.find(file_line, '"/>', 0, true) - 1;
 										xml_file_path = string.sub(file_line, pos_beg, pos_end);
-										table.insert(xml_file_paths, "/usr/local/freeswitch/conf/lang/"..language.."/"..xml_file_path);
+										table.insert(xml_file_paths, lang_path.."/"..language.."/"..xml_file_path);
 										--freeswitch.consoleLog("notice", "file path = "..xml_file_path.."\n");
 									end
 								end
