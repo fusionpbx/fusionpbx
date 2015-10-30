@@ -135,6 +135,7 @@ else {
 			$nibble_account = check_str($_POST["nibble_account"]);
 			$mwi_account = check_str($_POST["mwi_account"]);
 			$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
+			$absolute_codec_string = check_str($_POST["absolute_codec_string"]);
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
@@ -462,6 +463,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "mwi_account, ";
 							}
 							$sql .= "sip_bypass_media, ";
+							if (permission_exists('extension_absolute_codec_string')) {
+								$sql .= "absolute_codec_string, ";
+							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "dial_string, ";
 							}
@@ -527,6 +531,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "'$mwi_account', ";
 							}
 							$sql .= "'$sip_bypass_media', ";
+							if (permission_exists('extension_absolute_codec_string')) {
+								$sql .= "'$absolute_codec_string', ";
+							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "'$dial_string', ";
 							}
@@ -680,6 +687,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$sql .= "mwi_account = '$mwi_account', ";
 					$sql .= "sip_bypass_media = '$sip_bypass_media', ";
+					if (permission_exists('extension_absolute_codec_string')) {
+						$sql .= "absolute_codec_string = '$absolute_codec_string', ";
+					}
 					if (permission_exists('extension_dial_string')) {
 						$sql .= "dial_string = '$dial_string', ";
 					}
@@ -841,6 +851,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$nibble_account = $row["nibble_account"];
 			$mwi_account = $row["mwi_account"];
 			$sip_bypass_media = $row["sip_bypass_media"];
+			$absolute_codec_string = $row["absolute_codec_string"];
 			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -1878,6 +1889,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-sip_bypass_media']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('extension_absolute_codec_string')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-absolute_codec_string']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"$absolute_codec_string\">\n";
+		echo "<br />\n";
+		echo $text['description-absolute_codec_string']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('extension_domain')) {
 		echo "<tr>\n";
