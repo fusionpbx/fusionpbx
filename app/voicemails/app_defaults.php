@@ -48,6 +48,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Define whether to keep voicemail files on the local system after sending attached via email.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'storage_type';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'base64';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Define which storage type (base_64 stores in the database).';
+		$x++;
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
