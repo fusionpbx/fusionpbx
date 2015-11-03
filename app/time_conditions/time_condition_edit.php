@@ -44,10 +44,12 @@ require_once "resources/header.php";
 	$destination = new destinations;
 
 //load available presets
-	foreach ($_SESSION['time_conditions']['preset'] as $json) {
+	$preset_region = "preset_".$_SESSION['time_conditions']['region'];
+	foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
 		$available_presets[] = json_decode($json, true);
 	}
-
+	unset($preset_region);
+	
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
