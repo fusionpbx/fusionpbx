@@ -1,4 +1,4 @@
-require 'resources.config'
+require 'resources.functions.config'
 require 'resources.functions.trim'
 
 local Database = require 'resources.functions.database'
