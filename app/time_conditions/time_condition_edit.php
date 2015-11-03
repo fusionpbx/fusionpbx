@@ -44,7 +44,7 @@ require_once "resources/header.php";
 	$destination = new destinations;
 
 //load available presets
-	$preset_region = "preset_".$_SESSION['time_conditions']['region'];
+	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
 	foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
 		$available_presets[] = json_decode($json, true);
 	}
