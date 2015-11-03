@@ -142,18 +142,9 @@
 							table.insert(xml, [[					</macro>]]);;
 						end
 						
-						require "resources.functions.settings";
-						settings = settings(domain_uuid);
-						lang_path = "/usr/local/freeswitch/conf/lang/";
-						if (settings['switch']['phrases'] ~= nil) then
-							if (settings['switch']['phrases']['dir'] ~= nil) then
-								lang_path = settings['switch']['phrases']['dir'];
-							end
-						end
-
 						--read root xml language file, parse included xml files
 							local xml_file_paths = {}
-							local file_handle = io.open(lang_path.."/"..language.."/"..language..".xml", "r");
+							local file_handle = io.open(phrases_dir.."/"..language.."/"..language..".xml", "r");
 							if (file_handle ~= nil) then
 								for file_line in file_handle:lines() do
 									if (string.find(file_line, 'cmd="include" data="', 0, true) ~= nil) then
