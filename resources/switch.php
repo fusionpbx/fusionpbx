@@ -158,6 +158,15 @@ function byte_convert($bytes, $decimals = 2) {
 	return $formattedbytes;
 }
 
+function remove_config_from_cache($name) {
+	$cache = new cache;
+	$cache->delete($name);
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+	if($hostname){
+		$cache->delete($name . ':' . $hostname);
+	}
+}
+
 function ListFiles($dir) {
 	if($dh = opendir($dir)) {
 		$files = Array();
