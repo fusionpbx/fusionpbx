@@ -14,6 +14,13 @@ if ($domains_processed == 1) {
 		$preset['usa'][] = json_encode(array("thanksgiving_day" => array("wday" => "5-6", "mon" => "11", "mweek" => "4")));
 		$preset['usa'][] = json_encode(array("christmas_day" => array("mday" => "25", "mon" => "12")));
 
+		$preset['england'][] = json_encode(array("new_years_day" => array("mday" => "1", "mon" => "1")));
+		$preset['england'][] = json_encode(array("christmas_day" => array("mday" => "25", "mon" => "12")));
+		$preset['england'][] = json_encode(array("boxing_day" => array("mday" => "26", "mon" => "12")));
+		$preset['england'][] = json_encode(array("may_day" => array("mon" => "5", "mweek" => "1", "wday" => "2")));
+		$preset['england'][] = json_encode(array("spring_bank_holiday" => array("mon" => "5", "mday" => "25-31", "wday" => "2")));
+		$preset['england'][] = json_encode(array("august_bank_holiday" => array("mon" => "8", "mday" => "25-31", "wday" => "2")));
+
 	//iterate and migrate old presets first
 		$sql = "update v_default_settings ";
 		$sql .= "set default_setting_subcategory = 'preset_usa' ";
