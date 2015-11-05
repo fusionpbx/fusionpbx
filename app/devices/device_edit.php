@@ -590,7 +590,7 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('device_line_view') {
+	if (permission_exists('device_line_view')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-lines']."</td>";
 		echo "		<td class='vtable' align='left'>";
