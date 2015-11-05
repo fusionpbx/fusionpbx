@@ -128,10 +128,25 @@ require_once "resources/require.php";
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		//device mac address
+			if (permission_exists('device_mac_address')) {
+				$device_mac_address = check_str($_POST["device_mac_address"]);
+				$device_mac_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address));
+				$_POST["device_mac_address"] = $device_mac_address;
+			}
+			else {
+				$orm = new orm;
+				$orm->name('devices');
+				$orm->uuid($device_uuid);
+				$result = $orm->find()->get();
+				//$message = $orm->message;
+				foreach ($result as &$row) {
+					$device_mac_address = $row["device_mac_address"];
+					$_POST["device_mac_address"] = $device_mac_address;
+				}
+				unset ($prep_statement);
+			}
 		//devices
-			$device_mac_address = check_str($_POST["device_mac_address"]);
-			$device_mac_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address));
-			$_POST["device_mac_address"] = $device_mac_address;
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
 			$device_uuid_alternate = check_str($_POST["device_uuid_alternate"]);
