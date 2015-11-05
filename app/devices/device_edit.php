@@ -526,69 +526,82 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_mac_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
+	if (permission_exists('device_mac_address')) {
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
+	}
+	else {
+		echo $device_mac_address;
+	}
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
 	echo "<br />\n";
 	echo $text['description-device_mac_address']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\">\n";
+	if (permission_exists('device_label')) {
+		echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\">\n";
+	}
+	else {
+		echo $device_label;
+	}
 	echo "<br />\n";
 	echo $text['description-device_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_template']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	$device = new device;
-	$template_dir = $device->get_template_dir();
+	if (permission_exists('device_template')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_template']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		$device = new device;
+		$template_dir = $device->get_template_dir();
 
-	echo "<select id='device_template' name='device_template' class='formfld'>\n";
-	echo "<option value=''></option>\n";
+		echo "<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "<option value=''></option>\n";
 
-	if (is_dir($template_dir)) {
-			$templates = scandir($template_dir);
-			foreach($templates as $dir) {
-				if($file != "." && $dir != ".." && $dir[0] != '.') {
-					if(is_dir($template_dir . "/" . $dir)) {
-						echo "<optgroup label='$dir'>";
-						$dh_sub=$template_dir . "/" . $dir;
-						if(is_dir($dh_sub)) {
-							$templates_sub = scandir($dh_sub);
-							foreach($templates_sub as $dir_sub) {
-								if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-									if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-										if ($device_template == $dir."/".$dir_sub) {
-											echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-										}
-										else {
-											echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+		if (is_dir($template_dir)) {
+				$templates = scandir($template_dir);
+				foreach($templates as $dir) {
+					if($file != "." && $dir != ".." && $dir[0] != '.') {
+						if(is_dir($template_dir . "/" . $dir)) {
+							echo "<optgroup label='$dir'>";
+							$dh_sub=$template_dir . "/" . $dir;
+							if(is_dir($dh_sub)) {
+								$templates_sub = scandir($dh_sub);
+								foreach($templates_sub as $dir_sub) {
+									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
+											if ($device_template == $dir."/".$dir_sub) {
+												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+											}
+											else {
+												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+											}
 										}
 									}
 								}
+								closedir($dh_sub);
 							}
-							closedir($dh_sub);
+							echo "</optgroup>";
 						}
-						echo "</optgroup>";
 					}
 				}
+				closedir($dh);
 			}
-			closedir($dh);
-		}
-	echo "</select>\n";
-	echo "<br />\n";
-	echo $text['description-device_template']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "</select>\n";
+		echo "<br />\n";
+		echo $text['description-device_template']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('device_line_view')) {
 		echo "	<tr>";
@@ -1198,38 +1211,44 @@ require_once "resources/require.php";
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_vendor']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
-	echo "<br />\n";
-	echo $text['description-device_vendor']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('device_vendor')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_vendor']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
+		echo "<br />\n";
+		echo $text['description-device_vendor']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_model']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\">\n";
-	echo "<br />\n";
-	echo $text['description-device_model']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('device_model')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_model']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\">\n";
+		echo "<br />\n";
+		echo $text['description-device_model']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_firmware_version']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\">\n";
-	echo "<br />\n";
-	echo $text['description-device_firmware_version']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('device_firmware')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_firmware_version']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\">\n";
+		echo "<br />\n";
+		echo $text['description-device_firmware_version']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('device_domain')) {
 		echo "<tr>\n";
@@ -1292,7 +1311,12 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\">\n";
+	if (permission_exists('device_description')) {
+		echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\">\n";
+	}
+	else {
+		echo $device_description."\n";
+	}
 	echo "<br />\n";
 	echo $text['description-device_description']."\n";
 	echo "</td>\n";
