@@ -105,6 +105,15 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_username_password';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_alternate';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_profile_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -127,6 +136,11 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_enable';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
