@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -275,7 +275,7 @@
 
 //add the body to the email
 	$body_plain = rip_tags($body);
-	echo "body_plain = $body_plain\n";
+	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body;

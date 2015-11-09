@@ -112,6 +112,7 @@ This method causes the script to get its manadatory arguments directly from the 
 		--set the cache
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then
+					--set the cache
 					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
 					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
 
@@ -172,15 +173,16 @@ This method causes the script to get its manadatory arguments directly from the 
 			if (source == "database") then
 				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 			end
-			session:setVariable("call_block", "block")
+			session:execute("set", "call_blocked=true");
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
 			if (found_action == "Reject") then
 				session:hangup("CALL_REJECTED")
-			end
-			if (found_action == "Busy") then
+			elseif (found_action == "Busy") then
 				session:hangup("USER_BUSY")
-			end
-			if (details[0] =="Voicemail") then
+			elseif (found_action =="Hold") then
+				session:setAutoHangup(false)
+				session:execute("transfer", "*9664")
+			elseif (details[0] =="Voicemail") then
 				session:setAutoHangup(false)
 				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
 			end

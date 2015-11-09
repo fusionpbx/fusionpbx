@@ -185,17 +185,13 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 
 			$previous_voicemail_id = $field['voicemail_id'];
 			unset($sql, $result, $result_count);
-
 		}
-
 		echo "</table>";
 		echo "<br /><br />";
-
 	}
 	else {
 		echo "<br />".$text['message-messages_not_found']."<br /><br />";
 	}
-
 	echo "<br />";
 
 //autoplay message

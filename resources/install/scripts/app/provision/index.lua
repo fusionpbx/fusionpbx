@@ -121,7 +121,22 @@
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 	end 
 
---remove the previous device and send a sync command to it
+--this device already has an alternate find the correct device_uuid and then override current one
+	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil) then
+		sql = [[SELECT * FROM v_devices ]];
+		sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
+		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+		end
+		dbh:query(sql, function(row)
+			if (row.device_uuid_alternate ~= nil) then
+				device_uuid = row.device_uuid;
+			end
+		end);
+	end
+
+--remove the alternate device from another device so that it can be added to this device
 	if (authorized == 'true' and action == "login") then
 		sql = [[SELECT * FROM v_device_lines ]];
 		sql = sql .. [[WHERE device_uuid = ']]..device_uuid_alternate..[[' ]];
@@ -135,7 +150,7 @@
 				sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid_alternate..[[' ]];
 				sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
 				if (debug["sql"]) then
-					--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+					freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 				end
 				dbh:query(sql);
 			--send a sync command to the previous device

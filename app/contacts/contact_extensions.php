@@ -82,7 +82,7 @@ else {
 	echo "<th>".$text['label-description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('extension_add')) {
-		echo "<a href='/app/extensions/extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -92,7 +92,7 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo 	"<a href='/app/extensions/extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
 			}
 			else {
 				echo $row['extension'];
@@ -102,10 +102,10 @@ else {
 			echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='/app/extensions/extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='/app/extensions/extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='".PROJECT_PATH."/app/extensions/extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

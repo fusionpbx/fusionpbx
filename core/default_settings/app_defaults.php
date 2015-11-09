@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,11 +30,25 @@ if ($domains_processed == 1) {
 	//define array of settings
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'time_zone';
+		$array[$x]['default_setting_name'] = 'name';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'language';
 		$array[$x]['default_setting_name'] = 'code';
 		$array[$x]['default_setting_value'] = 'en-us';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'bridge';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'outbound';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'outbound,loopback,lcr';
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_length';

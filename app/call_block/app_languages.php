@@ -350,6 +350,31 @@ $text['label-busy']['de-at'] = "Besetzt";
 $text['label-busy']['ar-eg'] = "مشغول";
 $text['label-busy']['he'] = "תפוס";
 
+$text['label-hold']['en-us'] = "Hold";
+$text['label-hold']['es-cl'] = "";
+$text['label-hold']['pt-pt'] = "";
+$text['label-hold']['fr-fr'] = "";
+$text['label-hold']['nl-nl'] = "";
+$text['label-hold']['pt-br'] = "";
+$text['label-hold']['pl'] = "";
+$text['label-hold']['sv-se'] = "";
+$text['label-hold']['uk'] = "";
+$text['label-hold']['ro'] = "";
+$text['label-hold']['de-at'] = "";
+$text['label-hold']['ar-eg'] = "";
+$text['label-hold']['he'] = "";
+
+$text['label-voicemail']['en-us'] = "Voicemail";
+$text['label-voicemail']['es-cl'] = "Correo de Voz";
+$text['label-voicemail']['pt-pt'] = "Correio de Voz";
+$text['label-voicemail']['fr-fr'] = "Messagerie Vocale";
+$text['label-voicemail']['pt-br'] = "Correio de voz";
+$text['label-voicemail']['pl'] = "Poczta głosowa";
+$text['label-voicemail']['sv-se'] = "Röstbrevlåda";
+$text['label-voicemail']['uk'] = "Голосова пошта";
+$text['label-voicemail']['de-at'] = "Mailbox";
+$text['label-voicemail']['he'] = "תא קולי";
+
 $text['label-add-note']['en-us'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
 $text['label-add-note']['es-cl'] = "Bloquea llamadas desde un número. Puede elegir un número de la lista de arriba o ingresar el n&uacute, nombre y activarlo abajo.";
 $text['label-add-note']['pt-pt'] = "Bloquear chamadas a partir de um número. Seleccione um número a partir da lista indicada ou introduza um número, nome e active.";

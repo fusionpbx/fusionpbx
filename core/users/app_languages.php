@@ -651,7 +651,7 @@ $text['label-additional_info']['ro'] = "";
 $text['label-additional_info']['de-at'] = "Zusätzliche Information";
 $text['label-additional_info']['he'] = "מידע נוסף";
 
-$text['header-user_manager']['en-us'] = "User Manager";
+$text['header-user_manager']['en-us'] = "Users";
 $text['header-user_manager']['es-cl'] = "Administración de Usuario";
 $text['header-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 $text['header-user_manager']['fr-fr'] = "Gestion des utilisateurs";

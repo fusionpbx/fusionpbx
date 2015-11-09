@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,41 +34,13 @@ else {
 	exit;
 }
 
+//additional includes
 	require_once "resources/paging.php";
 
 //set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 	$search_value = check_str($_REQUEST["search_value"]);
-
-//page title and description
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<form method='post' action=''>";
-	echo "<tr>\n";
-	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']."</b></td>\n";
-	echo "<td align='right' nowrap='nowrap'>";
-	if (permission_exists('user_all')) {
-		if ($_GET['showall'] == 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='index.php';\">\n";
-			echo "<input type='hidden' name='showall' value='true'>";
-		}
-		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='index.php?showall=true';\">\n";
-		}
-	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
-	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "</td>";
-	echo "</tr>\n";
-	echo "</form>";
-
-	echo "<tr>\n";
-	echo "<td align='left' colspan='4'>\n";
-	echo $text['description-user_manager']."\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
@@ -157,9 +129,38 @@ else {
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$user_count = count($users);
 	unset ($prep_statement, $sql);
+
+//page title and description
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form method='post' action=''>";
+	echo "<tr>\n";
+	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
+	echo "<td align='right' nowrap='nowrap'>";
+	if (permission_exists('user_all')) {
+		if ($_GET['showall'] == 'true') {
+			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='index.php';\">\n";
+			echo "<input type='hidden' name='showall' value='true'>";
+		}
+		else {
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='index.php?showall=true';\">\n";
+		}
+	}
+	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
+	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "</td>";
+	echo "</tr>\n";
+	echo "</form>";
+
+	echo "<tr>\n";
+	echo "<td align='left' colspan='4'>\n";
+	echo $text['description-user_manager']."\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 //alternate the row style
 	$c = 0;
@@ -185,8 +186,8 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if ($user_count > 0) {
+		foreach($users as $row) {
 			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
 				//hide
 			} else {
@@ -233,7 +234,7 @@ else {
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $users, $user_count);
 	} //end if results
 
 	echo "<tr>\n";

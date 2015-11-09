@@ -101,17 +101,6 @@ $text['label-on-busy']['sv-se'] = "Vid Upptaget ";
 $text['label-on-busy']['uk'] = "Якщо зайнято";
 $text['label-on-busy']['de-at'] = "Bei Besetzt";
 
-$text['label-ignore-busy']['en-us'] = "Ignore Busy";
-$text['label-ignore-busy']['es-cl'] = "";
-$text['label-ignore-busy']['pt-pt'] = "";
-$text['label-ignore-busy']['fr-fr'] = "";
-$text['label-ignore-busy']['it-it'] = "";
-$text['label-ignore-busy']['pt-br'] = "";
-$text['label-ignore-busy']['pl'] = "";
-$text['label-ignore-busy']['sv-se'] = "";
-$text['label-ignore-busy']['uk'] = "";
-$text['label-ignore-busy']['de-at'] = "";
-
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
 $text['label-number']['pt-pt'] = "Número";
@@ -133,6 +122,17 @@ $text['label-no_answer']['sv-se'] = "Inget Svar ";
 $text['label-no_answer']['uk'] = "Без відповіді";
 $text['label-no_answer']['de-at'] = "Keine Antwort";
 
+$text['label-ignore-busy']['en-us'] = "Ignore Busy";
+$text['label-ignore-busy']['es-cl'] = "";
+$text['label-ignore-busy']['pt-pt'] = "";
+$text['label-ignore-busy']['fr-fr'] = "";
+$text['label-ignore-busy']['it-it'] = "";
+$text['label-ignore-busy']['pt-br'] = "";
+$text['label-ignore-busy']['pl'] = "";
+$text['label-ignore-busy']['sv-se'] = "";
+$text['label-ignore-busy']['uk'] = "";
+$text['label-ignore-busy']['de-at'] = "Ignorieren bei Besetzt";
+
 $text['label-follow-me']['en-us'] = "Follow Me";
 $text['label-follow-me']['es-cl'] = "Sígueme";
 $text['label-follow-me']['pt-pt'] = "Segue-me";
@@ -141,7 +141,7 @@ $text['label-follow-me']['pt-br'] = "Siga-me";
 $text['label-follow-me']['pl'] = "Podążaj za mną";
 $text['label-follow-me']['sv-se'] = "Följ Mig ";
 $text['label-follow-me']['uk'] = "";
-$text['label-follow-me']['de-at'] = "Follow Me";
+$text['label-follow-me']['de-at'] = "Anrufweiterschaltung";
 
 $text['label-enabled']['en-us'] = "Enabled";
 $text['label-enabled']['es-cl'] = "Activo";
@@ -311,7 +311,7 @@ $text['label-call-forward']['pt-br'] = "Encaminhamento de chamadas";
 $text['label-call-forward']['pl'] = "Przekierowanie";
 $text['label-call-forward']['sv-se'] = "Vidarekoppling ";
 $text['label-call-forward']['uk'] = "Переадресація";
-$text['label-call-forward']['de-at'] = "Ruf Weiterleitung";
+$text['label-call-forward']['de-at'] = "Rufumleitung";
 
 $text['description-on-busy']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
 $text['description-on-busy']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
@@ -383,7 +383,7 @@ $text['description-2']['pt-br'] = "A informação contem a origem, destino, dura
 $text['description-2']['pl'] = "Za pomocą poniższych linków można skonfigurować przekierowania, usługę „Podążaj z mną” lub „Nie przeszkadzać” (DnD).";
 $text['description-2']['sv-se'] = "Använd länkarna för att konfigurera Vidarekoppling, Följ Mig och Stör Ej. ";
 $text['description-2']['uk'] = "";
-$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Weiterleitung, Follow Me oder Bitte nicht stören zu konfigurieren.";
+$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Rufumleitung, Anrufweiterschaltung oder Nicht stören zu konfigurieren.";
 
 $text['description']['en-us'] = "Directs incoming calls for extension:";
 $text['description']['es-cl'] = "Dirige las llamadas entrantes hacia una extensión:";

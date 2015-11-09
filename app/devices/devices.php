@@ -33,6 +33,10 @@ else {
 	exit;
 }
 
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -44,15 +48,116 @@ else {
 		$order = check_str($_GET["order"]);
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
+//get total devices count from the database
+	$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_devices = $row['num_rows'];
+	}
+	unset($sql, $prep_statement, $row);
+
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_devices as d ";
+	if ($_GET['showall'] && permission_exists('device_all')) {
+		if (strlen($search) > 0) {
+			$sql .= "where ";
+		}
+	} else {
+		$sql .= "where (";
+		$sql .= "	d.domain_uuid = '$domain_uuid' ";
+		if (permission_exists('device_all')) {
+			$sql .= "	or d.domain_uuid is null ";
+		}
+		$sql .= ") ";
+		if (strlen($search) > 0) {
+			$sql .= "and ";
+		}
+	}
+	if (strlen($search) > 0) {
+		$sql .= "(";
+		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	or d.device_label like '%".$search."%' ";
+		$sql .= "	or d.device_vendor like '%".$search."%' ";
+		$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+		$sql .= "	or d.device_template like '%".$search."%' ";
+		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = '0';
+		}
+	}
+
+//prepare to page the results
+	$rows_per_page = 150;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select d.*, d2.device_label as alternate_label ";
+	$sql .= "from v_devices as d, v_devices as d2 ";
+	$sql .= "where ( ";
+	$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
+	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
+	$sql .= ") ";
+	if ($_GET['showall'] && permission_exists('device_all')) {
+		//echo __line__."<br \>\n";
+	} else {
+		$sql .= "and (";
+		$sql .= "	d.domain_uuid = '$domain_uuid' ";
+		if (permission_exists('device_all')) {
+			$sql .= "	or d.domain_uuid is null ";
+		}
+		$sql .= ") ";
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "	d.device_mac_address like '%".$search."%' ";
+		$sql .= "	or d.device_label like '%".$search."%' ";
+		$sql .= "	or d.device_vendor like '%".$search."%' ";
+		$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+		$sql .= "	or d.device_template like '%".$search."%' ";
+		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (strlen($order_by) == 0) {
+		$sql .= "order by d.device_label, d.device_description asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//alternate_found
+	$device_alternate = false;
+	foreach($devices as $row) {
+		if (strlen($row['device_uuid_alternate']) > 0) {
+			$device_alternate = true;
+			break;
+		}
+	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='100%' align='left' valign='top'>";
-	echo "			<b>".$text['header-devices']."</b>";
+	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>";
 	echo "			<br /><br />";
 	echo "			".$text['description-devices'];
 	echo "		</td>\n";
@@ -77,114 +182,10 @@ else {
 	echo "</table>\n";
 	echo "<br />";
 
-	//get total devices count from the database
-		$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$total_devices = $row['num_rows'];
-		}
-		unset($sql, $prep_statement, $row);
-
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_devices as d ";
-		if ($_GET['showall'] && permission_exists('device_all')) {
-			if (strlen($search) > 0) {
-				$sql .= "where ";
-			}
-		} else {
-			$sql .= "where (";
-			$sql .= "	d.domain_uuid = '$domain_uuid' ";
-			if (permission_exists('device_all')) {
-				$sql .= "	or d.domain_uuid is null ";
-			}
-			$sql .= ") ";
-			if (strlen($search) > 0) {
-				$sql .= "and ";
-			}
-		}
-		if (strlen($search) > 0) {
-			$sql .= "(";
-			$sql .= "	d.device_mac_address like '%".$search."%' ";
-			$sql .= "	or d.device_label like '%".$search."%' ";
-			$sql .= "	or d.device_vendor like '%".$search."%' ";
-			$sql .= "	or d.device_provision_enable like '%".$search."%' ";
-			$sql .= "	or d.device_template like '%".$search."%' ";
-			$sql .= "	or d.device_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = 150;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select d.*, d2.device_label as alternate_label ";
-		$sql .= "from v_devices as d, v_devices as d2 ";
-		$sql .= "where ( ";
-		$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
-		$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
-		$sql .= ") ";
-		if ($_GET['showall'] && permission_exists('device_all')) {
-			//echo __line__."<br \>\n";
-		} else {
-			$sql .= "and (";
-			$sql .= "	d.domain_uuid = '$domain_uuid' ";
-			if (permission_exists('device_all')) {
-				$sql .= "	or d.domain_uuid is null ";
-			}
-			$sql .= ") ";
-		}
-		if (strlen($search) > 0) {
-			$sql .= "and (";
-			$sql .= "	d.device_mac_address like '%".$search."%' ";
-			$sql .= "	or d.device_label like '%".$search."%' ";
-			$sql .= "	or d.device_vendor like '%".$search."%' ";
-			$sql .= "	or d.device_provision_enable like '%".$search."%' ";
-			$sql .= "	or d.device_template like '%".$search."%' ";
-			$sql .= "	or d.device_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		if (strlen($order_by) == 0) {
-			$sql .= "order by d.device_label, d.device_description asc ";
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
-
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	//alternate_found
-	$device_alternate = false;
-	foreach($devices as $row) {
-		if (strlen($row['device_uuid_alternate']) > 0) {
-			$device_alternate = true;
-			break;
-		}
-	}
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($_GET['showall'] && permission_exists('device_all')) {

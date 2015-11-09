@@ -4,8 +4,9 @@
 			<action application="set" data="caller_id_name=Page" />
 			<action application="set" data="caller_id_number=" />
 			<action application="set" data="pin_number={v_pin_number}" />
-			<action application="set" data="extension_list=101-103,105" />
+			<action application="set" data="destinations=101-103,105" />
 			<action application="set" data="moderator=false" />
+			<action application="set" data="mute=true" />
 			<action application="set" data="set api_hangup_hook=conference page-${destination_number} kick all" />
 			<action application="lua" data="page.lua" />
 		</condition>
