@@ -58,9 +58,7 @@ else {
 	else {
 		$action = "add";
 	}
-
-//get the app uuid
-	if (is_uuid($_REQUEST["app_uuid"])) {
+	if (strlen($_REQUEST["app_uuid"]) > 0) {
 		$app_uuid = $_REQUEST["app_uuid"];
 	}
 

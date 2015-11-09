@@ -257,6 +257,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//syncrhonize the configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			//delete the dialplan context from memcache
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -326,6 +327,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//synchronize the configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			//clear the cache
 				$cache = new cache;
@@ -393,6 +395,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//syncrhonize configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 		}
 
 		//redirect

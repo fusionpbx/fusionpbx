@@ -172,24 +172,6 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
-//show the header
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' valign='top'>\n";
-	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "			<b>".$text['header-inbox'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
-	}
-	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "			<b>".$text['header-sent'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
-	}
-	echo "		</td>\n";
-	echo "		<td width='70%' align='right' valign='top'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
-
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_fax_files ";
 	$sql .= "where fax_uuid = '$fax_uuid' ";
@@ -234,9 +216,26 @@ else {
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$fax_files = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
+
+//show the header
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' valign='top'>\n";
+	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
+		echo "			<b>".$text['header-inbox'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
+	}
+	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
+		echo "			<b>".$text['header-sent'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
+	}
+	echo "		</td>\n";
+	echo "		<td width='70%' align='right' valign='top'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+	echo "<br>\n";
 
 //show the table and content
 	$c = 0;
@@ -255,8 +254,8 @@ else {
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if ($num_rows > 0) {
+		foreach($fax_files as $row) {
 			$file = basename($row['fax_file_path']);
 			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
 				$file_name = substr($file, 0, (strlen($file) -4));
@@ -382,7 +381,7 @@ else {
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $fax_files);
 	} //end if results
 
 //show the paging controls

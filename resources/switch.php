@@ -158,6 +158,15 @@ function byte_convert($bytes, $decimals = 2) {
 	return $formattedbytes;
 }
 
+function remove_config_from_cache($name) {
+	$cache = new cache;
+	$cache->delete($name);
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+	if($hostname){
+		$cache->delete($name . ':' . $hostname);
+	}
+}
+
 function ListFiles($dir) {
 	if($dh = opendir($dir)) {
 		$files = Array();
@@ -501,7 +510,8 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	global $db;
 
 	$destination_number = trim($destination_number);
-	if (is_numeric($destination_number)) {
+	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
+	if (count($matches) > 0) {
 		//not found, continue to process the function
 	}
 	else {

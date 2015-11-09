@@ -97,7 +97,7 @@
 		<!-- extended info parsing -->
 		<param name="extended-info-parsing" value="true" enabled="false"/>
 
-		<param name="aggressive-nat-detection" value="true" enabled="false"/>
+		<param name="aggressive-nat-detection" value="true" enabled="true"/>
 		<!--
 		There are known issues (asserts and segfaults) when 100rel is enabled.
 		It is not recommended to enable 100rel at this time.
@@ -150,7 +150,7 @@
 		<!-- used to share presence info across sofia profiles -->
 		<!-- Name of the db to use for this profile -->
 		<param name="dbname" value="share_presence" enabled="false"/>
-		<param name="presence-hosts" value="$${domain},$${local_ip_v4}"/>
+		<param name="presence-hosts" value="$${domain},$${local_ip_v4}" enabled="false"/>
 		<param name="presence-privacy" value="$${presence_privacy}"/>
 		<!-- ************************************************* -->
 
@@ -292,7 +292,7 @@
 		<param name="enable-3pcc" value="true" enabled="false"/>
 
 		<!-- use at your own risk or if you know what this does.-->
-		<param name="NDLB-force-rport" value="true" enabled="false"/>
+		<param name="NDLB-force-rport" value="safe" enabled="true"/>
 		<!--
 		Choose the realm challenge key. Default is auto_to if not set. 
 

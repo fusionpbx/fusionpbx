@@ -111,7 +111,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql);
 
 		//syncrhonize configuration
-		save_call_center_xml();
+			save_call_center_xml();
+			remove_config_from_cache('configuration:callcenter.conf');
 
 		//look up queue uuid by queue name (ugh)
 		$sql = "select call_center_queue_uuid from v_call_center_queues where queue_name = '".$queue_name."'";

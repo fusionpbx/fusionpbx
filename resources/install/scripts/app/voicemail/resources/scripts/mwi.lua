@@ -99,7 +99,7 @@
 
 				--send the message waiting event
 					local event = freeswitch.Event("message_waiting");
-					if (row["message_count"] == "0") then
+					if (new_messages == "0") then
 						event:addHeader("MWI-Messages-Waiting", "no");
 					else
 						event:addHeader("MWI-Messages-Waiting", "yes");

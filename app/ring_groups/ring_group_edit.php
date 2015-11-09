@@ -499,6 +499,7 @@ else {
 	echo "	<option value='sequence' ".(($ring_group_strategy == "sequence") ? "selected='selected'" : null).">".$text['option-sequence']."</option>\n";
 	echo "	<option value='enterprise' ".(($ring_group_strategy == "enterprise") ? "selected='selected'" : null).">".$text['option-enterprise']."</option>\n";
 	echo "	<option value='rollover' ".(($ring_group_strategy == "rollover") ? "selected='selected'" : null).">".$text['option-rollover']."</option>\n";
+	echo "	<option value='random' ".(($ring_group_strategy == "random") ? "selected='selected'" : null).">".$text['option-random']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-strategy']."\n";

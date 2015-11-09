@@ -47,9 +47,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["domain_uuid"]) > 0) {
-	$domain_uuid = check_str($_GET["domain_uuid"]);
-}
+//set the domain_uuid
+	if (strlen($_GET["domain_uuid"]) > 0) {
+		$domain_uuid = check_str($_GET["domain_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
@@ -92,7 +93,75 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			$domain_setting_order = ($domain_setting_order != '') ? $domain_setting_order : 'null';
+			// fix null
+				$domain_setting_order = ($domain_setting_order != '') ? $domain_setting_order : 'null';
+
+			//update switch timezone variables
+				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" ) {
+					//get the dialplan_uuid
+						$sql = "select * from v_dialplans ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach ($result as $row) {
+							$dialplan_uuid = $row["dialplan_uuid"];
+						}
+						unset ($prep_statement);
+
+					//get the action
+						$sql = "select * from v_dialplan_details ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+						$sql .= "and dialplan_detail_tag = 'action' ";
+						$sql .= "and dialplan_detail_type = 'set' ";
+						$sql .= "and dialplan_detail_data like 'timezone=%' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						$detail_action = "add";
+						foreach ($result as $row) {
+							$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
+							$detail_action = "update";
+						}
+						unset ($prep_statement);
+
+					//update the timezone
+						if ($detail_action == "update") {
+							$sql = "update v_dialplan_details ";
+							$sql .= "set dialplan_detail_data = 'timezone=".$domain_setting_value."' ";
+							$sql .= "where dialplan_detail_uuid = '".$dialplan_detail_uuid."' ";
+						}
+						else {
+							$dialplan_detail_uuid = uuid();
+							$dialplan_detail_group = 0;
+							$sql = "insert into v_dialplan_details ";
+							$sql .= "(";
+							$sql .= "domain_uuid, ";
+							$sql .= "dialplan_detail_uuid, ";
+							$sql .= "dialplan_uuid, ";
+							$sql .= "dialplan_detail_tag, ";
+							$sql .= "dialplan_detail_type, ";
+							$sql .= "dialplan_detail_data, ";
+							$sql .= "dialplan_detail_inline, ";
+							$sql .= "dialplan_detail_group ";
+							$sql .= ") ";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".$domain_uuid."', ";
+							$sql .= "'".$dialplan_detail_uuid."', ";
+							$sql .= "'".$dialplan_uuid."', ";
+							$sql .= "'action', ";
+							$sql .= "'set', ";
+							$sql .= "'timezone=".$domain_setting_value."', ";
+							$sql .= "'true', ";
+							$sql .= "'".$dialplan_detail_group."' ";
+							$sql .= "); ";
+						}
+						$db->query($sql);
+						unset($sql);
+				}
 
 			//add the domain
 				if ($action == "add" && permission_exists('domain_setting_add')) {
