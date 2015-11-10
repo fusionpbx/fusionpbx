@@ -43,7 +43,7 @@
 
 	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
 
-	local function enquote(s)
+	local function quote(s)
 		local q = IS_WINDOWS and '"' or "'"
 		if s:find('%s') or s:find(q, nil, true) then
 			s = q .. s:gsub(q, q..q) .. q
@@ -192,15 +192,15 @@
 
 --fax to email
 
-	-- cmd = "lua" .. " " .. enquote(scripts_dir .. "/fax_to_email.lua") .. " ";
-	cmd = enquote(php_dir.."/"..php_bin).." "..enquote(document_root.."/secure/fax_to_email.php").." ";
-	cmd = cmd .. "email="..enquote(fax_email).." ";
-	cmd = cmd .. "extension="..enquote(fax_extension).." ";
-	cmd = cmd .. "name="..enquote(fax_file).." "; 
-	cmd = cmd .. "messages=" .. enquote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
-	cmd = cmd .. "domain="..enquote(domain_name).." ";
-	cmd = cmd .. "caller_id_name=" .. enquote(caller_id_name or '') .. " ";
-	cmd = cmd .. "caller_id_number=" .. enquote(caller_id_number or '') .. " ";
+	-- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
+	cmd = quote(php_dir.."/"..php_bin).." "..quote(document_root.."/secure/fax_to_email.php").." ";
+	cmd = cmd .. "email="..quote(fax_email).." ";
+	cmd = cmd .. "extension="..quote(fax_extension).." ";
+	cmd = cmd .. "name="..quote(fax_file).." "; 
+	cmd = cmd .. "messages=" .. quote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
+	cmd = cmd .. "domain="..quote(domain_name).." ";
+	cmd = cmd .. "caller_id_name=" .. quote(caller_id_name or '') .. " ";
+	cmd = cmd .. "caller_id_number=" .. quote(caller_id_number or '') .. " ";
 	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
 	end
