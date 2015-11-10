@@ -497,7 +497,7 @@ local log = require "resources.functions.log".ring_group
 											end
 										elseif (r.dialplan_detail_type == "bridge") then
 											if (bridge_match) then
-												dial_string = dial_string .. "|" .. square .."]"..dialplan_detail_data;
+												dial_string = dial_string .. delimiter .. square .."]"..dialplan_detail_data;
 												square = "[";
 											else
 												dial_string = square .."]"..dialplan_detail_data;
