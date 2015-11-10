@@ -81,9 +81,9 @@ function Database.__self_test__(name)
 	local db = Database.new(name or 'system')
 	assert(db:connected())
 
-	assert("1" == db:first_value("select 1 as v"))
+	assert("1" == db:first_value("select 1 as v union all select 2 as v"))
 
-	local t = assert(db:first_row("select 1 as v"))
+	local t = assert(db:first_row("select 1 as v union all select 2 as v"))
 	assert(t.v == "1")
 
 	t = assert(db:fetch_all("select 1 as v union all select 2 as v"))
@@ -99,10 +99,13 @@ function Database.__self_test__(name)
 
 	db:release()
 	assert(not db:connected())
+	print(" * databse - OK!")
 end
 
 end
 
--- Database.__self_test__()
+-- if debug.self_test then
+--   Database.__self_test__()
+-- end
 
 return Database
