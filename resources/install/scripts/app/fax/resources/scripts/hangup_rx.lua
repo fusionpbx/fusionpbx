@@ -45,7 +45,7 @@
 
 	local function Q(s)
 		local q = IS_WINDOWS and '"' or "'"
-		if s:find('%s') then
+		if s:find('%s') or s:find(q, nil, true) then
 			s = q .. s:gsub(q, q..q) .. q
 		end
 		return s
@@ -192,6 +192,7 @@
 
 --fax to email
 
+	-- cmd = "lua" .. " " .. Q(scripts_dir .. "/fax_to_email.lua") .. " ";
 	cmd = Q(php_dir.."/"..php_bin).." "..Q(document_root.."/secure/fax_to_email.php").." ";
 	cmd = cmd .. "email="..Q(fax_email).." ";
 	cmd = cmd .. "extension="..Q(fax_extension).." ";
