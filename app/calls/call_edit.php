@@ -536,7 +536,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('follow_me_cid_set')) {
 		echo "&nbsp;&nbsp;&nbsp;";
-		$sql_forward = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$sql_forward = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_forward = $db->prepare(check_sql($sql_forward));
 		$prep_statement_forward->execute();
 		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
@@ -546,7 +546,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "  <option value='' disabled='disabled'></option>\n";
 			foreach ($result_forward as &$row_forward) {
 				$selected = $row_forward["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
-				echo "<option value='".$row_forward["destination_uuid"]."' ".$selected.">".format_phone($row_forward["destination_number"])." : ".$row_forward["destination_description"]."</option>\n";
+				$caller_id_number = $row_forward['destination_caller_id_number'];
+				if(strlen($caller_id_number) == 0){
+					$caller_id_number = $row_forward['destination_number'];
+				}
+				$caller_id_name = $row_forward['destination_caller_id_name'];
+				if(strlen($caller_id_name) == 0){
+					$caller_id_name = $row_forward['destination_description'];
+				}
+				echo "<option value='".$row_forward["destination_uuid"]."' ".$selected.">".format_phone($caller_id_number)." : ".$caller_id_name."</option>\n";
 			}
 			echo "</select>\n";
 		}
@@ -603,7 +611,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('follow_me_cid_set')) {
 		echo "&nbsp;&nbsp;&nbsp;";
-		$sql_follow_me = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$sql_follow_me = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
 		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
 		$prep_statement_follow_me->execute();
 		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
@@ -613,7 +621,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='' disabled='disabled'></option>\n";
 			foreach ($result_follow_me as &$row_follow_me) {
 				$selected = $row_follow_me["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : '';
-				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($row_follow_me["destination_number"])." : ".$row_follow_me["destination_description"]."</option>\n";
+
+				$caller_id_number = $row_follow_me['destination_caller_id_number'];
+				if(strlen($caller_id_number) == 0){
+					$caller_id_number = $row_follow_me['destination_number'];
+				}
+				$caller_id_name = $row_follow_me['destination_caller_id_name'];
+				if(strlen($caller_id_name) == 0){
+					$caller_id_name = $row_follow_me['destination_description'];
+				}
+
+				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($caller_id_number)." : ".$caller_id_name."</option>\n";
 			}
 			echo "</select>\n";
 		}
@@ -749,11 +767,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo 				$text['label-ignore-busy'];
 	echo "			</td>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<select class='formfld' name='follow_me_ignore_busy'>\n";
-	echo "					<option value='true' " . ($follow_me_ignore_busy == 'true' ? "selected='selected'" : '') . ">True</option>\n";
-	echo "					<option value='false'" . ($follow_me_ignore_busy == 'true' ? '' : "selected='selected'") . ">False</option>\n";
-	echo "				</select>\n";
-	echo "				<br> Interrupt call if one of destination are busy\n";
+	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+	echo "				<br />\n";
+	echo $text['description-ignore-busy']." \n";
+	//echo "				<br> Interrupt call if one of destination are busy\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 

@@ -358,8 +358,7 @@
 			pos = string.find(ivr_menu_greet_long, ":", 0, true);
 			if (pos ~= nil and string.sub(ivr_menu_greet_long, 0, pos-1) == 'phrase') then
 				freeswitch.consoleLog("notice", "[ivr_menu] phrase detected\n");
-				session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
-				dtmf_digits = session:getVariable("dtmf_digits");
+				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
 				session:setVariable("slept", "false");
 			else 
 				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");				
