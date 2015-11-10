@@ -257,7 +257,7 @@
 			-- if not extension then
 			-- 	sql = sql .. "AND direction = 'outbound' ";
 			-- end
-			sql = sql .. "AND (1=1 ";
+			sql = sql .. "AND (1<>1 ";
 			for key,extension in pairs(extensions) do
 				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
 			end
