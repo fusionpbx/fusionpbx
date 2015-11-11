@@ -108,7 +108,7 @@
 
 		--check to see if the pin number is correct
 			if not session:ready() then return end
-			local sql = "SELECT * FROM v_voicemails ";
+			local sql = "SELECT voicemail_password FROM v_voicemails ";
 			sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
 			sql = sql .. "AND voicemail_id = '" .. extension .."' ";
 			if (debug["sql"]) then
