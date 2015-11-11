@@ -27,7 +27,11 @@ function Database.new(name)
 end
 
 function Database:query(sql, fn)
-	return self._dbh:query(sql, fn)
+	if (fn == nil) then
+		return self._dbh:query(sql)
+	else
+		return self._dbh:query(sql, fn)
+	end
 end
 
 function Database:first_row(sql)
