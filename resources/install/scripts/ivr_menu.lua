@@ -407,8 +407,12 @@
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
-								action = string.sub(row.ivr_menu_option_param, 0, pos-1);
-								data = string.sub(row.ivr_menu_option_param, pos+1);
+								if pos then
+									action = string.sub(row.ivr_menu_option_param, 0, pos-1);
+									data = string.sub(row.ivr_menu_option_param, pos+1);
+								else
+									action, data = row.ivr_menu_option_param, ""
+								end
 
 							--check if the option uses a regex
 								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
@@ -431,7 +435,11 @@
 						end
 						if (action == "lua") then
 							pos = string.find(data, " ", 0, true);
-							script = string.sub(data, 0, pos-1);
+							if pos then
+								script = string.sub(data, 0, pos-1);
+							else
+								script = data
+							end
 						end
 					end --if regex match
 
