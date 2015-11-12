@@ -254,9 +254,9 @@
 			-- next check should prevent pickup call from extension
 			-- e.g. if extension 100 dial some cell phone and some one else dial *8
 			-- he can pickup this call.
-			-- if not extension then
-			-- 	sql = sql .. "AND direction = 'outbound' ";
-			-- end
+			if not extension then
+				sql = sql .. "AND direction = 'outbound' ";
+			end
 			sql = sql .. "AND (1<>1 ";
 			for key,extension in pairs(extensions) do
 				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
