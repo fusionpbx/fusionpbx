@@ -98,21 +98,28 @@ if (!$included) {
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 
 }
-
-function correct_path($p) {
-	global $IS_WINDOWS;
-	if ($IS_WINDOWS) {
-		return str_replace('/', '\\', $p);
-	}
-	return $p;
+else {
+	require_once "resources/classes/EventSocket.php";
 }
 
-function gs_cmd($args) {
-	global $IS_WINDOWS;
-	if ($IS_WINDOWS) {
-		return 'gswin32c '.$args;
+if(!function_exists('correct_path')) {
+	function correct_path($p) {
+		global $IS_WINDOWS;
+		if ($IS_WINDOWS) {
+			return str_replace('/', '\\', $p);
+		}
+		return $p;
 	}
-	return 'gs '.$args;
+}
+
+if(!function_exists('gs_cmd')) {
+	function gs_cmd($args) {
+		global $IS_WINDOWS;
+		if ($IS_WINDOWS) {
+			return 'gswin32c '.$args;
+		}
+		return 'gs '.$args;
+	}
 }
 
 //get the fax extension
