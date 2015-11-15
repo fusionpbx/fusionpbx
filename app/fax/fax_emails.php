@@ -29,6 +29,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_attachments.php";
+require_once "resources/classes/text.php";
 
 //get accounts to monitor
 $sql = "select * from v_fax ";
