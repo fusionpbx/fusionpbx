@@ -66,7 +66,7 @@ if (strlen($id) > 0) {
 	//delete the call center queue
 		$sql = "delete from v_call_center_queues ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		$sql .= "and call_center_queue_uuid = '$id' ";
 		$db->query($sql);
 		unset($sql);
 
