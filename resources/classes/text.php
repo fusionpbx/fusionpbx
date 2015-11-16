@@ -30,6 +30,8 @@ class text {
 	 * @var string $app_path		examples: app/exec or core/domains
 	 */
 	public function get($language_code = null, $app_path = null) {
+		//get the global app_languages.php
+			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/app_languages.php";
 		//get the app_languages.php
 			if ($app_path != null) {
 				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
@@ -49,15 +51,16 @@ class text {
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
 
+		//check the session language
+			if(isset($_SESSION['domain'])){
+				$language_code = $_SESSION['domain']['language']['code'];
+			}elseif($language_code == null){
+				$language_code = 'en-us';
+			}
 		//reduce to specific language
 			if ($language_code != 'all') {
 				foreach($text as $key => $value) {
-					if ($language_code == null) {
-						$text[$key] = $value[$_SESSION['domain']['language']['code']];
-					}
-					else {
-						$text[$key] = $value[$language_code];
-					}
+					$text[$key] = $value[$language_code];
 				}
 			}
 
