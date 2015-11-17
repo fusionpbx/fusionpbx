@@ -78,6 +78,10 @@
 			if (not vm_disk_quota) then
 				vm_disk_quota = session:getVariable("vm_disk_quota");
 			end
+			record_silence_threshold = session:getVariable("record-silence-threshold");
+			if (not record_silence_threshold) then
+				record_silence_threshold = 300;
+			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
 

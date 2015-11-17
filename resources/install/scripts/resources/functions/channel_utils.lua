@@ -1,4 +1,4 @@
-require 'resources.config'
+require 'resources.functions.config'
 require 'resources.functions.trim'
 
 local Database = require 'resources.functions.database'
@@ -20,6 +20,14 @@ function channel_evalute(uuid, cmd)
 	if result:sub(1, 4) == '-ERR' then return nil, result end
 	if result == '_undef_' then return false end
 
+	return result
+end
+
+function channel_display(uuid, text)
+	local cmd = ("uuid_display %s '%s'"):format(uuid, text)
+	local result = trim(api:executeString(cmd))
+	if result:sub(1, 4) == '-ERR' then return nil, result end
+	if result == '_undef_' then return false end
 	return result
 end
 

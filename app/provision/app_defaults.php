@@ -103,6 +103,13 @@
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'path';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'voicemail_number';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = '*97';
