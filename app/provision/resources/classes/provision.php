@@ -822,8 +822,8 @@ include "root.php";
 										//$file_size = round(filesize($new_path)/1024, 2);
 										//echo $this->template_dir."/".$device_template."/".$file_name." $file_size\n";
 									//write the configuration to the directory
-										if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
-											$dir_array = explode(";", $_SESSION['switch']['provision']['dir']);
+										if (strlen($provision["path"]) > 0) {
+											$dir_array = explode(";", $provision["path"]);
 											foreach($dir_array as $directory) {
 
 												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {
