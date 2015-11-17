@@ -182,24 +182,37 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the opacity of the main menu (decimal, Minimized theme only).';
 
-	//iterate and add each, if necessary
-		foreach ($array as $index => $default_settings) {
-			//add theme default settings
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = 'theme' ";
-			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$orm = new orm;
-					$orm->name('default_settings');
-					$orm->save($array[$index]);
-					$message = $orm->message;
+		if($set_session_theme){
+			foreach ($array as $index => $default_settings) {
+				$sub_category = $array[$index]['default_setting_subcategory'];
+				$name = $array[$index]['default_setting_name'];
+				if($array[$index]['default_setting_enabled'] == 'true'){
+					$_SESSION['theme'][$sub_category][$name] = $array[$index]['default_setting_value'];
+				}else{
+					$_SESSION['theme'][$sub_category][$name] = '';
 				}
-				unset($row);
+			}
+		}
+		else{
+		//iterate and add each, if necessary
+			foreach ($array as $index => $default_settings) {
+				//add theme default settings
+				$sql = "select count(*) as num_rows from v_default_settings ";
+				$sql .= "where default_setting_category = 'theme' ";
+				$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					unset($prep_statement);
+					if ($row['num_rows'] == 0) {
+						$orm = new orm;
+						$orm->name('default_settings');
+						$orm->save($array[$index]);
+						$message = $orm->message;
+					}
+					unset($row);
+				}
 			}
 		}
 
@@ -222,25 +235,37 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set a secondary background (HTML compatible) color, for a gradient effect.';
 
-	//add secondary background color separately, if missing
-		$sql = "select count(*) as num_rows from v_default_settings ";
-		$sql .= "where default_setting_category = 'theme' ";
-		$sql .= "and default_setting_subcategory = 'background_color' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			unset($prep_statement);
-			if ($row['num_rows'] == 0) {
-				$orm = new orm;
-				$orm->name('default_settings');
-				foreach ($array as $index => $null) {
-					$orm->save($array[$index]);
+		if($set_session_theme){
+			foreach ($array as $index => $default_settings) {
+				$sub_category = $array[$index]['default_setting_subcategory'];
+				$idx = $array[$index]['default_setting_order'];
+				if($array[$index]['default_setting_enabled'] == 'true'){
+					$_SESSION['theme'][$sub_category][$idx] = $array[$index]['default_setting_value'];
 				}
-				$message = $orm->message;
-				//print_r($message);
 			}
-			unset($row);
+			return;
+		}
+		else{
+		//add secondary background color separately, if missing
+			$sql = "select count(*) as num_rows from v_default_settings ";
+			$sql .= "where default_setting_category = 'theme' ";
+			$sql .= "and default_setting_subcategory = 'background_color' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				unset($prep_statement);
+				if ($row['num_rows'] == 0) {
+					$orm = new orm;
+					$orm->name('default_settings');
+					foreach ($array as $index => $null) {
+						$orm->save($array[$index]);
+					}
+					$message = $orm->message;
+					//print_r($message);
+				}
+				unset($row);
+			}
 		}
 
 	//get the background images
