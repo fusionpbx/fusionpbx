@@ -3,9 +3,14 @@
 -- log.noticef("%s %s", "hello", "world")
 -- -- log if debug.SQL or debug.xml_handler.SQL then
 -- log.tracef("SQL", "SQL is %s", sql)
-
-local function log(name, level, msg)
-	freeswitch.consoleLog(level, "[" .. name .. "] " .. msg .. "\n")
+local log if freeswitch then
+	log = function (name, level, msg)
+		freeswitch.consoleLog(level, "[" .. name .. "] " .. msg .. "\n")
+	end
+else
+	log = function (name, level, msg)
+		print(os.date("%Y-%m-%d %X") .. '[' .. level:upper() .. '] [' .. name .. '] ' .. msg)
+	end
 end
 
 local function logf(name, level, ...)
