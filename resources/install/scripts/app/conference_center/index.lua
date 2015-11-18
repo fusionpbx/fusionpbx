@@ -385,7 +385,7 @@
 			end
 
 		--check if someone has already joined the conference
-			local_hostname = trim(api:execute("switchname", ""));
+			local_hostname = trim(api:execute("hostname", ""));
 			freeswitch.consoleLog("notice", "[conference center] local_hostname is " .. local_hostname .. "\n");
 			sql = "SELECT hostname FROM channels WHERE application = 'conference' AND dest = '" .. destination_number .. "' AND cid_num <> '".. caller_id_number .."' LIMIT 1";
 			if (debug["sql"]) then
