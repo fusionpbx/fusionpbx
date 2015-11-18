@@ -11,7 +11,6 @@
 -- example: pause 5 sec dial 008 pause 2 sec paly greeting
 -- PPPPP008@300PP
 --
--- api: originate {fax_file='d:/fax/file1.tiff',wav_file='c:/FreeSWITCH/sounds/music/8000/suite-espanola-op-47-leyenda_x8.wav',fax_dtmf=''}user/101@sip.office.intelcom-tg.ru &lua(fax_task.lua)
 
 require "resources.functions.config"
 local log = require "resources.functions.log".fax_task
@@ -61,7 +60,6 @@ end
 local function decode_dtmf(dtmf)
   local r, sleep, seq = {}
   dtmf:gsub('P', 'pp'):gsub('.', function(ch)
-    -- print(ch)
     if ch == ';' or ch == ',' then
       r[#r + 1] = sleep or seq
       sleep, seq = nil
