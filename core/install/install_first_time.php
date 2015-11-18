@@ -133,15 +133,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 	
 //set a default enviroment if first_time
 	if($first_time_install){
-	//grab the default theme
-		$set_session_theme = 1;
-		$domains_processed = 1;
-		include "themes/enhanced/app_defaults.php";
-		unset($set_session_theme, $domains_processed);
-	//initialize some defaults so we can be 'logged in'
-		$_SESSION['username'] = 'first_time_install';
-		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
-		$_SESSION['menu'] = '';
 	//initialize some varibles to cut down on warnings
 		$_SESSION['message'] = '';
 		$v_link_label_play = '';
@@ -277,7 +268,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		}
 		if($detect_ok){
 			$install_ok = true;
-			echo "<pre>\n";
+			echo "<pre style='text-align:left;'>\n";
 			function error_handler($err_severity, $errstr, $errfile, $errline ) {
 				if (0 === error_reporting()) { return false;}
 				switch($err_severity)
@@ -292,12 +283,12 @@ if(!$install_step) { $install_step = 'select_language'; }
 					default: 					return false;
 				}
 			}
-			set_error_handler("error_handler");
+			#set_error_handler("error_handler");
 			try {
-				$domain_uuid = uuid();
 				require_once "resources/classes/install_fusionpbx.php";
-				$fusionPBX = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
-				$fusionPBX->debug = true;
+				$fusionPBX = new install_fusionpbx($domain_name, null, $switch_detect);
+				$domain_uuid = $fusionPBX->domain_uuid();
+				//$fusionPBX->debug = true;
 				$fusionPBX->admin_username = $admin_username;
 				$fusionPBX->admin_password = $admin_password;
 				$fusionPBX->default_country = $install_default_country;
@@ -312,7 +303,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
-				$switch->debug = true;
+				//$switch->debug = true;
 				$switch->install();
 			}catch(Exception $e){
 				echo "</pre>\n";
@@ -344,6 +335,17 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
 
+if($first_time_install){
+	//grab the default theme
+		$set_session_theme = 1;
+		$domains_processed = 1;
+		include "themes/enhanced/app_defaults.php";
+		unset($set_session_theme, $domains_processed);
+	//initialize some defaults so we can be 'logged in'
+		$_SESSION['username'] = 'first_time_install';
+		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
+		$_SESSION['menu'] = '';
+}
 // add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer

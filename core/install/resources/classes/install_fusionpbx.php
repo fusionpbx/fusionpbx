@@ -29,12 +29,14 @@ include "root.php";
 //define the install class
 	class install_fusionpbx {
 
-		protected $domain_uuid;
+		protected $_domain_uuid;
 		protected $domain_name;
 		protected $detect_switch;
 		protected $config_php;
 		protected $menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 		protected $dbh;
+		
+		public function domain_uuid() { return $this->_domain_uuid; }
 
 		public $debug = false;
 		
@@ -57,7 +59,8 @@ include "root.php";
 			if(!is_a($detect_switch, 'detect_switch')){
 				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
 			}
-			$this->domain_uuid = $domain_uuid;
+			if($domain_uuid == null){ $domain_uuid = uuid(); }
+			$this->_domain_uuid = $domain_uuid;
 			$this->domain_name = $domain_name;
 			$this->detect_switch = $detect_switch;
 			if (is_dir("/etc/fusionpbx")){
@@ -91,7 +94,7 @@ include "root.php";
 			$this->create_superuser();
 			require "resources/require.php";
 			$this->create_menus();
-			$this->post_create();
+			$this->app_defaults();
 		}
 		
 		protected function create_config_php() {
@@ -196,7 +199,7 @@ include "root.php";
 		
 		protected function create_database() {
 			require $this->config_php;
-			$this->write_progress("creating database as " . $this->db_type);
+			$this->write_progress("Creating database as " . $this->db_type);
 			$function = "create_database_" . $this->db_type;
 			$this->$function();
 			global $db;
@@ -512,17 +515,23 @@ include "root.php";
 
 		
 		protected function create_domain() {
-			$this->write_progress("checking if domain exists '" . $this->domain_name . "'");
-			$sql = "select count(*) from v_domains ";
+			$this->write_progress("Checking if domain exists '" . $this->domain_name . "'");
+			$sql = "select * from v_domains ";
 			$sql .= "where domain_name = '".$this->domain_name."' ";
-
+			$sql .= "limit 1";
 			$this->write_debug($sql);
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 			unset($sql, $prep_statement);
-			if ($row['num_rows'] == 0) {
-				$this->write_progress("creating domain '" . $this->domain_name . "'");
+			if ($result) {
+				$this->_domain_uuid = $result['domain_uuid'];
+				$this->write_progress("... domain exists as '" . $this->_domain_uuid . "'");
+				if($result['domain_enabled'] != 'true'){
+					throw new Exception("Domain already exists but is disabled, this is unexpected");
+				}
+			}else{
+				$this->write_progress("... creating domain");
 				$sql = "insert into v_domains ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
@@ -531,7 +540,7 @@ include "root.php";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$this->domain_uuid."', ";
+				$sql .= "'".$this->_domain_uuid."', ";
 				$sql .= "'".$this->domain_name."', ";
 				$sql .= "'' ";
 				$sql .= ");";
@@ -801,123 +810,180 @@ include "root.php";
 		}
 		
 		protected function create_superuser() {
-			//check if it exists first?
-			$this->write_progress("creating super user '" . $this->admin_username . "'");
-		//add a user and then add the user to the superadmin group
-		//prepare the values
-			$this->admin_uuid = uuid();
-			$contact_uuid = uuid();
-		//set a sessiong variable
-			$_SESSION["user_uuid"] = $user_uuid;
-		//salt used with the password to create a one way hash
+			$this->write_progress("Checking if superuser exists '" . $this->domain_name . "'");
+			$sql = "select * from v_users ";
+			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "and username = '".$this->admin_username."' ";
+			$sql .= "limit 1 ";
+			$this->write_debug($sql);
+			$prep_statement = $this->dbh->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			unset($sql, $prep_statement);
 			$salt = generate_password('20', '4');
-		//add the user account
-			$sql = "insert into v_users ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "user_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "username, ";
-			$sql .= "password, ";
-			$sql .= "salt, ";
-			$sql .= "add_date, ";
-			$sql .= "add_user ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$this->domain_uuid."', ";
-			$sql .= "'".$this->admin_uuid."', ";
-			$sql .= "'$contact_uuid', ";
-			$sql .= "'".$this->admin_username."', ";
-			$sql .= "'".md5($salt.$this->admin_password)."', ";
-			$sql .= "'$salt', ";
-			$sql .= "now(), ";
-			$sql .= "'".$this->admin_username."' ";
-			$sql .= ");";
-			$this->write_debug( $sql."\n");
-			$this->dbh->exec(check_sql($sql));
-			unset($sql);
-
-		//add to contacts
-			$sql = "insert into v_contacts ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "contact_type, ";
-			$sql .= "contact_name_given, ";
-			$sql .= "contact_nickname ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$this->domain_uuid."', ";
-			$sql .= "'$contact_uuid', ";
-			$sql .= "'user', ";
-			$sql .= "'".$this->admin_username."', ";
-			$sql .= "'".$this->admin_username."' ";
-			$sql .= ")";
-			$this->dbh->exec(check_sql($sql));
-			unset($sql);
-
-		//add the user to the superadmin group
-			$sql = "insert into v_group_users ";
-			$sql .= "(";
-			$sql .= "group_user_uuid, ";
-			$sql .= "domain_uuid, ";
-			$sql .= "user_uuid, ";
-			$sql .= "group_name ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".$this->domain_uuid."', ";
-			$sql .= "'".$this->admin_uuid."', ";
-			$sql .= "'superadmin' ";
-			$sql .= ");";
-			$this->write_debug( $sql."\n");
-			$this->dbh->exec(check_sql($sql));
-			unset($sql);
+			if ($result) {
+				$this->admin_uuid = $result['user_uuid'];
+				$this->write_progress("... superuser exists as '" . $this->admin_uuid . "', updating password");
+				$sql = "update v_users ";
+				$sql .= "set password = '".md5($salt.$this->admin_password)."' ";
+				$sql .= "set salt = '$salt' ";
+				$sql .= "where USER_uuid = '".$this->admin_uuid."' ";
+				$this->write_debug($sql);
+				$this->dbh->exec(check_sql($sql));
+			}else{
+				$this->write_progress("... creating super user '" . $this->admin_username . "'");
+			//add a user and then add the user to the superadmin group
+			//prepare the values
+				$this->admin_uuid = uuid();
+				$contact_uuid = uuid();
+			//set a sessiong variable
+				$_SESSION["user_uuid"] = $user_uuid;
+			//salt used with the password to create a one way hash
+			//add the user account
+				$sql = "insert into v_users ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "user_uuid, ";
+				$sql .= "contact_uuid, ";
+				$sql .= "username, ";
+				$sql .= "password, ";
+				$sql .= "salt, ";
+				$sql .= "add_date, ";
+				$sql .= "add_user ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'".$this->admin_uuid."', ";
+				$sql .= "'$contact_uuid', ";
+				$sql .= "'".$this->admin_username."', ";
+				$sql .= "'".md5($salt.$this->admin_password)."', ";
+				$sql .= "'$salt', ";
+				$sql .= "now(), ";
+				$sql .= "'".$this->admin_username."' ";
+				$sql .= ");";
+				$this->write_debug( $sql."\n");
+				$this->dbh->exec(check_sql($sql));
+				unset($sql);
+			}
+			$this->write_progress("Checking if superuser contact exists");
+			$sql = "select count(*) from v_contacts ";
+			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "and contact_name_given = '".$this->admin_username."' ";
+			$sql .= "and contact_nickname = '".$this->admin_username."' ";
+			$sql .= "limit 1 ";
+			$this->write_debug($sql);
+			$prep_statement = $this->dbh->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['count'] == 0) {
+				$sql = "insert into v_contacts ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "contact_uuid, ";
+				$sql .= "contact_type, ";
+				$sql .= "contact_name_given, ";
+				$sql .= "contact_nickname ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'$contact_uuid', ";
+				$sql .= "'user', ";
+				$sql .= "'".$this->admin_username."', ";
+				$sql .= "'".$this->admin_username."' ";
+				$sql .= ")";
+				$this->dbh->exec(check_sql($sql));
+				unset($sql);
+			}
+			$this->write_progress("Checking if superuser is in the correct group");
+			$sql = "select count(*) from v_group_users ";
+			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
+			$sql .= "and group_name = 'superadmin' ";
+			$sql .= "limit 1 ";
+			$this->write_debug($sql);
+			$prep_statement = $this->dbh->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['count'] == 0) {
+			//add the user to the superadmin group
+				$sql = "insert into v_group_users ";
+				$sql .= "(";
+				$sql .= "group_user_uuid, ";
+				$sql .= "domain_uuid, ";
+				$sql .= "user_uuid, ";
+				$sql .= "group_name ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'".$this->admin_uuid."', ";
+				$sql .= "'superadmin' ";
+				$sql .= ");";
+				$this->write_debug( $sql."\n");
+				$this->dbh->exec(check_sql($sql));
+				unset($sql);
+			}
 		}
 	
 		protected function create_menus() {
-			$this->write_progress("creating menus");
+			$this->write_progress("Creating menus");
 		//set the defaults
 			$menu_name = 'default';
 			$menu_language = 'en-us';
 			$menu_description = 'Default Menu Set';
-		//add the parent menu
-			$sql = "insert into v_menus ";
-			$sql .= "(";
-			$sql .= "menu_uuid, ";
-			$sql .= "menu_name, ";
-			$sql .= "menu_language, ";
-			$sql .= "menu_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$this->menu_uuid."', ";
-			$sql .= "'$menu_name', ";
-			$sql .= "'$menu_language', ";
-			$sql .= "'$menu_description' ";
-			$sql .= ");";
-			if ($this->debug) {
-				$this->write_debug( $sql."\n");
+			
+			$this->write_progress("Checking if menu exists");
+			$sql = "select count(*) from v_menus ";
+			$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+			$sql .= "limit 1 ";
+			$this->write_debug($sql);
+			$prep_statement = $this->dbh->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			unset($sql, $prep_statement);
+			if ($result['count'] == 0) {
+				$this->write_progress("... creating menu '" . $menu_name. "'");
+				$sql = "insert into v_menus ";
+				$sql .= "(";
+				$sql .= "menu_uuid, ";
+				$sql .= "menu_name, ";
+				$sql .= "menu_language, ";
+				$sql .= "menu_description ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$this->menu_uuid."', ";
+				$sql .= "'$menu_name', ";
+				$sql .= "'$menu_language', ";
+				$sql .= "'$menu_description' ";
+				$sql .= ");";
+				if ($this->debug) {
+					$this->write_debug( $sql."\n");
+				}
+				$this->dbh->exec(check_sql($sql));
+				unset($sql);
+		
+			//add the menu items
+				require_once "resources/classes/menu.php";
+				$menu = new menu;
+				$menu->db = $this->dbh;
+				$menu->menu_uuid = $this->menu_uuid;
+				$menu->restore();
+				unset($menu);
 			}
-			$this->dbh->exec(check_sql($sql));
-			unset($sql);
-	
-		//add the menu items
-			require_once "resources/classes/menu.php";
-			$menu = new menu;
-			$menu->db = $this->dbh;
-			$menu->menu_uuid = $this->menu_uuid;
-			$menu->restore();
-			unset($menu);
 		}
 		
-		protected function post_create() {
-			$this->write_progress("running post steps");
-		//login the user account
+		protected function app_defaults() {
+			$this->write_progress("Running app_defaults");
+			
+		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;
+			$_SESSION["domain_uuid"] = $this->_domain_uuid;
+			require $this->config_php;
+			require "resources/require.php";
 	
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 			$sql = "SELECT * FROM v_group_users ";
@@ -949,17 +1015,19 @@ include "root.php";
 			$prep_statementsub->execute();
 			$_SESSION['permissions'] = $prep_statementsub->fetchAll(PDO::FETCH_NAMED);
 			unset($sql, $prep_statementsub);
-	
-		//make sure the database schema and installation have performed all necessary tasks
-			$display_results = false;
-			$display_type = 'none';
+
+
+
+
+			
 			require_once "resources/classes/schema.php";
-			$obj = new schema;
-			$obj->schema($this->dbh, $this->db_type, $this->db_name, $display_type);
+			global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
+	
+			$schema = new schema;
+			echo $schema->schema();
 	
 		//run all app_defaults.php files
 			$default_language = $this->install_language;
-			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->upgrade();
 	
@@ -971,6 +1039,7 @@ include "root.php";
 	
 		//clear the menu
 			$_SESSION["menu"] = "";
+	
 		}
 	
 		public function remove_config() {

@@ -150,6 +150,13 @@ require_once "resources/classes/EventSocket.php";
 			$esl->reset_fp();
 			return $result;
 		}
-
+		
+		public function restart_switch() {
+			$this->connect_event_socket();
+			if(!$this->event_socket){
+				throw new Exception('Failed to use event socket');
+			}
+			$this->event_socket_request('api fsctl shutdown restart elegant');
+		}
 	}
 ?>
