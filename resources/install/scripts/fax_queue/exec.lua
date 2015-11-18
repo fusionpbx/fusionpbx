@@ -1,7 +1,7 @@
 -- @usage without queue
--- api: originate {fax_file='',wav_file='',fax_dtmf=''}user/108@domain.local &lua(fax_task.lua)
+-- api: originate {fax_file='',wav_file='',fax_dtmf=''}user/108@domain.local &lua(fax_queue/exec.lua)
 -- @usage with queue task
--- api: originate {task_uuid=''}user/108@domain.local &lua(fax_task.lua)
+-- api: originate {task_uuid=''}user/108@domain.local &lua(fax_queue/exec.lua)
 -- @fax_dtmf
 --  0-9*# - dtmf symbols
 --  @200  - dtmf duration in ms
@@ -139,9 +139,7 @@ local function task()
     session:sleep(500)
   end
 
-  log.notice("11111")
   if not (session:ready() and session:answered()) then return end
-  log.notice("2222")
 
   if fax_file and wav_file then
     start_fax_detect()
@@ -180,4 +178,4 @@ task()
 
 log.noticef("STOP TASK")
 log.notice("Ready: " .. tostring(session:ready()))
-log.notice("answered: " .. tostring(session:answered()))
+log.notice("Answered: " .. tostring(session:answered()))
