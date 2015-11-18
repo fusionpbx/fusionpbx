@@ -84,21 +84,27 @@ if (!$included) {
 			}
 			foreach ($result as &$row) {
 				//set database fields as variables
+					$fax_uuid = $row["fax_uuid"];
 					$fax_extension = $row["fax_extension"];
 					$fax_caller_id_name = $row["fax_caller_id_name"];
 					$fax_caller_id_number = $row["fax_caller_id_number"];
 					$fax_accountcode = $row["accountcode"];
+					$fax_send_greeting = $row["fax_send_greeting"];
 				//limit to one row
 					break;
 			}
 			unset ($prep_statement);
+			$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
+			if(strlen($fax_send_mode) == 0){
+				$fax_send_mode = 'direct';
+			}
 		}
 
 	//set the fax directory
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 
 }
-else {
+else{
 	require_once "resources/classes/EventSocket.php";
 }
 
@@ -534,7 +540,7 @@ if(!function_exists('gs_cmd')) {
 		}
 
 		//preview, if requested
-		if ($_REQUEST['submit'] == $text['button-preview']) {
+		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == $text['button-preview'])) {
 			unset($file_type);
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
 				$file_type = 'pdf';
@@ -599,28 +605,95 @@ if(!function_exists('gs_cmd')) {
 		}
 
 		//send the fax
+		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
+		$common_dial_string  = "for_fax=1,";
+		$common_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+		$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$common_dial_string .= "mailto_address='"               . $mailto_address          . "',";
+		$common_dial_string .= "mailfrom_address='"             . $mailfrom_address        . "',";
+		$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$common_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
+
 		foreach ($fax_numbers as $fax_number) {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				//prepare the fax command
-				$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix.$fax_number);
-				$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-				if (count($route_array) == 0) {
-					//send the internal call to the registered extension
-					$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
-					$t38 = "";
+			$dial_string  = $common_dial_string;
+
+			//prepare the fax command
+			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
+
+			if (count($route_array) == 0) {
+				//send the internal call to the registered extension
+				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
+				$t38 = "";
+			}
+			else {
+				//send the external call
+				$fax_uri = $route_array[0];
+				$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
+			}
+			$tail_dial_string = $fax_uri." &txfax('".$fax_file."')";
+
+			if ($fax_send_mode != 'queue') {
+				$dial_string .= $t38;
+				$dial_string .= "fax_uri=" . $fax_uri  . ",";
+				$dial_string .= "fax_retry_attempts=1" . ",";
+				$dial_string .= "fax_retry_limit=20"   . ",";
+				$dial_string .= "fax_retry_sleep=180"  . ",";
+				$dial_string .= "fax_verbose=true"     . ",";
+				$dial_string .= "fax_use_ecm=off"      . ",";
+				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
+				$dial_string  = "{" . $dial_string . "}" . $tail_dial_string;
+
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$cmd = "api originate " . $dial_string;
+					// echo($cmd . "<br/>\n");
+					//send the command to event socket
+					$response = event_socket_request($fp, $cmd);
+					$response = str_replace("\n", "", $response);
+					$uuid = str_replace("+OK ", "", $response);
 				}
-				else {
-					//send the external call
-					$fax_uri = $route_array[0];
-					$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
-				}
-				$cmd = "api originate {for_fax=1,accountcode='".$fax_accountcode."',sip_h_X-accountcode='".$fax_accountcode."',domain_uuid=".$_SESSION["domain_uuid"].",domain_name=".$_SESSION["domain_name"].",mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
-				//send the command to event socket
-				$response = event_socket_request($fp, $cmd);
-				$response = str_replace("\n", "", $response);
-				$uuid = str_replace("+OK ", "", $response);
 				fclose($fp);
+			}
+			else{ // enqueue
+				$task_uuid = uuid();
+				$dial_string .= "task_uuid='" . $task_uuid . "',";
+				$wav_file = ''; //! @todo add custom message
+				$dtmf = ''; //! @todo add generate dtmf
+				$description = ''; //! @todo add description
+				$sql = <<<HERE
+INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
+	task_next_time, task_lock_time, 
+	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
+	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
+	task_description)
+VALUES (?, ?,
+	NOW(), NULL, 
+	?, ?, ?, ?, ?, 
+	'false', 0, 0, 0, 0, 
+	?);
+HERE;
+				$stmt = $db->prepare($sql);
+				$i = 0;
+				$stmt->bindValue(++$i, $task_uuid);
+				$stmt->bindValue(++$i, $fax_uuid);
+				$stmt->bindValue(++$i, $fax_file);
+				$stmt->bindValue(++$i, $wav_file);
+				$stmt->bindValue(++$i, $fax_uri);
+				$stmt->bindValue(++$i, $dial_string);
+				$stmt->bindValue(++$i, $dtmf);
+				$stmt->bindValue(++$i, $description);
+				if ($stmt->execute()) {
+					$response = 'Enqueued';
+				}
+				else{
+					//! @todo log error
+					$response = 'Fail enqueue';
+				}
 			}
 		}
 

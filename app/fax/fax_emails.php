@@ -74,6 +74,7 @@ if (sizeof($result) != 0) {
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
+		$fax_send_greeting = $row["fax_send_greeting"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
