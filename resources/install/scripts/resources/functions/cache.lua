@@ -8,7 +8,13 @@
 
 require "resources.functions.trim";
 
-local api = api or freeswitch.API();
+local api = api 
+if (not api) and freeswitch then api = freeswitch.API() else
+api = {}
+function api:execute()
+  return '-ERR UNSUPPORTTED'
+end
+end
 
 local function send_event(action, key)
   local event = freeswitch.Event("MEMCACHE", action);
