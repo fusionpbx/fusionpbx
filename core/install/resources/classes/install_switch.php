@@ -156,7 +156,7 @@ include "root.php";
 			//pharData is the correct ay to do it, but it keeps creating incomplete archives
 			//$tar = new PharData($dst_tar);
 			//$tar->buildFromDirectory($dir);
-			$this->write_debug("backingup to $dst_tar");
+			$this->write_debug("backing up to $dst_tar");
 			if (file_exists('/bin/tar')) {
 				exec('tar -cvf ' .$dst_tar. ' -C '.$dir .' .');
 			}else{
@@ -166,9 +166,13 @@ include "root.php";
 			}
 		}
 
+
 		function install() {
 			$this->copy_conf();
 			$this->copy_scripts();
+		//tell freeswitch to restart
+			$this->write_progress("Restarting switch");
+			$this->detect_switch->restart_switch();
 		}
 
 		function upgrade() {
