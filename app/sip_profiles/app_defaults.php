@@ -92,15 +92,18 @@
 									$sip_profile_description = "The Internal IPV6 profile binds to the IP version 6 address and is similar to the Internal profile.\n";
 									break;
 								case "external":
-									$sip_profile_description .= "The External profile external provides anonymous calling in the public context. ";
+									$sip_profile_description = "The External profile external provides anonymous calling in the public context. ";
 									$sip_profile_description .= "By default the External profile binds to port 5080. ";
 									$sip_profile_description .= "Calls can be sent using a SIP URL \"voip.domain.com:5080\" ";
+									break;
+								case "external-ipv6":
+									$sip_profile_description = "The External IPV6 profile binds to the IP version 6 address and is similar to the External profile.\n";
 									break;
 								case "lan":
 									$sip_profile_description = "The LAN profile is the same as the Internal profile except that it is bound to the LAN IP.\n";
 									break;
 								default:
-									$sip_profile_description .= '';
+									$sip_profile_description = '';
 								}
 
 						//add the sip profile if it is not false
