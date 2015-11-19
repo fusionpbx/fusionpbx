@@ -170,10 +170,6 @@ if (sizeof($result) != 0) {
 					else {
 						$fax_numbers[] = $tmp;
 					}
-					foreach ($fax_numbers as $index => $fax_number) {
-						$fax_numbers[$index] = preg_replace("~[^0-9]~", "", $fax_number);
-						if ($fax_numbers[$index] == '') { unset($fax_numbers[$index]); }
-					}
 					unset($fax_subject); //clear so not on cover page
 
 					//get email body (if any) for cover page
