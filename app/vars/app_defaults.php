@@ -99,7 +99,7 @@ EOD;
 // Set country depend variables as country code and international direct dialing code (exit code)
 	if (!function_exists('set_country_vars')) {
 		function set_country_vars($db, $x) {
-			require "resources/classes/countries.php";
+			require "resources/countries.php";
 
 	//		$country_iso=$_SESSION['domain']['country']['iso_code'];
 
