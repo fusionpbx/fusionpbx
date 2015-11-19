@@ -59,7 +59,7 @@ if ($domains_processed == 1) {
 			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement);
 	
-			$enable_background_images = false;
+			$background_image_enabled = false;
 		//add theme default settings
 			foreach ($array as $row) {
 				$found = false;
@@ -69,7 +69,7 @@ if ($domains_processed == 1) {
 					}
 					//enable_background_image is a new setting, if a user has any background images enabled we should turn it on
 					if ($field["default_setting_enabled"] == 'enabled') {
-						$enable_background_images = true;
+						$background_image_enabled = true;
 					}
 				}
 				if (!$found) {
@@ -240,11 +240,11 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the opacity of the main menu (decimal, Minimized theme only).';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'enable_background_images';
+		$array[$x]['default_setting_subcategory'] = 'background_image_enabled';
 		$array[$x]['default_setting_name'] = 'boolean';
 		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'false';
-		if($enable_background_images) { $array[$x]['default_setting_enabled'] = 'true'; }
+		if($background_image_enabled) { $array[$x]['default_setting_enabled'] = 'true'; }
 		$array[$x]['default_setting_description'] = 'Enable use of background images.';
 
 		if($set_session_theme){
