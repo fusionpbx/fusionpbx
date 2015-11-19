@@ -177,14 +177,6 @@ if(!function_exists('gs_cmd')) {
 		if (($_POST['action'] == "send")) {
 
 			$fax_numbers = $_POST['fax_numbers'];
-			if (sizeof($fax_numbers) > 0) {
-				foreach ($fax_numbers as $index => $fax_number) {
-					$fax_numbers[$index] = preg_replace("~[^0-9]~", "", $fax_number);
-					if ($fax_numbers[$index] == '') { unset($fax_numbers[$index]); }
-				}
-				sort($fax_numbers);
-			}
-
 			$fax_uuid = check_str($_POST["id"]);
 			$fax_caller_id_name = check_str($_POST['fax_caller_id_name']);
 			$fax_caller_id_number = check_str($_POST['fax_caller_id_number']);
@@ -204,6 +196,28 @@ if(!function_exists('gs_cmd')) {
 		//all necessary local and session variables should
 		//be already set by now by file including this one
 		$continue = true;
+	}
+
+	// cleanup numbers
+	if (isset($fax_numbers)) {
+		foreach ($fax_numbers as $index => $fax_number) {
+			$tmp=array();
+			$fax_dtmf = '';
+			if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+				$fax_number = $tmp[1];
+				$fax_dtmf = $tmp[2];
+			}
+			$fax_number = preg_replace("~[^0-9]~", "", $fax_number);
+			$fax_dtmf   = preg_replace("~[^0-9Pp*#]~", "", $fax_dtmf);
+			if ($fax_number != ''){
+				if ($fax_dtmf != '') {$fax_number .= " (" . $fax_dtmf . ")";}
+				$fax_numbers[$index] = $fax_number;
+			}
+			else{
+				unset($fax_numbers[$index]);
+			}
+		}
+		sort($fax_numbers);
 	}
 
 	if ($continue) {
@@ -621,6 +635,12 @@ if(!function_exists('gs_cmd')) {
 
 		foreach ($fax_numbers as $fax_number) {
 			$dial_string  = $common_dial_string;
+			$tmp = array();
+			$fax_dtmf = '';
+			if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+				$fax_number = $tmp[1];
+				$fax_dtmf = $tmp[2];
+			}
 
 			//prepare the fax command
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
@@ -663,7 +683,6 @@ if(!function_exists('gs_cmd')) {
 				$task_uuid = uuid();
 				$dial_string .= "task_uuid='" . $task_uuid . "',";
 				$wav_file = ''; //! @todo add custom message
-				$dtmf = ''; //! @todo add generate dtmf
 				$description = ''; //! @todo add description
 				$sql = <<<HERE
 INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
@@ -685,7 +704,7 @@ HERE;
 				$stmt->bindValue(++$i, $wav_file);
 				$stmt->bindValue(++$i, $fax_uri);
 				$stmt->bindValue(++$i, $dial_string);
-				$stmt->bindValue(++$i, $dtmf);
+				$stmt->bindValue(++$i, $fax_dtmf);
 				$stmt->bindValue(++$i, $description);
 				if ($stmt->execute()) {
 					$response = 'Enqueued';
