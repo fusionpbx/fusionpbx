@@ -1424,7 +1424,7 @@ if (strlen($_SESSION['message']) > 0) {
 
 	<?php
 	// check for background image
-	if (isset($_SESSION['theme']['background_image'])) {
+	if (isset($_SESSION['theme']['enable_background_images']['boolean']) and $_SESSION['theme']['enable_background_images']['boolean'] == 'true') {
 		// background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
