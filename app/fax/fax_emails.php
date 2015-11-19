@@ -55,6 +55,11 @@ if (sizeof($result) != 0) {
 	$event_socket['password'] = $record['event_socket_password'];
 	unset($sql, $prep_statement, $record);
 
+	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
+	if(strlen($fax_send_mode_default) == 0){
+		$fax_send_mode_default = 'direct';
+	}
+
 	foreach ($result as $row) {
 		//get fax server and account connection details
 		$fax_uuid = $row["fax_uuid"];
@@ -80,6 +85,11 @@ if (sizeof($result) != 0) {
 		unset($_SESSION);
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
+
+		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
+		if(strlen($fax_send_mode) == 0){
+			$fax_send_mode = $fax_send_mode_default;
+		}
 
 		//load event socket connection parameters
 		$_SESSION['event_socket_ip_address'] = $event_socket['ip_address'];
