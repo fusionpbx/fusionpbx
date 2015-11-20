@@ -679,7 +679,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($row["dialplan_detail_tag"] != "condition") {
 			if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
 			echo "				<tr>\n";
-			echo "					<td>\n";
+			echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
 				echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
 			}
