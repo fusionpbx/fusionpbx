@@ -3,6 +3,22 @@ local Settings = require "resources.functions.lazy_settings"
 
 local db
 
+local date_utc_now_sql
+local now_add_sec_sql
+
+if database.type == 'pgsql' then
+  date_utc_now_sql  = "NOW() at time zone 'utc'"
+  now_add_sec_sql   = "NOW() at time zone 'utc' + interval '%s second'"
+elseif database.type == 'mysql' then
+  date_utc_now_sql  = "UTC_TIMESTAMP()"
+  now_add_sec_sql   = "DATE_ADD(UTC_TIMESTAMP(), INTERVAL %s SECOND)"
+elseif database.type == 'sqlite'  then
+  date_utc_now_sql  = "datetime('now')"
+  now_add_sec_sql   = "datetime('now', '+%s seconds')"
+else
+  error("unsupported database type: " .. database.type)
+end
+
 local Q850_TIMEOUT = {
   [17] = 60;
 }
@@ -30,7 +46,7 @@ where t1.task_interrupted <> 'true'
 ]]
 
 local next_task_sql = select_task_common_sql .. [[
-and t1.task_status = 0 and t1.task_next_time < NOW()
+and t1.task_status = 0 and t1.task_next_time < ]] .. date_utc_now_sql .. [[
 and t2.fax_send_channels > (select count(*) from v_fax_tasks as tasks
   where tasks.fax_uuid = t1.fax_uuid and
   tasks.task_status > 0 and tasks.task_status <= 2
@@ -41,7 +57,7 @@ order by t1.task_next_time
 local select_task_sql = select_task_common_sql .. "and t1.task_uuid='%s'"
 
 local aquire_task_sql = [[
-  update v_fax_tasks set task_status = 1, task_lock_time = NOW()
+  update v_fax_tasks set task_status = 1, task_lock_time = ]] .. date_utc_now_sql .. [[
   where task_uuid = '%s' and task_status = 0
 ]]
 
@@ -52,7 +68,7 @@ local wait_task_sql = [[
   task_no_answer_counter = %s,
   task_no_answer_retry_counter = %s,
   task_retry_counter = %s,
-  task_next_time = NOW() + interval '%s second'
+  task_next_time = ]] .. now_add_sec_sql .. [[
   where task_uuid = '%s'
 ]]
 
@@ -64,15 +80,15 @@ local remove_task_task_sql = [[
 local release_task_sql = [[
   update v_fax_tasks
   set task_status = 0, task_lock_time = NULL,
-  task_next_time = NOW() + interval '%s second'
+  task_next_time = ]] .. now_add_sec_sql .. [[
   where task_uuid = '%s'
 ]]
 
 local release_stuck_tasks_sql = [[
   update v_fax_tasks
   set task_status = 0, task_lock_time = NULL,
-  task_next_time = NOW()
-  where task_lock_time < NOW() + interval '3600 second'
+  task_next_time = ]] .. date_utc_now_sql .. [[
+  where task_lock_time < ]] .. now_add_sec_sql:format('3600') .. [[
 ]]
 
 local remove_finished_tasks_sql = [[
