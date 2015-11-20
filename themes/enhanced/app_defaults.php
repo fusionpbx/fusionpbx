@@ -26,7 +26,64 @@
 
 if ($domains_processed == 1) {
 
+	//get the background images
+		$relative_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
+		$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
+		unset($array);
+		$x = 0;
+		while (false !== ($file = readdir($backgrounds))) {
+			if ($file != "." AND $file != ".."){
+				$new_path = $dir.'/'.$file;
+				$level = explode('/',$new_path);
+				$ext = pathinfo($file, PATHINFO_EXTENSION);
+				if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
+					$x++;
+					$array[$x]['default_setting_category'] = 'theme';
+					$array[$x]['default_setting_subcategory'] = 'background_image';
+					$array[$x]['default_setting_name'] = 'array';
+					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
+					$array[$x]['default_setting_enabled'] = 'false';
+					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
+				}
+				if ($x > 300) { break; };
+			}
+		}
+		
+		if(!$set_session_theme){
+		//get default settings
+			$sql = "select * from v_default_settings ";
+			$sql .= "where default_setting_category = 'theme' ";
+			$sql .= "and default_setting_subcategory = 'background_image' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset($prep_statement);
+	
+			$background_image_enabled = false;
+		//add theme default settings
+			foreach ($array as $row) {
+				$found = false;
+				foreach ($default_settings as $field) {
+					if ($field["default_setting_value"] == $row["default_setting_value"]) {
+						$found = true;
+					}
+					//enable_background_image is a new setting, if a user has any background images enabled we should turn it on
+					if ($field["default_setting_enabled"] == 'enabled') {
+						$background_image_enabled = true;
+					}
+				}
+				if (!$found) {
+					$orm = new orm;
+					$orm->name('default_settings');
+					$orm->save($row);
+					$message = $orm->message;
+					//print_r($message);
+				}
+			}
+		}
+
 	//define array of settings
+		unset($array);
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_opacity';
@@ -181,25 +238,46 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '0.96';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the opacity of the main menu (decimal, Minimized theme only).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'background_image_enabled';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		if($background_image_enabled) { $array[$x]['default_setting_enabled'] = 'true'; }
+		$array[$x]['default_setting_description'] = 'Enable use of background images.';
 
-	//iterate and add each, if necessary
-		foreach ($array as $index => $default_settings) {
-			//add theme default settings
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = 'theme' ";
-			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$orm = new orm;
-					$orm->name('default_settings');
-					$orm->save($array[$index]);
-					$message = $orm->message;
+		if($set_session_theme){
+			foreach ($array as $index => $default_settings) {
+				$sub_category = $array[$index]['default_setting_subcategory'];
+				$name = $array[$index]['default_setting_name'];
+				if($array[$index]['default_setting_enabled'] == 'true'){
+					$_SESSION['theme'][$sub_category][$name] = $array[$index]['default_setting_value'];
+				}else{
+					$_SESSION['theme'][$sub_category][$name] = '';
 				}
-				unset($row);
+			}
+		}
+		else{
+		//iterate and add each, if necessary
+			foreach ($array as $index => $default_settings) {
+				//add theme default settings
+				$sql = "select count(*) as num_rows from v_default_settings ";
+				$sql .= "where default_setting_category = 'theme' ";
+				$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					unset($prep_statement);
+					if ($row['num_rows'] == 0) {
+						$orm = new orm;
+						$orm->name('default_settings');
+						$orm->save($array[$index]);
+						$message = $orm->message;
+					}
+					unset($row);
+				}
 			}
 		}
 
@@ -222,73 +300,36 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set a secondary background (HTML compatible) color, for a gradient effect.';
 
-	//add secondary background color separately, if missing
-		$sql = "select count(*) as num_rows from v_default_settings ";
-		$sql .= "where default_setting_category = 'theme' ";
-		$sql .= "and default_setting_subcategory = 'background_color' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			unset($prep_statement);
-			if ($row['num_rows'] == 0) {
-				$orm = new orm;
-				$orm->name('default_settings');
-				foreach ($array as $index => $null) {
-					$orm->save($array[$index]);
+		if($set_session_theme){
+			foreach ($array as $index => $default_settings) {
+				$sub_category = $array[$index]['default_setting_subcategory'];
+				$idx = $array[$index]['default_setting_order'];
+				if($array[$index]['default_setting_enabled'] == 'true'){
+					$_SESSION['theme'][$sub_category][$idx] = $array[$index]['default_setting_value'];
 				}
-				$message = $orm->message;
-				//print_r($message);
 			}
-			unset($row);
+			return;
 		}
-
-	//get the background images
-		$relative_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
-		$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
-		unset($array);
-		$x = 0;
-		while (false !== ($file = readdir($backgrounds))) {
-			if ($file != "." AND $file != ".."){
-				$new_path = $dir.'/'.$file;
-				$level = explode('/',$new_path);
-				$ext = pathinfo($file, PATHINFO_EXTENSION);
-				if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
-					$x++;
-					$array[$x]['default_setting_category'] = 'theme';
-					$array[$x]['default_setting_subcategory'] = 'background_image';
-					$array[$x]['default_setting_name'] = 'array';
-					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
+		else{
+		//add secondary background color separately, if missing
+			$sql = "select count(*) as num_rows from v_default_settings ";
+			$sql .= "where default_setting_category = 'theme' ";
+			$sql .= "and default_setting_subcategory = 'background_color' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				unset($prep_statement);
+				if ($row['num_rows'] == 0) {
+					$orm = new orm;
+					$orm->name('default_settings');
+					foreach ($array as $index => $null) {
+						$orm->save($array[$index]);
+					}
+					$message = $orm->message;
+					//print_r($message);
 				}
-				if ($x > 300) { break; };
-			}
-		}
-
-	//get default settings
-		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_category = 'theme' ";
-		$sql .= "and default_setting_subcategory = 'background_image' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset($prep_statement);
-
-	//add theme default settings
-		foreach ($array as $row) {
-			$found = false;
-			foreach ($default_settings as $field) {
-				if ($field["default_setting_value"] == $row["default_setting_value"]) {
-					$found = true;
-				}
-			}
-			if (!$found) {
-				$orm = new orm;
-				$orm->name('default_settings');
-				$orm->save($row);
-				$message = $orm->message;
-				//print_r($message);
+				unset($row);
 			}
 		}
 
