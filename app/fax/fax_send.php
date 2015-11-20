@@ -684,6 +684,15 @@ if(!function_exists('gs_cmd')) {
 				$dial_string .= "task_uuid='" . $task_uuid . "',";
 				$wav_file = ''; //! @todo add custom message
 				$description = ''; //! @todo add description
+				if ($db_type == "pgsql") {
+					$date_utc_now_sql  = "NOW() at time zone 'utc'";
+				}
+				if ($db_type == "mysql") {
+					$date_utc_now_sql  = "UTC_TIMESTAMP()";
+				}
+				if ($db_type == "sqlite") {
+					$date_utc_now_sql  = "datetime('now')";
+				}
 				$sql = <<<HERE
 INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
 	task_next_time, task_lock_time, 
@@ -691,7 +700,7 @@ INSERT INTO v_fax_tasks( task_uuid, fax_uuid,
 	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
 	task_description)
 VALUES (?, ?,
-	NOW(), NULL, 
+	$date_utc_now_sql, NULL, 
 	?, ?, ?, ?, ?, 
 	'false', 0, 0, 0, 0, 
 	?);
