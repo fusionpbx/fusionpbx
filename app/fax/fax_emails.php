@@ -29,6 +29,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_attachments.php";
+require_once "resources/functions/parse_message.php";
 require_once "resources/classes/text.php";
 
 //get accounts to monitor
@@ -59,6 +60,7 @@ if (sizeof($result) != 0) {
 	if(strlen($fax_send_mode_default) == 0){
 		$fax_send_mode_default = 'direct';
 	}
+	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
 
 	foreach ($result as $row) {
 		//get fax server and account connection details
@@ -89,6 +91,11 @@ if (sizeof($result) != 0) {
 		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
 		if(strlen($fax_send_mode) == 0){
 			$fax_send_mode = $fax_send_mode_default;
+		}
+
+		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
+		if(strlen($fax_cover_font) == 0){
+			$fax_cover_font = $fax_cover_font_default;
 		}
 
 		//load event socket connection parameters
@@ -173,15 +180,11 @@ if (sizeof($result) != 0) {
 					unset($fax_subject); //clear so not on cover page
 
 					//get email body (if any) for cover page
-					$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
-					$fax_message = strip_tags($fax_message);
-					$fax_message = trim($fax_message);
+					$fax_message = parse_message($connection, $email_id, FT_UID);
 					if ($fax_message == '') {
-						$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
 						$fax_message = strip_tags($fax_message);
-						$fax_message = trim($fax_message);
+						$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 					}
-					$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 
 					// set fax directory (used for pdf creation - cover and/or attachments)
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.(($domain_name != '') ? '/'.$domain_name : null);

@@ -103,6 +103,8 @@ if (!$included) {
 	//set the fax directory
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 
+	// set fax cover font to generate pdf
+		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
 else{
 	require_once "resources/classes/EventSocket.php";
@@ -342,15 +344,25 @@ if(!function_exists('gs_cmd')) {
 			$pdf -> setPrintFooter(false);
 			$pdf -> SetMargins(0, 0, 0, true);
 
+			if(strlen($fax_cover_font) > 0){
+				if(substr($fax_cover_font, -4) == '.ttf'){
+					$pdf_font = TCPDF_FONTS::addTTFfont($fax_cover_font);
+				}
+				else{
+					$pdf_font = $fax_cover_font;
+				}
+			}
+
+			if(!$pdf_font){
+				$pdf_font = 'times';
+			}
+
 			//add blank page
 			$pdf -> AddPage('P', array($page_width, $page_height));
 
 			// content offset, if necessary
 			$x = 0;
 			$y = 0;
-
-			// output grid
-			//showgrid($pdf);
 
 			//logo
 			$display_logo = false;
@@ -395,23 +407,23 @@ if(!function_exists('gs_cmd')) {
 			//header
 			if ($fax_header != '') {
 				$pdf -> SetLeftMargin(0.5);
-				$pdf -> SetFont("times", "", 10);
+				$pdf -> SetFont($pdf_font, "", 10);
 				$pdf -> Write(0.3, $fax_header);
 			}
 
 			//fax, cover sheet
 			$pdf -> SetTextColor(0,0,0);
-			$pdf -> SetFont("times", "B", 55);
+			$pdf -> SetFont($pdf_font, "B", 55);
 			$pdf -> SetXY($x + 4.55, $y + 0.25);
 			$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-fax'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
-			$pdf -> SetFont("times", "", 12);
+			$pdf -> SetFont($pdf_font, "", 12);
 			$pdf -> SetFontSpacing(0.0425);
 			$pdf -> SetXY($x + 4.55, $y + 1.0);
 			$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-cover-sheet'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
 			$pdf -> SetFontSpacing(0);
 
 			//field labels
-			$pdf -> SetFont("times", "B", 12);
+			$pdf -> SetFont($pdf_font, "B", 12);
 			if ($fax_recipient != '' || sizeof($fax_numbers) > 0) {
 				$pdf -> Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
 			}
@@ -426,7 +438,7 @@ if(!function_exists('gs_cmd')) {
 			}
 
 			//field values
-			$pdf -> SetFont("times", "", 12);
+			$pdf -> SetFont($pdf_font, "", 12);
 			$pdf -> SetXY($x + 2.0, $y + 1.95);
 			if ($fax_recipient != '') {
 				$pdf -> Write(0.3, $fax_recipient);
@@ -466,7 +478,7 @@ if(!function_exists('gs_cmd')) {
 			//message
 			$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
 			if ($fax_message != '') {
-				$pdf -> SetFont("times", "", 12);
+				$pdf -> SetFont($pdf_font, "", 12);
 				$pdf -> SetXY($x + 0.75, $y + 3.65);
 				$pdf -> MultiCell(7, 5.75, $fax_message, 0, 'L', false);
 			}
