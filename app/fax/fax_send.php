@@ -130,6 +130,68 @@ if(!function_exists('gs_cmd')) {
 	}
 }
 
+if(!function_exists('fax_enqueue')) {
+	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $fax_uri, $fax_dtmf, $dial_string){
+		global $db, $db_type;
+
+		$task_uuid = uuid();
+		$dial_string .= "task_uuid='" . $task_uuid . "',";
+		$description = ''; //! @todo add description
+		if ($db_type == "pgsql") {
+			$date_utc_now_sql  = "NOW() at time zone 'utc'";
+		}
+		if ($db_type == "mysql") {
+			$date_utc_now_sql  = "UTC_TIMESTAMP()";
+		}
+		if ($db_type == "sqlite") {
+			$date_utc_now_sql  = "datetime('now')";
+		}
+		$sql = <<<HERE
+INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
+	task_next_time, task_lock_time, 
+	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
+	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
+	task_description)
+VALUES (?, ?,
+	$date_utc_now_sql, NULL, 
+	?, ?, ?, ?, ?, 
+	'false', 0, 0, 0, 0, 
+	?);
+HERE;
+		$stmt = $db->prepare($sql);
+		$i = 0;
+		$stmt->bindValue(++$i, $task_uuid);
+		$stmt->bindValue(++$i, $fax_uuid);
+		$stmt->bindValue(++$i, $fax_file);
+		$stmt->bindValue(++$i, $wav_file);
+		$stmt->bindValue(++$i, $fax_uri);
+		$stmt->bindValue(++$i, $dial_string);
+		$stmt->bindValue(++$i, $fax_dtmf);
+		$stmt->bindValue(++$i, $description);
+		if ($stmt->execute()) {
+			$response = 'Enqueued';
+		}
+		else{
+			//! @todo log error
+			$response = 'Fail enqueue';
+			var_dump($db->errorInfo());
+		}
+		unset($stmt);
+		return $response;
+	}
+}
+
+if(!function_exists('fax_split_dtmf')) {
+function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+	$tmp = array();
+	$fax_dtmf = '';
+	if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		$fax_number = $tmp[1];
+		$fax_dtmf = $tmp[2];
+	}
+}
+}
+
 //get the fax extension
 	if (strlen($fax_extension) > 0) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
@@ -200,15 +262,10 @@ if(!function_exists('gs_cmd')) {
 		$continue = true;
 	}
 
-	// cleanup numbers
+// cleanup numbers
 	if (isset($fax_numbers)) {
 		foreach ($fax_numbers as $index => $fax_number) {
-			$tmp=array();
-			$fax_dtmf = '';
-			if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
-				$fax_number = $tmp[1];
-				$fax_dtmf = $tmp[2];
-			}
+			fax_split_dtmf($fax_number, $fax_dtmf);
 			$fax_number = preg_replace("~[^0-9]~", "", $fax_number);
 			$fax_dtmf   = preg_replace("~[^0-9Pp*#]~", "", $fax_dtmf);
 			if ($fax_number != ''){
@@ -647,12 +704,7 @@ if(!function_exists('gs_cmd')) {
 
 		foreach ($fax_numbers as $fax_number) {
 			$dial_string  = $common_dial_string;
-			$tmp = array();
-			$fax_dtmf = '';
-			if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
-				$fax_number = $tmp[1];
-				$fax_dtmf = $tmp[2];
-			}
+			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
 			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
@@ -667,7 +719,6 @@ if(!function_exists('gs_cmd')) {
 				$fax_uri = $route_array[0];
 				$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
 			}
-			$tail_dial_string = $fax_uri." &txfax('".$fax_file."')";
 
 			if ($fax_send_mode != 'queue') {
 				$dial_string .= $t38;
@@ -678,7 +729,7 @@ if(!function_exists('gs_cmd')) {
 				$dial_string .= "fax_verbose=true"     . ",";
 				$dial_string .= "fax_use_ecm=off"      . ",";
 				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-				$dial_string  = "{" . $dial_string . "}" . $tail_dial_string;
+				$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
@@ -692,48 +743,8 @@ if(!function_exists('gs_cmd')) {
 				fclose($fp);
 			}
 			else{ // enqueue
-				$task_uuid = uuid();
-				$dial_string .= "task_uuid='" . $task_uuid . "',";
 				$wav_file = ''; //! @todo add custom message
-				$description = ''; //! @todo add description
-				if ($db_type == "pgsql") {
-					$date_utc_now_sql  = "NOW() at time zone 'utc'";
-				}
-				if ($db_type == "mysql") {
-					$date_utc_now_sql  = "UTC_TIMESTAMP()";
-				}
-				if ($db_type == "sqlite") {
-					$date_utc_now_sql  = "datetime('now')";
-				}
-				$sql = <<<HERE
-INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
-	task_next_time, task_lock_time, 
-	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
-	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
-	task_description)
-VALUES (?, ?,
-	$date_utc_now_sql, NULL, 
-	?, ?, ?, ?, ?, 
-	'false', 0, 0, 0, 0, 
-	?);
-HERE;
-				$stmt = $db->prepare($sql);
-				$i = 0;
-				$stmt->bindValue(++$i, $task_uuid);
-				$stmt->bindValue(++$i, $fax_uuid);
-				$stmt->bindValue(++$i, $fax_file);
-				$stmt->bindValue(++$i, $wav_file);
-				$stmt->bindValue(++$i, $fax_uri);
-				$stmt->bindValue(++$i, $dial_string);
-				$stmt->bindValue(++$i, $fax_dtmf);
-				$stmt->bindValue(++$i, $description);
-				if ($stmt->execute()) {
-					$response = 'Enqueued';
-				}
-				else{
-					//! @todo log error
-					$response = 'Fail enqueue';
-				}
+				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $fax_uri, $fax_dtmf, $dial_string);
 			}
 		}
 
