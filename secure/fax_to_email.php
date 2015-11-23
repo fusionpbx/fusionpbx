@@ -358,21 +358,12 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 
 	$mailto_address = $fax_email;
-	echo "mailto_adress is ".$mailto_address."\n";
-	echo "fax_email is ".$fax_email."\n";
 
 //get the fax file name (only) if a full path
-	$fax_file = realpath($fax_file);
-	$array = explode("/", $fax_file);
-	$fax_file_only = $array[count($array)-1];
-	$fax_file_name = pathinfo($fax_file_only, PATHINFO_FILENAME);
-	$dir_fax = pathinfo($fax_file, PATHINFO_DIRNAME);
-	unset($array);
-
-//used for debug
-	echo "fax_email $fax_email\n";
-	echo "fax_extension $fax_extension\n";
-	echo "fax_name $fax_file_only\n";
+	$fax_path      = pathinfo($fax_file);
+	$fax_file_only = $fax_path['basename'];
+	$fax_file_name = $fax_path['filename'];
+	$dir_fax       = $fax_path['dirname'];
 
 //get the domain_uuid from the database
 	$sql = "select * from v_domains ";
@@ -414,18 +405,33 @@ if(!function_exists('fax_split_dtmf')) {
 	unset ($prep_statement);
 
 //set the fax directory
-	if (!file_exists($dir_fax)) {
+	if (!file_exists($dir_fax) || !file_exists(path_join($dir_fax, $fax_file_only))) {
 		$dir_fax = $_SESSION['switch']['storage']['dir'].'/fax/'.$domain_name.'/'.$fax_extension.'/inbox';
-		echo "dir_fax is $dir_fax\n";
-		if (!file_exists($dir_fax)) {
+		if (!file_exists($dir_fax) || !file_exists(path_join($dir_fax, $fax_file_only))) {
 			$dir_fax = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox';
 		}
 	}
+
+	$fax_file = path_join($dir_fax, $fax_file_only);
+
+//used for debug
+	echo "mailto_adress is $mailto_address\n";
+	echo "fax_email is $fax_email\n";
+	echo "fax_extension is $fax_extension\n";
+	echo "fax_name is $fax_file_only\n";
+	echo "dir_fax is $dir_fax\n";
+	echo "full_path is $fax_file\n";
 
 	$pdf_file = tiff2pdf($fax_file);
 	if(!$pdf_file){
 		$fax_file_warning = ' Fax image not available on server.';
 	}
+	else{
+		$fax_file_warning = '';
+	}
+
+//used for debug
+	echo "pdf file is $pdf_file\n";
 
 //forward the fax
 	if(file_exists($fax_file)) {
@@ -520,7 +526,7 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 
 //send the email
-	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_file_name.".tif")) {
+	if (strlen($fax_email) > 0 && file_exists($fax_file)) {
 		//prepare the message
 			$tmp_subject = (($fax_email_inbound_subject_tag != '') ? "[".$fax_email_inbound_subject_tag."]" : "Fax Received").": ".$fax_file_name;
 
@@ -574,11 +580,11 @@ if(!function_exists('fax_split_dtmf')) {
 
 		//add the attachments
 			if (strlen($fax_file_name) > 0) {
-				if (file_exists($dir_fax.'/'.$fax_file_name.".pdf")) {
-					$mail->AddAttachment($dir_fax.'/'.$fax_file_name.'.pdf'); // pdf attachment
+				if ($pdf_file && file_exists($pdf_file)) {
+					$mail->AddAttachment($pdf_file); // pdf attachment
 				}
 				else {
-					$mail->AddAttachment($dir_fax.'/'.$fax_file_name.'.tif'); // tif attachment
+					$mail->AddAttachment($fax_file); // tif attachment
 				}
 				//$filename='fax.tif'; $encoding = "base64"; $type = "image/tif";
 				//$mail->AddStringAttachment(base64_decode($strfax),$filename,$encoding,$type);
@@ -607,7 +613,7 @@ if(!function_exists('fax_split_dtmf')) {
 	//        failed_fax_emails.sh - this is created when we have a email we need to re-send.  At the time it is created, an at job is created to execute it in 3 minutes time,
 	//            this allows us to try sending the email again at that time.  If the file exists but there is no at job this is because there are no longer any emails queued
 	//            as we have successfully sent them all.
-	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_file_name.".tif")) {
+	if (strlen($fax_email) > 0 && file_exists($fax_file)) {
 		if (stristr(PHP_OS, 'WIN')) {
 			//not compatible with windows
 		}
@@ -621,7 +627,7 @@ if(!function_exists('fax_split_dtmf')) {
 			} else {
 				// create an instruction log to email messages once the connection to the mail server has been restored
 					$fp = fopen($fax_to_email_queue_dir."/failed_fax_emails.log", "a");
-					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email='".$fax_email."' extension=".$fax_extension." name='".$dir_fax.'/'.$fax_file_only."' messages='".$fax_messages."' domain=".$domain_name." caller_id_name='".$caller_id_name."' caller_id_number=".$caller_id_number." retry=true\n");
+					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email='".$fax_email."' extension=".$fax_extension." name='".$fax_file."' messages='".$fax_messages."' domain=".$domain_name." caller_id_name='".$caller_id_name."' caller_id_number=".$caller_id_number." retry=true\n");
 					fclose($fp);
 				// create a script to do the delayed mailing
 					$fp = fopen($_SESSION['server']['temp']['dir']."/failed_fax_emails.sh", "w");
