@@ -453,6 +453,7 @@ local log = require "resources.functions.log".ring_group
 					else
 						--external number
 						y = 0;
+						dial_string = '';
 						previous_dialplan_uuid = '';
 						for k, r in pairs(dialplans) do
 							if (y > 0) then
