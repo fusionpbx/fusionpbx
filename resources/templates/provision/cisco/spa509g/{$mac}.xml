@@ -349,7 +349,7 @@
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
-<BMP_Picture_Download_URL group="Phone/General">http://www.coltarus.com/pic/Coltaruslogo-phone-509g-70.bmp</BMP_Picture_Download_URL>
+<BMP_Picture_Download_URL group="Phone/General">http://{$domain_name}/themes/enhanced/images/logo.bmp</BMP_Picture_Download_URL>
 <Select_Logo group="Phone/General" >BMP Picture</Select_Logo>
 <Select_Background_Picture group="Phone/General">BMP Picture</Select_Background_Picture>
 <Softkey_Labels_Font group="Phone/General">Auto</Softkey_Labels_Font>
