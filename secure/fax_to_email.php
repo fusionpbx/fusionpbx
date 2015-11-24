@@ -72,9 +72,22 @@ if(!function_exists('path_join')) {
 			$paths = array_merge($paths, (array)$arg);
 		}
 
-		$paths = array_map(create_function('$p', 'return trim($p, "/");'), $paths);
+		$prefix = null;
+		foreach($paths as &$path) {
+			if($prefix === null && strlen($path) > 0) {
+				if(substr($path, 0, 1) == '/') $prefix = '/';
+				else $prefix = '';
+			}
+			$path = trim( $path, '/' );
+		}
+
+		if($prefix === null){
+			return '';
+		}
+
 		$paths = array_filter($paths);
-		return join('/', $paths);
+
+		return $prefix . join('/', $paths);
 	}
 }
 
