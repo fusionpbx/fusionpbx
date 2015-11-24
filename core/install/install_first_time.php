@@ -138,7 +138,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 		$v_link_label_play = '';
 		$v_link_label_pause = '';
 		$default_login = 0;
-		$footer = '';
 		$onload = '';
 	}
 

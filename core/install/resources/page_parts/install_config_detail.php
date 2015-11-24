@@ -67,12 +67,13 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select id='install_default_country' name='install_default_country' class='formfld' style=''>\n";
-	require_once "resources/classes/iso_countries.php";
-	foreach ($iso_countries as $iso_code => $iso_country ){
+	require "resources/countries.php";
+ 
+	foreach ($countries as $iso_code => $country ){
 		if($iso_code == $install_default_country){
-			echo "			<option value='$iso_code' selected='selected'>$iso_country</option>\n";
+			echo "			<option value='$iso_code' selected='selected'>".$country['country']."</option>\n";
 		}else{
-			echo "			<option value='$iso_code'>$iso_country</option>\n";
+			echo "			<option value='$iso_code'>".$country['country']."</option>\n";
 		}
 	}
 	echo "		</select>\n";
