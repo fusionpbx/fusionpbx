@@ -19,6 +19,14 @@ else
   error("unsupported database type: " .. database.type)
 end
 
+-- Broken on FS 1.4 with native postgresql
+-- Fixed on 1.6.0
+-- Also works with ODBC
+local ignore_affected_rows = true
+if dbh_affected_rows_broken ~= nil then
+  ignore_affected_rows = dbh_affected_rows_broken
+end
+
 local Q850_TIMEOUT = {
   [17] = 60;
 }
@@ -110,7 +118,11 @@ local function next_task()
     if not task then return nil, err end
     local ok, err = db:query( aquire_task_sql:format(task.uuid) )
     if not ok then return nil, err end
-    if db:affected_rows() == 1 then
+    local rows = db:affected_rows()
+    if ignore_affected_rows then
+      rows = 1
+    end
+    if rows == 1 then
       task.no_answer_counter       = tonumber(task.no_answer_counter)
       task.no_answer_retry_counter = tonumber(task.no_answer_retry_counter)
       task.retry_counter           = tonumber(task.retry_counter)
