@@ -233,6 +233,9 @@ require_once "resources/require.php";
 				//array cleanup
 					$x = 0;
 					//unset($_POST["autocomplete"]);
+					unset($_POST["target_file"]);
+					unset($_POST["file_action"]);
+
 					foreach ($_POST["device_lines"] as $row) {
 						//unset the empty row
 							if (strlen($row["line_number"]) == 0) {
@@ -515,10 +518,62 @@ require_once "resources/require.php";
 			});
 		}
 	</script>
+
 <?php
+
+//select file download javascript
+	if (permission_exists("device_files")) {
+		echo "<script language='javascript' type='text/javascript'>\n";
+		echo "	var fade_speed = 400;\n";
+		echo "	function show_files() {\n";
+		echo "		document.getElementById('file_action').value = 'files';\n";
+		echo "		$('#button_files').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_back_location').fadeOut(fade_speed);\n";
+		echo "			$('#button_back').fadeIn(fade_speed);\n";
+		echo "			$('#target_file').fadeIn(fade_speed);\n";
+		echo "			$('#button_download').fadeIn(fade_speed);\n";
+		echo "		});";
+		echo "	}";
+		echo "	function hide_files() {\n";
+		echo "		document.getElementById('file_action').value = '';\n";
+		echo "		$('#button_back_location').fadeIn(fade_speed);\n";
+		echo "		$('#button_back').fadeOut(fade_speed);\n";
+		echo "		$('#target_file').fadeOut(fade_speed);\n";
+		echo "		$('#button_download').fadeOut(fade_speed, function() {\n";
+		echo "			$('#button_files').fadeIn(fade_speed);\n";
+		echo "			document.getElementById('target_file').selectedIndex = 0;\n";
+		echo "		});\n";
+		echo "	}\n";
+
+		echo "	function download(d) {\n";
+		echo "		if (d == '".$text['label-download']."') return;\n";
+		echo "		window.location = 'https://".$_SESSION['domain_name']."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "	}\n";
+
+		echo "\n";
+		echo "	$( document ).ready(function() {\n";
+		echo "		$('#default_setting_search').focus();\n";
+		if ($search == '') {
+			echo "		// scroll to previous category\n";
+			echo "		var category_span_id;\n";
+			echo "		var url = document.location.href;\n";
+			echo "		var hashindex = url.indexOf('#');\n";
+			echo "		if (hashindex == -1) { }\n";
+			echo "		else {\n";
+			echo "			category_span_id = url.substr(hashindex + 1);\n";
+			echo "		}\n";
+			echo "		if (category_span_id) {\n";
+			echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
+			echo "		}\n";
+		}
+		echo "	});\n";
+		echo "</script>";
+	}
+
 //show the content
 	echo "<form method='post' name='frm' id='frm' action='' onsubmit='check_duplicates(); return false;'>\n";
 	//echo "<input style='display:none;' type='password' name='autocomplete'>";
+	echo "<input type='hidden' name='file_action' id='file_action' value=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
@@ -528,7 +583,27 @@ require_once "resources/require.php";
 	echo "	<br><br>";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
+	if (permission_exists("device_files")) {
+		//get the template directory
+			$prov = new provision;
+			$prov->domain_uuid = $domain_uuid;
+			$template_dir = $prov->template_dir;
+			$files = glob($template_dir.'/'.$device_template.'/*');
+		//add file buttons and the file list
+			echo "		<input type='button' class='btn' id='button_files' name='' alt='".$text['button-files']."' onclick='show_files();' value='".$text['button-files']."'>";
+			echo "		<input type='button' class='btn' style='display: none;' id='button_back' name='' alt='".$text['button-back']."' onclick='hide_files();' value='".$text['button-back']."'> ";
+			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
+			echo "			<option value=''>".$text['label-download']."</option>\n";
+			foreach ($files as $file) {
+				//render the file name
+					$file_name = str_replace("{\$mac}",$device_mac_address,basename($file));
+				//add the select option
+					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
+			}
+			echo "		</select>\n";
+			//echo "		<input type='button' class='btn' id='button_download' style='display: none;' alt='".$text['button-download']."' value='".$text['button-download']."' onclick='document.forms.frm.submit();'>";
+	}
 	if (permission_exists('device_add') && $action != "add") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'>\n";
 	}

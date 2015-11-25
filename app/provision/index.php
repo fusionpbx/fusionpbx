@@ -283,20 +283,33 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	$cfg_ext = ".cfg";
-	if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strlen($file_contents));
-	} else if ($device_vendor === "yealink") {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strval(strlen($file_contents)));
-	} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
-		$file_contents = utf8_decode($file_contents);
-		header("Content-Type: text/plain; charset=iso-8859-1");
-		header("Content-Length: ".strlen($file_contents));
-	} else {
-		header("Content-Type: text/xml; charset=utf-8");
-		header("Content-Length: ".strlen($file_contents));
+	if ($_REQUEST['content_type'] = 'application/octet-stream') {
+		$file_name = str_replace("{\$mac}",$mac,$file);
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.basename($file_name).'"');
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file_contents));
+	}
+	else {
+		$cfg_ext = ".cfg";
+		if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strlen($file_contents));
+		} else if ($device_vendor === "yealink") {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strval(strlen($file_contents)));
+		} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
+			$file_contents = utf8_decode($file_contents);
+			header("Content-Type: text/plain; charset=iso-8859-1");
+			header("Content-Length: ".strlen($file_contents));
+		} else {
+			header("Content-Type: text/xml; charset=utf-8");
+			header("Content-Length: ".strlen($file_contents));
+		}
 	}
 	echo $file_contents;
 	closelog();
