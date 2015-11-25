@@ -239,8 +239,8 @@ if(!function_exists('fax_enqueue')) {
 	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $fax_uri, $fax_dtmf, $dial_string){
 		global $db, $db_type;
 
-		$task_uuid = uuid();
-		$dial_string .= "task_uuid='" . $task_uuid . "',";
+		$fax_task_uuid = uuid();
+		$dial_string .= "fax_task_uuid='" . $fax_task_uuid . "',";
 		$description = ''; //! @todo add description
 		if ($db_type == "pgsql") {
 			$date_utc_now_sql  = "NOW() at time zone 'utc'";
@@ -252,7 +252,7 @@ if(!function_exists('fax_enqueue')) {
 			$date_utc_now_sql  = "datetime('now')";
 		}
 		$sql = <<<HERE
-INSERT INTO v_fax_tasks( task_uuid, fax_uuid, 
+INSERT INTO v_fax_tasks( fax_task_uuid, fax_uuid, 
 	task_next_time, task_lock_time, 
 	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
 	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
@@ -265,7 +265,7 @@ VALUES (?, ?,
 HERE;
 		$stmt = $db->prepare($sql);
 		$i = 0;
-		$stmt->bindValue(++$i, $task_uuid);
+		$stmt->bindValue(++$i, $fax_task_uuid);
 		$stmt->bindValue(++$i, $fax_uuid);
 		$stmt->bindValue(++$i, $fax_file);
 		$stmt->bindValue(++$i, $wav_file);

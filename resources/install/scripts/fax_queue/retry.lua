@@ -9,10 +9,10 @@
 	local Settings = require "resources.functions.lazy_settings"
 	local Tasks    = require "fax_queue.tasks"
 
-	local task_uuid  = env:getHeader('task_uuid')
-	local task       = Tasks.select_task(task_uuid)
+	local fax_task_uuid  = env:getHeader('fax_task_uuid')
+	local task       = Tasks.select_task(fax_task_uuid)
 	if not task then
-		log.warningf("Can not find fax task: %q", tostring(task_uuid))
+		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
 		return 
 	end
 

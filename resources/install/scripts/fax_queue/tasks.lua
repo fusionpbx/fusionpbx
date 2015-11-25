@@ -33,7 +33,7 @@ local Q850_TIMEOUT = {
 
 local select_task_common_sql = [[
 select
-  t1.task_uuid as uuid,
+  t1.fax_task_uuid as uuid,
   t1.fax_uuid as fax_uuid,
   t3.domain_name,
   t3.domain_uuid, 
@@ -62,11 +62,11 @@ and t2.fax_send_channels > (select count(*) from v_fax_tasks as tasks
 order by t1.task_next_time
 ]]
 
-local select_task_sql = select_task_common_sql .. "and t1.task_uuid='%s'"
+local select_task_sql = select_task_common_sql .. "and t1.fax_task_uuid='%s'"
 
 local aquire_task_sql = [[
   update v_fax_tasks set task_status = 1, task_lock_time = ]] .. date_utc_now_sql .. [[
-  where task_uuid = '%s' and task_status = 0
+  where fax_task_uuid = '%s' and task_status = 0
 ]]
 
 local wait_task_sql = [[
@@ -77,19 +77,19 @@ local wait_task_sql = [[
   task_no_answer_retry_counter = %s,
   task_retry_counter = %s,
   task_next_time = ]] .. now_add_sec_sql .. [[
-  where task_uuid = '%s'
+  where fax_task_uuid = '%s'
 ]]
 
 local remove_task_task_sql = [[
   delete from v_fax_tasks
-  where task_uuid = '%s'
+  where fax_task_uuid = '%s'
 ]]
 
 local release_task_sql = [[
   update v_fax_tasks
   set task_status = 0, task_lock_time = NULL,
   task_next_time = ]] .. now_add_sec_sql .. [[
-  where task_uuid = '%s'
+  where fax_task_uuid = '%s'
 ]]
 
 local release_stuck_tasks_sql = [[
@@ -131,10 +131,10 @@ local function next_task()
   end
 end
 
-local function select_task(task_uuid)
+local function select_task(fax_task_uuid)
   local db = get_db()
 
-  local task, err = db:first_row(select_task_sql:format(task_uuid))
+  local task, err = db:first_row(select_task_sql:format(fax_task_uuid))
   if not task then return nil, err end
 
   task.no_answer_counter       = tonumber(task.no_answer_counter)
