@@ -510,7 +510,7 @@
 		$y = 4; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_fax_tasks';
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_task_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
