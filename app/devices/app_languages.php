@@ -1378,6 +1378,19 @@ $text['label-device_mac_address']['de-at'] = "MAC Adresse";
 $text['label-device_mac_address']['ar-eg'] = "";
 $text['label-device_mac_address']['he'] = "";
 
+$text['label-download']['en-us'] = "Download";
+$text['label-download']['es-cl'] = "";
+$text['label-download']['pt-pt'] = "";
+$text['label-download']['fr-fr'] = "";
+$text['label-download']['pt-br'] = "";
+$text['label-download']['pl'] = "";
+$text['label-download']['uk'] = "";
+$text['label-download']['sv-se'] = "";
+$text['label-download']['ro'] = "";
+$text['label-download']['de-at'] = "";
+$text['label-download']['ar-eg'] = "";
+$text['label-download']['he'] = "";
+
 $text['label-device_label']['en-us'] = "Label";
 $text['label-device_label']['es-cl'] = "Etiqueta";
 $text['label-device_label']['pt-pt'] = "Rótulo";
@@ -2598,6 +2611,32 @@ $text['button-copy']['ro'] = "";
 $text['button-copy']['de-at'] = "Kopieren";
 $text['button-copy']['ar-eg'] = "نسخ";
 $text['button-copy']['he'] = "העתקה";
+
+$text['button-files']['en-us'] = "Files";
+$text['button-files']['es-cl'] = "";
+$text['button-files']['pt-pt'] = "";
+$text['button-files']['fr-fr'] = "";
+$text['button-files']['pt-br'] = "";
+$text['button-files']['pl'] = "";
+$text['button-files']['uk'] = "";
+$text['button-files']['sv-se'] = "";
+$text['button-files']['ro'] = "";
+$text['button-files']['de-at'] = "";
+$text['button-files']['ar-eg'] = "";
+$text['button-files']['he'] = "";
+
+$text['button-download']['en-us'] = "Download";
+$text['button-download']['es-cl'] = "";
+$text['button-download']['pt-pt'] = "";
+$text['button-download']['fr-fr'] = "";
+$text['button-download']['pt-br'] = "";
+$text['button-download']['pl'] = "";
+$text['button-download']['uk'] = "";
+$text['button-download']['sv-se'] = "";
+$text['button-download']['ro'] = "";
+$text['button-download']['de-at'] = "";
+$text['button-download']['ar-eg'] = "";
+$text['button-download']['he'] = "";
 
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
