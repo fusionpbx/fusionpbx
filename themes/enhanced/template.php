@@ -282,7 +282,7 @@ input.btn:hover, input.button:hover, img.list_control_icon:hover, button:hover {
 	cursor: pointer;
 	}
 
-input.txt, textarea.txt, select.txt, .formfld {
+input.txt, textarea.txt, select.txt, .formfld, label.radio {
 	font-family: arial;
 	font-size: 12px;
 	color: #000;
@@ -311,6 +311,16 @@ input.txt:focus, .formfld:focus {
 	box-shadow: 0 0 5px #cddaf0;
 	}
 
+fieldset.container {
+	border:none;
+	padding:0;
+	margin:1px;
+	display:inline-block;
+}
+label.radio
+{
+	display:block;
+}
 /* removes spinners (increment/decrement controls) inside input fields */
 input[type=number] { -moz-appearance: textfield; }
 ::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -1424,7 +1434,7 @@ if (strlen($_SESSION['message']) > 0) {
 
 	<?php
 	// check for background image
-	if (isset($_SESSION['theme']['background_image_enabled']['boolean']) and $_SESSION['theme']['background_image_enabled']['boolean'] == 'true') {
+	if (isset($_SESSION['theme']['enable_background_images']['boolean']) and $_SESSION['theme']['enable_background_images']['boolean'] == 'true') {
 		// background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
