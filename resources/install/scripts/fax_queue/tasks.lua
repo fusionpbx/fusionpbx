@@ -14,7 +14,7 @@ elseif database.type == 'mysql' then
   now_add_sec_sql   = "DATE_ADD(UTC_TIMESTAMP(), INTERVAL %s SECOND)"
 elseif database.type == 'sqlite'  then
   date_utc_now_sql  = "datetime('now')"
-  now_add_sec_sql   = "datetime('now', '+%s seconds')"
+  now_add_sec_sql   = "datetime('now', '%s seconds')"
 else
   error("unsupported database type: " .. database.type)
 end
@@ -96,7 +96,7 @@ local release_stuck_tasks_sql = [[
   update v_fax_tasks
   set task_status = 0, task_lock_time = NULL,
   task_next_time = ]] .. date_utc_now_sql .. [[
-  where task_lock_time < ]] .. now_add_sec_sql:format('3600') .. [[
+  where task_lock_time < ]] .. now_add_sec_sql:format('-3600') .. [[
 ]]
 
 local remove_finished_tasks_sql = [[
