@@ -98,8 +98,8 @@
     tostring(accountcode)                  ,
     tostring(origination_caller_id_name)   ,
     tostring(origination_caller_id_number) ,
-    tostring(mailfrom_address)             ,
-    tostring(mailto_address)               ,
+    tostring(from_address)                 ,
+    tostring(email_address)                ,
     tostring(hangup_cause_q850)            ,
     fax_options
 )
@@ -240,8 +240,9 @@
 			"values(" .. table.concat(values, ",") .. ")"
 
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[FAX] retry: "..sql.."\n");
+			log.noticef("SQL: %s", sql);
 		end
+
 		dbh:query(sql);
 	end
 
@@ -298,7 +299,7 @@
 
 			sql = table.concat(sql, "\n");
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "\n");
+				log.noticef("SQL: %s", sql);
 			end
 		end
 
@@ -317,7 +318,7 @@
 
 	if fax_success == "1" then
 		--Success
-		log.info("RETRY STATS SUCCESS: GATEWAY[%s] VARS[%s]", fax_options, fax_trial);
+		log.infof("RETRY STATS SUCCESS: GATEWAY[%s]", fax_options);
 
 		if keep_local == "false" then
 			os.remove(fax_file);
