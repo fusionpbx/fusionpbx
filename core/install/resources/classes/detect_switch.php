@@ -30,6 +30,8 @@ require_once "resources/classes/EventSocket.php";
 //define the install class
 	class detect_switch {
 
+		// cached data
+		protected $_folders;
 		// version information
 		protected $_major;
 		protected $_minor;
@@ -53,25 +55,27 @@ require_once "resources/classes/EventSocket.php";
 		protected $_storage_dir = '';
 		protected $_temp_dir = '';
 		
-		function major() { return $this->_major; }
-		function minor() { return $this->_minor; }
-		function base_dir() { return $this->_base_dir; }
-		function cache_dir() { return $this->_cache_dir; }
-		function certs_dir() { return $this->_certs_dir; }
-		function conf_dir() { return $this->_conf_dir; }
-		function db_dir() { return $this->_db_dir; }
-		function external_ssl_dir() { return $this->_external_ssl_dir; }
-		function grammar_dir() { return $this->_grammar_dir; }
-		function htdocs_dir() { return $this->_htdocs_dir; }
-		function internal_ssl_dir() { return $this->_internal_ssl_dir; }
-		function log_dir() { return $this->_log_dir; }
-		function mod_dir() { return $this->_mod_dir; }
-		function recordings_dir() { return $this->_recordings_dir; }
-		function run_dir() { return $this->_run_dir; }
-		function script_dir() { return $this->_script_dir; }
-		function sounds_dir() { return $this->_sounds_dir; }
-		function storage_dir() { return $this->_storage_dir; }
-		function temp_dir() { return $this->_temp_dir; }
+		public function major() { return $this->_major; }
+		public function minor() { return $this->_minor; }
+		public function version() { return $this->_major.".".$this->_minor; }
+		public function base_dir() { return $this->_base_dir; }
+		public function cache_dir() { return $this->_cache_dir; }
+		public function certs_dir() { return $this->_certs_dir; }
+		public function conf_dir() { return $this->_conf_dir; }
+		public function db_dir() { return $this->_db_dir; }
+		public function external_ssl_dir() { return $this->_external_ssl_dir; }
+		public function grammar_dir() { return $this->_grammar_dir; }
+		public function htdocs_dir() { return $this->_htdocs_dir; }
+		public function internal_ssl_dir() { return $this->_internal_ssl_dir; }
+		public function log_dir() { return $this->_log_dir; }
+		public function mod_dir() { return $this->_mod_dir; }
+		public function recordings_dir() { return $this->_recordings_dir; }
+		public function run_dir() { return $this->_run_dir; }
+		public function script_dir() { return $this->_script_dir; }
+		public function sounds_dir() { return $this->_sounds_dir; }
+		public function storage_dir() { return $this->_storage_dir; }
+		public function temp_dir() { return $this->_temp_dir; }
+		public function get_folders() {	return $this->_folders;	}
 
 		// event socket
 		public $event_host = 'localhost';
@@ -87,6 +91,8 @@ require_once "resources/classes/EventSocket.php";
 			if(!$this->event_socket){
 				$this->detect_event_socket();
 			}
+			$this->_folders = preg_grep ('/.*_dir$/', get_class_methods('detect_switch') );
+			sort( $this->_folders );
 		}
 		
 		protected function detect_event_socket() {
@@ -112,29 +118,7 @@ require_once "resources/classes/EventSocket.php";
 			}
 		}
 		
-		public function show_config() {
-			$buffer = '';		
-			$buffer .= "FreeSWITCH Verson => " . $this->_major . "." . $this->_minor . "\n";
-			$buffer .= "base_dir => " . $this->_base_dir ."\n";
-			$buffer .= "cache_dir => " . $this->_cache_dir ."\n";
-			$buffer .= "certs_dir => " . $this->_certs_dir ."\n";
-			$buffer .= "conf_dir => " . $this->_conf_dir ."\n";
-			$buffer .= "db_dir => " . $this->_db_dir ."\n";
-			$buffer .= "external_ssl_dir => " . $this->_external_ssl_dir ."\n";
-			$buffer .= "grammar_dir => " . $this->_grammar_dir ."\n";
-			$buffer .= "htdocs_dir => " . $this->_htdocs_dir ."\n";
-			$buffer .= "internal_ssl_dir => " . $this->_internal_ssl_dir ."\n";
-			$buffer .= "log_dir => " . $this->_log_dir ."\n";
-			$buffer .= "mod_dir => " . $this->_mod_dir ."\n";
-			$buffer .= "recordings_dir => " . $this->_recordings_dir ."\n";
-			$buffer .= "run_dir => " . $this->_run_dir ."\n";
-			$buffer .= "script_dir => " . $this->_script_dir ."\n";
-			$buffer .= "sounds_dir => " . $this->_sounds_dir ."\n";
-			$buffer .= "storage_dir => " . $this->_storage_dir ."\n";
-			$buffer .= "temp_dir => " . $this->_temp_dir ."\n";
-			return $buffer;
-		}
-		
+	
 		protected function connect_event_socket(){
 			$esl = new EventSocket;
 			if ($esl->connect($this->event_host, $this->event_port, $this->event_password)) {

@@ -11,6 +11,17 @@ $text['title-install_first_time']['uk'] = "";
 $text['title-install_first_time']['de-at'] = "";
 $text['title-install_first_time']['ar-eg'] = "";
 
+$text['title-detected_configuration']['en-us'] = "Detected Configuration";
+$text['title-detected_configuration']['es-cl'] = "";
+$text['title-detected_configuration']['pt-pt'] = "";
+$text['title-detected_configuration']['fr-fr'] = "";
+$text['title-detected_configuration']['pt-br'] = "";
+$text['title-detected_configuration']['pl'] = "";
+$text['title-detected_configuration']['sv-se'] = "";
+$text['title-detected_configuration']['uk'] = "";
+$text['title-detected_configuration']['de-at'] = "";
+$text['title-detected_configuration']['ar-eg'] = "";
+
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";

@@ -23,24 +23,17 @@
 	Contributor(s):
 	Matthew Vale <github@mafoo.org>
 */
-	echo "<p>Detected Configuration</p>";
 	//fetch the values
 	require_once "core/install/resources/classes/detect_switch.php";
 	$switch_detect = new detect_switch($event_host, $event_port, $event_password);
 	//$switch_detect->event_port = 2021;
-	echo "<pre>";
 	$detect_ok = true;
 	try {
 		$switch_detect->detect();
 	} catch(Exception $e){
-		echo "Failed to detect confgiuration detect_switch reported: " . $e->getMessage() . "\n";
+		$messages[] = "Failed to detect confgiuration detect_switch reported: " . $e->getMessage();
 		$detect_ok = false;
 	}
-	if($detect_ok){
-		echo $switch_detect->show_config();
-	}
-	echo "</pre>";
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 	echo "<input type='hidden' name='install_step' value='detect_config'/>\n";
@@ -94,6 +87,41 @@
 
 	echo "</table>";
 	echo "</form>";
+	if($detect_ok){
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	
+		echo "<tr>\n";
+		echo "<td colspan='4' align='left' nowrap><b>".$text['title-detected_configuration']."</b><br><br></td>\n";
+		echo "</tr>\n";
+
+		$id = 0;
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
+		echo "Switch version\n";
+		echo "</td>\n";
+		echo "<td class='vtable' width='35%' align='left'>\n";
+		echo "    ".$switch_detect->version()."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		
+		foreach ($switch_detect->get_folders() as $folder)
+		{
+			if($id % 2 == 0){ echo "<tr>\n"; }
+			echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
+			echo $folder."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' width='35%' align='left'>\n";
+			echo "    ".$switch_detect->$folder()."\n";
+			echo "</td>\n";
+			if($id % 2 == 1){ echo "</tr>\n"; }
+			$id++;
+		}
+		if($id % 2 == 1){ echo "</tr>\n"; }
+			
+		echo "</table>";
+	}
+
+
 ?><script type='text/javascript'>
 function disable_next() {
 	document.getElementById("next").style.display = 'none';
