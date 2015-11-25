@@ -39,10 +39,10 @@
 	echo "	".$text['label-select_language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-		echo "<fieldset style='border:none;padding:0;margin:0;'>";
+		echo "<fieldset class='container'>";
 	foreach($_SESSION['app']['languages'] as $lang_code){
-		echo "<fieldset style='border:none;padding:0;margin:0;width:32%;display:inline-block;margin:1px'>";
-		echo "	<label style='display:block;width:100%;border:solid 1px;padding:2px;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;box-sizing:border-box;'>";
+		echo "<fieldset class='container'>";
+		echo "	<label class='radio' style='width:200px;'>";
 		echo "<input type='radio' name='install_language' value='$lang_code' id='lang_$lang_code' onchange='JavaScript:disable_next()'";
 		if($lang_code == $_SESSION['domain']['language']['code'])
 		{
