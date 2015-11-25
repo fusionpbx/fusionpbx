@@ -135,8 +135,10 @@ else {
 		} else {
 			$forward_prefix = $forward_prefix.$fax_forward_number.'#'; //found
 		}
-		$fax_local = check_str($_POST["fax_local"]);
+		$fax_local = check_str($_POST["fax_local"]); //! @todo check in database
 		$fax_description = check_str($_POST["fax_description"]);
+		$fax_send_greeting = check_str($_POST["fax_send_greeting"]);
+		$fax_send_channels = check_str($_POST["fax_send_channels"]);
 	}
 
 //delete the user from the fax users
@@ -274,6 +276,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($fax_forward_number) > 0) {
 						$sql .= "fax_forward_number, ";
 					}
+					$sql .= "fax_send_greeting,";
+					$sql .= "fax_send_channels,";
 					$sql .= "fax_description ";
 					$sql .= ")";
 					$sql .= "values ";
@@ -305,6 +309,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($fax_forward_number) > 0) {
 						$sql .= "'$fax_forward_number', ";
 					}
+					$sql .= (strlen($fax_send_greeting)==0?'NULL':"'$fax_send_greeting'") . ",";
+					$sql .= (strlen($fax_send_channels)==0?'NULL':"'$fax_send_channels'") . ",";
+
 					$sql .= "'$fax_description' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -345,9 +352,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						$sql .= "fax_forward_number = null, ";
 					}
+					$tmp = strlen($fax_send_greeting)==0?'NULL':"'$fax_send_greeting'";
+					$sql .= "fax_send_greeting = $tmp,";
+					$tmp = strlen($fax_send_channels)==0?'NULL':"'$fax_send_channels'";
+					$sql .= "fax_send_channels = $tmp,";
+
 					$sql .= "fax_description = '$fax_description' ";
+
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and fax_uuid = '$fax_uuid' ";
+
 					$db->exec(check_sql($sql));
 					unset($sql);
 			}
@@ -426,8 +440,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_forward_number = $row["fax_forward_number"];
 			$fax_description = $row["fax_description"];
+			$fax_send_greeting = $row["fax_send_greeting"];
+			$fax_send_channels = $row["fax_send_channels"];
 		}
 		unset ($prep_statement);
+	}
+	else{
+		$fax_send_channels = 10;
 	}
 
 //replace the dash with a space
@@ -669,6 +688,28 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-fax_send_greeting']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_send_greeting' maxlength='255' value=\"$fax_send_greeting\">\n";
+		echo "<br />\n";
+		echo " ".$text['description-fax_send_greeting']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-fax_send_channels']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_send_channels' maxlength='255' value=\"$fax_send_channels\">\n";
+		echo "<br />\n";
+		echo " ".$text['description-fax_send_channels']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-description']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -677,7 +718,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "".$text['description-info']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
 	}
 
 	echo "	<tr>\n";

@@ -1111,6 +1111,10 @@ $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
+$text['label-fax_send_greeting']['en-us'] = "Greeting";
+
+$text['label-fax_send_channels']['en-us'] = "Number of channels";
+
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['es-cl'] = "Los Faxes Enviados";
 $text['header-sent']['pt-pt'] = "Faxes Enviados";
