@@ -126,6 +126,6 @@ directory_url: "http://{$domain_name}/app/provision/?file=directory.php"
 # URL for branding logo
 #logo_url: "http://{$domain_name}/app/provision/logo.bmp"
 
-# Remote Party ID
-remote_party_id: 1              ; 0-Disabled (default), 1-Enabled
+# Remote Party ID  0-Disabled (default), 1-Enabled
+remote_party_id: 1
 

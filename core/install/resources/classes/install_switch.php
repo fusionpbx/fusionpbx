@@ -35,9 +35,9 @@ include "root.php";
 		public $debug = false;
 
 		function __construct($domain_name, $domain_uuid, $detect_switch) {
-			if(!is_a($detect_switch, 'detect_switch')){
-				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
-			}
+			//if(!is_a($detect_switch, 'detect_switch')){
+			//	throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
+			//}
 			$this->domain_uuid = $domain_uuid;
 			$this->domain = $domain_name;
 			$this->detect_switch = $detect_switch;
@@ -166,11 +166,10 @@ include "root.php";
 			}
 		}
 
-
 		function install() {
 			$this->copy_conf();
 			$this->copy_scripts();
-		//tell freeswitch to restart
+			//tell freeswitch to restart
 			$this->write_progress("Restarting switch");
 			$this->detect_switch->restart_switch();
 		}
@@ -182,10 +181,10 @@ include "root.php";
 		function copy_conf() {
 			$this->write_progress("Copying Config");
 			//make a backup of the config
-			if (file_exists($this->detect_switch->conf_dir())) {
-				$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
-				$this->recursive_delete($this->detect_switch->conf_dir());
-			}
+				if (file_exists($this->detect_switch->conf_dir())) {
+					$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
+					$this->recursive_delete($this->detect_switch->conf_dir());
+				}
 			//make sure the conf directory exists
 				if (!is_dir($this->detect_switch->conf_dir())) {
 					if (!mkdir($this->detect_switch->conf_dir(), 0774, true)) {
