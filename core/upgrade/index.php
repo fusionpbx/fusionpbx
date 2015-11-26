@@ -72,10 +72,8 @@ if (sizeof($_POST) > 0) {
 			//update scripts folder, if allowed (default)
 				if ($_SESSION['switch']['scripts']['dir'] != '') {
 					//copy the files and directories from resources/install
-						$install = new install;
-						$install->domain_uuid = $domain_uuid;
-						$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-						$install->copy_scripts();
+						$obj = new install_switch;
+						$obj->upgrade();
 					//set the message
 						$response_message = $text['message-upgrade_source_scripts'];
 				}
