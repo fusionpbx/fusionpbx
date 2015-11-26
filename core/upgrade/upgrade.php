@@ -67,7 +67,10 @@
 	$obj = new schema;
 	echo $obj->schema("text");
 
-//run all app_defaults.php files
+//request teh switch to perform upgrade functions
+	$obj = new install_switch;
+	$obj->upgrade();
+
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
 	$domain->upgrade();
