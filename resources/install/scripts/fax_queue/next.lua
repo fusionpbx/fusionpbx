@@ -51,6 +51,9 @@ local function next_task()
 
   if not ok then
     Tasks.release_task(task)
+    if task.status ~= 0 then
+      Tasks.remove_task(task)
+    end
     log.noticef("Error execute task: %s", tostring(err))
   end
 
