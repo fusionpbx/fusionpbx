@@ -67,7 +67,7 @@
 	$obj = new schema;
 	echo $obj->schema("text");
 
-//request teh switch to perform upgrade functions
+//request the switch to perform upgrade functions
 	$obj = new install_switch;
 	$obj->upgrade();
 
