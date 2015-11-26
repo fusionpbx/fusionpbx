@@ -63,7 +63,7 @@ if (is_link('/etc/localtime')) {
     // Ubuntu / Debian.
     $data = file_get_contents('/etc/timezone');
     if ($data) {
-        $timezone = $data;
+        $timezone = rtrim($data);
     }
 } elseif (file_exists('/etc/sysconfig/clock')) {
     // RHEL / CentOS
@@ -221,6 +221,9 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "	</div>\n";
 		echo "</form>\n";
 	}elseif($install_step == 'detect_config'){
+		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
+			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
+		}
 		include "resources/page_parts/install_event_socket.php";
 		if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
@@ -233,6 +236,12 @@ if(!$install_step) { $install_step = 'select_language'; }
 			echo "	<div style='text-align:right'>\n";
 			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
+			echo "	</div>\n";
+			echo "</form>\n";
+		}else{
+			echo "<form method='post' name='frm' action=''>\n";
+			echo "	<div style='text-align:right'>\n";
+			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
 		}
@@ -284,7 +293,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 				require_once "resources/classes/install_fusionpbx.php";
 				$fusionPBX = new install_fusionpbx($domain_name, null, $switch_detect);
 				$domain_uuid = $fusionPBX->domain_uuid();
-				//$fusionPBX->debug = true;
 				$fusionPBX->admin_username = $admin_username;
 				$fusionPBX->admin_password = $admin_password;
 				$fusionPBX->default_country = $install_default_country;
@@ -295,12 +303,15 @@ if(!$install_step) { $install_step = 'select_language'; }
 						$fusionPBX->$key = $value;
 					}
 				}
-				$fusionPBX->install();
 
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
+				//$fusionPBX->debug = true;
+				$fusionPBX->install();
 				$switch->install();
+				$fusionPBX->app_defaults();
+				$detect_switch->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
