@@ -35,9 +35,16 @@ include "root.php";
 		public $debug = false;
 
 		function __construct($domain_name, $domain_uuid, $detect_switch) {
-			//if(!is_a($detect_switch, 'detect_switch')){
-			//	throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
-			//}
+			if($detect_switch == null){
+				if(strlen($_SESSION['event_socket_ip_address']) == 0 or strlen($_SESSION['event_socket_port']) == 0 or strlen($_SESSION['event_socket_password']) == 0 ){
+					throw new Exception('The parameter $detect_switch was empty and i could not find the event socket details from the session');
+				}
+				$detect_switch = new detect_switch($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$domain_name = $_SESSION['domain_name'];
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}elseif(!is_a($detect_switch, 'detect_switch')){
+				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
+			}
 			$this->domain_uuid = $domain_uuid;
 			$this->domain = $domain_name;
 			$this->detect_switch = $detect_switch;
@@ -169,9 +176,6 @@ include "root.php";
 		function install() {
 			$this->copy_conf();
 			$this->copy_scripts();
-			//tell freeswitch to restart
-			$this->write_progress("Restarting switch");
-			$this->detect_switch->restart_switch();
 		}
 
 		function upgrade() {
