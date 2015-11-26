@@ -95,8 +95,6 @@ if (!if_group("superadmin")) {
 
 	echo "<br><br>";
 
-	echo "<p>WiP</p>";
-
 //include the footer
 	require_once "resources/footer.php";
 ?>

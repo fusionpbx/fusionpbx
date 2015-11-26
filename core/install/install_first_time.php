@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@ require_once "root.php";
 require_once "resources/functions.php";
 require_once "resources/classes/text.php";
 
-//initialize varibles we are going to use
+//initialize variables we are going to use
 	$event_host = '';
 	$event_port = '';
 	$event_password = '';
@@ -130,7 +130,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 	if (isset($_SESSION['domain']['template']['name']) and strlen($_SESSION['domain']['template']['name']) != 0) {
 		$default_template = $_SESSION['domain']['template']['name'];
 	}
-	
+
 //set a default enviroment if first_time
 	if($first_time_install){
 	//initialize some varibles to cut down on warnings
@@ -147,7 +147,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 //buffer the content
 	ob_end_clean(); //clean the buffer
 	ob_start();
-	
+
 	$messages = array();
 	if (!extension_loaded('PDO')) {
 		$messages[] = "<b>PHP PDO was not detected</b>. Please install it before proceeding";
@@ -168,7 +168,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				"<sm>You can use the following to find what ports are allowed<pre>semanage port -l | grep '^http_port_t'</pre></sm>";
 			}
 		}
-	
+
 	//action code
 	if($return_install_step == 'config_detail'){
 	//check for all required data
@@ -185,11 +185,8 @@ if(!$install_step) { $install_step = 'select_language'; }
 		
 		//set the max execution time to 1 hour
 		ini_set('max_execution_time',3600);
-
 	}
-	
 
-	
 	//display messages
 	if (count($messages)>0) {
 		echo "<br />\n";
@@ -262,7 +259,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		try {
 			$switch_detect->detect();
 		} catch(Exception $e){
-			echo "<p>Failed to detect confgiuration detect_switch reported: " . $e->getMessage() . "</p>\n";
+			echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
 			$detect_ok = false;
 		}
 		if($detect_ok){
@@ -299,7 +296,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 					}
 				}
 				$fusionPBX->install();
-		
+
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
@@ -345,6 +342,7 @@ if($first_time_install){
 		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
 		$_SESSION['menu'] = '';
 }
+
 // add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
