@@ -34,10 +34,8 @@ if ($domains_processed == 1) {
 				}
 
 			//copy the files and directories from resources/install
-				$install = new install;
-				$install->domain_uuid = $domain_uuid;
-				$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-				$install->copy_scripts();
+				$obj = new install_switch;
+				$obj->upgrade();
 		}
 
 	//update the software table
