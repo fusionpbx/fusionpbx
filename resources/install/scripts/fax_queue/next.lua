@@ -41,6 +41,9 @@ local function next_task()
     local ok, status, info = esl:api(originate)
     if not ok then
       Tasks.wait_task(task, false, info)
+      if task.status ~= 0 then
+        Tasks.remove_task(task)
+      end
       log.noticef('Can not originate to `%s` cause: %s: %s ', task.uri, tostring(status), tostring(info))
     else
       log.noticef("originate successfuly: %s", tostring(info))
@@ -51,9 +54,6 @@ local function next_task()
 
   if not ok then
     Tasks.release_task(task)
-    if task.status ~= 0 then
-      Tasks.remove_task(task)
-    end
     log.noticef("Error execute task: %s", tostring(err))
   end
 
