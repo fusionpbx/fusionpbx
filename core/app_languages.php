@@ -198,6 +198,17 @@ $text['button-login']['ro'] = "Autentificare";
 $text['button-login']['fa'] = "";
 $text['button-login']['ar-eg'] = "دخول";
 
+$text['button-next']['en-us'] = "Next";
+$text['button-next']['es-cl'] = "";
+$text['button-next']['pt-pt'] = "";
+$text['button-next']['fr-fr'] = "";
+$text['button-next']['pt-br'] = "";
+$text['button-next']['pl'] = "";
+$text['button-next']['sv-se'] = "";
+$text['button-next']['uk'] = "";
+$text['button-next']['de-at'] = "";
+$text['button-next']['ar-eg'] = "";
+
 $text['button-back']['en-us'] = "Back";
 $text['button-back']['es-cl'] = "Volver";
 $text['button-back']['pt-pt'] = "Voltar";
