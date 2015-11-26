@@ -311,7 +311,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$fusionPBX->install();
 				$switch->install();
 				$fusionPBX->app_defaults();
-				$switch->detect_switch->restart_switch();
+				$switch_detect->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
