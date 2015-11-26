@@ -239,7 +239,7 @@ include "root.php";
 				$script_dir = $_SESSION['switch']['scripts']['dir'];
 			}
 			else {
-				$script_dir = $this->detect_switch->script_dir()
+				$script_dir = $this->detect_switch->script_dir();
 			}
 			if (file_exists($script_dir())) {
 				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
