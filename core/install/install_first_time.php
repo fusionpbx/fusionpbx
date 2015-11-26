@@ -63,7 +63,7 @@ if (is_link('/etc/localtime')) {
     // Ubuntu / Debian.
     $data = file_get_contents('/etc/timezone');
     if ($data) {
-        $timezone = $data;
+        $timezone = rtrim($data);
     }
 } elseif (file_exists('/etc/sysconfig/clock')) {
     // RHEL / CentOS
