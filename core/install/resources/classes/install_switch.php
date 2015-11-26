@@ -176,9 +176,6 @@ include "root.php";
 		function install() {
 			$this->copy_conf();
 			$this->copy_scripts();
-			//tell freeswitch to restart
-			$this->write_progress("Restarting switch");
-			$this->detect_switch->restart_switch();
 		}
 
 		function upgrade() {

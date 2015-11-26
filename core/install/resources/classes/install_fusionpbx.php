@@ -975,7 +975,7 @@ include "root.php";
 			}
 		}
 		
-		protected function app_defaults() {
+		public function app_defaults() {
 			$this->write_progress("Running app_defaults");
 			
 		//set needed session settings
