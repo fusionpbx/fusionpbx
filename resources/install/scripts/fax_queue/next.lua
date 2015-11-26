@@ -28,10 +28,6 @@ local function next_task()
   local esl
   local ok, err = pcall(function()
 
-    for k, v in pairs(task) do
-      print(string.format("  `%s` => `%s`", tostring(k), tostring(v)))
-    end
-
     local mode = (task.retry_counter % #FAX_OPTIONS) + 1
     local dial_string  = '{' ..
       task.dial_string .. "api_hangup_hook='lua fax_queue/retry.lua'," ..
@@ -42,8 +38,13 @@ local function next_task()
 
     log.notice(originate)
     esl = assert(Esl.new())
-    local ok, err = esl:api(originate)
-    log.notice(ok or err)
+    local ok, status, info = esl:api(originate)
+    if not ok then
+      Tasks.wait_task(task, false, info)
+      log.noticef('Can not originate to `%s` cause: %s: %s ', task.uri, tostring(status), tostring(info))
+    else
+      log.noticef("originate successfuly: %s", tostring(info))
+    end
   end)
 
   if esl then esl:close() end

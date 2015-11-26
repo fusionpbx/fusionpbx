@@ -103,6 +103,14 @@ local remove_finished_tasks_sql = [[
   delete from v_fax_tasks where task_status > 3
 ]]
 
+local function serialize(task, header)
+  local str = header or ''
+  for k, v in pairs(task) do
+    str = str .. ('\n %q = %q'):format(tostring(k), tostring(v))
+  end
+  return str
+end
+
 local function get_db()
   if not db then
     db = assert(Database.new('system'))
