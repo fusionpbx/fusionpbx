@@ -77,6 +77,7 @@
 
 	log.noticef([[<<< CALL RESULT >>>
     uuid:                          = '%s'
+    task_session_uuid:             = '%s'
     answered:                      = '%s'
     fax_file:                      = '%s'
     wav_file:                      = '%s'
@@ -91,6 +92,7 @@
     fax_options                    = '%s'
 ]],
     tostring(uuid)                         ,
+    tostring(fax_queue_task_session)       ,
     tostring(answered)                     ,
     tostring(fax_file)                     ,
     tostring(wav_file)                     ,
