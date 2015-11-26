@@ -1018,10 +1018,6 @@ include "root.php";
 			$_SESSION['permissions'] = $prep_statementsub->fetchAll(PDO::FETCH_NAMED);
 			unset($sql, $prep_statementsub);
 
-
-
-
-			
 			require_once "resources/classes/schema.php";
 			global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
 	
