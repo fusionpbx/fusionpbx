@@ -983,7 +983,10 @@ include "root.php";
 			$_SESSION["domain_uuid"] = $this->_domain_uuid;
 			require $this->config_php;
 			require "resources/require.php";
-	
+			$_SESSION['event_socket_ip_address'] = $this->detect_switch->event_host;
+			$_SESSION['event_socket_port'] = $this->detect_switch->event_port;
+			$_SESSION['event_socket_password'] = $this->detect_switch->event_password;
+			
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 			$sql = "SELECT * FROM v_group_users ";
 			$sql .= "where domain_uuid=:domain_uuid ";
