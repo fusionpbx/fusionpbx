@@ -31,7 +31,7 @@
 	echo "<input type='hidden' name='install_step' value='execute'/>\n";
 
 	echo "<input type='hidden' name='event_host' value='$event_host'/>\n";
-	echo "<input type='hidden' name='event_port' value='$event_host'/>\n";
+	echo "<input type='hidden' name='event_port' value='$event_port'/>\n";
 	echo "<input type='hidden' name='event_password' value='$event_password'/>\n";
 	echo "<input type='hidden' name='db_type' value='$db_type'/>\n";
 	echo "<input type='hidden' name='admin_username' value='$admin_username'/>\n";
