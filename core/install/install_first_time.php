@@ -224,6 +224,9 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "	</div>\n";
 		echo "</form>\n";
 	}elseif($install_step == 'detect_config'){
+		if(!($event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1')){
+			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
+		}
 		include "resources/page_parts/install_event_socket.php";
 		if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
@@ -236,6 +239,12 @@ if(!$install_step) { $install_step = 'select_language'; }
 			echo "	<div style='text-align:right'>\n";
 			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
+			echo "	</div>\n";
+			echo "</form>\n";
+		}else{
+			echo "<form method='post' name='frm' action=''>\n";
+			echo "	<div style='text-align:right'>\n";
+			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
 		}
@@ -257,6 +266,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
 		require_once "core/install/resources/classes/detect_switch.php";
+		trigger_error("D:> using $event_host, $event_port, $event_password\n",E_USER_WARNING);
 		$switch_detect = new detect_switch($event_host, $event_port, $event_password);
 		$detect_ok = true;
 		try {
