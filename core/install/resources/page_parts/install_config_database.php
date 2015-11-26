@@ -245,7 +245,7 @@
 	echo "</table>";
 	echo "	<div style='text-align:right'>\n";
 	echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-	echo "    <button type='submit'>".$text['button-install_execute']."</button>\n";
+	echo "    <button type='submit'>".$text['button-execute']."</button>\n";
 	echo "	</div>\n";
 	echo "</form>\n";
 ?>
