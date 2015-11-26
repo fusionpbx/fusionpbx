@@ -132,6 +132,12 @@ local function check()
 end
 
 local function task()
+  local session_uuid = session:getVariable('uuid')
+
+  session:setVariable('fax_queue_task_session', session_uuid)
+
+  log.infof("SESSION UUID: %s", session_uuid)
+
   session:waitForAnswer(session)
 
   while not session:answered() do
