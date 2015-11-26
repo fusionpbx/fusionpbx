@@ -94,7 +94,6 @@ include "root.php";
 			$this->create_superuser();
 			require "resources/require.php";
 			$this->create_menus();
-			$this->app_defaults();
 		}
 		
 		protected function create_config_php() {

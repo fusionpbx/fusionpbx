@@ -221,7 +221,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "	</div>\n";
 		echo "</form>\n";
 	}elseif($install_step == 'detect_config'){
-		if(!($event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1')){
+		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
 			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
 		}
 		include "resources/page_parts/install_event_socket.php";
@@ -263,7 +263,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
 		require_once "core/install/resources/classes/detect_switch.php";
-		trigger_error("D:> using $event_host, $event_port, $event_password\n",E_USER_WARNING);
 		$switch_detect = new detect_switch($event_host, $event_port, $event_password);
 		$detect_ok = true;
 		try {
@@ -309,8 +308,9 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
 				//$fusionPBX->debug = true;
-				$switch->install();
 				$fusionPBX->install();
+				$switch->install();
+				$fusionPBX->app_defaults();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
