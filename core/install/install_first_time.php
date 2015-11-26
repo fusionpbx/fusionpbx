@@ -294,7 +294,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 				require_once "resources/classes/install_fusionpbx.php";
 				$fusionPBX = new install_fusionpbx($domain_name, null, $switch_detect);
 				$domain_uuid = $fusionPBX->domain_uuid();
-				//$fusionPBX->debug = true;
 				$fusionPBX->admin_username = $admin_username;
 				$fusionPBX->admin_password = $admin_password;
 				$fusionPBX->default_country = $install_default_country;
@@ -305,12 +304,13 @@ if(!$install_step) { $install_step = 'select_language'; }
 						$fusionPBX->$key = $value;
 					}
 				}
-				$fusionPBX->install();
 
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
+				//$fusionPBX->debug = true;
 				$switch->install();
+				$fusionPBX->install();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
