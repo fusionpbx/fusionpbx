@@ -150,15 +150,15 @@
 				--send the email
 					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 					if (voicemail_file == "attach") then
-						freeswitch.email("",
-							"",
+						freeswitch.email(voicemail_mail_to,
+							voicemail_mail_to,
 							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
 							body,
 							file
 							);
 					else
-						freeswitch.email("",
-							"",
+						freeswitch.email(voicemail_mail_to,
+							voicemail_mail_to,
 							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
 							body
 							);
