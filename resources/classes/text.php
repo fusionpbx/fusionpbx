@@ -27,7 +27,7 @@ class text {
 	 */
 	public function get($language_code = null, $app_path = null) {
 		//get the global app_languages.php
-			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/app_languages.php";
+			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/app_languages.php";
 		//get the app_languages.php
 			if ($app_path != null) {
 				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
