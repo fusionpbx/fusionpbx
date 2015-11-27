@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 
@@ -378,10 +379,10 @@ include "root.php";
 					$destination_number = trim($destination_number);
 
 				//check the session array if it doesn't exist then build the array
-					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-							$sql .= "where d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "where (d.domain_uuid = '".$this->domain_uuid."' OR
+									(d.domain_uuid IS NULL AND d.dialplan_context = '\${domain_name}')) ";
 							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 							$sql .= "and d.dialplan_enabled = 'true' ";
 							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
@@ -432,7 +433,6 @@ include "root.php";
 							unset ($prep_statement);
 						//set the session array
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
-					}
 				//find the matching outbound routes
 					foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
 						foreach ($row['dialplan_details'] as $field) {
