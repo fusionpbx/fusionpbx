@@ -7,6 +7,7 @@ $text['header-compare_languages']['en-us'] = "Select Languages";
 $text['header-language_results']['en-us'] = "Language results";
 
 $text['warning-incorrect_language_culture_code']['en-us'] = "the language culture code does not follow the normal format see - ";
+$text['warning-global_already_defined']['en-us'] = "Global already defines this text as ";
 
 $text['label-culture_code']['en-us'] = "Culture Code";
 $text['label-flag']['en-us'] = "Flag";
