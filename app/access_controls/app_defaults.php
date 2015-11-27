@@ -34,19 +34,29 @@
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
-				//find the file
-					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs')) {
-						$xml_file = '/usr/share/examples/fusionpbx/resources/templates/conf/autload_configs/acl.conf.xml';
+				//set the directory
+					$xml_dir = $_SESSION["switch"]["conf"]["dir"].'/autoload_configs';
+					$xml_file = $xml_dir."/acl.conf.xml";
+					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/resources/templates/conf/autoload_configs/acl.conf';
+				//load the xml and save it into an array
+					if (file_exists($xml_file)) {
+						$xml_string = file_get_contents($xml_file);
 					}
-					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/autoload_configs')) {
-						$xml_file = '/usr/local/share/fusionpbx/resources/templates/conf/autoload_configs/acl.conf.xml';
+					elseif (file_exists($xml_file_alt)) {
+						$xml_string = file_get_contents(xml_file_alt);
 					}
 					else {
-						$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/autoload_configs/acl.conf.xml';
+						$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
+						$xml_string .= "	<network-lists>\n";
+						$xml_string .= "		<list name=\"lan\" default=\"allow\">\n";
+						$xml_string .= "			<node type=\"allow\" cidr=\"192.168.42.42/32\"/>\n";
+						$xml_string .= "		</list>\n";
+						$xml_string .= "		<list name=\"domains\" default=\"deny\">\n";
+						$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
+						$xml_string .= "		</list>\n";
+						$xml_string .= "	</network-lists>\n";
+						$xml_string .= "</configuration>\n";
 					}
-
-				//load the xml and save it into an array
-					$xml_string = file_get_contents($xml_file);
 					$xml_object = simplexml_load_string($xml_string);
 					$json = json_encode($xml_object);
 					$conf_array = json_decode($json, true);
@@ -112,10 +122,14 @@
 								//echo $sql."\n";
 								$db->exec(check_sql($sql));
 						}
-				}
-				unset($prep_statement);
+					}
+					unset($prep_statement);
+
+				//rename the file
+					rename($xml_dir.'/acl.conf.xml', $xml_dir.'/acl.conf');
 			}
 		}
+
 	}
 
 ?>
