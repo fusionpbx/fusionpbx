@@ -801,6 +801,13 @@ include "root.php";
 				$tmp_array = '';
 				$i = 0;
 
+			//build the provision array
+				foreach($_SESSION['provision'] as $key=>$val) {
+					if (strlen($val['var']) > 0) { $value = $val['var']; }
+					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					$provision[$key] = $value;
+				}
+
 			//get the devices
 				$sql = "select * from v_devices ";
 				//$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
