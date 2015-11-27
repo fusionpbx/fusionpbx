@@ -74,7 +74,7 @@ if freeswitch then
   function send_mail(headers, address, message, file)
     local xheaders = "{"
     for k,v in pairs(headers) do
-      xheaders = xheaders .. ("'%s':'%s',"):format(k, v)
+      xheaders = xheaders .. ('"%s":"%s",'):format(k, v)
     end
     xheaders = xheaders:sub(1,-2) .. '}'
 
