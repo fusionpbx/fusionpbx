@@ -46,7 +46,7 @@ class text {
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
 		//check the session language
-			if(isset($_SESSION['domain'])){
+			if($language_code == null and isset($_SESSION['domain'])){
 				$language_code = $_SESSION['domain']['language']['code'];
 			}elseif($language_code == null){
 				$language_code = 'en-us';

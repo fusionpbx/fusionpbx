@@ -70,11 +70,13 @@ require_once "resources/require.php";
 	echo th_order_by('language_name', $text['label-name'], $order_by, $order);
 	echo "</tr>\n";
 
+	$c= 0;
 	$warn_about_wrong_culture = false;
-	foreach($_SESSION['app']['languages'] as $lang_code){
-		$c++;
-		echo "<tr>\n";
-		echo "<td class='row_style".($c%2)."'><img src='$project_path/themes/flags/$lang_code.png' alt='$lang_code'/></td>";
+	foreach($_SESSION['app']['languages'] as $lang_code){ //TODO add sorting
+		$tr_link = "href='languages_compare.php?target_language=$lang_code'";
+		echo "<tr $tr_link>\n";
+		echo "<td class='row_style".($c%2)."'>";
+		echo "<img src='$project_path/themes/flags/$lang_code.png' alt='$lang_code'/></td>";
 		echo "<td class='row_style".($c%2)."'>$lang_code";
 		if(strlen($lang_code) < 5){
 			$warn_about_wrong_culture = true;
@@ -83,24 +85,9 @@ require_once "resources/require.php";
 		echo "</td>";
 		echo "<td class='row_style".($c%2)."'>".$text["language-$lang_code"]."</td>";
 		echo "</tr>\n";
+		$c++;
 	}
 //complete the content
-	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('language_add')) {
-		echo "<a href='language_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "</table>";
 	if($warn_about_wrong_culture){
 		$lang_code = $_SESSION['domain']['language']['code'];

@@ -9,15 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "A tool to analyze languages used in the GUI following https://msdn.microsoft.com/en-gb/library/ee825488%28v=cs.20%29.aspx";
-		$apps[$x]['description']['es-cl'] = "";
-		$apps[$x]['description']['de-de'] = "";
-		$apps[$x]['description']['de-ch'] = "";
-		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "";
-		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
 		$y = 0;
