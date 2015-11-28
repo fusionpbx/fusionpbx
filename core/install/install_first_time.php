@@ -80,7 +80,6 @@ $first_time_install = true;
 if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 	$first_time_install = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
-	//linux
 	$first_time_install = false;
 } elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 	$first_time_install = false;
@@ -98,7 +97,7 @@ if(!$first_time_install) {
 $install_step = '';
 $return_install_step = '';
 
-if (count($_POST)>0) {
+if (count($_POST) > 0) {
 	$install_language = check_str($_POST["install_language"]);
 	$install_step = check_str($_POST["install_step"]);
 	$return_install_step = check_str($_POST["return_install_step"]);
@@ -291,34 +290,43 @@ if(!$install_step) { $install_step = 'select_language'; }
 			#set_error_handler("error_handler");
 			try {
 				require_once "resources/classes/install_fusionpbx.php";
-				$fusionPBX = new install_fusionpbx($domain_name, null, $switch_detect);
-				$domain_uuid = $fusionPBX->domain_uuid();
-				$fusionPBX->admin_username = $admin_username;
-				$fusionPBX->admin_password = $admin_password;
-				$fusionPBX->default_country = $install_default_country;
-				$fusionPBX->install_language = $install_language;
-				$fusionPBX->template_name = $install_template_name;
+				$system = new install_fusionpbx($domain_name, null, $switch_detect);
+				$domain_uuid = $system->domain_uuid();
+				$system->admin_username = $admin_username;
+				$system->admin_password = $admin_password;
+				$system->default_country = $install_default_country;
+				$system->install_language = $install_language;
+				$system->template_name = $install_template_name;
 				foreach($_POST as $key=>$value){
 					if(substr($key,0,3) == "db_"){
-						$fusionPBX->$key = $value;
+						$system->$key = $value;
 					}
+				}
+
+				//include the config.php
+				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+					require_once $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+				} elseif (file_exists("/etc/fusionpbx/config.php")) {
+					require_once "/etc/fusionpbx/config.php";
+				} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+					require_once "/usr/local/etc/fusionpbx/config.php";
 				}
 
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
-				//$fusionPBX->debug = true;
-				$fusionPBX->install();
+				//$system->debug = true;
+				$system->install();
 				$switch->install();
-				$fusionPBX->app_defaults();
+				$system->app_defaults();
 				$switch_detect->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
-					$fusionPBX = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
-					$fusionPBX->remove_config();
+					$system = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
+					$system->remove_config();
 				}catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
 				}
