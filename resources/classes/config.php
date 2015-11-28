@@ -1,10 +1,10 @@
 <?php
 
 /**
- * destinations
+ * config
  *
  * @method get config.php
- * @method exists determin if the the config.php file exists
+ * @method find find the path to the config.php file
  * @method exists determin if the the config.php file exists
  */
 class config {
@@ -49,22 +49,21 @@ class config {
 	 * @var string $db_port - network port to connect to the database
 	 */
 	public function get() {
-			$this->find();
-			if ($this->exists) {
-				include($this->path);
-				$this->db_type = $db_type;
-				$this->db_name = $db_name;
-				$this->db_username = $db_username;
-				$this->db_password = $db_password;
-				$this->db_host = $db_host;
-				$this->db_path = $db_path;
-				$this->db_port = $db_port;
-			}
+		$this->find();
+		if ($this->exists) {
+			include($this->path);
+			$this->db_type = $db_type;
+			$this->db_name = $db_name;
+			$this->db_username = $db_username;
+			$this->db_password = $db_password;
+			$this->db_host = $db_host;
+			$this->db_path = $db_path;
+			$this->db_port = $db_port;
 		}
 	}
 
 	/**
-	 * determine if the config.php exists
+	 * Find the path to the config.php
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public function find() {
