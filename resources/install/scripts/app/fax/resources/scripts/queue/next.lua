@@ -2,7 +2,7 @@ require "resources.functions.config"
 
 require "resources.functions.sleep"
 local log       = require "resources.functions.log".next_fax_task
-local Tasks     = require "fax_queue.tasks"
+local Tasks     = require "app.fax.resources.scripts.queue.tasks"
 local Esl       = require "resources.functions.esl"
 
 local FAX_OPTIONS = {
@@ -30,11 +30,11 @@ local function next_task()
 
     local mode = (task.retry_counter % #FAX_OPTIONS) + 1
     local dial_string  = '{' ..
-      task.dial_string .. "api_hangup_hook='lua fax_queue/retry.lua'," ..
+      task.dial_string .. "api_hangup_hook='lua app/fax/resources/scripts/queue/retry.lua'," ..
       FAX_OPTIONS[mode] .. 
     '}' .. task.uri
 
-    local originate = 'originate ' .. dial_string .. ' &lua(fax_queue/exec.lua)'
+    local originate = 'originate ' .. dial_string .. ' &lua(app/fax/resources/scripts/queue/exec.lua)'
 
     log.notice(originate)
     esl = assert(Esl.new())
