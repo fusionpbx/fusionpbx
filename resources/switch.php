@@ -1273,7 +1273,7 @@ if (!function_exists('switch_conf_xml')) {
 
 				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
 
-				$v_mail_bat = path_join($secure_path, 'v_mailto.bat');
+				$v_mail_bat = path_join($secure_path, 'mailto.bat');
 				$v_mail_cmd = '@' . 
 					'"' . str_replace('/', '\\', path_join($bindir, 'php.exe')) . '" ' .
 					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
