@@ -50,7 +50,7 @@ class config {
 	 */
 	public function get() {
 		$this->find();
-		if ($this->exists) {
+		if ($this->exists()) {
 			require $this->config_path;
 			$this->db_type = $db_type;
 			$this->db_name = $db_name;
