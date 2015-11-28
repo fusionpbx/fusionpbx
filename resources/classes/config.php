@@ -51,7 +51,7 @@ class config {
 	public function get() {
 		$this->find();
 		if ($this->exists) {
-			include($this->path);
+			require $this->config_path;
 			$this->db_type = $db_type;
 			$this->db_name = $db_name;
 			$this->db_username = $db_username;
@@ -105,6 +105,19 @@ $db_password = $config->db_password;
 $db_host = $config->db_host;
 $db_path = $config->db_path;
 $db_port = $config->db_port;
+echo "config_path: ".$config_path."\n";
+if ($config_exists) {
+	echo "config_exists: true\n";
+} else {
+	echo "config_exists: false\n";
+}
+echo "db_type: ".$db_type."\n";
+echo "db_name: ".$db_name."\n";
+echo "db_username: ".$db_username."\n";
+echo "db_password: ".$db_password."\n";
+echo "db_host: ".$db_host."\n";
+echo "db_path: ".$db_path."\n";
+echo "db_port: ".$db_port."\n";
 */
 
 ?>
