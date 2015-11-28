@@ -67,17 +67,21 @@ class config {
 	 * @var string $config_path - full path to the config.php file
 	 */
 	public function find() {
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-			$this->config_path = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
-		} elseif (file_exists("/etc/fusionpbx/config.php")) {
-			$this->config_path = "/etc/fusionpbx/config.php";
-		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-			$this->config_path = "/usr/local/etc/fusionpbx/config.php";
-		}
-		else {
-			$this->config_path = '';
-		}
-		return $this->config_path;
+		//get the PROJECT PATH
+			include "root.php";
+		// find the file
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+				$this->config_path = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+			} elseif (file_exists("/etc/fusionpbx/config.php")) {
+				$this->config_path = "/etc/fusionpbx/config.php";
+			} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+				$this->config_path = "/usr/local/etc/fusionpbx/config.php";
+			}
+			else {
+				$this->config_path = '';
+			}
+		//return the path
+			return $this->config_path;
 	}
 
 	/**

@@ -215,7 +215,20 @@
 		public function upgrade() {
 
 			//set the global variable
-				global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
+				global $db;
+
+			//get the db variables
+				$config = new config;
+				$config_exists = $config->exists();
+				$config_path = $config->find();
+				$config->get();
+				$db_type = $config->db_type;
+				$db_name = $config->db_name;
+				$db_username = $config->db_username;
+				$db_password = $config->db_password;
+				$db_host = $config->db_host;
+				$db_path = $config->db_path;
+				$db_port = $config->db_port;
 
 			//get the PROJECT PATH
 				include "root.php";
