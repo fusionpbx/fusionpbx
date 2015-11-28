@@ -35,11 +35,11 @@ include "root.php";
 		protected $config_php;
 		protected $menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 		protected $dbh;
-		
+
 		public function domain_uuid() { return $this->_domain_uuid; }
 
 		public $debug = false;
-		
+
 	 	public $install_msg;
 	 	public $install_language = 'en-us';
 	 	public $admin_username;
@@ -183,10 +183,11 @@ include "root.php";
 			$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 			$tmp_config .= "\n";
 			$tmp_config .= "?>";
-	
-			if((file_exists($this->config_php) and !is_writable($this->config_php))
-			   or !is_writable(dirname($this->config_php))
-			   ){
+
+			if((file_exists($this->config_php)
+				and !is_writable($this->config_php))
+				or !is_writable(dirname($this->config_php))
+				) {
 				throw new Exception("cannot write to '" . $this->config_php . "'" );
 			}
 			$this->write_progress("Creating " . $this->config_php);
@@ -978,17 +979,6 @@ include "root.php";
 		public function app_defaults() {
 			$this->write_progress("Running app_defaults");
 
-		//include the config.php
-			if (strlen($db_name) == 0) {
-				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-					require_once $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
-				} elseif (file_exists("/etc/fusionpbx/config.php")) {
-					require_once "/etc/fusionpbx/config.php";
-				} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-					require_once "/usr/local/etc/fusionpbx/config.php";
-				}
-			}
-
 		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;
 			$_SESSION["domain_uuid"] = $this->_domain_uuid;
@@ -1029,9 +1019,19 @@ include "root.php";
 			$_SESSION['permissions'] = $prep_statementsub->fetchAll(PDO::FETCH_NAMED);
 			unset($sql, $prep_statementsub);
 
+
+		//include the config.php
+			$db_type = $this->db_type;
+			$db_path = $this->db_path;
+			$db_host = $this->db_host;
+			$db_port = $this->db_port;
+			$db_name = $this->db_name;
+			$db_username = $this->db_username;
+			$db_password = $this->db_password;
+
+		//add the database structure
 			require_once "resources/classes/schema.php";
 			global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
-
 			$schema = new schema;
 			echo $schema->schema();
 
