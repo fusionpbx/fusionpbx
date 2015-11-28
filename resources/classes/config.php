@@ -4,12 +4,13 @@
  * destinations
  *
  * @method get config.php
- * @method exists check to see if the config.php exists
+ * @method exists determin if the the config.php file exists
+ * @method exists determin if the the config.php file exists
  */
 class config {
 
 	/**
-	 * destinations array
+	 * database variables and config path
 	 */
 	public $db_type;
 	public $db_name;
@@ -18,6 +19,7 @@ class config {
 	public $db_host;
 	public $db_path;
 	public $db_port;
+	public $config_path;
 
 	/**
 	 * Called when the object is created
@@ -47,31 +49,44 @@ class config {
 	 * @var string $db_port - network port to connect to the database
 	 */
 	public function get() {
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-			include($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php");
-		} elseif (file_exists("/etc/fusionpbx/config.php")) {
-			include("/etc/fusionpbx/config.php");
-		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-			include("/usr/local/etc/fusionpbx/config.php");
+			$this->find();
+			if ($this->exists) {
+				include($this->path);
+				$this->db_type = $db_type;
+				$this->db_name = $db_name;
+				$this->db_username = $db_username;
+				$this->db_password = $db_password;
+				$this->db_host = $db_host;
+				$this->db_path = $db_path;
+				$this->db_port = $db_port;
+			}
 		}
-		$this->db_type = $db_type;
-		$this->db_name = $db_name;
-		$this->db_username = $db_username;
-		$this->db_password = $db_password;
-		$this->db_host = $db_host;
-		$this->db_path = $db_path;
-		$this->db_port = $db_port;
+	}
+
+	/**
+	 * determine if the config.php exists
+	 * @var string $config_path - full path to the config.php file
+	 */
+	public function find() {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+			$this->config_path = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+		} elseif (file_exists("/etc/fusionpbx/config.php")) {
+			$this->config_path = "/etc/fusionpbx/config.php";
+		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			$this->config_path = "/usr/local/etc/fusionpbx/config.php";
+		}
+		else {
+			$this->config_path = '';
+		}
+		return $this->config_path;
 	}
 
 	/**
 	 * Determine whether the config.php exists
 	 */
 	public function exists() {
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-			return true;
-		} elseif (file_exists("/etc/fusionpbx/config.php")) {
-			return true;
-		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+		$this->find();
+		if (strlen($this->config_path) > 0) {
 			return true;
 		}
 		else {
@@ -81,8 +96,16 @@ class config {
 }
 /*
 $config = new config;
-$config = $config->get;
 $config_exists = $config->exists();
+$config_path = $config->find();
+$config->get();
+$db_type = $config->db_type;
+$db_name = $config->db_name;
+$db_username = $config->db_username;
+$db_password = $config->db_password;
+$db_host = $config->db_host;
+$db_path = $config->db_path;
+$db_port = $config->db_port;
 */
 
 ?>
