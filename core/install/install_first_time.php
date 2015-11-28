@@ -303,15 +303,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 					}
 				}
 
-				//include the config.php
-				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-					require_once $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
-				} elseif (file_exists("/etc/fusionpbx/config.php")) {
-					require_once "/etc/fusionpbx/config.php";
-				} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-					require_once "/usr/local/etc/fusionpbx/config.php";
-				}
-
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
