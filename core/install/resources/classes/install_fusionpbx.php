@@ -1014,11 +1014,10 @@ include "root.php";
 					$x++;
 				}
 			}
-			$prep_statementsub = $this->dbh->prepare($sql);
-			$prep_statementsub->execute();
-			$_SESSION['permissions'] = $prep_statementsub->fetchAll(PDO::FETCH_NAMED);
-			unset($sql, $prep_statementsub);
-
+			$prep_statement_sub = $this->dbh->prepare($sql);
+			$prep_statement_sub->execute();
+			$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+			unset($sql, $prep_statement_sub);
 
 		//include the config.php
 			$db_type = $this->db_type;
@@ -1031,7 +1030,6 @@ include "root.php";
 
 		//add the database structure
 			require_once "resources/classes/schema.php";
-			global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
 			$schema = new schema;
 			echo $schema->schema();
 
