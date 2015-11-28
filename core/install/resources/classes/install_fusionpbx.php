@@ -978,6 +978,17 @@ include "root.php";
 		public function app_defaults() {
 			$this->write_progress("Running app_defaults");
 
+		//include the config.php
+			if (strlen($db_name) == 0) {
+				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+					require_once $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+				} elseif (file_exists("/etc/fusionpbx/config.php")) {
+					require_once "/etc/fusionpbx/config.php";
+				} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+					require_once "/usr/local/etc/fusionpbx/config.php";
+				}
+			}
+
 		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;
 			$_SESSION["domain_uuid"] = $this->_domain_uuid;
@@ -1020,10 +1031,10 @@ include "root.php";
 
 			require_once "resources/classes/schema.php";
 			global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
-	
+
 			$schema = new schema;
 			echo $schema->schema();
-	
+
 		//run all app_defaults.php files
 			$default_language = $this->install_language;
 			$domain = new domains;
