@@ -7,7 +7,7 @@
 	local log      = require "resources.functions.log".fax_retry
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
-	local Tasks    = require "fax_queue.tasks"
+	local Tasks    = require "app.fax.resources.scripts.queue.tasks"
 
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
 	local task           = Tasks.select_task(fax_task_uuid)

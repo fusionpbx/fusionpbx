@@ -9,7 +9,7 @@
 	require "resources.functions.sleep";
 
 	local log = require "resources.functions.log".fax_queue_monitor
-	local Next = require "fax_queue.next"
+	local Next = require "app.fax.resources.scripts.queue.next"
 
 	mkdir(scripts_dir .. "/run");
 
