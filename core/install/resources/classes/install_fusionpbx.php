@@ -54,7 +54,7 @@ include "root.php";
 		public $db_name;
 		public $db_username;
 		public $db_password;
-		
+
 	 	function __construct($domain_name, $domain_uuid, $detect_switch) {
 			if(!is_a($detect_switch, 'detect_switch')){
 				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
@@ -95,7 +95,7 @@ include "root.php";
 			require "resources/require.php";
 			$this->create_menus();
 		}
-		
+
 		protected function create_config_php() {
 			$tmp_config = "<?php\n";
 			$tmp_config .= "/* \$Id\$ */\n";
@@ -195,7 +195,7 @@ include "root.php";
 			unset($tmp_config);
 			fclose($fout);
 		}
-		
+
 		protected function create_database() {
 			require $this->config_php;
 			$this->write_progress("Creating database as " . $this->db_type);
@@ -204,6 +204,7 @@ include "root.php";
 			global $db;
 			$db = $this->dbh;
 		}
+
 		protected function create_database_sqlite() {
 			//sqlite database will be created when the config.php is loaded and only if the database file does not exist
 				try {
@@ -267,7 +268,7 @@ include "root.php";
 		}
 
 		protected function create_database_pgsql() {
-	
+
 				//if $this->db_create_username provided, attempt to create new PG role and database
 					if (strlen($this->db_create_username) > 0) {
 						try {
@@ -280,16 +281,16 @@ include "root.php";
 						} catch (PDOException $error) {
 							throw new Exception("error connecting to database: " . $error->getMessage());
 						}
-	
+
 						//create the database, user, grant perms
 						$this->dbh->exec("CREATE DATABASE {$this->db_name}");
 						$this->dbh->exec("CREATE USER {$this->db_username} WITH PASSWORD '{$this->db_password}'");
 						$this->dbh->exec("GRANT ALL ON {$this->db_name} TO {$this->db_username}");
-	
+
 						//close database connection_aborted
 						$this->dbh = null;
 					}
-	
+
 				//open database connection with $this->db_name
 					try {
 						if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
@@ -302,7 +303,7 @@ include "root.php";
 					catch (PDOException $error) {
 						throw new Exception("error connecting to database: " . $error->getMessage());
 					}
-	
+
 				//add the database structure
 					require_once "resources/classes/schema.php";
 					$schema = new schema;
@@ -310,7 +311,7 @@ include "root.php";
 					$schema->db_type = $this->db_type;
 					$schema->sql();
 					$schema->exec();
-	
+
 				//get the contents of the sql file
 					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
 						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
@@ -319,10 +320,10 @@ include "root.php";
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
 					}
 					$file_contents = file_get_contents($filename);
-	
+
 				//replace \r\n with \n then explode on \n
 					$file_contents = str_replace("\r\n", "\n", $file_contents);
-	
+
 				//loop line by line through all the lines of sql code
 					$string_array = explode("\n", $file_contents);
 					$x = 0;
@@ -339,7 +340,7 @@ include "root.php";
 					}
 					unset ($file_contents, $sql);
 			}
-	
+
 		protected function create_database_mysql() {
 				//database connection
 					try {
@@ -376,7 +377,7 @@ include "root.php";
 					catch (PDOException $error) {
 								throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
 					}
-	
+
 				//create the table, user and set the permissions only if the db_create_username was provided
 					if (strlen($this->db_create_username) > 0) {
 						//select the mysql database
@@ -388,7 +389,7 @@ include "root.php";
 									throw new Exception("error conencting to database: " . $error->getMessage());
 								}
 							}
-	
+
 						//create user and set the permissions
 							try {
 								$tmp_sql = "CREATE USER '".$this->db_username."'@'%' IDENTIFIED BY '".$this->db_password."'; ";
@@ -399,7 +400,7 @@ include "root.php";
 									print "error: " . $error->getMessage() . "<br/>";
 								}
 							}
-	
+
 						//set account to unlimited use
 							try {
 								if ($this->db_host == "localhost" || $this->db_host == "127.0.0.1") {
@@ -407,7 +408,7 @@ include "root.php";
 									$tmp_sql .= "IDENTIFIED BY '".$this->db_password."' ";
 									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
 									$this->dbh->query($tmp_sql);
-	
+
 									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->db_username."'@'127.0.0.1' ";
 									$tmp_sql .= "IDENTIFIED BY '".$this->db_password."' ";
 									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
@@ -425,7 +426,7 @@ include "root.php";
 									print "error: " . $error->getMessage() . "<br/>";
 								}
 							}
-	
+
 						//create the database and set the create user with permissions
 							try {
 								$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$this->db_name."; ";
@@ -436,7 +437,7 @@ include "root.php";
 									print "error: " . $error->getMessage() . "<br/>";
 								}
 							}
-	
+
 						//set user permissions
 							try {
 								$this->dbh->query("GRANT ALL PRIVILEGES ON ".$this->db_name.".* TO '".$this->db_username."'@'%'; ");
@@ -446,7 +447,7 @@ include "root.php";
 									print "error: " . $error->getMessage() . "<br/>";
 								}
 							}
-	
+
 						//make the changes active
 							try {
 								$tmp_sql = "FLUSH PRIVILEGES; ";
@@ -457,9 +458,9 @@ include "root.php";
 									print "error: " . $error->getMessage() . "<br/>";
 								}
 							}
-	
+
 					} //if (strlen($this->db_create_username) > 0)
-	
+
 				//select the database
 					try {
 						$this->dbh->query("USE ".$this->db_name.";");
@@ -469,7 +470,7 @@ include "root.php";
 							print "error: " . $error->getMessage() . "<br/>";
 						}
 					}
-	
+
 				//add the database structure
 					require_once "resources/classes/schema.php";
 					$schema = new schema;
@@ -477,7 +478,7 @@ include "root.php";
 					$schema->db_type = $this->db_type;
 					$schema->sql();
 					$schema->exec();
-	
+
 				//add the defaults data into the database
 					//get the contents of the sql file
 					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
@@ -487,10 +488,10 @@ include "root.php";
 						$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
 					}
 					$file_contents = file_get_contents($filename);
-	
+
 					//replace \r\n with \n then explode on \n
 						$file_contents = str_replace("\r\n", "\n", $file_contents);
-	
+
 					//loop line by line through all the lines of sql code
 						$string_array = explode("\n", $file_contents);
 						$x = 0;
@@ -512,7 +513,6 @@ include "root.php";
 						unset ($file_contents, $sql);
 		}
 
-		
 		protected function create_domain() {
 			$this->write_progress("Checking if domain exists '" . $this->domain_name . "'");
 			$sql = "select * from v_domains ";
@@ -529,7 +529,7 @@ include "root.php";
 				if($result['domain_enabled'] != 'true'){
 					throw new Exception("Domain already exists but is disabled, this is unexpected");
 				}
-			}else{
+			} else {
 				$this->write_progress("... creating domain");
 				$sql = "insert into v_domains ";
 				$sql .= "(";
@@ -543,11 +543,11 @@ include "root.php";
 				$sql .= "'".$this->domain_name."', ";
 				$sql .= "'' ";
 				$sql .= ");";
-				
+
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
 				unset($sql);
-		
+
 				//domain settings
 				$x = 0;
 				$tmp[$x]['name'] = 'uuid';
@@ -579,7 +579,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'template';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-				
+
 				//switch settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $switch_bin_dir;
@@ -677,7 +677,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'dialplan';
 				$tmp[$x]['enabled'] = 'false';
 				$x++;
-		
+
 				//server settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->detect_switch->temp_dir();
@@ -698,7 +698,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'backup';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-		
+
 				$this->dbh->beginTransaction();
 				foreach($tmp as $row) {
 					$sql = "insert into v_default_settings ";
@@ -725,7 +725,7 @@ include "root.php";
 				}
 				$this->dbh->commit();
 				unset($tmp);
-		
+
 			//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
@@ -733,7 +733,7 @@ include "root.php";
 					include($config_path);
 					$x++;
 				}
-		
+
 			//add the groups
 				$x = 0;
 				$tmp[$x]['group_name'] = 'superadmin';
@@ -807,7 +807,7 @@ include "root.php";
 				$this->dbh->commit();
 			}
 		}
-		
+
 		protected function create_superuser() {
 			$this->write_progress("Checking if superuser exists '" . $this->domain_name . "'");
 			$sql = "select * from v_users ";
@@ -926,14 +926,14 @@ include "root.php";
 				unset($sql);
 			}
 		}
-	
+
 		protected function create_menus() {
 			$this->write_progress("Creating menus");
 		//set the defaults
 			$menu_name = 'default';
 			$menu_language = 'en-us';
 			$menu_description = 'Default Menu Set';
-			
+
 			$this->write_progress("Checking if menu exists");
 			$sql = "select count(*) from v_menus ";
 			$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
@@ -964,7 +964,7 @@ include "root.php";
 				}
 				$this->dbh->exec(check_sql($sql));
 				unset($sql);
-		
+
 			//add the menu items
 				require_once "resources/classes/menu.php";
 				$menu = new menu;
@@ -974,10 +974,10 @@ include "root.php";
 				unset($menu);
 			}
 		}
-		
+
 		public function app_defaults() {
 			$this->write_progress("Running app_defaults");
-			
+
 		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;
 			$_SESSION["domain_uuid"] = $this->_domain_uuid;
@@ -986,7 +986,7 @@ include "root.php";
 			$_SESSION['event_socket_ip_address'] = $this->detect_switch->event_host;
 			$_SESSION['event_socket_port'] = $this->detect_switch->event_port;
 			$_SESSION['event_socket_password'] = $this->detect_switch->event_password;
-			
+
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 			$sql = "SELECT * FROM v_group_users ";
 			$sql .= "where domain_uuid=:domain_uuid ";
@@ -998,7 +998,7 @@ include "root.php";
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			$_SESSION["groups"] = $result;
 			unset($sql, $row_count, $prep_statement);
-	
+
 		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
 			$x = 0;
 			$sql = "select distinct(permission_name) from v_group_permissions ";
@@ -1028,18 +1028,18 @@ include "root.php";
 			$default_language = $this->install_language;
 			$domain = new domains;
 			$domain->upgrade();
-	
+
 		//synchronize the config with the saved settings
 			save_switch_xml();
-	
+
 		//do not show the apply settings reminder on the login page
 			$_SESSION["reload_xml"] = false;
-	
+
 		//clear the menu
 			$_SESSION["menu"] = "";
-	
+
 		}
-	
+
 		public function remove_config() {
 			if (file_exists('/bin/rm')) {
 				$this->write_debug('rm -f ' . $this->config_php);
@@ -1056,4 +1056,5 @@ include "root.php";
 			clearstatcache();
 		}
 	}
+
 ?>
