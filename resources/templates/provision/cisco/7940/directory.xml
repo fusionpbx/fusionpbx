@@ -1,28 +1,17 @@
 <CiscoIPPhoneMenu>
 	<Title>Contacts</Title>
 	<Prompt>Please choose...</Prompt>
+
 	<!--
 	<MenuItem>
 		<Name>Personal</Name>
-		<URL>http://{$domain_name}/app/provision?file=directory-personal.xml</URL>
+		<URL>http://{$domain_name}/app/provision/file/directory-personal.xml</URL>
 	</MenuItem>
-	-->
-	<MenuItem>
-		<Name>Enterprise</Name>
-		<URL>http://{$domain_name}/app/provision?file=directory-enterprise.xml</URL>
+	-->	<MenuItem>		<Name>Enterprise</Name>
+		<URL>http://{$domain_name}/app/provision/file/directory-enterprise.xml?mac={$mac}</URL>
 	</MenuItem>
 	<MenuItem>
 		<Name>Speed Dial</Name>
-		<URL>http://{$domain_name}/app/provision/?file=directory-speed_dial.xml</URL>
+		<URL>http://{$domain_name}/app/provision/file/directory-speed_dial.xml?mac={$mac}</URL>
 	</MenuItem>
-	<SoftKeyItem>
-		<Name>Select</Name>
-		<URL>SoftKey:Select</URL>
-		<Position>1</Position>
-	</SoftKeyItem>
-	<SoftKeyItem>
-		<Name>Exit</Name>
-		<URL>SoftKey:Exit</URL>
-		<Position>4</Position>
-	</SoftKeyItem>
 </CiscoIPPhoneMenu>
