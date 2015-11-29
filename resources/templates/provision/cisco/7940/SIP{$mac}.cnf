@@ -4,7 +4,7 @@ image_version: "{$cisco_image_version}"
 {/if}
 
 # Phone settings
-phone_label: "{$device_label}"
+phone_label: "{$label}"
 proxy_register: 1
 timer_register_expires: 300
 preferred_codec: g711ulaw
