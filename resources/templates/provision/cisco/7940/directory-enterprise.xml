@@ -6,23 +6,23 @@
 		<URL>SoftKey:Select</URL>
 		<Position>1</Position>
 	</SoftKeyItem>
-	{assign var=x value=1}
-	{foreach $contacts as $row}
-		{if $row.contact_category == "enterprise"}
-		<MenuItem>
-			{if $row.contact_name_given != ""}
-			<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
-			{else}
-			<Name>{$row.contact_organization}</Name>
-			{/if}
-			{if $row.phone_number != ""}
-			<URL>Dial:{$row.phone_number}#</URL>
-			{else}
-			<URL>Dial:{$row.phone_extension}#</URL>
-			{/if}
-		</MenuItem>
-		{/if}
-	{/foreach}
+{assign var=x value=1}
+{foreach $contacts as $row}{if $row.contact_category == "enterprise"}
+<MenuItem>
+{if $row.contact_name_given != ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+{else}
+	<Name>{$row.contact_organization}</Name>
+{/if}
+{if $row.phone_number != ""}
+	<URL>Dial:{$row.phone_number}#</URL>
+{else}
+	<URL>Dial:{$row.phone_extension}#</URL>
+{/if}
+</MenuItem>
+{/if}
+{assign var=x value=$x+1}
+{/foreach}
 	<SoftKeyItem>
 		<Name>Exit</Name>
 		<URL>SoftKey:Exit</URL>
