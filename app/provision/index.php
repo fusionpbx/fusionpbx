@@ -46,7 +46,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	if (empty($mac)){
 		$name = check_str($_REQUEST['name']);
 		if (substr($name, 0, 3) == "SEP") {
-			$mac = substr($name, 3, 12);
+			$mac = strtolower(substr($name, 3, 12));
 			unset($name);
 		}
 	}
