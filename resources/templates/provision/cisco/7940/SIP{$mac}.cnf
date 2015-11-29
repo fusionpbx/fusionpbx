@@ -1,6 +1,5 @@
-
-# Image version
 {if isset($cisco_time_zone)}
+# Image version
 image_version: "{$cisco_image_version}"
 {/if}
 
@@ -14,13 +13,13 @@ dial_template: "dialplan"
 
 {foreach $lines as $row}reg.{$row.line_number}.displayName="{$row.display_name}"
 #registration information
-proxy{$row.line_number}_address: "{$server_address_1}"
-proxy{$row.line_number}_port:"5060"
-line{$row.line_number}_name: "{$user_id_1}"
+proxy{$row.line_number}_address: "{$row.server_address}"
+proxy{$row.line_number}_port:"{$row.sip_port}"
+line{$row.line_number}_name: "{$row.user_id}"
 line{$row.line_number}_displayname: "{$row.user_id}"
 line{$row.line_number}_shortname: "{$row.display_name}"
 line{$row.line_number}_authname: "{$row.auth_id}"
-line{$row.line_number}_password: "{$row.user_password}"
+line{$row.line_number}_password: "{$row.password}"
 
 {/foreach}
 # Emergency Proxy info
