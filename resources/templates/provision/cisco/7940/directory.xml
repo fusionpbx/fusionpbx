@@ -4,16 +4,16 @@
 	<!--
 	<MenuItem>
 		<Name>Personal</Name>
-		<URL>http://{$domain_name}/app/provision?file=directory-personal.xml&amp;mac={$mac}</URL>
+		<URL>http://{$domain_name}/app/provision?mac={$mac}&amp;file=directory-personal.xml</URL>
 	</MenuItem>
 	-->
 	<MenuItem>
 		<Name>Enterprise</Name>
-		<URL>http://{$domain_name}/app/provision?file=directory-enterprise&amp;mac={$mac}</URL>
+		<URL>http://{$domain_name}/app/provision?mac={$mac}&amp;file=directory-enterprise.xml</URL>
 	</MenuItem>
 	<MenuItem>
 		<Name>Speed Dial</Name>
-		<URL>http://{$domain_name}/app/provision/?file=directory-speed_dial&amp;mac={$mac}</URL>
+		<URL>http://{$domain_name}/app/provision/?mac={$mac}&amp;file=directory-speed_dial.xml</URL>
 	</MenuItem>
 	<SoftKeyItem>
 		<Name>Select</Name>
