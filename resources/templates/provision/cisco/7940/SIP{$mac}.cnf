@@ -39,7 +39,7 @@ voip_control_port: "5060"
 start_media_port: "16384"
 end_media_port:  "32768"
 nat_received_processing: "0"
-{if isset($nat_enable)}nat_enable: "{$nat_enable}"{else}1{/if}
+nat_enable: "{if isset($nat_enable)}{$nat_enable}{else}1{/if}"
 nat_address: "{$nat_nat_address}"
 
 # Sync value of the phone used for remote reset
