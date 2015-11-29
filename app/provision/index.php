@@ -283,7 +283,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	if ($_REQUEST['content_type'] = 'application/octet-stream') {
+	if ($_REQUEST['content_type'] == 'application/octet-stream') {
 		$file_name = str_replace("{\$mac}",$mac,$file);
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
