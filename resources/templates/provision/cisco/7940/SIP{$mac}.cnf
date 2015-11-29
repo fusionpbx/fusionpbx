@@ -35,12 +35,15 @@ outbound_proxy: "{$outbound_proxy}"
 outbound_proxy_port: "{$outbound_proxy_port}"
  
 # NAT/Firewall Traversal
-nat_enable: "{$nat_enable}"
-nat_address: "{$nat_nat_address}"
 voip_control_port: "5060"
 start_media_port: "16384"
 end_media_port:  "32768"
 nat_received_processing: "0"
+{if isset($nat_enable)}nat_enable: "{$nat_enable}"{else}1{/if}
+nat_address: "{$nat_nat_address}"
+
+# Sync value of the phone used for remote reset
+sync: 1                         ; Default 1
 
 # Proxy Registration (0-disable (default), 1-enable)
 proxy_register: "1"
