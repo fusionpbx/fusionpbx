@@ -1,31 +1,25 @@
-<CiscoIPPhoneMenu>
+<CiscoIPPhoneDirectory>
 	<Title>Enterprise</Title>
 	<Prompt>Please choose...</Prompt>
-	<SoftKeyItem>
-		<Name>Dial</Name>
-		<URL>SoftKey:Select</URL>
-		<Position>1</Position>
-	</SoftKeyItem>
 {assign var=x value=1}
 {foreach $contacts as $row}{if $row.contact_category == "enterprise"}
-<MenuItem>
+<DirectoryEntry>
 {if $row.contact_name_given != ""}
 	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
 {else}
 	<Name>{$row.contact_organization}</Name>
 {/if}
 {if $row.phone_number != ""}
-	<URL>Dial:{$row.phone_number}#</URL>
+	<Telephone>{$row.phone_number}</Telephone>
 {else}
-	<URL>Dial:{$row.phone_extension}#</URL>
+	<Telephone>{$row.phone_extension}</Telephone>
 {/if}
-</MenuItem>
+</DirectoryEntry>
 {/if}
 {assign var=x value=$x+1}
 {/foreach}
-	<SoftKeyItem>
-		<Name>Exit</Name>
-		<URL>SoftKey:Exit</URL>
-		<Position>4</Position>
-	</SoftKeyItem>
-</CiscoIPPhoneMenu>
+</CiscoIPPhoneDirectory>
+
+
+
+
