@@ -186,14 +186,10 @@ require_once "resources/require.php";
 	echo "<th>".$text['label-tag']."</th>";
 	echo "<th><img src='$project_path/themes/flags/$reference_language.png' alt='$reference_language'/>&nbsp;".$text["language-$reference_language"]."</th>\n";
 	if(strlen($target_language) > 0 ) { echo "<th><img src='$project_path/themes/flags/$target_language.png' alt='$target_language'/>&nbsp;".$text["language-$target_language"]."</th>\n"; }
-	echo "<th>".$text['label-tag']."</th>";
-	echo "<th><img src='$project_path/themes/flags/$reference_language.png' alt='$reference_language'/>&nbsp;".$text["language-$reference_language"]."</th>\n";
-	if(strlen($target_language) > 0 ) { echo "<th><img src='$project_path/themes/flags/$target_language.png' alt='$target_language'/>&nbsp;".$text["language-$target_language"]."</th>\n"; }
 	echo "</tr>\n";
-	$c = 0;
 	foreach ($language_labels as $lang_label){
 		if( preg_match( '/\Alanguage-\w{2}(?:-\w{2})?\z/', $lang_label) ) { break; }
-		if( $c%2==0 ) { echo "<tr>\n"; }
+		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>$lang_label";
 		if(isset($global_text[$lang_label])){
 			echo "&nbsp;<img src='$project_path/themes/enhanced/images/warning.png' alt='!' title=\"".$text['warning-global_already_defined']."'".$reference_text[$lang_label]."'\"/>";
@@ -215,10 +211,8 @@ require_once "resources/require.php";
 			}
 			echo "</td>\n";
 		}
-			if( $c%2 ) { echo "</tr>\n"; }
-			$c++;
+			echo "</tr>\n";
 	}
-	if( $c%2==0 ) { echo "</tr>\n"; }
 	echo "</table>\n";
 	
 //include the footer
