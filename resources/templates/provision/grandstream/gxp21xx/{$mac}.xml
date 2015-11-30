@@ -3611,6 +3611,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 {if $row.device_key_type == "call park"}    <P{$type_id}>9</P{$type_id}>{/if}
 {if $row.device_key_type == "intercom"}    <P{$type_id}>10</P{$type_id}>{/if}
 {if $row.device_key_type == "ldap search"}    <P{$type_id}>11</P{$type_id}>{/if}
+
     <P{$line_id}>{$row.device_key_line}</P{$line_id}>
     <P{$label_id}>{$row.device_key_label}</P{$label_id}>
     <P{$value_id}>{$row.device_key_value}</P{$value_id}>
