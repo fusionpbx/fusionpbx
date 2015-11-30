@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@ require_once "root.php";
 require_once "resources/functions.php";
 require_once "resources/classes/text.php";
 
-//initialize varibles we are going to use
+//initialize variables we are going to use
 	$event_host = '';
 	$event_port = '';
 	$event_password = '';
@@ -63,7 +63,7 @@ if (is_link('/etc/localtime')) {
     // Ubuntu / Debian.
     $data = file_get_contents('/etc/timezone');
     if ($data) {
-        $timezone = $data;
+        $timezone = rtrim($data);
     }
 } elseif (file_exists('/etc/sysconfig/clock')) {
     // RHEL / CentOS
@@ -80,7 +80,6 @@ $first_time_install = true;
 if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 	$first_time_install = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
-	//linux
 	$first_time_install = false;
 } elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 	$first_time_install = false;
@@ -98,7 +97,7 @@ if(!$first_time_install) {
 $install_step = '';
 $return_install_step = '';
 
-if (count($_POST)>0) {
+if (count($_POST) > 0) {
 	$install_language = check_str($_POST["install_language"]);
 	$install_step = check_str($_POST["install_step"]);
 	$return_install_step = check_str($_POST["return_install_step"]);
@@ -130,7 +129,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 	if (isset($_SESSION['domain']['template']['name']) and strlen($_SESSION['domain']['template']['name']) != 0) {
 		$default_template = $_SESSION['domain']['template']['name'];
 	}
-	
+
 //set a default enviroment if first_time
 	if($first_time_install){
 	//initialize some varibles to cut down on warnings
@@ -147,7 +146,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 //buffer the content
 	ob_end_clean(); //clean the buffer
 	ob_start();
-	
+
 	$messages = array();
 	if (!extension_loaded('PDO')) {
 		$messages[] = "<b>PHP PDO was not detected</b>. Please install it before proceeding";
@@ -168,7 +167,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				"<sm>You can use the following to find what ports are allowed<pre>semanage port -l | grep '^http_port_t'</pre></sm>";
 			}
 		}
-	
+
 	//action code
 	if($return_install_step == 'config_detail'){
 	//check for all required data
@@ -185,11 +184,8 @@ if(!$install_step) { $install_step = 'select_language'; }
 		
 		//set the max execution time to 1 hour
 		ini_set('max_execution_time',3600);
-
 	}
-	
 
-	
 	//display messages
 	if (count($messages)>0) {
 		echo "<br />\n";
@@ -224,6 +220,9 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "	</div>\n";
 		echo "</form>\n";
 	}elseif($install_step == 'detect_config'){
+		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
+			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
+		}
 		include "resources/page_parts/install_event_socket.php";
 		if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
@@ -236,6 +235,12 @@ if(!$install_step) { $install_step = 'select_language'; }
 			echo "	<div style='text-align:right'>\n";
 			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
+			echo "	</div>\n";
+			echo "</form>\n";
+		}else{
+			echo "<form method='post' name='frm' action=''>\n";
+			echo "	<div style='text-align:right'>\n";
+			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
 		}
@@ -262,7 +267,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		try {
 			$switch_detect->detect();
 		} catch(Exception $e){
-			echo "<p>Failed to detect confgiuration detect_switch reported: " . $e->getMessage() . "</p>\n";
+			echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
 			$detect_ok = false;
 		}
 		if($detect_ok){
@@ -285,32 +290,34 @@ if(!$install_step) { $install_step = 'select_language'; }
 			#set_error_handler("error_handler");
 			try {
 				require_once "resources/classes/install_fusionpbx.php";
-				$fusionPBX = new install_fusionpbx($domain_name, null, $switch_detect);
-				$domain_uuid = $fusionPBX->domain_uuid();
-				//$fusionPBX->debug = true;
-				$fusionPBX->admin_username = $admin_username;
-				$fusionPBX->admin_password = $admin_password;
-				$fusionPBX->default_country = $install_default_country;
-				$fusionPBX->install_language = $install_language;
-				$fusionPBX->template_name = $install_template_name;
+				$system = new install_fusionpbx($domain_name, null, $switch_detect);
+				$domain_uuid = $system->domain_uuid();
+				$system->admin_username = $admin_username;
+				$system->admin_password = $admin_password;
+				$system->default_country = $install_default_country;
+				$system->install_language = $install_language;
+				$system->template_name = $install_template_name;
 				foreach($_POST as $key=>$value){
 					if(substr($key,0,3) == "db_"){
-						$fusionPBX->$key = $value;
+						$system->$key = $value;
 					}
 				}
-				$fusionPBX->install();
-		
+
 				require_once "resources/classes/install_switch.php";
 				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
 				//$switch->debug = true;
+				//$system->debug = true;
+				$system->install();
 				$switch->install();
+				$system->app_defaults();
+				$switch_detect->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
-					$fusionPBX = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
-					$fusionPBX->remove_config();
+					$system = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
+					$system->remove_config();
 				}catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
 				}
@@ -345,6 +352,7 @@ if($first_time_install){
 		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
 		$_SESSION['menu'] = '';
 }
+
 // add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer

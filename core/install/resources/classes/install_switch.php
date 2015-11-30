@@ -35,7 +35,14 @@ include "root.php";
 		public $debug = false;
 
 		function __construct($domain_name, $domain_uuid, $detect_switch) {
-			if(!is_a($detect_switch, 'detect_switch')){
+			if($detect_switch == null){
+				if(strlen($_SESSION['event_socket_ip_address']) == 0 or strlen($_SESSION['event_socket_port']) == 0 or strlen($_SESSION['event_socket_password']) == 0 ){
+					throw new Exception('The parameter $detect_switch was empty and i could not find the event socket details from the session');
+				}
+				$detect_switch = new detect_switch($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$domain_name = $_SESSION['domain_name'];
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}elseif(!is_a($detect_switch, 'detect_switch')){
 				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
 			}
 			$this->domain_uuid = $domain_uuid;
@@ -166,13 +173,9 @@ include "root.php";
 			}
 		}
 
-
 		function install() {
 			$this->copy_conf();
 			$this->copy_scripts();
-		//tell freeswitch to restart
-			$this->write_progress("Restarting switch");
-			$this->detect_switch->restart_switch();
 		}
 
 		function upgrade() {
@@ -182,10 +185,10 @@ include "root.php";
 		function copy_conf() {
 			$this->write_progress("Copying Config");
 			//make a backup of the config
-			if (file_exists($this->detect_switch->conf_dir())) {
-				$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
-				$this->recursive_delete($this->detect_switch->conf_dir());
-			}
+				if (file_exists($this->detect_switch->conf_dir())) {
+					$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
+					$this->recursive_delete($this->detect_switch->conf_dir());
+				}
 			//make sure the conf directory exists
 				if (!is_dir($this->detect_switch->conf_dir())) {
 					if (!mkdir($this->detect_switch->conf_dir(), 0774, true)) {
@@ -236,15 +239,21 @@ include "root.php";
 
 		function copy_scripts() {
 			$this->write_progress("Copying Scripts");
-			if (file_exists($this->detect_switch->script_dir())) {
+			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+				$script_dir = $_SESSION['switch']['scripts']['dir'];
+			}
+			else {
+				$script_dir = $this->detect_switch->script_dir();
+			}
+			if (file_exists($script_dir)) {
 				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
 					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
 				}
 				else {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
 				}
-				$dst_dir = $this->detect_switch->script_dir();
-				if (is_readable($this->detect_switch->script_dir())) {
+				$dst_dir = $script_dir;
+				if (is_readable($script_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
 					unset($src_dir, $dst_dir);
 				}

@@ -1,7 +1,7 @@
 -- @usage without queue
--- api: originate {fax_file='',wav_file='',fax_dtmf=''}user/108@domain.local &lua(fax_queue/exec.lua)
+-- api: originate {fax_file='',wav_file='',fax_dtmf=''}user/108@domain.local &lua(app/fax/resources/scripts/queue/exec.lua)
 -- @usage with queue task
--- api: originate {fax_task_uuid=''}user/108@domain.local &lua(fax_queue/exec.lua)
+-- api: originate {fax_task_uuid=''}user/108@domain.local &lua(app/fax/resources/scripts/queue/exec.lua)
 -- @fax_dtmf
 --  0-9*# - dtmf symbols
 --  @200  - dtmf duration in ms
@@ -18,7 +18,7 @@ local log = require "resources.functions.log".fax_task
 -- If we handle queue task
 local fax_task_uuid  = session:getVariable('fax_task_uuid')
 local task if fax_task_uuid then
-  local Tasks = require "fax_queue.tasks"
+  local Tasks = require "app.fax.resources.scripts.queue.tasks"
   task = Tasks.select_task(fax_task_uuid)
   if not task then
     log.warningf("Can not found fax task: %q", tostring(fax_task_uuid))
@@ -132,6 +132,12 @@ local function check()
 end
 
 local function task()
+  local session_uuid = session:getVariable('uuid')
+
+  session:setVariable('fax_queue_task_session', session_uuid)
+
+  log.infof("SESSION UUID: %s", session_uuid)
+
   session:waitForAnswer(session)
 
   while not session:answered() do

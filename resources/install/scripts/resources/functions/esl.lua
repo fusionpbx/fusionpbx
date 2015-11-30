@@ -117,7 +117,11 @@ function EventSocket:api(cmd)
   local event, err = self:_request('api ' .. cmd)
   if not event then return nil, err end
   local body = event:getBody()
-  if body then return body end
+  if body then
+    local ok, status, msg = split_status(body)
+    if ok == nil then return body end
+    return ok, status, msg
+  end
   return event:getReply()
 end
 
@@ -134,6 +138,13 @@ if freeswitch then
 
 local api
 
+-- [+-][OK|ERR|USAGE|...][Message]
+local function split_status(str)
+  local ok, status, msg = string.match(str, "^%s*([-+])([^%s]+)%s*(.-)%s*$")
+  if not ok then return nil, str end
+  return ok == '+', status, msg
+end
+
 function EventSocket:__init()
   self._api = api or freeswitch.API()
   api = self._api
@@ -142,10 +153,9 @@ end
 
 function EventSocket:api(cmd)
   local result = self._api:executeString(cmd)
-  if result and result:sub(1, 4) == '-ERR' then
-    return nil, result:sub(5)
-  end
-  return result
+  local ok, status, msg = split_status(result)
+  if ok == nil then return result end
+  return ok, status, msg
 end
 
 function EventSocket:close()
