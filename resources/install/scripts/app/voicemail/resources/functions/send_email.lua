@@ -25,10 +25,6 @@
 
 	local send_mail = require 'resources.functions.send_mail'
 
-	local function T(str)
-		return text[str][default_language..'-'..default_dialect] or text[str]['en-us']
-	end
-
 --define a function to send email
 	function send_email(id, uuid)
 		--get voicemail message details
@@ -58,7 +54,8 @@
 		--require the email address to send the email
 			if (string.len(voicemail_mail_to) > 2) then
 				--include languages file
-					require "app.voicemail.app_languages";
+					local Text = require "resources.functions.text"
+					local text = Text.new("app.voicemail.app_languages")
 
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
@@ -142,11 +139,11 @@
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
-						body = body:gsub("${message}", T'label-attached');
+						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..T'label-download'.."</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'].."</a>");
 					else
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..T'label-listen'.."</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
 					end
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
