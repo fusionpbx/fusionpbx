@@ -4,10 +4,11 @@
 	require "resources.functions.split";
 	require "resources.functions.count";
 
-	local log      = require "resources.functions.log".fax_retry
-	local Database = require "resources.functions.database"
-	local Settings = require "resources.functions.lazy_settings"
-	local Tasks    = require "app.fax.resources.scripts.queue.tasks"
+	local log       = require "resources.functions.log".fax_retry
+	local Database  = require "resources.functions.database"
+	local Settings  = require "resources.functions.lazy_settings"
+	local Tasks     = require "app.fax.resources.scripts.queue.tasks"
+	local send_mail = require "resources.functions.send_mail"
 
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
 	local task           = Tasks.select_task(fax_task_uuid)
@@ -69,11 +70,7 @@
 	local fax_uuid                       = task.fax_uuid
 
 -- Email variables
-	local email_address = env:getHeader("mailto_address")
-	local from_address = env:getHeader("mailfrom_address") or email_address
 	local number_dialed = fax_uri:match("/([^/]-)%s*$")
-	local email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
-	local email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
 	log.noticef([[<<< CALL RESULT >>>
     uuid:                          = '%s'
@@ -86,7 +83,6 @@
     accountcode:                   = '%s'
     origination_caller_id_name:    = '%s'
     origination_caller_id_number:  = '%s'
-    mailfrom_address:              = '%s'
     mailto_address:                = '%s'
     hangup_cause_q850:             = '%s'
     fax_options                    = '%s'
@@ -101,8 +97,7 @@
     tostring(accountcode)                  ,
     tostring(origination_caller_id_name)   ,
     tostring(origination_caller_id_number) ,
-    tostring(from_address)                 ,
-    tostring(email_address)                ,
+    tostring(task.reply_address)           ,
     tostring(hangup_cause_q850)            ,
     fax_options
 )
@@ -249,6 +244,14 @@
 		dbh:query(sql);
 	end
 
+--prepare the headers
+	local mail_x_headers = {
+		["X-FusionPBX-Domain-UUID"] = domain_uuid;
+		["X-FusionPBX-Domain-Name"] = domain_name;
+		["X-FusionPBX-Call-UUID"]   = uuid;
+		["X-FusionPBX-Email-Type"]  = 'email2fax';
+	}
+
 -- add the fax files
 	if fax_success == "1" then
 
@@ -328,6 +331,16 @@
 		end
 
 		Tasks.remove_task(task)
+
+		if task.reply_address and #task.reply_address > 0 then
+			send_mail(mail_x_headers, task.reply_address, {
+				"Fax to: " .. number_dialed .. " SENT",
+				table.concat{
+					"We are happy to report the fax was sent successfully.",
+					"It has been attached for your records.",
+				}
+			})
+		end
 	end
 
 	if fax_success ~= "1" then
@@ -349,6 +362,16 @@
 			Tasks.wait_task(task, answered, hangup_cause_q850)
 			if task.status ~= 0 then
 				Tasks.remove_task(task)
+				if task.reply_address and #task.reply_address > 0 then
+					send_mail(mail_x_headers, task.reply_address, {
+						"Fax to: " .. number_dialed .. " FAILED",
+						table.concat{
+							"We are sorry the fax failed to go through. ",
+							"It has been attached. Please check the number "..number_dialed..", ",
+							"and if it was correct you might consider emailing it instead.",
+						}
+					})
+				end
 			end
 		end
 	end
