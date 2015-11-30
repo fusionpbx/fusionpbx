@@ -3591,6 +3591,17 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P396>{$memory_key_value_18}</P396>
     <!-- Extension Boards FOR GXP2110 and GXP2120 ONLY -->
     <!-- Extension Board 1 Settings. -->
+{$start_label_id = 23002}
+{$start_value_id = 23003}
+{foreach $keys as $row}
+{if $row.device_key_category == "expansion"}
+    {$key_id = $row.device_key_id - 1}
+    {$label_id = $start_label_id + ($key_id * 5)}
+    {$value_id = $start_value_id + ($key_id * 5)}
+    <P{$label_id}>{$row.device_key_label}</P{$label_id}>
+    <P{$value_id}>{$row.device_key_value}</P{$value_id}>
+{/if}
+{/foreach}
 
   </config>
 </gs_provision>
