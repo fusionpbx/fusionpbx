@@ -22,6 +22,17 @@ $text['title-detected_configuration']['uk'] = "";
 $text['title-detected_configuration']['de-at'] = "";
 $text['title-detected_configuration']['ar-eg'] = "";
 
+$text['title-assumed_configuration']['en-us'] = "Assumed Configuration";
+$text['title-assumed_configuration']['es-cl'] = "";
+$text['title-assumed_configuration']['pt-pt'] = "";
+$text['title-assumed_configuration']['fr-fr'] = "";
+$text['title-assumed_configuration']['pt-br'] = "";
+$text['title-assumed_configuration']['pl'] = "";
+$text['title-assumed_configuration']['sv-se'] = "";
+$text['title-assumed_configuration']['uk'] = "";
+$text['title-assumed_configuration']['de-at'] = "";
+$text['title-assumed_configuration']['ar-eg'] = "";
+
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";

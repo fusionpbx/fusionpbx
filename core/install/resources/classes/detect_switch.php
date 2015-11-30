@@ -36,7 +36,7 @@ require_once "resources/classes/EventSocket.php";
 		protected $_major;
 		protected $_minor;
 
-		// folders
+		// dirs - detected by from the switch
 		protected $_base_dir = '';
 		protected $_cache_dir = '';
 		protected $_certs_dir = '';
@@ -54,7 +54,7 @@ require_once "resources/classes/EventSocket.php";
 		protected $_sounds_dir = '';
 		protected $_storage_dir = '';
 		protected $_temp_dir = '';
-		
+
 		public function major() { return $this->_major; }
 		public function minor() { return $this->_minor; }
 		public function version() { return $this->_major.".".$this->_minor; }
@@ -75,7 +75,23 @@ require_once "resources/classes/EventSocket.php";
 		public function sounds_dir() { return $this->_sounds_dir; }
 		public function storage_dir() { return $this->_storage_dir; }
 		public function temp_dir() { return $this->_temp_dir; }
-		public function get_folders() {	return $this->_folders;	}
+		public function get_dirs() {	return $this->_dirs;	}
+		public function get_vdirs() {	return $this->_vdirs;	}
+
+		// virtual dirs - assumed based on the detected dirs
+		protected $_voicemail_vdir = '';
+		protected $_phrases_vdir = '';
+		protected $_extensions_vdir = '';
+		protected $_sip_profiles_vdir = '';
+		protected $_dialplan_vdir = '';
+		protected $_backup_vdir = '';
+
+		public function voicemail_vdir() { return $this->_voicemail_vdir; }
+		public function phrases_vdir() { return $this->_phrases_vdir; }
+		public function extensions_vdir() { return $this->_extensions_vdir; }
+		public function sip_profiles_vdir() { return $this->_sip_profiles_vdir; }
+		public function dialplan_vdir() { return $this->_dialplan_vdir; }
+		public function backup_vdir() { return $this->_backup_vdir; }
 
 		// event socket
 		public $event_host = 'localhost';
@@ -91,14 +107,16 @@ require_once "resources/classes/EventSocket.php";
 			if(!$this->event_socket){
 				$this->detect_event_socket();
 			}
-			$this->_folders = preg_grep ('/.*_dir$/', get_class_methods('detect_switch') );
-			sort( $this->_folders );
+			$this->_dirs = preg_grep ('/.*_dir$/', get_class_methods('detect_switch') );
+			sort( $this->_dirs );
+			$this->_vdirs = preg_grep ('/.*_vdir$/', get_class_methods('detect_switch') );
+			sort( $this->_vdirs );
 		}
-		
+
 		protected function detect_event_socket() {
 			//perform searches for user's config here
 		}
-		
+
 		public function detect() {
 			$this->connect_event_socket();
 			if(!$this->event_socket){
@@ -116,8 +134,13 @@ require_once "resources/classes/EventSocket.php";
 					$this->$field = $matches[2];
 				}
 			}
-		}
-		
+			$this->_voicemail_vdir = join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail"));
+			$this->_phrases_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang"));
+			$this->_extensions_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory"));
+			$this->_sip_profiles_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles"));
+			$this->_dialplan_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan"));
+			$this->_backup_vdir = sys_get_temp_dir();
+		}	
 	
 		protected function connect_event_socket(){
 			$esl = new EventSocket;
