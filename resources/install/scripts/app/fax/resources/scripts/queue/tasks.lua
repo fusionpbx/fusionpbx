@@ -43,6 +43,7 @@ select
   t1.task_dtmf as dtmf,
   t1.task_fax_file as fax_file,
   t1.task_wav_file as wav_file,
+  t1.task_reply_address as reply_address,
   t1.task_no_answer_counter as no_answer_counter,
   t1.task_no_answer_retry_counter as no_answer_retry_counter,
   t1.task_retry_counter as retry_counter,
