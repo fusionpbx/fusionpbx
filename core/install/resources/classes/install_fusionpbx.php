@@ -275,9 +275,9 @@ include "root.php";
 						try {
 							if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
 							if (strlen($this->db_host) > 0) {
-								$this->dbh = new PDO("pgsql:host={$this->db_host} port={$this->db_port} user={".$this->db_create_username."} password={".$this->db_create_password."} dbname=template1");
+								$this->dbh = new PDO("pgsql:host={$this->db_host} port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
 							} else {
-								$this->dbh = new PDO("pgsql:host=localhost port={$this->db_port} user={".$this->db_create_username."} password={".$this->db_create_password."} dbname=template1");
+								$this->dbh = new PDO("pgsql:host=localhost port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
 							}
 						} catch (PDOException $error) {
 							throw new Exception("error connecting to database: " . $error->getMessage());
