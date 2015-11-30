@@ -3597,7 +3597,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 {$key_id = $row.device_key_id - 1}
 {$type_id = $start_id + ($key_id * 5)}
 {$line_id = ($start_id + 1) + ($key_id * 5)}
-{$label_id = ($start_id + 2) ($key_id * 5)}
+{$label_id = ($start_id + 2) + ($key_id * 5)}
 {$value_id = ($start_id + 3) + ($key_id * 5)}
 {if $row.device_key_type == "speed dial"}<P{$type_id}>0</P{$type_id}>{/if}
 {if $row.device_key_type == "blf"}<P{$type_id}>1</P{$type_id}>{/if}
