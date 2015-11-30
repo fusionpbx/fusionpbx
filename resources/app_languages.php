@@ -14,6 +14,7 @@ $language_name['sv-se'] = "Svenska - Sverige";
 $language_name['uk'] = "Українська - Україна";
 $language_name['de-at'] = "Deutsch - Österreich";
 $language_name['ar-eg'] = "العربية - مصر";
+$language_name['ru-ru'] = 'Русский - Россия';
 
 // Common terms
 
