@@ -2,7 +2,7 @@ require "resources.functions.config"
 
 require "resources.functions.sleep"
 local log       = require "resources.functions.log".next_fax_task
-local Tasks     = require "fax_queue.tasks"
+local Tasks     = require "app.fax.resources.scripts.queue.tasks"
 local Esl       = require "resources.functions.esl"
 
 local FAX_OPTIONS = {
@@ -28,22 +28,26 @@ local function next_task()
   local esl
   local ok, err = pcall(function()
 
-    for k, v in pairs(task) do
-      print(string.format("  `%s` => `%s`", tostring(k), tostring(v)))
-    end
-
     local mode = (task.retry_counter % #FAX_OPTIONS) + 1
     local dial_string  = '{' ..
-      task.dial_string .. "api_hangup_hook='lua fax_queue/retry.lua'," ..
+      task.dial_string .. "api_hangup_hook='lua app/fax/resources/scripts/queue/retry.lua'," ..
       FAX_OPTIONS[mode] .. 
     '}' .. task.uri
 
-    local originate = 'originate ' .. dial_string .. ' &lua(fax_queue/exec.lua)'
+    local originate = 'originate ' .. dial_string .. ' &lua(app/fax/resources/scripts/queue/exec.lua)'
 
     log.notice(originate)
     esl = assert(Esl.new())
-    local ok, err = esl:api(originate)
-    log.notice(ok or err)
+    local ok, status, info = esl:api(originate)
+    if not ok then
+      Tasks.wait_task(task, false, info)
+      if task.status ~= 0 then
+        Tasks.remove_task(task)
+      end
+      log.noticef('Can not originate to `%s` cause: %s: %s ', task.uri, tostring(status), tostring(info))
+    else
+      log.noticef("originate successfuly: %s", tostring(info))
+    end
   end)
 
   if esl then esl:close() end

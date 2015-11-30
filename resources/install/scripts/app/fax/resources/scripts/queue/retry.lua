@@ -7,10 +7,10 @@
 	local log      = require "resources.functions.log".fax_retry
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
-	local Tasks    = require "fax_queue.tasks"
+	local Tasks    = require "app.fax.resources.scripts.queue.tasks"
 
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
-	local task       = Tasks.select_task(fax_task_uuid)
+	local task           = Tasks.select_task(fax_task_uuid)
 	if not task then
 		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
 		return 
@@ -25,6 +25,7 @@
 
 -- Channel/FusionPBX variables
 	local uuid                           = env:getHeader("uuid")
+	local fax_queue_task_session         = env:getHeader('fax_queue_task_session')
 	local domain_uuid                    = env:getHeader("domain_uuid")                  or task.domain_uuid
 	local domain_name                    = env:getHeader("domain_name")                  or task.domain_name
 	local origination_caller_id_name     = env:getHeader("origination_caller_id_name")   or '000000000000000'
@@ -76,6 +77,7 @@
 
 	log.noticef([[<<< CALL RESULT >>>
     uuid:                          = '%s'
+    task_session_uuid:             = '%s'
     answered:                      = '%s'
     fax_file:                      = '%s'
     wav_file:                      = '%s'
@@ -90,6 +92,7 @@
     fax_options                    = '%s'
 ]],
     tostring(uuid)                         ,
+    tostring(fax_queue_task_session)       ,
     tostring(answered)                     ,
     tostring(fax_file)                     ,
     tostring(wav_file)                     ,
@@ -338,9 +341,15 @@
 			end
 		end
 
-		Tasks.wait_task(task, answered, hangup_cause_q850)
-		if task.status ~= 0 then
-			Tasks.remove_task(task)
+		-- if task use group call then retry.lua will be called multiple times
+		-- here we check eathre that channel which execute `exec.lua`
+		-- Note that if there no one execute `exec.lua` we do not need call this
+		-- becase it should deal in `next.lua`
+		if fax_queue_task_session == uuid then
+			Tasks.wait_task(task, answered, hangup_cause_q850)
+			if task.status ~= 0 then
+				Tasks.remove_task(task)
+			end
 		end
 	end
 

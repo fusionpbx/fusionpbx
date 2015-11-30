@@ -1,8 +1,8 @@
 <?php
 
 $text['title-install_first_time']['en-us'] = "First Time Install";
-$text['title-install_first_time']['es-cl'] = "";
-$text['title-install_first_time']['pt-pt'] = "";
+$text['title-install_first_time']['es-cl'] = "Instale Primera Vez";
+$text['title-install_first_time']['pt-pt'] = "Première installation";
 $text['title-install_first_time']['fr-fr'] = "";
 $text['title-install_first_time']['pt-br'] = "";
 $text['title-install_first_time']['pl'] = "";
@@ -78,10 +78,37 @@ $text['message-delete']['de-at'] = "Erfolgreich gelöscht";
 $text['message-delete']['ar-eg'] = "تم المسح";
 
 $text['label-ft-install']['en-us'] = "First Time Install";
+$text['label-ft-install']['es-cl'] = "";
+$text['label-ft-install']['pt-pt'] = "";
+$text['label-ft-install']['fr-fr'] = "";
+$text['label-ft-install']['pt-br'] = "";
+$text['label-ft-install']['pl'] = "";
+$text['label-ft-install']['sv-se'] = "";
+$text['label-ft-install']['uk'] = "";
+$text['label-ft-install']['de-at'] = "";
+$text['label-ft-install']['ar-eg'] = "";
+
 $text['description-ft-install']['en-us'] = "Perform all actions for a First Time Install";
+$text['description-ft-install']['es-cl'] = "";
+$text['description-ft-install']['pt-pt'] = "";
+$text['description-ft-install']['fr-fr'] = "";
+$text['description-ft-install']['pt-br'] = "";
+$text['description-ft-install']['pl'] = "";
+$text['description-ft-install']['sv-se'] = "";
+$text['description-ft-install']['uk'] = "";
+$text['description-ft-install']['de-at'] = "";
+$text['description-ft-install']['ar-eg'] = "";
 
 $text['label-add-switch']['en-us'] = "Add a new switch";
-$text['description-add-switch']['en-us'] = "Add a new switch";
+$text['label-add-switch']['es-cl'] = "";
+$text['label-add-switch']['pt-pt'] = "";
+$text['label-add-switch']['fr-fr'] = "";
+$text['label-add-switch']['pt-br'] = "";
+$text['label-add-switch']['pl'] = "";
+$text['label-add-switch']['sv-se'] = "";
+$text['label-add-switch']['uk'] = "";
+$text['label-add-switch']['de-at'] = "";
+$text['label-add-switch']['ar-eg'] = "";
 
 $text['label-select_language']['en-us'] = "Language";
 $text['label-select_language']['es-cl'] = "";

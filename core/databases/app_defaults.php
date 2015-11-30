@@ -126,6 +126,9 @@ if ($domains_processed == 1) {
 				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
 			}
 			$fout = fopen($config,"w");
+			if(!$fout){
+				throw new Exception("Failed to open '$config' for writing");
+			}
 			$tmp = "\n";
 			$tmp .= "--set the variables\n";
 			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {

@@ -31,10 +31,10 @@
 	try {
 		$switch_detect->detect();
 	} catch(Exception $e){
-		$messages[] = "Failed to detect confgiuration detect_switch reported: " . $e->getMessage();
+		echo "<p><b>Failed to detect configuration</b> detect_switch reported: " . $e->getMessage() ."</p>\n";
 		$detect_ok = false;
 	}
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='detect_switch' action=''>\n";
 	echo "<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 	echo "<input type='hidden' name='install_step' value='detect_config'/>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

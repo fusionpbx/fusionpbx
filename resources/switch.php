@@ -1267,10 +1267,24 @@ if (!function_exists('switch_conf_xml')) {
 
 		//prepare the php variables
 			if (stristr(PHP_OS, 'WIN')) {
-				$bindir = getenv(PHPRC);
-				$v_mailer_app ='""'. $bindir."/php". '" -f  '.$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure/v_mailto.php -- "';
-				$v_mailer_app = sprintf("'%s'", $v_mailer_app);
+				$bindir = find_php_by_extension();
+				if(!$bindir)
+					$bindir = getenv(PHPRC);
+
+				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
+
+				$v_mail_bat = path_join($secure_path, 'mailto.bat');
+				$v_mail_cmd = '@' . 
+					'"' . str_replace('/', '\\', path_join($bindir, 'php.exe')) . '" ' .
+					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
+
+				$fout = fopen($v_mail_bat, "w+");
+				fwrite($fout, $v_mail_cmd);
+				fclose($fout);
+
+				$v_mailer_app = '"' .  str_replace('/', '\\', $v_mail_bat) . '"';
 				$v_mailer_app_args = "";
+				unset($v_mail_bat, $v_mail_cmd, $secure_path, $bindir, $fout);
 			}
 			else {
 				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
@@ -1450,6 +1464,52 @@ if (!function_exists('save_switch_xml')) {
 				save_sip_profile_xml();
 			}
 		}
+	}
+}
+
+if(!function_exists('path_join')) {
+	function path_join() {
+		$args = func_get_args();
+		$paths = array();
+		foreach ($args as $arg) {
+			$paths = array_merge($paths, (array)$arg);
+		}
+
+		$prefix = null;
+		foreach($paths as &$path) {
+			if($prefix === null && strlen($path) > 0) {
+				if(substr($path, 0, 1) == '/') $prefix = '/';
+				else $prefix = '';
+			}
+			$path = trim( $path, '/' );
+		}
+
+		if($prefix === null){
+			return '';
+		}
+
+		$paths = array_filter($paths);
+
+		return $prefix . join('/', $paths);
+	}
+}
+
+if(!function_exists('find_php_by_extension')) {
+	/*Tesetd on WAMP and OpenServer*/
+	function find_php_by_extension(){
+		$bin_dir = get_cfg_var('extension_dir');
+
+		while($bin_dir){
+			$bin_dir = dirname($bin_dir);
+			$php_bin = path_join($bin_dir, 'php.exe');
+			if(file_exists($php_bin))
+				break;
+		}
+
+		if(!$bin_dir)
+			return false;
+
+		return $bin_dir;
 	}
 }
 
