@@ -72,6 +72,15 @@ $text['label-type_voicemail']['pl'] = "Poczta głosowa";
 $text['label-type_voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-type_voicemail']['de-at'] = "Mailbox";
 
+$text['label-type_email2fax']['en-us'] = "Email to fax report";
+$text['label-type_email2fax']['es-cl'] = "";
+$text['label-type_email2fax']['pt-pt'] = "";
+$text['label-type_email2fax']['fr-fr'] = "";
+$text['label-type_email2fax']['pt-br'] = "";
+$text['label-type_email2fax']['pl'] = "";
+$text['label-type_email2fax']['sv-se'] = "";
+$text['label-type_email2fax']['de-at'] = "";
+
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['es-cl'] = "Tipo";
 $text['label-type']['pt-pt'] = "Tipo";
