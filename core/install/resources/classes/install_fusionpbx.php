@@ -54,6 +54,9 @@ include "root.php";
 		public $db_name;
 		public $db_username;
 		public $db_password;
+		public $db_create_option = 'none';
+		public $db_create_username;
+		public $db_create_password;
 
 	 	function __construct($domain_name, $domain_uuid, $detect_switch) {
 			if(!is_a($detect_switch, 'detect_switch')){
@@ -200,6 +203,12 @@ include "root.php";
 		protected function create_database() {
 			require $this->config_php;
 			$this->write_progress("Creating database as " . $this->db_type);
+			if($this->create_db_option == 'same')
+			{
+				$this->create_db_option = 'user';
+				$this->create_db_username = $this->db_username;
+				$this->create_db_password = $this->db_username_password;
+			}
 			$function = "create_database_" . $this->db_type;
 			$this->$function();
 			global $db;
@@ -270,17 +279,17 @@ include "root.php";
 
 		protected function create_database_pgsql() {
 
-				//if $this->db_create_username provided, attempt to create new PG role and database
-					if (strlen($this->db_create_username) > 0) {
+					if ($this->db_create_option == 'user') {
+					//Attempt to create new PG role and database
 						try {
 							if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
 							if (strlen($this->db_host) > 0) {
-								$this->dbh = new PDO("pgsql:host={$this->db_host} port={$this->db_port} user={".$this->db_create_username."} password={".$this->db_create_password."} dbname=template1");
+								$this->dbh = new PDO("pgsql:host={$this->db_host} port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
 							} else {
-								$this->dbh = new PDO("pgsql:host=localhost port={$this->db_port} user={".$this->db_create_username."} password={".$this->db_create_password."} dbname=template1");
+								$this->dbh = new PDO("pgsql:host=localhost port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
 							}
 						} catch (PDOException $error) {
-							throw new Exception("error connecting to database: " . $error->getMessage());
+							throw new Exception("error connecting to database in order to create: " . $error->getMessage());
 						}
 
 						//create the database, user, grant perms
@@ -344,50 +353,41 @@ include "root.php";
 
 		protected function create_database_mysql() {
 				//database connection
+					$connect_string = '';
+					$connect_username = $this->db_username;
+					$connect_password = $this->db_password;
+					if ($this->db_create_option == 'user') {
+						$connect_username = $this->db_create_username;
+						$connect_password = $this->db_create_password;
+					}
 					try {
 						if (strlen($this->db_host) == 0 && strlen($this->db_port) == 0) {
 							//if both host and port are empty use the unix socket
-							if (strlen($this->db_create_username) == 0) {
-								$this->dbh = new PDO("mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $this->db_username, $this->db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-							}
-							else {
-								$this->dbh = new PDO("mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $this->db_create_username, $this->db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-							}
+							$this->dbh = new PDO("mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+						}
+						elseif (strlen($this->db_port) == 0) {
+							//leave out port if it is empty
+							$this->dbh = new PDO("mysql:host=$this->db_host;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));							}
 						}
 						else {
-							if (strlen($this->db_port) == 0) {
-								//leave out port if it is empty
-								if (strlen($this->db_create_username) == 0) {
-									$this->dbh = new PDO("mysql:host=$this->db_host;", $this->db_username, $this->db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-								}
-								else {
-									$this->dbh = new PDO("mysql:host=$this->db_host;", $this->db_create_username, $this->db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));							}
-							}
-							else {
-								if (strlen($this->db_create_username) == 0) {
-									$this->dbh = new PDO("mysql:host=$this->db_host;port=$this->db_port;", $this->db_username, $this->db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-								}
-								else {
-									$this->dbh = new PDO("mysql:host=$this->db_host;port=$this->db_port;", $this->db_create_username, $this->db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-								}
-							}
+							$this->dbh = new PDO("mysql:host=$this->db_host;port=$this->db_port;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 						}
 						$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 						$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 					}
 					catch (PDOException $error) {
-								throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
+						throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
 					}
 
 				//create the table, user and set the permissions only if the db_create_username was provided
-					if (strlen($this->db_create_username) > 0) {
+					if ($this->db_create_option == 'user') {
 						//select the mysql database
 							try {
 								$this->dbh->query("USE mysql;");
 							}
 							catch (PDOException $error) {
 								if ($this->debug) {
-									throw new Exception("error conencting to database: " . $error->getMessage());
+									throw new Exception("error connecting to database in order to create: " . $error->getMessage());
 								}
 							}
 
