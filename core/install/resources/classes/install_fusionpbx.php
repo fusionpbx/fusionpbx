@@ -91,15 +91,18 @@ include "root.php";
 
 		function install() {
 			ini_set('max_execution_time',3600);
+			$this->write_progress("Install started for FusionPBX");
 			$this->create_config_php();
 			$this->create_database();
 			$this->create_domain();
 			$this->create_superuser();
 			require "resources/require.php";
 			$this->create_menus();
+			$this->write_progress("Install complete for FusionPBX");
 		}
 
 		protected function create_config_php() {
+			$this->write_progress("\tCreating " . $this->config_php);
 			$tmp_config = "<?php\n";
 			$tmp_config .= "/* \$Id\$ */\n";
 			$tmp_config .= "/*\n";
@@ -193,7 +196,6 @@ include "root.php";
 				) {
 				throw new Exception("cannot write to '" . $this->config_php . "'" );
 			}
-			$this->write_progress("Creating " . $this->config_php);
 			$fout = fopen($this->config_php,"w");
 			fwrite($fout, $tmp_config);
 			unset($tmp_config);
@@ -202,7 +204,7 @@ include "root.php";
 
 		protected function create_database() {
 			require $this->config_php;
-			$this->write_progress("Creating database as " . $this->db_type);
+			$this->write_progress("\tUsing database as type " . $this->db_type);
 			if($this->db_create and strlen($this->db_create_username) == 0)
 			{
 				$this->db_create_username = $this->db_username;
@@ -295,6 +297,7 @@ include "root.php";
 		protected function create_database_pgsql() {
 			if ($this->db_create) {
 			//Attempt to create new PG role and database
+				$this->write_progress("\tCreating database");				
 				try {
 					if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
 					if (strlen($this->db_host) > 0) {
@@ -307,7 +310,9 @@ include "root.php";
 				}
 
 				//create the database, user, grant perms
-				$this->dbh->exec("CREATE DATABASE {$this->db_name}");
+				if ($this->dbh->exec("CREATE DATABASE {$this->db_name}") == false) {
+					throw new Exception("Failed to create database {$this->db_name}: " . join(":", $this->dbh->errorInfo()));
+				}
 				$this->dbh->exec("CREATE USER {$this->db_username} WITH PASSWORD '{$this->db_password}'");
 				$this->dbh->exec("GRANT ALL ON {$this->db_name} TO {$this->db_username}");
 
@@ -315,6 +320,7 @@ include "root.php";
 				$this->dbh = null;
 			}
 
+			$this->write_progress("\tInstalling data to database");				
 		//open database connection with $this->db_name
 			try {
 				if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
@@ -327,6 +333,7 @@ include "root.php";
 			catch (PDOException $error) {
 				throw new Exception("error connecting to database: " . $error->getMessage());
 			}
+
 
 		//add the database structure
 			require_once "resources/classes/schema.php";
@@ -382,6 +389,7 @@ include "root.php";
 
 				//create the table, user and set the permissions only if the db_create_username was provided
 					if ($this->db_create) {
+						$this->write_progress("\tCreating database");				
 						try {
 							$this->dbh = new PDO($connect_string, $this->db_create_username, db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -459,6 +467,7 @@ include "root.php";
 							$this->dbh = null;
 					} //if (strlen($this->db_create_username) > 0)
 
+				$this->write_progress("\tInstalling data to database");
 				//select the database
 					try {
 						$this->dbh = new PDO($connect_string, $this->db_username, db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -518,7 +527,7 @@ include "root.php";
 		}
 
 		protected function create_domain() {
-			$this->write_progress("Checking if domain exists '" . $this->domain_name . "'");
+			$this->write_progress("\tChecking if domain exists '" . $this->domain_name . "'");
 			$sql = "select * from v_domains ";
 			$sql .= "where domain_name = '".$this->domain_name."' ";
 			$sql .= "limit 1";
@@ -534,7 +543,7 @@ include "root.php";
 					throw new Exception("Domain already exists but is disabled, this is unexpected");
 				}
 			} else {
-				$this->write_progress("... creating domain");
+				$this->write_progress("\t... creating domain");
 				$sql = "insert into v_domains ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
@@ -819,7 +828,7 @@ include "root.php";
 		}
 
 		protected function create_superuser() {
-			$this->write_progress("Checking if superuser exists '" . $this->domain_name . "'");
+			$this->write_progress("\tChecking if superuser exists '" . $this->domain_name . "'");
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
 			$sql .= "and username = '".$this->admin_username."' ";
@@ -840,7 +849,7 @@ include "root.php";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
 			}else{
-				$this->write_progress("... creating super user '" . $this->admin_username . "'");
+				$this->write_progress("\t... creating super user '" . $this->admin_username . "'");
 			//add a user and then add the user to the superadmin group
 			//prepare the values
 				$this->admin_uuid = uuid();
@@ -875,7 +884,7 @@ include "root.php";
 				$this->dbh->exec(check_sql($sql));
 				unset($sql);
 			}
-			$this->write_progress("Checking if superuser contact exists");
+			$this->write_progress("\tChecking if superuser contact exists");
 			$sql = "select count(*) from v_contacts ";
 			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
 			$sql .= "and contact_name_given = '".$this->admin_username."' ";
@@ -905,7 +914,7 @@ include "root.php";
 				$this->dbh->exec(check_sql($sql));
 				unset($sql);
 			}
-			$this->write_progress("Checking if superuser is in the correct group");
+			$this->write_progress("\tChecking if superuser is in the correct group");
 			$sql = "select count(*) from v_group_users ";
 			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
 			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
@@ -938,13 +947,13 @@ include "root.php";
 		}
 
 		protected function create_menus() {
-			$this->write_progress("Creating menus");
+			$this->write_progress("\tCreating menus");
 		//set the defaults
 			$menu_name = 'default';
 			$menu_language = 'en-us';
 			$menu_description = 'Default Menu Set';
 
-			$this->write_progress("Checking if menu exists");
+			$this->write_progress("\tChecking if menu exists");
 			$sql = "select count(*) from v_menus ";
 			$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
 			$sql .= "limit 1 ";
@@ -954,7 +963,7 @@ include "root.php";
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 			unset($sql, $prep_statement);
 			if ($result['count'] == 0) {
-				$this->write_progress("... creating menu '" . $menu_name. "'");
+				$this->write_progress("\t... creating menu '" . $menu_name. "'");
 				$sql = "insert into v_menus ";
 				$sql .= "(";
 				$sql .= "menu_uuid, ";
@@ -986,7 +995,7 @@ include "root.php";
 		}
 
 		public function app_defaults() {
-			$this->write_progress("Running app_defaults");
+			$this->write_progress("\tRunning app_defaults");
 
 		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;

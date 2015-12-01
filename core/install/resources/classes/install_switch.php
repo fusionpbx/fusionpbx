@@ -174,9 +174,11 @@ include "root.php";
 		}
 
 		function install() {
+			$this->write_progress("Install started for switch");
 			$this->copy_conf();
 			$this->copy_scripts();
 			$this->create_config_lua();
+			$this->write_progress("Install completed for switch");
 		}
 
 		function upgrade() {
@@ -185,7 +187,7 @@ include "root.php";
 		}
 
 		function copy_conf() {
-			$this->write_progress("Copying Config");
+			$this->write_progress("\tCopying Config");
 			//make a backup of the config
 				if (file_exists($this->detect_switch->conf_dir())) {
 					$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
@@ -240,7 +242,7 @@ include "root.php";
 		}
 
 		function copy_scripts() {
-			$this->write_progress("Copying Scripts");
+			$this->write_progress("\tCopying Scripts");
 			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 				$script_dir = $_SESSION['switch']['scripts']['dir'];
 			}
@@ -264,6 +266,8 @@ include "root.php";
 		}
 
 		function create_config_lua() {
+		$this->write_progress("\Creating config.lua");
+		global $db;
 		//get the odbc information
 			$sql = "select count(*) as num_rows from v_databases ";
 			$sql .= "where database_driver = 'odbc' ";
