@@ -246,8 +246,6 @@
 		if($db_create=='1') { echo " checked='checked'"; }
 		echo "/>Create the database</label>\n";
 		echo "	<label class='radio'><input type='checkbox' name='db_create_reuse_auth' value='1'";
-		if($db_create_reuse_auth=='1') { echo " checked='checked'"; }
-		echo "/>Create database using the username and password above</label>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -259,7 +257,7 @@
 		echo "		<input class='formfld' type='text' name='db_create_username' maxlength='255' value=\"$db_create_username\"><br />\n";
 		echo "		Optional, this username is used to create the database, a database user and set the permissions. \n";
 		echo "		By default this username is 'pgsql' however it can be any account with permission to add a database, user, and grant permissions. \n";
-		echo "		Leave blank if the user and empty database already exist and you do not want them created. \n";
+		echo "		Leave blank to use the details above. \n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
