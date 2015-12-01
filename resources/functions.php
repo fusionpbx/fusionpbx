@@ -601,8 +601,9 @@
 	//echo realpath(sys_get_temp_dir());
 
 	if ( !function_exists('normalize_path')) {
+		//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
 		function normalize_path($path) {
-			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
+			return str_replace(array('/','\\'), '/', $path);
 		}
 	}
 
