@@ -213,6 +213,22 @@ include "root.php";
 			$this->$function();
 			global $db;
 			$db = $this->dbh;
+
+			//sqlite is natively supported under all known OS'es
+			if($this->db_type != 'sqlite'){
+				if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+				//non sqlite database support only uses ODBC under windows
+					$this->create_odbc_database_connection();
+				}elseif($this->db_type != 'pgsql'){
+				//switch supports postgresql natively
+					$this->create_odbc_database_connection();
+				}
+			}
+		}
+		
+		protected function create_odbc_database_connection {
+		//needed for non native database support
+			
 		}
 
 		protected function create_database_sqlite() {
@@ -367,7 +383,7 @@ include "root.php";
 						}
 						elseif (strlen($this->db_port) == 0) {
 							//leave out port if it is empty
-							$this->dbh = new PDO("mysql:host=$this->db_host;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));							}
+							$this->dbh = new PDO("mysql:host=$this->db_host;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 						}
 						else {
 							$this->dbh = new PDO("mysql:host=$this->db_host;port=$this->db_port;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));

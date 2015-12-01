@@ -35,6 +35,7 @@ require_once "resources/classes/EventSocket.php";
 		// version information
 		protected $_major;
 		protected $_minor;
+		protected $_build;
 
 		// dirs - detected by from the switch
 		protected $_base_dir = '';
@@ -57,7 +58,8 @@ require_once "resources/classes/EventSocket.php";
 
 		public function major() { return $this->_major; }
 		public function minor() { return $this->_minor; }
-		public function version() { return $this->_major.".".$this->_minor; }
+		public function build() { return $this->_build; }
+		public function version() { return $this->_major.".".$this->_minor.".".$this->_build; }
 		public function base_dir() { return $this->_base_dir; }
 		public function cache_dir() { return $this->_cache_dir; }
 		public function certs_dir() { return $this->_certs_dir; }
@@ -123,23 +125,24 @@ require_once "resources/classes/EventSocket.php";
 				throw new Exception('Failed to use event socket');
 			}
 			$FS_Version = $this->event_socket_request('api version');
-			preg_match("/FreeSWITCH Version (\d+)\.(\d(?:\.\d+)?)/", $FS_Version, $matches);
+			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d(?:\.\d+)?)/", $FS_Version, $matches);
 			$this->_major = $matches[1];
 			$this->_minor = $matches[2];
+			$this->_build = $matches[3];
 			$FS_Vars = $this->event_socket_request('api global_getvar');
 			foreach (explode("\n",$FS_Vars) as $FS_Var){
 				preg_match("/(\w+_dir)=(.*)/", $FS_Var, $matches);
 				if(count($matches) > 0 and property_exists($this, "_" . $matches[1])){
 					$field = "_" . $matches[1];
-					$this->$field = $matches[2];
+					$this->$field = realpath($matches[2]);
 				}
 			}
-			$this->_voicemail_vdir = join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail"));
-			$this->_phrases_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang"));
-			$this->_extensions_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory"));
-			$this->_sip_profiles_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles"));
-			$this->_dialplan_vdir = join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan"));
-			$this->_backup_vdir = sys_get_temp_dir();
+			$this->_voicemail_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail")));
+			$this->_phrases_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang")));
+			$this->_extensions_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory")));
+			$this->_sip_profiles_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles")));
+			$this->_dialplan_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan")));
+			$this->_backup_vdir = realpath(sys_get_temp_dir());
 		}	
 	
 		protected function connect_event_socket(){
