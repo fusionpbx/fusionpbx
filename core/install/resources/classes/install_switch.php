@@ -55,7 +55,7 @@ include "root.php";
 				$this->config_lua = "/usr/local/etc/fusionpbx/config.lua";
 			}
 			else {
-				$this->config_lua = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+				$this->config_lua = $this->detect_switch->scripts_dir."/resources/config.lua";
 			}
 			$this->config_lua = normalize_path_to_os($this->config_lua);
 		}
@@ -270,8 +270,12 @@ include "root.php";
 				if (is_readable($script_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
 					unset($src_dir, $dst_dir);
+				}else{
+					throw new Exception("Cannot read from '$script_dir' to get teh scripts");
 				}
 				chmod($dst_dir, 0774);
+			}else{
+				$this->write_progress("\tSkipping scripts, scripts_dir is unset");
 			}
 		}
 
