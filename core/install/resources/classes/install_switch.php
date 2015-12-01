@@ -57,7 +57,7 @@ include "root.php";
 			else {
 				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
 			}
-			$this->config_lua = normalize_path_for_os($this->config_lua);
+			$this->config_lua = normalize_path_to_os($this->config_lua);
 		}
 
 		//utility Functions
