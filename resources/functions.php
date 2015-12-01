@@ -602,7 +602,7 @@
 
 	if ( !function_exists('normalize_path')) {
 		function normalize_path($path) {
-			return str_replace(DIRECTORY_SEPERATOR, '\\', $path);
+			return str_replace(DIRECTORY_SEPARATOR, '\\', $path);
 		}
 	}
 
