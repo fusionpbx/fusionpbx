@@ -168,6 +168,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 				"<sm>You can use the following to find what ports are allowed<pre>semanage port -l | grep '^http_port_t'</pre></sm>";
 			}
 		}
+	//test for windows and non sqlite
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') and strlen($db_type) > 0 and $db_type !='sqlite') {
+			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured after installing then restart freeswitch.";
+		}
 
 	//action code
 	if($return_install_step == 'config_detail'){
