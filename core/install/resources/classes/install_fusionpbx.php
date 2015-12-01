@@ -226,7 +226,7 @@ include "root.php";
 			}
 		}
 		
-		protected function create_odbc_database_connection {
+		protected function create_odbc_database_connection() {
 		//needed for non native database support
 			
 		}

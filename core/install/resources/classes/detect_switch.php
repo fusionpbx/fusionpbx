@@ -125,7 +125,7 @@ require_once "resources/classes/EventSocket.php";
 				throw new Exception('Failed to use event socket');
 			}
 			$FS_Version = $this->event_socket_request('api version');
-			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d(?:\.\d+)?)/", $FS_Version, $matches);
+			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d(?:\.\d+)?)$/", $FS_Version, $matches);
 			$this->_major = $matches[1];
 			$this->_minor = $matches[2];
 			$this->_build = $matches[3];
@@ -134,15 +134,15 @@ require_once "resources/classes/EventSocket.php";
 				preg_match("/(\w+_dir)=(.*)/", $FS_Var, $matches);
 				if(count($matches) > 0 and property_exists($this, "_" . $matches[1])){
 					$field = "_" . $matches[1];
-					$this->$field = realpath($matches[2]);
+					$this->$field = normalize_path($matches[2]);
 				}
 			}
-			$this->_voicemail_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail")));
-			$this->_phrases_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang")));
-			$this->_extensions_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory")));
-			$this->_sip_profiles_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles")));
-			$this->_dialplan_vdir = realpath(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan")));
-			$this->_backup_vdir = realpath(sys_get_temp_dir());
+			$this->_voicemail_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail")));
+			$this->_phrases_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang")));
+			$this->_extensions_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory")));
+			$this->_sip_profiles_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles")));
+			$this->_dialplan_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan")));
+			$this->_backup_vdir = normalize_path(sys_get_temp_dir());
 		}	
 	
 		protected function connect_event_socket(){
