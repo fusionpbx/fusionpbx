@@ -4,7 +4,6 @@ require "resources.functions.sleep"
 local log       = require "resources.functions.log".next_fax_task
 local Tasks     = require "app.fax.resources.scripts.queue.tasks"
 local Esl       = require "resources.functions.esl"
-local send_mail = require "resources.functions.send_mail"
 
 local FAX_OPTIONS = {
   "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
@@ -15,22 +14,16 @@ local FAX_OPTIONS = {
 }
 
 local function task_send_mail(task)
-  local mail_x_headers = {
-    ["X-FusionPBX-Domain-UUID"] = task.domain_uuid;
-    ["X-FusionPBX-Domain-Name"] = task.domain_name;
-    ["X-FusionPBX-Email-Type"]  = 'email2fax';
-  }
   local number_dialed = task.uri:match("/([^/]-)%s*$")
-  if task.reply_address and #task.reply_address > 0 then
-    send_mail(mail_x_headers, task.reply_address, {
-      "Fax to: " .. number_dialed .. " FAILED",
-      table.concat{
-        "We are sorry the fax failed to go through. ",
-          "It has been attached. Please check the number "..number_dialed..", ",
-          "and if it was correct you might consider emailing it instead.",
-        }
-      })
-  end
+
+  Tasks.send_mail_task(task, {
+    "Fax to: " .. number_dialed .. " FAILED",
+    table.concat{
+      "We are sorry the fax failed to go through. ",
+      "It has been attached. Please check the number " .. number_dialed .. ", ",
+      "and if it was correct you might consider emailing it instead.",
+    }}
+  )
 end
 
 local function next_task()
