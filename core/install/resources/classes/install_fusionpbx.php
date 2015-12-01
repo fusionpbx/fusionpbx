@@ -310,11 +310,15 @@ include "root.php";
 				}
 
 				//create the database, user, grant perms
-				if ($this->dbh->exec("CREATE DATABASE {$this->db_name}") == false) {
+				if($this->dbh->exec("CREATE DATABASE {$this->db_name}") === false) {
 					throw new Exception("Failed to create database {$this->db_name}: " . join(":", $this->dbh->errorInfo()));
 				}
-				$this->dbh->exec("CREATE USER {$this->db_username} WITH PASSWORD '{$this->db_password}'");
-				$this->dbh->exec("GRANT ALL ON {$this->db_name} TO {$this->db_username}");
+				if($this->dbh->exec("CREATE USER {$this->db_username} WITH PASSWORD '{$this->db_password}'") === false){
+					throw new Exception("Failed to create user {$this->db_name}: " . join(":", $this->dbh->errorInfo()));
+				}
+				if($this->dbh->exec("GRANT ALL ON {$this->db_name} TO {$this->db_username}") === false){
+					throw new Exception("Failed to create user {$this->db_name}: " . join(":", $this->dbh->errorInfo()));
+				}
 
 				//close database connection_aborted
 				$this->dbh = null;
