@@ -55,7 +55,6 @@ include "root.php";
 		public $db_username;
 		public $db_password;
 		public $db_create;
-		public $db_create_reuse_auth;
 		public $db_create_username;
 		public $db_create_password;
 
@@ -204,10 +203,10 @@ include "root.php";
 		protected function create_database() {
 			require $this->config_php;
 			$this->write_progress("Creating database as " . $this->db_type);
-			if($this->db_create_reuse_auth)
+			if($this->db_create and strlen($this->db_create_username) > 0)
 			{
 				$this->db_create_username = $this->db_username;
-				$this->db_create_password = $this->db_username_password;
+				$this->db_create_password = $this->db_password;
 			}
 			$function = "create_database_" . $this->db_type;
 			$this->$function();
@@ -368,42 +367,35 @@ include "root.php";
 
 		protected function create_database_mysql() {
 				//database connection
-					$connect_string = '';
-					$connect_username = $this->db_username;
-					$connect_password = $this->db_password;
-					if ($this->db_create) {
-						$connect_username = $this->db_create_username;
-						$connect_password = $this->db_create_password;
+					$connect_string;
+					if (strlen($this->db_host) == 0 && strlen($this->db_port) == 0) {
+						//if both host and port are empty use the unix socket
+						$connect_string = "mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;";
 					}
-					try {
-						if (strlen($this->db_host) == 0 && strlen($this->db_port) == 0) {
-							//if both host and port are empty use the unix socket
-							$this->dbh = new PDO("mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-						}
-						elseif (strlen($this->db_port) == 0) {
-							//leave out port if it is empty
-							$this->dbh = new PDO("mysql:host=$this->db_host;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-						}
-						else {
-							$this->dbh = new PDO("mysql:host=$this->db_host;port=$this->db_port;", $connect_username, $connect_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-						}
-						$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-						$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+					elseif (strlen($this->db_port) == 0) {
+						//leave out port if it is empty
+						$connect_string = "mysql:host=$this->db_host;";
 					}
-					catch (PDOException $error) {
-						throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
+					else {
+						$connect_string = "mysql:host=$this->db_host;port=$this->db_port;";
 					}
 
 				//create the table, user and set the permissions only if the db_create_username was provided
 					if ($this->db_create) {
+						try {
+							$this->dbh = new PDO($connect_string, $this->db_create_username, db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+							$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+							$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error connecting to database for ccreate: " . $error->getMessage() . "\n" . $sql );
+						}
 						//select the mysql database
 							try {
 								$this->dbh->query("USE mysql;");
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									throw new Exception("error connecting to database in order to create: " . $error->getMessage());
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
 
 						//create user and set the permissions
@@ -412,9 +404,7 @@ include "root.php";
 								$this->dbh->query($tmp_sql);
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
 
 						//set account to unlimited use
@@ -438,9 +428,7 @@ include "root.php";
 								}
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
 
 						//create the database and set the create user with permissions
@@ -449,9 +437,7 @@ include "root.php";
 								$this->dbh->query($tmp_sql);
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
 
 						//set user permissions
@@ -459,9 +445,7 @@ include "root.php";
 								$this->dbh->query("GRANT ALL PRIVILEGES ON ".$this->db_name.".* TO '".$this->db_username."'@'%'; ");
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
 
 						//make the changes active
@@ -470,21 +454,25 @@ include "root.php";
 								$this->dbh->query($tmp_sql);
 							}
 							catch (PDOException $error) {
-								if ($this->debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
+								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
-
+							$this->dbh = null;
 					} //if (strlen($this->db_create_username) > 0)
 
 				//select the database
 					try {
+						$this->dbh = new PDO($connect_string, $this->db_username, db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+						$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+						$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+					}
+					catch (PDOException $error) {
+						throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
+					}
+					try {
 						$this->dbh->query("USE ".$this->db_name.";");
 					}
 					catch (PDOException $error) {
-						if ($this->debug) {
-							print "error: " . $error->getMessage() . "<br/>";
-						}
+						throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 					}
 
 				//add the database structure
