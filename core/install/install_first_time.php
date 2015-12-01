@@ -45,7 +45,7 @@ require_once "resources/classes/text.php";
 	$db_name = '';
 	$db_username = '';
 	$db_password = '';
-	$db_create_option = 'none';
+	$db_create = '';
 	$db_create_username = '';
 	$db_create_password = '';
 
