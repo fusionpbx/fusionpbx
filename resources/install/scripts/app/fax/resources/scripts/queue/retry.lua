@@ -244,14 +244,6 @@
 		dbh:query(sql);
 	end
 
---prepare the headers
-	local mail_x_headers = {
-		["X-FusionPBX-Domain-UUID"] = domain_uuid;
-		["X-FusionPBX-Domain-Name"] = domain_name;
-		["X-FusionPBX-Call-UUID"]   = uuid;
-		["X-FusionPBX-Email-Type"]  = 'email2fax';
-	}
-
 -- add the fax files
 	if fax_success == "1" then
 
@@ -331,16 +323,13 @@
 		end
 
 		Tasks.remove_task(task)
-
-		if task.reply_address and #task.reply_address > 0 then
-			send_mail(mail_x_headers, task.reply_address, {
-				"Fax to: " .. number_dialed .. " SENT",
-				table.concat{
-					"We are happy to report the fax was sent successfully.",
-					"It has been attached for your records.",
-				}
-			})
-		end
+		Tasks.send_mail_task(task, {
+			"Fax to: " .. number_dialed .. " SENT",
+			table.concat{
+				"We are happy to report the fax was sent successfully.",
+				"It has been attached for your records.",
+			}}, uuid
+		)
 	end
 
 	if fax_success ~= "1" then
@@ -362,16 +351,14 @@
 			Tasks.wait_task(task, answered, hangup_cause_q850)
 			if task.status ~= 0 then
 				Tasks.remove_task(task)
-				if task.reply_address and #task.reply_address > 0 then
-					send_mail(mail_x_headers, task.reply_address, {
-						"Fax to: " .. number_dialed .. " FAILED",
-						table.concat{
-							"We are sorry the fax failed to go through. ",
-							"It has been attached. Please check the number "..number_dialed..", ",
-							"and if it was correct you might consider emailing it instead.",
-						}
-					})
-				end
+				Tasks.send_mail_task(task, {
+					"Fax to: " .. number_dialed .. " FAILED",
+					table.concat{
+						"We are sorry the fax failed to go through. ",
+						"It has been attached. Please check the number "..number_dialed..", ",
+						"and if it was correct you might consider emailing it instead.",
+					}}, uuid
+				)
 			end
 		end
 	end
