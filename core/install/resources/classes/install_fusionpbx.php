@@ -203,7 +203,7 @@ include "root.php";
 		protected function create_database() {
 			require $this->config_php;
 			$this->write_progress("Creating database as " . $this->db_type);
-			if($this->db_create and strlen($this->db_create_username) > 0)
+			if($this->db_create and strlen($this->db_create_username) == 0)
 			{
 				$this->db_create_username = $this->db_username;
 				$this->db_create_password = $this->db_password;
