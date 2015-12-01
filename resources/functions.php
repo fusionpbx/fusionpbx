@@ -600,6 +600,12 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
+	if ( !function_exists('normalize_path')) {
+		function normalize_path($path) {
+			return str_replace(DIRECTORY_SEPERATOR, '\\', $path);
+		}
+	}
+
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
 			global $db, $domain_uuid;
