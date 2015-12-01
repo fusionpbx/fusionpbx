@@ -11,6 +11,10 @@
 	local send_mail = require "resources.functions.send_mail"
 
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
+	if not fax_task_uuid then
+		log.warning("No [fax_task_uuid] channel variable")
+		return 
+	end
 	local task           = Tasks.select_task(fax_task_uuid)
 	if not task then
 		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
@@ -31,7 +35,7 @@
 	local domain_name                    = env:getHeader("domain_name")                  or task.domain_name
 	local origination_caller_id_name     = env:getHeader("origination_caller_id_name")   or '000000000000000'
 	local origination_caller_id_number   = env:getHeader("origination_caller_id_number") or '000000000000000'
-	local accountcode                    = env:getHeader("accountcode")
+	local accountcode                    = env:getHeader("accountcode")                  or domain_name
 	local duration                       = tonumber(env:getHeader("billmsec"))           or 0
 	local sip_to_user                    = env:getHeader("sip_to_user")
 	local bridge_hangup_cause            = env:getHeader("bridge_hangup_cause")
@@ -142,38 +146,28 @@
 		)
 	end
 
---get the values from the fax file
-	if not (fax_uuid and domain_name) then
-		local array = split(fax_file, "[\\/]+")
-		domain_name   = domain_name or   array[#array - 3]
-		local fax_extension = fax_extension or array[#array - 2]
+	log.debug([[<<< DEBUG >>>
+    domain_name                  = '%s'
+    domain_uuid                  = '%s'
+    task.domain_name             = '%s'
+    task.domain_uuid             = '%s'
+]],
+    tostring(domain_name      ),
+    tostring(domain_uuid      ),
+    tostring(task.domain_name ),
+    tostring(task.domain_uuid )
+)
 
-		if not fax_uuid then
-			local sql = "SELECT fax_uuid FROM v_fax "
-			sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' "
-			sql = sql .. "AND fax_extension = '" .. fax_extension .. "' "
-			fax_uuid = dbh:first_value(sql);
-		end
-	end
-
---get the domain_uuid using the domain name required for multi-tenant
-	if domain_name and not domain_uuid then
-		local sql = "SELECT domain_uuid FROM v_domains ";
-		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' "
-		domain_uuid = dbh:first_value(sql)
-	end
-
-	assert(domain_name and domain_uuid)
+	assert(fax_uuid,    'no fax server uuid')
+	assert(domain_name, 'no domain name')
+	assert(domain_uuid, 'no domain uuid')
+	assert(domain_uuid:lower() == task.domain_uuid:lower(), 'invalid domain uuid')
+	assert(domain_name:lower() == task.domain_name:lower(), 'invalid domain name')
 
 --settings
 	local settings = Settings.new(dbh, domain_name, domain_uuid)
 	local keep_local   = settings:get('fax', 'keep_local','boolean')
 	local storage_type = (keep_local == "false") and "" or settings:get('fax', 'storage_type', 'text')
-
---be sure accountcode is not empty
-	if (accountcode == nil) then
-		accountcode = domain_name
-	end
 
 	local function opt(v, default)
 		if v then return "'" .. v .. "'" end
