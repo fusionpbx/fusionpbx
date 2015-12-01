@@ -46,6 +46,7 @@ local LEVELS = {
 	'warning',
 	'notice',
 	'info',
+	'debug',
 }
 
 local TRACE_LEVEL = 'notice'

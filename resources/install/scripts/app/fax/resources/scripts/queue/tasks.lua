@@ -1,5 +1,6 @@
-local Database = require "resources.functions.database"
-local Settings = require "resources.functions.lazy_settings"
+local Database  = require "resources.functions.database"
+local Settings  = require "resources.functions.lazy_settings"
+local send_mail = require "resources.functions.send_mail"
 
 local db
 
@@ -244,6 +245,21 @@ local function cleanup_tasks()
   db:query(remove_finished_tasks_sql)
 end
 
+local function send_mail_task(task, message, call_uuid)
+  if not task.reply_address or #task.reply_address == 0 then
+    return
+  end
+
+  local mail_x_headers = {
+    ["X-FusionPBX-Domain-UUID"] = task.domain_uuid;
+    ["X-FusionPBX-Domain-Name"] = task.domain_name;
+    ["X-FusionPBX-Call-UUID"]   = call_uuid;
+    ["X-FusionPBX-Email-Type"]  = 'email2fax';
+  }
+
+  return send_mail(mail_x_headers, task.reply_address, message)
+end
+
 return {
   release_db = function()
     if db then
@@ -251,10 +267,11 @@ return {
       db = nil
     end
   end;
-  next_task     = next_task;
-  wait_task     = wait_task;
-  select_task   = select_task;
-  remove_task   = remove_task;
-  release_task  = release_task;
-  cleanup_tasks = cleanup_tasks;
+  next_task      = next_task;
+  wait_task      = wait_task;
+  select_task    = select_task;
+  remove_task    = remove_task;
+  release_task   = release_task;
+  cleanup_tasks  = cleanup_tasks;
+  send_mail_task = send_mail_task;
 }
