@@ -43,7 +43,7 @@
 		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 		unset ($prep_statement, $sql);
 	
-		if ($result and isset($language_migration[$result['default_setting_value']]) {
+		if ($result and isset($language_migration[$result['default_setting_value']])) {
 			// the default is using the wrong language code, migrating them
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_value = '".$language_migration[$result['default_setting_value']]."' ";
@@ -66,7 +66,7 @@
 	unset ($prep_statement, $sql);
 	
 	foreach ($domain_settings as $setting) {
-		if(isset($language_migration$setting['domain_setting_value']]){
+		if(isset($language_migration[$setting['domain_setting_value']])){
 			// the domain is using the wrong language code, migrating them
 			$sql = "update v_domain_settings ";
 			$sql .= "set domain_setting_value = '".$language_migration[$result['domain_setting_value']]."' ";
