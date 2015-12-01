@@ -50,12 +50,12 @@ include "root.php";
 			$this->domain = $domain_name;
 			$this->detect_switch = $detect_switch;
 			if (is_dir("/etc/fusionpbx")){
-				$config = "/etc/fusionpbx/config.lua";
+				$this->config_lua = "/etc/fusionpbx/config.lua";
 			} elseif (is_dir("/usr/local/etc/fusionpbx")){
-				$config = "/usr/local/etc/fusionpbx/config.lua";
+				$this->config_lua = "/usr/local/etc/fusionpbx/config.lua";
 			}
 			else {
-				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+				$this->config_lua = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
 			}
 			$this->config_lua = normalize_path_to_os($this->config_lua);
 		}
