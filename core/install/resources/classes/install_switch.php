@@ -31,6 +31,7 @@ include "root.php";
 		protected $domain_uuid;
 		protected $domain_name;
 		protected $detect_switch;
+		protected $config_lua;
 
 		public $debug = false;
 
@@ -48,6 +49,15 @@ include "root.php";
 			$this->domain_uuid = $domain_uuid;
 			$this->domain = $domain_name;
 			$this->detect_switch = $detect_switch;
+			if (is_dir("/etc/fusionpbx")){
+				$config = "/etc/fusionpbx/config.lua";
+			} elseif (is_dir("/usr/local/etc/fusionpbx")){
+				$config = "/usr/local/etc/fusionpbx/config.lua";
+			}
+			else {
+				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+			}
+			$this->config_lua = normalize_path_for_os($this->config_lua);
 		}
 
 		//utility Functions
@@ -266,8 +276,8 @@ include "root.php";
 		}
 
 		function create_config_lua() {
-		$this->write_progress("\Creating config.lua");
-		global $db;
+			$this->write_progress("\tCreating " . $this->config_lua);
+			global $db;
 		//get the odbc information
 			$sql = "select count(*) as num_rows from v_databases ";
 			$sql .= "where database_driver = 'odbc' ";
@@ -298,17 +308,9 @@ include "root.php";
 			}
 
 		//config.lua
-			if (is_dir("/etc/fusionpbx")){
-				$config = "/etc/fusionpbx/config.lua";
-			} elseif (is_dir("/usr/local/etc/fusionpbx")){
-				$config = "/usr/local/etc/fusionpbx/config.lua";
-			}
-			else {
-				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
-			}
-			$fout = fopen($config,"w");
+			$fout = fopen($this->config_lua,"w");
 			if(!$fout){
-				throw new Exception("Failed to open '$config' for writing");
+				throw new Exception("Failed to open '{$this->config_lua}' for writing");
 			}
 			$tmp = "\n";
 			$tmp .= "--set the variables\n";

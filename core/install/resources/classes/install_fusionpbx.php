@@ -77,6 +77,7 @@ include "root.php";
 			else {
 				$this->config_php = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 			}
+			$this->config_php = normalize_path_for_os($this->config_php);
 		}
 
 		function write_debug($message) {
