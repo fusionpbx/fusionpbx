@@ -99,7 +99,7 @@ function Settings:_load(category, subcategory, name)
   local found = false
   --get the domain settings
   if domain_uuid then
-    sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
+    local sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
     sql = sql .. "FROM v_domain_settings ";
     sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "'";
     sql = sql .. "AND domain_setting_enabled = 'true' ";
