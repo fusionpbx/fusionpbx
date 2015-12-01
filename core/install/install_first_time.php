@@ -169,7 +169,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 			}
 		}
 	//test for windows and non sqlite
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') and strlen($db_type) > 0 and $db_type !='sqlite') {
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
 			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured after installing then restart freeswitch.";
 		}
 
