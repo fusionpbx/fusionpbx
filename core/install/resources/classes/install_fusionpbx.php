@@ -54,7 +54,8 @@ include "root.php";
 		public $db_name;
 		public $db_username;
 		public $db_password;
-		public $db_create_option = 'none';
+		public $db_create;
+		public $db_create_reuse_auth;
 		public $db_create_username;
 		public $db_create_password;
 
@@ -203,11 +204,10 @@ include "root.php";
 		protected function create_database() {
 			require $this->config_php;
 			$this->write_progress("Creating database as " . $this->db_type);
-			if($this->create_db_option == 'same')
+			if($this->db_create_reuse_auth)
 			{
-				$this->create_db_option = 'user';
-				$this->create_db_username = $this->db_username;
-				$this->create_db_password = $this->db_username_password;
+				$this->db_create_username = $this->db_username;
+				$this->db_create_password = $this->db_username_password;
 			}
 			$function = "create_database_" . $this->db_type;
 			$this->$function();
@@ -294,7 +294,7 @@ include "root.php";
 		}
 
 		protected function create_database_pgsql() {
-			if ($this->db_create_option == 'user') {
+			if ($this->db_create) {
 			//Attempt to create new PG role and database
 				try {
 					if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
@@ -371,7 +371,7 @@ include "root.php";
 					$connect_string = '';
 					$connect_username = $this->db_username;
 					$connect_password = $this->db_password;
-					if ($this->db_create_option == 'user') {
+					if ($this->db_create) {
 						$connect_username = $this->db_create_username;
 						$connect_password = $this->db_create_password;
 					}
@@ -395,7 +395,7 @@ include "root.php";
 					}
 
 				//create the table, user and set the permissions only if the db_create_username was provided
-					if ($this->db_create_option == 'user') {
+					if ($this->db_create) {
 						//select the mysql database
 							try {
 								$this->dbh->query("USE mysql;");
