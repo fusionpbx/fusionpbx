@@ -86,6 +86,8 @@ include "root.php";
 				exec ($cmd);
 			}
 			elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+				$src = normalize_path_to_os($src);
+				$dst = normalize_path_to_os($dst);
 				exec("copy /L '$src' '$dst'");
 			}
 			else {
