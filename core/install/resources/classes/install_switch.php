@@ -55,7 +55,7 @@ include "root.php";
 				$this->config_lua = "/usr/local/etc/fusionpbx/config.lua";
 			}
 			else {
-				$this->config_lua = $this->detect_switch->scripts_dir."/resources/config.lua";
+				$this->config_lua = $this->detect_switch->script_dir."/resources/config.lua";
 			}
 			$this->config_lua = normalize_path_to_os($this->config_lua);
 		}
