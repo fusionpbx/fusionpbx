@@ -297,7 +297,7 @@ include "root.php";
 		protected function create_database_pgsql() {
 			if ($this->db_create) {
 			//Attempt to create new PG role and database
-				$this->write_progress("\tCreating database");				
+				$this->write_progress("\tCreating database");
 				try {
 					if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
 					if (strlen($this->db_host) > 0) {
@@ -347,18 +347,14 @@ include "root.php";
 			$schema->sql();
 			$schema->exec();
 
-				//if $this->db_create_username provided, attempt to create new PG role and database
-					if (strlen($this->db_create_username) > 0) {
-						try {
-							if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
-							if (strlen($this->db_host) > 0) {
-								$this->dbh = new PDO("pgsql:host={$this->db_host} port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
-							} else {
-								$this->dbh = new PDO("pgsql:host=localhost port={$this->db_port} user={$this->db_create_username} password={$this->db_create_password} dbname=template1");
-							}
-						} catch (PDOException $error) {
-							throw new Exception("error connecting to database: " . $error->getMessage());
-						}
+		//get the contents of the sql file
+			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
+				$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+			}
+			else {
+			$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
+			}
+			$file_contents = file_get_contents($filename);
 
 		//replace \r\n with \n then explode on \n
 			$file_contents = str_replace("\r\n", "\n", $file_contents);
