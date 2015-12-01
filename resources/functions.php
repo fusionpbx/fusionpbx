@@ -606,6 +606,12 @@
 			return str_replace(array('/','\\'), '/', $path);
 		}
 	}
+	
+	if ( !function_exists('normalize_path_to_os')) {
+		function normalize_path_to_os($path) {
+			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
+		}
+	}
 
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
