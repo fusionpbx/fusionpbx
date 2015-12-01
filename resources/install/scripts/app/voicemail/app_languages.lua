@@ -1,4 +1,4 @@
-text = {};
+text = text or {};
 
 text['label-download'] = {};
 text['label-download']['en-us'] = "Download";
@@ -24,3 +24,4 @@ text['label-attached']['fr-fr'] = "Attaché";
 text['label-attached']['de-de'] = "im Anhang";
 text['label-attached']['de-at'] = "im Anhang";
 
+return text

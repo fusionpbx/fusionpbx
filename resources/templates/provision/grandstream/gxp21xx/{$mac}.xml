@@ -3590,7 +3590,33 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- String -->
     <P396>{$memory_key_value_18}</P396>
     <!-- Extension Boards FOR GXP2110 and GXP2120 ONLY -->
-    <!-- Extension Board 1 Settings. -->
+    <!-- Extension Board 1 Settings. mode 23000, line 23001, label, 23002, value 23003 -->
+{$start_id = 23000}
+{foreach $keys as $row}
+{if $row.device_key_category == "expansion"}
+{$key_id = $row.device_key_id - 1}
+{$type_id = $start_id + ($key_id * 5)}
+{$line_id = ($start_id + 1) + ($key_id * 5)}
+{$label_id = ($start_id + 2) + ($key_id * 5)}
+{$value_id = ($start_id + 3) + ($key_id * 5)}
+{if $row.device_key_type == "speed dial"}    <P{$type_id}>0</P{$type_id}>{/if}
+{if $row.device_key_type == "blf"}    <P{$type_id}>1</P{$type_id}>{/if}
+{if $row.device_key_type == "presence watcher"}    <P{$type_id}>2</P{$type_id}>{/if}
+{if $row.device_key_type == "eventlist blf"}    <P{$type_id}>3</P{$type_id}>{/if}
+{if $row.device_key_type == "speed dial active"}    <P{$type_id}>4</P{$type_id}>{/if}
+{if $row.device_key_type == "dial dtmf"}    <P{$type_id}>5</P{$type_id}>{/if}
+{if $row.device_key_type == "voicemail"}    <P{$type_id}>6</P{$type_id}>{/if}
+{if $row.device_key_type == "call return"}    <P{$type_id}>7</P{$type_id}>{/if}
+{if $row.device_key_type == "transfer"}    <P{$type_id}>8</P{$type_id}>{/if}
+{if $row.device_key_type == "call park"}    <P{$type_id}>9</P{$type_id}>{/if}
+{if $row.device_key_type == "intercom"}    <P{$type_id}>10</P{$type_id}>{/if}
+{if $row.device_key_type == "ldap search"}    <P{$type_id}>11</P{$type_id}>{/if}
+
+    <P{$line_id}>{$row.device_key_line}</P{$line_id}>
+    <P{$label_id}>{$row.device_key_label}</P{$label_id}>
+    <P{$value_id}>{$row.device_key_value}</P{$value_id}>
+{/if}
+{/foreach}
 
   </config>
 </gs_provision>
