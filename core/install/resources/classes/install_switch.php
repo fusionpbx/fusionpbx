@@ -88,7 +88,7 @@ include "root.php";
 			elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 				$src = normalize_path_to_os($src);
 				$dst = normalize_path_to_os($dst);
-				exec("copy /L '$src' '$dst'");
+				exec("copy /L /Y \"$src\" \"$dst\"");
 			}
 			else {
 				$dir = opendir($src);
@@ -149,8 +149,9 @@ include "root.php";
 				exec ('rm -Rf '.$dir.'/*');
 			}
 			elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-				$this->write_debug("del /S /F /Q '$dir'");
-				exec("del /S /F /Q '$dir'");
+				$dst = normalize_path_to_os($dst);
+				$this->write_debug("del /S /F /Q \"$dir\"");
+				exec("del /S /F /Q \"$dir\"");
 			}
 			else {
 				foreach (glob($dir) as $file) {
@@ -255,12 +256,7 @@ include "root.php";
 
 		function copy_scripts() {
 			$this->write_progress("\tCopying Scripts");
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
-				$script_dir = $_SESSION['switch']['scripts']['dir'];
-			}
-			else {
-				$script_dir = $this->detect_switch->script_dir();
-			}
+			$script_dir = $this->detect_switch->script_dir();
 			if (file_exists($script_dir)) {
 				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
 					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
@@ -273,7 +269,7 @@ include "root.php";
 					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
 					unset($src_dir, $dst_dir);
 				}else{
-					throw new Exception("Cannot read from '$script_dir' to get teh scripts");
+					throw new Exception("Cannot read from '$src_dir' to get the scripts");
 				}
 				chmod($dst_dir, 0774);
 			}else{
