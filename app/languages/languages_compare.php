@@ -59,10 +59,7 @@ require_once "resources/require.php";
 	sort($language_labels);
 	
 	if($app_target != 'resources'){
-		$language_text = $language->get($reference_language, 'resources', true);
-		foreach ($language_text as $lang_label => $lang_codes) {
-			$global_text[$lang_label] = $lang_codes[$target_language];
-		}
+		$global_text = $language->get($reference_language, 'resources', true);
 	}
 	unset($language_text);
 
@@ -199,7 +196,7 @@ require_once "resources/require.php";
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>$lang_label";
 		if(isset($global_text[$lang_label])){
-			echo "&nbsp;<img src='$project_path/themes/enhanced/images/warning.png' alt='!' title=\"".$text['warning-global_already_defined']."'".$reference_text[$lang_label]."'\"/>";
+			echo "&nbsp;<img src='$project_path/themes/enhanced/images/warning.png' alt='!' title=\"".$text['warning-global_already_defined']."'".$global_text[$lang_label]."'\"/>";
 		}
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>";
