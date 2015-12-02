@@ -91,7 +91,12 @@ include "root.php";
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
 			$this->create_menus();
+			$this->app_defaults();
 			$this->write_progress("Install complete for FusionPBX");
+		}
+		
+		function upgrade() {
+			$this->app_defaults();
 		}
 
 		protected function create_config_php() {
@@ -1021,7 +1026,7 @@ include "root.php";
 			}
 		}
 
-		public function app_defaults() {
+		protected function app_defaults() {
 			$this->write_progress("\tRunning app_defaults");
 
 		//set needed session settings

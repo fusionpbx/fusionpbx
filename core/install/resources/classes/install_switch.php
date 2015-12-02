@@ -186,15 +186,17 @@ include "root.php";
 			$this->copy_conf();
 			$this->copy_scripts();
 			$this->create_config_lua();
+			$this->restart_switch();
 			$this->write_progress("Install completed for switch");
 		}
 
 		function upgrade() {
 			$this->copy_scripts();
 			$this->create_config_lua();
+			$this->restart_switch();
 		}
 
-		function copy_conf() {
+		protected function copy_conf() {
 			$this->write_progress("\tCopying Config");
 			//make a backup of the config
 				if (file_exists($this->global_settings->switch_conf_dir())) {
@@ -249,7 +251,7 @@ include "root.php";
 
 		}
 
-		function copy_scripts() {
+		protected function copy_scripts() {
 			$this->write_progress("\tCopying Scripts");
 			$script_dir = $this->global_settings->switch_script_dir();
 			if(strlen($script_dir) == 0) {
@@ -275,7 +277,7 @@ include "root.php";
 			}
 		}
 
-		function create_config_lua() {
+		public function create_config_lua() {
 			$this->write_progress("\tCreating " . $this->config_lua);
 			global $db;
 		//get the odbc information
@@ -409,5 +411,17 @@ include "root.php";
 			unset($tmp);
 			fclose($fout);	
 		}
+	}
+	
+	protected function restart_switch() {
+		global $errstr;
+		$esl = new EventSocket;
+		if (!$esl->connect($this->event_host, $this->event_port, $this->event_password)) {
+			throw new Exception("Failed to connect to switch: $errstr");
+		}
+		if (!$esl->request('api fsctl shutdown restart elegant')){
+			throw new Exception("Failed to send switch restart: $errstr");
+		}
+		$esl->reset_fp();
 	}
 ?>

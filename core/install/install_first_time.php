@@ -311,8 +311,6 @@ if(!$install_step) { $install_step = 'select_language'; }
 				//$system->debug = true;
 				$system->install();
 				$switch->install();
-				$system->app_defaults();
-				$detect_switch->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
