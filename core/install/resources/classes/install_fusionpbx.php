@@ -34,11 +34,8 @@ include "root.php";
 		protected $menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 		protected $dbh;
 
-		public function domain_uuid() { return $this->global_settings->domain_uuid(); }
-
 		public $debug = false;
 
-	 	public $install_msg;
 	 	public $install_language = 'en-us';
 	 	public $admin_username;
 	 	public $admin_password;
@@ -225,7 +222,6 @@ include "root.php";
 				$database_uuid = uuid();
 				$sql = "insert into v_databases ";
 				$sql .= "(";
-				//$sql .= "domain_uuid, ";
 				$sql .= "database_uuid, ";
 				$sql .= "database_driver, ";
 				$sql .= "database_type, ";
