@@ -46,7 +46,10 @@ include "root.php";
 		public $template_name = 'enhanced';
 
 	 	function __construct($global_settings) {
-			if(!is_a($global_settings, 'global_settings')){
+			if($global_settings == null){
+				require_once "resources/classes/global_settings.php";
+				$global_settings = new global_settings();
+			elseif(!is_a($global_settings, 'global_settings')){
 				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
 			}
 			$this->global_settings = $global_settings;

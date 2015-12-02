@@ -296,7 +296,9 @@ if(!$install_step) { $install_step = 'select_language'; }
 			try {
 				require_once "resources/classes/global_settings.php";
 				$settings = new global_settings($detect_switch, $domain_name);
-
+				if($settings = null){
+					throw new Exception("Error global_settings came back with null");
+				}
 				require_once "resources/classes/install_fusionpbx.php";
 				$system = new install_fusionpbx($settings);
 				$system->admin_username = $admin_username;
