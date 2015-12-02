@@ -78,7 +78,7 @@ require_once "root.php";
 		protected $_switch_sip_profiles_vdir = '';
 		protected $_switch_dialplan_vdir = '';
 		protected $_switch_backup_vdir = '';
-		public function switch_voicemail_vdir()	{ return $this->_switch_voicemail_vdir; }
+		public function switch_voicemail_vdir()		{ return $this->_switch_voicemail_vdir; }
 		public function switch_phrases_vdir()		{ return $this->_switch_phrases_vdir; }
 		public function switch_extensions_vdir()	{ return $this->_switch_extensions_vdir; }
 		public function switch_sip_profiles_vdir()	{ return $this->_switch_sip_profiles_vdir; }
@@ -104,24 +104,24 @@ require_once "root.php";
 		protected $_db_create;
 		protected $_db_create_username;
 		protected $_db_create_password;
-		public function db_type()	 			{return $this->_db_type; }
-		public function db_path()	 			{return $this->_db_path; }
-		public function db_host()	 			{return $this->_db_host; }
-		public function db_port()	 			{return $this->_db_port; }
-		public function db_name()	 			{return $this->_db_name; }
-		public function db_username()	 		{return $this->_db_username; }
-		public function db_password()	 		{return $this->_db_password; }
-		public function db_create()	 			{return $this->_db_create; }
-		public function db_create_username()	{return $this->_db_create_username; }
-		public function db_create_password()	{return $this->_db_create_password; }
+		public function db_type()	 			{ return $this->_db_type; }
+		public function db_path()	 			{ return $this->_db_path; }
+		public function db_host()	 			{ return $this->_db_host; }
+		public function db_port()	 			{ return $this->_db_port; }
+		public function db_name()	 			{ return $this->_db_name; }
+		public function db_username()	 		{ return $this->_db_username; }
+		public function db_password()	 		{ return $this->_db_password; }
+		public function db_create()	 			{ return $this->_db_create; }
+		public function db_create_username()	{ return $this->_db_create_username; }
+		public function db_create_password()	{ return $this->_db_create_password; }
 
 		//misc information
 		protected $_domain_uuid;
 		protected $_domain_name;
 		protected $_domain_count;
-		public function domain_uuid()	 		{return $this->_domain_uuid; }
-		public function domain_name()	 		{return $this->_domain_name; }
-		public function domain_count()	 		{return $this->_domain_count; }
+		public function domain_uuid()	 		{ return $this->_domain_uuid; }
+		public function domain_name()	 		{ return $this->_domain_name; }
+		public function domain_count()	 		{ return $this->_domain_count; }
 		public function set_domain_uuid($domain_uuid) {
 			$e = new Exception();
 			$trace = $e->getTrace();
@@ -143,17 +143,20 @@ require_once "root.php";
 				}
 				foreach ($this->_switch_dirs as $dir){
 					$session_var;
-					preg_match( '/^switch_.*_dir$/', $dir, $session_var);
-					$this->$dir = $_SESSION['switch'][$session_var[0]]['dir'];
+					preg_match( '/^switch_(.*)_dir$/', $dir, $session_var);
+					$dir = "_$dir";
+					if($session_var[1] == 'script'){ $session_var[1] = 'scripts'; }
+					$this->$dir = $_SESSION['switch'][$session_var[1]]['dir'];
 				}
 				foreach ($this->_switch_vdirs as $vdir){
 					$session_var;
-					preg_match( '/^switch_.*_vdir$/', $vdir, $session_var);
-					$this->$vdir = $_SESSION['switch'][$session_var[0]]['dir'];
+					preg_match( '/^switch_(.*)_vdir$/', $vdir, $session_var);
+					$vdir = "_$vdir";
+					$this->$vdir = $_SESSION['switch'][$session_var[1]]['dir'];
 				}
-				$this->switch_event_host		= $_SESSION['event_socket_ip_address'];
-				$this->switch_event_port		= $_SESSION['event_socket_port'];
-				$this->switch_event_password	= $_SESSION['event_socket_password'];
+				$this->_switch_event_host		= $_SESSION['event_socket_ip_address'];
+				$this->_switch_event_port		= $_SESSION['event_socket_port'];
+				$this->_switch_event_password	= $_SESSION['event_socket_password'];
 				
 				// domain info
 				$this->_domain_name = $_SESSION['domain_name'];
@@ -185,6 +188,9 @@ require_once "root.php";
 					$t_vdir = "_switch_$vdir";
 					$this->$t_vdir = $detect_switch->$vdir();
 				}
+				$this->_switch_event_host		= $detect_switch->event_host;
+				$this->_switch_event_port		= $detect_switch->event_port;
+				$this->_switch_event_password	= $detect_switch->event_password;
 
 				//copy from _POST
 				foreach($_POST as $key=>$value){
