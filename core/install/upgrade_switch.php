@@ -53,7 +53,7 @@
 
 //run switch upgrade
 	require_once "resources/classes/install_switch.php";
-	$switch = new install_switch;
+	$switch = new install_switch();
 	$switch->upgrade();
 
 ?>
