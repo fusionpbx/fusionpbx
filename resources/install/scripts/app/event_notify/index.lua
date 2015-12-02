@@ -85,6 +85,16 @@
 		end
 	end
 
+--linksys
+	if (vendor == "linksys") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'reboot=true');
+		end
+	end
+
 --polycom
 	if (vendor == "polycom") then
 		if (command == "reboot") then
