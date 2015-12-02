@@ -217,7 +217,38 @@ include "root.php";
 		
 		protected function create_odbc_database_connection() {
 		//needed for non native database support
-			
+				$database_uuid = uuid();
+				$sql = "insert into v_databases ";
+				$sql .= "(";
+				//$sql .= "domain_uuid, ";
+				$sql .= "database_uuid, ";
+				$sql .= "database_driver, ";
+				$sql .= "database_type, ";
+				$sql .= "database_host, ";
+				$sql .= "database_port, ";
+				$sql .= "database_name, ";
+				$sql .= "database_username, ";
+				$sql .= "database_password, ";
+				$sql .= "database_path, ";
+				$sql .= "database_description ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$database_uuid', ";
+				$sql .= "'odbc', ";
+				$sql .= "'".$this->global_settings->db_type()."', ";
+				$sql .= "'".$this->global_settings->db_host()."', ";
+				$sql .= "'".$this->global_settings->db_port()."', ";
+				$sql .= "'".$this->global_settings->db_name()."', ";
+				$sql .= "'".$this->global_settings->db_username()."', ";
+				$sql .= "'".$this->global_settings->db_password()."', ";
+				$sql .= "'".$this->global_settings->db_path()."', ";
+				$sql .= "'Created by installer' ";
+				$sql .= ")";
+				if($this->dbh->exec(check_sql($sql)) === false){
+					throw new Exception("Failed to create odbc_database entery: " . join(":", $this->dbh->errorInfo()));
+				}
+				unset($sql);
 		}
 
 		protected function create_database_sqlite() {
