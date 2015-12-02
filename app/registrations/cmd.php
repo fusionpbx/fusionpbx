@@ -54,6 +54,9 @@ else {
 	if (preg_replace('/^.*?(cisco).*$/i', '$1', strtolower($agent)) == "cisco") {
 		$vendor = "cisco";
 	}
+	if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', strtolower($agent)) == "cisco/spa") {
+		$vendor = "cisco-spa";
+	}
 	if (preg_replace('/^.*?(grandstream).*$/i', '$1', strtolower($agent)) == "grandstream") {
 		$vendor = "grandstream";
 	}

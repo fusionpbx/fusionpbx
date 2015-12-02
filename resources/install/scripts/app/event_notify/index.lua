@@ -68,6 +68,16 @@
 --cisco
 	if (vendor == "cisco") then
 		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync');
+		end
+	end
+
+--cisco-spa
+	if (vendor == "cisco-spa") then
+		if (command == "reboot") then
 			event:addHeader('event-string', 'reboot=true');
 		end
 		if (command == "check_sync") then
