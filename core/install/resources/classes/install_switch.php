@@ -28,34 +28,25 @@ include "root.php";
 //define the install class
 	class install_switch {
 
-		protected $domain_uuid;
-		protected $domain_name;
-		protected $detect_switch;
+		protected $global_settings;
 		protected $config_lua;
+		protected $dbh;
 
 		public $debug = false;
 
-		function __construct($domain_name, $domain_uuid, $detect_switch) {
-			if($detect_switch == null){
-				if(strlen($_SESSION['event_socket_ip_address']) == 0 or strlen($_SESSION['event_socket_port']) == 0 or strlen($_SESSION['event_socket_password']) == 0 ){
-					throw new Exception('The parameter $detect_switch was empty and i could not find the event socket details from the session');
-				}
-				$detect_switch = new detect_switch($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				$domain_name = $_SESSION['domain_name'];
-				$domain_uuid = $_SESSION['domain_uuid'];
-			}elseif(!is_a($detect_switch, 'detect_switch')){
-				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
+		function __construct($global_settings) {
+			if(!is_a($global_settings, 'global_settings')){
+				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
 			}
-			$this->domain_uuid = $domain_uuid;
-			$this->domain = $domain_name;
-			$this->detect_switch = $detect_switch;
+			$this->global_settings = $global_settings;
 			if (is_dir("/etc/fusionpbx")){
 				$this->config_lua = "/etc/fusionpbx/config.lua";
-			} elseif (is_dir("/usr/local/etc/fusionpbx")){
+			}elseif (is_dir("/usr/local/etc/fusionpbx")){
 				$this->config_lua = "/usr/local/etc/fusionpbx/config.lua";
-			}
-			else {
-				$this->config_lua = $this->detect_switch->script_dir."/resources/config.lua";
+			}elseif(strlen($this->global_settings->script_dir) > 0) {
+				$this->config_lua = $this->global_settings->script_dir."/resources/config.lua";
+			}else{
+				throw new Exception("Could not work out where to put the config.lua");
 			}
 			$this->config_lua = normalize_path_to_os($this->config_lua);
 		}
@@ -91,6 +82,7 @@ include "root.php";
 				exec("xcopy /E /Y \"$src\" \"$dst\"");
 			}
 			else {
+				throw new Exception('Could not perform copy operation on this platform, implementation missing');
 				$dir = opendir($src);
 				if (!$dir) {
 					if (!mkdir($src, 0755, true)) {
@@ -202,14 +194,14 @@ include "root.php";
 		function copy_conf() {
 			$this->write_progress("\tCopying Config");
 			//make a backup of the config
-				if (file_exists($this->detect_switch->conf_dir())) {
-					$this->backup_dir($this->detect_switch->conf_dir(), 'fusionpbx_switch_config');
-					$this->recursive_delete($this->detect_switch->conf_dir());
+				if (file_exists($this->global_settings->conf_dir())) {
+					$this->backup_dir($this->global_settings->conf_dir(), 'fusionpbx_switch_config');
+					$this->recursive_delete($this->global_settings->conf_dir());
 				}
 			//make sure the conf directory exists
-				if (!is_dir($this->detect_switch->conf_dir())) {
-					if (!mkdir($this->detect_switch->conf_dir(), 0774, true)) {
-						throw new Exception("Failed to create the switch conf directory '".$this->detect_switch->conf_dir()."'. ");
+				if (!is_dir($this->global_settings->conf_dir())) {
+					if (!mkdir($this->global_settings->conf_dir(), 0774, true)) {
+						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->conf_dir()."'. ");
 					}
 				}
 			//copy resources/templates/conf to the freeswitch conf dir
@@ -219,14 +211,14 @@ include "root.php";
 				else {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 				}
-				$dst_dir = $this->detect_switch->conf_dir();
+				$dst_dir = $this->global_settings->conf_dir();
 				if (is_readable($dst_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir);
 					unset($src_dir, $dst_dir);
 				}
-				$fax_dir = join( DIRECTORY_SEPARATOR, array($this->detect_switch->storage_dir(), 'fax'));
+				$fax_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->storage_dir(), 'fax'));
 				if (!is_readable($fax_dir)) { mkdir($fax_dir,0777,true); }
-				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->detect_switch->storage_dir(), 'voicemail'));
+				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->storage_dir(), 'voicemail'));
 				if (!is_readable($voicemail_dir)) { mkdir($voicemail_dir,0777,true); }
 			
 			//create the dialplan/default.xml for single tenant or dialplan/domain.xml
@@ -234,7 +226,7 @@ include "root.php";
 					$dialplan = new dialplan;
 					$dialplan->domain_uuid = $this->domain_uuid;
 					$dialplan->domain = $this->domain_name;
-					$dialplan->switch_dialplan_dir = join( DIRECTORY_SEPARATOR, array($this->detect_switch->conf_dir(), "/dialplan"));
+					$dialplan->switch_dialplan_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->conf_dir(), "/dialplan"));
 					$dialplan->restore_advanced_xml();
 					if($this->_debug){
 						print_r($dialplan->result, $message);
@@ -248,7 +240,7 @@ include "root.php";
 				}
 
 			//write the switch.conf.xml file
-				if (file_exists($this->detect_switch->conf_dir())) {
+				if (file_exists($this->global_settings->conf_dir())) {
 					switch_conf_xml();
 				}
 
@@ -256,7 +248,10 @@ include "root.php";
 
 		function copy_scripts() {
 			$this->write_progress("\tCopying Scripts");
-			$script_dir = $this->detect_switch->script_dir();
+			$script_dir = $this->global_settings->script_dir();
+			if(strlen($script_dir) == 0) {
+				throw new Exception("Cannot copy scripts the 'script_dir' is empty");
+			}
 			if (file_exists($script_dir)) {
 				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
 					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
@@ -312,30 +307,30 @@ include "root.php";
 		//config.lua
 			$fout = fopen($this->config_lua,"w");
 			if(!$fout){
-				throw new Exception("Failed to open '{$this->config_lua}' for writing");
+				throw new Exception("Failed to open '".$this->config_lua."' for writing");
 			}
 			$tmp = "\n";
 			$tmp .= "--set the variables\n";
-			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_sounds_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	sounds_dir = [[".$this->global_settings->switch_sounds_dir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	phrases_dir = [[".$_SESSION['switch']['phrases']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_phrases_vdir()) > 0) {
+				$tmp .= normalize_path_to_os("	phrases_dir = [[".$this->global_settings->switch_phrases_vdir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['db']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_db_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	database_dir = [[".$this->global_settings->switch_db_dir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	recordings_dir = [[".$_SESSION['switch']['recordings']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_recordings_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	recordings_dir = [[".$this->global_settings->switch_recordings_dir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	storage_dir = [[".$_SESSION['switch']['storage']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_storage_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	storage_dir = [[".$this->global_settings->switch_storage_dir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	voicemail_dir = [[".$_SESSION['switch']['voicemail']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_voicemail_vdir()) > 0) {
+				$tmp .= normalize_path_to_os("	voicemail_dir = [[".$this->global_settings->switch_voicemail_vdir()."]];\n");
 			}
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
-				$tmp .= normalize_path_to_os("	scripts_dir = [[".$_SESSION['switch']['scripts']['dir']."]];\n");
+			if (strlen($this->global_settings->switch_scripts_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	scripts_dir = [[".$this->global_settings->switch_scripts_dir()."]];\n");
 			}
 			$tmp .= normalize_path_to_os("	php_dir = [[".PHP_BINDIR."]];\n");
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -347,27 +342,27 @@ include "root.php";
 			$tmp .= normalize_path_to_os("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 			$tmp .= "\n";
 
-			if ((strlen($db_type) > 0) || (strlen($dsn_name) > 0)) {
+			if ((strlen($this->global_settings->db_type()) > 0) || (strlen($dsn_name) > 0)) {
 				$tmp .= "--database information\n";
 				$tmp .= "	database = {}\n";
-				$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
-				$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
-				$tmp .= normalize_path_to_os("	database[\"path\"] = [[".$db_path."]];\n");
+				$tmp .= "	database[\"type\"] = \"".$this->global_settings->db_type()."\";\n";
+				$tmp .= "	database[\"name\"] = \"".$this->global_settings->db_name()."\";\n";
+				$tmp .= normalize_path_to_os("	database[\"path\"] = [[".$this->global_settings->db_path()."]];\n");
 
 				if (strlen($dsn_name) > 0) {
 					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
 					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 				}
-				elseif ($db_type == "pgsql") {
-					if ($db_host == "localhost") { $db_host = "127.0.0.1"; }
-					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
-					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
+				elseif ($this->global_settings->db_type() == "pgsql") {
+					if ($this->global_settings->db_host() == "localhost") { $this->global_settings->db_host() = "127.0.0.1"; }
+					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
+					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
 				}
-				elseif ($db_type == "sqlite") {
-					$tmp .= "	database[\"system\"] = \"sqlite://".$db_path."/".$db_name."\";\n";
+				elseif ($this->global_settings->db_type() == "sqlite") {
+					$tmp .= "	database[\"system\"] = \"sqlite://".$this->global_settings->db_path()."/".$this->global_settings->db_name()."\";\n";
 					$tmp .= "	database[\"switch\"] = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 				}
-				elseif ($db_type == "mysql") {
+				elseif ($this->global_settings->db_type() == "mysql") {
 					$tmp .= "	database[\"system\"] = \"\";\n";
 					$tmp .= "	database[\"switch\"] = \"\";\n";
 				}
@@ -393,8 +388,8 @@ include "root.php";
 			$tmp .= "	debug[\"cache\"] = false;\n";
 			$tmp .= "\n";
 			$tmp .= "--additional info\n";
-			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
-			$tmp .= normalize_path_to_os("	temp_dir = [[".$_SESSION['server']['temp']['dir']."]];\n");
+			$tmp .= "	domain_count = ".$this->global_settings->domain_count().";\n";
+			$tmp .= normalize_path_to_os("	temp_dir = [[".$this->global_settings->switch_temp_dir()."]];\n");
 			if (isset($_SESSION['domain']['dial_string']['text'])) {
 				$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
 			}
