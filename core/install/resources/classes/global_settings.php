@@ -30,8 +30,8 @@ require_once "root.php";
 	class global_settings {
 
 		// cached data
-		protected $_dirs;
-		protected $_vdirs;
+		protected $_switch_dirs;
+		protected $_switch_vdirs;
 		public function get_switch_dirs()	{ return $this->_switch_dirs; }
 		public function get_switch_vdirs()	{ return $this->_switch_vdirs; }
 
@@ -116,25 +116,39 @@ require_once "root.php";
 		public function db_create_password()	{return $this->_db_create_password; }
 
 		//misc information
+		protected $_domain_uuid;
+		protected $_domain_name;
 		protected $_domain_count;
+		public function domain_uuid()	 		{return $this->_domain_uuid; }
+		public function domain_name()	 		{return $this->_domain_name; }
 		public function domain_count()	 		{return $this->_domain_count; }
+		public function set_domain_uuid($domain_uuid) {
+			$e = new Exception();
+			$trace = $e->getTrace();
+			if($trace[1]['function'] != 'create_domain'){
+				throw new Exception('Only create_domain is allowed to update the domain_uuid');
+			}
+			$this->_domain_uuid = $domain_uuid;
+		}
 
-		public function __construct($detect_switch, $domain_name, $domain_uuid) {
+		public function __construct($detect_switch = null, $domain_name = null, $domain_uuid = null) {
 			$this->_switch_dirs = preg_grep ('/^switch_.*_dir$/', get_class_methods('global_settings') );
 			sort( $this->_switch_dirs );
 			$this->_switch_vdirs = preg_grep ('/^switch_.*_vdir$/', get_class_methods('global_settings') );
 			sort( $this->_switch_vdirs );
-
-			if($detect_switch == null){
+			if(is_null($detect_switch)){
 				//take settings from session
+				if(!isset($_SESSION['switch'])){
+					throw new Exception("No detect_switch was passed to me but \$_SESSION['switch'] is empty!");
+				}
 				foreach ($this->_switch_dirs as $dir){
 					$session_var;
-					preg_match( '^switch_.*_dir$', $dir, $session_var);
+					preg_match( '/^switch_.*_dir$/', $dir, $session_var);
 					$this->$dir = $_SESSION['switch'][$session_var[0]]['dir'];
 				}
 				foreach ($this->_switch_vdirs as $vdir){
 					$session_var;
-					preg_match( '^switch_.*_vdir$', $vdir, $session_var);
+					preg_match( '/^switch_.*_vdir$/', $vdir, $session_var);
 					$this->$vdir = $_SESSION['switch'][$session_var[0]]['dir'];
 				}
 				$this->switch_event_host		= $_SESSION['event_socket_ip_address'];
@@ -142,8 +156,8 @@ require_once "root.php";
 				$this->switch_event_password	= $_SESSION['event_socket_password'];
 				
 				// domain info
-				$this->domain_name = $_SESSION['domain_name'];
-				$this->domain_uuid = $_SESSION['domain_uuid'];
+				$this->_domain_name = $_SESSION['domain_name'];
+				$this->_domain_uuid = $_SESSION['domain_uuid'];
 
 				// collect misc info
 				$this->domain_count = count($_SESSION["domains"]);
@@ -163,26 +177,33 @@ require_once "root.php";
 
 			}else{
 				//copy from detect_switch
-				foreach($detect_switch->switch_dirs() as $dir){
-					$t_dir = "_$dir";
+				foreach($detect_switch->get_dirs() as $dir){
+					$t_dir = "_switch_$dir";
 					$this->$t_dir = $detect_switch->$dir();
 				}
-				foreach($detect_switch->switch_vdirs() as $vdir){
-					$t_vdir = "_$vdir";
+				foreach($detect_switch->get_vdirs() as $vdir){
+					$t_vdir = "_switch_$vdir";
 					$this->$t_vdir = $detect_switch->$vdir();
 				}
 
 				//copy from _POST
 				foreach($_POST as $key=>$value){
 					if(substr($key,0,3) == "db_"){
-						$this->$key = $value;
+						$o_key = "_$key";
+						$this->$o_key = $value;
 					}
 				}
+				if($this->_db_create and strlen($this->_db_create_username) == 0)
+				{
+					$this->_db_create_username = $this->_db_username;
+					$this->_db_create_password = $this->_db_password;
+				}
+				if (strlen($this->_db_port) == 0) { $this->_db_port = "5432"; }
 
 				// domain info
-				if($domain_uuid == null){ $domain_uuid = uuid(); }
-				$this->domain_name = $domain_name;
-				$this->domain_uuid = $domain_uuid;
+				if(strlen($domain_uuid) == 0){ $domain_uuid = uuid(); }
+				$this->_domain_name = $domain_name;
+				$this->_domain_uuid = $domain_uuid;
 
 				//collect misc info
 				$this->_domain_count = 1;	//assumed to be one

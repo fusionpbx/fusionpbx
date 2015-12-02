@@ -34,7 +34,7 @@ include "root.php";
 		protected $menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 		protected $dbh;
 
-		public function domain_uuid() { return $this->_domain_uuid; }
+		public function domain_uuid() { return $this->global_settings->domain_uuid(); }
 
 		public $debug = false;
 
@@ -46,10 +46,10 @@ include "root.php";
 		public $template_name = 'enhanced';
 
 	 	function __construct($global_settings) {
-			if($global_settings == null){
+			if(is_null($global_settings)){
 				require_once "resources/classes/global_settings.php";
 				$global_settings = new global_settings();
-			elseif(!is_a($global_settings, 'global_settings')){
+			}elseif(!is_a($global_settings, 'global_settings')){
 				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
 			}
 			$this->global_settings = $global_settings;
@@ -81,9 +81,14 @@ include "root.php";
 			ini_set('max_execution_time',3600);
 			$this->write_progress("Install started for FusionPBX");
 			$this->create_config_php();
+			$this->write_progress("\tExecuting config.php");
+			require $this->config_php;
+			global $db;
+			$db = $this->dbh;
 			$this->create_database();
 			$this->create_domain();
 			$this->create_superuser();
+			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
 			$this->create_menus();
 			$this->write_progress("Install complete for FusionPBX");
@@ -135,12 +140,13 @@ include "root.php";
 			$tmp_config .= "\n";
 			$tmp_config .= "	//mysql: database connection information\n";
 			if ($this->global_settings->db_type() == "mysql") {
-				if ($this->global_settings->db_host() == "localhost") {
+				$db_host = $this->global_settings->db_host();
+				if ( $db_host == "localhost") {
 					//if localhost is used it defaults to a Unix Socket which doesn't seem to work.
 					//replace localhost with 127.0.0.1 so that it will connect using TCP
-					$this->global_settings->db_host() = "127.0.0.1";
+					$db_host = "127.0.0.1";
 				}
-				$tmp_config .= "		\$db_host = '".$this->global_settings->db_host()."';\n";
+				$tmp_config .= "		\$db_host = '".$db_host."';\n";
 				$tmp_config .= "		\$db_port = '".$this->global_settings->db_port()."';\n";
 				$tmp_config .= "		\$db_name = '".$this->global_settings->db_name()."';\n";
 				$tmp_config .= "		\$db_username = '".$this->global_settings->db_username()."';\n";
@@ -156,7 +162,9 @@ include "root.php";
 			$tmp_config .= "\n";
 			$tmp_config .= "	//pgsql: database connection information\n";
 			if ($this->global_settings->db_type() == "pgsql") {
-				$tmp_config .= "		\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
+				$cmt_out = '';
+				if($this->global_settings->db_host() != 'localhost') { $cmt_out = "//"; }
+				$tmp_config .= "		$cmt_out\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
 				$tmp_config .= "		\$db_port = '".$this->global_settings->db_port()."';\n";
 				$tmp_config .= "		\$db_name = '".$this->global_settings->db_name()."';\n";
 				$tmp_config .= "		\$db_username = '".$this->global_settings->db_username()."';\n";
@@ -191,16 +199,7 @@ include "root.php";
 		}
 
 		protected function create_database() {
-			require $this->config_php;
-			global $db;
-			$db = $this->dbh;
-
 			$this->write_progress("\tUsing database as type " . $this->global_settings->db_type());
-			if($this->global_settings->db_create() and strlen($this->global_settings->db_create_username()) == 0)
-			{
-				$this->global_settings->db_create_username() = $this->global_settings->db_username();
-				$this->global_settings->db_create_password() = $this->global_settings->db_password();
-			}
 			$function = "create_database_" . $this->global_settings->db_type();
 			$this->$function();
 
@@ -288,7 +287,6 @@ include "root.php";
 			//Attempt to create new PG role and database
 				$this->write_progress("\tCreating database");
 				try {
-					if (strlen($this->global_settings->db_port()) == 0) { $this->global_settings->db_port() = "5432"; }
 					if (strlen($this->global_settings->db_host()) > 0) {
 						$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
 					} else {
@@ -318,7 +316,6 @@ include "root.php";
 			$this->write_progress("\tInstalling data to database");				
 		//open database connection with $this->global_settings->db_name()
 			try {
-				if (strlen($this->global_settings->db_port()) == 0) { $this->global_settings->db_port() = "5432"; }
 				if (strlen($this->global_settings->db_host()) > 0) {
 					$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} dbname={$this->global_settings->db_name()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()}");
 				} else {
@@ -528,12 +525,14 @@ include "root.php";
 			$sql .= "limit 1";
 			$this->write_debug($sql);
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
-			$prep_statement->execute();
+			if($prep_statement->execute() === false){
+				throw new Exception("Failed to search for domain: " . join(":", $this->dbh->errorInfo()));
+			}
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 			unset($sql, $prep_statement);
 			if ($result) {
-				$this->_domain_uuid = $result['domain_uuid'];
-				$this->write_progress("... domain exists as '" . $this->_domain_uuid . "'");
+				$this->global_settings->set_domain_uuid($result['domain_uuid']);
+				$this->write_progress("... domain exists as '" . $this->global_settings->domain_uuid() . "'");
 				if($result['domain_enabled'] != 'true'){
 					throw new Exception("Domain already exists but is disabled, this is unexpected");
 				}
@@ -547,13 +546,15 @@ include "root.php";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$this->_domain_uuid."', ";
-				$sql .= "'".$this->global_settings->domain_name."', ";
-				$sql .= "'' ";
+				$sql .= "'".$this->global_settings->domain_uuid()."', ";
+				$sql .= "'".$this->global_settings->domain_name()."', ";
+				$sql .= "'Default Domain' ";
 				$sql .= ");";
 
 				$this->write_debug($sql);
-				$this->dbh->exec(check_sql($sql));
+				if($this->dbh->exec(check_sql($sql)) === false){
+					throw new Exception("Failed to execute sql statement: " . join(":", $this->dbh->errorInfo()));
+				}
 				unset($sql);
 
 				//domain settings
@@ -596,73 +597,73 @@ include "root.php";
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->base_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_base_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'base';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->conf_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_conf_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'conf';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->db_dir()();
+				$tmp[$x]['value'] = $this->global_settings->switch_db_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'db';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->log_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_log_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'log';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->mod_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_mod_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'mod';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->script_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_script_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'scripts';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->grammar_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_grammar_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'grammar';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->storage_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_storage_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'storage';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->voicemail_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_voicemail_vdir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'voicemail';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->recordings_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_recordings_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'recordings';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->sounds_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_sounds_dir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'sounds';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->phrases_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_phrases_vdir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'phrases';
 				$tmp[$x]['enabled'] = 'true';
@@ -674,19 +675,19 @@ include "root.php";
 				$tmp[$x]['enabled'] = 'false';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->extensions_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_extensions_vdir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'extensions';
 				$tmp[$x]['enabled'] = 'false';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->sip_profiles_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_sip_profiles_vdir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'sip_profiles';
 				$tmp[$x]['enabled'] = 'false';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->dialplan_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_dialplan_vdir();
 				$tmp[$x]['category'] = 'switch';
 				$tmp[$x]['subcategory'] = 'dialplan';
 				$tmp[$x]['enabled'] = 'false';
@@ -694,7 +695,7 @@ include "root.php";
 
 				//server settings
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->temp_dir();
+				$tmp[$x]['value'] = $this->global_settings->switch_temp_dir();
 				$tmp[$x]['category'] = 'server';
 				$tmp[$x]['subcategory'] = 'temp';
 				$tmp[$x]['enabled'] = 'true';
@@ -707,7 +708,7 @@ include "root.php";
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->backup_vdir();
+				$tmp[$x]['value'] = $this->global_settings->switch_backup_vdir();
 				$tmp[$x]['category'] = 'server';
 				$tmp[$x]['subcategory'] = 'backup';
 				$tmp[$x]['enabled'] = 'true';
@@ -825,7 +826,7 @@ include "root.php";
 		protected function create_superuser() {
 			$this->write_progress("\tChecking if superuser exists '" . $this->global_settings->domain_name . "'");
 			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and username = '".$this->admin_username."' ";
 			$sql .= "limit 1 ";
 			$this->write_debug($sql);
@@ -866,7 +867,7 @@ include "root.php";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'".$this->global_settings->domain_uuid()."', ";
 				$sql .= "'".$this->admin_uuid."', ";
 				$sql .= "'$contact_uuid', ";
 				$sql .= "'".$this->admin_username."', ";
@@ -881,7 +882,7 @@ include "root.php";
 			}
 			$this->write_progress("\tChecking if superuser contact exists");
 			$sql = "select count(*) from v_contacts ";
-			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and contact_name_given = '".$this->admin_username."' ";
 			$sql .= "and contact_nickname = '".$this->admin_username."' ";
 			$sql .= "limit 1 ";
@@ -900,7 +901,7 @@ include "root.php";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'".$this->global_settings->domain_uuid()."', ";
 				$sql .= "'$contact_uuid', ";
 				$sql .= "'user', ";
 				$sql .= "'".$this->admin_username."', ";
@@ -911,7 +912,7 @@ include "root.php";
 			}
 			$this->write_progress("\tChecking if superuser is in the correct group");
 			$sql = "select count(*) from v_group_users ";
-			$sql .= "where domain_uuid = '".$this->_domain_uuid."' ";
+			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and user_uuid = '".$this->admin_uuid."' ";
 			$sql .= "and group_name = 'superadmin' ";
 			$sql .= "limit 1 ";
@@ -931,7 +932,7 @@ include "root.php";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'".uuid()."', ";
-				$sql .= "'".$this->_domain_uuid."', ";
+				$sql .= "'".$this->global_settings->domain_uuid()."', ";
 				$sql .= "'".$this->admin_uuid."', ";
 				$sql .= "'superadmin' ";
 				$sql .= ");";
@@ -994,7 +995,7 @@ include "root.php";
 
 		//set needed session settings
 			$_SESSION["username"] = $this->admin_username;
-			$_SESSION["domain_uuid"] = $this->_domain_uuid;
+			$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
 			require $this->config_php;
 			require "resources/require.php";
 			$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
