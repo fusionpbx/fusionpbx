@@ -85,7 +85,7 @@ if ($domains_processed == 1) {
 			$sql .= "set event_socket_ip_address = '$event_socket_ip_address' ";
 			$sql .= "set event_socket_port = '$event_socket_port' ";
 			$sql .= "set event_socket_password = '$event_socket_password' ";
-			$this->dbh->exec(check_sql($sql));
+			$db->exec(check_sql($sql));
 			unset($sql);
 		}
 }

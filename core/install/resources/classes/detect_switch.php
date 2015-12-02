@@ -31,11 +31,19 @@ require_once "resources/classes/EventSocket.php";
 	class detect_switch {
 
 		// cached data
-		protected $_folders;
+		protected $_dirs;
+		protected $_vdirs;
+		public function get_dirs()	{ return $this->_dirs; }
+		public function get_vdirs()	{ return $this->_vdirs; }
+
 		// version information
 		protected $_major;
 		protected $_minor;
 		protected $_build;
+		public function major()		{ return $this->_major; }
+		public function minor()		{ return $this->_minor; }
+		public function build()		{ return $this->_build; }
+		public function version()	{ return $this->_major.".".$this->_minor.".".$this->_build; }
 
 		// dirs - detected by from the switch
 		protected $_base_dir = '';
@@ -55,30 +63,23 @@ require_once "resources/classes/EventSocket.php";
 		protected $_sounds_dir = '';
 		protected $_storage_dir = '';
 		protected $_temp_dir = '';
-
-		public function major() { return $this->_major; }
-		public function minor() { return $this->_minor; }
-		public function build() { return $this->_build; }
-		public function version() { return $this->_major.".".$this->_minor.".".$this->_build; }
-		public function base_dir() { return $this->_base_dir; }
-		public function cache_dir() { return $this->_cache_dir; }
-		public function certs_dir() { return $this->_certs_dir; }
-		public function conf_dir() { return $this->_conf_dir; }
-		public function db_dir() { return $this->_db_dir; }
-		public function external_ssl_dir() { return $this->_external_ssl_dir; }
-		public function grammar_dir() { return $this->_grammar_dir; }
-		public function htdocs_dir() { return $this->_htdocs_dir; }
-		public function internal_ssl_dir() { return $this->_internal_ssl_dir; }
-		public function log_dir() { return $this->_log_dir; }
-		public function mod_dir() { return $this->_mod_dir; }
-		public function recordings_dir() { return $this->_recordings_dir; }
-		public function run_dir() { return $this->_run_dir; }
-		public function script_dir() { return $this->_script_dir; }
-		public function sounds_dir() { return $this->_sounds_dir; }
-		public function storage_dir() { return $this->_storage_dir; }
-		public function temp_dir() { return $this->_temp_dir; }
-		public function get_dirs() {	return $this->_dirs;	}
-		public function get_vdirs() {	return $this->_vdirs;	}
+		public function base_dir()			{ return $this->_base_dir; }
+		public function cache_dir()			{ return $this->_cache_dir; }
+		public function certs_dir()			{ return $this->_certs_dir; }
+		public function conf_dir()			{ return $this->_conf_dir; }
+		public function db_dir()			{ return $this->_db_dir; }
+		public function external_ssl_dir()	{ return $this->_external_ssl_dir; }
+		public function grammar_dir()		{ return $this->_grammar_dir; }
+		public function htdocs_dir()		{ return $this->_htdocs_dir; }
+		public function internal_ssl_dir()	{ return $this->_internal_ssl_dir; }
+		public function log_dir()			{ return $this->_log_dir; }
+		public function mod_dir()			{ return $this->_mod_dir; }
+		public function recordings_dir()	{ return $this->_recordings_dir; }
+		public function run_dir()			{ return $this->_run_dir; }
+		public function script_dir()		{ return $this->_script_dir; }
+		public function sounds_dir()		{ return $this->_sounds_dir; }
+		public function storage_dir()		{ return $this->_storage_dir; }
+		public function temp_dir()			{ return $this->_temp_dir; }
 
 		// virtual dirs - assumed based on the detected dirs
 		protected $_voicemail_vdir = '';
@@ -87,13 +88,12 @@ require_once "resources/classes/EventSocket.php";
 		protected $_sip_profiles_vdir = '';
 		protected $_dialplan_vdir = '';
 		protected $_backup_vdir = '';
-
-		public function voicemail_vdir() { return $this->_voicemail_vdir; }
-		public function phrases_vdir() { return $this->_phrases_vdir; }
-		public function extensions_vdir() { return $this->_extensions_vdir; }
-		public function sip_profiles_vdir() { return $this->_sip_profiles_vdir; }
-		public function dialplan_vdir() { return $this->_dialplan_vdir; }
-		public function backup_vdir() { return $this->_backup_vdir; }
+		public function voicemail_vdir()	{ return $this->_voicemail_vdir; }
+		public function phrases_vdir()		{ return $this->_phrases_vdir; }
+		public function extensions_vdir()	{ return $this->_extensions_vdir; }
+		public function sip_profiles_vdir()	{ return $this->_sip_profiles_vdir; }
+		public function dialplan_vdir()		{ return $this->_dialplan_vdir; }
+		public function backup_vdir()		{ return $this->_backup_vdir; }
 
 		// event socket
 		public $event_host = 'localhost';
@@ -102,6 +102,7 @@ require_once "resources/classes/EventSocket.php";
 		protected $event_socket;
 
 		public function __construct($event_host, $event_port, $event_password) {
+			//do not take these settings from session as they be detecting a new switch
 			if($event_host){		$this->event_host = $event_host; }
 			if($event_port){		$this->event_port = $event_port; }
 			if($event_password){	$this->event_password = $event_password; }
@@ -137,12 +138,12 @@ require_once "resources/classes/EventSocket.php";
 					$this->$field = normalize_path($matches[2]);
 				}
 			}
-			$this->_voicemail_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_storage_dir, "voicemail")));
-			$this->_phrases_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "lang")));
-			$this->_extensions_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "directory")));
-			$this->_sip_profiles_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "sip_profiles")));
-			$this->_dialplan_vdir = normalize_path(join( DIRECTORY_SEPARATOR, array($this->_conf_dir, "dialplan")));
-			$this->_backup_vdir = normalize_path(sys_get_temp_dir());
+			$this->_voicemail_vdir = 	normalize_path($this->_storage_dir . DIRECTORY_SEPARATOR . "voicemail");
+			$this->_phrases_vdir = 		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "lang");
+			$this->_extensions_vdir = 	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "directory");
+			$this->_sip_profiles_vdir =	normalize_path(($this->_conf_dir . DIRECTORY_SEPARATOR . "sip_profiles");
+			$this->_dialplan_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "dialplan");
+			$this->_backup_vdir =		normalize_path(sys_get_temp_dir());
 		}	
 	
 		protected function connect_event_socket(){

@@ -267,10 +267,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
 		require_once "core/install/resources/classes/detect_switch.php";
-		$switch_detect = new detect_switch($event_host, $event_port, $event_password);
+		$detect_switch = new detect_switch($event_host, $event_port, $event_password);
 		$detect_ok = true;
 		try {
-			$switch_detect->detect();
+			$detect_switch->detect();
 		} catch(Exception $e){
 			echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
 			$detect_ok = false;
@@ -294,34 +294,31 @@ if(!$install_step) { $install_step = 'select_language'; }
 			}
 			#set_error_handler("error_handler");
 			try {
+				require_once "resources/classes/global_settings.php";
+				$settings = new global_settings($detect_switch, $domain_name);
+
 				require_once "resources/classes/install_fusionpbx.php";
-				$system = new install_fusionpbx($domain_name, null, $switch_detect);
-				$domain_uuid = $system->domain_uuid();
+				$system = new install_fusionpbx($settings);
 				$system->admin_username = $admin_username;
 				$system->admin_password = $admin_password;
 				$system->default_country = $install_default_country;
 				$system->install_language = $install_language;
 				$system->template_name = $install_template_name;
-				foreach($_POST as $key=>$value){
-					if(substr($key,0,3) == "db_"){
-						$system->$key = $value;
-					}
-				}
 
 				require_once "resources/classes/install_switch.php";
-				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
+				$switch = new install_switch($settings);
 				//$switch->debug = true;
 				//$system->debug = true;
 				$system->install();
 				$switch->install();
 				$system->app_defaults();
-				$switch_detect->restart_switch();
+				$detect_switch->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
-					$system = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
+					$system = new install_fusionpbx($domain_name, $domain_uuid, $detect_switch);
 					$system->remove_config();
 				}catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
