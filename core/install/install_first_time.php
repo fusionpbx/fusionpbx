@@ -326,7 +326,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 			restore_error_handler();
 			if($install_ok){
 				echo "</pre>\n";
-				#header("Location: ".PROJECT_PATH."/logout.php");
+				header("Location: ".PROJECT_PATH."/logout.php");
 				$_SESSION['message'] = 'Install complete';
 			}else{
 				echo "<form method='post' name='frm' action=''>\n";
