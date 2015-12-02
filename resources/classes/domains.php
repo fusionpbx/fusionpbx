@@ -369,6 +369,10 @@
 				if (function_exists('save_dialplan_xml')) {
 					save_dialplan_xml();
 				}
+			//update config.lua
+				require_once "core/install/resources/classes/install_switch.php";
+				$switch = new install_switch;
+				$switch->create_config_lua();
 
 			//clear the session variables
 				unset($_SESSION['domain']);

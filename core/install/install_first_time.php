@@ -45,6 +45,7 @@ require_once "resources/classes/text.php";
 	$db_name = '';
 	$db_username = '';
 	$db_password = '';
+	$db_create = '';
 	$db_create_username = '';
 	$db_create_password = '';
 
@@ -167,6 +168,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 				"<sm>You can use the following to find what ports are allowed<pre>semanage port -l | grep '^http_port_t'</pre></sm>";
 			}
 		}
+	//test for windows and non sqlite
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
+			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured after installing then restart freeswitch.";
+		}
 
 	//action code
 	if($return_install_step == 'config_detail'){
@@ -262,10 +267,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
 		require_once "core/install/resources/classes/detect_switch.php";
-		$switch_detect = new detect_switch($event_host, $event_port, $event_password);
+		$detect_switch = new detect_switch($event_host, $event_port, $event_password);
 		$detect_ok = true;
 		try {
-			$switch_detect->detect();
+			$detect_switch->detect();
 		} catch(Exception $e){
 			echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
 			$detect_ok = false;
@@ -289,34 +294,29 @@ if(!$install_step) { $install_step = 'select_language'; }
 			}
 			#set_error_handler("error_handler");
 			try {
+				require_once "resources/classes/global_settings.php";
+				$global_settings = new global_settings($detect_switch, $domain_name);
+				if(is_null($global_settings)){ throw new Exception("Error global_settings came back with null");	}
 				require_once "resources/classes/install_fusionpbx.php";
-				$system = new install_fusionpbx($domain_name, null, $switch_detect);
-				$domain_uuid = $system->domain_uuid();
+				$system = new install_fusionpbx($global_settings);
 				$system->admin_username = $admin_username;
 				$system->admin_password = $admin_password;
 				$system->default_country = $install_default_country;
 				$system->install_language = $install_language;
 				$system->template_name = $install_template_name;
-				foreach($_POST as $key=>$value){
-					if(substr($key,0,3) == "db_"){
-						$system->$key = $value;
-					}
-				}
 
 				require_once "resources/classes/install_switch.php";
-				$switch = new install_switch($domain_name, $domain_uuid, $switch_detect);
+				$switch = new install_switch($global_settings);
 				//$switch->debug = true;
 				//$system->debug = true;
 				$system->install();
 				$switch->install();
-				$system->app_defaults();
-				$switch_detect->restart_switch();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
-					$system = new install_fusionpbx($domain_name, $domain_uuid, $switch_detect);
+					$system = new install_fusionpbx($global_settings);
 					$system->remove_config();
 				}catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
