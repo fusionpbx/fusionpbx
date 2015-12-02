@@ -12,7 +12,7 @@
 
 	//permission details
 		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = "language_view";
+		$apps[$x]['permissions'][$y]['name'] = "languages_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 

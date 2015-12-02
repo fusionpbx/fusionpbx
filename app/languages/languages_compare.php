@@ -82,6 +82,13 @@ require_once "resources/require.php";
 		$app_list[$app_name] = $app_path;
 		$x++;
 	}
+	$theme_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/themes/*/app_languages.php");
+	foreach ($theme_list as $config_path) {
+		$dirs = explode("/", $config_path);
+		$app_path = $dirs[(sizeof($dirs)-3)] . "/" . $dirs[(sizeof($dirs)-2)];
+		$app_name = 'Theme - ' . $dirs[(sizeof($dirs)-2)];
+		$app_list[$app_name] = $app_path;
+	}
 	unset($apps);
 	ksort($app_list);
 
