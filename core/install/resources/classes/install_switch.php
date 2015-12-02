@@ -36,7 +36,7 @@ include "root.php";
 
 		function __construct($global_settings) {
 			if(is_null($global_settings)){
-				require_once "resources/classes/global_settings.php";
+				require_once "core/install/resources/classes/global_settings.php";
 				$global_settings = new global_settings();
 			}elseif(!is_a($global_settings, 'global_settings')){
 				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
@@ -411,17 +411,16 @@ include "root.php";
 			unset($tmp);
 			fclose($fout);	
 		}
-	}
-	
-	protected function restart_switch() {
-		global $errstr;
-		$esl = new EventSocket;
-		if (!$esl->connect($this->event_host, $this->event_port, $this->event_password)) {
-			throw new Exception("Failed to connect to switch: $errstr");
+
+		protected function restart_switch() {
+			$esl = new EventSocket;
+			if(!$esl->connect($this->global_settings->switch_event_host(), $this->global_settings->switch_event_port(), $this->global_settings->switch_event_password())) {
+				throw new Exception("Failed to connect to switch");
+			}
+			if (!$esl->request('api fsctl shutdown restart elegant')){
+				throw new Exception("Failed to send switch restart");
+			}
+			$esl->reset_fp();
 		}
-		if (!$esl->request('api fsctl shutdown restart elegant')){
-			throw new Exception("Failed to send switch restart: $errstr");
-		}
-		$esl->reset_fp();
 	}
 ?>
