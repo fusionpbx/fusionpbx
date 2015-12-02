@@ -35,10 +35,10 @@ include "root.php";
 		public $debug = false;
 
 		function __construct($global_settings) {
-			if($global_settings == null){
+			if(is_null($global_settings)){
 				require_once "resources/classes/global_settings.php";
 				$global_settings = new global_settings();
-			elseif(!is_a($global_settings, 'global_settings')){
+			}elseif(!is_a($global_settings, 'global_settings')){
 				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
 			}
 			$this->global_settings = $global_settings;
@@ -98,8 +98,8 @@ include "root.php";
 					}
 				}
 				//This looks wrong, essentially if we can't use /bin/cp it manually fils dirs, not correct
-				$scripts_dir_target = $_SESSION['switch']['scripts']['dir'];
-				$scripts_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
+				$script_dir_target = $_SESSION['switch']['scripts']['dir'];
+				$script_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
 				foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($src)) as $file_path_source) {
 					if (
 					substr_count($file_path_source, '/..') == 0 &&
@@ -197,14 +197,14 @@ include "root.php";
 		function copy_conf() {
 			$this->write_progress("\tCopying Config");
 			//make a backup of the config
-				if (file_exists($this->global_settings->conf_dir())) {
-					$this->backup_dir($this->global_settings->conf_dir(), 'fusionpbx_switch_config');
-					$this->recursive_delete($this->global_settings->conf_dir());
+				if (file_exists($this->global_settings->switch_conf_dir())) {
+					$this->backup_dir($this->global_settings->switch_conf_dir(), 'fusionpbx_switch_config');
+					$this->recursive_delete($this->global_settings->switch_conf_dir());
 				}
 			//make sure the conf directory exists
-				if (!is_dir($this->global_settings->conf_dir())) {
-					if (!mkdir($this->global_settings->conf_dir(), 0774, true)) {
-						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->conf_dir()."'. ");
+				if (!is_dir($this->global_settings->switch_conf_dir())) {
+					if (!mkdir($this->global_settings->switch_conf_dir(), 0774, true)) {
+						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->switch_conf_dir()."'. ");
 					}
 				}
 			//copy resources/templates/conf to the freeswitch conf dir
@@ -214,14 +214,14 @@ include "root.php";
 				else {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 				}
-				$dst_dir = $this->global_settings->conf_dir();
+				$dst_dir = $this->global_settings->switch_conf_dir();
 				if (is_readable($dst_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir);
 					unset($src_dir, $dst_dir);
 				}
-				$fax_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->storage_dir(), 'fax'));
+				$fax_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_storage_dir(), 'fax'));
 				if (!is_readable($fax_dir)) { mkdir($fax_dir,0777,true); }
-				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->storage_dir(), 'voicemail'));
+				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_storage_dir(), 'voicemail'));
 				if (!is_readable($voicemail_dir)) { mkdir($voicemail_dir,0777,true); }
 			
 			//create the dialplan/default.xml for single tenant or dialplan/domain.xml
@@ -229,7 +229,7 @@ include "root.php";
 					$dialplan = new dialplan;
 					$dialplan->domain_uuid = $this->domain_uuid;
 					$dialplan->domain = $this->domain_name;
-					$dialplan->switch_dialplan_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->conf_dir(), "/dialplan"));
+					$dialplan->switch_dialplan_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_conf_dir(), "/dialplan"));
 					$dialplan->restore_advanced_xml();
 					if($this->_debug){
 						print_r($dialplan->result, $message);
@@ -243,7 +243,7 @@ include "root.php";
 				}
 
 			//write the switch.conf.xml file
-				if (file_exists($this->global_settings->conf_dir())) {
+				if (file_exists($this->global_settings->switch_conf_dir())) {
 					switch_conf_xml();
 				}
 
@@ -251,7 +251,7 @@ include "root.php";
 
 		function copy_scripts() {
 			$this->write_progress("\tCopying Scripts");
-			$script_dir = $this->global_settings->script_dir();
+			$script_dir = $this->global_settings->switch_script_dir();
 			if(strlen($script_dir) == 0) {
 				throw new Exception("Cannot copy scripts the 'script_dir' is empty");
 			}
@@ -271,7 +271,7 @@ include "root.php";
 				}
 				chmod($dst_dir, 0774);
 			}else{
-				$this->write_progress("\tSkipping scripts, scripts_dir is unset");
+				$this->write_progress("\tSkipping scripts, script_dir is unset");
 			}
 		}
 
@@ -332,8 +332,8 @@ include "root.php";
 			if (strlen($this->global_settings->switch_voicemail_vdir()) > 0) {
 				$tmp .= normalize_path_to_os("	voicemail_dir = [[".$this->global_settings->switch_voicemail_vdir()."]];\n");
 			}
-			if (strlen($this->global_settings->switch_scripts_dir()) > 0) {
-				$tmp .= normalize_path_to_os("	scripts_dir = [[".$this->global_settings->switch_scripts_dir()."]];\n");
+			if (strlen($this->global_settings->switch_script_dir()) > 0) {
+				$tmp .= normalize_path_to_os("	script_dir = [[".$this->global_settings->switch_script_dir()."]];\n");
 			}
 			$tmp .= normalize_path_to_os("	php_dir = [[".PHP_BINDIR."]];\n");
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -357,7 +357,6 @@ include "root.php";
 					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 				}
 				elseif ($this->global_settings->db_type() == "pgsql") {
-					if ($this->global_settings->db_host() == "localhost") { $this->global_settings->db_host() = "127.0.0.1"; }
 					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
 					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
 				}
@@ -403,7 +402,7 @@ include "root.php";
 			$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
 			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
 			$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
-			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
+			$tmp .= "	elseif (file_exists(script_dir..\"/resources/local.lua\")) then\n";
 			$tmp .= "		require(\"resources.local\");\n";
 			$tmp .= "	end\n";
 			fwrite($fout, $tmp);

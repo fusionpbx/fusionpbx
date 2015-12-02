@@ -295,12 +295,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 			#set_error_handler("error_handler");
 			try {
 				require_once "resources/classes/global_settings.php";
-				$settings = new global_settings($detect_switch, $domain_name);
-				if($settings = null){
-					throw new Exception("Error global_settings came back with null");
-				}
+				$global_settings = new global_settings($detect_switch, $domain_name);
+				if(is_null($global_settings)){ throw new Exception("Error global_settings came back with null");	}
 				require_once "resources/classes/install_fusionpbx.php";
-				$system = new install_fusionpbx($settings);
+				$system = new install_fusionpbx($global_settings);
 				$system->admin_username = $admin_username;
 				$system->admin_password = $admin_password;
 				$system->default_country = $install_default_country;
@@ -308,7 +306,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$system->template_name = $install_template_name;
 
 				require_once "resources/classes/install_switch.php";
-				$switch = new install_switch($settings);
+				$switch = new install_switch($global_settings);
 				//$switch->debug = true;
 				//$system->debug = true;
 				$system->install();
@@ -320,7 +318,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
-					$system = new install_fusionpbx($domain_name, $domain_uuid, $detect_switch);
+					$system = new install_fusionpbx($global_settings);
 					$system->remove_config();
 				}catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
@@ -330,7 +328,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 			restore_error_handler();
 			if($install_ok){
 				echo "</pre>\n";
-				header("Location: ".PROJECT_PATH."/logout.php");
+				#header("Location: ".PROJECT_PATH."/logout.php");
 				$_SESSION['message'] = 'Install complete';
 			}else{
 				echo "<form method='post' name='frm' action=''>\n";
