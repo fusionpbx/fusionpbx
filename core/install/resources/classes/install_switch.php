@@ -181,13 +181,18 @@ include "root.php";
 			}
 		}
 
-		function install() {
-			$this->write_progress("Install started for switch");
+		function install_phase_1() {
+			$this->write_progress("Install phase 1 started for switch");
 			$this->copy_conf();
 			$this->copy_scripts();
+			$this->write_progress("Install phase 1 completed for switch");
+		}
+
+		function install_phase_2() {
+			$this->write_progress("Install phase 2 started for switch");
 			$this->create_config_lua();
 			$this->restart_switch();
-			$this->write_progress("Install completed for switch");
+			$this->write_progress("Install phase 2 completed for switch");
 		}
 
 		function upgrade() {

@@ -170,7 +170,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		}
 	//test for windows and non sqlite
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' and strlen($db_type) > 0 and $db_type !='sqlite') {
-			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured after installing then restart freeswitch.";
+			$messages[] = "<b>Windows requires a system DSN ODBC connection</b> this must be configured.";
 		}
 
 	//action code
@@ -309,8 +309,10 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$switch = new install_switch($global_settings);
 				//$switch->debug = true;
 				//$system->debug = true;
-				$system->install();
-				$switch->install();
+				$system->install_phase_1();
+				$switch->install_phase_1();
+				$system->install_phase_2();
+				$switch->install_phase_2();
 			}catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
