@@ -163,7 +163,7 @@ require_once "root.php";
 				$this->_domain_uuid = $_SESSION['domain_uuid'];
 
 				// collect misc info
-				$this->domain_count = count($_SESSION["domains"]);
+				$this->_domain_count = count($_SESSION["domains"]);
 
 				// collect db_info
 				global $db_type, $db_path, $db_host, $db_port, $db_name, $db_username, $db_password;
