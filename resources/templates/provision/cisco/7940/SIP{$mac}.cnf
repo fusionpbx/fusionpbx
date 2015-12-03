@@ -93,7 +93,7 @@ tftp_cfg_dir: ""
  
 # Time Server
 sntp_mode: "unicast"
-sntp_server: "{$sntp_server}"
+sntp_server: "{$ntp_server_primary}"
 {if isset($cisco_time_zone)}
 time_zone: "{$cisco_time_zone}"
 {/if}
