@@ -186,6 +186,7 @@ include "root.php";
 			$this->copy_conf();
 			$this->copy_scripts();
 			$this->create_config_lua();
+			save_switch_xml();
 			$this->restart_switch();
 			$this->write_progress("Install completed for switch");
 		}

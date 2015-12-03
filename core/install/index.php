@@ -78,10 +78,6 @@ if (!if_group("superadmin")) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	echo "<br><br>";
-
-	echo "<p>WiP</p>";
-
 //include the footer
 	require_once "resources/footer.php";
 ?>
