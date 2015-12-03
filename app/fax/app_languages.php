@@ -1112,8 +1112,26 @@ $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
 $text['label-fax_send_greeting']['en-us'] = "Greeting";
+$text['label-fax_send_greeting']['es-cl'] = "";
+$text['label-fax_send_greeting']['pt-pt'] = "";
+$text['label-fax_send_greeting']['fr-fr'] = "";
+$text['label-fax_send_greeting']['pt-br'] = "";
+$text['label-fax_send_greeting']['pl'] = "";
+$text['label-fax_send_greeting']['sv-se'] = "";
+$text['label-fax_send_greeting']['de-at'] = "";
+$text['label-fax_send_greeting']['ro'] = "";
+$text['label-fax_send_greeting']['he'] = "";
 
 $text['label-fax_send_channels']['en-us'] = "Number of channels";
+$text['label-fax_send_channels']['es-cl'] = "";
+$text['label-fax_send_channels']['pt-pt'] = "";
+$text['label-fax_send_channels']['fr-fr'] = "";
+$text['label-fax_send_channels']['pt-br'] = "";
+$text['label-fax_send_channels']['pl'] = "";
+$text['label-fax_send_channels']['sv-se'] = "";
+$text['label-fax_send_channels']['de-at'] = "";
+$text['label-fax_send_channels']['ro'] = "";
+$text['label-fax_send_channels']['he'] = "";
 
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['es-cl'] = "Los Faxes Enviados";
