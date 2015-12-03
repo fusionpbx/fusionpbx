@@ -188,7 +188,7 @@ include "root.php";
 			$this->write_progress("Install phase 1 completed for switch");
 		}
 
-		function install_phase_1() {
+		function install_phase_2() {
 			$this->write_progress("Install phase 2 started for switch");
 			$this->create_config_lua();
 			$this->restart_switch();
