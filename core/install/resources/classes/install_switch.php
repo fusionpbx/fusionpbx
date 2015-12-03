@@ -367,8 +367,10 @@ include "root.php";
 					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 				}
 				elseif ($this->global_settings->db_type() == "pgsql") {
-					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
-					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
+					$lua_db_host = $this->global_settings->db_host();
+					if($lua_db_host == 'localhost') { $lua_db_host = '127.0.0.1'; } // lua cannot resolve localhost
+					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$lua_db_host." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
+					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$lua_db_host." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
 				}
 				elseif ($this->global_settings->db_type() == "sqlite") {
 					$tmp .= "	database[\"system\"] = \"sqlite://".$this->global_settings->db_path()."/".$this->global_settings->db_name()."\";\n";
