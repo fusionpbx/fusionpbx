@@ -309,6 +309,8 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$switch = new install_switch($global_settings);
 				//$switch->debug = true;
 				//$system->debug = true;
+				$switch->echo_progress = true;
+				$system->echo_progress = true;
 				$system->install_phase_1();
 				$switch->install_phase_1();
 				$system->install_phase_2();

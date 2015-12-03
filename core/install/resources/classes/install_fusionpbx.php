@@ -35,6 +35,7 @@ include "root.php";
 		protected $dbh;
 
 		public $debug = false;
+		public $echo_progress = false;
 
 	 	public $install_language = 'en-us';
 	 	public $admin_username;
@@ -71,7 +72,9 @@ include "root.php";
 		}
 		
 		function write_progress($message) {
-			echo "$message\n";
+			if($this->echo_progress){
+				echo "$message\n";
+			}
 		}
 
 		function install_phase_1() {
