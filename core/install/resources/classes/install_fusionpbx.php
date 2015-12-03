@@ -856,7 +856,7 @@ include "root.php";
 		}
 
 		protected function create_superuser() {
-			$this->write_progress("\tChecking if superuser exists '" . $this->global_settings->domain_name . "'");
+			$this->write_progress("\tChecking if superuser exists '" . $this->admin_username . "'");
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and username = '".$this->admin_username."' ";
@@ -877,7 +877,7 @@ include "root.php";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
 			}else{
-				$this->write_progress("\t... creating super user '" . $this->admin_username . "'");
+				$this->write_progress("\t... creating super user");
 			//add a user and then add the user to the superadmin group
 			//prepare the values
 				$this->admin_uuid = uuid();

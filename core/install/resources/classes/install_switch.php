@@ -278,9 +278,9 @@ include "root.php";
 
 		public function create_config_lua() {
 			$this->write_progress("\tCreating " . $this->config_lua);
-			$dirs = array_pop(explode("/", normalize_path($this->config_lua)));
-			$path = normalize_path_to_os(join("/", $dirs));
-			if($dirs[(sizeof($dirs)-1)] == 'resources' and !file_exists($path)){
+			$path = dirname($this->config_lua);
+			$parent_dir = basename($path);
+			if($parent_dir == 'resources' and !file_exists($path)){
 				$this->write_progress("\t... creating missing '$path'");
 				if (!mkdir($path, 0755, true)) {
 					throw new Exception("Failed to create the missing resources directory '$path'");
@@ -412,7 +412,7 @@ include "root.php";
 			$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
 			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
 			$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
-			$tmp .= "	elseif (file_exists(script_dir..\"/resources/local.lua\")) then\n";
+			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
 			$tmp .= "		require(\"resources.local\");\n";
 			$tmp .= "	end\n";
 			fwrite($fout, $tmp);
