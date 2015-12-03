@@ -91,10 +91,10 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	
 		echo "<tr>\n";
-		echo "<td colspan='4' align='left' nowrap><b>".$text['title-detected_configuration']."</b><br><br></td>\n";
+		echo "<td colspan='4' align='left' nowrap><b>".$text['title-detected_configuration']."</b></td>\n";
 		echo "</tr>\n";
 
-		$id = 0;
+		$id = 1;
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
 		echo "Switch version\n";
@@ -102,9 +102,8 @@
 		echo "<td class='vtable' width='35%' align='left'>\n";
 		echo "    ".$switch_detect->version()."\n";
 		echo "</td>\n";
-		echo "</tr>\n";
 		
-		foreach ($switch_detect->get_folders() as $folder)
+		foreach ($switch_detect->get_dirs() as $folder)
 		{
 			if($id % 2 == 0){ echo "<tr>\n"; }
 			echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
@@ -117,6 +116,22 @@
 			$id++;
 		}
 		if($id % 2 == 1){ echo "</tr>\n"; }
+		echo "<tr>\n";
+		echo "<td colspan='4' align='left' nowrap><br/><b>".$text['title-assumed_configuration']."</b></td>\n";
+		echo "</tr>\n";
+		$id=0;
+		foreach ($switch_detect->get_vdirs() as $folder)
+		{
+			if($id % 2 == 0){ echo "<tr>\n"; }
+			echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
+			echo $folder."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' width='35%' align='left'>\n";
+			echo "    ".$switch_detect->$folder()."\n";
+			echo "</td>\n";
+			if($id % 2 == 1){ echo "</tr>\n"; }
+			$id++;
+		}
 			
 		echo "</table>";
 	}
