@@ -58,8 +58,8 @@
 		<param name="rtp-ip" value="$${local_ip_v6}"/>
 		<!-- ip address to bind to, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->
 		<param name="sip-ip" value="$${local_ip_v6}"/>
-		<param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
-		<param name="ext-sip-ip" value="$${external_sip_ip}"/>
+		<param name="ext-rtp-ip" value="$${external_rtp_ip}" enabled="false"/>
+		<param name="ext-sip-ip" value="$${external_sip_ip}" enabled="false"/>
 		<param name="rtp-timeout-sec" value="300"/>
 		<param name="rtp-hold-timeout-sec" value="1800"/>
 		<!--<param name="enable-3pcc" value="true"/>-->
