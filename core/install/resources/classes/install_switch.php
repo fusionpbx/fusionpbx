@@ -278,6 +278,14 @@ include "root.php";
 
 		public function create_config_lua() {
 			$this->write_progress("\tCreating " . $this->config_lua);
+			$dirs = array_pop(explode("/", normalize_path($config_path)));
+			$path = normalize_path_to_os(join("/", $dirs));
+			if($dirs[(sizeof($dirs)-1)] == 'resources' and !file_exists($path)){
+				if (!mkdir($path, 0755, true)) {
+					throw new Exception("Failed to create the missing resources directory '$path'");
+				}
+			}
+			
 			global $db;
 		//get the odbc information
 			$sql = "select count(*) as num_rows from v_databases ";
