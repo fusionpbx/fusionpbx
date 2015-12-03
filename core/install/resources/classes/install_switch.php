@@ -278,9 +278,10 @@ include "root.php";
 
 		public function create_config_lua() {
 			$this->write_progress("\tCreating " . $this->config_lua);
-			$dirs = array_pop(explode("/", normalize_path($config_path)));
+			$dirs = array_pop(explode("/", normalize_path($this->config_lua)));
 			$path = normalize_path_to_os(join("/", $dirs));
 			if($dirs[(sizeof($dirs)-1)] == 'resources' and !file_exists($path)){
+				$this->write_progress("\t... creating missing '$path'");
 				if (!mkdir($path, 0755, true)) {
 					throw new Exception("Failed to create the missing resources directory '$path'");
 				}
