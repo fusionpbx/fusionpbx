@@ -74,9 +74,9 @@ include "root.php";
 			echo "$message\n";
 		}
 
-		function install() {
+		function install_phase_1() {
 			ini_set('max_execution_time',3600);
-			$this->write_progress("Install started for FusionPBX");
+			$this->write_progress("Install phase 1 started for FusionPBX");
 			$this->create_config_php();
 			$this->write_progress("\tExecuting config.php");
 			require $this->config_php;
@@ -88,8 +88,14 @@ include "root.php";
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
 			$this->create_menus();
+			$this->write_progress("Install phase 1 complete for FusionPBX");
+		}
+		
+		function install_phase_2() {
+			ini_set('max_execution_time',3600);
+			$this->write_progress("Install phase 2 started for FusionPBX");
 			$this->app_defaults();
-			$this->write_progress("Install complete for FusionPBX");
+			$this->write_progress("Install phase 2 complete for FusionPBX");
 		}
 		
 		function upgrade() {
@@ -551,9 +557,9 @@ include "root.php";
 		}
 
 		protected function create_domain() {
-			$this->write_progress("\tChecking if domain exists '" . $this->global_settings->domain_name . "'");
+			$this->write_progress("\tChecking if domain exists '" . $this->global_settings->domain_name() . "'");
 			$sql = "select * from v_domains ";
-			$sql .= "where domain_name = '".$this->global_settings->domain_name."' ";
+			$sql .= "where domain_name = '".$this->global_settings->domain_name()."' ";
 			$sql .= "limit 1";
 			$this->write_debug($sql);
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
@@ -856,7 +862,7 @@ include "root.php";
 		}
 
 		protected function create_superuser() {
-			$this->write_progress("\tChecking if superuser exists '" . $this->global_settings->domain_name . "'");
+			$this->write_progress("\tChecking if superuser exists '" . $this->admin_username . "'");
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid = '".$this->global_settings->domain_uuid()."' ";
 			$sql .= "and username = '".$this->admin_username."' ";
@@ -877,7 +883,7 @@ include "root.php";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
 			}else{
-				$this->write_progress("\t... creating super user '" . $this->admin_username . "'");
+				$this->write_progress("\t... creating super user");
 			//add a user and then add the user to the superadmin group
 			//prepare the values
 				$this->admin_uuid = uuid();
