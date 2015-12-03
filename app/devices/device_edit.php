@@ -547,7 +547,13 @@ require_once "resources/require.php";
 
 		echo "	function download(d) {\n";
 		echo "		if (d == '".$text['label-download']."') return;\n";
-		echo "		window.location = 'https://".$_SESSION['domain_name']."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+		if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+			$domain_name = $_SERVER["HTTP_HOST"];
+		}
+		else {
+			$domain_name = $_SESSION['domain_name'];
+		}
+		echo "		window.location = 'https://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
