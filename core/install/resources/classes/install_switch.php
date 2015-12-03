@@ -46,8 +46,8 @@ include "root.php";
 				$this->config_lua = "/etc/fusionpbx/config.lua";
 			}elseif (is_dir("/usr/local/etc/fusionpbx")){
 				$this->config_lua = "/usr/local/etc/fusionpbx/config.lua";
-			}elseif(strlen($this->global_settings->script_dir) > 0) {
-				$this->config_lua = $this->global_settings->script_dir."/resources/config.lua";
+			}elseif(strlen($this->global_settings->switch_script_dir()) > 0) {
+				$this->config_lua = $this->global_settings->switch_script_dir()."/resources/config.lua";
 			}else{
 				throw new Exception("Could not work out where to put the config.lua");
 			}
@@ -193,7 +193,6 @@ include "root.php";
 		function upgrade() {
 			$this->copy_scripts();
 			$this->create_config_lua();
-			$this->restart_switch();
 		}
 
 		protected function copy_conf() {
@@ -279,6 +278,15 @@ include "root.php";
 
 		public function create_config_lua() {
 			$this->write_progress("\tCreating " . $this->config_lua);
+			$path = dirname($this->config_lua);
+			$parent_dir = basename($path);
+			if($parent_dir == 'resources' and !file_exists($path)){
+				$this->write_progress("\t... creating missing '$path'");
+				if (!mkdir($path, 0755, true)) {
+					throw new Exception("Failed to create the missing resources directory '$path'");
+				}
+			}
+			
 			global $db;
 		//get the odbc information
 			$sql = "select count(*) as num_rows from v_databases ";
@@ -335,7 +343,7 @@ include "root.php";
 				$tmp .= normalize_path_to_os("	voicemail_dir = [[".$this->global_settings->switch_voicemail_vdir()."]];\n");
 			}
 			if (strlen($this->global_settings->switch_script_dir()) > 0) {
-				$tmp .= normalize_path_to_os("	script_dir = [[".$this->global_settings->switch_script_dir()."]];\n");
+				$tmp .= normalize_path_to_os("	scripts_dir = [[".$this->global_settings->switch_script_dir()."]];\n");
 			}
 			$tmp .= normalize_path_to_os("	php_dir = [[".PHP_BINDIR."]];\n");
 			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -359,8 +367,10 @@ include "root.php";
 					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 				}
 				elseif ($this->global_settings->db_type() == "pgsql") {
-					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
-					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$this->global_settings->db_host()." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
+					$lua_db_host = $this->global_settings->db_host();
+					if($lua_db_host == 'localhost') { $lua_db_host = '127.0.0.1'; } // lua cannot resolve localhost
+					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$lua_db_host." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
+					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$lua_db_host." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
 				}
 				elseif ($this->global_settings->db_type() == "sqlite") {
 					$tmp .= "	database[\"system\"] = \"sqlite://".$this->global_settings->db_path()."/".$this->global_settings->db_name()."\";\n";
@@ -404,7 +414,7 @@ include "root.php";
 			$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
 			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
 			$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
-			$tmp .= "	elseif (file_exists(script_dir..\"/resources/local.lua\")) then\n";
+			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
 			$tmp .= "		require(\"resources.local\");\n";
 			$tmp .= "	end\n";
 			fwrite($fout, $tmp);
