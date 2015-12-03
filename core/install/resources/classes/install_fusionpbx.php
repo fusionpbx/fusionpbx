@@ -551,9 +551,9 @@ include "root.php";
 		}
 
 		protected function create_domain() {
-			$this->write_progress("\tChecking if domain exists '" . $this->global_settings->domain_name . "'");
+			$this->write_progress("\tChecking if domain exists '" . $this->global_settings->domain_name() . "'");
 			$sql = "select * from v_domains ";
-			$sql .= "where domain_name = '".$this->global_settings->domain_name."' ";
+			$sql .= "where domain_name = '".$this->global_settings->domain_name()."' ";
 			$sql .= "limit 1";
 			$this->write_debug($sql);
 			$prep_statement = $this->dbh->prepare(check_sql($sql));
