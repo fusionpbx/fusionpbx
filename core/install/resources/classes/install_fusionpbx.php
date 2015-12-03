@@ -74,9 +74,9 @@ include "root.php";
 			echo "$message\n";
 		}
 
-		function install() {
+		function install_phase_1() {
 			ini_set('max_execution_time',3600);
-			$this->write_progress("Install started for FusionPBX");
+			$this->write_progress("Install phase 1 started for FusionPBX");
 			$this->create_config_php();
 			$this->write_progress("\tExecuting config.php");
 			require $this->config_php;
@@ -88,8 +88,14 @@ include "root.php";
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
 			$this->create_menus();
+			$this->write_progress("Install phase 1 complete for FusionPBX");
+		}
+		
+		function install_phase_2() {
+			ini_set('max_execution_time',3600);
+			$this->write_progress("Install phase 2 started for FusionPBX");
 			$this->app_defaults();
-			$this->write_progress("Install complete for FusionPBX");
+			$this->write_progress("Install phase 2 complete for FusionPBX");
 		}
 		
 		function upgrade() {
