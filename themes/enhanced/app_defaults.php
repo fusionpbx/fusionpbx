@@ -287,7 +287,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'background_color';
 		$array[$x]['default_setting_name'] = 'array';
-		$array[$x]['default_setting_value'] = '#ffffff';
+		$array[$x]['default_setting_value'] = '#6c89b5';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_order'] = '0';
 		$array[$x]['default_setting_description'] = 'Set a background (HTML compatible) color.';
@@ -295,7 +295,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'background_color';
 		$array[$x]['default_setting_name'] = 'array';
-		$array[$x]['default_setting_value'] = '#e7ebf1';
+		$array[$x]['default_setting_value'] = '#144794';
 		$array[$x]['default_setting_order'] = '1';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set a secondary background (HTML compatible) color, for a gradient effect.';
