@@ -86,7 +86,7 @@ else {
 	}
 
 //set the fax directory
-	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
+	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 //download the fax
 	if ($_GET['a'] == "download") {
