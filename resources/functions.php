@@ -193,12 +193,14 @@
 			protected function recursive_delete($dir) {
 				$this->write_debug('rm -Rf '.$dir.'/*');
 				exec ('rm -Rf '.$dir.'/*');
+				clearstatcache();
 			}
 		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 			protected function recursive_delete($dir) {
 				$dst = normalize_path_to_os($dst);
 				$this->write_debug("del /S /F /Q \"$dir\"");
 				exec("del /S /F /Q \"$dir\"");
+				clearstatcache();
 			}
 		}else{
 			protected function recursive_delete($dir) {
@@ -212,8 +214,8 @@
 						unlink($file);
 					}
 				}
+				clearstatcache();
 			}
-			clearstatcache();
 		}
 	}
 
