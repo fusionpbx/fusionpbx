@@ -58,13 +58,17 @@ if (!$included) {
 			$fax_uuid = check_str($_REQUEST["id"]);
 			if (if_group("superadmin") || if_group("admin")) {
 				//show all fax extensions
-				$sql = "select * from v_fax ";
+				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
+				$sql .= "accountcode, fax_send_greeting ";
+				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and fax_uuid = '$fax_uuid' ";
 			}
 			else {
 				//show only assigned fax extensions
-				$sql = "select * from v_fax as f, v_fax_users as u ";
+				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
+				$sql .= "f.accountcode, f.fax_send_greeting ";
+				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and f.fax_uuid = '$fax_uuid' ";
