@@ -90,7 +90,7 @@ if freeswitch then
     if file then
       freeswitch.email(address, address, mail_headers, body, file)
     else
-      freeswitch.email(address, address, mail_headers, body, file)
+      freeswitch.email(address, address, mail_headers, body)
     end
   end
 end
