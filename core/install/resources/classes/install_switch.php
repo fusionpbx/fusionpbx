@@ -90,7 +90,6 @@ include "root.php";
 		function install_phase_1() {
 			$this->write_progress("Install phase 1 started for switch");
 			$this->copy_conf();
-			$this->copy_scripts();
 			$this->write_progress("Install phase 1 completed for switch");
 		}
 
@@ -102,7 +101,6 @@ include "root.php";
 		}
 
 		function upgrade() {
-			$this->copy_scripts();
 			$this->create_config_lua();
 		}
 
@@ -159,32 +157,6 @@ include "root.php";
 					switch_conf_xml();
 				}
 
-		}
-
-		protected function copy_scripts() {
-			$this->write_progress("\tCopying Scripts");
-			$script_dir = $this->global_settings->switch_script_dir();
-			if(strlen($script_dir) == 0) {
-				throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-			}
-			if (file_exists($script_dir)) {
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
-				}
-				else {
-					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
-				}
-				$dst_dir = $script_dir;
-				if (is_readable($script_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
-					unset($src_dir, $dst_dir);
-				}else{
-					throw new Exception("Cannot read from '$src_dir' to get the scripts");
-				}
-				chmod($dst_dir, 0774);
-			}else{
-				$this->write_progress("\tSkipping scripts, script_dir is unset");
-			}
 		}
 
 		public function create_config_lua() {
