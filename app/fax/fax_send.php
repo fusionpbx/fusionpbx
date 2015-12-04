@@ -101,7 +101,7 @@ if (!$included) {
 		}
 
 	//set the fax directory
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 	// set fax cover font to generate pdf
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
