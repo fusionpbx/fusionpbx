@@ -144,27 +144,78 @@
 	}
 
 	if (!function_exists('recursive_copy')) {
-		function recursive_copy($src,$dst) {
-			$dir = opendir($src);
-			if (!$dir) {
-				throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
-			}
-			if (!is_dir($dst)) {
-				if (!mkdir($dst)) {
-					throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+		if (file_exists('/bin/cp')) {
+			function recursive_copy($src, $dst, $options = '') {
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
+					//copy -R recursive, preserve attributes for SUN
+					$cmd = 'cp -Rp '.$src.'/* '.$dst;
+				} else {
+					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
+					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
 				}
+				$this->write_debug($cmd);
+				exec ($cmd);
 			}
-			while(false !== ( $file = readdir($dir)) ) {
-				if (( $file != '.' ) && ( $file != '..' )) {
-					if ( is_dir($src . '/' . $file) ) {
-						recursive_copy($src . '/' . $file,$dst . '/' . $file);
-					}
-					else {
-						copy($src . '/' . $file,$dst . '/' . $file);
+		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+			function recursive_copy($src, $dst, $options = '') {
+				$src = normalize_path_to_os($src);
+				$dst = normalize_path_to_os($dst);
+				exec("xcopy /E /Y \"$src\" \"$dst\"");
+			}
+		}else{
+			function recursive_copy($src, $dst, $options = '') {
+				$dir = opendir($src);
+				if (!$dir) {
+					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
+				}
+				if (!is_dir($dst)) {
+					if (!mkdir($dst)) {
+						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 					}
 				}
+				while(false !== ( $file = readdir($dir)) ) {
+					if (( $file != '.' ) && ( $file != '..' )) {
+						if ( is_dir($src . '/' . $file) ) {
+							recursive_copy($src . '/' . $file,$dst . '/' . $file);
+						}
+						else {
+							copy($src . '/' . $file,$dst . '/' . $file);
+						}
+					}
+				}
+				closedir($dir);
 			}
-			closedir($dir);
+		}
+	}
+
+	if (!function_exists('recursive_delete')) {
+		if (file_exists('/bin/rm')) {
+			protected function recursive_delete($dir) {
+				$this->write_debug('rm -Rf '.$dir.'/*');
+				exec ('rm -Rf '.$dir.'/*');
+				clearstatcache();
+			}
+		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+			protected function recursive_delete($dir) {
+				$dst = normalize_path_to_os($dst);
+				$this->write_debug("del /S /F /Q \"$dir\"");
+				exec("del /S /F /Q \"$dir\"");
+				clearstatcache();
+			}
+		}else{
+			protected function recursive_delete($dir) {
+				foreach (glob($dir) as $file) {
+					if (is_dir($file)) {
+						$this->write_debug("rm dir: ".$file);
+						$this->recursive_delete("$file/*");
+						rmdir($file);
+					} else {
+						$this->write_debug("delete file: ".$file);
+						unlink($file);
+					}
+				}
+				clearstatcache();
+			}
 		}
 	}
 

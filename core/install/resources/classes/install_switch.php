@@ -68,104 +68,7 @@ include "root.php";
 				echo "$message\n";
 			}
 		}
-
-		//$options '-n' --no-clobber
-		protected function recursive_copy($src, $dst, $options = '') {
-			if (file_exists('/bin/cp')) {
-				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
-					//copy -R recursive, preserve attributes for SUN
-					$cmd = 'cp -Rp '.$src.'/* '.$dst;
-				} else {
-					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
-				}
-				$this->write_debug($cmd);
-				exec ($cmd);
-			}
-			elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-				$src = normalize_path_to_os($src);
-				$dst = normalize_path_to_os($dst);
-				exec("xcopy /E /Y \"$src\" \"$dst\"");
-			}
-			else {
-				throw new Exception('Could not perform copy operation on this platform, implementation missing');
-				$dir = opendir($src);
-				if (!$dir) {
-					if (!mkdir($src, 0755, true)) {
-						throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
-					}
-				}
-				if (!is_dir($dst)) {
-					if (!mkdir($dst, 0755, true)) {
-						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
-					}
-				}
-				//This looks wrong, essentially if we can't use /bin/cp it manually fils dirs, not correct
-				$script_dir_target = $_SESSION['switch']['scripts']['dir'];
-				$script_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
-				foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($src)) as $file_path_source) {
-					if (
-					substr_count($file_path_source, '/..') == 0 &&
-					substr_count($file_path_source, '/.') == 0 &&
-					substr_count($file_path_source, '/.svn') == 0 &&
-					substr_count($file_path_source, '/.git') == 0
-					) {
-						if ($dst != $src.'/resources/config.lua') {
-							$this->write_debug($file_path_source.' ---> '.$dst);
-							copy($file_path_source, $dst);
-							chmod($dst, 0755);
-						}
-					}
-				}
-
-				while(false !== ($file = readdir($dir))) {
-					if (($file != '.') && ($file != '..')) {
-						if (is_dir($src.'/'.$file)) {
-							$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
-						}
-						else {
-						//copy only missing files -n --no-clobber
-							if (strpos($options,'-n') !== false) {
-								if (!file_exists($dst.'/'.$file)) {
-									$this->write_debug("copy(".$src."/".$file.", ".$dst."/".$file.")");
-									copy($src.'/'.$file, $dst.'/'.$file);
-								}
-							}
-							else {
-								copy($src.'/'.$file, $dst.'/'.$file);
-							}
-						}
-					}
-				}
-				closedir($dir);
-			}
-		}
-
-		protected function recursive_delete($dir) {
-			if (file_exists('/bin/rm')) {
-				$this->write_debug('rm -Rf '.$dir.'/*');
-				exec ('rm -Rf '.$dir.'/*');
-			}
-			elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-				$dst = normalize_path_to_os($dst);
-				$this->write_debug("del /S /F /Q \"$dir\"");
-				exec("del /S /F /Q \"$dir\"");
-			}
-			else {
-				foreach (glob($dir) as $file) {
-					if (is_dir($file)) {
-						$this->write_debug("rm dir: ".$file);
-						$this->recursive_delete("$file/*");
-						rmdir($file);
-					} else {
-						$this->write_debug("delete file: ".$file);
-						unlink($file);
-					}
-				}
-			}
-			clearstatcache();
-		}
-		
+	
 		protected function backup_dir($dir, $backup_name){
 			if (!is_readable($dir)) {
 				throw new Exception("backup_dir() source directory '".$dir."' does not exist.");
@@ -187,7 +90,6 @@ include "root.php";
 		function install_phase_1() {
 			$this->write_progress("Install phase 1 started for switch");
 			$this->copy_conf();
-			$this->copy_scripts();
 			$this->write_progress("Install phase 1 completed for switch");
 		}
 
@@ -199,7 +101,6 @@ include "root.php";
 		}
 
 		function upgrade() {
-			$this->copy_scripts();
 			$this->create_config_lua();
 		}
 
@@ -256,32 +157,6 @@ include "root.php";
 					switch_conf_xml();
 				}
 
-		}
-
-		protected function copy_scripts() {
-			$this->write_progress("\tCopying Scripts");
-			$script_dir = $this->global_settings->switch_script_dir();
-			if(strlen($script_dir) == 0) {
-				throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-			}
-			if (file_exists($script_dir)) {
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
-				}
-				else {
-					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
-				}
-				$dst_dir = $script_dir;
-				if (is_readable($script_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir, $_SESSION['scripts']['options']['text']);
-					unset($src_dir, $dst_dir);
-				}else{
-					throw new Exception("Cannot read from '$src_dir' to get the scripts");
-				}
-				chmod($dst_dir, 0774);
-			}else{
-				$this->write_progress("\tSkipping scripts, script_dir is unset");
-			}
 		}
 
 		public function create_config_lua() {
