@@ -53,12 +53,7 @@ else {
 	}
 
 //set the fax directory
-	if (count($_SESSION["domains"]) > 1) {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
-	}
-	else {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
-	}
+	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 //get the fax extension
 	if (strlen($fax_extension) > 0) {

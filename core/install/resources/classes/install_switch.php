@@ -33,6 +33,7 @@ include "root.php";
 		protected $dbh;
 
 		public $debug = false;
+		public $echo_progress = false;
 
 		function __construct($global_settings) {
 			if(is_null($global_settings)){
@@ -63,7 +64,9 @@ include "root.php";
 		}
 		
 		function write_progress($message) {
-			echo "$message\n";
+			if($this->echo_progress){
+				echo "$message\n";
+			}
 		}
 
 		//$options '-n' --no-clobber
