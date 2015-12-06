@@ -90,7 +90,7 @@ include "root.php";
 					}
 				}
 			//recordings
-				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
+				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
 					$tmp_selected = false;
 					$files = Array();
 					//$select .= "<optgroup label='recordings'>\n";

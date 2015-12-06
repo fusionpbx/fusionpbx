@@ -76,10 +76,8 @@
 		end
 	end
 
---set the recordings directory
-	if (domain_count > 1) then
-		recordings_dir = recordings_dir .. "/"..domain_name;
-	end
+--add the domain name to the recordings directory
+	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --set default variable(s)
 	tries = 0;
