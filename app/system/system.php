@@ -94,12 +94,12 @@ $document['title'] = $text['title-sys-status'];
 		rtrim($git_commit);
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		".$text['label-git-info']."\n";
+		echo "		".$text['label-git_info']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
-		echo "		Branch: '$git_branch'<br>\n";
-		echo "		Commit: '$git_commit'<br>\n";
-		echo "		Origin: '$git_origin'<br>\n";
+		echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
+		echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
+		echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 
