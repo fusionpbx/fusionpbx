@@ -186,30 +186,6 @@
 			//set the context
 				$_SESSION["context"] = $_SESSION["domain_name"];
 
-			//recordings add the domain to the path if there is more than one domains
-				if (count($_SESSION["domains"]) > 1) {
-					if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-						if (substr($_SESSION['switch']['recordings']['dir'], -strlen($_SESSION["domain_name"])) != $_SESSION["domain_name"]) {
-							//get the default recordings directory
-							$sql = "select * from v_default_settings ";
-							$sql .= "where default_setting_enabled = 'true' ";
-							$sql .= "and default_setting_category = 'switch' ";
-							$sql .= "and default_setting_subcategory = 'recordings' ";
-							$sql .= "and default_setting_name = 'dir' ";
-							$prep_statement = $db->prepare($sql);
-							$prep_statement->execute();
-							$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result_default_settings as $row) {
-								$name = $row['default_setting_name'];
-								$category = $row['default_setting_category'];
-								$subcategory = $row['default_setting_subcategory'];
-								$switch_recordings_dir = $row['default_setting_value'];
-							}
-							//add the domain
-							$_SESSION['switch']['recordings']['dir'] = $switch_recordings_dir . '/' . $_SESSION["domain_name"];
-						}
-					}
-				}
 		}
 
 		public function upgrade() {
@@ -271,16 +247,6 @@
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-			//get the default recordings directory
-				foreach($result_default_settings as $row) {
-					$name = $row['default_setting_name'];
-					$category = $row['default_setting_category'];
-					$subcategory = $row['default_setting_subcategory'];
-					if ($category == 'switch' && $subcategory == 'recordings' && $name == 'dir') {
-						$switch_recordings_dir = $row['default_setting_value'];
-					}
-				}
 
 			//loop through all domains
 				$sql = "select * from v_domains ";
@@ -347,11 +313,6 @@
 								//$$category[$subcategory][$name] = $row['domain_setting_value'];
 								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
 							}
-						}
-
-					//set the recordings directory
-						if (strlen($switch_recordings_dir) > 1 && count($_SESSION["domains"]) > 1) {
-							$_SESSION['switch']['recordings']['dir'] = $switch_recordings_dir."/".$domain_name;
 						}
 
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
