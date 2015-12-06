@@ -35,7 +35,7 @@ require_once "root.php";
 		public function get_switch_dirs()	{ return $this->_switch_dirs; }
 		public function get_switch_vdirs()	{ return $this->_switch_vdirs; }
 
-		// dirs - detected by from the switch
+		// dirs - detected from the switch
 		protected $_switch_base_dir = '';
 		protected $_switch_cache_dir = '';
 		protected $_switch_certs_dir = '';
@@ -157,7 +157,7 @@ require_once "root.php";
 				$this->_switch_event_host		= $_SESSION['event_socket_ip_address'];
 				$this->_switch_event_port		= $_SESSION['event_socket_port'];
 				$this->_switch_event_password	= $_SESSION['event_socket_password'];
-				
+
 				// domain info
 				$this->_domain_name = $_SESSION['domain_name'];
 				$this->_domain_uuid = $_SESSION['domain_uuid'];
