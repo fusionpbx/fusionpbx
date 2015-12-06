@@ -83,7 +83,7 @@ else {
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": //outbound routes
 		case "4b821450-926b-175a-af93-a03c441818b1": //time conditions
 		default:
-			$app_uuid = null;
+			unset($app_uuid);
 	}
 
 //copy the dialplan
@@ -104,11 +104,11 @@ else {
 	$sql .= "(";
 	$sql .= "'".$domain_uuid."', ";
 	$sql .= "'$dialplan_uuid', ";
-	if ($app_uuid == null) {
-		$sql .= "null, ";
+	if (isset($app_uuid)) {
+		$sql .= "'$app_uuid', ";
 	}
 	else {
-		$sql .= "'$app_uuid', ";
+		$sql .= "null, ";
 	}
 	$sql .= "'".$dialplan_name."-copy', ";
 	$sql .= "'$dialplan_order', ";
