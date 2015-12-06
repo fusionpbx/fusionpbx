@@ -381,13 +381,13 @@ include "root.php";
 					}
 					elseif ($this->global_settings->db_type() == "pgsql") {
 						$db_host = $this->global_settings->db_host();
+						if($db_host == 'localhost') { $db_host = '127.0.0.1'; } // lua cannot resolve localhost
 						if (filter_var($db_host, FILTER_VALIDATE_IP)) {
 							$host_type = "hostaddr";
 						}
 						else {
 							$host_type = "host";
 						}
-						if($db_host == 'localhost') { $db_host = '127.0.0.1'; } // lua cannot resolve localhost
 						$tmp .= "	database[\"system\"] = \"pgsql://".$host_type."=".$db_host." port=".$this->global_settings->db_port()." dbname=".$this->global_settings->db_name()." user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='".$this->global_settings->db_name()."'\";\n";
 						$tmp .= "	database[\"switch\"] = \"pgsql://".$host_type."=".$db_host." port=".$this->global_settings->db_port()." dbname=freeswitch user=".$this->global_settings->db_username()." password=".$this->global_settings->db_password()." options='' application_name='freeswitch'\";\n";
 					}
