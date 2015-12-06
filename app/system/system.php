@@ -338,37 +338,37 @@ $document['title'] = $text['title-sys-status'];
 		echo "		<th class='th' colspan='2' align='left'>".$text['title-memcache']."</th>\n";
 		echo "	</tr>\n";
 
-		$mc_fail = false;
+		$memcache_fail = false;
 		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$switch_cmd = "memcache status verbose";
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$mc_lines = preg_split('/\n/', $switch_result);
-				foreach($mc_lines as $mc_line) {
-					if (strlen(trim($mc_line)) > 0 && substr_count($mc_line, ': ') > 0) {
-						$mc_temp = explode(': ', $mc_line);
-						$mc_status[$mc_temp[0]] = $mc_temp[1];
+				$memcache_lines = preg_split('/\n/', $switch_result);
+				foreach($memcache_lines as $memcache_line) {
+					if (strlen(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ') > 0) {
+						$memcache_temp = explode(': ', $memcache_line);
+						$memcache_status[$memcache_temp[0]] = $memcache_temp[1];
 					}
 				}
 
-				if (is_array($mc_status) && sizeof($mc_status) > 0) {
-					foreach($mc_status as $mc_field => $mc_value) {
+				if (is_array($memcache_status) && sizeof($memcache_status) > 0) {
+					foreach($memcache_status as $memcache_field => $memcache_value) {
 						echo "<tr>\n";
-						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$mc_field."</td>\n";
-						echo "	<td class='row_style1'>".$mc_value."</td>\n";
+						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$memcache_field."</td>\n";
+						echo "	<td class='row_style1'>".$memcache_value."</td>\n";
 						echo "</tr>\n";
 					}
 				}
-				else { $mc_fail = true; }
+				else { $memcache_fail = true; }
 			}
-			else { $mc_fail = true; }
+			else { $memcache_fail = true; }
 
 		}
-		else { $mc_fail = true; }
+		else { $memcache_fail = true; }
 
-		if ($mc_fail) {
+		if ($memcache_fail) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class='vncell' style='text-align: left;'>".$text['label-memcache_status']."</td>\n";
 			echo "	<td class='row_style1'>".$text['message-unavailable']."</td>\n";
