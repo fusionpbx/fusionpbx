@@ -90,7 +90,7 @@ $text['label-git_info']['sv-se'] = "";
 $text['label-git_info']['uk'] = "";
 $text['label-git_info']['de-at'] = "";
 
-$text['label-git_branch']['en-us'] = "Branch";
+$text['label-git_branch']['en-us'] = "Branch:";
 $text['label-git_branch']['es-cl'] = "";
 $text['label-git_branch']['pt-pt'] = "";
 $text['label-git_branch']['fr-fr'] = "";
@@ -100,7 +100,7 @@ $text['label-git_branch']['sv-se'] = "";
 $text['label-git_branch']['uk'] = "";
 $text['label-git_branch']['de-at'] = "";
 
-$text['label-git_commit']['en-us'] = "Commit";
+$text['label-git_commit']['en-us'] = "Commit:";
 $text['label-git_commit']['es-cl'] = "";
 $text['label-git_commit']['pt-pt'] = "";
 $text['label-git_commit']['fr-fr'] = "";
@@ -110,7 +110,7 @@ $text['label-git_commit']['sv-se'] = "";
 $text['label-git_commit']['uk'] = "";
 $text['label-git_commit']['de-at'] = "";
 
-$text['label-git_origin']['en-us'] = "Origin";
+$text['label-git_origin']['en-us'] = "Origin:";
 $text['label-git_origin']['es-cl'] = "";
 $text['label-git_origin']['pt-pt'] = "";
 $text['label-git_origin']['fr-fr'] = "";
