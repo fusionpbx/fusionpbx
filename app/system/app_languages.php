@@ -80,6 +80,16 @@ $text['label-os']['sv-se'] = "Operativsystem";
 $text['label-os']['uk'] = "Операційна система ";
 $text['label-os']['de-at'] = "Betriebssystem";
 
+$text['label-git-info']['en-us'] = "Git Information";
+$text['label-git-info']['es-cl'] = "";
+$text['label-git-info']['pt-pt'] = "";
+$text['label-git-info']['fr-fr'] = "";
+$text['label-git-info']['pt-br'] = "";
+$text['label-git-info']['pl'] = "";
+$text['label-git-info']['sv-se'] = "";
+$text['label-git-info']['uk'] = "";
+$text['label-git-info']['de-at'] = "";
+
 $text['label-memcache_status']['en-us'] = "Memcache Status";
 $text['label-memcache_status']['es-cl'] = "Estado de Memcache";
 $text['label-memcache_status']['pt-pt'] = "Estado da Memcache";
