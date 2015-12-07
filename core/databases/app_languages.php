@@ -209,17 +209,6 @@ $text['description-driver']['uk'] = "Виберіть драйвер бази д
 $text['description-driver']['de-at'] = "Wählen Sie den Datenbank Treiber.";
 $text['description-driver']['ar-eg'] = "";
 
-$text['description-description']['en-us'] = "Enter a description for this database, if desired.";
-$text['description-description']['es-cl'] = "Ingrese una descripción para esta base de datos, opcional.";
-$text['description-description']['pt-pt'] = "Introduza a descrição para a base de dados (opcional).";
-$text['description-description']['fr-fr'] = "Entrer une description pour cette Base de données. (optionnel)";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wprowadź opis  bazy danych (opcjonalne)";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning för denna databas, om nödvändigt.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-$text['description-description']['ar-eg'] = "";
-
 $text['description-databases']['en-us'] = "Database information.";
 $text['description-databases']['es-cl'] = "Información de bases de datos.";
 $text['description-databases']['pt-pt'] = "Informação da Base de Dados";

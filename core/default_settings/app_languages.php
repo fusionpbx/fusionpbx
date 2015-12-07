@@ -121,17 +121,6 @@ $text['label-normal']['sv-se'] = "normal";
 $text['label-normal']['uk'] = "звичайно";
 $text['label-normal']['de-at'] = "normal";
 
-$text['label-none']['en-us'] = "None";
-$text['label-none']['es-cl'] = "Ninguno";
-$text['label-none']['pt-pt'] = "Nenhum";
-$text['label-none']['fr-fr'] = "Aucun";
-$text['label-none']['nl-nl'] = "";
-$text['label-none']['pt-br'] = "Nenhum";
-$text['label-none']['pl'] = "Żaden";
-$text['label-none']['sv-se'] = "Ingen";
-$text['label-none']['uk'] = "Жоден";
-$text['label-none']['de-at'] = "keine";
-
 $text['label-fine']['en-us'] = "Fine";
 $text['label-fine']['es-cl'] = "Fine";
 $text['label-fine']['pt-pt'] = "Belas";
@@ -230,16 +219,5 @@ $text['description-default_setting-add']['pl'] = "Ustawienia stosowane dla wszys
 $text['description-default_setting-add']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-add']['uk'] = "Налаштування використовується для всіх доменів";
 $text['description-default_setting-add']['de-at'] = "Einstellungen für alle Domains.";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['nl-nl'] = "";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
 
 ?>
