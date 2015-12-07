@@ -27,16 +27,20 @@ class text {
 	 */
 	public function get($language_code = null, $app_path = null, $exclude_global = false) {
 		//get the global app_languages.php
-		if(!$exclude_global){
-			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/app_languages.php";
-		}
+			if(!$exclude_global){
+				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/app_languages.php";
+			}
 		//get the app_languages.php
 			if ($app_path != null) {
-				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
+				$lang_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
 			}
 			else {
-				include getcwd().'/app_languages.php';
+				$lang_path = getcwd().'/app_languages.php';
 			}
+			if(file_exists($lang_path)){
+				require $lang_path;
+			}
+
 		//get the available languages
 			krsort($text);
 			foreach ($text as $lang_label => $lang_codes) {

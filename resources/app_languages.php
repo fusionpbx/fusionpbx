@@ -591,6 +591,16 @@ $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['uk'] = "Інше";
 $text['label-order']['de-at'] = "Reihenfolge";
 
+$text['label-delete']['en-us'] = "Delete";
+$text['label-delete']['es-cl'] = "Eliminar";
+$text['label-delete']['pt-pt'] = "Remover";
+$text['label-delete']['fr-fr'] = "Supprimer";
+$text['label-delete']['pt-br'] = "Remover";
+$text['label-delete']['pl'] = "Usuń";
+$text['label-delete']['sv-se'] = "Ta Bort";
+$text['label-delete']['uk'] = "Видалити";
+$text['label-delete']['de-at'] = "Löschen";
+
 
 //description
 
