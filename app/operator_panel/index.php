@@ -357,7 +357,7 @@ require_once "resources/header.php";
 	}
 
 	function get_record_cmd(uuid) {
-		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
+		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']; ?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
 		return cmd;
 	}
 
