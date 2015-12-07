@@ -36,7 +36,6 @@
 	destination_number = session:getVariable("destination_number");
 	call_direction = session:getVariable("call_direction");
 	domain_name = session:getVariable("domain_name");
-	recordings_dir = session:getVariable("recordings_dir");
 
 --determine the call direction
 	if (call_direction == nil) then
