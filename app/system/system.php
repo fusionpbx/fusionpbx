@@ -78,7 +78,7 @@ $document['title'] = $text['title-sys-status'];
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Version\n";
+		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
 		echo "		".software_version()."\n";

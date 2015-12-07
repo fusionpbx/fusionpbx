@@ -80,6 +80,16 @@ $text['label-os']['sv-se'] = "Operativsystem";
 $text['label-os']['uk'] = "Операційна система ";
 $text['label-os']['de-at'] = "Betriebssystem";
 
+$text['label-version']['en-us'] = "Version";
+$text['label-version']['es-cl'] = "";
+$text['label-version']['pt-pt'] = "";
+$text['label-version']['fr-fr'] = "";
+$text['label-version']['pt-br'] = "";
+$text['label-version']['pl'] = "";
+$text['label-version']['sv-se'] = "";
+$text['label-version']['uk'] = "";
+$text['label-version']['de-at'] = "";
+
 $text['label-git_info']['en-us'] = "Git Information";
 $text['label-git_info']['es-cl'] = "";
 $text['label-git_info']['pt-pt'] = "";
