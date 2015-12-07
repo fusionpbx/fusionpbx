@@ -86,22 +86,24 @@ $document['title'] = $text['title-sys-status'];
 		echo "</tr>\n";
 
 		$git_path = normalize_path_to_os($_SERVER["DOCUMENT_ROOT"]."/.git");
-		$git_branch = shell_exec('git --git-dir='.$git_path.' name-rev --name-only HEAD');
-		rtrim($git_branch);
-		$git_commit = shell_exec('git --git-dir='.$git_path.' rev-parse HEAD');
-		rtrim($git_commit);
-		$git_origin = shell_exec('git --git-dir='.$git_path.' config --get remote.origin.url');
-		rtrim($git_commit);
-		echo "<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		".$text['label-git_info']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"row_style1\">\n";
-		echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
-		echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
-		echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
+		if(file_exists($git_path)){
+			$git_branch = shell_exec('git --git-dir='.$git_path.' name-rev --name-only HEAD');
+			rtrim($git_branch);
+			$git_commit = shell_exec('git --git-dir='.$git_path.' rev-parse HEAD');
+			rtrim($git_commit);
+			$git_origin = shell_exec('git --git-dir='.$git_path.' config --get remote.origin.url');
+			rtrim($git_commit);
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-git_info']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
+			echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
+			echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uname -a');
