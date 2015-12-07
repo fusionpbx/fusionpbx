@@ -165,17 +165,6 @@ $text['option-yesterday']['uk'] = "Вчора";
 $text['option-yesterday']['de-at'] = "Gestern";
 $text['option-yesterday']['he'] = "אתמול";
 
-$text['option-true']['en-us'] = "True";
-$text['option-true']['es-cl'] = "Verdadero";
-$text['option-true']['pt-pt'] = "Sim";
-$text['option-true']['fr-fr'] = "Oui";
-$text['option-true']['pt-br'] = "Sim";
-$text['option-true']['pl'] = "Tak";
-$text['option-true']['sv-se'] = "Sann";
-$text['option-true']['uk'] = "Так";
-$text['option-true']['de-at'] = "Ein";
-$text['option-true']['he'] = "חוקי";
-
 $text['option-today']['en-us'] = "Today";
 $text['option-today']['es-cl'] = "Hoy";
 $text['option-today']['pt-pt'] = "Hoje";
@@ -242,17 +231,6 @@ $text['option-last_hour']['uk'] = "За останню годину";
 $text['option-last_hour']['de-at'] = "Letzte Stunde";
 $text['option-last_hour']['he'] = "בשעה אחרונה";
 
-$text['option-false']['en-us'] = "False";
-$text['option-false']['es-cl'] = "Falso";
-$text['option-false']['pt-pt'] = "Não";
-$text['option-false']['fr-fr'] = "Non";
-$text['option-false']['pt-br'] = "Não";
-$text['option-false']['pl'] = "Nie";
-$text['option-false']['sv-se'] = "Falsk";
-$text['option-false']['uk'] = "Ні";
-$text['option-false']['de-at'] = "Aus";
-$text['option-false']['he'] = "לא חוקי";
-
 $text['option-default']['en-us'] = "Default";
 $text['option-default']['es-cl'] = "Predeterminado";
 $text['option-default']['pt-pt'] = "Predefinido";
@@ -275,17 +253,6 @@ $text['message-preparing_download']['uk'] = "Підготовка файлу д�
 $text['message-preparing_download']['de-at'] = "Bereite Datei für den Download vor, bitte warten...";
 $text['message-preparing_download']['he'] = "מכין קובץ להורדה, אנא המתן";
 
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['message-delete']['he'] = "מחיקה הושלמה";
-
 $text['label-write_codec']['en-us'] = "Write Codec";
 $text['label-write_codec']['es-cl'] = "Escribe Códec";
 $text['label-write_codec']['pt-pt'] = "Escrever Codec";
@@ -306,17 +273,6 @@ $text['label-variables']['sv-se'] = "Variabler";
 $text['label-variables']['uk'] = "Змінні";
 $text['label-variables']['de-at'] = "Variablen";
 $text['label-variables']['he'] = "";
-
-$text['label-value']['en-us'] = "Value";
-$text['label-value']['es-cl'] = "Valor";
-$text['label-value']['pt-pt'] = "Valor";
-$text['label-value']['fr-fr'] = "Valeur";
-$text['label-value']['pt-br'] = "Valor";
-$text['label-value']['pl'] = "Wartość";
-$text['label-value']['sv-se'] = "Värde";
-$text['label-value']['uk'] = "Значення";
-$text['label-value']['de-at'] = "Wert";
-$text['label-value']['he'] = "";
 
 $text['label-uuid']['en-us'] = "UUID";
 $text['label-uuid']['es-cl'] = "UUID";
@@ -615,17 +571,6 @@ $text['label-network_addr']['uk'] = "";
 $text['label-network_addr']['de-at'] = "Netzwerk Adresse";
 $text['label-network_addr']['he'] = "כתובת רשת";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['he'] = "שם";
-
 $text['label-missed']['en-us'] = "Missed";
 $text['label-missed']['es-cl'] = "Perdidas";
 $text['label-missed']['pt-pt'] = "Perdidas";
@@ -833,17 +778,6 @@ $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['he'] = "יעד";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['he'] = "תיאור";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -1208,28 +1142,6 @@ $text['description']['uk'] = "Редагування інформації обл
 $text['description']['de-at'] = "Kontoinformationen bearbeiten";
 $text['description']['he'] = "ערוך את פרטי החשבון";
 
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar el número?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-$text['confirm-delete']['he'] = "?האם אתה בטוח שאתה רוצה למחוק";
-
-$text['button-view']['en-us'] = "View";
-$text['button-view']['es-cl'] = "Ver";
-$text['button-view']['pt-pt'] = "Vista";
-$text['button-view']['fr-fr'] = "Voir";
-$text['button-view']['pt-br'] = "Visualizar";
-$text['button-view']['pl'] = "Widok";
-$text['button-view']['sv-se'] = "Visa";
-$text['button-view']['uk'] = "";
-$text['button-view']['de-at'] = "Ansicht";
-$text['button-view']['he'] = "";
-
 $text['button-update']['en-us'] = "Update";
 $text['button-update']['es-cl'] = "Actualización";
 $text['button-update']['pt-pt'] = "Atualizar";
@@ -1251,39 +1163,6 @@ $text['button-statistics']['sv-se'] = "Statistik";
 $text['button-statistics']['uk'] = "";
 $text['button-statistics']['de-at'] = "Statistik";
 $text['button-statistics']['he'] = "סטטיסטיקה";
-
-$text['button-show_all']['en-us'] = "Show All";
-$text['button-show_all']['es-cl'] = "Mostrar Todos";
-$text['button-show_all']['pt-pt'] = "Mostrar Todos";
-$text['button-show_all']['fr-fr'] = "Montrer Tout";
-$text['button-show_all']['pt-br'] = "Mostrar todos";
-$text['button-show_all']['pl'] = "Pokaż wszystkie";
-$text['button-show_all']['sv-se'] = "Visa Allt";
-$text['button-show_all']['uk'] = "";
-$text['button-show_all']['de-at'] = "Alle anzeigen";
-$text['button-show_all']['he'] = "הצג הכל";
-
-$text['button-search']['en-us'] = "Search";
-$text['button-search']['es-cl'] = "Búsqueda";
-$text['button-search']['pt-pt'] = "Pesquisa";
-$text['button-search']['fr-fr'] = "Recherche";
-$text['button-search']['pt-br'] = "Pesquisar";
-$text['button-search']['pl'] = "Wyszukaj";
-$text['button-search']['sv-se'] = "Sök";
-$text['button-search']['uk'] = "Пошук";
-$text['button-search']['de-at'] = "Suchen";
-$text['button-search']['he'] = "חיפוש";
-
-$text['button-reset']['en-us'] = "Reset";
-$text['button-reset']['es-cl'] = "Reajustar";
-$text['button-reset']['pt-pt'] = "Restabelecer";
-$text['button-reset']['fr-fr'] = "Remettre";
-$text['button-reset']['pt-br'] = "Restabelecer";
-$text['button-reset']['pl'] = "Resetuj";
-$text['button-reset']['sv-se'] = "Återställ";
-$text['button-reset']['uk'] = "Скинути";
-$text['button-reset']['de-at'] = "Zurücksetzen";
-$text['button-reset']['he'] = "אפס";
 
 $text['button-missed']['en-us'] = "Missed Calls";
 $text['button-missed']['es-cl'] = "Llamadas Perdidas";
@@ -1307,17 +1186,6 @@ $text['button-extension_summary']['uk'] = "";
 $text['button-extension_summary']['de-at'] = "Nebenstellen Statistik";
 $text['button-extension_summary']['he'] = "";
 
-$text['button-export']['en-us'] = "Export";
-$text['button-export']['es-cl'] = "Exportación";
-$text['button-export']['pt-pt'] = "Exportação";
-$text['button-export']['fr-fr'] = "Exportation";
-$text['button-export']['pt-br'] = "Exportação ";
-$text['button-export']['pl'] = "Eksportuj";
-$text['button-export']['sv-se'] = "Export";
-$text['button-export']['uk'] = "";
-$text['button-export']['de-at'] = "Export";
-$text['button-export']['he'] = "יצוא";
-
 $text['button-download_csv']['en-us'] = "Download CSV";
 $text['button-download_csv']['es-cl'] = "Descarga CSV";
 $text['button-download_csv']['pt-pt'] = "Baixar CSV";
@@ -1328,28 +1196,6 @@ $text['button-download_csv']['sv-se'] = "Ladda Ned CSV";
 $text['button-download_csv']['uk'] = "";
 $text['button-download_csv']['de-at'] = "CSV Herunterladen";
 $text['button-download_csv']['he'] = "";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['he'] = "מחיקה";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['he'] = "חזרה";
 
 $text['button-advanced_search']['en-us'] = "Advanced Search";
 $text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";

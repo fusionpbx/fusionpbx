@@ -191,6 +191,7 @@ require_once "resources/require.php";
 	echo "<th><img src='$project_path/themes/flags/$reference_language.png' alt='$reference_language'/>&nbsp;".$text["language-$reference_language"]."</th>\n";
 	if(strlen($target_language) > 0 ) { echo "<th><img src='$project_path/themes/flags/$target_language.png' alt='$target_language'/>&nbsp;".$text["language-$target_language"]."</th>\n"; }
 	echo "</tr>\n";
+	$language_count = 0;
 	foreach ($language_labels as $lang_label){
 		if( preg_match( '/\Alanguage-\w{2}(?:-\w{2})?\z/', $lang_label) ) { break; }
 		echo "<tr>\n";
@@ -215,7 +216,11 @@ require_once "resources/require.php";
 			}
 			echo "</td>\n";
 		}
-			echo "</tr>\n";
+		echo "</tr>\n";
+		$language_count++;
+	}
+	if($language_count == 0){
+		echo "<tr><td colspan='3'>Sorry, this app hasn't defined any text</td></tr>\n";
 	}
 	echo "</table>\n";
 	

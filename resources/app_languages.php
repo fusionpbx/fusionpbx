@@ -65,6 +65,17 @@ $text['message-delete']['uk'] = "Видалено";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
 $text['message-delete']['ar-eg'] = "تم المسح";
 
+$text['message-delete_failed']['en-us'] = "Delete Failed";
+$text['message-delete_failed']['es-cl'] = "Eliminar Error";
+$text['message-delete_failed']['pt-pt'] = "Falha na exclusão";
+$text['message-delete_failed']['fr-fr'] = "Echec de la suppression";
+$text['message-delete_failed']['pt-br'] = "Falha na exclusão";
+$text['message-delete_failed']['pl'] = "Próba usunięcia zakończyła się niepowodzeniem";
+$text['message-delete_failed']['sv-se'] = "Borttagning Misslyckades";
+$text['message-delete_failed']['de-at'] = "Löschen fehlgeschlagen";
+$text['message-delete_failed']['ro'] = "Ștergere eșuată";
+$text['message-delete_failed']['he'] = "";
+
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
 $text['message-add']['pt-pt'] = "Adição Efectuada";
@@ -136,8 +147,27 @@ $text['confirm-delete']['uk'] = "Ви дійсно бажаєте це вида�
 $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['ar-eg'] = "هل تريد حقا أن تحذف هذا؟";
 
+$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
+$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
+$text['confirm-copy']['pt-pt'] = "Deseja realmente copiar isto?";
+$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
+$text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
+$text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
+$text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
+$text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
 
 //buttons
+
+$text['button-clear']['en-us'] = "Clear";
+$text['button-clear']['es-cl'] = "Limpiar";
+$text['button-clear']['pt-pt'] = "Apagar";
+$text['button-clear']['fr-fr'] = "Nettoyer";
+$text['button-clear']['pt-br'] = "Claro";
+$text['button-clear']['pl'] = "Wyczyść";
+$text['button-clear']['sv-se'] = "Rensa";
+$text['button-clear']['de-at'] = "Zurücksetzen";
+$text['button-clear']['ro'] = "Curătă";
+$text['button-clear']['he'] = "נקה";
 
 $text['button-save']['en-us'] = "Save";
 $text['button-save']['es-cl'] = "Guardar";
@@ -163,6 +193,20 @@ $text['button-search']['sv-se'] = "Sök";
 $text['button-search']['ro'] = "";
 $text['button-search']['de-at'] = "Suchen";
 $text['button-search']['he'] = "חפש";
+
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['pt-br'] = "Mostrar todos";
+$text['button-show_all']['pl'] = "Pokaż wszystkie";
+$text['button-show_all']['sv-se'] = "Visa Allt";
+$text['button-show_all']['uk'] = "Показати всі";
+$text['button-show_all']['ro'] = "";
+$text['button-show_all']['de-at'] = "Alle anzeigen";
+$text['button-show_all']['fa'] = "";
+$text['button-show_all']['ar-eg'] = "أظهر الكل";
+$text['button-show_all']['he'] = "הצג הכל";
 
 $text['button-restore']['en-us'] = "Restore Default";
 $text['button-restore']['es-cl'] = "Restaurar Predeterminados";
@@ -332,6 +376,16 @@ $text['button-view']['uk'] = "вид";
 $text['button-view']['sv-se'] = "Visa";
 $text['button-view']['ar-eg'] = "عرض";
 
+$text['button-upload']['en-us'] = "Upload";
+$text['button-upload']['es-cl'] = "Subir";
+$text['button-upload']['pt-pt'] = "Carregar";
+$text['button-upload']['fr-fr'] = "déposer";
+$text['button-upload']['pt-br'] = "Submeter";
+$text['button-upload']['pl'] = "Wyślij";
+$text['button-upload']['sv-se'] = "Ladda Upp";
+$text['button-upload']['uk'] = "Завантажити";
+$text['button-upload']['de-at'] = "Hochladen";
+
 $text['button-download']['en-us'] = "Download";
 $text['button-download']['es-cl'] = "Descargar";
 $text['button-download']['pt-pt'] = "Baixar";
@@ -371,6 +425,13 @@ $text['button-advanced']['pl'] = "Zaawansowany";
 $text['button-advanced']['sv-se'] = "Avancerat";
 $text['button-advanced']['uk'] = "Додатково";
 $text['button-advanced']['de-at'] = "Erweitert";
+
+$text['button-basic']['en-us'] = "Basic";
+$text['button-basic']['es-cl'] = "Básico";
+$text['button-basic']['pt-pt'] = "Básico";
+$text['button-basic']['fr-fr'] = "Basique";
+$text['button-basic']['pl'] = "Podstawowy";
+$text['button-basic']['uk'] = "Основний";
 
 $text['button-stop']['en-us'] = "Stop";
 $text['button-stop']['es-cl'] = "Detener";
@@ -600,6 +661,28 @@ $text['label-delete']['pl'] = "Usuń";
 $text['label-delete']['sv-se'] = "Ta Bort";
 $text['label-delete']['uk'] = "Видалити";
 $text['label-delete']['de-at'] = "Löschen";
+
+
+//option (present for compatibility, shoudl use label-true/false instead)
+
+$text['option-true']['en-us'] = "True";
+$text['option-true']['es-cl'] = "verdadero";
+$text['option-true']['pt-pt'] = "Sim";
+$text['option-true']['fr-fr'] = "Oui";
+$text['option-true']['pt-br'] = "Sim";
+$text['option-true']['pl'] = "Tak";
+$text['option-true']['sv-se'] = "Sann";
+$text['option-true']['de-at'] = "Ein";
+
+$text['option-false']['en-us'] = "False";
+$text['option-false']['es-cl'] = "Falso";
+$text['option-false']['pt-pt'] = "Não";
+$text['option-false']['fr-fr'] = "Non";
+$text['option-false']['pt-br'] = "Não";
+$text['option-false']['pl'] = "Nie";
+$text['option-false']['sv-se'] = "Falsk";
+$text['option-false']['de-at'] = "Aus";
+
 
 
 //description

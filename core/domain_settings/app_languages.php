@@ -260,14 +260,4 @@ $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk'] = "Введіть дані домену нижче.";
 $text['description-domain-add']['de-at'] = "Geben Sie die Domain Details unten an.";
 
-$text['description-description']['en-us'] = "Enter a description, if desired.";
-$text['description-description']['es-cl'] = "Ingrese una descripción, opcional.";
-$text['description-description']['pt-pt'] = "Introduza uma descrição, caso queira.";
-$text['description-description']['fr-fr'] = "";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wpisz opis (opcjonalne)";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-
 ?>
