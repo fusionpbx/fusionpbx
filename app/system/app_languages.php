@@ -80,6 +80,16 @@ $text['label-os']['sv-se'] = "Operativsystem";
 $text['label-os']['uk'] = "Операційна система ";
 $text['label-os']['de-at'] = "Betriebssystem";
 
+$text['label-version']['en-us'] = "Version";
+$text['label-version']['es-cl'] = "";
+$text['label-version']['pt-pt'] = "";
+$text['label-version']['fr-fr'] = "";
+$text['label-version']['pt-br'] = "";
+$text['label-version']['pl'] = "";
+$text['label-version']['sv-se'] = "";
+$text['label-version']['uk'] = "";
+$text['label-version']['de-at'] = "";
+
 $text['label-git_info']['en-us'] = "Git Information";
 $text['label-git_info']['es-cl'] = "";
 $text['label-git_info']['pt-pt'] = "";
@@ -89,6 +99,16 @@ $text['label-git_info']['pl'] = "";
 $text['label-git_info']['sv-se'] = "";
 $text['label-git_info']['uk'] = "";
 $text['label-git_info']['de-at'] = "";
+
+$text['label-switch_version']['en-us'] = "Switch Version";
+$text['label-switch_version']['es-cl'] = "";
+$text['label-switch_version']['pt-pt'] = "";
+$text['label-switch_version']['fr-fr'] = "";
+$text['label-switch_version']['pt-br'] = "";
+$text['label-switch_version']['pl'] = "";
+$text['label-switch_version']['sv-se'] = "";
+$text['label-switch_version']['uk'] = "";
+$text['label-switch_version']['de-at'] = "";
 
 $text['label-git_branch']['en-us'] = "Branch:";
 $text['label-git_branch']['es-cl'] = "";
