@@ -142,17 +142,21 @@ require_once "root.php";
 					throw new Exception("No detect_switch was passed to me but \$_SESSION['switch'] is empty!");
 				}
 				foreach ($this->_switch_dirs as $dir){
+					$category = 'switch';
 					$session_var;
 					preg_match( '/^switch_(.*)_dir$/', $dir, $session_var);
 					$dir = "_$dir";
 					if($session_var[1] == 'script'){ $session_var[1] = 'scripts'; }
-					$this->$dir = $_SESSION['switch'][$session_var[1]]['dir'];
+					if($session_var[1] == 'temp'){ $category = 'server'; }
+					$this->$dir = $_SESSION[$category][$session_var[1]]['dir'];
 				}
 				foreach ($this->_switch_vdirs as $vdir){
+					$category = 'switch';
 					$session_var;
 					preg_match( '/^switch_(.*)_vdir$/', $vdir, $session_var);
 					$vdir = "_$vdir";
-					$this->$vdir = $_SESSION['switch'][$session_var[1]]['dir'];
+					if($session_var[1] == 'backup'){ $category = 'server'; }
+					$this->$vdir = $_SESSION[$category][$session_var[1]]['dir'];
 				}
 				$this->_switch_event_host		= $_SESSION['event_socket_ip_address'];
 				$this->_switch_event_port		= $_SESSION['event_socket_port'];
