@@ -78,7 +78,7 @@ $document['title'] = $text['title-sys-status'];
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Version\n";
+		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
 		echo "		".software_version()."\n";
@@ -86,22 +86,38 @@ $document['title'] = $text['title-sys-status'];
 		echo "</tr>\n";
 
 		$git_path = normalize_path_to_os($_SERVER["DOCUMENT_ROOT"]."/.git");
-		$git_branch = shell_exec('git --git-dir='.$git_path.' name-rev --name-only HEAD');
-		rtrim($git_branch);
-		$git_commit = shell_exec('git --git-dir='.$git_path.' rev-parse HEAD');
-		rtrim($git_commit);
-		$git_origin = shell_exec('git --git-dir='.$git_path.' config --get remote.origin.url');
-		rtrim($git_commit);
-		echo "<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		".$text['label-git_info']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"row_style1\">\n";
-		echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
-		echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
-		echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
+		if(file_exists($git_path)){
+			$git_branch = shell_exec('git --git-dir='.$git_path.' name-rev --name-only HEAD');
+			rtrim($git_branch);
+			$git_commit = shell_exec('git --git-dir='.$git_path.' rev-parse HEAD');
+			rtrim($git_commit);
+			$git_origin = shell_exec('git --git-dir='.$git_path.' config --get remote.origin.url');
+			rtrim($git_commit);
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-git_info']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
+			echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
+			echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_version = event_socket_request($fp, 'api version');
+			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(\s*(\d+\w+)\s*\)/", $switch_version, $matches);
+			$switch_version = $matches[1];
+			$switch_bits = $matches[2];
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-switch_version']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uname -a');
