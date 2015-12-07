@@ -31,7 +31,7 @@
 	echo "<input type='hidden' name='install_step' value='execute'/>\n";
 
 	echo "<input type='hidden' name='event_host' value='$event_host'/>\n";
-	echo "<input type='hidden' name='event_port' value='$event_host'/>\n";
+	echo "<input type='hidden' name='event_port' value='$event_port'/>\n";
 	echo "<input type='hidden' name='event_password' value='$event_password'/>\n";
 	echo "<input type='hidden' name='db_type' value='$db_type'/>\n";
 	echo "<input type='hidden' name='admin_username' value='$admin_username'/>\n";
@@ -136,6 +136,25 @@
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "		Create Database Options\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<label class='radio'><input type='radio' name='create_db_option' value='none'";
+		if($db_create_option=='none') { echo " checked='checked'"; }
+		echo "/>Do not create database</label>\n";
+		echo "	<label class='radio'><input type='radio' name='create_db_option' value='same'";
+		if($db_create_option=='same') { echo " checked='checked'"; }
+		echo "/>Create database using above username/password</label>\n";
+		echo "	<label class='radio'><input type='radio' name='create_db_option' value='user'";
+		if($db_create_option=='user') { echo " checked='checked'"; }
+		echo "/>Create database using below username/password</label>\n";
+		echo "<br />\n";
+		echo "Choose whether to create the database\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "		Create Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -220,13 +239,24 @@
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "		Create Database Options\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<label class='radio'><input type='checkbox' name='db_create' value='1'";
+		if($db_create=='1') { echo " checked='checked'"; }
+		echo "/>Create the database</label>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "		Create Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_create_username' maxlength='255' value=\"$db_create_username\"><br />\n";
 		echo "		Optional, this username is used to create the database, a database user and set the permissions. \n";
 		echo "		By default this username is 'pgsql' however it can be any account with permission to add a database, user, and grant permissions. \n";
-		echo "		Leave blank if the user and empty database already exist and you do not want them created. \n";
+		echo "		Leave blank to use the details above. \n";
 		echo "</td>\n";
 		echo "</tr>\n";
 

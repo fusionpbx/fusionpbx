@@ -109,8 +109,8 @@ if ($domains_processed == 1) {
 				foreach ($result as &$row) {
 					$phrase_detail_uuid = $row['phrase_detail_uuid'];
 					$phrase_detail_data = $row['phrase_detail_data'];
-					if (substr_count($phrase_detail_data, $_SESSION['switch']['recordings']['dir']) > 0) {
-						$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/', '', $phrase_detail_data);
+					if (substr_count($phrase_detail_data, $_SESSION['switch']['recordings']['dir'].'/'.$domain_name) > 0) {
+						$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/', '', $phrase_detail_data);
 					}
 					//update function and data to be base64 compatible
 						$phrase_detail_data = "lua(streamfile.lua ".$phrase_detail_data.")";
@@ -141,7 +141,7 @@ if ($domains_processed == 1) {
 						$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $phrase_detail_data);
 						$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
 						if (substr_count($phrase_detail_data, '/') === 0) {
-							$phrase_detail_data = $_SESSION['switch']['recordings']['dir'].'/'.$phrase_detail_data;
+							$phrase_detail_data = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/'.$phrase_detail_data;
 						}
 						$sql = "update v_phrase_details set ";
 						$sql .= "phrase_detail_function = 'play-file', ";

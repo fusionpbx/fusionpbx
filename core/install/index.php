@@ -78,25 +78,6 @@ if (!if_group("superadmin")) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	echo "<form name='frm' method='post' action='/core/install/install_add_switch.php'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td width='30%' class='vncell'>\n";
-	echo "		<input id='do_add-switch' type='submit' class='btn' value='".$text['label-add-switch']."'/>";
-	echo "	</td>\n";
-	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_add-switch'>";
-	echo "			".$text['description-add-switch'];
-	echo "		</label>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</form>\n";
-
-	echo "<br><br>";
-
-	echo "<p>WiP</p>";
-
 //include the footer
 	require_once "resources/footer.php";
 ?>

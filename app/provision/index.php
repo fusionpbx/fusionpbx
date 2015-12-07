@@ -42,6 +42,15 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	//	$device_template = check_str($_REQUEST['template']);
 	//}
 
+//get the mac address for Cisco 79xx in the URL as &name=SEP000000000000
+	if (empty($mac)){
+		$name = check_str($_REQUEST['name']);
+		if (substr($name, 0, 3) == "SEP") {
+			$mac = strtolower(substr($name, 3, 12));
+			unset($name);
+		}
+	}
+
 //check alternate MAC source
 	if (empty($mac)){
 		//set the http user agent
@@ -283,7 +292,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	if ($_REQUEST['content_type'] = 'application/octet-stream') {
+	if ($_REQUEST['content_type'] == 'application/octet-stream') {
 		$file_name = str_replace("{\$mac}",$mac,$file);
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');

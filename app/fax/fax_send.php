@@ -58,13 +58,17 @@ if (!$included) {
 			$fax_uuid = check_str($_REQUEST["id"]);
 			if (if_group("superadmin") || if_group("admin")) {
 				//show all fax extensions
-				$sql = "select * from v_fax ";
+				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
+				$sql .= "accountcode, fax_send_greeting ";
+				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and fax_uuid = '$fax_uuid' ";
 			}
 			else {
 				//show only assigned fax extensions
-				$sql = "select * from v_fax as f, v_fax_users as u ";
+				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
+				$sql .= "f.accountcode, f.fax_send_greeting ";
+				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and f.fax_uuid = '$fax_uuid' ";
@@ -101,7 +105,7 @@ if (!$included) {
 		}
 
 	//set the fax directory
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 	// set fax cover font to generate pdf
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
@@ -131,7 +135,7 @@ if(!function_exists('gs_cmd')) {
 }
 
 if(!function_exists('fax_enqueue')) {
-	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $fax_uri, $fax_dtmf, $dial_string){
+	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $reply_address, $fax_uri, $fax_dtmf, $dial_string){
 		global $db, $db_type;
 
 		$fax_task_uuid = uuid();
@@ -151,12 +155,12 @@ INSERT INTO v_fax_tasks( fax_task_uuid, fax_uuid,
 	task_next_time, task_lock_time, 
 	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
 	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
-	task_description)
+	task_reply_address, task_description)
 VALUES (?, ?,
 	$date_utc_now_sql, NULL, 
 	?, ?, ?, ?, ?, 
 	'false', 0, 0, 0, 0, 
-	?);
+	?, ?);
 HERE;
 		$stmt = $db->prepare($sql);
 		$i = 0;
@@ -167,6 +171,7 @@ HERE;
 		$stmt->bindValue(++$i, $fax_uri);
 		$stmt->bindValue(++$i, $dial_string);
 		$stmt->bindValue(++$i, $fax_dtmf);
+		$stmt->bindValue(++$i, $reply_address);
 		$stmt->bindValue(++$i, $description);
 		if ($stmt->execute()) {
 			$response = 'Enqueued';
@@ -694,8 +699,6 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
 		$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
 		$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$common_dial_string .= "mailto_address='"               . $mailto_address          . "',";
-		$common_dial_string .= "mailfrom_address='"             . $mailfrom_address        . "',";
 		$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
 		$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
 		$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
@@ -722,6 +725,8 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 			if ($fax_send_mode != 'queue') {
 				$dial_string .= $t38;
+				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
+				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
 				$dial_string .= "fax_uri=" . $fax_uri  . ",";
 				$dial_string .= "fax_retry_attempts=1" . ",";
 				$dial_string .= "fax_retry_limit=20"   . ",";
@@ -744,7 +749,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 			}
 			else{ // enqueue
 				$wav_file = ''; //! @todo add custom message
-				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $fax_uri, $fax_dtmf, $dial_string);
+				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
 		}
 

@@ -2,7 +2,7 @@ require "resources.functions.config"
 
 require "resources.functions.sleep"
 local log       = require "resources.functions.log".next_fax_task
-local Tasks     = require "fax_queue.tasks"
+local Tasks     = require "app.fax.resources.scripts.queue.tasks"
 local Esl       = require "resources.functions.esl"
 
 local FAX_OPTIONS = {
@@ -12,6 +12,19 @@ local FAX_OPTIONS = {
   "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
   "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 }
+
+local function task_send_mail(task)
+  local number_dialed = task.uri:match("/([^/]-)%s*$")
+
+  Tasks.send_mail_task(task, {
+    "Fax to: " .. number_dialed .. " FAILED",
+    table.concat{
+      "We are sorry the fax failed to go through. ",
+      "It has been attached. Please check the number " .. number_dialed .. ", ",
+      "and if it was correct you might consider emailing it instead.",
+    }}
+  )
+end
 
 local function next_task()
   local task, err = Tasks.next_task()
@@ -28,22 +41,27 @@ local function next_task()
   local esl
   local ok, err = pcall(function()
 
-    for k, v in pairs(task) do
-      print(string.format("  `%s` => `%s`", tostring(k), tostring(v)))
-    end
-
     local mode = (task.retry_counter % #FAX_OPTIONS) + 1
     local dial_string  = '{' ..
-      task.dial_string .. "api_hangup_hook='lua fax_queue/retry.lua'," ..
+      task.dial_string .. "api_hangup_hook='lua app/fax/resources/scripts/queue/retry.lua'," ..
       FAX_OPTIONS[mode] .. 
     '}' .. task.uri
 
-    local originate = 'originate ' .. dial_string .. ' &lua(fax_queue/exec.lua)'
+    local originate = 'originate ' .. dial_string .. ' &lua(app/fax/resources/scripts/queue/exec.lua)'
 
     log.notice(originate)
     esl = assert(Esl.new())
-    local ok, err = esl:api(originate)
-    log.notice(ok or err)
+    local ok, status, info = esl:api(originate)
+    if not ok then
+      Tasks.wait_task(task, false, info)
+      if task.status ~= 0 then
+        Tasks.remove_task(task)
+        task_send_mail(task)
+      end
+      log.noticef('Can not originate to `%s` cause: %s: %s ', task.uri, tostring(status), tostring(info))
+    else
+      log.noticef("originate successfuly: %s", tostring(info))
+    end
   end)
 
   if esl then esl:close() end

@@ -1,8 +1,8 @@
 <?php
 
 $text['title-install_first_time']['en-us'] = "First Time Install";
-$text['title-install_first_time']['es-cl'] = "";
-$text['title-install_first_time']['pt-pt'] = "";
+$text['title-install_first_time']['es-cl'] = "Instale Primera Vez";
+$text['title-install_first_time']['pt-pt'] = "Première installation";
 $text['title-install_first_time']['fr-fr'] = "";
 $text['title-install_first_time']['pt-br'] = "";
 $text['title-install_first_time']['pl'] = "";
@@ -22,11 +22,49 @@ $text['title-detected_configuration']['uk'] = "";
 $text['title-detected_configuration']['de-at'] = "";
 $text['title-detected_configuration']['ar-eg'] = "";
 
+$text['title-assumed_configuration']['en-us'] = "Assumed Configuration";
+$text['title-assumed_configuration']['es-cl'] = "";
+$text['title-assumed_configuration']['pt-pt'] = "";
+$text['title-assumed_configuration']['fr-fr'] = "";
+$text['title-assumed_configuration']['pt-br'] = "";
+$text['title-assumed_configuration']['pl'] = "";
+$text['title-assumed_configuration']['sv-se'] = "";
+$text['title-assumed_configuration']['uk'] = "";
+$text['title-assumed_configuration']['de-at'] = "";
+$text['title-assumed_configuration']['ar-eg'] = "";
+
 $text['label-ft-install']['en-us'] = "First Time Install";
+$text['label-ft-install']['es-cl'] = "";
+$text['label-ft-install']['pt-pt'] = "";
+$text['label-ft-install']['fr-fr'] = "";
+$text['label-ft-install']['pt-br'] = "";
+$text['label-ft-install']['pl'] = "";
+$text['label-ft-install']['sv-se'] = "";
+$text['label-ft-install']['uk'] = "";
+$text['label-ft-install']['de-at'] = "";
+$text['label-ft-install']['ar-eg'] = "";
+
 $text['description-ft-install']['en-us'] = "Perform all actions for a First Time Install";
+$text['description-ft-install']['es-cl'] = "";
+$text['description-ft-install']['pt-pt'] = "";
+$text['description-ft-install']['fr-fr'] = "";
+$text['description-ft-install']['pt-br'] = "";
+$text['description-ft-install']['pl'] = "";
+$text['description-ft-install']['sv-se'] = "";
+$text['description-ft-install']['uk'] = "";
+$text['description-ft-install']['de-at'] = "";
+$text['description-ft-install']['ar-eg'] = "";
 
 $text['label-add-switch']['en-us'] = "Add a new switch";
-$text['description-add-switch']['en-us'] = "Add a new switch";
+$text['label-add-switch']['es-cl'] = "";
+$text['label-add-switch']['pt-pt'] = "";
+$text['label-add-switch']['fr-fr'] = "";
+$text['label-add-switch']['pt-br'] = "";
+$text['label-add-switch']['pl'] = "";
+$text['label-add-switch']['sv-se'] = "";
+$text['label-add-switch']['uk'] = "";
+$text['label-add-switch']['de-at'] = "";
+$text['label-add-switch']['ar-eg'] = "";
 
 $text['label-select_language']['en-us'] = "Language";
 $text['label-select_language']['es-cl'] = "";
@@ -104,28 +142,6 @@ $text['label-path']['sv-se'] = "Sökväg";
 $text['label-path']['uk'] = "Шлях";
 $text['label-path']['de-at'] = "Pfad";
 $text['label-path']['ar-eg'] = "";
-
-$text['label-password']['en-us'] = "Password";
-$text['label-password']['es-cl'] = "Contreseña";
-$text['label-password']['pt-pt'] = "Palavra-Chave";
-$text['label-password']['fr-fr'] = "Mot de Passe";
-$text['label-password']['pt-br'] = "Senha";
-$text['label-password']['pl'] = "Hasło";
-$text['label-password']['sv-se'] = "Lösenord";
-$text['label-password']['uk'] = "Пароль";
-$text['label-password']['de-at'] = "Passwort";
-$text['label-password']['ar-eg'] = "كلمة السر";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['ar-eg'] = "الأسم";
 
 $text['label-host']['en-us'] = "Host";
 $text['label-host']['es-cl'] = "Host";
@@ -335,17 +351,6 @@ $text['description-driver']['sv-se'] = "Välj databas drivrutin.";
 $text['description-driver']['uk'] = "Виберіть драйвер бази даних.";
 $text['description-driver']['de-at'] = "Wählen Sie den Datenbank Treiber.";
 $text['description-driver']['ar-eg'] = "";
-
-$text['description-description']['en-us'] = "Enter a description for this database, if desired.";
-$text['description-description']['es-cl'] = "Ingrese una descripción para esta base de datos, opcional.";
-$text['description-description']['pt-pt'] = "Introduza a descrição para a base de dados (opcional).";
-$text['description-description']['fr-fr'] = "Entrer une description pour cette Base de données. (optionnel)";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wprowadź opis  bazy danych (opcjonalne)";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning för denna databas, om nödvändigt.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-$text['description-description']['ar-eg'] = "";
 
 $text['description-install']['en-us'] = "Select the action below you wish to perform.";
 $text['description-install']['es-cl'] = "Seleccione las accion a continuación que desea realizar.";

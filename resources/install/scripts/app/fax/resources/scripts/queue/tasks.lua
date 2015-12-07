@@ -1,5 +1,6 @@
-local Database = require "resources.functions.database"
-local Settings = require "resources.functions.lazy_settings"
+local Database  = require "resources.functions.database"
+local Settings  = require "resources.functions.lazy_settings"
+local send_mail = require "resources.functions.send_mail"
 
 local db
 
@@ -43,6 +44,7 @@ select
   t1.task_dtmf as dtmf,
   t1.task_fax_file as fax_file,
   t1.task_wav_file as wav_file,
+  t1.task_reply_address as reply_address,
   t1.task_no_answer_counter as no_answer_counter,
   t1.task_no_answer_retry_counter as no_answer_retry_counter,
   t1.task_retry_counter as retry_counter,
@@ -102,6 +104,14 @@ local release_stuck_tasks_sql = [[
 local remove_finished_tasks_sql = [[
   delete from v_fax_tasks where task_status > 3
 ]]
+
+local function serialize(task, header)
+  local str = header or ''
+  for k, v in pairs(task) do
+    str = str .. ('\n %q = %q'):format(tostring(k), tostring(v))
+  end
+  return str
+end
 
 local function get_db()
   if not db then
@@ -235,6 +245,21 @@ local function cleanup_tasks()
   db:query(remove_finished_tasks_sql)
 end
 
+local function send_mail_task(task, message, call_uuid)
+  if not task.reply_address or #task.reply_address == 0 then
+    return
+  end
+
+  local mail_x_headers = {
+    ["X-FusionPBX-Domain-UUID"] = task.domain_uuid;
+    ["X-FusionPBX-Domain-Name"] = task.domain_name;
+    ["X-FusionPBX-Call-UUID"]   = call_uuid;
+    ["X-FusionPBX-Email-Type"]  = 'email2fax';
+  }
+
+  return send_mail(mail_x_headers, task.reply_address, message)
+end
+
 return {
   release_db = function()
     if db then
@@ -242,10 +267,11 @@ return {
       db = nil
     end
   end;
-  next_task     = next_task;
-  wait_task     = wait_task;
-  select_task   = select_task;
-  remove_task   = remove_task;
-  release_task  = release_task;
-  cleanup_tasks = cleanup_tasks;
+  next_task      = next_task;
+  wait_task      = wait_task;
+  select_task    = select_task;
+  remove_task    = remove_task;
+  release_task   = release_task;
+  cleanup_tasks  = cleanup_tasks;
+  send_mail_task = send_mail_task;
 }

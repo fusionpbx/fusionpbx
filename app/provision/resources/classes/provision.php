@@ -402,7 +402,7 @@ include "root.php";
 				//get the contacts array and add to the template engine
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
+							$sql = "select c.contact_category, c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
 							$sql .= "where c.domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and c.contact_uuid = p.contact_uuid ";
@@ -664,21 +664,21 @@ include "root.php";
 										case "ldap search": $device_key_type  = "21"; break;
 									}
 								}
-								if ($device_key_category == "memory") {
-										switch ($device_key_type) {
-											case "speed dial": $device_key_type  = "0"; break;
-											case "blf": $device_key_type  = "1"; break;
-											case "presence watcher": $device_key_type  = "2"; break;
-											case "eventlist blf": $device_key_type  = "3"; break;
-											case "speed dial active": $device_key_type  = "4"; break;
-											case "dial dtmf": $device_key_type  = "5"; break;
-											case "voicemail": $device_key_type  = "6"; break;
-											case "call return": $device_key_type  = "7"; break;
-											case "transfer": $device_key_type  = "8"; break;
-											case "call park": $device_key_type  = "9"; break;
-											case "intercom": $device_key_type  = "10"; break;
-											case "ldap search": $device_key_type  = "11"; break;
-										}
+								if ($device_key_category == "memory" || $device_key_category == "expansion") {
+									switch ($device_key_type) {
+										case "speed dial": $device_key_type  = "0"; break;
+										case "blf": $device_key_type  = "1"; break;
+										case "presence watcher": $device_key_type  = "2"; break;
+										case "eventlist blf": $device_key_type  = "3"; break;
+										case "speed dial active": $device_key_type  = "4"; break;
+										case "dial dtmf": $device_key_type  = "5"; break;
+										case "voicemail": $device_key_type  = "6"; break;
+										case "call return": $device_key_type  = "7"; break;
+										case "transfer": $device_key_type  = "8"; break;
+										case "call park": $device_key_type  = "9"; break;
+										case "intercom": $device_key_type  = "10"; break;
+										case "ldap search": $device_key_type  = "11"; break;
+									}
 								}
 							}
 
@@ -800,6 +800,13 @@ include "root.php";
 				$row_count = 0;
 				$tmp_array = '';
 				$i = 0;
+
+			//build the provision array
+				foreach($_SESSION['provision'] as $key=>$val) {
+					if (strlen($val['var']) > 0) { $value = $val['var']; }
+					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					$provision[$key] = $value;
+				}
 
 			//get the devices
 				$sql = "select * from v_devices ";

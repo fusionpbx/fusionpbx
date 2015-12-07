@@ -77,7 +77,7 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_session_details']."</b></td>\n";
 	echo "		<td width='70%' align='right'>\n";
-	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 	$tmp_name = '';
 	if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 		$tmp_name = $row['conference_session_uuid'].".mp3";

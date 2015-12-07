@@ -174,12 +174,7 @@
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "rxfax";
-					if (count($_SESSION["domains"]) > 1) {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
-					}
-					else {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
-					}
+					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;

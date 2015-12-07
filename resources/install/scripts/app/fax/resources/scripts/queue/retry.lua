@@ -4,13 +4,18 @@
 	require "resources.functions.split";
 	require "resources.functions.count";
 
-	local log      = require "resources.functions.log".fax_retry
-	local Database = require "resources.functions.database"
-	local Settings = require "resources.functions.lazy_settings"
-	local Tasks    = require "fax_queue.tasks"
+	local log       = require "resources.functions.log".fax_retry
+	local Database  = require "resources.functions.database"
+	local Settings  = require "resources.functions.lazy_settings"
+	local Tasks     = require "app.fax.resources.scripts.queue.tasks"
+	local send_mail = require "resources.functions.send_mail"
 
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
-	local task       = Tasks.select_task(fax_task_uuid)
+	if not fax_task_uuid then
+		log.warning("No [fax_task_uuid] channel variable")
+		return 
+	end
+	local task           = Tasks.select_task(fax_task_uuid)
 	if not task then
 		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
 		return 
@@ -25,11 +30,12 @@
 
 -- Channel/FusionPBX variables
 	local uuid                           = env:getHeader("uuid")
+	local fax_queue_task_session         = env:getHeader('fax_queue_task_session')
 	local domain_uuid                    = env:getHeader("domain_uuid")                  or task.domain_uuid
 	local domain_name                    = env:getHeader("domain_name")                  or task.domain_name
 	local origination_caller_id_name     = env:getHeader("origination_caller_id_name")   or '000000000000000'
 	local origination_caller_id_number   = env:getHeader("origination_caller_id_number") or '000000000000000'
-	local accountcode                    = env:getHeader("accountcode")
+	local accountcode                    = env:getHeader("accountcode")                  or domain_name
 	local duration                       = tonumber(env:getHeader("billmsec"))           or 0
 	local sip_to_user                    = env:getHeader("sip_to_user")
 	local bridge_hangup_cause            = env:getHeader("bridge_hangup_cause")
@@ -68,14 +74,11 @@
 	local fax_uuid                       = task.fax_uuid
 
 -- Email variables
-	local email_address = env:getHeader("mailto_address")
-	local from_address = env:getHeader("mailfrom_address") or email_address
 	local number_dialed = fax_uri:match("/([^/]-)%s*$")
-	local email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
-	local email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
 	log.noticef([[<<< CALL RESULT >>>
     uuid:                          = '%s'
+    task_session_uuid:             = '%s'
     answered:                      = '%s'
     fax_file:                      = '%s'
     wav_file:                      = '%s'
@@ -84,12 +87,12 @@
     accountcode:                   = '%s'
     origination_caller_id_name:    = '%s'
     origination_caller_id_number:  = '%s'
-    mailfrom_address:              = '%s'
     mailto_address:                = '%s'
     hangup_cause_q850:             = '%s'
     fax_options                    = '%s'
 ]],
     tostring(uuid)                         ,
+    tostring(fax_queue_task_session)       ,
     tostring(answered)                     ,
     tostring(fax_file)                     ,
     tostring(wav_file)                     ,
@@ -98,8 +101,7 @@
     tostring(accountcode)                  ,
     tostring(origination_caller_id_name)   ,
     tostring(origination_caller_id_number) ,
-    tostring(from_address)                 ,
-    tostring(email_address)                ,
+    tostring(task.reply_address)           ,
     tostring(hangup_cause_q850)            ,
     fax_options
 )
@@ -144,38 +146,28 @@
 		)
 	end
 
---get the values from the fax file
-	if not (fax_uuid and domain_name) then
-		local array = split(fax_file, "[\\/]+")
-		domain_name   = domain_name or   array[#array - 3]
-		local fax_extension = fax_extension or array[#array - 2]
+	log.debug([[<<< DEBUG >>>
+    domain_name                  = '%s'
+    domain_uuid                  = '%s'
+    task.domain_name             = '%s'
+    task.domain_uuid             = '%s'
+]],
+    tostring(domain_name      ),
+    tostring(domain_uuid      ),
+    tostring(task.domain_name ),
+    tostring(task.domain_uuid )
+)
 
-		if not fax_uuid then
-			local sql = "SELECT fax_uuid FROM v_fax "
-			sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' "
-			sql = sql .. "AND fax_extension = '" .. fax_extension .. "' "
-			fax_uuid = dbh:first_value(sql);
-		end
-	end
-
---get the domain_uuid using the domain name required for multi-tenant
-	if domain_name and not domain_uuid then
-		local sql = "SELECT domain_uuid FROM v_domains ";
-		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' "
-		domain_uuid = dbh:first_value(sql)
-	end
-
-	assert(domain_name and domain_uuid)
+	assert(fax_uuid,    'no fax server uuid')
+	assert(domain_name, 'no domain name')
+	assert(domain_uuid, 'no domain uuid')
+	assert(domain_uuid:lower() == task.domain_uuid:lower(), 'invalid domain uuid')
+	assert(domain_name:lower() == task.domain_name:lower(), 'invalid domain name')
 
 --settings
 	local settings = Settings.new(dbh, domain_name, domain_uuid)
 	local keep_local   = settings:get('fax', 'keep_local','boolean')
 	local storage_type = (keep_local == "false") and "" or settings:get('fax', 'storage_type', 'text')
-
---be sure accountcode is not empty
-	if (accountcode == nil) then
-		accountcode = domain_name
-	end
 
 	local function opt(v, default)
 		if v then return "'" .. v .. "'" end
@@ -325,6 +317,13 @@
 		end
 
 		Tasks.remove_task(task)
+		Tasks.send_mail_task(task, {
+			"Fax to: " .. number_dialed .. " SENT",
+			table.concat{
+				"We are happy to report the fax was sent successfully.",
+				"It has been attached for your records.",
+			}}, uuid
+		)
 	end
 
 	if fax_success ~= "1" then
@@ -338,9 +337,23 @@
 			end
 		end
 
-		Tasks.wait_task(task, answered, hangup_cause_q850)
-		if task.status ~= 0 then
-			Tasks.remove_task(task)
+		-- if task use group call then retry.lua will be called multiple times
+		-- here we check eathre that channel which execute `exec.lua`
+		-- Note that if there no one execute `exec.lua` we do not need call this
+		-- becase it should deal in `next.lua`
+		if fax_queue_task_session == uuid then
+			Tasks.wait_task(task, answered, hangup_cause_q850)
+			if task.status ~= 0 then
+				Tasks.remove_task(task)
+				Tasks.send_mail_task(task, {
+					"Fax to: " .. number_dialed .. " FAILED",
+					table.concat{
+						"We are sorry the fax failed to go through. ",
+						"It has been attached. Please check the number "..number_dialed..", ",
+						"and if it was correct you might consider emailing it instead.",
+					}}, uuid
+				)
+			end
 		end
 	end
 
