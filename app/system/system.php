@@ -78,7 +78,7 @@ $document['title'] = $text['title-sys-status'];
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Version\n";
+		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
 		echo "		".software_version()."\n";
@@ -102,6 +102,20 @@ $document['title'] = $text['title-sys-status'];
 		echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
+
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_version = event_socket_request($fp, 'api version');
+			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(\s*(\d+\w+)\s*\)/", $switch_version, $matches);
+			$switch_version = $matches[1];
+			$switch_bits = $matches[2];
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-switch_version']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uname -a');
