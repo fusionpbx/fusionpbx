@@ -210,7 +210,7 @@ HERE;
 				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_files     . "&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>" . $fax_uri        . "&nbsp;</td>\n";
 
-				echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".$uuid."'));\">".$v_link_label_delete."</a></td>\n";
+				echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup(escape('".$row['uuid']."'));\">".$v_link_label_delete."</a></td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
 			}
