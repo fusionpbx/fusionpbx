@@ -330,6 +330,17 @@ $text['label-log']['de-at'] = "Log";
 $text['label-log']['ro'] = "Log";
 $text['label-log']['he'] = "";
 
+$text['label-active']['en-us'] = "Active";
+$text['label-active']['es-cl'] = "";
+$text['label-active']['pt-pt'] = "";
+$text['label-active']['fr-fr'] = "";
+$text['label-active']['pt-br'] = "";
+$text['label-active']['pl'] = "";
+$text['label-active']['sv-se'] = "";
+$text['label-active']['de-at'] = "";
+$text['label-active']['ro'] = "";
+$text['label-active']['he'] = "";
+
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['es-cl'] = "Localización";
 $text['label-location']['pt-pt'] = "Localização";
@@ -2067,5 +2078,15 @@ $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['de-at'] = "Hinzufügen";
 $text['button-add']['ro'] = "Adaugă";
 $text['button-add']['he'] = "הוספה";
+
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['pt-br'] = "Mostrar Todos";
+$text['button-show_all']['pl'] = "Pokaż Wszystkie";
+$text['button-show_all']['uk'] = "Показати всі";
+$text['button-show_all']['de-at'] = "Alle anzeigen";
+$text['button-show_all']['he'] = "";
 
 ?>
