@@ -43,6 +43,11 @@ else {
 	require_once "resources/header.php";
 
 //page title and description
+
+	echo "<!-- // javascript calendar and color picker (source: http://rightjs.org) -->";
+	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right.js'></script>";
+	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right-calendar-src.js'></script>";
+	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right-colorpicker-src.js'></script>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
@@ -65,6 +70,26 @@ else {
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+#CJB
+/*	echo "<form method='get' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+	echo "			".$text['label-start_range']."\n";
+	echo "		</td>\n";
+	echo "		<td class='vtable' width='50%' align='left' style='white-space: nowrap;'>\n";
+	echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+	echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+	echo "		</td>\n";
+	echo "<td style='padding-top: 8px;' align='right'>";
+	echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
+	echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "</td>";
+	echo "	</tr>\n";
+	echo "</table>\n";
+	echo "</form>";
+*/
+#CJB
 
 //set the style
 	$c = 0;
