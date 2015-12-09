@@ -51,6 +51,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_files';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_extension_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";

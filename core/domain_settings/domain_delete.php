@@ -176,7 +176,7 @@ if (strlen($id) > 0) {
 
 		//delete the recordings
 			if (strlen($_SESSION['switch'][recordings]['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$domain_name);
+				system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
 			}
 
 		//delete voicemail

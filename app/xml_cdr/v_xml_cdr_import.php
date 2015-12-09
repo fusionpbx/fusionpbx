@@ -219,7 +219,7 @@
 			$database->fields['domain_name'] = $domain_name;
 
 		//check whether a recording exists
-			$recording_relative_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+			$recording_relative_path = '/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			if (file_exists($_SESSION['switch']['recordings']['dir'].$recording_relative_path.'/'.$uuid.'.wav')) {
 				$recording_file = $recording_relative_path.'/'.$uuid.'.wav';
 			}

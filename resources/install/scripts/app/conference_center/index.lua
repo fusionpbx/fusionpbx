@@ -148,6 +148,7 @@
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
 			--recording = session:getVariable("recording");
+			domain_name = session:getVariable("domain_name");
 
 		--set the end epoch
 			end_epoch = os.time();
@@ -339,6 +340,9 @@
 			--freeswitch.consoleLog("notice", "[conference center] destination_number: " .. destination_number .. "\n");
 			--freeswitch.consoleLog("notice", "[conference center] caller_id_number: " .. caller_id_number .. "\n");
 
+		--add the domain name to the recordings directory
+			recordings_dir = recordings_dir .. "/"..domain_name;
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -411,10 +415,6 @@
 
 		--add the domain to the recording directory
 			freeswitch.consoleLog("notice", "[conference center] domain_count: " .. domain_count .. "\n");
-			if (domain_count > 1) then
-				recordings_dir = recordings_dir.."/"..domain_name;
-				freeswitch.consoleLog("notice", "[conference center] recordings_dir: " .. recordings_dir .. "\n");
-			end
 
 		--sounds
 			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";
@@ -707,7 +707,7 @@
 						--there is one other member in this conference
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
 					elseif (member_count == "0") then
-						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-alone.wav");
+						--conference profile defines the alone sound file
 					else
 						--say the count
 							session:execute("say", default_language.." number pronounced "..member_count);

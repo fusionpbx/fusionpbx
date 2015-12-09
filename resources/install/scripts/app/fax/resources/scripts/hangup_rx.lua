@@ -41,6 +41,16 @@
 --array count
 	require "resources.functions.count";
 
+	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
+
+	local function quote(s)
+		local q = IS_WINDOWS and '"' or "'"
+		if s:find('%s') or s:find(q, nil, true) then
+			s = q .. s:gsub(q, q..q) .. q
+		end
+		return s
+	end
+
 -- set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -181,23 +191,17 @@
 	end
 
 --fax to email
-	cmd = "'"..php_dir.."/"..php_bin.."' '"..document_root.."/secure/fax_to_email.php' ";
-	cmd = cmd .. "email='"..fax_email.."' ";
-	cmd = cmd .. "extension="..fax_extension.." ";
-	cmd = cmd .. "name='"..fax_file.."' "; 
-	cmd = cmd .. "messages='result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages.."' ";
-	cmd = cmd .. "domain="..domain_name.." ";
-	cmd = cmd .. "caller_id_name='";
-	if (caller_id_name ~= nil) then
-		cmd = cmd .. caller_id_name;
-	end
-	cmd = cmd .. "' ";
-	cmd = cmd .. "caller_id_number=";
-	if (caller_id_number ~= nil) then
-		cmd = cmd .. caller_id_number;
-	end
-	cmd = cmd .. " ";
-	if (string.len(fax_forward_number) > 0) then
+
+	-- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
+	cmd = quote(php_dir.."/"..php_bin).." "..quote(document_root.."/secure/fax_to_email.php").." ";
+	cmd = cmd .. "email="..quote(fax_email).." ";
+	cmd = cmd .. "extension="..quote(fax_extension).." ";
+	cmd = cmd .. "name="..quote(fax_file).." "; 
+	cmd = cmd .. "messages=" .. quote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
+	cmd = cmd .. "domain="..quote(domain_name).." ";
+	cmd = cmd .. "caller_id_name=" .. quote(caller_id_name or '') .. " ";
+	cmd = cmd .. "caller_id_number=" .. quote(caller_id_number or '') .. " ";
+	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");

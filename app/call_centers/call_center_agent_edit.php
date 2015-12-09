@@ -129,48 +129,47 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//get and then set the complete agent_contact with the call_timeout and when necessary confirm
 		//if you change this variable, also change resources/switch.php
-		$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
+		$confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
 		if(strstr($agent_contact, '}') === FALSE) {
 			//not found
 			if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
 				//add the call_timeout
-				$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
+				$agent_contact = "{call_timeout=".$agent_call_timeout.",sip_invite_domain=".$_SESSION['domain_name']."}".$agent_contact;
 			}
 			else {
 				//add the call_timeout and confirm
-				$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
-				$tmp_agent_contact = "{".$tmp_confirm.",call_timeout=".$agent_call_timeout."}".$agent_contact;
-				echo "\n\n".$tmp_agent_contact."\n\n";
+				$agent_contact = $first.',call_timeout='.$agent_call_timeout.$last;
+				$agent_contact = "{".$confirm.",call_timeout=".$agent_call_timeout.",sip_invite_domain=".$_SESSION['domain_name']."}".$agent_contact;
+				echo "\n\n".$agent_contact."\n\n";
 			}
 		}
 		else {
 			//found
 			if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
 				//not found
+				$position = strrpos($agent_contact, "}");
+				$first = substr($agent_contact, 0, $position);
+				$last = substr($agent_contact, $position);
 				if(stristr($agent_contact, 'call_timeout') === FALSE) {
-					//add the call_timeout
-					$tmp_pos = strrpos($agent_contact, "}");
-					$tmp_first = substr($agent_contact, 0, $tmp_pos);
-					$tmp_last = substr($agent_contact, $tmp_pos);
-					$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+					$call_timeout = ',call_timeout='.$agent_call_timeout;
 				}
 				else {
-					//the string has the call timeout
-					$tmp_agent_contact = $agent_contact;
+					$call_timeout = '';
 				}
+				$agent_contact = $first.',sip_invite_domain='.$_SESSION['domain_name'].$call_timeout.$last;
 			}
 			else {
 				//found
-				$tmp_pos = strrpos($agent_contact, "}");
-				$tmp_first = substr($agent_contact, 0, $tmp_pos);
-				$tmp_last = substr($agent_contact, $tmp_pos);
+				$position = strrpos($agent_contact, "}");
+				$first = substr($agent_contact, 0, $position);
+				$last = substr($agent_contact, $position);
 				if(stristr($agent_contact, 'call_timeout') === FALSE) {
 					//add the call_timeout and confirm
-					$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
+					$agent_contact = $first.','.$confirm.',sip_invite_domain='.$_SESSION['domain_name'].'call_timeout='.$agent_call_timeout.$last;
 				}
 				else {
 					//add confirm
-					$tmp_agent_contact = $tmp_first.','.$tmp_confirm.$tmp_last;
+					$agent_contact = $first.',sip_invite_domain='.$_SESSION['domain_name'].','.$confirm.$last;
 				}
 			}
 		}
@@ -193,7 +192,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set contact
-					$cmd = "api callcenter_config agent set contact ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$tmp_agent_contact;
+					$cmd = "api callcenter_config agent set contact ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_contact;
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
 				//agent set status

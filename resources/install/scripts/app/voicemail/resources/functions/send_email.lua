@@ -23,6 +23,8 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local send_mail = require 'resources.functions.send_mail'
+
 --define a function to send email
 	function send_email(id, uuid)
 		--get voicemail message details
@@ -52,7 +54,8 @@
 		--require the email address to send the email
 			if (string.len(voicemail_mail_to) > 2) then
 				--include languages file
-					require "app.voicemail.app_languages";
+					local Text = require "resources.functions.text"
+					local text = Text.new("app.voicemail.app_languages")
 
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
@@ -103,10 +106,12 @@
 					end
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-					headers = headers..'"X-FusionPBX-Email-Type":"voicemail"}';
+					local headers = {
+						["X-FusionPBX-Domain-UUID"] = domain_uuid;
+						["X-FusionPBX-Domain-Name"] = domain_name;
+						["X-FusionPBX-Call-UUID"]   = uuid;
+						["X-FusionPBX-Email-Type"]  = 'voicemail';
+					}
 
 				--prepare the subject
 					local f = io.open(file_subject, "r");
@@ -134,11 +139,11 @@
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
-						body = body:gsub("${message}", text['label-attached'][default_language.."-"..default_dialect]);
+						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'][default_language.."-"..default_dialect].."</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'].."</a>");
 					else
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'][default_language.."-"..default_dialect].."</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
 					end
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
@@ -147,22 +152,15 @@
 					body = body:gsub("\n", "");
 					body = trim(body);
 
-				--send the email
+				--prepare file
 					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
-					if (voicemail_file == "attach") then
-						freeswitch.email("",
-							"",
-							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
-							body,
-							file
-							);
-					else
-						freeswitch.email("",
-							"",
-							"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nX-Headers: "..headers.."\nSubject: "..subject,
-							body
-							);
-					end
+
+				--send the email
+					send_mail(headers,
+						voicemail_mail_to,
+						{subject, body},
+						(voicemail_file == "attach") and file
+					);
 			end
 
 		--whether to keep the voicemail message and details local after email

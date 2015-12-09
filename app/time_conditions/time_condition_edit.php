@@ -860,7 +860,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "			<td colspan='2' class='vtable'>".$text['label-group']."</td>\n";
 	echo "		</tr>";
 	echo "		<tr>";
-	echo "			<td colspan='2' style='padding-top: 3px;'>";
+	echo "			<td colspan='2' style='padding-top: 3px; padding-right: 3px; white-space: nowrap;'>";
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "			</td>";

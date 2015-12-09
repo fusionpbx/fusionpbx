@@ -24,9 +24,10 @@
 --	Errol W Samuels <ewsamuels@gmail.com>
 
 --user defined variables
-	max_tries = "3";
-	digit_timeout = "5000";
-	extension = argv[1];
+	local extension = argv[1];
+
+-- we can use any number because other box should check sip_h_X_*** headers first
+	local pickup_number = '*8' -- extension and '**' or '*8'
 
 --set the debug options
 	debug["sql"] = false;
@@ -34,139 +35,298 @@
 --include config.lua
 	require "resources.functions.config";
 
---connect to the database
-	if (file_exists(database_dir.."/core.db")) then
-		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
-		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-	else
-		require "resources.functions.database_handle";
-		dbh = database_handle('switch');
-	end
+--add the function
+	require "resources.functions.explode";
+	require "resources.functions.trim";
+	require "resources.functions.channel_utils";
 
 --prepare the api object
 	api = freeswitch.API();
 
---add the function
-	require "resources.functions.trim";
-	require "resources.functions.channel_utils";
+--Get intercept logger
+	local log = require "resources.functions.log".intercept
 
---exits the script if we didn't connect properly
-	assert(dbh:connected());
-
-if ( session:ready() ) then
-	--answer the session
-		session:answer();
-
-	--get session variables
-		pin_number = session:getVariable("pin_number");
-		sounds_dir = session:getVariable("sounds_dir");
-		domain_uuid = session:getVariable("domain_uuid");
-		domain_name = session:getVariable("domain_name");
-		context = session:getVariable("context");
-		sofia_profile_name = session:getVariable("sofia_profile_name");
-
-	--set the sounds path for the language, dialect and voice
-		default_language = session:getVariable("default_language");
-		default_dialect = session:getVariable("default_dialect");
-		default_voice = session:getVariable("default_voice");
-		if (not default_language) then default_language = 'en'; end
-		if (not default_dialect) then default_dialect = 'us'; end
-		if (not default_voice) then default_voice = 'callie'; end
-
-	--set defaults
-		if (digit_min_length) then
-			--do nothing
-		else
-			digit_min_length = "2";
-		end
-
-		if (digit_max_length) then
-			--do nothing
-		else
-			digit_max_length = "11";
-		end
-
-	--if the pin number is provided then require it
-		if (pin_number) then
-			--sleep
-				session:sleep(500);
-			--get the user pin number
-				min_digits = 2;
-				max_digits = 20;
-				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-			--validate the user pin number
-				pin_number_table = explode(",",pin_number);
-				for index,pin_number in pairs(pin_number_table) do
-					if (digits == pin_number) then
-						--set the variable to true
-							auth = true;
-						--set the authorized pin number that was used
-							session:setVariable("pin_number", pin_number);
-						--end the loop
-							break;
-					end
-				end
-			--if not authorized play a message and then hangup
-				if (not auth) then
-					session:streamFile("phrase:voicemail_fail_auth:#");
-					session:hangup("NORMAL_CLEARING");
-					return;
-				end
-		end
-
-	--predefined variables
-		uuid = '';
-		call_hostname = '';
-		callee_num = '';
-
-	--check the database to get the uuid of a ringing call
-		sql = "select uuid, call_uuid, hostname, callee_num, ip_addr from channels ";
-		sql = sql .. "where callstate in ('RINGING', 'EARLY') ";
-		--sql = sql .. "AND direction = 'outbound' ";
-		if (extension) then
-			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
-		else
-			if (domain_count > 1) then
-				sql = sql .. "and context = '"..context.."' ";
-			end
-		end
-		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
-		end
-		dbh:query(sql, function(result)
-			--for key, val in pairs(result) do
-			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
-			--end
-			if result.uuid == result.call_uuid then
-				uuid = channel_variable(result.uuid, 'ent_originate_aleg_uuid') or
-						channel_variable(result.uuid, 'cc_member_session_uuid') or
-						channel_variable(result.uuid, 'fifo_bridge_uuid') or
-						result.uuid
-			else
-				uuid = result.call_uuid;
-			end
-			call_hostname = result.hostname;
-			callee_num = result.callee_num;
-		end);
-end
+--include database class
+	local Database = require "resources.functions.database"
 
 --get the hostname
-	hostname = trim(api:execute("hostname", ""));
-	freeswitch.consoleLog("NOTICE", "Hostname:"..hostname.."  Call Hostname:"..call_hostname.."\n");
+	local hostname = trim(api:execute("switchname", ""));
+
+-- redirect call to another box
+	local function make_proxy_call(destination, call_hostname)
+		destination = destination .. "@" .. domain_name
+		local profile, proxy = "internal", call_hostname;
+
+		local sip_auth_username = session:getVariable("sip_auth_username");
+		local sip_auth_password = api:execute("user_data", sip_auth_username .. "@" .. domain_name .." param password");
+		local auth = "sip_auth_username="..sip_auth_username..",sip_auth_password='"..sip_auth_password.."'"
+		dial_string = "{sip_invite_domain=" .. domain_name .. "," .. auth .. "}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
+		log.notice("Send call to other host....");
+		session:execute("bridge", dial_string);
+	end
+
+-- check pin number if defined
+	local function pin(pin_number)
+		if not pin_number then
+			return true
+		end
+
+		--sleep
+			session:sleep(500);
+		--get the user pin number
+			local min_digits = 2;
+			local max_digits = 20;
+			local max_tries = "3";
+			local digit_timeout = "5000";
+			local digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
+		--validate the user pin number
+			local pin_number_table = explode(",",pin_number);
+			for index,pin_number in pairs(pin_number_table) do
+				if (digits == pin_number) then
+					--set the authorized pin number that was used
+						session:setVariable("pin_number", pin_number);
+					--done
+						return true;
+				end
+			end
+
+		--if not authorized play a message and then hangup
+			session:streamFile("phrase:voicemail_fail_auth:#");
+			session:hangup("NORMAL_CLEARING");
+			return;
+	end
+
+-- do intercept if we get redirected request from another box
+	local function proxy_intercept()
+		-- Proceed calls from other boxes
+
+		-- Check if this call from other box with setted intercept_uuid
+			local intercept_uuid = session:getVariable("sip_h_X-intercept_uuid")
+
+			if intercept_uuid and #intercept_uuid > 0 then
+				log.notice("Get intercept_uuid from sip header. Do intercept....")
+				session:execute("intercept", intercept_uuid)
+				return true
+			end
+
+		-- Check if this call from other box and we need parent uuid for channel
+			local child_intercept_uuid = session:getVariable("sip_h_X-child_intercept_uuid")
+			if (not child_intercept_uuid) or (#child_intercept_uuid == 0) then
+				return
+			end
+
+		-- search parent uuid
+			log.notice("Get child_intercept_uuid from sip header.")
+			local parent_uuid =
+				channel_variable(child_intercept_uuid, 'ent_originate_aleg_uuid') or
+				channel_variable(child_intercept_uuid, 'cc_member_session_uuid') or
+				channel_variable(child_intercept_uuid, 'fifo_bridge_uuid') or
+				child_intercept_uuid
+
+			if parent_uuid == child_intercept_uuid then
+				log.notice("Can not found parent call. Try intercept child.")
+				session:execute("intercept", child_intercept_uuid)
+				return true
+			end
+
+		-- search parent hostname
+			call_hostname = hostname
+		--[[ parent and child have to be on same box so we do not search it
+			log.notice("Found parent channel try detect parent hostname")
+			local dbh = Database.new('switch')
+			local sql = "SELECT hostname FROM channels WHERE uuid='" .. parent_uuid .. "'"
+			local call_hostname = dbh:first_value(sql)
+			dbh:release()
+
+			if not call_hostname then
+				log.notice("Can not find host name. Channels is dead?")
+				return true
+			end
+		--]]
+
+			if hostname == call_hostname then
+				log.notice("Found parent call on local machine. Do intercept....")
+				session:execute("intercept", parent_uuid);
+				return true
+			end
+
+			log.noticef("Found parent call on remote machine `%s`.", call_hostname)
+			session:execute("export", "sip_h_X-intercept_uuid="..parent_uuid);
+			make_proxy_call(pickup_number, call_hostname)
+			return true
+	end
+
+-- return array of extensions for group
+	local function select_group_extensions()
+		-- connect to Fusion database
+			local dbh = Database.new('system');
+
+		--get the call groups the extension is a member of
+			local sql = "SELECT call_group FROM v_extensions ";
+			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
+			sql = sql .. "AND (extension = '"..caller_id_number.."'";
+			sql = sql .. "OR  number_alias = '"..caller_id_number.."')";
+			sql = sql .. "limit 1";
+			local call_group = dbh:first_value(sql) or ''
+			log.noticef("call_group: `%s`", call_group);
+			call_groups = explode(",", call_group);
+
+		--get the extensions in the call groups
+			sql = "SELECT extension, number_alias FROM v_extensions ";
+			sql = sql .. "WHERE domain_uuid = '"..domain_uuid.."' ";
+			sql = sql .. "AND (";
+			for key,call_group in ipairs(call_groups) do
+				if (key > 1) then
+					sql = sql .. "OR ";
+				end
+				if (#call_group > 0) then
+					sql = sql .. "call_group like '%"..call_group.."%' ";
+				else
+					sql = sql .. "call_group = '' ";
+				end
+			end
+			sql = sql .. ") ";
+			if (debug["sql"]) then
+				log.notice("sql "..sql);
+			end
+			local extensions = {}
+			dbh:query(sql, function(row)
+				local member = row.extension
+				if row.number_alias and #row.number_alias > 0 then
+					member = row.number_alias
+				end
+				extensions[#extensions+1] = member
+				log.noticef("member `%s`", member)
+			end);
+
+		-- release Fusion database
+			dbh:release()
+
+		-- return result
+			return extensions
+	end
+
+--check if the session is ready
+	if ( session:ready() ) then
+		--answer the session
+			session:answer();
+		--get session variables
+			domain_uuid = session:getVariable("domain_uuid");
+			domain_name = session:getVariable("domain_name");
+			pin_number = session:getVariable("pin_number");
+			context = session:getVariable("context");
+			caller_id_number = session:getVariable("caller_id_number");
+	end
+
+--check if the session is ready
+	if ( session:ready() ) then
+		if proxy_intercept() then
+			return
+		end
+	end
+
+--check if the session is ready
+	if ( session:ready() ) then
+		--if the pin number is provided then require it
+			if not pin(pin_number) then
+				return
+			end
+	end
+
+	if ( session:ready() ) then
+		-- select intercept mode
+			if not extension then
+				log.notice("GROUP INTERCEPT")
+				extensions = select_group_extensions()
+			else
+				log.noticef("INTERCEPT %s", extension)
+				extensions = {extension}
+			end
+
+		--connect to FS database
+			local dbh = Database.new('switch')
+
+		--check the database to get the uuid of a ringing call
+			call_hostname = "";
+			sql = "SELECT uuid, call_uuid, hostname FROM channels ";
+			sql = sql .. "WHERE callstate in ('RINGING', 'EARLY') ";
+			-- next check should prevent pickup call from extension
+			-- e.g. if extension 100 dial some cell phone and some one else dial *8
+			-- he can pickup this call.
+			if not extension then
+				sql = sql .. "AND direction = 'outbound' ";
+			end
+			sql = sql .. "AND (1<>1 ";
+			for key,extension in pairs(extensions) do
+				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
+			end
+			sql = sql .. ") ";
+			sql = sql .. "and call_uuid is not null ";
+			sql = sql .. "limit 1 ";
+			if (debug["sql"]) then
+				log.notice("sql "..sql);
+			end
+			local is_child
+			dbh:query(sql, function(row)
+				-- for key, val in pairs(row) do
+				-- 	log.notice("row "..key.." "..val);
+				-- end
+				-- log.notice("-----------------------");
+				is_child = (row.uuid == row.call_uuid)
+				uuid = row.call_uuid;
+				call_hostname = row.hostname;
+			end);
+
+			if is_child then
+				-- we need intercept `parent` call e.g. call in FIFO/CallCenter Queue
+				if (call_hostname == hostname) then
+					log.notice("Found child call on local machine. Try find parent channel.")
+					local parent_uuid =
+						channel_variable(uuid, 'ent_originate_aleg_uuid') or
+						channel_variable(uuid, 'cc_member_session_uuid') or
+						channel_variable(uuid, 'fifo_bridge_uuid') or
+						uuid
+
+					--[[ parent and child have to be on same box so we do not search it
+					if parent_uuid ~= uuid then
+						local sql = "SELECT hostname FROM channels WHERE uuid='" .. uuid .. "'"
+						call_hostname = dbh:first_value(sql)
+					end
+					--]]
+
+					if call_hostname then
+						uuid = parent_uuid
+						if call_hostname ~= hostname then
+							log.noticef("Found parent call on remote machine `%s`.", call_hostname)
+						else
+							log.notice("Found parent call on local machine.")
+						end
+					end
+
+				else
+					log.noticef("Found child call on remote machine `%s`.", call_hostname)
+					-- we can not find parent on this box because channel on other box so we have to 
+					-- forward call to this box
+					session:execute("export", "sip_h_X-child_intercept_uuid="..uuid);
+					return make_proxy_call(pickup_number, call_hostname)
+				end
+			end
+
+		--release FS database
+			dbh:release()
+	end
+
+	log.noticef( "Hostname: %s Call Hostname: %s", hostname, call_hostname);
 
 --intercept a call that is ringing
-	if (uuid) then
+	if (uuid ~= nil) then
 		if (session:getVariable("billmsec") == nil) then
 			if (hostname == call_hostname) then
 				session:execute("intercept", uuid);
 			else
 				session:execute("export", "sip_h_X-intercept_uuid="..uuid);
-				session:execute("export", "sip_h_X-domain_uuid="..domain_uuid);
-				session:execute("export", "sip_h_X-domain_name="..domain_name);
-				session:execute("export", "sip_h_X-callee_num="..callee_num);
-				port = freeswitch.getGlobalVariable(sofia_profile_name.."_sip_port");
-				session:execute("bridge", "sofia/"..sofia_profile_name.."/**@"..call_hostname..":"..port);
-				freeswitch.consoleLog("NOTICE", "Send call to other host.... \n");
+				make_proxy_call(pickup_number, call_hostname)
 			end
 		end
 	end
