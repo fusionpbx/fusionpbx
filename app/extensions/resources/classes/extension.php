@@ -382,6 +382,13 @@
 							if (strlen($row['forward_no_answer_destination']) > 0) {
 								$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . $row['forward_no_answer_destination'] . "\"/>\n";
 							}
+							if (strlen($row['forward_user_not_registered_enabled']) > 0) {
+								$xml .= "      <variable name=\"forward_user_not_registered_enabled\" value=\"" . $row['forward_user_not_registered_enabled'] . "\"/>\n";
+							}
+							if (strlen($row['forward_user_not_registered_destination']) > 0) {
+								$xml .= "      <variable name=\"forward_user_not_registered_destination\" value=\"" . $row['forward_user_not_registered_destination'] . "\"/>\n";
+							}
+
 							if (strlen($row['do_not_disturb']) > 0) {
 								$xml .= "      <variable name=\"do_not_disturb\" value=\"" . $row['do_not_disturb'] . "\"/>\n";
 							}
