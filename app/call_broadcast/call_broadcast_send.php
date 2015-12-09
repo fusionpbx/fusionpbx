@@ -260,10 +260,10 @@ require_once "resources/header.php";
 			$phone_1 = preg_replace('{\D}', '', $tmp_value_array[0]);
 
 			if ($gateway == "loopback") {
-				$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_1."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+				$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_1."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 			}
 			else {
-				$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_1." ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+				$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_1." ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 			}
 			echo $cmd."<br />\n";
 			cmd_async($cmd);
@@ -335,20 +335,20 @@ require_once "resources/header.php";
 			//make the call
 				if (strlen($phone_1)> 0) {
 					if ($gateway == "loopback") {
-						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_1."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_1."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 					}
 					else {
-						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_1." ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_1." ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 					}
 					//echo $cmd."<br />\n";
 					cmd_async($cmd);
 				}
 				if (strlen($phone_2)> 0) {
 					if ($gateway == "loopback") {
-						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_2."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}loopback/".$phone_2."/default/XML ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 					}
 					else {
-						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_2." ".$_SESSION['switch']['recordings']['dir']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
+						$cmd = $_SESSION['switch']['bin']['dir']."/fs_cli -x \"luarun call_broadcast_originate.lua {call_timeout=".$broadcast_timeout."}sofia/gateway/".$gateway."/".$phone_2." ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename." '".$broadcast_caller_id_name."' ".$broadcast_caller_id_number." ".$broadcast_timeout." '".$broadcast_destination_application."' '".$broadcast_destination_data."'\";";
 					}
 					//echo $cmd."<br />\n";
 					cmd_async($cmd);

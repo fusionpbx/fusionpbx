@@ -104,7 +104,7 @@ else {
 		echo "	</td>\n";
 		echo "<td align='right'>\n";
 
-		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 		$recording_name = '';
 		if (file_exists($recording_dir.'/'.$row['uuid'].'.wav')) {
 			$recording_name = $session_uuid.".wav";

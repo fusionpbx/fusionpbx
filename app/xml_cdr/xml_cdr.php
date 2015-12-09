@@ -396,7 +396,7 @@ else {
 
 			//handle recordings
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
 					$tmp_name=$row['recording_file'];

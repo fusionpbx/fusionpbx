@@ -26,19 +26,6 @@
 
 
 if ($domains_processed == 1) {
-	//process if the scripts directory exists
-		if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
-			//if the resource scripts resource directory does not exist then create it
-				if (!is_dir($_SESSION['switch']['scripts']['dir']."/resources")) {
-					mkdir($_SESSION['switch']['scripts']['dir']."/resources",0755,true);
-				}
-
-			//copy the files and directories from resources/install
-				$install = new install;
-				$install->domain_uuid = $domain_uuid;
-				$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-				$install->copy_scripts();
-		}
 
 	//update the software table
 		$sql = "select count(*) as num_rows from v_software ";

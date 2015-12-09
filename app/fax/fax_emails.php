@@ -29,6 +29,8 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_attachments.php";
+require_once "resources/functions/parse_message.php";
+require_once "resources/classes/text.php";
 
 //get accounts to monitor
 $sql = "select * from v_fax ";
@@ -54,6 +56,12 @@ if (sizeof($result) != 0) {
 	$event_socket['password'] = $record['event_socket_password'];
 	unset($sql, $prep_statement, $record);
 
+	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
+	if(strlen($fax_send_mode_default) == 0){
+		$fax_send_mode_default = 'direct';
+	}
+	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
+
 	foreach ($result as $row) {
 		//get fax server and account connection details
 		$fax_uuid = $row["fax_uuid"];
@@ -73,11 +81,22 @@ if (sizeof($result) != 0) {
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
+		$fax_send_greeting = $row["fax_send_greeting"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
+
+		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
+		if(strlen($fax_send_mode) == 0){
+			$fax_send_mode = $fax_send_mode_default;
+		}
+
+		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
+		if(strlen($fax_cover_font) == 0){
+			$fax_cover_font = $fax_cover_font_default;
+		}
 
 		//load event socket connection parameters
 		$_SESSION['event_socket_ip_address'] = $event_socket['ip_address'];
@@ -158,22 +177,14 @@ if (sizeof($result) != 0) {
 					else {
 						$fax_numbers[] = $tmp;
 					}
-					foreach ($fax_numbers as $index => $fax_number) {
-						$fax_numbers[$index] = preg_replace("~[^0-9]~", "", $fax_number);
-						if ($fax_numbers[$index] == '') { unset($fax_numbers[$index]); }
-					}
 					unset($fax_subject); //clear so not on cover page
 
 					//get email body (if any) for cover page
-					$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
-					$fax_message = strip_tags($fax_message);
-					$fax_message = trim($fax_message);
+					$fax_message = parse_message($connection, $email_id, FT_UID);
 					if ($fax_message == '') {
-						$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
 						$fax_message = strip_tags($fax_message);
-						$fax_message = trim($fax_message);
+						$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 					}
-					$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 
 					// set fax directory (used for pdf creation - cover and/or attachments)
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.(($domain_name != '') ? '/'.$domain_name : null);
@@ -199,8 +210,12 @@ if (sizeof($result) != 0) {
 					}
 
 					//send fax
+					$cwd = getcwd();
 					$included = true;
 					require("fax_send.php");
+					if($cwd){
+						chdir($cwd);
+					}
 
 					//reset variables
 					unset($fax_numbers);
