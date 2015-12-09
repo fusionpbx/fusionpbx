@@ -615,6 +615,17 @@ $text['label-network_addr']['uk'] = "";
 $text['label-network_addr']['de-at'] = "Netzwerk Adresse";
 $text['label-network_addr']['he'] = "כתובת רשת";
 
+$text['label-mos_score']['en-us'] = "MOS Score";
+$text['label-mos_score']['es-cl'] = "";
+$text['label-mos_score']['pt-pt'] = "";
+$text['label-mos_score']['fr-fr'] = "";
+$text['label-mos_score']['pt-br'] = "";
+$text['label-mos_score']['pl'] = "";
+$text['label-mos_score']['sv-se'] = "";
+$text['label-mos_score']['uk'] = "";
+$text['label-mos_score']['de-at'] = "";
+$text['label-mos_score']['he'] = "";
+
 $text['label-name']['en-us'] = "Name";
 $text['label-name']['es-cl'] = "Nombre";
 $text['label-name']['pt-pt'] = "Nome";
