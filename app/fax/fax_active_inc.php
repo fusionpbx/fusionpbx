@@ -106,7 +106,7 @@ HERE;
 //if the connnection is available then run it and return the results
 	if ($result === false) {
 		var_dump($db->errorInfo());
-		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
+		$msg = "<div align='center'>".$text['message-fail']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -142,9 +142,9 @@ HERE;
 			echo "</table>";
 
 		// show title
-			echo "<b>".'Fax queue'."</b>";
+			echo "<b>".$text['fax-active_title']."</b>";
 			echo "<br><br>\n";
-			echo 'Current status of fax queue' . "\n";
+			echo $text['fax-active_description']."\n";
 			echo "<br><br>\n";
 
 		//set the alternating color for each row
@@ -158,12 +158,12 @@ HERE;
 		//show headers
 			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<th>". 'Fax'       . "</th>\n";
-			echo "<th>". 'Enabled'   . "</th>\n";
-			echo "<th>". 'Status'    . "</th>\n";
-			echo "<th>". 'Next time' . "</th>\n";
-			echo "<th>". 'Files'     . "</th>\n";
-			echo "<th>". 'URI'       . "</th>\n";
+			echo "<th>" . $text['fax-active_title_fax_server'] . "</th>\n";
+			echo "<th>" . $text['fax-active_title_enabled']    . "</th>\n";
+			echo "<th>" . $text['fax-active_title_status']     . "</th>\n";
+			echo "<th>" . $text['fax-active_title_next_time']  . "</th>\n";
+			echo "<th>" . $text['fax-active_title_files']      . "</th>\n";
+			echo "<th>" . $text['fax-active_title_uri']        . "</th>\n";
 
 			echo "<td class='list_control_icon'></td>\n";
 			echo "</tr>\n";
@@ -172,18 +172,18 @@ HERE;
 				$fax_uri = $row['uri'];
 				$domain_name = $row['domain_name'];
 				$task_enabled = ($row['interrupted'] == 'true') ? 'Disable': 'Enable';
-				$task_status  = 'Wait';
+				$task_status  = $text['fax-active_status_wait'];
 				$task_next_time  = $row['next_time'];
 
 				if($row['status'] > 0){
 					if($row['status'] <= 3){
-						$task_status = 'Execute';
+						$task_status = $text['fax-active_status_execute'];
 					}
 					else if($row['status'] == 10){
-						$task_status = 'Success';
+						$task_status = $text['fax-active_status_success'];
 					}
 					else{
-						$task_status = 'Fail';
+						$task_status = $text['fax-active_status_fail'];
 					}
 				}
 

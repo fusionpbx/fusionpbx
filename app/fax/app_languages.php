@@ -2089,4 +2089,28 @@ $text['button-show_all']['uk'] = "Показати всі";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "";
 
+$text['fax-active_title']['en-us'] = "Fax queue";
+
+$text['fax-active_description']['en-us'] = "Current status of fax queue";
+
+$text['fax-active_title_fax_server']['en-us'] = "Fax";
+
+$text['fax-active_title_enabled']['en-us'] = "Enabled";
+
+$text['fax-active_title_status']['en-us'] = "Status";
+
+$text['fax-active_title_next_time']['en-us'] = "Next time";
+
+$text['fax-active_title_files']['en-us'] = "Files";
+
+$text['fax-active_title_uri']['en-us'] = "URI";
+
+$text['fax-active_status_wait']['en-us'] = "Wait";
+
+$text['fax-active_status_execute']['en-us'] = "Execute";
+
+$text['fax-active_status_success']['en-us'] = "Success";
+
+$text['fax-active_status_fail']['en-us'] = "Fail";
+
 ?>
