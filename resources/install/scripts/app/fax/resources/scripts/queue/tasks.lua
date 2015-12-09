@@ -292,7 +292,7 @@ local function build_template(task, templ, env)
   if default_language and default_dialect then
     lang = (default_language .. '/' .. default_dialect):lower()
   else
-    local settings = Settings.new(dbh or 'system', task.domain_name, task.domain_uuid)
+    local settings = Settings.new(get_db(), task.domain_name, task.domain_uuid)
     lang = settings:get('domain', 'language', 'code')
     if lang then lang = lang:gsub('%-', '/'):lower() end
   end
