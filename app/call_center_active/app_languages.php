@@ -275,17 +275,6 @@ $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['ar-eg'] = "رقم";
 $text['label-number']['he'] = "מספר";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['ar-eg'] = "الأسم";
-$text['label-name']['he'] = "שם";
-
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Musica en Espera";
 $text['label-music_on_hold']['fr-fr'] = "Musique de Garde";
@@ -362,17 +351,6 @@ $text['label-discard_abandoned_after']['sv-se'] = "Uteslut Övergivna Efter ";
 $text['label-discard_abandoned_after']['de-at'] = "Zurückweisen nach Abwurf";
 $text['label-discard_abandoned_after']['ar-eg'] = "";
 $text['label-discard_abandoned_after']['he'] = "";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['ar-eg'] = "الوصف";
-$text['label-description']['he'] = "תיאור";
 
 $text['label-call']['en-us'] = "Call";
 $text['label-call']['es-cl'] = "Llamar";
@@ -472,27 +450,5 @@ $text['description-active_call_center']['sv-se'] = "Välj en Call Center Grupp f
 $text['description-active_call_center']['de-at'] = "Wählen Sie eine Callcenter Warteschlange aus der Liste unten um die Aktivität zu beobachten.";
 $text['description-active_call_center']['ar-eg'] = "";
 $text['description-active_call_center']['he'] = "";
-
-$text['button-view']['en-us'] = "View";
-$text['button-view']['es-cl'] = "Ver";
-$text['button-view']['pt-pt'] = "Vista";
-$text['button-view']['fr-fr'] = "Voir";
-$text['button-view']['pt-br'] = "Visualizar";
-$text['button-view']['pl'] = "Widok";
-$text['button-view']['sv-se'] = "Visa";
-$text['button-view']['de-at'] = "Ansicht";
-$text['button-view']['ar-eg'] = "عرض";
-$text['button-view']['he'] = "תצוגה";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['ar-eg'] = "تعديل";
-$text['button-edit']['he'] = "עריכה";
 
 ?>

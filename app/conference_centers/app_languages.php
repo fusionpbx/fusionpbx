@@ -60,16 +60,6 @@ $text['title-conference_center']['sv-se'] = "Konferenscenter";
 $text['title-conference_center']['uk'] = "Конференц-центр";
 $text['title-conference_center']['de-at'] = "Konferenz Zentrale";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['uk'] = "Оновлено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
 $text['message-unique_participant_pin']['en-us'] = "Please provide a unique Participant PIN number.";
 $text['message-unique_participant_pin']['es-cl'] = "Por favor ingrese su número PIN participante único.";
 $text['message-unique_participant_pin']['pt-pt'] = "Por favor, forneça um número PIN Participante único.";
@@ -109,26 +99,6 @@ $text['message-minimum_pin_length']['pl'] = "Minimalna długość kodu PIN:";
 $text['message-minimum_pin_length']['sv-se'] = "Minimum läng på PIN:";
 $text['message-minimum_pin_length']['uk'] = "Мінімальна довжина PIN-коду:";
 $text['message-minimum_pin_length']['de-at'] = "Minimale PIN länge erforderlich:";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-wait_moderator']['en-us'] = "Secure";
 $text['label-wait_moderator']['es-cl'] = "Seguro";
@@ -189,16 +159,6 @@ $text['label-username']['pl'] = "Użytkownik";
 $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['de-at'] = "Benutzername";
-
-$text['label-true']['en-us'] = "True";
-$text['label-true']['es-cl'] = "Verdadero";
-$text['label-true']['pt-pt'] = "Sim";
-$text['label-true']['fr-fr'] = "Oui";
-$text['label-true']['pt-br'] = "Sim";
-$text['label-true']['pl'] = "Tak";
-$text['label-true']['sv-se'] = "Sann";
-$text['label-true']['uk'] = "Так";
-$text['label-true']['de-at'] = "Ein";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -350,16 +310,6 @@ $text['label-network-address']['sv-se'] = "Nätverks-adress";
 $text['label-network-address']['uk'] = "Адреса мережі";
 $text['label-network-address']['de-at'] = "Netzwerk Adresse";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-
 $text['label-mute']['en-us'] = "Mute";
 $text['label-mute']['es-cl'] = "Mudo";
 $text['label-mute']['pt-pt'] = "Silenciar";
@@ -460,16 +410,6 @@ $text['label-from']['sv-se'] = "Från";
 $text['label-from']['uk'] = "Від";
 $text['label-from']['de-at'] = "Von";
 
-$text['label-false']['en-us'] = "False";
-$text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "Não";
-$text['label-false']['fr-fr'] = "Non";
-$text['label-false']['pt-br'] = "Não";
-$text['label-false']['pl'] = "Nie";
-$text['label-false']['sv-se'] = "Falsk";
-$text['label-false']['uk'] = "Ні";
-$text['label-false']['de-at'] = "Aus";
-
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
 $text['label-extension']['pt-pt'] = "Extensão";
@@ -510,16 +450,6 @@ $text['label-end']['sv-se'] = "Slut";
 $text['label-end']['uk'] = "Кінець";
 $text['label-end']['de-at'] = "Ende";
 
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activo";
-$text['label-enabled']['pt-pt'] = "Activo";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pt-br'] = "Habilitado";
-$text['label-enabled']['pl'] = "Włączony";
-$text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['de-at'] = "An";
-
 $text['label-edit']['en-us'] = "Edit";
 $text['label-edit']['es-cl'] = "Editar";
 $text['label-edit']['pt-pt'] = "Editar";
@@ -549,26 +479,6 @@ $text['label-details']['pl'] = "Szczegóły";
 $text['label-details']['sv-se'] = "Detaljer";
 $text['label-details']['uk'] = "Деталі";
 $text['label-details']['de-at'] = "Details";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-
-$text['label-delete']['en-us'] = "Delete";
-$text['label-delete']['es-cl'] = "Eliminar";
-$text['label-delete']['pt-pt'] = "Remover";
-$text['label-delete']['fr-fr'] = "Supprimer";
-$text['label-delete']['pt-br'] = "Remover";
-$text['label-delete']['pl'] = "Usuń";
-$text['label-delete']['sv-se'] = "Ta Bort";
-$text['label-delete']['uk'] = "Видалити";
-$text['label-delete']['de-at'] = "Löschen";
 
 $text['label-conference_name']['en-us'] = "Conference Name";
 $text['label-conference_name']['es-cl'] = "Nombre de la conferencia";
@@ -730,16 +640,6 @@ $text['description-enabled']['sv-se'] = "Välj om konferenscenter skall vara akt
 $text['description-enabled']['uk'] = "Виберіть, щоб включити або відключити конференц-центр.";
 $text['description-enabled']['de-at'] = "Wählen Sie ob die Konferenz Zentrale Ein- oder Ausgeschaltet werden soll.";
 
-$text['description-description']['en-us'] = "Enter the description.";
-$text['description-description']['es-cl'] = "Ingrese una descripción";
-$text['description-description']['pt-pt'] = "Introduza uma descrição.";
-$text['description-description']['fr-fr'] = "";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wpisz opis.";
-$text['description-description']['sv-se'] = "Ange en beskrivning för gateway:en här.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-
 $text['description-conference_sessions']['en-us'] = "Conference Sessions are log details about the conferences.";
 $text['description-conference_sessions']['es-cl'] = "Las Sesiones de Conferencia son un registro detallado de las conferencias.";
 $text['description-conference_sessions']['pt-pt'] = "As sessões das conferências representam os detalhes dos logs das conferências.";
@@ -780,26 +680,6 @@ $text['description-conference_center']['sv-se'] = "Konferenscenter används för
 $text['description-conference_center']['uk'] = "Конференц-центр використовується для установки одного або декількох конференц-залів з ім'ям, додатковий номер, в необхідної довжини контактний номер та опис.";
 $text['description-conference_center']['de-at'] = "Konferenz Zentralen gruppieren mehrere Konferenzräume. Diese können über diverse Kriterien organisiert werden.";
 
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
-$text['button-view']['en-us'] = "View";
-$text['button-view']['es-cl'] = "Ver";
-$text['button-view']['pt-pt'] = "Ver";
-$text['button-view']['fr-fr'] = "Vue";
-$text['button-view']['pt-br'] = "Visualizar";
-$text['button-view']['pl'] = "Widok";
-$text['button-view']['sv-se'] = "Visa";
-$text['button-view']['uk'] = "Перегляд";
-$text['button-view']['de-at'] = "Ansicht";
-
 $text['button-sessions']['en-us'] = "Sessions";
 $text['button-sessions']['es-cl'] = "Sesiones";
 $text['button-sessions']['pt-pt'] = "Sessões";
@@ -810,26 +690,6 @@ $text['button-sessions']['sv-se'] = "Sessioner";
 $text['button-sessions']['uk'] = "Сесії";
 $text['button-sessions']['de-at'] = "Sitzungen";
 
-$text['button-search']['en-us'] = "Search";
-$text['button-search']['es-cl'] = "Buscar";
-$text['button-search']['pt-pt'] = "Pesquisar";
-$text['button-search']['fr-fr'] = "Chercher";
-$text['button-search']['pt-br'] = "Pesquisar";
-$text['button-search']['pl'] = "Wyszukaj";
-$text['button-search']['sv-se'] = "Sök";
-$text['button-search']['uk'] = "Пошук";
-$text['button-search']['de-at'] = "Suchen";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-
 $text['button-rooms']['en-us'] = "Rooms";
 $text['button-rooms']['es-cl'] = "Salas";
 $text['button-rooms']['pt-pt'] = "Salas";
@@ -839,25 +699,5 @@ $text['button-rooms']['pl'] = "Pokoje";
 $text['button-rooms']['sv-se'] = "Rum";
 $text['button-rooms']['uk'] = "Кімнати";
 $text['button-rooms']['de-at'] = "Räume";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['uk'] = "Додати";
-$text['button-add']['de-at'] = "Hinzufügen";
 
 ?>

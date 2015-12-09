@@ -50,16 +50,6 @@ $text['option-result_type_csv']['sv-se'] = "Ladda Ned CSV";
 $text['option-result_type_csv']['uk'] = "CSV Download ";
 $text['option-result_type_csv']['de-at'] = "CSV Download";
 
-$text['label-type']['en-us'] = "Type";
-$text['label-type']['es-cl'] = "Tipo";
-$text['label-type']['pt-pt'] = "Tipo";
-$text['label-type']['fr-fr'] = "Type";
-$text['label-type']['pt-br'] = "Tipo";
-$text['label-type']['pl'] = "Typ";
-$text['label-type']['sv-se'] = "Typ";
-$text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "Typ";
-
 $text['label-table']['en-us'] = "Table";
 $text['label-table']['es-cl'] = "Tabla";
 $text['label-table']['pt-pt'] = "Tabela";
@@ -100,16 +90,6 @@ $text['label-result_type']['sv-se'] = "Resultat";
 $text['label-result_type']['uk'] = "Результат";
 $text['label-result_type']['de-at'] = "Ergebnis";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-
 $text['label-host']['en-us'] = "Host";
 $text['label-host']['es-cl'] = "Host";
 $text['label-host']['pt-pt'] = "Host";
@@ -129,16 +109,6 @@ $text['label-error']['pl'] = "Błąd";
 $text['label-error']['sv-se'] = "Fel";
 $text['label-error']['uk'] = "Помилка";
 $text['label-error']['de-at'] = "Fehler";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
 
 $text['header-sql_query']['en-us'] = "SQL Query";
 $text['header-sql_query']['es-cl'] = "Consulta SQL";
@@ -190,26 +160,6 @@ $text['button-manage']['sv-se'] = "Hantera";
 $text['button-manage']['uk'] = "Керувати";
 $text['button-manage']['de-at'] = "Verwalten";
 
-$text['button-execute']['en-us'] = "Execute";
-$text['button-execute']['es-cl'] = "Ejecutar";
-$text['button-execute']['pt-pt'] = "Executar";
-$text['button-execute']['fr-fr'] = "Exécuter";
-$text['button-execute']['pt-br'] = "Executar";
-$text['button-execute']['pl'] = "Wykonaj";
-$text['button-execute']['sv-se'] = "Kör";
-$text['button-execute']['uk'] = "Виконати";
-$text['button-execute']['de-at'] = "Ausführen";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-
 $text['button-backup']['en-us'] = "Backup";
 $text['button-backup']['es-cl'] = "Respaldar";
 $text['button-backup']['pt-pt'] = "Backup";
@@ -219,15 +169,5 @@ $text['button-backup']['pl'] = "Kopia Zapasowa";
 $text['button-backup']['sv-se'] = "Backup";
 $text['button-backup']['uk'] = "Резервна копія";
 $text['button-backup']['de-at'] = "Sichern";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>
