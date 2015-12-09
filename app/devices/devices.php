@@ -99,7 +99,11 @@ else {
 
 //prepare to page the results
 	$rows_per_page = 150;
-	$param = "";
+	if ($_GET['showall'] && permission_exists('device_all')) {
+		$param = "&showall=true";
+	} else {
+		$param = "";
+	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
