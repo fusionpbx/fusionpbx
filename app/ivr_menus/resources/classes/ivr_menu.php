@@ -575,23 +575,6 @@ include "root.php";
 							$database->fields['dialplan_detail_order'] = '030';
 							$database->add();
 
-							/*
-							$database->table = "v_dialplan_details";
-							$database->fields['domain_uuid'] = $this->domain_uuid;
-							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
-							$database->fields['dialplan_detail_uuid'] = uuid();
-							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-							$database->fields['dialplan_detail_type'] = 'ivr';
-							if (count($_SESSION["domains"]) > 1) {
-								$database->fields['dialplan_detail_data'] = $_SESSION['domain_name'].'-'.$this->ivr_menu_name;
-							}
-							else {
-								$database->fields['dialplan_detail_data'] = $this->ivr_menu_name;
-							}
-							$database->fields['dialplan_detail_order'] = '035';
-							$database->add();
-							*/
-
 							$database->table = "v_dialplan_details";
 							$database->fields['domain_uuid'] = $this->domain_uuid;
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
