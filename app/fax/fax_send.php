@@ -213,7 +213,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				mkdir($_SESSION['switch']['storage']['dir'].'/fax');
 				chmod($_SESSION['switch']['storage']['dir'].'/fax',0774);
 			}
-			if (count($_SESSION["domains"]) > 1 && !is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
+			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
 				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
 				chmod($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'],0774);
 			}
@@ -237,7 +237,6 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 //clear file status cache
 	clearstatcache();
-
 
 //send the fax
 	$continue = false;

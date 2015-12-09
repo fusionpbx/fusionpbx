@@ -931,7 +931,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</table>";
 		echo "<br>";
 		echo "</div>\n";
-
 	}
 
 	echo "</form>";
