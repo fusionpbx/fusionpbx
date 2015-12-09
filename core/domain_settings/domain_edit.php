@@ -234,7 +234,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// rename switch/recordings/[domain] (folder)
-						if ( isset($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']) ) {
+						if ( file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']) ) {
 							$switch_recordings_dir = str_replace("/".$_SESSION["domain_name"], "", $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']);
 							if ( file_exists($switch_recordings_dir."/".$original_domain_name) ) {
 								@rename($switch_recordings_dir."/".$original_domain_name, $switch_recordings_dir."/".$domain_name); // folder
