@@ -145,12 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
 	//set the context
-		if (count($_SESSION["domains"]) > 1) {
-			$context = 'default';
-		}
-		else {
-			$context = '$${domain_name}';
-		}
+		$context = '$${domain_name}';
 
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
