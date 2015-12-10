@@ -203,8 +203,6 @@ local function wait_task(task, answered, q850)
     task.uuid
   )
 
-  print(sql)
-
   local ok, err = db:query( sql )
 
   if not ok then return nil, err end
@@ -245,7 +243,7 @@ local function cleanup_tasks()
   db:query(remove_finished_tasks_sql)
 end
 
-local function send_mail_task(task, message, call_uuid)
+local function send_mail_task(task, message, call_uuid, file)
   if not task.reply_address or #task.reply_address == 0 then
     return
   end
@@ -257,7 +255,61 @@ local function send_mail_task(task, message, call_uuid)
     ["X-FusionPBX-Email-Type"]  = 'email2fax';
   }
 
-  return send_mail(mail_x_headers, task.reply_address, message)
+  return send_mail(mail_x_headers, task.reply_address, message, file)
+end
+
+local function read_file(name, mode)
+  local f, err, code = io.open(name, mode or 'rb')
+  if not f then return nil, err, code end
+  local data = f:read("*all")
+  f:close()
+  return data
+end
+
+local function read_template(app, name, lang)
+  local default_language_path = 'en/us'
+
+  local full_path_tpl = scripts_dir .. '/app/' .. app .. '/resources/templates/{lang}/' .. name .. '.tpl'
+
+  local path
+
+  if lang then
+    path = file_exists((full_path_tpl:gsub('{lang}', lang)))
+  end
+
+  if (not path) and (lang ~= default_language_path) then
+    path = file_exists((full_path_tpl:gsub('{lang}', default_language_path)))
+  end
+
+  if path then
+    return read_file(path)
+  end
+end
+
+local function build_template(task, templ, env)
+  local lang
+
+  if default_language and default_dialect then
+    lang = (default_language .. '/' .. default_dialect):lower()
+  else
+    local settings = Settings.new(get_db(), task.domain_name, task.domain_uuid)
+    lang = settings:get('domain', 'language', 'code')
+    if lang then lang = lang:gsub('%-', '/'):lower() end
+  end
+
+  local body = read_template('fax', templ, lang)
+
+  body = body:gsub("[^\\](${.-})", function(name)
+    name = name:sub(3, -2)
+    if type(env) == 'table' then
+      return env[name] or ''
+    end
+    if type(env) == 'function' then
+      return env(name) or ''
+    end
+  end)
+
+  return body
 end
 
 return {
@@ -274,4 +326,5 @@ return {
   release_task   = release_task;
   cleanup_tasks  = cleanup_tasks;
   send_mail_task = send_mail_task;
+  build_template = build_template;
 }
