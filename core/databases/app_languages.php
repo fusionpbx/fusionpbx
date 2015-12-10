@@ -33,61 +33,6 @@ $text['title-database-add']['uk'] = "Додавання бази даних";
 $text['title-database-add']['de-at'] = "Datenbank hinzufügen";
 $text['title-database-add']['ar-eg'] = "إضافة قاعدة بيانات";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['uk'] = "Оновлення завершено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-$text['message-update']['ar-eg'] = "اكتمال التحديث";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Por favor indique: ";
-$text['message-required']['pt-pt'] = "Por favor indique: ";
-$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-$text['message-required']['pt-br'] = "Por favor Indique:";
-$text['message-required']['pl'] = "Wpisz:";
-$text['message-required']['sv-se'] = "Var god uppge:";
-$text['message-required']['uk'] = "Будь ласка, вкажіть:";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
-$text['message-required']['ar-eg'] = "من فضلك أدخل";
-
-$text['message-message']['en-us'] = "Message";
-$text['message-message']['es-cl'] = "Mensaje";
-$text['message-message']['pt-pt'] = "Mensagem";
-$text['message-message']['fr-fr'] = "Message";
-$text['message-message']['pt-br'] = "Mensagem";
-$text['message-message']['pl'] = "Wiadomość";
-$text['message-message']['sv-se'] = "Meddelande";
-$text['message-message']['uk'] = "Повідомлення";
-$text['message-message']['de-at'] = "Nachricht";
-$text['message-message']['ar-eg'] = "رسالة";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['message-delete']['ar-eg'] = "تم المسح";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-$text['message-add']['ar-eg'] = "تمت الأضافة";
-
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de usuario";
 $text['label-username']['pt-pt'] = "Utilizador";
@@ -98,17 +43,6 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk'] = "Ім’я користувача";
 $text['label-username']['de-at'] = "Benutzername";
 $text['label-username']['ar-eg'] = "اسم المستخدم";
-
-$text['label-type']['en-us'] = "Type";
-$text['label-type']['es-cl'] = "Tipo";
-$text['label-type']['pt-pt'] = "Tipo";
-$text['label-type']['fr-fr'] = "Type";
-$text['label-type']['pt-br'] = "Tipo";
-$text['label-type']['pl'] = "Typ";
-$text['label-type']['sv-se'] = "Typ";
-$text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "Typ";
-$text['label-type']['ar-eg'] = "النوع";
 
 $text['label-port']['en-us'] = "Port";
 $text['label-port']['es-cl'] = "Puerto";
@@ -132,28 +66,6 @@ $text['label-path']['uk'] = "Шлях";
 $text['label-path']['de-at'] = "Pfad";
 $text['label-path']['ar-eg'] = "";
 
-$text['label-password']['en-us'] = "Password";
-$text['label-password']['es-cl'] = "Contreseña";
-$text['label-password']['pt-pt'] = "Palavra-Chave";
-$text['label-password']['fr-fr'] = "Mot de Passe";
-$text['label-password']['pt-br'] = "Senha";
-$text['label-password']['pl'] = "Hasło";
-$text['label-password']['sv-se'] = "Lösenord";
-$text['label-password']['uk'] = "Пароль";
-$text['label-password']['de-at'] = "Passwort";
-$text['label-password']['ar-eg'] = "كلمة السر";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['ar-eg'] = "الأسم";
-
 $text['label-host']['en-us'] = "Host";
 $text['label-host']['es-cl'] = "Host";
 $text['label-host']['pt-pt'] = "Máquina";
@@ -175,17 +87,6 @@ $text['label-driver']['sv-se'] = "Drivrutin";
 $text['label-driver']['uk'] = "Драйвер";
 $text['label-driver']['de-at'] = "Treiber";
 $text['label-driver']['ar-eg'] = "";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['ar-eg'] = "الوصف";
 
 $text['header-databases']['en-us'] = "Databases";
 $text['header-databases']['es-cl'] = "Bases de datos";
@@ -308,17 +209,6 @@ $text['description-driver']['uk'] = "Виберіть драйвер бази д
 $text['description-driver']['de-at'] = "Wählen Sie den Datenbank Treiber.";
 $text['description-driver']['ar-eg'] = "";
 
-$text['description-description']['en-us'] = "Enter a description for this database, if desired.";
-$text['description-description']['es-cl'] = "Ingrese una descripción para esta base de datos, opcional.";
-$text['description-description']['pt-pt'] = "Introduza a descrição para a base de dados (opcional).";
-$text['description-description']['fr-fr'] = "Entrer une description pour cette Base de données. (optionnel)";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wprowadź opis  bazy danych (opcjonalne)";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning för denna databas, om nödvändigt.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-$text['description-description']['ar-eg'] = "";
-
 $text['description-databases']['en-us'] = "Database information.";
 $text['description-databases']['es-cl'] = "Información de bases de datos.";
 $text['description-databases']['pt-pt'] = "Informação da Base de Dados";
@@ -351,71 +241,5 @@ $text['description-database-add']['sv-se'] = "Information om Databasanslutning";
 $text['description-database-add']['uk'] = "інформація про підключення до бази даних.";
 $text['description-database-add']['de-at'] = "Datenbank Verbindungs Information.";
 $text['description-database-add']['ar-eg'] = "بيانات الإتصال الخاص بقاعدة البيانات";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-$text['confirm-delete']['ar-eg'] = "هل تريد حقا مسح هذا؟";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-$text['button-save']['ar-eg'] = "حفظ";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['ar-eg'] = "تعديل";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimé";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['ar-eg'] = "مسح";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['ar-eg'] = "رجوع";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['uk'] = "Додати";
-$text['button-add']['de-at'] = "Hinzufügen";
-$text['button-add']['ar-eg'] = "اضافة";
 
 ?>
