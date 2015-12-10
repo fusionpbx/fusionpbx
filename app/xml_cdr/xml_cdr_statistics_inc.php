@@ -141,9 +141,15 @@ else {
 	//$call_seconds_1st_hour = get_call_seconds_between(3600, 0);
 	//if (strlen($call_seconds_1st_hour) == 0) { $call_seconds_1st_hour = 0; }
 
-//round down to the nearest hour
-	$time = time() - time() % 3600;
-
+//	if (strlen(check_str($_GET['start_stamp_begin'])) > 0 && strlen(check_str($_GET['start_stamp_end'])) > 0 ) {
+//		$start_date = new DateTime(check_str($_GET['start_stamp_begin']));
+//		$end_date = new DateTime(check_str($_GET['start_stamp_end']));
+//		$time = $start_date->getTimestamp();
+//	} else {
+		//round down to the nearest hour
+		$time = time() - time() % 3600;
+//	}
+	
 //call info hour by hour
 	for ($i = 0; $i <= 23; $i++) {
 		$start_epoch = $time - 3600*$i;
