@@ -58,7 +58,12 @@ class text {
 		//reduce to specific language
 			if ($language_code != 'all') {
 				foreach($text as $key => $value) {
-					$text[$key] = $value[$language_code];
+					if(strlen($value[$language_code]) > 0) {
+						$text[$key] = $value[$language_code];
+					}else{
+						//fallback to en-us
+						$text[$key] = $value['en-us'];
+					}
 				}
 			}
 			if ($language_code != 'all') {
