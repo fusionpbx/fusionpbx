@@ -102,6 +102,8 @@ else {
 			$forward_busy_enabled = $row["forward_busy_enabled"];
 			$forward_no_answer_destination = $row["forward_no_answer_destination"];
 			$forward_no_answer_enabled = $row["forward_no_answer_enabled"];
+			$forward_user_not_registered_destination = $row["forward_user_not_registered_destination"];
+			$forward_user_not_registered_enabled = $row["forward_user_not_registered_enabled"];
 			$follow_me_uuid = $row["follow_me_uuid"];
 			$forward_caller_id_uuid = $row["forward_caller_id_uuid"];
 			break; //limit to 1 row
@@ -122,6 +124,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$forward_busy_destination = check_str($_POST["forward_busy_destination"]);
 			$forward_no_answer_enabled = check_str($_POST["forward_no_answer_enabled"]);
 			$forward_no_answer_destination = check_str($_POST["forward_no_answer_destination"]);
+			$forward_user_not_registered_destination = check_str($_POST["forward_user_not_registered_destination"]);
+			$forward_user_not_registered_enabled = check_str($_POST["forward_user_not_registered_enabled"]);
 			$forward_caller_id_uuid = check_str($_POST["forward_caller_id_uuid"]);
 			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
 			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
@@ -371,6 +375,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "forward_busy_enabled = '".$forward_busy_enabled."', ";
 		$sql .= "forward_no_answer_destination = '".$forward_no_answer_destination."', ";
 		$sql .= "forward_no_answer_enabled = '".$forward_no_answer_enabled."', ";
+		$sql .= "forward_user_not_registered_destination = '".$forward_user_not_registered_destination."', ";
+		$sql .= "forward_user_not_registered_enabled = '".$forward_user_not_registered_enabled."', ";
 		$sql .= "forward_caller_id_uuid = ".(($forward_caller_id_uuid != '') ? "'".$forward_caller_id_uuid."' " : "null ");
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and extension_uuid = '".$extension_uuid."'";
@@ -595,6 +601,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<br />".$text['description-no_answer'].".\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+//CJB
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-not_registered']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	$on_click = "document.getElementById('dnd_disabled').checked=true;";
+	$on_click .= "document.getElementById('forward_user_not_registered_destination').focus();";
+	echo "	<label for='forward_user_not_registered_disabled'><input type='radio' name='forward_user_not_registered_enabled' id='forward_user_not_registered_disabled' onclick=\"\" value='false' ".(($forward_user_not_registered_enabled == "false" || $forward_user_not_registered_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "	<label for='forward_user_not_registered_enabled'><input type='radio' name='forward_user_not_registered_enabled' id='forward_user_not_registered_enabled' onclick=\"$on_click\" value='true' ".(($forward_user_not_registered_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	unset($on_click);
+	echo "&nbsp;&nbsp;&nbsp;";
+	echo "	<input class='formfld' type='text' name='forward_user_not_registered_destination' id='forward_user_not_registered_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_user_not_registered_destination."\">\n";
+	echo "	<br />".$text['description-not_registered'].".\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+//CJB
 
 	echo "<tr><td colspan='2'><br /></td></tr>\n";
 

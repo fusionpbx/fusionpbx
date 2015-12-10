@@ -251,6 +251,9 @@
 								forward_busy_destination = row.forward_busy_destination;
 								forward_no_answer_enabled = row.forward_no_answer_enabled;
 								forward_no_answer_destination = row.forward_no_answer_destination;
+								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
+								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
+
 								do_not_disturb = row.do_not_disturb;
 
 							--set the dial_string
@@ -477,6 +480,13 @@
 							if (string.len(forward_no_answer_destination) > 0) then
 								table.insert(xml, [[								<variable name="forward_no_answer_destination" value="]] .. forward_no_answer_destination .. [["/>]]);
 							end
+							if (string.len(forward_user_not_registered_enabled) > 0) then
+								table.insert(xml, [[								<variable name="forward_user_not_registered_enabled" value="]] .. forward_user_not_registered_enabled .. [["/>]]);
+							end
+							if (string.len(forward_user_not_registered_destination) > 0) then
+								table.insert(xml, [[								<variable name="forward_user_not_registered_destination" value="]] .. forward_user_not_registered_destination .. [["/>]]);
+							end
+
 							if (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end
