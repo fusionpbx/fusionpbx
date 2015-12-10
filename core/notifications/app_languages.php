@@ -40,16 +40,6 @@ $text['option-disabled']['uk'] = "袙懈泻谢褞褔械薪芯";
 $text['option-disabled']['sv-se'] = "Avaktiverad";
 $text['option-disabled']['de-at'] = "Deaktiviert";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualizaci髇 Completada";
-$text['message-update']['pt-pt'] = "Actualiza玢o Efectuada";
-$text['message-update']['fr-fr'] = "Mis ?jour";
-$text['message-update']['pt-br'] = "Atualiza莽茫o Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "袨薪芯胁谢械薪芯";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
 $text['message-no_channels']['en-us'] = "No Channels Enabled";
 $text['message-no_channels']['es-cl'] = "No hay canales habilitados";
 $text['message-no_channels']['pt-pt'] = "N鉶 h?canais habilitados";
@@ -69,16 +59,6 @@ $text['message-invalid_recipient']['pl'] = "Nieprawid艂owy odbiorca powiadomien
 $text['message-invalid_recipient']['uk'] = "袧械胁褨褉薪懈泄  芯褌褉懈屑褍胁邪褔 锌芯胁褨写芯屑谢械薪薪褟";
 $text['message-invalid_recipient']['sv-se'] = "Ogiltig Mottagare f枚r Meddelande";
 $text['message-invalid_recipient']['de-at'] = "Ungültiger Empfänger";
-
-$text['message-failed']['en-us'] = "Update Failed - Contact Support";
-$text['message-failed']['es-cl'] = "Update Error - Contact Support";
-$text['message-failed']['pt-pt'] = "Falha na atualiza玢o - Contato com o suporte";
-$text['message-failed']['fr-fr'] = "Mise ?jour a 閏hou?- Contacter le support technique";
-$text['message-failed']['pt-br'] = "Falha na atualiza莽茫o  - Entre em contato com o suporte";
-$text['message-failed']['pl'] = "Aktualizacja nie powiod艂a si臋 - skontaktuj si臋 z pomoc膮";
-$text['message-failed']['uk'] = "袧械 胁写邪谢芯褋褟 芯薪芯胁懈褌懈 - 蟹胁'褟卸褨褌褜褋褟 蟹褨 褋谢褍卸斜芯褞 锌褨写褌褉懈屑泻懈";
-$text['message-failed']['sv-se'] = "Uppdatering Misslyckades - Kontakta Support";
-$text['message-failed']['de-at'] = "Aktualisierung fehlgeschlagen - Kontaktieren Sie den Support";
 
 $text['message-disclaimer']['en-us'] = "<u>Disclosure</u>: Enabling Project Notifications is consent to the collection of <i>anonymous</i> and <i>general</i> demographic information about your installation environment.  Information requested consists of the following: 1) FusionPBX version, 2) PHP version, 3) web server and version, 4) voice switch version, 5) database type and version, 6) operating system platform and version, and 7) public IP address. If you do not wish for this information to be submitted, simply leave Project Notifications disabled, and no information will be submitted about your system.";
 $text['message-disclaimer']['es-cl'] = "<u>Divulgaci髇</u>: Habilitaci髇 del proyecto Notificaciones es el consentimiento a la recopilaci髇 de <i>an髇imo</i> y <i>generales</i> la informaci髇 demogr醘ica sobre su entorno de instalaci髇. La informaci髇 solicitada se compone de los siguientes: 1) FusionPBX versi髇, 2) la versi髇 de PHP, 3) del servidor web y la versi髇 4) Versi髇 conmutador de voz, 5) el tipo de base de datos y la versi髇 6) plataforma de sistema operativo y versi髇, y 7) IP p鷅lica direcci髇. Si usted no desea que esta informaci髇 sea presentada, simplemente deje de Proyecto Notificaciones deshabilitado, y ninguna informaci髇 se presentar?sobre su sistema.";
@@ -279,15 +259,5 @@ $text['description-notifications']['pl'] = "Ustawienia preferencji powiadomie艅
 $text['description-notifications']['uk'] = "";
 $text['description-notifications']['sv-se'] = "Inst盲llningar f枚r FusionPBX relaterade meddelanden och andra lokala system varningar.";
 $text['description-notifications']['de-at'] = "Benachrichtigungseinstellungen für FusionPBX Projektbezogene Informationen.";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['uk'] = "袟斜械褉械谐褌懈";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['de-at'] = "Speichern";
 
 ?>
