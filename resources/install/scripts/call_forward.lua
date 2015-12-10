@@ -229,14 +229,15 @@
 		end
 
 		--set the dial_string
-		dial_string = "{presence_id="..presence_id.."@"..domain_name;
-		dial_string = dial_string .. ",instant_ringback=true";
+		dial_string = "{instant_ringback=true";
 		dial_string = dial_string .. ",domain_uuid="..domain_uuid;
 		dial_string = dial_string .. ",sip_invite_domain="..domain_name;
 		dial_string = dial_string .. ",domain_name="..domain_name;
 		dial_string = dial_string .. ",domain="..domain_name;
+		dial_string = dial_string .. ",extension_uuid="..extension_uuid;
 		dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
 		if (accountcode ~= nil) then
+			dial_string = dial_string .. ",sip_h_X-accountcode="..accountcode;
 			dial_string = dial_string .. ",accountcode="..accountcode;
 		end
 		dial_string = dial_string .. forward_caller_id
@@ -249,10 +250,11 @@
 		user_exists = trim(api:executeString(cmd));
 		if (user_exists == "true") then
 			local user = destination_user or forward_all_destination
-			dial_string = dial_string .. "dialed_extension=" .. user
+			dial_string = dial_string .. ",dialed_extension=" .. user
 			dial_string = dial_string .. "}"
 			dial_string = dial_string .. "user/"..user.."@"..domain_name;
 		else
+			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
 			dial_string = dial_string .. "}";
 			dial_string = dial_string .. "loopback/"..forward_all_destination;
 		end
