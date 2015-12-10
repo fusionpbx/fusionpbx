@@ -40,16 +40,6 @@ $text['title-sip-status']['sv-se'] = "SIP Status";
 $text['title-sip-status']['uk'] = "Стан SIP";
 $text['title-sip-status']['de-at'] = "SIP Status";
 
-$text['label-type']['en-us'] = "Type";
-$text['label-type']['es-cl'] = "Tipo";
-$text['label-type']['pt-pt'] = "Tipo";
-$text['label-type']['fr-fr'] = "Type";
-$text['label-type']['pt-br'] = "Tipo";
-$text['label-type']['pl'] = "Typ";
-$text['label-type']['sv-se'] = "Typ";
-$text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "Typ";
-
 $text['label-state']['en-us'] = "State";
 $text['label-state']['es-cl'] = "Estado";
 $text['label-state']['fr-fr'] = "Etat";
@@ -59,16 +49,6 @@ $text['label-state']['pl'] = "Status";
 $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk'] = "Стан";
 $text['label-state']['de-at'] = "Status";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
@@ -110,36 +90,6 @@ $text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckad
 $text['error-event-socket']['uk'] = "Помилка підключення до сокета подій";
 $text['error-event-socket']['de-at'] = "Connection to Event Socket failed.";
 
-$text['button-stop']['en-us'] = "Stop";
-$text['button-stop']['es-cl'] = "Detener";
-$text['button-stop']['pt-pt'] = "Parar";
-$text['button-stop']['fr-fr'] = "Stop";
-$text['button-stop']['pt-br'] = "Pausar Broadcast";
-$text['button-stop']['pl'] = "Zatrzymaj";
-$text['button-stop']['sv-se'] = "Stoppa";
-$text['button-stop']['uk'] = "Зупинити ";
-$text['button-stop']['de-at'] = "Stopp";
-
-$text['button-start']['en-us'] = "Start";
-$text['button-start']['es-cl'] = "Iniciar";
-$text['button-start']['pt-pt'] = "Iniciar";
-$text['button-start']['fr-fr'] = "Démarrer";
-$text['button-start']['pt-br'] = "Iniciar";
-$text['button-start']['pl'] = "Start";
-$text['button-start']['sv-se'] = "Starta";
-$text['button-start']['uk'] = "Запустити";
-$text['button-start']['de-at'] = "Start";
-
-$text['button-restart']['en-us'] = "Restart";
-$text['button-restart']['es-cl'] = "Reanudar";
-$text['button-restart']['pt-pt'] = "Restart";
-$text['button-restart']['fr-fr'] = "Redémarrer";
-$text['button-restart']['pt-br'] = "Reiniciar";
-$text['button-restart']['pl'] = "Restartuj";
-$text['button-restart']['sv-se'] = "Starta Om";
-$text['button-restart']['uk'] = "Перезапустити";
-$text['button-restart']['de-at'] = "Neu starten";
-
 $text['button-rescan']['en-us'] = "Rescan";
 $text['button-rescan']['es-cl'] = "Vuelva a Explorar";
 $text['button-rescan']['pt-pt'] = "Redigitalize";
@@ -179,16 +129,6 @@ $text['button-registrations']['pl'] = "Rejestracje";
 $text['button-registrations']['sv-se'] = "Registreringar";
 $text['button-registrations']['uk'] = "Реєстрації";
 $text['button-registrations']['de-at'] = "Registrierungen";
-
-$text['button-refresh']['en-us'] = "Refresh";
-$text['button-refresh']['es-cl'] = "Refrescar";
-$text['button-refresh']['pt-pt'] = "Actualizar";
-$text['button-refresh']['fr-fr'] = "Rafraîchir";
-$text['button-refresh']['pt-br'] = "Atualizar";
-$text['button-refresh']['pl'] = "Odśwież";
-$text['button-refresh']['uk'] = "Оновити";
-$text['button-refresh']['sv-se'] = "Uppdatera";
-$text['button-refresh']['de-at'] = "Aktualisieren";
 
 $text['button-flush_registrations']['en-us'] = "Flush Registrations";
 $text['button-flush_registrations']['es-cl'] = "Inscripciones Flush";

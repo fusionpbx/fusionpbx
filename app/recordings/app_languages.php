@@ -40,36 +40,6 @@ $text['message-uploaded']['sv-se'] = "File Uppladdade";
 $text['message-uploaded']['uk'] = "файл Завантажено";
 $text['message-uploaded']['de-at'] = "Datei hochgeladen";
 
-$text['message-update']['en-us'] = "Update Complete";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['uk'] = "Оновлення завершено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
-$text['message-delete']['en-us'] = "Delete Complete";
-$text['message-delete']['es-cl'] = "Eliminación Completa";
-$text['message-delete']['pt-pt'] = "Remoçãoo Realizada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
-$text['message-add']['en-us'] = "Add Complete";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-
 $text['label-upload']['en-us'] = "File Path";
 $text['label-upload']['es-cl'] = "Archivo a subir";
 $text['label-upload']['pt-pt'] = "Ficheiro a carregar";
@@ -180,16 +150,6 @@ $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk'] = "Завантажини";
 $text['label-download']['de-at'] = "Download";
 
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-
 $text['header']['en-us'] = "Upload Recording";
 $text['header']['es-cl'] = "Subir Grabación";
 $text['header']['pt-pt'] = "Carregar Gravações";
@@ -220,16 +180,6 @@ $text['description-file']['sv-se'] = "Namn på filen. exempel: inspelning.wav";
 $text['description-file']['uk'] = "";
 $text['description-file']['de-at'] = "Dateiname (z.B.: example.wav)";
 
-$text['description-description']['en-us'] = "You may enter a description here for your reference (not parsed).";
-$text['description-description']['es-cl'] = "Puede ingresar una descripción aquí para su referencia.";
-$text['description-description']['pt-pt'] = "Deverá introduzir uma descrição para sua referência.";
-$text['description-description']['fr-fr'] = "Vous pouvez entrer ici une description pour votre référence (non parsé).";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Tutaj możesz wpisać opis w celach informacyjnych.";
-$text['description-description']['sv-se'] = "Du kan skriva in en beskrivning här som referens (ej analyserad).";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-
 $text['description']['en-us'] = "Dial *732 to create a recording, or (for best results) upload a 16bit 8khz/16khz mono WAV file.";
 $text['description']['es-cl'] = "Para realizar una grabación marque *732 o puede crear un archivo en formato WAV a 16 bit 8khz/16khz Mono y luego copiarlo en el siguiente directorio y refrezcar la página para reproducirlo.";
 $text['description']['pt-pt'] = "Para fazer uma gravação marque *732 ou crie um ficheiro WAV de 16bit 8khz/16khz e copie-o para a seguinte directoria e actualize a página para o ouvir.";
@@ -239,45 +189,5 @@ $text['description']['pl'] = "Aby stworzyć własne nagranie wybierz *732 z klaw
 $text['description']['sv-se'] = "För att göra en inspelning ring * 732 eller så kan du göra en 16bit 8kHz/16kHz Mono WAV-fil och kopiera den till följande katalog uppdatera sedan sidan för att spela upp den.";
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['de-at'] = "Wählen Sie *732 um eine Aufnahme direkt vom Telefon zu starten oder laden Sie eine 16bit 8/16kHz mono WAV Datei hoch.";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
-$text['button-upload']['en-us'] = "Upload";
-$text['button-upload']['es-cl'] = "Subir";
-$text['button-upload']['pt-pt'] = "Carregar";
-$text['button-upload']['fr-fr'] = "déposer";
-$text['button-upload']['pt-br'] = "Submeter";
-$text['button-upload']['pl'] = "Wyślij";
-$text['button-upload']['sv-se'] = "Ladda Upp";
-$text['button-upload']['uk'] = "Завантажити";
-$text['button-upload']['de-at'] = "Hochladen";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Gravar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>

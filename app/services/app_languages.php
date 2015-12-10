@@ -22,17 +22,6 @@ $text['title']['ro'] = "Adăugare serviciu";
 $text['title']['uk'] = "Параметри облікового запису";
 $text['title']['de-at'] = "Service hinzufügen";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à Jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['ro'] = "Actualizare completă";
-$text['message-update']['uk'] = "Оновлення завершено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
 $text['message-stopping']['en-us'] = "Stopping Service";
 $text['message-stopping']['es-cl'] = "Servicio de Detención";
 $text['message-stopping']['pt-pt'] = "A Parar Serviço";
@@ -54,39 +43,6 @@ $text['message-starting']['sv-se'] = "Startar Tjänst";
 $text['message-starting']['ro'] = "Pornire serviciu";
 $text['message-starting']['uk'] = "Запуск служби";
 $text['message-starting']['de-at'] = "Starte Service";
-
-$text['message-delete']['en-us'] = "Delete Complete";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['ro'] = "Ștergere completă";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['ro'] = "Adăugare completă";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-
-$text['label-type']['en-us'] = "Type";
-$text['label-type']['es-cl'] = "Tipo";
-$text['label-type']['pt-pt'] = "Tipo";
-$text['label-type']['fr-fr'] = "Type";
-$text['label-type']['pt-br'] = "Tipo";
-$text['label-type']['pl'] = "Typ";
-$text['label-type']['sv-se'] = "Typ";
-$text['label-type']['ro'] = "Tip";
-$text['label-type']['uk'] = "Тип";
-$text['label-type']['de-at'] = "Typ";
 
 $text['label-stopped']['en-us'] = "Stopped";
 $text['label-stopped']['es-cl'] = "Detenido";
@@ -164,28 +120,6 @@ $text['label-running']['sv-se'] = "I Drift";
 $text['label-running']['ro'] = "În desfășurare";
 $text['label-running']['uk'] = "Запущено";
 $text['label-running']['de-at'] = "Läuft";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['ro'] = "Nume";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['ro'] = "Descriere";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -275,17 +209,6 @@ $text['description-name']['ro'] = "Introduceți numele serviciului";
 $text['description-name']['uk'] = "Введіть назву служби";
 $text['description-name']['de-at'] = "Geben Sie den Namen des Services an";
 
-$text['description-description']['en-us'] = "Enter the service description.";
-$text['description-description']['es-cl'] = "Ingrese una descripción del servicio.";
-$text['description-description']['pt-pt'] = "Introduza a descrição do serviço.";
-$text['description-description']['fr-fr'] = "Entrer la description du service.";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wprowadź opis serwisu.";
-$text['description-description']['sv-se'] = "Ange beskrivning på tjänsten.";
-$text['description-description']['ro'] = "Introduceți descrierea serviciului";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Geben Sie eine Beschreibung für dieses Service an.";
-
 $text['description-data']['en-us'] = "Enter the service data.";
 $text['description-data']['es-cl'] = "Ingrese los datos del servicio.";
 $text['description-data']['pt-pt'] = "Introduza os dados do serviço.";
@@ -307,60 +230,5 @@ $text['description']['sv-se'] = "Visar en lista med tjänster samt ger möjlighe
 $text['description']['ro'] = "";
 $text['description']['uk'] = "Показує список процесів і забезпечує можливість запуску і зупинки їх.";
 $text['description']['de-at'] = "Zeigt eine Liste der Prozesse und bietet die Möglichkeit diese zu Starten und zu Stoppen.";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['ro'] = "Sigur vreți să ștergeți?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['ro'] = "Salvează";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['ro'] = "Editare";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['ro'] = "Ștergere";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['ro'] = "Înapoi";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>

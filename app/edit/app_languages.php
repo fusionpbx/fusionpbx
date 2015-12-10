@@ -26,11 +26,6 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
-$text['message-add']['en-us'] = "Add Complete";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-
 $text['label-folder']['en-us'] = "Folder:";
 $text['label-folder']['es-cl'] = "Carpeta:";
 $text['label-folder']['pt-pt'] = "Ficheiro:";
@@ -50,21 +45,6 @@ $text['label-notes']['en-us'] = "Notes:";
 $text['label-notes']['es-cl'] = "Notas:";
 $text['label-notes']['pt-pt'] = "Notas:";
 $text['label-notes']['fr-fr'] = "Notes:";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-
-$text['message-delete']['en-us'] = "Delete Complete";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
 
 $text['message-give-up']['en-us'] = "Giving up :( Cannot create an XMLHTTP instance";
 $text['message-give-up']['es-cl'] = "Cancelando, no se puede crear una instancia XMLHTTP";
@@ -95,11 +75,6 @@ $text['message-delete-clip']['en-us'] = "Are you sure you want to delete the sel
 $text['message-delete-clip']['es-cl'] = "¿Realmente desea eliminar el clip seleccionado?";
 $text['message-delete-clip']['pt-pt'] = "Tem a certeza que pretende remover o clip seleccionado?";
 $text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le CLIP sélectionné?";
-
-$text['button-delete']['en-us'] = "  Delete   ";
-$text['button-delete']['es-cl'] = "  Eliminar   ";
-$text['button-delete']['pt-pt'] = "  Apagar   ";
-$text['button-delete']['fr-fr'] = "  Supprimé   ";
 
 $text['button-close']['en-us'] = "   Close    ";
 $text['button-close']['es-cl'] = "   Cerrar    ";
@@ -189,16 +164,6 @@ $text['button-delete-this']['en-us'] = "Are you sure want to delete this?";
 $text['button-delete-this']['es-cl'] = "¿Realmente desea eliminar esto?";
 $text['button-delete-this']['pt-pt'] = "Tem a certeza que pretende remover isto?";
 $text['button-delete-this']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-
-$text['button-search']['en-us'] = "Search";
-$text['button-search']['es-cl'] = "Buscar";
-$text['button-search']['pt-pt'] = "Pesquisar";
-$text['button-search']['fr-fr'] = "Chercher";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
 
 $text['label-file']['en-us'] = "File:";
 $text['label-file']['es-cl'] = "Archivo:";
