@@ -1729,6 +1729,17 @@ $text['button-save']['ro'] = "Salvează";
 $text['button-save']['ar-eg'] = "حفظ";
 $text['button-save']['he'] = "שמור";
 
+$text['button-export']['en-us'] = "Export";
+$text['button-export']['es-cl'] = "Exportación";
+$text['button-export']['pt-pt'] = "Exportação";
+$text['button-export']['fr-fr'] = "Exportation";
+$text['button-export']['pt-br'] = "Exportação ";
+$text['button-export']['pl'] = "Eksportuj";
+$text['button-export']['sv-se'] = "Export";
+$text['button-export']['uk'] = "";
+$text['button-export']['de-at'] = "Export";
+$text['button-export']['he'] = "יצוא";
+
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['es-cl'] = "Editar";
 $text['button-edit']['pt-pt'] = "Editar";
