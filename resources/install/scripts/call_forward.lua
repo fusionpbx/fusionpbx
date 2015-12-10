@@ -75,8 +75,6 @@
 --connect to the database
 	local dbh = Database.new('system');
 
-	local settings = Settings.new(dbh, domain_name, domain_uuid)
-
 --request id is true
 	if (request_id == "true") then
 		--unset extension uuid
@@ -209,24 +207,12 @@
 			destination_number_alias = row.number_alias or '';
 		end);
 
-		local presence_id
-		if destination_extension then
-			if (#destination_number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
-				presence_id = destination_number_alias
-			else
-				presence_id = destination_extension
-			end
-		elseif extension then
-			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
-			-- $presence_id = extension_presence_id($this->extension, $this->number_alias);
-			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
-				presence_id = number_alias
-			else
-				presence_id = extension
-			end
+		if (destination_user ~= nil) then
+			cmd = "user_exists id ".. destination_user .." "..domain_name;
 		else
-			presence_id = forward_all_destination
+			cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 		end
+		user_exists = trim(api:executeString(cmd));
 
 		--set the dial_string
 		dial_string = "{instant_ringback=true";
@@ -242,18 +228,21 @@
 		end
 		dial_string = dial_string .. forward_caller_id
 
-		if (destination_user ~= nil) then
-			cmd = "user_exists id ".. destination_user .." "..domain_name;
-		else
-			cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
-		end
-		user_exists = trim(api:executeString(cmd));
 		if (user_exists == "true") then
+			-- we do not need here presence_id because user dial-string already has one
 			local user = destination_user or forward_all_destination
 			dial_string = dial_string .. ",dialed_extension=" .. user
 			dial_string = dial_string .. "}"
 			dial_string = dial_string .. "user/"..user.."@"..domain_name;
 		else
+			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
+			local settings, presence_id = Settings.new(dbh, domain_name, domain_uuid)
+			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
+				presence_id = number_alias
+			else
+				presence_id = extension
+			end
+
 			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
 			dial_string = dial_string .. "}";
 			dial_string = dial_string .. "loopback/"..forward_all_destination;
