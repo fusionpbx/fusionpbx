@@ -170,6 +170,9 @@ else {
 				if (permission_exists('fax_log_view')) {
 					echo "		<a href='fax_logs.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
 				}
+				if (permission_exists('fax_active_view')) {
+					echo "		<a href='fax_active.php?id=".$row['fax_uuid']."'>".$text['label-active']."</a>";
+				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
