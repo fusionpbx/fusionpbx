@@ -212,7 +212,7 @@
 		else
 			cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 		end
-		user_exists = trim(api:executeString(cmd));
+		local user_exists = trim(api:executeString(cmd));
 
 		--set the dial_string
 		dial_string = "{instant_ringback=true";
@@ -230,10 +230,9 @@
 
 		if (user_exists == "true") then
 			-- we do not need here presence_id because user dial-string already has one
-			local user = destination_user or forward_all_destination
-			dial_string = dial_string .. ",dialed_extension=" .. user
+			dial_string = dial_string .. ",dialed_extension=" .. forward_all_destination
 			dial_string = dial_string .. "}"
-			dial_string = dial_string .. "user/"..user.."@"..domain_name;
+			dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
 		else
 			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
 			local settings, presence_id = Settings.new(dbh, domain_name, domain_uuid)
