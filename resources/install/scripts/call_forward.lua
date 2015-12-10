@@ -37,24 +37,12 @@
 --include config.lua
 	require "resources.functions.config";
 
---include config.lua
-	require "resources.functions.settings";
-
 	require "resources.functions.channel_utils";
 
 	local log = require "resources.functions.log".call_forward
 	local cache = require "resources.functions.cache"
 	local Database = require "resources.functions.database"
-
-	local function opt(t, ...)
-		if select('#', ...) == 0 then
-			return t
-		end
-		if type(t) ~= 'table' then
-			return nil
-		end
-		return opt(t[...], select(2, ...))
-	end
+	local Settings = require "resources.functions.lazy_settings"
 
 	local function empty(t)
 		return (not t) or (#t == 0)
@@ -85,7 +73,9 @@
 	session:sleep(1000);
 
 --connect to the database
-	dbh = Database.new('system');
+	local dbh = Database.new('system');
+
+	local settings = Settings.new(dbh, domain_name, domain_uuid)
 
 --request id is true
 	if (request_id == "true") then
@@ -221,7 +211,7 @@
 
 		local presence_id
 		if destination_extension then
-			if (#destination_number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
+			if (#destination_number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
 				presence_id = destination_number_alias
 			else
 				presence_id = destination_extension
@@ -229,7 +219,7 @@
 		elseif extension then
 			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
 			-- $presence_id = extension_presence_id($this->extension, $this->number_alias);
-			if (#number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
+			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
 				presence_id = number_alias
 			else
 				presence_id = extension
