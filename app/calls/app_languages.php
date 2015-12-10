@@ -122,6 +122,17 @@ $text['label-no_answer']['sv-se'] = "Inget Svar ";
 $text['label-no_answer']['uk'] = "Без відповіді";
 $text['label-no_answer']['de-at'] = "Keine Antwort";
 
+$text['label-not_registered']['en-us'] = "Not Registered";
+$text['label-not_registered']['es-cl'] = "";
+$text['label-not_registered']['pt-pt'] = "";
+$text['label-not_registered']['fr-fr'] = "";
+$text['label-not_registered']['it-it'] = "";
+$text['label-not_registered']['pt-br'] = "";
+$text['label-not_registered']['pl'] = "";
+$text['label-not_registered']['sv-se'] = "";
+$text['label-not_registered']['uk'] = "";
+$text['label-not_registered']['de-at'] = "";
+
 $text['label-ignore-busy']['en-us'] = "Ignore Busy";
 $text['label-ignore-busy']['es-cl'] = "";
 $text['label-ignore-busy']['pt-pt'] = "";
@@ -334,6 +345,17 @@ $text['description-no_answer']['pl'] = "Jeżeli włączone, ustawienie włączen
 $text['description-no_answer']['sv-se'] = "Om aktiverad, så tar den överhand framför röstbrevlåda hos anknytningen. ";
 $text['description-no_answer']['uk'] = "";
 $text['description-no_answer']['de-at'] = "Falls aktiv, wird der Wert 'Mailbox eingeschaltet' in der Nebenstelle überschrieben";
+
+$text['description-not_registered']['en-us'] = "If endpoint is not reachable, forward to this destination before going to voicemail.";
+$text['description-not_registered']['es-cl'] = "";
+$text['description-not_registered']['pt-pt'] = "";
+$text['description-not_registered']['fr-fr'] = "";
+$text['description-not_registered']['it-it'] = "";
+$text['description-not_registered']['pt-br'] = "";
+$text['description-not_registered']['pl'] = "";
+$text['description-not_registered']['sv-se'] = "";
+$text['description-not_registered']['uk'] = "";
+$text['description-not_registered']['de-at'] = "";
 
 $text['description-cid-number-prefix']['en-us'] = "Set the caller ID number prefix.";
 $text['description-cid-number-prefix']['es-cl'] = "Configure el prefijo de número de caller ID.";
