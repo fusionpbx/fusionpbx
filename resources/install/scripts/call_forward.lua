@@ -240,7 +240,6 @@
 			dial_string = dial_string .. ",accountcode="..accountcode;
 		end
 		dial_string = dial_string .. forward_caller_id
-		dial_string = dial_string .. "}";
 
 		if (destination_user ~= nil) then
 			cmd = "user_exists id ".. destination_user .." "..domain_name;
@@ -249,12 +248,12 @@
 		end
 		user_exists = trim(api:executeString(cmd));
 		if (user_exists == "true") then
-			if (destination_user ~= nil) then
-				dial_string = dial_string .. "user/"..destination_user.."@"..domain_name;
-			else
-				dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
-			end
+			local user = destination_user or forward_all_destination
+			dial_string = dial_string .. "dialed_extension=" .. user
+			dial_string = dial_string .. "}"
+			dial_string = dial_string .. "user/"..user.."@"..domain_name;
 		else
+			dial_string = dial_string .. "}";
 			dial_string = dial_string .. "loopback/"..forward_all_destination;
 		end
 	end

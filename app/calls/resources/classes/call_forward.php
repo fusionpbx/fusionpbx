@@ -119,6 +119,8 @@ include "root.php";
 					}
 
 					if (extension_exists($this->forward_all_destination)) {
+						// For support load_balance we need set `dialed_extension`
+						$dial_string .= ",dialed_extension=".$this->forward_all_destination;
 						// we do not need here presence_id because user dial-string already has one
 						$dial_string .= "}";
 						$dial_string .= "user/".$this->forward_all_destination."@".$_SESSION['domain_name'];
