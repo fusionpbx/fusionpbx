@@ -36,51 +36,6 @@ $text['title-ivr_menu']['pl'] = "Menu zapowiedzi głosowej (IVR)";
 $text['title-ivr_menu']['sv-se'] = "IVR Meny";
 $text['title-ivr_menu']['de-at'] = "Automatische Vermittlung";
 
-$text['option-true']['en-us'] = "True";
-$text['option-true']['es-cl'] = "verdadero";
-$text['option-true']['pt-pt'] = "Sim";
-$text['option-true']['fr-fr'] = "Oui";
-$text['option-true']['pt-br'] = "Sim";
-$text['option-true']['pl'] = "Tak";
-$text['option-true']['sv-se'] = "Sann";
-$text['option-true']['de-at'] = "Ein";
-
-$text['option-false']['en-us'] = "False";
-$text['option-false']['es-cl'] = "Falso";
-$text['option-false']['pt-pt'] = "Não";
-$text['option-false']['fr-fr'] = "Non";
-$text['option-false']['pt-br'] = "Não";
-$text['option-false']['pl'] = "Nie";
-$text['option-false']['sv-se'] = "Falsk";
-$text['option-false']['de-at'] = "Aus";
-
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Por favor ingrese: ";
-$text['message-required']['pt-pt'] = "Por favor indique: ";
-$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-$text['message-required']['pt-br'] = "Por favor Indique:";
-$text['message-required']['pl'] = "Wpisz:";
-$text['message-required']['sv-se'] = "Var god uppge:";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
-
-$text['message-message']['en-us'] = "Message";
-$text['message-message']['es-cl'] = "Mensaje";
-$text['message-message']['pt-pt'] = "Mensagem";
-$text['message-message']['fr-fr'] = "Message";
-$text['message-message']['pt-br'] = "Mensagem";
-$text['message-message']['pl'] = "Wiadomość";
-$text['message-message']['sv-se'] = "Meddelande";
-$text['message-message']['de-at'] = "Nachricht";
-
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['es-cl'] = "Máxima IVR Menús Animales:";
 $text['message-maximum_ivr_menus']['pt-pt'] = "Menus Máxima IVR de Estimação:";
@@ -89,33 +44,6 @@ $text['message-maximum_ivr_menus']['pt-br'] = "Menu máximo IVR";
 $text['message-maximum_ivr_menus']['pl'] = "Maksymalna ilość zapowiedzi głosowych";
 $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
 $text['message-maximum_ivr_menus']['de-at'] = "Maximale Anzahl an Automatischen Vermittlungen:";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
-$text['message-copy']['en-us'] = "Copy Completed";
-$text['message-copy']['es-cl'] = "Copia Completada";
-$text['message-copy']['pt-pt'] = "Cópia Efectuada";
-$text['message-copy']['fr-fr'] = "Copié";
-$text['message-copy']['pt-br'] = "Cópia Efetuada";
-$text['message-copy']['pl'] = "Skopiowano poprawnie";
-$text['message-copy']['sv-se'] = "Kopiering Slutförd";
-$text['message-copy']['de-at'] = "Erfolgreich kopiert";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
 
 $text['label-tts_voice']['en-us'] = "TTS Voice";
 $text['label-tts_voice']['es-cl'] = "Voz TTS";
@@ -153,15 +81,6 @@ $text['label-ring_back']['pl'] = "Rodzaj sygnału w słuchawce dzwoniącego";
 $text['label-ring_back']['sv-se'] = "Ring Tillbaka";
 $text['label-ring_back']['de-at'] = "Wähl Ton";
 
-$text['label-order']['en-us'] = "Order";
-$text['label-order']['es-cl'] = "Orden";
-$text['label-order']['pt-pt'] = "Ordem";
-$text['label-order']['fr-fr'] = "Ordre";
-$text['label-order']['pt-br'] = "Ordenação";
-$text['label-order']['pl'] = "Kolejność";
-$text['label-order']['sv-se'] = "Ordning";
-$text['label-order']['de-at'] = "Reihenfolge";
-
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['es-cl'] = "Opciones";
 $text['label-options']['pt-pt'] = "Opções";
@@ -179,15 +98,6 @@ $text['label-option']['pt-br'] = "Opção";
 $text['label-option']['pl'] = "Opcja";
 $text['label-option']['sv-se'] = "Val";
 $text['label-option']['de-at'] = "Option";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['de-at'] = "Name";
 
 $text['label-max_timeouts']['en-us'] = "Max Timeouts";
 $text['label-max_timeouts']['es-cl'] = "Máximo de Timeouts";
@@ -270,15 +180,6 @@ $text['label-exit_action']['pl'] = "Porzuć operację";
 $text['label-exit_action']['sv-se'] = "Avslutningsaktion";
 $text['label-exit_action']['de-at'] = "Aktion bei verlassen";
 
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activado";
-$text['label-enabled']['pt-pt'] = "Habilitado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pt-br'] = "Habilitado";
-$text['label-enabled']['pl'] = "IVR Włączony";
-$text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['de-at'] = "An";
-
 $text['label-direct_dial']['en-us'] = "Direct Dial";
 $text['label-direct_dial']['es-cl'] = "Discado Directo";
 $text['label-direct_dial']['pt-pt'] = "Marcações Directas";
@@ -305,15 +206,6 @@ $text['label-destination']['pt-br'] = "Número de destino";
 $text['label-destination']['pl'] = "Destynacja";
 $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['de-at'] = "Ziel";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['de-at'] = "Beschreibung";
 
 $text['label-comfirm_macro']['en-us'] = "Confirm Macro";
 $text['label-comfirm_macro']['es-cl'] = "Macro de Confirmación";
@@ -621,15 +513,6 @@ $text['description-destination']['pl'] = "Wybierz numer docelowy.";
 $text['description-destination']['sv-se'] = "Välj destination.";
 $text['description-destination']['de-at'] = "Wählen Sie das Ziel.";
 
-$text['description-description']['en-us'] = "Enter a description, if desired.";
-$text['description-description']['es-cl'] = "Ingrese una descripción, opcional.";
-$text['description-description']['pt-pt'] = "Introduza uma descrição, caso deseje.";
-$text['description-description']['fr-fr'] = "";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wpisz opis (opcjonalne).";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-
 $text['description-comfirm_macro']['en-us'] = "Enter the confirm macro.";
 $text['description-comfirm_macro']['es-cl'] = "Ingrese el macro de confirmación.";
 $text['description-comfirm_macro']['pt-pt'] = "Introduza a confirmação de macro.";
@@ -665,95 +548,5 @@ $text['description-caller_id_name_prefix']['pt-br'] = "Defina um prefixo no nome
 $text['description-caller_id_name_prefix']['pl'] = "Ustaw prefiks nazwy abonenta dzwoniącego.";
 $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID namn.";
 $text['description-caller_id_name_prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name).";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
-$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
-$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
-$text['confirm-copy']['pt-pt'] = "Deseja realmente copiar isto?";
-$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
-$text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
-$text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
-$text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
-$text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-restore']['en-us'] = "Restore Default";
-$text['button-restore']['es-cl'] = "Restaurar Predeterminado";
-$text['button-restore']['pt-pt'] = "Restaurar Predefinições.";
-$text['button-restore']['fr-fr'] = "Restaurer les paramètres par défaut";
-$text['button-restore']['pt-br'] = "Restaurar valores";
-$text['button-restore']['pl'] = "Przywróć ustawienia domyślne";
-$text['button-restore']['sv-se'] = "Aktivera Standard Inställningar";
-$text['button-restore']['de-at'] = "Zurücksetzen";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['de-at'] = "Bearbeiten";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['de-at'] = "Löschen";
-
-$text['button-copy']['en-us'] = "Copy";
-$text['button-copy']['es-cl'] = "Copiar";
-$text['button-copy']['pt-pt'] = "Copiar";
-$text['button-copy']['fr-fr'] = "Copier";
-$text['button-copy']['pt-br'] = "Copiar";
-$text['button-copy']['pl'] = "Kopiuj";
-$text['button-copy']['sv-se'] = "Kopiera";
-$text['button-copy']['de-at'] = "Kopieren";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "espalda";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['de-at'] = "Zurück";
-
-$text['button-advanced']['en-us'] = "Advanced";
-$text['button-advanced']['es-cl'] = "Avanzado";
-$text['button-advanced']['pt-pt'] = "Avançadas";
-$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
-$text['button-advanced']['pt-br'] = "Avançar";
-$text['button-advanced']['pl'] = "Zaawansowane";
-$text['button-advanced']['sv-se'] = "Avancerat";
-$text['button-advanced']['de-at'] = "Erweitert";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['de-at'] = "Hinzufügen";
 
 ?>
