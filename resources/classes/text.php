@@ -27,14 +27,18 @@ class text {
 	 */
 	public function get($language_code = null, $app_path = null) {
 		//get the global app_languages.php
-			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/app_languages.php";
+			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/app_languages.php";
 		//get the app_languages.php
 			if ($app_path != null) {
-				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
+				$lang_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
 			}
 			else {
-				include getcwd().'/app_languages.php';
+				$lang_path = getcwd().'/app_languages.php';
 			}
+			if(file_exists($lang_path)){
+				require $lang_path;
+			}
+
 		//get the available languages
 			krsort($text);
 			foreach ($text as $lang_label => $lang_codes) {
@@ -46,7 +50,7 @@ class text {
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
 		//check the session language
-			if(isset($_SESSION['domain'])){
+			if(isset($_SESSION['domain']) and $language_code == null){
 				$language_code = $_SESSION['domain']['language']['code'];
 			}elseif($language_code == null){
 				$language_code = 'en-us';
