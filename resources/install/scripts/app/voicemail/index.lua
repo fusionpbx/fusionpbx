@@ -73,9 +73,14 @@
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
+			vm_say_caller_id_number = session:getVariable("vm_say_caller_id_number");
 			vm_disk_quota = session:getVariable("vm-disk-quota");
 			if (not vm_disk_quota) then
 				vm_disk_quota = session:getVariable("vm_disk_quota");
+			end
+			record_silence_threshold = session:getVariable("record-silence-threshold");
+			if (not record_silence_threshold) then
+				record_silence_threshold = 300;
 			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end

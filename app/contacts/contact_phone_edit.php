@@ -72,102 +72,113 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$phone_label = ($phone_label_custom != '') ? $phone_label_custom : $phone_label;
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the form data
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_phone_uuid = check_str($_POST["contact_phone_uuid"]);
-	}
+		//set thge uuid
+			if ($action == "update") {
+				$contact_phone_uuid = check_str($_POST["contact_phone_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
 
-		//if primary, unmark other primary numbers
-		if ($phone_primary) {
-			$sql = "update v_contact_phones set phone_primary = 0 ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
+				//update last modified
+				$sql = "update v_contacts set ";
+				$sql .= "last_mod_date = now(), ";
+				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and contact_uuid = '".$contact_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-		if ($action == "add") {
-			$contact_phone_uuid = uuid();
-			$sql = "insert into v_contact_phones ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "contact_phone_uuid, ";
-			$sql .= "phone_type_voice, ";
-			$sql .= "phone_type_fax, ";
-			$sql .= "phone_type_video, ";
-			$sql .= "phone_type_text, ";
-			$sql .= "phone_label, ";
-			$sql .= "phone_number, ";
-			$sql .= "phone_extension, ";
-			$sql .= "phone_primary, ";
-			$sql .= "phone_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$contact_phone_uuid."', ";
-			$sql .= (($phone_type_voice) ? 1 : 'null').", ";
-			$sql .= (($phone_type_fax) ? 1 : 'null').", ";
-			$sql .= (($phone_type_video) ? 1 : 'null').", ";
-			$sql .= (($phone_type_text) ? 1 : 'null').", ";
-			$sql .= "'".$phone_label."', ";
-			$sql .= "'".$phone_number."', ";
-			$sql .= "'".$phone_extension."', ";
-			$sql .= (($phone_primary) ? 1 : 0).", ";
-			$sql .= "'".$phone_description."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				//if primary, unmark other primary numbers
+				if ($phone_primary) {
+					$sql = "update v_contact_phones set phone_primary = 0 ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_uuid = '".$contact_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "add")
+				if ($action == "add") {
+					$contact_phone_uuid = uuid();
+					$sql = "insert into v_contact_phones ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "contact_phone_uuid, ";
+					$sql .= "phone_type_voice, ";
+					$sql .= "phone_type_fax, ";
+					$sql .= "phone_type_video, ";
+					$sql .= "phone_type_text, ";
+					$sql .= "phone_label, ";
+					$sql .= "phone_number, ";
+					$sql .= "phone_extension, ";
+					$sql .= "phone_primary, ";
+					$sql .= "phone_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$domain_uuid."', ";
+					$sql .= "'".$contact_uuid."', ";
+					$sql .= "'".$contact_phone_uuid."', ";
+					$sql .= (($phone_type_voice) ? 1 : 'null').", ";
+					$sql .= (($phone_type_fax) ? 1 : 'null').", ";
+					$sql .= (($phone_type_video) ? 1 : 'null').", ";
+					$sql .= (($phone_type_text) ? 1 : 'null').", ";
+					$sql .= "'".$phone_label."', ";
+					$sql .= "'".$phone_number."', ";
+					$sql .= "'".$phone_extension."', ";
+					$sql .= (($phone_primary) ? 1 : 0).", ";
+					$sql .= "'".$phone_description."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-		if ($action == "update") {
-			$sql = "update v_contact_phones set ";
-			$sql .= "contact_uuid = '$contact_uuid', ";
-			$sql .= "phone_type_voice = ".(($phone_type_voice) ? 1 : 'null').", ";
-			$sql .= "phone_type_fax = ".(($phone_type_fax) ? 1 : 'null').", ";
-			$sql .= "phone_type_video = ".(($phone_type_video) ? 1 : 'null').", ";
-			$sql .= "phone_type_text = ".(($phone_type_text) ? 1 : 'null').", ";
-			$sql .= "phone_label = '".$phone_label."', ";
-			$sql .= "phone_number = '".$phone_number."', ";
-			$sql .= "phone_extension = '".$phone_extension."', ";
-			$sql .= "phone_primary = ".(($phone_primary) ? 1 : 0).", ";
-			$sql .= "phone_description = '".$phone_description."' ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_phone_uuid = '".$contact_phone_uuid."'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+					$_SESSION["message"] = $text['message-add'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "add")
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				if ($action == "update") {
+					$sql = "update v_contact_phones set ";
+					$sql .= "contact_uuid = '$contact_uuid', ";
+					$sql .= "phone_type_voice = ".(($phone_type_voice) ? 1 : 'null').", ";
+					$sql .= "phone_type_fax = ".(($phone_type_fax) ? 1 : 'null').", ";
+					$sql .= "phone_type_video = ".(($phone_type_video) ? 1 : 'null').", ";
+					$sql .= "phone_type_text = ".(($phone_type_text) ? 1 : 'null').", ";
+					$sql .= "phone_label = '".$phone_label."', ";
+					$sql .= "phone_number = '".$phone_number."', ";
+					$sql .= "phone_extension = '".$phone_extension."', ";
+					$sql .= "phone_primary = ".(($phone_primary) ? 1 : 0).", ";
+					$sql .= "phone_description = '".$phone_description."' ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_phone_uuid = '".$contact_phone_uuid."'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$_SESSION["message"] = $text['message-update'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {

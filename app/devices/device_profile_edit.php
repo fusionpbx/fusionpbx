@@ -138,7 +138,7 @@ require_once "resources/require.php";
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
+					if (strlen($_SESSION['provision']['path']['text']) > 0) {
 						require_once "app/provision/provision_write.php";
 					}
 
@@ -454,6 +454,13 @@ require_once "resources/require.php";
 				<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 				<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
 				<option value='normal' <?php if ($row['device_key_type'] == "normal") { echo $selected;$found=true; } ?>><?php echo $text['label-normal'] ?></option>
+				<option value='Messages' <?php if ($row['device_key_type'] == "Messages") { echo $selected;$found=true; } ?>><?php echo $text['label-messages'] ?></option>
+				<option value='MicMute' <?php if ($row['device_key_type'] == "MicMute") { echo $selected;$found=true; } ?>><?php echo $text['label-micmute'] ?></option>
+				<option value='Redial' <?php if ($row['device_key_type'] == "Redial") { echo $selected;$found=true; } ?>><?php echo $text['label-redial'] ?></option>
+				<option value='Null' <?php if ($row['device_key_type'] == "Null") { echo $selected;$found=true; } ?>><?php echo $text['label-null'] ?></option>
+				<option value='SpeedDial' <?php if ($row['device_key_type'] == "SpeedDial") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddial'] ?></option>
+				<option value='SpeedDialMenu' <?php if ($row['device_key_type'] == "SpeedDialMenu") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddialmenu'] ?></option>
+				<option value='URL' <?php if ($row['device_key_type'] == "URL") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
 				<?php
 				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 			}

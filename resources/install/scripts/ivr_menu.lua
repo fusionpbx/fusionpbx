@@ -76,10 +76,8 @@
 		end
 	end
 
---set the recordings directory
-	if (domain_count > 1) then
-		recordings_dir = recordings_dir .. "/"..domain_name;
-	end
+--add the domain name to the recordings directory
+	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --set default variable(s)
 	tries = 0;
@@ -358,8 +356,7 @@
 			pos = string.find(ivr_menu_greet_long, ":", 0, true);
 			if (pos ~= nil and string.sub(ivr_menu_greet_long, 0, pos-1) == 'phrase') then
 				freeswitch.consoleLog("notice", "[ivr_menu] phrase detected\n");
-				session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
-				dtmf_digits = session:getVariable("dtmf_digits");
+				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
 				session:setVariable("slept", "false");
 			else 
 				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");				
@@ -408,8 +405,12 @@
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
-								action = string.sub(row.ivr_menu_option_param, 0, pos-1);
-								data = string.sub(row.ivr_menu_option_param, pos+1);
+								if pos then
+									action = string.sub(row.ivr_menu_option_param, 0, pos-1);
+									data = string.sub(row.ivr_menu_option_param, pos+1);
+								else
+									action, data = row.ivr_menu_option_param, ""
+								end
 
 							--check if the option uses a regex
 								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
@@ -432,7 +433,11 @@
 						end
 						if (action == "lua") then
 							pos = string.find(data, " ", 0, true);
-							script = string.sub(data, 0, pos-1);
+							if pos then
+								script = string.sub(data, 0, pos-1);
+							else
+								script = data
+							end
 						end
 					end --if regex match
 

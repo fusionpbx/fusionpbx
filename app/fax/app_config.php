@@ -146,6 +146,13 @@
 		$apps[$x]['permissions'][$y]['name'] = 'fax_file_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_active_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_active_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index
@@ -275,6 +282,14 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_forward_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_send_greeting";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_send_channels";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		//$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_keep_local";
@@ -499,4 +514,79 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
+		$y = 4; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = 'v_fax_tasks';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_task_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_fax';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'fax_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'FAX server primary key';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_next_time';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_lock_time';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'timestamp';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_fax_file';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_wav_file';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_uri';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_dial_string';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_dtmf';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_reply_address';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_interrupted';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_status';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_no_answer_counter';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_no_answer_retry_counter';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_retry_counter';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'task_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
 ?>

@@ -340,15 +340,15 @@ else {
 	echo "	<select name='conference_center_greeting' class='formfld' ".((permission_exists('conference_center_add') || permission_exists('conference_center_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option></option>\n";
 	//recordings
-		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
+		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
 			$tmp_selected = false;
 			$files = Array();
 			echo "<optgroup label='Recordings'>\n";
 			while ($file = readdir($dh)) {
 				if ($file != "." && $file != ".." && $file[0] != '.') {
-					if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$file)) {
-						$selected = ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($conference_center_greeting) > 0) ? true : false;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
+					if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
+						$selected = ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($conference_center_greeting) > 0) ? true : false;
+						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
 						if ($selected) { $tmp_selected = true; }
 					}
 				}
@@ -393,8 +393,8 @@ else {
 			if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 				if (!$tmp_selected) {
 					echo "<optgroup label='selected'>\n";
-					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting)) {
-						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$conference_center_greeting)) {
+						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$conference_center_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
 					}
 					else if (substr($conference_center_greeting, -3) == "wav" || substr($conference_center_greeting, -3) == "mp3") {
 						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";

@@ -103,6 +103,13 @@
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'path';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'voicemail_number';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = '*97';
@@ -171,6 +178,13 @@
 			$array[$x]['default_setting_value'] = 'true';
 			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'directory_extensions';
+			$array[$x]['default_setting_name'] = 'boolean';
+			$array[$x]['default_setting_value'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = 'allow extensions to be provisioned as contacts as $extensions in provision templates';
 			$x++;
 			$array[$x]['default_setting_category'] = 'ntp_server_primary';
 			$array[$x]['default_setting_subcategory'] = 'directory';

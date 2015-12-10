@@ -330,6 +330,17 @@ $text['label-log']['de-at'] = "Log";
 $text['label-log']['ro'] = "Log";
 $text['label-log']['he'] = "";
 
+$text['label-active']['en-us'] = "Active";
+$text['label-active']['es-cl'] = "";
+$text['label-active']['pt-pt'] = "";
+$text['label-active']['fr-fr'] = "";
+$text['label-active']['pt-br'] = "";
+$text['label-active']['pl'] = "";
+$text['label-active']['sv-se'] = "";
+$text['label-active']['de-at'] = "";
+$text['label-active']['ro'] = "";
+$text['label-active']['he'] = "";
+
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['es-cl'] = "Localización";
 $text['label-location']['pt-pt'] = "Localização";
@@ -1110,6 +1121,28 @@ $text['label-accountcode']['sv-se'] = "Kontokod";
 $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['he'] = "קוד חשבון";
+
+$text['label-fax_send_greeting']['en-us'] = "Greeting";
+$text['label-fax_send_greeting']['es-cl'] = "";
+$text['label-fax_send_greeting']['pt-pt'] = "";
+$text['label-fax_send_greeting']['fr-fr'] = "";
+$text['label-fax_send_greeting']['pt-br'] = "";
+$text['label-fax_send_greeting']['pl'] = "";
+$text['label-fax_send_greeting']['sv-se'] = "";
+$text['label-fax_send_greeting']['de-at'] = "";
+$text['label-fax_send_greeting']['ro'] = "";
+$text['label-fax_send_greeting']['he'] = "";
+
+$text['label-fax_send_channels']['en-us'] = "Number of channels";
+$text['label-fax_send_channels']['es-cl'] = "";
+$text['label-fax_send_channels']['pt-pt'] = "";
+$text['label-fax_send_channels']['fr-fr'] = "";
+$text['label-fax_send_channels']['pt-br'] = "";
+$text['label-fax_send_channels']['pl'] = "";
+$text['label-fax_send_channels']['sv-se'] = "";
+$text['label-fax_send_channels']['de-at'] = "";
+$text['label-fax_send_channels']['ro'] = "";
+$text['label-fax_send_channels']['he'] = "";
 
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['es-cl'] = "Los Faxes Enviados";
@@ -2045,5 +2078,39 @@ $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['de-at'] = "Hinzufügen";
 $text['button-add']['ro'] = "Adaugă";
 $text['button-add']['he'] = "הוספה";
+
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['pt-br'] = "Mostrar Todos";
+$text['button-show_all']['pl'] = "Pokaż Wszystkie";
+$text['button-show_all']['uk'] = "Показати всі";
+$text['button-show_all']['de-at'] = "Alle anzeigen";
+$text['button-show_all']['he'] = "";
+
+$text['fax-active_title']['en-us'] = "Fax queue";
+
+$text['fax-active_description']['en-us'] = "Current status of fax queue";
+
+$text['fax-active_title_fax_server']['en-us'] = "Fax";
+
+$text['fax-active_title_enabled']['en-us'] = "Enabled";
+
+$text['fax-active_title_status']['en-us'] = "Status";
+
+$text['fax-active_title_next_time']['en-us'] = "Next time";
+
+$text['fax-active_title_files']['en-us'] = "Files";
+
+$text['fax-active_title_uri']['en-us'] = "URI";
+
+$text['fax-active_status_wait']['en-us'] = "Wait";
+
+$text['fax-active_status_execute']['en-us'] = "Execute";
+
+$text['fax-active_status_success']['en-us'] = "Success";
+
+$text['fax-active_status_fail']['en-us'] = "Fail";
 
 ?>

@@ -161,7 +161,7 @@
 			if ($result_count > 0) {
 				foreach($result as &$row) {
 					//set the greeting directory
-					$path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+					$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 					if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
 						$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
 					}
@@ -239,7 +239,7 @@
 				}
 
 			//delete the recording
-				$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
 					unlink($file_name);
 				}
@@ -278,7 +278,7 @@
 				session_cache_limiter('public');
 
 			//set source folder path
-				$path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+				$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
 
 			//prepare base64 content from db, if enabled
 				if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {

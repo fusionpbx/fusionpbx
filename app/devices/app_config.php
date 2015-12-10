@@ -39,6 +39,22 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_mac_address';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_label';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_template';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_files';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_extension_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -105,6 +121,15 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_username_password';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_alternate';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_profile_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -127,6 +152,25 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_vendor';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_model';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_firmware';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_enable';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_description';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index

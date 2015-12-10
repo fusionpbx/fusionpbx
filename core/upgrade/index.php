@@ -35,6 +35,7 @@ if (
 	!permission_exists('upgrade_source') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_apps') &&
+	!permission_exists('upgrade_switch') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
@@ -52,7 +53,7 @@ if (sizeof($_POST) > 0) {
 
 	// run source update
 	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
-		chdir("/var/www/fusionpbx/");
+		chdir($_SERVER["DOCUMENT_ROOT"]);
 		exec("git pull", $response_source_update);
 		$update_failed = true;
 		if (sizeof($response_source_update) > 0) {
@@ -72,10 +73,8 @@ if (sizeof($_POST) > 0) {
 			//update scripts folder, if allowed (default)
 				if ($_SESSION['switch']['scripts']['dir'] != '') {
 					//copy the files and directories from resources/install
-						$install = new install;
-						$install->domain_uuid = $domain_uuid;
-						$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-						$install->copy_scripts();
+						$obj = new install_switch;
+						$obj->upgrade();
 					//set the message
 						$response_message = $text['message-upgrade_source_scripts'];
 				}
@@ -121,6 +120,13 @@ if (sizeof($_POST) > 0) {
 		$included = true;
 		require_once("core/users/permissions_default.php");
 		$response_message = "Permission Defaults Restored";
+	}
+
+	// upgrade switch
+	if ($do["switch"] && permission_exists("upgrade_switch")) {
+		$included = true;
+		require_once("core/install/upgrade_switch.php");
+		$response_message = "Switch Upgraded";
 	}
 
 	if (sizeof($_POST['do']) > 1) {
@@ -246,6 +252,22 @@ if (permission_exists("group_edit")) {
 	echo "		<label for='do_permissions'>";
 	echo "			<input type='checkbox' class='formfld' name='do[permissions]' id='do_permissions' value='1'>";
 	echo "			".$text['description-upgrade_permissions'];
+	echo "		</label>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+}
+
+if (permission_exists("upgrade_switch")) {
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td width='30%' class='vncell'>\n";
+	echo "		".$text['label-upgrade_switch'];
+	echo "	</td>\n";
+	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
+	echo "		<label for='do_switch'>";
+	echo "			<input type='checkbox' class='formfld' name='do[switch]' id='do_switch' value='1'>";
+	echo "			".$text['description-upgrade_switch'];
 	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";

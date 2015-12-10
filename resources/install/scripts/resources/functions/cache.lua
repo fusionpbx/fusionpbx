@@ -8,7 +8,20 @@
 
 require "resources.functions.trim";
 
-local api = api or freeswitch.API();
+local api = api 
+if (not api) and freeswitch then api = freeswitch.API() else
+api = {}
+function api:execute()
+  return '-ERR UNSUPPORTTED'
+end
+end
+
+local function send_event(action, key)
+  local event = freeswitch.Event("MEMCACHE", action);
+  event:addHeader("API-Command", "memcache");
+  event:addHeader("API-Command-Argument", action .. " " .. key);
+  event:fire()
+end
 
 local Cache = {}
 
@@ -57,6 +70,7 @@ function Cache.set(key, value, expire)
 end
 
 function Cache.del(key)
+  send_event('delete', key)
   local result, err = check_error(api:execute("memcache", "delete " .. key))
   if not result then
     if err == 'NOT FOUND' then

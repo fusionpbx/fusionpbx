@@ -143,10 +143,9 @@
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 			max_len_seconds = 300;
-			silence_threshold = 30;
 			silence_seconds = 5;
 			if (storage_path == "http_cache") then
-				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
@@ -154,10 +153,10 @@
 					if (shout_exists == "true") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
 						--record in mp3 directly
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, silence_threshold, silence_seconds);
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);
 					else
 						--create initial wav recording
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, record_silence_threshold, silence_seconds);
 						--use lame to encode, if available
 							if (file_exists("/usr/bin/lame")) then
 								freeswitch.consoleLog("notice", "using lame for mp3 encoding\n");
@@ -176,7 +175,7 @@
 							end
 					end
 				else
-					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
 				end
 			end
 

@@ -180,11 +180,17 @@ include "root.php";
 							if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_mac_address=:mac ";
+								if($provision['http_domain_filter'] == "true") {
+									$sql  .= "AND domain_uuid=:domain_uuid ";
+								}
 								//$sql .= "WHERE device_mac_address= '$mac' ";
 								$prep_statement_2 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_2) {
 									//use the prepared statement
 										$prep_statement_2->bindParam(':mac', $mac);
+										if($provision['http_domain_filter'] == "true") {
+											$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
+										}
 										$prep_statement_2->execute();
 										$row = $prep_statement_2->fetch();
 									//set the variables from values in the database
@@ -300,8 +306,14 @@ include "root.php";
 				if (strlen($device_uuid) > 0) {
 					$sql = "SELECT * FROM v_devices ";
 					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+					if($provision['http_domain_filter'] == "true") {
+						$sql  .= "AND domain_uuid=:domain_uuid ";
+					}
 					$prep_statement_3 = $this->db->prepare(check_sql($sql));
 					if ($prep_statement_3) {
+						if($provision['http_domain_filter'] == "true") {
+							$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
+						}
 						$prep_statement_3->execute();
 						$row = $prep_statement_3->fetch();
 						$device_uuid_alternate = $row["device_uuid_alternate"];
@@ -311,8 +323,14 @@ include "root.php";
 							//get the new devices information
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+								if($provision['http_domain_filter'] == "true") {
+									$sql  .= "AND domain_uuid=:domain_uuid ";
+								}
 								$prep_statement_4 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_4) {
+									if($provision['http_domain_filter'] == "true") {
+										$prep_statement_4->bindParam(':domain_uuid', $domain_uuid);
+									}
 									$prep_statement_4->execute();
 									$row = $prep_statement_4->fetch();
 									$device_label = $row["device_label"];
@@ -384,7 +402,7 @@ include "root.php";
 				//get the contacts array and add to the template engine
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory']['boolean'] == "true") {
 						//get contacts from the database
-							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
+							$sql = "select c.contact_category, c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
 							$sql .= "from v_contacts as c, v_contact_phones as p ";
 							$sql .= "where c.domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and c.contact_uuid = p.contact_uuid ";
@@ -453,6 +471,29 @@ include "root.php";
 									$view->assign("register_expires_".$line_number, $register_expires);
 							}
 							unset ($prep_statement);
+					}
+
+				//get the extensions array and add to the template engine
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
+						//get contacts from the database
+							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, e.extension ";
+							$sql .= "from v_contacts as c, v_extension_users as cte, v_extensions as e, v_users as u ";
+							$sql .= "where c.domain_uuid = '".$domain_uuid."' ";
+							$sql .= "and c.contact_uuid = u.contact_uuid ";
+							$sql .= "and u.user_uuid = cte.user_uuid ";
+							$sql .= "and cte.extension_uuid = e.extension_uuid ";
+							$sql .= "and e.directory_visible = 'true' ";
+							foreach ($lines as $line){
+								$sql .= "and e.extension != '" . $line['user_id']. "' ";
+							}
+							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
+							$prep_statement = $this->db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							unset ($prep_statement, $sql);
+
+						//assign the contacts array
+							$view->assign("extensions", $extensions);
 					}
 
 				//get the provisioning information from device keys
@@ -623,21 +664,21 @@ include "root.php";
 										case "ldap search": $device_key_type  = "21"; break;
 									}
 								}
-								if ($device_key_category == "memory") {
-										switch ($device_key_type) {
-											case "speed dial": $device_key_type  = "0"; break;
-											case "blf": $device_key_type  = "1"; break;
-											case "presence watcher": $device_key_type  = "2"; break;
-											case "eventlist blf": $device_key_type  = "3"; break;
-											case "speed dial active": $device_key_type  = "4"; break;
-											case "dial dtmf": $device_key_type  = "5"; break;
-											case "voicemail": $device_key_type  = "6"; break;
-											case "call return": $device_key_type  = "7"; break;
-											case "transfer": $device_key_type  = "8"; break;
-											case "call park": $device_key_type  = "9"; break;
-											case "intercom": $device_key_type  = "10"; break;
-											case "ldap search": $device_key_type  = "11"; break;
-										}
+								if ($device_key_category == "memory" || $device_key_category == "expansion") {
+									switch ($device_key_type) {
+										case "speed dial": $device_key_type  = "0"; break;
+										case "blf": $device_key_type  = "1"; break;
+										case "presence watcher": $device_key_type  = "2"; break;
+										case "eventlist blf": $device_key_type  = "3"; break;
+										case "speed dial active": $device_key_type  = "4"; break;
+										case "dial dtmf": $device_key_type  = "5"; break;
+										case "voicemail": $device_key_type  = "6"; break;
+										case "call return": $device_key_type  = "7"; break;
+										case "transfer": $device_key_type  = "8"; break;
+										case "call park": $device_key_type  = "9"; break;
+										case "intercom": $device_key_type  = "10"; break;
+										case "ldap search": $device_key_type  = "11"; break;
+									}
 								}
 							}
 
@@ -760,6 +801,13 @@ include "root.php";
 				$tmp_array = '';
 				$i = 0;
 
+			//build the provision array
+				foreach($_SESSION['provision'] as $key=>$val) {
+					if (strlen($val['var']) > 0) { $value = $val['var']; }
+					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					$provision[$key] = $value;
+				}
+
 			//get the devices
 				$sql = "select * from v_devices ";
 				//$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
@@ -822,8 +870,8 @@ include "root.php";
 										//$file_size = round(filesize($new_path)/1024, 2);
 										//echo $this->template_dir."/".$device_template."/".$file_name." $file_size\n";
 									//write the configuration to the directory
-										if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
-											$dir_array = explode(";", $_SESSION['switch']['provision']['dir']);
+										if (strlen($provision["path"]) > 0) {
+											$dir_array = explode(";", $provision["path"]);
 											foreach($dir_array as $directory) {
 
 												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {

@@ -100,6 +100,7 @@
 			recording_slots = session:getVariable("recording_slots");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
+			domain_name = session:getVariable("domain_name");
 
 		--select the recording number
 			if (recording_slots) then
@@ -256,20 +257,9 @@ if ( session:ready() ) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
 
-	--set the base recordings dir
-		base_recordings_dir = recordings_dir;
+	--add the domain name to the recordings directory
+		recordings_dir = recordings_dir .. "/"..domain_name;
 
-	--use the recording_dir when the variable is set
-		if (session:getVariable("recordings_dir")) then
-			if (base_recordings_dir ~= session:getVariable("recordings_dir")) then
-				recordings_dir = session:getVariable("recordings_dir");
-			end
-		end
-
-	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
-		if (domain_count > 1) then
-			recordings_dir = recordings_dir .. "/" .. domain_name;
-		end
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

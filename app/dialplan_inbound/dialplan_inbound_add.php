@@ -145,12 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
 	//set the context
-		if (count($_SESSION["domains"]) > 1) {
-			$context = 'default';
-		}
-		else {
-			$context = '$${domain_name}';
-		}
+		$context = '$${domain_name}';
 
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
@@ -180,33 +175,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'public', ";
 		$sql .= "'$dialplan_enabled', ";
 		$sql .= "'$dialplan_description' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
-
-	//add condition public context
-		$dialplan_detail_uuid = uuid();
-		$sql = "insert into v_dialplan_details ";
-		$sql .= "(";
-		$sql .= "domain_uuid, ";
-		$sql .= "dialplan_uuid, ";
-		$sql .= "dialplan_detail_uuid, ";
-		$sql .= "dialplan_detail_tag, ";
-		$sql .= "dialplan_detail_type, ";
-		$sql .= "dialplan_detail_data, ";
-		$sql .= "dialplan_detail_group, ";
-		$sql .= "dialplan_detail_order ";
-		$sql .= ") ";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'$domain_uuid', ";
-		$sql .= "'$dialplan_uuid', ";
-		$sql .= "'$dialplan_detail_uuid', ";
-		$sql .= "'condition', ";
-		$sql .= "'context', ";
-		$sql .= "'public', ";
-		$sql .= "'0', ";
-		$sql .= "'10' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);

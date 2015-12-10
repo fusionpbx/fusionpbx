@@ -214,15 +214,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 						$dialplan_detail_order = 10;
 
-						//add the public condition
-							$y = 0;
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
 
@@ -369,7 +360,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (!permission_exists('destination_domain')) {
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							}
-							echo $sql."<br><br>";
+							//echo $sql."<br><br>";
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
@@ -552,7 +543,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_actions').style.display = 'none';\n";
-	echo "			document.getElementById('tr_fax_detection').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
@@ -564,7 +555,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = ''; }\n";
 	echo "			document.getElementById('tr_actions').style.display = '';\n";
-	echo "			document.getElementById('tr_fax_detection').style.display = '';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = ''; }\n";
 	echo "			document.getElementById('tr_cid_name_prefix').style.display = '';\n";
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = ''; }\n";
@@ -688,7 +679,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($row["dialplan_detail_tag"] != "condition") {
 			if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
 			echo "				<tr>\n";
-			echo "					<td>\n";
+			echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
 				echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
 			}

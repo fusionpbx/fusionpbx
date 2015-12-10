@@ -38,6 +38,7 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.explode";
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
+	require "resources.functions.channel_utils"
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -438,23 +439,10 @@ local log = require "resources.functions.log".ring_group
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-						if (ring_group_skip_active ~= nil) then
-							if (ring_group_skip_active == "true") then
-								cmd = "show channels like "..destination_number;
-								reply = trim(api:executeString(cmd));
-								--freeswitch.consoleLog("notice", "[ring group] reply "..cmd.." " .. reply .. "\n");
-								if (reply == "0 total.") then
-									dial_string = dial_string_to_user
-								else
-									if (string.find(reply, domain_name)) then
-										--active call
-									else
-										dial_string = dial_string_to_user;
-									end
-								end
-							else
-								--look inside the reply to check for the correct domain_name
-									dial_string = dial_string_to_user;
+						if (ring_group_skip_active == "true") then
+							local channels = channels_by_number(destination_number, domain_name)
+							if (not channels) or #channels == 0 then
+								dial_string = dial_string_to_user
 							end
 						else
 							dial_string = dial_string_to_user;
@@ -465,6 +453,7 @@ local log = require "resources.functions.log".ring_group
 					else
 						--external number
 						y = 0;
+						dial_string = '';
 						previous_dialplan_uuid = '';
 						for k, r in pairs(dialplans) do
 							if (y > 0) then
@@ -509,7 +498,7 @@ local log = require "resources.functions.log".ring_group
 											end
 										elseif (r.dialplan_detail_type == "bridge") then
 											if (bridge_match) then
-												dial_string = dial_string .. "|" .. square .."]"..dialplan_detail_data;
+												dial_string = dial_string .. delimiter .. square .."]"..dialplan_detail_data;
 												square = "[";
 											else
 												dial_string = square .."]"..dialplan_detail_data;

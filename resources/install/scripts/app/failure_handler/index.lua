@@ -188,8 +188,25 @@
 				end
 
 			elseif (originate_disposition == "USER_NOT_REGISTERED") then
+				
+				--handle USER_NOT_REGISTERED
+				forward_user_not_registered_enabled = session:getVariable("forward_user_not_registered_enabled");
+				if (forward_user_not_registered_enabled == "true") then
+					forward_user_not_registered_destination = session:getVariable("forward_user_not_registered_destination");
+					if (forward_user_not_registered_destination == nil) then
+						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registered to hangup\n");
+						session:hangup("NO_ANSWER");
+					else
+						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registerd to: " .. forward_user_not_registered_destination .. "\n");
+						session:transfer(forward_user_not_registered_destination, "XML", context);
+					end
+				else
+					--send missed call notification
+					missed();
+				end
+				
 				--send missed call notification
-				missed();
+				--missed();
 
 				--handle USER_NOT_REGISTERED
 				if (debug["info"] ) then
