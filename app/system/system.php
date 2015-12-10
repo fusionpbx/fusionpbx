@@ -113,10 +113,20 @@ $document['title'] = $text['title-sys-status'];
 			$switch_bits = $matches[2];
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		".$text['label-switch_version']."\n";
+			echo "		".$text['label-switch']." ".$text['label-version']."\n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
 			echo "</tr>\n";
+			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
+			$switch_git_info = $matches[1];
+			if(strlen($switch_git_info) > 0){
+				echo "<tr>\n";
+				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
+				echo "	</td>\n";
+				echo "	<td class=\"row_style1\">$switch_git_info</td>\n";
+				echo "</tr>\n";
+			}
 		}
 
 		echo "<!--\n";
