@@ -249,9 +249,7 @@ else {
 		$sql = "select count(*) as count from v_xml_cdr ";
 		$sql .= $where;
 		$sql .= " start_epoch BETWEEN ".$start." AND ".$end." ";
-echo '<pre>'; 
-print_r($sql);
-echo '</pre>';
+
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
