@@ -12,6 +12,8 @@
 			<action application="set" data="forward_busy_destination=${user_data ${destination_number}@${domain_name} var forward_busy_destination}"/>
 			<action application="set" data="forward_no_answer_enabled=${user_data ${destination_number}@${domain_name} var forward_no_answer_enabled}"/>
 			<action application="set" data="forward_no_answer_destination=${user_data ${destination_number}@${domain_name} var forward_no_answer_destination}"/>
+			<action application="set" data="forward_user_not_registered_enabled=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_enabled}"/>
+			<action application="set" data="forward_user_not_registered_destination=${user_data ${destination_number}@${domain_name} var forward_user_not_registered_destination}"/>
 			<action application="set" data="do_not_disturb=${user_data ${destination_number}@${domain_name} var do_not_disturb}"/>
 			<action application="set" data="call_timeout=${user_data ${destination_number}@${domain_name} var call_timeout}"/>
 			<action application="set" data="missed_call_app=${user_data ${destination_number}@${domain_name} var missed_call_app}"/>

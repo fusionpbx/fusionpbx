@@ -366,6 +366,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_user_not_registered_destination";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_user_not_registered_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
