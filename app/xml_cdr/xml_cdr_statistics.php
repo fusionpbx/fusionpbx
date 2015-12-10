@@ -44,14 +44,13 @@ else {
 
 //page title and description
 
-	echo "<!-- // javascript calendar and color picker (source: http://rightjs.org) -->";
-	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right.js'></script>";
-	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right-calendar-src.js'></script>";
-	echo "	<script language=\"JavaScript\" type='text/javascript' src='/resources/rightjs/right-colorpicker-src.js'></script>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
+	if (permission_exists('xml_cdr_search_advanced')) {
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?redirect=xml_cdr_statistics';\">\n";
+	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {
 			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true';\">\n";
@@ -70,26 +69,6 @@ else {
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
-#CJB
-/*	echo "<form method='get' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
-	echo "			".$text['label-start_range']."\n";
-	echo "		</td>\n";
-	echo "		<td class='vtable' width='50%' align='left' style='white-space: nowrap;'>\n";
-	echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
-	echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
-	echo "		</td>\n";
-	echo "<td style='padding-top: 8px;' align='right'>";
-	echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
-	echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "</td>";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "</form>";
-*/
-#CJB
 
 //set the style
 	$c = 0;
@@ -100,6 +79,7 @@ else {
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
 	<div align='center'>
 	<table>
 		<tr>
@@ -172,7 +152,17 @@ else {
 			if (data.length > 0)
 				$.plot($("#placeholder"), data, {
 					yaxis: { min: 0 },
-					xaxis: { tickDecimals: 0 }
+					<?php 
+						if ($hours <= 48) {
+							echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+						} else if ($hours > 48 && $hours < 168) {
+							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+						} else {
+							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+						}
+					
+					?>
+					
 				});
 		}
 
@@ -198,10 +188,10 @@ else {
 	$i = 0;
 	foreach ($stats as $row) {
 		echo "<tr >\n";
-		if ($i < 24) {
+		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".($i+1)."</td>\n";
 		}
-		elseif ($i == 24) {
+		elseif ($i == $hours+1) {
 			echo "	<br /><br />\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
@@ -223,14 +213,14 @@ else {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>1</td>\n";
 		}
-		elseif ($i == 25) {
+		elseif ($i == $hours+2) {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>7</td>\n";
 		}
-		elseif ($i == 26) {
+		elseif ($i == $hours+3) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>30</td>\n";
 		}
-		if ($i < 24) {
+		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
 		}
