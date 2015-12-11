@@ -22,8 +22,6 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	
-	Callblock is written by Gerrit Visser <gerrit308@gmail.com>
 */
 
 // make sure the PATH_SEPARATOR is defined
