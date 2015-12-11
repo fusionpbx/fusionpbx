@@ -38,6 +38,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "emails_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+
 
 	//schema details
 		$y = 1; //table array index
