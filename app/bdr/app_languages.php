@@ -1,19 +1,4 @@
 <?php
-
-$text['title-call-block']['en-us'] = "Call Block";
-$text['title-call-block']['es-cl'] = "Bloqueo de llamadas";
-$text['title-call-block']['pt-pt'] = "Bloqueio de Chamadas";
-$text['title-call-block']['fr-fr'] = "Liste noire";
-$text['title-call-block']['nl-nl'] = "";
-$text['title-call-block']['pt-br'] = "Bloqueio de chamadas";
-$text['title-call-block']['pl'] = "Blokowanie rozmów";
-$text['title-call-block']['sv-se'] = "Blockera Samtal";
-$text['title-call-block']['uk'] = "Блокування дзвінків";
-$text['title-call-block']['ro'] = "Blocare apel";
-$text['title-call-block']['de-at'] = "Sperrlisten";
-$text['title-call-block']['ar-eg'] = "حظر المكالمات";
-$text['title-call-block']['he'] = "חסימת מספר";
-
 $text['label-update-complete']['en-us'] = "Update Complete";
 $text['label-update-complete']['es-cl'] = "Actualización Completa";
 $text['label-update-complete']['pt-pt'] = "Actualização Efectuada";
