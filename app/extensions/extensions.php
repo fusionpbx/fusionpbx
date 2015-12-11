@@ -123,6 +123,9 @@ require_once "resources/paging.php";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='30%' align='right'>\n";
+	if (if_group("superadmin")) {
+		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
