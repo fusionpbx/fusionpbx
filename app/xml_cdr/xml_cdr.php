@@ -368,7 +368,6 @@ else {
 		$database = new database;
 	}
 
-	$path_mod = $_SESSION["domain_name"];
 	if ($result_count > 0) {
 		foreach($result as $index => $row) {
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
@@ -391,7 +390,8 @@ else {
 
 			//handle recordings
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_rel_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION["domain_name"].$tmp_rel_path;
 				$tmp_name = '';
 				if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
 					$tmp_name=$row['recording_file'];
@@ -421,7 +421,7 @@ else {
 					$tmp_name = $row['bridge_uuid']."_1.mp3";
 				}
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name) && $seconds > 0) {
-					$recording_file_path = '/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
+					$recording_file_path = $tmp_rel_path.'/'.$tmp_name;
 					$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
 					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
 					switch ($recording_file_ext) {
