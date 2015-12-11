@@ -100,15 +100,15 @@ $text['label-git_info']['sv-se'] = "";
 $text['label-git_info']['uk'] = "";
 $text['label-git_info']['de-at'] = "";
 
-$text['label-switch_version']['en-us'] = "Switch Version";
-$text['label-switch_version']['es-cl'] = "";
-$text['label-switch_version']['pt-pt'] = "";
-$text['label-switch_version']['fr-fr'] = "";
-$text['label-switch_version']['pt-br'] = "";
-$text['label-switch_version']['pl'] = "";
-$text['label-switch_version']['sv-se'] = "";
-$text['label-switch_version']['uk'] = "";
-$text['label-switch_version']['de-at'] = "";
+$text['label-switch']['en-us'] = "Switch";
+$text['label-switch']['es-cl'] = "";
+$text['label-switch']['pt-pt'] = "";
+$text['label-switch']['fr-fr'] = "";
+$text['label-switch']['pt-br'] = "";
+$text['label-switch']['pl'] = "";
+$text['label-switch']['sv-se'] = "";
+$text['label-switch']['uk'] = "";
+$text['label-switch']['de-at'] = "";
 
 $text['label-git_branch']['en-us'] = "Branch:";
 $text['label-git_branch']['es-cl'] = "";
