@@ -43,10 +43,14 @@ else {
 	require_once "resources/header.php";
 
 //page title and description
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
+	if (permission_exists('xml_cdr_search_advanced')) {
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?redirect=xml_cdr_statistics';\">\n";
+	}
 	if (permission_exists('xml_cdr_all')) {
 		if ($_GET['showall'] != 'true') {
 			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true';\">\n";
@@ -75,6 +79,7 @@ else {
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
 	<div align='center'>
 	<table>
 		<tr>
@@ -147,7 +152,17 @@ else {
 			if (data.length > 0)
 				$.plot($("#placeholder"), data, {
 					yaxis: { min: 0 },
-					xaxis: { tickDecimals: 0 }
+					<?php 
+						if ($hours <= 48) {
+							echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+						} else if ($hours > 48 && $hours < 168) {
+							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+						} else {
+							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+						}
+					
+					?>
+					
 				});
 		}
 
@@ -173,10 +188,10 @@ else {
 	$i = 0;
 	foreach ($stats as $row) {
 		echo "<tr >\n";
-		if ($i < 24) {
+		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".($i+1)."</td>\n";
 		}
-		elseif ($i == 24) {
+		elseif ($i == $hours+1) {
 			echo "	<br /><br />\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
@@ -198,14 +213,14 @@ else {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>1</td>\n";
 		}
-		elseif ($i == 25) {
+		elseif ($i == $hours+2) {
 			echo "<tr>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>7</td>\n";
 		}
-		elseif ($i == 26) {
+		elseif ($i == $hours+3) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>30</td>\n";
 		}
-		if ($i < 24) {
+		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
 		}
