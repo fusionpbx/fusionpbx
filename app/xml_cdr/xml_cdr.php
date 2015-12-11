@@ -113,7 +113,7 @@ else {
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		if ($_GET['showall'] != 'true') {
+		if ($_REQUEST['showall'] != 'true') {
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
 		}
 	}
@@ -325,7 +325,7 @@ else {
 		$col_count++;
 	}
 	echo "<th>&nbsp;</th>\n";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 		$col_count++;
 	}
@@ -446,7 +446,7 @@ else {
 			}
 
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_GET['showall']) ? "&showall=true" : null)."'";
+				$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
 			}
 			else {
 				$tr_link = null;
@@ -495,7 +495,7 @@ else {
 			else {
 				echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
 			}
-			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+			if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				echo 	$row['domain_name'].'&nbsp;';
 				echo "	</td>\n";
