@@ -1254,6 +1254,10 @@ SPAN.playback_progress_bar {
 			}
 		});
 
+	    $("#selecctall").change(function(){
+      		$(".checkbox1").prop('checked', $(this).prop("checked"));
+      	});
+
 		// linkify rows (except the last - the list_control_icons cell)
 		// on a table with a class of 'tr_hover', according to the href
 		// attribute of the <tr> tag

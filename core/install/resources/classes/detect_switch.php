@@ -40,10 +40,12 @@ require_once "resources/classes/EventSocket.php";
 		protected $_major;
 		protected $_minor;
 		protected $_build;
+		protected $_bits;
 		public function major()		{ return $this->_major; }
 		public function minor()		{ return $this->_minor; }
 		public function build()		{ return $this->_build; }
-		public function version()	{ return $this->_major.".".$this->_minor.".".$this->_build; }
+		public function bits()		{ return $this->_bits; }
+		public function version()	{ return $this->_major.".".$this->_minor.".".$this->_build." (".$this->_bits.")"; }
 
 		// dirs - detected by from the switch
 		protected $_base_dir = '';
@@ -126,7 +128,7 @@ require_once "resources/classes/EventSocket.php";
 				throw new Exception('Failed to use event socket');
 			}
 			$FS_Version = $this->event_socket_request('api version');
-			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d+(?:\.\d+)?)/", $FS_Version, $matches);
+			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $FS_Version, $matches);
 			$this->_major = $matches[1];
 			$this->_minor = $matches[2];
 			$this->_build = $matches[3];
