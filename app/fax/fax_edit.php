@@ -686,7 +686,108 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-fax_send_greeting']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_send_greeting' maxlength='255' value=\"$fax_send_greeting\">\n";
+		if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
+			echo "<script>\n";
+			echo "var Objs;\n";
+			echo "\n";
+			echo "function changeToInput(obj){\n";
+			echo "	tb=document.createElement('INPUT');\n";
+			echo "	tb.type='text';\n";
+			echo "	tb.name=obj.name;\n";
+			echo "	tb.setAttribute('class', 'formfld');\n";
+			echo "	tb.setAttribute('style', 'width: 350px;');\n";
+			echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+			echo "	tbb=document.createElement('INPUT');\n";
+			echo "	tbb.setAttribute('class', 'btn');\n";
+			echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+			echo "	tbb.type='button';\n";
+			echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+			echo "	tbb.objs=[obj,tb,tbb];\n";
+			echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+			echo "	obj.parentNode.insertBefore(tb,obj);\n";
+			echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+			echo "	obj.parentNode.removeChild(obj);\n";
+			echo "}\n";
+			echo "\n";
+			echo "function Replace(obj){\n";
+			echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+			echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+			echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+			echo "}\n";
+			echo "</script>\n";
+			echo "\n";
+		}
+		echo "	<select name='fax_send_greeting' class='formfld' ".((permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "		<option></option>\n";
+		//recordings
+			if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
+				$tmp_selected = false;
+				$files = Array();
+				echo "<optgroup label='Recordings'>\n";
+				while ($file = readdir($dh)) {
+					if ($file != "." && $file != ".." && $file[0] != '.') {
+						if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
+							$selected = ($fax_send_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($fax_send_greeting) > 0) ? true : false;
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
+							if ($selected) { $tmp_selected = true; }
+						}
+					}
+				}
+				closedir($dh);
+				echo "</optgroup>\n";
+			}
+		//phrases
+			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (count($result) > 0) {
+				echo "<optgroup label='Phrases'>\n";
+				foreach ($result as &$row) {
+					$selected = ($fax_send_greeting == "phrase:".$row["phrase_name"].".".$domain_uuid) ? true : false;
+					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
+					if ($selected) { $tmp_selected = true; }
+				}
+				unset ($prep_statement);
+				echo "</optgroup>\n";
+			}
+		//sounds
+			$dir_path = $_SESSION['switch']['sounds']['dir'];
+			recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+			if (count($dir_array) > 0) {
+				echo "<optgroup label='Sounds'>\n";
+				foreach ($dir_array as $key => $value) {
+					if (strlen($value) > 0) {
+						if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+							$fax_send_greeting = substr($fax_send_greeting, 71);
+						}
+						$selected = ($fax_send_greeting == $key) ? true : false;
+						echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+						if ($selected) { $tmp_selected = true; }
+					}
+				}
+				echo "</optgroup>\n";
+			}
+		//select
+			if (strlen($fax_send_greeting) > 0) {
+				if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
+					if (!$tmp_selected) {
+						echo "<optgroup label='selected'>\n";
+						if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting)) {
+							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+						}
+						else if (substr($fax_send_greeting, -3) == "wav" || substr($fax_send_greeting, -3) == "mp3") {
+							echo "		<option value='".$fax_send_greeting."' selected='selected'>".$fax_send_greeting."</option>\n";
+						}
+						else {
+							echo "		<option value='".$fax_send_greeting."' selected='selected'>".$fax_send_greeting."</option>\n";
+						}
+						echo "</optgroup>\n";
+					}
+					unset($tmp_selected);
+				}
+			}
+		echo "	</select>\n";
 		echo "<br />\n";
 		echo " ".$text['description-fax_send_greeting']."\n";
 		echo "</td>\n";
