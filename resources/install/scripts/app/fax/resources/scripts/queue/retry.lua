@@ -1,8 +1,7 @@
 -- include libraries
 	require "resources.functions.config";
-	require "resources.functions.explode";
 	require "resources.functions.split";
-	require "resources.functions.count";
+	require "resources.functions.file_exists";
 
 	local log       = require "resources.functions.log".fax_retry
 	local Database  = require "resources.functions.database"
@@ -27,6 +26,10 @@
 	end
 
 	local dbh = Database.new('system')
+
+-- Global environment
+	default_language                     = env:getHeader("default_language")
+	default_dialect                      = env:getHeader("default_dialect")
 
 -- Channel/FusionPBX variables
 	local uuid                           = env:getHeader("uuid")
@@ -312,18 +315,32 @@
 		--Success
 		log.infof("RETRY STATS SUCCESS: GATEWAY[%s]", fax_options);
 
+		Tasks.remove_task(task)
+
+		local Text = require "resources.functions.text"
+		local text = Text.new("app.fax.app_languages")
+
+		local env = {
+			fax_options                = fax_options;
+			destination_number         = number_dialed:match("^([^@]*)");
+			document_transferred_pages = fax_document_transferred_pages;
+			document_total_pages       = fax_document_total_pages;
+			message                    = text['message-send_success'];
+		}
+
+		local body    = Tasks.build_template(task, 'outbound/success/body', env)
+		local subject = Tasks.build_template(task, 'outbound/success/subject', env)
+
+		if not subject then
+			log.warning("Can not find template for email")
+			subject = "Fax to: " .. number_dialed .. " SENT"
+		end
+
+		Tasks.send_mail_task(task, {subject, body}, uuid, file_exists(fax_file))
+
 		if keep_local == "false" then
 			os.remove(fax_file);
 		end
-
-		Tasks.remove_task(task)
-		Tasks.send_mail_task(task, {
-			"Fax to: " .. number_dialed .. " SENT",
-			table.concat{
-				"We are happy to report the fax was sent successfully.",
-				"It has been attached for your records.",
-			}}, uuid
-		)
 	end
 
 	if fax_success ~= "1" then
@@ -345,14 +362,32 @@
 			Tasks.wait_task(task, answered, hangup_cause_q850)
 			if task.status ~= 0 then
 				Tasks.remove_task(task)
-				Tasks.send_mail_task(task, {
-					"Fax to: " .. number_dialed .. " FAILED",
-					table.concat{
-						"We are sorry the fax failed to go through. ",
-						"It has been attached. Please check the number "..number_dialed..", ",
-						"and if it was correct you might consider emailing it instead.",
-					}}, uuid
-				)
+
+				local Text = require "resources.functions.text"
+				local text = Text.new("app.fax.app_languages")
+
+				local env = {
+					fax_options                = fax_options;
+					destination_number         = number_dialed:match("^([^@]*)");
+					document_transferred_pages = fax_document_transferred_pages;
+					document_total_pages       = fax_document_total_pages;
+					hangup_cause               = hangup_cause;
+					hangup_cause_q850          = hangup_cause_q850;
+					fax_result_code            = fax_result_code;
+					fax_result_text            = fax_result_text;
+					message                    = text['message-send_fail'];
+				}
+
+				local body    = Tasks.build_template(task, 'outbound/fail/body', env)
+				local subject = Tasks.build_template(task, 'outbound/fail/subject', env)
+
+				if not subject then
+					log.warning("Can not find template for email")
+					subject = "Fax to: " .. number_dialed .. " FAILED"
+				end
+
+				Tasks.send_mail_task(task, {subject, body}, uuid, file_exists(fax_file))
+
 			end
 		end
 	end

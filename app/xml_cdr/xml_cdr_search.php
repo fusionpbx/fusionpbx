@@ -53,8 +53,12 @@ echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').foc
 echo "		}";
 echo "	}";
 echo "</script>";
-	
-echo "<form method='post' action='xml_cdr.php'>\n";
+
+if (strlen(check_str($_GET['redirect'])) > 0) {
+	echo "<form method='get' action='" . $_GET['redirect'] . ".php'>\n";
+} else {
+	echo "<form method='post' action='xml_cdr.php'>\n";
+}
 
 echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";

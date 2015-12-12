@@ -706,6 +706,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		foreach ($fax_numbers as $fax_number) {
 			$dial_string  = $common_dial_string;
+
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
@@ -767,7 +768,12 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		if (!$included) {
 			//redirect the browser
 			$_SESSION["message"] = $response;
-			header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+			if (permission_exists('fax_active_view')) {
+				header("Location: fax_active.php?id=".$fax_uuid);
+			}
+			else {
+				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+			}
 			exit;
 		}
 
