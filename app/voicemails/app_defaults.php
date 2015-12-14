@@ -88,7 +88,6 @@ if ($domains_processed == 1) {
 		$voicemails = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($voicemails as $row) {
 			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$row['domain_name'].'/'.$row['voicemail_id'];
-			echo $path."\n";
 			mkdir($path, 07, true);
 		}
 		unset ($prep_statement, $sql);
