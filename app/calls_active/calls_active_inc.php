@@ -93,7 +93,21 @@ else {
 			echo "	</tr>";
 			echo "</table>";
 
-			echo "<b>".$text['title']."</b>";
+			$rows = array();
+			foreach ($results["rows"] as &$row) {
+				//determine show all
+					if (!($show == 'all' && permission_exists('call_active_all'))) {
+						$foreign_call = true;
+						foreach ($row as $key => $value) {
+							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
+						}
+						if ($foreign_call) { continue; }
+					}
+				// append call
+					$rows[] = $row;
+			}
+
+			echo "<b>".$text['title']." (" . count($rows) . ")"."</b>";
 			echo "<br><br>\n";
 			echo $text['description']."\n";
 			echo "<br><br>\n";
@@ -123,15 +137,7 @@ else {
 			echo "<td class='list_control_icon'></td>\n";
 			echo "</tr>\n";
 
-			foreach ($results["rows"] as $row) {
-				//determine show all
-					if (!($show == 'all' && permission_exists('call_active_all'))) {
-						$foreign_call = true;
-						foreach ($row as $key => $value) {
-							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
-						}
-						if ($foreign_call) { continue; }
-					}
+			foreach ($rows as &$row) {
 				//set the php variables
 					foreach ($row as $key => $value) {
 						$$key = $value;
