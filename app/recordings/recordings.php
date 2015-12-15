@@ -77,8 +77,15 @@ require_once "resources/check_auth.php";
 					$recording_filename = base64_decode($_GET['filename']); //xml_cdr
 				}
 
-			if (file_exists($path.'/'.$recording_filename)) {
-				$fd = fopen($path.'/'.$recording_filename, "rb");
+			// build full path
+				if(substr($recording_filename,0,1) == '/'){
+					$full_recording_path = $path . $recording_filename;
+				} else {
+					$full_recording_path = $path . '/' . $recording_filename;
+				}
+
+			if (file_exists($full_recording_path)) {
+				$fd = fopen($full_recording_path, "rb");
 				if ($_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
@@ -97,14 +104,14 @@ require_once "resources/check_auth.php";
 				header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				header("Content-Length: " . filesize($path.'/'.$recording_filename));
+				header("Content-Length: " . filesize($full_recording_path));
 				ob_clean();
 				fpassthru($fd);
 			}
 
 			//if base64, remove temp recording file
 			if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
-				@unlink($path.'/'.$recording_filename);
+				@unlink($full_recording_path);
 			}
 		}
 		exit;

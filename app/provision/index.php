@@ -60,6 +60,11 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
