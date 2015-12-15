@@ -2586,6 +2586,17 @@ $text['button-edit']['de-at'] = "Bearbeiten";
 $text['button-edit']['ar-eg'] = "تعديل";
 $text['button-edit']['he'] = "עריכה";
 
+$text['button-export']['en-us'] = "Export";
+$text['button-export']['es-cl'] = "Exportación";
+$text['button-export']['pt-pt'] = "Exportação";
+$text['button-export']['fr-fr'] = "Exportation";
+$text['button-export']['pt-br'] = "Exportação ";
+$text['button-export']['pl'] = "Eksportuj";
+$text['button-export']['sv-se'] = "Export";
+$text['button-export']['uk'] = "";
+$text['button-export']['de-at'] = "Export";
+$text['button-export']['he'] = "יצוא";
+
 $text['button-delete']['en-us'] = "Delete";
 $text['button-delete']['es-cl'] = "Eliminar";
 $text['button-delete']['pt-pt'] = "Remover";

@@ -167,6 +167,9 @@ else {
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
+	if (if_group("superadmin")) {
+		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
+	}
 	if (permission_exists('device_all')) {
 		if ($_GET['showall'] == 'true') {
 			echo "	<input type='hidden' name='showall' value='true'>";
