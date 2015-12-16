@@ -58,22 +58,22 @@
 
 --send the email
 	if (file == nil) then
-		freeswitch.email("",
-			"",
+		freeswitch.email(to,
+			to,
 			"To: "..to.."\nFrom: "..from.."\nX-Headers: "..headers.."\nSubject: "..subject,
 			body
 			);
 	else
 		if (convert_cmd == nil) then
-			freeswitch.email("",
-				"",
+			freeswitch.email(to,
+				to,
 				"To: "..to.."\nFrom: "..from.."\nX-Headers: "..headers.."\nSubject: "..subject,
 				body,
 				file
 				);
 		else
-			freeswitch.email("",
-				"",
+			freeswitch.email(to,
+				to,
 				"To: "..to.."\nFrom: "..from.."\nX-Headers: "..headers.."\nSubject: "..subject,
 				body,
 				file,
