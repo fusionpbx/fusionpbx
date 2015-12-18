@@ -187,6 +187,8 @@
 								condition_type = 'time';
 							elseif (dialplan_detail_type == "week") then 
 								condition_type = 'time';
+							elseif (dialplan_detail_type == "date-time") then 
+								condition_type = 'time';
 							else
 								condition_type = 'default';
 							end
