@@ -5,12 +5,14 @@
  * @method array get
  */
 class text {
+
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
 		//place holder
 	}
+
 	/**
 	 * Called when there are no references to a particular object
 	 * unset the variables used in the class
@@ -20,6 +22,7 @@ class text {
 			unset($this->$key);
 		}
 	}
+
 	/**
 	 * Get a specific item from the cache
 	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
@@ -40,7 +43,6 @@ class text {
 			if(file_exists($lang_path)){
 				require $lang_path;
 			}
-
 		//get the available languages
 			krsort($text);
 			foreach ($text as $lang_label => $lang_codes) {
@@ -79,7 +81,7 @@ class text {
 					}
 				}
 			}
-			
+
 		//return the array of translations
 			return $text;
 	}
