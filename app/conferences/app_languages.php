@@ -21,11 +21,6 @@
 	$text['button-view_active']['pt-pt'] = "Ver Ativo";
 	$text['button-view_active']['fr-fr'] = "Voir Active";
 
-	$text['button-view']['en-us'] = "View";
-	$text['button-view']['es-cl'] = "Ver";
-	$text['button-view']['pt-pt'] = "Ver";
-	$text['button-view']['fr-fr'] = "Voir";
-
 	$text['table-name']['en-us'] = "Name";
 	$text['table-name']['es-cl'] = "Nombre";
 	$text['table-name']['pt-pt'] = "Nome";
@@ -55,12 +50,6 @@
 	$text['table-description']['es-cl'] = "Descripción";
 	$text['table-description']['pt-pt'] = "Descrição";
 	$text['table-description']['fr-fr'] = "Description";
-
-	//conferences_delete
-	$text['confirm-delete']['en-us'] = "Delete Complete";
-	$text['confirm-delete']['es-cl'] = "Eliminación Completa";
-	$text['confirm-delete']['pt-pt'] = "Remoçãp Efectuada";
-	$text['confirm-delete']['fr-fr'] = "Supprimé";
 
 	//conferences_add
 	$text['confirm-add']['en-us'] = "Add Complete";
@@ -103,20 +92,10 @@
 	$text['label-conference-edit']['pt-pt'] = "Edição de Conferências";
 	$text['label-conference-edit']['fr-fr'] = "Editer les conférences";
 
-	$text['button-back']['en-us'] = "Back";
-	$text['button-back']['es-cl'] = "Volver";
-	$text['button-back']['pt-pt'] = "Voltar";
-	$text['button-back']['fr-fr'] = "Retour";
-
 	$text['label-extension']['en-us'] = "Extension";
 	$text['label-extension']['es-cl'] = "Extensión";
 	$text['label-extension']['pt-pt'] = "Extensão";
 	$text['label-extension']['fr-fr'] = "Extension";
-
-	$text['label-name']['en-us'] = "Name";
-	$text['label-name']['es-cl'] = "Nombre";
-	$text['label-name']['pt-pt'] = "Nome";
-	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['description-name']['en-us'] = "Enter the conference name.";
 	$text['description-name']['es-cl'] = "Ingrese el nombre de la conferencia.";
@@ -148,21 +127,6 @@
 	$text['confirm-delete-2']['pt-pt'] = "Deseja realmente apagar isto?";
 	$text['confirm-delete-2']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
-	$text['button-add']['en-us'] = "Add";
-	$text['button-add']['es-cl'] = "Agregar";
-	$text['button-add']['pt-pt'] = "Adicionar";
-	$text['button-add']['fr-fr'] = "Ajouter";
-
-	$text['button-save']['en-us'] = "Save";
-	$text['button-save']['es-cl'] = "Guardar";
-	$text['button-save']['pt-pt'] = "Gravar";
-	$text['button-save']['fr-fr'] = "Sauvegarder";
-
-	$text['label-description']['en-us'] = "Description";
-	$text['label-description']['es-cl'] = "Descripción";
-	$text['label-description']['pt-pt'] = "Descrição";
-	$text['label-description']['fr-fr'] = "Description";
-
 	$text['description-info']['en-us'] = "Enter the description.";
 	$text['description-info']['es-cl'] = "Ingrese una descripción.";
 	$text['description-info']['pt-pt'] = "Insira a descrição.";
@@ -178,11 +142,6 @@
 	$text['description-order']['pt-pt'] = "Digite o número do pedido.";
 	$text['description-order']['fr-fr'] = "Entrer le numéro d'ordre.";
 
-	$text['label-order']['en-us'] = "Order";
-	$text['label-order']['es-cl'] = "Orden";
-	$text['label-order']['pt-pt'] = "Pedido";
-	$text['label-order']['fr-fr'] = "Ordre";
-
 	$text['description-user-add']['en-us'] = "Assign the users that are can manage this conference extension.";
 	$text['description-user-add']['es-cl'] = "Asignar usuarios para que puedan administrar esta extensión de conferencia.";
 	$text['description-user-add']['pt-pt'] = "Atribuir utilizadores que podem gerir esta extensão de conferência.";
@@ -197,16 +156,6 @@
 	$text['description-flags']['es-cl'] = "Flags opcionales de conferencia. Ejemplo: mute|deaf|waste|moderator";
 	$text['description-flags']['pt-pt'] = "Flags opcionais de conferências. Exemplos: mute|deaf|waste|moderator";
 	$text['description-flags']['fr-fr'] = "Flags Optionnels de la conférence. exemple: mute|deaf|waste|moderator";
-
-	$text['label-true']['en-us'] = "True";
-	$text['label-true']['es-cl'] = "Verdadero";
-	$text['label-true']['pt-pt'] = "Sim";
-	$text['label-true']['fr-fr'] = "Oui";
-
-	$text['label-false']['en-us'] = "False";
-	$text['label-false']['es-cl'] = "Falso";
-	$text['label-false']['pt-pt'] = "Não";
-	$text['label-false']['fr-fr'] = "Non";
 
 	$text['label-user_list']['en-us'] = "User List";
 	$text['label-user_list']['es-cl'] = "Lista de usuarios";
