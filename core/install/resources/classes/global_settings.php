@@ -38,13 +38,10 @@ require_once "root.php";
 		// dirs - detected from the switch
 		protected $_switch_base_dir = '';
 		protected $_switch_cache_dir = '';
-		protected $_switch_certs_dir = '';
 		protected $_switch_conf_dir = '';
 		protected $_switch_db_dir = '';
-		protected $_switch_external_ssl_dir = '';
 		protected $_switch_grammar_dir = '';
 		protected $_switch_htdocs_dir = '';
-		protected $_switch_internal_ssl_dir = '';
 		protected $_switch_log_dir = '';
 		protected $_switch_mod_dir = '';
 		protected $_switch_recordings_dir = '';
@@ -55,13 +52,10 @@ require_once "root.php";
 		protected $_switch_temp_dir = '';
 		public function switch_base_dir()			{ return $this->_switch_base_dir; }
 		public function switch_cache_dir()			{ return $this->_switch_cache_dir; }
-		public function switch_certs_dir()			{ return $this->_switch_certs_dir; }
 		public function switch_conf_dir()			{ return $this->_switch_conf_dir; }
 		public function switch_db_dir()				{ return $this->_switch_db_dir; }
-		public function switch_external_ssl_dir()	{ return $this->_switch_external_ssl_dir; }
 		public function switch_grammar_dir()		{ return $this->_switch_grammar_dir; }
 		public function switch_htdocs_dir()			{ return $this->_switch_htdocs_dir; }
-		public function switch_internal_ssl_dir()	{ return $this->_switch_internal_ssl_dir; }
 		public function switch_log_dir()			{ return $this->_switch_log_dir; }
 		public function switch_mod_dir()			{ return $this->_switch_mod_dir; }
 		public function switch_recordings_dir()		{ return $this->_switch_recordings_dir; }
