@@ -20,26 +20,6 @@ $text['title-settings-add']['uk'] = "Додавання налаштувань";
 $text['title-settings-add']['sv-se'] = "Lägg Till Inställning";
 $text['title-settings-add']['de-at'] = "Einstellung hinzufügen";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à Jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "Оновлено";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-
 $text['label-xml-rpc-user']['en-us'] = "XML RPC Auth User";
 $text['label-xml-rpc-user']['es-cl'] = "Usuario XML RPC";
 $text['label-xml-rpc-user']['pt-pt'] = "Utilizador de autenticação de XML RPC";
@@ -219,24 +199,5 @@ $text['description-event-socket-ip']['pl'] = "Wprowadź adres IP 'Event Socket' 
 $text['description-event-socket-ip']['uk'] = "Enter the event socket IP address. default: 127.0.0.1 ";
 $text['description-event-socket-ip']['sv-se'] = "Fyll i event socket IP address. default: 127.0.0.1";
 $text['description-event-socket-ip']['de-at'] = "Geben Sie die Event Socket IP Addresse an. Standard: 127.0.0.1";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Guardar";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>

@@ -320,16 +320,6 @@ $text['header-source_update_results']['sv-se'] = "Resultat";
 $text['header-source_update_results']['uk'] = "Результати";
 $text['header-source_update_results']['de-at'] = "Ergebnisse";
 
-$text['header-message']['en-us'] = "Message";
-$text['header-message']['es-cl'] = "Mensaje";
-$text['header-message']['pt-pt'] = "Mensagem";
-$text['header-message']['fr-fr'] = "Message";
-$text['header-message']['pt-br'] = "Mensagem";
-$text['header-message']['pl'] = "Wiadomość";
-$text['header-message']['sv-se'] = "Meddelande";
-$text['header-message']['uk'] = "Повідомлення";
-$text['header-message']['de-at'] = "Nachricht";
-
 $text['header-database_type']['en-us'] = "Database Type";
 $text['header-database_type']['es-cl'] = "Tipo de base de datos";
 $text['header-database_type']['pt-pt'] = "Tipo de Base de Dados";

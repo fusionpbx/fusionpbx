@@ -210,14 +210,4 @@ $text['description-active_queues']['sv-se'] = "Lista alla köer med en eller fle
 $text['description-active_queues']['uk'] = "Перелік всіх черг, в яких в даний час є активні абоненти.";
 $text['description-active_queues']['de-at'] = "Auflistung aller derzeit aktiven Warteschlangen mit einem oder mehreren Anrufern.";
 
-$text['button-view']['en-us'] = "View";
-$text['button-view']['es-cl'] = "Ver";
-$text['button-view']['pt-pt'] = "Vista";
-$text['button-view']['fr-fr'] = "Voir";
-$text['button-view']['pt-br'] = "Visualizar";
-$text['button-view']['pl'] = "Widok";
-$text['button-view']['sv-se'] = "Visa";
-$text['button-view']['uk'] = "Перегляд";
-$text['button-view']['de-at'] = "Ansicht";
-
 ?>

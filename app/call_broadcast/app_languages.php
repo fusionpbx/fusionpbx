@@ -33,17 +33,6 @@ $text['option-false']['uk'] = "Ні";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['he'] = "לא חוקי";
 
-$text['message-message']['en-us'] = "Message";
-$text['message-message']['es-cl'] = "Mensaje";
-$text['message-message']['pt-pt'] = "Mensagem";
-$text['message-message']['fr-fr'] = "Message";
-$text['message-message']['pt-br'] = "Mensagem";
-$text['message-message']['pl'] = "Wiadomość";
-$text['message-message']['sv-se'] = "Meddelande";
-$text['message-message']['uk'] = "Повідомлення";
-$text['message-message']['de-at'] = "Nachricht";
-$text['message-message']['he'] = "הודעה";
-
 $text['label-view-calls']['en-us'] = "View Calls";
 $text['label-view-calls']['es-cl'] = "Ver llamadas";
 $text['label-view-calls']['pt-pt'] = "Ver Chamadas";
@@ -77,17 +66,6 @@ $text['label-phone']['uk'] = "Список телефонних номерів";
 $text['label-phone']['de-at'] = "Liste der Telefonnummern";
 $text['label-phone']['he'] = "רשימת מספרי טלפון";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['he'] = "שם";
-
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
 $text['label-message']['pt-pt'] = "Mensagem";
@@ -120,17 +98,6 @@ $text['label-destination']['sv-se'] = "Destinationsnummer";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Zielnummer";
 $text['label-destination']['he'] = "יעד";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['he'] = "תיאור";
 
 $text['label-concurrent-limit']['en-us'] = "Concurrent Limit";
 $text['label-concurrent-limit']['es-cl'] = "Límite de concurrencia";
@@ -340,17 +307,6 @@ $text['confirm-delete-info']['uk'] = "Ви дійсно бажаєте це ви
 $text['confirm-delete-info']['de-at'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-info']['he'] = "";
 
-$text['confirm-delete']['en-us'] = "Delete Complete";
-$text['confirm-delete']['es-cl'] = "Eliminación Completa";
-$text['confirm-delete']['pt-pt'] = "Remoção Efectuada";
-$text['confirm-delete']['fr-fr'] = "Supprimé";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Usunięto poprawnie";
-$text['confirm-delete']['sv-se'] = "Borttagning Klar";
-$text['confirm-delete']['uk'] = "Видалено";
-$text['confirm-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['confirm-delete']['he'] = "";
-
 $text['confirm-add']['en-us'] = "Add Complete";
 $text['confirm-add']['es-cl'] = "Ingreso Completo";
 $text['confirm-add']['pt-pt'] = "Adição Efectuada";
@@ -383,49 +339,5 @@ $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['uk'] = "Транслювати";
 $text['button-send']['de-at'] = "Senden";
 $text['button-send']['he'] = "נשלח";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-$text['button-save']['he'] = "שמור";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['he'] = "";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['he'] = "";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['he'] = "חזרה";
 
 ?>

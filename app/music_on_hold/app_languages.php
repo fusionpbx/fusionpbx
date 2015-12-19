@@ -77,17 +77,6 @@ $text['message-event-socket']['uk'] = "Помилка підключення д�
 $text['message-event-socket']['de-at'] = "Verbindung zum Event Socket unterbrochen.";
 $text['message-event-socket']['he'] = "";
 
-$text['message-delete']['en-us'] = "Do you really want to delete this file?";
-$text['message-delete']['es-cl'] = "¿Realmente desea eliminar este archivo?";
-$text['message-delete']['pt-pt'] = "Deseja realmente remover este ficheiro?";
-$text['message-delete']['fr-fr'] = "Voulez-vous vraiment supprimer ce fichier?";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Vill du verkligen ta bort denna fil?";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Wollen Sie diese Datei wirklich löschen?";
-$text['message-delete']['he'] = "?האם אתה בטוח רוצה למחוק את הקובץ";
-
 $text['message-click-select']['en-us'] = "Double-Click to Select an Existing Category";
 $text['message-click-select']['es-cl'] = "Doble click para seleccionar una categoría existente";
 $text['message-click-select']['pt-pt'] = "Duplo-Clique para Seleccionar uma Categoria Existente";
@@ -264,17 +253,6 @@ $text['label-default']['sv-se'] = "Standard";
 $text['label-default']['uk'] = "Типово";
 $text['label-default']['de-at'] = "Standard";
 $text['label-default']['he'] = "ברירת מחדל";
-
-$text['label-category']['en-us'] = "Category";
-$text['label-category']['es-cl'] = "Categoría";
-$text['label-category']['pt-pt'] = "Categoria";
-$text['label-category']['fr-fr'] = "Catégorie";
-$text['label-category']['pt-br'] = "Categoria";
-$text['label-category']['pl'] = "Kategoria";
-$text['label-category']['sv-se'] = "Kategori";
-$text['label-category']['uk'] = "Категорія";
-$text['label-category']['de-at'] = "Kategorie";
-$text['label-category']['he'] = "קטגוריה";
 
 $text['desc-moh']['en-us'] = "Music on hold can be in WAV or MP3 format. To play an MP3 file you must have mod_shout enabled on the 'Modules' tab. You can adjust the volume of the MP3 audio from the 'Settings' tab. For best performance upload 16 bit, 8/16/32/48 kHz <i>mono</i> WAV files.";
 $text['desc-moh']['es-cl'] = "La música en espera puede estar en formato WAV o MP3. Para reproducir un archivo en frmato MP3 debe tener activado el módulo mod_shout. Puede ajustar el volumen del MP3 desde la pestaña 'Configuraciones'. Para el mejor rendimiento se recomienda utilizar archivos en formato WAV 16 bit, 8/16/32/48 kHz <i>mono</i>.";
