@@ -210,16 +210,6 @@ $text['label-no']['sv-se'] = "Nej";
 $text['label-no']['uk'] = "Ні";
 $text['label-no']['de-at'] = "Nein";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-
 $text['label-mute-all-alt']['en-us'] = "Mute all Participants.";
 $text['label-mute-all-alt']['es-cl'] = "Silenciar a todos excepto al moderador.";
 $text['label-mute-all-alt']['pt-pt'] = "Silenciar tudo menos o moderador.";
@@ -459,16 +449,6 @@ $text['description-active']['pl'] = "Lista wszystkich aktywnych konferencji z pr
 $text['description-active']['sv-se'] = "Lista alla Konferenser som är aktiva med en eller fler deltagare";
 $text['description-active']['uk'] = "";
 $text['description-active']['de-at'] = "Liste alle aktiven Konferenzen mit einem oder mehreren Teilnehmern.";
-
-$text['button-view']['en-us'] = "View";
-$text['button-view']['es-cl'] = "Ver";
-$text['button-view']['pt-pt'] = "Vista";
-$text['button-view']['fr-fr'] = "Voir";
-$text['button-view']['pt-br'] = "Visualizar";
-$text['button-view']['pl'] = "Widok";
-$text['button-view']['sv-se'] = "Visa";
-$text['button-view']['uk'] = "Перегляд";
-$text['button-view']['de-at'] = "Ansicht";
 
 $text['button-stop-rec']['en-us'] = "Stop Record";
 $text['button-stop-rec']['es-cl'] = "Detener Grabación";
