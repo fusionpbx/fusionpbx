@@ -120,24 +120,4 @@ $text['description-filter']['sv-se'] = "Filtrerar loggen med texten:";
 $text['description-filter']['uk'] = "Фільтрування логів по тексту";
 $text['description-filter']['de-at'] = "Log Datei nach Text filtern:";
 
-$text['button-reload']['en-us'] = "Reload";
-$text['button-reload']['es-cl'] = "Recargar";
-$text['button-reload']['pt-pt'] = "Recarregar";
-$text['button-reload']['fr-fr'] = "Recharger";
-$text['button-reload']['pt-br'] = "Recarregar";
-$text['button-reload']['pl'] = "Przeładuj";
-$text['button-reload']['sv-se'] = "Ladda Om";
-$text['button-reload']['uk'] = "Оновити";
-$text['button-reload']['de-at'] = "Neu Laden";
-
-$text['button-download']['en-us'] = "Download Logs";
-$text['button-download']['es-cl'] = "Descargar Registro";
-$text['button-download']['pt-pt'] = "Descarregar Logs";
-$text['button-download']['fr-fr'] = "Télécharger les Logs";
-$text['button-download']['pt-br'] = "Download";
-$text['button-download']['pl'] = "Pobierz logi";
-$text['button-download']['sv-se'] = "Ladda Ned Log";
-$text['button-download']['uk'] = "Скачати";
-$text['button-download']['de-at'] = "Download";
-
 ?>

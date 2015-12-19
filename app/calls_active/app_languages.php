@@ -152,17 +152,6 @@ $text['label-number']['uk'] = "Номер";
 $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['he'] = "מספר";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['he'] = "שם";
-
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
 $text['label-message']['fr-fr'] = "Message";
@@ -380,15 +369,5 @@ $text['button-show_all']['pl'] = "Pokaż Wszystkie";
 $text['button-show_all']['uk'] = "Показати всі";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['he'] = "חזרה";
 
 ?>

@@ -90,14 +90,4 @@ $text['description-execute']['sv-se'] = "Erbjuder ett smidigt sätt att köra sy
 $text['description-execute']['uk'] = "Забезпечує зручний спосіб виконати команди PHP, switch, а також системні команди";
 $text['description-execute']['de-at'] = "Bietet die Möglichkeit System, PHP und Switch Kommandos auszuführen.";
 
-$text['button-execute']['en-us'] = "Execute";
-$text['button-execute']['es-cl'] = "Ejecutar";
-$text['button-execute']['pt-pt'] = "Executar";
-$text['button-execute']['fr-fr'] = "Executer";
-$text['button-execute']['pt-br'] = "Executar";
-$text['button-execute']['pl'] = "Wykonaj";
-$text['button-execute']['sv-se'] = "Kör";
-$text['button-execute']['uk'] = "Виконати";
-$text['button-execute']['de-at'] = "Ausführen";
-
 ?>

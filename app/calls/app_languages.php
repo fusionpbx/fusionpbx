@@ -154,26 +154,6 @@ $text['label-follow-me']['sv-se'] = "Följ Mig ";
 $text['label-follow-me']['uk'] = "";
 $text['label-follow-me']['de-at'] = "Anrufweiterschaltung";
 
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activo";
-$text['label-enabled']['pt-pt'] = "Activo";
-$text['label-enabled']['fr-fr'] = "Activé";
-$text['label-enabled']['pt-br'] = "Habilitado";
-$text['label-enabled']['pl'] = "Włączony";
-$text['label-enabled']['sv-se'] = "Aktiverad ";
-$text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['de-at'] = "An";
-
-$text['label-enable']['en-us'] = "Enable";
-$text['label-enable']['es-cl'] = "Activar";
-$text['label-enable']['pt-pt'] = "Activar";
-$text['label-enable']['fr-fr'] = "Activer";
-$text['label-enable']['pt-br'] = "Ativar";
-$text['label-enable']['pl'] = "Włącz";
-$text['label-enable']['sv-se'] = "Aktivera ";
-$text['label-enable']['uk'] = "";
-$text['label-enable']['de-at'] = "Aktivieren";
-
 $text['label-dnd']['en-us'] = "Do Not Disturb";
 $text['label-dnd']['es-cl'] = "No Molestar";
 $text['label-dnd']['pt-pt'] = "Não Perturbar";
@@ -183,26 +163,6 @@ $text['label-dnd']['pl'] = "Nie przeszkadzaj (DND)";
 $text['label-dnd']['sv-se'] = "Stör Ej ";
 $text['label-dnd']['uk'] = "Не турбувати";
 $text['label-dnd']['de-at'] = "Bitte nicht stören";
-
-$text['label-disabled']['en-us'] = "Disabled";
-$text['label-disabled']['es-cl'] = "Desactivado";
-$text['label-disabled']['pt-pt'] = "Desactivo";
-$text['label-disabled']['fr-fr'] = "Desactivé";
-$text['label-disabled']['pt-br'] = "Inválido";
-$text['label-disabled']['pl'] = "Wyłączony";
-$text['label-disabled']['sv-se'] = "Inaktiverad ";
-$text['label-disabled']['uk'] = "Відключено";
-$text['label-disabled']['de-at'] = "Inaktiv";
-
-$text['label-disable']['en-us'] = "Disable";
-$text['label-disable']['es-cl'] = "Desactivar";
-$text['label-disable']['pt-pt'] = "Desactivo";
-$text['label-disable']['fr-fr'] = "Désactiver";
-$text['label-disable']['pt-br'] = "Desativado";
-$text['label-disable']['pl'] = "Wyłącz";
-$text['label-disable']['sv-se'] = "Inaktivera ";
-$text['label-disable']['uk'] = "Відключити";
-$text['label-disable']['de-at'] = "Deaktivieren";
 
 $text['label-destinations']['en-us'] = "Destinations";
 $text['label-destinations']['es-cl'] = "Destinos";
@@ -494,25 +454,5 @@ $text['check-false']['sv-se'] = "Falsk ";
 $text['check-false']['uk'] = "Ні";
 $text['check-false']['fr-fr'] = "";
 $text['check-false']['de-at'] = "Aus";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara ";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka ";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>
