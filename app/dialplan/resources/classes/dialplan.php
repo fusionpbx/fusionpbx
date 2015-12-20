@@ -218,7 +218,7 @@ include "root.php";
 			private function app_uuid_exists() {
 				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
 				$sql .= "and app_uuid = '".$this->app_uuid."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
