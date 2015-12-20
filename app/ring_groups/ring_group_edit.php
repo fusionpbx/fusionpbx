@@ -366,6 +366,9 @@ else {
 
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //pre-populate the form
 	if (strlen($ring_group_uuid) == 0) { $ring_group_uuid = check_str($_GET["id"]); }
 	if (strlen($ring_group_uuid) > 0) {
@@ -496,6 +499,7 @@ else {
 	echo "	<option value='sequence' ".(($ring_group_strategy == "sequence") ? "selected='selected'" : null).">".$text['option-sequence']."</option>\n";
 	echo "	<option value='enterprise' ".(($ring_group_strategy == "enterprise") ? "selected='selected'" : null).">".$text['option-enterprise']."</option>\n";
 	echo "	<option value='rollover' ".(($ring_group_strategy == "rollover") ? "selected='selected'" : null).">".$text['option-rollover']."</option>\n";
+	echo "	<option value='random' ".(($ring_group_strategy == "random") ? "selected='selected'" : null).">".$text['option-random']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-strategy']."\n";
@@ -589,8 +593,7 @@ else {
 	echo "	".$text['label-timeout_destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-	switch_select_destination("dialplan", "", "ring_group_timeout_action", $ring_group_timeout_action, "", "");
+	echo $destination->select('dialplan', 'ring_group_timeout_action', $ring_group_timeout_action);
 	echo "	<br />\n";
 	echo "	".$text['description-timeout_destination']."\n";
 	echo "</td>\n";

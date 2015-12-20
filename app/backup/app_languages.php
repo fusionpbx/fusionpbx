@@ -180,16 +180,6 @@ $text['description-backup']['sv-se'] = "För att skapa en säkerhetskopia av Kä
 $text['description-backup']['uk'] = "Щоб створити резервну копію  вказаних нижче об’єктів (вказано у налаштуваннях за замовчуванням), виберіть потрібний формат і призначення";
 $text['description-backup']['de-at'] = "Um eine Sicherung der unten angeführten Quell Pfade (in Standard Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
 
-$text['button-restore']['en-us'] = "Restore";
-$text['button-restore']['es-cl'] = "Restaurar";
-$text['button-restore']['pt-pt'] = "Restaurar";
-$text['button-restore']['fr-fr'] = "Restaurer";
-$text['button-restore']['pt-br'] = "Restaurar valores";
-$text['button-restore']['pl'] = "Przywróć ustawienia domyślne";
-$text['button-restore']['sv-se'] = "Återställ";
-$text['button-restore']['uk'] = "Відновити";
-$text['button-restore']['de-at'] = "Widerherstellen";
-
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['es-cl'] = "Generar";
 $text['button-generate']['pt-pt'] = "Gerar";
@@ -199,15 +189,5 @@ $text['button-generate']['pl'] = "Generuj";
 $text['button-generate']['sv-se'] = "Generera";
 $text['button-generate']['uk'] = "Згенерувати";
 $text['button-generate']['de-at'] = "Generieren";
-
-$text['button-download']['en-us'] = "Download";
-$text['button-download']['es-cl'] = "Descargar";
-$text['button-download']['pt-pt'] = "Baixar";
-$text['button-download']['fr-fr'] = "Télécharger";
-$text['button-download']['pt-br'] = "Download";
-$text['button-download']['pl'] = "Pobierz";
-$text['button-download']['sv-se'] = "Ladda Ned";
-$text['button-download']['uk'] = "Скачати";
-$text['button-download']['de-at'] = "Download";
 
 ?>

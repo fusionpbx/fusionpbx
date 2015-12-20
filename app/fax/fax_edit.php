@@ -53,12 +53,7 @@ else {
 	}
 
 //set the fax directory
-	if (count($_SESSION["domains"]) > 1) {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
-	}
-	else {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
-	}
+	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
 //get the fax extension
 	if (strlen($fax_extension) > 0) {
@@ -101,7 +96,7 @@ else {
 	}
 
 //get the http post values and set them as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$fax_name = check_str($_POST["fax_name"]);
 		$fax_extension = check_str($_POST["fax_extension"]);
 		$fax_accountcode = check_str($_POST["accountcode"]);
@@ -135,7 +130,10 @@ else {
 		} else {
 			$forward_prefix = $forward_prefix.$fax_forward_number.'#'; //found
 		}
+		$fax_local = check_str($_POST["fax_local"]); //! @todo check in database
 		$fax_description = check_str($_POST["fax_description"]);
+		$fax_send_greeting = check_str($_POST["fax_send_greeting"]);
+		$fax_send_channels = check_str($_POST["fax_send_channels"]);
 	}
 
 //delete the user from the fax users
@@ -273,6 +271,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($fax_forward_number) > 0) {
 						$sql .= "fax_forward_number, ";
 					}
+					$sql .= "fax_send_greeting,";
+					$sql .= "fax_send_channels,";
 					$sql .= "fax_description ";
 					$sql .= ")";
 					$sql .= "values ";
@@ -304,6 +304,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($fax_forward_number) > 0) {
 						$sql .= "'$fax_forward_number', ";
 					}
+					$sql .= (strlen($fax_send_greeting)==0?'NULL':"'$fax_send_greeting'") . ",";
+					$sql .= (strlen($fax_send_channels)==0?'NULL':"'$fax_send_channels'") . ",";
+
 					$sql .= "'$fax_description' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -317,9 +320,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//update the fax extension in the database
 					$dialplan_type = "";
 					$sql = "update v_fax set ";
-					if (strlen($dialplan_uuid) > 0) {
-						$sql .= "dialplan_uuid = '".$dialplan_uuid."', ";
-					}
 					$sql .= "fax_extension = '$fax_extension', ";
 					$sql .= "accountcode = '$fax_accountcode', ";
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
@@ -347,180 +347,44 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						$sql .= "fax_forward_number = null, ";
 					}
+					$tmp = strlen($fax_send_greeting)==0?'NULL':"'$fax_send_greeting'";
+					$sql .= "fax_send_greeting = $tmp,";
+					$tmp = strlen($fax_send_channels)==0?'NULL':"'$fax_send_channels'";
+					$sql .= "fax_send_channels = $tmp,";
+
 					$sql .= "fax_description = '$fax_description' ";
+
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and fax_uuid = '$fax_uuid' ";
+
 					$db->exec(check_sql($sql));
 					unset($sql);
 			}
 
-			//if there are no variables in the vars table then add them
-				if ($dialplan_type != "add") {
-					$sql = "select count(*) as num_rows from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if ($row['num_rows'] == 0) {
-							$dialplan_type = "add";
-						}
-						else {
-							$dialplan_type = "update";
-						}
-					}
+			//get the dialplan_uuid
+				$sql = "select * from v_fax ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and fax_uuid = '$fax_uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$dialplan_uuid = $row["dialplan_uuid"];
 				}
+				unset ($prep_statement);
 
-				if ($dialplan_type == "add") {
-					//add the dialplan entry for fax
-						$dialplan_name = $fax_name;
-						$dialplan_order ='310';
-						$dialplan_context = $_SESSION['context'];
-						$dialplan_enabled = 'true';
-						$dialplan_description = $fax_description;
-						$app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
-
-						//<!-- default ${domain_name} -->
-						//<condition field="destination_number" expression="^\*9978$">
-							$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-							$dialplan_detail_type = 'destination_number';
-							$dialplan_detail_data = '^'.$fax_destination_number.'$';
-							$dialplan_detail_order = '010';
-							$dialplan_detail_group = '';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="answer" />
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'answer';
-							$dialplan_detail_data = '';
-							$dialplan_detail_order = '020';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="set" data="fax_uuid="/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = 'fax_uuid='.$fax_uuid;
-							$dialplan_detail_order = '030';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="system" data="$switch_scripts_dir/emailfax.sh USER DOMAIN {$_SESSION['switch']['scripts']['dir']}/fax/inbox/9872/${last_fax}.tif"/>
-							$dialplan_detail_tag = 'action'; //condition, action, anti-action
-							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = "api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua";
-							$dialplan_detail_order = '040';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="set" data="fax_enable_t38=true"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = 'fax_enable_t38=true';
-							$dialplan_detail_order = '050';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="set" data="fax_enable_t38_request=false"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = 'fax_enable_t38_request=false';
-							$dialplan_detail_order = '060';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="set" data="last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = 'last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}';
-							$dialplan_detail_order = '070';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="playback" data="silence_stream://2000"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'playback';
-							$dialplan_detail_data = 'silence_stream://2000';
-							$dialplan_detail_order = '080';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="rxfax" data="$switch_storage_dir/fax/inbox/${last_fax}.tif"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'rxfax';
-							if (count($_SESSION["domains"]) > 1) {
-								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
-							}
-							else {
-								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
-							}
-							$dialplan_detail_order = '090';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-						//<action application="hangup"/>
-							$dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan_detail_type = 'hangup';
-							$dialplan_detail_data = '';
-							$dialplan_detail_order = '100';
-							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-				}
-				if ($dialplan_type == "update") {
-					//update the fax dialplan entry
-						$sql = "update v_dialplans set ";
-						$sql .= "dialplan_name = '$fax_name', ";
-						if (strlen($dialplan_order) > 0) {
-							$sql .= "dialplan_order = '333', ";
-						}
-						$sql .= "dialplan_context = '".$_SESSION['context']."', ";
-						$sql .= "dialplan_enabled = 'true', ";
-						$sql .= "dialplan_description = '$fax_description' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-						unset($sql);
-
-					//update dialplan detail condition
-						$sql = "update v_dialplan_details set ";
-						$sql .= "dialplan_detail_data = '^".$fax_destination_number."$' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_detail_tag = 'condition' ";
-						$sql .= "and dialplan_detail_type = 'destination_number' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-						unset($sql);
-
-					//update dialplan detail action
-						if (count($_SESSION["domains"]) > 1) {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
-						}
-						else {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/'.$forward_prefix.'${last_fax}.tif';
-						}
-						$sql = "update v_dialplan_details set ";
-						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_detail_tag = 'action' ";
-						$sql .= "and dialplan_detail_type = 'rxfax' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$db->query($sql);
-
-					//update dialplan detail action
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = "api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua";
-						$sql = "update v_dialplan_details set ";
-						$sql .= "dialplan_detail_data = '".check_str($dialplan_detail_data)."' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and dialplan_detail_tag = 'action' ";
-						$sql .= "and dialplan_detail_type = 'set' ";
-						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-						$sql .= "and dialplan_detail_data like 'api_hangup_hook=%' ";
-						$db->query(check_sql($sql));
-				}
-
-			//save the xml
-				save_dialplan_xml();
-
-			//apply settings reminder
-				$_SESSION["reload_xml"] = true;
-
-			//clear the cache
-				$cache = new cache;
-				$cache->delete("dialplan:".$_SESSION["context"]);
+			//dialplan add or update
+				$c = new fax;
+				$c->db = $db;
+				$c->domain_uuid = $_SESSION['domain_uuid'];
+				$c->dialplan_uuid = $dialplan_uuid;
+				$c->fax_name = $fax_name;
+				$c->fax_uuid = $fax_uuid;
+				$c->fax_extension = $fax_extension;
+				$c->fax_forward_number = $fax_forward_number;
+				$c->destination_number = $fax_destination_number;
+				$c->fax_description = $fax_description;
+				$a = $c->dialplan();
 
 			//redirect the browser
 				if ($action == "update" && permission_exists('fax_extension_edit')) {
@@ -571,8 +435,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_forward_number = $row["fax_forward_number"];
 			$fax_description = $row["fax_description"];
+			$fax_send_greeting = $row["fax_send_greeting"];
+			$fax_send_channels = $row["fax_send_channels"];
 		}
 		unset ($prep_statement);
+	}
+	else{
+		$fax_send_channels = 10;
 	}
 
 //replace the dash with a space
@@ -814,6 +683,129 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-fax_send_greeting']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
+			echo "<script>\n";
+			echo "var Objs;\n";
+			echo "\n";
+			echo "function changeToInput(obj){\n";
+			echo "	tb=document.createElement('INPUT');\n";
+			echo "	tb.type='text';\n";
+			echo "	tb.name=obj.name;\n";
+			echo "	tb.setAttribute('class', 'formfld');\n";
+			echo "	tb.setAttribute('style', 'width: 350px;');\n";
+			echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+			echo "	tbb=document.createElement('INPUT');\n";
+			echo "	tbb.setAttribute('class', 'btn');\n";
+			echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+			echo "	tbb.type='button';\n";
+			echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+			echo "	tbb.objs=[obj,tb,tbb];\n";
+			echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+			echo "	obj.parentNode.insertBefore(tb,obj);\n";
+			echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+			echo "	obj.parentNode.removeChild(obj);\n";
+			echo "}\n";
+			echo "\n";
+			echo "function Replace(obj){\n";
+			echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+			echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+			echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+			echo "}\n";
+			echo "</script>\n";
+			echo "\n";
+		}
+		echo "	<select name='fax_send_greeting' class='formfld' ".((permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "		<option></option>\n";
+		//recordings
+			if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
+				$tmp_selected = false;
+				$files = Array();
+				echo "<optgroup label='Recordings'>\n";
+				while ($file = readdir($dh)) {
+					if ($file != "." && $file != ".." && $file[0] != '.') {
+						if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
+							$selected = ($fax_send_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($fax_send_greeting) > 0) ? true : false;
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
+							if ($selected) { $tmp_selected = true; }
+						}
+					}
+				}
+				closedir($dh);
+				echo "</optgroup>\n";
+			}
+		//phrases
+			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (count($result) > 0) {
+				echo "<optgroup label='Phrases'>\n";
+				foreach ($result as &$row) {
+					$selected = ($fax_send_greeting == "phrase:".$row["phrase_name"].".".$domain_uuid) ? true : false;
+					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
+					if ($selected) { $tmp_selected = true; }
+				}
+				unset ($prep_statement);
+				echo "</optgroup>\n";
+			}
+		//sounds
+			$dir_path = $_SESSION['switch']['sounds']['dir'];
+			recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+			if (count($dir_array) > 0) {
+				echo "<optgroup label='Sounds'>\n";
+				foreach ($dir_array as $key => $value) {
+					if (strlen($value) > 0) {
+						if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+							$fax_send_greeting = substr($fax_send_greeting, 71);
+						}
+						$selected = ($fax_send_greeting == $key) ? true : false;
+						echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+						if ($selected) { $tmp_selected = true; }
+					}
+				}
+				echo "</optgroup>\n";
+			}
+		//select
+			if (strlen($fax_send_greeting) > 0) {
+				if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
+					if (!$tmp_selected) {
+						echo "<optgroup label='selected'>\n";
+						if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting)) {
+							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$fax_send_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+						}
+						else if (substr($fax_send_greeting, -3) == "wav" || substr($fax_send_greeting, -3) == "mp3") {
+							echo "		<option value='".$fax_send_greeting."' selected='selected'>".$fax_send_greeting."</option>\n";
+						}
+						else {
+							echo "		<option value='".$fax_send_greeting."' selected='selected'>".$fax_send_greeting."</option>\n";
+						}
+						echo "</optgroup>\n";
+					}
+					unset($tmp_selected);
+				}
+			}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo " ".$text['description-fax_send_greeting']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-fax_send_channels']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_send_channels' maxlength='255' value=\"$fax_send_channels\">\n";
+		echo "<br />\n";
+		echo " ".$text['description-fax_send_channels']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-description']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -822,7 +814,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "".$text['description-info']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
 	}
 
 	echo "	<tr>\n";
@@ -1041,7 +1032,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</table>";
 		echo "<br>";
 		echo "</div>\n";
-
 	}
 
 	echo "</form>";

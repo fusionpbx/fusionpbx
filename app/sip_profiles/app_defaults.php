@@ -61,13 +61,13 @@
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] == 0) {
 					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					else {
-						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
 					}
 					$db->beginTransaction();
 					$xml_files = glob($sip_profile_dir);
@@ -92,15 +92,18 @@
 									$sip_profile_description = "The Internal IPV6 profile binds to the IP version 6 address and is similar to the Internal profile.\n";
 									break;
 								case "external":
-									$sip_profile_description .= "The External profile external provides anonymous calling in the public context. ";
+									$sip_profile_description = "The External profile external provides anonymous calling in the public context. ";
 									$sip_profile_description .= "By default the External profile binds to port 5080. ";
 									$sip_profile_description .= "Calls can be sent using a SIP URL \"voip.domain.com:5080\" ";
+									break;
+								case "external-ipv6":
+									$sip_profile_description = "The External IPV6 profile binds to the IP version 6 address and is similar to the External profile.\n";
 									break;
 								case "lan":
 									$sip_profile_description = "The LAN profile is the same as the Internal profile except that it is bound to the LAN IP.\n";
 									break;
 								default:
-									$sip_profile_description .= '';
+									$sip_profile_description = '';
 								}
 
 						//add the sip profile if it is not false

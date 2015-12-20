@@ -42,6 +42,15 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	//	$device_template = check_str($_REQUEST['template']);
 	//}
 
+//get the mac address for Cisco 79xx in the URL as &name=SEP000000000000
+	if (empty($mac)){
+		$name = check_str($_REQUEST['name']);
+		if (substr($name, 0, 3) == "SEP") {
+			$mac = strtolower(substr($name, 3, 12));
+			unset($name);
+		}
+	}
+
 //check alternate MAC source
 	if (empty($mac)){
 		//set the http user agent
@@ -49,6 +58,11 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
 	}
@@ -77,6 +91,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 				$domain_uuid = $row["domain_uuid"];
 			}
 			unset($result, $prep_statement);
+			$_SESSION['domain_uuid'] = $domain_uuid;
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -240,7 +255,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 			header('HTTP/1.0 401 Unauthorized');
 			header("Content-Type: text/plain");
-			echo 'Authorization Required';
+			header("Content-Length: 0");
 			exit;
 		} else {
 			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
@@ -251,7 +266,9 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 				usleep(rand(1000000,3000000));//1-3 seconds.
-				echo 'Authorization Required';
+				$content = 'Authorization Required';
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
 				exit;
 			}
 		}
@@ -280,20 +297,33 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	$cfg_ext = ".cfg";
-	if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strlen($file_contents));
-	} else if ($device_vendor === "yealink") {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strval(strlen($file_contents)));
-	} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
-		$file_contents = utf8_decode($file_contents);
-		header("Content-Type: text/plain; charset=iso-8859-1");
-		header("Content-Length: ".strlen($file_contents));
-	} else {
-		header("Content-Type: text/xml; charset=utf-8");
-		header("Content-Length: ".strlen($file_contents));
+	if ($_REQUEST['content_type'] == 'application/octet-stream') {
+		$file_name = str_replace("{\$mac}",$mac,$file);
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.basename($file_name).'"');
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file_contents));
+	}
+	else {
+		$cfg_ext = ".cfg";
+		if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strlen($file_contents));
+		} else if ($device_vendor === "yealink") {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strval(strlen($file_contents)));
+		} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
+			$file_contents = utf8_decode($file_contents);
+			header("Content-Type: text/plain; charset=iso-8859-1");
+			header("Content-Length: ".strlen($file_contents));
+		} else {
+			header("Content-Type: text/xml; charset=utf-8");
+			header("Content-Length: ".strlen($file_contents));
+		}
 	}
 	echo $file_contents;
 	closelog();

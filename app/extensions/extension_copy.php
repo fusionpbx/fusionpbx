@@ -176,11 +176,11 @@ else {
 		//get the voicemails
 			$sql = "select * from v_voicemails ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			if (is_numeric($extension)) {
-				$sql .= "and voicemail_id = '$extension' ";
+			if (is_numeric($number_alias)) {
+				$sql .= "and voicemail_id = '$number_alias' ";
 			}
 			else {
-				$sql .= "and voicemail_id = '$number_alias' ";
+				$sql .= "and voicemail_id = '$extension' ";
 			}
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();

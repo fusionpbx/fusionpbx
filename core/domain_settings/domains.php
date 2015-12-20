@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2015
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -57,9 +57,6 @@ else {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
-						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_description'] = $row['domain_description'];
 					}
 				}
 				unset($result, $prep_statement);
@@ -78,7 +75,7 @@ else {
 				$domain->db = $db;
 				$domain->set();
 
-			// on domain change, redirect user
+			//redirect the user
 				if ($_SESSION["login"]["destination"] != '') {
 					// to default, or domain specific, login destination
 					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
@@ -90,10 +87,14 @@ else {
 		}
 	}
 
+//redirect the user
+	if (file_exists($_SERVER["DOCUMENT_ROOT"]."/app/domains/domains.php")) {
+		$href = '/app/domains/domains.php';
+	}
+
 //includes
 	require_once "resources/header.php";
 	$document['title'] = $text['title-domains'];
-
 	require_once "resources/paging.php";
 
 //get the http values and set them as variables
@@ -102,24 +103,6 @@ else {
 		$order_by = check_str($_GET["order_by"]);
 		$order = check_str($_GET["order"]);
 	}
-
-//show the header and the search
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
-	echo "		<td width='50%' align='right' valign='top'>\n";
-	echo "			<form method='get' action=''>\n";
-	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
-	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "			</form>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' valign='top' colspan='2'>\n";
-	echo "			".$text['description-domains']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_domains ";
@@ -149,12 +132,12 @@ else {
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//get the  list
+//get the domains
 	$sql = "select * from v_domains ";
 	if (strlen($search) > 0) {
 		$sql .= "where (";
-		$sql .= " 	domain_name like '%".$search."%' ";
-		$sql .= " 	or domain_description like '%".$search."%' ";
+		$sql .= "	domain_name like '%".$search."%' ";
+		$sql .= "	or domain_description like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
@@ -180,6 +163,24 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//show the header and the search
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
+	echo "		<td width='50%' align='right' valign='top'>\n";
+	echo "			<form method='get' action=''>\n";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</form>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' valign='top' colspan='2'>\n";
+	echo "			".$text['description-domains']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
@@ -193,53 +194,37 @@ else {
 	echo "</tr>\n";
 
 	if (count($domains) > 0) {
-
-		function get_child_domains($domain_parent_uuid) {
-			global $domains, $indent;
-			global $c, $row_style, $text, $v_link_label_edit, $v_link_label_delete;
-			foreach ($domains as $domain_uuid => $domain) {
-				if ($domain['parent_uuid'] == $domain_parent_uuid) {
-
-					$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
-					echo "<tr ".$tr_link.">\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
-					echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
-					if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
-						echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
-					}
-					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>";
-					if (permission_exists('domain_edit')) {
-						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
-					}
-					echo "	</td>";
-					echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
-					echo "	<td class='list_control_icons'>";
-					if (permission_exists('domain_edit')) {
-						echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
-					}
-					if (permission_exists('domain_delete')) {
-						if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
-							echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-						}
-						else {
-							echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
-						}
-					}
-					echo "	</td>\n";
-					echo "</tr>\n";
-					$c = ($c == 0) ? 1 : 0;
-
-					$indent++;
-					get_child_domains($domain_uuid);
-					$indent--;
+		foreach ($domains as $domain_uuid => $domain) {
+			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
+			echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
+			if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
+				echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
+			}
+			echo "	</td>";
+			echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+			}
+			if (permission_exists('domain_delete')) {
+				if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
+					echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+				}
+				else {
+					echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
 				}
 			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			$c = ($c == 0) ? 1 : 0;
 		}
-
-		$indent = 0;
-		get_child_domains();
-
 	} //end if results
 
 	echo "<tr>\n";
@@ -263,4 +248,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

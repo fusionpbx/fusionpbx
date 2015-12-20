@@ -65,7 +65,7 @@
 			--database connection
 				if (continue) then
 					--connect to the database
-						dofile(scripts_dir.."/resources/functions/database_handle.lua");
+						require "resources.functions.database_handle";
 						dbh = database_handle('system');
 
 					--exits the script if we didn't connect properly
@@ -144,14 +144,14 @@
 						
 						--read root xml language file, parse included xml files
 							local xml_file_paths = {}
-							local file_handle = io.open("/usr/local/freeswitch/conf/lang/"..language.."/"..language..".xml", "r");
+							local file_handle = io.open(phrases_dir.."/"..language.."/"..language..".xml", "r");
 							if (file_handle ~= nil) then
 								for file_line in file_handle:lines() do
 									if (string.find(file_line, 'cmd="include" data="', 0, true) ~= nil) then
 										pos_beg = string.find(file_line, 'cmd="include" data="', 0, true) + 20;
 										pos_end = string.find(file_line, '"/>', 0, true) - 1;
 										xml_file_path = string.sub(file_line, pos_beg, pos_end);
-										table.insert(xml_file_paths, "/usr/local/freeswitch/conf/lang/"..language.."/"..xml_file_path);
+										table.insert(xml_file_paths, lang_path.."/"..language.."/"..xml_file_path);
 										--freeswitch.consoleLog("notice", "file path = "..xml_file_path.."\n");
 									end
 								end
@@ -192,7 +192,7 @@
 
 					--send the xml to the console
 						if (debug["xml_string"]) then
-							local file = assert(io.open("/tmp/xml_handler-" .. language .. ".xml", "w"));
+							local file = assert(io.open(temp_dir .. "/xml_handler-" .. language .. ".xml", "w"));
 							file:write(XML_STRING);
 							file:close();
 						end

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,9 +32,10 @@ require_once "resources/check_auth.php";
 
 //check the permission
 if (
-	!permission_exists('upgrade_svn') &&
+	!permission_exists('upgrade_source') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_apps') &&
+	!permission_exists('upgrade_switch') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
@@ -50,15 +51,15 @@ if (sizeof($_POST) > 0) {
 
 	$do = $_POST['do'];
 
-	// run svn update
-	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
-		$cmd = "svn up /var/www/fusionpbx";
-		exec($cmd, $response_svn_update);
+	// run source update
+	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+		chdir($_SERVER["DOCUMENT_ROOT"]);
+		exec("git pull", $response_source_update);
 		$update_failed = true;
-		if (sizeof($response_svn_update) > 0) {
-			$_SESSION["response_svn_update"] = $response_svn_update;
-			foreach ($response_svn_update as $response_line) {
-				if (substr_count($response_line, "Updated to revision") > 0 || substr_count($response_line, "At revision") > 0) {
+		if (sizeof($response_source_update) > 0) {
+			$_SESSION["response_source_update"] = $response_source_update;
+			foreach ($response_source_update as $response_line) {
+				if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 					$update_failed = false;
 				}
 			}
@@ -66,31 +67,20 @@ if (sizeof($_POST) > 0) {
 		if ($update_failed) {
 			$_SESSION["message_delay"] = 3500;
 			$_SESSION["message_mood"] = 'negative';
-			$response_message = $text['message-upgrade_svn_failed'];
+			$response_message = $text['message-upgrade_source_failed'];
 		}
 		else {
 			//update scripts folder, if allowed (default)
-				if ($_SESSION['switch']['scripts_update']['boolean'] != 'false' && $_SESSION['switch']['scripts']['dir'] != '') {
-					$scripts_dir_target = $_SESSION['switch']['scripts']['dir'];
-					$scripts_dir_source = realpath($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts');
-					foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($scripts_dir_source)) as $file_path_source) {
-						if (
-							substr_count($file_path_source, '/..') == 0 &&
-							substr_count($file_path_source, '/.') == 0 &&
-							substr_count($file_path_source, '/.svn') == 0
-							) {
-							$file_path_target = str_replace($scripts_dir_source, $scripts_dir_target, $file_path_source);
-							if ($file_path_target != $scripts_dir_target.'/resources/config.lua') {
-								//echo $file_path_source.' ---> '.$file_path_target.'<br>';
-								copy($file_path_source, $file_path_target);
-								chmod($file_path_target, 0755);
-							}
-						}
-					}
-					$response_message = $text['message-upgrade_svn_scripts'];
+				if ($_SESSION['switch']['scripts']['dir'] != '') {
+					//copy the files and directories from resources/install
+						$obj = new install_switch;
+						$obj->upgrade();
+					//set the message
+						$response_message = $text['message-upgrade_source_scripts'];
 				}
 				else {
-					$response_message = $text['message-upgrade_svn'];
+					//set the message
+						$response_message = $text['message-upgrade_source'];
 				}
 		}
 	}
@@ -132,6 +122,13 @@ if (sizeof($_POST) > 0) {
 		$response_message = "Permission Defaults Restored";
 	}
 
+	// upgrade switch
+	if ($do["switch"] && permission_exists("upgrade_switch")) {
+		$included = true;
+		require_once("core/install/upgrade_switch.php");
+		$response_message = "Switch Upgraded";
+	}
+
 	if (sizeof($_POST['do']) > 1) {
 		$response_message = $text['message-upgrade'];
 	}
@@ -153,16 +150,16 @@ echo "<br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
-if (permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
+if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		".$text['label-upgrade_svn'];
+	echo "		".$text['label-upgrade_source'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_svn'>";
-	echo "			<input type='checkbox' class='formfld' name='do[svn]' id='do_svn' value='1'>";
-	echo "			".$text['description-upgrade_svn'];
+	echo "		<label for='do_source'>";
+	echo "			<input type='checkbox' class='formfld' name='do[source]' id='do_source' value='1'>";
+	echo "			".$text['description-upgrade_source'];
 	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -261,22 +258,38 @@ if (permission_exists("group_edit")) {
 	echo "</table>\n";
 }
 
+if (permission_exists("upgrade_switch")) {
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td width='30%' class='vncell'>\n";
+	echo "		".$text['label-upgrade_switch'];
+	echo "	</td>\n";
+	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
+	echo "		<label for='do_switch'>";
+	echo "			<input type='checkbox' class='formfld' name='do[switch]' id='do_switch' value='1'>";
+	echo "			".$text['description-upgrade_switch'];
+	echo "		</label>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+}
+
 echo "<br>";
 echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
 echo "<br><br>";
 echo "</form>\n";
 
 
-// output result of svn update
-if (sizeof($_SESSION["response_svn_update"]) > 0) {
+// output result of source update
+if (sizeof($_SESSION["response_source_update"]) > 0) {
 	echo "<br />";
-	echo "<b>".$text['header-svn_update_results']."</b>";
+	echo "<b>".$text['header-source_update_results']."</b>";
 	echo "<br /><br />";
 	echo "<pre>";
-	echo implode("\n", $_SESSION["response_svn_update"]);
+	echo implode("\n", $_SESSION["response_source_update"]);
 	echo "</pre>";
 	echo "<br /><br />";
-	unset($_SESSION["response_svn_update"]);
+	unset($_SESSION["response_source_update"]);
 }
 
 

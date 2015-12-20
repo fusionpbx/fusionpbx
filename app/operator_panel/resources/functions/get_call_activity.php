@@ -45,6 +45,11 @@ function get_call_activity() {
 	//build the response
 		$x = 0;
 		foreach($extensions as &$row) {
+			$user = $row['extension'];
+			if (strlen($row['number_alias']) >0 ) {
+				$user = $row['number_alias'];
+			}
+
 			//add the extension details
 				$array[$x] = $row;
 
@@ -80,6 +85,7 @@ function get_call_activity() {
 				$array[$x]["call_uuid"] = null;
 				$array[$x]["sent_callee_name"] = null;
 				$array[$x]["sent_callee_num"] = null;
+				$array[$x]["destination"] = null;
 
 			//add the active call details
 				$found = false;
@@ -88,7 +94,7 @@ function get_call_activity() {
 					$presence = explode("@", $presence_id);
 					$presence_id = $presence[0];
 					$presence_domain = $presence[1];
-					if ($row['extension'] == $presence_id) {
+					if ($user == $presence_id) {
 						if ($presence_domain == $_SESSION['domain_name']) {
 							$found = true;
 							break;
@@ -129,6 +135,7 @@ function get_call_activity() {
 					$array[$x]["call_uuid"] = $field['call_uuid'];
 					$array[$x]["sent_callee_name"] = $field['sent_callee_name'];
 					$array[$x]["sent_callee_num"] = $field['sent_callee_num'];
+					$array[$x]["destination"] = $user;
 
 				//calculate and set the call length
 					$call_length_seconds = time() - $array[$x]["created_epoch"];

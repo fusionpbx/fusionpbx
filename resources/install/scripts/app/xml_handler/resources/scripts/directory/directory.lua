@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -57,6 +57,8 @@
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/reverse-auth-lookup.lua");
 	elseif (params:getHeader("Event-Calling-Function") == "switch_xml_locate_domain") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
+	elseif (params:getHeader("Event-Calling-Function") == "switch_load_network_lists") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
 	else
 		--handle action
 			--all other directory actions: sip_auth, user_call 
@@ -85,7 +87,7 @@
 			end
 
 		--prevent processing for invalid user
-			if (user == "*97") then
+			if (user == "*97") or (user == "") then
 				source = "";
 				continue = false;
 			end
@@ -99,17 +101,17 @@
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				load_balancing = false;
+				xml_handler["fs_path"] = false;
 			else
 				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 		--build the XML string from the database
-			if (source == "database") or (load_balancing) then
+			if (source == "database") or (xml_handler["fs_path"]) then
 				--database connection
 					if (continue) then
 						--connect to the database
-							dofile(scripts_dir.."/resources/functions/database_handle.lua");
+							require "resources.functions.database_handle";
 							dbh = database_handle('system');
 
 						--exits the script if we didn't connect properly
@@ -138,7 +140,7 @@
 
 				--if load balancing is set to true then get the hostname
 					if (continue) then
-						if (load_balancing) then
+						if (xml_handler["fs_path"]) then
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
@@ -150,18 +152,18 @@
 								end
 
 							--get the caller hostname
-								local_hostname = trim(api:execute("hostname", ""));
+								local_hostname = trim(api:execute("switchname", ""));
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
-								dofile(scripts_dir.."/resources/functions/file_exists.lua");
+								require "resources.functions.file_exists";
 
 							--connect to the switch database
 								if (file_exists(database_dir.."/core.db")) then
 									--dbh_switch = freeswitch.Dbh("core:core"); -- when using sqlite
 									dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 								else
-									dofile(scripts_dir.."/resources/functions/database_handle.lua");
+									require "resources.functions.database_handle";
 									dbh_switch = database_handle('switch');
 								end
 
@@ -170,7 +172,8 @@
 								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
-									sql = sql .. "AND expires > unix_timestamp(NOW())";
+									now = os.time();
+									sql = sql .. "AND expires > "..now;
 								else
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
@@ -180,9 +183,9 @@
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
-							--hostname was not found set load_balancing to false to prevent a database_hostname concatenation error
+							--hostname was not found set xml_handler["fs_path"] to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
-									load_balancing = false;
+									xml_handler["fs_path"] = false;
 								end
 
 							--close the database connection
@@ -196,8 +199,10 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
+						continue = false;
 						dbh:query(sql, function(row)
 							--general
+								continue = true;
 								domain_uuid = row.domain_uuid;
 								extension_uuid = row.extension_uuid;
 								extension = row.extension;
@@ -215,6 +220,7 @@
 								auth_acl = row.auth_acl;
 							--variables
 								sip_from_user = row.extension;
+								sip_from_number = (#number_alias > 0) and number_alias or row.extension;
 								call_group = row.call_group;
 								call_screen_enabled = row.call_screen_enabled;
 								user_record = row.user_record;
@@ -240,12 +246,16 @@
 								sip_force_expires = row.sip_force_expires;
 								nibble_account = row.nibble_account;
 								sip_bypass_media = row.sip_bypass_media;
+								absolute_codec_string = row.absolute_codec_string;
 								forward_all_enabled = row.forward_all_enabled;
 								forward_all_destination = row.forward_all_destination;
 								forward_busy_enabled = row.forward_busy_enabled;
 								forward_busy_destination = row.forward_busy_destination;
 								forward_no_answer_enabled = row.forward_no_answer_enabled;
 								forward_no_answer_destination = row.forward_no_answer_destination;
+								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
+								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
+
 								do_not_disturb = row.do_not_disturb;
 
 							--set the dial_string
@@ -254,10 +264,10 @@
 								else
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. extension .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
-										if (load_balancing) then
+										if (xml_handler["fs_path"]) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
@@ -267,13 +277,13 @@
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(load_balancing) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(xml_handler["fs_path"]) .. "\n");
 										end
 
 									--show debug informationa
-										--if (load_balancing) then
-										--	freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
-										--end
+										if (xml_handler["fs_path"]) then
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+										end
 								end
 						end);
 					end
@@ -360,10 +370,10 @@
 								table.insert(xml, [[							<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
 							end
 							table.insert(xml, [[								<param name="dial-string" value="]] .. dial_string .. [["/>]]);
-							table.insert(xml, [[                                                            <param name="verto-context" value="]] .. user_context .. [["/>]]);
-							table.insert(xml, [[                                                            <param name="verto-dialplan" value="XML"/>]]);
-							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-methods" value="verto"/>]]);
-							table.insert(xml, [[                                                            <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[								<param name="verto-context" value="]] .. user_context .. [["/>]]);
+							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
+							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
 							table.insert(xml, [[							</params>]]);
 							table.insert(xml, [[							<variables>]]);
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
@@ -371,7 +381,7 @@
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
-							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
+							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_number .. [["/>]]);
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
 							end
@@ -433,7 +443,7 @@
 								table.insert(xml, [[								<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
 							end
 							if (string.len(sip_force_contact) > 0) then
-								table.insert(xml, [[								<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
+								table.insert(xml, [[								<variable name="sip-force-contact" value="]] .. sip_force_contact .. [["/>]]);
 							end
 							if (string.len(sip_force_expires) > 0) then
 								table.insert(xml, [[								<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);
@@ -441,9 +451,13 @@
 							if (string.len(nibble_account) > 0) then
 								table.insert(xml, [[								<variable name="nibble_account" value="]] .. nibble_account .. [["/>]]);
 							end
+							if (string.len(absolute_codec_string) > 0) then
+								table.insert(xml, [[								<variable name="absolute_codec_string" value="]] .. absolute_codec_string .. [["/>]]);
+							end
 							if (sip_bypass_media == "bypass-media") then
 								table.insert(xml, [[								<variable name="bypass_media" value="true"/>]]);
 							end
+							
 							if (sip_bypass_media == "bypass-media-after-bridge") then
 								table.insert(xml, [[								<variable name="bypass_media_after_bridge" value="true"/>]]);
 							end
@@ -468,6 +482,13 @@
 							if (string.len(forward_no_answer_destination) > 0) then
 								table.insert(xml, [[								<variable name="forward_no_answer_destination" value="]] .. forward_no_answer_destination .. [["/>]]);
 							end
+							if (string.len(forward_user_not_registered_enabled) > 0) then
+								table.insert(xml, [[								<variable name="forward_user_not_registered_enabled" value="]] .. forward_user_not_registered_enabled .. [["/>]]);
+							end
+							if (string.len(forward_user_not_registered_destination) > 0) then
+								table.insert(xml, [[								<variable name="forward_user_not_registered_destination" value="]] .. forward_user_not_registered_destination .. [["/>]]);
+							end
+
 							if (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end
@@ -494,7 +515,7 @@
 
 						--send the xml to the console
 							if (debug["xml_string"]) then
-								local file = assert(io.open("/tmp/" .. user .. "@" .. domain_name .. ".xml", "w"));
+								local file = assert(io.open(temp_dir .. "/" .. user .. "@" .. domain_name .. ".xml", "w"));
 								file:write(XML_STRING);
 								file:close();
 							end

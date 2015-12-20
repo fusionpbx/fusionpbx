@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -24,18 +24,25 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local cache = require"resources.functions.cache"
+	local log = require"resources.functions.log"["xml_handler"]
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get dialplan:" .. call_context));
-	else
-		XML_STRING = "-ERR NOT FOUND";
+	XML_STRING, err = cache.get("dialplan:" .. call_context)
+
+	if debug['cache'] then
+		if XML_STRING then
+			log.notice("dialplan:"..call_context.." source: memcache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error get element form cache: " .. err);
+		end
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if not XML_STRING then
 
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--exits the script if we didn't connect properly
@@ -60,17 +67,6 @@
 						domain_uuid = domains[domain_name];
 					end
 			end
-
-	
-		--get the domain name
-			function get_domain_name(domains, domain_uuid)
-				for key,value in ipairs(domains) do
-					if (value.domain_uuid == domain_uuid) then
-						return value.domain_name;
-					end
-				end
-			  	return nil;
-			end	
 
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
@@ -110,7 +106,7 @@
 			sql = sql .. "ELSE 100 END, ";
 			sql = sql .. "s.dialplan_detail_order asc ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				log.notice("SQL: " .. sql);
 			end
 			x = 0;
 			dbh:query(sql, function(row)
@@ -191,6 +187,8 @@
 								condition_type = 'time';
 							elseif (dialplan_detail_type == "week") then 
 								condition_type = 'time';
+							elseif (dialplan_detail_type == "date-time") then 
+								condition_type = 'time';
 							else
 								condition_type = 'default';
 							end
@@ -252,12 +250,11 @@
 							condition = ""; --prevents duplicate time conditions
 						end
 					end
-					
-					if (call_context == "public") then
+
+					if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
-									--domain_name = get_domain_name(domains, domain_uuid);
 									domain_name = domains[domain_uuid];
 									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
@@ -299,29 +296,23 @@
 			XML_STRING = table.concat(xml, "\n");
 
 		--set the cache
-			tmp = XML_STRING:gsub("\\", "\\\\");
-			result = trim(api:execute("memcache", "set dialplan:" .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
+			if cache.support() then
+				cache.set("dialplan:" .. call_context, XML_STRING, expire["dialplan"])
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open("/tmp/dialplan-" .. call_context .. ".xml", "w"));
+				local file = assert(io.open(temp_dir .. "/dialplan-" .. call_context .. ".xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
+				log.notice("dialplan:"..call_context.." source: database");
 			end
 
 		--close the database connection
 			dbh:release();
-	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
-		--send to the console
-			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
-			end
 	end
+

@@ -95,6 +95,7 @@ else {
 		$extension_in_contact = check_str($_POST["extension_in_contact"]);
 		$context = check_str($_POST["context"]);
 		$profile = check_str($_POST["profile"]);
+		$hostname = check_str($_POST["hostname"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
 	}
@@ -198,6 +199,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "extension_in_contact, ";
 				$sql .= "context, ";
 				$sql .= "profile, ";
+				$sql .= "hostname, ";
 				$sql .= "enabled, ";
 				$sql .= "description ";
 				$sql .= ")";
@@ -232,6 +234,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$extension_in_contact', ";
 				$sql .= "'$context', ";
 				$sql .= "'$profile', ";
+				if (strlen($hostname) == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'$hostname', ";
+				}
 				$sql .= "'$enabled', ";
 				$sql .= "'$description' ";
 				$sql .= ")";
@@ -277,6 +285,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				else {
 					$sql .= "domain_uuid = '$domain_uuid', ";
+				}
+				if (strlen($hostname) == 0) {
+					$sql .= "hostname = null, ";
+				}
+				else {
+					$sql .= "hostname = '$hostname', ";
 				}
 				$sql .= "enabled = '$enabled', ";
 				$sql .= "description = '$description' ";
@@ -374,6 +388,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$extension_in_contact = $row["extension_in_contact"];
 			$context = $row["context"];
 			$profile = $row["profile"];
+			$hostname = $row["hostname"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
@@ -868,6 +883,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-profile']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-hostname']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
+	echo "<br />\n";
+	echo $text['description-hostname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

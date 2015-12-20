@@ -1,6 +1,6 @@
 --	ivr_menu.lua
 --	Part of FusionPBX
---	Copyright (C) 2012 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2012-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -32,12 +32,10 @@
 	debug["tries"] = false;
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --get the variables
@@ -49,7 +47,7 @@
 	domain_uuid = session:getVariable("domain_uuid");
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -68,33 +66,28 @@
 			end
 		end
 	end
-	temp_dir = "";
-	if (settings['server'] ~= nil) then
-		if (settings['server']['temp'] ~= nil) then
-			if (settings['server']['temp']['dir'] ~= nil) then
-				temp_dir = settings['server']['temp']['dir'];
+	if (not temp_dir) or (#temp_dir == 0) then
+		if (settings['server'] ~= nil) then
+			if (settings['server']['temp'] ~= nil) then
+				if (settings['server']['temp']['dir'] ~= nil) then
+					temp_dir = settings['server']['temp']['dir'];
+				end
 			end
 		end
 	end
 
---set the recordings directory
-	if (domain_count > 1) then
-		recordings_dir = recordings_dir .. "/"..domain_name;
-	end
+--add the domain name to the recordings directory
+	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --set default variable(s)
 	tries = 0;
+	option_found = "false";
 
---add the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
+--define the trim function
+	require "resources.functions.trim"
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists"
 
 --prepare the api object
 	api = freeswitch.API();
@@ -218,7 +211,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
 							ivr_menu_greet_long_is_base64 = true;
@@ -242,7 +235,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
 							ivr_menu_greet_short_is_base64 = true;
@@ -266,7 +259,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
 							ivr_menu_invalid_sound_is_base64 = true;
@@ -290,7 +283,7 @@
 					end
 					status = dbh:query(sql, function(row)
 						--add functions
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 						--add the path to filename
 							ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
 							ivr_menu_exit_sound_is_base64 = true;
@@ -363,8 +356,7 @@
 			pos = string.find(ivr_menu_greet_long, ":", 0, true);
 			if (pos ~= nil and string.sub(ivr_menu_greet_long, 0, pos-1) == 'phrase') then
 				freeswitch.consoleLog("notice", "[ivr_menu] phrase detected\n");
-				session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
-				dtmf_digits = session:getVariable("dtmf_digits");
+				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
 				session:setVariable("slept", "false");
 			else 
 				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");				
@@ -413,8 +405,12 @@
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
-								action = string.sub(row.ivr_menu_option_param, 0, pos-1);
-								data = string.sub(row.ivr_menu_option_param, pos+1);
+								if pos then
+									action = string.sub(row.ivr_menu_option_param, 0, pos-1);
+									data = string.sub(row.ivr_menu_option_param, pos+1);
+								else
+									action, data = row.ivr_menu_option_param, ""
+								end
 
 							--check if the option uses a regex
 								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
@@ -437,13 +433,20 @@
 						end
 						if (action == "lua") then
 							pos = string.find(data, " ", 0, true);
-							script = string.sub(data, 0, pos-1);
+							if pos then
+								script = string.sub(data, 0, pos-1);
+							else
+								script = data
+							end
 						end
 					end --if regex match
 
 				--execute
 					if (action) then
 						if (string.len(action) > 0) then
+							--option found
+								option_found = "true";
+
 							--send to the log
 								if (debug["action"]) then
 									freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
@@ -468,14 +471,16 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				if (string.len(digits) < 6) then
+				if (string.len(digits) < 6 and option_found == "false") then
 					--replace the $1 and the domain name
 						digits = digits:gsub("*", "");
 					--check to see if the user extension exists
 						cmd = "user_exists id ".. digits .." "..domain_name;
 						result = api:executeString(cmd);
-						freeswitch.consoleLog("NOTICE", "[ivr_menu] "..cmd.." "..result.."\n");
+						freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..cmd.." "..result.."\n");
 						if (result == "true") then
+							--log the action
+								freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..digits.." XML "..context.."\n");
 							--run the action
 								session:execute("transfer", digits.." XML "..context);
 						else

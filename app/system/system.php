@@ -78,12 +78,58 @@ $document['title'] = $text['title-sys-status'];
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Version\n";
+		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
 		echo "		".software_version()."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
+
+		$git_path = normalize_path_to_os($_SERVER["DOCUMENT_ROOT"]."/.git");
+		if(file_exists($git_path)){
+			$git_exe = 'git';
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') { $git_exe = shell_exec('which git'); }
+			$git_branch = shell_exec($git_exe.' --git-dir='.$git_path.' name-rev --name-only HEAD');
+			rtrim($git_branch);
+			$git_commit = shell_exec($git_exe.' --git-dir='.$git_path.' rev-parse HEAD');
+			rtrim($git_commit);
+			$git_origin = shell_exec($git_exe.' --git-dir='.$git_path.' config --get remote.origin.url');
+			rtrim($git_commit);
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-git_info']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">\n";
+			echo "		".$text['label-git_branch']." ".$git_branch."<br>\n";
+			echo "		".$text['label-git_commit']." ".$git_commit."<br>\n";
+			echo "		".$text['label-git_origin']." ".$git_origin."<br>\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_version = event_socket_request($fp, 'api version');
+			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
+			$switch_version = $matches[1];
+			$switch_bits = $matches[2];
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		".$text['label-switch']." ".$text['label-version']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">$switch_version ($switch_bits)</td>\n";
+			echo "</tr>\n";
+			preg_match("/\(git\s*(.*?)\s*\d+\w+\s*\)/", $switch_version, $matches);
+			$switch_git_info = $matches[1];
+			if(strlen($switch_git_info) > 0){
+				echo "<tr>\n";
+				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
+				echo "	</td>\n";
+				echo "	<td class=\"row_style1\">$switch_git_info</td>\n";
+				echo "</tr>\n";
+			}
+		}
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uname -a');
@@ -320,37 +366,37 @@ $document['title'] = $text['title-sys-status'];
 		echo "		<th class='th' colspan='2' align='left'>".$text['title-memcache']."</th>\n";
 		echo "	</tr>\n";
 
-		$mc_fail = false;
+		$memcache_fail = false;
 		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$switch_cmd = "memcache status verbose";
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$mc_lines = preg_split('/\n/', $switch_result);
-				foreach($mc_lines as $mc_line) {
-					if (strlen(trim($mc_line)) > 0 && substr_count($mc_line, ': ') > 0) {
-						$mc_temp = explode(': ', $mc_line);
-						$mc_status[$mc_temp[0]] = $mc_temp[1];
+				$memcache_lines = preg_split('/\n/', $switch_result);
+				foreach($memcache_lines as $memcache_line) {
+					if (strlen(trim($memcache_line)) > 0 && substr_count($memcache_line, ': ') > 0) {
+						$memcache_temp = explode(': ', $memcache_line);
+						$memcache_status[$memcache_temp[0]] = $memcache_temp[1];
 					}
 				}
 
-				if (is_array($mc_status) && sizeof($mc_status) > 0) {
-					foreach($mc_status as $mc_field => $mc_value) {
+				if (is_array($memcache_status) && sizeof($memcache_status) > 0) {
+					foreach($memcache_status as $memcache_field => $memcache_value) {
 						echo "<tr>\n";
-						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$mc_field."</td>\n";
-						echo "	<td class='row_style1'>".$mc_value."</td>\n";
+						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$memcache_field."</td>\n";
+						echo "	<td class='row_style1'>".$memcache_value."</td>\n";
 						echo "</tr>\n";
 					}
 				}
-				else { $mc_fail = true; }
+				else { $memcache_fail = true; }
 			}
-			else { $mc_fail = true; }
+			else { $memcache_fail = true; }
 
 		}
-		else { $mc_fail = true; }
+		else { $memcache_fail = true; }
 
-		if ($mc_fail) {
+		if ($memcache_fail) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class='vncell' style='text-align: left;'>".$text['label-memcache_status']."</td>\n";
 			echo "	<td class='row_style1'>".$text['message-unavailable']."</td>\n";

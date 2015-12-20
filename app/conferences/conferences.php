@@ -49,7 +49,7 @@ else {
 //show the content
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td valign='top'><b>".$text['title']."</b></td>\n";
+	echo "		<td valign='top'><b>".$text['title-conferences']."</b></td>\n";
 	echo "		<td valign='top' align='right'>\n";
 	if (permission_exists('conference_active_view')) {
 		echo "		<input type='button' class='btn' alt='".$text['button-view_active']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php';\" value='".$text['button-view_active']."'>\n";

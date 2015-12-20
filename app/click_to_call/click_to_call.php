@@ -73,12 +73,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				$sip_auto_answer = '';
 		}
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
-		if (strlen($_SESSION['context']) > 0) {
-			$context = $_SESSION['context'];
-		}
-		else {
-			$context = 'default';
-		}
+		$context = $_SESSION['context'];
 
 		//workaround for TBDialout on Thunderbird
 		//seems it can only handle the first %NUM%
@@ -206,7 +201,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
 							date_default_timezone_set($_SESSION['time_zone']['system']);
 						//create the api record command and send it over event socket
-							$switch_cmd = "api uuid_record ".$uuid." start ".$_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
+							$switch_cmd = "api uuid_record ".$uuid." start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
 							$result2 = trim(event_socket_request($fp, $switch_cmd));
 					}
 				}

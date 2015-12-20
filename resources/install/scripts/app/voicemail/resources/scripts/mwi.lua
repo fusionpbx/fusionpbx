@@ -24,9 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --include the lua script
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --define general settings
 	sleep = 300;
@@ -41,23 +39,18 @@
 --only run the script a single time 
 	runonce = true
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");
 
---add the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
+--define the trim function
+	require "resources.functions.trim";
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists";
 
 --create the api object
 	api = freeswitch.API();
@@ -106,7 +99,7 @@
 
 				--send the message waiting event
 					local event = freeswitch.Event("message_waiting");
-					if (row["message_count"] == "0") then
+					if (new_messages == "0") then
 						event:addHeader("MWI-Messages-Waiting", "no");
 					else
 						event:addHeader("MWI-Messages-Waiting", "yes");

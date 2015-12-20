@@ -28,19 +28,11 @@ pin_number = "";
 max_tries = "3";
 digit_timeout = "3000";
 
-function trim (s)
-	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-end
+--define the trim function
+	require "resources.functions.trim";
 
-function explode ( seperator, str ) 
-	local pos, arr = 0, {}
-	for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-		table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-		pos = sp + 1 -- jump past current divider
-	end
-	table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-	return arr
-end
+--define the explode function
+	require "resources.functions.explode";
 
 if ( session:ready() ) then
 	session:answer();
@@ -67,6 +59,8 @@ if ( session:ready() ) then
 		if (not default_dialect) then default_dialect = 'us'; end
 		if (not default_voice) then default_voice = 'callie'; end
 
+	local conf_name = "page-"..destination_number.."-"..domain_name.."@page"
+
 	if (caller_id_name) then
 		--caller id name provided do nothing
 	else
@@ -82,14 +76,10 @@ if ( session:ready() ) then
 	end
 
 	--set conference flags
-	if (mute) then
-		if (mute == "false") then
-			flags = "flags{}";
-		else
-			flags = "flags{mute}";
-		end
-	else
+	if (mute == "true") then
 		flags = "flags{mute}";
+	else
+		flags = "flags{}";
 	end
 
 	--if the pin number is provided then require it
@@ -129,7 +119,7 @@ if ( session:ready() ) then
 		sub_table = explode("-",value);
 		for destination=sub_table[1],sub_table[2] do
 			--get the destination required for number-alias
-			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");	 
+			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
 
 			--prevent calling the user that initiated the page
 			if (sip_from_user ~= destination) then
@@ -139,12 +129,12 @@ if ( session:ready() ) then
 					destination_status = "show channels like "..destination.."@";
 					reply = trim(api:executeString(destination_status));
 					if (reply == "0 total.") then
-						--freeswitch.consoleLog("NOTICE", "destination "..destination.." available\n");
+						freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
 						if (destination == tonumber(sip_from_user)) then
 							--this destination is the caller that initated the page
 						else
 							--originate the call
-							cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+							cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conf_name.."+"..flags.." inline";
 							api:executeString(cmd_string);
 							destination_count = destination_count + 1;
 						end
@@ -159,7 +149,7 @@ if ( session:ready() ) then
 								--this destination is the caller that initated the page
 							else
 								--originate the call
-								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+								cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conf_name.."+"..flags.." inline";
 								api:executeString(cmd_string);
 								destination_count = destination_count + 1;
 							end
@@ -172,12 +162,12 @@ if ( session:ready() ) then
 
 	--send main call to the conference room
 	if (destination_count > 0) then
-		if (session:getVariable("moderator") ~= nil and session:getVariable("moderator") == "true") then
+		if (session:getVariable("moderator") == "true") then
 			moderator_flag = ",moderator";
 		else
 			moderator_flag = "";
 		end
-		session:execute("conference", "page-"..destination_number.."@page+flags{endconf"..moderator_flag.."}");
+		session:execute("conference", conf_name.."+flags{endconf"..moderator_flag.."}");
 	else
 		session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
 	end

@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -275,7 +275,7 @@
 
 //add the body to the email
 	$body_plain = rip_tags($body);
-	echo "body_plain = $body_plain\n";
+	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body;
@@ -292,11 +292,14 @@
 		$mailer_error = $mail->ErrorInfo;
 		echo "Mailer Error: ".$mailer_error."\n\n";
 
+		$call_uuid = $headers["X-FusionPBX-Call-UUID"];
 		// log/store message in database for review
 		$email_uuid = uuid();
 		$sql = "insert into v_emails ( ";
 		$sql .= "email_uuid, ";
-		$sql .= "call_uuid, ";
+		if ($call_uuid) {
+			$sql .= "call_uuid, ";
+		}
 		$sql .= "domain_uuid, ";
 		$sql .= "sent_date, ";
 		$sql .= "type, ";
@@ -304,7 +307,9 @@
 		$sql .= "email ";
 		$sql .= ") values ( ";
 		$sql .= "'".$email_uuid."', ";
-		$sql .= "'".$headers["X-FusionPBX-Call-UUID"]."', ";
+		if ($call_uuid) {
+			$sql .= "'".$call_uuid."', ";
+		}
 		$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
 		$sql .= "now(),";
 		$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";

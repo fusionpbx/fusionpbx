@@ -80,6 +80,66 @@ $text['label-os']['sv-se'] = "Operativsystem";
 $text['label-os']['uk'] = "Операційна система ";
 $text['label-os']['de-at'] = "Betriebssystem";
 
+$text['label-version']['en-us'] = "Version";
+$text['label-version']['es-cl'] = "";
+$text['label-version']['pt-pt'] = "";
+$text['label-version']['fr-fr'] = "";
+$text['label-version']['pt-br'] = "";
+$text['label-version']['pl'] = "";
+$text['label-version']['sv-se'] = "";
+$text['label-version']['uk'] = "";
+$text['label-version']['de-at'] = "";
+
+$text['label-git_info']['en-us'] = "Git Information";
+$text['label-git_info']['es-cl'] = "";
+$text['label-git_info']['pt-pt'] = "";
+$text['label-git_info']['fr-fr'] = "";
+$text['label-git_info']['pt-br'] = "";
+$text['label-git_info']['pl'] = "";
+$text['label-git_info']['sv-se'] = "";
+$text['label-git_info']['uk'] = "";
+$text['label-git_info']['de-at'] = "";
+
+$text['label-switch']['en-us'] = "Switch";
+$text['label-switch']['es-cl'] = "";
+$text['label-switch']['pt-pt'] = "";
+$text['label-switch']['fr-fr'] = "";
+$text['label-switch']['pt-br'] = "";
+$text['label-switch']['pl'] = "";
+$text['label-switch']['sv-se'] = "";
+$text['label-switch']['uk'] = "";
+$text['label-switch']['de-at'] = "";
+
+$text['label-git_branch']['en-us'] = "Branch:";
+$text['label-git_branch']['es-cl'] = "";
+$text['label-git_branch']['pt-pt'] = "";
+$text['label-git_branch']['fr-fr'] = "";
+$text['label-git_branch']['pt-br'] = "";
+$text['label-git_branch']['pl'] = "";
+$text['label-git_branch']['sv-se'] = "";
+$text['label-git_branch']['uk'] = "";
+$text['label-git_branch']['de-at'] = "";
+
+$text['label-git_commit']['en-us'] = "Commit:";
+$text['label-git_commit']['es-cl'] = "";
+$text['label-git_commit']['pt-pt'] = "";
+$text['label-git_commit']['fr-fr'] = "";
+$text['label-git_commit']['pt-br'] = "";
+$text['label-git_commit']['pl'] = "";
+$text['label-git_commit']['sv-se'] = "";
+$text['label-git_commit']['uk'] = "";
+$text['label-git_commit']['de-at'] = "";
+
+$text['label-git_origin']['en-us'] = "Origin:";
+$text['label-git_origin']['es-cl'] = "";
+$text['label-git_origin']['pt-pt'] = "";
+$text['label-git_origin']['fr-fr'] = "";
+$text['label-git_origin']['pt-br'] = "";
+$text['label-git_origin']['pl'] = "";
+$text['label-git_origin']['sv-se'] = "";
+$text['label-git_origin']['uk'] = "";
+$text['label-git_origin']['de-at'] = "";
+
 $text['label-memcache_status']['en-us'] = "Memcache Status";
 $text['label-memcache_status']['es-cl'] = "Estado de Memcache";
 $text['label-memcache_status']['pt-pt'] = "Estado da Memcache";

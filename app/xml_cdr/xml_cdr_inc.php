@@ -34,9 +34,6 @@ else {
 	exit;
 }
 
-//import xml_cdr files
-	require_once "v_xml_cdr_import.php";
-
 //additional includes
 	require_once "resources/paging.php";
 
@@ -74,7 +71,35 @@ else {
 		$bridge_uuid = check_str($_REQUEST["network_addr"]);
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
+		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
+			switch(check_str($_REQUEST["mos_comparison"])) {
+				case 'less':
+					$mos_comparison = "<";
+					break;
+				case 'greater':
+					$mos_comparison = ">";
+					break;
+				case 'lessorequal':
+					$mos_comparison = "<=";
+					break;
+				case 'greaterorequal':
+					$mos_comparison = ">=";
+					break;
+				case 'equal':
+					$mos_comparison = "<";
+					break;
+				case 'notequal':
+					$mos_comparison = "<>";
+					break;
+			}
+         } else {
+             $mos_comparison = '';
+        }
+		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);		
+		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
+
+
 
 //build the sql where string
 	if ($missed == true) {
@@ -126,6 +151,7 @@ else {
 	if (strlen($write_codec) > 0) { $sql_where_ands[] = "write_codec like '%".$write_codec."%'"; }
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
+	if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) { $sql_where_ands[] = "rtp_audio_in_mos " . $mos_comparison . " ".$mos_score.""; }
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
@@ -201,6 +227,9 @@ else {
 	$param .= "&remote_media_ip=".$remote_media_ip;
 	$param .= "&network_addr=".$network_addr;
 	$param .= "&bridge_uuid=".$bridge_uuid;
+	$param .= "&mos_comparison=".$mos_comparison;
+	$param .= "&mos_score=".$mos_score;
+
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		$param .= "&showall=" . $_GET['showall'];
 	}
@@ -236,6 +265,7 @@ else {
 				}
 			}
 			unset($prep_statement, $result);
+
 		//limit the number of results
 			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
 				$num_rows = $_SESSION['cdr']['limit']['numeric'];
@@ -268,11 +298,9 @@ else {
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "accountcode, ";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
-		$sql .= "accountcode, ";
 		$sql .= "call_sell, ";
-		$sql .= "xml, ";
-		$sql .= "json, ";
 	}
 	if (permission_exists("xml_cdr_pdd")) {
 		$sql .= "pdd_ms, ";
@@ -298,6 +326,7 @@ else {
 	else {
 		$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	}
+	
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

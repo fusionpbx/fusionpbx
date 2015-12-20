@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '3.9.0';
+			return '4.1.0';
 		}
 	}
 
@@ -600,6 +600,19 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
+	if ( !function_exists('normalize_path')) {
+		//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
+		function normalize_path($path) {
+			return str_replace(array('/','\\'), '/', $path);
+		}
+	}
+	
+	if ( !function_exists('normalize_path_to_os')) {
+		function normalize_path_to_os($path) {
+			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
+		}
+	}
+
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
 			global $db, $domain_uuid;
@@ -771,15 +784,13 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (is_numeric($phone_number)) {
-			foreach ($_SESSION["format"]["phone"] as &$format) {
-				$format_count = substr_count($format, 'x');
-				$format_count = $format_count + substr_count($format, 'R');
-				$format_count = $format_count + substr_count($format, 'r');
-				if ($format_count == strlen($phone_number)) {
-					//format the number
-					$phone_number = format_string($format, $phone_number);
-				}
+		foreach ($_SESSION["format"]["phone"] as &$format) {
+			$format_count = substr_count($format, 'x');
+			$format_count = $format_count + substr_count($format, 'R');
+			$format_count = $format_count + substr_count($format, 'r');
+			if ($format_count == strlen($phone_number)) {
+				//format the number
+				$phone_number = format_string($format, $phone_number);
 			}
 		}
 		return $phone_number;
@@ -1038,8 +1049,9 @@ function number_pad($number,$n) {
 				if ($file != '.' && $file != '..') {
 					$newpath = $dir.'/'.$file;
 					$level = explode('/',$newpath);
-					if (substr($newpath, -4) == ".svn") {
-						//ignore .svn dir and subdir
+					if (substr($newpath, -4) == ".svn" ||
+						substr($newpath, -4) == ".git") {
+						//ignore .svn and .git dir and subdir
 					}
 					else {
 						if (is_dir($newpath)) { //directories
@@ -1312,5 +1324,19 @@ function number_pad($number,$n) {
 			return strtoupper($string);
 		}
 	}
+
+//email validate
+	function email_validate($strEmail){
+	   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+	   // search email text for regular exp matches
+	   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+
+	   if (count($matches) == 0) {
+		return 0;
+	   }
+	   else {
+		return 1;
+	   }
+}
 
 ?>

@@ -22,36 +22,33 @@
 --	Contributor(s):
 --		Mark J. Crane
 
+--set the debug options
+	debug["sql"] = false;
+
 --create the api object
 	api = freeswitch.API();
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --define the explode function
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+	require "resources.functions.explode";
 
 --array count
-	function count(t)
-		c = 0;
-		for k,v in pairs(t) do
-  			c = c+1;
+	require "resources.functions.count";
+
+	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
+
+	local function quote(s)
+		local q = IS_WINDOWS and '"' or "'"
+		if s:find('%s') or s:find(q, nil, true) then
+			s = q .. s:gsub(q, q..q) .. q
 		end
-		return c;
+		return s
 	end
 
 -- set channel variables to lua variables
@@ -68,7 +65,7 @@
 	end
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -194,23 +191,17 @@
 	end
 
 --fax to email
-	cmd = "'"..php_dir.."/"..php_bin.."' '"..document_root.."/secure/fax_to_email.php' ";
-	cmd = cmd .. "email='"..fax_email.."' ";
-	cmd = cmd .. "extension="..fax_extension.." ";
-	cmd = cmd .. "name='"..fax_file.."' "; 
-	cmd = cmd .. "messages='result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages.."' ";
-	cmd = cmd .. "domain="..domain_name.." ";
-	cmd = cmd .. "caller_id_name='";
-	if (caller_id_name ~= nil) then
-		cmd = cmd .. caller_id_name;
-	end
-	cmd = cmd .. "' ";
-	cmd = cmd .. "caller_id_number=";
-	if (caller_id_number ~= nil) then
-		cmd = cmd .. caller_id_number;
-	end
-	cmd = cmd .. " ";
-	if (string.len(fax_forward_number) > 0) then
+
+	-- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
+	cmd = quote(php_dir.."/"..php_bin).." "..quote(document_root.."/secure/fax_to_email.php").." ";
+	cmd = cmd .. "email="..quote(fax_email).." ";
+	cmd = cmd .. "extension="..quote(fax_extension).." ";
+	cmd = cmd .. "name="..quote(fax_file).." "; 
+	cmd = cmd .. "messages=" .. quote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
+	cmd = cmd .. "domain="..quote(domain_name).." ";
+	cmd = cmd .. "caller_id_name=" .. quote(caller_id_name or '') .. " ";
+	cmd = cmd .. "caller_id_number=" .. quote(caller_id_number or '') .. " ";
+	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
@@ -313,7 +304,7 @@
 		if (fax_success =="1") then
 			if (storage_type == "base64") then
 				--include the base64 function
-					dofile(scripts_dir.."/resources/functions/base64.lua");
+					require "resources.functions.base64";
 
 				--base64 encode the file
 					local f = io.open(fax_file, "rb");

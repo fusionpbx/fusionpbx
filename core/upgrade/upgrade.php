@@ -38,7 +38,7 @@
 		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
-		if (permission_exists('upgrade_schema') || permission_exists('upgrade_svn') || if_group("superadmin")) {
+		if (permission_exists('upgrade_schema') || permission_exists('upgrade_source') || if_group("superadmin")) {
 			//echo "access granted";
 		}
 		else {
@@ -67,7 +67,10 @@
 	$obj = new schema;
 	echo $obj->schema("text");
 
-//run all app_defaults.php files
+//request the switch to perform upgrade functions
+	$obj = new install_switch;
+	$obj->upgrade();
+
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
 	$domain->upgrade();

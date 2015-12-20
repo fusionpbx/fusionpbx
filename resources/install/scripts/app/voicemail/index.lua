@@ -50,7 +50,7 @@
 	password_tries = 0;
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --set the api
@@ -73,9 +73,14 @@
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
+			vm_say_caller_id_number = session:getVariable("vm_say_caller_id_number");
 			vm_disk_quota = session:getVariable("vm-disk-quota");
 			if (not vm_disk_quota) then
 				vm_disk_quota = session:getVariable("vm_disk_quota");
+			end
+			record_silence_threshold = session:getVariable("record-silence-threshold");
+			if (not record_silence_threshold) then
+				record_silence_threshold = 300;
 			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
@@ -123,7 +128,7 @@
 			end
 
 		--settings
-			dofile(scripts_dir.."/resources/functions/settings.lua");
+			require "resources.functions.settings";
 			settings = settings(domain_uuid);
 			storage_type = "";
 			storage_path = "";
@@ -142,11 +147,12 @@
 					end
 				end
 			end
-			temp_dir = "";
-			if (settings['server'] ~= nil) then
-				if (settings['server']['temp'] ~= nil) then
-					if (settings['server']['temp']['dir'] ~= nil) then
-						temp_dir = settings['server']['temp']['dir'];
+			if (not temp_dir) or (#temp_dir == 0) then
+				if (settings['server'] ~= nil) then
+					if (settings['server']['temp'] ~= nil) then
+						if (settings['server']['temp']['dir'] ~= nil) then
+							temp_dir = settings['server']['temp']['dir'];
+						end
 					end
 				end
 			end
@@ -199,36 +205,36 @@
 	end
 
 --general functions
-	dofile(scripts_dir.."/resources/functions/base64.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
-	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
-	dofile(scripts_dir.."/resources/functions/copy.lua");
+	require "resources.functions.base64";
+	require "resources.functions.trim";
+	require "resources.functions.file_exists";
+	require "resources.functions.explode";
+	require "resources.functions.format_seconds";
+	require "resources.functions.mkdir";
+	require "resources.functions.copy";
 
 --voicemail functions
-	dofile(scripts_dir.."/app/voicemail/resources/functions/on_dtmf.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/get_voicemail_id.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/check_password.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/change_password.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/macro.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/play_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_message.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_menu.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/forward_to_extension.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/main_menu.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/listen_to_recording.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/message_waiting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/send_email.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/delete_recording.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/message_saved.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/return_call.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/menu_messages.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/advanced.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/choose_greeting.lua");
-	dofile(scripts_dir.."/app/voicemail/resources/functions/record_name.lua");
+	require "app.voicemail.resources.functions.on_dtmf";
+	require "app.voicemail.resources.functions.get_voicemail_id";
+	require "app.voicemail.resources.functions.check_password";
+	require "app.voicemail.resources.functions.change_password";
+	require "app.voicemail.resources.functions.macro";
+	require "app.voicemail.resources.functions.play_greeting";
+	require "app.voicemail.resources.functions.record_message";
+	require "app.voicemail.resources.functions.record_menu";
+	require "app.voicemail.resources.functions.forward_to_extension";
+	require "app.voicemail.resources.functions.main_menu";
+	require "app.voicemail.resources.functions.listen_to_recording";
+	require "app.voicemail.resources.functions.message_waiting";
+	require "app.voicemail.resources.functions.send_email";
+	require "app.voicemail.resources.functions.delete_recording";
+	require "app.voicemail.resources.functions.message_saved";
+	require "app.voicemail.resources.functions.return_call";
+	require "app.voicemail.resources.functions.menu_messages";
+	require "app.voicemail.resources.functions.advanced";
+	require "app.voicemail.resources.functions.record_greeting";
+	require "app.voicemail.resources.functions.choose_greeting";
+	require "app.voicemail.resources.functions.record_name";
 
 --send a message waiting event
 	if (voicemail_action == "mwi") then
@@ -317,7 +323,7 @@
 							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
 						--include the base64 function
-							dofile(scripts_dir.."/resources/functions/base64.lua");
+							require "resources.functions.base64";
 
 						--base64 encode the file
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
@@ -447,7 +453,11 @@
 
 						--copy the voicemail to each destination
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
+								local src = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
+								local dst = voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext
+								if src ~= dst then
+									copy(src, dst)
+								end
 							end
 
 						--send the message waiting event

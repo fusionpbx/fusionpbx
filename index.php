@@ -41,7 +41,7 @@ include "root.php";
 	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		//bsd
 	} else {
-		header("Location: ".PROJECT_PATH."/resources/install.php");
+		header("Location: ".PROJECT_PATH."/core/install/install_first_time.php");
 		exit;
 	}
 
@@ -58,6 +58,9 @@ include "root.php";
 	if (strlen($_SESSION["username"]) > 0) {
 		if (strlen($_SESSION['login']['destination']['url']) > 0) {
 			header("Location: ".$_SESSION['login']['destination']['url']);
+		}elseif(file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."core/user_settings/user_dashboard.php"))
+		{
+			header("Location: ".$_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."core/user_settings/user_dashboard.php");
 		}
 		else {
 			require_once "resources/header.php";

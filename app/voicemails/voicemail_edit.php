@@ -249,6 +249,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$voicemail_uuid = check_str($_GET["id"]);
@@ -395,9 +398,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "  <input class='formfld' style='width:70px' type='text' name='voicemail_options[".$c."][voicemail_option_digits]' maxlength='255' value='".$voicemail_option_digits."'>\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-		$tmp_select_value = '';
-		switch_select_destination("ivr", $voicemail_options_label, 'voicemail_options['.$c.'][voicemail_option_param]', $tmp_select_value, "width:175px", $voicemail_option_action);
-		unset($tmp_select_value);
+		echo $destination->select('ivr', 'voicemail_options['.$c.'][voicemail_option_param]', '');
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='voicemail_options[".$c."][voicemail_option_order]' class='formfld' style='width:55px'>\n";

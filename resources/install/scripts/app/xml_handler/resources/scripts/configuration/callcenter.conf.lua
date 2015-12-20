@@ -36,7 +36,7 @@
 	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
 
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--exits the script if we didn't connect properly
@@ -284,7 +284,7 @@
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open("/tmp/callcenter.conf.xml", "w"));
+				local file = assert(io.open(temp_dir .. "/callcenter.conf.xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end

@@ -368,12 +368,6 @@ else {
 		$database = new database;
 	}
 
-	if (count($_SESSION['domains']) == 1) { // add to path if single-tenant
-		$path_mod = $_SESSION["domain_name"];
-	}
-	else {
-		$path_mod = "";
-	}
 	if ($result_count > 0) {
 		foreach($result as $index => $row) {
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
@@ -396,7 +390,8 @@ else {
 
 			//handle recordings
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_rel_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION["domain_name"].$tmp_rel_path;
 				$tmp_name = '';
 				if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
 					$tmp_name=$row['recording_file'];
@@ -426,7 +421,7 @@ else {
 					$tmp_name = $row['bridge_uuid']."_1.mp3";
 				}
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name) && $seconds > 0) {
-					$recording_file_path = '/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
+					$recording_file_path = $tmp_rel_path.'/'.$tmp_name;
 					$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
 					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
 					switch ($recording_file_ext) {
@@ -471,21 +466,21 @@ else {
 				switch ($row['direction']) {
 					case "inbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' title='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' width='16' style='border: none;' title='".$text['label-inbound']." ".$text['label-missed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' title='".$text['label-inbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' width='16' style='border: none;' title='".$text['label-inbound']."'>\n";
 						break;
 					case "outbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' style='border: none;' title='".$text['label-outbound']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' width='16' style='border: none;' title='".$text['label-outbound']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' style='border: none;' title='".$text['label-outbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' width='16' style='border: none;' title='".$text['label-outbound']."'>\n";
 						break;
 					case "local" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' title='".$text['label-local']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' width='16' style='border: none;' title='".$text['label-local']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' title='".$text['label-local']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' width='16' style='border: none;' title='".$text['label-local']."'>\n";
 						break;
 					default:
 						echo "&nbsp;";

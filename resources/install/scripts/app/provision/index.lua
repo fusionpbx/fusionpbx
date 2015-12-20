@@ -26,16 +26,8 @@
 --set the debug options
 	debug["sql"] = false;
 
---define explode
-	function explode ( seperator, str )
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+--define the explode function
+	require "resources.functions.explode";
 
 --set the defaults
 	max_tries = 3;
@@ -44,13 +36,8 @@
 	tries = 0;
 	profile = "internal";
 
---include config.lua
-	--scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	--dofile(scripts_dir.."/resources/functions/config.lua");
-	--dofile(config());
-
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --answer
@@ -134,7 +121,22 @@
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 	end 
 
---remove the previous device and send a sync command to it
+--this device already has an alternate find the correct device_uuid and then override current one
+	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil) then
+		sql = [[SELECT * FROM v_devices ]];
+		sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
+		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+		end
+		dbh:query(sql, function(row)
+			if (row.device_uuid_alternate ~= nil) then
+				device_uuid = row.device_uuid;
+			end
+		end);
+	end
+
+--remove the alternate device from another device so that it can be added to this device
 	if (authorized == 'true' and action == "login") then
 		sql = [[SELECT * FROM v_device_lines ]];
 		sql = sql .. [[WHERE device_uuid = ']]..device_uuid_alternate..[[' ]];
@@ -148,7 +150,7 @@
 				sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid_alternate..[[' ]];
 				sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
 				if (debug["sql"]) then
-					--freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+					freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
 				end
 				dbh:query(sql);
 			--send a sync command to the previous device

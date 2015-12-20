@@ -251,7 +251,7 @@ form {
 	margin: 0;
 	}
 
-input.btn, input.button {
+input.btn, input.button, button {
 	font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 	padding: 2px 6px 3px 6px;
 	color: #fff;
@@ -273,7 +273,7 @@ input.btn, input.button {
 	-moz-opacity: 0.9;
 	}
 
-input.btn:hover, input.button:hover, img.list_control_icon:hover {
+input.btn:hover, input.button:hover, img.list_control_icon:hover, button:hover {
 	box-shadow: 0 0 5px #cddaf0;
 	-webkit-box-shadow: 0 0 5px #cddaf0;
 	-moz-box-shadow: 0 0 5px #cddaf0;
@@ -282,7 +282,7 @@ input.btn:hover, input.button:hover, img.list_control_icon:hover {
 	cursor: pointer;
 	}
 
-input.txt, textarea.txt, select.txt, .formfld {
+input.txt, textarea.txt, select.txt, .formfld, label.radio {
 	font-family: arial;
 	font-size: 12px;
 	color: #000;
@@ -311,6 +311,16 @@ input.txt:focus, .formfld:focus {
 	box-shadow: 0 0 5px #cddaf0;
 	}
 
+fieldset.container {
+	border:none;
+	padding:0;
+	margin:1px;
+	display:inline-block;
+}
+label.radio
+{
+	display:block;
+}
 /* removes spinners (increment/decrement controls) inside input fields */
 input[type=number] { -moz-appearance: textfield; }
 ::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -1244,6 +1254,10 @@ SPAN.playback_progress_bar {
 			}
 		});
 
+	    $("#selecctall").change(function(){
+      		$(".checkbox1").prop('checked', $(this).prop("checked"));
+      	});
+
 		// linkify rows (except the last - the list_control_icons cell)
 		// on a table with a class of 'tr_hover', according to the href
 		// attribute of the <tr> tag
@@ -1369,7 +1383,15 @@ if (strlen($_SESSION['message']) > 0) {
 			<div id="domains_block">
 				<div id="domains_header">
 					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?php echo $text['theme-button-close']; ?>">
-					<b style="color: #000;"><?php echo $text['theme-title-domains']; ?></b> (<?php echo sizeof($_SESSION['domains']); ?>)
+					<?php
+					if (file_exists($_SERVER["DOCUMENT_ROOT"]."/app/domains/domains.php")) {
+						$href = '/app/domains/domains.php';
+					}
+					else {
+						$href = '/core/domain_settings/domains.php';
+					}
+					echo "<a href=\"".$href."\"><b style=\"color: #000;\">".$text['theme-title-domains']."</b></a> (".sizeof($_SESSION['domains']).")";
+					?>
 					<br><br>
 					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?php echo $text['theme-label-search']; ?>" onkeyup="domain_search(this.value);">
 				</div>
@@ -1416,7 +1438,7 @@ if (strlen($_SESSION['message']) > 0) {
 
 	<?php
 	// check for background image
-	if (isset($_SESSION['theme']['background_image'])) {
+	if (isset($_SESSION['theme']['background_image_enabled']['boolean']) and $_SESSION['theme']['background_image_enabled']['boolean'] == 'true') {
 		// background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
@@ -1562,7 +1584,7 @@ if (strlen($_SESSION['message']) > 0) {
 									}
 
 								//logout icon
-									if ($_SESSION['username'] != '') {
+									if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 										$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 										echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
 										unset($username_full);

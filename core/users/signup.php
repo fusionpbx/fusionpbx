@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -99,7 +99,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 		$sql = "select * from v_users ";
 		$sql .= "where username = '$username' ";
 		if ($_SESSION["user"]["unique"]["text"] != "global") {
-			$sql .= "and domain_uuid = '$domain_uuid' ";
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		}
 		//$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -154,7 +154,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$_SESSION['domain_uuid']."', ";
 	$sql .= "'".$user_uuid."', ";
 	$sql .= "'".$contact_uuid."', ";
 	$sql .= "'".$username."', ";
@@ -181,7 +181,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'".$group_user_uuid."', ";
-			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$_SESSION['domain_uuid']."', ";
 			$sql .= "'".$group_name."', ";
 			$sql .= "'".$group_uuid."', ";
 			$sql .= "'".$user_uuid."' ";
@@ -204,7 +204,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$_SESSION['domain_uuid']."', ";
 	$sql .= "'".$contact_uuid."', ";
 	$sql .= "'user', ";
 	$sql .= "'".$contact_organization."', ";
@@ -227,7 +227,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= "values ";
 	$sql .= "(";
 	$sql .= "'".$contact_email_uuid."', ";
-	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'".$_SESSION['domain_uuid']."', ";
 	$sql .= "'".$contact_uuid."', ";
 	$sql .= "'".$user_email."', ";
 	$sql .= "1 ";
@@ -298,12 +298,12 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	echo "<table border='0' $tablewidth cellpadding='0' cellspacing='0'>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq' width='30%'>".$text['label-username']."</td>";
-	echo "		<td class='vtable' width='70%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
+	echo "		<td class='vtable' width='70%'><input style='display:none;' type='password' name='autocomplete'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-password']."</td>";
-	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='password' id='password' value='$password' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' class='formfld' autocomplete='off' name='password' id='password' value='$password' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-confirm_password']."</td>";
@@ -319,11 +319,9 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	echo "		<td class='vtable'>";
 
 	$sql = "select * from v_groups ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "where (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
 	$sql .= "order by domain_uuid desc, group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-	$prep_statement->execute();
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	echo "			<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";

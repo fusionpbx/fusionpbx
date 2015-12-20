@@ -186,36 +186,25 @@
 			//set the context
 				$_SESSION["context"] = $_SESSION["domain_name"];
 
-			//recordings add the domain to the path if there is more than one domains
-				if (count($_SESSION["domains"]) > 1) {
-					if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-						if (substr($_SESSION['switch']['recordings']['dir'], -strlen($_SESSION["domain_name"])) != $_SESSION["domain_name"]) {
-							//get the default recordings directory
-							$sql = "select * from v_default_settings ";
-							$sql .= "where default_setting_enabled = 'true' ";
-							$sql .= "and default_setting_category = 'switch' ";
-							$sql .= "and default_setting_subcategory = 'recordings' ";
-							$sql .= "and default_setting_name = 'dir' ";
-							$prep_statement = $db->prepare($sql);
-							$prep_statement->execute();
-							$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result_default_settings as $row) {
-								$name = $row['default_setting_name'];
-								$category = $row['default_setting_category'];
-								$subcategory = $row['default_setting_subcategory'];
-								$switch_recordings_dir = $row['default_setting_value'];
-							}
-							//add the domain
-							$_SESSION['switch']['recordings']['dir'] = $switch_recordings_dir . '/' . $_SESSION["domain_name"];
-						}
-					}
-				}
 		}
 
 		public function upgrade() {
 
 			//set the global variable
-				global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
+				global $db;
+
+			//get the db variables
+				$config = new config;
+				$config_exists = $config->exists();
+				$config_path = $config->find();
+				$config->get();
+				$db_type = $config->db_type;
+				$db_name = $config->db_name;
+				$db_username = $config->db_username;
+				$db_password = $config->db_password;
+				$db_host = $config->db_host;
+				$db_path = $config->db_path;
+				$db_port = $config->db_port;
 
 			//get the PROJECT PATH
 				include "root.php";
@@ -258,16 +247,6 @@
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-			//get the default recordings directory
-				foreach($result_default_settings as $row) {
-					$name = $row['default_setting_name'];
-					$category = $row['default_setting_category'];
-					$subcategory = $row['default_setting_subcategory'];
-					if ($category == 'switch' && $subcategory == 'recordings' && $name == 'dir') {
-						$switch_recordings_dir = $row['default_setting_value'];
-					}
-				}
 
 			//loop through all domains
 				$sql = "select * from v_domains ";
@@ -336,11 +315,6 @@
 							}
 						}
 
-					//set the recordings directory
-						if (strlen($switch_recordings_dir) > 1 && count($_SESSION["domains"]) > 1) {
-							$_SESSION['switch']['recordings']['dir'] = $switch_recordings_dir."/".$domain_name;
-						}
-
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 						foreach ($default_list as &$default_path) {
@@ -356,6 +330,10 @@
 				if (function_exists('save_dialplan_xml')) {
 					save_dialplan_xml();
 				}
+			//update config.lua
+				require_once "core/install/resources/classes/install_switch.php";
+				$switch = new install_switch;
+				$switch->create_config_lua();
 
 			//clear the session variables
 				unset($_SESSION['domain']);

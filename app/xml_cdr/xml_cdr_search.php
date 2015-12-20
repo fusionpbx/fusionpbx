@@ -54,7 +54,11 @@ echo "		}";
 echo "	}";
 echo "</script>";
 
-echo "<form method='post' action='xml_cdr.php'>\n";
+if (strlen(check_str($_GET['redirect'])) > 0) {
+	echo "<form method='get' action='" . $_GET['redirect'] . ".php'>\n";
+} else {
+	echo "<form method='post' action='xml_cdr.php'>\n";
+}
 
 echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
@@ -201,6 +205,20 @@ echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='$network_addr'></td>";
+echo "	</tr>";
+echo "	<tr>";
+echo "		<td class='vncell'>".$text['label-mos_score']."</td>";
+echo "		<td class='vtable'>";
+echo "			<select name='mos_comparison' class='formfld'>\n";
+echo "				<option value=''></option>\n";
+	echo "			<option value='less'>&lt;</option>\n";
+	echo "			<option value='greater'>&gt;</option>\n";
+	echo "			<option value='lessorequal'>&lt;&#61;</option>\n";
+	echo "			<option value='greaterorequal'>&gt;&#61;</option>\n";
+	echo "			<option value='equal'>&#61;</option>\n";
+	echo "			<option value='notequal'>&lt;&gt;</option>\n";
+echo "			</select>\n";
+echo " <input type='text' class='formfld' name='mos_score' value='$mos_score'></td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td colspan='2' align='right'><br><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";

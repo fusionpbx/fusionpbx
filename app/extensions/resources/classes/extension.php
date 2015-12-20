@@ -65,6 +65,7 @@
 		public $nibble_account;
 		public $mwi_account;
 		public $sip_bypass_media;
+		public $absolute_codec_string;
 		public $dial_string;
 		public $enabled;
 		public $description;
@@ -91,11 +92,11 @@
 		public function voicemail() {
 
 			//determine the voicemail_id
-				if (is_numeric($this->extension)) {
-					$this->voicemail_id = $this->extension;
+				if (is_numeric($this->number_alias)) {
+					$this->voicemail_id = $this->number_alias;
 				}
 				else {
-					$this->voicemail_id = $this->number_alias;
+					$this->voicemail_id = $this->extension;
 				}
 
 			//update the voicemail settings
@@ -159,16 +160,9 @@
 				//declare global variables
 					global $config, $db, $domain_uuid;
 
-				//get the context based from the domain_uuid
-					if (count($_SESSION['domains']) == 1) {
-						$user_context = "default";
-					}
-					else {
-						$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
-					}
-
 				//get the domain_name
 					$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+					$user_context = $domain_name;
 
 				//delete all old extensions to prepare for new ones
 					$dialplan_list = glob($_SESSION['switch']['extensions']['dir']."/".$user_context."/v_*.xml");
@@ -367,6 +361,9 @@
 										$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 										break;
 							}
+							if (strlen($row['absolute_codec_string']) > 0) {
+								$xml .= "      <variable name=\"absolute_codec_string\" value=\"" . $row['absolute_codec_string'] . "\"/>\n";
+							}
 							if (strlen($row['forward_all_enabled']) > 0) {
 								$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . $row['forward_all_enabled'] . "\"/>\n";
 							}
@@ -385,6 +382,13 @@
 							if (strlen($row['forward_no_answer_destination']) > 0) {
 								$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . $row['forward_no_answer_destination'] . "\"/>\n";
 							}
+							if (strlen($row['forward_user_not_registered_enabled']) > 0) {
+								$xml .= "      <variable name=\"forward_user_not_registered_enabled\" value=\"" . $row['forward_user_not_registered_enabled'] . "\"/>\n";
+							}
+							if (strlen($row['forward_user_not_registered_destination']) > 0) {
+								$xml .= "      <variable name=\"forward_user_not_registered_destination\" value=\"" . $row['forward_user_not_registered_destination'] . "\"/>\n";
+							}
+
 							if (strlen($row['do_not_disturb']) > 0) {
 								$xml .= "      <variable name=\"do_not_disturb\" value=\"" . $row['do_not_disturb'] . "\"/>\n";
 							}

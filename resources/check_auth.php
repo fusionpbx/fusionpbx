@@ -91,6 +91,8 @@ require_once "resources/require.php";
 							}
 						}
 					}
+				//set the domain parent uuid
+					$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
 			}
 
 		//get the username or key
@@ -287,24 +289,25 @@ require_once "resources/require.php";
 					exit;
 			}
 			else {
-				foreach ($result as &$row) {
-					//allow the user to choose a template only if the template has not been assigned by the superadmin
-						if (strlen($_SESSION['domain']['template']['name']) == 0) {
-							$_SESSION['domain']['template']['name'] = $row["user_template_name"];
-						}
-					//user defined time zone
-						$_SESSION["time_zone"]["user"] = '';
-						if (strlen($row["user_time_zone"]) > 0) {
-							//user defined time zone
-							$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
-						}
-					// add session variables
-						$_SESSION["user_uuid"] = $row["user_uuid"];
-					// user session array
-						$_SESSION["user"]["username"] = $row["username"];
-						$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
-						$_SESSION["user"]["contact_uuid"] = $row["contact_uuid"];
-				}
+				//set the user settings
+					foreach ($result as &$row) {
+						//allow the user to choose a template only if the template has not been assigned by the superadmin
+							if (strlen($_SESSION['domain']['template']['name']) == 0) {
+								$_SESSION['domain']['template']['name'] = $row["user_template_name"];
+							}
+						//user defined time zone
+							$_SESSION["time_zone"]["user"] = '';
+							if (strlen($row["user_time_zone"]) > 0) {
+								//user defined time zone
+								$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
+							}
+						// add session variables
+							$_SESSION["user_uuid"] = $row["user_uuid"];
+						// user session array
+							$_SESSION["user"]["username"] = $row["username"];
+							$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
+							$_SESSION["user"]["contact_uuid"] = $row["contact_uuid"];
+					}
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
@@ -390,6 +393,12 @@ require_once "resources/require.php";
 					exit();
 				}
 			}
+
+		//get the domains
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/domains/app_config.php")){
+				require_once "app/domains/resources/domains.php";
+			}
+
 	}
 
 //set the time zone

@@ -112,6 +112,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$voicemail_option_uuid = $_GET["id"];
@@ -184,7 +187,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($voicemail_option_action.$voicemail_option_param) > 0) {
 		$tmp_select_value = $voicemail_option_action.':'.$voicemail_option_param;
 	}
-	switch_select_destination("ivr", $voicemail_options_label, "voicemail_option_param", $tmp_select_value, "width: 350px;", $voicemail_option_action);
+	echo $destination->select('ivr', 'voicemail_option_param', $tmp_select_value);
 	unset($tmp_select_value);
 
 	echo "<br />\n";
