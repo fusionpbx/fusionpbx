@@ -34,9 +34,6 @@ else {
 	exit;
 }
 
-//import xml_cdr files
-	require_once "v_xml_cdr_import.php";
-
 //additional includes
 	require_once "resources/paging.php";
 

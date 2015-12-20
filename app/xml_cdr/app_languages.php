@@ -571,7 +571,6 @@ $text['label-network_addr']['uk'] = "";
 $text['label-network_addr']['de-at'] = "Netzwerk Adresse";
 $text['label-network_addr']['he'] = "כתובת רשת";
 
-<<<<<<< HEAD
 $text['label-mos_score']['en-us'] = "MOS Score";
 $text['label-mos_score']['es-cl'] = "";
 $text['label-mos_score']['pt-pt'] = "";
