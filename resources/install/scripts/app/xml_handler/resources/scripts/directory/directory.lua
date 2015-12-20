@@ -57,6 +57,8 @@
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/reverse-auth-lookup.lua");
 	elseif (params:getHeader("Event-Calling-Function") == "switch_xml_locate_domain") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
+	elseif (params:getHeader("Event-Calling-Function") == "switch_load_network_lists") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
 	else
 		--handle action
 			--all other directory actions: sip_auth, user_call 
