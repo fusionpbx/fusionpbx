@@ -24,22 +24,21 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//remove external from the end of the gateway path
-	if (substr($v_gateways_dir, -8) == "external") {
-		//$v_gateways_dir = substr($v_gateways_dir, 0, (strlen($v_gateways_dir)-9));
-		//$sql = "update v_domain_settings set ";
-		//$sql .= "v_gateways_dir = '$v_gateways_dir' ";
-		//$sql .= "where domain_uuid = '$domain_uuid'";
-		//$db->exec($sql);
-		//unset($sql);
+//process this only one time
+if ($domains_processed == 1) {
+	//set the sip_profiles directory for older installs
+	if (isset($_SESSION['switch']['gateways']['dir'])) {
+		$orm = new orm;
+		$orm->name('default_settings');
+		$orm->uuid($_SESSION['switch']['gateways']['uuid']);
+		$array['default_setting_category'] = 'switch';
+		$array['default_setting_subcategory'] = 'sip_profiles';
+		$array['default_setting_name'] = 'dir';
+		//$array['default_setting_value'] = '';
+		//$array['default_setting_enabled'] = 'true';
+		$orm->save($array);
+		unset($array);
 	}
-
-//proccess this only one time
-	if ($domains_processed == 1) {
-		//set domains with enabled status of empty or null to true
-			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
-			$db->exec(check_sql($sql));
-			unset($sql);
-	}
+}
 
 ?>
