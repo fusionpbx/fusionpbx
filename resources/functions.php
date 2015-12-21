@@ -1326,17 +1326,19 @@ function number_pad($number,$n) {
 	}
 
 //email validate
-	function email_validate($strEmail){
-	   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-	   // search email text for regular exp matches
-	   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+	if (!function_exists('email_validate')) {
+		function email_validate($strEmail){
+			$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+			// search email text for regular exp matches
+			preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
 
-	   if (count($matches) == 0) {
-		return 0;
-	   }
-	   else {
-		return 1;
-	   }
-}
+			if (count($matches) == 0) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+	}
 
 ?>
