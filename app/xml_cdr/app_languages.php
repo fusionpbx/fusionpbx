@@ -593,8 +593,6 @@ $text['label-name']['uk'] = "Назва";
 $text['label-name']['de-at'] = "Name";
 $text['label-name']['he'] = "שם";
 
-=======
->>>>>>> remotes/origin/Enhance-Languages
 $text['label-missed']['en-us'] = "Missed";
 $text['label-missed']['es-cl'] = "Perdidas";
 $text['label-missed']['pt-pt'] = "Perdidas";
