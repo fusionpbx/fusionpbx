@@ -35,7 +35,6 @@ if (
 	!permission_exists('upgrade_source') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_apps') &&
-	!permission_exists('upgrade_switch') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
@@ -122,13 +121,6 @@ if (sizeof($_POST) > 0) {
 		$response_message = "Permission Defaults Restored";
 	}
 
-	// upgrade switch
-	if ($do["switch"] && permission_exists("upgrade_switch")) {
-		$included = true;
-		require_once("core/install/upgrade_switch.php");
-		$response_message = "Switch Upgraded";
-	}
-
 	if (sizeof($_POST['do']) > 1) {
 		$response_message = $text['message-upgrade'];
 	}
@@ -137,7 +129,7 @@ if (sizeof($_POST) > 0) {
 	header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 	exit;
 
-} // if
+} // end if
 
 
 require_once "resources/header.php";
