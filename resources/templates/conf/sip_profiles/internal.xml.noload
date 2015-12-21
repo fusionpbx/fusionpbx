@@ -38,7 +38,7 @@
 		 bypass media after an attended transfer.
 		-->
 		<param name="media-option" value="bypass-media-after-att-xfer" enabled="false"/>
-		<param name="user-agent-string" value="FreeSWITCH Rocks!" enabled="false"/>
+		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
 		<param name="debug" value="0"/>
 		<!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
 		<param name="shutdown-on-fail" value="true" enabled="false"/>
