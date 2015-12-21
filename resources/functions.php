@@ -190,20 +190,20 @@
 
 	if (!function_exists('recursive_delete')) {
 		if (file_exists('/bin/rm')) {
-			protected function recursive_delete($dir) {
+			function recursive_delete($dir) {
 				$this->write_debug('rm -Rf '.$dir.'/*');
 				exec ('rm -Rf '.$dir.'/*');
 				clearstatcache();
 			}
 		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-			protected function recursive_delete($dir) {
+			function recursive_delete($dir) {
 				$dst = normalize_path_to_os($dst);
 				$this->write_debug("del /S /F /Q \"$dir\"");
 				exec("del /S /F /Q \"$dir\"");
 				clearstatcache();
 			}
 		}else{
-			protected function recursive_delete($dir) {
+			function recursive_delete($dir) {
 				foreach (glob($dir) as $file) {
 					if (is_dir($file)) {
 						$this->write_debug("rm dir: ".$file);
