@@ -102,6 +102,7 @@ class scripts {
 		if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 
 			//define the global variables
+				global $db;
 				global $db_type;
 				global $db_name;
 				global $db_host;
