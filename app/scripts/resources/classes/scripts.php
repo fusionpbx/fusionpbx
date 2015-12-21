@@ -83,7 +83,7 @@ class scripts {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
 				}
 				if (is_readable($dst_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir);
+					recursive_copy($src_dir, $dst_dir);
 					unset($src_dir, $dst_dir);
 				}else{
 					throw new Exception("Cannot read from '$src_dir' to get the scripts");
