@@ -153,7 +153,7 @@
 					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
 					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
 				}
-				$this->write_debug($cmd);
+				//$this->write_debug($cmd);
 				exec ($cmd);
 			}
 		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
@@ -191,14 +191,14 @@
 	if (!function_exists('recursive_delete')) {
 		if (file_exists('/bin/rm')) {
 			function recursive_delete($dir) {
-				$this->write_debug('rm -Rf '.$dir.'/*');
+				//$this->write_debug('rm -Rf '.$dir.'/*');
 				exec ('rm -Rf '.$dir.'/*');
 				clearstatcache();
 			}
 		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 			function recursive_delete($dir) {
 				$dst = normalize_path_to_os($dst);
-				$this->write_debug("del /S /F /Q \"$dir\"");
+				//$this->write_debug("del /S /F /Q \"$dir\"");
 				exec("del /S /F /Q \"$dir\"");
 				clearstatcache();
 			}
@@ -206,11 +206,11 @@
 			function recursive_delete($dir) {
 				foreach (glob($dir) as $file) {
 					if (is_dir($file)) {
-						$this->write_debug("rm dir: ".$file);
-						$this->recursive_delete("$file/*");
+						//$this->write_debug("rm dir: ".$file);
+						recursive_delete("$file/*");
 						rmdir($file);
 					} else {
-						$this->write_debug("delete file: ".$file);
+						//$this->write_debug("delete file: ".$file);
 						unlink($file);
 					}
 				}
