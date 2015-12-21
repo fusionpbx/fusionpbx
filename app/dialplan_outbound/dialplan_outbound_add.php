@@ -401,13 +401,6 @@ else {
 							$dialplan_detail_group = '0';
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 						}
-
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'sip_h_X-Tag=';
-						$dialplan_detail_order = '015';
-						$dialplan_detail_group = '0';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
