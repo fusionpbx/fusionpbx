@@ -54,15 +54,15 @@ class scripts {
 	/**
 	 * Corrects the path for specifically for windows
 	 */
-	private function $this->correct_path($p) {
+	private function correct_path($path) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS == null) {
 			if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 		}
 		if ($IS_WINDOWS) {
-			return str_replace('/', '\\', $p);
+			return str_replace('/', '\\', $path);
 		}
-		return $p;
+		return $path;
 	}
 
 	/**
