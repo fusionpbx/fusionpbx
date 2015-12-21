@@ -19,6 +19,7 @@
 	<settings>
 		<param name="debug" value="0"/>
 		<!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
+		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
 		<param name="shutdown-on-fail" value="true" enabled="false"/>
 		<param name="sip-trace" value="no"/>
 		<param name="sip-capture" value="no"/>        
