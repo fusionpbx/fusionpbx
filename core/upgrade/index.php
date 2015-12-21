@@ -250,22 +250,6 @@ if (permission_exists("group_edit")) {
 	echo "</table>\n";
 }
 
-if (permission_exists("upgrade_switch")) {
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td width='30%' class='vncell'>\n";
-	echo "		".$text['label-upgrade_switch'];
-	echo "	</td>\n";
-	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_switch'>";
-	echo "			<input type='checkbox' class='formfld' name='do[switch]' id='do_switch' value='1'>";
-	echo "			".$text['description-upgrade_switch'];
-	echo "		</label>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-}
-
 echo "<br>";
 echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
 echo "<br><br>";
