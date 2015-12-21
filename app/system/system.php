@@ -85,7 +85,7 @@ $document['title'] = $text['title-sys-status'];
 		echo "	</td>\n";
 		echo "</tr>\n";
 
-		$git_path = normalize_path_to_os($_SERVER["DOCUMENT_ROOT"]."/.git");
+		$git_path = normalize_path_to_os($_SERVER['PROJECT_ROOT']."/.git");
 		if(file_exists($git_path)){
 			$git_exe = 'git';
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') { $git_exe = shell_exec('which git'); }
@@ -106,6 +106,15 @@ $document['title'] = $text['title-sys-status'];
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
+
+		echo "<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+		echo "		".$text['label-path']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"row_style1\">\n";
+		echo "		".$_SERVER['PROJECT_ROOT']."\n";
+		echo "	</td>\n";
+		echo "</tr>\n";
 
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
@@ -130,6 +139,10 @@ $document['title'] = $text['title-sys-status'];
 				echo "</tr>\n";
 			}
 		}
+
+		echo "<tr>\n";
+		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
+		echo "</tr>\n";
 
 		echo "<!--\n";
 		$tmp_result = shell_exec('uname -a');
