@@ -234,29 +234,6 @@ include "root.php";
 				unset($prep_statement, $result);
 			}
 
-			private function dialplan_name_exists() {
-				global $db;
-				$sql = "select count(*) as num_rows from v_dialplans ";
-				if($this->domain_uuid == ''){
-					$sql .= "where domain_uuid is null ";
-				}else{
-					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				}
-				$sql .= "and dialplan_name = '".strval($this->dialplan_name)."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] > 0) {
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
-				unset($prep_statement, $result);
-			}
-
 			public function dialplan_exists() {
 				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
@@ -303,16 +280,13 @@ include "root.php";
 							$dialplan['extension']['condition'][0] = $tmp;
 						}
 					}
-				//check if the dialplan name exists
-					$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
-					if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
-						if( $dialplan['extension']['@attributes']['global'] = 'true'){
-							$this->domain_uuid = '';
-						}
+				//check if the dialplan app uuid exists
+					$this->app_uuid = $dialplan['extension']['@attributes']['app_uuid'];
+					if(strlen($dialplan['extension']['@attributes']['global']) and $dialplan['extension']['@attributes']['global'] == 'true') {
+						$this->domain_uuid = null;
 					}
-					if ($this->dialplan_name_exists()) {
+					if ($this->app_uuid_exists()) {
 						//dialplan entry already exists do nothing
-						//trigger_error("Skipping already exists ...". $this->dialplan_name,E_USER_WARNING);
 					}
 					else {
 						//start the transaction
@@ -323,11 +297,6 @@ include "root.php";
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 							$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 							$this->dialplan_context = $dialplan['@attributes']['name'];
-							if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
-								if ($dialplan['extension']['@attributes']['global'] == "true") {
-									$this->domain_uuid = null;
-								}
-							}
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";
 							}
@@ -426,7 +395,11 @@ include "root.php";
 					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-							$sql .= "where d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "where ";
+							$sql .= "( ";
+							$sql .= "d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "or d.domain_uuid is null ";
+							$sql .= ") ";
 							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 							$sql .= "and d.dialplan_enabled = 'true' ";
 							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
