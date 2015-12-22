@@ -31,6 +31,7 @@ require_once "resources/require.php";
 	}
 
 //start the session
+	ini_set("session.cookie_httponly", True);
 	session_start();
 
 //if the username session is not set the check username and password

@@ -228,6 +228,7 @@ echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"i
 //echo "</DIV></TD></TR></TABLE>\n";
 //echo "</DIV></TD></TR></TABLE>\n";
 
+ini_set("session.cookie_httponly", True);
 session_start();
 if ($_SESSION["app"]["edit"]["dir"] == "scripts") {
 	echo recur_dir($_SESSION['switch']['scripts']['dir']);

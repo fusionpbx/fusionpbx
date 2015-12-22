@@ -156,13 +156,13 @@
 				//$this->write_debug($cmd);
 				exec ($cmd);
 			}
-		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+		} elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			function recursive_copy($src, $dst, $options = '') {
 				$src = normalize_path_to_os($src);
 				$dst = normalize_path_to_os($dst);
 				exec("xcopy /E /Y \"$src\" \"$dst\"");
 			}
-		}else{
+		} else {
 			function recursive_copy($src, $dst, $options = '') {
 				$dir = opendir($src);
 				if (!$dir) {

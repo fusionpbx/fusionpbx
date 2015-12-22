@@ -26,6 +26,7 @@
 include "root.php";
 
 //start session
+	ini_set("session.cookie_httponly", True);
 	session_start();
 
 //retain message
