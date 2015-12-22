@@ -22,18 +22,6 @@
 		log.noticef("SQL - %s", sql)
 	end
 
--- export this params
-	local params = {
-		directory_visible      = "directory-visible";
-		directory_exten_visible = "directory-exten-visible";
-	}
-
--- export this variables
-	local variables = {
-		effective_caller_id_name = "effective_caller_id_name";
-		directory_full_name      = "directory_full_name";
-	}
-
 	local prev_domain_name
 
 	dbh:query(sql, function(row)
