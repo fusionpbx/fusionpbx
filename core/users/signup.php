@@ -82,7 +82,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	$msg = '';
 
 	//--- begin captcha verification ---------------------
-		//session_start(); //make sure sessions are started
+		//ini_set("session.cookie_httponly", True); //session_start(); //make sure sessions are started
 		if (strtolower($_SESSION["captcha"]) != strtolower($_REQUEST["captcha"]) || strlen($_SESSION["captcha"]) == 0) {
 			//$msg .= "Captcha Verification Failed<br>\n";
 		}
