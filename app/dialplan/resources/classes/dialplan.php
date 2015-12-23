@@ -282,6 +282,9 @@ include "root.php";
 					}
 				//check if the dialplan app uuid exists
 					$this->app_uuid = $dialplan['extension']['@attributes']['app_uuid'];
+					if(strlen($dialplan['extension']['@attributes']['global']) and $dialplan['extension']['@attributes']['global'] == 'true') {
+						$this->domain_uuid = null;
+					}
 					if ($this->app_uuid_exists()) {
 						//dialplan entry already exists do nothing
 					}
@@ -290,14 +293,10 @@ include "root.php";
 							$db->beginTransaction();
 						//get the attributes
 							$this->dialplan_uuid = uuid();
+							$this->app_uuid = $dialplan['extension']['@attributes']['app_uuid'];
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 							$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 							$this->dialplan_context = $dialplan['@attributes']['name'];
-							if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
-								if ($dialplan['extension']['@attributes']['global'] == "true") {
-									$this->domain_uuid = null;
-								}
-							}
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";
 							}
