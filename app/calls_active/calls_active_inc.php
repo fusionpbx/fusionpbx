@@ -183,6 +183,11 @@ else {
 						}
 					}
 
+				// reduce too long app data
+					if(strlen($application_data) > 512) {
+						$application_data = substr($application_data, 0, 512) . ' <b>...</b>';
+					}
+
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
