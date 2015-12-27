@@ -441,7 +441,7 @@ include "root.php";
 
 						//create user and set the permissions
 							try {
-								$tmp_sql = "CREATE USER '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
+								$tmp_sql = "GRANT SELECT ON ".$this->global_settings->db_name().".* TO '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
 								$this->dbh->query($tmp_sql);
 							}
 							catch (PDOException $error) {
