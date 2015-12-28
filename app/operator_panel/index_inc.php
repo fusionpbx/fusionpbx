@@ -173,8 +173,8 @@ foreach ($activity as $extension => $ext) {
 			$call_number = $ext['dest'];
 		}
 		else {
-			$call_name = $activity[(int) $ext['dest']]['effective_caller_id_name'];
-			$call_number = format_phone((int) $ext['dest']);
+			$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
+			$call_number = format_phone($ext['dest']);
 		}
 		$dir_icon = 'outbound';
 	}
@@ -182,13 +182,13 @@ foreach ($activity as $extension => $ext) {
 		if ($ext['callstate'] == 'ACTIVE') {
 			$ext_state = 'active';
 			if ($ext['direction'] == 'inbound') {
-				$call_name = $activity[(int) $ext['dest']]['effective_caller_id_name'];
-				$call_number = format_phone((int) $ext['dest']);
+				$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
+				$call_number = format_phone($ext['dest']);
 				$dir_icon = 'outbound';
 			}
 			else if ($ext['direction'] == 'outbound') {
-				$call_name = $activity[(int) $ext['cid_num']]['effective_caller_id_name'];
-				$call_number = format_phone((int) $ext['cid_num']);
+				$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+				$call_number = format_phone($ext['cid_num']);
 				$dir_icon = 'inbound';
 			}
 		}
@@ -201,8 +201,8 @@ foreach ($activity as $extension => $ext) {
 			$ext_state = 'active';
 		}
 		$dir_icon = 'inbound';
-		$call_name = $activity[(int) $ext['cid_num']]['effective_caller_id_name'];
-		$call_number = format_phone((int) $ext['cid_num']);
+		$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+		$call_number = format_phone($ext['cid_num']);
 	}
 	else {
 		unset($ext_state, $dir_icon, $call_name, $call_number);
