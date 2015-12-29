@@ -29,6 +29,7 @@
 
 	//session handling
 		//start the session
+			ini_set("session.cookie_httponly", True);
 			session_start();
 		//regenerate sessions to avoid session id attacks such as session fixation
 			if ($_SESSION['security']['session_rotate']['boolean'] == "true") {
