@@ -26,6 +26,7 @@
 include "root.php";
 
 // start the session
+	ini_set("session.cookie_httponly", True);
 	session_start();
 
 //if config.php file does not exist then redirect to the install page

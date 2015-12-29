@@ -141,7 +141,7 @@
 		<param name="caller-id-type" value="none" enabled="false"/>
 
 		<param name="record-path" value="$${recordings_dir}"/>
-		<param name="record-template" value="${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav"/>
+		<param name="record-template" value="${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext}"/>
 		<!--enable to use presence -->
 		<param name="manage-presence" value="true"/>
 		<!-- send a presence probe on each register to query devices to send presence instead of sending presence with less info -->
