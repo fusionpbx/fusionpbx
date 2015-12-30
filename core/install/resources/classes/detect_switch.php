@@ -122,10 +122,11 @@ require_once "resources/classes/EventSocket.php";
 				throw new Exception('Failed to use event socket');
 			}
 			$FS_Version = $this->event_socket_request('api version');
-			preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $FS_Version, $matches);
+			preg_match("/FreeSWITCH Version (\d+)\.(\d+)\.(\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $FS_Version, $matches);
 			$this->_major = $matches[1];
 			$this->_minor = $matches[2];
 			$this->_build = $matches[3];
+			$this->_bits =  $matches[4];
 			$FS_Vars = $this->event_socket_request('api global_getvar');
 			foreach (explode("\n",$FS_Vars) as $FS_Var){
 				preg_match("/(\w+_dir)=(.*)/", $FS_Var, $matches);

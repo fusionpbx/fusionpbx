@@ -336,7 +336,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				echo "<form method='post' name='frm' action=''>\n";
 				echo "	<div style='text-align:right'>\n";
 				echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-				echo "    <button type='button' onclick=\"location.reload(true);\">".$text['button-install_execute']."</button>\n";
+				echo "    <button type='button' onclick=\"location.reload(true);\">".$text['button-execute']."</button>\n";
 				echo "	</div>\n";
 				echo "</form>\n";
 			}
