@@ -268,7 +268,7 @@ include "root.php";
 				//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
 			}
 			catch (PDOException $error) {
-				throw Exception("Failed to create database: " . $error->getMessage());
+				throw new Exception("Failed to create database: " . $error->getMessage());
 			}
 
 		//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
@@ -312,7 +312,7 @@ include "root.php";
 					$this->dbh->query($sql);
 				}
 				catch (PDOException $error) {
-							throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
+					throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
 				}
 				$x++;
 			}
