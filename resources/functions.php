@@ -835,13 +835,16 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		foreach ($_SESSION["format"]["phone"] as &$format) {
-			$format_count = substr_count($format, 'x');
-			$format_count = $format_count + substr_count($format, 'R');
-			$format_count = $format_count + substr_count($format, 'r');
-			if ($format_count == strlen($phone_number)) {
-				//format the number
-				$phone_number = format_string($format, $phone_number);
+		$phone_number = trim($phone_number, "+");
+		if (is_numeric($phone_number)) {
+			foreach ($_SESSION["format"]["phone"] as &$format) {
+				$format_count = substr_count($format, 'x');
+				$format_count = $format_count + substr_count($format, 'R');
+				$format_count = $format_count + substr_count($format, 'r');
+				if ($format_count == strlen($phone_number)) {
+					//format the number
+					$phone_number = format_string($format, $phone_number);
+				}
 			}
 		}
 		return $phone_number;
