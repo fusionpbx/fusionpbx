@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2016
 --	All Rights Reserved.
 --
 --	Contributor(s):
@@ -30,62 +30,68 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
-sounds_dir = "";
-recordings_dir = "";
-pin_number = "";
-max_tries = "3";
-digit_timeout = "3000";
+--set default variables
+	sounds_dir = "";
+	recordings_dir = "";
+	pin_number = "";
+	max_tries = "3";
+	digit_timeout = "3000";
 
+--define uuid function
+	local random = math.random
+	local function uuid()
+	    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+	    return string.gsub(template, '[xy]', function (c)
+	        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+	        return string.format('%x', v)
+	    end)
+	end
 
-local random = math.random
-local function uuid()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
-        return string.format('%x', v)
-    end)
-end
+--get session variables
+	if (session:ready()) then
+		session:answer();
+		--session:execute("info", "");
+		destination_number = session:getVariable("user_name");
+		pin_number = session:getVariable("pin_number");
+		sounds_dir = session:getVariable("sounds_dir");
+		ring_group_uuid = session:getVariable("ring_group_uuid");
+	end
 
-if ( session:ready() ) then
-	session:answer();
-	--session:execute("info", "");
-	destination_number = session:getVariable("user_name");
-	pin_number = session:getVariable("pin_number");
-	sounds_dir = session:getVariable("sounds_dir");
-	ring_group_uuid = session:getVariable("ring_group_uuid");
+--get the domain uuid and set other required variables
+	if (session:ready()) then
+		--get info for the ring group
+			sql = "SELECT * FROM v_ring_groups ";
+			sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
+			status = dbh:query(sql, function(row)
+				domain_uuid = row["domain_uuid"];
+			end);
+
+			destination_timeout = 15;
+			destination_delay = 0;
+
+		--create the primary key uuid
+			ring_group_destination_uuid = uuid();
+	end
+
+--pin number is not required
 	
-	--get info for the ring group
-	sql = "SELECT * FROM v_ring_groups ";
-	sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-	status = dbh:query(sql, function(row)
-		domain_uuid = row["domain_uuid"];
-	end);
 
-	destination_timeout = 15;
-	destination_delay = 0;
-	
-
-
-	ring_group_destination_uuid = uuid();
-
-	--pin number is not required
-
-	--press 1 to login and 2 to logout
+--press 1 to login and 2 to logout
+	if (session:ready()) then
 		menu_selection = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 		freeswitch.consoleLog("NOTICE", "menu_selection: "..menu_selection.."\n");
 		if (menu_selection == "1") then
-			--first, check to see if is already in that ring group
+			--first, check to see if the destination is already in this ring group
 			sql = [[
-					SELECT COUNT(*) AS in_group FROM
-						v_ring_group_destinations
-					WHERE
-						domain_uuid = ']]..domain_uuid..[[' 
-						AND ring_group_uuid = ']]..ring_group_uuid..[['
-						AND destination_number = ']]..destination_number..[['
+				SELECT COUNT(*) AS in_group FROM
+					v_ring_group_destinations
+				WHERE
+					domain_uuid = ']]..domain_uuid..[[' 
+					AND ring_group_uuid = ']]..ring_group_uuid..[['
+					AND destination_number = ']]..destination_number..[['
 			]];
-			
 			--freeswitch.consoleLog("NOTICE", "ring_group_member: SQL "..sql.."\n");
-			
+
 			assert(dbh:query(sql, function(row)
 				if (row.in_group == "0") then
 					sql = [[
@@ -104,12 +110,12 @@ if ( session:ready() ) then
 									']]..destination_number..[[', 
 									]]..destination_delay..[[, 
 									]]..destination_timeout..[[)
-			
+
 					]];
-								
+				
 					--freeswitch.consoleLog("NOTICE", "ring_group_member: SQL "..sql.."\n");
 					dbh:query(sql);
-		
+
 					freeswitch.consoleLog("NOTICE", "ring_group_member: LOG IN\n");
 					session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
 
@@ -118,8 +124,7 @@ if ( session:ready() ) then
 					session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
 				end		
 			end));
-			
-			
+
 		end
 		if (menu_selection == "2") then
 			sql = [[
@@ -136,10 +141,14 @@ if ( session:ready() ) then
 			freeswitch.consoleLog("NOTICE", "ring_group_member: LOG OUT\n");
 			session:streamFile("ivr/ivr-you_are_now_logged_out.wav");
 		end
+	end
 
-	--wait for the file to be written before proceeding
+--wait for the file to be written before proceeding
+	if (session:ready()) then
 		--session:sleep(1000);
+	end
 
-	--hangup
+--hangup
+	if (session:ready()) then
 		session:hangup();
-end
+	end
