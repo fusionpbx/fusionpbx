@@ -93,11 +93,19 @@
 					if (string.len(queue_moh_sound) == 0) then
 						table.insert(xml, [[                                    <param name="moh-sound" value="local_stream://default"/>]]);
 					else
-						if (string.sub(queue_moh_sound, 0, 15) == 'local_stream://') then
+						if (string.sub(queue_moh_sound, 0, 14) == 'tone_stream://' or string.sub(queue_moh_sound, 0, 2) == '${') then
+							--given this string --tone_stream://${us-ring};loops=-1  --return us-ring
+							a, b, tone_string = string.find(queue_moh_sound, ".*{(.*)}.*");
+							if (tone_string ~= nil) then
+								tone_string = trim(api:execute("global_getvar", tone_string));
+								table.insert(xml, [[                                    <param name="moh-sound" value="tone_stream://]]..tone_string..[[;loops=-1"/>]]);
+							end
+						elseif (string.sub(queue_moh_sound, 0, 15) == 'local_stream://') then
 							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
-						elseif (string.sub(queue_moh_sound, 0, 2) == '${' and string.sub(queue_moh_sound, -5) == 'ring}') then
-							table.insert(xml, [[                                    <param name="moh-sound" value="tone_stream://]]..queue_moh_sound..[[;loops=-1"/>]]);
 						else
+							if (queue_moh_sound == nil or queue_moh_sound == "") then
+								queue_moh_sound = "local_stream://default";
+							end
 							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
 						end
 					end

@@ -82,7 +82,7 @@
 			end
 			status = dbh:query(sql, function(row)
 				extension = row.extension;
-				number_alias = row.number_alias;
+				number_alias = row.number_alias or '';
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..row.extension.."\n");

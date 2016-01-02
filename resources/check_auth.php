@@ -31,6 +31,9 @@ require_once "resources/require.php";
 	}
 
 //start the session
+	ini_set("session.use_only_cookies", True);
+	ini_set("session.cookie_httponly", True);
+	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	session_start();
 
 //if the username session is not set the check username and password

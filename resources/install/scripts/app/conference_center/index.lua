@@ -13,7 +13,7 @@
 --	notice, this list of conditions and the following disclaimer in the
 --	documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED AS ''IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -148,6 +148,7 @@
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
 			--recording = session:getVariable("recording");
+			domain_name = session:getVariable("domain_name");
 
 		--set the end epoch
 			end_epoch = os.time();
@@ -449,7 +450,7 @@
 						AND m.domain_uuid = ']] .. domain_uuid ..[['
 						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[') 
 						AND r.enabled = 'true'
-						AND r.enabled = 'true'
+						AND m.enabled = 'true'
 						AND (
 								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
 								( r.start_datetime = '' OR r.start_datetime is null ) 
@@ -496,7 +497,9 @@
 					AND r.conference_center_uuid = ']] .. conference_center_uuid ..[['
 					AND m.domain_uuid = ']] .. domain_uuid ..[['
 					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-					AND r.enabled = 'true' ]];
+					AND r.enabled = 'true' 
+					AND m.enabled = 'true'
+					]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
 				end
@@ -707,7 +710,7 @@
 						--there is one other member in this conference
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
 					elseif (member_count == "0") then
-						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-alone.wav");
+						--conference profile defines the alone sound file
 					else
 						--say the count
 							session:execute("say", default_language.." number pronounced "..member_count);

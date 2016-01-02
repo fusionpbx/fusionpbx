@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -85,7 +85,7 @@
 			end
 
 		--prevent processing for invalid user
-			if (user == "*97") then
+			if (user == "*97") or (user == "") then
 				source = "";
 				continue = false;
 			end
@@ -436,7 +436,7 @@
 								table.insert(xml, [[								<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
 							end
 							if (string.len(sip_force_contact) > 0) then
-								table.insert(xml, [[								<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
+								table.insert(xml, [[								<variable name="sip-force-contact" value="]] .. sip_force_contact .. [["/>]]);
 							end
 							if (string.len(sip_force_expires) > 0) then
 								table.insert(xml, [[								<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);
