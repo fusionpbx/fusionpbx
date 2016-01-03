@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -116,8 +116,8 @@
 								sql = sql .. "and g.enabled = 'true' ";
 								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							else
-								sql = "select * from v_gateways ";
-								sql = sql .. "where enabled = 'true' and profile = '"..sip_profile_name.."' ";
+								sql = "select * from v_gateways as g ";
+								sql = sql .. "where g.enabled = 'true' and g.profile = '"..sip_profile_name.."' ";
 							end
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
