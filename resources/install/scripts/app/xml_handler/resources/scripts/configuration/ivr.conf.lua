@@ -28,9 +28,8 @@
 	ivr_menu_uuid = params:getHeader("Menu-Name");
 
 --get the cache
-	hostname = trim(api:execute("switchname", ""));
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. hostname));
+		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. ivr_menu_uuid));
 	else
 		XML_STRING = "-ERR NOT FOUND";
 	end
@@ -137,7 +136,7 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:ivr.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
+			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -148,7 +147,7 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. ivr_menu_uuid .." source: database\n");
 			end
 
 	else
@@ -156,6 +155,6 @@
 			XML_STRING = XML_STRING:gsub("&#39;", "'");
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf" .. ivr_menu_uuid .." source: memcache\n");
 			end
 	end --if XML_STRING
