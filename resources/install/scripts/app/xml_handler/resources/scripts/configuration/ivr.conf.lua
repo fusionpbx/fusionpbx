@@ -122,7 +122,7 @@
 			end
 
 		--close the extension tag if it was left open
-			table.insert(xml, [[				<menu>]]);
+			table.insert(xml, [[				</menu>]]);
 			table.insert(xml, [[			</menus>]]);
 			table.insert(xml, [[		</configuration>]]);
 			table.insert(xml, [[	</section>]]);
