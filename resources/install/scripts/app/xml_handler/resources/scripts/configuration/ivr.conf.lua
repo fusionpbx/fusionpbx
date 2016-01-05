@@ -112,7 +112,7 @@
 				ivr_menu_option_digits = r.ivr_menu_option_digits
 				ivr_menu_option_action = r.ivr_menu_option_action
 				ivr_menu_option_param = r.ivr_menu_option_param
-				ivr_menu_option_description = row.ivr_menu_option_description
+				ivr_menu_option_description = r.ivr_menu_option_description
 				table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[["/><!--]]..ivr_menu_option_description..[[-->]]);
 			end);
 
