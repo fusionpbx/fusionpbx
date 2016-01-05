@@ -63,7 +63,9 @@ else {
 		if ($email_uuid != '') {
 			$sql = "select email from v_emails ";
 			$sql .= "where email_uuid = '".$email_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			if (!permission_exists('emails_all') || $_REQUEST['showall'] != 'true') {
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			}
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -89,7 +91,11 @@ else {
 				$_SESSION["message_mood"] = 'negative';
 				$_SESSION["message_delay"] = '4'; //sec
 				$_SESSION["message"] = $text['message-resend_failed'].": ".$mailer_error;
-				header("Location: emails.php");
+				if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+					header("Location: emails.php?showall=true");
+				} else {
+					header("Location: emails.php");
+				}
 			}
 		}
 
@@ -110,6 +116,11 @@ else {
 	echo "			".$text['description-emails'];
 	echo "		</td>\n";
 	echo "		<td width='50%' align='right' valign='top'>\n";
+	if (permission_exists('emails_all')) {
+		if ($_REQUEST['showall'] != 'true') {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='emails.php?showall=true';\">\n";
+		}
+	}
 	echo "			<input type='button' class='btn' alt=\"".$text['button-refresh']."\" onclick=\"document.location.reload();\" value='".$text['button-refresh']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -118,7 +129,11 @@ else {
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_emails ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		if (permission_exists('emails_all')) {
+			if ($_REQUEST['showall'] != 'true') {
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			}
+		}
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -128,7 +143,11 @@ else {
 
 	//prepare to page the results
 		$rows_per_page = 50;
-		$param = "";
+		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+				$param .= "&showall=true";
+		} else {
+			$param = "";
+		}
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -136,7 +155,11 @@ else {
 
 	//get the list
 		$sql = "select * from v_emails ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+				$sql .= " join v_domains on v_emails.domain_uuid = v_domains.domain_uuid ";
+		} else {
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		}
 		if (strlen($order_by)> 0) { $sql .= "order by ".$order_by." ".$order." "; }
 		$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -152,9 +175,12 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('sent_date', $text['label-sent'], $order_by, $order);
-	echo th_order_by('type', $text['label-type'], $order_by, $order);
-	echo th_order_by('status', $text['label-status'], $order_by, $order);
+	if ($_REQUEST['showall'] == true && permission_exists('emails_all')) {
+		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, null, null, $param);
+	}
+	echo th_order_by('sent_date', $text['label-sent'], $order_by, $order, null, null, $param);
+	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $param);
+	echo th_order_by('status', $text['label-status'], $order_by, $order, null, null, $param);
 	echo "<th>".$text['label-message']."</th>\n";
 	echo "<th>".$text['label-reference']."</th>\n";
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
@@ -180,6 +206,10 @@ else {
 
 			$tr_link = "href='email_view.php?id=".$row['email_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
+			if ($_REQUEST['showall'] == true && permission_exists('emails_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
+			}
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			$sent_date = explode('.', $row['sent_date']);
 			echo 		$sent_date[0];
@@ -192,7 +222,11 @@ else {
 				echo "	<a href='?id=".$row['email_uuid']."&a=download'>".$text['label-download']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('email_resend')) {
-				echo "	<a href='?id=".$row['email_uuid']."&a=resend'>".$text['label-resend']."</a>";
+				echo "	<a href='?id=".$row['email_uuid']."&a=resend";
+				if ($_REQUEST['showall'] == true && permission_exists('emails_all')) {
+					echo "&showall=true";
+				}
+				echo "'>" . $text['label-resend']."</a>";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg tr_link_void' style='white-space: nowrap; vertical-align: top;'>";
