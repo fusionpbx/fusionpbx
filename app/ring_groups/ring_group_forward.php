@@ -128,7 +128,6 @@ require_once "resources/paging.php";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	//echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_extension', $text['label-ring-group-extension'], $order_by, $order);
 	//echo th_order_by('ring_group_context', 'Context', $order_by, $order);
 	//echo th_order_by('ring_group_strategy', 'Strategy', $order_by, $order);
@@ -136,13 +135,13 @@ require_once "resources/paging.php";
 	//echo th_order_by('ring_group_timeout_data', 'Timeout Data', $order_by, $order);
 	//echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>";
+	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order);
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_context']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_strategy']."&nbsp;</td>\n";
@@ -150,6 +149,7 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
