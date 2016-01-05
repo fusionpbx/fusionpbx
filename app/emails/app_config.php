@@ -14,7 +14,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Gérer les messages électroniques échoué.";
+		$apps[$x]['description']['fr-fr'] = "GÃˆrer les messages Ãˆlectroniques ÃˆchouÃˆ.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gerenciar mensagens de e-mail falhou.";
@@ -38,6 +38,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "emails_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+
 
 	//schema details
 		$y = 1; //table array index
