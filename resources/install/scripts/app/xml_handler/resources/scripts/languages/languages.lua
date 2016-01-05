@@ -127,7 +127,7 @@
 									table.insert(xml, [[						</input>]]);
 									table.insert(xml, [[					</macro>]]);;
 								end
-								table.insert(xml, [[					<macro name="]]..row.phrase_name..[[.]]..row.domain_uuid..[[">]]);
+								table.insert(xml, [[					<macro name="]]..row.phrase_uuid..[[">]]);
 								table.insert(xml, [[						<input pattern=\"(.*)\">]]);
 								table.insert(xml, [[							<match>]]);
 								match_open_tag = true
