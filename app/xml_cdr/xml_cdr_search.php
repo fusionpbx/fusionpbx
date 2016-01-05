@@ -164,6 +164,12 @@ echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-duration']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='$duration'></td>";
 echo "	</tr>";
+if (permission_exists('xml_cdr_all')) {
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['button-show_all']."</td>";
+	echo "		<td class='vtable'><input type='checkbox' class='formfld' name='showall' value='true'></td>";
+	echo "	</tr>";
+}
 echo "</table>";
 
 echo "		</td>";
