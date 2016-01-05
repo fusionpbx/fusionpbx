@@ -101,7 +101,7 @@
 			table.insert(xml, [[				max-failures="]]..ivr_menu_max_failures..[[" ]]);
 			table.insert(xml, [[				max-timeouts="]]..ivr_menu_max_timeouts..[[" ]]);
 			table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
-			table.insert(xml, [[				/>]]);
+			table.insert(xml, [[				>]]);
 
 		--get the ivr menu options
 			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
@@ -113,15 +113,16 @@
 				ivr_menu_option_action = r.ivr_menu_option_action
 				ivr_menu_option_param = r.ivr_menu_option_param
 				ivr_menu_option_description = r.ivr_menu_option_description
-				table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[["/><!--]]..ivr_menu_option_description..[[-->]]);
+				table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
 			end);
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/(^(\d{2,5}))$/" param="transfer $1 XML features"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/(^(\d{2,5}))$/" param="transfer $1 XML features" description="direct dial"/>\n]]);
 			end
 
 		--close the extension tag if it was left open
+			table.insert(xml, [[				<menu>]]);
 			table.insert(xml, [[			</menus>]]);
 			table.insert(xml, [[		</configuration>]]);
 			table.insert(xml, [[	</section>]]);
