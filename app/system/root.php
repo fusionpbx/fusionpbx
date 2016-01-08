@@ -22,7 +22,6 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Matthew Vale <github@mafoo.org>
 */
 
 // make sure the PATH_SEPARATOR is defined
