@@ -299,8 +299,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	//need to make sure content-type is correct
 	if ($_REQUEST['content_type'] == 'application/octet-stream') {
 		//format the mac address and 
-			$format = new provision();
-			$mac = $format->format_mac($mac, $device_vendor);
+			$mac = $prov->format_mac($mac, $device_vendor);
 
 		//replace the variable name with the value
 			$file_name = str_replace("{\$mac}", $mac, $file);
