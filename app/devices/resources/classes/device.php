@@ -86,7 +86,7 @@ include "root.php";
 				case "000e08":
 					$device_vendor = "linksys";
 					break;
-				case "08000F":
+				case "08000f":
 					$device_vendor = "mitel";
 					break;
 				case "0080f0":
