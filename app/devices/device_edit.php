@@ -602,8 +602,11 @@ require_once "resources/require.php";
 			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 			echo "			<option value=''>".$text['label-download']."</option>\n";
 			foreach ($files as $file) {
+				//format the mac address and 
+					$format = new provision();
+					$mac = $format->format_mac($device_mac_address, $device_vendor);
 				//render the file name
-					$file_name = str_replace("{\$mac}",$mac,basename($file));
+					$file_name = str_replace("{\$mac}", $mac, basename($file));
 				//add the select option
 					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 			}
