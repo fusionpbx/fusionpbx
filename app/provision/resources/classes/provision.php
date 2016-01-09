@@ -127,7 +127,7 @@ include "root.php";
 		}
 
 		//set the mac address in the correct format for the specific vendor
-		public format_mac($mac, $vendor) {
+		public function format_mac($mac, $vendor) {
 			switch (strtolower($vendor)) {
 			case "aastra":
 				$mac = strtoupper($mac);
@@ -148,7 +148,7 @@ include "root.php";
 			return $mac;
 		}
 
-		function render() {
+		public function render() {
 
 			//debug
 				$debug = $_REQUEST['debug']; // array
