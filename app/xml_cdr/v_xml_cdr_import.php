@@ -290,7 +290,7 @@
 					case "inbound":
 							$callee_number = check_str(urldecode($row->caller_profile->destination_number));
 							$callee_number_serie = number_series($callee_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($callee_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
