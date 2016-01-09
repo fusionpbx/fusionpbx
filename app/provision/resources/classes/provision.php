@@ -891,15 +891,11 @@ include "root.php";
 															$this->file = $file_name;
 															$file_contents = $this->render();
 
+													//format the mac address
+														$mac = $this->format_mac($device_mac_address, $device_vendor);
+
 													//replace {$mac} in the file name
-														if ($device_vendor == "aastra" || $device_vendor == "cisco") {
-															//upper case the mac address for aastra phones
-															$file_name = str_replace("{\$mac}", strtoupper($device_mac_address), $file_name);
-														}
-														else {
-															//all other phones
-															$file_name = str_replace("{\$mac}", $device_mac_address, $file_name);
-														}
+														$file_name = str_replace("{\$mac}", $mac, $file_name);
 
 													//write the file
 														//echo $directory.'/'.$file_name."\n";
