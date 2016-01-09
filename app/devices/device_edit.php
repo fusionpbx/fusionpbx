@@ -357,6 +357,10 @@ require_once "resources/require.php";
 		unset ($prep_statement);
 	}
 
+//format the mac address
+	$format = new provision();
+	$formatted_mac_address = $format->format_mac($device_mac_address, $device_vendor);
+
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
 		$template_array = explode("/", $device_template);
@@ -553,7 +557,7 @@ require_once "resources/require.php";
 		else {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		echo "		window.location = 'https://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = 'https://".$domain_name."/app/provision?mac=".$formatted_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
