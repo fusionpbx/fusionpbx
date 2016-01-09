@@ -126,6 +126,28 @@ include "root.php";
 				}
 		}
 
+		//set the mac address in the correct format for the specific vendor
+		public format_mac($mac, $vendor) {
+			switch (strtolower($vendor)) {
+			case "aastra":
+				$mac = strtoupper($mac);
+				break;
+			case "mitel":
+				$mac = strtoupper($mac);
+				break;
+			case "polycom":
+				$mac = strtolower($mac);
+				break;
+			case "snom":
+				$mac = strtolower($mac);
+				break;
+			default:
+				$mac = strtolower($mac);
+				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+			}
+			return $mac;
+		}
+
 		function render() {
 
 			//debug
@@ -703,23 +725,7 @@ include "root.php";
 					unset ($prep_statement);
 
 				//set the mac address in the correct format
-					switch (strtolower($device_vendor)) {
-					case "aastra":
-						$mac = strtoupper($mac);
-						break;
-					case "mitel":
-						$mac = strtoupper($mac);
-						break;
-					case "polycom":
-						$mac = strtolower($mac);
-						break;
-					case "snom":
-						$mac = strtolower($mac);
-						break;
-					default:
-						$mac = strtolower($mac);
-						$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
-					}
+					$this->format_mac($mac, $device_vendor);
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
