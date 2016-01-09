@@ -707,10 +707,13 @@ include "root.php";
 					case "aastra":
 						$mac = strtoupper($mac);
 						break;
-					case "snom":
-						$mac = strtolower($mac);
+					case "mitel":
+						$mac = strtoupper($mac);
 						break;
 					case "polycom":
+						$mac = strtolower($mac);
+						break;
+					case "snom":
 						$mac = strtolower($mac);
 						break;
 					default:
