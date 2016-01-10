@@ -52,7 +52,7 @@ if (sizeof($_POST) > 0) {
 
 	// run source update
 	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
-		chdir($_SERVER["DOCUMENT_ROOT"]);
+		chdir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH);
 		exec("git pull", $response_source_update);
 		$update_failed = true;
 		if (sizeof($response_source_update) > 0) {
