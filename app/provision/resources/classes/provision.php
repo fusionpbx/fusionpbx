@@ -725,7 +725,7 @@ include "root.php";
 					unset ($prep_statement);
 
 				//set the mac address in the correct format
-					$this->format_mac($mac, $device_vendor);
+					$mac = $this->format_mac($mac, $device_vendor);
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
