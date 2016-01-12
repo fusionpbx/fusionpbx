@@ -553,7 +553,7 @@ require_once "resources/require.php";
 		else {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		echo "		window.location = 'https://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = 'https://".$domain_name."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -602,8 +602,11 @@ require_once "resources/require.php";
 			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 			echo "			<option value=''>".$text['label-download']."</option>\n";
 			foreach ($files as $file) {
+				//format the mac address and 
+					$format = new provision();
+					$mac = $format->format_mac($device_mac_address, $device_vendor);
 				//render the file name
-					$file_name = str_replace("{\$mac}",$device_mac_address,basename($file));
+					$file_name = str_replace("{\$mac}", $mac, basename($file));
 				//add the select option
 					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 			}
