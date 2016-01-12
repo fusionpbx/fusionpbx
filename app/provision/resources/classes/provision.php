@@ -126,7 +126,29 @@ include "root.php";
 				}
 		}
 
-		function render() {
+		//set the mac address in the correct format for the specific vendor
+		public function format_mac($mac, $vendor) {
+			switch (strtolower($vendor)) {
+			case "aastra":
+				$mac = strtoupper($mac);
+				break;
+			case "mitel":
+				$mac = strtoupper($mac);
+				break;
+			case "polycom":
+				$mac = strtolower($mac);
+				break;
+			case "snom":
+				$mac = strtolower($mac);
+				break;
+			default:
+				$mac = strtolower($mac);
+				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+			}
+			return $mac;
+		}
+
+		public function render() {
 
 			//debug
 				$debug = $_REQUEST['debug']; // array
@@ -473,7 +495,7 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
-				//get the extensions array and add to the template engine
+				//get the contact extensions array and add to the template engine
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, e.extension ";
@@ -489,8 +511,26 @@ include "root.php";
 							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
-							$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$contact_extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 							unset ($prep_statement, $sql);
+
+						//assign the contacts array
+							$view->assign("contact_extensions", $contact_extensions);
+					}
+
+				//get the extensions array and add to the template engine
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
+						//get contacts from the database
+							$sql = "select directory_full_name, description ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and enabled = 'true' ";
+							$prep_statement = $db->prepare($sql);
+							if ($prep_statement) {
+								$prep_statement->execute();
+								$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							}
 
 						//assign the contacts array
 							$view->assign("extensions", $extensions);
@@ -703,20 +743,7 @@ include "root.php";
 					unset ($prep_statement);
 
 				//set the mac address in the correct format
-					switch (strtolower($device_vendor)) {
-					case "aastra":
-						$mac = strtoupper($mac);
-						break;
-					case "snom":
-						$mac = strtolower($mac);
-						break;
-					case "polycom":
-						$mac = strtolower($mac);
-						break;
-					default:
-						$mac = strtolower($mac);
-						$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
-					}
+					$mac = $this->format_mac($mac, $device_vendor);
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
@@ -882,15 +909,11 @@ include "root.php";
 															$this->file = $file_name;
 															$file_contents = $this->render();
 
+													//format the mac address
+														$mac = $this->format_mac($device_mac_address, $device_vendor);
+
 													//replace {$mac} in the file name
-														if ($device_vendor == "aastra" || $device_vendor == "cisco") {
-															//upper case the mac address for aastra phones
-															$file_name = str_replace("{\$mac}", strtoupper($device_mac_address), $file_name);
-														}
-														else {
-															//all other phones
-															$file_name = str_replace("{\$mac}", $device_mac_address, $file_name);
-														}
+														$file_name = str_replace("{\$mac}", $mac, $file_name);
 
 													//write the file
 														//echo $directory.'/'.$file_name."\n";
