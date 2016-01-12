@@ -34,23 +34,23 @@
 	}
 
 // make sure the document_root is set
-	$_SERVER["SCRIPT_FILENAME"] = str_replace("\\", "/", $_SERVER["SCRIPT_FILENAME"]);
+	$_SERVER["SCRIPT_FILENAME"] = str_replace("\\", '/', $_SERVER["SCRIPT_FILENAME"]);
 	$_SERVER["DOCUMENT_ROOT"]   = str_replace($_SERVER["PHP_SELF"], "", $_SERVER["SCRIPT_FILENAME"]);
 	$_SERVER["DOCUMENT_ROOT"]   = realpath($_SERVER["DOCUMENT_ROOT"]);
 
 // try to detect if a project path is being used
 	if (!defined('PROJECT_PATH')) {
-		if (is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . 'fusionpbx')) {
-			define('PROJECT_PATH', DIRECTORY_SEPARATOR . 'fusionpbx');
-		} elseif (file_exists($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . 'README.md')) {
+		if (is_dir($_SERVER["DOCUMENT_ROOT"]. '/fusionpbx')) {
+			define('PROJECT_PATH', '/fusionpbx');
+		} elseif (file_exists($_SERVER["DOCUMENT_ROOT"]. '/README.md')) {
 			define('PROJECT_PATH', '');
 		} else {
 			$dirs = explode('/', str_replace('\\', '/', pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME)));
 			$i    = 1;
 			$path = $_SERVER["DOCUMENT_ROOT"];
 			while ($i < count($dirs)) {
-				$path .= DIRECTORY_SEPARATOR . $dirs[$i];
-				if (file_exists($path . DIRECTORY_SEPARATOR . 'README.md')) {
+				$path .= '/' . $dirs[$i];
+				if (file_exists($path. '/README.md')) {
 					break;
 				}
 				$i++;
