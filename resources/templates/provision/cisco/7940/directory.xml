@@ -1,13 +1,18 @@
 <CiscoIPPhoneMenu>
 	<Title>Contacts</Title>
 	<Prompt>Please choose...</Prompt>
-
+	<MenuItem>
+		<Name>Our Phones</Name>
+		<URL>http://{$domain_name}/app/provision/file/directory-extensions.xml</URL>
+	</MenuItem>
 	<!--
 	<MenuItem>
 		<Name>Personal</Name>
 		<URL>http://{$domain_name}/app/provision/file/directory-personal.xml</URL>
 	</MenuItem>
-	-->	<MenuItem>		<Name>Enterprise</Name>
+	-->
+	<MenuItem>
+		<Name>Enterprise</Name>
 		<URL>http://{$domain_name}/app/provision/file/directory-enterprise.xml?mac={$mac}</URL>
 	</MenuItem>
 	<MenuItem>

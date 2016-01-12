@@ -495,7 +495,7 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
-				//get the extensions array and add to the template engine
+				//get the contact extensions array and add to the template engine
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, e.extension ";
@@ -511,8 +511,26 @@ include "root.php";
 							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
-							$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$contact_extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 							unset ($prep_statement, $sql);
+
+						//assign the contacts array
+							$view->assign("contact_extensions", $contact_extensions);
+					}
+
+				//get the extensions array and add to the template engine
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
+						//get contacts from the database
+							$sql = "select directory_full_name, description ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and enabled = 'true' ";
+							$prep_statement = $db->prepare($sql);
+							if ($prep_statement) {
+								$prep_statement->execute();
+								$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							}
 
 						//assign the contacts array
 							$view->assign("extensions", $extensions);
