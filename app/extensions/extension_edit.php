@@ -1645,7 +1645,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+		if (is_array($_SESSION['toll allow']['name'])) {
+			echo "	<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='toll_allow' id='toll_allow'>\n";
+			echo "		<option value=''></option>\n";
+			foreach ($_SESSION['toll allow']['name'] as $name) {
+				echo "		<option value='$name'>$name</option>\n";
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+		}
 		echo "<br />\n";
 		echo $text['description-toll_allow']."\n";
 		echo "</td>\n";
@@ -1668,7 +1678,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-call_group']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
+	if (is_array($_SESSION['toll allow']['name'])) { 
+		echo "	<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='call_group' id='call_group'>\n";
+		echo "		<option value=''></option>\n";
+		foreach ($_SESSION['call groups']['name'] as $name) {
+			echo "		<option value='$name'>$name</option>\n";
+		}
+		echo "	</select>\n";
+	} else {
+		echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
+	}
 	echo "<br />\n";
 	echo $text['description-call_group']."\n";
 	echo "</td>\n";
