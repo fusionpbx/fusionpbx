@@ -175,8 +175,10 @@
 
 		--clear the cache
 			if (extension ~= nil) then
+				freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..extension.."@"..domain_name);
 				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
 				if #number_alias > 0 then
+					freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..number_alias.."@"..domain_name);
 					api:execute("memcache", "delete directory:"..number_alias.."@"..domain_name);
 				end
 			end
