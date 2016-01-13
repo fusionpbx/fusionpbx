@@ -1,0 +1,18 @@
+<YealinkIPPhoneDirectory>
+{assign var=x value=1}
+{foreach $extensions as $row}
+	<DirectoryEntry>
+{if $row.directory_full_name != ""}
+		<Name>{$row.directory_full_name}</Name>
+{else}
+		<Name>{$row.effective_caller_id_name}</Name>
+{/if}
+{if $row.number_alias != ""}
+		<Telephone>{$row.number_alias}</Telephone>
+{else}
+		<Telephone>{$row.extension}</Telephone>
+{/if}
+	</DirectoryEntry>
+{assign var=x value=$x+1}
+{/foreach}
+</YealinkIPPhoneDirectory>
