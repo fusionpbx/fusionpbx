@@ -97,6 +97,10 @@ class destinations {
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '';
+			$y++;
 			$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';

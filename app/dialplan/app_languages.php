@@ -118,6 +118,16 @@ $text['option-company_directory']['sv-se'] = "Företagskatalog";
 $text['option-company_directory']['uk'] = "Каталог компаній";
 $text['option-company_directory']['de-at'] = "Firmenverzeichnis";
 
+$text['option-hangup']['en-us'] = "Hangup";
+$text['option-hangup']['es-cl'] = "Colgar";
+$text['option-hangup']['pt-pt'] = "Desligar";
+$text['option-hangup']['fr-fr'] = "Raccrocher";
+$text['option-hangup']['pt-br'] = "Desligar";
+$text['option-hangup']['pl'] = "Odwieszenie";
+$text['option-hangup']['sv-se'] = "Lägg på";
+$text['option-hangup']['uk'] = "роз'єднання";
+$text['option-hangup']['de-at'] = "Auflegen";
+
 $text['option-record']['en-us'] = "Record";
 $text['option-record']['es-cl'] = "Registro";
 $text['option-record']['pt-pt'] = "Registro";
