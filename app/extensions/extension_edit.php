@@ -1646,10 +1646,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION['toll allow']['name'])) {
-			echo "	<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='toll_allow' id='toll_allow'>\n";
+			echo "	<select class='formfld' name='toll_allow'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($_SESSION['toll allow']['name'] as $name) {
-				echo "		<option value='$name'>$name</option>\n";
+				if ($_SESSION['call group']['name'] == $call_group) {
+					echo "		<option value='$name' selected='selected'>$name</option>\n";
+				}
+				else {
+					echo "		<option value='$name'>$name</option>\n";
+				}
 			}
 			echo "	</select>\n";
 		}
@@ -1679,10 +1684,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (is_array($_SESSION['call group']['name'])) { 
-		echo "	<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='call_group' id='call_group'>\n";
+		echo "	<select class='formfld' name='call_group'>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['call group']['name'] as $name) {
-			echo "		<option value='$name'>$name</option>\n";
+			if ($_SESSION['call group']['name'] == $call_group) {
+				echo "		<option value='$name' selected='selected'>$name</option>\n";
+			}
+			else {
+				echo "		<option value='$name'>$name</option>\n";
+			}
 		}
 		echo "	</select>\n";
 	} else {
