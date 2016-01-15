@@ -15,9 +15,11 @@
 	<Telephone>{$row.phone_extension}</Telephone>
 {/if}
 </DirectoryEntry>
+{/if}
 {assign var=x value=$x+1}
 {/foreach}
 </CiscoIPPhoneDirectory>
+
 
 
 
