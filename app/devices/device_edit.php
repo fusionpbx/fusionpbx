@@ -553,7 +553,14 @@ require_once "resources/require.php";
 		else {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		echo "		window.location = '".$_SERVER['REQUEST_SCHEME']."://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+
+		if (!isset($_SERVER['HTTP_PROTOCOL'])) {
+			$_SERVER['HTTP_PROTOCOL'] = 'http';
+			if (isset($_SERVER['REQUEST_SCHEME'])) { $_SERVER['HTTP_PROTOCOL'] = $_SERVER['REQUEST_SCHEME']; }
+			if ($_SERVER['HTTPS'] = 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+			if ($_SERVER['SERVER_PORT'] = '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+		}
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
