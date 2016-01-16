@@ -31,11 +31,11 @@ class text {
 	public function get($language_code = null, $app_path = null, $exclude_global = false) {
 		//get the global app_languages.php
 			if(!$exclude_global){
-				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/app_languages.php";
+				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
 			}
 		//get the app_languages.php
 			if ($app_path != null) {
-				$lang_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
+				$lang_path = $_SERVER["PROJECT_ROOT"]."/".$app_path."/app_languages.php";
 			}
 			else {
 				$lang_path = getcwd().'/app_languages.php';

@@ -160,6 +160,9 @@ include "root.php";
 				$mac = $this->mac;
 				$file = $this->file;
 
+			//set the mac address to lower case to be consistent with the database
+				$mac = strtolower($mac);
+
 			//get the device template
 				if (strlen($_REQUEST['template']) > 0) {
 					$device_template = $_REQUEST['template'];
