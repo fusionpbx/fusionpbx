@@ -553,7 +553,7 @@ require_once "resources/require.php";
 		else {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		echo "		window.location = 'https://".$domain_name."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = '".$_SERVER['REQUEST_SCHEME']."://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
