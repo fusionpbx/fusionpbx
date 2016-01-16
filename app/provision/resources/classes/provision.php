@@ -160,6 +160,9 @@ include "root.php";
 				$mac = $this->mac;
 				$file = $this->file;
 
+			//set the mac address to lower case to be consistent with the database
+				$mac = strtolower($mac);
+
 			//get the device template
 				if (strlen($_REQUEST['template']) > 0) {
 					$device_template = $_REQUEST['template'];
@@ -209,7 +212,7 @@ include "root.php";
 								$prep_statement_2 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_2) {
 									//use the prepared statement
-										$prep_statement_2->bindParam(':mac', strtolower($mac));
+										$prep_statement_2->bindParam(':mac', $mac);
 										if($provision['http_domain_filter'] == "true") {
 											$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
 										}
