@@ -117,11 +117,11 @@
 {/foreach}
 </functionKeys>
 <tbook e="2" complete="true">
-{foreach $internal_addressbook as $address}
+{foreach $extensions as $row}
     <item context="active" type="" fav="false">
-        <number>{$address.extension}</number>
+        <number>{$row.extension}</number>
         <number_type>sip</number_type>
-        <first_name>{$address.directory_full_name} ({$address.extension})</first_name>
+        <first_name>{$row.directory_full_name} ({$row.extension})</first_name>
     </item>
 {/foreach}
 
