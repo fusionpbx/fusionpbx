@@ -125,7 +125,7 @@
 								if (x > 0) then
 									table.insert(xml, [[							</match>]]);
 									table.insert(xml, [[						</input>]]);
-									table.insert(xml, [[					</macro>]]);;
+									table.insert(xml, [[					</macro>]]);
 								end
 								table.insert(xml, [[					<macro name="]]..row.phrase_uuid..[[">]]);
 								table.insert(xml, [[						<input pattern=\"(.*)\">]]);
@@ -139,7 +139,7 @@
 						if (x > 0) then
 							table.insert(xml, [[							</match>]]);
 							table.insert(xml, [[						</input>]]);
-							table.insert(xml, [[					</macro>]]);;
+							table.insert(xml, [[					</macro>]]);
 						end
 						
 						--read root xml language file, parse included xml files
@@ -155,8 +155,8 @@
 										--freeswitch.consoleLog("notice", "file path = "..xml_file_path.."\n");
 									end
 								end
+								file_handle:close();
 							end
-							file_handle:close();
 
 						--iterate array of file paths, get contents of other xml macro files
 							for key, xml_file_path in pairs(xml_file_paths) do 
