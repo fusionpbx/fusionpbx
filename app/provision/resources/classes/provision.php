@@ -522,11 +522,12 @@ include "root.php";
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory_extensions']['boolean'] == "true") {
 						//get contacts from the database
 							$sql = "select directory_full_name, description ";
-							$sql .= "effective_caller_id_name, effective_caller_id_number ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
+							$sql .= "number_alias, extension ";
 							$sql .= "from v_extensions ";
-							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and enabled = 'true' ";
-							$prep_statement = $db->prepare($sql);
+							$prep_statement = $this->db->prepare($sql);
 							if ($prep_statement) {
 								$prep_statement->execute();
 								$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
