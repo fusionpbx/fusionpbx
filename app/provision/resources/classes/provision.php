@@ -209,7 +209,7 @@ include "root.php";
 								$prep_statement_2 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_2) {
 									//use the prepared statement
-										$prep_statement_2->bindParam(':mac', $mac);
+										$prep_statement_2->bindParam(':mac', strtolower($mac));
 										if($provision['http_domain_filter'] == "true") {
 											$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
 										}
