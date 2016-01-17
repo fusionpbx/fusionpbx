@@ -106,7 +106,7 @@ if (strlen($contact_uuid) > 0) {
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
 
-	//delete groups
+	//delete contact groups
 		$sql = "delete from v_contact_groups ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and contact_uuid = '".$contact_uuid."' ";

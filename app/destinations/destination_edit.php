@@ -35,7 +35,7 @@ else {
 	exit;
 }
 
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")) {
+if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) {
 	require_once "app/billing/resources/functions/currency.php";
 	require_once "app/billing/resources/functions/rating.php";
 }
@@ -432,7 +432,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
 					// billing
-					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 						$db2 = new database;
 						$db2->sql = "select currency, billing_uuid, balance from v_billings where type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
@@ -706,7 +706,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/fax/app_config.php")){
 		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "order by fax_name asc ";
@@ -750,7 +750,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	// billing
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo "<tr id='tr_sell'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "  ".$text['label-monthly_price']."\n";
@@ -797,7 +797,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
 	echo "<br />\n";
 	echo $text['description-account_code']."\n";
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo " ".$text['billing-warning'];
 	}
 	echo "</td>\n";

@@ -133,7 +133,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($original_domain_name != $domain_name) {
 
 					// update dialplans
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/dialplan/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
 							$sql = "update v_dialplans set ";
 							$sql .= "dialplan_context = '".$domain_name."' ";
 							$sql .= "where dialplan_context = '".$original_domain_name."' ";
@@ -143,7 +143,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update extensions (accountcode, user_context, dial_domain)
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/extensions/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")){
 							$sql = "update v_extensions set ";
 							$sql .= "accountcode = '".$domain_name."' ";
 							$sql .= "where accountcode = '".$original_domain_name."' ";
@@ -167,7 +167,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update cdr records (domain_name, context)
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/xml_cdr/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/xml_cdr/app_config.php")){
 							$sql = "update v_xml_cdr set ";
 							$sql .= "domain_name = '".$domain_name."' ";
 							$sql .= "where domain_name = '".$original_domain_name."' ";
@@ -184,7 +184,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update billing, if installed
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 							$sql = "update v_billings set ";
 							$sql .= "type_value = '".$domain_name."' ";
 							$sql .= "where type_value = '".$original_domain_name."' ";
@@ -242,7 +242,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update conference session recording paths
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/conference_centers/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/conference_centers/app_config.php")){
 							$sql = "select conference_session_uuid, recording from v_conference_sessions ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and recording like '%".$original_domain_name."%' ";
@@ -267,7 +267,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update conference center greetings
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/conference_centers/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/conference_centers/app_config.php")){
 							$sql = "select conference_center_uuid, conference_center_greeting from v_conference_centers ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and conference_center_greeting like '%".$original_domain_name."%' ";
@@ -292,7 +292,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update ivr menu greetings
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menu/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menu/app_config.php")){
 							$sql = "select ivr_menu_uuid, ivr_menu_greet_long, ivr_menu_greet_short from v_ivr_menus ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
@@ -323,7 +323,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update ivr menu option parameters
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menu/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menu/app_config.php")){
 							$sql = "select ivr_menu_option_uuid, ivr_menu_option_param from v_ivr_menu_options ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ivr_menu_option_param like '%".$original_domain_name."%' ";
@@ -348,7 +348,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update call center queue record templates
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")){
 							$sql = "select call_center_queue_uuid, queue_record_template from v_call_center_queues ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and queue_record_template like '%".$original_domain_name."%' ";
@@ -373,7 +373,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update call center agent contacts
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")){
 							$sql = "select call_center_agent_uuid, agent_contact from v_call_center_agents ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and agent_contact like '%".$original_domain_name."%' ";
@@ -398,7 +398,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update call flows data, anti-data and contexts
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_flows/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_flows/app_config.php")){
 							$sql = "select call_flow_uuid, call_flow_data, call_flow_anti_data, call_flow_context from v_call_flows ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
@@ -433,7 +433,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update ring group context, forward destination, timeout data
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ring_groups/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")){
 							$sql = "select ring_group_uuid, ring_group_context, ring_group_forward_destination, ring_group_timeout_data from v_ring_groups ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
@@ -468,7 +468,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 
 					// update device lines server address, outbound proxy
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/devices/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/devices/app_config.php")){
 							$sql = "select device_line_uuid, server_address, outbound_proxy from v_device_lines ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and ( ";
@@ -510,7 +510,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($dialplan_public_xml);
 
 					// update dialplan details
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/dialplan/app_config.php")){
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplan/app_config.php")){
 							$sql = "select dialplan_detail_uuid, dialplan_detail_data from v_dialplan_details ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and dialplan_detail_data like '%".$original_domain_name."%' ";

@@ -78,7 +78,7 @@ date_default_timezone_set($timezone);
 
 //detect install state
 $first_time_install = true;
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 	$first_time_install = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
 	$first_time_install = false;

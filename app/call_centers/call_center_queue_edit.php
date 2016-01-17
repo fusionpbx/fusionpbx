@@ -266,7 +266,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-			$_SESSION["message"] = $text['message-add'];
+			//set the message
+				$_SESSION["message"] = $text['message-add'];
 		} //if ($action == "add")
 
 		if ($action == "update") {
