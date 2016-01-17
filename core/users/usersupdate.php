@@ -341,7 +341,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 
 	// if call center installed
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
 
 		// update agent and tiers tables
 			$sql  = "update v_call_center_agents set agent_name = '".$username."' where domain_uuid = '".$domain_uuid."' and agent_name = '".$username_old."' ";

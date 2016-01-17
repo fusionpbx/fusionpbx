@@ -87,7 +87,7 @@ require_once "resources/require.php";
 	unset($menu_prep_statement, $menu_result, $menu_row);
 
 //get the content
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/content/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
 		$sql = "select * from v_rss ";
 		$sql .= "where domain_uuid =:domain_uuid ";
 		$sql .= "and rss_category = 'content' ";

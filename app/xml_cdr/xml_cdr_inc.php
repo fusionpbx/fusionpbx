@@ -299,7 +299,7 @@ else {
 	$sql .= "caller_id_number, ";
 	$sql .= "destination_number, ";
 	$sql .= "accountcode, ";
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		$sql .= "call_sell, ";
 	}
 	if (permission_exists("xml_cdr_pdd")) {
