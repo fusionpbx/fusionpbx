@@ -74,6 +74,9 @@
 				}
 				$i++;
 			}
+			if(!file_exists($path. '/.project.ROOT')){
+				throw new Exception("Failed to locate the Project Root by searching for .project.ROOT please contact support for assistance");
+			}
 			$project_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $path);
 			define('PROJECT_PATH', $project_path);
 		}
