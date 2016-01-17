@@ -117,141 +117,133 @@ else {
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
-				//update last modified
-				$sql = "update v_contacts set ";
-				$sql .= "last_mod_date = now(), ";
-				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and contact_uuid = '".$contact_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				//add the contact
+					if ($action == "add") {
+						$contact_uuid = uuid();
+						$sql = "insert into v_contacts ";
+						$sql .= "( ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "contact_type, ";
+						$sql .= "contact_organization, ";
+						$sql .= "contact_name_prefix, ";
+						$sql .= "contact_name_given, ";
+						$sql .= "contact_name_middle, ";
+						$sql .= "contact_name_family, ";
+						$sql .= "contact_name_suffix, ";
+						$sql .= "contact_nickname, ";
+						$sql .= "contact_title, ";
+						$sql .= "contact_category, ";
+						$sql .= "contact_role, ";
+						$sql .= "contact_time_zone, ";
+						$sql .= "contact_note, ";
+						$sql .= "last_mod_date, ";
+						$sql .= "last_mod_user ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".$_SESSION['domain_uuid']."', ";
+						$sql .= "'".$contact_uuid."', ";
+						$sql .= "'".$contact_type."', ";
+						$sql .= "'".$contact_organization."', ";
+						$sql .= "'".$contact_name_prefix."', ";
+						$sql .= "'".$contact_name_given."', ";
+						$sql .= "'".$contact_name_middle."', ";
+						$sql .= "'".$contact_name_family."', ";
+						$sql .= "'".$contact_name_suffix."', ";
+						$sql .= "'".$contact_nickname."', ";
+						$sql .= "'".$contact_title."', ";
+						$sql .= "'".$contact_category."', ";
+						$sql .= "'".$contact_role."', ";
+						$sql .= "'".$contact_time_zone."', ";
+						$sql .= "'".$contact_note."', ";
+						$sql .= "now(), ";
+						$sql .= "'".$_SESSION['username']."' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-				if ($action == "add") {
-					$contact_uuid = uuid();
-					$sql = "insert into v_contacts ";
-					$sql .= "( ";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "contact_type, ";
-					$sql .= "contact_organization, ";
-					$sql .= "contact_name_prefix, ";
-					$sql .= "contact_name_given, ";
-					$sql .= "contact_name_middle, ";
-					$sql .= "contact_name_family, ";
-					$sql .= "contact_name_suffix, ";
-					$sql .= "contact_nickname, ";
-					$sql .= "contact_title, ";
-					$sql .= "contact_category, ";
-					$sql .= "contact_role, ";
-					$sql .= "contact_time_zone, ";
-					$sql .= "contact_note, ";
-					$sql .= "last_mod_date, ";
-					$sql .= "last_mod_user ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "( ";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".$contact_type."', ";
-					$sql .= "'".$contact_organization."', ";
-					$sql .= "'".$contact_name_prefix."', ";
-					$sql .= "'".$contact_name_given."', ";
-					$sql .= "'".$contact_name_middle."', ";
-					$sql .= "'".$contact_name_family."', ";
-					$sql .= "'".$contact_name_suffix."', ";
-					$sql .= "'".$contact_nickname."', ";
-					$sql .= "'".$contact_title."', ";
-					$sql .= "'".$contact_category."', ";
-					$sql .= "'".$contact_role."', ";
-					$sql .= "'".$contact_time_zone."', ";
-					$sql .= "'".$contact_note."', ";
-					$sql .= "now(), ";
-					$sql .= "'".$_SESSION['username']."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+						$_SESSION["message"] = $text['message-add'];
+						$location = "contact_edit.php?id=".$contact_uuid;
+					} //if ($action == "add")
 
-					$_SESSION["message"] = $text['message-add'];
-					$location = "contact_edit.php?id=".$contact_uuid;
-				} //if ($action == "add")
+				//assign the contact to the user that added the contact
+					if ($action == "add") {
+						$sql = "insert into v_contact_users ";
+						$sql .= "( ";
+						$sql .= "contact_user_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "user_uuid ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$contact_uuid."', ";
+						$sql .= "'".$_SESSION["user_uuid"]."' ";
+						$sql .= ") ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 
-				//if contact is shared, remove contact group record containing user's uuid
-				if ($_POST['contact_shared'] == 'true') {
-					$sql = "delete from v_contact_groups ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$sql .= "and group_uuid = '".$_SESSION["user_uuid"]."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					unset($prep_statement, $sql);
-					$group_uuid = $_POST['group_uuid'];
-				}
-				//if private contact, delete any groups currently assigned, set group uuid to user's uuid
-				else {
-					$sql = "delete from v_contact_groups ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					unset($prep_statement, $sql);
-					$group_uuid = $_SESSION["user_uuid"];
-				}
+				//assign the contact to the group
+					if ($group_uuid != '') {
+						$sql = "insert into v_contact_groups ";
+						$sql .= "( ";
+						$sql .= "contact_group_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "group_uuid ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$contact_uuid."', ";
+						$sql .= "'".$group_uuid."' ";
+						$sql .= ") ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 
-				//handle insertion of contact group (or private contact, if not shared)
-				if ($group_uuid != '') {
-					$sql = "insert into v_contact_groups ";
-					$sql .= "( ";
-					$sql .= "contact_group_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "contact_uuid, ";
-					$sql .= "group_uuid ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "( ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$contact_uuid."', ";
-					$sql .= "'".$group_uuid."' ";
-					$sql .= ") ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
+				//update the contact
+					if ($action == "update") {
+						$sql = "update v_contacts set ";
+						$sql .= "contact_type = '".$contact_type."', ";
+						$sql .= "contact_organization = '".$contact_organization."', ";
+						$sql .= "contact_name_prefix = '".$contact_name_prefix."', ";
+						$sql .= "contact_name_given = '".$contact_name_given."', ";
+						$sql .= "contact_name_middle = '".$contact_name_middle."', ";
+						$sql .= "contact_name_family = '".$contact_name_family."', ";
+						$sql .= "contact_name_suffix = '".$contact_name_suffix."', ";
+						$sql .= "contact_nickname = '".$contact_nickname."', ";
+						$sql .= "contact_title = '".$contact_title."', ";
+						$sql .= "contact_category = '".$contact_category."', ";
+						$sql .= "contact_role = '".$contact_role."', ";
+						$sql .= "contact_time_zone = '".$contact_time_zone."', ";
+						$sql .= "contact_note = '".$contact_note."', ";
+						$sql .= "last_mod_date = now(), ";
+						$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and contact_uuid = '".$contact_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-				if ($action == "update") {
-					$sql = "update v_contacts set ";
-					$sql .= "contact_type = '".$contact_type."', ";
-					$sql .= "contact_organization = '".$contact_organization."', ";
-					$sql .= "contact_name_prefix = '".$contact_name_prefix."', ";
-					$sql .= "contact_name_given = '".$contact_name_given."', ";
-					$sql .= "contact_name_middle = '".$contact_name_middle."', ";
-					$sql .= "contact_name_family = '".$contact_name_family."', ";
-					$sql .= "contact_name_suffix = '".$contact_name_suffix."', ";
-					$sql .= "contact_nickname = '".$contact_nickname."', ";
-					$sql .= "contact_title = '".$contact_title."', ";
-					$sql .= "contact_category = '".$contact_category."', ";
-					$sql .= "contact_role = '".$contact_role."', ";
-					$sql .= "contact_time_zone = '".$contact_time_zone."', ";
-					$sql .= "contact_note = '".$contact_note."', ";
-					$sql .= "last_mod_date = now(), ";
-					$sql .= "last_mod_user = '".$_SESSION['username']."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and contact_uuid = '".$contact_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-					$_SESSION["message"] = $text['message-update'];
-					$location = "contact_edit.php?id=".$contact_uuid;
-				} //if ($action == "update")
+						$_SESSION["message"] = $text['message-update'];
+						$location = "contact_edit.php?id=".$contact_uuid;
+					} //if ($action == "update")
 
 				//handle redirect
-				if ($_POST['submit'] == $text['button-add']) {
-					$group_uuid = $_POST['group_uuid'];
-					//insert
-					$location = "contact_edit.php?id=".$contact_uuid;
-				}
+					if ($_POST['submit'] == $text['button-add']) {
+						$group_uuid = $_POST['group_uuid'];
+						//insert
+						$location = "contact_edit.php?id=".$contact_uuid;
+					}
 
-				header("Location: ".$location);
-				return;
+				//redirect the browser
+					header("Location: ".$location);
+					return;
 
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
