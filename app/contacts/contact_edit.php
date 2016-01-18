@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_edit')) {
+if (permission_exists('contact_view')) {
 	//access granted
 }
 else {
@@ -64,6 +64,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		$user_uuid = check_str($_POST["user_uuid"]);
 		$contact_type = check_str($_POST["contact_type"]);
 		$contact_organization = check_str($_POST["contact_organization"]);
 		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
@@ -77,6 +78,25 @@ else {
 		$contact_role = check_str($_POST["contact_role"]);
 		$contact_time_zone = check_str($_POST["contact_time_zone"]);
 		$contact_note = check_str($_POST["contact_note"]);
+	}
+
+//delete the user
+	if ($_GET["a"] == "delete" && permission_exists('contact_user_delete')) {
+		if (strlen($_REQUEST["contact_user_uuid"]) > 0) {
+			//set the variables
+				$contact_uuid = check_str($_REQUEST["contact_uuid"]);
+				$contact_user_uuid = check_str($_REQUEST["contact_user_uuid"]);
+			//delete the assigned user from the contact
+				$sql = "delete from v_contact_users ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and contact_user_uuid = '$contact_user_uuid' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+		}
+
+		$_SESSION["message"] = $text['message-delete'];
+		header("Location: contact_edit.php?id=".$contact_uuid);
+		return;
 	}
 
 //process the form data
@@ -118,7 +138,7 @@ else {
 			if ($_POST["persistformvar"] != "true") {
 
 				//add the contact
-					if ($action == "add") {
+					if ($action == "add" && permission_exists('contact_add')) {
 						$contact_uuid = uuid();
 						$sql = "insert into v_contacts ";
 						$sql .= "( ";
@@ -167,48 +187,8 @@ else {
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "add")
 
-				//assign the contact to the user that added the contact
-					if ($action == "add") {
-						$sql = "insert into v_contact_users ";
-						$sql .= "( ";
-						$sql .= "contact_user_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "user_uuid ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "( ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$contact_uuid."', ";
-						$sql .= "'".$_SESSION["user_uuid"]."' ";
-						$sql .= ") ";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-
-				//assign the contact to the group
-					if ($group_uuid != '') {
-						$sql = "insert into v_contact_groups ";
-						$sql .= "( ";
-						$sql .= "contact_group_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "contact_uuid, ";
-						$sql .= "group_uuid ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "( ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$contact_uuid."', ";
-						$sql .= "'".$group_uuid."' ";
-						$sql .= ") ";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-
 				//update the contact
-					if ($action == "update") {
+					if ($action == "update" && permission_exists('contact_edit')) {
 						$sql = "update v_contacts set ";
 						$sql .= "contact_type = '".$contact_type."', ";
 						$sql .= "contact_organization = '".$contact_organization."', ";
@@ -234,10 +214,60 @@ else {
 						$location = "contact_edit.php?id=".$contact_uuid;
 					} //if ($action == "update")
 
+				//assign the contact to the user that added the contact
+					if ($action == "add" && !permission_exists('contact_user_add')) {
+						$user_uuid = $_SESSION["user_uuid"];
+					}
+
+				//add user to contact users table
+					if ($user_uuid != '') {
+						$contact_user_uuid = uuid();
+						$sql = "insert into v_contact_users ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_user_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "user_uuid ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$contact_user_uuid', ";
+						$sql .= "'$contact_uuid', ";
+						$sql .= "'$user_uuid' ";
+						$sql .= ")";
+						if (permission_exists('contact_user_add')) {
+							$db->exec(check_sql($sql));
+						}
+						elseif ($action == "add") {
+							//add the contact to the user that created it
+							$db->exec(check_sql($sql));
+						}
+						unset($sql);
+
+				//assign the contact to the group
+					if ($group_uuid != '' && permission_exists('contact_group_add')) {
+						$sql = "insert into v_contact_groups ";
+						$sql .= "( ";
+						$sql .= "contact_group_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "group_uuid ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$contact_uuid."', ";
+						$sql .= "'".$group_uuid."' ";
+						$sql .= ") ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+
 				//handle redirect
 					if ($_POST['submit'] == $text['button-add']) {
 						$group_uuid = $_POST['group_uuid'];
-						//insert
 						$location = "contact_edit.php?id=".$contact_uuid;
 					}
 
@@ -640,7 +670,7 @@ else {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('contact_user_view')) {
+		if (permission_exists('contact_user_edit')) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 			echo "		<td class='vtable' align='left'>";
@@ -650,25 +680,29 @@ else {
 					echo "			<tr>\n";
 					echo "				<td class='vtable'>".$field['username']."</td>\n";
 					echo "				<td style='width: 25px;' align='right'>\n";
-					echo "					<a href='contact_edit.php?contact_user_uuid=".$field['contact_user_uuid']."&contact_uuid=".$contact_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					if (permission_exists('contact_user_delete')) {
+						echo "					<a href='contact_edit.php?contact_user_uuid=".$field['contact_user_uuid']."&contact_uuid=".$contact_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					}
 					echo "				</td>\n";
 					echo "			</tr>\n";
 				}
 				echo "			</table>\n";
 			}
 			echo "			<br />\n";
-			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-			echo "			<option value=\"\"></option>\n";
-			foreach($users as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			if (permission_exists('contact_user_add')) {
+				echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+				echo "			<option value=\"\"></option>\n";
+				foreach($users as $field) {
+					echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				}
+				echo "			</select>";
+				if ($action == "update") {
+					echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+				}
+				unset($users);
+				echo "			<br>\n";
+				echo "			".$text['description-users']."\n";
 			}
-			echo "			</select>";
-			if ($action == "update") {
-				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-			}
-			unset($users);
-			echo "			<br>\n";
-			echo "			".$text['description-users']."\n";
 			echo "		</td>";
 			echo "	</tr>";
 		}
