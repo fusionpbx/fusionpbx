@@ -285,10 +285,11 @@ else {
 	unset($prep_statement, $sql);
 
 //get the users assigned to this contact
-	$sql = "SELECT * FROM v_contacts as u, v_contact_users as c ";
-	$sql .= "where u.user_uuid = c.user_uuid ";
-	$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and u.contact_uuid = '".$contact_uuid."' ";
+	$sql = "SELECT u.username, u.user_uuid, a.contact_user_uuid FROM v_contacts as c, v_users as u, v_contact_users as a ";
+	$sql .= "where c.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and u.user_uuid = a.user_uuid ";
+	$sql .= "and c.contact_uuid = a.contact_uuid ";
 	$sql .= "order by u.username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
