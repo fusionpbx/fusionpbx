@@ -638,7 +638,6 @@ else {
 		echo $text['description-shared']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-		echo "</table>";
 
 		if (permission_exists('contact_user_view')) {
 			echo "	<tr>";
@@ -672,6 +671,7 @@ else {
 			echo "		</td>";
 			echo "	</tr>";
 		}
+		echo "</table>";
 
 		if (permission_exists('contact_group_view')) {
 			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
