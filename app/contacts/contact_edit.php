@@ -244,6 +244,7 @@ else {
 							$db->exec(check_sql($sql));
 						}
 						unset($sql);
+					}
 
 				//assign the contact to the group
 					if ($group_uuid != '' && permission_exists('contact_group_add')) {
