@@ -63,7 +63,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$contact_type = check_str($_POST["contact_type"]);
 		$contact_organization = check_str($_POST["contact_organization"]);
 		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
@@ -272,8 +272,28 @@ else {
 			$contact_time_zone = $row["contact_time_zone"];
 			$contact_note = $row["contact_note"];
 		}
-		unset ($prep_statement);
+		unset ($prep_statement, $sql);
 	}
+
+//get the users array
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "order by username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($prep_statement, $sql);
+
+//get the users assigned to this contact
+	$sql = "SELECT * FROM v_contact_users as u, v_contact_users as c ";
+	$sql .= "where u.user_uuid = c.user_uuid ";
+	$sql .= "and m.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and m.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "order by u.username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$contact_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($prep_statement, $sql);
 
 //show the header
 	require_once "resources/header.php";
@@ -284,7 +304,7 @@ else {
 		$document['title'] = $text['title-contact-add'];
 	}
 
-// qr code generation
+//qr code generation
 	$_GET['type'] = "text";
 	$qr_vcard = true;
 	include "contacts_vcard.php";
@@ -619,6 +639,39 @@ else {
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
+
+		if (if_group("superadmin") || if_group("admin")) {
+			echo "	<tr>";
+			echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
+			echo "		<td class='vtable' align='left'>";
+			if ($action == "update") {
+				echo "			<table border='0' style='width : 235px;'>\n";
+				foreach($contact_users as $field) {
+					echo "			<tr>\n";
+					echo "				<td class='vtable'>".$field['username']."</td>\n";
+					echo "				<td style='width: 25px;' align='right'>\n";
+					echo "					<a href='contact_edit.php?contact_user_uuid=".$field['contact_user_uuid']."&contact_uuid=".$contact_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					echo "				</td>\n";
+					echo "			</tr>\n";
+				}
+				echo "			</table>\n";
+			}
+			echo "			<br />\n";
+			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+			echo "			<option value=\"\"></option>\n";
+			foreach($users as $field) {
+				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			}
+			echo "			</select>";
+			if ($action == "update") {
+				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+			}
+			unset($users);
+			echo "			<br>\n";
+			echo "			".$text['description-users']."\n";
+			echo "		</td>";
+			echo "	</tr>";
+		}
 
 		if (permission_exists('contact_group_view')) {
 			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
