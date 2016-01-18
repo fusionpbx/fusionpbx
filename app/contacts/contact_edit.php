@@ -285,10 +285,10 @@ else {
 	unset($prep_statement, $sql);
 
 //get the users assigned to this contact
-	$sql = "SELECT * FROM v_contact_users as u, v_contact_users as c ";
+	$sql = "SELECT * FROM v_contacts as u, v_contact_users as c ";
 	$sql .= "where u.user_uuid = c.user_uuid ";
-	$sql .= "and m.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and m.contact_uuid = '".$contact_uuid."' ";
+	$sql .= "and u.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and u.contact_uuid = '".$contact_uuid."' ";
 	$sql .= "order by u.username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -640,7 +640,7 @@ else {
 		echo "</tr>\n";
 		echo "</table>";
 
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('contact_user_view')) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 			echo "		<td class='vtable' align='left'>";

@@ -1033,6 +1033,16 @@ $text['label-import_delimiter']['sv-se'] = "Avgränsare";
 $text['label-import_delimiter']['de-at'] = "Trennzeichen";
 $text['label-import_delimiter']['he'] = "";
 
+$text['label-users']['en-us'] = "Users";
+$text['label-users']['es-cl'] = "Usuarios";
+$text['label-users']['pt-pt'] = "Utilizadores";
+$text['label-users']['fr-fr'] = "Utilisateurs";
+$text['label-users']['pt-br'] = "Usuários";
+$text['label-users']['pl'] = "Użytkownicy";
+$text['label-users']['sv-se'] = "Användare";
+$text['label-users']['uk'] = "Користувачі";
+$text['label-users']['de-at'] = "Benutzer";
+
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['es-cl'] = "Grupos";
 $text['label-groups']['pt-pt'] = "Grupos";
@@ -2107,6 +2117,16 @@ $text['description-import_delimiter']['uk'] = "";
 $text['description-import_delimiter']['sv-se'] = "Välj avgränsare (comma or pipe). ";
 $text['description-import_delimiter']['de-at'] = "Wählen Sie das Trennzeichen (Beistrich oder Wagrechter Strich)";
 $text['description-import_delimiter']['he'] = "";
+
+$text['description-users']['en-us'] = "Assign additional users as administrators of this conference room.";
+$text['description-users']['es-cl'] = "Asignar usuarios adicionales como administradores de esta sala de conferencia.";
+$text['description-users']['pt-pt'] = "Atribuir utilizadores adicionais como administradores da sala de conferência.";
+$text['description-users']['fr-fr'] = "Ajouter des utilisateurs comme administrateurs des cette salle de conférence.";
+$text['description-users']['pt-br'] = "Atribuir usuários adicionais como administradores da sala de conferência. ";
+$text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako administratorów tego pokoju konferencyjnego.";
+$text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
+$text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
+$text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
 
 $text['description-groups']['en-us'] = "Contacts assigned to a group are only visible to users in the group.  Contacts not assigned to a group will be visible to all users in the domain.";
 $text['description-groups']['es-cl'] = "Contactos asignados a un grupo sólo son visibles para los usuarios del grupo. Los contactos no asignados a un grupo serán visibles para todos los usuarios del dominio.";
