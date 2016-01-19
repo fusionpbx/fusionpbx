@@ -38,21 +38,6 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//handle removal of contact group
-	if ($_GET['a'] == 'delete') {
-		$contact_uuid = $_GET["id"];
-		$contact_group_uuid = $_GET["cgid"];
-		$sql = "delete from v_contact_groups ";
-		$sql .= "where contact_uuid = '".$contact_uuid."' ";
-		$sql .= "and contact_group_uuid = '".$contact_group_uuid."' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
-
-		$_SESSION["message"] = $text['message-update'];
-		header("Location: contact_edit.php?id=".$contact_uuid);
-		exit;
-	}
-
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -78,25 +63,6 @@ else {
 		$contact_role = check_str($_POST["contact_role"]);
 		$contact_time_zone = check_str($_POST["contact_time_zone"]);
 		$contact_note = check_str($_POST["contact_note"]);
-	}
-
-//delete the user
-	if ($_GET["a"] == "delete" && permission_exists('contact_user_delete')) {
-		if (strlen($_REQUEST["contact_user_uuid"]) > 0) {
-			//set the variables
-				$contact_uuid = check_str($_REQUEST["contact_uuid"]);
-				$contact_user_uuid = check_str($_REQUEST["contact_user_uuid"]);
-			//delete the assigned user from the contact
-				$sql = "delete from v_contact_users ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and contact_user_uuid = '$contact_user_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
-
-		$_SESSION["message"] = $text['message-delete'];
-		header("Location: contact_edit.php?id=".$contact_uuid);
-		return;
 	}
 
 //process the form data
@@ -682,7 +648,7 @@ else {
 					echo "				<td class='vtable'>".$field['username']."</td>\n";
 					echo "				<td style='width: 25px;' align='right'>\n";
 					if (permission_exists('contact_user_delete')) {
-						echo "					<a href='contact_edit.php?contact_user_uuid=".$field['contact_user_uuid']."&contact_uuid=".$contact_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+						echo "					<a href='contact_user_delete.php?id=".$field['contact_user_uuid']."&contact_uuid=".$contact_uuid."' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 					}
 					echo "				</td>\n";
 					echo "			</tr>\n";
@@ -739,7 +705,7 @@ else {
 						echo "	<td class='vtable'>".$field['group_name']."</td>\n";
 						echo "	<td>\n";
 						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
-							echo "	<a href='contact_edit.php?id=".$contact_uuid."&cgid=".$field['contact_group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+							echo "	<a href='contact_group_delete.php?id=".$contact_group_uuid."&contact_uuid=".$field['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
