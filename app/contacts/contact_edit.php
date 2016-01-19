@@ -602,41 +602,6 @@ else {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		//determine if contact is shared or private
-		if ($action == 'update') {
-			$sql = "select count(*) as num_rows from v_contact_groups ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and group_uuid = '".$_SESSION["user_uuid"]."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$contact_shared = ($row['num_rows'] > 0) ? 'false' : 'true';
-			unset ($sql, $prep_statement, $row);
-		}
-		else {
-			//private by default on contact add, unless being done by a superadmin from a different domain
-			$contact_shared = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? 'true' : 'false';
-		}
-		//disable shared change if user (superadmin) is accessing a foreign domain
-		$contact_shared_disabled = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? "disabled='disabled'" : null;
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-shared']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' ".(($contact_shared_disabled == '') ? "name='contact_shared'" : null)." id='contact_shared' ".((permission_exists('contact_group_view')) ? "onchange=\"$('#div_groups').slideToggle('400');\"" : null)." ".$contact_shared_disabled.">\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".(($contact_shared == 'true') ? "selected" : null).">".$text['option-true']."</option>\n";
-		echo "	</select>\n";
-		if ($contact_shared_disabled != '') {
-			echo "	<input type='hidden' name='contact_shared' value='".$contact_shared."'>";
-		}
-		echo "<br />\n";
-		echo $text['description-shared']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
 		if (permission_exists('contact_user_edit')) {
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
@@ -676,6 +641,7 @@ else {
 		echo "</table>";
 
 		if (permission_exists('contact_group_view')) {
+			$contact_shared = 'true';
 			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
 			echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 			echo "<tr>";
