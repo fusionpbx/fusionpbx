@@ -141,7 +141,7 @@ else {
 	}
 
 //delete the user
-	if ($_GET["a"] == "delete" && permission_exists('conference_room_add') && permission_exists('conference_room_edit')) {
+	if ($_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
 			//set the variables
 				$meeting_user_uuid = check_str($_REQUEST["meeting_user_uuid"]);
@@ -601,24 +601,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td style='width: 25px;' align='right'>\n";
-				echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+				if (permission_exists('conference_room_delete')) {
+					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
 			echo "			</table>\n";
 		}
 		echo "			<br />\n";
-		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-		echo "			<option value=\"\"></option>\n";
-		foreach($users as $field) {
-			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+		if (permission_exists('conference_room_add')) {
+			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+			echo "			<option value=\"\"></option>\n";
+			foreach($users as $field) {
+				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			}
+			echo "			</select>";
+			if ($action == "update") {
+				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+			}
+			unset($users);
+			echo "			<br>\n";
 		}
-		echo "			</select>";
-		if ($action == "update") {
-			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		}
-		unset($users);
-		echo "			<br>\n";
 		echo "			".$text['description-users']."\n";
 		echo "		</td>";
 		echo "	</tr>";
