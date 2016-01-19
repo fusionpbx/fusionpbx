@@ -2118,21 +2118,21 @@ $text['description-import_delimiter']['sv-se'] = "Välj avgränsare (comma or pi
 $text['description-import_delimiter']['de-at'] = "Wählen Sie das Trennzeichen (Beistrich oder Wagrechter Strich)";
 $text['description-import_delimiter']['he'] = "";
 
-$text['description-users']['en-us'] = "Assign additional users as administrators of this conference room.";
+$text['description-users']['en-us'] = "Select the users that are allowed to view this contact.";
 $text['description-users']['es-cl'] = "Asignar usuarios adicionales como administradores de esta sala de conferencia.";
 $text['description-users']['pt-pt'] = "Atribuir utilizadores adicionais como administradores da sala de conferência.";
 $text['description-users']['fr-fr'] = "Ajouter des utilisateurs comme administrateurs des cette salle de conférence.";
-$text['description-users']['pt-br'] = "Atribuir usuários adicionais como administradores da sala de conferência. ";
+$text['description-users']['pt-br'] = "Selecione os usuários que podem ver este contato. ";
 $text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako administratorów tego pokoju konferencyjnego.";
 $text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
 $text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
 $text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
 
-$text['description-groups']['en-us'] = "Contacts assigned to a group are only visible to users in the group.  Contacts not assigned to a group will be visible to all users in the domain.";
+$text['description-groups']['en-us'] = "Select the groups that are allowed to view this contact.";
 $text['description-groups']['es-cl'] = "Contactos asignados a un grupo sólo son visibles para los usuarios del grupo. Los contactos no asignados a un grupo serán visibles para todos los usuarios del dominio.";
 $text['description-groups']['pt-pt'] = "Contatos atribuídos a um grupo só são visíveis para os usuários do grupo. Contatos não atribuídos a um grupo será visível para todos os usuários no domínio.";
 $text['description-groups']['fr-fr'] = "Contacts affectés à un groupe ne sont accessibles qu'aux utilisateurs du groupe. Contacts ne sont pas affectés à un groupe seront visibles à tous les utilisateurs dans le domaine.";
-$text['description-groups']['pt-br'] = "Descrição";
+$text['description-groups']['pt-br'] = "Selecione os grupos que podem ver este contato";
 $text['description-groups']['pl'] = "Kontaky przypisane do grupy, są widoczne tylko dla użytkowników w grupie. Kontakty nie przypisane do grupy będą widoczna dla wszystkich użytkowników w domenie.";
 $text['description-groups']['uk'] = "Опис";
 $text['description-groups']['sv-se'] = "Kontakter tilldelade till en grupp är endast synbara för användare i guppen. Kontakter som inte är tilldelade till någon grupp syns för alla användare i hela domänen.";
