@@ -72,7 +72,7 @@ else {
 	$sql .= "and contact_setting_name = 'array' ";
 	$sql .= "and contact_setting_value <> '' ";
 	$sql .= "and contact_setting_value is not null ";
-	if (sizeof($user_group_uuids) > 0) {
+	if (!(if_group("superadmin") || if_group("admin"))) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
@@ -82,7 +82,8 @@ else {
 		$sql .= "	or \n";
 		$sql .= "	contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
@@ -100,17 +101,18 @@ else {
 	$sql = "select count(*) as num_rows ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (sizeof($user_group_uuids) > 0) {
+	if (!(if_group("superadmin") || if_group("admin"))) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
-		$sql .= "	or \n";
-		$sql .= "	contact_uuid not in ( \n";
-		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "	or contact_uuid in ( \n";
+		$sql .= "		select contact_uuid from v_contact_users ";
+		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
