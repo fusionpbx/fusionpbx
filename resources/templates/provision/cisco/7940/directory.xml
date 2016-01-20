@@ -3,14 +3,12 @@
 	<Prompt>Please choose...</Prompt>
 	<MenuItem>
 		<Name>Our Phones</Name>
-		<URL>http://{$domain_name}/app/provision/file/directory_extensions.xml</URL>
+		<URL>http://{$domain_name}/app/provision/file/directory_extensions.xml?mac={$mac}</URL>
 	</MenuItem>
-	<!--
 	<MenuItem>
 		<Name>Personal</Name>
-		<URL>http://{$domain_name}/app/provision/file/directory_personal.xml</URL>
+		<URL>http://{$domain_name}/app/provision/file/directory_personal.xml?mac={$mac}</URL>
 	</MenuItem>
-	-->
 	<MenuItem>
 		<Name>Enterprise</Name>
 		<URL>http://{$domain_name}/app/provision/file/directory_enterprise.xml?mac={$mac}</URL>
