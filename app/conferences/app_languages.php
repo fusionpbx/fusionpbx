@@ -166,7 +166,7 @@
 	$text['description-info']['en-us'] = "Enter the description.";
 	$text['description-info']['es-cl'] = "Ingrese una descripción.";
 	$text['description-info']['pt-pt'] = "Insira a descrição.";
-	$text['description-info']['fr-fr'] = "";
+	$text['description-info']['fr-fr'] = "Entrer une description.";
 
 	$text['description-conference-enable']['en-us'] = "Select whether to enable or disable the conference.";
 	$text['description-conference-enable']['es-cl'] = "Indique si desea activar o desactivar la conferencia.";
