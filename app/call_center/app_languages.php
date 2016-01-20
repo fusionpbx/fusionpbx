@@ -17,7 +17,7 @@ $text['title-call_center_queues_edit']['pt-br'] = "Editar fila de call center";
 $text['title-call_center_queues_edit']['pl'] = "";
 $text['title-call_center_queues_edit']['sv-se'] = "";
 $text['title-call_center_queues_edit']['uk'] = "";
-$text['title-call_center_queues_edit']['fr-fr'] = "";
+$text['title-call_center_queues_edit']['fr-fr'] = "Editer la file du Centre d'appels";
 $text['title-call_center_queues_edit']['de-at'] = "";
 
 $text['title-call_center_queues_add']['es-cl'] = "Agregar Cola de Centro de Llamados";
@@ -27,7 +27,7 @@ $text['title-call_center_queues_add']['pt-br'] = "Adicionar fila de call center"
 $text['title-call_center_queues_add']['pl'] = "";
 $text['title-call_center_queues_add']['sv-se'] = "";
 $text['title-call_center_queues_add']['uk'] = "";
-$text['title-call_center_queues_add']['fr-fr'] = "";
+$text['title-call_center_queues_add']['fr-fr'] = "Ajouter une file au Centre d'appels";
 $text['title-call_center_queues_add']['de-at'] = "";
 
 $text['title-call_center_queues']['en-us'] = "Call Center Queues";
