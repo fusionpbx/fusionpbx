@@ -387,7 +387,7 @@ $text['description-shortcut']['uk'] = "Ярлик для створення ма
 $text['description-outbound-routes']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call.  When a call matches the conditions the call is then routed to the gateway.";
 $text['description-outbound-routes']['es-cl'] = "Los planes de marcado de salida tienen una o más condiciones que deben cumplirse.  Cuando las condiciones se cumplen, las llamada es dirigida con la pasarela seleccionada.";
 $text['description-outbound-routes']['pt-pt'] = " Dialplans de saída têm uma ou mais condições que se encontram nos atributos da chamada. Quando uma chamada verifica as condições a chamada é encaminhada para o gateway.";
-$text['description-outbound-routes']['fr-fr'] = "les Plan de numérotation sortant doivent remplir une ou plusieures conditions afin d'acheminer un appel. Lorsqu'un appel rempli la ou des conditions, l'appel est alors acheminé à la passerelle.";
+$text['description-outbound-routes']['fr-fr'] = "les Plans de numérotation sortants doivent remplir une ou plusieures conditions afin d'acheminer un appel. Lorsqu'un appel rempli la ou des conditions, l'appel est alors acheminé à la passerelle.";
 $text['description-outbound-routes']['pl'] = "Wychodzący dialplan ma jeden lub więcej warunków, które zostają  porównane z atrybutami każdego połączenia. Gdy rozmowa wychodząca spełnia warunki dialplanu jest przesyłana do Bramy wyjściowej.";
 $text['description-outbound-routes']['uk'] = "Плани набору вихідних дзвінків мають умови, які відповідають  атрибутам дзвінка. Коли дзвінок відповідає умовам, то він спрямовується на шлюзу.";
 
@@ -401,7 +401,7 @@ $text['description-order']['uk'] = "Виберіть порядковий ном
 $text['description-limit']['en-us'] = "Enter limit to restrict the number of outbound calls.";
 $text['description-limit']['es-cl'] = "Ingrese un límite para restringir el número de llamadas salientes.";
 $text['description-limit']['pt-pt'] = "Introduza o limite máximo de número de chamadas de saída.";
-$text['description-limit']['fr-fr'] = "Choisir une limite afin de limiter le noombre d'appel sortants.";
+$text['description-limit']['fr-fr'] = "Choisir une limitre afin de restreindre le nombre d'appel sortants.";
 $text['description-limit']['pl'] = "Wprowadź limit aby ograniczyć liczbę połączeń wychodzących.";
 $text['description-limit']['uk'] = "Введіть обмеження кількість вихідних дзвінків.";
 
@@ -415,21 +415,21 @@ $text['description-enter-prefix']['uk'] = "Введіть префікс, щоб
 $text['description-enter-custom-outbound-prefix']['en-us'] = "Enter custom outbound prefix";
 $text['description-enter-custom-outbound-prefix']['es-cl'] = "Ingrese un prefijo de salida personalizados";
 $text['description-enter-custom-outbound-prefix']['pt-pt'] = "Introduza um prefixo de saída personalizado";
-$text['description-enter-custom-outbound-prefix']['fr-fr'] = "Choisir le préfixe sortantes personnalisé";
+$text['description-enter-custom-outbound-prefix']['fr-fr'] = "Choisir le préfixe sortant personnalisé";
 $text['description-enter-custom-outbound-prefix']['pl'] = "Wprowadź swój prefiks wyjściowy";
 $text['description-enter-custom-outbound-prefix']['uk'] = "Введіть префікс вихідного дзвінка";
 
 $text['description-enabled']['en-us'] = "Choose to enable or disable the outbound route.";
 $text['description-enabled']['es-cl'] = "Seleccione si desea activar o desactivar la ruta de salida.";
 $text['description-enabled']['pt-pt'] = "Active ou desactive a rota de saída.";
-$text['description-enabled']['fr-fr'] = "";
+$text['description-enabled']['fr-fr'] = "Sélectioner pour activer ou desactiver la route sortante.";
 $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "Виберіть щоб включити або відключити маршрут";
 
 $text['description-enable-toll_allow']['en-us'] = "Set to true to enable toll allow";
 $text['description-enable-toll_allow']['es-cl'] = "Seleccione verdadero para activar permitir Tarifas Especiales";
 $text['description-enable-toll_allow']['pt-pt'] = "scolha 'sim' para activar permissões";
-$text['description-enable-toll_allow']['fr-fr'] = "Choisir Oui pour activer droits";
+$text['description-enable-toll_allow']['fr-fr'] = "Choisir Oui pour activer permissions";
 $text['description-enable-toll_allow']['pl'] = "Wybierz TAK aby zezwolić na połaczenia specjalne (toll-free).";
 $text['description-enable-toll_allow']['uk'] = "Встановіть 'Так' щоб дозволити номери TOLL";
 
@@ -443,7 +443,7 @@ $text['description-description']['uk'] = "Введіть опис, якщо це
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.";
 $text['description-accountcode']['pt-pt'] = "Introduza a conta.";
-$text['description-accountcode']['fr-fr'] = "";
+$text['description-accountcode']['fr-fr'] = "entrer le numéro de compte.";
 $text['description-accountcode']['pl'] = "Wpisz numer billingowy (nagłówek dodany do SIP INVITE).";
 $text['description-accountcode']['uk'] = "Введіть код облікового запису";
 
