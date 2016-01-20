@@ -422,7 +422,7 @@ $text['description-enter-custom-outbound-prefix']['uk'] = "Введіть пре
 $text['description-enabled']['en-us'] = "Choose to enable or disable the outbound route.";
 $text['description-enabled']['es-cl'] = "Seleccione si desea activar o desactivar la ruta de salida.";
 $text['description-enabled']['pt-pt'] = "Active ou desactive a rota de saída.";
-$text['description-enabled']['fr-fr'] = "Sélectioner pour activer ou desactiver la route sortante.";
+$text['description-enabled']['fr-fr'] = "Sélectionner pour activer ou désactiver la route sortante.";
 $text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
 $text['description-enabled']['uk'] = "Виберіть щоб включити або відключити маршрут";
 
