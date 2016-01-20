@@ -401,7 +401,7 @@ $text['description-order']['uk'] = "Виберіть порядковий ном
 $text['description-limit']['en-us'] = "Enter limit to restrict the number of outbound calls.";
 $text['description-limit']['es-cl'] = "Ingrese un límite para restringir el número de llamadas salientes.";
 $text['description-limit']['pt-pt'] = "Introduza o limite máximo de número de chamadas de saída.";
-$text['description-limit']['fr-fr'] = "Choisir une limitre afin de restreindre le nombre d'appel sortants.";
+$text['description-limit']['fr-fr'] = "Choisir une limite afin de restreindre le nombre d'appel sortants.";
 $text['description-limit']['pl'] = "Wprowadź limit aby ograniczyć liczbę połączeń wychodzących.";
 $text['description-limit']['uk'] = "Введіть обмеження кількість вихідних дзвінків.";
 
