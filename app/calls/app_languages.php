@@ -409,7 +409,7 @@ $text['ckeck-simultaneous']['pt-br'] = "Simultâneo";
 $text['ckeck-simultaneous']['pl'] = "";
 $text['ckeck-simultaneous']['sv-se'] = "";
 $text['ckeck-simultaneous']['uk'] = "";
-$text['ckeck-simultaneous']['fr-fr'] = "";
+$text['ckeck-simultaneous']['fr-fr'] = "Simultané";
 $text['ckeck-simultaneous']['de-at'] = "";
 
 $text['ckeck-sequence']['es-cl'] = "secuencia";
@@ -418,7 +418,7 @@ $text['ckeck-sequence']['pt-br'] = "Sequência";
 $text['ckeck-sequence']['pl'] = "";
 $text['ckeck-sequence']['sv-se'] = "";
 $text['ckeck-sequence']['uk'] = "";
-$text['ckeck-sequence']['fr-fr'] = "";
+$text['ckeck-sequence']['fr-fr'] = "Séquentiel";
 $text['ckeck-sequence']['de-at'] = "";
 
 $text['ckeck-false']['es-cl'] = "Falso";
@@ -435,7 +435,7 @@ $text['check-true']['pt-br'] = "";
 $text['check-true']['pl'] = "Tak";
 $text['check-true']['sv-se'] = "Sann ";
 $text['check-true']['uk'] = "Так";
-$text['check-true']['fr-fr'] = "";
+$text['check-true']['fr-fr'] = "Vrai";
 $text['check-true']['de-at'] = "An";
 
 $text['check-simultaneous']['en-us'] = "simultaneous";
@@ -459,7 +459,7 @@ $text['check-false']['pt-br'] = "";
 $text['check-false']['pl'] = "Nie";
 $text['check-false']['sv-se'] = "Falsk ";
 $text['check-false']['uk'] = "Ні";
-$text['check-false']['fr-fr'] = "";
+$text['check-false']['fr-fr'] = "Faux";
 $text['check-false']['de-at'] = "Aus";
 
 $text['button-save']['en-us'] = "Save";
