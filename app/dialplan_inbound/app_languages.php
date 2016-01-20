@@ -38,7 +38,7 @@ $text['option-rdnis']['uk'] = "RDNIS";
 $text['option-public']['en-us'] = "Public";
 $text['option-public']['es-cl'] = "Público";
 $text['option-public']['pt-pt'] = "Público";
-$text['option-public']['fr-fr'] = "";
+$text['option-public']['fr-fr'] = "Public";
 $text['option-public']['pl'] = "Publiczny";
 $text['option-public']['uk'] = "Публічний";
 
@@ -108,7 +108,7 @@ $text['label-true']['uk'] = "Так";
 $text['label-select-inbound-destination-number']['en-us'] = "Select the inbound destination number.";
 $text['label-select-inbound-destination-number']['es-cl'] = "Seleccione el número de destino entrante.";
 $text['label-select-inbound-destination-number']['pt-pt'] = "Escolha um número de entrada.";
-$text['label-select-inbound-destination-number']['fr-fr'] = "";
+$text['label-select-inbound-destination-number']['fr-fr'] = "Choisir le numéro de destination entrant.";
 $text['label-select-inbound-destination-number']['pl'] = "Wybierz destynację numeru przychodzącego.";
 $text['label-select-inbound-destination-number']['uk'] = "Виберіть вхідний номер";
 
