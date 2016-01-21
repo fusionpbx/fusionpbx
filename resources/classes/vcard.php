@@ -13,10 +13,10 @@ class vcard {
 	var $revision_date;
 	var $card;
 
-	/*
-	The class constructor. You can set some defaults here if desired.
-	*/
-	function vcard() {
+	/**
+	 * Called when the object is created
+	 */
+	public function __construct() {
 	$this->log = "New vcard() called<br />";
 	$this->data = array(
 		"display_name"=>null
@@ -59,7 +59,17 @@ class vcard {
 		,"sort_string"=>null
 		,"note"=>null
 		);
-	return true;
+		return true;
+	}
+
+	/**
+	 * Called when there are no references to a particular object
+	 * unset the variables used in the class
+	 */
+	public function __destruct() {
+		foreach ($this as $key => $value) {
+			unset($this->$key);
+		}
 	}
 
 	/*
