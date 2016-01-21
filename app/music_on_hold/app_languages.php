@@ -11,6 +11,9 @@ $text['title-moh']['uk'] = "Музика на утриманні";
 $text['title-moh']['de-at'] = "Haltemusik";
 $text['title-moh']['he'] = "מוסיקה בהמתנה";
 
+$text['label-music_on_hold']['en-us'] = "Muisc On Hold";
+$text['label-recordings']['en-us'] = "Recordings";
+
 $text['opt-new']['en-us'] = "New...";
 $text['opt-new']['es-cl'] = "Nuevo...";
 $text['opt-new']['pt-pt'] = "Novo...";

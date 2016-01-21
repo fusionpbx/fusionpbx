@@ -400,6 +400,8 @@ else {
 		if (strlen($ring_group_timeout_app) > 0) {
 			$ring_group_timeout_action = $ring_group_timeout_app.":".$ring_group_timeout_data;
 		}
+	}else{
+		$ring_group_ringback = 'default_ringback';
 	}
 
 //get the ring group destination array
@@ -448,6 +450,16 @@ else {
 		$ring_group_context = $_SESSION['domain_name'];
 	}
 
+//get the ringback types
+	$sql = "select * from v_vars ";
+	$sql .= "where var_cat = 'Defaults' ";
+	$sql .= "and var_name LIKE '%-ring' ";
+	$sql .= "order by var_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$ringbacks = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+	
 //show the header
 	require_once "resources/header.php";
 
@@ -638,58 +650,45 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$select_options = "";
-	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") {
-		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${pt-ring}" || $ring_group_ringback == "pt-ring") {
-		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
-		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") {
-		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") {
-		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${it-ring}" || $ring_group_ringback == "it-ring") {
-		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
-	}
+	echo "	<select class='formfld' name='ring_group_ringback'>\n";
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
 		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$moh = new switch_music_on_hold;
-		$moh->select_name = "ring_group_ringback";
-		$moh->select_value = $ring_group_ringback;
-		$moh->select_options = $select_options;
-		echo $moh->select();
+		$moh_list = $moh->list_moh();
+		if (sizeof($moh_list) > 0) {
+			echo "    <optgroup label='".$text['label-music_on_hold']."'>";
+			foreach($moh_list as $value => $name){
+				echo "		<option value='$value'".(($ring_group_ringback == $value) ? ' selected="selected"' : '').">$name</option>\n";
+			}
+			echo "    </optgroup>\n";
+		}
+		$recordings_list = $moh->list_recordings();
+		if (sizeof($recordings_list) > 0) {
+			echo "    <optgroup label='".$text['label-recordings']."'>";
+			foreach($recordings_list as $value => $name){
+				echo "		<option value='$value'".(($ring_group_ringback == $value) ? ' selected="selected"' : '').">$name</option>\n";
+			}
+			echo "    </optgroup>\n";
+		}
 	}
-	else {
-		echo "	<select class='formfld' name='ring_group_ringback'>\n";
-		//echo "	<option value=''></option>\n";
-		echo $select_options;
-		echo "	</select>\n";
+	$t_ring_group_ringback = $ring_group_ringback;
+	$t_ring_group_ringback = preg_replace("\A\${","",$t_ring_group_ringback);
+	$t_ring_group_ringback = preg_replace("}\z","",$t_ring_group_ringback);
+	echo "    <optgroup label='".$text['label-ringback']."'>";
+	echo "		<option value='default_ringback'".(($ring_group_ringback == "default_ringback") ? ' selected="selected"' : '').">".$text['option-default_ringback']."</option>\n";
+	foreach ($ringbacks as $ringback) {
+		$ringback = $ringback['var_name'];
+		$label = $text['option-'.$ringback];
+		if ($label == "") {
+			$label = $ringback;
+		}
+		echo "		<option value='\${".$ringback."}'".(($ringback == $t_ring_group_ringback) ? ' selected="selected"' : '').">$label</option>\n";
 	}
-
+	unset($t_ring_group_ringback);
+	echo "    </optgroup>\n";
+	
+	echo "	</select>\n";
+	
 	echo "<br />\n";
 	echo $text['description-ringback']."\n";
 	echo "</td>\n";
