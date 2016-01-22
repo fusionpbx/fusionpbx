@@ -62,7 +62,7 @@
 					end
 				end
 
-			-- check either we found valid voicemail box
+			--end the session if this is an invalid voicemail box
 				if (not voicemail_uuid) or (#voicemail_uuid == 0) then
 					return session:hangup();
 				end
