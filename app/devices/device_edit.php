@@ -1067,7 +1067,6 @@ require_once "resources/require.php";
 					<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>><?php echo $text['label-forward'] ?></option>
 					<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
 					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
-					<?php
 					<!--
 					0 - not programmed
 					1 - speed dial
@@ -1096,6 +1095,7 @@ require_once "resources/require.php";
 					26 - Cancel key (5304 set only)
 					27 - Speed Dial & BLF
 					-->
+					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
