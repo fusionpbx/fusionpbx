@@ -186,7 +186,7 @@ class destinations {
 				$destination = $row['field']['destination'];
 
 				//add multi-lingual support
-				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/".$name."/app_languages.php")) {
+				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}

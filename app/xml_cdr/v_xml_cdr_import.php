@@ -70,7 +70,7 @@
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //add rating functions if the billing is installed
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		require_once "app/billing/resources/functions/rating.php";
 	}
 
@@ -246,7 +246,7 @@
 			}
 
 		//billing information
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;

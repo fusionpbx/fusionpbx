@@ -786,7 +786,7 @@ else {
 	echo "<br><br>\n";
 	echo "</form>";
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo "<p>".$text['billing-warning']."</p>";
 	}
 

@@ -141,7 +141,7 @@ else {
 	}
 
 //delete the user
-	if ($_GET["a"] == "delete" && permission_exists('conference_room_add') && permission_exists('conference_room_edit')) {
+	if ($_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
 			//set the variables
 				$meeting_user_uuid = check_str($_REQUEST["meeting_user_uuid"]);
@@ -473,8 +473,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$enabled = $row["enabled"];
 				$description = $row["description"];
 			}
-			unset ($prep_statement);
-		}
+			unset ($prep_statement, $sql);
+	}
+
+//get the users array
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "order by username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($prep_statement, $sql);
+
+//get the users assigned to this meeting
+	$sql = "SELECT * FROM v_users as u, v_meeting_users as m ";
+	$sql .= "where u.user_uuid = m.user_uuid  ";
+	$sql .= "and m.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and m.meeting_uuid = '$meeting_uuid' ";
+	$sql .= "order by u.username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$meeting_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($prep_statement, $sql);
 
 //set default profile
 	if (strlen($profile) == 0) { $profile = 'default'; }
@@ -572,56 +592,40 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 
 	if (if_group("superadmin") || if_group("admin")) {
-
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
-	echo "		<td class='vtable' align='left'>";
-	if ($action == "update") {
-		echo "			<table border='0' style='width : 235px;'>\n";
-		$sql = "SELECT * FROM v_users as u, v_meeting_users as m ";
-		$sql .= "where u.user_uuid = m.user_uuid  ";
-		$sql .= "and m.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and m.meeting_uuid = '$meeting_uuid' ";
-		$sql .= "order by u.username asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		foreach($result as $field) {
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>".$field['username']."</td>\n";
-			echo "				<td style='width: 25px;' align='right'>\n";
-			if ($result_count > 1) {
-				echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+		echo "	<tr>";
+		echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
+		echo "		<td class='vtable' align='left'>";
+		if ($action == "update") {
+			echo "			<table border='0' style='width : 235px;'>\n";
+			foreach($meeting_users as $field) {
+				echo "			<tr>\n";
+				echo "				<td class='vtable'>".$field['username']."</td>\n";
+				echo "				<td style='width: 25px;' align='right'>\n";
+				if (permission_exists('conference_room_delete')) {
+					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+				}
+				echo "				</td>\n";
+				echo "			</tr>\n";
 			}
-			echo "				</td>\n";
-			echo "			</tr>\n";
+			echo "			</table>\n";
 		}
-		echo "			</table>\n";
-	}
-
-	echo "			<br />\n";
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-	echo "			<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-		echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
-	}
-	echo "			</select>";
-	if ($action == "update") {
-		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	}
-	unset($sql, $result);
-	echo "			<br>\n";
-	echo "			".$text['description-users']."\n";
-	echo "		</td>";
-	echo "	</tr>";
-
+		echo "			<br />\n";
+		if (permission_exists('conference_room_add')) {
+			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+			echo "			<option value=\"\"></option>\n";
+			foreach($users as $field) {
+				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			}
+			echo "			</select>";
+			if ($action == "update") {
+				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+			}
+			unset($users);
+			echo "			<br>\n";
+		}
+		echo "			".$text['description-users']."\n";
+		echo "		</td>";
+		echo "	</tr>";
 	}
 
 	if (permission_exists('conference_room_profile')) {
