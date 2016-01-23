@@ -36,7 +36,7 @@ else {
 }
 
 //detect billing app
-	$billing_app_exists = file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php");
+	$billing_app_exists = file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php");
 
 	if ($billing_app_exists) {
 		require_once "app/billing/resources/functions/currency.php";

@@ -29,7 +29,7 @@ require_once "root.php";
 require_once "resources/require.php";
 
 //get the event socket information
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
 			$sql = "select * from v_settings ";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -49,7 +49,7 @@ require_once "resources/require.php";
 //get the extensions that are assigned to this user
 function load_extensions() {
 	global $db;
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/extensions/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
 		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
@@ -128,7 +128,7 @@ function event_socket_request($fp, $cmd) {
 function event_socket_request_cmd($cmd) {
 	global $db;
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		$sql = "select * from v_settings ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -1442,25 +1442,25 @@ if (!function_exists('save_switch_xml')) {
 			}
 		}
 		if (is_readable($_SESSION['switch']['conf']['dir'])) {
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 				save_setting_xml();
 			}
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/modules/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/modules/app_config.php")) {
 				save_module_xml();
 			}
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/vars/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/vars/app_config.php")) {
 				save_var_xml();
 			}
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
 				save_call_center_xml();
 			}
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/gateways/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/gateways/app_config.php")) {
 				save_gateway_xml();
 			}
-			//if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menu/app_config.php")) {
+			//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menu/app_config.php")) {
 			//	save_ivr_menu_xml();
 			//}
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/sip_profiles/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/sip_profiles/app_config.php")) {
 				save_sip_profile_xml();
 			}
 		}

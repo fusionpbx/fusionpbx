@@ -56,7 +56,7 @@ include "root.php";
 			} elseif (is_dir("/usr/local/etc/fusionpbx")){
 				$this->config_php = "/usr/local/etc/fusionpbx/config.php";
 			}
-			elseif (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
+			elseif (is_dir($_SERVER["PROJECT_ROOT"]."/resources")) {
 				$this->config_php = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 			}
 			else {

@@ -70,8 +70,8 @@ class config {
 		//get the PROJECT PATH
 			include "root.php";
 		// find the file
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-				$this->config_path = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+				$this->config_path = $_SERVER["PROJECT_ROOT"]."/resources/config.php";
 			} elseif (file_exists("/etc/fusionpbx/config.php")) {
 				$this->config_path = "/etc/fusionpbx/config.php";
 			} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
