@@ -307,19 +307,19 @@
 --adjust file paths
 	--greet long
 		if (not file_exists(ivr_menu_greet_long)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name)) then
+			if (file_exists(recordings_dir.."/"..domain_name.."/"..greet_long_file_name)) then
+				ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..greet_long_file_name;
+			elseif (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name)) then
 				ivr_menu_greet_long = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_long_file_name;
-			elseif (file_exists(recordings_dir.."/"..greet_long_file_name)) then
-				ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
 			end
 		end
 	--greet short
 		if (string.len(ivr_menu_greet_short) > 1) then
 			if (not file_exists(ivr_menu_greet_short)) then
-				if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name)) then
+				if (file_exists(recordings_dir.."/"..domain_name.."/"..greet_short_file_name)) then
+					ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..greet_short_file_name;
+				elseif (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name)) then
 					ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..greet_short_file_name;
-				elseif (file_exists(recordings_dir.."/"..greet_short_file_name)) then
-					ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
 				end
 			end
 		else
@@ -327,18 +327,18 @@
 		end
 	--invalid sound
 		if (not file_exists(ivr_menu_invalid_sound)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name)) then
+			if (file_exists(recordings_dir.."/"..domain_name.."/"..invalid_sound_file_name)) then
+				ivr_menu_invalid_sound = recordings_dir.."/"..domain_name.."/"..invalid_sound_file_name;
+			elseif (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name)) then
 				ivr_menu_invalid_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..invalid_sound_file_name;
-			elseif (file_exists(recordings_dir.."/"..invalid_sound_file_name)) then
-				ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
 			end
 		end
 	--exit sound
 		if (not file_exists(ivr_menu_exit_sound)) then
-			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name)) then
+			if (file_exists(recordings_dir.."/"..domain_name.."/"..exit_sound_file_name)) then
+				ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..exit_sound_file_name;
+			elseif (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name)) then
 				ivr_menu_exit_sound = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..exit_sound_file_name;
-			elseif (file_exists(recordings_dir.."/"..exit_sound_file_name)) then
-				ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
 			end
 		end
 
