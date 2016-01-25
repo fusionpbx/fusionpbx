@@ -13,7 +13,7 @@
 --	notice, this list of conditions and the following disclaimer in the
 --	documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -76,8 +76,6 @@
 		end
 	end
 
---add the domain name to the recordings directory
-	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --set default variable(s)
 	tries = 0;
@@ -202,7 +200,7 @@
 	if (storage_type == "base64") then
 		--greet long
 			if (string.len(ivr_menu_greet_long) > 1) then
-				if (not file_exists(recordings_dir.."/"..greet_long_file_name)) then
+				if (not file_exists(recordings_dir.."/"..domain_name.."/"..greet_long_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
 						AND recording_filename = ']]..greet_long_file_name..[[' ]];
@@ -213,7 +211,7 @@
 						--add functions
 							require "resources.functions.base64";
 						--add the path to filename
-							ivr_menu_greet_long = recordings_dir.."/"..greet_long_file_name;
+							ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..greet_long_file_name;
 							ivr_menu_greet_long_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -226,7 +224,7 @@
 			end
 		--greet short
 			if (string.len(ivr_menu_greet_short) > 1) then
-				if (not file_exists(recordings_dir.."/"..greet_short_file_name)) then
+				if (not file_exists(recordings_dir.."/"..domain_name.."/"..greet_short_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
 						AND recording_filename = ']]..greet_short_file_name..[[' ]];
@@ -237,7 +235,7 @@
 						--add functions
 							require "resources.functions.base64";
 						--add the path to filename
-							ivr_menu_greet_short = recordings_dir.."/"..greet_short_file_name;
+							ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..greet_short_file_name;
 							ivr_menu_greet_short_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -250,7 +248,7 @@
 			end
 		--invalid sound
 			if (string.len(ivr_menu_invalid_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..invalid_sound_file_name)) then
+				if (not file_exists(recordings_dir.."/"..domain_name.."/"..invalid_sound_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
 						AND recording_filename = ']]..invalid_sound_file_name..[[' ]];
@@ -261,7 +259,7 @@
 						--add functions
 							require "resources.functions.base64";
 						--add the path to filename
-							ivr_menu_invalid_sound = recordings_dir.."/"..invalid_sound_file_name;
+							ivr_menu_invalid_sound = recordings_dir.."/"..domain_name.."/"..invalid_sound_file_name;
 							ivr_menu_invalid_sound_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
@@ -274,7 +272,7 @@
 			end
 		--exit sound
 			if (string.len(ivr_menu_exit_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..exit_sound_file_name)) then
+				if (not file_exists(recordings_dir.."/"..domain_name.."/"..exit_sound_file_name)) then
 					sql = [[SELECT * FROM v_recordings 
 						WHERE domain_uuid = ']]..domain_uuid..[['
 						AND recording_filename = ']]..exit_sound_file_name..[[' ]];
@@ -285,7 +283,7 @@
 						--add functions
 							require "resources.functions.base64";
 						--add the path to filename
-							ivr_menu_exit_sound = recordings_dir.."/"..exit_sound_file_name;
+							ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..exit_sound_file_name;
 							ivr_menu_exit_sound_is_base64 = true;
 						--save the recording to the file system
 							if (string.len(row["recording_base64"]) > 32) then
