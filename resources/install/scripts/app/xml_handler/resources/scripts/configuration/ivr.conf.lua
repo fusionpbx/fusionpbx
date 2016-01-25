@@ -77,115 +77,115 @@
 				ivr_menu_description = row["ivr_menu_description"];
 			end);
 
---get the recordings from the database
-	ivr_menu_greet_long_is_base64 = false;
-	ivr_menu_greet_short_is_base64 = false;
-	ivr_menu_invalid_sound_is_base64 = false;
-	ivr_menu_exit_sound_is_base64 = false;
-	if (storage_type == "base64") then
-		--greet long
-			if (string.len(ivr_menu_greet_long) > 1) then
-				if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
-					sql = [[SELECT * FROM v_recordings 
-						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..ivr_menu_greet_long..[[' ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
-					end
-					status = dbh:query(sql, function(row)
-						--add functions
-							require "resources.functions.base64";
-						--add the path to filename
-							ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
-							ivr_menu_greet_long_is_base64 = true;
-						--save the recording to the file system
-							if (string.len(row["recording_base64"]) > 32) then
-								local file = io.open(ivr_menu_greet_long, "w");
-								file:write(base64.decode(row["recording_base64"]));
-								file:close();
+		--get the recordings from the database
+			ivr_menu_greet_long_is_base64 = false;
+			ivr_menu_greet_short_is_base64 = false;
+			ivr_menu_invalid_sound_is_base64 = false;
+			ivr_menu_exit_sound_is_base64 = false;
+			if (storage_type == "base64") then
+				--greet long
+					if (string.len(ivr_menu_greet_long) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
+							sql = [[SELECT * FROM v_recordings 
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_greet_long..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 							end
-					end);
-				end
-			end
-		--greet short
-			if (string.len(ivr_menu_greet_short) > 1) then
-				if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
-					sql = [[SELECT * FROM v_recordings 
-						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..ivr_menu_greet_short..[[' ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
+									ivr_menu_greet_long_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_greet_long, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
 					end
-					status = dbh:query(sql, function(row)
-						--add functions
-							require "resources.functions.base64";
-						--add the path to filename
-							ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short;
-							ivr_menu_greet_short_is_base64 = true;
-						--save the recording to the file system
-							if (string.len(row["recording_base64"]) > 32) then
-								local file = io.open(ivr_menu_greet_short, "w");
-								file:write(base64.decode(row["recording_base64"]));
-								file:close();
+				--greet short
+					if (string.len(ivr_menu_greet_short) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
+							sql = [[SELECT * FROM v_recordings 
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_greet_short..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 							end
-					end);
-				end
-			end
-		--invalid sound
-			if (string.len(ivr_menu_invalid_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound)) then
-					sql = [[SELECT * FROM v_recordings 
-						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..ivr_menu_invalid_sound..[[' ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short;
+									ivr_menu_greet_short_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_greet_short, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
 					end
-					status = dbh:query(sql, function(row)
-						--add functions
-							require "resources.functions.base64";
-						--add the path to filename
-							ivr_menu_invalid_sound = recordings_dir..domain_name.."/".."/"..ivr_menu_invalid_sound;
-							ivr_menu_invalid_sound_is_base64 = true;
-						--save the recording to the file system
-							if (string.len(row["recording_base64"]) > 32) then
-								local file = io.open(ivr_menu_invalid_sound, "w");
-								file:write(base64.decode(row["recording_base64"]));
-								file:close();
+				--invalid sound
+					if (string.len(ivr_menu_invalid_sound) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound)) then
+							sql = [[SELECT * FROM v_recordings 
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_invalid_sound..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 							end
-					end);
-				end
-			end
-		--exit sound
-			if (string.len(ivr_menu_exit_sound) > 1) then
-				if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound)) then
-					sql = [[SELECT * FROM v_recordings 
-						WHERE domain_uuid = ']]..domain_uuid..[['
-						AND recording_filename = ']]..ivr_menu_exit_sound..[[' ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_invalid_sound = recordings_dir..domain_name.."/".."/"..ivr_menu_invalid_sound;
+									ivr_menu_invalid_sound_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_invalid_sound, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
 					end
-					status = dbh:query(sql, function(row)
-						--add functions
-							require "resources.functions.base64";
-						--add the path to filename
-							ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
-							ivr_menu_exit_sound_is_base64 = true;
-						--save the recording to the file system
-							if (string.len(row["recording_base64"]) > 32) then
-								local file = io.open(ivr_menu_exit_sound, "w");
-								file:write(base64.decode(row["recording_base64"]));
-								file:close();
+				--exit sound
+					if (string.len(ivr_menu_exit_sound) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound)) then
+							sql = [[SELECT * FROM v_recordings 
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_exit_sound..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
 							end
-					end);
-				end
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
+									ivr_menu_exit_sound_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_exit_sound, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
+					end
+			elseif (storage_type == "http_cache") then
+				--add the path to file name
+				ivr_menu_greet_long = storage_path.."/"..ivr_menu_greet_long;
+				ivr_menu_greet_short = storage_path.."/"..ivr_menu_greet_short;
+				ivr_menu_invalid_sound = storage_path.."/"..ivr_menu_invalid_sound;
+				ivr_menu_exit_sound = storage_path.."/"..ivr_menu_exit_sound;
 			end
-	elseif (storage_type == "http_cache") then
-		--add the path to file name
-		ivr_menu_greet_long = storage_path.."/"..ivr_menu_greet_long;
-		ivr_menu_greet_short = storage_path.."/"..ivr_menu_greet_short;
-		ivr_menu_invalid_sound = storage_path.."/"..ivr_menu_invalid_sound;
-		ivr_menu_exit_sound = storage_path.."/"..ivr_menu_exit_sound;
-	end
 
 		--greet long
 			if (not file_exists(ivr_menu_greet_long)) then
