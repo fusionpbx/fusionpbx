@@ -26,6 +26,7 @@
 include "root.php";
 
 //start session
+	ini_set("session.cookie_httponly", True);
 	session_start();
 
 //retain message
@@ -39,12 +40,12 @@ include "root.php";
 	session_destroy();
 
 //if config.php file does not exist then redirect to the install page
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 		//original directory
 	}
-	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+	else if (file_exists($_SERVER["PROJECT_ROOT"]."/includes/config.php")) {
 		//move config.php from the includes to resources directory.
-		rename($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php", $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php");
+		rename($_SERVER["PROJECT_ROOT"]."/includes/config.php", $_SERVER["PROJECT_ROOT"]."/resources/config.php");
 	}
 	else if (file_exists("/etc/fusionpbx/config.php")){
 		//linux
@@ -67,7 +68,7 @@ include "root.php";
 	}
 
 //use custom login, if present, otherwise use default login
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
 		require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
 	}
 	else {

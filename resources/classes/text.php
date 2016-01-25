@@ -5,12 +5,14 @@
  * @method array get
  */
 class text {
+
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
 		//place holder
 	}
+
 	/**
 	 * Called when there are no references to a particular object
 	 * unset the variables used in the class
@@ -20,20 +22,26 @@ class text {
 			unset($this->$key);
 		}
 	}
+
 	/**
 	 * Get a specific item from the cache
 	 * @var string $language_code	examples: en-us, es-cl, fr-fr, pt-pt
 	 * @var string $app_path		examples: app/exec or core/domains
 	 */
-	public function get($language_code = null, $app_path = null) {
+	public function get($language_code = null, $app_path = null, $exclude_global = false) {
 		//get the global app_languages.php
-			include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/app_languages.php";
+			if(!$exclude_global){
+				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			}
 		//get the app_languages.php
 			if ($app_path != null) {
-				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
+				$lang_path = $_SERVER["PROJECT_ROOT"]."/".$app_path."/app_languages.php";
 			}
 			else {
-				include getcwd().'/app_languages.php';
+				$lang_path = getcwd().'/app_languages.php';
+			}
+			if(file_exists($lang_path)){
+				require $lang_path;
 			}
 		//get the available languages
 			krsort($text);
@@ -46,7 +54,7 @@ class text {
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
 		//check the session language
-			if(isset($_SESSION['domain'])){
+			if(isset($_SESSION['domain']) and $language_code == null){
 				$language_code = $_SESSION['domain']['language']['code'];
 			}elseif($language_code == null){
 				$language_code = 'en-us';
@@ -54,7 +62,12 @@ class text {
 		//reduce to specific language
 			if ($language_code != 'all') {
 				foreach($text as $key => $value) {
-					$text[$key] = $value[$language_code];
+					if(strlen($value[$language_code]) > 0) {
+						$text[$key] = $value[$language_code];
+					}else{
+						//fallback to en-us
+						$text[$key] = $value['en-us'];
+					}
 				}
 			}
 			if ($language_code != 'all') {
@@ -68,7 +81,7 @@ class text {
 					}
 				}
 			}
-			
+
 		//return the array of translations
 			return $text;
 	}

@@ -33,8 +33,6 @@ if ($domains_processed == 1) {
 		$x = 0;
 		while (false !== ($file = readdir($backgrounds))) {
 			if ($file != "." AND $file != ".."){
-				$new_path = $dir.'/'.$file;
-				$level = explode('/',$new_path);
 				$ext = pathinfo($file, PATHINFO_EXTENSION);
 				if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
 					$x++;

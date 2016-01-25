@@ -56,7 +56,7 @@ include "root.php";
 			} elseif (is_dir("/usr/local/etc/fusionpbx")){
 				$this->config_php = "/usr/local/etc/fusionpbx/config.php";
 			}
-			elseif (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
+			elseif (is_dir($_SERVER["PROJECT_ROOT"]."/resources")) {
 				$this->config_php = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 			}
 			else {
@@ -268,7 +268,7 @@ include "root.php";
 				//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
 			}
 			catch (PDOException $error) {
-				throw Exception("Failed to create database: " . $error->getMessage());
+				throw new Exception("Failed to create database: " . $error->getMessage());
 			}
 
 		//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
@@ -312,7 +312,7 @@ include "root.php";
 					$this->dbh->query($sql);
 				}
 				catch (PDOException $error) {
-							throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
+					throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
 				}
 				$x++;
 			}

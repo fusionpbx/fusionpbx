@@ -46,6 +46,10 @@
 	number_alias_string = "";
 	vm_mailto = "";
 
+-- event source 
+	local event_calling_function = params:getHeader("Event-Calling-Function")
+	local event_calling_file = params:getHeader("Event-Calling-File")
+
 --determine the correction action to perform
 	if (purpose == "gateways") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
@@ -55,8 +59,12 @@
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/group_call.lua");
 	elseif (action == "reverse-auth-lookup") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/reverse-auth-lookup.lua");
-	elseif (params:getHeader("Event-Calling-Function") == "switch_xml_locate_domain") then
+	elseif (event_calling_function == "switch_xml_locate_domain") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
+	elseif (event_calling_function == "switch_load_network_lists") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/acl.lua");
+	elseif (event_calling_function == "populate_database") and (event_calling_file == "mod_directory.c") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/directory.lua");
 	else
 		--handle action
 			--all other directory actions: sip_auth, user_call 

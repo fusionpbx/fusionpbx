@@ -98,13 +98,6 @@ $text['option-ani']['fr-fr'] = "ANI";
 $text['option-ani']['pl'] = "ANI";
 $text['option-ani']['uk'] = "ANI";
 
-$text['label-true']['en-us'] = "True";
-$text['label-true']['es-cl'] = "Verdadero";
-$text['label-true']['pt-pt'] = "Sim";
-$text['label-true']['fr-fr'] = "Oui";
-$text['label-true']['pl'] = "Tak";
-$text['label-true']['uk'] = "Так";
-
 $text['label-select-inbound-destination-number']['en-us'] = "Select the inbound destination number.";
 $text['label-select-inbound-destination-number']['es-cl'] = "Seleccione el número de destino entrante.";
 $text['label-select-inbound-destination-number']['pt-pt'] = "Escolha um número de entrada.";
@@ -154,20 +147,6 @@ $text['label-redial-outbound-prefix']['fr-fr'] = "Bis préfixe pour sortant";
 $text['label-redial-outbound-prefix']['pl'] = "Prefiks ponownego wybierania";
 $text['label-redial-outbound-prefix']['uk'] = "Префікс для повторного набору вихідного дзвінка";
 
-$text['label-order']['en-us'] = "Order";
-$text['label-order']['es-cl'] = "Orden";
-$text['label-order']['pt-pt'] = "Ordem";
-$text['label-order']['fr-fr'] = "Ordre";
-$text['label-order']['pl'] = "Kolejność";
-$text['label-order']['uk'] = "Порядок";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['uk'] = "Назва";
-
 $text['label-limit']['en-us'] = "Limit";
 $text['label-limit']['es-cl'] = "Límite";
 $text['label-limit']['pt-pt'] = "Limite";
@@ -182,13 +161,6 @@ $text['label-field']['fr-fr'] = "Champs";
 $text['label-field']['pl'] = "Pole";
 $text['label-field']['uk'] = "Поле";
 
-$text['label-false']['en-us'] = "False";
-$text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "Não";
-$text['label-false']['fr-fr'] = "Non";
-$text['label-false']['pl'] = "Nie";
-$text['label-false']['uk'] = "Ні";
-
 $text['label-expression']['en-us'] = "Expression";
 $text['label-expression']['es-cl'] = "Expresión";
 $text['label-expression']['pt-pt'] = "Expressão";
@@ -196,26 +168,12 @@ $text['label-expression']['fr-fr'] = "Expression";
 $text['label-expression']['pl'] = "Wyrażenie";
 $text['label-expression']['uk'] = "Вираз";
 
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activado";
-$text['label-enabled']['pt-pt'] = "Habilitado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pl'] = "Numer wew włączony?";
-$text['label-enabled']['uk'] = "Включено";
-
 $text['label-destination-number']['en-us'] = "Destination Number";
 $text['label-destination-number']['es-cl'] = "Número de destino";
 $text['label-destination-number']['pt-pt'] = "Número de Destino";
 $text['label-destination-number']['fr-fr'] = "Numéro de Destination";
 $text['label-destination-number']['pl'] = "Numer destynacji";
 $text['label-destination-number']['uk'] = "Номер";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['uk'] = "Опис";
 
 $text['label-condition_2']['en-us'] = "Condition 2";
 $text['label-condition_2']['es-cl'] = "Condición 2";
@@ -286,40 +244,5 @@ $text['confirm-update-complete']['pt-pt'] = "Actualização Efectuada";
 $text['confirm-update-complete']['fr-fr'] = "Mis à jour";
 $text['confirm-update-complete']['pl'] = "Potwierdź";
 $text['confirm-update-complete']['uk'] = "Оновлення завершено";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarde";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['uk'] = "Зберегти";
-
-$text['button-basic']['en-us'] = "Basic";
-$text['button-basic']['es-cl'] = "Básico";
-$text['button-basic']['pt-pt'] = "Básico";
-$text['button-basic']['fr-fr'] = "Basique";
-$text['button-basic']['pl'] = "Podstawowy";
-$text['button-basic']['uk'] = "Основний";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['uk'] = "Назад";
-
-$text['button-advanced']['en-us'] = "Advanced";
-$text['button-advanced']['es-cl'] = "Avanzado";
-$text['button-advanced']['pt-pt'] = "Avançadas";
-$text['button-advanced']['fr-fr'] = "Avancé";
-$text['button-advanced']['pl'] = "Zaawansowane";
-$text['button-advanced']['uk'] = "Додатково";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['uk'] = "Додати";
 
 ?>

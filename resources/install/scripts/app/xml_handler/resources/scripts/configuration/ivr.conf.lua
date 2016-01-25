@@ -24,17 +24,18 @@
 --      ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --      POSSIBILITY OF SUCH DAMAGE.
 
+--get the ivr name
+	ivr_menu_uuid = params:getHeader("Menu-Name");
+
 --get the cache
-	hostname = trim(api:execute("switchname", ""));
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. hostname));
+		XML_STRING = trim(api:execute("memcache", "get configuration:ivr.conf:" .. ivr_menu_uuid));
 	else
 		XML_STRING = "-ERR NOT FOUND";
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
-
+	if (XML_STRING == "-ERR NOT FOUND" or XML_STRING == "-ERR CONNECTION FAILURE") then
 		--connect to the database
 			require "resources.functions.database_handle";
 			dbh = database_handle('system');
@@ -49,6 +50,7 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
 			end
+
 			status = dbh:query(sql, function(row)
 				domain_uuid = row["domain_uuid"];
 				ivr_menu_name = row["ivr_menu_name"];
@@ -69,7 +71,6 @@
 				ivr_menu_max_failures = row["ivr_menu_max_failures"];
 				ivr_menu_max_timeouts = row["ivr_menu_max_timeouts"];
 				ivr_menu_digit_len = row["ivr_menu_digit_len"];
-
 				ivr_menu_direct_dial = row["ivr_menu_direct_dial"];
 				ivr_menu_ringback = row["ivr_menu_ringback"];
 				ivr_menu_cid_prefix = row["ivr_menu_cid_prefix"];
@@ -77,7 +78,6 @@
 			end);
 
 		--recording path
-			
 
 		--start the xml array
 			local xml = {}
@@ -85,64 +85,59 @@
 			table.insert(xml, [[<document type="freeswitch/xml">]]);
 			table.insert(xml, [[	<section name="configuration">]]);
 			table.insert(xml, [[		<configuration name="ivr.conf" description="IVR Menus">]]);
-
 			table.insert(xml, [[			<menus>]]);
-			dbh:query(sql, function(row)
+			table.insert(xml, [[				<menu name="]]..ivr_menu_uuid..[[" description="]]..ivr_menu_name..[[" ]]);
+			table.insert(xml, [[				greet-long="]]..ivr_menu_greet_long..[[" ]]);
+			table.insert(xml, [[				greet-short="]]..ivr_menu_greet_short..[[" ]]);
+			table.insert(xml, [[				invalid-sound="]]..ivr_menu_invalid_sound..[[" ]]);
+			table.insert(xml, [[				exit-sound="]]..ivr_menu_exit_sound..[[" ]]);
+			table.insert(xml, [[				confirm-macro="]]..ivr_menu_confirm_macro..[[" ]]);
+			table.insert(xml, [[				confirm-key="]]..ivr_menu_confirm_key..[[" ]]);
+			table.insert(xml, [[				tts-engine="]]..ivr_menu_tts_engine..[[" ]]);
+			table.insert(xml, [[				tts-voice="]]..ivr_menu_tts_voice..[[" ]]);
+			table.insert(xml, [[				confirm-attempts="]]..ivr_menu_confirm_attempts..[[" ]]);
+			table.insert(xml, [[				timeout="]]..ivr_menu_timeout..[[" ]]);
+			table.insert(xml, [[				inter-digit-timeout="]]..ivr_menu_inter_digit_timeout..[[" ]]);
+			table.insert(xml, [[				max-failures="]]..ivr_menu_max_failures..[[" ]]);
+			table.insert(xml, [[				max-timeouts="]]..ivr_menu_max_timeouts..[[" ]]);
+			table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
+			table.insert(xml, [[				>]]);
 
-				--build the xml
-					table.insert(xml, [[				<menu name="]]..ivr_menu_uuid..[[" description="]]..ivr_menu_name..[[" ]]);
-					table.insert(xml, [[				greet-long="]]..ivr_menu_greet_long..[[" ]]);
-					table.insert(xml, [[				greet-short="]]..ivr_menu_greet_short..[[" ]]);
-					table.insert(xml, [[				invalid-sound="]]..ivr_menu_invalid_sound..[[" ]]);
-					table.insert(xml, [[				exit-sound="]]..ivr_menu_exit_sound..[[" ]]);
-					table.insert(xml, [[				confirm-macro="]]..ivr_menu_confirm_macro..[[" ]]);
-					table.insert(xml, [[				confirm-key="]]..ivr_menu_confirm_key..[[" ]]);
-					table.insert(xml, [[				tts-engine="]]..ivr_menu_tts_engine..[[" ]]);
-					table.insert(xml, [[				tts-voice="]]..ivr_menu_tts_voice..[[" ]]);
-					table.insert(xml, [[				confirm-attempts="]]..ivr_menu_confirm_attempts..[[" ]]);
-					table.insert(xml, [[				timeout="]]..ivr_menu_timeout..[[" ]]);
-					table.insert(xml, [[				inter-digit-timeout="]]..ivr_menu_inter_digit_timeout..[[" ]]);
-					table.insert(xml, [[				max-failures="]]..ivr_menu_max_failures..[[" ]]);
-					table.insert(xml, [[				max-timeouts="]]..ivr_menu_max_timeouts..[[" ]]);
-					table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
-					table.insert(xml, [[				/>]]);
+		--get the ivr menu options
+			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(r)
+				ivr_menu_option_digits = r.ivr_menu_option_digits
+				ivr_menu_option_action = r.ivr_menu_option_action
+				ivr_menu_option_param = r.ivr_menu_option_param
+				ivr_menu_option_description = r.ivr_menu_option_description
+				table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
+			end);
 
-				--get the ivr menu options
-					sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
-					end
-					status = dbh:query(sql, function(r)
-					dbh:query(sql, function(r)
-						ivr_menu_option_digits = r.ivr_menu_option_digits
-						ivr_menu_option_action = r.ivr_menu_option_action
-						ivr_menu_option_param = r.ivr_menu_option_param
-						ivr_menu_option_description = row.ivr_menu_option_description
-						table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[["/><!--]]..ivr_menu_option_description..[[-->]]);
-					end)
-
-				--direct dial
-					if (ivr_menu_direct_dial == "true") then
-						table.insert(xml, [[<entry action="menu-exec-app" digits="/(^(\d{2,5}))$/" param="transfer $1 XML features"/>\n");
-					end
-			end)
-			table.insert(xml, [[			</menus>]]);
+		--direct dial
+			if (ivr_menu_direct_dial == "true") then
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/(^(\d{2,5}))$/" param="transfer $1 XML features" description="direct dial"/>\n]]);
+			end
 
 		--close the extension tag if it was left open
-				table.insert(xml, [[		</configuration>]]);
-				table.insert(xml, [[	</section>]]);
-				table.insert(xml, [[</document>]]);
-				XML_STRING = table.concat(xml, "\n");
-				if (debug["xml_string"]) then
-						freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
-				end
+			table.insert(xml, [[				</menu>]]);
+			table.insert(xml, [[			</menus>]]);
+			table.insert(xml, [[		</configuration>]]);
+			table.insert(xml, [[	</section>]]);
+			table.insert(xml, [[</document>]]);
+			XML_STRING = table.concat(xml, "\n");
+			if (debug["xml_string"]) then
+					freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
+			end
 
 		--close the database connection
-				dbh:release();
-				--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
+			dbh:release();
+			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:ivr.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
+			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -153,13 +148,14 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. hostname .." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf:" .. ivr_menu_uuid .." source: database\n");
 			end
+
 	else
 		--replace the &#39 back to a single quote
 			XML_STRING = XML_STRING:gsub("&#39;", "'");
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf source: memcache\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:ivr.conf" .. ivr_menu_uuid .." source: memcache\n");
 			end
 	end --if XML_STRING

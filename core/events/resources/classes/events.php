@@ -9,7 +9,7 @@
 class events {
 
 	/**
-	 * @var obj $db 				Database connnection object
+	 * @var obj $db 			Database connnection object
 	 * @var array $plugins		Store available plugin classes
 	 * @var array $methods		store methods found on each plugin
 	 * @var array $headers		headers provide information about the events

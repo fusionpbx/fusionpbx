@@ -78,7 +78,7 @@ date_default_timezone_set($timezone);
 
 //detect install state
 $first_time_install = true;
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 	$first_time_install = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
 	$first_time_install = false;
@@ -336,7 +336,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				echo "<form method='post' name='frm' action=''>\n";
 				echo "	<div style='text-align:right'>\n";
 				echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-				echo "    <button type='button' onclick=\"location.reload(true);\">".$text['button-install_execute']."</button>\n";
+				echo "    <button type='button' onclick=\"location.reload(true);\">".$text['button-execute']."</button>\n";
 				echo "	</div>\n";
 				echo "</form>\n";
 			}

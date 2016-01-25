@@ -35,7 +35,7 @@ else {
 }
 
 //detect billing app
-	$billing_app_exists = file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php");
+	$billing_app_exists = file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php");
 	if ($billing_app_exists) {
 		require_once "app/billing/resources/functions/currency.php";
 		require_once "app/billing/resources/functions/rating.php";
@@ -1645,7 +1645,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+		if (is_array($_SESSION['toll allow']['name'])) {
+			echo "	<select class='formfld' name='toll_allow'>\n";
+			echo "		<option value=''></option>\n";
+			foreach ($_SESSION['toll allow']['name'] as $name) {
+				if ($_SESSION['call group']['name'] == $call_group) {
+					echo "		<option value='$name' selected='selected'>$name</option>\n";
+				}
+				else {
+					echo "		<option value='$name'>$name</option>\n";
+				}
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "    <input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"$toll_allow\">\n";
+		}
 		echo "<br />\n";
 		echo $text['description-toll_allow']."\n";
 		echo "</td>\n";
@@ -1668,7 +1683,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-call_group']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
+	if (is_array($_SESSION['call group']['name'])) { 
+		echo "	<select class='formfld' name='call_group'>\n";
+		echo "		<option value=''></option>\n";
+		foreach ($_SESSION['call group']['name'] as $name) {
+			if ($_SESSION['call group']['name'] == $call_group) {
+				echo "		<option value='$name' selected='selected'>$name</option>\n";
+			}
+			else {
+				echo "		<option value='$name'>$name</option>\n";
+			}
+		}
+		echo "	</select>\n";
+	} else {
+		echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
+	}
 	echo "<br />\n";
 	echo $text['description-call_group']."\n";
 	echo "</td>\n";

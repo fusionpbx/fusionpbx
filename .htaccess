@@ -9,18 +9,18 @@ RewriteRule     ^(cfg)([A-Fa-f0-9]{12})(\.(xml))$                      app/provi
 RewriteRule     ^(m3/settings/)([A-Fa-f0-9]{12})(\.(cfg))?$            app/provision/index.php?mac=$2 [QSA]
 
 #Grandstream
-RewriteRule     ^.*/provision/cfg([A-Fa-f0-9]{12})(\.(xml|cfg))?$      app/provision/?mac=$1 [QSA]
+RewriteRule     ^(?:.*/)?provision/cfg([A-Fa-f0-9]{12})(\.(xml|cfg))?$      app/provision/?mac=$1 [QSA]
 
 #Yealink
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})(\.(xml|cfg))?$         app/provision/index.php?mac=$1 [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})(\.(xml|cfg))?$         app/provision/index.php?mac=$1 [QSA]
 
 #Polycom
-RewriteRule     ^.*/provision/000000000000.cfg$                       app/provison/?mac=$1&file={$mac}.cfg [QSA]
-RewriteRule     ^.*/provision/features.cfg$                           app/provision/?mac=$1&file=features.cfg [QSA]
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-sip.cfg$              app/provision/?mac=$1&file=sip.cfg [QSA]
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-phone.cfg$            app/provision/?mac=$1 [QSA]
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-registration.cfg$     app/provision/?mac=$1&file={$mac}-registration.cfg [QSA]
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-site.cfg$             app/provision/?mac=$1&file=site.cfg [QSA]
-RewriteRule     ^.*/provision/([A-Fa-f0-9]{12})-web.cfg$              app/provision/?mac=$1&file=web.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/000000000000.cfg$                       app/provison/?mac=$1&file={$mac}.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/features.cfg$                           app/provision/?mac=$1&file=features.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})-sip.cfg$              app/provision/?mac=$1&file=sip.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})-phone.cfg$            app/provision/?mac=$1 [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})-registration.cfg$     app/provision/?mac=$1&file={$mac}-registration.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})-site.cfg$             app/provision/?mac=$1&file=site.cfg [QSA]
+RewriteRule     ^(?:.*/)?provision/([A-Fa-f0-9]{12})-web.cfg$              app/provision/?mac=$1&file=web.cfg [QSA]
 
 Options -Indexes

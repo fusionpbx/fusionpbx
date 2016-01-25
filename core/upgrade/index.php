@@ -35,7 +35,6 @@ if (
 	!permission_exists('upgrade_source') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_apps') &&
-	!permission_exists('upgrade_switch') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
@@ -53,7 +52,7 @@ if (sizeof($_POST) > 0) {
 
 	// run source update
 	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
-		chdir($_SERVER["DOCUMENT_ROOT"]);
+		chdir($_SERVER["PROJECT_ROOT"]);
 		exec("git pull", $response_source_update);
 		$update_failed = true;
 		if (sizeof($response_source_update) > 0) {
@@ -122,13 +121,6 @@ if (sizeof($_POST) > 0) {
 		$response_message = "Permission Defaults Restored";
 	}
 
-	// upgrade switch
-	if ($do["switch"] && permission_exists("upgrade_switch")) {
-		$included = true;
-		require_once("core/install/upgrade_switch.php");
-		$response_message = "Switch Upgraded";
-	}
-
 	if (sizeof($_POST['do']) > 1) {
 		$response_message = $text['message-upgrade'];
 	}
@@ -137,7 +129,7 @@ if (sizeof($_POST) > 0) {
 	header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 	exit;
 
-} // if
+} // end if
 
 
 require_once "resources/header.php";
@@ -252,22 +244,6 @@ if (permission_exists("group_edit")) {
 	echo "		<label for='do_permissions'>";
 	echo "			<input type='checkbox' class='formfld' name='do[permissions]' id='do_permissions' value='1'>";
 	echo "			".$text['description-upgrade_permissions'];
-	echo "		</label>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-}
-
-if (permission_exists("upgrade_switch")) {
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td width='30%' class='vncell'>\n";
-	echo "		".$text['label-upgrade_switch'];
-	echo "	</td>\n";
-	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_switch'>";
-	echo "			<input type='checkbox' class='formfld' name='do[switch]' id='do_switch' value='1'>";
-	echo "			".$text['description-upgrade_switch'];
 	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";

@@ -160,16 +160,6 @@ $text['button-unregister']['sv-se'] = "Avregistrera";
 $text['button-unregister']['uk'] = "Розреєструвати";
 $text['button-unregister']['de-at'] = "Unregister";
 
-$text['button-show_all']['en-us'] = "Show All";
-$text['button-show_all']['es-cl'] = "Mostrar Todos";
-$text['button-show_all']['pt-pt'] = "Mostrar Todos";
-$text['button-show_all']['fr-fr'] = "Tout montrer";
-$text['button-show_all']['pt-br'] = "Mostrar todos";
-$text['button-show_all']['pl'] = "Pokaż wszystkie";
-$text['button-show_all']['sv-se'] = "Visa Allt";
-$text['button-show_all']['uk'] = "Показати всі";
-$text['button-show_all']['de-at'] = "Alle anzeigen";
-
 $text['button-reboot']['en-us'] = "Reboot";
 $text['button-reboot']['es-cl'] = "Reiniciar";
 $text['button-reboot']['pt-pt'] = "Reinicialização";
@@ -189,15 +179,5 @@ $text['button-provision']['pl'] = "Konfigutuj";
 $text['button-provision']['sv-se'] = "Provisionera";
 $text['button-provision']['uk'] = "Provision ";
 $text['button-provision']['de-at'] = "Bereitstellen";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>

@@ -553,7 +553,14 @@ require_once "resources/require.php";
 		else {
 			$domain_name = $_SESSION['domain_name'];
 		}
-		echo "		window.location = 'https://".$domain_name."/app/provision?mac=$device_mac_address&file=' + d + '&content_type=application/octet-stream';\n";
+
+		if (!isset($_SERVER['HTTP_PROTOCOL'])) {
+			$_SERVER['HTTP_PROTOCOL'] = 'http';
+			if (isset($_SERVER['REQUEST_SCHEME'])) { $_SERVER['HTTP_PROTOCOL'] = $_SERVER['REQUEST_SCHEME']; }
+			if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+			if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+		}
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$domain_name."/app/provision?mac=".$device_mac_address."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -602,8 +609,11 @@ require_once "resources/require.php";
 			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 			echo "			<option value=''>".$text['label-download']."</option>\n";
 			foreach ($files as $file) {
+				//format the mac address and 
+					$format = new provision();
+					$mac = $format->format_mac($device_mac_address, $device_vendor);
 				//render the file name
-					$file_name = str_replace("{\$mac}",$device_mac_address,basename($file));
+					$file_name = str_replace("{\$mac}", $mac, basename($file));
 				//add the select option
 					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 			}
@@ -1036,6 +1046,48 @@ require_once "resources/require.php";
 					<option value='call park' <?php if ($row['device_key_type'] == "call park") { echo $selected;$found=true; } ?>><?php echo $text['label-call_park'] ?></option>
 					<option value='intercom' <?php if ($row['device_key_type'] == "intercom") { echo $selected;$found=true; } ?>><?php echo $text['label-intercom'] ?></option>
 					<option value='ldap search' <?php if ($row['device_key_type'] == "ldap search") { echo $selected;$found=true; } ?>><?php echo $text['label-ldap_search'] ?></option>
+					<?php
+					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
+				}
+				if (strtolower($device_vendor) == "mitel" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+					echo "<optgroup label='Mitel'>";
+					?>
+					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-none'] ?></option>
+					<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
+					<option value='27' <?php if ($row['device_key_type'] == "27") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
+					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
+					<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
+					<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>><?php echo $text['label-forward'] ?></option>
+					<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
+					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
+					<!--
+					0 - not programmed
+					1 - speed dial
+					2 - callLog
+					3 - advisoryMsg (on/off)
+					4 - headset(on/off)
+					5 - shared line
+					6 - Line 1
+					7 - Line 2
+					8 - Line 3
+					9 - Line 4
+					10 - Line 5
+					11 - Line 6
+					12 - Line 7
+					13 - Line 8
+					15 - phonebook
+					16 - call forwarding
+					17 - do not disturb
+					18 - PC Application
+					19 - RSS Feed URL / Branding /Notes
+					21 - Superkey (5304 set only)
+					22 - Redial key (5304 set only)
+					23 - Hold key (5304 set only)
+					24 - Trans/Conf key (5304 set only)
+					25 - Message key (5304 set only)
+					26 - Cancel key (5304 set only)
+					27 - Speed Dial & BLF
+					-->
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}

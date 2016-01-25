@@ -100,6 +100,7 @@
 			recording_slots = session:getVariable("recording_slots");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
+			record_ext = session:getVariable("record_ext");
 			domain_name = session:getVariable("domain_name");
 
 		--select the recording number
@@ -108,7 +109,7 @@
 				max_digits = 20;
 				session:sleep(1000);
 				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
-				recording_name = recording_prefix..recording_number..".wav";
+				recording_name = recording_prefix..recording_number.."."..record_ext;
 			end
 
 		--set the default recording name if one was not provided
@@ -116,7 +117,7 @@
 				--recording name is provided do nothing
 			else
 				--set a default recording_name
-				recording_name = "temp_"..session:get_uuid()..".wav";
+				recording_name = "temp_"..session:get_uuid().."."..record_ext;
 			end
 
 		--prompt for the recording

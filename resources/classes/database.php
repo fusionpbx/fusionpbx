@@ -54,10 +54,10 @@ include "root.php";
 				if (strlen($this->type) == 0 && strlen($this->db_name) == 0) {
 					//include config.php
 						include "root.php";
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
-						} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
-							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+						if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+							include $_SERVER["PROJECT_ROOT"]."/resources/config.php";
+						} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+							include $_SERVER["PROJECT_ROOT"]."/resources/config.php";
 						} elseif (file_exists("/etc/fusionpbx/config.php")){
 							//linux
 							include "/etc/fusionpbx/config.php";

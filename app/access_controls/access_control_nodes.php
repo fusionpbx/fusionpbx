@@ -10,9 +10,13 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //additional includes
 	require_once "resources/header.php";

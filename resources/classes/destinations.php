@@ -97,6 +97,11 @@ class destinations {
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 			$y++;
+			$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
+			$this->destinations[$x]['result']['data'][$y]['destination'] = '';
+			$y++;
 			$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
 			$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
 			$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
@@ -181,7 +186,7 @@ class destinations {
 				$destination = $row['field']['destination'];
 
 				//add multi-lingual support
-				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/".$name."/app_languages.php")) {
+				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
@@ -211,7 +216,7 @@ class destinations {
 											}
 											else {
 												$label = $data['label'];
-												$select_label = str_replace("\${".$key."}", $text2['option-'.$label]."215", $select_label);
+												$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 											}
 										}
 									}
@@ -227,8 +232,13 @@ class destinations {
 										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
 									}
 								}
+								//application: hangup
+								if (strlen($data['application']) > 0) {
+									$select_value = str_replace("transfer", $data['application'], $select_value);
+								}
 							}
 						}
+
 						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
 						$select_value = str_replace("\${context}", $_SESSION['context'], $select_value); //to do: context can come from the array
 						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);

@@ -53,18 +53,6 @@ include "root.php";
 				case "00085d":
 					$device_vendor = "aastra";
 					break;
-				case "000e08":
-					$device_vendor = "linksys";
-					break;
-				case "0004f2":
-					$device_vendor = "polycom";
-					break;
-				case "00907a":
-					$device_vendor = "polycom";
-					break;
-				case "0080f0":
-					$device_vendor = "panasonic";
-					break;
 				case "001873":
 					$device_vendor = "cisco";
 					break;
@@ -83,23 +71,38 @@ include "root.php";
 				case "68efbd":
 					$device_vendor = "cisco";
 					break;
+				case "000b82":
+					$device_vendor = "grandstream";
+					break;
+				case "00177d":
+					$device_vendor = "konftel";
+					break;
 				case "00045a":
 					$device_vendor = "linksys";
 					break;
 				case "000625":
 					$device_vendor = "linksys";
 					break;
-				case "001565":
-					$device_vendor = "yealink";
+				case "000e08":
+					$device_vendor = "linksys";
+					break;
+				case "08000f":
+					$device_vendor = "mitel";
+					break;
+				case "0080f0":
+					$device_vendor = "panasonic";
+					break;
+				case "0004f2":
+					$device_vendor = "polycom";
+					break;
+				case "00907a":
+					$device_vendor = "polycom";
 					break;
 				case "000413":
 					$device_vendor = "snom";
 					break;
-				case "000b82":
-					$device_vendor = "grandstream";
-					break;
-				case "00177d":
-					$device_vendor = "konftel";
+				case "001565":
+					$device_vendor = "yealink";
 					break;
 				default:
 					$device_vendor = "";

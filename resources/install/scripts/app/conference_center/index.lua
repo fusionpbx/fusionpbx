@@ -449,7 +449,7 @@
 						AND m.domain_uuid = ']] .. domain_uuid ..[['
 						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[') 
 						AND r.enabled = 'true'
-						AND r.enabled = 'true'
+						AND m.enabled = 'true'
 						AND (
 								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
 								( r.start_datetime = '' OR r.start_datetime is null ) 
@@ -496,7 +496,9 @@
 					AND r.conference_center_uuid = ']] .. conference_center_uuid ..[['
 					AND m.domain_uuid = ']] .. domain_uuid ..[['
 					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-					AND r.enabled = 'true' ]];
+					AND r.enabled = 'true' 
+					AND m.enabled = 'true'
+					]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
 				end

@@ -70,7 +70,7 @@
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //add rating functions if the billing is installed
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		require_once "app/billing/resources/functions/rating.php";
 	}
 
@@ -246,7 +246,7 @@
 			}
 
 		//billing information
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
@@ -290,7 +290,7 @@
 					case "inbound":
 							$callee_number = check_str(urldecode($row->caller_profile->destination_number));
 							$callee_number_serie = number_series($callee_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($callee_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";

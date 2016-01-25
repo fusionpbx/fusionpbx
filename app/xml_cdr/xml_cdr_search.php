@@ -53,8 +53,12 @@ echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').foc
 echo "		}";
 echo "	}";
 echo "</script>";
-	
-echo "<form method='post' action='xml_cdr.php'>\n";
+
+if (strlen(check_str($_GET['redirect'])) > 0) {
+	echo "<form method='get' action='" . $_GET['redirect'] . ".php'>\n";
+} else {
+	echo "<form method='post' action='xml_cdr.php'>\n";
+}
 
 echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
@@ -160,6 +164,12 @@ echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-duration']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='$duration'></td>";
 echo "	</tr>";
+if (permission_exists('xml_cdr_all')) {
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['button-show_all']."</td>";
+	echo "		<td class='vtable'><input type='checkbox' class='formfld' name='showall' value='true'></td>";
+	echo "	</tr>";
+}
 echo "</table>";
 
 echo "		</td>";

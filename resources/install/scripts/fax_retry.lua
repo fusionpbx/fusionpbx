@@ -457,8 +457,8 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY_STATS FAILURE BAD NUMBER: GATEWAY[".. fax_uri .."]");
 				email_message_fail = email_message_fail.."We tried sending, but the number entered was not a working phone number "
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was INVALID",
 									email_message_fail ,
 									fax_file
@@ -470,8 +470,8 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE BUSY: GATEWAY[".. fax_uri .."], BUSY NUMBER");
 				email_message_fail = email_message_fail.."  We tried sending, but the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was BUSY",
 									email_message_fail ,
 									fax_file
@@ -485,8 +485,8 @@
 				email_message_fail = email_message_fail.."  We tried sending 5 times ways.  You may also want to know that the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
 
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." FAILED",
 									email_message_fail ,
 									fax_file
@@ -521,8 +521,8 @@
 		freeswitch.consoleLog("INFO", "[FAX] RETRY STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]");
 		email_address = email_address:gsub("\\,", ",");
 
-		freeswitch.email("",
-				"",
+		freeswitch.email(email_address,
+				email_address,
 				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
 				email_message_success ,
 				fax_file

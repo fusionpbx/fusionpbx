@@ -65,7 +65,7 @@ else {
 		if (if_group("superadmin")){
 			$broadcast_accountcode = check_str($_POST["broadcast_accountcode"]);
 		}
-		elseif (if_group("admin") && file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		elseif (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 			$sql_accountcode = "SELECT COUNT(*) as count FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."' AND type_value='".$_POST["accountcode"]."'";
 			$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
 			$prep_statement_accountcode->execute();
@@ -277,7 +277,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	}elseif (if_group("admin") &&  file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	}elseif (if_group("admin") &&  file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."'";
 
 		echo "<tr>\n";

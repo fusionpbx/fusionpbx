@@ -113,7 +113,7 @@ else {
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		if ($_GET['showall'] != 'true') {
+		if ($_REQUEST['showall'] != 'true') {
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
 		}
 	}
@@ -325,7 +325,7 @@ else {
 		$col_count++;
 	}
 	echo "<th>&nbsp;</th>\n";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 		$col_count++;
 	}
@@ -339,7 +339,7 @@ else {
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
 	echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		// billing collumns
 		echo "<th>".$text['label-price']."</th>\n";
 		$col_count++;
@@ -362,18 +362,12 @@ else {
 		$col_count++;
 	}
 	echo "</tr>\n";
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		require_once "app/billing/resources/functions/rating.php";
 		require_once "resources/classes/database.php";
 		$database = new database;
 	}
 
-	if (count($_SESSION['domains']) == 1) { // add to path if single-tenant
-		$path_mod = $_SESSION["domain_name"];
-	}
-	else {
-		$path_mod = "";
-	}
 	if ($result_count > 0) {
 		foreach($result as $index => $row) {
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
@@ -396,7 +390,8 @@ else {
 
 			//handle recordings
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_rel_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION["domain_name"].$tmp_rel_path;
 				$tmp_name = '';
 				if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
 					$tmp_name=$row['recording_file'];
@@ -426,7 +421,7 @@ else {
 					$tmp_name = $row['bridge_uuid']."_1.mp3";
 				}
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name) && $seconds > 0) {
-					$recording_file_path = '/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
+					$recording_file_path = $tmp_rel_path.'/'.$tmp_name;
 					$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
 					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
 					switch ($recording_file_ext) {
@@ -446,7 +441,7 @@ else {
 			}
 
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_GET['showall']) ? "&showall=true" : null)."'";
+				$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
 			}
 			else {
 				$tr_link = null;
@@ -495,7 +490,7 @@ else {
 			else {
 				echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
 			}
-			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+			if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				echo 	$row['domain_name'].'&nbsp;';
 				echo "	</td>\n";
@@ -548,7 +543,7 @@ else {
 
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".gmdate("G:i:s", $seconds)."</td>\n";
 
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 
 				$database->table = "v_xml_cdr";
 				$accountcode = (strlen($row["accountcode"])?$row["accountcode"]:$_SESSION[domain_name]);
