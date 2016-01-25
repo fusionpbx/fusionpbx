@@ -336,8 +336,14 @@
 								do_not_disturb = row.do_not_disturb;
 
 							-- check matching UserID and AuthName
-								if sip_auth_method and (METHODS[sip_auth_method] or METHODS._ANY_) then
-									continue = (sip_from_user == user) and ((sip_from_number == from_user) or (from_user == user))
+								if sip_auth_method then
+									local check_from_number = METHODS[sip_auth_method] or METHODS._ANY_
+									if DIAL_STRING_BASED_ON_USERID then
+										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == sip_from_number))
+									else
+										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == user))
+									end
+
 									if not continue then
 										XML_STRING = nil;
 										return 1;
@@ -625,14 +631,23 @@
 					end
 			end
 
-			if XML_STRING and (not loaded_from_db)
-				and sip_auth_method and (METHODS[sip_auth_method] or METHODS._ANY_)
-			then
-					local user_id = api:execute("user_data", from_user .. "@" .. domain_name .." attr id")
-				--disable registration for number-alias and foreign number_alias
-					if user_id ~= user then
+			if XML_STRING and (not loaded_from_db) and sip_auth_method then
+				local user_id = api:execute("user_data", from_user .. "@" .. domain_name .." attr id")
+				if user_id ~= user then
+					XML_STRING = nil;
+				elseif METHODS[sip_auth_method] or METHODS._ANY_ then
+					local alias
+					if DIAL_STRING_BASED_ON_USERID then
+						alias = api:execute("user_data", from_user .. "@" .. domain_name .." attr number-alias")
+					end
+					if alias and #alias > 0 then
+						if from_user ~= alias then
+							XML_STRING = nil
+						end
+					elseif from_user ~= user_id then
 						XML_STRING = nil;
 					end
+				end
 			end
 
 		--get the XML string from the cache
