@@ -53,11 +53,15 @@ include "root.php";
 				$text = $language->get(null, 'app/music_on_hold');
 
 				$moh_list[''] = $text['opt-default'];
-				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music"."/".$_SESSION['domain_name'];
-				$array = glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR);
+				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
+				$array = array_merge(glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR), glob($music_on_hold_dir."/".$_SESSION['domain_name']."/*/*", GLOB_ONLYDIR));
 				foreach($array as $moh_dir) {
 				//set the directory
 					$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
+					if (stristr($moh_dir, $_SESSION['domain_name'])) {
+						$domain_moh = 1;
+						$moh_dir = substr($moh_dir, strlen($_SESSION['domain_name']."/"));
+					}
 				//get and set the rate
 					$sub_array = explode("/", $moh_dir);
 					$moh_rate = end($sub_array);
@@ -65,7 +69,7 @@ include "root.php";
 					$moh_name = $moh_dir;
 					$moh_name = substr($moh_dir, 0, strlen($moh_name)-(strlen($moh_rate)));
 					$moh_name = rtrim($moh_name, "/");
-					if (count($_SESSION['domains']) > 1) {
+					if ($domain_moh) {
 						$moh_value = "local_stream://".$_SESSION['domain_name']."/".$moh_name;
 					}
 					else {
