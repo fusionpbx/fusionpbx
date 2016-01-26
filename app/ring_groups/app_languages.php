@@ -11,7 +11,7 @@ $text['title-ring_groups']['uk'] = "Групи";
 $text['title-ring_groups']['de-at'] = "Rufgruppen";
 $text['title-ring_groups']['he'] = "קבוצות חיוג";
 
-$text['label-music_on_hold']['en-us'] = "Muisc On Hold";
+$text['label-music']['en-us'] = "Muisc";
 $text['label-ringback']['en-us'] = "Ringback";
 $text['label-recordings']['en-us'] = "Recordings";
 

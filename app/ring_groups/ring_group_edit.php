@@ -656,7 +656,7 @@ else {
 		$moh = new switch_music_on_hold;
 		$moh_list = $moh->list_moh();
 		if (sizeof($moh_list) > 0) {
-			echo "    <optgroup label='".$text['label-music_on_hold']."'>";
+			echo "    <optgroup label='".$text['label-music']."'>";
 			foreach($moh_list as $value => $name){
 				echo "		<option value='$value'".(($ring_group_ringback == $value) ? ' selected="selected"' : '').">$name</option>\n";
 			}
