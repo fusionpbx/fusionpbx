@@ -11,34 +11,6 @@ $text['title-ring_groups']['uk'] = "Групи";
 $text['title-ring_groups']['de-at'] = "Rufgruppen";
 $text['title-ring_groups']['he'] = "קבוצות חיוג";
 
-$text['label-music']['en-us'] = "Muisc";
-$text['label-ringback']['en-us'] = "Ringback";
-$text['label-recordings']['en-us'] = "Recordings";
-
-$text['option-default_ringback']['en-us'] = "default ringback";
-
-$text['option-us-ring']['en-us'] = "us-ring";
-$text['option-us-ring']['es-cl'] = "us-ring";
-$text['option-us-ring']['fr-fr'] = "États-Unis";
-$text['option-us-ring']['pt-pt'] = "us-ring";
-$text['option-us-ring']['pt-br'] = "USRing";
-$text['option-us-ring']['pl'] = "us-ring";
-$text['option-us-ring']['sv-se'] = "us-ring";
-$text['option-us-ring']['uk'] = "us-ring";
-$text['option-us-ring']['de-at'] = "us-ring";
-$text['option-us-ring']['he'] = "צלצול אמריקאי";
-
-$text['option-uk-ring']['en-us'] = "uk-ring";
-$text['option-uk-ring']['es-cl'] = "uk-ring";
-$text['option-uk-ring']['fr-fr'] = "Grande Bretagne";
-$text['option-uk-ring']['pt-pt'] = "uk-ring";
-$text['option-uk-ring']['pt-br'] = "UKRing";
-$text['option-uk-ring']['pl'] = "uk-ring ";
-$text['option-uk-ring']['sv-se'] = "uk-ring";
-$text['option-uk-ring']['uk'] = "uk-ring";
-$text['option-uk-ring']['de-at'] = "uk-ring";
-$text['option-uk-ring']['he'] = "צלצול אנגלי";
-
 $text['option-simultaneous']['en-us'] = "Simultaneous";
 $text['option-simultaneous']['es-cl'] = "Simultaneos";
 $text['option-simultaneous']['fr-fr'] = "Simultané";
@@ -93,39 +65,6 @@ $text['option-random']['sv-se'] = "";
 $text['option-random']['uk'] = "";
 $text['option-random']['de-at'] = "";
 $text['option-random']['he'] = "";
-
-$text['option-pt-ring']['en-us'] = "pt-ring";
-$text['option-pt-ring']['es-cl'] = "pt-ring";
-$text['option-pt-ring']['fr-fr'] = "Portugal";
-$text['option-pt-ring']['pt-pt'] = "pt-ring";
-$text['option-pt-ring']['pt-br'] = "PTRing";
-$text['option-pt-ring']['pl'] = "pt-ring ";
-$text['option-pt-ring']['sv-se'] = "pt-ring";
-$text['option-pt-ring']['uk'] = "pt-ring";
-$text['option-pt-ring']['de-at'] = "pt-ring";
-$text['option-pt-ring']['he'] = "צלצול פולני";
-
-$text['option-it-ring']['en-us'] = "it-ring";
-$text['option-it-ring']['es-cl'] = "it-ring";
-$text['option-it-ring']['fr-fr'] = "Italie";
-$text['option-it-ring']['pt-pt'] = "it-ring";
-$text['option-it-ring']['pt-br'] = "ITRing";
-$text['option-it-ring']['pl'] = "it-ring ";
-$text['option-it-ring']['sv-se'] = "it-ring";
-$text['option-it-ring']['uk'] = "it-ring";
-$text['option-it-ring']['de-at'] = "it-ring";
-$text['option-it-ring']['he'] = "צלצול איטלקי";
-
-$text['option-fr-ring']['en-us'] = "fr-ring";
-$text['option-fr-ring']['es-cl'] = "fr-ring";
-$text['option-fr-ring']['fr-fr'] = "France";
-$text['option-fr-ring']['pt-pt'] = "fr-ring";
-$text['option-fr-ring']['pt-br'] = "FRRing";
-$text['option-fr-ring']['pl'] = "fr-ring ";
-$text['option-fr-ring']['sv-se'] = "fr-ring";
-$text['option-fr-ring']['uk'] = "fr-ring";
-$text['option-fr-ring']['de-at'] = "fr-ring";
-$text['option-fr-ring']['he'] = "צלצול צרפתי";
 
 $text['option-enterprise']['en-us'] = "Enterprise";
 $text['option-enterprise']['es-cl'] = "Compañia";

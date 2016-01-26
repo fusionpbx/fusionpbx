@@ -135,26 +135,20 @@
 	end
 
 --set ringback
-	if (ivr_menu_ringback == "${uk-ring}") then
-		ivr_menu_ringback = "tone_stream://%(400,200,400,450);%(400,2200,400,450);loops=-1";
+	if (ivr_menu_ringback == "default_ringback") then
+		ivr_menu_ringback = session:getVariable("ringback");
 	end
-	if (ivr_menu_ringback == "${us-ring}") then
-		ivr_menu_ringback = "tone_stream://%(2000,4000,440.0,480.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${pt-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,5000,400.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${fr-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1500,3500,440.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${rs-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${it-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == nil or ivr_menu_ringback == "") then
-		ivr_menu_ringback = "local_stream://default";
+	if (ivr_menu_ringback:match("%${.*}")) then
+		ivr_menu_ringback = ivr_menu_ringback:gsub("%${", "");
+		ivr_menu_ringback = ivr_menu_ringback:gsub("}", "");
+		ivr_menu_ringback = session:getVariable(ivr_menu_ringback);
+		if (ivr_menu_ringback == "") then
+		--fallback to us-ring
+			ivr_menu_ringback = session:getVariable("us-ring");
+		end
+		ivr_menu_ringback = "tone_stream://" .. ivr_menu_ringback .. ";loops=-1";
+	elseif (ivr_menu_ringback == "") then
+		ivr_menu_ringback = session:getVariable(hold_music);
 	end
 	session:setVariable("ringback", ivr_menu_ringback);
 	session:setVariable("transfer_ringback", ivr_menu_ringback);
