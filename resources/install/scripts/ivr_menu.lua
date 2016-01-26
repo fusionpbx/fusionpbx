@@ -38,6 +38,9 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+--include functions
+	require "resources.functions.get_ringback"
+
 --get the variables
 	domain_name = session:getVariable("domain_name");
 	context = session:getVariable("context");
@@ -135,21 +138,7 @@
 	end
 
 --set ringback
-	if (ivr_menu_ringback == "default_ringback") then
-		ivr_menu_ringback = session:getVariable("ringback");
-	end
-	if (ivr_menu_ringback:match("%${.*}")) then
-		ivr_menu_ringback = ivr_menu_ringback:gsub("%${", "");
-		ivr_menu_ringback = ivr_menu_ringback:gsub("}", "");
-		ivr_menu_ringback = session:getVariable(ivr_menu_ringback);
-		if (ivr_menu_ringback == "") then
-		--fallback to us-ring
-			ivr_menu_ringback = session:getVariable("us-ring");
-		end
-		ivr_menu_ringback = "tone_stream://" .. ivr_menu_ringback .. ";loops=-1";
-	elseif (ivr_menu_ringback == "") then
-		ivr_menu_ringback = session:getVariable(hold_music);
-	end
+	ivr_menu_ringback = get_ringback(ivr_menu_ringback);
 	session:setVariable("ringback", ivr_menu_ringback);
 	session:setVariable("transfer_ringback", ivr_menu_ringback);
 

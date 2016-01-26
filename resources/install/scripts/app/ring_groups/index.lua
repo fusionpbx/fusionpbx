@@ -39,6 +39,7 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
+	require "resources.functions.get_ringback"
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -321,21 +322,7 @@ local log = require "resources.functions.log".ring_group
 					domain_name = row.domain_name;
 
 				--set ringback
-					if (ring_group_ringback == "default_ringback") then
-						ring_group_ringback = session:getVariable("ringback");
-					end
-					if (ring_group_ringback:match("%${.*}")) then
-						ring_group_ringback = ring_group_ringback:gsub("%${", "");
-						ring_group_ringback = ring_group_ringback:gsub("}", "");
-						ring_group_ringback = session:getVariable(ring_group_ringback);
-						if (ring_group_ringback == "") then
-						--fallback to us-ring
-							ring_group_ringback = session:getVariable("us-ring");
-						end
-						ring_group_ringback = "tone_stream://" .. ring_group_ringback .. ";loops=-1";
-					elseif (ring_group_ringback == "") then
-						ring_group_ringback = session:getVariable(hold_music);
-					end
+					ring_group_ringback = get_ringback(ring_group_ringback);
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
 
