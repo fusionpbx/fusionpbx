@@ -132,6 +132,12 @@ include "root.php";
 			case "aastra":
 				$mac = strtoupper($mac);
 				break;
+			case "cisco":
+				$mac = strtoupper($mac);
+				break;
+			case "linksys":
+				$mac = strtolower($mac);
+				break;
 			case "mitel":
 				$mac = strtoupper($mac);
 				break;
