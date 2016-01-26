@@ -174,12 +174,13 @@ include "root.php";
 			$tmp_config .= "	//pgsql: database connection information\n";
 			if ($this->global_settings->db_type() == "pgsql") {
 				$db_host = $this->global_settings->db_host();
-				$comment_out = '';
-				if ( $db_host == "localhost" or $db_host == "127.0.0.1") {
-					//if localhost or 127.0.0.1 we want it to default to a Unix Socket.
-					$comment_out = "//";
-				}
-				$tmp_config .= "		$comment_out\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
+				//Unix Socket - if localhost or 127.0.0.1 we want it to default to a Unix Socket.
+				//$comment_out = '';
+				//if ( $db_host == "localhost" or $db_host == "127.0.0.1") {
+				//	$comment_out = "//";
+				//}
+				//$tmp_config .= "		$comment_out\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
+				$tmp_config .= "		\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
 				$tmp_config .= "		\$db_port = '".$this->global_settings->db_port()."';\n";
 				$tmp_config .= "		\$db_name = '".$this->global_settings->db_name()."';\n";
 				$tmp_config .= "		\$db_username = '".$this->global_settings->db_username()."';\n";
