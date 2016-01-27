@@ -42,7 +42,7 @@ function save_phrases_xml() {
 			}
 
 			//build xml
-			$xml .= "	<macro name=\"".$row['phrase_name'].".".$domain_uuid."\">\n";
+			$xml .= "	<macro name=\"".$row['phrase_uuid']."\">\n";
 			$xml .= "		<input pattern=\"(.*)\">\n";
 			$xml .= "			<match>\n";
 
