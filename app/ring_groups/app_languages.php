@@ -11,28 +11,6 @@ $text['title-ring_groups']['uk'] = "Групи";
 $text['title-ring_groups']['de-at'] = "Rufgruppen";
 $text['title-ring_groups']['he'] = "קבוצות חיוג";
 
-$text['option-usring']['en-us'] = "us-ring";
-$text['option-usring']['es-cl'] = "us-ring";
-$text['option-usring']['fr-fr'] = "États-Unis";
-$text['option-usring']['pt-pt'] = "us-ring";
-$text['option-usring']['pt-br'] = "USRing";
-$text['option-usring']['pl'] = "us-ring";
-$text['option-usring']['sv-se'] = "us-ring";
-$text['option-usring']['uk'] = "us-ring";
-$text['option-usring']['de-at'] = "us-ring";
-$text['option-usring']['he'] = "צלצול אמריקאי";
-
-$text['option-ukring']['en-us'] = "uk-ring";
-$text['option-ukring']['es-cl'] = "uk-ring";
-$text['option-ukring']['fr-fr'] = "Grande Bretagne";
-$text['option-ukring']['pt-pt'] = "uk-ring";
-$text['option-ukring']['pt-br'] = "UKRing";
-$text['option-ukring']['pl'] = "uk-ring ";
-$text['option-ukring']['sv-se'] = "uk-ring";
-$text['option-ukring']['uk'] = "uk-ring";
-$text['option-ukring']['de-at'] = "uk-ring";
-$text['option-ukring']['he'] = "צלצול אנגלי";
-
 $text['option-simultaneous']['en-us'] = "Simultaneous";
 $text['option-simultaneous']['es-cl'] = "Simultaneos";
 $text['option-simultaneous']['fr-fr'] = "Simultané";
@@ -55,16 +33,16 @@ $text['option-sequence']['uk'] = "";
 $text['option-sequence']['de-at'] = "sequenziell";
 $text['option-sequence']['he'] = "אחד אחרי השני";
 
-$text['option-rsring']['en-us'] = "rs-ring";
-$text['option-rsring']['es-cl'] = "rs-ring";
-$text['option-rsring']['fr-fr'] = "Serbie";
-$text['option-rsring']['pt-pt'] = "rs-ring";
-$text['option-rsring']['pt-br'] = "RSRing";
-$text['option-rsring']['pl'] = "rs-ring";
-$text['option-rsring']['sv-se'] = "rs-ring";
-$text['option-rsring']['uk'] = "rs-ring";
-$text['option-rsring']['de-at'] = "rs-ring";
-$text['option-rsring']['he'] = "צלצול רוסי";
+$text['option-rs-ring']['en-us'] = "rs-ring";
+$text['option-rs-ring']['es-cl'] = "rs-ring";
+$text['option-rs-ring']['fr-fr'] = "Serbie";
+$text['option-rs-ring']['pt-pt'] = "rs-ring";
+$text['option-rs-ring']['pt-br'] = "RSRing";
+$text['option-rs-ring']['pl'] = "rs-ring";
+$text['option-rs-ring']['sv-se'] = "rs-ring";
+$text['option-rs-ring']['uk'] = "rs-ring";
+$text['option-rs-ring']['de-at'] = "rs-ring";
+$text['option-rs-ring']['he'] = "צלצול רוסי";
 
 $text['option-rollover']['en-us'] = "Rollover";
 $text['option-rollover']['es-cl'] = "Rollover";
@@ -87,39 +65,6 @@ $text['option-random']['sv-se'] = "";
 $text['option-random']['uk'] = "";
 $text['option-random']['de-at'] = "";
 $text['option-random']['he'] = "";
-
-$text['option-ptring']['en-us'] = "pt-ring";
-$text['option-ptring']['es-cl'] = "pt-ring";
-$text['option-ptring']['fr-fr'] = "Portugal";
-$text['option-ptring']['pt-pt'] = "pt-ring";
-$text['option-ptring']['pt-br'] = "PTRing";
-$text['option-ptring']['pl'] = "pt-ring ";
-$text['option-ptring']['sv-se'] = "pt-ring";
-$text['option-ptring']['uk'] = "pt-ring";
-$text['option-ptring']['de-at'] = "pt-ring";
-$text['option-ptring']['he'] = "צלצול פולני";
-
-$text['option-itring']['en-us'] = "it-ring";
-$text['option-itring']['es-cl'] = "it-ring";
-$text['option-itring']['fr-fr'] = "Italie";
-$text['option-itring']['pt-pt'] = "it-ring";
-$text['option-itring']['pt-br'] = "ITRing";
-$text['option-itring']['pl'] = "it-ring ";
-$text['option-itring']['sv-se'] = "it-ring";
-$text['option-itring']['uk'] = "it-ring";
-$text['option-itring']['de-at'] = "it-ring";
-$text['option-itring']['he'] = "צלצול איטלקי";
-
-$text['option-frring']['en-us'] = "fr-ring";
-$text['option-frring']['es-cl'] = "fr-ring";
-$text['option-frring']['fr-fr'] = "France";
-$text['option-frring']['pt-pt'] = "fr-ring";
-$text['option-frring']['pt-br'] = "FRRing";
-$text['option-frring']['pl'] = "fr-ring ";
-$text['option-frring']['sv-se'] = "fr-ring";
-$text['option-frring']['uk'] = "fr-ring";
-$text['option-frring']['de-at'] = "fr-ring";
-$text['option-frring']['he'] = "צלצול צרפתי";
 
 $text['option-enterprise']['en-us'] = "Enterprise";
 $text['option-enterprise']['es-cl'] = "Compañia";
