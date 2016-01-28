@@ -38,6 +38,9 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+--include functions
+	require "resources.functions.format_ringback"
+
 --get the variables
 	domain_name = session:getVariable("domain_name");
 	context = session:getVariable("context");
@@ -135,27 +138,7 @@
 	end
 
 --set ringback
-	if (ivr_menu_ringback == "${uk-ring}") then
-		ivr_menu_ringback = "tone_stream://%(400,200,400,450);%(400,2200,400,450);loops=-1";
-	end
-	if (ivr_menu_ringback == "${us-ring}") then
-		ivr_menu_ringback = "tone_stream://%(2000,4000,440.0,480.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${pt-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,5000,400.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${fr-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1500,3500,440.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${rs-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == "${it-ring}") then
-		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-	end
-	if (ivr_menu_ringback == nil or ivr_menu_ringback == "") then
-		ivr_menu_ringback = "local_stream://default";
-	end
+	ivr_menu_ringback = format_ringback(ivr_menu_ringback);
 	session:setVariable("ringback", ivr_menu_ringback);
 	session:setVariable("transfer_ringback", ivr_menu_ringback);
 
