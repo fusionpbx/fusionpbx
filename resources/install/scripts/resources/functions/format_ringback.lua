@@ -1,22 +1,21 @@
 
 --add the format_ringback function
-	function format_ringback ( ringback ) 
-		if (ringback == "default_ringback") then
-			--fetch the default_ringback
-			ringback = session:getVariable("ringback");
-		end
-		if (ringback:match("%${.*}")) then
-			ringback = ringback:gsub("%${", "");
-			ringback = ringback:gsub("}", "");
-			ringback = session:getVariable(ringback);
-			if (ringback == "") then
+	function format_ringback (ringback) 
+		if (ringback == nil or ringback == "") then
+			--get the default ring back
+				ringback = session:getVariable("hold_music");
+		elseif (ringback:match("%${.*}")) then
+			--strip the ${ and }
+				ringback = ringback:gsub("%${", "");
+				ringback = ringback:gsub("}", "");
+			--get the ringback variable
+				ringback = session:getVariable(ringback);
 			--fallback to us-ring
-				ringback = session:getVariable("us-ring");
-			end
+				if (ringback == "") then
+					ringback = session:getVariable("us-ring");
+				end
 			--convert to tone_stream
-			ringback = "tone_stream://" .. ringback .. ";loops=-1";
-		elseif (ringback == "") then
-			ringback = session:getVariable(hold_music);
+				ringback = "tone_stream://" .. ringback .. ";loops=-1";
 		end
 		return ringback;
 	end
