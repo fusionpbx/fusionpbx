@@ -292,6 +292,16 @@
 
 		-- prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 			if pass == false then
+				log.errf('context: %s, extension: %s, type: %s, data: %s ',
+					call_context,
+					dialplan_name or '----',
+					dialplan_detail_tag or '----',
+					dialplan_detail_data or '----'
+				)
+
+				--close the database connection
+					dbh:release();
+
 				error('error while build context: ' .. call_context)
 			end
 
