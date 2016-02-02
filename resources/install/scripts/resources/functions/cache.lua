@@ -9,11 +9,15 @@
 require "resources.functions.trim";
 
 local api = api 
-if (not api) and freeswitch then api = freeswitch.API() else
-api = {}
-function api:execute()
-  return '-ERR UNSUPPORTTED'
-end
+if not api then
+  if freeswitch then
+    api = freeswitch.API()
+  else
+    api = {}
+    function api:execute()
+      return '-ERR UNSUPPORTTED'
+    end
+  end
 end
 
 local function send_event(action, key)
