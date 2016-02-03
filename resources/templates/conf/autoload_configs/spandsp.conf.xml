@@ -24,7 +24,7 @@
     </modem-settings>
 
     <fax-settings>
-	<param name="use-ecm"		value="true"/>
+	<param name="use-ecm"		value="false"/>
 	<param name="verbose"		value="false"/>
 	<param name="disable-v17"	value="false"/>
 	<param name="ident"		value="SpanDSP Fax Ident"/>

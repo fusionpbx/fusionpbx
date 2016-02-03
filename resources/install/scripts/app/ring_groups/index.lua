@@ -39,6 +39,7 @@ local log = require "resources.functions.log".ring_group
 	require "resources.functions.base64";
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
+	require "resources.functions.format_ringback"
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -321,27 +322,7 @@ local log = require "resources.functions.log".ring_group
 					domain_name = row.domain_name;
 
 				--set ringback
-					if (ring_group_ringback == "${uk-ring}") then
-						ring_group_ringback = "tone_stream://%(400,200,400,450);%(400,2200,400,450);loops=-1";
-					end
-					if (ring_group_ringback == "${us-ring}") then
-						ring_group_ringback = "tone_stream://%(2000,4000,440.0,480.0);loops=-1";
-					end
-					if (ring_group_ringback == "${pt-ring}") then
-						ring_group_ringback = "tone_stream://%(1000,5000,400.0,0.0);loops=-1";
-					end
-					if (ring_group_ringback == "${fr-ring}") then
-						ring_group_ringback = "tone_stream://%(1500,3500,440.0,0.0);loops=-1";
-					end
-					if (ring_group_ringback == "${rs-ring}") then
-						ring_group_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-					end
-					if (ring_group_ringback == "${it-ring}") then
-						ring_group_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
-					end
-					if (ring_group_ringback == "") then
-						ring_group_ringback = "local_stream://default";
-					end
+					ring_group_ringback = format_ringback(ring_group_ringback);
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
 

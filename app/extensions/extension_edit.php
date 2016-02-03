@@ -1729,42 +1729,44 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-user_record']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='user_record'>\n";
-	echo "    <option value=''>".$text['label-user_record_none']."</option>\n";
-	if ($user_record == "all") {
-		echo "    <option value='all' selected='selected'>".$text['label-user_record_all']."</option>\n";
+	if (permission_exists('extension_user_record')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-user_record']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='user_record'>\n";
+		echo "    <option value=''>".$text['label-user_record_none']."</option>\n";
+		if ($user_record == "all") {
+			echo "    <option value='all' selected='selected'>".$text['label-user_record_all']."</option>\n";
+		}
+		else {
+			echo "    <option value='all'>".$text['label-user_record_all']."</option>\n";
+		}
+		if ($user_record == "local") {
+			echo "    <option value='local' selected='selected'>".$text['label-user_record_local']."</option>\n";
+		}
+		else {
+			echo "    <option value='local'>".$text['label-user_record_local']."</option>\n";
+		}
+		if ($user_record == "inbound") {
+			echo "    <option value='inbound' selected='selected'>".$text['label-user_record_inbound']."</option>\n";
+		}
+		else {
+			echo "    <option value='inbound'>".$text['label-user_record_inbound']."</option>\n";
+		}
+		if ($user_record == "outbound") {
+			echo "    <option value='outbound' selected='selected'>".$text['label-user_record_outbound']."</option>\n";
+		}
+		else {
+			echo "    <option value='outbound'>".$text['label-user_record_outbound']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-user_record']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "    <option value='all'>".$text['label-user_record_all']."</option>\n";
-	}
-	if ($user_record == "local") {
-		echo "    <option value='local' selected='selected'>".$text['label-user_record_local']."</option>\n";
-	}
-	else {
-		echo "    <option value='local'>".$text['label-user_record_local']."</option>\n";
-	}
-	if ($user_record == "inbound") {
-		echo "    <option value='inbound' selected='selected'>".$text['label-user_record_inbound']."</option>\n";
-	}
-	else {
-		echo "    <option value='inbound'>".$text['label-user_record_inbound']."</option>\n";
-	}
-	if ($user_record == "outbound") {
-		echo "    <option value='outbound' selected='selected'>".$text['label-user_record_outbound']."</option>\n";
-	}
-	else {
-		echo "    <option value='outbound'>".$text['label-user_record_outbound']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-user_record']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
 		echo "<tr>\n";

@@ -339,10 +339,10 @@
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="directory">]]);
 							table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-							table.insert(xml, [[            <params>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-methods" value="verto"/>]]);
-							table.insert(xml, [[                    <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
-							table.insert(xml, [[            </params>]]);
+							table.insert(xml, [[			<params>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-methods" value="verto"/>]]);
+							table.insert(xml, [[				<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[			</params>]]);
 							table.insert(xml, [[			<groups>]]);
 							table.insert(xml, [[				<group name="default">]]);
 							table.insert(xml, [[					<users>]]);
