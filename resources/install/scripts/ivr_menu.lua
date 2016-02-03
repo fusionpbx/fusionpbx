@@ -40,6 +40,7 @@
 
 --include functions
 	require "resources.functions.format_ringback"
+	require "resources.functions.split"
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
@@ -79,10 +80,8 @@
 		end
 	end
 
-
 --set default variable(s)
 	tries = 0;
-	option_found = "false";
 
 --define the trim function
 	require "resources.functions.trim"
@@ -142,12 +141,9 @@
 
 --get the sounds dir, language, dialect and voice
 	sounds_dir = session:getVariable("sounds_dir");
-	default_language = session:getVariable("default_language");
-	default_dialect = session:getVariable("default_dialect");
-	default_voice = session:getVariable("default_voice");
-	if (not default_language) then default_language = 'en'; end
-	if (not default_dialect) then default_dialect = 'us'; end
-	if (not default_voice) then default_voice = 'callie'; end
+	default_language = session:getVariable("default_language") or 'en';
+	default_dialect = session:getVariable("default_dialect") or 'us';
+	default_voice = session:getVariable("default_voice") or 'callie';
 
 --make the path relative
 	if (string.sub(ivr_menu_greet_long,0,71) == "$${sounds_dir}/${default_language}/${default_dialect}/${default_voice}/") then
@@ -164,16 +160,10 @@
 	end
 
 --parse file names
-	greet_long_file_name = ivr_menu_greet_long:match("([^/]+)$");
-	greet_short_file_name = ivr_menu_greet_short:match("([^/]+)$");
-	invalid_sound_file_name = ivr_menu_invalid_sound:match("([^/]+)$");
-	exit_sound_file_name = ivr_menu_exit_sound:match("([^/]+)$");
-
---prevent nil concatenation errors
-	if (greet_long_file_name == nil) then greet_long_file_name = ""; end
-	if (greet_short_file_name == nil) then greet_short_file_name = ""; end
-	if (invalid_sound_file_name == nil) then invalid_sound_file_name = ""; end
-	if (exit_sound_file_name == nil) then exit_sound_file_name = ""; end
+	greet_long_file_name = ivr_menu_greet_long:match("([^/]+)$") or "";
+	greet_short_file_name = ivr_menu_greet_short:match("([^/]+)$") or "";
+	invalid_sound_file_name = ivr_menu_invalid_sound:match("([^/]+)$") or "";
+	exit_sound_file_name = ivr_menu_exit_sound:match("([^/]+)$") or "";
 
 --get the recordings from the database
 	ivr_menu_greet_long_is_base64 = false;
@@ -295,7 +285,7 @@
 			end
 		end
 	--greet short
-		if (string.len(ivr_menu_greet_short) > 1) then
+		if #ivr_menu_greet_short > 1 then
 			if (not file_exists(ivr_menu_greet_short)) then
 				if (file_exists(recordings_dir.."/"..domain_name.."/"..greet_short_file_name)) then
 					ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..greet_short_file_name;
@@ -325,44 +315,49 @@
 
 --define the ivr menu
 	function menu()
-		--increment the tries
-		tries = tries + 1;
-		min_digits = 1;
-		session:setVariable("slept", "false");
-		if (tries == 1) then
-			if (debug["tries"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_long .. "\n");
+		-- increment the tries
+			tries = tries + 1;
+		-- set the minimum dtmf lengts
+			local min_digits = 1;
+
+		-- set sound file and number of attempts
+			local sound, sound_type, attempts
+
+			if tries == 1 then
+				sound, sound_type, attempts = ivr_menu_greet_long or "", "long", 1
+			else
+				sound, sound_type, attempts = ivr_menu_greet_short or "", "short", tonumber(ivr_menu_max_timeouts) or 3
 			end
-			--check if phrase
-			pos = string.find(ivr_menu_greet_long, ":", 0, true);
-			if (pos ~= nil and string.sub(ivr_menu_greet_long, 0, pos-1) == 'phrase') then
-				freeswitch.consoleLog("notice", "[ivr_menu] phrase detected\n");
-				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");
+
+			if (debug["tries"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] greet " .. sound_type .. ": " .. sound .. "\n");
+			end
+
+		-- read dtmf
+			local dtmf_digits
+			if attempts > 0 then
+				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, attempts, ivr_menu_timeout, ivr_menu_confirm_key, sound, "", ".*");
+				-- need pause before stream file
 				session:setVariable("slept", "false");
-			else 
-				dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", ".*");				
 			end
-		else
-			if (debug["tries"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_short .. "\n");
+
+		-- proceed dtmf
+			if dtmf_digits and #dtmf_digits > 0 then
+				if (debug["tries"]) then
+					freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+				end
+				return menu_options(session, dtmf_digits);
 			end
-			dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, ivr_menu_max_timeouts, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_short, "", ".*");
-		end
-		if (dtmf_digits ~= nil and string.len(dtmf_digits) > 0) then
-			if (debug["tries"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+
+		-- check number of failures
+			if tries < tonumber(ivr_menu_max_failures) then
+			--log the dtmf digits
+				if (debug["tries"]) then
+					freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
+				end
+			--run the menu again
+				return menu(); 
 			end
-			menu_options(session, dtmf_digits);
-		else
-			if (tries < tonumber(ivr_menu_max_failures)) then
-				--log the dtmf digits
-					if (debug["tries"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
-					end
-				--run the menu again
-					menu(); 
-			end
-		end
 	end
 
 	function menu_options(session, digits)
@@ -377,113 +372,109 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+
+			local action, script, data
+			dbh:query(sql, function(row)
+				-- clear vars
+					action, script, data = nil
+
 				--check for matching options
-					if (tonumber(row.ivr_menu_option_digits) ~= nil) then
+					if tonumber(row.ivr_menu_option_digits) then
 						row.ivr_menu_option_digits = "^"..row.ivr_menu_option_digits.."$";
 					end
-					if (api:execute("regex", "m:~"..digits.."~"..row.ivr_menu_option_digits) == "true") then
-						if (row.ivr_menu_option_action == "menu-exec-app") then
-							--get the action and data
-								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
-								if pos then
-									action = string.sub(row.ivr_menu_option_param, 0, pos-1);
-									data = string.sub(row.ivr_menu_option_param, pos+1);
-								else
-									action, data = row.ivr_menu_option_param, ""
-								end
 
-							--check if the option uses a regex
-								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
-								if (regex) then
-									--get the regex result
-										result = trim(api:execute("regex", "m:~"..digits.."~"..row.ivr_menu_option_digits.."~$1"));
-										if (debug["regex"]) then
-											freeswitch.consoleLog("notice", "[ivr_menu] regex m:~"..digits.."~"..row.ivr_menu_option_digits.."~$1\n");
-											freeswitch.consoleLog("notice", "[ivr_menu] result: "..result.."\n");
-										end
-
-									--replace the $1 and the domain name
-										data = data:gsub("$1", result);
-										data = data:gsub("${domain_name}", domain_name);
-								end --if regex
-						end --if menu-exex-app
-						if (row.ivr_menu_option_action == "phrase") then
-							action = 'phrase';
-							data = row.ivr_menu_option_param;
-						end
-						if (action == "lua") then
-							pos = string.find(data, " ", 0, true);
-							if pos then
-								script = string.sub(data, 0, pos-1);
-							else
-								script = data
-							end
-						end
-					end --if regex match
-
-				--execute
-					if (action) then
-						if (string.len(action) > 0) then
-							--option found
-								option_found = "true";
-
-							--send to the log
-								if (debug["action"]) then
-									freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
-								end
-							--run the action
-								if (action == 'phrase' or (script ~= nil and script == 'streamfile.lua')) then
-									session:execute(action, data);
-									menu();
-								else 
-									if (ivr_menu_exit_sound ~= nil) then
-										session:streamFile(ivr_menu_exit_sound);
-									end
-									session:execute(action, data);
-								end
-						end
+					if api:execute("regex", "m:~"..digits.."~"..row.ivr_menu_option_digits) ~= "true" then
+						return
 					end
 
-				--clear the variables
-					action = "";
-					data = "";
+					if row.ivr_menu_option_action == "menu-exec-app" then
+						--get the action and data
+							action, data = split_first(row.ivr_menu_option_param, ' ', true)
+							data = data or ""
+
+						--check if the option uses a regex
+							local regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
+							if regex then
+								--get the regex result
+									regex = "m:~"..digits.."~"..row.ivr_menu_option_digits.."~$1"
+									local result = trim(api:execute("regex", regex));
+									if (debug["regex"]) then
+										freeswitch.consoleLog("notice", "[ivr_menu] regex "..regex.."\n");
+										freeswitch.consoleLog("notice", "[ivr_menu] result: "..result.."\n");
+									end
+
+								--replace the $1 and the domain name
+									data = data:gsub("$1", result);
+									data = data:gsub("${domain_name}", domain_name);
+							end --if regex
+					end --if menu-exex-app
+
+					if row.ivr_menu_option_action == "phrase" then
+						action = 'phrase';
+						data = row.ivr_menu_option_param;
+					end
+
+					if action == "lua" then
+						script = split_first(data, " ", true)
+					end
+
+				-- break loop
+					if action and #action > 0 then
+						return 1
+					end
+
+				-- we have unsupported IVR action
+					freeswitch.consoleLog("warning", "[ivr_menu] invalid action in ivr: " .. row.ivr_menu_option_action .. "\n");
 			end); --end results
 
-		--direct dial
-			if (ivr_menu_direct_dial == "true") then
-				if (string.len(digits) < 6 and option_found == "false") then
-					--replace the $1 and the domain name
-						digits = digits:gsub("*", "");
-					--check to see if the user extension exists
-						cmd = "user_exists id ".. digits .." "..domain_name;
-						result = api:executeString(cmd);
-						freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..cmd.." "..result.."\n");
-						if (result == "true") then
-							--log the action
-								freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..digits.." XML "..context.."\n");
-							--run the action
-								session:execute("transfer", digits.." XML "..context);
-						else
-							--run the menu again
-								menu();
-						end
-				end
+		--execute
+			if action and #action > 0 then
+				-- send to the log
+					if (debug["action"]) then
+						freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
+					end
+
+				-- run the action (with return to menu)
+					if action == 'phrase' or script == 'streamfile.lua' then
+						session:execute(action, data);
+						return menu();
+					end
+
+				-- run the action (without return to menu)
+					if ivr_menu_exit_sound and #ivr_menu_exit_sound > 0 then
+						session:streamFile(ivr_menu_exit_sound);
+					end
+					return session:execute(action, data);
 			end
 
-		--execute
-			if (action) then
-				if (string.len(action) == 0) then
-					session:streamFile(ivr_menu_invalid_sound);
-					menu();
-				end
-			else
-				if (action ~= 'phrase' and (script == nil or script ~= 'streamfile.lua')) then
-					session:streamFile(ivr_menu_invalid_sound);
-				end
-				menu();
+		--direct dial
+			if ivr_menu_direct_dial == "true" and #digits > 0 and #digits < 6 then
+				-- remove *#
+					digits = digits:gsub("[*#]", "");
+
+				-- check to see if the user extension exists
+					local cmd = "user_exists id ".. digits .." "..domain_name;
+					local result = api:executeString(cmd);
+					freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..cmd.." "..result.."\n");
+					if result == "true" then
+						--log the action
+							freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..digits.." XML "..context.."\n");
+						--run the action
+							return session:execute("transfer", digits.." XML "..context);
+					end
+
+				--run the menu again (without play ivr_menu_invalid_sound)
+					return menu();
 			end
-			
+
+		--invalid input try again
+			if (debug["action"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] unrecgnized action \n");
+			end
+			if ivr_menu_invalid_sound and #ivr_menu_invalid_sound then
+				session:streamFile(ivr_menu_invalid_sound);
+			end
+			return menu();
 	end --end function
 
 --answer the session
