@@ -54,7 +54,7 @@ if ($domains_processed == 1) {
 				$sql .= "'call_center', ";
 				$sql .= "'dir', ";
 				$sql .= "'".$_SESSION['switch']['conf']['dir']."/autoload_configs', ";
-				$sql .= "'true', ";
+				$sql .= "'false', ";
 				$sql .= "'' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));

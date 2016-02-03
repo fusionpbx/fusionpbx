@@ -44,6 +44,28 @@ $text['label-unload_module']['uk'] = "Вивантажити модуль";
 $text['label-unload_module']['sv-se'] = "Ladda av Modul";
 $text['label-unload_module']['de-at'] = "Modul deaktivieren";
 
+$text['label-unknown']['en-us'] = "Unknown";
+$text['label-unknown']['es-cl'] = "";
+$text['label-unknown']['pt-pt'] = "";
+$text['label-unknown']['fr-fr'] = "";
+$text['label-unknown']['pt-br'] = "";
+$text['label-unknown']['he'] = "";
+$text['label-unknown']['pl'] = "";
+$text['label-unknown']['uk'] = "";
+$text['label-unknown']['sv-se'] = "";
+$text['label-unknown']['de-at'] = "";
+
+$text['label-none']['en-us'] = "None";
+$text['label-none']['es-cl'] = "";
+$text['label-none']['pt-pt'] = "";
+$text['label-none']['fr-fr'] = "";
+$text['label-none']['pt-br'] = "";
+$text['label-none']['he'] = "";
+$text['label-none']['pl'] = "";
+$text['label-none']['uk'] = "";
+$text['label-none']['sv-se'] = "";
+$text['label-none']['de-at'] = "";
+
 $text['label-stopped']['en-us'] = "Stopped";
 $text['label-stopped']['es-cl'] = "Detenido";
 $text['label-stopped']['pt-pt'] = "Parado";
@@ -219,5 +241,15 @@ $text['description-modules']['pl'] = "Moduły rozszerzają funkcjonalność syst
 $text['description-modules']['uk'] = "Модулі розширюють можливості системи. Використовуйте цю сторінку, щоб включити або відключити модулі.";
 $text['description-modules']['sv-se'] = "Moduler utökar funktionerna i systemet. Använd den här sidan för att aktivera eller inaktivera moduler.";
 $text['description-modules']['de-at'] = "Module erweitern die Funktionalität des Systems. Benutzen Sie diese Seite um Module zu aktivieren oder zu deaktivieren.";
+
+$text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
+$text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
+$text['error-event-socket']['pt-pt'] = "A ligação ao Event Socket falhou.";
+$text['error-event-socket']['fr-fr'] = "Connexion à l'Event Socket en echec.";
+$text['error-event-socket']['pt-br'] = "A conexão do evento socket falhou";
+$text['error-event-socket']['pl'] = "Połączenie do “Event Socket” nie powiodło się";
+$text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckades.";
+$text['error-event-socket']['uk'] = "Помилка підключення до сокета подій";
+$text['error-event-socket']['de-at'] = "Connection to Event Socket failed.";
 
 ?>

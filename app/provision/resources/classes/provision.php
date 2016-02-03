@@ -132,6 +132,12 @@ include "root.php";
 			case "aastra":
 				$mac = strtoupper($mac);
 				break;
+			case "cisco":
+				$mac = strtoupper($mac);
+				break;
+			case "linksys":
+				$mac = strtolower($mac);
+				break;
 			case "mitel":
 				$mac = strtoupper($mac);
 				break;
@@ -519,12 +525,12 @@ include "root.php";
 								$sql = "select user_uuid from v_extension_users ";
 								$sql .= "where extension_uuid = '$extension_uuid' ";
 								$sql .= "and domain_uuid = '$domain_uuid' ";
-								//echo $sql."\n";
 								$prep_statement = $this->db->prepare(check_sql($sql));
 								$prep_statement->execute();
 								$extension_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 								unset($prep_statement);
 								foreach ($extension_users as &$row) {
+									//echo "user uuid: ".$row["user_uuid"]."\n";
 									//get the list of contacts [multiple results]
 									$sql = "select contact_uuid from v_contact_users ";
 									$sql .= "where user_uuid = '".$row["user_uuid"]."' ";
@@ -535,7 +541,7 @@ include "root.php";
 									$extension_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 									unset($prep_statement);
 									foreach ($extension_users as &$row) {
-										$contacts[] = $row["contact_uuid"];
+										$contact_uuids[] = $row["contact_uuid"];
 									}
 								}
 						}
@@ -543,23 +549,23 @@ include "root.php";
 						//get the contacts assigned to the user
 							//SQL 'in' with implode contacts array prevents returning duplicate contacts
 							if (sizeof($contacts) > 0) {
-								$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, ";
-								$sql .= "p.phone_number, p.phone_extension ";
-								$sql .= "from v_contacts as c, v_contact_phones as p ";
-								$sql .= "where c.contact_uuid in ('".implode("','",$contacts)."') ";
-								$sql .= "and c.contact_uuid = p.contact_uuid ";
-								$sql .= "and p.phone_type_voice = '1' ";
-								$sql .= "and c.domain_uuid = '$domain_uuid' ";
-								//echo $sql."\n";
-								$prep_statement = $this->db->prepare(check_sql($sql));
-								$prep_statement->execute();
-								$directory_personal = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-								unset($prep_statement);
-								//print_r($contacts);
+								//get the contact details
+									$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, ";
+									$sql .= "p.phone_number, p.phone_extension ";
+									$sql .= "from v_contacts as c, v_contact_phones as p ";
+									$sql .= "where c.contact_uuid in ('".implode("','",$contact_uuids)."') ";
+									$sql .= "and c.contact_uuid = p.contact_uuid ";
+									$sql .= "and p.phone_type_voice = '1' ";
+									$sql .= "and c.domain_uuid = '$domain_uuid' ";
+									//echo $sql."\n";
+									$prep_statement = $this->db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									unset($prep_statement);
+								//assign the contacts array
+									$view->assign("user_contacts", $user_contacts);
 							}
 
-						//assign the contacts array
-							$view->assign("directory_personal", $contacts);
 					}
 
 				//get the contact extensions array and add to the template engine

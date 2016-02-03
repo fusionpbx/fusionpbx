@@ -54,9 +54,7 @@
 	end
 
 --set the recordings directory
-	if (domain_count > 1) then
-		recordings_dir = recordings_dir .. "/"..domain_name;
-	end
+	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --check if a file exists
 	require "resources.functions.file_exists";
@@ -139,6 +137,7 @@
 		end
 		session:setInputCallback("on_dtmf", "");
 		session:streamFile(file_name);
+		session:unsetInputCallback();
 	end
 
 --if base64, remove temp file (increases responsiveness when files remain local)

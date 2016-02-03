@@ -90,22 +90,23 @@ include "root.php";
 					}
 				}
 			//recordings
-				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
+				$recordings_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/";
+				if($dh = opendir($recordings_dir)) {
 					$tmp_selected = false;
 					$files = Array();
 					//$select .= "<optgroup label='recordings'>\n";
 					while($file = readdir($dh)) {
 						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
+							if(is_dir($recordings_dir . $file)) {
 								//this is a directory
 							}
 							else {
-								if ($this->select_value == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($this->select_value) > 0) {
+								if ($this->select_value == $recordings_dir . $file && strlen($this->select_value) > 0) {
 									$tmp_selected = true;
-									$select .= "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+									$select .= "		<option value='".$recordings_dir.$file."' selected='selected'>".$file."</option>\n";
 								}
 								else {
-									$select .= "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+									$select .= "		<option value='".$recordings_dir.$file."'>".$file."</option>\n";
 								}
 							}
 						}
