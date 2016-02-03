@@ -562,10 +562,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			foreach ($result as &$row) {
 				if ($ivr_menu_greet_short == "phrase:".$row["phrase_name"].".".$domain_uuid) {
 					$tmp_selected = true;
-					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 				}
 				else {
-					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -901,10 +901,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				foreach ($result as &$row) {
 					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_name"].".".$domain_uuid) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 					}
 				}
 				unset ($prep_statement);
@@ -997,10 +997,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				foreach ($result as &$row) {
 					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_name"].".".$domain_uuid) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 					}
 				}
 				unset ($prep_statement);
