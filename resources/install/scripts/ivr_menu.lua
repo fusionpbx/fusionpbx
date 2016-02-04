@@ -38,6 +38,9 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+--get logger
+	local log = require "resources.functions.log".ivr_menu
+
 --include functions
 	require "resources.functions.format_ringback"
 	require "resources.functions.split"
@@ -49,6 +52,8 @@
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
 	domain_uuid = session:getVariable("domain_uuid");
+
+	local recordings_dir = recordings_dir .. "/" .. domain_name
 
 --settings
 	require "resources.functions.settings";
@@ -94,9 +99,9 @@
 		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
 		AND ivr_menu_enabled = 'true' ]];
 	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+		log.notice("SQL: " .. sql);
 	end
-	status = dbh:query(sql, function(row)
+	dbh:query(sql, function(row)
 		domain_uuid = row["domain_uuid"];
 		ivr_menu_name = row["ivr_menu_name"];
 		--ivr_menu_extension = row["ivr_menu_extension"];
@@ -123,12 +128,10 @@
 	end);
 
 --set the caller id name
-	if (caller_id_name) then
-		if (string.len(ivr_menu_cid_prefix) > 0) then
-			caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
-			session:setVariable("caller_id_name", caller_id_name);
-			session:setVariable("effective_caller_id_name", caller_id_name);
-		end
+	if caller_id_name and #caller_id_name >0 then
+		caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
+		session:setVariable("caller_id_name", caller_id_name);
+		session:setVariable("effective_caller_id_name", caller_id_name);
 	end
 
 --set ringback
@@ -167,11 +170,11 @@
 			require "resources.functions.mkdir";
 
 		--make sure the recordings directory exists
-			mkdir(recordings_dir.."/"..domain_name);
+			mkdir(recordings_dir);
 
 		--define function to load file from db
-			local function load_file(recordings_dir, domain_name, file_name)
-				local full_path = recordings_dir.."/"..domain_name .. "/" .. file_name
+			local function load_file(file_name)
+				local full_path = recordings_dir .. "/" .. file_name
 				if file_exists(full_path) then
 					return full_path
 				end
@@ -180,7 +183,7 @@
 							[['AND recording_filename = ']]..file_name..[[' ]];
 
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+					log.notice("SQL: "..sql);
 				end
 
 				local is_base64
@@ -188,7 +191,8 @@
 					if #row.recording_base64 > 32 then
 						local file, err = io.open(full_path, "w");
 						if not file then
-							freeswitch.consoleLog("err", "[ivr_menu] can not create file: "..full_path.."; Error - " .. tostring(err) .. "\n");
+							log.err("can not create file: "..full_path.."; Error - " .. tostring(err));
+							return
 						end
 						file:write(base64.decode(row.recording_base64));
 						file:close();
@@ -202,22 +206,22 @@
 
 		--greet long
 			if #ivr_menu_greet_long > 1 then
-				ivr_menu_greet_long, ivr_menu_greet_long_is_base64 = load_file(recordings_dir, domain_name, greet_long_file_name)
+				ivr_menu_greet_long, ivr_menu_greet_long_is_base64 = load_file(greet_long_file_name)
 			end
 
 		--greet short
 			if #ivr_menu_greet_short > 1 then
-				ivr_menu_greet_short, ivr_menu_greet_short_is_base64 = load_file(recordings_dir, domain_name, greet_short_file_name)
+				ivr_menu_greet_short, ivr_menu_greet_short_is_base64 = load_file(greet_short_file_name)
 			end
 
 		--invalid sound
 			if #ivr_menu_invalid_sound > 1 then
-				ivr_menu_invalid_sound, ivr_menu_invalid_sound_is_base64 = load_file(recordings_dir, domain_name, invalid_sound_file_name)
+				ivr_menu_invalid_sound, ivr_menu_invalid_sound_is_base64 = load_file(invalid_sound_file_name)
 			end
 
 		--exit sound
 			if #ivr_menu_exit_sound > 1 then
-				ivr_menu_exit_sound, ivr_menu_exit_sound_is_base64 = load_file(recordings_dir, domain_name, exit_sound_file_name)
+				ivr_menu_exit_sound, ivr_menu_exit_sound_is_base64 = load_file(exit_sound_file_name)
 			end
 
 	elseif (storage_type == "http_cache") then
@@ -231,7 +235,7 @@
 --adjust file paths
 	local function adjust_file_path(full_path, file_name)
 		return file_exists(full_path)
-			or file_exists(recordings_dir.."/"..domain_name.."/"..file_name)
+			or file_exists(recordings_dir.."/"..file_name)
 			or file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name)
 			or full_path
 	end
@@ -267,7 +271,7 @@
 			end
 
 			if (debug["tries"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] greet " .. sound_type .. ": " .. sound .. "\n");
+				log.notice("greet " .. sound_type .. ": " .. sound);
 			end
 
 		-- read dtmf
@@ -281,7 +285,7 @@
 		-- proceed dtmf
 			if dtmf_digits and #dtmf_digits > 0 then
 				if (debug["tries"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+					log.notice("dtmf_digits: " .. dtmf_digits);
 				end
 				return menu_options(session, dtmf_digits);
 			end
@@ -290,7 +294,7 @@
 			if tries < tonumber(ivr_menu_max_failures) then
 			--log the dtmf digits
 				if (debug["tries"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
+					log.notice("tries: " .. tries);
 				end
 			--run the menu again
 				return menu(); 
@@ -301,13 +305,13 @@
 
 		--log the dtmf digits
 			if (debug["dtmf"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] dtmf: " .. digits .. "\n");
+				log.notice("dtmf: " .. digits);
 			end
 
 		--get the ivr menu options
 			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+				log.notice("SQL: " .. sql);
 			end
 
 			local action, script, data
@@ -336,8 +340,8 @@
 									regex = "m:~"..digits.."~"..row.ivr_menu_option_digits.."~$1"
 									local result = trim(api:execute("regex", regex));
 									if (debug["regex"]) then
-										freeswitch.consoleLog("notice", "[ivr_menu] regex "..regex.."\n");
-										freeswitch.consoleLog("notice", "[ivr_menu] result: "..result.."\n");
+										log.notice("regex "..regex);
+										log.notice("result: "..result);
 									end
 
 								--replace the $1 and the domain name
@@ -361,14 +365,14 @@
 					end
 
 				-- we have unsupported IVR action
-					freeswitch.consoleLog("warning", "[ivr_menu] invalid action in ivr: " .. row.ivr_menu_option_action .. "\n");
+					log.warning("invalid action in ivr: " .. row.ivr_menu_option_action);
 			end); --end results
 
 		--execute
 			if action and #action > 0 then
 				-- send to the log
 					if (debug["action"]) then
-						freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
+						log.notice("action: " .. action .. " data: ".. data);
 					end
 
 				-- run the action (with return to menu)
@@ -392,10 +396,10 @@
 				-- check to see if the user extension exists
 					local cmd = "user_exists id ".. digits .." "..domain_name;
 					local result = api:executeString(cmd);
-					freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..cmd.." "..result.."\n");
+					log.notice("[direct dial] "..cmd.." "..result);
 					if result == "true" then
 						--log the action
-							freeswitch.consoleLog("NOTICE", "[ivr_menu][direct dial] "..digits.." XML "..context.."\n");
+							log.notice("[direct dial] "..digits.." XML "..context);
 						--run the action
 							return session:execute("transfer", digits.." XML "..context);
 					end
@@ -406,7 +410,7 @@
 
 		--invalid input try again
 			if (debug["action"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] unrecgnized action \n");
+				log.notice("unrecgnized action");
 			end
 			if ivr_menu_invalid_sound and #ivr_menu_invalid_sound then
 				session:streamFile(ivr_menu_invalid_sound);
