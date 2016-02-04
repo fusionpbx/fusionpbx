@@ -467,9 +467,13 @@ function save_module_xml() {
 function save_var_xml() {
 	global $config, $db, $domain_uuid;
 
+	//open the vars.xml file
 	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
-	$xml = '';
 
+	//get the hostname
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+
+	//build the xml
 	$sql = "select * from v_vars ";
 	$sql .= "where var_enabled = 'true' ";
 	$sql .= "order by var_cat, var_order asc ";
@@ -477,6 +481,7 @@ function save_var_xml() {
 	$prep_statement->execute();
 	$prev_var_cat = '';
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$xml = '';
 	foreach ($result as &$row) {
 		if ($row['var_cat'] != 'Provision') {
 			if ($prev_var_cat != $row['var_cat']) {
@@ -484,10 +489,10 @@ function save_var_xml() {
 				if (strlen($row["var_description"]) > 0) {
 					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 				}
-			}
+			} 
 			if (strlen($row['var_hostname']) == 0) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
-			} elseif ($row['var_hostname'] == system('hostname')) {
+			} elseif ($row['var_hostname'] == $hostname) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			}
 		}
