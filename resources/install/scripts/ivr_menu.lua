@@ -314,7 +314,7 @@
 				log.notice("SQL: " .. sql);
 			end
 
-			local action, script, data
+			local actions, script, data = {}
 			dbh:query(sql, function(row)
 				-- clear vars
 					action, script, data = nil
@@ -361,7 +361,8 @@
 
 				-- break loop
 					if action and #action > 0 then
-						return 1
+						actions[#actions + 1] = {action, script, data}
+						return
 					end
 
 				-- we have unsupported IVR action
@@ -369,7 +370,9 @@
 			end); --end results
 
 		--execute
-			if action and #action > 0 then
+			if #actions > 0 then
+				for _, t in ipairs(actions) do
+					local action, script, data = t[1],t[2],t[3]
 				-- send to the log
 					if (debug["action"]) then
 						log.notice("action: " .. action .. " data: ".. data);
@@ -378,14 +381,15 @@
 				-- run the action (with return to menu)
 					if action == 'phrase' or script == 'streamfile.lua' then
 						session:execute(action, data);
-						return menu();
+					else
+						if ivr_menu_exit_sound and #ivr_menu_exit_sound > 0 then
+							session:streamFile(ivr_menu_exit_sound);
+						end
+						-- run the action (without return to menu)
+							return session:execute(action, data);
 					end
-
-				-- run the action (without return to menu)
-					if ivr_menu_exit_sound and #ivr_menu_exit_sound > 0 then
-						session:streamFile(ivr_menu_exit_sound);
-					end
-					return session:execute(action, data);
+				end
+				return menu();
 			end
 
 		--direct dial
