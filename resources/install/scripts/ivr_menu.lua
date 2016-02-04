@@ -266,7 +266,7 @@
 
 		--log the dtmf digits
 			if (debug["tries"]) then
-				log.notice("tries: " .. tries);
+				log.noticef("tries: %d/%d", tries, tonumber(ivr_menu_max_failures) or '-1');
 			end
 
 		-- set the minimum dtmf lengts
