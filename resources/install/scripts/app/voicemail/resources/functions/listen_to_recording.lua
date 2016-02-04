@@ -83,6 +83,7 @@
 						require "resources.functions.base64";
 
 					--set the voicemail message path
+						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 
 					--save the recording to the file system
