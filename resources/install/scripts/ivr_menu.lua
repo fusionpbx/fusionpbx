@@ -256,8 +256,19 @@
 	local menu_options, menu
 	local tries = 0;
 	function menu()
+		-- check number of failures
+			if (tries > 0) and (tries >= tonumber(ivr_menu_max_failures)) then
+				return
+			end
+
 		-- increment the tries
 			tries = tries + 1;
+
+		--log the dtmf digits
+			if (debug["tries"]) then
+				log.notice("tries: " .. tries);
+			end
+
 		-- set the minimum dtmf lengts
 			local min_digits = 1;
 
@@ -290,15 +301,7 @@
 				return menu_options(session, dtmf_digits);
 			end
 
-		-- check number of failures
-			if tries < tonumber(ivr_menu_max_failures) then
-			--log the dtmf digits
-				if (debug["tries"]) then
-					log.notice("tries: " .. tries);
-				end
-			--run the menu again
-				return menu(); 
-			end
+			return menu();
 	end
 
 	function menu_options(session, digits)
