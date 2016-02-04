@@ -108,8 +108,12 @@
 			if (debug["sql"]) then
 				log.notice("SQL: " .. sql);
 			end
-			x = 0;
+			local x = 0;
+			local pass
 			dbh:query(sql, function(row)
+				--clear flag pass
+					pass = false
+
 				--get the dialplan
 					domain_uuid = row.domain_uuid;
 					dialplan_uuid = row.dialplan_uuid;
@@ -281,7 +285,25 @@
 
 				--increment the x
 					x = x + 1;
+
+				--set flag pass
+					pass = true
 			end);
+
+		-- prevent partial dialplan (pass=nil may be error in sql or empty resultset)
+			if pass == false then
+				log.errf('context: %s, extension: %s, type: %s, data: %s ',
+					call_context,
+					dialplan_name or '----',
+					dialplan_detail_tag or '----',
+					dialplan_detail_data or '----'
+				)
+
+				--close the database connection
+					dbh:release();
+
+				error('error while build context: ' .. call_context)
+			end
 
 		--close the extension tag if it was left open
 			if (dialplan_tag_status == "open") then
