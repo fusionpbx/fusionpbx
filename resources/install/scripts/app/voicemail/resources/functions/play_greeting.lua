@@ -55,6 +55,7 @@
 										require "resources.functions.base64";
 
 									--set the voicemail message path
+										mkdir(voicemail_dir.."/"..voicemail_id);
 										greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 
 									--if not found, save greeting to local file system

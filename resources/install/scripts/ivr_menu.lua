@@ -183,6 +183,9 @@
 					status = dbh:query(sql, function(row)
 						--add functions
 							require "resources.functions.base64";
+						--make sure the recordings directory exists
+							require "resources.functions.mkdir";
+							mkdir(recordings_dir.."/"..domain_name);
 						--add the path to filename
 							ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..greet_long_file_name;
 							ivr_menu_greet_long_is_base64 = true;

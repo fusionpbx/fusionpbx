@@ -498,7 +498,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		*/
 	//select
 		if (if_group("superadmin")) {
-			if (!$tmp_selected) {
+			if (!$tmp_selected && strlen($ivr_menu_greet_long) > 0) {
 				echo "<optgroup label='Selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_greet_long)) {
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
@@ -560,12 +560,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (count($result) > 0) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($result as &$row) {
-				if ($ivr_menu_greet_short == "phrase:".$row["phrase_name"].".".$domain_uuid) {
+				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
-					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 				}
 				else {
-					echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+					echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 				}
 			}
 			echo "</optgroup>\n";
@@ -899,12 +899,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			if (count($result) > 0) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
-					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_name"].".".$domain_uuid) {
+					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 					}
 				}
 				unset ($prep_statement);
@@ -933,7 +933,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		//select
 			if (if_group("superadmin")) {
-				if (!$tmp_selected) {
+				if (!$tmp_selected && strlen($ivr_menu_invalid_sound) > 0) {
 					echo "<optgroup label='Selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_invalid_sound)) {
 						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_invalid_sound."' selected='selected'>".$ivr_menu_invalid_sound."</option>\n";
@@ -995,12 +995,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			if (count($result) > 0) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
-					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_name"].".".$domain_uuid) {
+					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 					}
 					else {
-						echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+						echo "	<option value='phrase:".$row["phrase_uuid"]."'>".$row["phrase_name"]."</option>\n";
 					}
 				}
 				unset ($prep_statement);
@@ -1029,7 +1029,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		//select
 			if (if_group("superadmin")) {
-				if (!$tmp_selected) {
+				if (!$tmp_selected && strlen($ivr_menu_exit_sound) > 0) {
 					echo "<optgroup label='Selected'>\n";
 					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_exit_sound)) {
 						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$ivr_menu_exit_sound."' selected='selected'>".$ivr_menu_exit_sound."</option>\n";
