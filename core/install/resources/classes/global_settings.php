@@ -132,9 +132,6 @@ require_once "root.php";
 			sort( $this->_switch_vdirs );
 			if(is_null($detect_switch)){
 				//take settings from session
-				if(!isset($_SESSION['switch'])){
-					throw new Exception("No detect_switch was passed to me but \$_SESSION['switch'] is empty!");
-				}
 				foreach ($this->_switch_dirs as $dir){
 					$category = 'switch';
 					$session_var;
