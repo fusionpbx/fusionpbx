@@ -372,8 +372,7 @@ $document['title'] = $text['title-sys-status'];
 	}
 
 //memcache information
-	if (permission_exists('system_view_memcache')) {
-
+	if (if_group("system_view_memcache") && file_exists($_SERVER["PROJECT_ROOT"]."/app/sip_status/app_config.php")){
 		echo "<table width='100%' border='0' cellpadding='7' cellspacing='0'>\n";
 		echo "	<tr>\n";
 		echo "		<th class='th' colspan='2' align='left'>".$text['title-memcache']."</th>\n";
@@ -418,7 +417,6 @@ $document['title'] = $text['title-sys-status'];
 
 		echo "</table>\n";
 		echo "<br /><br />\n";
-
 	}
 
 //backup
