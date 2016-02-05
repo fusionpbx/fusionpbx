@@ -317,10 +317,10 @@
 				log.notice("SQL: " .. sql);
 			end
 
-			local actions, script, data = {}
+			local actions = {}
 			dbh:query(sql, function(row)
-				-- clear vars
-					action, script, data = nil
+				-- declare vars
+					local action, script, data
 
 				--check for matching options
 					if tonumber(row.ivr_menu_option_digits) then
