@@ -193,7 +193,7 @@
 			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
 		//get the domain name from sip_req_host
-			if (strlen($domain_name) > 0) {
+			if (strlen($domain_name) == 0) {
 				$domain_name = check_str(urldecode($xml->variables->sip_req_host));
 			}
 
