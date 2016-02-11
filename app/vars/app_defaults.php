@@ -245,6 +245,26 @@ EOD;
 	if ($domains_processed == 1) {
 
 		$result = json_decode($vars, true);
+
+	// detect and add paths present in existing vars.xml
+		$handle = fopen($_SESSION['switch']['conf']['dir'] . '/vars.xml', 'r');
+		if($handle) {
+			while (($line = fgets($handle)) !== false) {
+				if(preg_match("/<X-PRE-PROCESS\s+cmd=\"set\"\s+data=\"(\w+_dir)=(.*)\"\/>/", $line, $matches)){
+					list($dummy, $var, $value) = $matches;
+					$result[] = array (
+						"var_name"			=> $var,
+						"var_value"			=> $value,
+						"var_cat"			=> "Paths",
+						"var_enabled"		=> "true",
+						"var_description"	=> base64_encode("Path detected from vars.xml")
+					);
+				}
+			}
+			fclose($handle);
+		}
+
+	// populate missing vars
 		foreach($result as $row) {
 
 			$sql = "select count(*) as num_rows from v_vars ";

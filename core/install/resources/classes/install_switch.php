@@ -31,6 +31,7 @@ include "root.php";
 		protected $global_settings;
 		protected $config_lua;
 		protected $dbh;
+		protected $extra_vars = array();
 
 		public $debug = false;
 		public $echo_progress = false;
@@ -89,7 +90,9 @@ include "root.php";
 
 		function install_phase_1() {
 			$this->write_progress("Install phase 1 started for switch");
+			$this->import_vars_dirs();
 			$this->copy_conf();
+			$this->update_vars_dirs();
 			$this->copy_scripts();
 			$this->write_progress("Install phase 1 completed for switch");
 		}
@@ -104,6 +107,26 @@ include "root.php";
 		function upgrade() {
 			$this->copy_scripts();
 			$this->create_config_lua();
+		}
+
+		protected function import_vars_dirs() {
+			$this->write_progress("\tChecking for path definitions in vars.xml");
+			if (file_exists($this->global_settings->switch_conf_dir())) {
+				$vars_xml = $this->global_settings->switch_conf_dir() . '/vars.xml';
+				$handle = fopen($vars_xml, "r");
+				if($handle) {
+					while (($line = fgets($handle)) !== false) {
+						if(preg_match("/<X-PRE-PROCESS\s+cmd=\"set\"\s+data=\"([a-zA-Z_]+[a-zA-Z]_dir)=(.*)\"\/>/", $line, $matches)) {
+							list($dummy, $var, $value) = $matches;
+							if(!preg_match("/\w+_ssl_dir/", $var)) {
+								$this->write_progress("\t... found $var=$value");
+								$this->extra_vars[$var] = $value;
+							}
+						}
+					}
+					fclose($handle);
+				}
+			}			
 		}
 
 		protected function copy_conf() {
@@ -161,11 +184,46 @@ include "root.php";
 
 		}
 
+		protected function update_vars_dirs() {
+			if($this->extra_vars > 0){
+				$this->write_progress("\tAdding dirs back to vars.xml");
+				$vars_xml = $this->global_settings->switch_conf_dir() . '/vars.xml';
+				$vars_source = file_get_contents($vars_xml);
+				$handle = fopen($vars_xml, "w");
+				if($handle) {
+					$found_end = 0;
+					foreach(explode("\n", $vars_source) as $line){
+						if(preg_match("/<\/include>/", $line)){
+							$found_end = 1;
+							fwrite($handle, "\n    <!-- Sets the directorys -->\n");
+							foreach ($this->extra_vars as $var => $value) {
+								fwrite($handle, "    <X-PRE-PROCESS cmd=\"set\" data=\"$var=$value\"/>\n");
+							}
+						}
+						fwrite($handle, "$line\n");
+					}
+					if(!$found_end) {
+						fwrite($handle, "\n<!-- Sets the directorys -->\n");
+						foreach ($this->extra_vars as $var => $value) {
+							fwrite($handle, "<X-PRE-PROCESS cmd=\"set\" data=\"$var=$value\"/>\n");
+						}
+					}
+					fclose($handle);
+				}else{
+					throw new Exception("Cannot write to '$vars_xml'");
+				}
+			}
+		}
 		protected function copy_scripts() {
 			$this->write_progress("\tCopying Scripts");
 			$script_dir = $this->global_settings->switch_script_dir();
 			if(strlen($script_dir) == 0) {
 				throw new Exception("Cannot copy scripts the 'script_dir' is empty");
+			}
+			$conf_dir = $this->global_settings->switch_conf_dir();
+			if(substr($script_dir, 0, strlen($conf_dir)) == $conf_dir) {
+				$this->write_progress("\t... script_dir is under conf, recreating");
+				mkdir($script_dir, 0755, true);
 			}
 			if (file_exists($script_dir)) {
 				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
@@ -183,7 +241,7 @@ include "root.php";
 				}
 				chmod($dst_dir, 0774);
 			}else{
-				$this->write_progress("\tSkipping scripts, script_dir is unset");
+				$this->write_progress("\tSkipping scripts, script_dir doesn't exist '$script_dir'");
 			}
 		}
 
