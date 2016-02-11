@@ -141,6 +141,22 @@ require_once "resources/classes/EventSocket.php";
 			$this->_sip_profiles_vdir =	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "sip_profiles");
 			$this->_dialplan_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "dialplan");
 			$this->_backup_vdir =		normalize_path(sys_get_temp_dir());
+			
+			$vars_xml = $this->_conf_dir . '/vars.xml';
+			if (file_exists($vars_xml)) {
+				$handle = fopen($vars_xml, "r");
+				if($handle) {
+					while (($line = fgets($handle)) !== false) {
+						if(preg_match("/<X-PRE-PROCESS\s+cmd=\"set\"\s+data=\"([a-zA-Z_]+[a-zA-Z]_dir)=(.*)\"\/>/", $line, $matches)) {
+							list($dummy, $var, $value) = $matches;
+							if(!preg_match("/\w+_ssl_dir/", $var)) {
+								throw new Exception("Directories cannot be set in vars.xml, switch currently ignores them, use the correct command line option for $var");
+							}
+						}
+					}
+					fclose($handle);
+				}
+			}
 		}	
 	
 		protected function connect_event_socket(){
