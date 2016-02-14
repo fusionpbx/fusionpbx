@@ -97,6 +97,7 @@
 								$node_type = $row['@attributes']['type'];
 								$node_cidr = $row['@attributes']['cidr'];
 								$node_domain = $row['@attributes']['domain'];
+								$node_description = $row['@attributes']['description'];
 							//replace $${domain}
 								if (strlen($node_domain) > 0) {
 									$node_domain = str_replace("\$\${domain}", $domain_name, $node_domain);
@@ -109,7 +110,8 @@
 								$sql .= "access_control_uuid, ";
 								$sql .= "node_type, ";
 								$sql .= "node_cidr, ";
-								$sql .= "node_domain ";
+								$sql .= "node_domain, ";
+								$sql .= "node_description ";
 								$sql .= ") ";
 								$sql .= "values ";
 								$sql .= "( ";
@@ -117,7 +119,8 @@
 								$sql .= "'".$access_control_uuid."', ";
 								$sql .= "'".$node_type."', ";
 								$sql .= "'".$node_cidr."', ";
-								$sql .= "'".$node_domain."' ";
+								$sql .= "'".$node_domain."', ";
+								$sql .= "'".$node_description."' ";
 								$sql .= ")";
 								//echo $sql."\n";
 								$db->exec(check_sql($sql));
