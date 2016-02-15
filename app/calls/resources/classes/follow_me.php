@@ -324,7 +324,7 @@ include "root.php";
 					}
 
 					if (strlen($this->cid_name_prefix) > 0) {
-						$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#$dial_string_caller_id_name";
+						$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."$dial_string_caller_id_name";
 					}
 					else {
 						$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
@@ -332,7 +332,7 @@ include "root.php";
 
 					if (strlen($this->cid_number_prefix) > 0) {
 						//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
-					$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#dial_string_caller_id_number";
+					$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."$dial_string_caller_id_number";
 					}
 					else {
 						$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";

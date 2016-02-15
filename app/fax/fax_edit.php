@@ -820,7 +820,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<br>";
 	if ($action == "update") {
-		if (if_group("user")) {
+		if (!permission_exists('fax_extension_delete')) {
 			echo "	<input type='hidden' name='fax_name' value=\"$fax_name\">\n";
 			echo "	<input type='hidden' name='fax_extension' value=\"$fax_extension\">\n";
 			echo "	<input type='hidden' name='fax_destination_number' value=\"$fax_destination_number\">\n";
