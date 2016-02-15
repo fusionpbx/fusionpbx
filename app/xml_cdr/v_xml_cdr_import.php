@@ -192,6 +192,12 @@
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
 			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
+		//get the domain name from sip_req_host
+			if (strlen($domain_name) == 0) {
+				$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+			}
+
+		//send the domain name to the cdr log
 			xml_cdr_log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
 
 		//get the domain_uuid with the domain_name
@@ -205,18 +211,16 @@
 				}
 				$row = $db->query($sql)->fetch();
 				$domain_uuid = $row['domain_uuid'];
-				if (strlen($domain_uuid) == 0) {
-					$sql = "select domain_name, domain_uuid from v_domains ";
-					$row = $db->query($sql)->fetch();
-					$domain_uuid = $row['domain_uuid'];
-					if (strlen($domain_name) == 0) { $domain_name = $row['domain_name']; }
-				}
 			}
 
 		//set values in the database
-			$database->domain_uuid = $domain_uuid;
-			$database->fields['domain_uuid'] = $domain_uuid;
-			$database->fields['domain_name'] = $domain_name;
+			if (strlen($domain_uuid) > 0) {
+				$database->domain_uuid = $domain_uuid;
+				$database->fields['domain_uuid'] = $domain_uuid;
+			}
+			if (strlen($domain_name) > 0) {
+				$database->fields['domain_name'] = $domain_name;
+			}
 
 		//check whether a recording exists
 			$recording_relative_path = '/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
