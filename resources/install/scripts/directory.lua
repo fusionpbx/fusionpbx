@@ -211,7 +211,7 @@
 				--end
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
-					if (row.first_name and row.last_name) then
+					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
 								sql = [[SELECT * FROM v_voicemails 
@@ -241,7 +241,9 @@
 											--announce the first and last names
 											session:execute("say", "en name_spelled iterated "..row.first_name);
 											--session:execute("sleep", "500");
-											session:execute("say", "en name_spelled iterated "..row.last_name);
+											if (row.last_name ~= nil) then
+												session:execute("say", "en name_spelled iterated "..row.last_name);
+											end
 										end
 								end);
 							elseif (storage_type == "http_cache") then
@@ -258,8 +260,10 @@
 								else
 									--announce the first and last names
 										session:execute("say", "en name_spelled iterated "..row.first_name);
-										--session:execute("sleep", "500");
-										session:execute("say", "en name_spelled iterated "..row.last_name);
+										if (row.last_name ~= nil) then
+											--session:execute("sleep", "500");
+											session:execute("say", "en name_spelled iterated "..row.last_name);
+										end
 								end
 							end
 
