@@ -74,6 +74,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
+				remove_config_from_cache('configuration:acl.conf');
 				$_SESSION['message'] = $text['message-add'];
 				header('Location: access_controls.php');
 				return;
@@ -89,6 +90,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
+				remove_config_from_cache('configuration:acl.conf');
 				$_SESSION['message'] = $text['message-update'];
 				header('Location: access_controls.php');
 				return;
