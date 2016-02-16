@@ -42,7 +42,7 @@
 		public function room_count() {
 			//get the room count
 				$not_admin = 1;
-				if (if_permision("conference_room_view_all")) {
+				if (permission_exists("conference_room_view_all")) {
 					$not_admin = 0;
 				}
 				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meetings as p ";
@@ -79,7 +79,7 @@
 		public function rooms() {
 			//get the list of rooms
 				$not_admin = 1;
-				if (if_permision("conference_room_view_all")) {
+				if (permission_exists("conference_room_view_all")) {
 					$not_admin = 0;
 				}
 				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, r.conference_room_name, max_members, ";
