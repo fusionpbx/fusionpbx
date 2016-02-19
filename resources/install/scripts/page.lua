@@ -65,7 +65,7 @@ if ( session:ready() ) then
 		--caller id name provided do nothing
 	else
 		effective_caller_id_name = session:getVariable("effective_caller_id_name");
-		caller_id_number = effective_caller_id_name;
+		caller_id_name = effective_caller_id_name;
 	end
 
 	if (caller_id_number) then
@@ -113,7 +113,7 @@ if ( session:ready() ) then
 	destination_count = 0;
 	api = freeswitch.API();
 	for index,value in pairs(destination_table) do
-		if (string.find(value, "-") == nill) then
+		if (string.find(value, "-") == nil) then
 			value = value..'-'..value;
 		end
 		sub_table = explode("-",value);
