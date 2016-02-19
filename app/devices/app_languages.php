@@ -1667,6 +1667,125 @@ $text['label-acd']['de-at'] = "ACD";
 $text['label-acd']['ar-eg'] = "";
 $text['label-acd']['he'] = "";
 
+//Mitel specific function keys
+$text['label-not_programmed']['en-us'] = "Not Programmed";
+$text['label-not_programmed']['es-cl'] = "";
+$text['label-not_programmed']['pt-pt'] = "";
+$text['label-not_programmed']['fr-fr'] = "";
+$text['label-not_programmed']['pt-br'] = "";
+$text['label-not_programmed']['pl'] = "";
+$text['label-not_programmed']['uk'] = "";
+$text['label-not_programmed']['sv-se'] = "";
+$text['label-not_programmed']['ro'] = "";
+$text['label-not_programmed']['de-at'] = "";
+$text['label-not_programmed']['ar-eg'] = "";
+$text['label-not_programmed']['he'] = "";
+
+$text['label-call_log']['en-us'] = "Call Log";
+$text['label-call_log']['es-cl'] = "";
+$text['label-call_log']['pt-pt'] = "";
+$text['label-call_log']['fr-fr'] = "";
+$text['label-call_log']['pt-br'] = "";
+$text['label-call_log']['pl'] = "";
+$text['label-call_log']['uk'] = "";
+$text['label-call_log']['sv-se'] = "";
+$text['label-call_log']['ro'] = "";
+$text['label-call_log']['de-at'] = "";
+$text['label-call_log']['ar-eg'] = "";
+$text['label-call_log']['he'] = "";
+
+$text['label-phone_book']['en-us'] = "Phone Book";
+$text['label-phone_book']['es-cl'] = "";
+$text['label-phone_book']['pt-pt'] = "";
+$text['label-phone_book']['fr-fr'] = "";
+$text['label-phone_book']['pt-br'] = "";
+$text['label-phone_book']['pl'] = "";
+$text['label-phone_book']['uk'] = "";
+$text['label-phone_book']['sv-se'] = "";
+$text['label-phone_book']['ro'] = "";
+$text['label-phone_book']['de-at'] = "";
+$text['label-phone_book']['ar-eg'] = "";
+$text['label-phone_book']['he'] = "";
+
+$text['label-advisory_message']['en-us'] = "Advisory Message on/off";
+$text['label-advisory_message']['es-cl'] = "";
+$text['label-advisory_message']['pt-pt'] = "";
+$text['label-advisory_message']['fr-fr'] = "";
+$text['label-advisory_message']['pt-br'] = "";
+$text['label-advisory_message']['pl'] = "";
+$text['label-advisory_message']['uk'] = "";
+$text['label-advisory_message']['sv-se'] = "";
+$text['label-advisory_message']['ro'] = "";
+$text['label-advisory_message']['de-at'] = "";
+$text['label-advisory_message']['ar-eg'] = "";
+$text['label-advisory_message']['he'] = "";
+
+$text['label-pc_application']['en-us'] = "PC Application";
+$text['label-pc_application']['es-cl'] = "";
+$text['label-pc_application']['pt-pt'] = "";
+$text['label-pc_application']['fr-fr'] = "";
+$text['label-pc_application']['pt-br'] = "";
+$text['label-pc_application']['pl'] = "";
+$text['label-pc_application']['uk'] = "";
+$text['label-pc_application']['sv-se'] = "";
+$text['label-pc_application']['ro'] = "";
+$text['label-pc_application']['de-at'] = "";
+$text['label-pc_application']['ar-eg'] = "";
+$text['label-pc_application']['he'] = "";
+
+$text['label-headset_on_off']['en-us'] = "Headset on/off";
+$text['label-headset_on_off']['es-cl'] = "";
+$text['label-headset_on_off']['pt-pt'] = "";
+$text['label-headset_on_off']['fr-fr'] = "";
+$text['label-headset_on_off']['pt-br'] = "";
+$text['label-headset_on_off']['pl'] = "";
+$text['label-headset_on_off']['uk'] = "";
+$text['label-headset_on_off']['sv-se'] = "";
+$text['label-headset_on_off']['ro'] = "";
+$text['label-headset_on_off']['de-at'] = "";
+$text['label-headset_on_off']['ar-eg'] = "";
+$text['label-headset_on_off']['he'] = "";
+
+$text['label-rss_feed']['en-us'] = "RSS Feed";
+$text['label-rss_feed']['es-cl'] = "";
+$text['label-rss_feed']['pt-pt'] = "";
+$text['label-rss_feed']['fr-fr'] = "";
+$text['label-rss_feed']['pt-br'] = "";
+$text['label-rss_feed']['pl'] = "";
+$text['label-rss_feed']['uk'] = "";
+$text['label-rss_feed']['sv-se'] = "";
+$text['label-rss_feed']['ro'] = "";
+$text['label-rss_feed']['de-at'] = "";
+$text['label-rss_feed']['ar-eg'] = "";
+$text['label-rss_feed']['he'] = "";
+
+$text['label-html_application']['en-us'] = "HTML Application";
+$text['label-html_application']['es-cl'] = "";
+$text['label-html_application']['pt-pt'] = "";
+$text['label-html_application']['fr-fr'] = "";
+$text['label-html_application']['pt-br'] = "";
+$text['label-html_application']['pl'] = "";
+$text['label-html_application']['uk'] = "";
+$text['label-html_application']['sv-se'] = "";
+$text['label-html_application']['ro'] = "";
+$text['label-html_application']['de-at'] = "";
+$text['label-html_application']['ar-eg'] = "";
+$text['label-html_application']['he'] = "";
+
+$text['label-speed_dial_blf']['en-us'] = "Speed Dial + BLF";
+$text['label-speed_dial_blf']['es-cl'] = "";
+$text['label-speed_dial_blf']['pt-pt'] = "";
+$text['label-speed_dial_blf']['fr-fr'] = "";
+$text['label-speed_dial_blf']['pt-br'] = "";
+$text['label-speed_dial_blf']['pl'] = "";
+$text['label-speed_dial_blf']['uk'] = "";
+$text['label-speed_dial_blf']['sv-se'] = "";
+$text['label-speed_dial_blf']['ro'] = "";
+$text['label-speed_dial_blf']['de-at'] = "";
+$text['label-speed_dial_blf']['ar-eg'] = "";
+$text['label-speed_dial_blf']['he'] = "";
+
+//Additional translations
 $text['header-profiles']['en-us'] = "Profiles";
 $text['header-profiles']['es-cl'] = "Perfiles";
 $text['header-profiles']['pt-pt'] = "Perfis";
