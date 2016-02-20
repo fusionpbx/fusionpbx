@@ -15,6 +15,8 @@ local log = require "resources.functions.log".database
 
 local BACKEND = xml_handler and xml_handler.db_backend or 'native'
 
+local unpack = unpack or table.unpack
+
 -----------------------------------------------------------
 local installed_classes = {}
 local default_backend = FsDatabase
