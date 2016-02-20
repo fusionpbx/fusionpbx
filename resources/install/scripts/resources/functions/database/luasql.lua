@@ -94,7 +94,11 @@ function LuaSQLDatabase:release()
 end
 
 function LuaSQLDatabase:connected()
-  return self._dbh and self._dbh:connected()
+  if not self._dbh then
+    return false
+  end
+  local str = tostring(self._dbh)
+  return not string.find(str, 'closed')
 end
 
 end
