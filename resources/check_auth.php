@@ -31,7 +31,9 @@ require_once "resources/require.php";
 	}
 
 //start the session
+	ini_set("session.use_only_cookies", True);
 	ini_set("session.cookie_httponly", True);
+	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	session_start();
 
 //if the username session is not set the check username and password
@@ -223,7 +225,7 @@ require_once "resources/require.php";
 					}
 					else {
 						$sql .= "where username=:username ";
-						//$sql .= "and username='".$username."' ";
+						//$sql .= "where username='".$username."' ";
 					}
 					//$sql .= "and domain_uuid='".$domain_uuid."' ";
 					if ($_SESSION["user"]["unique"]["text"] == "global") {
@@ -396,7 +398,7 @@ require_once "resources/require.php";
 			}
 
 		//get the domains
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/domains/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php")){
 				require_once "app/domains/resources/domains.php";
 			}
 
