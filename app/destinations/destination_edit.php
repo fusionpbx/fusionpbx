@@ -221,7 +221,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $regex_destination_number;
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "(".$regex_destination_number.")";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
