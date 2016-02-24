@@ -305,9 +305,11 @@ else {
 			echo 	$text['description_search'];
 			echo "</td>";
 			echo "<td style='padding-top: 8px;' align='right'>";
-
-				echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
-				echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
+				echo "<input type='hidden' name='showall' value='true'>\n";
+			}
+			echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
+			echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 
 			echo "</td>";
 			echo "</tr>";
