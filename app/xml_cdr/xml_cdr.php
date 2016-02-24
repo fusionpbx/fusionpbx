@@ -110,7 +110,7 @@ else {
 		echo "	<input type='hidden' name='order' value='$order'>\n";
 	}
 	if (permission_exists('xml_cdr_all' && $_REQUEST['showall'] == 'true')) {
-		echo "		<input type='hidden' name='showall' value='true'>\n";
+		echo "	<input type='hidden' name='showall' value='true'>\n";
 	}
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
