@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -229,9 +229,8 @@ else {
 	$param .= "&bridge_uuid=".$bridge_uuid;
 	$param .= "&mos_comparison=".$mos_comparison;
 	$param .= "&mos_score=".$mos_score;
-
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$param .= "&showall=" . $_GET['showall'];
+	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
+		$param .= "&showall=true";
 	}
 	if (isset($order_by)) {
 		$param .= "&order_by=".$order_by."&order=".$order;
@@ -326,7 +325,8 @@ else {
 	else {
 		$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	}
-	
+	$sql= str_replace("  ", " ", $sql);
+	$sql= str_replace("where and", "where", $sql);
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
