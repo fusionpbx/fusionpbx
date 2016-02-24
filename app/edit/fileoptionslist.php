@@ -42,77 +42,71 @@ else {
 //include
 	require_once "header.php";
 
-function isfile($filename) {
-	if (@filesize($filename) > 0) { return true; } else { return false; }
-}
+//define function recure_dir
+	function recur_dir($dir) {
+		clearstatcache();
+		$htmldirlist = '';
+		$htmlfilelist = '';
+		$dirlist = opendir($dir);
+		$dir_array = array();
+		while (false !== ($file = readdir($dirlist))) {
+			if ($file != "." AND $file != ".."){
+				$newpath = $dir.'/'.$file;
+				$level = explode('/',$newpath);
+				if (substr($newpath, -4) == ".svn" ||
+					substr($newpath, -4) == ".git") {
+					//ignore .svn and .git dir and subdir
+				}
+				elseif (substr($newpath, -3) == ".db") {
+					//ignore .db files
+				}
+				else {
+					$dir_array[] = $newpath;
+				}
+				if ($x > 1000) { break; };
+				$x++;
+			}
+		}
 
-function space($count) {
-	$r=''; $i=0;
-	while($i < $count) {
-		$r .= '     ';
-		$i++;
+		asort($dir_array);
+		foreach ($dir_array as $newpath){
+			$level = explode('/',$newpath);
+
+			if (is_dir($newpath)) {
+				$dirname = end($level);
+				$newpath = str_replace ('//', '/', $newpath);
+				$htmldirlist .= "
+					<table border=0 cellpadding='0' cellspacing='0'>
+						<tr>
+							<td nowrap style='padding-left: 16px;'>
+								<a onclick=\"Toggle(this, '".$newpath."');\" style='cursor: pointer;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$dirname."</a><div style='display:none'>".recur_dir($newpath)."</div>
+							</td>
+						</tr>
+					</table>\n";
+			}
+			else {
+				$filename = end($level);
+				$filesize = round(filesize($newpath)/1024, 2);
+				$newpath = str_replace ('//', '/', $newpath);
+				$newpath = str_replace ("\\", "/", $newpath);
+				$newpath = str_replace ($filename, '', $newpath);
+				$htmlfilelist .= "
+					<table border=0 cellpadding='0' cellspacing='0'>
+						<tr>
+							<td nowrap align='bottom' style='padding-left: 16px;'>
+								<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filename').value='".$filename."'; parent.document.getElementById('folder').value='".$newpath."';\" title='".$newpath." &#10; ".$filesize." KB'><img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>
+							</td>
+						</tr>
+					</table>\n";
+			}
+		}
+
+		closedir($dirlist);
+		return $htmldirlist ."\n". $htmlfilelist;
 	}
-	return $r;
-}
-
-function recur_dir($dir) {
-  clearstatcache();
-  $htmldirlist = '';
-  $htmlfilelist = '';
-  $dirlist = opendir($dir);
-  while ($file = readdir ($dirlist)) {
-      if ($file != '.' && $file != '..') {
-          $newpath = $dir.'/'.$file;
-           $level = explode('/',$newpath);
-
-           if (is_dir($newpath)) {
-               /*$mod_array[] = array(
-                       'level'=>count($level)-1,
-                       'path'=>$newpath,
-                       'name'=>end($level),
-                       'type'=>'dir',
-                       'mod_time'=>filemtime($newpath),
-                       'size'=>'');
-                       $mod_array[] = recur_dir($newpath);
-               */
-               $dirname = end($level);
-               $htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this, '".$newpath."');\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
-               //$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
-               //$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-               //$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-               //$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-               //$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-               //$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
-               //$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-               //$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-               $htmldirlist .= recur_dir($newpath);
-               $htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
-           }
-           else {
-                /*$mod_array[] = array(
-                       'level'=>count($level)-1,
-                       'path'=>$newpath,
-                       'name'=>end($level),
-                       'type'=>'file',
-                       'mod_time'=>filemtime($newpath),
-                       'size'=>filesize($newpath));
-                */
-               $filename = end($level);
-               $filesize = round(filesize($newpath)/1024, 2);
-               $newpath = str_replace ($filename, "", $newpath);
-               $htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.getElementById('filename').value='".$filename."'; parent.document.getElementById('folder').value='".$newpath."';\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'>$filename</a><DIV style='display:none'>\n";
-               $htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
-          }
-       }
-   }
-
-   closedir($dirlist);
-   return $htmldirlist ."\n". $htmlfilelist;
-}
 
 echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 echo "    function makeRequest(url, strpost) {\n";
-//echo "        alert(url); \n";
 echo "        var http_request = false;\n";
 echo "\n";
 echo "        if (window.XMLHttpRequest) { // Mozilla, Safari, ...\n";
@@ -141,14 +135,11 @@ echo "        http_request.open('POST', url, true);\n";
 echo "\n";
 echo "\n";
 echo "        if (strpost.length == 0) {\n";
-//echo "            alert('none');\n";
 echo "            //http_request.send(null);\n";
 echo "            http_request.send('name=value&foo=bar');\n";
 echo "        }\n";
 echo "        else {\n";
-//echo "            alert(strpost);\n";
 echo "            http_request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');\n";
-//echo "            http_request.send('name=value&foo=bar');\n";
 echo "            http_request.send(strpost);\n";
 echo "        }\n";
 echo "\n";
@@ -160,13 +151,7 @@ echo "        if (http_request.readyState == 4) {\n";
 echo "            if (http_request.status == 200) {\n";
 
 echo "                  parent.editAreaLoader.setValue('edit1', http_request.responseText); \n";
-//echo "                alert(http_request.responseText);\n";
 echo "\n";
-//echo "                //var xmldoc = http_request.responseXML;\n";
-//echo "                //var root_node = xmldoc.getElementsByTagName('doc').item(0);\n";
-//echo "                //alert(xmldoc.getElementByID('fr1').value);\n";
-//echo "                //alert(root_node.firstChild.data);\n";
-//echo "\n";
 echo "            }\n";
 echo "            else {\n";
 echo "                alert('".$text['message-problem']."');\n";
@@ -188,45 +173,21 @@ echo "	parent.document.getElementById('folder').value=path; \n";
 echo "	parent.document.getElementById('filename').value='';\n";
 echo "	parent.document.getElementById('folder').focus();\n";
 echo "	// Unfold the branch if it isn't visible\n";
-echo "	if (node.nextSibling.style.display == 'none')	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/minus.gif\";\n";
-echo "    			}\n";
-echo "  		}\n";
-echo "  \n";
-echo "  		node.nextSibling.style.display = 'block';\n";
+echo "	if (node.nextSibling.style.display == 'none') {\n";
+echo "  	node.nextSibling.style.display = 'block';\n";
 echo "	}\n";
 echo "	// Collapse the branch if it IS visible\n";
-echo "	else	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/plus.gif\";\n";
-echo "    			}\n";
-echo "  		}\n";
-echo "  		node.nextSibling.style.display = 'none';\n";
+echo "	else {\n";
+echo "  	node.nextSibling.style.display = 'none';\n";
 echo "	}\n";
 echo "\n";
 echo "}\n";
 echo "</SCRIPT>\n";
 
-echo "<div align='center' valign='1'>";
 echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\" valign='top' nowrap>\n";
-echo "\n";    
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-files']." <DIV style=''>\n"; //display:none
-//echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this, '')\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
-
-//echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this, '')\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
-//echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-//echo "</DIV></TD></TR></TABLE>\n";
-//echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-//echo "</DIV></TD></TR></TABLE>\n";
-//echo "</DIV></TD></TR></TABLE>\n";
+echo "	<tr>\n";
+echo "		<td align=\"left\" valign='top' nowrap>\n";
+echo "      	<table border=0 cellpadding='0' cellspacing='0'><tr><td style='cursor: default;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'>".$text['label-files']."<div>\n";
 
 ini_set("session.cookie_httponly", True);
 session_start();
@@ -246,15 +207,12 @@ if ($_SESSION["app"]["edit"]["dir"] == "xml") {
 	echo recur_dir($_SESSION['switch']['conf']['dir']);
 }
 
-echo "</DIV></TD></TR></TABLE>\n";
+echo "			</div></td></tr></table>\n";
 
-
-echo "</td>\n";
-echo "</tr>\n";
+echo "		</td>\n";
+echo "	</tr>\n";
 echo "</table>\n";
-echo "</div>";
 
-echo "<br><br>";
 require_once "footer.php";
 
 unset ($result_count);
@@ -262,8 +220,4 @@ unset ($result);
 unset ($key);
 unset ($val);
 unset ($c);
-
-echo "</body>";
-echo "</html>";
-
 ?>
