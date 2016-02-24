@@ -95,7 +95,7 @@ else {
          } else {
              $mos_comparison = '';
         }
-		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);		
+		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
 
@@ -284,6 +284,7 @@ else {
 
 //get the results from the db
 	$sql = "select ";
+	$sql .= "domain_uuid, ";
 	$sql .= "start_stamp, ";
 	$sql .= "start_epoch, ";
 	$sql .= "hangup_cause, ";
