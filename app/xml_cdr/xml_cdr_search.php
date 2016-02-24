@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012
+	Copyright (C) 2008-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -34,11 +34,11 @@ else {
 	exit;
 }
 
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
+//send the header
 require_once "resources/header.php";
 
 //javascript to toggle input/select boxes
@@ -54,6 +54,7 @@ echo "		}";
 echo "	}";
 echo "</script>";
 
+//start the html form
 if (strlen(check_str($_GET['redirect'])) > 0) {
 	echo "<form method='get' action='" . $_GET['redirect'] . ".php'>\n";
 } else {
@@ -216,20 +217,27 @@ echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-mos_score']."</td>";
 echo "		<td class='vtable'>";
 echo "			<select name='mos_comparison' class='formfld'>\n";
-echo "				<option value=''></option>\n";
-	echo "			<option value='less'>&lt;</option>\n";
-	echo "			<option value='greater'>&gt;</option>\n";
-	echo "			<option value='lessorequal'>&lt;&#61;</option>\n";
-	echo "			<option value='greaterorequal'>&gt;&#61;</option>\n";
-	echo "			<option value='equal'>&#61;</option>\n";
-	echo "			<option value='notequal'>&lt;&gt;</option>\n";
+echo "			<option value=''></option>\n";
+echo "			<option value='less'>&lt;</option>\n";
+echo "			<option value='greater'>&gt;</option>\n";
+echo "			<option value='lessorequal'>&lt;&#61;</option>\n";
+echo "			<option value='greaterorequal'>&gt;&#61;</option>\n";
+echo "			<option value='equal'>&#61;</option>\n";
+echo "			<option value='notequal'>&lt;&gt;</option>\n";
 echo "			</select>\n";
-echo " <input type='text' class='formfld' name='mos_score' value='$mos_score'></td>";
-echo "	</tr>";
-echo "	<tr>";
-echo "		<td colspan='2' align='right'><br><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
-echo "	</tr>";
-echo "</table>";
+echo "			<input type='text' class='formfld' name='mos_score' value='$mos_score'>\n";
+echo "		</td>";
+echo "	</tr>\n";
+
+echo "	<tr>\n";
+echo "		<td colspan='2' align='right'><br>\n";
+if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
+	echo "			<input type='hidden' name='showall' value='".$_REQUEST['showall']."'>\n";
+}
+echo "			<input type='submit' name='submit' class='btn' value='".$text['button-search']."'>\n";
+echo "		</td>\n";
+echo "	</tr>\n";
+echo "</table>\n";
 
 echo "		</td>";
 echo "	</tr>";
