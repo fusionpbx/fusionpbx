@@ -35,23 +35,13 @@ else {
 	echo "access denied";
 	exit;
 }
-//require_once "edit/header.php";
+
+require_once "header.php";
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-
-echo "<html>";
-echo "<head>";
-echo "<style>\n";
-echo "TD {\n";
-echo "	font-size: 11.5px;\n";
-echo "}\n";
-echo "A {\n";
-echo "	text-decoration:none\n";
-echo "}\n";
-echo "</style>";
 
 function isfile($filename) {
 	if (@filesize($filename) > 0) { return true; } else { return false; }
@@ -135,37 +125,49 @@ echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
 echo "function Toggle(node) {\n";
 echo "	// Unfold the branch if it isn't visible\n";
 echo "	if (node.nextSibling.style.display == 'none')	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/minus.gif\";\n";
-echo "    			}\n";
-
-echo "  		}\n";
-echo "  \n";
 echo "  		node.nextSibling.style.display = 'block';\n";
 echo "	}\n";
 echo "	// Collapse the branch if it IS visible\n";
 echo "	else	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/plus.gif\";\n";
-echo "    			}\n";
-echo "  		}\n";
 echo "  		node.nextSibling.style.display = 'none';\n";
 echo "	}\n";
 echo "\n";
 echo "}\n";
 echo "</SCRIPT>";
 
+// keyboard shortcut bindings
+echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.11.1.js'></script>\n";
+echo "<script>\n";
+echo "	$(window).keypress(function(event) {\n";
+echo "		//save file [Ctrl+S]\n";
+echo "		if ((event.which == 115 && event.ctrlKey) || (event.which == 19)) {\n";
+echo "			parent.$('form#frm_edit').submit();\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//open file manager/clip library pane [Ctrl+Q]\n";
+echo "		else if ((event.which == 113 && event.ctrlKey) || (event.which == 19)) {\n";
+echo "			parent.toggle_sidebar();\n";
+echo "			parent.focus_editor();\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//block backspace\n";
+echo "		else if (event.which == 8) {\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//otherwise, default action\n";
+echo "		else {\n";
+echo "			return true;\n";
+echo "		}\n";
+echo "	});\n";
+echo "</script>";
+
 echo "<head>";
-echo "<body onfocus='null;'>";
+echo "<body style='margin: 0; padding: 5px;' onfocus='null;'>";
 echo "<div align='center' valign='1'>";
 echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 echo "<tr class='border'>\n";
 echo "	<td align=\"left\" valign='top' nowrap>\n";
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-clip-library']."</a><DIV style=''>\n"; //display:none
+echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','clipwin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none; cursor: pointer;' title='Manage Clips'><IMG SRC=\"resources/images/icon_gear.png\" border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'>".$text['label-clip-library']."</a><DIV style=''>\n"; //display:none
 
 $sql = "select * from v_clips ";
 $sql .= "order by clip_folder ";
@@ -195,7 +197,7 @@ if ($result_count > 0) { //no results
 		if ($last_folder != $row['clip_folder']) {
 			$clip_folder_name = str_replace ($previous_folder_name, "", $row['clip_folder']);
 			$clip_folder_name = str_replace ("/", "", $clip_folder_name);
-			echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A href='javascript:void(0);' onClick=\"Toggle(this);\"><IMG SRC=\"images/plus.gif\" border='none'> <IMG SRC=\"images/folder.gif\" border='none'> &nbsp;".$clip_folder_name." &nbsp; </A><DIV style='display:none'>\n\n";
+			echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD style='padding-left: 16px;'><A onClick=\"Toggle(this);\" style='cursor: pointer; text-decoration: none;'><IMG SRC=\"resources/images/icon_folder.png\" border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$clip_folder_name."</A><DIV style='display:none'>\n\n";
 			$tag_open = 1;
 		}
 
@@ -205,8 +207,8 @@ if ($result_count > 0) { //no results
 		echo "<textarea style='display:none' id='clip_lib_start".$row['clip_uuid']."'>".$row['clip_text_start']."</textarea>\n";
 		echo "<textarea style='display:none' id='clip_lib_end".$row['clip_uuid']."'>".$row['clip_text_end']."</textarea>\n";
 		echo "\n";
-		echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=12></TD><TD align='bottom'><IMG SRC=\"images/file.png\" border='0'> \n";
-		echo "<a href='javascript:void(0);' onclick=\"parent.editAreaLoader.insertTags('edit1', document.getElementById('clip_lib_start".$row['clip_uuid']."').value, document.getElementById('clip_lib_end".$row['clip_uuid']."').value);\">".$row['clip_name']."</a>\n";
+		echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD align='bottom' style='padding-left: 16px;'><IMG SRC=\"resources/images/icon_file.png\" border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>";
+		echo "<a href='javascript:void(0);' onclick=\"parent.insert_clip(document.getElementById('clip_lib_start".$row['clip_uuid']."').value, document.getElementById('clip_lib_end".$row['clip_uuid']."').value);\">".$row['clip_name']."</a>\n";
 		echo "</TD></TR></TABLE>\n";
 		echo "\n\n";
 
@@ -226,16 +228,11 @@ echo "</tr>\n";
 echo "</table>\n";
 echo "</div>";
 
-echo "<br><br>";
-//require_once "resources/footer.php";
+require_once "footer.php";
 
 unset ($result_count);
 unset ($result);
 unset ($key);
 unset ($val);
 unset ($c);
-
-echo "</body>";
-echo "</html>";
-
 ?>

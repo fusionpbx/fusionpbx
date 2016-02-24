@@ -80,13 +80,10 @@ if (count($_POST)>0) {
 
 //show the content
 	require_once "header.php";
-	echo "<div align='left'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
+	echo "<tr>\n";
 	echo "	<td align=\"left\">\n";
 
-	//echo "Clip Library";
-	//echo "<hr size='1'>";
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' border='0'>";
 	echo "	<tr>";
@@ -117,7 +114,9 @@ if (count($_POST)>0) {
 	echo "		</td>";
 	echo "	</tr>";
 
-	echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='".$text['button-add']."'></td>";
+	echo "	<tr>";
+	echo "		<td align='left'><input type='button' value='".$text['button-back']."' onclick='history.back()'></td>";
+	echo "		<td align='right'><input type='submit' name='submit' value='".$text['button-add']."'></td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
@@ -125,7 +124,6 @@ if (count($_POST)>0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
 
 	require_once "footer.php";
 ?>
