@@ -309,11 +309,11 @@ else {
 		$sql .= "rtp_audio_in_mos, ";
 	}
 	$sql .= "(answer_epoch - start_epoch) as tta ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
 		$sql .= ", domain_name ";
 	}
 	$sql .= "from v_xml_cdr ";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
 		if ($sql_where) { $sql .= "where "; }
 	} else {
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
