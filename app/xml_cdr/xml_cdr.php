@@ -109,14 +109,14 @@ else {
 		echo "	<input type='hidden' name='order_by' value='$order_by'>\n";
 		echo "	<input type='hidden' name='order' value='$order'>\n";
 	}
+	if (permission_exists('xml_cdr_all' && $_REQUEST['showall'] == 'true')) {
+		echo "		<input type='hidden' name='showall' value='true'>\n";
+	}
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
 	if (permission_exists('xml_cdr_all')) {
-		if ($_REQUEST['showall'] == 'true') {
-			echo "		<input type='hidden' name='showall' value='true'>\n";
-		}
-		else {
+		if ($_REQUEST['showall'] != 'true') {
 			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
 		}
 	}

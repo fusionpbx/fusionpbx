@@ -168,7 +168,14 @@ echo "	</tr>";
 if (permission_exists('xml_cdr_all')) {
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['button-show_all']."</td>";
-	echo "		<td class='vtable'><input type='checkbox' class='formfld' name='showall' value='true'></td>";
+	echo "		<td class='vtable'>\n";
+	if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
+		echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
+	}
+	else {
+		echo "			<input type='checkbox' class='formfld' name='showall' value='true'>";
+	}
+	echo "		<td>";
 	echo "	</tr>";
 }
 echo "</table>";
@@ -231,9 +238,6 @@ echo "	</tr>\n";
 
 echo "	<tr>\n";
 echo "		<td colspan='2' align='right'><br>\n";
-if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == "true") {
-	echo "			<input type='hidden' name='showall' value='".$_REQUEST['showall']."'>\n";
-}
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-search']."'>\n";
 echo "		</td>\n";
 echo "	</tr>\n";
