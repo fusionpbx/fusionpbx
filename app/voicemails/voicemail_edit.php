@@ -286,6 +286,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
 
+//get the greetings list
+	$sql = "select * from v_voicemail_greetings ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and voicemail_id = '".$voicemail_id."' ";
+	$sql .= "order by greeting_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$greetings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$greeting_count = count($greetings);
+	unset ($prep_statement, $sql);
+
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-voicemail'];
@@ -328,12 +339,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-greeting_id']."\n";
+	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='greeting_id' maxlength='255' value='$greeting_id'>\n";
+	echo "	<select class='formfld' name='greeting_id'>\n";
+	echo "		<option value=''></option>\n";
+	if ($greeting_count > 0) {
+		foreach ($greetings as $greeting) {
+			$selected = ($greeting['id'] == $greeting_id) ? 'selected' : null;
+			echo "<option value='".$greeting['id']."' ".$selected.">".$greeting['greeting_name']."</option>\n";
+		}
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-greeting_id']."\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
