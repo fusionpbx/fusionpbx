@@ -285,7 +285,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$greetings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	echo "<pre>".print_r($greetings, true)."</pre><br><br>";
 	$greeting_count = count($greetings);
 	unset ($prep_statement, $sql);
 
