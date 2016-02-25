@@ -64,7 +64,7 @@ else {
 <html>
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<title><?=$title?></title>
+	<title><?php echo $title;?></title>
 	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {
@@ -242,21 +242,21 @@ else {
 	//load ace editor
 		var editor = ace.edit("editor");
 		editor.setOptions({
-			mode: 'ace/mode/<?=$mode?>',
+			mode: 'ace/mode/<?php echo $mode;?>',
 			theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,
 			selectionStyle: 'text',
 			cursorStyle: 'smooth',
-			showInvisibles: <?=$setting_invisibles?>,
-			displayIndentGuides: <?=$setting_indenting?>,
-			showLineNumbers: <?=$setting_numbering?>,
+			showInvisibles: <?php echo $setting_invisibles;?>,
+			displayIndentGuides: <?php echo $setting_indenting;?>,
+			showLineNumbers: <?php echo $setting_numbering;?>,
 			showGutter: true,
 			scrollPastEnd: true,
-			fadeFoldWidgets: <?=$setting_numbering?>,
+			fadeFoldWidgets: <?php echo $setting_numbering;?>,
 			showPrintMargin: false,
 			highlightGutterLine: false,
 			useSoftTabs: false
 			});
-		document.getElementById('editor').style.fontSize='<?=$setting_size?>';
+		document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
 		editor.focus();
 
 	//keyboard shortcut to save file
