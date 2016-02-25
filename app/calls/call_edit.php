@@ -790,8 +790,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo 				$text['label-ignore-busy'];
 	echo "			</td>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "				<label for='follow_me_ignore_busy'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+	echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
 	echo "				<br />\n";
 	echo $text['description-ignore-busy']." \n";
 	//echo "				<br> Interrupt call if one of destination are busy\n";
@@ -832,8 +832,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_disabled').checked=true;";
-	$on_click .= "document.getElementById('forward_busy_disabled').checked=true;";
-	$on_click .= "document.getElementById('forward_no_answer_disabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
 	echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" ".(($dnd_enabled == "false" || $dnd_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" ".(($dnd_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
