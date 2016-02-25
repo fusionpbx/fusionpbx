@@ -39,18 +39,26 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//set the directory
+//set the directory title and mode
 	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];
 	$title = strtoupper($_GET["dir"]);
 	unset($mode);
 	switch ($_GET["dir"]) {
-		case 'xml': $mode['xml'] = 'selected'; break;
-		case 'provision': $mode['xml'] = 'selected'; break;
-		case 'php': $mode['php'] = 'selected'; break;
-		case 'scripts': $mode['lua'] = 'selected'; break;
+		case 'xml': $mode = 'xml'; break;
+		case 'provision': $mode = 'xml'; break;
+		case 'php': $mode = 'php'; break;
+		case 'scripts': $mode = 'lua'; break;
 		case 'grammar': //use default
-		default: $mode['text'] = 'selected';
+		default: $mode = 'text';
 	}
+
+// load editor preferences/defaults
+	$setting_size = ($_SESSION["editor"]["font_size"]["text"] != '') ? $_SESSION["editor"]["font_size"]["text"] : '12px';
+	$setting_theme = ($_SESSION["editor"]["theme"]["text"] != '') ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
+	$setting_invisibles = ($_SESSION["editor"]["invisibles"]["boolean"] != '') ? $_SESSION["editor"]["invisibles"]["boolean"] : 'false';
+	$setting_indenting = ($_SESSION["editor"]["indent_guides"]["boolean"] != '') ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
+	$setting_numbering = ($_SESSION["editor"]["line_numbers"]["boolean"] != '') ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
+	$setting_preview = ($_SESSION["editor"]["live_preview"]["boolean"] != '') ? $_SESSION["editor"]["live_preview"]["boolean"] : 'true';
 ?>
 
 <html>
@@ -64,21 +72,17 @@ else {
 				document.getElementById('editor_source').value = editor.getSession().getValue();
 				return true;
 			}
-			focus_editor();
+			editor.focus();
 			return false;
-		}
-
-		function preview_theme(opt) {
-			editor.setTheme('ace/theme/' + opt.value);
 		}
 
 		function toggle_option(opt) {
 			switch (opt) {
-				case 'numbering': 	toggle_option_do('showGutter'); break;
+				case 'numbering': 	toggle_option_do('showLineNumbers'); toggle_option_do('fadeFoldWidgets'); break;
 				case 'invisibles':	toggle_option_do('showInvisibles'); break;
 				case 'indenting':	toggle_option_do('displayIndentGuides'); break;
 			}
-			focus_editor();
+			editor.focus();
 		}
 
 		function toggle_option_do(opt_name) {
@@ -89,16 +93,12 @@ else {
 		function toggle_sidebar() {
 			var td_sidebar = document.getElementById('sidebar');
 			td_sidebar.style.display = (td_sidebar.style.display == '') ? 'none' : '';
-			focus_editor();
+			editor.focus();
 		}
 
 		function insert_clip(before, after) {
 			var selected_text = editor.session.getTextRange(editor.getSelectionRange());
 			editor.insert(before + selected_text + after);
-			focus_editor();
-		}
-
-		function focus_editor() {
 			editor.focus();
 		}
 	</script>
@@ -118,7 +118,6 @@ else {
 		div#editor {
 			box-shadow: 0 5px 15px #333;
 			}
-
 	</style>
 </head>
 <body style='padding: 0; margin: 0; overflow: hidden;'>
@@ -144,71 +143,89 @@ else {
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick="editor.execCommand('replace');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick="editor.execCommand('gotoline');"></td>
 					<td valign='middle' style='padding-left: 10px;'>
-						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
-							<option value='php' <?=$mode['php']?>>PHP</option>
-							<option value='css'>CSS</option>
-							<option value='html'>HTML</option>
-							<option value='javascript'>JS</option>
-							<option value='json'>JSON</option>
-							<option value='ini'>Conf</option>
-							<option value='lua' <?=$mode['lua']?>>Lua</option>
-							<option value='text' <?=$mode['text']?>>Text</option>
-							<option value='xml' <?=$mode['xml']?>>XML</option>
-							<option value='sql'>SQL</option>
+						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); editor.focus();">
+							<?php
+							$modes['php'] = 'PHP';
+							$modes['css'] = 'CSS';
+							$modes['html'] = 'HTML';
+							$modes['javascript'] = 'JS';
+							$modes['json'] = 'JSON';
+							$modes['ini'] = 'Conf';
+							$modes['lua'] = 'Lua';
+							$modes['text'] = 'Text';
+							$modes['xml'] = 'XML';
+							$modes['sql'] = 'SQL';
+							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
+							foreach ($modes as $value => $label) {
+								$selected = ($value == $mode) ? 'selected' : null;
+								echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+							}
+							?>
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px;'>
-						<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();">
-							<option value='9px'>9px</option>
-							<option value='10px'>10px</option>
-							<option value='11px'>11px</option>
-							<option value='12px' selected>12px</option>
-							<option value='14px'>14px</option>
-							<option value='16px'>16px</option>
-							<option value='18px'>18px</option>
-							<option value='20px'>20px</option>
+						<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; editor.focus();">
+							<?php
+							$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
+							$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
+							if (!in_array($setting_size, $sizes)) {
+								echo "<option value='".$setting_size."' ".$preview.">".$setting_size."</option>\n";
+								echo "<option value='' disabled='disabled'></option>\n";
+							}
+							foreach ($sizes as $size) {
+								$selected = ($size == $setting_size) ? 'selected' : null;
+								echo "<option value='".$size."' ".$selected." ".$preview.">".$size."</option>\n";
+							}
+							?>
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px; padding-right: 4px;'>
-						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
- 							<optgroup label="Bright">
- 								<option value="chrome" onmouseover="preview_theme(this);">Chrome</option>
-								<option value="clouds" onmouseover="preview_theme(this);">Clouds</option>
-								<option value="crimson_editor" onmouseover="preview_theme(this);">Crimson Editor</option>
-								<option value="dawn" onmouseover="preview_theme(this);">Dawn</option>
-								<option value="dreamweaver" onmouseover="preview_theme(this);">Dreamweaver</option>
-								<option value="eclipse" onmouseover="preview_theme(this);">Eclipse</option>
-								<option value="github" onmouseover="preview_theme(this);">GitHub</option>
-								<option value="iplastic" onmouseover="preview_theme(this);">IPlastic</option>
-								<option value="solarized_light" onmouseover="preview_theme(this);">Solarized Light</option>
-								<option value="textmate" onmouseover="preview_theme(this);">TextMate</option>
-								<option value="tomorrow" onmouseover="preview_theme(this);">Tomorrow</option>
-								<option value="xcode" onmouseover="preview_theme(this);">XCode</option>
-								<option value="kuroir" onmouseover="preview_theme(this);">Kuroir</option>
-								<option value="katzenmilch" onmouseover="preview_theme(this);">KatzenMilch</option>
-								<option value="sqlserver" onmouseover="preview_theme(this);">SQL Server</option>
-							</optgroup>
-							<optgroup label="Dark">
-								<option value="ambiance" onmouseover="preview_theme(this);">Ambiance</option>
-								<option value="chaos" onmouseover="preview_theme(this);">Chaos</option>
-								<option value="clouds_midnight" onmouseover="preview_theme(this);">Clouds Midnight</option>
-								<option value="cobalt" onmouseover="preview_theme(this);" selected>Cobalt</option>
-								<option value="idle_fingers" onmouseover="preview_theme(this);">idle Fingers</option>
-								<option value="kr_theme" onmouseover="preview_theme(this);">krTheme</option>
-								<option value="merbivore" onmouseover="preview_theme(this);">Merbivore</option>
-								<option value="merbivore_soft" onmouseover="preview_theme(this);">Merbivore Soft</option>
-								<option value="mono_industrial" onmouseover="preview_theme(this);">Mono Industrial</option>
-								<option value="monokai" onmouseover="preview_theme(this);">Monokai</option>
-								<option value="pastel_on_dark" onmouseover="preview_theme(this);">Pastel on dark</option>
-								<option value="solarized_dark" onmouseover="preview_theme(this);">Solarized Dark</option>
-								<option value="terminal" onmouseover="preview_theme(this);">Terminal</option>
-								<option value="tomorrow_night" onmouseover="preview_theme(this);">Tomorrow Night</option>
-								<option value="tomorrow_night_blue" onmouseover="preview_theme(this);">Tomorrow Night Blue</option>
-								<option value="tomorrow_night_bright" onmouseover="preview_theme(this);">Tomorrow Night Bright</option>
-								<option value="tomorrow_night_eighties" onmouseover="preview_theme(this);">Tomorrow Night 80s</option>
-								<option value="twilight" onmouseover="preview_theme(this);">Twilight</option>
-								<option value="vibrant_ink" onmouseover="preview_theme(this);">Vibrant Ink</option>
-							</optgroup>
+						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); editor.focus();">
+							<?php
+							$themes['Bright']['chrome']= 'Chrome';
+							$themes['Bright']['clouds']= 'Clouds';
+							$themes['Bright']['crimson_editor']= 'Crimson Editor';
+							$themes['Bright']['dawn']= 'Dawn';
+							$themes['Bright']['dreamweaver']= 'Dreamweaver';
+							$themes['Bright']['eclipse']= 'Eclipse';
+							$themes['Bright']['github']= 'GitHub';
+							$themes['Bright']['iplastic']= 'IPlastic';
+							$themes['Bright']['solarized_light']= 'Solarized Light';
+							$themes['Bright']['textmate']= 'TextMate';
+							$themes['Bright']['tomorrow']= 'Tomorrow';
+							$themes['Bright']['xcode']= 'XCode';
+							$themes['Bright']['kuroir']= 'Kuroir';
+							$themes['Bright']['katzenmilch']= 'KatzenMilch';
+							$themes['Bright']['sqlserver']= 'SQL Server';
+							$themes['Dark']['ambiance']= 'Ambiance';
+							$themes['Dark']['chaos']= 'Chaos';
+							$themes['Dark']['clouds_midnight']= 'Clouds Midnight';
+							$themes['Dark']['cobalt']= 'Cobalt';
+							$themes['Dark']['idle_fingers']= 'idle Fingers';
+							$themes['Dark']['kr_theme']= 'krTheme';
+							$themes['Dark']['merbivore']= 'Merbivore';
+							$themes['Dark']['merbivore_soft']= 'Merbivore Soft';
+							$themes['Dark']['mono_industrial']= 'Mono Industrial';
+							$themes['Dark']['monokai']= 'Monokai';
+							$themes['Dark']['pastel_on_dark']= 'Pastel on dark';
+							$themes['Dark']['solarized_dark']= 'Solarized Dark';
+							$themes['Dark']['terminal']= 'Terminal';
+							$themes['Dark']['tomorrow_night']= 'Tomorrow Night';
+							$themes['Dark']['tomorrow_night_blue']= 'Tomorrow Night Blue';
+							$themes['Dark']['tomorrow_night_bright']= 'Tomorrow Night Bright';
+							$themes['Dark']['tomorrow_night_eighties']= 'Tomorrow Night 80s';
+							$themes['Dark']['twilight']= 'Twilight';
+							$themes['Dark']['vibrant_ink']= 'Vibrant Ink';
+							$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.setTheme('ace/theme/' + this.value);\"" : null;
+							foreach ($themes as $optgroup => $theme) {
+								echo "<optgroup label='".$optgroup."'>\n";
+								foreach ($theme as $value => $label) {
+									$selected = (strtolower($label) == strtolower($setting_theme)) ? 'selected' : null;
+									echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
+								}
+								echo "</optgroup>\n";
+							}
+							?>
 						</select>
 					</td>
 				</tr>
@@ -225,25 +242,22 @@ else {
 	//load ace editor
 		var editor = ace.edit("editor");
 		editor.setOptions({
-			<?php
-			foreach ($mode as $lang => $meh) {
-				if ($meh == 'selected') { echo "mode: 'ace/mode/".$lang."',\n"; break; }
-			}
-			?>
-			theme: 'ace/theme/cobalt',
+			mode: 'ace/mode/<?=$mode?>',
+			theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,
 			selectionStyle: 'text',
 			cursorStyle: 'smooth',
-			showInvisibles: false,
-			displayIndentGuides: true,
-			showLineNumbers: true,
+			showInvisibles: <?=$setting_invisibles?>,
+			displayIndentGuides: <?=$setting_indenting?>,
+			showLineNumbers: <?=$setting_numbering?>,
 			showGutter: true,
 			scrollPastEnd: true,
-			fadeFoldWidgets: true,
+			fadeFoldWidgets: <?=$setting_numbering?>,
 			showPrintMargin: false,
 			highlightGutterLine: false,
 			useSoftTabs: false
 			});
-		focus_editor();
+		document.getElementById('editor').style.fontSize='<?=$setting_size?>';
+		editor.focus();
 
 	//keyboard shortcut to save file
 		$(window).keypress(function(event) {
@@ -264,7 +278,7 @@ else {
 		});
 
 	//remove certain keyboard shortcuts
-		editor.commands.bindKey("Ctrl-T", null);
+		editor.commands.bindKey("Ctrl-T", null); //new browser tab
 </script>
 
 
