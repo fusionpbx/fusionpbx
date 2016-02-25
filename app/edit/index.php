@@ -72,7 +72,7 @@ else {
 				document.getElementById('editor_source').value = editor.getSession().getValue();
 				return true;
 			}
-			editor.focus();
+			focus_editor();
 			return false;
 		}
 
@@ -82,7 +82,7 @@ else {
 				case 'invisibles':	toggle_option_do('showInvisibles'); break;
 				case 'indenting':	toggle_option_do('displayIndentGuides'); break;
 			}
-			editor.focus();
+			focus_editor();
 		}
 
 		function toggle_option_do(opt_name) {
@@ -93,12 +93,16 @@ else {
 		function toggle_sidebar() {
 			var td_sidebar = document.getElementById('sidebar');
 			td_sidebar.style.display = (td_sidebar.style.display == '') ? 'none' : '';
-			editor.focus();
+			focus_editor();
 		}
 
 		function insert_clip(before, after) {
 			var selected_text = editor.session.getTextRange(editor.getSelectionRange());
 			editor.insert(before + selected_text + after);
+			focus_editor();
+		}
+
+		function focus_editor() {
 			editor.focus();
 		}
 	</script>
@@ -134,7 +138,7 @@ else {
 			<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 				<tr>
 					<td valign='middle'><img src='resources/images/icon_save.png' title='Save Changes [Ctrl+S]' class='control' onclick="$('form#frm_edit').submit();";></td>
-					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' disabled='disabled' style='height: 23px; width: 100%; color: #000;'></td>
+					<td align='left' valign='middle' width='100%' style='padding: 0 4px 0 6px;'><input id='current_file' type='text' style='height: 23px; width: 100%;'></td>
 					<td style='padding: 0;'><img src='resources/images/blank.gif' style='width: 1px; height: 30px; border: none;'></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_sidebar.png' title='Toggle Side Bar [Ctrl+Q]' class='control' onclick="toggle_sidebar();"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_numbering.png' title='Toggle Line Numbers' class='control' onclick="toggle_option('numbering');"></td>
@@ -143,7 +147,7 @@ else {
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick="editor.execCommand('replace');"></td>
 					<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick="editor.execCommand('gotoline');"></td>
 					<td valign='middle' style='padding-left: 10px;'>
-						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); editor.focus();">
+						<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$modes['php'] = 'PHP';
 							$modes['css'] = 'CSS';
@@ -164,7 +168,7 @@ else {
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px;'>
-						<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; editor.focus();">
+						<select id='size' style='height: 23px;' onchange="document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();">
 							<?php
 							$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 							$preview = ($setting_preview == 'true') ? "onmouseover=\"document.getElementById('editor').style.fontSize = this.value;\"" : null;
@@ -180,7 +184,7 @@ else {
 						</select>
 					</td>
 					<td valign='middle' style='padding-left: 4px; padding-right: 4px;'>
-						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); editor.focus();">
+						<select id='theme' style='height: 23px;' onchange="editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();">
 							<?php
 							$themes['Bright']['chrome']= 'Chrome';
 							$themes['Bright']['clouds']= 'Clouds';
@@ -257,7 +261,12 @@ else {
 			useSoftTabs: false
 			});
 		document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
-		editor.focus();
+		focus_editor();
+
+	//prevent submit (file save) with enter key on file path input
+		$('#current_file').keypress(function(event){
+			if (event.which == 13) { return false; }
+		});
 
 	//keyboard shortcut to save file
 		$(window).keypress(function(event) {
