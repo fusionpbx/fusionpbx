@@ -39,7 +39,10 @@ function OdbcPoolDatabase:query(sql, fn)
   if fn then
     ok, err = cli:acquire(self._timeout, function(dbh)
       local ok, err = dbh:neach(sql, function(row)
-        return fn(remove_null(row, odbc.NULL, ""))
+        local n = fn(remove_null(row, odbc.NULL, ""))
+        if type(n) == 'number' and n ~= 0 then
+          return true
+        end
       end)
       if err and not ok then
         log.errf("Can not execute sql: %s\n%s", tostring(err), sql)
