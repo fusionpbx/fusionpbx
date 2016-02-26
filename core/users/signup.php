@@ -279,7 +279,7 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	echo "</script>";
 
 	$tablewidth ='width="100%"';
-	echo "<form method='post' action=''>";
+	echo "<form name='frm' id='frm' method='post' action=''>";
 
 	echo "<table border='0' $tablewidth cellpadding='0' cellspacing='0'>";
 	echo "	<tr>\n";
@@ -350,11 +350,24 @@ if (count($_POST) > 0 && check_str($_POST["persistform"]) != "1") {
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
-	echo "      	<br><input type='submit' name='submit' class='btn' value='".$text['button-create_account']."'>";
+	echo "      	<br><input type='button' class='btn' value='".$text['button-create_account']."' onclick='submit_form();'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the footer
 	require_once "resources/footer.php";
