@@ -789,18 +789,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "		<tr>\n";
-	echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
-	echo 				$text['label-ignore-busy'];
-	echo "			</td>\n";
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
-	echo "				<br />\n";
-	echo $text['description-ignore-busy']." \n";
-	//echo "				<br> Interrupt call if one of destination are busy\n";
-	echo "			</td>\n";
-	echo "		</tr>\n";
+	if (permission_exists('follow_me_ignore_busy')) {
+		echo "		<tr>\n";
+		echo "			<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
+		echo 				$text['label-ignore-busy'];
+		echo "			</td>\n";
+		echo "			<td class='vtable' align='left'>\n";
+		echo "				<label for='follow_me_ignore_busy_false'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_false' value='false' onclick=\"\" ".(($follow_me_ignore_busy == "false" || $follow_me_ignore_busy == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+		echo "				<label for='follow_me_ignore_busy_true'><input type='radio' name='follow_me_ignore_busy' id='follow_me_ignore_busy_true' value='true' onclick=\"$on_click\" ".(($follow_me_ignore_busy == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
+		echo "				<br />\n";
+		echo $text['description-ignore-busy']." \n";
+		//echo "				<br> Interrupt call if one of destination are busy\n";
+		echo "			</td>\n";
+		echo "		</tr>\n";
+	}
 
 	if (permission_exists('follow_me_cid_name_prefix')) {
 		echo "<tr>\n";
