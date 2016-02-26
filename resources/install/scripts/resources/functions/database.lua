@@ -117,6 +117,14 @@ local function new_database(backend)
     assert(x == 2, ("Got %d expected %d"):format(x, 2))
     end
 
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return "1"
+    end)
+    assert(x == 1, ("Got %d expected %d"):format(x, 2))
+    end
+
     assert("1" == db:first_value("select 1 as v union all select 2 as v"))
 
     local t = assert(db:first_row("select '1' as v union all select '2' as v"))
