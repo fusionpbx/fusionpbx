@@ -88,6 +88,14 @@ local function new_database(backend)
     do local x = 0
     db:query("select 1 as v union all select 2 as v", function(row)
       x = x + 1
+      return -1
+    end)
+    assert(x == 1, ("Got %d expected %d"):format(x, 1))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
       return 0
     end)
     assert(x == 2, ("Got %d expected %d"):format(x, 2))
