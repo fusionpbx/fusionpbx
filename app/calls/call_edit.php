@@ -667,7 +667,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	echo "<div id='tr_follow_me_settings' style='display: none;'>\n";
+	if ($follow_me_enabled == "true") { $style = ''; } else { $style = 'display: none;'; }
+	echo "<div id='tr_follow_me_settings' style='$style'>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
