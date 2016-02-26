@@ -54,7 +54,8 @@ function LuaSQLDatabase:query(sql, fn)
       local row, err = cur:fetch({}, "a")
       if not row then break end
       local ok, ret = pcall(fn, apply_names(row, colnames, ""))
-      if (not ok) or (type(ret) == 'number' and ret > 0) then
+      ret = tonumber(ret)
+      if (not ok) or (ret and ret ~= 0) then
         break
       end
     end

@@ -38,7 +38,10 @@ function OdbcDatabase:query(sql, fn)
   self._rows_affected = nil
   if fn then
     return self._dbh:neach(sql, function(row)
-      return fn(remove_null(row, odbc.NULL, ""))
+      local n = tonumber((fn(remove_null(row, odbc.NULL, ""))))
+      if n and n ~= 0 then
+        return true
+      end
     end)
   end
   local ok, err = self._dbh:exec(sql)
