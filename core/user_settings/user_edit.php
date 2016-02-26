@@ -282,7 +282,7 @@ else {
 
 //show the content
 	$table_width ='width="100%"';
-	echo "<form method='post' action=''>";
+	echo "<form name='frm' id='frm' method='post' action=''>";
 
 	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<td align='left' width='100%' nowrap><b>".$text['title']."</b></td>\n";
@@ -290,7 +290,7 @@ else {
 	if (strlen($_SESSION['login']['destination']['url']) > 0) {
 		echo "	<input type='button' class='btn' onclick=\"window.location='".$_SESSION['login']['destination']['url']."'\" value='".$text['button-back']."'>";
 	}
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -480,12 +480,25 @@ else {
 	echo "<table $table_width>";
 	echo "	<tr>";
 	echo "		<td align='right'>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
