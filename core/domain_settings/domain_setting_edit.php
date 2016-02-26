@@ -336,8 +336,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
 	if ($action == "update") {
@@ -349,7 +349,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domain_edit.php?id=$domain_uuid'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -630,12 +630,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='domain_setting_uuid' value='$domain_setting_uuid'>\n";
 	}
 	echo "			<br />";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br />";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
