@@ -39,8 +39,8 @@ function OdbcPoolDatabase:query(sql, fn)
   if fn then
     ok, err = cli:acquire(self._timeout, function(dbh)
       local ok, err = dbh:neach(sql, function(row)
-        local n = fn(remove_null(row, odbc.NULL, ""))
-        if type(n) == 'number' and n ~= 0 then
+        local n = tonumber((fn(remove_null(row, odbc.NULL, ""))))
+        if n and n ~= 0 then
           return true
         end
       end)
