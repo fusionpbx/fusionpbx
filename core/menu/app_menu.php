@@ -96,6 +96,7 @@ $apps[$x]['menu'][5]['category'] = "internal";
 $apps[$x]['menu'][5]['path'] = "";
 $apps[$x]['menu'][5]['order'] = "30";
 $apps[$x]['menu'][5]['groups'][] = "superadmin";
+$apps[$x]['menu'][5]['groups'][] = "admin";
 
 $apps[$x]['menu'][6]['title']['en-us'] = "Login";
 $apps[$x]['menu'][6]['title']['es-cl'] = "Ingresar";

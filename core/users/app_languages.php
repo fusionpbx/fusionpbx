@@ -1,5 +1,15 @@
 <?php
 
+$text['title-user_setting-edit']['en-us'] = "User Setting";
+$text['title-user_setting-edit']['es-cl'] = "Configuración de Usuario";
+$text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
+$text['title-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+
+$text['title-user_setting-add']['en-us'] = "User Setting Add";
+$text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
+$text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
+$text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+
 $text['title-user_manager']['en-us'] = "User Manager";
 $text['title-user_manager']['es-cl'] = "Administración de Usuarios";
 $text['title-user_manager']['pt-pt'] = "Gestão de Utilizadores";
@@ -572,6 +582,16 @@ $text['label-additional_info']['ro'] = "";
 $text['label-additional_info']['de-at'] = "Zusätzliche Information";
 $text['label-additional_info']['he'] = "מידע נוסף";
 
+$text['header-user_setting-edit']['en-us'] = "User Setting";
+$text['header-user_setting-edit']['es-cl'] = "Configuración de Usuario";
+$text['header-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
+$text['header-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+
+$text['header-user_setting-add']['en-us'] = "User Setting Add";
+$text['header-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
+$text['header-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
+$text['header-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+
 $text['header-user_manager']['en-us'] = "Users";
 $text['header-user_manager']['es-cl'] = "Administración de Usuario";
 $text['header-user_manager']['pt-pt'] = "Gestão de Utilizadores";
@@ -659,6 +679,16 @@ $text['header-group_add']['sv-se'] = "Lägg Till Grupp";
 $text['header-group_add']['ro'] = "";
 $text['header-group_add']['de-at'] = "Gruppe hinzufügen";
 $text['header-group_add']['he'] = "הוסף קבוצה";
+
+$text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
+$text['description-user_setting-edit']['es-cl'] = "Editar un escenario de este usuario.";
+$text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
+$text['description-user_setting-edit']['fr-fr'] = "Modifier un réglage pour cet utilisateur.";
+
+$text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
+$text['description-user_setting-add']['es-cl'] = "Añadir un entorno para este usuario.";
+$text['description-user_setting-add']['pt-pt'] = "Adicionar uma definição para esse usuário.";
+$text['description-user_setting-add']['fr-fr'] = "Ajouter un cadre pour cet utilisateur.";
 
 $text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-user_manager']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";
