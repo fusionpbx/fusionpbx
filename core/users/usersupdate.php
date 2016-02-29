@@ -368,7 +368,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		$_SESSION["message"] = $text['message-update'];
-		if ($_REQUEST['submit'] == $text['button-add']) {
+		if ($_REQUEST['action'] == $text['button-add']) {
 			header("Location: usersupdate.php?id=".$user_uuid);
 		}
 		else {
@@ -435,13 +435,13 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "	}";
 	echo "</script>";
 
-	echo "<form method='post' action=''>";
-
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<input type='hidden' name='action' id='action' value=''>\n";
 	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_edit']."</b></td>\n";
 	echo "<td align='right' nowrap>\n";
 	echo "	<input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -570,7 +570,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			}
 		}
 		echo "</select>";
-		echo "<input type='submit' name='submit' class='btn' value=\"".$text['button-add']."\">\n";
+		echo "<input type='button' class='btn' value=\"".$text['button-add']."\" onclick=\"document.getElementById('action').value = '".$text['button-add']."'; submit_form();\">\n";
 	}
 	unset($sql, $prep_statement, $result);
 
@@ -745,12 +745,29 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
 	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
+
+	if (permission_exists('user_setting_view')) {
+		require "user_settings.php";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

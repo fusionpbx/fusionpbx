@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -109,6 +109,9 @@ else {
 		echo "	<input type='hidden' name='order_by' value='$order_by'>\n";
 		echo "	<input type='hidden' name='order' value='$order'>\n";
 	}
+	if (permission_exists('xml_cdr_all' && $_REQUEST['showall'] == 'true')) {
+		echo "	<input type='hidden' name='showall' value='true'>\n";
+	}
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
@@ -118,7 +121,10 @@ else {
 		}
 	}
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
+		if ($_REQUEST['showall'] == 'true') {
+			$query_string = "showall=true";
+		}
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?$query_string';\">\n";
 	}
 	if ($_GET['missed'] != 'true') {
 		echo "			<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
@@ -299,9 +305,11 @@ else {
 			echo 	$text['description_search'];
 			echo "</td>";
 			echo "<td style='padding-top: 8px;' align='right'>";
-
-				echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
-				echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+			if (permission_exists('xml_cdr_all') && $_REQUEST['showall'] == 'true') {
+				echo "<input type='hidden' name='showall' value='true'>\n";
+			}
+			echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
+			echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 
 			echo "</td>";
 			echo "</tr>";

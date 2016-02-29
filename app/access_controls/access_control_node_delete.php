@@ -27,6 +27,7 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
+		remove_config_from_cache('configuration:acl.conf');
 	}
 
 //redirect the user

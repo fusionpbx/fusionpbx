@@ -38,6 +38,25 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//retrieve allowed setting categories
+	if (!permission_exists('domain_setting_category_edit')) {
+		if (is_array($_SESSION['settings']) && sizeof($_SESSION['settings']) > 0) {
+			foreach ($_SESSION['groups'] as $index => $group) {
+				$group_name = $group['group_name'];
+				if (is_array($_SESSION['settings'][$group_name]) && sizeof($_SESSION['settings'][$group_name]) > 0) {
+					foreach ($_SESSION['settings'][$group_name] as $category) {
+						$categories[] = strtolower($category);
+					}
+				}
+			}
+		}
+		if (is_array($categories) && sizeof($categories) > 0) {
+			$allowed_categories = array_unique($categories);
+			sort($allowed_categories, SORT_NATURAL);
+		}
+		unset($group, $group_name, $index, $category, $categories);
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -70,13 +89,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$domain_setting_uuid = check_str($_POST["domain_setting_uuid"]);
 	}
 
-	//check for all required data
-		//if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		//if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		//if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+	//check for all required/authorized data
+		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		//if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		//if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		if (strlen($domain_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 		//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -336,8 +355,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
 	if ($action == "update") {
@@ -349,7 +368,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domain_edit.php?id=$domain_uuid'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -358,7 +377,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-domain_setting-edit'];
 	}
 	if ($action == "add") {
-		echo $text['header-domain_setting-add'];
+		echo $text['description-domain_setting-add'];
 	}
 	echo "<br /><br />\n";
 	echo "</td>\n";
@@ -369,18 +388,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_category' maxlength='255' value=\"$domain_setting_category\">\n";
+	if (permission_exists('domain_setting_category_edit')) {
+		echo "	<input type='text' class='formfld' name='domain_setting_category' id='domain_setting_category' maxlength='255' value=\"".$domain_setting_category."\">\n";
+	}
+	else {
+		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').focus();\">\n";
+		echo "		<option value=''></option>\n";
+		if (is_array($allowed_categories) && sizeof($allowed_categories) > 0) {
+			foreach ($allowed_categories as $category) {
+				$selected = ($domain_setting_category == $category) ? 'selected' : null;
+				echo "		<option value='".$category."' ".$selected.">".ucwords(str_replace('_',' ',$category))."</option>\n";
+			}
+		}
+		echo "	</select>";
+	}
 	echo "<br />\n";
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_subcategory' maxlength='255' value=\"$domain_setting_subcategory\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='domain_setting_subcategory' id='domain_setting_subcategory' maxlength='255' value=\"$domain_setting_subcategory\">\n";
 	echo "<br />\n";
 	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
@@ -391,7 +423,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_name' maxlength='255' value=\"$domain_setting_name\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='domain_setting_name' id='domain_setting_name' maxlength='255' value=\"$domain_setting_name\">\n";
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -424,7 +456,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($sub_prep_statement);
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 		echo "		<select id='domain_setting_value' name='domain_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//add all the themes to the list
@@ -445,7 +478,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($handle);
 		}
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
 		echo "		<select id='domain_setting_value' name='domain_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
@@ -457,7 +491,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
 		echo "		<select id='domain_setting_value' name='domain_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//$list = DateTimeZone::listAbbreviations();
@@ -541,12 +576,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option value='fine' ".(($row['default_setting_value'] == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
 		echo "		<option value='superfine' ".(($row['default_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
-	} elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
+	}
+	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    </select>\n";
-	} elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
+	}
+	elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
@@ -559,40 +596,44 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 
-	if ($name == "array" || $name == '') {
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-order']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='domain_setting_order' class='formfld'>\n";
-		$i=0;
-		while($i<=999) {
-			$selected = ($i == $domain_setting_order) ? "selected" : null;
-			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
-		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo $text['description-order']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
+	echo "<div id='tr_order' ".(($domain_setting_name != 'array') ? "style='display: none;'" : null).">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-order']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<select name='domain_setting_order' class='formfld'>\n";
+	$i=0;
+	while($i<=999) {
+		$selected = ($i == $domain_setting_order) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "		<option value='00$i' ".$selected.">00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "		<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "		<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i++;
+	}
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo $text['description-order']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='domain_setting_enabled'>\n";
 	if ($domain_setting_enabled == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -630,12 +671,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='domain_setting_uuid' value='$domain_setting_uuid'>\n";
 	}
 	echo "			<br />";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br />";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+//hide/convert password fields then submit form
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+//define lowercase class
+	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+//show order if array
+	echo "	$('#domain_setting_name').keyup(function(){ \n";
+	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
+	echo "	});\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

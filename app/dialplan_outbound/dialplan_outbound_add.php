@@ -207,7 +207,7 @@ else {
 						$label = $text['label-11d'];
 						$abbrv = "11d";
 						break;
-					case "^(?:\+1|1)?([2-9]\d\d[2-9]\d{6})$":
+					case "^(?:\+?1)?(\d{10})$":
 						$label = $text['label-north-america'];
 						$abbrv = "10-11d";
 						break;

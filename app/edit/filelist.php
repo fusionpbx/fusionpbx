@@ -38,16 +38,6 @@ else {
 //add css and javascript
 	require_once "header.php";
 
-//define function space
-	function space($count) {
-		$r=''; $i=0;
-		while($i < $count) {
-			$r .= '     ';
-			$i++;
-		}
-		return $r;
-	}
-
 //define function recure_dir
 	function recur_dir($dir) {
 		clearstatcache();
@@ -59,12 +49,17 @@ else {
 			if ($file != "." AND $file != ".."){
 				$newpath = $dir.'/'.$file;
 				$level = explode('/',$newpath);
-				if (substr($newpath, -4) == ".svn" ||
-					substr($newpath, -4) == ".git") {
-					//ignore .svn and .git dir and subdir
-				}
-				elseif (substr($newpath, -3) == ".db") {
-					//ignore .db files
+				if (
+					substr(strtolower($newpath), -4) == ".svn" ||
+					substr(strtolower($newpath), -4) == ".git" ||
+					substr(strtolower($newpath), -3) == ".db" ||
+					substr(strtolower($newpath), -4) == ".jpg" ||
+					substr(strtolower($newpath), -4) == ".gif" ||
+					substr(strtolower($newpath), -4) == ".png" ||
+					substr(strtolower($newpath), -4) == ".ico" ||
+					substr(strtolower($newpath), -4) == ".ttf"
+					) {
+					//ignore certain files (and folders)
 				}
 				else {
 					$dir_array[] = $newpath;
@@ -79,45 +74,32 @@ else {
 			$level = explode('/',$newpath);
 
 			if (is_dir($newpath)) {
-
-				//$mod_array[] = array(
-					//'level'=>count($level)-1,
-					//'path'=>$newpath,
-					//'name'=>end($level),
-					//'type'=>'dir',
-					//'mod_time'=>filemtime($newpath),
-					//'size'=>'');
-					//$mod_array[] = recur_dir($newpath);
-
 				$dirname = end($level);
-				$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
-				//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				$htmldirlist .= recur_dir($newpath);
-				$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
+				$htmldirlist .= "
+					<table border=0 cellpadding='0' cellspacing='0'>
+						<tr>
+							<td nowrap style='padding-left: 16px;'>
+								<a onclick='Toggle(this);' style='cursor: pointer;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$dirname."</a><div style='display:none'>".recur_dir($newpath)."</div>
+							</td>
+						</tr>
+					</table>\n";
 			}
 			else {
-
-				//$mod_array[] = array(
-					//	'level'=>count($level)-1,
-					//	'path'=>$newpath,
-					//	'name'=>end($level),
-					//	'type'=>'file',
-					//	'mod_time'=>filemtime($newpath),
-					//	'size'=>filesize($newpath));
-
 				$filename = end($level);
 				$filesize = round(filesize($newpath)/1024, 2);
-				$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
-				$htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
+				$newpath = str_replace ('//', '/', $newpath);
+				$newpath = str_replace ("\\", "/", $newpath);
+				$htmlfilelist .= "
+					<table border=0 cellpadding='0' cellspacing='0'>
+						<tr>
+							<td nowrap align='bottom' style='padding-left: 16px;'>
+								<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filepath').value='".$newpath."'; parent.document.getElementById('current_file').value = '".$newpath."'; makeRequest('fileread.php','file=".urlencode($newpath)."');\" title='".$newpath." &#10; ".$filesize." KB'><img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>
+							</td>
+						</tr>
+					</table>\n";
 			}
 		}
+
 		closedir($dirlist);
 		return $htmldirlist ."\n". $htmlfilelist;
 	}
@@ -154,14 +136,11 @@ echo "        http_request.open('POST', url, true);\n";
 echo "\n";
 echo "\n";
 echo "        if (strpost.length == 0) {\n";
-//echo "            alert('none');\n";
 echo "            //http_request.send(null);\n";
 echo "            http_request.send('name=value&foo=bar');\n";
 echo "        }\n";
 echo "        else {\n";
-//echo "            alert(strpost);\n";
 echo "            http_request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');\n";
-//echo "            http_request.send('name=value&foo=bar');\n";
 echo "            http_request.send(strpost);\n";
 echo "        }\n";
 echo "\n";
@@ -171,15 +150,12 @@ echo "    function returnContent(http_request) {\n";
 echo "\n";
 echo "        if (http_request.readyState == 4) {\n";
 echo "            if (http_request.status == 200) {\n";
-
-echo "                  parent.editAreaLoader.setValue('edit1', http_request.responseText); \n";
-//echo "                alert(http_request.responseText);\n";
+echo "					parent.document.getElementById('editor_source').value=http_request.responseText;";
+echo "					parent.editor.getSession().setValue(parent.document.getElementById('editor_source').value);";
+echo "					parent.editor.gotoLine(1);";
+echo "					parent.editor.scrollToLine(1, true, true, function() {});";
+echo "					parent.editor.focus();";
 echo "\n";
-//echo "                //var xmldoc = http_request.responseXML;\n";
-//echo "                //var root_node = xmldoc.getElementsByTagName('doc').item(0);\n";
-//echo "                //alert(xmldoc.getElementByID('fr1').value);\n";
-//echo "                //alert(root_node.firstChild.data);\n";
-//echo "\n";
 echo "            }\n";
 echo "            else {\n";
 echo "                alert('".$text['message-problem']."');\n";
@@ -199,39 +175,53 @@ echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
 //echo "// ---------------------------------------------\n";
 echo "function Toggle(node) {\n";
 echo "	// Unfold the branch if it isn't visible\n";
-echo "	if (node.nextSibling.style.display == 'none')	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/minus.gif\";\n";
-echo "    			}\n";
-echo "  		}\n";
-echo "  \n";
-echo "  		node.nextSibling.style.display = 'block';\n";
+echo "	if (node.nextSibling.style.display == 'none') {\n";
+echo "  	node.nextSibling.style.display = 'block';\n";
 echo "	}\n";
 echo "	// Collapse the branch if it IS visible\n";
-echo "	else	{\n";
-echo "  		// Change the image (if there is an image)\n";
-echo "  		if (node.childNodes.length > 0)	{\n";
-echo "    			if (node.childNodes.item(0).nodeName == \"IMG\") {\n";
-echo "    				node.childNodes.item(0).src = \"images/plus.gif\";\n";
-echo "    			}\n";
-echo "  		}\n";
-echo "  		node.nextSibling.style.display = 'none';\n";
+echo "	else {\n";
+echo "  	node.nextSibling.style.display = 'none';\n";
 echo "	}\n";
 echo "\n";
 echo "}\n";
 echo "</SCRIPT>";
 
+// keyboard shortcut bindings
+echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.11.1.js'></script>\n";
+echo "<script>\n";
+echo "	$(window).keypress(function(event) {\n";
+echo "		//save file [Ctrl+S]\n";
+echo "		if ((event.which == 115 && event.ctrlKey) || (event.which == 19)) {\n";
+echo "			parent.$('form#frm_edit').submit();\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//open file manager/clip library pane [Ctrl+Q]\n";
+echo "		else if ((event.which == 113 && event.ctrlKey) || (event.which == 19)) {\n";
+echo "			parent.toggle_sidebar();\n";
+echo "			parent.focus_editor();\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//block backspace\n";
+echo "		else if (event.which == 8) {\n";
+echo "			return false;\n";
+echo "		}\n";
+echo "		//otherwise, default action\n";
+echo "		else {\n";
+echo "			return true;\n";
+echo "		}\n";
+echo "	});\n";
+echo "</script>";
+
+echo "</head>\n";
+echo "<body style='margin: 0px; padding: 0px;'>\n";
+
 echo "<div align='center' valign='1'>";
 echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 echo "<tr class='border'>\n";
 echo "	<td align=\"left\" valign='top' nowrap>\n";
-//echo "      <br>";
 
 echo "\n";
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"if (typeof(clipwin)!='undefined') { clipwin.close(); } clipwin = window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-files']." </a><DIV style=''>\n"; //display:none
-//echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
+echo "      <table border=0 cellpadding='0' cellspacing='0'><tr><td><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='Manage Files'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'>".$text['label-files']."</a><div>\n";
 
 //start the session
 ini_set("session.cookie_httponly", True);
@@ -286,7 +276,6 @@ echo "</tr>\n";
 echo "</table>\n";
 echo "</div>";
 
-echo "<br><br>";
 require_once "footer.php";
 
 unset ($result_count);
@@ -294,8 +283,4 @@ unset ($result);
 unset ($key);
 unset ($val);
 unset ($c);
-
-echo "</body>";
-echo "</html>";
-
 ?>

@@ -553,10 +553,10 @@ $text['label-true']['de-at'] = "Ein";
 $text['label-true']['ar-eg'] = "صحيح";
 $text['label-true']['he'] = "חיובי";
 
-$text['label-false']['en-us'] = "false";
+$text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "falso";
-$text['label-false']['fr-fr'] = "falso";
+$text['label-false']['pt-pt'] = "Falso";
+$text['label-false']['fr-fr'] = "Falso";
 $text['label-false']['pt-br'] = "Não";
 $text['label-false']['he'] = "לא חוקי";
 $text['label-false']['de-at'] = "Aus";
@@ -663,7 +663,7 @@ $text['label-delete']['uk'] = "Видалити";
 $text['label-delete']['de-at'] = "Löschen";
 
 
-//option (present for compatibility, shoudl use label-true/false instead)
+//option (present for compatibility, should use label-true/false instead)
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "verdadero";

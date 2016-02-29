@@ -1,188 +1,189 @@
+---
+-- @usage 
+--  -- Use default backend
+--  dbh = Database.new("system")
+--  .....
+--
+-- @usage 
+--  -- Use LuaSQL backend
+--  dbh = Database.backend.luasql("system")
+--  .....
+
 require 'resources.functions.config'
 
+local log = require "resources.functions.log".database
+
+local BACKEND = xml_handler and xml_handler.db_backend or 'native'
+
+local unpack = unpack or table.unpack
+
 -----------------------------------------------------------
-local OdbcDatabase = {} if not freeswitch then
-OdbcDatabase.__index = OdbcDatabase
+local installed_classes = {}
+local default_backend = FsDatabase
+local function new_database(backend)
+  local class = installed_classes[backend]
+  if class then return class end
 
-local odbc = require "odbc.dba"
+  local Database = {} do
+  Database.__index = Database
+  Database.__base = backend or default_backend
+  Database = setmetatable(Database, Database.__base)
 
-function OdbcDatabase.new(name)
-  local self = setmetatable({}, OdbcDatabase)
+  function Database.new(...)
+    local self = Database.__base.new(...)
+    setmetatable(self, Database)
+    return self
+  end
 
-  local connection_string = assert(database[name])
-
-  local typ, dsn, user, password = connection_string:match("^(.-)://(.-):(.-):(.-)$")
-  assert(typ == 'odbc', "unsupported connection string:" .. connection_string)
-
-  self._dbh = odbc.Connect(dsn, user, password)
-
-  return self
-end
-
-function OdbcDatabase:query(sql, fn)
-  self._rows_affected = nil
-  if fn then
-    return self._dbh:neach(sql, function(row)
-      local o = {}
-      for k, v in pairs(row) do
-        if v == odbc.NULL then 
-          o[k] = nil
-        else
-          o[k] = tostring(v)
-        end
-      end
-      return fn(o)
+  function Database:first_row(sql)
+    local result
+    local ok, err = self:query(sql, function(row)
+      result = row
+      return 1
     end)
+    if not ok then return nil, err end
+    return result
   end
-  local ok, err = self._dbh:exec(sql)
-  if not ok then return nil, err end
-  self._rows_affected = ok
-  return self._rows_affected
-end
 
-function OdbcDatabase:affected_rows()
-  return self._rows_affected;
-end
-
-function OdbcDatabase:release()
-  if self._dbh then
-    self._dbh:destroy()
-    self._dbh = nil
+  function Database:first_value(sql)
+    local result, err = self:first_row(sql)
+    if not result then return nil, err end
+    local k, v = next(result)
+    return v
   end
-end
 
-function OdbcDatabase:connected()
-  return self._dbh and self._dbh:connected()
-end
-
-end
------------------------------------------------------------
-
------------------------------------------------------------
-local FsDatabase = {} if freeswitch then
-
-require "resources.functions.file_exists"
-require "resources.functions.database_handle"
-
-FsDatabase.__index = FsDatabase
-
-function FsDatabase.new(name)
-  local dbh = assert(name)
-  if type(name) == 'string' then
-    if name == 'switch' and file_exists(database_dir.."/core.db") then
-      dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db")
-    else
-      dbh = database_handle(name)
+  function Database:first(sql, ...)
+    local result, err = self:first_row(sql)
+    if not result then return nil, err end
+    local t, n = {}, select('#', ...)
+    for i = 1, n do
+      t[i] = result[(select(i, ...))]
     end
+    return unpack(t, 1, n)
   end
-  assert(dbh:connected())
 
-  local self = setmetatable({
-    _dbh = dbh;
-  }, FsDatabase)
-
-  return self
-end
-
-function FsDatabase:query(sql, fn)
-  if fn then
-    return self._dbh:query(sql, fn)
+  function Database:fetch_all(sql)
+    local result = {}
+    local ok, err = self:query(sql, function(row)
+      result[#result + 1] = row
+    end)
+    if (not ok) and err then return nil, err end
+    return result
   end
-  return self._dbh:query(sql)
-end
 
-function FsDatabase:affected_rows()
-  if self._dbh then
-    return self._dbh:affected_rows()
+  function Database.__self_test__(...)
+    log.info('self_test Database - ' ..  Database._backend_name)
+    local db = Database.new(...)
+
+    assert(db:connected())
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return 1
+    end)
+    assert(x == 1, ("Got %d expected %d"):format(x, 1))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return -1
+    end)
+    assert(x == 1, ("Got %d expected %d"):format(x, 1))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return 0
+    end)
+    assert(x == 2, ("Got %d expected %d"):format(x, 2))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return true
+    end)
+    assert(x == 2, ("Got %d expected %d"):format(x, 2))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return false
+    end)
+    assert(x == 2, ("Got %d expected %d"):format(x, 2))
+    end
+
+    do local x = 0
+    db:query("select 1 as v union all select 2 as v", function(row)
+      x = x + 1
+      return "1"
+    end)
+    assert(x == 1, ("Got %d expected %d"):format(x, 2))
+    end
+
+    assert("1" == db:first_value("select 1 as v union all select 2 as v"))
+
+    local t = assert(db:first_row("select '1' as v union all select '2' as v"))
+    assert(t.v == "1")
+
+    t = assert(db:fetch_all("select '1' as v union all select '2' as v"))
+    assert(#t == 2)
+    assert(t[1].v == "1")
+    assert(t[2].v == "2")
+
+    local a, b = assert(db:first("select '1' as b, '2' as a", 'a', 'b'))
+    assert(a == "2")
+    assert(b == "1")
+
+    -- assert(nil == db:first_value("some non sql query"))
+
+    -- select NULL
+    local a = assert(db:first_value("select NULL as a"))
+    assert(a == "")
+
+    db:release()
+    assert(not db:connected())
+
+    -- second close
+    db:release()
+    assert(not db:connected())
+
+    log.info('self_test Database - pass')
   end
-end
 
-function FsDatabase:release()
-  if self._dbh then
-    self._dbh:release()
-    self._dbh = nil
   end
-end
 
-function FsDatabase:connected()
-  return self._dbh and self._dbh:connected()
-end
-
+  installed_classes[backend] = Database
+  return Database
 end
 -----------------------------------------------------------
 
 -----------------------------------------------------------
-local Database = {} do
-Database.__index = Database
-Database.__base = freeswitch and FsDatabase or OdbcDatabase
-Database = setmetatable(Database, Database.__base)
+local Database = {} do 
 
-function Database.new(...)
-  local self = Database.__base.new(...)
-  setmetatable(self, Database)
-  return self
-end
-
-function Database:first_row(sql)
-  local result
-  local ok, err = self:query(sql, function(row)
-    result = row
-    return 1
-  end)
-  if not ok then return nil, err end
-  return result
-end
-
-function Database:first_value(sql)
-  local result, err = self:first_row(sql)
-  if not result then return nil, err end
-  local k, v = next(result)
-  return v
-end
-
-function Database:first(sql, ...)
-  local result, err = self:first_row(sql)
-  if not result then return nil, err end
-  local t, n = {}, select('#', ...)
-  for i = 1, n do
-    t[i] = result[(select(i, ...))]
+local backend_loader = setmetatable({}, {__index = function(self, backend)
+  local class = require("resources.functions.database." .. backend)
+  local database = new_database(class)
+  self[backend] = function(...)
+    return database.new(...)
   end
-  return unpack(t, 1, n)
-end
+  return self[backend]
+end})
 
-function Database:fetch_all(sql)
-  local result = {}
-  local ok, err = self:query(sql, function(row)
-    result[#result + 1] = row
-  end)
-  if (not ok) and err then return nil, err end
-  return result
-end
+Database.backend = backend_loader
 
-function Database.__self_test__(...)
-  local db = Database.new(...)
-  assert(db:connected())
+Database.new = Database.backend[BACKEND]
 
-  assert("1" == db:first_value("select 1 as v union all select 2 as v"))
-
-  local t = assert(db:first_row("select '1' as v union all select '2' as v"))
-  assert(t.v == "1")
-
-  t = assert(db:fetch_all("select '1' as v union all select '2' as v"))
-  assert(#t == 2)
-  assert(t[1].v == "1")
-  assert(t[2].v == "2")
-
-  local a, b = assert(db:first("select '1' as b, '2' as a", 'a', 'b'))
-  assert(a == "2")
-  assert(b == "1")
-
-  -- assert(nil == db:first_value("some non sql query"))
-
-  db:release()
-  assert(not db:connected())
-  print(" * databse - OK!")
-end
+Database.__self_test__ = function(backends, ...)
+  for _, backend in ipairs(backends) do
+    local t = Database.backend[backend]
+    t(...).__self_test__(...)
+  end
+end;
 
 end
 -----------------------------------------------------------

@@ -67,12 +67,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
-		//if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
-		//if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 		//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
-		//if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-		//if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 		//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -206,7 +206,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
@@ -217,17 +217,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='default_settings.php".(($search != '') ? "?search=".$search : null)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
 	if ($action == "add") {
-		echo $text['description-default_setting-add']."<br /><br />\n";
+		echo $text['description-default_setting-add'];
 	}
 	if ($action == "update") {
-		echo $text['description-default_setting-edit']."<br /><br />\n";
+		echo $text['description-default_setting-edit'];
 	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -247,7 +248,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-subcategory']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_subcategory' id='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='default_setting_subcategory' id='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
 	echo "<br />\n";
 	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
@@ -258,7 +259,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_name' maxlength='255' value=\"$default_setting_name\">\n";
+	echo "	<input class='formfld lowercase' type='text' name='default_setting_name' id='default_setting_name' maxlength='255' value=\"$default_setting_name\">\n";
 	echo "<br />\n";
 	echo $text['description-type']."\n";
 	echo "</td>\n";
@@ -514,40 +515,42 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	if ($name == "array" || $name == '') {
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-order']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='default_setting_order' class='formfld'>\n";
-		$i=0;
-		while($i<=999) {
-			$selected = ($i == $default_setting_order) ? "selected" : null;
-			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
-		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo $text['description-order']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
+	echo "</table>\n";
+	echo "<div id='tr_order' ".(($default_setting_name != 'array') ? "style='display: none;'" : null).">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-order']."\n";
+	echo "</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "	<select name='default_setting_order' class='formfld'>\n";
+	$i=0;
+	while($i<=999) {
+		$selected = ($i == $default_setting_order) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "		<option value='00$i' ".$selected.">00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "		<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "		<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i++;
+	}
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo $text['description-order']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='default_setting_enabled'>\n";
 	if ($default_setting_enabled == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -585,7 +588,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='search' value='".$search."'>\n";
 	}
 	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -595,6 +598,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($_REQUEST["id"] == '' && $_REQUEST["default_setting_category"] != '') {
 		echo "<script>document.getElementById('default_setting_subcategory').focus();</script>";
 	}
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+//hide/convert password fields then submit form
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+//define lowercase class
+	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+//show order if array
+	echo "	$('#default_setting_name').keyup(function(){ \n";
+	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
+	echo "	});\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

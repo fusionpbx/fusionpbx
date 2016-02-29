@@ -255,16 +255,7 @@ if (sizeof($_REQUEST) > 1) {
 	} //end if results
 
 	echo "<tr>\n";
-	if (
-		(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-		permission_exists("domain_delete")
-		) {
-		$colspan = 7;
-	}
-	else {
-		$colspan = 6;
-	}
-	echo "<td colspan='".$colspan."' align='left'>\n";
+	echo "<td colspan='20' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
@@ -274,7 +265,7 @@ if (sizeof($_REQUEST) > 1) {
 		echo 		"<a href='domain_setting_edit.php?domain_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('domain_setting_delete') && $result_count > 0) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+		echo 		"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

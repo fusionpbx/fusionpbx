@@ -90,18 +90,6 @@ require_once "resources/require.php";
 					}
 			}
 		}
-		else {
-			//disable if not to remember last
-				$sql = "update v_user_settings set ";
-				$sql .= "user_setting_enabled = 'false' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and user_uuid = '".$_SESSION["user_uuid"]."' ";
-				$sql .= "and user_setting_category = 'login' ";
-				$sql .= "and user_setting_subcategory = 'destination' ";
-				$sql .= "and user_setting_name = 'url' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
 	}
 
 //redirect the user to the index page

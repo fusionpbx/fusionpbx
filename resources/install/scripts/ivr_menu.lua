@@ -128,7 +128,7 @@
 	end);
 
 --set the caller id name
-	if caller_id_name and #caller_id_name >0 then
+	if caller_id_name and #caller_id_name > 0 and ivr_menu_cid_prefix and #ivr_menu_cid_prefix > 0 then
 		caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
 		session:setVariable("caller_id_name", caller_id_name);
 		session:setVariable("effective_caller_id_name", caller_id_name);

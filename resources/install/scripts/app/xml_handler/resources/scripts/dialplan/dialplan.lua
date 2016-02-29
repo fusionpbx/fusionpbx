@@ -34,7 +34,7 @@
 		if XML_STRING then
 			log.notice("dialplan:"..call_context.." source: memcache");
 		elseif err ~= 'NOT FOUND' then
-			log.notice("error get element form cache: " .. err);
+			log.notice("error get element from cache: " .. err);
 		end
 	end
 

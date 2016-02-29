@@ -26,6 +26,16 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+$text['title-manage-files']['en-us'] = "Manage Files";
+$text['title-manage-files']['es-cl'] = "Gestión de Archivos";
+$text['title-manage-files']['pt-pt'] = "Gerenciar Arquivos";
+$text['title-manage-files']['fr-fr'] = "Gérer les Fichiers";
+
+$text['title-manage-clips']['en-us'] = "Manage Clips";
+$text['title-manage-clips']['es-cl'] = "Gestión de Clips";
+$text['title-manage-clips']['pt-pt'] = "Gerir Clipes";
+$text['title-manage-clips']['fr-fr'] = "Gérer Clips";
+
 $text['label-folder']['en-us'] = "Folder:";
 $text['label-folder']['es-cl'] = "Carpeta:";
 $text['label-folder']['pt-pt'] = "Ficheiro:";
@@ -61,6 +71,11 @@ $text['label-clip-library']['es-cl'] = "Librería de Clips";
 $text['label-clip-library']['pt-pt'] = "Biblioteca de Clips";
 $text['label-clip-library']['fr-fr'] = "Clip Libraries";
 
+$text['label-selected-clip']['en-us'] = "Selected Clip";
+$text['label-selected-clip']['es-cl'] = "Clip Seleccionado";
+$text['label-selected-clip']['pt-pt'] = "Clipe Selecionado";
+$text['label-selected-clip']['fr-fr'] = "Clip Sélectionné";
+
 $text['button-edit-clip']['en-us'] = "Edit Clip";
 $text['button-edit-clip']['es-cl'] = "Editar Clip";
 $text['button-edit-clip']['pt-pt'] = "Editar Clip";
@@ -76,10 +91,10 @@ $text['message-delete-clip']['es-cl'] = "¿Realmente desea eliminar el clip sele
 $text['message-delete-clip']['pt-pt'] = "Tem a certeza que pretende remover o clip seleccionado?";
 $text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le CLIP sélectionné?";
 
-$text['button-close']['en-us'] = "   Close    ";
-$text['button-close']['es-cl'] = "   Cerrar    ";
-$text['button-close']['pt-pt'] = "   Fechar    ";
-$text['button-close']['fr-fr'] = "   Fermé    ";
+$text['button-close']['en-us'] = "Close";
+$text['button-close']['es-cl'] = "Cerrar";
+$text['button-close']['pt-pt'] = "Fechar";
+$text['button-close']['fr-fr'] = "Fermé";
 
 $text['label-path']['en-us'] = "Path:";
 $text['label-path']['es-cl'] = "Ruta:";
