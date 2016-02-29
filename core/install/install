@@ -77,16 +77,16 @@ if (is_link('/etc/localtime')) {
 date_default_timezone_set($timezone);
 
 //detect install state
-$first_time_install = true;
+$install_enabled = true;
 if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-	$first_time_install = false;
+	$install_enabled = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
-	$first_time_install = false;
+	$install_enabled = false;
 } elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-	$first_time_install = false;
+	$install_enabled = false;
 }
 
-if(!$first_time_install) {
+if(!$install_enabled) {
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	if (!if_group("superadmin")) {
@@ -132,7 +132,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 	}
 
 //set a default enviroment if first_time
-	if($first_time_install){
+	if($install_enabled){
 	//initialize some varibles to cut down on warnings
 		$_SESSION['message'] = '';
 		$v_link_label_play = '';
@@ -183,10 +183,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		if ( count($messages) > $existing_errors) { $install_step = 'config_detail'; }
 	}
 
-	if($install_step =='execute')
-	{
-		//start the rocket launch!
-		
+	if($install_step =='execute') {
 		//set the max execution time to 1 hour
 		ini_set('max_execution_time',3600);
 	}
@@ -224,7 +221,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
 		echo "	</div>\n";
 		echo "</form>\n";
-	}elseif($install_step == 'detect_config'){
+	} elseif($install_step == 'detect_config'){
 		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
 			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
 		}
@@ -242,7 +239,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 			echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
-		}else{
+		} else {
 			echo "<form method='post' name='frm' action=''>\n";
 			echo "	<div style='text-align:right'>\n";
 			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
@@ -315,14 +312,14 @@ if(!$install_step) { $install_step = 'select_language'; }
 				$switch->install_phase_1();
 				$system->install_phase_2();
 				$switch->install_phase_2();
-			}catch(Exception $e){
+			} catch(Exception $e){
 				echo "</pre>\n";
 				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
 				try {
 					require_once "resources/classes/install_fusionpbx.php";
 					$system = new install_fusionpbx($global_settings);
 					$system->remove_config();
-				}catch(Exception $e){
+				} catch(Exception $e){
 					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
 				}
 				$install_ok = false;
@@ -345,14 +342,14 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
 
-if($first_time_install){
+if($install_enabled){
 	//grab the default theme
 		$set_session_theme = 1;
 		$domains_processed = 1;
 		include "themes/enhanced/app_defaults.php";
 		unset($set_session_theme, $domains_processed);
 	//initialize some defaults so we can be 'logged in'
-		$_SESSION['username'] = 'first_time_install';
+		$_SESSION['username'] = 'install_enabled';
 		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
 		$_SESSION['menu'] = '';
 }

@@ -37,13 +37,13 @@ include "root.php";
 		public $debug = false;
 		public $echo_progress = false;
 
-	 	public $install_language = 'en-us';
-	 	public $admin_username;
-	 	public $admin_password;
-	 	public $default_country = 'US';
+		public $install_language = 'en-us';
+		public $admin_username;
+		public $admin_password;
+		public $default_country = 'US';
 		public $template_name = 'enhanced';
 
-	 	function __construct($global_settings) {
+		function __construct($global_settings) {
 			if(is_null($global_settings)){
 				require_once "resources/classes/global_settings.php";
 				$global_settings = new global_settings();
@@ -70,7 +70,7 @@ include "root.php";
 				echo "$message\n";
 			}
 		}
-		
+
 		function write_progress($message) {
 			if($this->echo_progress){
 				echo "$message\n";
@@ -93,14 +93,14 @@ include "root.php";
 			$this->create_menus();
 			$this->write_progress("Install phase 1 complete for FusionPBX");
 		}
-		
+
 		function install_phase_2() {
 			ini_set('max_execution_time',3600);
 			$this->write_progress("Install phase 2 started for FusionPBX");
 			$this->app_defaults();
 			$this->write_progress("Install phase 2 complete for FusionPBX");
 		}
-		
+
 		function upgrade() {
 			$this->app_defaults();
 		}
@@ -230,9 +230,9 @@ include "root.php";
 				}
 			}
 		}
-		
+
 		protected function create_odbc_database_connection() {
-		//needed for non native database support
+			//needed for non native database support
 				$database_uuid = uuid();
 				$sql = "insert into v_databases ";
 				$sql .= "(";
@@ -267,147 +267,147 @@ include "root.php";
 		}
 
 		protected function create_database_sqlite() {
-		//sqlite database will be created when the config.php is loaded and only if the database file does not exist
-			try {
-				$this->dbh = new PDO('sqlite:'.$this->global_settings->db_path().'/'.$this->global_settings->db_name()); //sqlite 3
-				//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
-			}
-			catch (PDOException $error) {
-				throw new Exception("Failed to create database: " . $error->getMessage());
-			}
-
-		//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
-			if (!function_exists('php_now')) {
-				function php_now() {
-					if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
-						@date_default_timezone_set(@date_default_timezone_get());
-					}
-					return date("Y-m-d H:i:s");
-				}
-			}
-			$this->dbh->sqliteCreateFunction('now', 'php_now', 0);
-
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			$schema->db = $this->dbh;
-			$schema->db_type = $this->global_settings->db_type();
-			$schema->sql();
-			$schema->exec();
-
-		//get the contents of the sql file
-			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
-				$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
-			}
-			else {
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
-			}
-			$file_contents = file_get_contents($filename);
-			unset($filename);
-
-		//replace \r\n with \n then explode on \n
-			$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-		//loop line by line through all the lines of sql code
-			$this->dbh->beginTransaction();
-			$string_array = explode("\n", $file_contents);
-			$x = 0;
-			foreach($string_array as $sql) {
+			//sqlite database will be created when the config.php is loaded and only if the database file does not exist
 				try {
-					$this->dbh->query($sql);
+					$this->dbh = new PDO('sqlite:'.$this->global_settings->db_path().'/'.$this->global_settings->db_name()); //sqlite 3
+					//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
 				}
 				catch (PDOException $error) {
-					throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
-				}
-				$x++;
-			}
-			unset ($file_contents, $sql);
-			$this->dbh->commit();
-
-		//set the file permissions
-			chmod($this->global_settings->db_path().'/'.$this->global_settings->db_name(), 0777);
-		}
-
-		protected function create_database_pgsql() {
-			if ($this->global_settings->db_create()) {
-			//Attempt to create new PG role and database
-				$this->write_progress("\tCreating database");
-				try {
-					if (strlen($this->global_settings->db_host()) > 0) {
-						$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-					} else {
-						$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-					}
-				} catch (PDOException $error) {
-					throw new Exception("error connecting to database in order to create: " . $error->getMessage());
+					throw new Exception("Failed to create database: " . $error->getMessage());
 				}
 
-				//create the database, user, grant perms
-				if($this->dbh->exec("CREATE DATABASE {$this->global_settings->db_name()}") === false) {
-					throw new Exception("Failed to create database {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
-				}
-				if($this->global_settings->db_username() != $this->global_settings->db_create_username()){
-					if($this->dbh->exec("CREATE USER {$this->global_settings->db_username()} WITH PASSWORD '{$this->global_settings->db_password()}'") === false){
-						throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
-					}
-					if($this->dbh->exec("GRANT ALL ON {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
-						throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+			//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
+				if (!function_exists('php_now')) {
+					function php_now() {
+						if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
+							@date_default_timezone_set(@date_default_timezone_get());
+						}
+						return date("Y-m-d H:i:s");
 					}
 				}
+				$this->dbh->sqliteCreateFunction('now', 'php_now', 0);
 
-				//close database connection_aborted
-				$this->dbh = null;
-			}
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
 
-			$this->write_progress("\tInstalling data to database");				
-		//open database connection with $this->global_settings->db_name()
-			try {
-				if (strlen($this->global_settings->db_host()) > 0) {
-					$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} dbname={$this->global_settings->db_name()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()}");
-				} else {
-					$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()} dbname={$this->global_settings->db_name()}");
+			//get the contents of the sql file
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
 				}
-			}
-			catch (PDOException $error) {
-				throw new Exception("error connecting to database: " . $error->getMessage());
-			}
+				else {
+					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
+				}
+				$file_contents = file_get_contents($filename);
+				unset($filename);
 
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
 
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			$schema->db = $this->dbh;
-			$schema->db_type = $this->global_settings->db_type();
-			$schema->sql();
-			$schema->exec();
-
-		//get the contents of the sql file
-			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
-				$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
-			}
-			else {
-			$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
-			}
-			$file_contents = file_get_contents($filename);
-
-		//replace \r\n with \n then explode on \n
-			$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-		//loop line by line through all the lines of sql code
-			$string_array = explode("\n", $file_contents);
-			$x = 0;
-			foreach($string_array as $sql) {
-				if (strlen($sql) > 3) {
+			//loop line by line through all the lines of sql code
+				$this->dbh->beginTransaction();
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
 					try {
 						$this->dbh->query($sql);
 					}
 					catch (PDOException $error) {
 						throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
 					}
+					$x++;
 				}
-				$x++;
-			}
-			unset ($file_contents, $sql);
+				unset ($file_contents, $sql);
+				$this->dbh->commit();
+
+			//set the file permissions
+				chmod($this->global_settings->db_path().'/'.$this->global_settings->db_name(), 0777);
+		}
+
+		protected function create_database_pgsql() {
+			//create the database
+				if ($this->global_settings->db_create()) {
+					//attempt to create new Postgres role and database
+						$this->write_progress("\tCreating database");
+						try {
+							if (strlen($this->global_settings->db_host()) > 0) {
+								$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
+							} else {
+								$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
+							}
+						} catch (PDOException $error) {
+							throw new Exception("error connecting to database in order to create: " . $error->getMessage());
+						}
+
+					//create the database, user, grant perms
+						if($this->dbh->exec("CREATE DATABASE {$this->global_settings->db_name()}") === false) {
+							throw new Exception("Failed to create database {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+						}
+						if($this->global_settings->db_username() != $this->global_settings->db_create_username()){
+							if($this->dbh->exec("CREATE USER {$this->global_settings->db_username()} WITH PASSWORD '{$this->global_settings->db_password()}'") === false){
+								throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+							}
+							if($this->dbh->exec("GRANT ALL ON {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
+								throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+							}
+						}
+
+					//close database connection_aborted
+						$this->dbh = null;
+				}
+				$this->write_progress("\tInstalling data to database");
+
+			//open database connection with $this->global_settings->db_name()
+				try {
+					if (strlen($this->global_settings->db_host()) > 0) {
+						$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} dbname={$this->global_settings->db_name()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()}");
+					} else {
+						$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()} dbname={$this->global_settings->db_name()}");
+					}
+				}
+				catch (PDOException $error) {
+					throw new Exception("error connecting to database: " . $error->getMessage());
+				}
+
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
+
+			//get the contents of the sql file
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+				}
+				else {
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
+				}
+				$file_contents = file_get_contents($filename);
+
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
+
+			//loop line by line through all the lines of sql code
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
+					if (strlen($sql) > 3) {
+						try {
+							$this->dbh->query($sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
+						}
+					}
+					$x++;
+				}
+				unset ($file_contents, $sql);
 		}
 
 		protected function create_database_mysql() {
@@ -505,7 +505,8 @@ include "root.php";
 							$this->dbh = null;
 					} //if (strlen($this->global_settings->db_create_username()) > 0)
 
-				$this->write_progress("\tInstalling data to database");
+					$this->write_progress("\tInstalling data to database");
+
 				//select the database
 					try {
 						$this->dbh = new PDO($connect_string, $this->global_settings->db_username(), db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
