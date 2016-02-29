@@ -115,8 +115,7 @@ include "root.php";
 					recursive_delete($this->global_settings->switch_conf_dir());
 				}
 
-			//make the directory
-				sure the conf directory exists
+			//make sure the conf directory exists
 				if (!is_dir($this->global_settings->switch_conf_dir())) {
 					if (!mkdir($this->global_settings->switch_conf_dir(), 0774, true)) {
 						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->switch_conf_dir()."'. ");
