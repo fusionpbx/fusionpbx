@@ -61,8 +61,8 @@ if (!if_group("superadmin")) {
 	echo "<br><br>";
 	echo $text['description-install'];
 	echo "<br><br>";
-	
-	echo "<form name='frm' method='post' action='/core/install/install_first_time.php'>\n";
+
+	echo "<form name='frm' method='post' action='/core/install/install.php'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
@@ -79,4 +79,5 @@ if (!if_group("superadmin")) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
