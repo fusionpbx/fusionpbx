@@ -89,8 +89,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$domain_setting_uuid = check_str($_POST["domain_setting_uuid"]);
 	}
 
-	//check for all required data
-		if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+	//check for all required/authorized data
+		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
 		if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
 		if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
