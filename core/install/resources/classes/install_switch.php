@@ -73,7 +73,7 @@ include "root.php";
 				throw new Exception("backup_dir() source directory '".$dir."' does not exist.");
 			}
 			$dst_tar = join( DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), "$backup_name.tar"));
-			//pharData is the correct ay to do it, but it keeps creating incomplete archives
+			//pharData is the correct way to do it, but it keeps creating incomplete archives
 			//$tar = new PharData($dst_tar);
 			//$tar->buildFromDirectory($dir);
 			$this->write_debug("backing up to $dst_tar");
@@ -106,18 +106,23 @@ include "root.php";
 		}
 
 		protected function copy_conf() {
-			$this->write_progress("\tCopying Config");
+			//send a message
+				$this->write_progress("\tCopying Config");
+
 			//make a backup of the config
 				if (file_exists($this->global_settings->switch_conf_dir())) {
 					$this->backup_dir($this->global_settings->switch_conf_dir(), 'fusionpbx_switch_config');
 					recursive_delete($this->global_settings->switch_conf_dir());
 				}
-			//make sure the conf directory exists
+
+			//make the directory
+				sure the conf directory exists
 				if (!is_dir($this->global_settings->switch_conf_dir())) {
 					if (!mkdir($this->global_settings->switch_conf_dir(), 0774, true)) {
 						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->switch_conf_dir()."'. ");
 					}
 				}
+
 			//copy resources/templates/conf to the freeswitch conf dir
 				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
 					$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
