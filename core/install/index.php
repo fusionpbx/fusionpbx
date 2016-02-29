@@ -29,19 +29,18 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 
 //detect install state
-
-$first_time_install = true;
+$install_enabled = true;
 if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-	$first_time_install = false;
+	$install_enabled = false;
 } elseif (file_exists("/etc/fusionpbx/config.php")) {
 	//linux
-	$first_time_install = false;
+	$install_enabled = false;
 } elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-	$first_time_install = false;
+	$install_enabled = false;
 }
 
-if($first_time_install) {
-	header("Location: ".PROJECT_PATH."/core/install/install_first_time.php");
+if($install_enabled) {
+	header("Location: ".PROJECT_PATH."/core/install/install.php");
 	exit;
 }
 require_once "resources/check_auth.php";

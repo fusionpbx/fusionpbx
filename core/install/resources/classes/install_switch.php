@@ -56,7 +56,6 @@ include "root.php";
 		}
 
 		//utility Functions
-		
 		function write_debug($message) {
 			if($this->debug){
 				echo "$message\n";
@@ -135,7 +134,7 @@ include "root.php";
 				if (!is_readable($fax_dir)) { mkdir($fax_dir,0777,true); }
 				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_storage_dir(), 'voicemail'));
 				if (!is_readable($voicemail_dir)) { mkdir($voicemail_dir,0777,true); }
-			
+
 			//create the dialplan/default.xml for single tenant or dialplan/domain.xml
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/dialplan")) {
 					$dialplan = new dialplan;
