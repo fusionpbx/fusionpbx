@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('domain_setting_view')) {
+if (permission_exists('user_setting_view')) {
 	//access granted
 }
 else {
@@ -38,41 +38,41 @@ else {
 if (sizeof($_REQUEST) > 1) {
 
 	$action = check_str($_REQUEST["action"]);
-	$domain_uuid = check_str($_REQUEST["domain_id"]);
-	$domain_setting_uuids = $_REQUEST["id"];
+	$user_uuid = check_str($_REQUEST["user_id"]);
+	$user_setting_uuids = $_REQUEST["id"];
 	$enabled = check_str($_REQUEST['enabled']);
 
 	//change enabled value
-		if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
-			$sql = "update v_domain_settings set ";
-			$sql .= "domain_setting_enabled = '".$enabled."' ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
+		if ($user_uuid != '' && sizeof($user_setting_uuids) == 1 && $enabled != '') {
+			$sql = "update v_user_settings set ";
+			$sql .= "user_setting_enabled = '".$enabled."' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and user_setting_uuid = '".$user_setting_uuids[0]."' ";
 			//echo $sql."<br><br>";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: domain_edit.php?id=".$domain_uuid);
+			header("Location: usersupdate.php?id=".$user_uuid);
 			exit;
 		}
 
-	//delete domain settings
-		if ($action == 'delete' && permission_exists('domain_setting_delete')) {
+	//delete user settings
+		if ($action == 'delete' && permission_exists('user_setting_delete')) {
 			//add multi-lingual support
 				$language = new text;
 				$text = $language->get();
 
-			if (sizeof($domain_setting_uuids) > 0) {
-				foreach ($domain_setting_uuids as $domain_setting_uuid) {
-					$sql = "delete from v_domain_settings ";
-					$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
+			if (sizeof($user_setting_uuids) > 0) {
+				foreach ($user_setting_uuids as $user_setting_uuid) {
+					$sql = "delete from v_user_settings ";
+					$sql .= "where user_setting_uuid = '".$user_setting_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					unset ($prep_statement, $sql);
 				}
 				// set message
-				$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
+				$_SESSION["message"] = $text['message-delete'].": ".sizeof($user_setting_uuids);
 			}
 			else {
 				// set message
@@ -80,7 +80,7 @@ if (sizeof($_REQUEST) > 1) {
 				$_SESSION["message_mood"] = "negative";
 			}
 
-			header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
+			header("Location: usersupdate.php?id=".check_str($_REQUEST["user_uuid"]));
 			exit;
 		}
 
@@ -94,13 +94,13 @@ if (sizeof($_REQUEST) > 1) {
 	$order = check_str($_GET["order"]);
 
 //show the content
-	echo "<form name='domain_frm' id='domain_frm' method='GET' action='domain_settings.php'>";
+	echo "<form name='user_frm' id='user_frm' method='GET' action='user_settings.php'>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
-	echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>";
+	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_domain_settings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "select count(*) as num_rows from v_user_settings ";
+	$sql .= "where user_uuid = '$user_uuid' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -123,10 +123,12 @@ if (sizeof($_REQUEST) > 1) {
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_domain_settings ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_user_settings ";
+	$sql .= "where user_uuid = '$user_uuid' ";
+	$sql .= "and (user_setting_category <> 'domain' and user_setting_subcategory <> 'language') ";
+	$sql .= "and (user_setting_category <> 'domain' and user_setting_subcategory <> 'time_zone') ";
 	if (strlen($order_by) == 0) {
-		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
+		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
 	}
 	else {
 		$sql .= "order by $order_by $order ";
@@ -148,7 +150,7 @@ if (sizeof($_REQUEST) > 1) {
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
-			if ($previous_category != $row['domain_setting_category']) {
+			if ($previous_category != $row['user_setting_category']) {
 				$c = 0;
 				echo "<tr>\n";
 				echo "	<td colspan='7' align='left'>\n";
@@ -156,24 +158,24 @@ if (sizeof($_REQUEST) > 1) {
 					echo "	<br /><br />\n";
 				}
 				echo "		<b>\n";
-				if (strtolower($row['domain_setting_category']) == "cdr") {
+				if (strtolower($row['user_setting_category']) == "cdr") {
 					echo "		CDR";
 				}
-				elseif (strtolower($row['domain_setting_category']) == "ldap") {
+				elseif (strtolower($row['user_setting_category']) == "ldap") {
 					echo "		LDAP";
 				}
 				else {
-					echo "		".ucfirst($row['domain_setting_category']);
+					echo "		".ucfirst($row['user_setting_category']);
 				}
 				echo "		</b>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				if ((permission_exists("domain_select")
-					&& permission_exists("domain_setting_add")
+					&& permission_exists("user_setting_add")
 					&& count($_SESSION['domains']) > 1) ||
-					permission_exists('domain_setting_delete')) {
-						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
+					permission_exists('user_setting_delete')) {
+						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['user_setting_category'])."') : check('none','".strtolower($row['user_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -181,41 +183,41 @@ if (sizeof($_REQUEST) > 1) {
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
-				if (permission_exists('domain_setting_add')) {
-					echo "<a href='domain_setting_edit.php?domain_setting_category=".urlencode($row['domain_setting_category'])."&domain_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+				if (permission_exists('user_setting_add')) {
+					echo "<a href='user_setting_edit.php?user_setting_category=".urlencode($row['user_setting_category'])."&user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
-				if (permission_exists('domain_setting_delete')) {
-					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.domain_frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+				if (permission_exists('user_setting_delete')) {
+					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.user_frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 				}
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('domain_setting_edit')) ? " href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."'" : null;
+			$tr_link = (permission_exists('user_setting_edit')) ? " href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (
-				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-				permission_exists("domain_setting_delete")
+				(permission_exists("domain_select") && permission_exists("user_setting_add") && count($_SESSION['domains']) > 1) ||
+				permission_exists("user_setting_delete")
 				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['domain_setting_uuid']."' value='".$row['domain_setting_uuid']."'></td>\n";
-				$subcat_ids[strtolower($row['domain_setting_category'])][] = 'checkbox_'.$row['domain_setting_uuid'];
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['user_setting_uuid']."' value='".$row['user_setting_uuid']."'></td>\n";
+				$subcat_ids[strtolower($row['user_setting_category'])][] = 'checkbox_'.$row['user_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('domain_setting_edit')) {
-				echo 	"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."'>".$row['domain_setting_subcategory']."</a>";
+			if (permission_exists('user_setting_edit')) {
+				echo 	"<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'>".$row['user_setting_subcategory']."</a>";
 			}
 			else {
-				echo $row['domain_setting_subcategory'];
+				echo $row['user_setting_subcategory'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_setting_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
 
-			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];
-			$name = $row['domain_setting_name'];
+			$category = $row['user_setting_category'];
+			$subcategory = $row['user_setting_subcategory'];
+			$name = $row['user_setting_name'];
 			if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 				$sql = "select * from v_menus ";
-				$sql .= "where menu_uuid = '".$row['domain_setting_value']."' ";
+				$sql .= "where menu_uuid = '".$row['user_setting_value']."' ";
 				$sub_prep_statement = $db->prepare(check_sql($sql));
 				$sub_prep_statement->execute();
 				$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -225,30 +227,30 @@ if (sizeof($_REQUEST) > 1) {
 				}
 			}
 			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
-				echo "		".ucwords($row['domain_setting_value']);
+				echo "		".ucwords($row['user_setting_value']);
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-				echo "		".str_repeat('*', strlen($row['domain_setting_value']));
+				echo "		".str_repeat('*', strlen($row['user_setting_value']));
 			}
 			else {
-				echo "		".htmlspecialchars($row['domain_setting_value']);
+				echo "		".htmlspecialchars($row['user_setting_value']);
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?domain_id=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['domain_setting_enabled'])."</a>\n";
+			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['user_setting_enabled'])."</a>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['user_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
-			if (permission_exists('domain_setting_edit')) {
-				echo "<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			if (permission_exists('user_setting_edit')) {
+				echo "<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('domain_setting_delete')) {
-				echo "<a href='domain_settings.php?domain_uuid=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			if (permission_exists('user_setting_delete')) {
+				echo "<a href='user_settings.php?user_uuid=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			$previous_category = $row['domain_setting_category'];
+			$previous_category = $row['user_setting_category'];
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
@@ -261,11 +263,11 @@ if (sizeof($_REQUEST) > 1) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	if (permission_exists('domain_setting_add')) {
-		echo 		"<a href='domain_setting_edit.php?domain_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	if (permission_exists('user_setting_add')) {
+		echo 		"<a href='user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	if (permission_exists('domain_setting_delete') && $result_count > 0) {
-		echo 		"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+	if (permission_exists('user_setting_delete') && $result_count > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('user_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -282,8 +284,8 @@ if (sizeof($_REQUEST) > 1) {
 	if (sizeof($subcat_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what, category) {\n";
-		foreach ($subcat_ids as $domain_setting_category => $checkbox_ids) {
-			echo "if (category == '".$domain_setting_category."') {\n";
+		foreach ($subcat_ids as $user_setting_category => $checkbox_ids) {
+			echo "if (category == '".$user_setting_category."') {\n";
 			foreach ($checkbox_ids as $index => $checkbox_id) {
 				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
 			}
@@ -293,6 +295,4 @@ if (sizeof($_REQUEST) > 1) {
 		echo "</script>\n";
 	}
 
-//include the footer
-	//require_once "resources/footer.php";
 ?>

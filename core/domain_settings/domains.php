@@ -26,13 +26,20 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('domain_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//redirect admin to app instead
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_parent') && permission_exists('domain_descendants')) {
+		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
+	}
+
+//check permission
+	if (permission_exists('domain_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;

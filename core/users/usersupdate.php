@@ -765,6 +765,10 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "	}\n";
 	echo "</script>\n";
 
+	if (permission_exists('user_setting_view')) {
+		require "user_settings.php";
+	}
+
 //include the footer
 	require_once "resources/footer.php";
 
