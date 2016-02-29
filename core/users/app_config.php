@@ -110,26 +110,24 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_view";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "0d57cc1e-1874-47b9-7ddd-fe1f57cec99b";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
-
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "user_setting_category_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
