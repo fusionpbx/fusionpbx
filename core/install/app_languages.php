@@ -1,15 +1,15 @@
 <?php
 
-$text['title-install_first_time']['en-us'] = "First Time Install";
-$text['title-install_first_time']['es-cl'] = "Instale Primera Vez";
-$text['title-install_first_time']['pt-pt'] = "Première installation";
-$text['title-install_first_time']['fr-fr'] = "Première installation";
-$text['title-install_first_time']['pt-br'] = "Première installation";
-$text['title-install_first_time']['pl'] = "Zainstalować";
-$text['title-install_first_time']['sv-se'] = "Första gången Installera";
-$text['title-install_first_time']['uk'] = "Перший раз Встановіть";
-$text['title-install_first_time']['de-at'] = "Erstinstallation";
-$text['title-install_first_time']['ar-eg'] = "للمرة الأولى قم بتثبيت";
+$text['title-install']['en-us'] = "Install";
+$text['title-install']['es-cl'] = "Instale";
+$text['title-install']['pt-pt'] = "Installation";
+$text['title-install']['fr-fr'] = "Installation";
+$text['title-install']['pt-br'] = "Installation";
+$text['title-install']['pl'] = "Zainstalować";
+$text['title-install']['sv-se'] = "Installera";
+$text['title-install']['uk'] = "Перший раз Встановіть";
+$text['title-install']['de-at'] = "Erstinstallation";
+$text['title-install']['ar-eg'] = "للمرة الأولى قم بتثبيت";
 
 $text['title-detected_configuration']['en-us'] = "Detected Configuration";
 $text['title-detected_configuration']['es-cl'] = "Configuración detectado";
