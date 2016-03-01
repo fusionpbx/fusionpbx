@@ -135,14 +135,14 @@ require_once "resources/classes/EventSocket.php";
 					$this->$field = normalize_path($matches[2]);
 				}
 			}
-			$this->_voicemail_vdir = 	normalize_path($this->_storage_dir . DIRECTORY_SEPARATOR . "voicemail");
-			$this->_phrases_vdir = 		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "lang");
-			$this->_extensions_vdir = 	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "directory");
+			$this->_voicemail_vdir =	normalize_path($this->_storage_dir . DIRECTORY_SEPARATOR . "voicemail");
+			$this->_phrases_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "lang");
+			$this->_extensions_vdir =	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "directory");
 			$this->_sip_profiles_vdir =	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "sip_profiles");
 			$this->_dialplan_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "dialplan");
 			$this->_backup_vdir =		normalize_path(sys_get_temp_dir());
-		}	
-	
+		}
+
 		protected function connect_event_socket(){
 			$esl = new EventSocket;
 			if ($esl->connect($this->event_host, $this->event_port, $this->event_password)) {
