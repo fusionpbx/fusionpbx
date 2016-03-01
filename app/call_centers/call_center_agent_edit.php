@@ -140,37 +140,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//add the call_timeout and confirm
 				$agent_contact = $first.',call_timeout='.$agent_call_timeout.$last;
 				$agent_contact = "{".$confirm.",call_timeout=".$agent_call_timeout.",sip_invite_domain=".$_SESSION['domain_name']."}".$agent_contact;
-				echo "\n\n".$agent_contact."\n\n";
 			}
 		}
 		else {
-			//found
+			$position = strrpos($agent_contact, "}");
+			$first = substr($agent_contact, 0, $position);
+			$last = substr($agent_contact, $position);
+			//add call_timeout and sip_invite_domain, only if missing
+			$call_timeout = (stristr($agent_contact, 'call_timeout') === FALSE) ? ',call_timeout='.$agent_call_timeout : null;
+			$sip_invite_domain = (stristr($agent_contact, 'sip_invite_domain') === FALSE) ? ',sip_invite_domain='.$_SESSION['domain_name'] : null;
+			//compose
 			if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
-				//not found
-				$position = strrpos($agent_contact, "}");
-				$first = substr($agent_contact, 0, $position);
-				$last = substr($agent_contact, $position);
-				if(stristr($agent_contact, 'call_timeout') === FALSE) {
-					$call_timeout = ',call_timeout='.$agent_call_timeout;
-				}
-				else {
-					$call_timeout = '';
-				}
-				$agent_contact = $first.',sip_invite_domain='.$_SESSION['domain_name'].$call_timeout.$last;
+				$agent_contact = $first.$sip_invite_domain.$call_timeout.$last;
 			}
 			else {
-				//found
-				$position = strrpos($agent_contact, "}");
-				$first = substr($agent_contact, 0, $position);
-				$last = substr($agent_contact, $position);
-				if(stristr($agent_contact, 'call_timeout') === FALSE) {
-					//add the call_timeout and confirm
-					$agent_contact = $first.','.$confirm.',sip_invite_domain='.$_SESSION['domain_name'].'call_timeout='.$agent_call_timeout.$last;
-				}
-				else {
-					//add confirm
-					$agent_contact = $first.',sip_invite_domain='.$_SESSION['domain_name'].','.$confirm.$last;
-				}
+				$agent_contact = $first.','.$confirm.$sip_invite_domain.$call_timeout.$last;
 			}
 		}
 
