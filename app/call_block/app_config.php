@@ -69,6 +69,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the full phone number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_number_type";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_block_number_type";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the call number type.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_count";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_call_count";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
