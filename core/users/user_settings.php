@@ -34,15 +34,12 @@ else {
 	exit;
 }
 
+//toggle setting enabled
+	if (sizeof($_REQUEST) > 1) {
+		$user_uuid = check_str($_REQUEST["user_id"]);
+		$user_setting_uuids = $_REQUEST["id"];
+		$enabled = check_str($_REQUEST['enabled']);
 
-if (sizeof($_REQUEST) > 1) {
-
-	$action = check_str($_REQUEST["action"]);
-	$user_uuid = check_str($_REQUEST["user_id"]);
-	$user_setting_uuids = $_REQUEST["id"];
-	$enabled = check_str($_REQUEST['enabled']);
-
-	//change enabled value
 		if ($user_uuid != '' && sizeof($user_setting_uuids) == 1 && $enabled != '') {
 			$sql = "update v_user_settings set ";
 			$sql .= "user_setting_enabled = '".$enabled."' ";
@@ -56,35 +53,7 @@ if (sizeof($_REQUEST) > 1) {
 			header("Location: usersupdate.php?id=".$user_uuid);
 			exit;
 		}
-
-	//delete user settings
-		if ($action == 'delete' && permission_exists('user_setting_delete')) {
-			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
-
-			if (sizeof($user_setting_uuids) > 0) {
-				foreach ($user_setting_uuids as $user_setting_uuid) {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_uuid = '".$user_setting_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					unset ($prep_statement, $sql);
-				}
-				// set message
-				$_SESSION["message"] = $text['message-delete'].": ".sizeof($user_setting_uuids);
-			}
-			else {
-				// set message
-				$_SESSION["message"] = $text['message-delete_failed'];
-				$_SESSION["message_mood"] = "negative";
-			}
-
-			header("Location: usersupdate.php?id=".check_str($_REQUEST["user_uuid"]));
-			exit;
-		}
-
-} //REQUEST
+	}
 
 //include the paging
 	require_once "resources/paging.php";
@@ -94,8 +63,7 @@ if (sizeof($_REQUEST) > 1) {
 	$order = check_str($_GET["order"]);
 
 //show the content
-	echo "<form name='user_frm' id='user_frm' method='GET' action='user_settings.php'>";
-	echo "<input type='hidden' name='action' id='action' value=''>";
+	echo "<form name='frm_settings' id='frm_settings' method='get' action='user_setting_delete.php'>";
 	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>";
 
 //prepare to page the results
@@ -187,7 +155,7 @@ if (sizeof($_REQUEST) > 1) {
 					echo "<a href='user_setting_edit.php?user_setting_category=".urlencode($row['user_setting_category'])."&user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('user_setting_delete')) {
-					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.user_frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 				}
 				echo "</td>\n";
 				echo "</tr>\n";
@@ -246,7 +214,7 @@ if (sizeof($_REQUEST) > 1) {
 				echo "<a href='user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('user_setting_delete')) {
-				echo "<a href='user_settings.php?user_uuid=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&action=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='user_setting_delete.php?user_uuid=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -267,7 +235,7 @@ if (sizeof($_REQUEST) > 1) {
 		echo 		"<a href='user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('user_setting_delete') && $result_count > 0) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('user_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
