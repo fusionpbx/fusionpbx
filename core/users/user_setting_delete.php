@@ -38,26 +38,29 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the variables
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-		$user_uuid = check_str($_GET["user_uuid"]);
-	}
+//delete user settings
+	$user_setting_uuids = $_REQUEST["id"];
+	$user_uuid = check_str($_REQUEST["user_uuid"]);
 
-//delete the record
-	if (strlen($id) > 0) {
-		//delete user_setting
+	if (sizeof($user_setting_uuids) > 0) {
+		foreach ($user_setting_uuids as $user_setting_uuid) {
 			$sql = "delete from v_user_settings ";
-			$sql .= "where user_uuid = '$user_uuid' ";
-			$sql .= "and user_setting_uuid = '$id' ";
+			$sql .= "where user_uuid = '".$user_uuid."' ";
+			$sql .= "and user_setting_uuid = '".$user_setting_uuid."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			unset($sql);
+			unset ($prep_statement, $sql);
+		}
+		// set message
+		$_SESSION["message"] = $text['message-delete'].": ".sizeof($user_setting_uuids);
+	}
+	else {
+		// set message
+		$_SESSION["message"] = $text['message-delete_failed'];
+		$_SESSION["message_mood"] = "negative";
 	}
 
-//redirect the user
-	$_SESSION["message"] = $text['message-delete'];
-	header("Location: usersupdate.php?id=".$user_uuid);
-	return;
+	header("Location: usersupdate.php?id=".check_str($_REQUEST["user_uuid"]));
+	exit;
 
 ?>
