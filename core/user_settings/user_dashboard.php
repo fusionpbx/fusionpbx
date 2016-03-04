@@ -88,12 +88,6 @@
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
-	/*
-	$text['title-user-settings']
-	$text['label-username']
-	$text['label-voicemail']
-	*/
-
 //call routing
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {

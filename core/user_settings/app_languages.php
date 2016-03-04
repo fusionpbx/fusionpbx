@@ -14,20 +14,6 @@ $text['title-user_dashboard']['ro'] = "Panou control utilizator";
 $text['title-user_dashboard']['fa'] = "";
 $text['title-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
-$text['title-user-settings']['en-us'] = "User Information";
-$text['title-user-settings']['es-cl'] = "Información de Usuario";
-$text['title-user-settings']['pt-pt'] = "Informação do Utilizador";
-$text['title-user-settings']['fr-fr'] = "Informations de l'usager";
-$text['title-user-settings']['pt-br'] = "Informação do Usuário";
-$text['title-user-settings']['pl'] = "Informacje o użytkowniku";
-$text['title-user-settings']['he'] = "פרטי משתמש";
-$text['title-user-settings']['uk'] = "Інформація про користувача";
-$text['title-user-settings']['sv-se'] = "Användarinformation";
-$text['title-user-settings']['de-at'] = "Benutzerinformationen";
-$text['title-user-settings']['ro'] = "Informații utilizator";
-$text['title-user-settings']['fa'] = "";
-$text['title-user-settings']['ar-eg'] = "بيانات المستخدم";
-
 $text['title']['en-us'] = "Account Settings";
 $text['title']['es-cl'] = "Configuración de Cuenta";
 $text['title']['pt-pt'] = "Configurações de Conta";
@@ -195,20 +181,6 @@ $text['login-message_attention']['de-at'] = "Achtung!";
 $text['login-message_attention']['ro'] = "Atenție!";
 $text['login-message_attention']['fa'] = "";
 $text['login-message_attention']['ar-eg'] = "برجاء الملاحظة";
-
-$text['label-voicemail']['en-us'] = "Voicemail";
-$text['label-voicemail']['es-cl'] = "Correo de Voz";
-$text['label-voicemail']['pt-pt'] = "Correio de Voz";
-$text['label-voicemail']['fr-fr'] = "Messagerie vocale";
-$text['label-voicemail']['pt-br'] = "Correio de Voz";
-$text['label-voicemail']['pl'] = "Poczta głosowa";
-$text['label-voicemail']['he'] = "תיבה קולית";
-$text['label-voicemail']['uk'] = "Голосова пошта";
-$text['label-voicemail']['sv-se'] = "Röstbrevlåda";
-$text['label-voicemail']['de-at'] = "Sprachnachricht";
-$text['label-voicemail']['ro'] = "Mesagerie vocală";
-$text['label-voicemail']['fa'] = "";
-$text['label-voicemail']['ar-eg'] = "البريد الصوتي";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
