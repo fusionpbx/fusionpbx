@@ -45,6 +45,18 @@ else {
 		$order = check_str($_GET["order"]);
 	}
 
+//handle search term
+	$search = check_str($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_mod = "and ( ";
+		$sql_mod .= "extension like '%".$search."%' ";
+		$sql_mod .= "or call_group like '%".$search."%' ";
+		$sql_mod .= "or user_context like '%".$search."%' ";
+		$sql_mod .= "or enabled like '%".$search."%' ";
+		$sql_mod .= "or description like '%".$search."%' ";
+		$sql_mod .= ") ";
+	}
+
 require_once "resources/header.php";
 $document['title'] = $text['title-extensions'];
 
@@ -61,15 +73,7 @@ require_once "resources/paging.php";
 	unset($prep_statement, $row);
 
 //get the number of extensions (reuse $sql from above)
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "	extension like '%".$search."%' ";
-		$sql .= " 	or call_group like '%".$search."%' ";
-		$sql .= " 	or user_context like '%".$search."%' ";
-		$sql .= " 	or enabled like '%".$search."%' ";
-		$sql .= " 	or description like '%".$search."%' ";
-		$sql .= ") ";
-	}
+	$sql .= $sql_mod; //add search mod from above
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -85,24 +89,17 @@ require_once "resources/paging.php";
 
 //prepare to page the results
 	$rows_per_page = 150;
-	$param = "";
+	$param = "&search=".$search;
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $_GET['page'];
 
 //get the extensions
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "	extension like '%".$search."%' ";
-		$sql .= " 	or call_group like '%".$search."%' ";
-		$sql .= " 	or user_context like '%".$search."%' ";
-		$sql .= " 	or enabled like '%".$search."%' ";
-		$sql .= " 	or description like '%".$search."%' ";
-		$sql .= ") ";
-	}
+	$sql .= $sql_mod; //add search mod from above
 	if (isset($order_by)) {
 		$sql .= "order by $order_by $order ";
 	}
@@ -118,16 +115,19 @@ require_once "resources/paging.php";
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left'><b>".$text['header-extensions']." (".$num_rows.")</b><br>\n";
+	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$num_rows.")</b><br>\n";
 	echo "		".$text['description-extensions']."\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
-	echo "			<td width='30%' align='right'>\n";
+	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	if (if_group("superadmin")) {
-		echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
+		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
 	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	if ($paging_controls_mini != '') {
+		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "  </tr>\n";
@@ -186,26 +186,23 @@ require_once "resources/paging.php";
 		unset($sql, $extensions, $row_count);
 	} //end if results
 
-	echo "<tr>\n";
-	echo "<td colspan='6' align='left'>\n";
-	echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' class='list_control_icons'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
+			echo "	<tr>\n";
+			echo "		<td colspan='20' class='list_control_icons'>\n";
 			echo "			<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>\n";
+			echo "		</td>\n";
+			echo "	</tr>\n";
 		}
 	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "</table>";
-	echo "<br><br>";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<center>".$paging_controls."</center>\n";
+	}
+
+	echo "<br><br>\n";
 
 //show the footer
 	require_once "resources/footer.php";

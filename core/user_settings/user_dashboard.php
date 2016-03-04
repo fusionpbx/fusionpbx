@@ -66,9 +66,21 @@
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_dashboard'];
 
-	echo "<b>".$text['header-user_dashboard']."</b><br>";
-	echo $text['description-user_dashboard'];
-
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+	echo "	<tr>\n";
+	echo "		<td valign='top'>";
+	echo "			<b>".$text['header-user_dashboard']."</b><br />";
+	echo "			".$text['description-user_dashboard'];
+	echo "		</td>\n";
+	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
+	echo "			<input type='button' class='btn' value='".$_SESSION["username"]."' onclick=\"document.location.href='".PROJECT_PATH."/core/user_settings/user_edit.php';\">";
+	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/voicemail_messages.php")) {
+		echo "		<input type='button' class='btn' value='".$text['button-voicemail']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+	echo "<br /><br />";
 
 //display login message
 	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
@@ -76,52 +88,37 @@
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
-//start the user table
-	echo "<br />";
-	echo "<br />";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$text['title-user-settings']." &nbsp;</th>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$text['label-username']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"row_style1\">\n";
-	echo "		<a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a> \n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-
-//voicemail
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/voicemail_messages.php")) {
-		echo "<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		".$text['label-voicemail']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"row_style1\">\n";
-		echo "		<a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'>".$text['label-view-messages']."</a> \n";
-		echo "	</td>\n";
-		echo "</tr>\n";
-	}
-
-//end the table
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<br />\n";
-
-//call forward, follow me and dnd
+//call routing
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 			$is_included = "true";
+			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+			echo "	<tr>\n";
+			echo "		<td valign='top'><b>".$text['header-call_routing']."</b><br><br></td>\n";
+			echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
 			require_once "app/calls/calls.php";
+			echo "<br>\n";
 		}
 	}
+
+//reload language values
+	$language = new text;
+	$text = $language->get();
 
 //ring group forward
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
 		if (permission_exists('ring_group_forward')) { //ring_group_forward
 			$is_included = "true";
+			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+			echo "	<tr>\n";
+			echo "		<td valign='top'><b>".$text['header-ring_groups']."</b><br><br></td>\n";
+			echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
 			require_once "app/ring_groups/ring_group_forward.php";
+			echo "<br>\n";
 		}
 	}
 
