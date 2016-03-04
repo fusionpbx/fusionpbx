@@ -14,20 +14,6 @@ $text['title-user_dashboard']['ro'] = "Panou control utilizator";
 $text['title-user_dashboard']['fa'] = "";
 $text['title-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
-$text['title-user-settings']['en-us'] = "User Information";
-$text['title-user-settings']['es-cl'] = "Información de Usuario";
-$text['title-user-settings']['pt-pt'] = "Informação do Utilizador";
-$text['title-user-settings']['fr-fr'] = "Informations de l'usager";
-$text['title-user-settings']['pt-br'] = "Informação do Usuário";
-$text['title-user-settings']['pl'] = "Informacje o użytkowniku";
-$text['title-user-settings']['he'] = "פרטי משתמש";
-$text['title-user-settings']['uk'] = "Інформація про користувача";
-$text['title-user-settings']['sv-se'] = "Användarinformation";
-$text['title-user-settings']['de-at'] = "Benutzerinformationen";
-$text['title-user-settings']['ro'] = "Informații utilizator";
-$text['title-user-settings']['fa'] = "";
-$text['title-user-settings']['ar-eg'] = "بيانات المستخدم";
-
 $text['title']['en-us'] = "Account Settings";
 $text['title']['es-cl'] = "Configuración de Cuenta";
 $text['title']['pt-pt'] = "Configurações de Conta";
@@ -195,34 +181,6 @@ $text['login-message_attention']['de-at'] = "Achtung!";
 $text['login-message_attention']['ro'] = "Atenție!";
 $text['login-message_attention']['fa'] = "";
 $text['login-message_attention']['ar-eg'] = "برجاء الملاحظة";
-
-$text['label-voicemail']['en-us'] = "Voicemail";
-$text['label-voicemail']['es-cl'] = "Correo de Voz";
-$text['label-voicemail']['pt-pt'] = "Correio de Voz";
-$text['label-voicemail']['fr-fr'] = "Messagerie vocale";
-$text['label-voicemail']['pt-br'] = "Correio de Voz";
-$text['label-voicemail']['pl'] = "Poczta głosowa";
-$text['label-voicemail']['he'] = "תיבה קולית";
-$text['label-voicemail']['uk'] = "Голосова пошта";
-$text['label-voicemail']['sv-se'] = "Röstbrevlåda";
-$text['label-voicemail']['de-at'] = "Sprachnachricht";
-$text['label-voicemail']['ro'] = "Mesagerie vocală";
-$text['label-voicemail']['fa'] = "";
-$text['label-voicemail']['ar-eg'] = "البريد الصوتي";
-
-$text['label-view-messages']['en-us'] = "View Messages";
-$text['label-view-messages']['es-cl'] = "Ver mensajes";
-$text['label-view-messages']['pt-pt'] = "Ver Mensagens";
-$text['label-view-messages']['fr-fr'] = "Voir les messages";
-$text['label-view-messages']['pt-br'] = "Ver Mensagens";
-$text['label-view-messages']['pl'] = "Przegląd wiadomości";
-$text['label-view-messages']['he'] = "ראה הודעות";
-$text['label-view-messages']['uk'] = "Переглянути повідомлення";
-$text['label-view-messages']['sv-se'] = "Se Meddelanden";
-$text['label-view-messages']['de-at'] = "Nachrichten anzeigen";
-$text['label-view-messages']['ro'] = "Afișare Mesaje";
-$text['label-view-messages']['fa'] = "";
-$text['label-view-messages']['ar-eg'] = "عرض الرسائل";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de Usuario";
@@ -476,6 +434,31 @@ $text['header-user_dashboard']['ro'] = "Panou control utilizator";
 $text['header-user_dashboard']['fa'] = "";
 $text['header-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
+$text['header-ring_groups']['en-us'] = "Ring Groups";
+$text['header-ring_groups']['es-cl'] = "Grupo de llamado";
+$text['header-ring_groups']['fr-fr'] = "Groupes de Sonnerie";
+$text['header-ring_groups']['pt-pt'] = "Grupos";
+$text['header-ring_groups']['pt-br'] = "Configurações da Conta";
+$text['header-ring_groups']['pl'] = "Grupy odbiorców rozmów";
+$text['header-ring_groups']['sv-se'] = "Ringgrupper";
+$text['header-ring_groups']['uk'] = "Групи";
+$text['header-ring_groups']['de-at'] = "Rufgruppen";
+$text['header-ring_groups']['he'] = "קבוצות חיוג";
+
+$text['header-call_routing']['en-us'] = "Call Routing";
+$text['header-call_routing']['es-cl'] = "Enrutamiento de Llamadas";
+$text['header-call_routing']['pt-pt'] = "Roteamento de Chamadas";
+$text['header-call_routing']['fr-fr'] = "Routage des Appels";
+$text['header-call_routing']['pt-br'] = "Roteamento de Chamadas";
+$text['header-call_routing']['pl'] = "Trasy połączeń";
+$text['header-call_routing']['he'] = "ניתוב שיחות";
+$text['header-call_routing']['uk'] = "маршрутизація викликів";
+$text['header-call_routing']['sv-se'] = "samtals Rutter";
+$text['header-call_routing']['de-at'] = "Anrufrouten";
+$text['header-call_routing']['ro'] = "Маршрутизация вызовов";
+$text['header-call_routing']['fa'] = "";
+$text['header-call_routing']['ar-eg'] = "توجيه الدعوة";
+
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
 $text['description-user_language']['pt-pt'] = "Selecione o idioma.";
@@ -643,5 +626,27 @@ $text['check-available-ondemand-status']['de-at'] = "Erreichbar (bei Bedarf)";
 $text['check-available-ondemand-status']['ro'] = "Disponibil (la cerere)";
 $text['check-available-ondemand-status']['fa'] = "";
 $text['check-available-ondemand-status']['ar-eg'] = "(متاح ( تحت الطلب";
+
+$text['button-voicemail']['en-us'] = "Voicemail";
+$text['button-voicemail']['es-cl'] = "Correo de Voz";
+$text['button-voicemail']['pt-pt'] = "Correio de Voz";
+$text['button-voicemail']['fr-fr'] = "Messagerie Vocale";
+$text['button-voicemail']['pt-br'] = "Correio de voz";
+$text['button-voicemail']['pl'] = "Poczta głosowa";
+$text['button-voicemail']['sv-se'] = "Röstbrevlåda";
+$text['button-voicemail']['uk'] = "Голосова пошта";
+$text['button-voicemail']['de-at'] = "Mailbox";
+$text['button-voicemail']['he'] = "תא קולי";
+
+$text['button-view_all']['en-us'] = "View All";
+$text['button-view_all']['es-cl'] = "Mostrar Todos";
+$text['button-view_all']['pt-pt'] = "Mostrar Todos";
+$text['button-view_all']['fr-fr'] = "Tout Montrer";
+$text['button-view_all']['pl'] = "Pokaż wszystkie";
+$text['button-view_all']['uk'] = "Показати всі";
+$text['button-view_all']['sv-se'] = "Visa Allt";
+$text['button-view_all']['ro'] = "";
+$text['button-view_all']['de-at'] = "Alle anzeigen";
+$text['button-view_all']['he'] = "הצג הכל";
 
 ?>
