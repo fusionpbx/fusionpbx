@@ -38,6 +38,15 @@ else {
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//handle search term
+	$search = check_str($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_mod = "and ( ";
+		$sql_mod .= "extension like '%".$search."%' ";
+		$sql_mod .= "or description like '%".$search."%' ";
+		$sql_mod .= ") ";
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/calls');
@@ -45,18 +54,6 @@ else {
 //begin the content
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
-
-	if ($is_included != "true") {
-		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-		echo "		<tr>\n";
-		echo "		<td align='left'><b>".$text['title']."</b><br>\n";
-		echo "			".$text['description-2']."\n";
-		echo "			".$text['description-3']." \n";
-		echo "		</td>\n";
-		echo "		</tr>\n";
-		echo "		</table>\n";
-		echo "		<br />";
-	}
 
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -77,6 +74,7 @@ else {
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
+	$sql .= $sql_mod; //add search mod from above
 	if (strlen($order_by)> 0) {
 		$sql .= "order by $order_by $order ";
 	}
@@ -89,10 +87,19 @@ else {
 	$num_rows = count($result);
 	unset ($prep_statement, $result, $sql);
 
-	$rows_per_page = 150;
-	$param = "";
+	if ($is_included == 'true') {
+		$rows_per_page = 10;
+		if ($num_rows > 10) {
+			echo "<script>document.getElementById('btn_viewall_callrouting').style.display = 'inline';</script>\n";
+		}
+	}
+	else {
+		$rows_per_page = 150;
+	}
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true);
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
@@ -115,6 +122,7 @@ else {
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
+	$sql .= $sql_mod; //add search mod from above
 	if (strlen($order_by)> 0) {
 		$sql .= "order by $order_by $order ";
 	}
@@ -131,6 +139,27 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+	if ($is_included != "true") {
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "  <tr>\n";
+		echo "	<td align='left' width='100%'><b>".$text['title']."</b><br>\n";
+		echo "	".$text['description-2']."\n";
+		echo "	".$text['description-3']."\n";
+		echo "	</td>\n";
+		echo "		<form method='get' action=''>\n";
+		echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+		if ($paging_controls_mini != '') {
+			echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		}
+		echo "			</td>\n";
+		echo "		</form>\n";
+		echo "  </tr>\n";
+		echo "</table>\n";
+		echo "<br />";
+	}
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -157,20 +186,13 @@ else {
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	if (strlen($paging_controls) > 0) {
-		echo "<tr>\n";
-		echo "<td colspan='5' align='left'>\n";
-		echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "	</tr>\n";
-		echo "	</table>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
 	echo "</table>";
-	echo "<br><br>";
+	echo "<br>";
+
+	if (strlen($paging_controls) > 0 && ($is_included != "true")) {
+		echo "<center>".$paging_controls."</center>\n";
+		echo "<br><br>\n";
+	}
 
 	if ($is_included != "true") {
 		require_once "resources/footer.php";
