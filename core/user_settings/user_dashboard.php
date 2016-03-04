@@ -73,9 +73,9 @@
 	echo "			".$text['description-user_dashboard'];
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
-	echo "			<a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a>";
+	echo "			<input type='button' class='btn' value='".$_SESSION["username"]."' onclick=\"document.location.href='".PROJECT_PATH."/core/user_settings/user_edit.php';\">";
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/voicemail_messages.php")) {
-		echo "		<input type='button' class='btn' value='".$text['button-voicemail_messages']."' style='margin-left: 15px;' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">";
+		echo "		<input type='button' class='btn' value='".$text['button-voicemail']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

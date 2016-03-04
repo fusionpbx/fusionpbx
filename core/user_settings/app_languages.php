@@ -627,16 +627,16 @@ $text['check-available-ondemand-status']['ro'] = "Disponibil (la cerere)";
 $text['check-available-ondemand-status']['fa'] = "";
 $text['check-available-ondemand-status']['ar-eg'] = "(متاح ( تحت الطلب";
 
-$text['button-voicemail_messages']['en-us'] = "Voicemail Messages";
-$text['button-voicemail_messages']['es-cl'] = "Mensajes de correo de voz";
-$text['button-voicemail_messages']['pt-pt'] = "Mensagens de Correio de Voz";
-$text['button-voicemail_messages']['fr-fr'] = "Messages vocaux";
-$text['button-voicemail_messages']['pt-br'] = "Mensagem de correio de voz";
-$text['button-voicemail_messages']['pl'] = "Wiadomości poczty głosowej";
-$text['button-voicemail_messages']['sv-se'] = "Röstbrevlåda Meddelanden";
-$text['button-voicemail_messages']['uk'] = "Повідомлення голосової пошти";
-$text['button-voicemail_messages']['de-at'] = "Mailbox Nachrichten";
-$text['button-voicemail_messages']['he'] = "הודעות תא קולי";
+$text['button-voicemail']['en-us'] = "Voicemail";
+$text['button-voicemail']['es-cl'] = "Correo de Voz";
+$text['button-voicemail']['pt-pt'] = "Correio de Voz";
+$text['button-voicemail']['fr-fr'] = "Messagerie Vocale";
+$text['button-voicemail']['pt-br'] = "Correio de voz";
+$text['button-voicemail']['pl'] = "Poczta głosowa";
+$text['button-voicemail']['sv-se'] = "Röstbrevlåda";
+$text['button-voicemail']['uk'] = "Голосова пошта";
+$text['button-voicemail']['de-at'] = "Mailbox";
+$text['button-voicemail']['he'] = "תא קולי";
 
 $text['button-view_all']['en-us'] = "View All";
 $text['button-view_all']['es-cl'] = "Mostrar Todos";
