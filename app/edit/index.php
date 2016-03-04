@@ -59,12 +59,22 @@ else {
 	$setting_indenting = ($_SESSION["editor"]["indent_guides"]["boolean"] != '') ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
 	$setting_numbering = ($_SESSION["editor"]["line_numbers"]["boolean"] != '') ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 	$setting_preview = ($_SESSION["editor"]["live_preview"]["boolean"] != '') ? $_SESSION["editor"]["live_preview"]["boolean"] : 'true';
+
+//get and then set the favicon
+	if (isset($_SESSION['theme']['favicon']['text'])){
+		$favicon = $_SESSION['theme']['favicon']['text'];
+	}
+	else {
+		$favicon = '<!--{project_path}-->/themes/enhanced/favicon.ico';
+	}
+
 ?>
 
 <html>
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<title><?php echo $title;?></title>
+	<title><?php echo $title; ?></title>
+	<link rel="icon" type="image/x-icon" href="<?php echo $favicon; ?>">
 	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {
