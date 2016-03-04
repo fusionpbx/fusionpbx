@@ -38,7 +38,7 @@
 	}
 	else {
 		$favicon = '<!--{project_path}-->/themes/enhanced/favicon.ico';
-        }
+	}
 ?>
 <link rel="icon" href="<?php echo $favicon; ?>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
