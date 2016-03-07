@@ -590,7 +590,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    </select>\n";
 	}
 	else {
-		echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"".$row['domain_setting_value']."\">\n";
+		echo "	<input class='formfld' type='text' name='domain_setting_value' value=\"".$row['domain_setting_value']."\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
