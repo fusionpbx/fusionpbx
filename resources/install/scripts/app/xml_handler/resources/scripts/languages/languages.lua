@@ -144,7 +144,7 @@
 
 					--if nil do nt include language xml from the file system the phrases directory is not set in default settings - category: switch name: phrases_dir or its false
 						--it also can be nil if config.lua is not writable so that it can be defined in it
-						if (phrases_dir == nil) then
+						if (phrases_dir ~= nil) then
 							--read root xml language file, parse included xml files
 								local xml_file_paths = {}
 								local file_handle = io.open(phrases_dir.."/"..language.."/"..language..".xml", "r");
