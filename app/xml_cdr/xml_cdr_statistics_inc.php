@@ -125,7 +125,7 @@ else {
          } else {
              $mos_comparison = '';
         }
-		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);		
+		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
 

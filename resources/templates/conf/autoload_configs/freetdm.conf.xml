@@ -1,6 +1,6 @@
 <!-- Please refer to http://wiki.freeswitch.org/wiki/FreeTDM for further documentation  -->
 
-<!-- 
+<!--
 This is a sample FreeSWITCH XML configuration for FreeTDM
 Remember you still need to configure freetdm.conf (no XML extension) in $prefix/conf/
 directory of FreeSWITCH. The freetdm.conf (no XML extension) is a simple text file
@@ -8,11 +8,11 @@ definining the I/O interfaces (Sangoma, DAHDI etc). This file (freetdm.conf.xml)
 with the signaling protocols that you can run on top of your I/O interfaces.
 -->
 <configuration name="freetdm.conf" description="FreeTDM Configuration">
-	
+
 	<settings>
 		<param name="debug" value="0"/>
 		<!--<param name="hold-music" value="$${moh_uri}"/>-->
-		<!-- Analog global options (they apply to all spans) 
+		<!-- Analog global options (they apply to all spans)
 		     Remember you can only choose between either call-swap
 		     or 3-way, not both!
 		-->
@@ -65,7 +65,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			<!-- whether you want to enable callwaiting feature -->
 			<!--<param name="callwaiting" value="true"/>-->
 
-			<!-- whether you want to answer/hangup on polarity reverse for outgoing calls in FXO devices 
+			<!-- whether you want to answer/hangup on polarity reverse for outgoing calls in FXO devices
 			     and send polarity reverse on answer/hangup for incoming calls in FXS devices -->
 			<!--<param name="answer-polarity-reverse" value="false"/>-->
 			<!--<param name="hangup-polarity-reverse" value="false"/>-->
@@ -76,7 +76,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			-->
 
 			<!-- Retrieve caller id on polarity reverse -->
-			<!-- 
+			<!--
 			<param name="polarity-callerid" value="true"/>
 			-->
 
@@ -92,10 +92,10 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 		</span>
 	</analog_spans>
 
-	<!-- 
-	
+	<!--
+
  	openr2 (MFC-R2 signaling) spans (ftmod_r2)
-	
+
 	In order to use this type of spans your FreeTDM must have been compiled with ftmod_r2 module.
 	The module is compiled if the openr2 library is present when running the ./configure script
 	in the FreeTDM source code
@@ -103,17 +103,17 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 	MFC-R2 signaling has lots of variants from country to country and even sometimes
 	minor variants inside the same country. The only mandatory parameters here are:
 	variant, but typically you also want to set max_ani and max_dnis.
-	IT IS RECOMMENDED that you leave the default values (leaving them commented) for the 
-	other parameters unless you have problems or you have been instructed to change some 
-	parameter. OpenR2 library uses the 'variant' parameter to try to determine the 
-	best defaults for your country.  If you want to contribute your configs for a particular 
-	country send them to the e-mail of the primary OpenR2 developer that you can find in the 
+	IT IS RECOMMENDED that you leave the default values (leaving them commented) for the
+	other parameters unless you have problems or you have been instructed to change some
+	parameter. OpenR2 library uses the 'variant' parameter to try to determine the
+	best defaults for your country.  If you want to contribute your configs for a particular
+	country send them to the e-mail of the primary OpenR2 developer that you can find in the
 	AUTHORS file of the OpenR2 package, they will be added to the samples directory of openr2.
 
 	-->
 	<r2_spans>
 		<span name="wp1" cfgprofile="testr2">
-			
+
 			<!--
 			MFC/R2 variant. This depends on the OpenR2 supported variants
 			A list of values can be found by executing the openr2 command r2test -l
@@ -130,20 +130,20 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			<param name="dialplan" value="XML"/>
 			<param name="context" value="default"/>
 
-			<!-- 
+			<!--
 			Max amount of ANI (caller id digits) to ask for
-			<param name="max_ani" value="4"/> 
+			<param name="max_ani" value="4"/>
 			-->
-			<!-- 
-			Max amount of DNIS to ask for 
-			<param name="max_dnis" value="4"/> 
+			<!--
+			Max amount of DNIS to ask for
+			<param name="max_dnis" value="4"/>
 			-->
 
 			<!-- Do not set parameters below this line unless you desire to tweak it because is not working -->
-			
-			<!-- 
+
+			<!--
 			Whether or not to get the ANI before getting DNIS (only affects incoming calls)
-			Some telcos require ANI first some others do not care, if default go wrong on 
+			Some telcos require ANI first some others do not care, if default go wrong on
 			incoming calls, change this value
 			<param name="get_ani_first" value="yes"/>
 			-->
@@ -237,23 +237,23 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			WARNING: advanced users only! I really mean it
 			this parameter is commented by default because
 			YOU DON'T NEED IT UNLESS YOU REALLY GROK MFC/R2
-			READ COMMENTS on doc/r2proto.conf in openr2 package 
+			READ COMMENTS on doc/r2proto.conf in openr2 package
 			for more info
 			<param name="advanced_protocol_file" value="/usr/local/freeswitch/conf/r2proto.conf"/>
 			-->
 
 			<!-- USE THIS FOR DEBUGGING MFC-R2 PROTOCOL -->
-			<!-- 
+			<!--
 			Where to dump advanced call file protocol logs
 			<param name="logdir" value="$${base_dir}/log/mfcr2"/>
 			-->
 
-			<!-- 
+			<!--
 			MFC/R2 valid logging values are: all,error,warning,debug,notice,cas,mf,nothing
 			error,warning,debug and notice are self-descriptive
 			'cas' is for logging ABCD CAS tx and rx
 			'mf' is for logging of the Multi Frequency tones
-			You can mix up values, like: loglevel=error,debug,mf to log just error, debug and 
+			You can mix up values, like: loglevel=error,debug,mf to log just error, debug and
 			multi frequency messages
 			'all' is a special value to log all the activity
 			'nothing' is a clean-up value, in case you want to not log any activity for
@@ -265,7 +265,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			<param name="logging" value="debug,notice,warning,error,mf,cas"/>
 			-->
 
-			<!-- 
+			<!--
 			whether or not to drop protocol call files into 'logdir'
 			<param name="call_files" value="yes"/>
 			-->
@@ -284,7 +284,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 	<!-- Sangoma ISDN PRI/BRI spans. Requires libsng_isdn to be installed -->
 	<sangoma_pri_spans>
 		<span name="wp1">
-			<!-- 
+			<!--
 				Switch emulation/Variant
 				Possible values are:
 					national
@@ -293,7 +293,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 					qsig
 					euroisdn
 					ntt
-			
+
 			<param name="switchtype" value="national"/>
 			-->
 			<!--
@@ -301,7 +301,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				Possible values are:
 					net
 					cpe
-				
+
 				<param name="signalling" value="cpe"/>
 			-->
 			<!--
@@ -381,7 +381,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				Bearer Capability - User Layer 1
 				Set the Bearer Capability - User Layer 1 on outbound calls
 				Possible values are:
-				
+
 				V.110
 				ulaw
 				alaw
@@ -392,13 +392,13 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				Channel Restart Timeout
 				If we do not receive a RESTART message within this timeout on link
 				UP, we will send a channel restart.
-				
-				
+
+
 				<param name="channel-restart-timeout" value="20"/>
 			-->
 			<!--
 				Local Number (MSN)
-				On incoming calls, we will only respond to this call if 
+				On incoming calls, we will only respond to this call if
 				the Called Party Number matches this value.
 
 				Note: Up to 8 local numbers can be added per span.
@@ -452,7 +452,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				Force sending complete
 				Will add Sending Complete IE to outgoing SETUP message
 				By default, enabled on EuroISDN, disabled on US variants.
-				
+
 				<param name="force-sending-complete" value="yes/no"/>
 			-->
 			<!--
@@ -464,13 +464,13 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 					on-proceed
 					on-progress
 					on-alert
-				
+
 				<param name="early-media-override" value="on-alert"/>
 			-->
 			<!--
 				Invert Channel ID Invert Bit
 
-				Invert the Channel ID Extend Bit 
+				Invert the Channel ID Extend Bit
 
 				<param name="chan-id-invert-extend-bit" value="yes/no"/>
 			-->
@@ -478,7 +478,7 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				CID Name transmit method
 
 				How to transmit Caller ID Name
-				
+
 				Possible values:
 				display-ie
 				user-user-ie
@@ -499,11 +499,11 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 
 				<param name="cid-name-transmit-method" value="default"/>
 			-->
-			<!-- 
+			<!--
 				Q.931 Timers in seconds
-				
+
 				Override default Q.931 values
-				
+
 				timers:
 				timer-t301
 				timer-t302
@@ -526,9 +526,9 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 				-->
 		</span>
 	</sangoma_pri_spans>
-	
 
-	<!-- 
+
+	<!--
 		PRI passive tapping spans. Requires patched version from libpri at http://svn.digium.com/svn/libpri/team/moy/tap-1.4
 		You must also configure FreeTDM with "-with-pritap" (see ./configure help for details)
 	-->
@@ -537,13 +537,13 @@ with the signaling protocols that you can run on top of your I/O interfaces.
 			<!-- The peer span name used to tap the link -->
 			<param name="peerspan" value="tapped2"/>
 
-			<!-- 
-				Whether to mix the audio from the peerspan with the audio from this span 
+			<!--
+				Whether to mix the audio from the peerspan with the audio from this span
 				This is most likely what you want (and therefore the default) so you can hear
 				the full conversation being tapped instead of just one side
 			-->
 			<!-- <param name="mixaudio" value="yes"/> -->
-			
+
 			<!-- switch parameters (required), where to send calls to -->
 			<param name="dialplan" value="XML"/>
 			<param name="context" value="default"/>

@@ -198,17 +198,17 @@ local log = require "resources.functions.log".ring_group
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
 			sql = [[
-					SELECT 
+					SELECT
 						r.ring_group_strategy
-					FROM 
+					FROM
 						v_ring_groups as r
-					WHERE 
-						ring_group_uuid = ']]..ring_group_uuid..[[' 
-						AND r.domain_uuid = ']]..domain_uuid..[[' 
-						AND r.ring_group_enabled = 'true'  
+					WHERE
+						ring_group_uuid = ']]..ring_group_uuid..[['
+						AND r.domain_uuid = ']]..domain_uuid..[['
+						AND r.ring_group_enabled = 'true'
 					]];
 
-			
+
 			assert(dbh:query(sql, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
@@ -218,23 +218,23 @@ local log = require "resources.functions.log".ring_group
 					end
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
-				end		
+				end
 			end));
-		
+
 		--get the ring group destinations
 			sql = [[
-				SELECT 
-					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring, 
-					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, 
+				SELECT
+					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
+					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt,
 					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
-				FROM 
+				FROM
 					v_ring_groups as r, v_ring_group_destinations as d
-				WHERE 
-					d.ring_group_uuid = r.ring_group_uuid 
-					AND d.ring_group_uuid = ']]..ring_group_uuid..[[' 
-					AND r.domain_uuid = ']]..domain_uuid..[[' 
-					AND r.ring_group_enabled = 'true' 
-				ORDER BY 
+				WHERE
+					d.ring_group_uuid = r.ring_group_uuid
+					AND d.ring_group_uuid = ']]..ring_group_uuid..[['
+					AND r.domain_uuid = ']]..domain_uuid..[['
+					AND r.ring_group_enabled = 'true'
+				ORDER BY
 					]]..sql_order..[[
 				]];
 			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
@@ -277,21 +277,21 @@ local log = require "resources.functions.log".ring_group
 
 		--get the dialplan data and save it to a table
 			if (external) then
-				sql = [[select * from v_dialplans as d, v_dialplan_details as s 
+				sql = [[select * from v_dialplans as d, v_dialplan_details as s
 				where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
-				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' 
-				and d.dialplan_enabled = 'true' 
-				and d.dialplan_uuid = s.dialplan_uuid 
-				order by 
-				d.dialplan_order asc, 
-				d.dialplan_name asc, 
-				d.dialplan_uuid asc, 
-				s.dialplan_detail_group asc, 
-				CASE s.dialplan_detail_tag 
-				WHEN 'condition' THEN 1 
-				WHEN 'action' THEN 2 
-				WHEN 'anti-action' THEN 3 
-				ELSE 100 END, 
+				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+				and d.dialplan_enabled = 'true'
+				and d.dialplan_uuid = s.dialplan_uuid
+				order by
+				d.dialplan_order asc,
+				d.dialplan_name asc,
+				d.dialplan_uuid asc,
+				s.dialplan_detail_group asc,
+				CASE s.dialplan_detail_tag
+				WHEN 'condition' THEN 1
+				WHEN 'action' THEN 2
+				WHEN 'anti-action' THEN 3
+				ELSE 100 END,
 				s.dialplan_detail_order asc ]]
 				--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 				dialplans = {};
@@ -369,7 +369,7 @@ local log = require "resources.functions.log".ring_group
 					end
 
 				--set confirm
-					if (ring_group_strategy == "simultaneous" 
+					if (ring_group_strategy == "simultaneous"
 						or ring_group_strategy == "sequence"
 						or ring_group_strategy == "rollover") then
 							session:execute("set", "group_confirm_key=exec");
@@ -408,7 +408,7 @@ local log = require "resources.functions.log".ring_group
 				--record the session
 					if (record_session) then
 						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_file .. "'";
-					else 
+					else
 						record_session = ""
 					end
 					row.record_session = record_session
@@ -564,8 +564,8 @@ local log = require "resources.functions.log".ring_group
 
 								--if the timeout was reached go to the timeout action
 									if (x > 0) then
-										if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
-											or session:getVariable("originate_disposition") == "NO_ANSWER" 
+										if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT"
+											or session:getVariable("originate_disposition") == "NO_ANSWER"
 											or session:getVariable("originate_disposition") == "NO_USER_RESPONSE") then
 												break;
 										end
@@ -604,12 +604,12 @@ local log = require "resources.functions.log".ring_group
 					--timeout destination
 						if (app_data ~= nil) then
 							if session:ready() and (
-								session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT" 
-								or session:getVariable("originate_disposition") == "NO_ANSWER" 
-								or session:getVariable("originate_disposition") == "NO_USER_RESPONSE" 
-								or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED" 
-								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE" 
-								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
+								session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
+								or session:getVariable("originate_disposition") == "NO_ANSWER"
+								or session:getVariable("originate_disposition") == "NO_USER_RESPONSE"
+								or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED"
+								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
+								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
 								or session:getVariable("originate_disposition") == "USER_BUSY"
 								or session:getVariable("originate_disposition") == "failure"
 							) then

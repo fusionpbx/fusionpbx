@@ -49,7 +49,7 @@
 
 	$parameters=array(
 		'File'=>$message_file,
-		
+
 		/* Read a message from a string instead of a file */
 		/* 'Data'=>'My message data string',              */
 

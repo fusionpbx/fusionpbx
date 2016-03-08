@@ -489,7 +489,7 @@ function save_var_xml() {
 				if (strlen($row["var_description"]) > 0) {
 					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 				}
-			} 
+			}
 			if (strlen($row['var_hostname']) == 0) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			} elseif ($row['var_hostname'] == $hostname) {
@@ -1279,7 +1279,7 @@ if (!function_exists('switch_conf_xml')) {
 				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
 
 				$v_mail_bat = path_join($secure_path, 'mailto.bat');
-				$v_mail_cmd = '@' . 
+				$v_mail_cmd = '@' .
 					'"' . str_replace('/', '\\', path_join($bindir, 'php.exe')) . '" ' .
 					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
 

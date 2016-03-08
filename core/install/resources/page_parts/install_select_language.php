@@ -33,7 +33,7 @@
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-select']."'/>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-select_language']."\n";

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
+<?xml version="1.0" encoding="UTF-8" ?>
 	<gs_provision version="1">
 	<config version="1">
 
@@ -14,7 +14,7 @@
 		<P212>1</P212>
 		<!-- Config Server Path , String: serveraddress -->
 		<P237>{$domain_name}{$project_path}/app/provision</P237>
-			
+
 	<!-- Profile 1 Settings	-->
 		<!-- Profile Active.  0 - no, 1 - yes, Number: 0,1. -->
 		<P271>1</P271>
@@ -37,7 +37,7 @@
 		<!-- Request URI Routing ID, Enable Port(0 - No, 1 - Yes, default is Yes) -->
 		<P4060>{$user_id_1}</P4060>
 		<P4090>{$user_id_1}</P4090>
-		<P4120>{$user_password_1}</P4120> 
+		<P4120>{$user_password_1}</P4120>
 		<P4180>{$display_name_1}</P4180>
 		<P4150>0</P4150>
 		<P4300>0</P4300>
@@ -49,7 +49,7 @@
 		<!-- Request URI Routing ID.Enable Port(0 - No, 1 - Yes, default is Yes) -->
 		<P4061>{$user_id_2}</P4061>
 		<P4091>{$user_id_2}</P4091>
-		<P4121>{$user_password_2}</P4121> 
+		<P4121>{$user_password_2}</P4121>
 		<P4181>{$display_name_2}</P4181>
 		<P4151>0</P4151>
 		<P4301>0</P4301>
@@ -73,7 +73,7 @@
 		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
 		<P4063>{$user_id_4}</P4063>
 		<P4093>{$user_id_4}</P4093>
-		<P4123>{$user_password_4}</P4123> 
+		<P4123>{$user_password_4}</P4123>
 		<P4183>{$display_name_4}</P4183>
 		<P4153>0</P4153>
 		<P4303>0</P4303>
@@ -84,11 +84,11 @@
 	<!-- The following ports (5 to 8) belong to GXW-4008/GXW-4024 only -->
 
 		<!-- FXS Port 5. SIP USER ID, Authenticate ID, Password, Name, Profile ID (0 - Profile 1, 1 - Profile 2, 2 - Profile 3) -->
-		<!-- Hunting Group (0 - None, 5 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 6 - 6, 7 - 7, 8 - 8 ) -->	
+		<!-- Hunting Group (0 - None, 5 - Active, 1 - 1, 2 - 2, 3 - 3, 4 -4, 6 - 6, 7 - 7, 8 - 8 ) -->
 		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
 		<P4064>{$user_id_5}</P4064>
 		<P4094>{$user_id_5}</P4094>
-		<P4124>{$user_password_5}</P4124> 
+		<P4124>{$user_password_5}</P4124>
 		<P4184>{$display_name_5}</P4184>
 		<P4154>0</P4154>
 		<P4304>0</P4304>
@@ -100,7 +100,7 @@
 		<!-- Request URI Routing ID. Enable Port(0 - No, 1 - Yes, default is Yes) -->
 		<P4065>{$user_id_6}</P4065>
 		<P4095>{$user_id_6}</P4095>
-		<P4125>{$user_password_6}</P4125> 
+		<P4125>{$user_password_6}</P4125>
 		<P4185>{$display_name_6}</P4185>
 		<P4155>0</P4155>
 		<P4305>0</P4305>
@@ -115,7 +115,7 @@
 		<P4126>{$user_password_7}</P4126>
 		<P4186>{$display_name_7}</P4186>
 		<P4156>0</P4156>
-		<P4306>0</P4306>	
+		<P4306>0</P4306>
 		<P4675></P4675>
 		<P4601>1</P4601>
 

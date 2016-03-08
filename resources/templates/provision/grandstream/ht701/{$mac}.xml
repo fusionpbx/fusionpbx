@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?> 
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <gs_provision version="1">
 <config version="1">
 
@@ -70,7 +70,7 @@
 <!-- XML Config File Password -->
 <!-- String; between ascii values 33 and 126 -->
 <!-- Mandatory -->
-<P1359></P1359>  
+<P1359></P1359>
 
 <!-- HTTP/HTTPS User Name -->
 <!-- String; between ascii values 33 and 126 -->
@@ -95,7 +95,7 @@
 <!-- Config File Postfix -->
 <!-- String; between ascii values 33 and 126 -->
 <P235></P235>
- 
+
 <!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
 <!-- When set to Yes(1), it will override the configured provision path and method. -->
 <!-- Number: 0, 1 -->
@@ -110,29 +110,29 @@
 <!-- Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. -->
 <!-- Number: 60 to 5256000 -->
 <!-- Mandatory -->
-<P193>10080</P193> 
+<P193>10080</P193>
 
 <!-- Automatic Upgrade. Daily at hour(0-23) -->
 <!-- Number: 0 to 23 -->
 <!-- Mandatory -->
-<P285>1</P285> 
+<P285>1</P285>
 
 <!-- Automatic Upgrade. Weekly on day (0-6) -->
 <!--  Number: 0 to 6 -->
 <!-- Mandatory -->
-<P286>1</P286> 
+<P286>1</P286>
 
 <!-- 0 = Always Check for New Firmware -->
 <!-- 1 = Check New Firmware only when F/W pre/suffix changes -->
 <!-- 2 = Always Skip the Firmware Check -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P238>0</P238> 
+<P238>0</P238>
 
 <!-- Firmware Key (AES 128, in Hexadecimal Representation) -->
 <!-- String: 0-9, a-z, A-Z -->
 <!-- Mandatory -->
-<P242></P242> 
+<P242></P242>
 
 <!-- SSL Certificate -->
 <!-- String -->
@@ -151,552 +151,552 @@
 
 <!-- ACS Username -->
 <!-- String -->
-<P4504></P4504> 
+<P4504></P4504>
 
 <!-- ACS Password -->
 <!-- String -->
-<P4505></P4505> 
+<P4505></P4505>
 
 <!-- Periodic Inform Enable 0 - No, 1 - Yes (default is No) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4506>0</P4506> 
+<P4506>0</P4506>
 
 <!-- Periodic Inform Interval (default is 300) -->
 <!-- Number: 1-99999 -->
-<P4507>300</P4507> 
+<P4507>300</P4507>
 
 <!-- Connection Request Username -->
 <!-- String -->
-<P4511></P4511> 
+<P4511></P4511>
 
 <!-- Connection Request Password -->
 <!-- String -->
-<P4512></P4512> 
+<P4512></P4512>
 
 <!-- CPE SSL Certificate -->
-<P8220></P8220> 
+<P8220></P8220>
 
 <!-- CPE SSL Private Key -->
-<P8221></P8221> 
+<P8221></P8221>
 
 <!-- System Ring Cadence -->
 <!-- String -->
 <P4040>c=2000/4000;</P4040> -->
-<!-- Call Progress Tones -->                        
+<!-- Call Progress Tones -->
 
 <!-- Dial Tone -->
 <!-- String -->
-<P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000> 
+<P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000>
 
 <!-- Ringback Tone -->
 <!-- String -->
-<P4001>f1=440@-19,f2=480@-19,c=2000/4000;</P4001> 
+<P4001>f1=440@-19,f2=480@-19,c=2000/4000;</P4001>
 
 <!-- Busy Tone -->
 <!-- String -->
-<P4002>f1=480@-24,f2=620@-24,c=500/500;</P4002> 
+<P4002>f1=480@-24,f2=620@-24,c=500/500;</P4002>
 
 <!-- Reorder Tone -->
 <!-- String -->
-<P4003>f1=480@-24,f2=620@-24,c=250/250;</P4003> 
+<P4003>f1=480@-24,f2=620@-24,c=250/250;</P4003>
 
 <!-- Confirmation Tone -->
 <!-- String -->
-<P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004> 
+<P4004>f1=350@-11,f2=440@-11,c=100/100-100/100-100/100;</P4004>
 
 <!-- Call Waiting tone -->
 <!-- String -->
-<P4005>f1=440@-13,c=300/300-300/10000;</P4005> 
+<P4005>f1=440@-13,c=300/300-300/10000;</P4005>
 
 <!-- Lock keypad update.  0 - No, 1 - Yes, 2( invisible on web GUI, set to 2 for Reset button - ISP Data reset allowed only).  (configuration update via keypad is disabled if set to Yes). -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P88>0</P88> 
+<P88>0</P88>
 
 <!-- Disable voice prompt. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P253>0</P253> 
+<P253>0</P253>
 
 <!-- Disable Direct IP Call. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P277>0</P277> 
+<P277>0</P277>
 
 <!-- NTP Server -->
 <!-- Server address -->
-<P30>us.pool.ntp.org</P30> 
+<P30>us.pool.ntp.org</P30>
 
 <!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is No. -->
 <!-- When set to Yes(1), it will override the configured NTP server. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P144>0</P144> 
+<P144>0</P144>
 
 <!-- Syslog Server (name of the server, max length is 64 characters) -->
 <!-- Server address -->
-<P207></P207> 
+<P207></P207>
 
-<!-- Syslog Level (Default setting is NONE) --> 
+<!-- Syslog Level (Default setting is NONE) -->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR, 5 - EXTRA DEBUG -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
 <!-- Mandatory -->
-<P208>0</P208> 
+<P208>0</P208>
 
 <!-- Send SIP Log. 0 - No, 1 - Yes. (If set to yes, The unit will replicate the received and send SIP packets on the syslog) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1387>0</P1387> 
+<P1387>0</P1387>
 
-<!-- FXS PORT 1 Settings -->                                             
+<!-- FXS PORT 1 Settings -->
 
 <!-- Account Active. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P271>1</P271> 
+<P271>1</P271>
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P47>{$server_address_1}</P47> 
+<P47>{$server_address_1}</P47>
 
 <!-- Failover SIP Server -->
 <!-- Server address -->
-<P967></P967> 
+<P967></P967>
 
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4567>0</P4567> 
+<P4567>0</P4567>
 
 <!-- Outbound Proxy -->
 <!-- Server address -->
-<P48></P48> 
+<P48></P48>
 
 <!-- Allow DHCP Option 120( override SIP server )  0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1411>0</P1411> 
+<P1411>0</P1411>
 
 <!-- SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P130>0</P130> 
+<P130>0</P130>
 
 <!-- NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P52>0</P52> 
+<P52>0</P52>
 
 <!-- SIP User ID -->
 <!-- String -->
-<P35>{$user_id_1}</P35> 
+<P35>{$user_id_1}</P35>
 
 <!-- Authentication ID -->
 <!-- String -->
-<P36>{$user_id_1}</P36> 
+<P36>{$user_id_1}</P36>
 
 <!-- Authentication password -->
 <!-- String -->
-<P34>{$user_password_1}</P34> 
+<P34>{$user_password_1}</P34>
 
 <!-- Name (John Doe) -->
 <!-- String -->
-<P3>{$display_name_1}</P3> 
+<P3>{$display_name_1}</P3>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P103>0</P103> 
+<P103>0</P103>
 
 <!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P63>0</P63> 
+<P63>0</P63>
 
 <!-- SIP Registration. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P31>1</P31> 
+<P31>1</P31>
 
 <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P81>0</P81> 
+<P81>0</P81>
 
 <!-- Outgoing call without Registration. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P109>1</P109> 
+<P109>1</P109>
 
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P32>3</P32> 
+<P32>3</P32>
 
 <!-- Reregister before Expiration (in seconds. Default 0 second) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P2330>0</P2330>  
+<P2330>0</P2330>
 
 <!-- Registration Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <!-- Number: 1 to 3600 -->
 <!-- Mandatory -->
-<P138>20</P138> 
+<P138>20</P138>
 
 <!-- Local SIP port (default 5060) -->
 <!-- Number: 1 to 65535 -->
 <!-- Mandatory -->
-<P40>5060</P40>  
+<P40>5060</P40>
 
 <!-- Local RTP port (1024-65535, default 5004) -->
 <!-- Number: 1024 to 65535 -->
 <!-- Mandatory -->
-<P39>5004</P39> 
+<P39>5004</P39>
 
 <!-- Use Random SIP Port. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P20501>0</P20501> 
+<P20501>0</P20501>
 
 <!-- Use Random RTP Port. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P20505>0</P20505> 
+<P20505>0</P20505>
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P135>0</P135> 
+<P135>0</P135>
 
 <!-- Transfer on Conference Hangup. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4560>0</P4560>  
+<P4560>0</P4560>
 
 <!-- Enable Ring-Transfer. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4820>0</P4820> 
+<P4820>0</P4820>
 
 <!-- Disable Bellcore Style 3-Way Conference. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4830>0</P4830> 
+<P4830>0</P4830>
 
 <!-- Remove OBP from Route Header. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4562>0</P4562>  
+<P4562>0</P4562>
 
 <!-- Support SIP Instance ID. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P288>1</P288> 
+<P288>1</P288>
 
 <!-- Validate Incoming SIP Message . 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4340>0</P4340> 
+<P4340>0</P4340>
 
 <!-- Check SIP UserID for incoming INVITE. 0 - No, 1 - Yes (no direct IP calling if Yes) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P258>0</P258> 
+<P258>0</P258>
 
 <!-- Authenticate incoming INVITE -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P2346>0</P2346> 
+<P2346>0</P2346>
 
 <!-- Allow Incoming SIP Messages from SIP Proxy Only. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P243>0</P243> 
+<P243>0</P243>
 
 <!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P2338>0</P2338> 
+<P2338>0</P2338>
 
 <!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P2339>0</P2339> 
+<P2339>0</P2339>
 
 <!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
 <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50. -->
 <!-- Number: 50, 100, 200, 400, 800 -->
 <!-- Mandatory -->
-<P209>50</P209> 
+<P209>50</P209>
 
 <!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
 <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
 <!-- Number: 200, 400, 800, 1600, 3200 -->
 <!-- Mandatory -->
-<P250>400</P250> 
+<P250>400</P250>
 
 <!-- DTMF Payload Type -->
 <!-- Number: 96 to 127 -->
-<P79>101</P79> 
+<P79>101</P79>
 
 <!-- Preferred DTMF method. -->
 <!-- 100 - In-audio, 101 - RFC2833, 102 - SIP INFO -->
 <!-- Priority 1 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
-<P850>101</P850> 
+<P850>101</P850>
 
 <!-- Priority 2 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
-<P851>102</P851> 
+<P851>102</P851>
 
 <!-- Priority 3 -->
 <!-- Number: 100, 101, 102 -->
 <!-- Mandatory -->
-<P852>100</P852> 
+<P852>100</P852>
 
 <!-- Disable DTMF Negotiation. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4825>0</P4825> 
+<P4825>0</P4825>
 
 <!-- Send Hook Flash Event. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P74>0</P74> 
+<P74>0</P74>
 
 <!-- Enable Call Features. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P191>1</P191> 
+<P191>1</P191>
 
 <!-- Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
 <!-- String: 0-9, #, * -->
 <!-- Mandatory -->
-<P71></P71> 
+<P71></P71>
 
 <!-- Offhook Auto-Dial Delay (0-60 seconds, default is 0) -->
 <!-- Number: 0 to 60 -->
-<P4045>0</P4045> 
+<P4045>0</P4045>
 
 <!-- Proxy-Require -->
 <!-- IP Address -->
-<P197></P197> 
+<P197></P197>
 
 <!-- Use NAT IP (used in SIP/SDP message if specified) -->
 <!-- IP Address -->
-<P101></P101> 
+<P101></P101>
 
 <!-- Use SIP User-Agent Header -->
-<P4834></P4834> 
+<P4834></P4834>
 
 <!-- Distinctive Ring Tone -->
-<!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, --> 
+<!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, -->
 <!-- 5 - Ring Tone 6, 6 - Ring Tone 7, 7 - Ring Tone 8, 8 - Ring Tone 9, 9 - Ring Tone 10 -->
 <!-- Distinctive Ring Tone Choice 1 -->
 <!-- Number: 0-9 -->
 <!-- Mandatory -->
-<P870>0</P870> 
+<P870>0</P870>
 
 <!-- Choice 1 incoming caller ID -->
 <!-- String -->
-<P871></P871> 
+<P871></P871>
 
 <!-- Distinctive Ring Tone Choice 2 -->
 <!-- Number: 0-9 -->
 <!-- Mandatory -->
-<P872>0</P872> 
+<P872>0</P872>
 
 <!-- Choice 2 incoming caller ID -->
 <!-- String -->
-<P873></P873> 
+<P873></P873>
 
 <!-- Distinctive Ring Tone Choice 3 -->
 <!-- Number: 0-9 -->
 <!-- Mandatory -->
-<P874>0</P874> 
+<P874>0</P874>
 
 <!-- Choice 3 incoming caller ID -->
 <!-- String -->
-<P875></P875> 
+<P875></P875>
 
 <!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P91>0</P91> 
+<P91>0</P91>
 
 <!-- Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P714>0</P714> 
+<P714>0</P714>
 
 <!-- Disable Call-Waiting Tone. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P186>0</P186> 
+<P186>0</P186>
 
 <!-- Disable Receiver Offhook Tone. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!--  Mandatory -->
-<P4793>0</P4793> 
+<P4793>0</P4793>
 
 <!-- Disable Reminder Ring for On-Hold Call: -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4360>0</P4360> 
+<P4360>0</P4360>
 
 <!-- Disable Visual MWI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P855>0</P855> 
+<P855>0</P855>
 
 <!-- Ring Timeout. (10-300, default is 60 seconds) -->
 <!-- Number: 10-300 -->
 <!-- Mandatory -->
-<P185>60</P185> 
+<P185>60</P185>
 
 <!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
 <!-- Number: 1-120 -->
 <!-- Mandatory -->
-<P139>20</P139> 
+<P139>20</P139>
 
 <!-- No Key Entry Timeout. Default - 4 seconds. -->
 <!-- Number: 1-15 -->
 <!-- Mandatory -->
-<P85>4</P85> 
+<P85>4</P85>
 
 <!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P29>0</P29> 
+<P29>0</P29>
 
 <!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
 <!-- String; between ascii values 33 and 126 -->
-<P66></P66> 
+<P66></P66>
 
 <!-- Use # as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P72>1</P72> 
+<P72>1</P72>
 
 <!-- Dial Plan -->
 <!--  String -->
-<P4200>{ x+ | *x+ }</P4200> 
+<P4200>{ x+ | *x+ }</P4200>
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P99>0</P99> 
+<P99>0</P99>
 
 <!-- Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P65>0</P65> 
+<P65>0</P65>
 
 <!-- Anonymous Call Rejection. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P129>0</P129> 
+<P129>0</P129>
 
 <!-- Special Feature -->
-<!-- STANDARD = 100, BROADSOFT = 102, LUCENT = 105, CBCOM =108, RNK = 109, HUAWEI = 111, --> 
+<!-- STANDARD = 100, BROADSOFT = 102, LUCENT = 105, CBCOM =108, RNK = 109, HUAWEI = 111, -->
 <!-- ZTE_IMS = 114, PHONEPOWER = 119, TELKOM_SA = 120, VONAGE = 121 -->
 <!-- Number: 100, 102, 105, 108, 109, 111, 114, 119, 120, 121 -->
 <!-- Mandatory -->
-<P198>100</P198> 
+<P198>100</P198>
 
 <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
 <!-- Number: 90-64800 -->
 <!-- Mandatory -->
-<P260>180</P260> 
+<P260>180</P260>
 
 <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
 <!-- Number: 90-64800 -->
 <!-- Mandatory -->
-<P261>90</P261> 
+<P261>90</P261>
 
 <!-- Caller Request Timer (Request for timer when calling) 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P262>0</P262> 
+<P262>0</P262>
 
 <!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P263>0</P263> 
+<P263>0</P263>
 
 <!-- Force Timer (Still use timer when remote party does not support timer) 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P264>0</P264> 
+<P264>0</P264>
 
 <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
-<P266>0</P266> 
+<P266>0</P266>
 
 <!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
 <!-- Number: 1, 2 -->
 <!-- Mandatory -->
-<P267>1</P267> 
+<P267>1</P267>
 
 <!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P265>0</P265> 
+<P265>0</P265>
 
 <!-- Send Re-INVITE After Fax. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4367>0</P4367> 
+<P4367>0</P4367>
 
 <!-- Enable 100rel. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P272>0</P272>  
+<P272>0</P272>
 
 <!-- Add Auth Header On Initial REGISTER. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P2359>0</P2359> 
+<P2359>0</P2359>
 
-<!-- Codec/Voice Quality settings -->                                          
+<!-- Codec/Voice Quality settings -->
 
 <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4363>0</P4363> 
+<P4363>0</P4363>
 
 <!-- Preferred Vocoder -->
 <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
 <!-- Choice 1. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
-<P57>0</P57> 
+<P57>0</P57>
 
 <!-- Choice 2. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
-<P58>8</P58> 
+<P58>8</P58>
 
-<!-- Choice 3. --> 
+<!-- Choice 3. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
-<P59>4</P59> 
+<P59>4</P59>
 
-<!-- Choice 4. --> 
+<!-- Choice 4. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
-<P60>18</P60> 
+<P60>18</P60>
 
-<!-- Choice 5. --> 
+<!-- Choice 5. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
-<P61>2</P61> 
+<P61>2</P61>
 
-<!-- Choice 6. --> 
+<!-- Choice 6. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
 <P62>98</P62>
@@ -759,14 +759,14 @@
 <!-- Mandatory -->
 <P183>0</P183>
 
-<!-- SLIC Setting. -->   
+<!-- SLIC Setting. -->
 <!-- 0 - USA (BELLCORE 600 ohms), 3 - USA 2(BELCORE 600 ohms + 2.16uF), 11 - AUSTRAILA, 5 - CHINA CO, 6 - CHINA PBX, 4 - EUROPEAN CTR21 -->
 <!-- 9 - GERMANY, 8 -INDIA/NEW ZEALAND, 2 - JAPAN CO, 7 - JAPAN PBX, 1 - STANDARD 900 omhs, 10 - UK -->
 <!-- Number: 0-11 -->
 <!-- Mandatory -->
 <P854>0</P854>
 
-<!-- Caller ID Scheme. -->  
+<!-- Caller ID Scheme. -->
 <!-- <value=0>  Bellcore/Telcordia (default) -->
 <!-- <value=1>  ETSI-FSK during ringing	 -->
 <!-- <value=2>  ETSI-FSK prior to ringing with DTAS -->
@@ -882,23 +882,23 @@
 
 <!-- Ring Tone 1 -->
 <!-- String -->
-<P4010>c=2000/4000;</P4010> 
+<P4010>c=2000/4000;</P4010>
 
 <!-- Ring Tone 2 -->
 <!-- String -->
-<P4011>c=2000/4000;</P4011> 
+<P4011>c=2000/4000;</P4011>
 
 <!-- Ring Tone 3 -->
 <!-- String -->
-<P4012>c=2000/4000;</P4012> 
+<P4012>c=2000/4000;</P4012>
 
 <!-- Ring Tone 4 -->
 <!-- String -->
-<P4013>c=2000/4000;</P4013> 
+<P4013>c=2000/4000;</P4013>
 
 <!-- Ring Tone 5 -->
 <!-- String -->
-<P4014>c=2000/4000;</P4014> 
+<P4014>c=2000/4000;</P4014>
 
 <!-- Ring Tone 6 -->
 <!-- String -->
@@ -914,12 +914,12 @@
 
 <!-- Ring Tone 9 -->
 <!-- String -->
-<P4018>c=2000/4000;</P4018> 
+<P4018>c=2000/4000;</P4018>
 
 <!-- Ring Tone 10 -->
 <!-- String -->
 <P4019>c=2000/4000;</P4019>
-<!-- FXS PORT 2 Settings. -->             
+<!-- FXS PORT 2 Settings. -->
 
 <!--HT 702 Only -->
 
@@ -984,7 +984,7 @@
 <!-- SIP Registration. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P731>1</P731> 
+<P731>1</P731>
 
 <!-- Unregister On Reboot. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -1009,7 +1009,7 @@
 <!-- Registration Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <!-- Number: 1 to 3600 -->
 <!-- Mandatory -->
-<P471>20</P471> 
+<P471>20</P471>
 
 <!-- Local SIP port (default 5062) -->
 <!-- Number: 1 to 65535 -->
@@ -1064,12 +1064,12 @@
 <!-- Validate Incoming SIP Message. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P4341>0</P4341> 
+<P4341>0</P4341>
 
 <!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P449>0</P449> 
+<P449>0</P449>
 
 <!-- Authenticate incoming INVITE -->
 <!-- Number: 0, 1 -->
@@ -1091,7 +1091,7 @@
 <!-- Mandatory -->
 <P2439>0</P2439>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
 <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50. -->
 <!-- Number: 50, 100, 200, 400, 800 -->
 <!-- Mandatory -->
@@ -1124,17 +1124,17 @@
 <!-- Mandatory -->
 <P862>100</P862>
 
-<!-- Disable DTMF Negotiation. 0 - No, 1 - Yes --> 
+<!-- Disable DTMF Negotiation. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <P4826>0</P4826>
 
-<!-- Send Flash Event. 0 - No, 1 - Yes --> 
+<!-- Send Flash Event. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <P774>0</P774>
 
-<!-- Enable Call Features. 0 - No, 1 - Yes --> 
+<!-- Enable Call Features. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <P751>1</P751>
@@ -1143,7 +1143,7 @@
 <!-- String: 0-9, *, # -->
 <P771></P771>
 
-<!-- Proxy-Require --> 
+<!-- Proxy-Require -->
 <!-- IP Address -->
 <P792></P792>
 
@@ -1152,7 +1152,7 @@
 <P866></P866>
 
 <!-- Distinctive Ring Tone -->
-<!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, --> 
+<!-- 0 - Ring Tone 1, 1 - Ring Tone 2, 2 - Ring Tone 3, 3 - Ring Tone 4, 4 - Ring Tone 5, -->
 <!-- 5 - Ring Tone 6, 6 - Ring Tone 7, 7 - Ring Tone 8, 8 - Ring Tone 9, 9 - Ring Tone 10 -->
 <!-- Distinctive Ring Tone Choice 1 -->
 <!-- Number: 0-9 -->
@@ -1209,7 +1209,7 @@
 <!-- Disable Visual MWI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P869>0</P869> 
+<P869>0</P869>
 
 <!-- Ring Timeout. (10-300, default is 60 seconds) -->
 <!-- Number: 10-300 -->
@@ -1259,7 +1259,7 @@
 <!-- Mandatory -->
 <P446>0</P446>
 
-<!-- Special Feature --> 
+<!-- Special Feature -->
 <!-- STANDARD = 100, BROADSOFT = 102, LUCENT = 105, CBCOM =108, RNK = 109, HUAWEI = 111, ZTE_IMS = 114, PHONEPOWER = 119, TELKOM_SA = 120, VONAGE = 121 -->
 <!-- Number: 100, 102, 105, 108, 109, 111, 114, 119, 120, 121 -->
 <P767>100</P767>
@@ -1267,7 +1267,7 @@
 <!-- Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
 <!-- Number: 90-64800 -->
 <!-- Mandatory -->
-<P434>180</P434> 
+<P434>180</P434>
 
 <!-- Minimum SE (in seconds. default 90 seconds, must be lower than or equal to P260) -->
 <!-- Number: 90-64800 -->
@@ -1319,7 +1319,7 @@
 <!-- Mandatory -->
 <P2459>0</P2459>
 
-<!-- Codec/Voice Quality settings -->                                                
+<!-- Codec/Voice Quality settings -->
 
 <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -1328,7 +1328,7 @@
 
 <!-- Preferred Vocoder -->
 <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
-<!-- Choice 1. --> 
+<!-- Choice 1. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
 <P757>0</P757>
@@ -1348,12 +1348,12 @@
 <!-- Mandatory -->
 <P760>18</P760>
 
-<!-- Choice 5. --> 
+<!-- Choice 5. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
 <P761>2</P761>
 
-<!-- Choice 6. --> 
+<!-- Choice 6. -->
 <!-- Number: 0, 2, 4, 8, 18, 98 -->
 <!-- Mandatory -->
 <P762>98</P762>
@@ -1378,7 +1378,7 @@
 <!-- Mandatory -->
 <P704>97</P704>
 
-<!-- VAD. 0 - No, 1 - Yes --> 
+<!-- VAD. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <P750>0</P750>
@@ -1416,14 +1416,14 @@
 <!-- Mandatory -->
 <P443>0</P443>
 
-<!-- SLIC Setting. -->   
+<!-- SLIC Setting. -->
 <!-- 0 - USA (BELLCORE 600 ohms), 1 - STANDARD 900 ohms, 2 - JAPAN CO, 3 - USA 2 (BELLCORE 600 ohms + 2.16uF), 4 - EUROPEAN CTR21, 5 - CHINA CO -->
 <!-- 6 - CHINA PBX, 7 -JAPAN PBX, 8 - INDIA/NEW ZEALAND, 9 - GERMANY, 10 - UK, 11 - AUSTRALIA, -->
 <!-- Number: 0 to 11 -->
 <!-- Mandatory -->
 <P864>0</P864>
 
-<!-- Caller ID Scheme. -->  
+<!-- Caller ID Scheme. -->
 <!-- <value=0>  Bellcore/Telcordia (default) -->
 <!-- <value=1>  ETSI-FSK during ringing	-->
 <!-- <value=2>  ETSI-FSK prior to ringing with DTAS -->
@@ -1513,9 +1513,9 @@
 <!-- <value=6> -6dB -->
 <!-- Number: 0, 1, 2, 3, 4, 5, 6 -->
 <!-- Mandatory -->
-<P248>0</P248> 
+<P248>0</P248>
 
-<!-- RX --> 
+<!-- RX -->
 <!-- <value=1> +6dB -->
 <!-- <value=2> +4dB -->
 <!-- <value=3> +2dB -->
@@ -1534,31 +1534,31 @@
 
 <!-- Ring Tone 1 -->
 <!-- String -->
-<P4030>c=2000/4000;</P4030> 
+<P4030>c=2000/4000;</P4030>
 
 <!-- Ring Tone 2 -->
 <!-- String -->
-<P403>c=2000/4000;</P403> 
+<P403>c=2000/4000;</P403>
 
 <!-- Ring Tone 3 -->
 <!-- String -->
-<P4032>c=2000/4000;</P4032> 
+<P4032>c=2000/4000;</P4032>
 
 <!-- Ring Tone 4 -->
 <!-- String -->
-<P4033>c=2000/4000;</P4033> 
+<P4033>c=2000/4000;</P4033>
 
 <!-- Ring Tone 5 -->
 <!-- String -->
-<P4034>c=2000/4000;</P4034> 
+<P4034>c=2000/4000;</P4034>
 
 <!-- Ring Tone 6 -->
 <!-- String -->
-<P4035>c=2000/4000;</P4035> 
+<P4035>c=2000/4000;</P4035>
 
 <!-- Ring Tone 7 -->
 <!-- String -->
-<P4036>c=2000/4000;</P4036> 
+<P4036>c=2000/4000;</P4036>
 
 <!-- Ring Tone 8 -->
 <!-- String -->
@@ -1572,7 +1572,7 @@
 <!-- String -->
 <P4039>c=2000/4000;</P4039>
 
-<!-- Basic Settings.  -->                                                        
+<!-- Basic Settings.  -->
 
 <!-- End User Password -->
 <!-- String -->
@@ -1652,7 +1652,7 @@
 
 <!-- Static IP -->
 <!-- IP Address. Ignore if DHCP or PPPoE is used -->
-<!-- Number: 0 to 255 --> 
+<!-- Number: 0 to 255 -->
 <!-- P9=192 -->
 <!-- P10=168 -->
 <!-- P11=0 -->

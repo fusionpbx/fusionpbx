@@ -2916,7 +2916,7 @@
     <!-- LDAP Lookup -->
     <!-- Incoming calls. 0 - No, 1 - Yes. Default is 0 -->
     <P8035>0</P8035>
-    <!-- 
+    <!--
 Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P8034>0</P8034>
     <!-- Lookup Display Name -->
@@ -3120,7 +3120,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Enable Currency update. 0 - No, 1 - Yes. Default is 1 --><!-- Enable stock update. 0 - No, 1 - Yes. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P1404>0</P1404>   
+    <P1404>0</P1404>
     <!-- Settings/XML Applications -->
     <!-- Enable Idle Screen XML Download -->
     <!-- 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - YES, HTTPS. Default is 0 -->

@@ -31,7 +31,7 @@ Commercial Support
 --------------------------------------
 These options support the project and cover any kind of help you might need from architecture, installation, best practices, troubleshooting, custom feature programming, and training.
 
-1. [Commercial Paid Support](http://fusionpbx.com/support.php) 
+1. [Commercial Paid Support](http://fusionpbx.com/support.php)
 2. [Custom Feature Development](http://fusionpbx.com/support.php)
 3. [Admin Training](http://fusionpbx.com)
 4. [Advanced Training](http://fusionpbx.com)
@@ -39,7 +39,7 @@ These options support the project and cover any kind of help you might need from
 
 Software Requirements
 --------------------------------------
-- [Debian Jessie](http://cdimage.debian.org/debian-cd/8.1.0/amd64/iso-cd/debian-8.1.0-amd64-netinst.iso) - Recommended 
+- [Debian Jessie](http://cdimage.debian.org/debian-cd/8.1.0/amd64/iso-cd/debian-8.1.0-amd64-netinst.iso) - Recommended
 This is the distribution recommended by the FreeSwitch team
 - Fusion will also install on Debian Wheezy, Ubuntu 10.10 LTS and is known to work on FreeBSD
 - [FusionPBX Installer](http://fusionpbx.com)
@@ -50,14 +50,14 @@ Community
 We have a pretty thriving community if you know how to get to us:
 
 - [IRC](http://webchat.freenode.net/) in the fusionpbx channel
-- [Twitter](http://twitter.com/fusionpbx) 
+- [Twitter](http://twitter.com/fusionpbx)
 - [Website](http://fusionpbx.com)
 
 Contributing
 ---------------------------------------
 
 ###Requirements
-It's easy to contribute to FusionPBX the only thing we ask before accepting your pull request is that you sign a Contributor License Agreement. 
+It's easy to contribute to FusionPBX the only thing we ask before accepting your pull request is that you sign a Contributor License Agreement.
 We ask that you sign the Contributor License Agreement for the following reasons:
 
 1. It protects FusionPBX by you gauranteeing that your contributions are yours to contribute and not the property of an employer or something found on the web.
@@ -88,5 +88,5 @@ chmod 755 install_fusionpbx.sh
 ```
 
 Installation Questions:
-- During the install it will ask you to press continue after verifying that the command ran successfully. This is usually the case, so you can simply tell it to continue. The install also asks several questions. 
+- During the install it will ask you to press continue after verifying that the command ran successfully. This is usually the case, so you can simply tell it to continue. The install also asks several questions.
 - Unless you have a reason to choose otherwise, PostgreSQL and Nginx is probably your best path and is recommended by the developers of FusionPBX

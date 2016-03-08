@@ -95,7 +95,7 @@
 	api = freeswitch.API();
 
 --get the ivr menu from the database
-	sql = [[SELECT * FROM v_ivr_menus 
+	sql = [[SELECT * FROM v_ivr_menus
 		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
 		AND ivr_menu_enabled = 'true' ]];
 	if (debug["sql"]) then
@@ -435,11 +435,11 @@
 	if (storage_type == "base64") then
 		if (ivr_menu_greet_long_is_base64 and file_exists(ivr_menu_greet_long)) then
 			--os.remove(ivr_menu_greet_long);
-		end 
+		end
 		if (ivr_menu_greet_short_is_base64 and file_exists(ivr_menu_greet_short)) then
 			--os.remove(ivr_menu_greet_short);
-		end 
+		end
 		if (ivr_menu_invalid_sound_is_base64 and file_exists(ivr_menu_invalid_sound)) then
 			--os.remove(ivr_menu_invalid_sound);
-		end 
+		end
 	end

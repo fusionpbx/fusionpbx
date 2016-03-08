@@ -79,7 +79,7 @@ if ($domains_processed == 1) {
 			}
 		}
 
-	//add that the directory structure for voicemail each domain and voicemail id is 
+	//add that the directory structure for voicemail each domain and voicemail id is
 		$sql = "select d.domain_name, v.voicemail_id ";
 		$sql .= "from v_domains as d, v_voicemails as v ";
 		$sql .= "where v.domain_uuid = d.domain_uuid ";

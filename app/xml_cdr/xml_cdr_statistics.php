@@ -152,7 +152,7 @@ else {
 			if (data.length > 0)
 				$.plot($("#placeholder"), data, {
 					yaxis: { min: 0 },
-					<?php 
+					<?php
 						if ($hours <= 48) {
 							echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
 						} else if ($hours > 48 && $hours < 168) {
@@ -160,9 +160,9 @@ else {
 						} else {
 							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
 						}
-					
+
 					?>
-					
+
 				});
 		}
 

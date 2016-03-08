@@ -1,6 +1,6 @@
 
 --add the explode function
-	function explode ( seperator, str ) 
+	function explode ( seperator, str )
 		local pos, arr = 0, {}
 		if (seperator ~= nil and str ~= nil) then
 			for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found

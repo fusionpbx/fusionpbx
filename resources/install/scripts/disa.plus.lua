@@ -195,7 +195,7 @@ if ( session:ready() ) then
 			end
 
 			--contact exists
-			--looks for caller_id_name and caller_id_name 
+			--looks for caller_id_name and caller_id_name
 		end
 
 	--if a predefined_destination is provided then set the number to the predefined_destination
@@ -221,7 +221,7 @@ if ( session:ready() ) then
 			else
 				caller_id_number = session:getVariable("effective_caller_id_number");
 			end
-		else 
+		else
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
@@ -244,7 +244,7 @@ if ( session:ready() ) then
 			freeswitch.consoleLog("notice", "[disa] cmd "..cmd.."\n");
 			api:executeString(cmd);
 			session:hangup("NORMAL_CLEARING");
-			return;		
+			return;
 		end
 
 

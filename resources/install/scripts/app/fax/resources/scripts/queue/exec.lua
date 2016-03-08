@@ -22,7 +22,7 @@ local task if fax_task_uuid then
   task = Tasks.select_task(fax_task_uuid)
   if not task then
     log.warningf("Can not found fax task: %q", tostring(fax_task_uuid))
-    return 
+    return
   end
 end
 

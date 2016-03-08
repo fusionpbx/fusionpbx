@@ -6,12 +6,12 @@ editAreaLoader.load_syntax["sql"] = {
 	,'KEYWORDS' : {
 		'statements' : [
 			'select', 'SELECT', 'where', 'order', 'by',
-			'insert', 'from', 'update', 'grant', 'left join', 'right join', 
+			'insert', 'from', 'update', 'grant', 'left join', 'right join',
             'union', 'group', 'having', 'limit', 'alter', 'LIKE','IN','CASE'
 		]
 		,'reserved' : [
 			'null', 'enum', 'int', 'boolean', 'add', 'varchar'
-			
+
 		]
 		,'functions' : [
    'ABS','ACOS','ADDDATE','ADDTIME','AES_DECRYPT','AES_ENCRYPT','ASCII','ASIN','ATAN2 ATAN','ATAN','AVG','BENCHMARK','DISTINCT','BIN','BIT_AND','BIT_COUNT','BIT_LENGTH','BIT_OR','BIT_XOR','CAST','CEILING CEIL','CHAR_LENGTH','CHAR',
@@ -50,6 +50,6 @@ editAreaLoader.load_syntax["sql"] = {
 		,'DELIMITERS' : 'color: #2B60FF;'
 		,'REGEXPS' : {
 			'variables' : 'color: #E0BD54;'
-		}		
+		}
 	}
 };

@@ -22,7 +22,7 @@
 
 	Contributor(s):
 	Matthew Vale <github@mafoo.org>
-	
+
 */
 require_once "root.php";
 require_once "resources/classes/EventSocket.php";
@@ -151,14 +151,14 @@ require_once "resources/classes/EventSocket.php";
 			}
 			return false;
 		}
-	
+
 		protected function event_socket_request($cmd) {
 			$esl = new EventSocket($this->event_socket);
 			$result = $esl->request($cmd);
 			$esl->reset_fp();
 			return $result;
 		}
-		
+
 		public function restart_switch() {
 			$this->connect_event_socket();
 			if(!$this->event_socket){

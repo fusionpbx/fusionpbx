@@ -88,22 +88,22 @@ License:
 Third party fonts:
 
 	This library may include third party font files released with different licenses.
-	
+
 	All the PHP files on the fonts directory are subject to the general TCPDF license (GNU-LGPLv3),
 	they do not contain any binary data but just a description of the general properties of a particular font.
 	These files can be also generated on the fly using the font utilities and TCPDF methods.
-	
+
 	All the original binary TTF font files have been renamed for compatibility with TCPDF and compressed using the gzcompress PHP function that uses the ZLIB data format (.z files).
-	
+
 	The binary files (.z) that begins with the prefix "free" have been extracted from the GNU FreeFont collection (GNU-GPLv3).
 	The binary files (.z) that begins with the prefix "pdfa" have been derived from the GNU FreeFont, so they are subject to the same license.
 	For the details of Copyright, License and other information, please check the files inside the directory fonts/freefont-20120503
 	Link : http://www.gnu.org/software/freefont/
-	
+
 	The binary files (.z) that begins with the prefix "dejavu" have been extracted from the DejaVu fonts 2.33 (Bitstream) collection.
 	For the details of Copyright, License and other information, please check the files inside the directory fonts/dejavu-fonts-ttf-2.33
 	Link : http://dejavu-fonts.org
-	
+
 	The binary files (.z) that begins with the prefix "ae" have been extracted from the Arabeyes.org collection (GNU-GPLv2).
 	Link : http://projects.arabeyes.org/
 

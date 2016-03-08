@@ -55,7 +55,7 @@ local function next_task()
     local mode = (task.retry_counter % #FAX_OPTIONS) + 1
     local dial_string  = '{' ..
       task.dial_string .. "api_hangup_hook='lua app/fax/resources/scripts/queue/retry.lua'," ..
-      FAX_OPTIONS[mode] .. 
+      FAX_OPTIONS[mode] ..
     '}' .. task.uri
 
     local originate = 'originate ' .. dial_string .. ' &lua(app/fax/resources/scripts/queue/exec.lua)'

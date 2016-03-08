@@ -61,7 +61,7 @@ include "root.php";
 				echo "$message\n";
 			}
 		}
-		
+
 		function write_progress($message) {
 			if($this->echo_progress){
 				echo "$message\n";

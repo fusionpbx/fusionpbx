@@ -39,14 +39,14 @@
 			end
 
 		--validate the greeting_id
-			if (greeting_id == "1" 
-				or greeting_id == "2" 
-				or greeting_id == "3" 
-				or greeting_id == "4" 
-				or greeting_id == "5" 
-				or greeting_id == "6" 
-				or greeting_id == "7" 
-				or greeting_id == "8" 
+			if (greeting_id == "1"
+				or greeting_id == "2"
+				or greeting_id == "3"
+				or greeting_id == "4"
+				or greeting_id == "5"
+				or greeting_id == "6"
+				or greeting_id == "7"
+				or greeting_id == "8"
 				or greeting_id == "9") then
 				--record your greeting at the tone press any key or stop talking to end the recording
 					if (session:ready()) then
@@ -59,7 +59,7 @@
 						freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
 						storage_path = storage_path:gsub("${domain_name}", domain_name);
 						session:execute("record", storage_path .."/"..recording_name);
-					else 
+					else
 						--prepare to record the greeting
 							if (session:ready()) then
 								max_len_seconds = 30;
@@ -101,12 +101,12 @@
 						end
 					end
 			end
-			
+
 		--clean up any tmp greeting files
 			for gid = 1, 9, 1 do
 				if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..gid..".tmp.wav")) then
 					os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..gid..".tmp.wav");
 				end
 			end
-			
+
 	end
