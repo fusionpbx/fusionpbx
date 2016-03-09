@@ -48,26 +48,6 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
-		--get the domains
-			x = 1;
-			domains = {}
-			sql = "SELECT * FROM v_domains;";
-			dbh:query(sql, function(row)
-				--add items to the domains array
-					domains[row["domain_name"]] = row["domain_uuid"];
-					domains[row["domain_uuid"]] = row["domain_name"];
-				--increment x
-					x = x + 1;
-			end);
-
-		--get the domain_uuid
-			if (domain_uuid == nil) then
-				--get the domain_uuid
-					if (domain_name ~= nil) then
-						domain_uuid = domains[domain_name];
-					end
-			end
-
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -90,7 +70,6 @@
 				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
 			else
 				sql = sql .. "where (d.dialplan_context = '" .. call_context .. "' or d.dialplan_context = '${domain_name}') ";
-				sql = sql .. "and (d.domain_uuid = '" .. domain_uuid .. "' or d.domain_uuid is null )";
 			end
 			sql = sql .. "and d.dialplan_enabled = 'true' ";
 			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
@@ -259,11 +238,20 @@
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
-									domain_name = domains[domain_uuid];
+									if (domain_name == nil) then
+										sql = "SELECT domain_name FROM v_domains where domain_uuid = '"..domain_uuid.."'";
+										dbh:query(sql, function(row)
+											domain_name = row["domain_name"];
+										end);
+									end
 									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
-									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
-									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
-									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
+									if (domain_uuid ~= nil) then
+										table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
+									end
+									if (domain_name ~= nil) then
+										table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
+										table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
+									end
 									first_action = false;
 								end
 							end
@@ -292,17 +280,19 @@
 
 		-- prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 			if pass == false then
-				log.errf('context: %s, extension: %s, type: %s, data: %s ',
-					call_context,
-					dialplan_name or '----',
-					dialplan_detail_tag or '----',
-					dialplan_detail_data or '----'
-				)
+				--send a message to the log
+					log.errf('context: %s, extension: %s, type: %s, data: %s ',
+						call_context,
+						dialplan_name or '----',
+						dialplan_detail_tag or '----',
+						dialplan_detail_data or '----'
+					)
 
 				--close the database connection
 					dbh:release();
 
-				error('error while build context: ' .. call_context)
+				--show an error
+					error('error while build context: ' .. call_context)
 			end
 
 		--close the extension tag if it was left open
@@ -337,4 +327,3 @@
 		--close the database connection
 			dbh:release();
 	end
-
