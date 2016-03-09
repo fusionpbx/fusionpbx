@@ -96,7 +96,7 @@
 	--	if string.len(destination) == 0) then
 	--		destination = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 	--		freeswitch.consoleLog("NOTICE", "[ring_group] destination: "..destination.."\n");
-`	--	end
+	--	end
 	--end
 
 --login or logout
