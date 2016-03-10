@@ -1009,6 +1009,7 @@ legend {
 		-moz-border-radius: 3px;
 		border-radius: 3px;
 		padding: 20px;
+		margin-bottom: 15px;
 		}
 
 /* operator panel styles begin */
@@ -1201,11 +1202,63 @@ legend {
 
 /* operator panel styles end */
 
-SPAN.playback_progress_bar {
-	background-color: #c43e42;
-	height: 1px;
-	display: inline-block;
-	}
+	SPAN.playback_progress_bar {
+		background-color: #c43e42;
+		height: 1px;
+		display: inline-block;
+		}
+
+/* dashboard hud styles begin */
+
+	td.hud_box {
+		height: auto;
+		vertical-align: top;
+		padding: 15px;
+		background-color: #f5f7fa;
+		border: 1px solid #c6d4e8;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+		text-align: center;
+		}
+
+	b.hud_title {
+		color: #a4aebf;
+		}
+
+	span.hud_voicemail_total {
+		cursor: pointer;
+		color: #004083;
+		font-size: 60px;
+		line-hight: 20px;
+		font-weight: bold;
+		}
+
+	span.hud_voicemail_total:hover {
+		opacity: 0.7;
+		}
+
+	sup.hud_voicemail_new {
+		font-weight: normal;
+		color: #03920a;
+		font-size: 30px;
+		line-hight: 10px;
+		}
+
+	th.hud_heading {
+		font-size: 11px;
+		font-weight: bold;
+		color: black;
+		text-align: left;
+		}
+
+	td.hud_text {
+		font-size: 11px;
+		color: black;
+		text-align: left;
+		}
+
+/* dashboard hud styles end */
 
 </style>
 
