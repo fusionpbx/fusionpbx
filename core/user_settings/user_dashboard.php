@@ -893,8 +893,6 @@
 		if ((in_array('missed', $selected_blocks) || in_array('recent', $selected_blocks)) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
-			echo "		alert('call made');\n";
-			echo "		/*";
 			echo "		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari\n";
 			echo "			xmlhttp=new XMLHttpRequest();\n";
 			echo "		}\n";
@@ -904,7 +902,6 @@
 			echo "		xmlhttp.open(\"GET\",url,true);\n";
 			echo "		xmlhttp.send(null);\n";
 			echo "		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
-			echo "		*/";
 			echo "	}\n";
 			echo "</script>\n";
 		}
