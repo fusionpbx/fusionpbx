@@ -48,6 +48,7 @@ else {
 	echo "<tr>\n";
 	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?redirect=xml_cdr_statistics';\">\n";
 	}
@@ -56,7 +57,6 @@ else {
 			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true';\">\n";
 		}
 	}
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	echo "		<input type='button' class='btn' value='".$text['button-extension_summary']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
 	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php';\">\n";
 	echo "	</td>\n";
@@ -152,7 +152,7 @@ else {
 			if (data.length > 0)
 				$.plot($("#placeholder"), data, {
 					yaxis: { min: 0 },
-					<?php 
+					<?php
 						if ($hours <= 48) {
 							echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
 						} else if ($hours > 48 && $hours < 168) {
@@ -160,9 +160,9 @@ else {
 						} else {
 							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
 						}
-					
+
 					?>
-					
+
 				});
 		}
 
