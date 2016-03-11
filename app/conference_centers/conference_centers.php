@@ -165,7 +165,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_extension']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_order']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['conference_center_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['conference_center_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_center_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_center_edit')) {
