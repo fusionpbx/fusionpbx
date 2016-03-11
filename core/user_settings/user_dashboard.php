@@ -498,7 +498,17 @@
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch = (defined('TIME_24HR') && TIME_24HR == 1) ? date("j/n H:i", $row['start_epoch']) : date("j/n h:ia", $row['start_epoch']);
 
-					$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\"";
+					//determine name
+						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : "&nbsp;";
+					//determine number to display/click-to-call
+						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) {
+							$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
+						}
+						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && in_array($row['caller_id_number'], $assigned_extensions))) {
+							$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
+						}
+
+					$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($cdr_name)."&src_cid_number=".urlencode($cdr_number)."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($cdr_number)."&rec=false&ringback=us-ring&auto_answer=true');\"";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					//determine call result and appropriate icon
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]."' style='cursor: help;'>\n";
@@ -517,16 +527,9 @@
 							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 						}
 						$hud[$n]['html'] .= "</td>\n";
-					//determine name
-						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : "&nbsp;";
+					//display name
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$cdr_name."</td>\n";
-					//determine number
-						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) {
-							$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
-						}
-						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && in_array($row['caller_id_number'], $assigned_extensions))) {
-							$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
-						}
+					//display number
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0)'>".$cdr_number."</a></td>\n";
 					//date/time
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
@@ -893,6 +896,7 @@
 		if ((in_array('missed', $selected_blocks) || in_array('recent', $selected_blocks)) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
+			echo "		/*\n";
 			echo "		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari\n";
 			echo "			xmlhttp=new XMLHttpRequest();\n";
 			echo "		}\n";
@@ -902,6 +906,7 @@
 			echo "		xmlhttp.open(\"GET\",url,true);\n";
 			echo "		xmlhttp.send(null);\n";
 			echo "		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+			echo "		*/\n";
 			echo "	}\n";
 			echo "</script>\n";
 		}
