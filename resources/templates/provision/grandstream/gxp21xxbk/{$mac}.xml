@@ -2,7 +2,7 @@
 <gs_provision version="1">
 <config version="1">
 
-<!-- Configuration Template For GXP21xx Firmware Version 1.0.5.32 -->                              
+<!-- Configuration Template For GXP21xx Firmware Version 1.0.5.32 -->
 
 <!-- Maintenance/Upgrade and Provisioning -->
 
@@ -90,391 +90,391 @@
 <!-- Mandatory -->
 <P240>0</P240>
 
-<!-- Account Settings -->                                                  
-<!-- Account 1 -->                                                         
-<!-- Account 1/General Settings -->  
-	
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->  
+<!-- Account Settings -->
+<!-- Account 1 -->
+<!-- Account 1/General Settings -->
+
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <P271>1</P271>
-	
-<!-- Account Name --> 
+
+<!-- Account Name -->
 <P270>{$display_name_1}</P270>
 
-<!-- SIP Server --> 
+<!-- SIP Server -->
 <P47>{$server_address_1}</P47>
 
-<!-- Secondary SIP Server --> 
+<!-- Secondary SIP Server -->
 <P2312></P2312>
-	
-<!-- Outbound Proxy --> 
+
+<!-- Outbound Proxy -->
 <P48></P48>
 
-<!-- SIP User ID --> 
+<!-- SIP User ID -->
 <P35>{$user_id_1}</P35>
 
-<!-- Authenticate ID --> 
+<!-- Authenticate ID -->
 <P36>{$user_id_1}</P36>
 
-<!-- Authenticate Password --> 
+<!-- Authenticate Password -->
 <P34>{$user_password_1}</P34>
 
-<!-- Display Name --> 
+<!-- Display Name -->
 <P3>{$display_name_1}</P3>
 
-<!-- Voice Mail UserID --> 
+<!-- Voice Mail UserID -->
 <P33>*97</P33>
 
-<!-- Account 1/Network Settings --> 
+<!-- Account 1/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <P103>0</P103>
 
-<!-- Primary IP. Maximum 15 characters --> 
+<!-- Primary IP. Maximum 15 characters -->
 <P2308></P2308>
 
-<!-- Backup IP 1 --> 
-<P2309></P2309> 
+<!-- Backup IP 1 -->
+<P2309></P2309>
 
-<!-- Backup IP 2 --> 
+<!-- Backup IP 2 -->
 <P2310></P2310>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. --> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <P52>0</P52>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<P197></P197> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<P197></P197>
 
-<!-- Account 1/SIP Settings/Basic Settings --> 
+<!-- Account 1/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
 <P63>0</P63>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
 <P31>1</P31>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
 <P81>0</P81>
 
-<!-- Register Expiration (in minutes). Default is 60. Max about 45 days --> 
+<!-- Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <P32>3</P32>
 
-<!-- Reregister Before Expiration (in seconds). Default is 0 second --> 
+<!-- Reregister Before Expiration (in seconds). Default is 0 second -->
 <P2330>0</P2330>
 
-<!-- Local SIP Port. Default is 5060 --> 
+<!-- Local SIP Port. Default is 5060 -->
 <P40>5060</P40>
 
-<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 --> 
+<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
 <P138>20</P138>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
-<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 50 --> 
-<P209>50</P209> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 50 -->
+<P209>50</P209>
 
-<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses --> 
-<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 --> 
+<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
 <P250>400</P250>
 
-<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 --> 
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
 <P130>0</P130>
 
-<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 --> 
+<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <P2329>1</P2329>
 
-<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 -->
 <P2331>0</P2331>
 
-<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 -->
 <P2305>0</P2305>
 
-<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 --> 
+<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 -->
 <P288>1</P288>
 
-<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default is 0 -->
 <P99>0</P99>
 
-<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
 <P2319>0</P2319>
 
-<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 --> 
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
 <P272>0</P272>
 
-<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 --> 
+<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
 <P2324>0</P2324>
 
-<!-- Use Privacy Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use Privacy Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2338>0</P2338>
 
-<!-- Use P-Preferred-Identity Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use P-Preferred-Identity Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2339>0</P2339>
 
 
-<!-- Account 1/SIP Settings/Advanced Features --> 
+<!-- Account 1/SIP Settings/Advanced Features -->
 
-<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P2341>0</P2341> 
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2341>0</P2341>
 
-<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2342>0</P2342>
 
-<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2343>0</P2343>
 
-<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2340>0</P2340>
 
-<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2325>0</P2325>
 
-<!-- Line-Seize Timeout (in seconds). Default is 15 --> 
-<!-- Number: 15 - 60 --> 
-<!-- Mandatory --> 
-<P2313>15</P2313> 
+<!-- Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- Number: 15 - 60 -->
+<!-- Mandatory -->
+<P2313>15</P2313>
 
-<!-- Eventlist BLF URI --> 
-<!-- String --> 
+<!-- Eventlist BLF URI -->
+<!-- String -->
 <P134></P134>
 
-<!-- Conference URI --> 
-<!-- String --> 
+<!-- Conference URI -->
+<!-- String -->
 <P2318></P2318>
 
-<!-- Music On Hold URI --> 
-<!-- String --> 
+<!-- Music On Hold URI -->
+<!-- String -->
 <P2350></P2350>
 
-<!-- BLF Call-pickup Prefix. Default is --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- BLF Call-pickup Prefix. Default is -->
+<!-- String -->
+<!-- Mandatory -->
 <P1347>**</P1347>
 
-<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P188>0</P188> 
+<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P188>0</P188>
 
-<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS --> 
-<!-- Default is 100 --> 
-<!-- Number: 100, 101, 102, 108, 109, 110, 117 --> 
-<!-- Mandatory --> 
+<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS -->
+<!-- Default is 100 -->
+<!-- Number: 100, 101, 102, 108, 109, 110, 117 -->
+<!-- Mandatory -->
 <P198>100</P198>
 
 
-<!-- Account 1/SIP Settings/Session Timer --> 
+<!-- Account 1/SIP Settings/Session Timer -->
 
-<!-- Session Expiration (in seconds). Default is 180 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Session Expiration (in seconds). Default is 180 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P260>180</P260>
 
-<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P260 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P260 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P261>90</P261>
 
-<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P262>0</P262> 
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P262>0</P262>
 
-<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P263>0</P263>
 
-<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P264>0</P264> 
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P264>0</P264>
 
-<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P266>0</P266>
 
-<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 --> 
-<!-- Number: 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+<!-- Number: 1, 2 -->
+<!-- Mandatory -->
 <P267>1</P267>
 
-<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P265>0</P265>
 
 
-<!-- Account 1/SIP Settings/Security Settings --> 
+<!-- Account 1/SIP Settings/Security Settings -->
 
-<!-- Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2311>0</P2311>
 
-<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2306>0</P2306>
 
-<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P258>0</P258>
 
-<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2347>0</P2347>
 
-<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2346>0</P2346>
 
 
-<!-- Account 1/Audio Settings --> 
+<!-- Account 1/Audio Settings -->
 
-<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2301>0</P2301>
 
-<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2302>1</P2302>
 
-<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P2303>0</P2303> 
+<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2303>0</P2303>
 
-<!-- DTMF Payload Type. Default is 101 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- DTMF Payload Type. Default is 101 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P79>101</P79>
 
-<!-- Preferred Vocoder --> 
-<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC --> 
-<!-- choice 1. Default is 0 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+<!-- choice 1. Default is 0 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P57>0</P57>
 
-<!-- choice 2. Default is 8 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 2. Default is 8 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P58>8</P58>
 
-<!-- choice 3. Default is 4 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 3. Default is 4 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P59>4</P59>
 
-<!-- choice 4. Default is 18 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 4. Default is 18 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P60>18</P60>
 
-<!-- choice 5. Default is 9 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 5. Default is 9 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P61>9</P61>
- 
-<!-- choice 6. Default is 98 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+
+<!-- choice 6. Default is 98 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P62>98</P62>
 
-<!-- choice 7. Default is 2 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 7. Default is 2 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P46>2</P46>
 
-<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2348>0</P2348>
 
-<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P183>0</P183>
 
-<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P291>0</P291>
 
-<!-- Silence Suppression. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Silence Suppression. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P50>0</P50>
 
-<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 --> 
-<!-- Number: 1 - 64 --> 
-<!-- Mandatory --> 
+<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- Number: 1 - 64 -->
+<!-- Mandatory -->
 <P37>2</P37>
 
-<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P49>1</P49>
 
-<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2323>0</P2323>
 
-<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P97>1</P97>
 
-<!-- iLBC Payload Type. Default is 97 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- iLBC Payload Type. Default is 97 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P96>97</P96>
 
-<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P133>1</P133>
 
-<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms --> 
-<!-- Default is 2 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms -->
+<!-- Default is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<!-- Mandatory -->
 <P132>2</P132>
 
 
-<!-- Account 1/Call Settings --> 
+<!-- Account 1/Call Settings -->
 
-<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P29>0</P29>
 
-<!-- Dial Plan Prefix --> 
-<!-- String  --> 
+<!-- Dial Plan Prefix -->
+<!-- String  -->
 <P66></P66>
 
 <!-- Dial Plan. Default value is { x+ | *x+ | *xx*x+ } -->
@@ -483,2407 +483,2407 @@
 <P290>{ x+ | *x+ | *xx*x+ }</P290>
 
 
-<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 120 --> 
-<!-- Mandatory --> 
+<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 120 -->
+<!-- Mandatory -->
 <P139>20</P139>
 
-<!-- Enable Call Features.  0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P191>1</P191>
 
-<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P182>0</P182>
 
-<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P104>0</P104>
 
-<!-- Matching Incoming Caller ID. Matching Rule 1 --> 
-<!-- String --> 
- 
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
+
 <P1488></P1488>
 
-<!-- Matching Rule 1 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 1 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1489>0</P1489>
 
-<!-- Matching Incoming Caller ID. Matching Rule 2 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
 <P1490></P1490>
 
-<!-- Matching Rule 2 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
-<P1491>0</P1491> 
+<!-- Matching Rule 2 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+<P1491>0</P1491>
 
-<!-- Matching Incoming Caller ID. Matching Rule 3 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
 <P1492></P1492>
 
-<!-- Matching Rule 3 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 3 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1493>0</P1493>
 
-<!-- Ring Timeout (in seconds). Default is 60 --> 
-<!-- Number: 30 - 3600 --> 
-<!-- Mandatory --> 
+<!-- Ring Timeout (in seconds). Default is 60 -->
+<!-- Number: 30 - 3600 -->
+<!-- Mandatory -->
 <P1328>60</P1328>
 
-<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P65>0</P65>
 
-<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P129>0</P129>
 
-<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P90>0</P90>
 
-<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P298>0</P298>
 
-<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P135>0</P135>
 
-<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2304>0</P2304>
 
-<!-- No Key Entry Timeout (in seconds). Default is 4 --> 
-<!-- Number: 1 - 15 --> 
-<!-- Mandatory --> 
+<!-- No Key Entry Timeout (in seconds). Default is 4 -->
+<!-- Number: 1 - 15 -->
+<!-- Mandatory -->
 <P85>4</P85>
 
-<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P72>1</P72>
 
-<!-- DND Call Feature ON --> 
-<!-- String --> 
+<!-- DND Call Feature ON -->
+<!-- String -->
 <P2344></P2344>
 
-<!-- DND Call Feature OFF --> 
-<!-- String --> 
+<!-- DND Call Feature OFF -->
+<!-- String -->
 <P2345></P2345>
 
 
 
-<!-- Account 2 --> 
+<!-- Account 2 -->
 
-<!-- Account 2/General Settings --> 
+<!-- Account 2/General Settings -->
 
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P401>1</P401>
 
-<!-- Account Name --> 
-<!-- String --> 
-<P417>{$display_name_2}</P417> 
+<!-- Account Name -->
+<!-- String -->
+<P417>{$display_name_2}</P417>
 
-<!-- SIP Server --> 
-<!-- String --> 
+<!-- SIP Server -->
+<!-- String -->
 <P402>{$server_address_2}</P402>
 
-<!-- Secondary SIP Server --> 
-<!-- String --> 
+<!-- Secondary SIP Server -->
+<!-- String -->
 <P2412></P2412>
 
-<!-- Outbound Proxy --> 
+<!-- Outbound Proxy -->
 <!-- String -->
 <P403></P403>
 
-<!-- SIP User ID --> 
-<!-- String --> 
+<!-- SIP User ID -->
+<!-- String -->
 <P404>{$user_id_2}</P404>
 
-<!-- Authenticate ID --> 
-<!-- String --> 
+<!-- Authenticate ID -->
+<!-- String -->
 <P405>{$user_id_2}</P405>
 
-<!-- Authenticate Password --> 
-<!-- String --> 
+<!-- Authenticate Password -->
+<!-- String -->
 <P406>{$user_password_2}</P406>
 
-<!-- Display Name --> 
-<!-- String --> 
+<!-- Display Name -->
+<!-- String -->
 <P407>{$display_name_2}</P407>
 
-<!-- Voice Mail UserID --> 
-<!-- String --> 
+<!-- Voice Mail UserID -->
+<!-- String -->
 <P426>*97</P426>
 
 
-<!-- Account 2/Network Settings --> 
+<!-- Account 2/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
-<P408>0</P408> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+<P408>0</P408>
 
-<!-- Primary IP. Maximum 15 characters --> 
-<!-- String --> 
+<!-- Primary IP. Maximum 15 characters -->
+<!-- String -->
 <P2408></P2408>
 
-<!-- Backup IP 1 --> 
-<!-- String --> 
+<!-- Backup IP 1 -->
+<!-- String -->
 <P2409></P2409>
 
-<!-- Backup IP 2 --> 
-<!-- String --> 
+<!-- Backup IP 2 -->
+<!-- String -->
 <P2410></P2410>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5 --> 
-<!-- Mandatory --> 
-<P414>0</P414> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<!-- Mandatory -->
+<P414>0</P414>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<!-- String --> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<!-- String -->
 <P418></P418>
 
-<!-- Account 2/SIP Settings/Basic Settings --> 
+<!-- Account 2/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P409>0</P409>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P410>1</P410>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P411>0</P411>
 
-<!-- Register Expiration (in minutes). Default is 60. Max is 45 days --> 
-<!-- Number: 1 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
+<!-- Number: 1 - 64800 -->
+<!-- Mandatory -->
 <P412>3</P412>
 
-<!-- Reregister Before Expiration (in seconds). Default is 0 --> 
-<!-- Number: 0 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Reregister Before Expiration (in seconds). Default is 0 -->
+<!-- Number: 0 - 64800 -->
+<!-- Mandatory -->
 <P2430>0</P2430>
 
-<!-- Local SIP Port. Default is 5062 --> 
-<!-- Number --> 
-<!-- Mandatory --> 
+<!-- Local SIP Port. Default is 5062 -->
+<!-- Number -->
+<!-- Mandatory -->
 <P413>5062</P413>
 
-<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 3600 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 3600 -->
+<!-- Mandatory -->
 <P471>20</P471>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
-<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 --> 
-<!-- Number: 50, 100, 200 --> 
-<!-- Mandatory --> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- Number: 50, 100, 200 -->
+<!-- Mandatory -->
 <P440>50</P440>
 
-<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses --> 
-<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 --> 
-<!-- Number: 200, 400, 800 --> 
-<!-- Mandatory --> 
+<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- Number: 200, 400, 800 -->
+<!-- Mandatory -->
 <P441>400</P441>
 
-<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P448>0</P448>
 
-<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2429>1</P2429>
 
-<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2431>0</P2431>
 
-<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2405>0</P2405>
 
-<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P489>1</P489>
 
-<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P415>0</P415>
 
-<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2419>0</P2419>
 
-<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P435>0</P435>
 
-<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2424>0</P2424>
 
-<!-- Use Privacy Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use Privacy Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2438>0</P2438>
 
-<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2439>0</P2439>
 
 
-<!-- Account 2/SIP Settings/Advanced Features --> 
+<!-- Account 2/SIP Settings/Advanced Features -->
 
-<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2441>0</P2441>
 
-<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2442>0</P2442>
 
-<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2443>0</P2443>
 
-<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2440>0</P2440>
 
-<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0. --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2425>0</P2425>
 
-<!-- Line-Seize Timeout (in seconds). Default is 15 --> 
-<!-- Number: 15 - 60 --> 
-<!-- Mandatory --> 
+<!-- Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- Number: 15 - 60 -->
+<!-- Mandatory -->
 <P2413>15</P2413>
 
-<!-- Eventlist BLF URI --> 
-<!-- String --> 
+<!-- Eventlist BLF URI -->
+<!-- String -->
 <P444></P444>
 
-<!-- Conference URI --> 
-<!-- String --> 
+<!-- Conference URI -->
+<!-- String -->
 <P2418></P2418>
 
-<!-- Music On Hold URI --> 
-<!-- String --> 
+<!-- Music On Hold URI -->
+<!-- String -->
 <P2450></P2450>
 
-<!-- BLF Call-pickup Prefix. Default is --> 
-<!-- String --> 
-<!-- Mandatory --> 
-<P481>**</P481> 
+<!-- BLF Call-pickup Prefix. Default is -->
+<!-- String -->
+<!-- Mandatory -->
+<P481>**</P481>
 
-<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P488>0</P488>
 
-<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS --> 
-<!-- Number: 100, 101, 102, 108, 109, 110, 117. Default is 100 --> 
-<!-- Mandatory --> 
+<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS -->
+<!-- Number: 100, 101, 102, 108, 109, 110, 117. Default is 100 -->
+<!-- Mandatory -->
 <P424>100</P424>
 
 
-<!-- Account 2/SIP Settings/Session Timer --> 
+<!-- Account 2/SIP Settings/Session Timer -->
 
-<!-- Session Expiration (in seconds). Default is 180 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Session Expiration (in seconds). Default is 180 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P434>180</P434>
 
-<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P434 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P434 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P427>90</P427>
 
-<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P428>0</P428>
 
-<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P429>0</P429>
 
-<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P430>0</P430>
 
-<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P432>0</P432>
 
-<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 --> 
-<!-- Number: 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+<!-- Number: 1, 2 -->
+<!-- Mandatory -->
 <P433>1</P433>
 
-<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P431>0</P431>
 
 
-<!-- Account 2/SIP Settings/Security Settings --> 
+<!-- Account 2/SIP Settings/Security Settings -->
 
-<!-- Check Domain Certificates. 0 - No, 1 - Yes. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check Domain Certificates. 0 - No, 1 - Yes. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2411>0</P2411>
 
-<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2406>0</P2406>
 
-<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P449>0</P449>
 
-<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2447>0</P2447>
 
-<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P2446>0</P2446> 
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P2446>0</P2446>
 
 
-<!-- Account 2/Audio Settings --> 
+<!-- Account 2/Audio Settings -->
 
-<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2401>0</P2401>
 
-<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2402>1</P2402>
 
-<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2403>0</P2403>
 
-<!-- DTMF Payload Type. Default is 101 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- DTMF Payload Type. Default is 101 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P496>101</P496>
 
-<!-- Preferred Vocoder --> 
-<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC --> 
-<!-- choice 1. Default is 0 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+<!-- choice 1. Default is 0 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P451>0</P451>
 
-<!-- choice 2. Default is 8 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 2. Default is 8 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P452>8</P452>
 
-<!-- choice 3. Default is 4 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory  --> 
+<!-- choice 3. Default is 4 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory  -->
 <P453>4</P453>
 
-<!-- choice 4. Default is 18 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 4. Default is 18 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P454>18</P454>
 
-<!-- choice 5. Default is 9 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 5. Default is 9 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P455>9</P455>
 
-<!-- choice 6. Default is 98 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 6. Default is 98 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P456>98</P456>
 
-<!-- choice 7. Default is 2 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 7. Default is 2 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P457>2</P457>
 
-<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2448>0</P2448>
 
-<!-- SRTP Mode --> 
-<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- SRTP Mode -->
+<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P443>0</P443>
 
-<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P460>0</P460>
 
-<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P485>0</P485>
 
-<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 --> 
-<!-- Number: 1 - 64 --> 
-<!-- Mandatory --> 
+<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- Number: 1 - 64 -->
+<!-- Mandatory -->
 <P486>2</P486>
 
-<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P493>1</P493>
 
-<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2423>0</P2423>
 
-<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P495>1</P495>
 
-<!-- iLBC Payload Type. Default is 97. --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- iLBC Payload Type. Default is 97. -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P494>97</P494>
 
-<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P498>1</P498>
 
-<!-- Jitter Buffer Length. --> 
-<!-- 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Length. -->
+<!-- 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<!-- Mandatory -->
 <P497>2</P497>
 
 
-<!-- Account 2/Call Settings --> 
+<!-- Account 2/Call Settings -->
 
-<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P422>0</P422>
 
-<!-- Dial Plan Prefix --> 
-<!-- String --> 
+<!-- Dial Plan Prefix -->
+<!-- String -->
 <P419></P419>
 
-<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+<!-- String -->
+<!-- Mandatory -->
 <P459>{ x+ | *x+ | *xx*x+ }</P459>
 
-<!-- Delayed Call Forward Wait Time (in seconds). Default 20 --> 
-<!-- Number: 1 - 120 --> 
-<!-- Mandatory --> 
+<!-- Delayed Call Forward Wait Time (in seconds). Default 20 -->
+<!-- Number: 1 - 120 -->
+<!-- Mandatory -->
 <P470>20</P470>
 
-<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P420>1</P420>
 
-<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P442>0</P442>
 
-<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory  --> 
+<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory  -->
 <P423>0</P423>
 
-<!-- Matching Incoming Caller ID. Matching Rule 1 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
 <P1494></P1494>
 
-<!-- Matching Rule 1 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 1 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1495>0</P1495>
 
-<!-- Matching Incoming Caller ID. Matching Rule 2. --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 2. -->
+<!-- String -->
 <P1496></P1496>
 
-<!-- Matching Rule 2 Distinctive Ringtone. --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 2 Distinctive Ringtone. -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1497>0</P1497>
 
-<!-- Matching Incoming Caller ID. Matching Rule 3. --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 3. -->
+<!-- String -->
 <P1498></P1498>
 
-<!-- Matching Rule 3 Distinctive Ringtone. --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 3 Distinctive Ringtone. -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1499>0</P1499>
 
-<!-- Ring Timeout (in seconds) Default is 60 --> 
-<!-- Number: 30 - 3600 --> 
-<!-- Mandatory --> 
+<!-- Ring Timeout (in seconds) Default is 60 -->
+<!-- Number: 30 - 3600 -->
+<!-- Mandatory -->
 <P476>60</P476>
 
-<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P421>0</P421>
 
-<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P446>0</P446>
 
-<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P425>0</P425>
 
-<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P438>0</P438>
 
-<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P469>0</P469>
 
-<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2404>0</P2404>
 
-<!-- No Key Entry Timeout. Default is 4 --> 
-<!-- Number: 1 - 15 --> 
-<!-- Mandatory --> 
+<!-- No Key Entry Timeout. Default is 4 -->
+<!-- Number: 1 - 15 -->
+<!-- Mandatory -->
 <P491>4</P491>
 
-<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P492>1</P492>
 
-<!-- DND Call Feature ON --> 
-<!-- String --> 
+<!-- DND Call Feature ON -->
+<!-- String -->
 <P2444></P2444>
 
-<!-- DND Call Feature OFF --> 
-<!-- String --> 
+<!-- DND Call Feature OFF -->
+<!-- String -->
 <P2445></P2445>
 
 
-<!-- Account 3 --> 
+<!-- Account 3 -->
 
-<!-- Account 3/General Settings --> 
+<!-- Account 3/General Settings -->
 
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P501>1</P501> 
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P501>1</P501>
 
-<!-- Account Name --> 
-<!-- String --> 
-<P517>{$display_name_3}</P517>  
+<!-- Account Name -->
+<!-- String -->
+<P517>{$display_name_3}</P517>
 
-<!-- SIP Server --> 
-<!-- String --> 
+<!-- SIP Server -->
+<!-- String -->
 <P502>{$server_address_3}</P502>
 
-<!-- Secondary SIP Server --> 
-<!-- String --> 
+<!-- Secondary SIP Server -->
+<!-- String -->
 <P2512></P2512>
 
-<!-- Outbound Proxy --> 
-<!-- String --> 
+<!-- Outbound Proxy -->
+<!-- String -->
 <P503></P503>
 
-<!-- SIP User ID --> 
-<!-- String --> 
+<!-- SIP User ID -->
+<!-- String -->
 <P504>{$user_id_3}</P504>
 
-<!-- Authenticate ID --> 
-<!-- String --> 
+<!-- Authenticate ID -->
+<!-- String -->
 <P505>{$user_id_3}</P505>
 
-<!-- Authenticate Password --> 
-<!-- String --> 
+<!-- Authenticate Password -->
+<!-- String -->
 <P506>{$user_password_3}</P506>
 
-<!-- Display Name --> 
-<!-- String --> 
+<!-- Display Name -->
+<!-- String -->
 <P507>{$display_name_3}</P507>
 
-<!-- Voice Mail UserID --> 
-<!-- String --> 
+<!-- Voice Mail UserID -->
+<!-- String -->
 <P526>*97</P526>
 
 
-<!-- Account 3/Network Settings --> 
+<!-- Account 3/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P508>0</P508>
 
-<!-- Primary IP. Maximum 15 characters --> 
-<!-- String --> 
+<!-- Primary IP. Maximum 15 characters -->
+<!-- String -->
 <P2508></P2508>
 
-<!-- Backup IP 1 --> 
-<!-- String --> 
+<!-- Backup IP 1 -->
+<!-- String -->
 <P2509></P2509>
 
-<!-- Backup IP 2 --> 
-<!-- String --> 
+<!-- Backup IP 2 -->
+<!-- String -->
 <P2510></P2510>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5 --> 
-<!-- Mandatory --> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<!-- Mandatory -->
 <P514>0</P514>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<!-- String --> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<!-- String -->
 <P518></P518>
 
-<!-- Account 3/SIP Settings/Basic Settings --> 
+<!-- Account 3/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P509>0</P509>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P510>1</P510>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P511>0</P511>
 
-<!-- Register Expiration (in minutes). Default is 60. Max is 45 days --> 
-<!-- Number: 1 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
+<!-- Number: 1 - 64800 -->
+<!-- Mandatory -->
 <P512>3</P512>
 
-<!-- Reregister before Expiration (in seconds). Default is 0 second --> 
-<!-- Number: 0 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Reregister before Expiration (in seconds). Default is 0 second -->
+<!-- Number: 0 - 64800 -->
+<!-- Mandatory -->
 <P2530>0</P2530>
 
-<!-- Local SIP Port. Default is 5064 --> 
-<!-- Number --> 
-<!-- Mandatory --> 
+<!-- Local SIP Port. Default is 5064 -->
+<!-- Number -->
+<!-- Mandatory -->
 <P513>5064</P513>
 
-<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 3600 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 3600 -->
+<!-- Mandatory -->
 <P571>20</P571>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
-<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 --> 
-<!-- Number: 50, 100, 200 --> 
-<!-- Mandatory --> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- Number: 50, 100, 200 -->
+<!-- Mandatory -->
 <P540>50</P540>
 
-<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. --> 
-<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 --> 
-<!-- Number: 200, 400, 800 --> 
-<!-- Mandatory --> 
+<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- Number: 200, 400, 800 -->
+<!-- Mandatory -->
 <P541>400</P541>
 
-<!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P548>0</P548>
 
-<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2529>1</P2529>
 
-<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2531>0</P2531>
 
-<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2505>0</P2505>
 
-<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P589>1</P589>
 
-<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P515>0</P515>
 
-<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2519>0</P2519>
 
-<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P535>0</P535>
 
-<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2524>0</P2524>
 
-<!-- Use Privacy Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use Privacy Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2538>0</P2538>
 
-<!-- Use P-Preferred-Identity Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use P-Preferred-Identity Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2539>0</P2539>
 
 
-<!-- Account 3/SIP Settings/Advanced Features --> 
+<!-- Account 3/SIP Settings/Advanced Features -->
 
-<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2541>0</P2541>
 
-<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2542>0</P2542>
 
-<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2543>0</P2543>
 
-<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2540>0</P2540>
 
-<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2525>0</P2525>
 
-<!-- Line-Seize Timeout (in seconds). Default is 15 --> 
-<!-- Number: 15 - 60 --> 
-<!-- Mandatory --> 
+<!-- Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- Number: 15 - 60 -->
+<!-- Mandatory -->
 <P2513>15</P2513>
 
-<!-- Eventlist BLF URI --> 
-<!-- String --> 
-<P544></P544> 
+<!-- Eventlist BLF URI -->
+<!-- String -->
+<P544></P544>
 
-<!-- Conference URI --> 
-<!-- String --> 
+<!-- Conference URI -->
+<!-- String -->
 <P2518></P2518>
 
-<!-- Music On Hold URI --> 
-<!-- String --> 
+<!-- Music On Hold URI -->
+<!-- String -->
 <P2550></P2550>
 
-<!-- BLF Call-pickup Prefix. Default is --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- BLF Call-pickup Prefix. Default is -->
+<!-- String -->
+<!-- Mandatory -->
 <P581>**</P581>
 
-<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P588>0</P588>
 
-<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 --> 
-<!-- Number: 100, 101, 102, 108, 109, 110, 117 --> 
-<!-- Mandatory --> 
+<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 -->
+<!-- Number: 100, 101, 102, 108, 109, 110, 117 -->
+<!-- Mandatory -->
 <P524>100</P524>
 
 
-<!-- Account 3/SIP Settings/Session Timer --> 
+<!-- Account 3/SIP Settings/Session Timer -->
 
-<!-- Session Expiration (in seconds). Default is 180 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Session Expiration (in seconds). Default is 180 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P534>180</P534>
 
-<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P534 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P534 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P527>90</P527>
 
-<!-- Caller Request Timer (Request for timer when calling) 0 - No, 1 - Yes --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Caller Request Timer (Request for timer when calling) 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P528>0</P528>
 
-<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P529>0</P529>
 
-<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P530>0</P530>
 
-<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P532>0</P532>
 
-<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 --> 
-<!-- Number: 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+<!-- Number: 1, 2 -->
+<!-- Mandatory -->
 <P533>1</P533>
 
-<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P531>0</P531>
 
 
-<!-- Account 3/SIP Settings/Security Settings --> 
+<!-- Account 3/SIP Settings/Security Settings -->
 
-<!-- Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2511>0</P2511>
 
-<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2506>0</P2506>
 
-<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P549>0</P549>
 
-<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2547>0</P2547>
 
-<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2546>0</P2546>
 
 
-<!-- Account 3/Audio Settings --> 
+<!-- Account 3/Audio Settings -->
 
-<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2501>0</P2501>
 
-<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2502>1</P2502>
 
-<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2503>0</P2503>
 
-<!-- DTMF Payload Type. Default is 101 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- DTMF Payload Type. Default is 101 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P596>101</P596>
 
-<!-- Preferred Vocoder --> 
-<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC --> 
-<!-- choice 1. Default is 0 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+<!-- choice 1. Default is 0 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P551>0</P551>
 
-<!-- choice 2. Default is 8 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 2. Default is 8 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P552>8</P552>
 
-<!-- choice 3. Default is 4 -->  
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 3. Default is 4 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P553>4</P553>
 
-<!-- choice 4. Default is 18 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 4. Default is 18 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P554>18</P554>
 
-<!-- choice 5. Default is 9 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 5. Default is 9 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P555>9</P555>
 
-<!-- choice 6. Default is 98 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 6. Default is 98 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P556>98</P556>
 
-<!-- choice 7. Default is 2 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 7. Default is 2 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P557>2</P557>
 
-<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2548>0</P2548>
 
-<!-- SRTP Mode --> 
-<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- SRTP Mode -->
+<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P543>0</P543>
 
-<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P560>0</P560>
 
-<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P585>0</P585>
 
-<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 --> 
-<!-- Number: 1 - 64 --> 
-<!-- Mandatory --> 
+<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- Number: 1 - 64 -->
+<!-- Mandatory -->
 <P586>2</P586>
 
-<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P593>1</P593>
 
-<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2523>0</P2523>
 
-<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P595>1</P595>
 
-<!-- iLBC Payload Type. Default is 97 --> 
-<!-- Number: 96-127 --> 
-<!-- Mandatory --> 
+<!-- iLBC Payload Type. Default is 97 -->
+<!-- Number: 96-127 -->
+<!-- Mandatory -->
 <P594>97</P594>
 
-<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P598>1</P598>
 
-<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<!-- Mandatory -->
 <P597>2</P597>
 
-<!-- Account 3/Call Settings --> 
+<!-- Account 3/Call Settings -->
 
-<!-- Early Dial use Yes only if proxy supports 484 response. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Early Dial use Yes only if proxy supports 484 response. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P522>0</P522>
 
-<!-- Dial Plan Prefix --> 
-<!-- String --> 
-<P519></P519> 
+<!-- Dial Plan Prefix -->
+<!-- String -->
+<P519></P519>
 
-<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+<!-- String -->
+<!-- Mandatory -->
 <P559>{ x+ | *x+ | *xx*x+ }</P559>
 
-<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 120 --> 
-<!-- Mandatory --> 
+<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 120 -->
+<!-- Mandatory -->
 <P570>20</P570>
 
-<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P520>1</P520>
 
-<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P542>0</P542>
 
-<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P523>0</P523>
 
-<!-- Matching Incoming Caller ID. Matching Rule 1 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
 <P1500></P1500>
 
-<!-- Matching Rule 1 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 1 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1501>0</P1501>
 
-<!-- Matching Incoming Caller ID. Matching Rule 2 --> 
-<!--  String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!--  String -->
 <P1502></P1502>
 
-<!-- Matching Rule 2 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 2 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1503>0</P1503>
 
-<!-- Matching Incoming Caller ID. Matching Rule 3 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
 <P1504></P1504>
 
-<!-- Matching Rule 3 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 3 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1505>0</P1505>
 
-<!-- Ring Timeout (in seconds). Default is 60 --> 
-<!-- Number: 30 - 3600 --> 
-<!-- Mandatory --> 
+<!-- Ring Timeout (in seconds). Default is 60 -->
+<!-- Number: 30 - 3600 -->
+<!-- Mandatory -->
 <P576>60</P576>
 
-<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P521>0</P521>
 
-<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P546>0</P546>
 
-<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P525>0</P525>
 
-<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P538>0</P538>
 
-<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P569>0</P569>
 
-<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2504>0</P2504>
 
-<!-- No Key Entry Timeout. Default is 4 --> 
-<!-- Number: 1 - 15 --> 
-<!-- Mandatory --> 
+<!-- No Key Entry Timeout. Default is 4 -->
+<!-- Number: 1 - 15 -->
+<!-- Mandatory -->
 <P591>4</P591>
 
-<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P592>1</P592>
 
-<!-- DND Call Feature ON --> 
-<!-- String --> 
+<!-- DND Call Feature ON -->
+<!-- String -->
 <P2544></P2544>
 
-<!-- DND Call Feature OFF --> 
-<!-- String --> 
+<!-- DND Call Feature OFF -->
+<!-- String -->
 <P2545></P2545>
 
 
-<!-- Account 4 --> 
+<!-- Account 4 -->
 
-<!-- Account 4/General Settings --> 
+<!-- Account 4/General Settings -->
 
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P601>1</P601>
 
-<!-- Account Name --> 
-<!-- String --> 
+<!-- Account Name -->
+<!-- String -->
 <P617>{$display_name_4}</P617>
 
-<!-- SIP Server --> 
-<!-- String --> 
+<!-- SIP Server -->
+<!-- String -->
 <P602>{$server_address_4}</P602>
 
-<!-- Secondary SIP Server --> 
-<!-- String --> 
+<!-- Secondary SIP Server -->
+<!-- String -->
 <P2612></P2612>
 
-<!-- Outbound Proxy --> 
-<!-- String --> 
+<!-- Outbound Proxy -->
+<!-- String -->
 <P603></P603>
 
-<!-- SIP User ID --> 
-<!-- String --> 
+<!-- SIP User ID -->
+<!-- String -->
 <P604>{$user_id_4}</P604>
 
-<!-- Authenticate ID --> 
-<!-- String --> 
+<!-- Authenticate ID -->
+<!-- String -->
 <P605>{$user_id_4}</P605>
 
-<!-- Authenticate password --> 
-<!-- String --> 
+<!-- Authenticate password -->
+<!-- String -->
 <P606>{$user_password_4}</P606>
 
-<!-- Display Name --> 
-<!-- String --> 
+<!-- Display Name -->
+<!-- String -->
 <P607>{$display_name_4}</P607>
 
-<!-- Voice Mail UserID --> 
-<!-- String --> 
-<P626>*97</P626> 
+<!-- Voice Mail UserID -->
+<!-- String -->
+<P626>*97</P626>
 
 
-<!-- Account 4/Network Settings --> 
+<!-- Account 4/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P608>0</P608>
 
-<!-- Primary IP. Maximum 15 characters --> 
-<!-- String  --> 
+<!-- Primary IP. Maximum 15 characters -->
+<!-- String  -->
 <P2608></P2608>
 
-<!-- Backup IP 1 --> 
-<!-- String --> 
+<!-- Backup IP 1 -->
+<!-- String -->
 <P2609></P2609>
 
-<!-- Backup IP 2 --> 
-<!-- String --> 
-<P2610></P2610> 
+<!-- Backup IP 2 -->
+<!-- String -->
+<P2610></P2610>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5 --> 
-<!-- Mandatory --> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<!-- Mandatory -->
 <P614>0</P614>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<!-- String --> 
-<P618></P618> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<!-- String -->
+<P618></P618>
 
 
-<!-- Account 4/SIP Settings/Basic Settings --> 
+<!-- Account 4/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P609>0</P609>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P610>1</P610>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P611>0</P611>
 
-<!-- Register Expiration (in minutes). Default is 60. Max is 45 days --> 
-<!-- Number: 1 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
+<!-- Number: 1 - 64800 -->
+<!-- Mandatory -->
 <P612>3</P612>
 
-<!-- Reregister before Expiration (in seconds). Default is 0 --> 
-<!-- Number: 0 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Reregister before Expiration (in seconds). Default is 0 -->
+<!-- Number: 0 - 64800 -->
+<!-- Mandatory -->
 <P2630>0</P2630>
 
-<!-- Local SIP Port. Default is 5066 --> 
-<!-- Number --> 
-<!-- Mandatory --> 
+<!-- Local SIP Port. Default is 5066 -->
+<!-- Number -->
+<!-- Mandatory -->
 <P613>5066</P613>
 
-<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 3600 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 3600 -->
+<!-- Mandatory -->
 <P671>20</P671>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
-<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 --> 
-<!-- Number: 50, 100, 200 --> 
-<!-- Mandatory --> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- Number: 50, 100, 200 -->
+<!-- Mandatory -->
 <P640>50</P640>
 
-<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses --> 
-<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 --> 
-<!-- Number: 200, 400, 800 --> 
-<!-- Mandatory --> 
+<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- Number: 200, 400, 800 -->
+<!-- Mandatory -->
 <P641>400</P641>
 
-<!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P648>0</P648>
 
-<!-- SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2629>1</P2629>
 
-<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2631>0</P2631>
 
-<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2605>0</P2605>
 
-<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P689>1</P689>
 
-<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P615>0</P615>
 
-<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2619>0</P2619>
 
-<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P635>0</P635>
 
-<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2624>0</P2624>
 
-<!-- Use Privacy Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use Privacy Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2638>0</P2638>
 
-<!-- Use P-Preferred-Identity Header --> 
-<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use P-Preferred-Identity Header -->
+<!-- 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2639>0</P2639>
 
 
-<!-- Account 4/SIP Settings/Advanced Features --> 
+<!-- Account 4/SIP Settings/Advanced Features -->
 
-<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2641>0</P2641>
 
-<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2642>0</P2642>
 
-<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2643>0</P2643>
 
-<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2640>0</P2640>
 
-<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2625>0</P2625>
 
-<!-- Line-Seize Timeout (in seconds). Default is 15 --> 
-<!-- Number: 15 - 60 --> 
-<!-- Mandatory --> 
+<!-- Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- Number: 15 - 60 -->
+<!-- Mandatory -->
 <P2613>15</P2613>
 
-<!-- Eventlist BLF URI --> 
-<!-- String --> 
+<!-- Eventlist BLF URI -->
+<!-- String -->
 <P644></P644>
 
-<!-- Conference URI --> 
-<!-- String --> 
+<!-- Conference URI -->
+<!-- String -->
 <P2618></P2618>
 
-<!-- Music On Hold URI --> 
-<!-- String --> 
+<!-- Music On Hold URI -->
+<!-- String -->
 <P2650></P2650>
 
-<!-- BLF Call-pickup Prefix. Default is --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- BLF Call-pickup Prefix. Default is -->
+<!-- String -->
+<!-- Mandatory -->
 <P681>**</P681>
 
-<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P688>0</P688>
 
-<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 --> 
-<!-- Number: 100, 101, 102, 108, 109, 110, 117 --> 
-<!-- Mandatory --> 
+<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 -->
+<!-- Number: 100, 101, 102, 108, 109, 110, 117 -->
+<!-- Mandatory -->
 <P624>100</P624>
 
-<!-- Account 4/SIP Settings/Session Timer --> 
+<!-- Account 4/SIP Settings/Session Timer -->
 
-<!-- Session Expiration (in seconds). Default is 180 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Session Expiration (in seconds). Default is 180 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P634>180</P634>
 
-<!-- Minimum SE (in seconds). Default is 90 seconds. This value must be lower than or equal to P634 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Minimum SE (in seconds). Default is 90 seconds. This value must be lower than or equal to P634 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P627>90</P627>
 
-<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P628>0</P628>
 
-<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P629>0</P629>
 
-<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P630>0</P630>
 
-<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 --> 
-<!-- Number: 0 - 2 --> 
-<!-- Mandatory --> 
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 -->
+<!-- Number: 0 - 2 -->
+<!-- Mandatory -->
 <P632>0</P632>
 
-<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 --> 
-<!-- Number: 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+<!-- Number: 1, 2 -->
+<!-- Mandatory -->
 <P633>1</P633>
 
-<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P631>0</P631>
 
 
-<!-- Account 4/SIP Settings/Security Settings --> 
+<!-- Account 4/SIP Settings/Security Settings -->
 
-<!-- Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check Domain Certificates. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2611>0</P2611>
 
-<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2606>0</P2606>
 
-<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P649>0</P649>
 
-<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2647>0</P2647>
 
-<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2646>0</P2646>
 
 
 
-<!-- Account 4/Audio Settings --> 
+<!-- Account 4/Audio Settings -->
 
-<!-- Send DTMF: In-audio. 0 - on, 1 - off. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: In-audio. 0 - on, 1 - off. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2601>0</P2601>
 
-<!-- Send DTMF: Via RTP (RFC2833). 0 - on, 1 - off. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via RTP (RFC2833). 0 - on, 1 - off. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2602>1</P2602>
 
-<!-- Send DTMF: Via SIP INFO. 0 - on, 1 - off. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via SIP INFO. 0 - on, 1 - off. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2603>0</P2603>
 
-<!-- DTMF Payload Type. Default is 101 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- DTMF Payload Type. Default is 101 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P696>101</P696>
 
-<!-- Preferred Vocoder --> 
-<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC --> 
-<!-- choice 1. Default is 0 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+<!-- choice 1. Default is 0 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P651>0</P651>
 
-<!-- choice 2. Default is 8 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 2. Default is 8 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P652>8</P652>
 
-<!-- choice 3. Default is 4 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 3. Default is 4 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P653>4</P653>
 
-<!-- choice 4. Default is 18 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 4. Default is 18 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P654>18</P654>
 
-<!-- choice 5. Default is 9 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 5. Default is 9 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P655>9</P655>
 
-<!-- choice 6. Default is 98 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 6. Default is 98 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P656>98</P656>
 
-<!-- choice 7. Default is 2 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
+<!-- choice 7. Default is 2 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <P657>2</P657>
 
-<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2648>0</P2648>
 
-<!-- SRTP Mode --> 
-<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- SRTP Mode -->
+<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P643>0</P643>
 
-<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P660>0</P660>
 
-<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P685>0</P685>
 
-<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 --> 
-<!-- Number: 1 - 64 --> 
-<!-- Mandatory --> 
+<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- Number: 1 - 64 -->
+<!-- Mandatory -->
 <P686>2</P686>
 
-<!-- G723 rate. 0  6.3kbps encoding rate, 1 5.3kbps encoding rate. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G723 rate. 0  6.3kbps encoding rate, 1 5.3kbps encoding rate. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P693>1</P693>
 
-<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2623>0</P2623>
 
-<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P695>1</P695>
 
-<!-- iLBC Payload Type. Between 96 and 127. Default is 97. --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- iLBC Payload Type. Between 96 and 127. Default is 97. -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P694>97</P694>
 
-<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P698>1</P698>
 
-<!-- Jitter Buffer Length. -->  
-<!-- 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Length. -->
+<!-- 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 -->
+<!-- Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+<!-- Mandatory -->
 <P697>2</P697>
 
 
 <!-- Account 4/Call Settings -->
- 
-<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+
+<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P622>0</P622>
 
-<!-- Dial Plan Prefix --> 
-<!-- String --> 
+<!-- Dial Plan Prefix -->
+<!-- String -->
 <P619></P619>
 
-<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+<!-- String -->
+<!-- Mandatory -->
 <P659>{ x+ | *x+ | *xx*x+ }</P659>
 
-<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 120 --> 
-<!-- Mandatory --> 
+<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 120 -->
+<!-- Mandatory -->
 <P670>20</P670>
 
-<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P620>1</P620>
 
-<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P642>0</P642>
 
-<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P623>0</P623>
 
-<!-- Matching Incoming Caller ID. Matching Rule 1 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 1 -->
+<!-- String -->
 <P1506></P1506>
 
-<!-- Matching Rule 1 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 1 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1507>0</P1507>
 
-<!-- Matching Incoming Caller ID. Matching Rule 2 --> 
-<!-- String --> 
-<P1508></P1508> 
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
+<P1508></P1508>
 
-<!-- Matching Rule 2 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 2 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1509>0</P1509>
 
-<!-- Matching Incoming Caller ID. Matching Rule 3 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
 <P1510></P1510>
 
-<!-- Matching Rule 3 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 3 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1511>0</P1511>
 
-<!-- Ring Timeout (in seconds). Default is 60 --> 
-<!-- Number: 30 - 3600 --> 
-<!-- Mandatory --> 
+<!-- Ring Timeout (in seconds). Default is 60 -->
+<!-- Number: 30 - 3600 -->
+<!-- Mandatory -->
 <P676>60</P676>
 
-<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P621>0</P621>
 
-<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P646>0</P646>
 
-<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P625>0</P625>
 
-<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P638>0</P638>
 
-<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P669>0</P669>
 
-<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Transfer on Conference Hang-Up. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2604>0</P2604>
 
-<!-- No Key Entry Timeout. Default is 4 --> 
-<!-- Number: 1 - 15 --> 
-<!-- Mandatory --> 
+<!-- No Key Entry Timeout. Default is 4 -->
+<!-- Number: 1 - 15 -->
+<!-- Mandatory -->
 <P691>4</P691>
 
-<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P692>1</P692>
 
-<!-- DND Call Feature ON --> 
-<!-- String --> 
+<!-- DND Call Feature ON -->
+<!-- String -->
 <P2644></P2644>
 
-<!-- DND Call Feature OFF --> 
-<!-- String --> 
+<!-- DND Call Feature OFF -->
+<!-- String -->
 <P2645></P2645>
 
-<!-- Account 5, For GXP2120 ONLY --> 
+<!-- Account 5, For GXP2120 ONLY -->
 
 
-<!-- Account 5/General Settings --> 
+<!-- Account 5/General Settings -->
 
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1701>1</P1701>
 
-<!-- Account Name --> 
-<!-- String --> 
+<!-- Account Name -->
+<!-- String -->
 <P1717>{$display_name_5}</P1717>
 
-<!-- SIP Server --> 
-<!-- String --> 
+<!-- SIP Server -->
+<!-- String -->
 <P1702>{$server_address_5}</P1702>
 
-<!-- Secondary SIP Server --> 
-<!-- String --> 
+<!-- Secondary SIP Server -->
+<!-- String -->
 <P2712></P2712>
 
-<!-- Outbound Proxy --> 
-<!-- String --> 
+<!-- Outbound Proxy -->
+<!-- String -->
 <P1703></P1703>
 
-<!-- SIP User ID --> 
-<!-- String --> 
+<!-- SIP User ID -->
+<!-- String -->
 <P1704>{$user_id_5}</P1704>
 
-<!-- Authenticate ID --> 
-<!-- String --> 
+<!-- Authenticate ID -->
+<!-- String -->
 <P1705>{$user_id_5}</P1705>
 
-<!-- Authenticate Password --> 
-<!-- String --> 
+<!-- Authenticate Password -->
+<!-- String -->
 <P1706>{$user_password_5}</P1706>
 
-<!-- Display Name --> 
-<!-- String --> 
+<!-- Display Name -->
+<!-- String -->
 <P1707>{$display_name_5}</P1707>
 
-<!-- Voice Mail UserID --> 
-<!-- String --> 
-<P1726>*97</P1726> 
+<!-- Voice Mail UserID -->
+<!-- String -->
+<P1726>*97</P1726>
 
 
-<!-- Account 5/Network Settings --> 
+<!-- Account 5/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
-<P1708>0</P1708> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
+<P1708>0</P1708>
 
-<!-- Primary IP. Maximum 15 characters --> 
-<!-- String --> 
+<!-- Primary IP. Maximum 15 characters -->
+<!-- String -->
 <P2708></P2708>
 
-<!-- Backup IP  --> 
-<!-- String --> 
+<!-- Backup IP  -->
+<!-- String -->
 <P2709></P2709>
 
-<!-- Backup IP 2 --> 
-<!-- String --> 
-<P2710></P2710> 
+<!-- Backup IP 2 -->
+<!-- String -->
+<P2710></P2710>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5 --> 
-<!-- Mandatory --> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<!-- Mandatory -->
 <P1714>0</P1714>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<!-- String --> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<!-- String -->
 <P1718></P1718>
 
 
-<!-- Account 5/SIP Settings/Basic Settings --> 
+<!-- Account 5/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P1709>0</P1709>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1710>1</P1710>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1711>0</P1711>
 
-<!-- Register Expiration (in minutes. default 1 hour, max 45 days) --> 
-<!-- Number: 1-64800 --> 
-<!-- Mandatory --> 
+<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+<!-- Number: 1-64800 -->
+<!-- Mandatory -->
 <P1712>3</P1712>
 
-<!-- Reregister before Expiration (in seconds) Default is 0 --> 
-<!-- Number: 0 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Reregister before Expiration (in seconds) Default is 0 -->
+<!-- Number: 0 - 64800 -->
+<!-- Mandatory -->
 <P2730>0</P2730>
 
-<!-- Local SIP Port. Default is 5068 --> 
-<!-- Number --> 
-<!-- Mandatory --> 
+<!-- Local SIP Port. Default is 5068 -->
+<!-- Number -->
+<!-- Mandatory -->
 <P1713>5068</P1713>
 
-<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 3600 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 3600 -->
+<!-- Mandatory -->
 <P1771>20</P1771>
 
-<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) --> 
-<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 --> 
-<!-- Number: 50, 100, 200 --> 
-<!-- Mandatory --> 
+<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+<!-- Number: 50, 100, 200 -->
+<!-- Mandatory -->
 <P1740>50</P1740>
 
-<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses --> 
-<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 --> 
-<!-- Number: 200, 400, 800 --> 
-<!-- Mandatory --> 
+<!-- SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+<!-- Number: 200, 400, 800 -->
+<!-- Mandatory -->
 <P1741>400</P1741>
 
-<!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P1748>0</P1748>
 
-<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2729>1</P2729>
 
-<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2731>0</P2731>
 
-<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Remove OBP from Route. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2705>0</P2705>
 
-<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Support SIP Instace ID. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1789>1</P1789>
 
-<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1715>0</P1715>
 
-<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2719>0</P2719>
 
-<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1735>0</P1735>
 
-<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2724>0</P2724>
 
-<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use Privacy Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2738>0</P2738>
 
-<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Use P-Preferred-Identity Header. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P2739>0</P2739>
 
 
-<!-- Account 5/SIP Settings/Advanced Features --> 
+<!-- Account 5/SIP Settings/Advanced Features -->
 
-<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2741>0</P2741>
 
-<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2742>0</P2742>
 
-<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Call Center Status. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2743>0</P2743>
 
-<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH to Call Center. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2740>0</P2740>
 
-<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2725>0</P2725>
 
-<!-- Line-Seize Timeout (in seconds). Default is 15 --> 
-<!-- Number: 15 - 60 --> 
-<!-- Mandatory --> 
+<!-- Line-Seize Timeout (in seconds). Default is 15 -->
+<!-- Number: 15 - 60 -->
+<!-- Mandatory -->
 <P2713>15</P2713>
 
-<!-- Eventlist BLF URI --> 
-<!-- String --> 
-<P1744></P1744> 
+<!-- Eventlist BLF URI -->
+<!-- String -->
+<P1744></P1744>
 
-<!-- Conference URI --> 
-<!-- String --> 
+<!-- Conference URI -->
+<!-- String -->
 <P2718></P2718>
 
-<!-- Music On Hold URI --> 
-<!-- String --> 
+<!-- Music On Hold URI -->
+<!-- String -->
 <P2750></P2750>
 
-<!-- BLF Call-pickup Prefix. Default is  --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- BLF Call-pickup Prefix. Default is  -->
+<!-- String -->
+<!-- Mandatory -->
 <P1781>**</P1781>
 
-<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1788>0</P1788>
 
-<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 --> 
-<!-- Number: 100, 101, 102, 108, 109, 110, 117 --> 
-<!-- Mandatory --> 
+<!-- Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, 110 - Sylantro, 117 - Huawei IMS. Default is 100 -->
+<!-- Number: 100, 101, 102, 108, 109, 110, 117 -->
+<!-- Mandatory -->
 <P1724>100</P1724>
 
 
-<!-- Account 5/SIP Settings/Session Timer --> 
+<!-- Account 5/SIP Settings/Session Timer -->
 
-<!-- Session Expiration (in seconds). Default is 180 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Session Expiration (in seconds). Default is 180 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P1734>180</P1734>
 
-<!-- Minimum SE (in seconds). Default is 90. The value must be lower than or equal to P1734 --> 
-<!-- Number: 90 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Minimum SE (in seconds). Default is 90. The value must be lower than or equal to P1734 -->
+<!-- Number: 90 - 64800 -->
+<!-- Mandatory -->
 <P1727>90</P1727>
 
-<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1728>0</P1728>
 
-<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P172>0</P172>
 
-<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1730>0</P1730>
 
-<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P1732>0</P1732>
 
-<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 --> 
-<!-- Number: 1, 2 --> 
-<!-- Mandatory --> 
+<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+<!-- Number: 1, 2 -->
+<!-- Mandatory -->
 <P1733>1</P1733>
 
-<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1731>0</P1731>
 
 
-<!-- Account 5/SIP Settings/Security Settings --> 
+<!-- Account 5/SIP Settings/Security Settings -->
 
-<!-- Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 --> 
-<!-- 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 -->
+<!-- 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2711>0</P2711>
 
-<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2706>0</P2706>
 
-<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1749>0</P1749>
 
-<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2747>0</P2747>
 
-<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2746>0</P2746>
 
 
-<!-- Account 5/Audio Settings --> 
+<!-- Account 5/Audio Settings -->
 
-<!-- Send DTMF: In-audio. 0 - on, 1 - off. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: In-audio. 0 - on, 1 - off. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2701>0</P2701>
 
-<!-- Send DTMF: Via RTP (RFC2833). 0 - on, 1 - off. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via RTP (RFC2833). 0 - on, 1 - off. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2702>1</P2702>
 
-<!-- Send DTMF: Via SIP INFO. 0 - on, 1 - off. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send DTMF: Via SIP INFO. 0 - on, 1 - off. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2703>0</P2703>
 
-<!-- DTMF Payload Type. Default is 101 --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- DTMF Payload Type. Default is 101 -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P1796>101</P1796>
 
-<!-- Preferred Vocoder --> 
-<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC --> 
-<!-- choice 1. Default is 0 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- Preferred Vocoder -->
+<!-- 0 - PCMU, 2 - G.726-32, 4 - G.723.1, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC -->
+<!-- choice 1. Default is 0 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1751>0</P1751>
 
-<!-- choice 2. Default is 8 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 2. Default is 8 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1752>8</P1752>
 
-<!-- choice 3. Default is 4 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 3. Default is 4 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1753>4</P1753>
 
-<!-- choice 4. Default is 18 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 4. Default is 18 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1754>18</P1754>
 
-<!-- choice 5. Default is 9 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 5. Default is 9 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1755>9</P1755>
 
-<!-- choice 6. Default is 98 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 6. Default is 98 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1756>98</P1756>
 
-<!-- choice 7. Default is 2 --> 
-<!-- Number: 0, 2, 4, 8, 9, 18, 98 --> 
-<!-- Mandatory --> 
+<!-- choice 7. Default is 2 -->
+<!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
+<!-- Mandatory -->
 <P1757>2</P1757>
 
-<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2748>0</P2748>
 
-<!-- SRTP Mode --> 
-<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- SRTP Mode -->
+<!-- 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1743>0</P1743>
 
-<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1760>0</P1760>
 
-<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1785>0</P1785>
 
-<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 --> 
-<!-- Number: 1 - 64 --> 
-<!-- Mandatory --> 
+<!-- Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+<!-- Number: 1 - 64 -->
+<!-- Mandatory -->
 <P1786>2</P1786>
 
-<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1793>1</P1793>
 
-<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2723>0</P2723>
 
-<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1. --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1. -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1795>1</P1795>
 
-<!-- iLBC Payload Type. Between 96 and 127. Default is 97. --> 
-<!-- Number: 96 - 127 --> 
-<!-- Mandatory --> 
+<!-- iLBC Payload Type. Between 96 and 127. Default is 97. -->
+<!-- Number: 96 - 127 -->
+<!-- Mandatory -->
 <P1794>97</P1794>
 
-<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1798>1</P1798>
 
-<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 --> 
-<!-- Number: 0 - 7 --> 
-<!-- Mandatory --> 
+<!-- Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 -->
+<!-- Number: 0 - 7 -->
+<!-- Mandatory -->
 <P1797>2</P1797>
 
 
-<!-- Account 5/Call Settings --> 
+<!-- Account 5/Call Settings -->
 
-<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P1722>0</P1722> 
+<!-- Early Dial (use "Yes" only if proxy supports 484 response). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1722>0</P1722>
 
-<!-- Dial Plan Prefix --> 
-<!-- String --> 
+<!-- Dial Plan Prefix -->
+<!-- String -->
 <P1719></P1719>
 
-<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+<!-- String -->
+<!-- Mandatory -->
 <P1759>{ x+ | *x+ | *xx*x+ }</P1759>
 
-<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 --> 
-<!-- Number: 1 - 120 --> 
-<!-- Mandatory --> 
+<!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
+<!-- Number: 1 - 120 -->
+<!-- Mandatory -->
 <P1770>20</P1770>
 
-<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1720>1</P1720>
 
-<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- Call Log. 0 - Log All, 1 - Log Incoming/Outgoing only (Missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P1742>0</P1742>
 
-<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1723>0</P1723>
 
-<!-- Matching Incoming Caller ID. Matching Rule 1. --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 1. -->
+<!-- String -->
 <P1512></P1512>
 
-<!--  Matching Rule 1 Distinctive Ringtone. --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!--  Matching Rule 1 Distinctive Ringtone. -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1513>0</P1513>
 
-<!-- Matching Incoming Caller ID. Matching Rule 2 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 2 -->
+<!-- String -->
 <P1514></P1514>
 
-<!-- Matching Rule 2 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 2 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1515>0</P1515>
 
-<!-- Matching Incoming Caller ID. Matching Rule 3 --> 
-<!-- String --> 
+<!-- Matching Incoming Caller ID. Matching Rule 3 -->
+<!-- String -->
 <P1516></P1516>
 
-<!-- Matching Rule 3 Distinctive Ringtone --> 
-<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- Matching Rule 3 Distinctive Ringtone -->
+<!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1517>0</P1517>
 
-<!-- Ring Timeout (in seconds). Default is 60 --> 
-<!--  Number: 30 - 3600 --> 
-<!-- Mandatory --> 
+<!-- Ring Timeout (in seconds). Default is 60 -->
+<!--  Number: 30 - 3600 -->
+<!-- Mandatory -->
 <P1776>60</P1776>
 
-<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1721>0</P1721>
 
-<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1746>0</P1746>
 
-<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1725>0</P1725>
 
-<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1738>0</P1738>
 
-<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1769>0</P1769>
 
-<!-- Transfer on conference Hang-Up. 0 - No, 1 - Yes. Default is 0 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Transfer on conference Hang-Up. 0 - No, 1 - Yes. Default is 0 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P2704>0</P2704>
 
-<!-- No Key Entry Timeout. Default is 4 --> 
-<!-- Number: 1 - 15 --> 
-<!-- Mandatory --> 
+<!-- No Key Entry Timeout. Default is 4 -->
+<!-- Number: 1 - 15 -->
+<!-- Mandatory -->
 <P1791>4</P1791>
 
-<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Use # as Dial Key. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1792>1</P1792>
 
-<!-- DND Call Feature ON --> 
-<!-- String --> 
+<!-- DND Call Feature ON -->
+<!-- String -->
 <P2744></P2744>
 
-<!-- DND Call Feature OFF --> 
-<!-- String --> 
+<!-- DND Call Feature OFF -->
+<!-- String -->
 <P2745></P2745>
 
-<!-- Account 6, For GXP2120 ONLY --> 
+<!-- Account 6, For GXP2120 ONLY -->
 
-<!-- Account 6/General Settings --> 
+<!-- Account 6/General Settings -->
 
-<!-- Account Active. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
-<P1801>1</P1801> 
+<!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P1801>1</P1801>
 
-<!-- Account Name --> 
-<!-- String --> 
+<!-- Account Name -->
+<!-- String -->
 <P1817>{$display_name_6}</P1817>
 
-<!-- SIP Server --> 
-<!-- String --> 
+<!-- SIP Server -->
+<!-- String -->
 <P1802>{$server_address_6}</P1802>
 
-<!-- Secondary SIP Server --> 
-<!-- String --> 
-<P2812></P2812> 
+<!-- Secondary SIP Server -->
+<!-- String -->
+<P2812></P2812>
 
-<!-- Outbound Proxy --> 
-<!-- String --> 
+<!-- Outbound Proxy -->
+<!-- String -->
 <P1803></P1803>
 
-<!-- SIP User ID --> 
-<!-- String --> 
+<!-- SIP User ID -->
+<!-- String -->
 <P1804>{$user_id_6}</P1804>
 
-<!-- Authenticate ID --> 
-<!-- String --> 
+<!-- Authenticate ID -->
+<!-- String -->
 <P1805>{$user_id_6}</P1805>
 
-<!-- Authenticate password --> 
-<!-- String --> 
+<!-- Authenticate password -->
+<!-- String -->
 <P1806>{$user_password_6}</P1806>
 
-<!-- Display Name --> 
-<!-- String --> 
+<!-- Display Name -->
+<!-- String -->
 <P1807>{$display_name_6}</P1807>
 
-<!-- Voice Mail UserID --> 
-<!-- String --> 
+<!-- Voice Mail UserID -->
+<!-- String -->
 <P1826>*97</P1826>
 
 
-<!-- Account 6/Network Settings --> 
+<!-- Account 6/Network Settings -->
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3 --> 
-<!-- Mandatory --> 
+<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+<!-- Number: 0, 1, 2, 3 -->
+<!-- Mandatory -->
 <P1808>0</P1808>
 
-<!-- Primary IP. Maximum 15 characters --> 
-<!-- String --> 
+<!-- Primary IP. Maximum 15 characters -->
+<!-- String -->
 <P2808></P2808>
 
-<!-- Backup IP 1 --> 
-<!-- String --> 
+<!-- Backup IP 1 -->
+<!-- String -->
 <P2809></P2809>
 
-<!-- Backup IP 2 --> 
-<!-- String --> 
+<!-- Backup IP 2 -->
+<!-- String -->
 <P2810></P2810>
 
-<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 --> 
-<!-- Number: 0, 1, 2, 3, 4, 5 --> 
-<!-- Mandatory --> 
+<!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+<!-- Number: 0, 1, 2, 3, 4, 5 -->
+<!-- Mandatory -->
 <P1814>0</P1814>
 
-<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters --> 
-<!-- String --> 
-<!-- Mandatory --> 
+<!-- Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+<!-- String -->
+<!-- Mandatory -->
 <P1818></P1818>
 
 
-<!-- Account 6/SIP Settings/Basic Settings --> 
+<!-- Account 6/SIP Settings/Basic Settings -->
 
-<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 --> 
-<!-- Number: 0, 1, 2 --> 
-<!-- Mandatory --> 
+<!-- TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+<!-- Number: 0, 1, 2 -->
+<!-- Mandatory -->
 <P1809>0</P1809>
 
-<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1810>1</P1810>
 
-<!-- Unregister On Reboot. 0 - No, 1 - Yes --> 
-<!-- Number: 0, 1 --> 
-<!-- Mandatory --> 
+<!-- Unregister On Reboot. 0 - No, 1 - Yes -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
 <P1811>0</P1811>
 
-<!-- Register Expiration (in minutes). Default is 60. Max is 45 days --> 
-<!-- Number: 1 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
+<!-- Number: 1 - 64800 -->
+<!-- Mandatory -->
 <P1812>3</P1812>
 
-<!-- Reregister before Expiration (in seconds). Default is 0 --> 
-<!-- Number: 1 - 64800 --> 
-<!-- Mandatory --> 
+<!-- Reregister before Expiration (in seconds). Default is 0 -->
+<!-- Number: 1 - 64800 -->
+<!-- Mandatory -->
 <P2830>0</P2830>
 
 <!-- Local SIP Port. Default is 5070 -->
@@ -2971,7 +2971,7 @@
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P2841>0</P2841> 
+<P2841>0</P2841>
 
 <!-- Hoteling Event. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
@@ -3205,7 +3205,7 @@
 <!-- iLBC payload type. Default is 97 -->
 <!-- Number: 96 - 127 -->
 <!-- Mandatory -->
-<P1894>97</P1894> 
+<P1894>97</P1894>
 
 <!-- Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
 <!-- Number: 0, 1 -->
@@ -3363,7 +3363,7 @@
 
 
 <!-- Display Language. Default is auto -->
-<!-- ar - Arabic, cz - Czech, de - Deutsh --> 
+<!-- ar - Arabic, cz - Czech, de - Deutsh -->
 <!-- en - English, es - Spanish, fr - Francais -->
 <!-- he - Hebrew, hr - Hrvatski, hu - Magyar  -->
 <!-- it - Italiano, ja - japanese, ko - korean -->
@@ -3409,11 +3409,11 @@
 <!-- Number -->
 <P4507>86400</P4507>
 
-<!-- Connection Request Username -->	
+<!-- Connection Request Username -->
 <!-- String: a-z, A-Z, 0-9 -->
 <P4511></P4511>
 
-<!-- Connection Request Password -->	
+<!-- Connection Request Password -->
 <!-- String: a-z, A-Z, 0-9 -->
 <P4512></P4512>
 
@@ -3502,7 +3502,7 @@
 
 <!-- LDAP Directory -->
 <!-- LDAP Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
-<!-- String --> 
+<!-- String -->
 <P8020></P8020>
 
 <!-- LDAP Server Port -->
@@ -3515,7 +3515,7 @@
 <!-- String -->
 <P8022></P8022>
 
-<!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank --> 
+<!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
 <!-- String -->
 <P8023></P8023>
 
@@ -3573,7 +3573,7 @@
 <!-- Incoming calls. 0 - No, 1 - Yes. Default is 0 -->
 <P8035>0</P8035>
 
-<!-- 
+<!--
 Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <P8034>0</P8034>
 
@@ -3677,7 +3677,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1341>0</P1341> 
+<P1341>0</P1341>
 
 <!-- In-call Dial Number on Pressing Transfer Key -->
 <!-- String -->
@@ -3908,7 +3908,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
 <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
-<!-- Mandatory --> 
+<!-- Mandatory -->
 <P1368>0</P1368>
 
 <!-- Name. Max length allowed is 32 characters. -->
@@ -3932,7 +3932,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
 <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
-<!-- Mandatory --> 
+<!-- Mandatory -->
 <P1370>0</P1370>
 
 <!-- Name. Max length allowed is 32 characters. -->
@@ -3999,7 +3999,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Account 5 and Account 6 setting is for GXP2120 only -->
 
 <!--  Multipupose Key 1 -->
- 
+
 <!-- Key Mode. -->
 <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
@@ -4022,7 +4022,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <P303></P303>
 
 <!-- Multipupose Key 2 -->
- 
+
 <!-- Key Mode. -->
 <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
@@ -4041,7 +4041,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <P305></P305>
 
 <!-- User ID. Max length allowed is 64 characters. -->
-<!-- String --> 
+<!-- String -->
 <P306></P306>
 
 <!-- Multipupose Key 3 -->
@@ -4069,7 +4069,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Multipupose Key 4 -->
 
-<!-- Key Mode. --> 
+<!-- Key Mode. -->
 <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
@@ -4093,7 +4093,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Multipupose Key 5 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4106,17 +4106,17 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <P313>0</P313>
 
 <!-- Name. Max length allowed is 32 characters. -->
-<!-- String --> 
+<!-- String -->
 <P314></P314>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P315></P315>  
+<P315></P315>
 
 <!-- Multipupose Key 6 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4130,16 +4130,16 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P317></P317>  
+<P317></P317>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P318></P318>  
+<P318></P318>
 
 <!-- Multipupose Key 7 -->
- 
+
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4153,11 +4153,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P320></P320> 
+<P320></P320>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P321></P321> 
+<P321></P321>
 
 
 <!-- Mutlipurpose Key 8 - 18 FOR GXP2110 ONLY -->
@@ -4165,7 +4165,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Multipupose Key 8 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4179,16 +4179,16 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P355></P355>  
+<P355></P355>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P356></P356>   
+<P356></P356>
 
 <!-- Multipupose Key 9 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4206,12 +4206,12 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P360></P360>  
+<P360></P360>
 
 <!-- Multipupose Key 10 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4225,16 +4225,16 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P363></P363>  
+<P363></P363>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P364></P364>  
+<P364></P364>
 
 <!-- Multipupose Key 11 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4248,16 +4248,16 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P367></P367>  
+<P367></P367>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P368></P368>    
+<P368></P368>
 
 <!-- Multipupose Key 12 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4271,11 +4271,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P371></P371>  
+<P371></P371>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P372></P372>  
+<P372></P372>
 
 <!-- Multipupose Key 13 -->
 
@@ -4298,12 +4298,12 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P376></P376>  
+<P376></P376>
 
 <!-- Multipupose Key 14 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4317,39 +4317,39 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P379></P379>  
+<P379></P379>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P380></P380>  
+<P380></P380>
 
 <!-- Multipupose Key 15 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
 <!-- Mandatory -->
 <P381>0</P381>
 
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 --> 
+<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
 <!-- Number: 0 - 5 -->
 <!-- Mandatory -->
 <P382>0</P382>
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P383></P383>  
+<P383></P383>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P384></P384>  
+<P384></P384>
 
 <!-- Multipupose Key 16 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4363,17 +4363,17 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P387></P387>  
+<P387></P387>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P388></P388>  
+<P388></P388>
 
 <!-- Multipupose Key 17 -->
 
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4387,16 +4387,16 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P391></P391> 
+<P391></P391>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P392></P392>  
+<P392></P392>
 
 <!-- Multipupose Key 18 -->
 
 <!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF --> 
+<!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
 <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
 <!-- Number: 0-11 -->
@@ -4410,11 +4410,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 
 <!-- Name. Max length allowed is 32 characters. -->
 <!-- String -->
-<P395></P395> 
+<P395></P395>
 
 <!-- User ID. Max length allowed is 64 character -->
 <!-- String -->
-<P396></P396>  
+<P396></P396>
 
 </config>
 </gs_provision>
