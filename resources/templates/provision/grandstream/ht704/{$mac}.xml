@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <gs_provision version="1">
 <config version="1">
 
-<!-- Configuration template for HT704 firmware version 1.0.5.2  -->                           
+<!-- Configuration template for HT704 firmware version 1.0.5.2  -->
 
 <!--  Advanced Settings.  -->
 
@@ -38,8 +38,8 @@
 
 <!-- STUN server -->
 <!-- Server address -->
-<P76></P76> 
- 
+<P76></P76>
+
 <!-- Keep-alive interval (in seconds. default 20 seconds) -->
 <!-- Number: 10 to 160 -->
 <!-- Mandatory -->
@@ -64,13 +64,13 @@
 <!-- Firmware Upgrade -->
 <!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0, 1, 2 -->
-<!-- Mandatory --> 
+<!-- Mandatory -->
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
 <P192>fm.grandstream.com/gs</P192>
 
-<!-- Config Server Path --> 
+<!-- Config Server Path -->
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 
 <!-- XML Config File Password -->
@@ -189,7 +189,7 @@
 <P4040>c=2000/4000;</P4040>
 
 
-<!-- Call Progress Tones  -->                       
+<!-- Call Progress Tones  -->
 
 <!-- Dial Tone-->
 <!-- String-->
@@ -304,7 +304,7 @@
 <P4559>3</P4559>
 
 
-<!--  Profile 1 Settings      -->                                                
+<!--  Profile 1 Settings      -->
 
 <!-- Account Active. 0 - No, 1 - Yes.-->
 <!-- Number: 0, 1-->
@@ -313,7 +313,7 @@
 
 <!-- Primary SIP Server-->
 <!-- Server address-->
-<P47>{$server_address_1}</P47> 
+<P47>{$server_address_1}</P47>
 
 <!-- Failover SIP Server-->
 <!-- Server address-->
@@ -467,7 +467,7 @@
 <!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50.-->
 <!-- Number: 50, 100, 200, 400, 800-->
 <!-- Mandatory-->
-<P209>50</P209> 
+<P209>50</P209>
 
 <!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses.-->
 <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400.-->
@@ -705,7 +705,7 @@
 <P2359>0</P2359>
 
 
-<!-- Codec/Voice Quality settings   -->                                               
+<!-- Codec/Voice Quality settings   -->
 
 <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -960,7 +960,7 @@
 <P4019>c=2000/4000;</P4019>
 
 
-<!-- Profile 2 Settings. -->                                                     
+<!-- Profile 2 Settings. -->
 
 <!-- Account Active. 0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
@@ -988,7 +988,7 @@
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
 <P830>0</P830>
- 
+
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
@@ -1163,7 +1163,7 @@
 <P751>1</P751>
 
 <!-- Offhook Auto-Dial Delay. (0-60 seconds, default is 0)   -->
-<!-- Number: 0 to 60 --> 
+<!-- Number: 0 to 60 -->
 <P4046></P4046>
 
 <!-- Proxy-Require -->
@@ -1323,7 +1323,7 @@
 <!-- Force Timer (Still use timer when remote party does not support timer) 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P430>0</P430> 
+<P430>0</P430>
 
 <!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
 <!-- Number: 0, 1, 2 -->
@@ -1356,7 +1356,7 @@
 <P2459>0</P2459>
 
 
-<!-- Codec/Voice Quality settings  -->                                               
+<!-- Codec/Voice Quality settings  -->
 
 <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -1429,7 +1429,7 @@
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <P710>0</P710>
- 
+
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
@@ -1454,7 +1454,7 @@
 <P443>0</P443>
 
 
-<!-- SLIC Setting.  -->  
+<!-- SLIC Setting.  -->
 <!-- 0 - USA (BELLCORE 600 ohms), 3 - USA 2(BELCORE 600 ohms + 2.16uF), 11 - AUSTRAILA, 5 - CHINA CO, 6 - CHINA PBX, 4 - EUROPEAN CTR21 -->
 <!-- 9 - GERMANY, 8 -INDIA/NEW ZEALAND, 2 - JAPAN CO, 7 - JAPAN PBX, 1 - STANDARD 900 omhs, 10 - UK -->
 <!-- Number: 0 to 11 -->
@@ -1633,7 +1633,7 @@
 <!-- Number: 0, 1, 2, 3 -->
 <P4150>0</P4150>
 
-<P4300>0</P4300> 
+<P4300>0</P4300>
 
 <!-- Number: 0, 1 -->
 <P4595>1</P4595>
@@ -1762,7 +1762,7 @@
 <P4861></P4861>
 
 
-<!--  Basic Settings.    -->                                                      
+<!--  Basic Settings.    -->
 
 <!-- End User Password -->
 <!-- String -->
@@ -1861,7 +1861,7 @@
 <!-- Router. Ignore if DHCP or PPPoE is used -->
 <!-- Number: 0 to 255 -->
 <!--P17=0 -->
-<!--P18=0 --> 
+<!--P18=0 -->
 <!--P19=0 -->
 <!--P20=0 -->
 
