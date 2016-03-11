@@ -61,7 +61,7 @@ function download_send_headers($filename) {
     header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
     header("Last-Modified: {$now} GMT");
 
-    // force download  
+    // force download
     header("Content-Type: application/force-download");
     header("Content-Type: application/octet-stream");
     header("Content-Type: application/download");
@@ -154,9 +154,9 @@ $row_style["1"] = "row_style1";
 		echo "<th><input type=\"checkbox\" id=\"selecctall\"/>";
 		echo "</th>";
 		echo "<th> Column Name";
-		echo "</th>";	
+		echo "</th>";
 		echo "<th> Description";
-		echo "</th>";	
+		echo "</th>";
 		echo "</tr>";
 	echo "</tr>";
 	foreach ($columns as $value) {
@@ -164,9 +164,9 @@ $row_style["1"] = "row_style1";
 		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'><input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
 		echo "</td>";
 		echo "	<td valign='top' class='".$row_style[$c]."'> $value";
-		echo "</td>";	
+		echo "</td>";
 		echo "	<td valign='top' class='".$row_style[$c]."'>";
-		echo "</td>";	
+		echo "</td>";
 		echo "</tr>";
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
@@ -181,7 +181,7 @@ $row_style["1"] = "row_style1";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-	
+
 //include the footer
 	require_once "resources/footer.php";
 ?>

@@ -694,7 +694,7 @@ echo $mod->dir."\n";
 		//get the list of modules
 			public function get_modules() {
 				$sql = " select * from v_modules ";
-				$sql .= "order by module_category,  module_label"; 
+				$sql .= "order by module_category,  module_label";
 				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				$this->modules = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

@@ -8,7 +8,7 @@
 
 require "resources.functions.trim";
 
-local api = api 
+local api = api
 if not api then
   if freeswitch then
     api = freeswitch.API()
@@ -92,7 +92,7 @@ function Cache._self_test()
   local ok, err = Cache.get("a")
   assert(nil == ok)
   assert(err == "NOT FOUND")
-  
+
   local s = "hello \\ ' world"
   assert(true == Cache.set("a", s))
   assert(s == Cache.get("a"))

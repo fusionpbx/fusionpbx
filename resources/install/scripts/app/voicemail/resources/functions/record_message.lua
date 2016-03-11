@@ -40,7 +40,7 @@
 				if (dtmf_digits == nil) then
 					dtmf_digits = session:getDigits(max_digits, "#", 1000);
 				else
-					dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", 1000);	
+					dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", 1000);
 				end
 			end
 			if (dtmf_digits) then
@@ -166,10 +166,10 @@
 								--delete the wav file, if mp3 exists
 									if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
 										os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
-									else 
+									else
 										vm_message_ext = "wav";
 									end
-							else 
+							else
 								freeswitch.consoleLog("notice", "neither mod_shout or lame found, defaulting to wav\n");
 								vm_message_ext = "wav";
 							end

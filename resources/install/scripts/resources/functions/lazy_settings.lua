@@ -95,7 +95,7 @@ function Settings:_load(category, subcategory, name)
   if type(self._db) == 'string' then
     db = Database.new(self._db)
   end
-  
+
   local found = false
   --get the domain settings
   if domain_uuid then

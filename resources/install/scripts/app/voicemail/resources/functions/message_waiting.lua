@@ -29,7 +29,7 @@
 		 	local accounts = {}
 			table.insert(accounts, voicemail_id);
 		--get the voicemail id and all related mwi accounts
-			sql = [[SELECT extension, number_alias from v_extensions 
+			sql = [[SELECT extension, number_alias from v_extensions
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND (mwi_account = ']]..voicemail_id..[[' or mwi_account = ']]..voicemail_id..[[@]]..domain_name..[[')]];
 			if (debug["sql"]) then
@@ -47,7 +47,7 @@
 			sql = [[SELECT count(*) as message_count FROM v_voicemail_messages as m, v_voicemails as v
 				WHERE v.domain_uuid = ']] .. domain_uuid ..[['
 				AND v.voicemail_uuid = m.voicemail_uuid
-				AND v.voicemail_id = ']] .. voicemail_id ..[[' 
+				AND v.voicemail_id = ']] .. voicemail_id ..[['
 				AND (m.message_status is null or m.message_status = '') ]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
@@ -57,7 +57,7 @@
 			end);
 
 		--send the message waiting event
-			for key,value in pairs(accounts) do 
+			for key,value in pairs(accounts) do
 				local event = freeswitch.Event("message_waiting");
 				if (message_count == "0") then
 					if (debug["info"]) then

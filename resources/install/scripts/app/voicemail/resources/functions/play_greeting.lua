@@ -43,7 +43,7 @@
 
 						--get the greeting from the database
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemail_greetings 
+								sql = [[SELECT * FROM v_voicemail_greetings
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. voicemail_id.. [['
 									AND greeting_id = ']].. greeting_id.. [[' ]];

@@ -42,7 +42,7 @@
 			end
 		--say the message number
 			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then 
+				if (string.len(dtmf_digits) == 0) then
 					dtmf_digits = macro(session, "message_number", 1, 100, '');
 				end
 			end
@@ -72,7 +72,7 @@
 			end
 		--get the recordings from the database
 			if (storage_type == "base64") then
-				sql = [[SELECT * FROM v_voicemail_messages 
+				sql = [[SELECT * FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_message_uuid = ']].. uuid.. [[' ]];
 				if (debug["sql"]) then

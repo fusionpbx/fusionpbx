@@ -26,7 +26,7 @@
 --define on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
-			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
+			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n");
 			if (obj['digit'] == "#") then
 				return 0;
 			else

@@ -67,7 +67,7 @@
 
   <!-- The following macro is the same as demo_ivr_main_menu except it is the "short" version -->
   <!-- The short version has all the options but not the initial greeting -->
-  <macro name="demo_ivr_main_menu_short" pause="100"> 
+  <macro name="demo_ivr_main_menu_short" pause="100">
     <input pattern="(.*)">
       <match>
         <!-- Menu option 1: Call FreeSWITCH conference-->

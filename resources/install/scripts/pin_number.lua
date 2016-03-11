@@ -35,7 +35,7 @@ tries = 0;
 
 function check_pin_number()
 	--sleep
-		session:sleep(500);	
+		session:sleep(500);
 	--increment the number of tries
 		tries = tries + 1;
 	--get the user pin number
@@ -58,7 +58,7 @@ function check_pin_number()
 		if (not auth) then
 			if (tries < max_tries) then
 				session:streamFile("phrase:voicemail_fail_auth:#");
-				
+
 				check_pin_number();
 			else
 				session:streamFile("phrase:voicemail_fail_auth:#");

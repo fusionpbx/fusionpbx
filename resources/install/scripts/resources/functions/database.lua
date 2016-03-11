@@ -1,10 +1,10 @@
 ---
--- @usage 
+-- @usage
 --  -- Use default backend
 --  dbh = Database.new("system")
 --  .....
 --
--- @usage 
+-- @usage
 --  -- Use LuaSQL backend
 --  dbh = Database.backend.luasql("system")
 --  .....
@@ -163,7 +163,7 @@ end
 -----------------------------------------------------------
 
 -----------------------------------------------------------
-local Database = {} do 
+local Database = {} do
 
 local backend_loader = setmetatable({}, {__index = function(self, backend)
   local class = require("resources.functions.database." .. backend)

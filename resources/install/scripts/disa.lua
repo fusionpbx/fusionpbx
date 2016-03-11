@@ -102,7 +102,7 @@ if ( session:ready() ) then
 			else
 				caller_id_number = session:getVariable("effective_caller_id_number");
 			end
-		else 
+		else
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else

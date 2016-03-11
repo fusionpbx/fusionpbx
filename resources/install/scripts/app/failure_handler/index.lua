@@ -52,7 +52,7 @@
 						file_subject = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_subject.tpl";
 						file_body = scripts_dir.."/app/missed_calls/resources/templates/en/us/email_body.tpl";
 					end
-					
+
 				--prepare the headers
 					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
 					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
@@ -86,7 +86,7 @@
 					body = body:gsub("'", "&#39;");
 					body = body:gsub([["]], "&#34;");
 					body = trim(body);
-				
+
 				--send the email
 					cmd = "luarun email.lua "..missed_call_data.." "..missed_call_data.." "..headers.." '"..subject.."' '"..body.."'";
 					if (debug["info"]) then
@@ -188,7 +188,7 @@
 				end
 
 			elseif (originate_disposition == "USER_NOT_REGISTERED") then
-				
+
 				--handle USER_NOT_REGISTERED
 				forward_user_not_registered_enabled = session:getVariable("forward_user_not_registered_enabled");
 				if (forward_user_not_registered_enabled == "true") then
@@ -204,7 +204,7 @@
 					--send missed call notification
 					missed();
 				end
-				
+
 				--send missed call notification
 				--missed();
 
