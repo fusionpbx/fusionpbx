@@ -485,7 +485,7 @@ include "root.php";
 										$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-										$this->bridges = $dialplan_detail_data; 
+										$this->bridges = $dialplan_detail_data;
 									}
 							}
 						}
