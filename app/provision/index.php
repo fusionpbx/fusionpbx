@@ -359,7 +359,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
 	if ($_REQUEST['content_type'] == 'application/octet-stream') {
-		//format the mac address and 
+		//format the mac address and
 			$mac = $prov->format_mac($mac, $device_vendor);
 
 		//replace the variable name with the value
