@@ -80,10 +80,10 @@
 			global $debug;
 
 		//fix the xml by escaping the contents of <sip_full_XXX>
-			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/", 
+			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/",
 				function ($matches) {
 					return '<' . $matches[1] . '>' .
-						str_replace(">", "&gt;", 
+						str_replace(">", "&gt;",
 							str_replace("<", "&lt;", $matches[2])
 						) .
 					'</' . $matches[1] . '>';
