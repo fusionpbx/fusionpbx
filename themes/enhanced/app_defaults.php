@@ -46,7 +46,7 @@ if ($domains_processed == 1) {
 				if ($x > 300) { break; };
 			}
 		}
-		
+
 		if(!$set_session_theme){
 		//get default settings
 			$sql = "select * from v_default_settings ";
@@ -56,7 +56,7 @@ if ($domains_processed == 1) {
 			$prep_statement->execute();
 			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement);
-	
+
 			$background_image_enabled = false;
 		//add theme default settings
 			foreach ($array as $row) {
