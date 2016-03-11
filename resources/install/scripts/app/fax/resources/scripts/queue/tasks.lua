@@ -37,7 +37,7 @@ select
   t1.fax_task_uuid as uuid,
   t1.fax_uuid as fax_uuid,
   t3.domain_name,
-  t3.domain_uuid, 
+  t3.domain_uuid,
   t1.task_status as status,
   t1.task_uri as uri,
   t1.task_dial_string as dial_string,
@@ -51,7 +51,7 @@ select
   t2.fax_send_greeting as greeting
 from v_fax_tasks t1
   inner join v_fax t2 on t2.fax_uuid = t1.fax_uuid
-  inner join v_domains t3 on t2.domain_uuid = t3.domain_uuid 
+  inner join v_domains t3 on t2.domain_uuid = t3.domain_uuid
 where t1.task_interrupted <> 'true'
 ]]
 

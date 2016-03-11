@@ -176,7 +176,7 @@
 	local forward_caller_id = ""
 	if enabled == "true" and not empty(forward_caller_id_uuid) then
 		local sql = "select destination_number, destination_description,"..
-			"destination_caller_id_number, destination_caller_id_name " .. 
+			"destination_caller_id_number, destination_caller_id_name " ..
 			"from v_destinations where domain_uuid = '" .. domain_uuid .. "' and " ..
 			"destination_type = 'inbound' and destination_uuid = '" .. forward_caller_id_uuid .. "'";
 		local row = dbh:first_row(sql)

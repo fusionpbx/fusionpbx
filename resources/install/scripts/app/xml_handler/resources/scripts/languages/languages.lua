@@ -161,7 +161,7 @@
 									file_handle:close();
 								end
 							--iterate array of file paths, get contents of other xml macro files
-								for key, xml_file_path in pairs(xml_file_paths) do 
+								for key, xml_file_path in pairs(xml_file_paths) do
 									if (file_exists(xml_file_path)) then
 										xml_file = io.open(xml_file_path, "r");
 										if (xml_file ~= nil) then
@@ -170,7 +170,7 @@
 											xml_file_content = string.gsub(xml_file_content, "</include>", '');
 											table.insert(xml, xml_file_content);
 											--freeswitch.consoleLog("notice", "file contents...\n\n"..xml_file_content.."\n");
-										end 
+										end
 										xml_file:close();
 									end
 								end
