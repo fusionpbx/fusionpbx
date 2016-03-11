@@ -51,6 +51,6 @@ editAreaLoader.load_syntax["xml"] = {
 			,'tags': 'color: #E62253;'
 			,'xml': 'color: #8DCFB5;'
 			,'cdata': 'color: #50B020;'
-		}	
-	}		
+		}
+	}
 };
