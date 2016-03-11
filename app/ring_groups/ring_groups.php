@@ -141,7 +141,7 @@ require_once "resources/paging.php";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ring_group_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['ring_group_enabled']]."&nbsp;</td>\n";
 			if (permission_exists('ring_group_forward')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
 			}

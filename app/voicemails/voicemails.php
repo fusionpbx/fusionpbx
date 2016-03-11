@@ -186,7 +186,7 @@ else {
 				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."'>".$text['label-greetings']."</a>\n";
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['voicemail_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['voicemail_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['voicemail_description']."&nbsp;</td>\n";
 			if (permission_exists('voicemail_edit') || permission_exists('voicemail_delete')) {
 				echo "	<td class='list_control_icons' style='width: 25px;'>";
