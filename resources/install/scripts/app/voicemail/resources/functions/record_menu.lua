@@ -170,7 +170,7 @@
 								--remove temporary greeting file, if any
 									if (file_exists(tmp_file)) then
 										os.remove(tmp_file);
-									end 
+									end
 								record_greeting(greeting_id);
 							end
 							if (type == "name") then
@@ -181,8 +181,8 @@
 							--remove temporary greeting file, if any
 								if (file_exists(tmp_file)) then
 									os.remove(tmp_file);
-								end 
-						end 
+								end
+						end
 						--hangup
 							if (session:ready()) then
 								dtmf_digits = '';
@@ -205,7 +205,7 @@
 									--remove temporary greeting file, if any
 										if (file_exists(tmp_file)) then
 											os.remove(tmp_file);
-										end 
+										end
 									advanced();
 								end
 								if (type == "name") then

@@ -154,8 +154,8 @@
 	end
 
 --get the fax settings from the database
-	sql = [[SELECT * FROM v_fax 
-		WHERE fax_uuid = ']] .. fax_uuid ..[[' 
+	sql = [[SELECT * FROM v_fax
+		WHERE fax_uuid = ']] .. fax_uuid ..[['
 		AND domain_uuid = ']] .. domain_uuid ..[[']];
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "\n");
@@ -196,7 +196,7 @@
 	cmd = quote(php_dir.."/"..php_bin).." "..quote(document_root.."/secure/fax_to_email.php").." ";
 	cmd = cmd .. "email="..quote(fax_email).." ";
 	cmd = cmd .. "extension="..quote(fax_extension).." ";
-	cmd = cmd .. "name="..quote(fax_file).." "; 
+	cmd = cmd .. "name="..quote(fax_file).." ";
 	cmd = cmd .. "messages=" .. quote("result:"..fax_result_text.." sender:"..fax_remote_station_id.." pages:"..fax_document_total_pages).." ";
 	cmd = cmd .. "domain="..quote(domain_name).." ";
 	cmd = cmd .. "caller_id_name=" .. quote(caller_id_name or '') .. " ";

@@ -43,7 +43,7 @@ if ( session:ready() ) then
 		sounds_dir = session:getVariable("sounds_dir");
 		destinations = session:getVariable("destinations");
 		if (destinations == nil) then
-			destinations = session:getVariable("extension_list");	
+			destinations = session:getVariable("extension_list");
 		end
 		destination_table = explode(",",destinations);
 		caller_id_name = session:getVariable("caller_id_name");
