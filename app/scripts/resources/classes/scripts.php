@@ -27,7 +27,7 @@
 
 /**
  * scripts class provides methods for creating the config.lua and copying switch scripts
- * 
+ *
  * @method string correct_path
  * @method string copy_files
  * @method string write_config
@@ -110,7 +110,7 @@ class scripts {
 				global $db_path;
 				global $db_username;
 				global $db_password;
-	
+
 			//replace the backslash with a forward slash
 				$db_path = str_replace("\\", "/", $db_path);
 
