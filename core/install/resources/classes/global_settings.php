@@ -22,7 +22,7 @@
 
 	Contributor(s):
 	Matthew Vale <github@mafoo.org>
-	
+
 */
 require_once "root.php";
 
