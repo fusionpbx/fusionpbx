@@ -25,7 +25,7 @@
 <Preferred_Codec_1_>G729a</Preferred_Codec_1_>
 <Register_Expires_1_>{$register_expires_1}</Register_Expires_1_><!--*9 will perform intercom and call the other line on the box. There is no other way, from my testing to call from jack to jack on the box, without without the media being proxied.-->
 <Dial_Plan_1_>
-(1xxx[2-9]xxxxxxS0|[*#x]x.)  
+(1xxx[2-9]xxxxxxS0|[*#x]x.)
 </Dial_Plan_1_>
 <!--|&lt;*9:{$user_id_2}@127.0.0.1:5061&gt;-->
 <Line_Enable_2_>yes</Line_Enable_2_>
@@ -37,7 +37,7 @@
 <Preferred_Codec_2_>G729a</Preferred_Codec_2_>
 <Register_Expires_2_>{$register_expires_2}</Register_Expires_2_>
 <Dial_Plan_2_>
-(1xxx[2-9]xxxxxxS0|[*#x]x.) 
+(1xxx[2-9]xxxxxxS0|[*#x]x.)
 </Dial_Plan_2_><!--|&lt;*9:{$user_id_1}@127.0.0.1:5061&gt;-->
 
 
@@ -47,7 +47,7 @@
 <G729a_Codec_Name>G729</G729a_Codec_Name> <!--suggestion by Callcentric.-->
 <G729b_Codec_Name>G729</G729b_Codec_Name> <!--suggestion by Callcentric.-->
 
-<!-- NAT_Settings 
+<!-- NAT_Settings
 <NAT_Mapping_Enable_1_>yes</NAT_Mapping_Enable_1_>
 <NAT_Keep_Alive_Enable_1_>yes</NAT_Keep_Alive_Enable_1_>
 <NAT_Keep_Alive_Msg_1_>$NOTIFY</NAT_Keep_Alive_Msg_1_>
