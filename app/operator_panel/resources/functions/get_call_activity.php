@@ -166,9 +166,11 @@ function get_call_activity() {
 		}
 
 		//reindex array using extension instead of auto-incremented value
+		$result = array();
 		foreach ($array as $index => $subarray) {
+			$extension = $subarray['extension'];
 			foreach ($subarray as $field => $value) {
-				$array[$subarray['extension']][$field] = $array[$index][$field];
+				$result[$extension][$field] = $array[$index][$field];
 				unset($array[$index][$field]);
 			}
 			unset($array[$subarray['extension']]['extension']);
@@ -176,5 +178,5 @@ function get_call_activity() {
 		}
 
 	//return array
-		return $array;
+		return $result;
 }
