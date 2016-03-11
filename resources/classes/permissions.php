@@ -23,7 +23,7 @@
 
 /**
  * permission class
- * 
+ *
  * @method string add
  * @method string delete
  * @method string exists

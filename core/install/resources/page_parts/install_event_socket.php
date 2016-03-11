@@ -89,7 +89,7 @@
 	echo "</form>";
 	if($detect_ok){
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	
+
 		echo "<tr>\n";
 		echo "<td colspan='4' align='left' nowrap><b>".$text['title-detected_configuration']."</b></td>\n";
 		echo "</tr>\n";
@@ -102,7 +102,7 @@
 		echo "<td class='vtable' width='35%' align='left'>\n";
 		echo "    ".$switch_detect->version()."\n";
 		echo "</td>\n";
-		
+
 		foreach ($switch_detect->get_dirs() as $folder)
 		{
 			if($id % 2 == 0){ echo "<tr>\n"; }
@@ -132,7 +132,7 @@
 			if($id % 2 == 1){ echo "</tr>\n"; }
 			$id++;
 		}
-			
+
 		echo "</table>";
 	}
 

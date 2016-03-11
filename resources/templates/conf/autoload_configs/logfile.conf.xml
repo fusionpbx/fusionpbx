@@ -18,7 +18,7 @@
 			</settings>
 			<mappings>
 				<!--
-				name can be a file name, function name or 'all' 
+				name can be a file name, function name or 'all'
 				value is one or more of debug,info,notice,warning,err,crit,alert,all
 				Please see comments in console.conf.xml for more information
 				-->

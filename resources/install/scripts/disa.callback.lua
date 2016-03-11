@@ -63,21 +63,21 @@ if (a_user_exists == "true") then
 	extension_uuid = trim(api:executeString(cmd));
 	a_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..aleg_number.."@"..context;
 else
-	sql = [[select * from v_dialplans as d, v_dialplan_details as s 
+	sql = [[select * from v_dialplans as d, v_dialplan_details as s
 			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
-				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' 
-				and d.dialplan_enabled = 'true' 
-				and d.dialplan_uuid = s.dialplan_uuid 
-				order by 
-				d.dialplan_order asc, 
-				d.dialplan_name asc, 
-				d.dialplan_uuid asc, 
-				s.dialplan_detail_group asc, 
-				CASE s.dialplan_detail_tag 
-				WHEN 'condition' THEN 1 
-				WHEN 'action' THEN 2 
-				WHEN 'anti-action' THEN 3 
-				ELSE 100 END, 
+				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+				and d.dialplan_enabled = 'true'
+				and d.dialplan_uuid = s.dialplan_uuid
+				order by
+				d.dialplan_order asc,
+				d.dialplan_name asc,
+				d.dialplan_uuid asc,
+				s.dialplan_detail_group asc,
+				CASE s.dialplan_detail_tag
+				WHEN 'condition' THEN 1
+				WHEN 'action' THEN 2
+				WHEN 'anti-action' THEN 3
+				ELSE 100 END,
 				s.dialplan_detail_order asc ]]
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
@@ -88,7 +88,7 @@ else
 		dialplans[x] = row;
 		x = x + 1;
 		end));
-	
+
 	y = 0;
 	previous_dialplan_uuid = '';
 	for k, r in pairs(dialplans) do
@@ -151,7 +151,7 @@ freeswitch.consoleLog("info", "[disa.callback] calling " .. aleg_number .. "\n")
 freeswitch.msleep(2000);
 
 while (session1:ready() and not session1:answered()) do
-	if os.time() > t_started + 30 then 
+	if os.time() > t_started + 30 then
 		freeswitch.consoleLog("info", "[disa.callback] timed out for " .. aleg_number .. "\n");
 		session1:hangup();
 	else
@@ -176,21 +176,21 @@ if session1:ready() and session1:answered() then
 		extension_uuid = trim(api:executeString(cmd));
 		b_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..bleg_number.."@"..context;
 	else
-		sql = [[select * from v_dialplans as d, v_dialplan_details as s 
+		sql = [[select * from v_dialplans as d, v_dialplan_details as s
 			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
-				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' 
-				and d.dialplan_enabled = 'true' 
-				and d.dialplan_uuid = s.dialplan_uuid 
-				order by 
-				d.dialplan_order asc, 
-				d.dialplan_name asc, 
-				d.dialplan_uuid asc, 
-				s.dialplan_detail_group asc, 
-				CASE s.dialplan_detail_tag 
-				WHEN 'condition' THEN 1 
-				WHEN 'action' THEN 2 
-				WHEN 'anti-action' THEN 3 
-				ELSE 100 END, 
+				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+				and d.dialplan_enabled = 'true'
+				and d.dialplan_uuid = s.dialplan_uuid
+				order by
+				d.dialplan_order asc,
+				d.dialplan_name asc,
+				d.dialplan_uuid asc,
+				s.dialplan_detail_group asc,
+				CASE s.dialplan_detail_tag
+				WHEN 'condition' THEN 1
+				WHEN 'action' THEN 2
+				WHEN 'anti-action' THEN 3
+				ELSE 100 END,
 				s.dialplan_detail_order asc ]]
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
@@ -200,7 +200,7 @@ if session1:ready() and session1:answered() then
 		assert(dbh:query(sql, function(row)
 			dialplans[x] = row;
 			x = x + 1;
-			end));	
+			end));
 		y = 0;
 		previous_dialplan_uuid = '';
 		for k, r in pairs(dialplans) do
@@ -258,7 +258,7 @@ if session1:ready() and session1:answered() then
 
 	session2 = freeswitch.Session(b_dialstring);
 	while (session2:ready() and not session2:answered()) do
-		if os.time() > t_started2 + 30 then 
+		if os.time() > t_started2 + 30 then
 			freeswitch.consoleLog("info", "[disa.callback] timed out for " .. bleg_number .. "\n");
 			session2:hangup();
 		else

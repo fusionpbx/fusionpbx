@@ -41,7 +41,7 @@
 		return max;
 	end
 
---define select_entry function 
+--define select_entry function
 	function settings(domain_uuid)
 
 		--define the table
@@ -124,7 +124,7 @@
 						subcategory = row.domain_setting_subcategory;
 						name = row.domain_setting_name;
 						value = row.domain_setting_value;
-					
+
 					--add the category array
 						if (array[category] == nil) then
 							array[category] = {}

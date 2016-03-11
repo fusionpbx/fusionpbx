@@ -44,7 +44,7 @@
 			assert(dbh:connected());
 
 		--get the ivr menu from the database
-			sql = [[SELECT * FROM v_ivr_menus 
+			sql = [[SELECT * FROM v_ivr_menus
 				WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
 				AND ivr_menu_enabled = 'true' ]];
 			if (debug["sql"]) then
@@ -86,7 +86,7 @@
 				--greet long
 					if (string.len(ivr_menu_greet_long) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
-							sql = [[SELECT * FROM v_recordings 
+							sql = [[SELECT * FROM v_recordings
 								WHERE domain_uuid = ']]..domain_uuid..[['
 								AND recording_filename = ']]..ivr_menu_greet_long..[[' ]];
 							if (debug["sql"]) then
@@ -110,7 +110,7 @@
 				--greet short
 					if (string.len(ivr_menu_greet_short) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
-							sql = [[SELECT * FROM v_recordings 
+							sql = [[SELECT * FROM v_recordings
 								WHERE domain_uuid = ']]..domain_uuid..[['
 								AND recording_filename = ']]..ivr_menu_greet_short..[[' ]];
 							if (debug["sql"]) then
@@ -134,7 +134,7 @@
 				--invalid sound
 					if (string.len(ivr_menu_invalid_sound) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound)) then
-							sql = [[SELECT * FROM v_recordings 
+							sql = [[SELECT * FROM v_recordings
 								WHERE domain_uuid = ']]..domain_uuid..[['
 								AND recording_filename = ']]..ivr_menu_invalid_sound..[[' ]];
 							if (debug["sql"]) then
@@ -158,7 +158,7 @@
 				--exit sound
 					if (string.len(ivr_menu_exit_sound) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound)) then
-							sql = [[SELECT * FROM v_recordings 
+							sql = [[SELECT * FROM v_recordings
 								WHERE domain_uuid = ']]..domain_uuid..[['
 								AND recording_filename = ']]..ivr_menu_exit_sound..[[' ]];
 							if (debug["sql"]) then

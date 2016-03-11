@@ -98,7 +98,7 @@ else {
 				echo $row['extension'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {

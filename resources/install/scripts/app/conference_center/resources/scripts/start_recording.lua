@@ -17,7 +17,7 @@
 	api = freeswitch.API();
 
 --check if the conference exists
-	cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";                                        
+	cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
 	freeswitch.consoleLog("INFO","" .. cmd .. "\n");
 	result = trim(api:executeString(cmd));
 	if (string.sub(result, -9) == "not found") then

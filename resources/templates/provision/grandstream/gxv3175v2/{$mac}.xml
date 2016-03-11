@@ -460,9 +460,9 @@
     <!--P7065 -->
     <!-- Distinctive Ring Tone3, Maxlength -->
     <!--P7064 -->
-    
-    
-    
+
+
+
     <!--  Advanced Settings -->
     <!--  Advanced Settings/ General Settings -->
     <!-- Local RTP Port, Allowed value: 5-65535 -->
@@ -722,7 +722,7 @@
 
     <!-- End User Password, MaxLength 32 -->
     <P196>{$user_password}</P196>
-   
+
     <!-- Maintenance/ UPgrade and Provisioning -->
     <!-- Enable Provider Lock. 0 - No, 1 - Yes. -->
     <P9999>0</P9999>

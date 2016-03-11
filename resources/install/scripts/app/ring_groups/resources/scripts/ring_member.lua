@@ -25,7 +25,7 @@
 
 --include config.lua
 	require "resources.functions.config";
-	
+
 --connect to the database
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
@@ -39,12 +39,12 @@
 
 --define uuid function
 	local random = math.random;
-	local function uuid();
-	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-	return string.gsub(template, '[xy]', function (c)
-		local v = (c == 'x') and random(0, 0xf) or random(8, 0xb);
-		return string.format('%x', v);
-	end)
+	local function uuid()
+		local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+		return string.gsub(template, '[xy]', function (c)
+			local v = (c == 'x') and random(0, 0xf) or random(8, 0xb);
+			return string.format('%x', v);
+		end)
 	end
 
 --get session variables
@@ -100,7 +100,7 @@
 				SELECT COUNT(*) AS in_group FROM
 					v_ring_group_destinations
 				WHERE
-					domain_uuid = ']]..domain_uuid..[[' 
+					domain_uuid = ']]..domain_uuid..[['
 					AND ring_group_uuid = ']]..ring_group_uuid..[['
 					AND destination_number = ']]..destination_number..[['
 			]];
@@ -109,21 +109,21 @@
 			assert(dbh:query(sql, function(row)
 				if (row.in_group == "0") then
 					sql = [[
-						INSERT INTO 
-							v_ring_group_destinations 
+						INSERT INTO
+							v_ring_group_destinations
 								(	ring_group_destination_uuid,
-									domain_uuid, 
-									ring_group_uuid, 
+									domain_uuid,
+									ring_group_uuid,
 									destination_number,
 									destination_delay,
 									destination_timeout
-								) 
-						VALUES 
+								)
+						VALUES
 								(	']]..ring_group_destination_uuid..[[',
-									']]..domain_uuid..[[', 
-									']]..ring_group_uuid..[[', 
-									']]..destination..[[', 
-									]]..destination_delay..[[, 
+									']]..domain_uuid..[[',
+									']]..ring_group_uuid..[[',
+									']]..destination..[[',
+									]]..destination_delay..[[,
 									]]..destination_timeout..[[
 								)]];
 					freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");
@@ -139,11 +139,11 @@
 		end
 		if (menu_selection == "2") then
 			sql = [[
-				DELETE FROM 
-					v_ring_group_destinations 
-				WHERE 
-					domain_uuid =']]..domain_uuid..[[' 
-					AND ring_group_uuid=']]..ring_group_uuid..[['  
+				DELETE FROM
+					v_ring_group_destinations
+				WHERE
+					domain_uuid =']]..domain_uuid..[['
+					AND ring_group_uuid=']]..ring_group_uuid..[['
 					AND destination_number=']]..destination..[['
 				]];
 			freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");

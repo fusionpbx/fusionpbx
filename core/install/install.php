@@ -53,8 +53,8 @@ require_once "resources/classes/text.php";
 //TBD $locale = Locale::getDefault();
 $timezone = 'UTC';
 if (is_link('/etc/localtime')) {
-    // Mac OS X (and older Linuxes)    
-    // /etc/localtime is a symlink to the 
+    // Mac OS X (and older Linuxes)
+    // /etc/localtime is a symlink to the
     // timezone in /usr/share/zoneinfo.
     $filename = readlink('/etc/localtime');
     if (strpos($filename, '/usr/share/zoneinfo/') === 0) {
@@ -73,7 +73,7 @@ if (is_link('/etc/localtime')) {
         $timezone = $data['ZONE'];
     }
 }
- 
+
 date_default_timezone_set($timezone);
 
 //detect install state

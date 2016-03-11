@@ -139,7 +139,7 @@ require_once "resources/require.php";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['call_block_enabled'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['call_block_enabled']]."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
