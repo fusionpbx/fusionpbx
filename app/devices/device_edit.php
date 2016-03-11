@@ -152,7 +152,7 @@ require_once "resources/require.php";
 			$device_uuid_alternate = check_str($_POST["device_uuid_alternate"]);
 			$device_model = check_str($_POST["device_model"]);
 			$device_firmware_version = check_str($_POST["device_firmware_version"]);
-			$device_provision_enable = check_str($_POST["device_provision_enable"]);
+			$device_enabled = check_str($_POST["device_enabled"]);
 			$device_template = check_str($_POST["device_template"]);
 			$device_description = check_str($_POST["device_description"]);
 		//lines
@@ -197,7 +197,7 @@ require_once "resources/require.php";
 			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
 			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
 			//if (strlen($device_firmware_version) == 0) { $msg .= "Please provide: Firmware Version<br>\n"; }
-			//if (strlen($device_provision_enable) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
+			//if (strlen($device_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 			//if (strlen($device_template) == 0) { $msg .= "Please provide: Template<br>\n"; }
 			//if (strlen($device_username) == 0) { $msg .= "Please provide: Username<br>\n"; }
 			//if (strlen($device_password) == 0) { $msg .= "Please provide: Password<br>\n"; }
@@ -349,7 +349,7 @@ require_once "resources/require.php";
 			$device_uuid_alternate = $row["device_uuid_alternate"];
 			$device_model = $row["device_model"];
 			$device_firmware_version = $row["device_firmware_version"];
-			$device_provision_enable = $row["device_provision_enable"];
+			$device_enabled = $row["device_enabled"];
 			$device_template = $row["device_template"];
 			$device_profile_uuid = $row["device_profile_uuid"];
 			$device_description = $row["device_description"];
@@ -1449,17 +1449,17 @@ require_once "resources/require.php";
 	if (permission_exists('device_enable')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-device_provision_enable']."\n";
+		echo "	".$text['label-device_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='device_provision_enable'>\n";
-		if ($device_provision_enable == "true" || strlen($device_provision_enable) == 0) {
+		echo "    <select class='formfld' name='device_enabled'>\n";
+		if ($device_enabled == "true" || strlen($device_enabled) == 0) {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($device_provision_enable == "false") {
+		if ($device_enabled == "false") {
 			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -1467,7 +1467,7 @@ require_once "resources/require.php";
 		}
 		echo "    </select>\n";
 		echo "<br />\n";
-		echo $text['description-device_provision_enable']."\n";
+		echo $text['description-device_enabled']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

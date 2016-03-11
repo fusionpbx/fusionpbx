@@ -120,16 +120,16 @@
 				$stats['system']['devices']['disabled'] = 0;
 				$stats['domain']['devices']['total'] = 0;
 				$stats['domain']['devices']['disabled'] = 0;
-				$sql = "select domain_uuid, device_provision_enabled from v_devices";
+				$sql = "select domain_uuid, device_enabled from v_devices";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				$stats['system']['devices']['total'] = count($result);
 				foreach ($result as $row) {
-					$stats['system']['devices']['disabled'] += ($row['device_provision_enabled'] != 'true') ? 1 : 0;
+					$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
 					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 						$stats['domain']['devices']['total']++;
-						$stats['domain']['devices']['disabled'] += ($row['device_provision_enabled'] != 'true') ? 1 : 0;
+						$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
 					}
 				}
 				unset ($sql, $prep_statement, $result);
