@@ -24,7 +24,7 @@
 		<!--<domain name="$${domain}" parse="true"/>-->
 		<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->
 		<!--<domain name="all" alias="true" parse="true"/>-->
-		<domain name="all" alias="true" parse="false"/> 
+		<domain name="all" alias="true" parse="false"/>
 	</domains>
 
 	<settings>
@@ -34,7 +34,7 @@
 		-->
 		<param name="media-option" value="resume-media-on-hold" enabled="false"/>
 		<!--
-		This will allow a call after an attended transfer go back to 
+		This will allow a call after an attended transfer go back to
 		 bypass media after an attended transfer.
 		-->
 		<param name="media-option" value="bypass-media-after-att-xfer" enabled="false"/>
@@ -51,7 +51,7 @@
 		<!-- Don't be picky about negotiated DTMF just always offer 2833 and accept both 2833 and INFO -->
 		<param name="liberal-dtmf" value="true" enabled="false"/>
 
-		<!-- 
+		<!--
 			Sometimes, in extremely rare edge cases, the Sofia SIP stack may stop
 			responding. These options allow you to enable and control a watchdog
 			on the Sofia SIP stack so that if it stops responding for the
@@ -64,7 +64,7 @@
 			through the FreeSWITCH CLI either on an individual profile basis or
 			globally for all profiles. So, if you run in an HA environment with a
 			master and slave, you should use the CLI to make sure the watchdog is
-			only enabled on the master. 
+			only enabled on the master.
 			If such crash occurs, FreeSWITCH will dump core if allowed. The
 			stacktrace will include function watchdog_triggered_abort().
 		-->
@@ -111,7 +111,7 @@
 		<!-- Enable Compact SIP headers. -->
 		<param name="enable-compact-headers" value="true" enabled="false"/>
 		<!--
-		enable/disable session timers 
+		enable/disable session timers
 		-->
 		<param name="enable-timer" value="false" enabled="false"/>
 		<param name="minimum-session-expires" value="120" enabled="false"/>
@@ -192,7 +192,7 @@
 		<!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
 		<param name="tls-version" value="$${sip_tls_version}"/>
 
-		<!-- turn on auto-flush during bridge (skip timer sleep when the socket already has data) 
+		<!-- turn on auto-flush during bridge (skip timer sleep when the socket already has data)
 		 (reduces delay on latent connections default true, must be disabled explicitly)-->
 		<param name="rtp-autoflush-during-bridge" value="false" enabled="false"/>
 
@@ -223,7 +223,7 @@
 
 		<!--TTL for nonce in sip auth-->
 		<param name="nonce-ttl" value="60"/>
-		<!--Uncomment if you want to force the outbound leg of a bridge to only offer the codec 
+		<!--Uncomment if you want to force the outbound leg of a bridge to only offer the codec
 		that the originator is using-->
 		<param name="disable-transcoding" value="true" enabled="false"/>
 		<!-- Handle 302 Redirect in the dialplan -->
@@ -285,7 +285,7 @@
 		<param name="disable-transfer" value="true" enabled="false"/>
 		<param name="disable-register" value="true" enabled="false"/>
 
-		<!-- 
+		<!--
 		enable-3pcc can be set to either 'true' or 'proxy', true accepts the call
 		right away, proxy waits until the call has been answered then sends accepts
 		-->
@@ -294,7 +294,7 @@
 		<!-- use at your own risk or if you know what this does.-->
 		<param name="NDLB-force-rport" value="safe" enabled="true"/>
 		<!--
-		Choose the realm challenge key. Default is auto_to if not set. 
+		Choose the realm challenge key. Default is auto_to if not set.
 
 		auto_from  - uses the from field as the value for the sip realm.
 		auto_to    - uses the to field as the value for the sip realm.
@@ -331,38 +331,38 @@
 		<param name="disable-srv" value="false" enabled="false"/>
 		<param name="disable-naptr" value="false" enabled="false"/>
 
-		<!-- The following can be used to fine-tune timers within sofia's transport layer 
+		<!-- The following can be used to fine-tune timers within sofia's transport layer
 			 Those settings are for advanced users and can safely be left as-is -->
 
 		<!-- Initial retransmission interval (in milliseconds).
-			Set the T1 retransmission interval used by the SIP transaction engine. 
+			Set the T1 retransmission interval used by the SIP transaction engine.
 			The T1 is the initial duration used by request retransmission timers A and E (UDP) as well as response retransmission timer G. 	 -->
 		<param name="timer-T1" value="500" enabled="false"/>
 
 		<!--  Transaction timeout (defaults to T1 * 64).
 			Set the T1x64 timeout value used by the SIP transaction engine.
-			The T1x64 is duration used for timers B, F, H, and J (UDP) by the SIP transaction engine. 
+			The T1x64 is duration used for timers B, F, H, and J (UDP) by the SIP transaction engine.
 			The timeout value T1x64 can be adjusted separately from the initial retransmission interval T1. -->
 		<param name="timer-T1X64" value="32000" enabled="false"/>
 
 		<!-- Maximum retransmission interval (in milliseconds).
-			Set the maximum retransmission interval used by the SIP transaction engine. 
-			The T2 is the maximum duration used for the timers E (UDP) and G by the SIP transaction engine. 
-			Note that the timer A is not capped by T2. Retransmission interval of INVITE requests grows exponentially 
+			Set the maximum retransmission interval used by the SIP transaction engine.
+			The T2 is the maximum duration used for the timers E (UDP) and G by the SIP transaction engine.
+			Note that the timer A is not capped by T2. Retransmission interval of INVITE requests grows exponentially
 			until the timer B fires.  -->
 		<param name="timer-T2" value="4000" enabled="false"/>
 
 		<!--
 			Transaction lifetime (in milliseconds).
-			Set the lifetime for completed transactions used by the SIP transaction engine. 
-			A completed transaction is kept around for the duration of T4 in order to catch late responses. 
+			Set the lifetime for completed transactions used by the SIP transaction engine.
+			A completed transaction is kept around for the duration of T4 in order to catch late responses.
 			The T4 is the maximum duration for the messages to stay in the network and the duration of SIP timer K. -->
 		<param name="timer-T4" value="4000" enabled="false"/>
 
 		<!-- Turn on a jitterbuffer for every call -->
 		<param name="auto-jitterbuffer-msec" value="60" enabled="false"/>
 
-		<!-- By default mod_sofia will ignore the codecs in the sdp for hold/unhold operations 
+		<!-- By default mod_sofia will ignore the codecs in the sdp for hold/unhold operations
 			Set this to true if you want to actually parse the sdp and re-negotiate the codec during hold/unhold.
 			It's probably not what you want so stick with the default unless you really need to change this.
 		-->

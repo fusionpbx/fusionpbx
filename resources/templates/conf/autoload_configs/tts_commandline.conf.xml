@@ -6,7 +6,7 @@
 	${rate}: sample rate (example: 8000)
 	${voice}: voice_name passed to TTS(quoted)
 	${file}: output file (quoted, including .wav extension)
-    
+
     Example commands can be found at:
     http://wiki.freeswitch.org/wiki/Mod_tts_commandline#Example_commands
 	-->
