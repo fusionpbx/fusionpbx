@@ -48,6 +48,26 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
+		--get the domains
+			x = 1;
+			domains = {}
+			sql = "SELECT * FROM v_domains;";
+			dbh:query(sql, function(row)
+				--add items to the domains array
+					domains[row["domain_name"]] = row["domain_uuid"];
+					domains[row["domain_uuid"]] = row["domain_name"];
+				--increment x
+					x = x + 1;
+			end);
+
+		--get the domain_uuid
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						domain_uuid = domains[domain_name];
+					end
+			end
+
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -65,7 +85,7 @@
 			condition_tag_status = "closed";
 
 		--get the dialplan and related details
-			sql = "select * from v_dialplans as p, v_dialplan_details as s, v_domains as d ";
+			sql = "select * from v_dialplans as p, v_dialplan_details as s ";
 			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 				sql = sql .. "where p.dialplan_context = '" .. call_context .. "' ";
 			else
@@ -73,7 +93,6 @@
 			end
 			sql = sql .. "and p.dialplan_enabled = 'true' ";
 			sql = sql .. "and p.dialplan_uuid = s.dialplan_uuid ";
-			sql = sql .. "and p.domain_uuid = d.domain_uuid ";
 			sql = sql .. "order by ";
 			sql = sql .. "p.dialplan_order asc, ";
 			sql = sql .. "p.dialplan_name asc, ";
@@ -96,7 +115,6 @@
 
 				--get the dialplan
 					domain_uuid = row.domain_uuid;
-					domain_name = row.domain_name;
 					dialplan_uuid = row.dialplan_uuid;
 					--app_uuid = row.app_uuid;
 					--dialplan_context = row.dialplan_context;
