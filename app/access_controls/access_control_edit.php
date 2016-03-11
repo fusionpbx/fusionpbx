@@ -96,7 +96,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -155,13 +155,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='access_control_default'>\n";
 	echo "	<option value=''></option>\n";
-	if ($access_control_default == "allow") { 
+	if ($access_control_default == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}
 	else {
 		echo "	<option value='allow'>".$text['label-allow']."</option>\n";
 	}
-	if ($access_control_default == "deny") { 
+	if ($access_control_default == "deny") {
 		echo "	<option value='deny' selected='selected'>".$text['label-deny']."</option>\n";
 	}
 	else {
