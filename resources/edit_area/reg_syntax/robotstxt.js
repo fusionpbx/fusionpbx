@@ -19,6 +19,6 @@ editAreaLoader.load_syntax["robotstxt"] = {
 			'specials' : 'color: #FF0000;'
 			},
 	'OPERATORS' : 'color: #FF00FF;',
-	'DELIMITERS' : 'color: #60CA00;'			
+	'DELIMITERS' : 'color: #60CA00;'
 	}
 };

@@ -45,6 +45,6 @@ editAreaLoader.load_syntax["html"] = {
 			,'tags': 'color: #E62253;'
 			,'doctype': 'color: #8DCFB5;'
 			,'test': 'color: #00FF00;'
-		}	
-	}		
+		}
+	}
 };
