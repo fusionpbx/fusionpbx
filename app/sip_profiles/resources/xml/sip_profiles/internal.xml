@@ -1,5 +1,5 @@
 <profile name="{v_sip_profile_name}">
-	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files --> 
+	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 	<!--aliases are other names that will work as a valid profile name for this profile-->
 	<aliases>
 		<!--
@@ -17,7 +17,7 @@
 		<!--<domain name="$${domain}" parse="true"/>-->
 		<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->
 		<!--<domain name="all" alias="true" parse="true"/>-->
-		<domain name="all" alias="true" parse="false"/> 
+		<domain name="all" alias="true" parse="false"/>
 	</domains>
 
 	<settings>

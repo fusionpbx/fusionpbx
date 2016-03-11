@@ -1,5 +1,5 @@
 <profile name="{v_sip_profile_name}">
-	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files --> 
+	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 	<!--aliases are other names that will work as a valid profile name for this profile-->
 	<aliases>
 	</aliases>
