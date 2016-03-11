@@ -23,7 +23,7 @@
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 --
---	add this in Inbound Routes before transfer to use it: 
+--	add this in Inbound Routes before transfer to use it:
 --	action set caller_id_name=${luarun cidlookup.lua ${uuid}}
 
 --debug
@@ -47,16 +47,16 @@
 	countryCode = api:executeString("uuid_getvar " .. uuid .. " default_countrycode");
 
 	if ((countryCode ~= nil) and (string.len(countryCode) > 0)) then
-		
+
 		countryPrefix = "+" .. countryCode;
-		
+
 		if (string.sub(caller, 1, string.len(countryPrefix)) == countryPrefix) then
 			cleanCaller = string.sub(caller, string.len(countryPrefix)+1);
 			freeswitch.consoleLog("NOTICE", "[cidlookup] ignoring local international prefix " .. countryPrefix .. ": " .. caller .. " ==> " .. cleanCaller .. "\n");
 			caller = cleanCaller;
 		else
 			if ((exitCode ~= nil) and (string.len(exitCode) > 0)) then
-				
+
 				countryPrefix = exitCode .. countryCode;
 
 				if (string.sub(caller, 1, string.len(countryPrefix)) == countryPrefix) then
@@ -65,7 +65,7 @@
 					caller = cleanCaller;
 				end;
 			end;
-		end;		
+		end;
 	end;
 
 --include config.lua
@@ -104,7 +104,7 @@
 			if ((name == nil) or  (string.len(name) == 0)) then
 				name = api:executeString("cidlookup " .. caller);
 			end
-			
+
 			freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
 			api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 

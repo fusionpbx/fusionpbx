@@ -12,12 +12,12 @@
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
 	if not fax_task_uuid then
 		log.warning("No [fax_task_uuid] channel variable")
-		return 
+		return
 	end
 	local task           = Tasks.select_task(fax_task_uuid)
 	if not task then
 		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
-		return 
+		return
 	end
 
 -- show all channel variables

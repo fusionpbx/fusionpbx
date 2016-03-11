@@ -57,9 +57,9 @@
 
 		--build the call group array
 			sql = [[
-			select * from v_extensions 
-			where domain_uuid = ']]..domain_uuid..[[' 
-			order by call_group asc 
+			select * from v_extensions
+			where domain_uuid = ']]..domain_uuid..[['
+			order by call_group asc
 			]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");

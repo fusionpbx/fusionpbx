@@ -170,27 +170,27 @@
 						--determine the type of condition
 							if (dialplan_detail_type == "hour") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "minute") then 
+							elseif (dialplan_detail_type == "minute") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "minute-of-day") then 
+							elseif (dialplan_detail_type == "minute-of-day") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mday") then 
+							elseif (dialplan_detail_type == "mday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mweek") then 
+							elseif (dialplan_detail_type == "mweek") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mon") then 
+							elseif (dialplan_detail_type == "mon") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "time-of-day") then 
+							elseif (dialplan_detail_type == "time-of-day") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "yday") then 
+							elseif (dialplan_detail_type == "yday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "year") then 
+							elseif (dialplan_detail_type == "year") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "wday") then 
+							elseif (dialplan_detail_type == "wday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "week") then 
+							elseif (dialplan_detail_type == "week") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "date-time") then 
+							elseif (dialplan_detail_type == "date-time") then
 								condition_type = 'time';
 							else
 								condition_type = 'default';
