@@ -9,7 +9,7 @@ local odbcpool = require "odbc.dba.pool"
 local function remove_null(row, null, null_value)
   local o = {}
   for k, v in pairs(row) do
-    if v == null then 
+    if v == null then
       o[k] = null_value
     else
       o[k] = tostring(v)

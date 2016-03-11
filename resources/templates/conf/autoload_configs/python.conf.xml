@@ -6,7 +6,7 @@
     <!--
 	The following options identifies a py module that is launched
 	at startup and may live forever in the background.
-	You can define multiple lines, one for each script you 
+	You can define multiple lines, one for each script you
 	need to run.
     -->
     <!--<param name="startup-script" value="startup_script_1"/>-->

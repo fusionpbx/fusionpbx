@@ -306,7 +306,7 @@
 
 				else
 					log.noticef("Found child call on remote machine `%s`.", call_hostname)
-					-- we can not find parent on this box because channel on other box so we have to 
+					-- we can not find parent on this box because channel on other box so we have to
 					-- forward call to this box
 					session:execute("export", "sip_h_X-child_intercept_uuid="..uuid);
 					return make_proxy_call(pickup_number, call_hostname)

@@ -1,7 +1,7 @@
 <include>
   <!--
-      ipauth if you have an cidr= in the user attributes ie cidr="1.2.3.4/32"  
-      see <node type="allow" domain="$${domain}"/> in default acl.conf.xml 
+      ipauth if you have an cidr= in the user attributes ie cidr="1.2.3.4/32"
+      see <node type="allow" domain="$${domain}"/> in default acl.conf.xml
   -->
   <user id="brian" cidr="192.0.2.0/24">
     <!-- Outbound Registrations Related to this user -->
@@ -16,7 +16,7 @@
       <!--/// domain to use in from: *optional* same as  realm, if blank ///-->
       <!--<param name="from-domain" value="asterlink.com"/>-->
       <!--/// account password *required* ///-->
-      <!--<param name="password" value="2007"/>--> 
+      <!--<param name="password" value="2007"/>-->
       <!--/// replace the INVITE from user with the channel's caller-id ///-->
       <!--<param name="caller-id-in-from" value="false"/>-->
       <!--/// extension for inbound calls: *optional* same as username, if blank ///-->
@@ -52,7 +52,7 @@
       <!--<param name="vm-email-all-messages" value="true"/>-->
       <!-- optionally use this instead if you want to store the hash of user:domain:pass-->
       <!--<param name="a1-hash" value="c6440e5de50b403206989679159de89a"/>-->
-      <!-- What this user is allowed to acces --> 
+      <!-- What this user is allowed to acces -->
       <!--<param name="http-allowed-api" value="jsapi,voicemail,status"/> -->
     </params>
     <variables>
@@ -74,7 +74,7 @@
       <!--<variable name="numbering_plan" value="US"/>-->
       <!--<variable name="default_area_code" value="434"/>-->
       <!--<variable name="default_gateway" value="asterlink.com"/>-->
-      <!--  
+      <!--
 	   NDLB-connectile-dysfunction - Rewrite contact ip and port
 	   NDLB-tls-connectile-dysfunction - Rewrite contact port only.
       -->

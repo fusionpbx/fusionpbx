@@ -183,7 +183,7 @@
 						if (voicemail_attach_file == nil) then
 							voicemail_attach_file = "true";
 						end
-						
+
 					--valid voicemail
 						if (voicemail_uuid ~= nil) then
 						--answer the session
@@ -340,7 +340,7 @@
 					end
 
 				--get the voicemail destinations
-					sql = [[select * from v_voicemail_destinations 
+					sql = [[select * from v_voicemail_destinations
 					where voicemail_uuid = ']]..voicemail_uuid..[[']]
 					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "\n");
 					destinations = {};
@@ -361,7 +361,7 @@
 						--determine uuid
 							if (y == 1) then
 								voicemail_message_uuid = uuid;
-							else 
+							else
 								voicemail_message_uuid = api:execute("create_uuid");
 							end
 							y = y + 1;
@@ -506,7 +506,7 @@
 	--callback (works with DTMF)
 		--http://wiki.freeswitch.org/wiki/Mod_fsv
 		--mkdir(voicemail_dir.."/"..voicemail_id);
-		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs) 
+		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 		--session:sayPhrase(macro_name [,macro_data] [,language]);
 		--session:sayPhrase("voicemail_menu", "1:2:3:#", default_language);
 		--session:streamFile("directory/dir-to_select_entry.wav"); --works with setInputCallback

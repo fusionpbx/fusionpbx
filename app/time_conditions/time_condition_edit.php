@@ -49,7 +49,7 @@ require_once "resources/header.php";
 		$available_presets[] = json_decode($json, true);
 	}
 	unset($preset_region);
-	
+
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -250,14 +250,14 @@ require_once "resources/header.php";
 			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 			//set group and order number
-			
+
 			$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
 			if($dialplan_detail_group_user!='') {
 				$dialplan_detail_group = $dialplan_detail_group_user;
 			} else {
 				$dialplan_detail_group = $group_id;
-			}	
-					
+			}
+
 			$dialplan_detail_order = 0;
 
 			foreach ($conditions as $cond_num => $cond_var) {

@@ -163,7 +163,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_item_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_item_desc";
-		
+
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

@@ -60,7 +60,7 @@
 	if (count($_SESSION["domains"]) > 1) {
 		//make sure the public directory and xml file exist
 		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
-			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public'.$_SESSION['domains'][$domain_uuid]['domain_name'])) { 
+			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public'.$_SESSION['domains'][$domain_uuid]['domain_name'])) {
 				mkdir($_SESSION['switch']['dialplan']['dir'].'/public/'.$_SESSION['domains'][$domain_uuid]['domain_name'],0777,true);
 			}
 			$file = $_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$domain_uuid]['domain_name'].".xml";

@@ -63,7 +63,7 @@
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
 			session:setVariable("dtmf_digits", obj['digit']);
-			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
+			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n");
 			if (obj['digit'] == "*") then
 				return("false"); --return to previous
 			elseif (obj['digit'] == "0") then
@@ -92,7 +92,7 @@
 --if base64, get from db, create temp file
 	if (storage_type == "base64") then
 		if (not file_exists(recordings_dir.."/"..file_name_only)) then
-			sql = [[SELECT * FROM v_recordings 
+			sql = [[SELECT * FROM v_recordings
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND recording_filename = ']].. file_name_only.. [[' ]];
 			if (debug["sql"]) then
@@ -110,13 +110,13 @@
 						file:close();
 					end
 			end);
-		else 
+		else
 			file_name = recordings_dir.."/"..file_name_only;
 		end
-	end 
+	end
 
 --adjust file path
-	if (not file_exists(file_name)) then 
+	if (not file_exists(file_name)) then
 		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only)) then
 			file_name = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only;
 		elseif (file_exists(recordings_dir.."/"..file_name_only)) then
@@ -128,10 +128,10 @@
 	if (session:ready()) then
 		session:answer();
 		slept = session:getVariable("slept");
-		if (slept == nil or slept == "false") then 
+		if (slept == nil or slept == "false") then
 			freeswitch.consoleLog("notice", "[ivr_menu] sleeping (1s)\n");
 			session:sleep(1000);
-			if (slept == "false") then 
+			if (slept == "false") then
 				session:setVariable("slept", "true");
 			end
 		end
@@ -144,5 +144,5 @@
 	if (storage_type == "base64") then
 		if (file_exists(file_name)) then
 			--os.remove(file_name);
-		end 
+		end
 	end

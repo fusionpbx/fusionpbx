@@ -128,7 +128,7 @@
 --authentication failed
 	if (authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
-	end 
+	end
 
 --this device already has an alternate find the correct device_uuid and then override current one
 	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then

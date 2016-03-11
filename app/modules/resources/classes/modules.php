@@ -627,6 +627,13 @@ echo $mod->dir."\n";
 						$mod['module_enabled'] = 'false';
 						$mod['module_default_enabled'] = 'false';
 						break;
+					case "mod_translate":
+						$mod['module_label'] = 'Translate';
+						$mod['module_category'] = 'Applications';
+						$mod['module_description'] = 'format numbers into a specified format.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
 					case "mod_xml_cdr":
 						$mod['module_label'] = 'XML CDR';
 						$mod['module_category'] = 'XML Interfaces';
@@ -694,7 +701,7 @@ echo $mod->dir."\n";
 		//get the list of modules
 			public function get_modules() {
 				$sql = " select * from v_modules ";
-				$sql .= "order by module_category,  module_label"; 
+				$sql .= "order by module_category,  module_label";
 				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				$this->modules = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

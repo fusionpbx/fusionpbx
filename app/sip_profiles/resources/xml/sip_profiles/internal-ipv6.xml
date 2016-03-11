@@ -1,5 +1,5 @@
 <profile name="{v_sip_profile_name}">
-	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files --> 
+	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 	<settings>
 {v_sip_profile_settings}
 	</settings>
