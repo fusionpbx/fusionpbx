@@ -1,5 +1,5 @@
 body{
-	background-color: #F0F0EE; 
+	background-color: #F0F0EE;
 	font: 12px monospace, sans-serif;
 }
 
@@ -50,7 +50,7 @@ a.char:hover{
 	padding: 2px 5px;
 	height: 35px;
 	line-height: 35px;
-	text-align:center;	 
+	text-align:center;
 	background-color: #CCCCCC;
 	font-size: 2em;
 	float: right;
