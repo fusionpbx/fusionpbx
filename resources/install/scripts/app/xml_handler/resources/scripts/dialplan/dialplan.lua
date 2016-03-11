@@ -85,19 +85,18 @@
 			condition_tag_status = "closed";
 
 		--get the dialplan and related details
-			sql = "select * from v_dialplans as d, v_dialplan_details as s ";
+			sql = "select * from v_dialplans as p, v_dialplan_details as s ";
 			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
-				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
+				sql = sql .. "where p.dialplan_context = '" .. call_context .. "' ";
 			else
-				sql = sql .. "where (d.dialplan_context = '" .. call_context .. "' or d.dialplan_context = '${domain_name}') ";
-				sql = sql .. "and (d.domain_uuid = '" .. domain_uuid .. "' or d.domain_uuid is null )";
+				sql = sql .. "where (p.dialplan_context = '" .. call_context .. "' or p.dialplan_context = '${domain_name}') ";
 			end
-			sql = sql .. "and d.dialplan_enabled = 'true' ";
-			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
+			sql = sql .. "and p.dialplan_enabled = 'true' ";
+			sql = sql .. "and p.dialplan_uuid = s.dialplan_uuid ";
 			sql = sql .. "order by ";
-			sql = sql .. "d.dialplan_order asc, ";
-			sql = sql .. "d.dialplan_name asc, ";
-			sql = sql .. "d.dialplan_uuid asc, ";
+			sql = sql .. "p.dialplan_order asc, ";
+			sql = sql .. "p.dialplan_name asc, ";
+			sql = sql .. "p.dialplan_uuid asc, ";
 			sql = sql .. "s.dialplan_detail_group asc, ";
 			sql = sql .. "CASE s.dialplan_detail_tag ";
 			sql = sql .. "WHEN 'condition' THEN 1 ";
@@ -258,14 +257,15 @@
 					if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
+								table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
-									domain_name = domains[domain_uuid];
-									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
+								end
+								if (domain_name ~= nil and domain_name ~= '') then
 									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
 									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
-									first_action = false;
 								end
+								first_action = false;
 							end
 						end
 					end
@@ -292,17 +292,19 @@
 
 		-- prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 			if pass == false then
-				log.errf('context: %s, extension: %s, type: %s, data: %s ',
-					call_context,
-					dialplan_name or '----',
-					dialplan_detail_tag or '----',
-					dialplan_detail_data or '----'
-				)
+				--send a message to the log
+					log.errf('context: %s, extension: %s, type: %s, data: %s ',
+						call_context,
+						dialplan_name or '----',
+						dialplan_detail_tag or '----',
+						dialplan_detail_data or '----'
+					)
 
 				--close the database connection
 					dbh:release();
 
-				error('error while build context: ' .. call_context)
+				--show an error
+					error('error while build context: ' .. call_context)
 			end
 
 		--close the extension tag if it was left open
@@ -337,4 +339,3 @@
 		--close the database connection
 			dbh:release();
 	end
-
