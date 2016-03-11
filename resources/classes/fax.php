@@ -323,7 +323,7 @@ include "root.php";
 							$database->add();
 						}
 
-					//delete the old dialplan details to prepare for new details 
+					//delete the old dialplan details to prepare for new details
 						$database = new database;
 						$database->table = "v_dialplan_details";
 						$database->where[0]['name'] = 'domain_uuid';
