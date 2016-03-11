@@ -63,7 +63,7 @@
   <macro name="voicemail_menu">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
-	<action function="speak-text" 
+	<action function="speak-text"
 		data="To listen to new messages, press $1, To listen to saved messages, press $2, For advanced options, press $3, to exit, press $4."/>
       </match>
     </input>
@@ -73,7 +73,7 @@
   <macro name="voicemail_config_menu">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
-	<action function="speak-text" 
+	<action function="speak-text"
 		data="To record a greeting, press $1, To choose a greeting, press $2, To record your name, press $3, to change your password, press $5, to return to the main menu, press $5."/>
       </match>
     </input>
@@ -92,7 +92,7 @@
   <macro name="voicemail_record_file_check">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
-	<action function="speak-text" 
+	<action function="speak-text"
 		data="To listen to the recording, press $1, To save the recording, press $2, To re record, press $3."/>
       </match>
     </input>
@@ -101,7 +101,7 @@
   <macro name="voicemail_record_urgent_check">
     <input pattern="^([0-9#*]):([0-9#*])$">
       <match>
-	<action function="speak-text" 
+	<action function="speak-text"
 		data="To mark this message urgent, press $1, To continue, press $2."/>
       </match>
     </input>
@@ -134,7 +134,7 @@
   <macro name="voicemail_listen_file_check">
     <input pattern="^([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*]):([0-9#*])$">
       <match>
-	<action function="speak-text" 
+	<action function="speak-text"
 		data="To listen to the recording again, press $1, To save the recording, press $2,  To delete the recording, press $3, to forward the recording to your email, press $4, to call the caller now, press $5, To forward this message to another extension, press $6."/>
       </match>
     </input>
