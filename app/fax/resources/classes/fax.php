@@ -26,7 +26,7 @@
 
 /**
  * cache class provides an abstracted cache
- * 
+ *
  * @method string dialplan - builds the dialplan for the fax servers
  */
 //define the fax class
@@ -150,7 +150,7 @@
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = substr($data,8,strlen($data));
 						}
 						elseif (substr($data,0,9) == "outbound:") {}
-						else { 
+						else {
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $data;
 						}
 						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
