@@ -62,6 +62,11 @@ local log = require "resources.functions.log".ring_group
 	context = session:getVariable("context");
 	call_direction = session:getVariable("call_direction");
 
+--default to local if nil
+	if (call_direction == nil) then
+		call_direction = "local";
+	end
+
 --define additional variables
 	uuids = "";
 	external = "false";
@@ -419,7 +424,7 @@ local log = require "resources.functions.log".ring_group
 						cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
-						local dial_string_to_user = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
+						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
 						if (ring_group_skip_active == "true") then
 							local channels = channels_by_number(destination_number, domain_name)
 							if (not channels) or #channels == 0 then
@@ -430,7 +435,7 @@ local log = require "resources.functions.log".ring_group
 						end
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
-						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 					else
 						--external number
 						y = 0;
@@ -461,7 +466,7 @@ local log = require "resources.functions.log".ring_group
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
 										if (y == 0) then
-											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",ignore_early_media=true,";
+											square = "[domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_invite_domain="..domain_name..",call_direction=outbound,"..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",ignore_early_media=true,";
 										end
 										if (r.dialplan_detail_type == "set") then
 											--session:execute("eval", dialplan_detail_data);
@@ -573,14 +578,14 @@ local log = require "resources.functions.log".ring_group
 
 								--send the call to the destination
 									if (user_exists == "true") then
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid..",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
 										session:execute("bridge", dial_string);
 									elseif (tonumber(destination_number) == nil) then
 										--sip uri
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 										session:execute("bridge", dial_string);
 									else
-										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid.."]loopback/" .. destination_number;
+										dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
 										session:execute("bridge", dial_string);
 									end
 
