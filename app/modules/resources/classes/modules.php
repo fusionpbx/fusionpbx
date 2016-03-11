@@ -627,6 +627,13 @@ echo $mod->dir."\n";
 						$mod['module_enabled'] = 'false';
 						$mod['module_default_enabled'] = 'false';
 						break;
+					case "mod_translate":
+						$mod['module_label'] = 'Translate';
+						$mod['module_category'] = 'Applications';
+						$mod['module_description'] = 'format numbers into a specified format.';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
+						break;
 					case "mod_xml_cdr":
 						$mod['module_label'] = 'XML CDR';
 						$mod['module_category'] = 'XML Interfaces';
