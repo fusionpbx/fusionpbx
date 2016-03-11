@@ -2,10 +2,10 @@
 /**
 * Smarty Internal Plugin Templatelexer
 *
-* This is the lexer to break the template source into tokens 
+* This is the lexer to break the template source into tokens
 * @package Smarty
 * @subpackage Compiler
-* @author Uwe Tews 
+* @author Uwe Tews
 */
 /**
 * Smarty Internal Plugin Templatelexer
@@ -72,8 +72,8 @@ class Smarty_Internal_Templatelexer
     				'AS' => 'as',
     				'TO' => 'to',
     				);
-    				
-    				
+
+
     function __construct($data,$compiler)
     {
 //        $this->data = preg_replace("/(\r\n|\r|\n)/", "\n", $data);
@@ -82,10 +82,10 @@ class Smarty_Internal_Templatelexer
         $this->line = 1;
         $this->smarty = $compiler->smarty;
         $this->compiler = $compiler;
-        $this->ldel = preg_quote($this->smarty->left_delimiter,'/'); 
-        $this->ldel_length = strlen($this->smarty->left_delimiter); 
+        $this->ldel = preg_quote($this->smarty->left_delimiter,'/');
+        $this->ldel_length = strlen($this->smarty->left_delimiter);
         $this->rdel = preg_quote($this->smarty->right_delimiter,'/');
-        $this->rdel_length = strlen($this->smarty->right_delimiter); 
+        $this->rdel_length = strlen($this->smarty->right_delimiter);
         $this->smarty_token_names['LDEL'] =	$this->smarty->left_delimiter;
         $this->smarty_token_names['RDEL'] =	$this->smarty->right_delimiter;
         $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
@@ -668,7 +668,7 @@ class Smarty_Internal_Templatelexer
     function yy_r2_46($yy_subpatterns)
     {
 
-  $this->token = Smarty_Internal_Templateparser::TP_PTR; 
+  $this->token = Smarty_Internal_Templateparser::TP_PTR;
     }
     function yy_r2_47($yy_subpatterns)
     {
@@ -968,7 +968,7 @@ class Smarty_Internal_Templatelexer
     $to = $match[0][1];
   } else {
     $this->compiler->trigger_template_error ("missing or misspelled literal closing tag");
-  }  
+  }
   if ($this->mbstring_overload) {
     $this->value = mb_substr($this->data,$this->counter,$to-$this->counter,'latin1');
   } else {

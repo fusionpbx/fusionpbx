@@ -1203,34 +1203,34 @@ static public $yy_action = array(
     public $yystack = array();  /* The parser's stack */
 
     public $yyTokenName = array(
-  '$',             'VERT',          'COLON',         'RDEL',        
-  'COMMENT',       'PHPSTARTTAG',   'PHPENDTAG',     'ASPSTARTTAG', 
-  'ASPENDTAG',     'FAKEPHPSTARTTAG',  'XMLTAG',        'TEXT',        
+  '$',             'VERT',          'COLON',         'RDEL',
+  'COMMENT',       'PHPSTARTTAG',   'PHPENDTAG',     'ASPSTARTTAG',
+  'ASPENDTAG',     'FAKEPHPSTARTTAG',  'XMLTAG',        'TEXT',
   'STRIPON',       'STRIPOFF',      'BLOCKSOURCE',   'LITERALSTART',
-  'LITERALEND',    'LITERAL',       'LDEL',          'DOLLAR',      
-  'ID',            'EQUAL',         'PTR',           'LDELIF',      
-  'LDELFOR',       'SEMICOLON',     'INCDEC',        'TO',          
-  'STEP',          'LDELFOREACH',   'SPACE',         'AS',          
-  'APTR',          'LDELSETFILTER',  'SMARTYBLOCKCHILDPARENT',  'LDELSLASH',   
-  'ATTR',          'INTEGER',       'COMMA',         'OPENP',       
-  'CLOSEP',        'MATH',          'UNIMATH',       'ANDSYM',      
-  'ISIN',          'ISDIVBY',       'ISNOTDIVBY',    'ISEVEN',      
-  'ISNOTEVEN',     'ISEVENBY',      'ISNOTEVENBY',   'ISODD',       
-  'ISNOTODD',      'ISODDBY',       'ISNOTODDBY',    'INSTANCEOF',  
-  'QMARK',         'NOT',           'TYPECAST',      'HEX',         
-  'DOT',           'SINGLEQUOTESTRING',  'DOUBLECOLON',   'AT',          
-  'HATCH',         'OPENB',         'CLOSEB',        'EQUALS',      
+  'LITERALEND',    'LITERAL',       'LDEL',          'DOLLAR',
+  'ID',            'EQUAL',         'PTR',           'LDELIF',
+  'LDELFOR',       'SEMICOLON',     'INCDEC',        'TO',
+  'STEP',          'LDELFOREACH',   'SPACE',         'AS',
+  'APTR',          'LDELSETFILTER',  'SMARTYBLOCKCHILDPARENT',  'LDELSLASH',
+  'ATTR',          'INTEGER',       'COMMA',         'OPENP',
+  'CLOSEP',        'MATH',          'UNIMATH',       'ANDSYM',
+  'ISIN',          'ISDIVBY',       'ISNOTDIVBY',    'ISEVEN',
+  'ISNOTEVEN',     'ISEVENBY',      'ISNOTEVENBY',   'ISODD',
+  'ISNOTODD',      'ISODDBY',       'ISNOTODDBY',    'INSTANCEOF',
+  'QMARK',         'NOT',           'TYPECAST',      'HEX',
+  'DOT',           'SINGLEQUOTESTRING',  'DOUBLECOLON',   'AT',
+  'HATCH',         'OPENB',         'CLOSEB',        'EQUALS',
   'NOTEQUALS',     'GREATERTHAN',   'LESSTHAN',      'GREATEREQUAL',
-  'LESSEQUAL',     'IDENTITY',      'NONEIDENTITY',  'MOD',         
-  'LAND',          'LOR',           'LXOR',          'QUOTE',       
-  'BACKTICK',      'DOLLARID',      'error',         'start',       
-  'template',      'template_element',  'smartytag',     'literal',     
+  'LESSEQUAL',     'IDENTITY',      'NONEIDENTITY',  'MOD',
+  'LAND',          'LOR',           'LXOR',          'QUOTE',
+  'BACKTICK',      'DOLLARID',      'error',         'start',
+  'template',      'template_element',  'smartytag',     'literal',
   'literal_elements',  'literal_element',  'value',         'modifierlist',
-  'attributes',    'expr',          'varindexed',    'statement',   
-  'statements',    'optspace',      'varvar',        'foraction',   
-  'modparameters',  'attribute',     'ternary',       'array',       
-  'ifcond',        'lop',           'variable',      'function',    
-  'doublequoted_with_quotes',  'static_class_access',  'object',        'arrayindex',  
+  'attributes',    'expr',          'varindexed',    'statement',
+  'statements',    'optspace',      'varvar',        'foraction',
+  'modparameters',  'attribute',     'ternary',       'array',
+  'ifcond',        'lop',           'variable',      'function',
+  'doublequoted_with_quotes',  'static_class_access',  'object',        'arrayindex',
   'indexdef',      'varvarele',     'objectchain',   'objectelement',
   'method',        'params',        'modifier',      'modparameter',
   'arrayelements',  'arrayelement',  'doublequoted',  'doublequotedcontent',
@@ -2160,9 +2160,9 @@ static public $yy_action = array(
     if ($this->compiler->has_code) {
         $tmp =''; foreach ($this->compiler->prefix_code as $code) {$tmp.=$code;} $this->compiler->prefix_code=array();
         $this->_retvalue = new _smarty_tag($this, $this->compiler->processNocacheCode($tmp.$this->yystack[$this->yyidx + -1]->minor,true));
-    } else { 
+    } else {
         $this->_retvalue = null;
-    }  
+    }
     $this->compiler->has_variable_string = false;
     $this->block_nesting_level = count($this->compiler->_tag_stack);
     }
@@ -2196,11 +2196,11 @@ static public $yy_action = array(
 #line 162 "smarty_internal_templateparser.y"
     function yy_r8(){
     if ($this->is_xml) {
-        $this->compiler->tag_nocache = true; 
+        $this->compiler->tag_nocache = true;
         $this->is_xml = false;
-        $save = $this->template->has_nocache_code; 
+        $save = $this->template->has_nocache_code;
         $this->_retvalue = new _smarty_text($this, $this->compiler->processNocacheCode("<?php echo '?>';?>\n", $this->compiler, true));
-        $this->template->has_nocache_code = $save; 
+        $this->template->has_nocache_code = $save;
     } elseif ($this->php_handling == Smarty::PHP_PASSTHRU) {
         $this->_retvalue = new _smarty_text($this, '?<?php ?>>');
     } elseif ($this->php_handling == Smarty::PHP_QUOTE) {
@@ -2260,17 +2260,17 @@ static public $yy_action = array(
 #line 225 "smarty_internal_templateparser.y"
     function yy_r11(){
     if ($this->strip) {
-        $this->_retvalue = new _smarty_text($this, preg_replace('![\t ]*[\r\n]+[\t ]*!', '', self::escape_start_tag($this->yystack[$this->yyidx + 0]->minor))); 
+        $this->_retvalue = new _smarty_text($this, preg_replace('![\t ]*[\r\n]+[\t ]*!', '', self::escape_start_tag($this->yystack[$this->yyidx + 0]->minor)));
     } else {
-        $this->_retvalue = new _smarty_text($this, self::escape_start_tag($this->yystack[$this->yyidx + 0]->minor));  
+        $this->_retvalue = new _smarty_text($this, self::escape_start_tag($this->yystack[$this->yyidx + 0]->minor));
     }
     }
 #line 2264 "smarty_internal_templateparser.php"
 #line 234 "smarty_internal_templateparser.y"
     function yy_r12(){
     $this->compiler->tag_nocache = true;
-    $this->is_xml = true; 
-    $save = $this->template->has_nocache_code; 
+    $this->is_xml = true;
+    $save = $this->template->has_nocache_code;
     $this->_retvalue = new _smarty_text($this, $this->compiler->processNocacheCode("<?php echo '<?xml';?>", $this->compiler, true));
     $this->template->has_nocache_code = $save;
     }
@@ -2407,7 +2407,7 @@ static public $yy_action = array(
 #line 2403 "smarty_internal_templateparser.php"
 #line 386 "smarty_internal_templateparser.y"
     function yy_r42(){
-    $tag = trim(substr($this->yystack[$this->yyidx + -1]->minor,$this->lex->ldel_length)); 
+    $tag = trim(substr($this->yystack[$this->yyidx + -1]->minor,$this->lex->ldel_length));
     $this->_retvalue = $this->compiler->compileTag(($tag == 'else if')? 'elseif' : $tag,array(),array('if condition'=>$this->yystack[$this->yyidx + 0]->minor));
     }
 #line 2409 "smarty_internal_templateparser.php"
@@ -2677,7 +2677,7 @@ static public $yy_action = array(
             $this->_retvalue = $this->smarty->registered_classes[$this->yystack[$this->yyidx + -2]->minor].'::'.$this->yystack[$this->yyidx + 0]->minor;
         } else {
             $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor.'::'.$this->yystack[$this->yyidx + 0]->minor;
-        } 
+        }
     } else {
         $this->compiler->trigger_template_error ("static class '".$this->yystack[$this->yyidx + -2]->minor."' is undefined or not allowed by security setting");
     }
@@ -2705,7 +2705,7 @@ static public $yy_action = array(
         $smarty_var = $this->compiler->compileTag('private_special_variable',array(),$this->yystack[$this->yyidx + 0]->minor['smarty_internal_index']);
         $this->_retvalue = $smarty_var;
     } else {
-        // used for array reset,next,prev,end,current 
+        // used for array reset,next,prev,end,current
         $this->last_variable = $this->yystack[$this->yyidx + 0]->minor['var'];
         $this->last_index = $this->yystack[$this->yyidx + 0]->minor['smarty_internal_index'];
         $this->_retvalue = $this->compileVariable($this->yystack[$this->yyidx + 0]->minor['var']).$this->yystack[$this->yyidx + 0]->minor['smarty_internal_index'];
@@ -3023,7 +3023,7 @@ static public $yy_action = array(
     }
 #line 3020 "smarty_internal_templateparser.php"
 #line 1196 "smarty_internal_templateparser.y"
-    function yy_r190(){ 
+    function yy_r190(){
     $this->_retvalue = '\''.$this->yystack[$this->yyidx + -2]->minor.'\'=>'.$this->yystack[$this->yyidx + 0]->minor;
     }
 #line 3025 "smarty_internal_templateparser.php"
