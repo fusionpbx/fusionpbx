@@ -1,6 +1,6 @@
 <configuration name="mongo.conf">
   <settings>
-    <!-- 
+    <!--
       connection-string handles different ways to connect to mongo
       samples:
          server:port

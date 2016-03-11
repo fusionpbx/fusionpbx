@@ -23,7 +23,7 @@ WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND (v_contact_pho
 LIMIT 1
       "/>
 
-    <!-- comment out citystate-sql to not setup a database (city/state) 
+    <!-- comment out citystate-sql to not setup a database (city/state)
          lookup -->
     <!--
     <param name="citystate-sql" value="

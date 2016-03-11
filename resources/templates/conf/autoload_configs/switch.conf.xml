@@ -13,7 +13,7 @@
 		<key name="10" value="sofia profile internal siptrace on"/>
 		<key name="11" value="sofia profile internal siptrace off"/>
 		<key name="12" value="version"/>
-	</cli-keybindings> 
+	</cli-keybindings>
 
 	<default-ptimes>
 		<!-- Set this to override the 20ms assumption of various codecs in the sdp with no ptime defined -->
@@ -45,7 +45,7 @@
 
 		<!--
 		Max number of sessions to allow at any given time.
-		
+
 		NOTICE: If you're driving 28 T1's in a single box you should set this to 644*2 or 1288
 		this will ensure you're able to use the entire DS3 without a problem.  Otherwise you'll
 		be 144 channels short of always filling that DS3 up which can translate into waste.
@@ -64,24 +64,24 @@
 		<!-- Maximum SQL Buffer length must be greater than sql-buffer-len -->
 		<!-- <param name="max-sql-buffer-len" value="2m"/> -->
 
-		<!-- 
-		 The min-dtmf-duration specifies the minimum DTMF duration to use on 
+		<!--
+		 The min-dtmf-duration specifies the minimum DTMF duration to use on
 		 outgoing events. Events shorter than this will be increased in duration
-		 to match min_dtmf_duration. You cannot configure a dtmf duration on a 
+		 to match min_dtmf_duration. You cannot configure a dtmf duration on a
 		 profile that is less than this setting. You may increase this value,
-		 but cannot set it lower than 400. This value cannot exceed 
+		 but cannot set it lower than 400. This value cannot exceed
 		 max-dtmf-duration. -->
 		<param name="min-dtmf-duration" value="640"/>
 
-		<!-- 
+		<!--
 		 The max-dtmf-duration caps the playout of a DTMF event at the specified
 		 duration. Events exceeding this duration will be truncated to this
 		 duration. You cannot configure a duration on a profile that exceeds
-		 this setting. This setting can be lowered, but cannot exceed 192000. 
+		 this setting. This setting can be lowered, but cannot exceed 192000.
 		 This setting cannot be set lower than min_dtmf_duration. -->
 		<!-- <param name="max-dtmf-duration" value="192000"/> -->
 
-		<!-- 
+		<!--
 		 The default_dtmf_duration specifies the DTMF duration to use on
 		 originated DTMF events or on events that are received without a
 		 duration specified. This value can be increased or lowered. This
@@ -144,7 +144,7 @@
 		<param name="rtp-enable-zrtp" value="true"/>
 
 		<!-- <param name="core-db-dsn" value="$${dsn}" /> -->
-		<!-- 
+		<!--
 		 Allow to specify the sqlite db at a different location (In this example, move it to ramdrive for
 		 better performance on most linux distro (note, you loose the data if you reboot))
 		-->
