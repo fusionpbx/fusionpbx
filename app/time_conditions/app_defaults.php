@@ -64,7 +64,7 @@ if ($domains_processed == 1) {
 				}
 			}
 		}
-		
+
 	//add the missing default settings
 		foreach ($missing as $row) {
 			//add the default settings
@@ -84,7 +84,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'What region to use by default when choosing Time Conditions';
 		$x++;
-	
+
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
 

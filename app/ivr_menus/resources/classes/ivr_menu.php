@@ -491,7 +491,7 @@ include "root.php";
 								$database->where[1]['operator'] = '=';
 								$database->update();
 
-							//delete the old dialplan details to prepare for new details 
+							//delete the old dialplan details to prepare for new details
 								$database = new database;
 								$database->table = "v_dialplan_details";
 								$database->where[0]['name'] = 'domain_uuid';
@@ -828,7 +828,7 @@ include "root.php";
 							$sub_sql = "select * from v_ivr_menu_options ";
 							$sub_sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
 							$sub_sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-							$sub_sql .= "order by ivr_menu_option_order asc "; 
+							$sub_sql .= "order by ivr_menu_option_order asc ";
 							$sub_prep_statement = $db->prepare(check_sql($sub_sql));
 							$sub_prep_statement->execute();
 							$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_ASSOC);

@@ -39,7 +39,7 @@ else {
 		$db_path = $db_file_path;
 		$db_name = $dbfilename;
 	}
- 
+
 //get the db connection information
 	if (strlen($_REQUEST['id']) > 0) {
 		$sql = "select * from v_databases ";
