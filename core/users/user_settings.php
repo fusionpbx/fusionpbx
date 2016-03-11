@@ -206,7 +206,7 @@ else {
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['user_setting_enabled'])."</a>\n";
+			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['user_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
