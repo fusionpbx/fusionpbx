@@ -1,31 +1,20 @@
 <?php
 
-// Fill in the value in the native language
-// rename the corerct flag in /theme/flags/*.png
-
-$language_name['en-us'] = "English - United States";
-$language_name['es-cl'] = "Español - Chile";
-$language_name['pt-pt'] = "Português - Portugal";
-$language_name['fr-fr'] = "Français - France";
-$language_name['nl-nl'] = "Nederlands - De Nederland";
-$language_name['pt-br'] = "Brasileiro - Português";
-$language_name['pl'] = "Polski - Polska";
-$language_name['sv-se'] = "Svenska - Sverige";
-$language_name['uk'] = "Українська - Україна";
-$language_name['de-at'] = "Deutsch - Österreich";
-$language_name['ar-eg'] = "العربية - مصر";
-$language_name['ru-ru'] = 'Русский - Россия';
-
-// pl should be pl-pl
-// ro should be ro-ro
-// uk should be uk-ua
-// he should be he-il
-
-// Common terms
-
+//language
+$text['language-name']['en-us'] = "English - United States";
+$text['language-name']['es-cl'] = "Español - Chile";
+$text['language-name']['pt-pt'] = "Português - Portugal";
+$text['language-name']['fr-fr'] = "Français - France";
+$text['language-name']['nl-nl'] = "Nederlands - De Nederland";
+$text['language-name']['pt-br'] = "Brasileiro - Português";
+$text['language-name']['pl'] = "Polski - Polska";
+$text['language-name']['sv-se'] = "Svenska - Sverige";
+$text['language-name']['uk'] = "Українська - Україна";
+$text['language-name']['de-at'] = "Deutsch - Österreich";
+$text['language-name']['ar-eg'] = "العربية - مصر";
+$text['language-name']['ru-ru'] = 'Русский - Россия';
 
 //message
-
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";
@@ -95,7 +84,7 @@ $text['message-failed']['pt-pt'] = "Falha na atualiza玢o - Contato com o suport
 $text['message-failed']['fr-fr'] = "Mise ?jour a 閏hou?- Contacter le support technique";
 $text['message-failed']['pt-br'] = "Falha na atualiza莽茫o  - Entre em contato com o suporte";
 $text['message-failed']['pl'] = "Aktualizacja nie powiod艂a si臋 - skontaktuj si臋 z pomoc膮";
-$text['message-failed']['uk'] = "袧械 胁写邪谢芯褋褟 芯薪芯胁懈褌懈 - 蟹胁'褟卸褨褌褜褋褟 蟹褨 褋谢褍卸斜芯褞 锌褨写褌褉懈屑泻懈";
+$text['message-failed']['uk'] = ""
 $text['message-failed']['sv-se'] = "Uppdatering Misslyckades - Kontakta Support";
 $text['message-failed']['de-at'] = "Aktualisierung fehlgeschlagen - Kontaktieren Sie den Support";
 
