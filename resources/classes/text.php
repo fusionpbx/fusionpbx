@@ -30,9 +30,10 @@ class text {
 	 */
 	public function get($language_code = null, $app_path = null, $exclude_global = false) {
 		//get the global app_languages.php
-			if(!$exclude_global){
+			if (!$exclude_global){
 				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
 			}
+
 		//get the app_languages.php
 			if ($app_path != null) {
 				$lang_path = $_SERVER["PROJECT_ROOT"]."/".$app_path."/app_languages.php";
@@ -43,6 +44,7 @@ class text {
 			if(file_exists($lang_path)){
 				require $lang_path;
 			}
+
 		//get the available languages
 			krsort($text);
 			foreach ($text as $lang_label => $lang_codes) {
@@ -53,31 +55,22 @@ class text {
 				}
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
+
 		//check the session language
-			if(isset($_SESSION['domain']) and $language_code == null){
+			if (isset($_SESSION['domain']) and $language_code == null){
 				$language_code = $_SESSION['domain']['language']['code'];
-			}elseif($language_code == null){
+			} elseif ($language_code == null){
 				$language_code = 'en-us';
 			}
+
 		//reduce to specific language
 			if ($language_code != 'all') {
-				foreach($text as $key => $value) {
-					if(strlen($value[$language_code]) > 0) {
+				foreach ($text as $key => $value) {
+					if (strlen($value[$language_code]) > 0) {
 						$text[$key] = $value[$language_code];
-					}else{
+					} else {
 						//fallback to en-us
 						$text[$key] = $value['en-us'];
-					}
-				}
-			}
-			if ($language_code != 'all') {
-				foreach($language_name as $code => $value) {
-					$text["language-$code"] = $value;
-				}
-			}else{
-				foreach($language_name as $code => $value) {
-					foreach($language_name as $c_code => $value) {
-						$text["language-$code"][$c_code] = $value;
 					}
 				}
 			}
@@ -86,4 +79,5 @@ class text {
 			return $text;
 	}
 }
+
 ?>
