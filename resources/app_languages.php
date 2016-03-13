@@ -84,7 +84,7 @@ $text['message-failed']['pt-pt'] = "Falha na atualiza玢o - Contato com o suport
 $text['message-failed']['fr-fr'] = "Mise ?jour a 閏hou?- Contacter le support technique";
 $text['message-failed']['pt-br'] = "Falha na atualiza莽茫o  - Entre em contato com o suporte";
 $text['message-failed']['pl'] = "Aktualizacja nie powiod艂a si臋 - skontaktuj si臋 z pomoc膮";
-$text['message-failed']['uk'] = ""
+$text['message-failed']['uk'] = "";
 $text['message-failed']['sv-se'] = "Uppdatering Misslyckades - Kontakta Support";
 $text['message-failed']['de-at'] = "Aktualisierung fehlgeschlagen - Kontaktieren Sie den Support";
 
