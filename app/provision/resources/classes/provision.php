@@ -154,6 +154,16 @@ include "root.php";
 			return $mac;
 		}
 
+		//define a function to check if a contact exists in the contacts array
+		private function contact_exists($contacts, $uuid) {
+			if (is_array($contacts[$uuid])) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
 		public function render() {
 
 			//debug
@@ -486,16 +496,6 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
-				//define a function to check if a contact exists in the contacts array
-					function contact_exists($contacts, $uuid) {
-						if (is_array($contacts[$uuid])) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					}
-
 				//get the list of contact directly assigned to the user
 					//get the user_uuid to find the contacts assigned to the user and the groups the user is a member of.
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
@@ -541,7 +541,7 @@ include "root.php";
 										//get the contact_uuid
 											$uuid = $row['contact_uuid'];
 										//add the contacts to the contact array
-											if (!contact_exists($contacts, $uuid)) {
+											if (!$this->contact_exists($contacts, $uuid)) {
 												$contacts[$uuid]['category'] = 'groups';
 												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
 												$contacts[$uuid]['contact_category'] = $row['contact_category'];
@@ -576,7 +576,7 @@ include "root.php";
 										//get the contact_uuid
 											$uuid = $row['contact_uuid'];
 										//add the contacts to the contact array
-											if (!contact_exists($contacts, $uuid)) {
+											if (!$this->contact_exists($contacts, $uuid)) {
 												$contacts[$uuid]['category'] = 'users';
 												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
 												$contacts[$uuid]['contact_category'] = $row['contact_category'];
