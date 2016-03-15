@@ -1,24 +1,20 @@
 <CiscoIPPhoneDirectory>
 	<Title>Our Phones</Title>
 	<Prompt>Please choose...</Prompt>
-{assign var=x value=1}
-{foreach $extensions as $row}{
-	<DirectoryEntry>
-{if $row.directory_full_name != ""}
-		<Name>{$row.directory_full_name}</Name>
+{foreach $contacts as $row}{if $row.category == "extensions"}
+<DirectoryEntry>
+{if $row.contact_name_given != ""}
+	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
 {else}
-		<Name>{$row.effective_caller_id_name}</Name>
+	<Name>{$row.contact_organization}</Name>
 {/if}
-{if $row.number_alias != ""}
-		<Telephone>{$row.number_alias}</Telephone>
+{if $row.phone_number != ""}
+	<Telephone>{$row.phone_number}</Telephone>
 {else}
-		<Telephone>{$row.extension}</Telephone>
+	<Telephone>{$row.phone_extension}</Telephone>
 {/if}
-	</DirectoryEntry>
-{assign var=x value=$x+1}
+</DirectoryEntry>
+{/if}
 {/foreach}
 </CiscoIPPhoneDirectory>
-
-
-
 

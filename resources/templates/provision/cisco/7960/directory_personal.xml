@@ -1,8 +1,7 @@
 <CiscoIPPhoneDirectory>
 	<Title>Personal</Title>
 	<Prompt>Please choose...</Prompt>
-{assign var=x value=1}
-{foreach $user_contacts as $row}
+{foreach $contacts as $row}{if $row.category == "users"}
 <DirectoryEntry>
 {if $row.contact_name_given != ""}
 	<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
@@ -15,6 +14,6 @@
 	<Telephone>{$row.phone_extension}</Telephone>
 {/if}
 </DirectoryEntry>
-{assign var=x value=$x+1}
+{/if}
 {/foreach}
 </CiscoIPPhoneDirectory>
