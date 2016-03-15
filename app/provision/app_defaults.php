@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -150,6 +150,13 @@
 			$array[$x]['default_setting_value'] = '';
 			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '3600 * GMT offset';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'polycom_digitmap';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '[*]xxxx|[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-9]xxT|**x.T';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'http_domain_filter';
