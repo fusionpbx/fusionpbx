@@ -341,7 +341,7 @@ else {
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	if (permission_exists('xml_cdr_delete') && $result_count > 0) {
-		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 		$col_count++;
 	}
 	//column headings
@@ -473,7 +473,7 @@ else {
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('xml_cdr_delete')) {
 					echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-					echo "		<input type='checkbox' name='id[".$index."]' id='checkbox_".$row['uuid']."' value='".$row['uuid']."' onclick=\"(this.checked) ? document.getElementById('recording_".$row['uuid']."').value='".base64_encode($recording_file_path)."' : document.getElementById('recording_".$row['uuid']."').value='';\">";
+					echo "		<input type='checkbox' name='id[".$index."]' id='checkbox_".$row['uuid']."' value='".$row['uuid']."' onclick=\"if (this.checked) { document.getElementById('recording_".$row['uuid']."').value='".base64_encode($recording_file_path)."' } else { document.getElementById('recording_".$row['uuid']."').value=''; document.getElementById('chk_all').checked = false; }\">";
 					echo "		<input type='hidden' name='rec[".$index."]' id='recording_".$row['uuid']."'>";
 					echo "	</td>";
 					$xml_ids[] = 'checkbox_'.$row['uuid'];
