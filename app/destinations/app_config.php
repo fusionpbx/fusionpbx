@@ -109,6 +109,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_number_regex";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Regular Expression version of destination number";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id name.";

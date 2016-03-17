@@ -1381,16 +1381,65 @@ function number_pad($number,$n) {
 
 //email validate
 	function email_validate($strEmail){
-	   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-	   // search email text for regular exp matches
-	   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+		$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+		// search email text for regular exp matches
+		preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+		if (count($matches) == 0) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	}
 
-	   if (count($matches) == 0) {
-		return 0;
-	   }
-	   else {
-		return 1;
-	   }
-}
+//converts a string to a regular expression
+	function string_to_regex($string) {
+		//escape the plus
+			if (substr($string, 0, 1) == "+") {
+				$string = "^\\+(".substr($string, 1).")$";
+			}
+		//convert N,X,Z syntax to regex
+			$string = str_ireplace("N", "[2-9]", $string);
+			$string = str_ireplace("X", "[0-9]", $string);
+			$string = str_ireplace("Z", "[1-9]", $string);
+		//add ^ to the start of the string if missing
+			if (substr($string, 0, 1) != "^") {
+				$string = "^".$string;
+			}
+		//add $ to the end of the string if missing
+			if (substr($string, -1) != "$") {
+				$string = $string."$";
+			}
+		//add the round brackgets ( and )
+			if (!strstr($string, '(')) {
+				if (strstr($string, '^')) {
+					$string = str_replace("^", "^(", $string);
+				}
+				else {
+					$string = '^('.$string;
+				}
+			}
+			if (!strstr($string, ')')) {
+				if (strstr($string, '$')) {
+					$string = str_replace("$", ")$", $string);
+				}
+				else {
+					$string = $string.')$';
+				}
+			}
+		//return the result
+			return $string;
+	}
+	//$string = "+12089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "12089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^(20890682[0-9][0-9])$"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "1208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "nxxnxxxxxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^(2089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^2089068227)"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227$"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
 
 ?>
