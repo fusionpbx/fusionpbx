@@ -342,7 +342,7 @@ else {
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 					permission_exists('default_setting_delete')
 					) {
-					echo "<th style='text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+					echo "<th style='text-align: center; padding: 0px;'><input type='checkbox' id='chk_all_".$row['default_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th width='23%'>".$text['label-subcategory']."</th>";
 				echo "<th width='7%'>".$text['label-type']."</th>";
@@ -366,7 +366,7 @@ else {
 				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 				permission_exists("default_setting_delete")
 				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."'></td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['default_setting_category']."').checked = false; }\"></td>\n";
 				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -473,6 +473,7 @@ else {
 		echo "	function setting_search() {\n";
 		echo "		var criteria = $('#default_setting_search').val();\n";
 		echo "		if (criteria.length >= 2) {\n";
+		echo "			$('.chk_all').hide();\n";
 		echo "			for (var x = 0; x < categories.length; x++) {\n";
 		echo "				document.getElementById('category_'+categories[x]).style.display = 'none';\n";
 		echo "			}\n";
@@ -493,6 +494,7 @@ else {
 		echo "			}\n";
 		echo "		}\n";
 		echo "		else {\n";
+		echo "			$('.chk_all').show();\n";
 		echo "			for (var x = 0; x < setting_uuids.length; x++) {\n";
 		echo "				document.getElementById('category_'+categories[x]).style.display = '';\n";
 		echo "				document.getElementById('setting_'+setting_uuids[x]).style.display = '';\n";
