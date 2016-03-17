@@ -106,7 +106,7 @@ else {
 					break;
 				case 'php':
 					document.getElementById('description').innerHTML = "<?php echo $text['description-php'];?>";
-					editor.getSession().setMode('ace/mode/php');
+					editor.getSession().setMode({path:'ace/mode/php', inline:true}); //highlight without opening tag
 					$('#mode option[value=php]').prop('selected',true);
 					break;
 				case 'shell':
@@ -196,7 +196,7 @@ else {
 			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick="editor.execCommand('replace');"></td>
 			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick="editor.execCommand('gotoline');"></td>
 			<td valign='middle' style='padding-left: 10px;'>
-				<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode('ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
+				<select id='mode' style='height: 23px;' onchange="editor.getSession().setMode((this.options[this.selectedIndex].value == 'php') ? {path:'ace/mode/php', inline:true} : 'ace/mode/' + this.options[this.selectedIndex].value); focus_editor();">
 					<?php
 					$modes['php'] = 'PHP';
 					$modes['css'] = 'CSS';
@@ -208,8 +208,10 @@ else {
 					$modes['text'] = 'Text';
 					$modes['xml'] = 'XML';
 					$modes['sql'] = 'SQL';
-					$preview = ($setting_preview == 'true') ? "onmouseover=\"editor.getSession().setMode('ace/mode/' + this.value);\"" : null;
 					foreach ($modes as $value => $label) {
+						if ($setting_preview == 'true') {
+							$preview = "onmouseover=\"editor.getSession().setMode(".(($value == 'php') ? "{path:'ace/mode/php', inline:true}" : "'ace/mode/' + this.value").");\"";
+						}
 						$selected = ($value == $mode) ? 'selected' : null;
 						echo "<option value='".$value."' ".$selected." ".$preview.">".$label."</option>\n";
 					}
@@ -283,7 +285,7 @@ else {
 			</td>
 		</tr>
 	</table>
-	<div id='editor'><?php echo $cmd; ?></div>
+	<div id='editor'><?php echo htmlentities($cmd); ?></div>
 	<?php
 	echo "		</td>";
 	echo "	</tr>\n";
@@ -311,6 +313,7 @@ else {
 				highlightGutterLine: false,
 				useSoftTabs: false
 				});
+			<?php if ($mode == 'php') { ?>editor.getSession().setMode({path:'ace/mode/php', inline:true});<?php } ?>
 			document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
 			focus_editor();
 
@@ -345,7 +348,6 @@ else {
 						eval($cmd);
 						$result = ob_get_contents();
 						ob_end_clean();
-						$result = htmlentities($result);
 					}
 					break;
 				case 'switch':
