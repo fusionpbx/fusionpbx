@@ -38,7 +38,7 @@ $pathtofonts = "/captcha/fonts/"; //path from the root of the website
           <td align='right'><input type="text" name="captcha" size="15"></td>
         </tr>
         </table>
-        
+
     //Option2:  or add this to the html form
 				<br>
 					<script language="JavaScript" type="text/javascript">

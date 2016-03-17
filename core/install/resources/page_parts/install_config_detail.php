@@ -68,7 +68,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select id='install_default_country' name='install_default_country' class='formfld' style=''>\n";
 	require "resources/countries.php";
- 
+
 	foreach ($countries as $iso_code => $country ){
 		if($iso_code == $install_default_country){
 			echo "			<option value='$iso_code' selected='selected'>".$country['country']."</option>\n";

@@ -121,7 +121,7 @@ EOD;
 			if ( $country_iso===NULL ) {
 				return;
 			}
-			
+
 			if(isset($countries[$country_iso])){
 				$country = $countries[$country_iso];
 
@@ -133,7 +133,7 @@ EOD;
 				if ($prep_statement) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-	
+
 					if ($row['num_rows'] == 0) {
 						$sql = "insert into v_vars ";
 						$sql .= "(";
@@ -161,7 +161,7 @@ EOD;
 					}
 				}
 				unset($prep_statement, $sql);
-	
+
 		// Set default Country code
 				$sql = "select count(*) as num_rows from v_vars ";
 				$sql .= "where var_name = 'default_countrycode' ";
@@ -197,7 +197,7 @@ EOD;
 					}
 				}
 				unset($prep_statement, $sql);
-	
+
 		// Set default International Direct Dialing code
 				$sql = "select count(*) as num_rows from v_vars ";
 				$sql .= "where var_name = 'default_exitcode' ";
@@ -229,11 +229,11 @@ EOD;
 						$sql .= ");";
 						$db->exec(check_sql($sql));
 						unset($sql, $row);
-						$x++;				
+						$x++;
 					}
 				}
 				unset($prep_statement, $sql);
-	
+
 				unset($countries);
 			}
 		}

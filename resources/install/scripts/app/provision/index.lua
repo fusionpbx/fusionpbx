@@ -75,31 +75,40 @@
 --get the user and domain name from the user argv user@domain
 	sip_from_uri = session:getVariable("sip_from_uri");
 	user_table = explode("@",sip_from_uri);
+	domain_table = explode(":",user_table[2]);
 	user = user_table[1];
-	domain = user_table[2];
+	domain = domain_table[1];
 
 --show the phone that will be overridden
-	freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. "\n");
-	freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
-	freeswitch.consoleLog("NOTICE", "[provision] domain: ".. domain .. "\n");
+	if (sip_from_uri ~= nil) then
+		freeswitch.consoleLog("NOTICE", "[provision] sip_from_uri: ".. sip_from_uri .. "\n");
+	end
+	if (user ~= nil) then
+		freeswitch.consoleLog("NOTICE", "[provision] user: ".. user .. "\n");
+	end
+	if (domain ~= nil) then
+		freeswitch.consoleLog("NOTICE", "[provision] domain: ".. domain .. "\n");
+	end
 
 --get the device uuid for the phone that will have its configuration overridden
-	sql = [[SELECT * FROM v_device_lines ]];
-	sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
-	sql = sql .. [[AND server_address = ']]..domain..[[' ]];
-	sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
-	if (debug["sql"]) then
-		freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
-	end
-	dbh:query(sql, function(row)
-		--get device uuid
+	if (user ~= nil and domain ~= nil and domain_uuid ~= nil) then
+		sql = [[SELECT * FROM v_device_lines ]];
+		sql = sql .. [[WHERE user_id = ']] .. user .. [[' ]];
+		sql = sql .. [[AND server_address = ']]..domain..[[' ]];
+		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("NOTICE", "[provision] sql: ".. sql .. "\n");
+		end
+		dbh:query(sql, function(row)
+			--get device uuid
 			device_uuid = row.device_uuid;
 			freeswitch.consoleLog("NOTICE", "[provision] device_uuid: ".. device_uuid .. "\n");
-	end);
+		end);
+	end
 
 --get the alternate device uuid using the device username and password
 	authorized = 'false';
-	if (user_id ~= '' and password ~= '') then
+	if (user_id ~= nil and password ~= nil and domain_uuid ~= nil) then
 		sql = [[SELECT * FROM v_devices ]];
 		sql = sql .. [[WHERE device_username = ']]..user_id..[[' ]];
 		sql = sql .. [[AND device_password = ']]..password..[[' ]]
@@ -119,10 +128,10 @@
 --authentication failed
 	if (authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
-	end 
+	end
 
 --this device already has an alternate find the correct device_uuid and then override current one
-	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil) then
+	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then
 		sql = [[SELECT * FROM v_devices ]];
 		sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
 		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
@@ -137,7 +146,7 @@
 	end
 
 --remove the alternate device from another device so that it can be added to this device
-	if (authorized == 'true' and action == "login") then
+	if (authorized == 'true' and action == "login" and device_uuid_alternate ~= nil and domain_uuid ~= nil) then
 		sql = [[SELECT * FROM v_device_lines ]];
 		sql = sql .. [[WHERE device_uuid = ']]..device_uuid_alternate..[[' ]];
 		sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];
@@ -170,7 +179,7 @@
 
 --add the override to the device uuid (login)
 	if (authorized == 'true' and action == "login") then
-		if (device_uuid_alternate ~= nil) then
+		if (device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then
 			--send a hangup
 				session:hangup();
 			--add the new alternate
@@ -186,7 +195,7 @@
 
 --remove the override to the device uuid (logout)
 	if (authorized == 'true' and action == "logout") then
-		if (device_uuid_alternate ~= nil) then
+		if (device_uuid_alternate ~= nil and device_uuid ~= nil and domain_uuid ~= nil) then
 			sql = [[UPDATE v_devices SET device_uuid_alternate = null ]];
 			sql = sql .. [[WHERE device_uuid_alternate = ']]..device_uuid..[[' ]];
 			sql = sql .. [[AND domain_uuid = ']]..domain_uuid..[[' ]];

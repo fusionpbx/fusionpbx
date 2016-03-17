@@ -3,7 +3,7 @@
 //	email :	fuushikaden@yahoo.com
 
 //////////////////////////////////////////////////////////////////////////////////
-// Layers 
+// Layers
 //////////////////////////////////////////////////////////////////////////////////
 
 var layerQueue=new Array()
@@ -21,22 +21,22 @@ function hideElement( elmID, overDiv )
 	  {
 		continue;
 	  }
-  
+
 	  // Find the element's offsetTop and offsetLeft relative to the BODY tag.
 	  objLeft   = obj.offsetLeft;
 	  objTop    = obj.offsetTop;
 	  objParent = obj.offsetParent;
-	  
+
 	  while( objParent.tagName.toUpperCase() != "BODY" )
 	  {
 		objLeft  += objParent.offsetLeft;
 		objTop   += objParent.offsetTop;
 		objParent = objParent.offsetParent;
 	  }
-  
+
 	  objHeight = obj.offsetHeight;
 	  objWidth = obj.offsetWidth;
-  
+
 	  if(( overDiv.offsetLeft + overDiv.offsetWidth ) <= objLeft );
 	  else if(( overDiv.offsetTop + overDiv.offsetHeight ) <= objTop );
 	  else if( overDiv.offsetTop >= ( objTop + objHeight ));
@@ -48,7 +48,7 @@ function hideElement( elmID, overDiv )
 	}
   }
 }
- 
+
 /*
 * unhides <select> and <applet> objects (for IE only)
 */
@@ -59,12 +59,12 @@ function showElement( elmID )
 	for( i = 0; i < document.getElementsByTagName( elmID ).length; i++ )
 	{
 	  obj = document.getElementsByTagName( elmID )[i];
-	  
+
 	  if( !obj || !obj.offsetParent )
 	  {
 		continue;
 	  }
-	
+
 	  obj.style.visibility = "";
 	}
   }
@@ -96,7 +96,7 @@ function lw_showLayer (layerName) {
 
 		hideElement( 'SELECT', document.getElementById(layerName) );
 		hideElement( 'APPLET', document.getElementById(layerName) );
-	}	
+	}
 }
 
 function lw_hideLayer () {
@@ -120,11 +120,11 @@ function lw_hideLayerName (layerName) {
 	{
 		if ((layerQueue[i]!="")&&(layerQueue[i]!=layerName))
 		{
-			tmpQueue [++newIndex] = layerQueue[i]			
+			tmpQueue [++newIndex] = layerQueue[i]
 			hideElement( 'SELECT', document.getElementById(layerQueue[i]) );
 			hideElement( 'APPLET', document.getElementById(layerQueue[i]) );
 		}
-		
+
 	}
 
 	layerQueue = tmpQueue
@@ -161,7 +161,7 @@ function lw_escLayer (e) {
 	else
 	if ((event.keyCode==0)||(event.keyCode==27))
 	{
-		lw_closeLastLayer()		
+		lw_closeLastLayer()
 	}
 }
 

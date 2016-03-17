@@ -25,7 +25,7 @@
 
 --include config.lua
 	require "resources.functions.config";
-	
+
 --connect to the database
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
@@ -96,7 +96,7 @@
 	--	if string.len(destination) == 0) then
 	--		destination = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 	--		freeswitch.consoleLog("NOTICE", "[ring_group] destination: "..destination.."\n");
-`	--	end
+	--	end
 	--end
 
 --login or logout
@@ -109,7 +109,7 @@
 				SELECT COUNT(*) AS in_group FROM
 					v_ring_group_destinations
 				WHERE
-					domain_uuid = ']]..domain_uuid..[[' 
+					domain_uuid = ']]..domain_uuid..[['
 					AND ring_group_uuid = ']]..ring_group_uuid..[['
 					AND destination_number = ']]..destination..[['
 			]];
@@ -118,21 +118,21 @@
 			assert(dbh:query(sql, function(row)
 				if (row.in_group == "0") then
 					sql = [[
-						INSERT INTO 
-							v_ring_group_destinations 
+						INSERT INTO
+							v_ring_group_destinations
 								(	ring_group_destination_uuid,
-									domain_uuid, 
-									ring_group_uuid, 
+									domain_uuid,
+									ring_group_uuid,
 									destination_number,
 									destination_delay,
 									destination_timeout
-								) 
-						VALUES 
+								)
+						VALUES
 								(	']]..ring_group_destination_uuid..[[',
-									']]..domain_uuid..[[', 
-									']]..ring_group_uuid..[[', 
-									']]..destination..[[', 
-									]]..destination_delay..[[, 
+									']]..domain_uuid..[[',
+									']]..ring_group_uuid..[[',
+									']]..destination..[[',
+									]]..destination_delay..[[,
 									]]..destination_timeout..[[
 								)]];
 					freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");
@@ -148,11 +148,11 @@
 		end
 		if (menu_selection == "2") then
 			sql = [[
-				DELETE FROM 
-					v_ring_group_destinations 
-				WHERE 
-					domain_uuid =']]..domain_uuid..[[' 
-					AND ring_group_uuid=']]..ring_group_uuid..[['  
+				DELETE FROM
+					v_ring_group_destinations
+				WHERE
+					domain_uuid =']]..domain_uuid..[['
+					AND ring_group_uuid=']]..ring_group_uuid..[['
 					AND destination_number=']]..destination..[['
 				]];
 			freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL "..sql.."\n");

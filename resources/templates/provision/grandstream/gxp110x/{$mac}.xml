@@ -3,9 +3,9 @@
   <config version="1">
 <!-- Configuration Template For GXP110x Firmware Version 1.0.5.26 -->
 
-<!-- Change Log -->                                                    
+<!-- Change Log -->
 
-<!-- P values added since 1.0.5.23 -->   
+<!-- P values added since 1.0.5.23 -->
 <!-- Enable Idle Mute. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
@@ -22,7 +22,7 @@
 <!-- P1696 = 0 -->
 
 
-<!-- P values' default value changed since 1.0.5.15  -->   
+<!-- P values' default value changed since 1.0.5.15  -->
 <!-- Periodic Inform Interval -->
 <!-- Number -->
 <!-- P4507 = 86400 -->
@@ -37,7 +37,7 @@
 <!-- P1434 = 4 -->
 
 
-<!-- P values added since 1.0.4.23  -->          
+<!-- P values added since 1.0.4.23  -->
 <!-- Music On Hold URI -->
 <!-- P2350 = -->
 
@@ -104,14 +104,14 @@
 <!-- P2348 = 0 -->
 
 
-<!-- P values deleted from 1.0.4.23 -->          
+<!-- P values deleted from 1.0.4.23 -->
 <!-- China Telecom Mode. 0 - No. 1 - Yes. Default is 0. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 <!-- P1386 =0 -->
 
 
-<!-- P values option updated since 1.0.4.23 -->          
+<!-- P values option updated since 1.0.4.23 -->
 <!-- Option 12 added for P323, P324, P325, P326 -->
 <!-- Key Mode. -->
 <!-- 0 - Speed Dial -->
@@ -128,11 +128,11 @@
 <!-- P325 = 0 -->
 <!-- P326 = 0 -->
 
-<!--Change Log End  -->                                                
+<!--Change Log End  -->
 
 
 
-<!-- Account Settings  -->                                              
+<!-- Account Settings  -->
 
 <!-- Account 1 -->
 
@@ -674,7 +674,7 @@
 
 
 
-<!--Network/Basic Settings -->                                                   
+<!--Network/Basic Settings -->
 
 <!-- Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
 <!-- Number: 0, 1 -->
@@ -1005,7 +1005,7 @@
 <!-- Display Language. Default is auto -->
 <!-- ar - Arabic, cz - Czech, de - Deutsh -->
 <!-- en - English, es - Spanish, fr - Francais -->
-<!-- he - Hebrew, hr - Hrvatski, hu - Magyar --> 
+<!-- he - Hebrew, hr - Hrvatski, hu - Magyar -->
 <!-- it - Italiano, ja - japanese, ko - korean -->
 <!-- nl - Dutch, pl - Polski, pt - Portugue -->
 <!-- ru - Russian, sl - Slovenian, tr - Turkish -->
@@ -1049,11 +1049,11 @@
 <!-- Number -->
 <P4507>86400</P4507>
 
-<!-- Connection Request Username -->	
+<!-- Connection Request Username -->
 <!-- String: a-z, A-Z, 0-9 -->
 <P4511></P4511>
 
-<!-- Connection Request Password -->	
+<!-- Connection Request Password -->
 <!-- String: a-z, A-Z, 0-9 -->
 <P4512></P4512>
 
@@ -1205,8 +1205,8 @@
 
 <!--Call Progress Tones  -->
 
-<!-- Syntax: f1=val,f2=val[,c=on1/off1[-on2/off2[-on3/off3]]]; --> 
-<!-- (Frequencies are in Hz and cadence on and off are in 10ms) --> 
+<!-- Syntax: f1=val,f2=val[,c=on1/off1[-on2/off2[-on3/off3]]]; -->
+<!-- (Frequencies are in Hz and cadence on and off are in 10ms) -->
 
 <!-- System Ring Tone -->
 <!-- String -->
@@ -1288,7 +1288,7 @@
 <P304></P304>
 
 <!-- Multipupose Key 2 -->
- 
+
 <!-- Key Mode.  -->
 <!-- 0 - Speed Dial -->
 <!-- 5 - DialDTMF -->

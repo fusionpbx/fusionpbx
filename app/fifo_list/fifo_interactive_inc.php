@@ -188,8 +188,8 @@ else {
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 			echo "</table>\n";
-			
-			
+
+
 			//Current logged members
 			//set the alternating row styles
 			$c = 0;
@@ -201,33 +201,33 @@ else {
 			echo "</div>\n";
 			echo "<br><br>Logged in agents<br><br>\n";
 
-			
+
 		//show the content
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	
-			
+
+
 			echo "<tr>\n";
 			echo "<th>".$text['label-username']."</th>\n";
 			echo "<th>Total inbound calls</th>\n";
 			echo "<th>Logged on since</th>\n";
 			echo "</tr>\n";
-			
-			
+
+
 			//print_r($xml->fifo->outbound->member[0]);
 			//print_r($xml->fifo->outbound->member[1]);
 
-			
+
 			foreach ($xml->fifo->outbound->member as $row) {
 
-				
-				
+
+
 				$username=explode("@",$row);
 				$username=explode("/",$username[0]);
 				$username=$username[1];
-				
+
 				$fifo_duration_formatted=$row["logged-on-since"];
 				$fifo_total_inbound_calls=$row["outbound-call-total-count"];
-			
+
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$username &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_total_inbound_calls &nbsp;</td>\n";

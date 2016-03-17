@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -38,20 +38,24 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
+//get the ids
+	if (is_array($_REQUEST) && sizeof($_REQUEST) > 0) {
 
-if (strlen($id)>0) {
-	//delete voicemail
-		$sql = "delete from v_voicemails ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and voicemail_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-}
+		$voicemail_uuids = $_REQUEST["id"];
+		foreach($voicemail_uuids as $voicemail_uuid) {
+			$voicemail_uuid = check_str($voicemail_uuid);
+			if ($voicemail_uuid != '') {
+				//delete voicemail messages
+					require_once "resources/classes/voicemail.php";
+					$voicemail = new voicemail;
+					$voicemail->db = $db;
+					$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+					$voicemail->voicemail_uuid = $voicemail_uuid;
+					$result = $voicemail->voicemail_delete();
+					unset($voicemail);
+			}
+		}
+	}
 
 //redirect the user
 	$_SESSION["message"] = $text['message-delete'];

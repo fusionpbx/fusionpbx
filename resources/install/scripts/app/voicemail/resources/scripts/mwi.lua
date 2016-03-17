@@ -36,7 +36,7 @@
 	debug["sql"] = false;
 	debug["info"] = false;
 
---only run the script a single time 
+--only run the script a single time
 	runonce = true
 --connect to the database
 	require "resources.functions.database_handle";
@@ -65,10 +65,10 @@
 			end
 
 		--Send MWI events for voicemail boxes with messages
-			sql = [[SELECT v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name, COUNT(*) AS message_count 
-				FROM v_voicemail_messages as m, v_voicemails as v, v_domains as d 
-				WHERE v.voicemail_uuid = m.voicemail_uuid 
-				AND v.domain_uuid = d.domain_uuid 
+			sql = [[SELECT v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name, COUNT(*) AS message_count
+				FROM v_voicemail_messages as m, v_voicemails as v, v_domains as d
+				WHERE v.voicemail_uuid = m.voicemail_uuid
+				AND v.domain_uuid = d.domain_uuid
 				GROUP BY v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name;]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
@@ -120,5 +120,5 @@
 			--slow the loop down
 			os.execute("sleep "..sleep);
 		end
-		
+
 	end

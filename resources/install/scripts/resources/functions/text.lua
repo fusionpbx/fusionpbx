@@ -1,11 +1,11 @@
---- 
+---
 -- @tparam table dict Dictionary
 -- @tparam[opt='en'] string language default language
 -- @tparam[opt='us'] string dialect default language
 -- @return[1] nil if key is unknown
 -- @return[2] empty string if language/dialect unknown or there no appropriate value for default language/dialect
 -- @return[3] translated value accordint dictionary/language/dialect
--- 
+--
 -- @usage
 -- local dict = {
 -- 	['label-text'] = {

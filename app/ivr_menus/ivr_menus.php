@@ -127,7 +127,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ivr_menu_direct_dial'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ivr_menu_enabled'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['ivr_menu_enabled']]."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ivr_menu_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ivr_menu_edit')) {

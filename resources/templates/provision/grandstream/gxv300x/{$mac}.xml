@@ -5,7 +5,7 @@
     <!-- Advanced/System-wide Options -->
     <!-- Admin password for web interface, max. length is 30 -->
     <P2>{$admin_password}</P2>
-    <!-- End User Password --> 
+    <!-- End User Password -->
     <P196>{$user_password}</P196>
     <!-- G.723 rate: 0 - 6.3kbps encoding rate,  1 - 5.3kbps encoding rate -->
     <P49></P49>

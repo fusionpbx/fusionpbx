@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -186,6 +186,50 @@
 			return $result;
 		}
 
+		public function voicemail_delete() {
+			//delete voicemail messages
+				$this->message_delete();
+
+			//delete voicemail recordings folder (includes greetings)
+				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+				foreach (glob($file_path."/*.*") as $file_name) {
+					unlink($file_name);
+				}
+				@rmdir($file_path);
+
+			//delete voicemail destinations
+				$sql = "delete from v_voicemail_destinations ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+
+			//delete voicemail greetings
+				$sql = "delete from v_voicemail_greetings ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+
+			//delete voicemail options
+				$sql = "delete from v_voicemail_options ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+
+			//delete voicemail
+				$sql = "delete from v_voicemails ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+		}
+
 		public function message_count() {
 			$sql = "select count(*) as num_rows from v_voicemail_messages ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
@@ -214,21 +258,11 @@
 		}
 
 		public function message_delete() {
-
-			//delete voicemail_message
-				$sql = "delete from v_voicemail_messages ";
-				$sql .= "where domain_uuid = '$this->domain_uuid' ";
-				$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
-				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid' ";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				unset($sql);
-
 			//get the voicemail_id
 				if (!isset($this->voicemail_id)) {
-					$sql = "select * from v_voicemails ";
+					$sql = "select voicemail_id from v_voicemails ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
+					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -240,13 +274,30 @@
 
 			//delete the recording
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
-				foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
-					unlink($file_name);
+				if ($this->voicemail_message_uuid != '') {
+					foreach (
+						glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) { unlink($file_name);
+					}
 				}
+				else {
+					foreach (
+						glob($file_path."/msg_*.*") as $file_name) { unlink($file_name); //remove all recordings
+					}
+				}
+
+			//delete voicemail message(s)
+				$sql = "delete from v_voicemail_messages ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				if ($this->voicemail_message_uuid != '') {
+					$sql .= "and voicemail_message_uuid = '".$this->voicemail_message_uuid."' ";
+				}
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql);
 
 			//check the message waiting status
 				$this->message_waiting();
-
 		}
 
 		public function message_saved() {

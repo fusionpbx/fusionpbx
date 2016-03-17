@@ -1,7 +1,6 @@
 <CiscoIPPhoneDirectory>
 	<Title>Speed Dial</Title>
 	<Prompt>Please choose...</Prompt>
-{assign var=x value=1}
 {foreach $contacts as $row}{if $row.contact_category == "speed dial"}
 <DirectoryEntry>
 {if $row.contact_name_given != ""}
@@ -16,6 +15,5 @@
 {/if}
 </DirectoryEntry>
 {/if}
-{assign var=x value=$x+1}
 {/foreach}
 </CiscoIPPhoneDirectory>

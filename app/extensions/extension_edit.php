@@ -240,7 +240,7 @@ else {
 							$sql_insert .= "domain_uuid, ";
 							$sql_insert .= "device_mac_address, ";
 							$sql_insert .= "device_template, ";
-							$sql_insert .= "device_provision_enable ";
+							$sql_insert .= "device_enabled ";
 							$sql_insert .= ") ";
 							$sql_insert .= "values ";
 							$sql_insert .= "(";

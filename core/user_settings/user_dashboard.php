@@ -120,16 +120,16 @@
 				$stats['system']['devices']['disabled'] = 0;
 				$stats['domain']['devices']['total'] = 0;
 				$stats['domain']['devices']['disabled'] = 0;
-				$sql = "select domain_uuid, device_provision_enabled from v_devices";
+				$sql = "select domain_uuid, device_enabled from v_devices";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				$stats['system']['devices']['total'] = count($result);
 				foreach ($result as $row) {
-					$stats['system']['devices']['disabled'] += ($row['device_provision_enabled'] != 'true') ? 1 : 0;
+					$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
 					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 						$stats['domain']['devices']['total']++;
-						$stats['domain']['devices']['disabled'] += ($row['device_provision_enabled'] != 'true') ? 1 : 0;
+						$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
 					}
 				}
 				unset ($sql, $prep_statement, $result);
@@ -361,6 +361,15 @@
 					)
 					and bridge_uuid is null
 					and destination_number in ('".implode("','",$assigned_extensions)."')
+					and (";
+					$x = 0;
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql .= "extension_uuid = '".$assigned_extension_uuid."' ";
+						$sql .= "or destination_number = '".$assigned_extension."' ";
+						if (++$x < sizeof($assigned_extensions)) { $sql .= "or "; }
+					}
+					$sql .= "
+					)
 				order by
 					start_epoch desc
 				limit ".$missed_limit."
@@ -396,9 +405,22 @@
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch = (defined('TIME_24HR') && TIME_24HR == 1) ? date("j/n H:i", $row['start_epoch']) : date("j/n h:ia", $row['start_epoch']);
-
-					$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\"";
-					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					//set click-to-call variables
+						if (permission_exists('click_to_call_call')) {
+							$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
+								"?src_cid_name=".urlencode($row['caller_id_name']).
+								"&src_cid_number=".urlencode($row['caller_id_number']).
+								"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
+								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
+								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
+								"&dest=".urlencode($row['caller_id_number']).
+								"&rec=false".
+								"&ringback=us-ring".
+								"&auto_answer=true".
+								"');\" ".
+								"style='cursor: pointer;'";
+						}
+					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]."' style='cursor: help;'>\n";
 					if ($theme_cdr_images_exist) {
 						$call_result = ($row['answer_stamp'] != '') ? 'voicemail' : 'cancelled';
@@ -447,10 +469,11 @@
 					domain_uuid = '".$_SESSION['domain_uuid']."'
 					and (";
 					$x = 0;
-					foreach ($assigned_extensions as $assigned_extension) {
-						$sql .= "caller_id_number like '".$assigned_extension."' ";
-						$sql .= "or destination_number like '".$assigned_extension."' ";
-						$sql .= "or destination_number like '*99".$assigned_extension."' ";
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql .= "extension_uuid = '".$assigned_extension_uuid."' ";
+						$sql .= "or caller_id_number = '".$assigned_extension."' ";
+						$sql .= "or destination_number = '".$assigned_extension."' ";
+						$sql .= "or destination_number = '*99".$assigned_extension."' ";
 						if (++$x < sizeof($assigned_extensions)) { $sql .= "or "; }
 					}
 					$sql .= "
@@ -499,17 +522,32 @@
 					$tmp_start_epoch = (defined('TIME_24HR') && TIME_24HR == 1) ? date("j/n H:i", $row['start_epoch']) : date("j/n h:ia", $row['start_epoch']);
 
 					//determine name
-						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : "&nbsp;";
-					//determine number to display/click-to-call
+						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
+					//determine number to display
 						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
+							$dest = $row['caller_id_number'];
 						}
 						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && in_array($row['caller_id_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
+							$dest = $row['destination_number'];
 						}
-
-					$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($cdr_name)."&src_cid_number=".urlencode($cdr_number)."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($cdr_number)."&rec=false&ringback=us-ring&auto_answer=true');\"";
-					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					//set click-to-call variables
+						if (permission_exists('click_to_call_call')) {
+							$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
+								"?src_cid_name=".urlencode($cdr_name).
+								"&src_cid_number=".urlencode($cdr_number).
+								"&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']).
+								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
+								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
+								"&dest=".urlencode($dest).
+								"&rec=false".
+								"&ringback=us-ring".
+								"&auto_answer=true".
+								"');\" ".
+								"style='cursor: pointer;'";
+						}
+					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					//determine call result and appropriate icon
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]."' style='cursor: help;'>\n";
 						if ($theme_cdr_images_exist) {
@@ -896,7 +934,7 @@
 		if ((in_array('missed', $selected_blocks) || in_array('recent', $selected_blocks)) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
-			echo "		/*\n";
+			//echo "		alert(url);\n";
 			echo "		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari\n";
 			echo "			xmlhttp=new XMLHttpRequest();\n";
 			echo "		}\n";
@@ -906,7 +944,6 @@
 			echo "		xmlhttp.open(\"GET\",url,true);\n";
 			echo "		xmlhttp.send(null);\n";
 			echo "		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
-			echo "		*/\n";
 			echo "	}\n";
 			echo "</script>\n";
 		}

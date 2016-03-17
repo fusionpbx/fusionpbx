@@ -127,7 +127,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "user_setting_category_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
