@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -138,8 +138,12 @@ require_once "resources/paging.php";
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+	echo "<form name='frm' method='post' action='extension_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	if (permission_exists('extension_delete') && $num_rows > 0) {
+		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	//echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
@@ -149,8 +153,11 @@ require_once "resources/paging.php";
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
-			echo "	<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>\n";
+			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
+	}
+	if (permission_exists('extension_delete') && $num_rows > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -159,6 +166,12 @@ require_once "resources/paging.php";
 		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
+			if (permission_exists('extension_delete')) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['extension_uuid']."' value='".$row['extension_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
+				echo "	</td>";
+				$ext_ids[] = 'checkbox_'.$row['extension_uuid'];
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
 				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
@@ -177,7 +190,7 @@ require_once "resources/paging.php";
 				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='extension_delete.php?id[]=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -186,23 +199,39 @@ require_once "resources/paging.php";
 		unset($sql, $extensions, $row_count);
 	} //end if results
 
+	echo "	<tr>\n";
+	echo "		<td colspan='20' class='list_control_icons'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
-			echo "	<tr>\n";
-			echo "		<td colspan='20' class='list_control_icons'>\n";
-			echo "			<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>\n";
-			echo "		</td>\n";
-			echo "	</tr>\n";
+			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
+	if (permission_exists('extension_delete') && $num_rows > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+
 
 	echo "</table>";
+	echo "</form>";
 
 	if (strlen($paging_controls) > 0) {
 		echo "<center>".$paging_controls."</center>\n";
 	}
 
 	echo "<br><br>\n";
+
+	// check or uncheck all checkboxes
+	if (sizeof($ext_ids) > 0) {
+		echo "<script>\n";
+		echo "	function check(what) {\n";
+		foreach ($ext_ids as $ext_id) {
+			echo "document.getElementById('".$ext_id."').checked = (what == 'all') ? true : false;\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
 
 //show the footer
 	require_once "resources/footer.php";
