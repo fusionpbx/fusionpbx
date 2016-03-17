@@ -170,7 +170,7 @@ else {
 	if (permission_exists('exec_command_line')) { echo "<tr><td valign='middle'><input type='radio' name='handler' id='handler_shell' value='shell' ".(($handler == 'shell') ? 'checked' : null)." onclick=\"set_handler('shell');\"></td><td valign='bottom' style='padding-top: 3px;'><label for='handler_shell'> ".$text['label-shell']."</label></td></tr>\n"; }
 	echo "						</table>\n";
 	echo "						<br />";
-	echo "						<input type='button' class='btn' title=\"".$text['button-execute']." [Ctrl + Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
+	echo "						<input type='button' class='btn' title=\"".$text['button-execute']." [Ctrl+Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
 	echo "						&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='reset_editor();'>".$text['label-reset']."</a>\n";
 	echo "						<br /><br /><br />";
 	echo "					</td>";
@@ -318,7 +318,7 @@ else {
 			$(window).keypress(function(event) {
 				//execute command [Ctrl+Enter]
 				if (((event.which == 13 || event.which == 10) && event.ctrlKey) || (event.which == 19)) {
-					$('form#frm_edit').submit();
+					$('form#frm').submit();
 					return false;
 				}
 				//otherwise, default action
