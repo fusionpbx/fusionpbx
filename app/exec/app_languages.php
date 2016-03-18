@@ -30,6 +30,30 @@ $text['label-shell']['sv-se'] = "Shell";
 $text['label-shell']['uk'] = "Консоль";
 $text['label-shell']['de-at'] = "Shell";
 
+$text['label-response']['en-us'] = "Response";
+$text['label-response']['es-cl'] = "Respuesta";
+$text['label-response']['pt-pt'] = "Resposta";
+$text['label-response']['fr-fr'] = "Réponse";
+$text['label-response']['pt-br'] = "Resposta";
+$text['label-response']['pl'] = "Odpowiedź";
+$text['label-response']['sv-se'] = "Respons";
+$text['label-response']['uk'] = "Відповідь";
+$text['label-response']['de-at'] = "Antwort";
+
+$text['label-reset']['en-us'] = "Reset";
+$text['label-reset']['es-cl'] = "Reajustar";
+$text['label-reset']['pt-pt'] = "Restabelecer";
+$text['label-reset']['fr-fr'] = "Remettre";
+$text['label-reset']['pt-br'] = "Restabelecer";
+$text['label-reset']['pl'] = "Resetuj";
+$text['label-reset']['he'] = "אפס";
+$text['label-reset']['uk'] = "Скинути";
+$text['label-reset']['sv-se'] = "Återställ";
+$text['label-reset']['de-at'] = "Zurücksetzen";
+$text['label-reset']['ro'] = "Inițializare";
+$text['label-reset']['fa'] = "";
+$text['label-reset']['ar-eg'] = "إعادة تعيين";
+
 $text['label-php']['en-us'] = "PHP";
 $text['label-php']['es-cl'] = "Comando PHP";
 $text['label-php']['pt-pt'] = "Comandos PHP";

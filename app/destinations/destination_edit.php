@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013-2015
+	Portions created by the Initial Developer are Copyright (C) 2013-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -83,7 +83,6 @@ if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) {
 			$destination_type = check_str($_POST["destination_type"]);
 			$destination_number = check_str($_POST["destination_number"]);
 			$db_destination_number = check_str($_POST["db_destination_number"]);
-			$regex_destination_number = str_replace("+", "\\+", $destination_number);
 			$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 			$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 			$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
@@ -97,6 +96,9 @@ if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) {
 			$currency_buy = check_str($_POST["currency_buy"]);
 			$destination_accountcode = check_str($_POST["destination_accountcode"]);
 			$destination_carrier = check_str($_POST["destination_carrier"]);
+		//convert the number to a regular expression
+			$destination_number_regex = string_to_regex($destination_number);
+			$_POST["destination_number_regex"] = $destination_number_regex;
 	}
 
 //unset the db_destination_number
@@ -221,7 +223,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "(".$regex_destination_number.")";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
