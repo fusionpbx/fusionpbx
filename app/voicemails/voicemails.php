@@ -160,7 +160,7 @@ else {
 		if (permission_exists('voicemail_add') || permission_exists('voicemail_edit')) {
 			echo "<a href='voicemail_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
-		if (permission_exists('voicemail_delete') && $num_rows > 0) {
+		if (permission_exists('voicemail_delete')) {
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "</td>\n";

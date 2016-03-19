@@ -307,20 +307,15 @@
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
 				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid'";
-				$this->db->exec($sql);
-				unset($sql);
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+
 			//check the message waiting status
 				$this->message_waiting();
 		}
 
 		public function message_download() {
-
-			//check the message waiting status
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
 
 			//change the message status
 				$this->message_saved();

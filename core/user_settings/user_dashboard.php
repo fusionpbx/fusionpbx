@@ -273,7 +273,6 @@
 				$vm = new voicemail;
 				$vm->db = $db;
 				$vm->domain_uuid = $_SESSION['domain_uuid'];
-				$vm->voicemail_uuid = $voicemail_uuid;
 				$vm->order_by = $order_by;
 				$vm->order = $order;
 				$voicemails = $vm->messages();
@@ -296,7 +295,7 @@
 					}
 				}
 
-				$hud[$n]['html'] .= "<span class='hud_voicemail_total' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'\"><sup class='hud_voicemail_new'>&nbsp;</sup>".$messages['total']."<sup class='hud_voicemail_new'>".$messages['new']."</sup></span>\n";
+				$hud[$n]['html'] .= "<span class='hud_voicemail_total' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\"><sup class='hud_voicemail_new'>&nbsp;</sup>".$messages['total']."<sup class='hud_voicemail_new'>".$messages['new']."</sup></span>\n";
 				$hud[$n]['html'] .= "<br><br>";
 
 				if (sizeof($voicemails) > 0) {
