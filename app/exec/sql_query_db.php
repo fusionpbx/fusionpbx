@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('exec_sql')) {
 	//access granted
 }
 else {
@@ -51,15 +51,16 @@ require_once "resources/paging.php";
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-databases']."</b></td>\n";
-	echo "		<td width='50%' align=\"right\">";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-databases']."</b></td>\n";
+	echo "		<td width='50%' align='right'>";
+	echo "		<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location.href='exec.php';\" value='".$text['button-back']."'>\n";
 	if (if_group("superadmin")) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-manage']."' onclick=\"window.location='/core/databases/databases.php'\" value='".$text['button-manage']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-manage']."' onclick=\"document.location.href='/core/databases/databases.php';\" value='".$text['button-manage']."'>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
-	echo "		<td align=\"left\" colspan='2'>\n";
+	echo "		<td align='left' colspan='2'>\n";
 	echo "			".$text['description-databases'].".<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -72,12 +73,7 @@ require_once "resources/paging.php";
 		if ($prep_statement) {
 		$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
+			$num_rows = ($row['num_rows'] > 0) ? $row['num_rows'] : '0';
 		}
 
 	//prepare to page the results
@@ -102,28 +98,28 @@ require_once "resources/paging.php";
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('database_type', $text['label-type'], $order_by, $order);
 	echo th_order_by('database_host', $text['label-host'], $order_by, $order);
 	echo th_order_by('database_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('database_description', $text['label-description'], $order_by, $order);
-	echo "<td align='right' width='21'>\n";
-	echo "</td>\n";
+	echo "<td class='list_control_icons' style='width: 25px;'>&nbsp;</td>\n";
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = "href='exec.php?id=".$row['database_uuid']."'";
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_host']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='exec.php?id=".$row['database_uuid']."'>".$row['database_name']."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='sql_query.php?id=".$row['database_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "	<td class='list_control_icons' style='width: 25px;'>";
+			echo "		<a href='exec.php?id=".$row['database_uuid']."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = ($c == 0) ? 1 : 0;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results

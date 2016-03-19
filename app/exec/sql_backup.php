@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('sql_query_backup')) {
+if (permission_exists('exec_sql_backup')) {
 	//access granted
 }
 else {
