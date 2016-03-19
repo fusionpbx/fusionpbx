@@ -57,7 +57,8 @@ else {
 //resend email
 	if ($_REQUEST['a'] == 'resend' && permission_exists('email_resend')) {
 		$email_uuid = check_str($_REQUEST["id"]);
-
+		$resend = true;
+		
 		$msg_found = false;
 
 		if ($email_uuid != '') {
@@ -85,7 +86,11 @@ else {
 			require_once "secure/v_mailto.php";
 			if ($mailer_error == '') {
 				$_SESSION["message"] = $text['message-message_resent'];
-				header("Location: email_delete.php?id=".$email_uuid);
+				if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+					header("Location: email_delete.php?id=".$email_uuid."&showall=true");
+				} else {
+					header("Location: email_delete.php?id=".$email_uuid);
+				}
 			}
 			else {
 				$_SESSION["message_mood"] = 'negative';

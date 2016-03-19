@@ -44,7 +44,11 @@ else {
 	if ($email_uuid != '') {
 		$sql = "delete from v_emails ";
 		$sql .= "where email_uuid = '".$email_uuid."' ";
-		$sql .= "and domain_uuid = '".$domain_uuid."' ";
+		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
+			$sql .= "";
+		} else {
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+		}
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql, $prep_statement);
