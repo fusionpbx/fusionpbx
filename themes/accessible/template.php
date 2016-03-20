@@ -451,36 +451,65 @@ table tr:last-child td:last-child {
 	td.hud_box {
 		height: auto;
 		vertical-align: top;
-		padding: 15px;
-		background-color: #f5f7fa;
-		border: 1px solid #c6d4e8;
-		-webkit-border-radius: 6px;
-		-moz-border-radius: 6px;
-		border-radius: 6px;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
 		text-align: center;
+		background-image: url('<?php echo PROJECT_PATH?>/themes/accessible/images/menu_background.jpg');
+		background-repeat: repeat-x;
+		background-position: top center;
 		}
 
-	b.hud_title {
-		color: #a4aebf;
+	span.hud_title {
+		display: block;
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		text-shadow: 0px 1px 2px #000;
+		letter-spacing: -0.02em;
+		font-size: 12pt;
+		color: #fff;
+		width: 100%;
+		height: 40px;
+		cursor: default;
+		text-align: center;
+		line-height: 40px;
+		background-color: #4f66b6;
+		-webkit-border-radius: 4px 4px 0 0;
+		-moz-border-radius: 4px 4px 0 0;
+		border-radius: 4px 4px 0 0;
+		border-top: 3px solid #000e41;
+		border-bottom: 1px solid #000;
 		}
 
-	span.hud_voicemail_total {
+	span.hud_stat {
+		display: block;
 		cursor: pointer;
-		color: #004083;
-		font-size: 60px;
-		line-hight: 20px;
-		font-weight: bold;
-		}
-
-	span.hud_voicemail_total:hover {
-		opacity: 0.7;
-		}
-
-	sup.hud_voicemail_new {
+		text-align: center;
+		text-shadow: 0px 2px 2px #aaa;
+		width: 100%;
+		height: 130px;
+		color: #000;
+		font-size: 75px;
 		font-weight: normal;
-		color: #03920a;
-		font-size: 30px;
-		line-hight: 10px;
+		padding-top: 10px;
+		margin-bottom: 6px;
+		}
+
+	span.hud_stat_title {
+		display: block;
+		width: 100%;
+		height: 30px;
+		cursor: pointer;
+		text-align: center;
+		text-shadow: 0px 1px 1px #aaa;
+		color: #000;
+		font-size: 14px;
+		font-weight: normal;
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		}
+
+	span.hud_stat:hover {
+		opacity: 0.9;
+		cursor: pointer;
 		}
 
 	th.hud_heading {

@@ -221,38 +221,105 @@
 
 		//call center queues
 			if (permission_exists('call_center_active_view')) {
-				$sql = "select domain_uuid from v_call_center_queues where domain_uuid = '".$_SESSION['domain_uuid']."'";
+				$stats['system']['call_center_queues']['total'] = 0;
+				$stats['system']['call_center_queues']['disabled'] = 0;
+				$stats['domain']['call_center_queues']['total'] = 0;
+				$stats['domain']['call_center_queues']['disabled'] = 0;
+				$sql = "select domain_uuid from v_call_center_queues";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['domain']['call_center_queues']['total'] = count($result);
+				$stats['system']['call_center_queues']['total'] = count($result);
+				foreach ($result as $row) {
+					//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+						$stats['domain']['call_center_queues']['total']++;
+						//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+					}
+				}
 				unset ($sql, $prep_statement, $result);
 			}
 
 		//ivr menus
 			if (permission_exists('ivr_menu_view')) {
+				$stats['system']['ivr_menus']['total'] = 0;
+				$stats['system']['ivr_menus']['disabled'] = 0;
+				$stats['domain']['ivr_menus']['total'] = 0;
 				$stats['domain']['ivr_menus']['disabled'] = 0;
-				$sql = "select domain_uuid, ivr_menu_enabled from v_ivr_menus where domain_uuid = '".$_SESSION['domain_uuid']."'";
+				$sql = "select domain_uuid, ivr_menu_enabled from v_ivr_menus";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['domain']['ivr_menus']['total'] = count($result);
+				$stats['system']['ivr_menus']['total'] = count($result);
 				foreach ($result as $row) {
-					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+						$stats['domain']['ivr_menus']['total']++;
+						$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					}
 				}
 				unset ($sql, $prep_statement, $result);
 			}
 
 		//ring groups
 			if (permission_exists('ring_group_view')) {
+				$stats['system']['ring_groups']['total'] = 0;
+				$stats['system']['ring_groups']['disabled'] = 0;
+				$stats['domain']['ring_groups']['total'] = 0;
 				$stats['domain']['ring_groups']['disabled'] = 0;
-				$sql = "select domain_uuid, ring_group_enabled from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."'";
+				$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$stats['domain']['ring_groups']['total'] = count($result);
+				$stats['system']['ring_groups']['total'] = count($result);
 				foreach ($result as $row) {
-					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+						$stats['domain']['ring_groups']['total']++;
+						$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					}
+				}
+				unset ($sql, $prep_statement, $result);
+			}
+
+		//voicemails
+			if (permission_exists('voicemail_view')) {
+				$stats['system']['voicemails']['total'] = 0;
+				$stats['system']['voicemails']['disabled'] = 0;
+				$stats['domain']['voicemails']['total'] = 0;
+				$stats['domain']['voicemails']['disabled'] = 0;
+				$sql = "select domain_uuid, voicemail_enabled from v_voicemails";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$stats['system']['voicemails']['total'] = count($result);
+				foreach ($result as $row) {
+					$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+						$stats['domain']['voicemails']['total']++;
+						$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+					}
+				}
+				unset ($sql, $prep_statement, $result);
+			}
+
+		//voicemail messages
+			if (permission_exists('voicemail_message_view')) {
+				$stats['system']['messages']['total'] = 0;
+				$stats['system']['messages']['new'] = 0;
+				$stats['domain']['messages']['total'] = 0;
+				$stats['domain']['messages']['new'] = 0;
+				$sql = "select domain_uuid, message_status from v_voicemail_messages";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$stats['system']['messages']['total'] = count($result);
+				foreach ($result as $row) {
+					$stats['system']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+					if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+						$stats['domain']['messages']['total']++;
+						$stats['domain']['messages']['new'] += ($row['message_status'] != 'saved') ? 1 : 0;
+					}
 				}
 				unset ($sql, $prep_statement, $result);
 			}
@@ -295,8 +362,8 @@
 					}
 				}
 
-				$hud[$n]['html'] .= "<span class='hud_voicemail_total' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\"><sup class='hud_voicemail_new'>&nbsp;</sup>".$messages['total']."<sup class='hud_voicemail_new'>".$messages['new']."</sup></span>\n";
-				$hud[$n]['html'] .= "<br><br>";
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\"";
+				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$messages['new']."<br><span class='hud_stat_title' ".$onclick.">".$text['label-new_messages']."</span></span>\n";
 
 				if (sizeof($voicemails) > 0) {
 					$hud[$n]['html'] .= "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
@@ -314,7 +381,7 @@
 						if (is_uuid($voicemail_uuid)) {
 							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'";
 							$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>";
-							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='javascript:void(0);'>".$row['ext']."</td>";
+							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'>".$row['ext']."</td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
 							$hud[$n]['html'] .= "</tr>";
@@ -340,7 +407,7 @@
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$missed_limit = (in_array('system', $selected_blocks)) ? 8 : 5;
+			$missed_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -369,10 +436,9 @@
 					}
 					$sql .= "
 					)
+					and start_epoch > ".(time() - 86400)."
 				order by
-					start_epoch desc
-				limit ".$missed_limit."
-				offset 0";
+					start_epoch desc";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -382,6 +448,9 @@
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
+
+			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\"";
+			$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$result_count."<br><span class='hud_stat_title' ".$onclick.">".$text['label-last_24_hours']."</span></span>\n";
 
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -400,6 +469,7 @@
 					) ? true : false;
 
 				foreach($result as $index => $row) {
+					if ($index + 1 > $missed_limit) { break; } //only show limit
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
@@ -449,7 +519,7 @@
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$recent_limit = (in_array('system', $selected_blocks)) ? 8 : 5;
+			$recent_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -477,10 +547,9 @@
 					}
 					$sql .= "
 					)
+					and start_epoch > ".(time() - 86400)."
 				order by
-					start_epoch desc
-				limit ".$recent_limit."
-				offset 0";
+					start_epoch desc";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -490,6 +559,9 @@
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
+
+			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'\"";
+			$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$result_count."<br><span class='hud_stat_title' ".$onclick.">".$text['label-last_24_hours']."</span></span>\n";
 
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
@@ -515,6 +587,7 @@
 					) ? true : false;
 
 				foreach($result as $index => $row) {
+					if ($index + 1 > $recent_limit) { break; } //only show limit
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
@@ -584,6 +657,89 @@
 		}
 
 
+	//domain limits
+		if (in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+			$hud[$n]['title'] = $text['label-domain_limits'];
+
+			$c = 0;
+			$row_style["0"] = "row_style0";
+			$row_style["1"] = "row_style1";
+
+			$show_stat = true;
+			if (permission_exists('extension_view')) {
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
+				$hud_stat = $stats['domain']['extensions']['total'];
+				$hud_stat_title = $text['label-total_extensions'];
+			}
+			else if (permission_exists('destination_view')) {
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/destinations/destinations.php'\"";
+				$hud_stat = $stats['domain']['destinations']['total'];
+				$hud_stat_title = $text['label-total_destinations'];
+			}
+			else {
+				$show_stat = false;
+			}
+			if ($show_stat) {
+				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$hud_stat."<br><span class='hud_stat_title' ".$onclick.">".$hud_stat_title."</span></span>\n";
+			}
+
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<tr>\n";
+			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-feature']."</th>\n";
+			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
+			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
+			$hud[$n]['html'] .= "</tr>\n";
+
+			foreach ($_SESSION['limit'] as $category => $value) {
+				$limit = $value['numeric'];
+				switch ($category) {
+					case 'users':
+						if (!permission_exists('user_view')) { continue 2; }
+						$url = '/core/users/index.php';
+						break;
+					case 'call_center_queues':
+						if (!permission_exists('call_center_active_view')) { continue 2; }
+						$url = '/app/call_centers/call_center_queues.php';
+						break;
+					case 'destinations':
+						if (!permission_exists('destination_view')) { continue 2; }
+						$url = '/app/destinations/destinations.php';
+						break;
+					case 'devices':
+						if (!permission_exists('device_view')) { continue 2; }
+						$url = '/app/devices/devices.php';
+						break;
+					case 'extensions':
+						if (!permission_exists('extension_view')) { continue 2; }
+						$url = '/app/extensions/extensions.php';
+						break;
+					case 'gateways':
+						if (!permission_exists('gateway_view')) { continue 2; }
+						$url = '/app/gateways/gateways.php';
+						break;
+					case 'ivr_menus':
+						if (!permission_exists('ivr_menu_view')) { continue 2; }
+						$url = '/app/ivr_menus/ivr_menus.php';
+						break;
+					case 'ring_groups':
+						if (!permission_exists('ring_group_view')) { continue 2; }
+						$url = '/app/ring_groups/ring_groups.php';
+						break;
+				}
+				$tr_link = "href='".PROJECT_PATH.$url."'";
+				$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-'.$category]."</a></td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['domain'][$category]['total']."</td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
+				$hud[$n]['html'] .= "</tr>\n";
+				$c = ($c) ? 0 : 1;
+			}
+
+			$hud[$n]['html'] .= "</table>\n";
+			$n++;
+		}
+
+
 	//system counts
 		if (in_array('counts', $selected_blocks) && permission_exists('xml_cdr_view')) {
 			$hud[$n]['title'] = $text['label-system_counts'];
@@ -592,7 +748,30 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+			$show_stat = true;
+			if (permission_exists('domain_view')) {
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php'\"";
+				$hud_stat = $stats['system']['domains']['total'] - $stats['system']['domains']['disabled'];
+				$hud_stat_title = $text['label-active_domains'];
+			}
+			else if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
+				$hud_stat = $stats['system']['extensions']['total'] - $stats['system']['extensions']['disabled'];
+				$hud_stat_title = $text['label-active_extensions'];
+			}
+			else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/index.php'\"";
+				$hud_stat = $stats['system']['users']['total'] - $stats['system']['users']['disabled'];
+				$hud_stat_title = $text['label-active_users'];
+			}
+			else {
+				$show_stat = false;
+			}
+			if ($show_stat) {
+				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$hud_stat."<br><span class='hud_stat_title' ".$onclick.">".$hud_stat_title."</span></span>\n";
+			}
+
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-disabled']."</th>\n";
@@ -665,74 +844,66 @@
 					$c = ($c) ? 0 : 1;
 				}
 
-			$hud[$n]['html'] .= "</table>\n";
-			$n++;
-		}
-
-
-	//domain limits
-		if (in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
-			$hud[$n]['title'] = $text['label-domain_limits'];
-
-			$c = 0;
-			$row_style["0"] = "row_style0";
-			$row_style["1"] = "row_style1";
-
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-			$hud[$n]['html'] .= "<tr>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-feature']."</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
-			$hud[$n]['html'] .= "</tr>\n";
-
-			foreach ($_SESSION['limit'] as $category => $value) {
-				$category_raw = $category;
-				$category = str_replace('_', ' ', $category);
-				$category = ucwords($category);
-				$category = str_replace('Ivr', 'IVR', $category);
-				$limit = $value['numeric'];
-				switch ($category_raw) {
-					case 'users':
-						if (!permission_exists('user_view')) { continue 2; }
-						$url = '/core/users/index.php';
-						break;
-					case 'call_center_queues':
-						if (!permission_exists('call_center_active_view')) { continue 2; }
-						$url = '/app/call_centers/call_center_queues.php';
-						break;
-					case 'destinations':
-						if (!permission_exists('destination_view')) { continue 2; }
-						$url = '/app/destinations/destinations.php';
-						break;
-					case 'devices':
-						if (!permission_exists('device_view')) { continue 2; }
-						$url = '/app/devices/devices.php';
-						break;
-					case 'extensions':
-						if (!permission_exists('extension_view')) { continue 2; }
-						$url = '/app/extensions/extensions.php';
-						break;
-					case 'gateways':
-						if (!permission_exists('gateway_view')) { continue 2; }
-						$url = '/app/gateways/gateways.php';
-						break;
-					case 'ivr_menus':
-						if (!permission_exists('ivr_menu_view')) { continue 2; }
-						$url = '/app/ivr_menus/ivr_menus.php';
-						break;
-					case 'ring_groups':
-						if (!permission_exists('ring_group_view')) { continue 2; }
-						$url = '/app/ring_groups/ring_groups.php';
-						break;
+			//call center queues
+				if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
+					$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['call_center_queues']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['call_center_queues']['total']."</td>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+					$c = ($c) ? 0 : 1;
 				}
-				$tr_link = "href='".PROJECT_PATH.$url."'";
-				$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$category."</a></td>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['domain'][$category_raw]['total']."</td>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
-				$hud[$n]['html'] .= "</tr>\n";
-				$c = ($c) ? 0 : 1;
-			}
+
+			//ivr menus
+				if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
+					$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ivr_menus']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ivr_menus']['total']."</td>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+
+			//ring groups
+				if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
+					$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ring_groups']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ring_groups']['total']."</td>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+
+			//voicemails
+				if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['voicemails']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['voicemails']['total']."</td>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+
+			//messages
+				if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+					$hud[$n]['html'] .= "<tr>\n";
+					$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+					$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-new']."</th>\n";
+					$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+
+					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['messages']['new']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['messages']['total']."</td>\n";
+					$hud[$n]['html'] .= "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
 
 			$hud[$n]['html'] .= "</table>\n";
 			$n++;
@@ -747,7 +918,21 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+			//disk usage
+			if (stristr(PHP_OS, 'Linux')) {
+				$tmp = shell_exec("df /home");
+				$tmp = explode("\n", $tmp);
+				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
+				$tmp = explode(' ', $tmp);
+				foreach ($tmp as $stat) {
+					if (substr_count($stat, '%') > 0) { $percent = rtrim($stat,'%'); break; }
+				}
+				if ($percent != '') {
+					$hud[$n]['html'] .= "<span class='hud_stat' style='cursor: default;'>".$percent."<br><span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span></span>\n";
+				}
+			}
+
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-item']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
@@ -831,17 +1016,11 @@
 
 			//disk usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$tmp =  shell_exec("df /home");
-					$tmp = explode("\n", $tmp);
-					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
-					$tmp = explode(' ', $tmp);
-					foreach ($tmp as $stat) {
-						if (substr_count($stat, '%') > 0) { $percent = $stat; break; }
-					}
+					//calculated above
 					if ($percent != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent."</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -916,8 +1095,8 @@
 					$registrations = (is_numeric($registrations)) ? $registrations : 0;
 					$tr_link = "href='".PROJECT_PATH."/app/registrations/status_registrations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='border-bottom: none;'><a href='javascript:void(0);'>".$text['label-registrations']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='border-bottom: none; text-align: right; white-space: nowrap;'>".$registrations."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a href='javascript:void(0);'>".$text['label-registrations']."</a></td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$registrations."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -950,7 +1129,10 @@
 		echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-bottom: 30px;'>\n";
 		echo "<tr>\n";
 		foreach ($hud as $index => $block) {
-			echo "<td class='hud_box' style='padding: 10px 1px 1px 1px; width: ".(round((100 / sizeof($hud)), 2))."%;'><b class='hud_title'>".$block['title']."</b><br><br>".$block['html']."</td>\n";
+			echo "<td class='hud_box' style='width: ".(round((100 / sizeof($hud)), 2))."%;'>";
+			echo "	<span class='hud_title'>".$block['title']."</span>";
+			echo "	".$block['html'];
+			echo "</td>\n";
 			if ($index+1 < sizeof($hud)) { echo "<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; }
 		}
 		echo "</tr>";
@@ -958,40 +1140,41 @@
 		unset($hud);
 	}
 
-
-//call routing
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
-		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-			$is_included = "true";
-			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
-			echo "	<tr>\n";
-			echo "		<td valign='top'><b>".$text['header-call_routing']."</b><br><br></td>\n";
-			echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></td>\n";
-			echo "	</tr>\n";
-			echo "</table>\n";
-			require_once "app/calls/calls.php";
-			echo "<br>\n";
+if (!is_array($selected_blocks) || in_array('forwarding', $selected_blocks)) {
+	//call routing
+		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+			if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+				$is_included = "true";
+				echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+				echo "	<tr>\n";
+				echo "		<td valign='top'><b>".$text['header-call_routing']."</b><br><br></td>\n";
+				echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></td>\n";
+				echo "	</tr>\n";
+				echo "</table>\n";
+				require_once "app/calls/calls.php";
+				echo "<br>\n";
+			}
 		}
-	}
 
-//reload language values
-	$language = new text;
-	$text = $language->get();
+	//reload language values
+		$language = new text;
+		$text = $language->get();
 
-//ring group forward
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
-		if (permission_exists('ring_group_forward')) {
-			$is_included = "true";
-			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
-			echo "	<tr>\n";
-			echo "		<td valign='top'><b>".$text['header-ring_groups']."</b><br><br></td>\n";
-			echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></td>\n";
-			echo "	</tr>\n";
-			echo "</table>\n";
-			require_once "app/ring_groups/ring_group_forward.php";
-			echo "<br>\n";
+	//ring group forward
+		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+			if (permission_exists('ring_group_forward')) {
+				$is_included = "true";
+				echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+				echo "	<tr>\n";
+				echo "		<td valign='top'><b>".$text['header-ring_groups']."</b><br><br></td>\n";
+				echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></td>\n";
+				echo "	</tr>\n";
+				echo "</table>\n";
+				require_once "app/ring_groups/ring_group_forward.php";
+				echo "<br>\n";
+			}
 		}
-	}
+}
 
 //show the footer
 	require_once "resources/footer.php";
