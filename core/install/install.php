@@ -207,8 +207,8 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "</div>\n";
 	}
 
-//includes and title
-	$document['title'] = $text['title-install_first_time'];
+	//includes and title
+	$document['title'] = $text['title-install'];
 
 	//view code
 	if($install_step == 'select_language'){
