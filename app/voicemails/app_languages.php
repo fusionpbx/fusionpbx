@@ -265,17 +265,17 @@ $text['label-option']['de-at'] = "Option";
 $text['label-option']['he'] = "אופציה";
 
 $text['label-messages']['en-us'] = "Messages";
-$text['label-messages']['es-cl'] = "Messages";
-$text['label-messages']['pt-pt'] = "Messages";
+$text['label-messages']['es-cl'] = "Mensajes";
+$text['label-messages']['pt-pt'] = "mensagens";
 $text['label-messages']['fr-fr'] = "Messages";
-$text['label-messages']['pt-br'] = "Messages";
-$text['label-messages']['pl'] = "Messages";
-$text['label-messages']['uk'] = "Messages";
-$text['label-messages']['sv-se'] = "Messages";
-$text['label-messages']['ro'] = "Messages";
-$text['label-messages']['de-at'] = "Messages";
-$text['label-messages']['ar-eg'] = "Messages";
-$text['label-messages']['he'] = "Messages";
+$text['label-messages']['pt-br'] = "mensagens";
+$text['label-messages']['pl'] = "Wiadomości";
+$text['label-messages']['uk'] = "повідомлення";
+$text['label-messages']['sv-se'] = "meddelanden";
+$text['label-messages']['ro'] = "mesaje";
+$text['label-messages']['de-at'] = "Nachrichten";
+$text['label-messages']['ar-eg'] = "رسائل";
+$text['label-messages']['he'] = "הודעות";
 
 $text['label-message_status']['en-us'] = "Status";
 $text['label-message_status']['es-cl'] = "Estado";
