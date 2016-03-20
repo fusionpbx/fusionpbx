@@ -34,15 +34,15 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 		if ($_SESSION['ivr menu']['application']['text'] != "lua") {
 			$y++;
-			$this->destinations[$x]['type'] = 'array';
-			//$this->destinations[$x]['label'] = 'ivr_menus';
-			$this->destinations[$x]['result']['data'][$y]['label'] = 'menu-top';
-			$this->destinations[$x]['result']['data'][$y]['name'] = 'menu-top:';
-			$this->destinations[$x]['result']['data'][$y]['destination'] = 'menu-top';
+			$apps[$x]['destinations'][$x]['type'] = 'array';
+			//$apps[$x]['destinations'][$x]['label'] = 'ivr_menus';
+			$apps[$x]['destinations'][$y]['label'] = 'menu-top';
+			$apps[$x]['destinations'][$y]['name'] = 'menu-top:';
+			$apps[$x]['destinations'][$y]['destination'] = 'menu-top';
 			$y++;
-			$this->destinations[$x]['result']['data'][$y]['label'] = 'menu-exit';
-			$this->destinations[$x]['result']['data'][$y]['name'] = 'menu-exit';
-			$this->destinations[$x]['result']['data'][$y]['destination'] = 'menu-exit';
+			$apps[$x]['destinations'][$y]['label'] = 'menu-exit';
+			$apps[$x]['destinations'][$y]['name'] = 'menu-exit';
+			$apps[$x]['destinations'][$y]['destination'] = 'menu-exit';
 			$y++;
 			$apps[$x]['destinations'][$y]['type'] = "sql";
 			$apps[$x]['destinations'][$y]['label'] = "sub_ivr_menus";
