@@ -62,11 +62,6 @@ else {
 	echo "</table>\n";
 
 	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>";
-	echo "	<td colspan='6' align='left'>\n";
-	echo "		<b>".ucfirst($row['contact_setting_category'])."</b>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['label-contact_setting_category']."</th>";
 	echo "<th>".$text['label-contact_setting_subcategory']."</th>";
