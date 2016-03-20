@@ -43,7 +43,7 @@
 	foreach($_SESSION['app']['languages'] as $lang_code){
 		echo "<fieldset class='container'>";
 		echo "	<label class='radio' style='width:200px;'>";
-		echo "<input type='radio' name='install_language' value='$lang_code' id='lang_$lang_code' onchange='JavaScript:disable_next()'";
+		echo "	<input type='radio' name='install_language' value='$lang_code' id='lang_$lang_code' onchange='JavaScript:disable_next()'";
 		if($lang_code == $_SESSION['domain']['language']['code'])
 		{
 			echo " checked='checked'";
