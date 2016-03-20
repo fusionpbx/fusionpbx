@@ -1216,11 +1216,9 @@ legend {
 	td.hud_box {
 		height: auto;
 		vertical-align: top;
-		padding: 15px;
-		border: 1px solid #c6d4e8;
-		-webkit-border-radius: 6px;
-		-moz-border-radius: 6px;
-		border-radius: 6px;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
 		text-align: center;
 		background-color: #f5f7fa;
 		background-image: -ms-linear-gradient(left, #edf1f7 0%, #f9fbfe 30%, #f9fbfe 70%, #edf1f7 100%);
@@ -1231,27 +1229,58 @@ legend {
 		background-image: linear-gradient(to right, #edf1f7 0%, #f9fbfe 30%, #f9fbfe 70%, #edf1f7 100%);
 		}
 
-	b.hud_title {
-		color: #a4aebf;
+	span.hud_title {
+		display: block;
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		text-shadow: 0px 1px 2px #000;
+		letter-spacing: -0.02em;
+		font-size: 12pt;
+		color: #fff;
+		width: 100%;
+		height: 40px;
+		cursor: default;
+		text-align: center;
+		line-height: 40px;
+		background-color: #8e96a5;
+		-webkit-border-radius: 4px 4px 0 0;
+		-moz-border-radius: 4px 4px 0 0;
+		border-radius: 4px 4px 0 0;
+		border-bottom: 1px solid #737983;
 		}
 
-	span.hud_voicemail_total {
+	span.hud_stat {
+		display: block;
 		cursor: pointer;
-		color: #004083;
-		font-size: 60px;
-		line-hight: 20px;
-		font-weight: bold;
-		}
-
-	span.hud_voicemail_total:hover {
-		opacity: 0.7;
-		}
-
-	sup.hud_voicemail_new {
+		text-align: center;
+		text-shadow: 0px 2px 2px #737983;
+		width: 100%;
+		height: 130px;
+		color: #fff;
+		font-size: 75px;
 		font-weight: normal;
-		color: #03920a;
-		font-size: 30px;
-		line-hight: 10px;
+		background-color: #a4aebf;
+		border-top: 1px solid #c5d1e5;
+		border-bottom: 1px solid #909aa8;
+		padding-top: 10px;
+		margin-bottom: 6px;
+		}
+
+	span.hud_stat_title {
+		display: block;
+		width: 100%;
+		height: 30px;
+		cursor: pointer;
+		text-align: center;
+		text-shadow: 0px 1px 1px #737983;
+		color: #fff;
+		font-size: 14px;
+		font-weight: normal;
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		}
+
+	span.hud_stat:hover {
+		opacity: 0.9;
+		cursor: pointer;
 		}
 
 	th.hud_heading {
