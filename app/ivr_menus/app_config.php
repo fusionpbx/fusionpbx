@@ -32,29 +32,21 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		if ($_SESSION['ivr menu']['application']['text'] != "lua") {
-			$y++;
-			$apps[$x]['destinations'][$x]['type'] = 'array';
-			//$apps[$x]['destinations'][$x]['label'] = 'ivr_menus';
-			$apps[$x]['destinations'][$y]['label'] = 'menu-top';
-			$apps[$x]['destinations'][$y]['name'] = 'menu-top:';
-			$apps[$x]['destinations'][$y]['destination'] = 'menu-top';
-			$y++;
-			$apps[$x]['destinations'][$y]['label'] = 'menu-exit';
-			$apps[$x]['destinations'][$y]['name'] = 'menu-exit';
-			$apps[$x]['destinations'][$y]['destination'] = 'menu-exit';
-			$y++;
-			$apps[$x]['destinations'][$y]['type'] = "sql";
-			$apps[$x]['destinations'][$y]['label'] = "sub_ivr_menus";
-			$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
-			$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-			$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
-			$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
-			$apps[$x]['destinations'][$y]['field']['destination'] = "ivr_menu_uuid";
-			//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "ivr:\${uuid}";
-			$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:ivr \${uuid}";
-			$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		}
+		//if ($_SESSION['ivr menu']['application']['text'] != "lua") {
+		//	$y++;
+		//	$apps[$x]['destinations'][$y]['type'] = "sql";
+		//	$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
+		//	$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		//	$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
+		//	$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		//	$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
+		//	$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
+		//	//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "ivr:\${ivr_menu_uuid}";
+		//	$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
+		//	$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		//}
+		//menu-top
+		//menu-exit
 		//menu-say-phrase
 		//menu-play-sound
 
