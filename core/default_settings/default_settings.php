@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2015
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -332,6 +332,7 @@ else {
 					case "api" : echo "API"; break;
 					case "cdr" : echo "CDR"; break;
 					case "ldap" : echo "LDAP"; break;
+					case "ivr menu" : echo "IVR Menu"; break;
 					default: echo ucwords(str_replace("_", " ", $row['default_setting_category']));
 				}
 				echo "</b>\n";
