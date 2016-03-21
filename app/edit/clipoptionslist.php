@@ -113,82 +113,71 @@ echo "\n";
 echo "}\n";
 echo "</SCRIPT>";
 
-echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+echo "</head>\n";
+echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\" valign='top' nowrap>\n";
-echo "      <table border=0 cellpadding='0' cellspacing='0'><tr><td style='cursor: default;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'> ".$text['label-clip-library']."</a><div>\n";
+echo "<div style='text-align: left;'>\n";
 
-$sql = "select * from v_clips ";
-$sql .= "order by clip_folder ";
+$sql = "select * from v_clips order by clip_folder asc, clip_name asc";
 $prep_statement = $db->prepare(check_sql($sql));
 $prep_statement->execute();
 $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 $result_count = count($result);
 
-if ($result_count > 0) { //no results
-	$last_folder = '';
-	$tag_open = '';
-	$x = 0;
-	$current_depth = 0;
-	$previous_depth = 0;
-	foreach($result as $row) {
-		$current_depth = count(explode("/", $row[clip_folder]));
-		if ($current_depth < $previous_depth) {
-			$count = ($previous_depth - $current_depth);
-			$i=0;
-			while($i < $count){
-				echo "</div></td></tr></table>\n";
-				$i++;
+if ($result_count > 0) {
+	$master_array = array();
+	foreach ($result as $row) {
+		$clip_folder = rtrim($row['clip_folder'], '/');
+		$clip_folder .= '/'.$row['clip_name'];
+
+		$parts = explode('/', $clip_folder);
+		$folders = array();
+		while ($bottom = array_pop($parts)) {
+			if (sizeof($folders) > 0) {
+				$folders = array($bottom => $folders);
 			}
-			echo "</div></td></tr></table>\n";
-
+			else {
+				$clip['uuid'] = $row['clip_uuid'];
+				$clip['name'] = $row['clip_name'];
+				$clip['before'] = $row['clip_text_start'];
+				$clip['after'] = $row['clip_text_end'];
+				$folders = array($bottom => $clip);
+			}
 		}
 
-		if ($last_folder != $row['clip_folder']) {
-			$clip_folder_name = str_replace ($previous_folder_name, "", $row['clip_folder']);
-			$clip_folder_name = str_replace ("/", "", $clip_folder_name);
-			echo "<table border=0 cellpadding='0' cellspacing='0'>";
-			echo "	<tr>";
-			echo "		<td nowrap style='padding-left: 16px;'>";
-			echo "			<a onclick='Toggle(this);'><img src='resources/images/icon_folder.png' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$clip_folder_name."</a><div style='display:none'>";
-			$tag_open = 1;
+		$master_array = array_merge_recursive($master_array, $folders);
+	}
+
+	function parse_array($arr) {
+		if (is_array($arr)) {
+			//folder/clip
+			foreach ($arr as $name => $sub_arr) {
+				if ($name != $sub_arr['name']) {
+					//folder
+					echo "<a onclick='Toggle(this);' style='display: block; cursor: pointer; text-decoration: none;'><img src='resources/images/icon_folder.png' border='none' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$name."</a>";
+					echo "<div style='display: none; padding-left: 16px;'>\n";
+					parse_array($sub_arr);
+					echo "</div>\n";
+				}
+				else {
+					//clip
+					echo "<div style='white-space: nowrap;'>\n";
+					echo "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clip_uuid').value='".$sub_arr['uuid']."'; parent.document.getElementById('clip_name').value='".$sub_arr['name']."';\">";
+					echo "<img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>";
+					echo $sub_arr['name'];
+					echO "</a>\n";
+					echo "<textarea style='display: none' id='before_".$sub_arr['uuid']."'>".$sub_arr['before']."</textarea>\n";
+					echo "<textarea style='display: none' id='after_".$sub_arr['uuid']."'>".$sub_arr['after']."</textarea>\n";
+					echo "</div>\n";
+				}
+			}
 		}
+	}
+	parse_array($master_array);
+}
 
-		$previous_depth = $current_depth;
-		$previous_folder_name = $row['clip_folder'];
-
-		echo "<textarea style='display:none' id='clip_lib_start".$row['clip_uuid']."'>".$row['clip_text_start']."</textarea>\n";
-		echo "<textarea style='display:none' id='clip_lib_end".$row['clip_uuid']."'>".$row['clip_text_end']."</textarea>\n";
-		echo "\n";
-		echo "<table border=0 cellpadding='0' cellspacing='0'>";
-		echo "	<tr>";
-		echo "		<td nowrap align='bottom' style='padding-left: 16px;'>";
-		echo "			<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clip_uuid').value='".$row['clip_uuid']."'; parent.document.getElementById('clip_name').value='".$row['clip_name']."';\"><img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$row['clip_name']."</a>";
-		echo "		</td>";
-		echo "	</tr>";
-		echo "</table>\n";
-
-		$last_folder = $row['clip_folder'];
-		if ($c==0) { $c=1; } else { $c=0; }
-	} //end foreach
-	unset($sql, $result, $row_count);
-} //end if results
-
-echo "			</div>";
-echo "		</td>";
-echo "	</tr>";
-echo "</table>\n";
-
-echo "</td>\n";
-echo "</tr>\n";
-echo "</table>\n";
+echo "</div>\n";
 
 require_once "footer.php";
 
-unset ($result_count);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>

@@ -75,28 +75,20 @@ else {
 
 			if (is_dir($newpath)) {
 				$dirname = end($level);
-				$htmldirlist .= "
-					<table border=0 cellpadding='0' cellspacing='0'>
-						<tr>
-							<td nowrap style='padding-left: 16px;'>
-								<a onclick='Toggle(this);' style='cursor: pointer;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$dirname."</a><div style='display:none'>".recur_dir($newpath)."</div>
-							</td>
-						</tr>
-					</table>\n";
+				$htmldirlist .= "<div style='white-space: nowrap; padding-left: 16px;'>\n";
+				$htmldirlist .= "<a onclick='Toggle(this);' style='display: block; cursor: pointer;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$dirname."</a>";
+				$htmldirlist .= "<div style='display: none;'>".recur_dir($newpath)."</div>\n";
+				$htmldirlist .= "</div>\n";
 			}
 			else {
 				$filename = end($level);
 				$filesize = round(filesize($newpath)/1024, 2);
 				$newpath = str_replace ('//', '/', $newpath);
 				$newpath = str_replace ("\\", "/", $newpath);
-				$htmlfilelist .= "
-					<table border=0 cellpadding='0' cellspacing='0'>
-						<tr>
-							<td nowrap align='bottom' style='padding-left: 16px;'>
-								<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filepath').value='".$newpath."'; parent.document.getElementById('current_file').value = '".$newpath."'; makeRequest('fileread.php','file=".urlencode($newpath)."');\" title='".$newpath." &#10; ".$filesize." KB'><img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>
-							</td>
-						</tr>
-					</table>\n";
+				$htmlfilelist .= "<div style='white-space: nowrap; padding-left: 16px;'>\n";
+				$htmlfilelist .= "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filepath').value='".$newpath."'; parent.document.getElementById('current_file').value = '".$newpath."'; makeRequest('fileread.php','file=".urlencode($newpath)."');\" title='".$newpath." &#10; ".$filesize." KB'>";
+				$htmlfilelist .= "<img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>\n";
+				$htmlfilelist .= "</div>\n";
 			}
 		}
 
@@ -213,68 +205,49 @@ echo "	});\n";
 echo "</script>";
 
 echo "</head>\n";
-echo "<body style='margin: 0px; padding: 0px;'>\n";
+echo "<body style='margin: 0px; padding: 5px;'>\n";
 
-echo "<div align='center' valign='1'>";
-echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\" valign='top' nowrap>\n";
-
-echo "\n";
-echo "      <table border=0 cellpadding='0' cellspacing='0'><tr><td><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='Manage Files'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'>".$text['label-files']."</a><div>\n";
+echo "<div style='text-align: left; padding-top: 3px; padding-bottom: 3px;'><a href='javascript:void(0);' onclick=\"window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','filewin','left=20,top=20,width=310,height=350,toolbar=0,resizable=0');\" style='text-decoration:none;' title='".$text['label-files']."'><img src='resources/images/icon_gear.png' border='0' align='absmiddle' style='margin: 0px 2px 4px -1px;'>".$text['label-files']."</a></div>\n";
+echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 //start the session
 ini_set("session.cookie_httponly", True);
 session_start();
-if ($_SESSION["app"]["edit"]["dir"] == "scripts") {
-	echo recur_dir($_SESSION['switch']['scripts']['dir']);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "php") {
-	echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "grammar") {
-	echo recur_dir($_SESSION['switch']['grammar']['dir']);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "provision") {
-
-	switch (PHP_OS) {
-	case "Linux":
-		if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
-			echo recur_dir('/etc/fusionpbx/resources/templates/provision');
-		}
-		else {
-			echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-		}
+switch ($_SESSION["app"]["edit"]["dir"]) {
+	case 'scripts':
+		echo recur_dir($_SESSION['switch']['scripts']['dir']);
 		break;
-	case "FreeBSD":
-		//if the FreeBSD port is installed use the following paths by default.
-			if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+	case 'php':
+		echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
+		break;
+	case 'grammer':
+		echo recur_dir($_SESSION['switch']['grammar']['dir']);
+		break;
+	case 'provision':
+		switch (PHP_OS) {
+			case "Linux":
+				echo (file_exists('/etc/fusionpbx/resources/templates/provision')) ? recur_dir('/etc/fusionpbx/resources/templates/provision') : recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
+				break;
+			case "FreeBSD":
+				echo (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) ? recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/") : recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
+				break;
+			case "NetBSD":
 				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-			}
-			else {
+				break;
+			case "OpenBSD":
 				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-			}
+				break;
+			default:
+				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
+		}
 		break;
-	case "NetBSD":
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
+	case 'xml':
+		echo recur_dir($_SESSION['switch']['conf']['dir']);
 		break;
-	case "OpenBSD":
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-		break;
-	default:
-		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-	}
-}
-if ($_SESSION["app"]["edit"]["dir"] == "xml") {
-	echo recur_dir($_SESSION['switch']['conf']['dir']);
 }
 
-echo "</div></td></tr></table>\n";
+echo "</div>\n";
 
-echo "</td>\n";
-echo "</tr>\n";
-echo "</table>\n";
-echo "</div>";
 
 require_once "footer.php";
 
