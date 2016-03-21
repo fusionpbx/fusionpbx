@@ -222,7 +222,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						//check the destination number
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+							if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+							}
+							else {
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+							}
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
