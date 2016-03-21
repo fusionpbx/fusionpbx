@@ -73,6 +73,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_REQUEST) > 0) {
+		echo "<pre>".print_r($_REQUEST, true)."</pre>";
 		$user_setting_category = strtolower(check_str($_REQUEST["user_setting_category"]));
 		$user_setting_subcategory = strtolower(check_str($_POST["user_setting_subcategory"]));
 		$user_setting_name = strtolower(check_str($_POST["user_setting_name"]));
@@ -470,10 +471,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dir_label = str_replace('_', ' ', $dir_name);
 					$dir_label = str_replace('-', ' ', $dir_label);
 					if ($dir_name == $row['user_setting_value']) {
-						echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
+						echo "		<option value='$dir_name' selected='selected'>".ucwords($dir_label)."</option>\n";
 					}
 					else {
-						echo "		<option value='$dir_name'>$dir_label</option>\n";
+						echo "		<option value='$dir_name'>".ucwords($dir_label)."</option>\n";
 					}
 				}
 			}
