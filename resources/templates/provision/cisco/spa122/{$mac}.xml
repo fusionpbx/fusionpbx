@@ -433,7 +433,7 @@
 <CWCID_Setting_1_>Yes</CWCID_Setting_1_>
 <Dist_Ring_Setting_1_>Yes</Dist_Ring_Setting_1_>
 <Secure_Call_Setting_1_>No</Secure_Call_Setting_1_>
-<Message_Waiting_1_>Yes</Message_Waiting_1_>
+<Message_Waiting_1_>No</Message_Waiting_1_>
 <Accept_Media_Loopback_Request_1_>automatic</Accept_Media_Loopback_Request_1_>
 <Media_Loopback_Mode_1_>source</Media_Loopback_Mode_1_>
 <Media_Loopback_Type_1_>media</Media_Loopback_Type_1_>
