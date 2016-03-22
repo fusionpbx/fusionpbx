@@ -53,8 +53,8 @@ echo "</td>\n";
 echo "<td valign='top' style='height: 100%; padding: 0;'>";
 
 echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>";
-echo "  <tr><td><input type='button' class='btn' onclick=\"window.location='clipupdate.php?id='+document.getElementById('clip_uuid').value;\" value='".$text['button-edit-clip']."'></td></tr>\n";
 echo "  <tr><td><input type='button' class='btn' onclick=\"window.location='clipadd.php'\" value='".$text['button-add-clip']."'></td></tr>\n";
+echo "  <tr><td><input type='button' class='btn' onclick=\"window.location='clipupdate.php?id='+document.getElementById('clip_uuid').value;\" value='".$text['button-edit-clip']."'></td></tr>\n";
 echo "  <tr><td><input type='button' class='btn' onclick=\"if (confirm('".$text['message-delete-clip']."')){ window.location='clipdelete.php?id='+document.getElementById('clip_uuid').value; }\" value='".$text['button-delete']."'></td></tr>\n";
 echo "  <tr><td height='100%'>&nbsp;</td></tr>\n";
 echo "  <tr><td><input type='button' class='btn' onclick='opener.location.reload(); self.close();' value='".$text['button-close']."'></td></tr>\n";

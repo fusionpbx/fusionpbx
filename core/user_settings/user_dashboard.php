@@ -925,10 +925,10 @@
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
 				foreach ($tmp as $stat) {
-					if (substr_count($stat, '%') > 0) { $percent = rtrim($stat,'%'); break; }
+					if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 				}
-				if ($percent != '') {
-					$hud[$n]['html'] .= "<span class='hud_stat' style='cursor: default;'>".$percent."<br><span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span></span>\n";
+				if ($percent_disk_usage != '') {
+					$hud[$n]['html'] .= "<span class='hud_stat' style='cursor: default;'>".$percent_disk_usage."<br><span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span></span>\n";
 				}
 			}
 
@@ -1004,11 +1004,11 @@
 
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
-					$percent = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1).'%';
-					if ($percent != '') {
+					$percent_memory = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
+					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent."</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_memory."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1017,10 +1017,10 @@
 			//disk usage
 				if (stristr(PHP_OS, 'Linux')) {
 					//calculated above
-					if ($percent != '') {
+					if ($percent_disk_usage != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent."%</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_disk_usage."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1032,11 +1032,11 @@
 					$tmp = explode("\n", $tmp);
 					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 					$tmp = explode(' ', trim($tmp));
-					$cpu = $tmp[0];
-					if ($cpu != '') {
+					$percent_cpu = $tmp[0];
+					if ($percent_cpu != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$cpu."%</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_cpu."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}

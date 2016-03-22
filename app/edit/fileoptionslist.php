@@ -53,12 +53,17 @@ else {
 			if ($file != "." AND $file != ".."){
 				$newpath = $dir.'/'.$file;
 				$level = explode('/',$newpath);
-				if (substr($newpath, -4) == ".svn" ||
-					substr($newpath, -4) == ".git") {
-					//ignore .svn and .git dir and subdir
-				}
-				elseif (substr($newpath, -3) == ".db") {
-					//ignore .db files
+				if (
+					substr(strtolower($newpath), -4) == ".svn" ||
+					substr(strtolower($newpath), -4) == ".git" ||
+					substr(strtolower($newpath), -3) == ".db" ||
+					substr(strtolower($newpath), -4) == ".jpg" ||
+					substr(strtolower($newpath), -4) == ".gif" ||
+					substr(strtolower($newpath), -4) == ".png" ||
+					substr(strtolower($newpath), -4) == ".ico" ||
+					substr(strtolower($newpath), -4) == ".ttf"
+					){
+					//ignore certain files (and folders)
 				}
 				else {
 					$dir_array[] = $newpath;
@@ -76,7 +81,7 @@ else {
 				$dirname = end($level);
 				$newpath = str_replace ('//', '/', $newpath);
 				$htmldirlist .= "
-					<table border=0 cellpadding='0' cellspacing='0'>
+					<table border=0 cellpadding='0' cellspacing='0' width='100%'>
 						<tr>
 							<td nowrap style='padding-left: 16px;'>
 								<a onclick=\"Toggle(this, '".$newpath."');\" style='cursor: pointer;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 1px 2px 3px 0px;'>".$dirname."</a><div style='display:none'>".recur_dir($newpath)."</div>
@@ -91,7 +96,7 @@ else {
 				$newpath = str_replace ("\\", "/", $newpath);
 				$newpath = str_replace ($filename, '', $newpath);
 				$htmlfilelist .= "
-					<table border=0 cellpadding='0' cellspacing='0'>
+					<table border=0 cellpadding='0' cellspacing='0' width='100%'>
 						<tr>
 							<td nowrap align='bottom' style='padding-left: 16px;'>
 								<a href='javascript:void(0);' onclick=\"parent.document.getElementById('filename').value='".$filename."'; parent.document.getElementById('folder').value='".$newpath."';\" title='".$newpath." &#10; ".$filesize." KB'><img src='resources/images/icon_file.png' border='0' align='absmiddle' style='margin: 1px 2px 3px -1px;'>".$filename."</a>
@@ -184,40 +189,33 @@ echo "\n";
 echo "}\n";
 echo "</SCRIPT>\n";
 
-echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "	<tr>\n";
-echo "		<td align=\"left\" valign='top' nowrap>\n";
-echo "      	<table border=0 cellpadding='0' cellspacing='0'><tr><td style='cursor: default;'><img src='resources/images/icon_folder.png' border='0' align='absmiddle' style='margin: 0px 2px 4px 0px;'>".$text['label-files']."<div>\n";
+echo "</head>\n";
+echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
+
+echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 ini_set("session.cookie_httponly", True);
 session_start();
-if ($_SESSION["app"]["edit"]["dir"] == "scripts") {
-	echo recur_dir($_SESSION['switch']['scripts']['dir']);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "php") {
-	echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "grammar") {
-	echo recur_dir($_SESSION['switch']['grammar']['dir']);
-}
-if ($_SESSION["app"]["edit"]["dir"] == "provision") {
-	echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
-}
-if ($_SESSION["app"]["edit"]["dir"] == "xml") {
-	echo recur_dir($_SESSION['switch']['conf']['dir']);
+switch ($_SESSION["app"]["edit"]["dir"]) {
+	case 'scripts':
+		echo recur_dir($_SESSION['switch']['scripts']['dir']);
+		break;
+	case 'php':
+		echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
+		break;
+	case 'grammer':
+		echo recur_dir($_SESSION['switch']['grammar']['dir']);
+		break;
+	case 'provision':
+		echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
+		break;
+	case 'xml':
+		echo recur_dir($_SESSION['switch']['conf']['dir']);
+		break;
 }
 
-echo "			</div></td></tr></table>\n";
-
-echo "		</td>\n";
-echo "	</tr>\n";
-echo "</table>\n";
+echo "</div>\n";
 
 require_once "footer.php";
 
-unset ($result_count);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>

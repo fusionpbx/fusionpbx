@@ -93,8 +93,10 @@ else {
 //get the list
 	$sql = "select * from v_user_settings ";
 	$sql .= "where user_uuid = '$user_uuid' ";
-	$sql .= "and (user_setting_category <> 'domain' and user_setting_subcategory <> 'language') ";
-	$sql .= "and (user_setting_category <> 'domain' and user_setting_subcategory <> 'time_zone') ";
+	$sql .= "and not ( ";
+	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
+	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
+	$sql .= ") ";
 	if (strlen($order_by) == 0) {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
 	}
