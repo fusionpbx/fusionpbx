@@ -282,7 +282,7 @@ else {
 	if (permission_exists('script_editor_view') && file_exists($_SERVER["PROJECT_ROOT"]."/app/edit/")) {
 		echo "			<tr>";
 		echo "				<td valign='top' height='100%'>";
-		echo "					<iframe id='clip_list' src='".PROJECT_PATH."/app/edit/cliplist.php' style='border: none; border-top: 1px solid #ccc; height: 100%; width: calc(100% - 15px);'></iframe>\n";
+		echo "					<iframe id='clip_list' src='".PROJECT_PATH."/app/edit/cliplist.php' style='border: none; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; height: calc(100% - 2px); width: calc(100% - 15px);'></iframe>\n";
 		echo "				</td>";
 		echo "			</tr>";
 	}

@@ -88,7 +88,7 @@ if (count($_POST)>0) {
 	echo "<table width='100%' border='0'>";
 	echo "	<tr>";
 	echo "		<td>Name</td>";
-	echo "		<td><input type='text' class='txt' name='clip_name'></td>";
+	echo "		<td><input type='text' class='txt' name='clip_name' id='clip_name'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -124,6 +124,8 @@ if (count($_POST)>0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
+
+	echo "<script>document.getElementById('clip_name').focus();</script>";
 
 	require_once "footer.php";
 ?>
