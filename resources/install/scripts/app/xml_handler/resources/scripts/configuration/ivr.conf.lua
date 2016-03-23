@@ -266,7 +266,7 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="${cond(${user_exists id $1 ]]..domain_name..[[}?$1 XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
 			end
 
 		--close the extension tag if it was left open
