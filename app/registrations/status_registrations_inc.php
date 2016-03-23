@@ -107,10 +107,10 @@ require_once "resources/check_auth.php";
 						$registrations[$x]['mwi-account'] = $row->{'mwi-account'};
 						$registrations[$x]['status'] = $row->{'status'};
 
-					//get the NAT ip address if it exists replace the external ip
+					//get the LAN IP address if it exists replace the external ip
 						$call_id_array = explode('@', $row->{'call-id'});
 						if (isset($call_id_array[1])) {
-							$registrations[$x]['network-ip'] = $call_id_array[1];
+							$registrations[$x]['lan-ip'] = $call_id_array[1];
 						}
 
 					//remove unrelated domains
@@ -156,6 +156,7 @@ require_once "resources/check_auth.php";
 			echo "<tr>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
 			echo "	<th>".$text['label-agent']."</th>\n";
+			echo "	<th>".$text['label-lan_ip']."</th>\n";
 			echo "	<th>".$text['label-ip']."</th>\n";
 			echo "	<th>".$text['label-port']."</th>\n";
 			echo "	<th>".$text['label-hostname']."</th>\n";
@@ -178,6 +179,7 @@ require_once "resources/check_auth.php";
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['lan-ip']."' target='_blank'>".$row['lan-ip']."</a>&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['host']."&nbsp;</td>\n";
