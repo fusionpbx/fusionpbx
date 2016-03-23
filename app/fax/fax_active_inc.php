@@ -202,6 +202,13 @@ HERE;
 					$task_files .= '<br/>&nbsp;' . basename($row['greeting']);
 				}
 
+				//replace gateway uuid with name
+					if (sizeof($_SESSION['gateways']) > 0) {
+						foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
+							$fax_uri = str_replace($gateway_uuid, $gateway_name, $fax_uri);
+						}
+					}
+
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>" . $fax_server     . "&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>" . $task_enabled   . "&nbsp;</td>\n";
