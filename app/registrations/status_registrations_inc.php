@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -106,6 +106,12 @@ require_once "resources/check_auth.php";
 						$registrations[$x]['sip-auth-realm'] = $row->{'sip-auth-realm'};
 						$registrations[$x]['mwi-account'] = $row->{'mwi-account'};
 						$registrations[$x]['status'] = $row->{'status'};
+
+					//get the NAT ip address if it exists replace the external ip
+						$call_id_array = explode('@', $row->{'call-id'});
+						if (isset($call_id_array[1])) {
+							$registrations[$x]['network-ip'] = $call_id_array[1];
+						}
 
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
