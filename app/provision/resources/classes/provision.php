@@ -563,7 +563,7 @@ include "root.php";
 									$sql .= "	select contact_uuid from v_contact_users ";
 									$sql .= "	where user_uuid = '".$user_uuid."' ";
 									$sql .= "	and domain_uuid = '$domain_uuid' ";
-									$sql .= "') ";
+									$sql .= ") ";
 									$sql .= "and c.contact_uuid = p.contact_uuid ";
 									$sql .= "and p.phone_type_voice = '1' ";
 									$sql .= "and c.domain_uuid = '$domain_uuid' ";
