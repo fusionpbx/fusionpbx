@@ -529,7 +529,7 @@ include "root.php";
 									$sql .= "		select group_uuid from v_group_users ";
 									$sql .= "		where user_uuid = '".$user_uuid."' ";
 									$sql .= "		and domain_uuid = '$domain_uuid' ";
-									$sql .= "'	) ";
+									$sql .= "	) ";
 									$sql .= "and domain_uuid = '$domain_uuid' ";
 									$sql .= ") ";
 									//echo $sql."\n";
