@@ -60,7 +60,7 @@ class scripts {
 			if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 		}
 		if ($IS_WINDOWS) {
-			return str_replace('/', '\\', $path);
+			return str_replace('\\', '/', $path);
 		}
 		return $path;
 	}
@@ -261,8 +261,13 @@ class scripts {
 		}
 	} //end config_lua
 
-
-
 } //end scripts class
 
+/*
+//example use
+
+//update config.lua
+	$obj = new scripts;
+	$obj->write_config();
+*/
 ?>
