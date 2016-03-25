@@ -13,14 +13,16 @@ require 'resources.functions.config'
 
 local log = require "resources.functions.log".database
 
-local BACKEND = xml_handler and xml_handler.db_backend or 'native'
+local BACKEND = database and database.backend
+if type(BACKEND) ~= 'table' then BACKEND = {main = BACKEND} end
+BACKEND.main = BACKEND.main or 'native'
 
 local unpack = unpack or table.unpack
 
 -----------------------------------------------------------
 local installed_classes = {}
 local default_backend = FsDatabase
-local function new_database(backend)
+local function new_database(backend, backend_name)
   local class = installed_classes[backend]
   if class then return class end
 
@@ -35,6 +37,10 @@ local function new_database(backend)
     return self
   end
 
+  function Database:backend_name()
+    return backend_name
+  end
+  
   function Database:first_row(sql)
     local result
     local ok, err = self:query(sql, function(row)
@@ -167,7 +173,7 @@ local Database = {} do
 
 local backend_loader = setmetatable({}, {__index = function(self, backend)
   local class = require("resources.functions.database." .. backend)
-  local database = new_database(class)
+  local database = new_database(class, backend)
   self[backend] = function(...)
     return database.new(...)
   end
@@ -176,7 +182,10 @@ end})
 
 Database.backend = backend_loader
 
-Database.new = Database.backend[BACKEND]
+function Database.new(dbname, role)
+  local backend = role and BACKEND[role] or BACKEND.main
+  return Database.backend[backend](dbname)
+end
 
 Database.__self_test__ = function(backends, ...)
   for _, backend in ipairs(backends) do
