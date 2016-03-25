@@ -4,8 +4,10 @@
 
 local log = require "resources.functions.log".database
 
+assert(freeswitch, "Require FreeSWITCH environment")
+
 -----------------------------------------------------------
-local FsDatabase = {} if freeswitch then
+local FsDatabase = {} do
 
 require "resources.functions.file_exists"
 require "resources.functions.database_handle"
