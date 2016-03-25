@@ -225,8 +225,8 @@ class scripts {
 				$tmp .= "	expire.directory = \"3600\";\n";
 				$tmp .= "	expire.dialplan = \"3600\";\n";
 				$tmp .= "	expire.languages = \"3600\";\n";
-				$tmp .= "	expire.sofia.conf = \"3600\";\n";
-				$tmp .= "	expire.acl.conf = \"3600\";\n";
+				$tmp .= "	expire.sofia_conf = \"3600\";\n";
+				$tmp .= "	expire.acl_conf = \"3600\";\n";
 				$tmp .= "\n";
 				$tmp .= "--set xml_handler\n";
 				$tmp .= "	xml_handler = {}\n";
