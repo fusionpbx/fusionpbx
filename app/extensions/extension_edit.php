@@ -1216,7 +1216,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				tb.type='text';
 				tb.name=obj.name;
 				tb.className='formfld';
-				tb.setAttribute('id', 'device_mac_address_chosen');
+				tb.setAttribute('id', 'device_mac_address');
 				tb.setAttribute('style', 'width: 80%;');
 				tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
 				tb.value=obj.options[obj.selectedIndex].value;
@@ -1242,7 +1242,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			</script>
 			<?php
-			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld chosen-select' style='' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
+			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 180px;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
 			echo "					<option value=''></option>\n";
 			if (count($devices) > 0) {
 				foreach($devices as $field) {
