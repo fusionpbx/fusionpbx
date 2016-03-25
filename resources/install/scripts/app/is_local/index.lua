@@ -45,7 +45,11 @@
 	if (cache == "-ERR NOT FOUND") then
 		sql = "SELECT destination_number, destination_context "
 		sql = sql .. "FROM v_destinations "
-		sql = sql .. "WHERE destination_number = '"..destination_number.."' "
+		if (database["type"] == "pgsql") then
+			sql = sql .. "WHERE destination_number_regex ~ '"..destination_number.."' "
+		else
+			sql = sql .. "WHERE destination_number_regex REGEXP '"..destination_number.."' "
+		end
 		sql = sql .. "AND destination_type = 'inbound' "
 		sql = sql .. "AND destination_enabled = 'true' "
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
@@ -69,14 +73,14 @@
 					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
 				else
 					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
-					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. row.destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
+					result = trim(api:execute("memcache", "set app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name .. " 'destination_number=" .. row.destination_number .. "&destination_context=" .. destination_context .. "' "..expire["is_local"]));
 				end
 
 			--log the result
 				freeswitch.consoleLog("notice", "[app:dialplan:outbound:is_local] " .. destination_number .. " XML " .. destination_context .. " source: database\n");
 
 			--transfer the call
-				session:transfer(row.destination_number, "XML", row.destination_context);
+				session:transfer(destination_number, "XML", row.destination_context);
 		end));
 	else
 		--add the function
