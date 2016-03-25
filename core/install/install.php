@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -126,14 +126,14 @@ if(!$install_step) { $install_step = 'select_language'; }
 	$text = $language->get();
 
 //set a default template
-	$default_template = 'enhanced';
+	$default_template = 'default';
 	if (isset($_SESSION['domain']['template']['name']) and strlen($_SESSION['domain']['template']['name']) != 0) {
 		$default_template = $_SESSION['domain']['template']['name'];
 	}
 
 //set a default enviroment if first_time
 	if($install_enabled){
-	//initialize some varibles to cut down on warnings
+		//initialize some varibles to cut down on warnings
 		$_SESSION['message'] = '';
 		$v_link_label_play = '';
 		$v_link_label_pause = '';
@@ -175,7 +175,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 
 	//action code
 	if($return_install_step == 'config_detail'){
-	//check for all required data
+		//check for all required data
 		$existing_errors = count($messages);
 		if (strlen($admin_username) == 0) { $messages[] = "Please provide the Admin Username"; }
 		if (strlen($admin_password) == 0) {	$messages[] = "Please provide the Admin Password"; }
@@ -286,7 +286,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 					case E_USER_ERROR:          throw new Exception ($errstr . " in $errfile line: $errline");
 					case E_STRICT:              throw new Exception ($errstr . " in $errfile line: $errline");
 					case E_RECOVERABLE_ERROR:   throw new Exception ($errstr . " in $errfile line: $errline");
-					default: 					return false;
+					default:                    return false;
 				}
 			}
 			#set_error_handler("error_handler");
@@ -338,15 +338,16 @@ if(!$install_step) { $install_step = 'select_language'; }
 				echo "</form>\n";
 			}
 		}
-	}else{
+	}
+	else {
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
 
 if($install_enabled){
-	//grab the default theme
+	//get the default theme
 		$set_session_theme = 1;
 		$domains_processed = 1;
-		include "themes/enhanced/app_defaults.php";
+		include "themes/".$default_template."/app_defaults.php";
 		unset($set_session_theme, $domains_processed);
 	//initialize some defaults so we can be 'logged in'
 		$_SESSION['username'] = 'install_enabled';
@@ -354,7 +355,7 @@ if($install_enabled){
 		$_SESSION['menu'] = '';
 }
 
-// add the content to the template and then send output
+//add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
 
