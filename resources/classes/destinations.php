@@ -148,7 +148,6 @@ class destinations {
 				}
 				$response .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
 				$response .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
-				$response .= "	document.getElementById('".$destination_id."_chosen').style.visibility = document.getElementById('".$destination_id."_chosen').style.visibility == 'hidden' ? 'visible': 'hidden';\n";
 				$response .= "	tbb=document.createElement('INPUT');\n";
 				$response .= "	tbb.setAttribute('class', 'btn');\n";
 				$response .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
@@ -178,7 +177,7 @@ class destinations {
 			//set default to false
 			$select_found = false;
 
-			$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld chosen-select' style='".$select_style."' onchange=\"".$onchange."\">\n";
+			$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
 			$response .= "			<option value=''></option>\n";
 			foreach ($this->destinations as $row) {
 
