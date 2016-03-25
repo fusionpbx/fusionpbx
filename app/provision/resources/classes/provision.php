@@ -521,6 +521,7 @@ include "root.php";
 							//get the contacts assigned to the groups and add to the contacts array
 								if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
 									$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
+									$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 									$sql .= "p.phone_number, p.phone_extension ";
 									$sql .= "from v_contacts as c, v_contact_phones as p ";
 									$sql .= "where c.contact_uuid in ( ";
@@ -544,10 +545,12 @@ include "root.php";
 											if (!$this->contact_exists($contacts, $uuid)) {
 												$contacts[$uuid]['category'] = 'groups';
 												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+												$contacts[$uuid]['contact_type'] = $row['contact_type'];
 												$contacts[$uuid]['contact_category'] = $row['contact_category'];
 												$contacts[$uuid]['contact_organization'] = $row['contact_organization'];
 												$contacts[$uuid]['contact_name_given'] = $row['contact_name_given'];
 												$contacts[$uuid]['contact_name_family'] = $row['contact_name_given'];
+												$contacts[$uuid]['phone_label'] = $row['phone_label'];
 												$contacts[$uuid]['phone_number'] = $row['phone_number'];
 												$contacts[$uuid]['phone_extension'] = $row['contact_name_given'];
 											}
@@ -557,6 +560,7 @@ include "root.php";
 							//get the contacts assigned to the user and add to the contacts array
 								if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
 									$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
+									$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 									$sql .= "p.phone_number, p.phone_extension ";
 									$sql .= "from v_contacts as c, v_contact_phones as p ";
 									$sql .= "where c.contact_uuid in ( ";
@@ -579,10 +583,12 @@ include "root.php";
 											if (!$this->contact_exists($contacts, $uuid)) {
 												$contacts[$uuid]['category'] = 'users';
 												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+												$contacts[$uuid]['contact_type'] = $row['contact_type'];
 												$contacts[$uuid]['contact_category'] = $row['contact_category'];
 												$contacts[$uuid]['contact_organization'] = $row['contact_organization'];
 												$contacts[$uuid]['contact_name_given'] = $row['contact_name_given'];
 												$contacts[$uuid]['contact_name_family'] = $row['contact_name_given'];
+												$contacts[$uuid]['phone_label'] = $row['phone_label'];
 												$contacts[$uuid]['phone_number'] = $row['phone_number'];
 												$contacts[$uuid]['phone_extension'] = $row['contact_name_given'];
 											}
