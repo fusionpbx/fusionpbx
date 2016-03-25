@@ -197,47 +197,47 @@ class scripts {
 				if ((strlen($db_type) > 0) || (strlen($dsn_name) > 0)) {
 					$tmp .= "--database information\n";
 					$tmp .= "	database = {}\n";
-					$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
-					$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
-					$tmp .= $this->correct_path("	database[\"path\"] = [[".$db_path."]];\n");
+					$tmp .= "	database.type = \"".$db_type."\";\n";
+					$tmp .= "	database.name = \"".$db_name."\";\n";
+					$tmp .= $this->correct_path("	database.path = [[".$db_path."]];\n");
 
 					if (strlen($dsn_name) > 0) {
-						$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
-						$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
+						$tmp .= "	database.system = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
+						$tmp .= "	database.switch = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 					}
 					elseif ($db_type == "pgsql") {
 						if ($db_host == "localhost") { $db_host = "127.0.0.1"; }
-						$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
-						$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
+						$tmp .= "	database.system = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
+						$tmp .= "	database.switch = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
 					}
 					elseif ($db_type == "sqlite") {
-						$tmp .= "	database[\"system\"] = \"sqlite://".$db_path."/".$db_name."\";\n";
-						$tmp .= "	database[\"switch\"] = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
+						$tmp .= "	database.system = \"sqlite://".$db_path."/".$db_name."\";\n";
+						$tmp .= "	database.switch = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 					}
 					elseif ($db_type == "mysql") {
-						$tmp .= "	database[\"system\"] = \"\";\n";
-						$tmp .= "	database[\"switch\"] = \"\";\n";
+						$tmp .= "	database.system = \"\";\n";
+						$tmp .= "	database.switch = \"\";\n";
 					}
 					$tmp .= "\n";
 				}
 				$tmp .= "--set defaults\n";
 				$tmp .= "	expire = {}\n";
-				$tmp .= "	expire[\"directory\"] = \"3600\";\n";
-				$tmp .= "	expire[\"dialplan\"] = \"3600\";\n";
-				$tmp .= "	expire[\"languages\"] = \"3600\";\n";
-				$tmp .= "	expire[\"sofia.conf\"] = \"3600\";\n";
-				$tmp .= "	expire[\"acl.conf\"] = \"3600\";\n";
+				$tmp .= "	expire.directory = \"3600\";\n";
+				$tmp .= "	expire.dialplan = \"3600\";\n";
+				$tmp .= "	expire.languages = \"3600\";\n";
+				$tmp .= "	expire.sofia.conf = \"3600\";\n";
+				$tmp .= "	expire.acl.conf = \"3600\";\n";
 				$tmp .= "\n";
 				$tmp .= "--set xml_handler\n";
 				$tmp .= "	xml_handler = {}\n";
-				$tmp .= "	xml_handler[\"fs_path\"] = false;\n";
+				$tmp .= "	xml_handler.fs_path = false;\n";
 				$tmp .= "\n";
 				$tmp .= "--set the debug options\n";
-				$tmp .= "	debug[\"params\"] = false;\n";
-				$tmp .= "	debug[\"sql\"] = false;\n";
-				$tmp .= "	debug[\"xml_request\"] = false;\n";
-				$tmp .= "	debug[\"xml_string\"] = false;\n";
-				$tmp .= "	debug[\"cache\"] = false;\n";
+				$tmp .= "	debug.params = false;\n";
+				$tmp .= "	debug.sql = false;\n";
+				$tmp .= "	debug.xml_request = false;\n";
+				$tmp .= "	debug.xml_string = false;\n";
+				$tmp .= "	debug.cache = false;\n";
 				$tmp .= "\n";
 				$tmp .= "--additional info\n";
 				$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
