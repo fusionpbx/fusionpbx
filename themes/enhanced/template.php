@@ -1306,11 +1306,6 @@ legend {
 
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
-<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/chosen/chosen.jquery.js"></script>
-<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/chosen/prism.js"></script>
-
-<link rel="stylesheet" href="<?php echo PROJECT_PATH; ?>/resources/jquery/chosen/prism.css">
-<link rel="stylesheet" href="<?php echo PROJECT_PATH; ?>/resources/jquery/chosen/chosen.css">
 
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
@@ -1806,17 +1801,6 @@ if (strlen($_SESSION['message']) > 0) {
 		echo $_SESSION['theme']['bottom_html']['text'];
 	}
 	?>
-<script type="text/javascript">
-	var config = {
-	  '.chosen-select'           : {},
-	  '.chosen-select-deselect'  : {allow_single_deselect:true},
-	  '.chosen-select-no-single' : {disable_search_threshold:10},
-	  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-	  '.chosen-select-width'     : {width:"95%"}
-	}
-	for (var selector in config) {
-	  $(selector).chosen(config[selector]);
-	}
-</script>
+
 </body>
 </html>
