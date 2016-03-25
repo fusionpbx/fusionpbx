@@ -734,7 +734,7 @@ require_once "resources/header.php";
 		tb.id = obj.id;
 		tb.className = 'formfld';
 		tb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
-		tb.setAttribute('data-calendar', "{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}");
+		tb.addClass('datetimepicker');
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 	}
@@ -743,6 +743,7 @@ require_once "resources/header.php";
 		sb = document.createElement('SELECT');
 		sb.name = obj.name;
 		sb.id = obj.id;
+		sb.removeClass('datetimepicker');
 		sb.className = 'formfld';
 		sb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px;');
 		obj.parentNode.insertBefore(sb, obj);

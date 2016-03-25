@@ -1,6 +1,6 @@
 <?php
 
-$text['title-user_dashboard']['en-us'] = "User Dashboard";
+$text['title-user_dashboard']['en-us'] = "Dashboard";
 $text['title-user_dashboard']['es-cl'] = "Dashboard Usuario";
 $text['title-user_dashboard']['pt-pt'] = "Painel de Controle do Usuário";
 $text['title-user_dashboard']['fr-fr'] = "Tableau de bord de l'utilisateur";
@@ -1064,7 +1064,7 @@ $text['label-active_domains']['ro'] = "Domenii active";
 $text['label-active_domains']['fa'] = "";
 $text['label-active_domains']['ar-eg'] = "مجالات حية";
 
-$text['header-user_dashboard']['en-us'] = "User Dashboard";
+$text['header-user_dashboard']['en-us'] = "Dashboard";
 $text['header-user_dashboard']['es-cl'] = "Dashboard Usuario";
 $text['header-user_dashboard']['pt-pt'] = "Painel de Controle do Usuário";
 $text['header-user_dashboard']['fr-fr'] = "Tableau de bord de l'utilisateur";

@@ -1,14 +1,16 @@
 <?php
 
-$text['title']['en-us'] = "Calls";
-$text['title']['es-cl'] = "Llamadas";
-$text['title']['pt-pt'] = "Chamadas";
-$text['title']['fr-fr'] = "Appels";
-$text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pl'] = "Rozmowy";
-$text['title']['sv-se'] = "Samtal ";
-$text['title']['uk'] = "Дзвінки";
-$text['title']['de-at'] = "Anrufe";
+$text['title']['en-us'] = "Call Routing";
+$text['title']['es-cl'] = "enrutamiento de llamadas";
+$text['title']['pt-pt'] = "roteamento de chamadas";
+$text['title']['fr-fr'] = "routage des appels";
+$text['title']['uk'] = "маршрутизація викликів";
+$text['title']['pl'] = "Call Routing";
+$text['title']['sv-se'] = "Call Routing";
+$text['title']['de-at'] = "Call Routing";
+$text['title']['ro'] = "rutare de apel";
+$text['title']['ar-eg'] = "توجيه الدعوة";
+$text['title']['he'] = "ניתוב שיחות";
 
 $text['table-tools']['en-us'] = "Tools";
 $text['table-tools']['es-cl'] = "Herramientas";

@@ -173,7 +173,7 @@ if (sizeof($_REQUEST) > 1) {
 					&& permission_exists("domain_setting_add")
 					&& count($_SESSION['domains']) > 1) ||
 					permission_exists('domain_setting_delete')) {
-						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all_".$row['domain_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
+						echo "<th style='width: 30px; vertical-align: bottom; text-align: center; padding: 0px 3px 2px 8px;'><input type='checkbox' id='chk_all_".$row['domain_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -196,7 +196,7 @@ if (sizeof($_REQUEST) > 1) {
 				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 				permission_exists("domain_setting_delete")
 				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['domain_setting_uuid']."' value='".$row['domain_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['domain_setting_category']."').checked = false; }\"></td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".$row['domain_setting_uuid']."' value='".$row['domain_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['domain_setting_category']."').checked = false; }\"></td>\n";
 				$subcat_ids[strtolower($row['domain_setting_category'])][] = 'checkbox_'.$row['domain_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -225,6 +225,15 @@ if (sizeof($_REQUEST) > 1) {
 				}
 			}
 			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+				echo "		".ucwords($row['domain_setting_value']);
+			}
+			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
+				switch ($row['domain_setting_value'] == '12h') {
+					case '12h': echo "		".$text['label-12-hour']; break;
+					case '24h': echo "		".$text['label-24-hour']; break;
+				}
+			}
+			else if ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
 				echo "		".ucwords($row['domain_setting_value']);
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {

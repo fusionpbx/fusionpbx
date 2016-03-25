@@ -70,6 +70,20 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['de-at'] = "Werkzeug";
 
+$text['label-text']['en-us'] = "Text";
+$text['label-text']['es-cl'] = "Texto";
+$text['label-text']['pt-pt'] = "Texto";
+$text['label-text']['fr-fr'] = "Texte";
+$text['label-text']['pt-br'] = "Texto";
+$text['label-text']['pl'] = "Tekst";
+$text['label-text']['he'] = "טֶקסט";
+$text['label-text']['uk'] = "текст";
+$text['label-text']['sv-se'] = "Text";
+$text['label-text']['de-at'] = "Text";
+$text['label-text']['ro'] = "Text";
+$text['label-text']['fa'] = "";
+$text['label-text']['ar-eg'] = "نص";
+
 $text['label-parent_domain']['en-us'] = "Parent Domain";
 $text['label-parent_domain']['es-cl'] = "Dominio de los Padres";
 $text['label-parent_domain']['pt-pt'] = "Domínio Parent";
@@ -79,6 +93,20 @@ $text['label-parent_domain']['pl'] = "Domena nadrzędna";
 $text['label-parent_domain']['sv-se'] = "Överordnad Domän";
 $text['label-parent_domain']['uk'] = "Батьківський домен";
 $text['label-parent_domain']['de-at'] = "Übergeordnete Domain";
+
+$text['label-none']['en-us'] = "None";
+$text['label-none']['es-cl'] = "Ninguna";
+$text['label-none']['pt-pt'] = "Nenhum";
+$text['label-none']['fr-fr'] = "Aucun";
+$text['label-none']['pt-br'] = "Nenhum";
+$text['label-none']['pl'] = "Żaden";
+$text['label-none']['he'] = "אף לא אחד";
+$text['label-none']['uk'] = "жоден";
+$text['label-none']['sv-se'] = "Ingen";
+$text['label-none']['de-at'] = "Keiner";
+$text['label-none']['ro'] = "Nici unul";
+$text['label-none']['fa'] = "";
+$text['label-none']['ar-eg'] = "لا شيء";
 
 $text['label-manage']['en-us'] = "Manage";
 $text['label-manage']['es-cl'] = "Gestionar";
@@ -90,6 +118,20 @@ $text['label-manage']['sv-se'] = "Hantera";
 $text['label-manage']['uk'] = "Керувати";
 $text['label-manage']['de-at'] = "Verwalten";
 
+$text['label-image']['en-us'] = "Image";
+$text['label-image']['es-cl'] = "Imagen";
+$text['label-image']['pt-pt'] = "Imagem";
+$text['label-image']['fr-fr'] = "image";
+$text['label-image']['pt-br'] = "Imagem";
+$text['label-image']['pl'] = "Obraz";
+$text['label-image']['he'] = "תמונה";
+$text['label-image']['uk'] = "зображення";
+$text['label-image']['sv-se'] = "Bild";
+$text['label-image']['de-at'] = "Image";
+$text['label-image']['ro'] = "Imagine";
+$text['label-image']['fa'] = "";
+$text['label-image']['ar-eg'] = "صورة";
+
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
 $text['label-domain']['pt-pt'] = "Domínio";
@@ -99,6 +141,34 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['de-at'] = "Domain";
+
+$text['label-24-hour']['en-us'] = "24-Hour";
+$text['label-24-hour']['es-cl'] = "24 horas";
+$text['label-24-hour']['pt-pt'] = "24 horas";
+$text['label-24-hour']['fr-fr'] = "24 heures";
+$text['label-24-hour']['pt-br'] = "24 horas";
+$text['label-24-hour']['pl'] = "24-godzinny";
+$text['label-24-hour']['he'] = "24 שעות";
+$text['label-24-hour']['uk'] = "24-годинний";
+$text['label-24-hour']['sv-se'] = "24-timmars";
+$text['label-24-hour']['de-at'] = "24 Stunden";
+$text['label-24-hour']['ro'] = "24 de ore";
+$text['label-24-hour']['fa'] = "";
+$text['label-24-hour']['ar-eg'] = "24 ساعة";
+
+$text['label-12-hour']['en-us'] = "12-Hour";
+$text['label-12-hour']['es-cl'] = "12 horas";
+$text['label-12-hour']['pt-pt'] = "12 horas";
+$text['label-12-hour']['fr-fr'] = "12 heures";
+$text['label-12-hour']['pt-br'] = "12 horas";
+$text['label-12-hour']['pl'] = "12-godzinny";
+$text['label-12-hour']['he'] = "12 שעות";
+$text['label-12-hour']['uk'] = "12-годинний";
+$text['label-12-hour']['sv-se'] = "12-timmars";
+$text['label-12-hour']['de-at'] = "12 Stunden";
+$text['label-12-hour']['ro'] = "12 de ore";
+$text['label-12-hour']['fa'] = "";
+$text['label-12-hour']['ar-eg'] = "12 ساعة";
 
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['es-cl'] = "Configuraciones";

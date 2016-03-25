@@ -73,7 +73,6 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_REQUEST) > 0) {
-		echo "<pre>".print_r($_REQUEST, true)."</pre>";
 		$user_setting_category = strtolower(check_str($_REQUEST["user_setting_category"]));
 		$user_setting_subcategory = strtolower(check_str($_POST["user_setting_subcategory"]));
 		$user_setting_name = strtolower(check_str($_POST["user_setting_name"]));
@@ -441,7 +440,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$subcategory = $row['user_setting_subcategory'];
 	$name = $row['user_setting_name'];
 	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
-		echo "		<select id='user_setting_value' name='user_setting_value' class='formfld' style=''>\n";
+		echo "		<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		$sql = "";
 		$sql .= "select * from v_menus ";
@@ -461,7 +460,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
-		echo "		<select id='user_setting_value' name='user_setting_value' class='formfld' style=''>\n";
+		echo "		<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//add all the themes to the list
 		$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
@@ -483,7 +482,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
-		echo "		<select id='user_setting_value' name='user_setting_value' class='formfld' style=''>\n";
+		echo "		<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
 			if ($row['default_setting_value'] == $key) {
@@ -496,7 +495,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
-		echo "		<select id='user_setting_value' name='user_setting_value' class='formfld' style=''>\n";
+		echo "		<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//$list = DateTimeZone::listAbbreviations();
 		$time_zone_identifiers = DateTimeZone::listIdentifiers();
@@ -536,16 +535,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "		</select>\n";
 	}
+	elseif ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='24h' ".(($row['user_setting_value'] == "24h") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+		echo "    	<option value='12h' ".(($row['user_setting_value'] == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-		echo "	<input class='formfld' type='password' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['user_setting_value']."\">\n";
+		echo "	<input class='formfld' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['user_setting_value']."\">\n";
 	}
 	elseif (
+		$category == "theme" && $subcategory == "body_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "body_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
 		$category == "theme" && $subcategory == "login_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_selector_shadow_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "message_default_background_color" && $name == "text" ||
@@ -553,47 +561,56 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$category == "theme" && $subcategory == "message_negative_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "message_negative_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "message_alert_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_alert_color" && $name == "text"
+		$category == "theme" && $subcategory == "message_alert_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_main_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_main_text_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_main_text_color_hover" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_main_shadow_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_sub_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_sub_background_color_hover" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_sub_text_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_sub_text_color_hover" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_sub_shadow_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_brand_text_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "menu_brand_text_color_hover" && $name == "text"
 		) {
-		echo "	<style>";
-		echo "		DIV.rui-colorpicker  { width: 253px; }";
-		echo "		DIV.rui-colorpicker DIV.controls { width: 61px; }";
-		echo "		DIV.rui-colorpicker DIV.controls DIV.preview { width: 55px; }";
-		echo "		DIV.rui-colorpicker DIV.controls INPUT.display { width: 61px; text-align: center; font-family: courier; }";
-		echo "		DIV.rui-colorpicker DIV.controls DIV.rgb-display { width: 50px; }";
-		echo "		DIV.rui-colorpicker DIV.controls DIV.rgb-display DIV INPUT { width: 30px; }";
-		echo "	</style>";
-		echo "	<input class='formfld' id='user_setting_value' name='user_setting_value' data-colorpcker=\"{format: 'hex'}\" value=\"".$row['user_setting_value']."\">\n";
-		echo "	<script type='text/javascript'>new Colorpicker().assignTo('user_setting_value');</script>";
+		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
 	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
-		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
-		echo "		<option value='letter' ".(($row['default_setting_value'] == 'letter') ? 'selected' : null).">Letter</option>";
-		echo "		<option value='legal' ".(($row['default_setting_value'] == 'legal') ? 'selected' : null).">Legal</option>";
-		echo "		<option value='a4' ".(($row['default_setting_value'] == 'a4') ? 'selected' : null).">A4</option>";
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
+		echo "		<option value='letter' ".(($row['user_setting_value'] == 'letter') ? 'selected' : null).">Letter</option>";
+		echo "		<option value='legal' ".(($row['user_setting_value'] == 'legal') ? 'selected' : null).">Legal</option>";
+		echo "		<option value='a4' ".(($row['user_setting_value'] == 'a4') ? 'selected' : null).">A4</option>";
 		echo "	</select>";
 	}
 	elseif ($category == "fax" && $subcategory == "resolution" && $name == "text" ) {
-		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
-		echo "		<option value='normal' ".(($row['default_setting_value'] == 'normal') ? 'selected' : null).">".$text['label-normal']."</option>";
-		echo "		<option value='fine' ".(($row['default_setting_value'] == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
-		echo "		<option value='superfine' ".(($row['default_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
+		echo "		<option value='normal' ".(($row['user_setting_value'] == 'normal') ? 'selected' : null).">".$text['label-normal']."</option>";
+		echo "		<option value='fine' ".(($row['user_setting_value'] == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
+		echo "		<option value='superfine' ".(($row['user_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
 	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
-		echo "    <select class='formfld' name='default_setting_value'>\n";
-		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='false' ".(($row['user_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    	<option value='true' ".(($row['user_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
-		echo "    <select class='formfld' name='default_setting_value'>\n";
-		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='true' ".(($row['user_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['user_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='image' ".(($row['user_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($row['user_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='none' ".(($row['user_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
 	else {
-		echo "	<input class='formfld' type='text' name='user_setting_value' maxlength='255' value=\"".$row['user_setting_value']."\">\n";
+		echo "	<input class='formfld' type='text' id='user_setting_value' name='user_setting_value' maxlength='255' value=\"".$row['user_setting_value']."\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
