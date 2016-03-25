@@ -103,7 +103,7 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:acl.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["acl.conf"]));
+			result = trim(api:execute("memcache", "set configuration:acl.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["acl_conf"]));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
