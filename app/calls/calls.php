@@ -55,8 +55,9 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+//define select count query
+	$sql = "select count(extension_uuid) as count from v_extensions ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -75,22 +76,18 @@ else {
 		}
 	}
 	$sql .= $sql_mod; //add search mod from above
-	if (strlen($order_by)> 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
+
+//execute select count query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$result_count = $row['count'];
+	unset ($prep_statement, $row);
 
 	if ($is_included == 'true') {
 		$rows_per_page = 10;
-		if ($num_rows > 10) {
-			echo "<script>document.getElementById('btn_viewall_callrouting').style.display = 'inline';</script>\n";
+		if ($result_count > 10) {
+			echo "<script>document.getElementById('btn_viewall_callrouting').style.display = 'inline-block';</script>\n";
 		}
 	}
 	else {
@@ -99,41 +96,18 @@ else {
 	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true);
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and enabled = 'true' ";
-	if (!(if_group("admin") || if_group("superadmin"))) {
-		if (count($_SESSION['user']['extension']) > 0) {
-			$sql .= "and (";
-			$x = 0;
-			foreach($_SESSION['user']['extension'] as $row) {
-				if ($x > 0) { $sql .= "or "; }
-				$sql .= "extension = '".$row['user']."' ";
-				$x++;
-			}
-			$sql .= ")";
-		}
-		else {
-			//hide any results when a user has not been assigned an extension
-			$sql .= "and extension = 'disabled' ";
-		}
-	}
-	$sql .= $sql_mod; //add search mod from above
-	if (strlen($order_by)> 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
-	$sql .= " limit $rows_per_page offset $offset ";
+//rework select data query
+	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+
+//execute select data query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
 	$c = 0;

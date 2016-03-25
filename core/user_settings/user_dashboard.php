@@ -328,12 +328,10 @@
 
 //build hud block html
 	$n = 0;
-	define('TIME_24HR', 1); //set 24hr or 12hr clock
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; // used for missed and recent calls
 
 	//voicemail
 		if (in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
-			$hud[$n]['title'] = $text['label-voicemail'];
 			//required class
 				require_once "app/voicemails/resources/classes/voicemail.php";
 			//get the voicemail
@@ -362,9 +360,12 @@
 					}
 				}
 
-				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'\"";
-				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$messages['new']."<br><span class='hud_stat_title' ".$onclick.">".$text['label-new_messages']."</span></span>\n";
+				$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
 
+				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$messages['new']."</span>";
+				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-new_messages']."</span>\n";
+
+				$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 				if (sizeof($voicemails) > 0) {
 					$hud[$n]['html'] .= "<table class='tr_hover' cellpadding='2' cellspacing='0' border='0' width='100%'>";
 					$hud[$n]['html'] .= "<tr>";
@@ -394,14 +395,13 @@
 				else {
 					$hud[$n]['html'] .= "<center><br><br>".$text['label-no_voicemail_assigned']."</center>";
 				}
-
+				$hud[$n]['html'] .= "</div>";
 				$n++;
 		}
 
 
 	//missed calls
 		if (in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
-			$hud[$n]['title'] = $text['label-missed_calls'];
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
@@ -449,14 +449,18 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\"";
-			$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$result_count."<br><span class='hud_stat_title' ".$onclick.">".$text['label-last_24_hours']."</span></span>\n";
+			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
+			$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-last_24_hours']."</span>\n";
+
+			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-cid_name']."</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-cid_number']."</th>\n";
+			if ($result_count > 0) {
+				$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
+			}
+			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-missed']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
@@ -473,7 +477,7 @@
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
-					$tmp_start_epoch = (defined('TIME_24HR') && TIME_24HR == 1) ? date("j/n H:i", $row['start_epoch']) : date("j/n h:ia", $row['start_epoch']);
+					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 					//set click-to-call variables
 						if (permission_exists('click_to_call_call')) {
 							$tr_link = "onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php".
@@ -490,14 +494,13 @@
 								"style='cursor: pointer;'";
 						}
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]."' style='cursor: help;'>\n";
+					$hud[$n]['html'] .= "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 					if ($theme_cdr_images_exist) {
 						$call_result = ($row['answer_stamp'] != '') ? 'voicemail' : 'cancelled';
 						$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 					}
 					$hud[$n]['html'] .= "</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$row['caller_id_name']."&nbsp;</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0)'>".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".$row['caller_id_name']."\"" : null).">".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
@@ -506,14 +509,14 @@
 			}
 
 			$hud[$n]['html'] .= "</table>\n";
-			$hud[$n]['html'] .= "<span style='display: block; margin-bottom: 8px;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'>".$text['label-view_all']."</a></span>\n";
+			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'>".$text['label-view_all']."</a></span>\n";
+			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
 
 
 	//recent calls
 		if (in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
-			$hud[$n]['title'] = $text['label-recent_calls'];
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
@@ -560,14 +563,18 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'\"";
-			$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$result_count."<br><span class='hud_stat_title' ".$onclick.">".$text['label-last_24_hours']."</span></span>\n";
+			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>";
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
+			$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-last_24_hours']."</span>\n";
+
+			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-cid_name']."</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-cid_number']."</th>\n";
+			if ($result_count > 0) {
+				$hud[$n]['html'] .= "<th class='hud_heading'>&nbsp;</th>\n";
+			}
+			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-cid_number']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading'>".$text['label-date_time']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
@@ -591,7 +598,7 @@
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
-					$tmp_start_epoch = (defined('TIME_24HR') && TIME_24HR == 1) ? date("j/n H:i", $row['start_epoch']) : date("j/n h:ia", $row['start_epoch']);
+					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 
 					//determine name
 						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
@@ -621,7 +628,7 @@
 						}
 					$hud[$n]['html'] .= "<tr ".$tr_link.">\n";
 					//determine call result and appropriate icon
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]."' style='cursor: help;'>\n";
+						$hud[$n]['html'] .= "<td valign='middle' class='".$row_style[$c]."' style='cursor: help; padding: 0 0 0 6px;'>\n";
 						if ($theme_cdr_images_exist) {
 							if ($row['direction'] == 'inbound' || $row['direction'] == 'local') {
 								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
@@ -637,11 +644,7 @@
 							$hud[$n]['html'] .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 						}
 						$hud[$n]['html'] .= "</td>\n";
-					//display name
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$cdr_name."</td>\n";
-					//display number
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0)'>".$cdr_number."</a></td>\n";
-					//date/time
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($cdr_name != '') ? "title=\"".$cdr_name."\"" : null).">".$cdr_number."</a></td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$tmp_start_epoch."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 
@@ -652,15 +655,14 @@
 			}
 
 			$hud[$n]['html'] .= "</table>\n";
-			$hud[$n]['html'] .= "<span style='display: block; margin-bottom: 8px;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
+			$hud[$n]['html'] .= "<span style='display: block; margin: 6px 0 7px 0;'><a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php'>".$text['label-view_all']."</a></span>\n";
+			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
 
 
 	//domain limits
 		if (in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
-			$hud[$n]['title'] = $text['label-domain_limits'];
-
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -679,11 +681,16 @@
 			else {
 				$show_stat = false;
 			}
+
+			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-domain_limits']."</span>";
+
 			if ($show_stat) {
-				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$hud_stat."<br><span class='hud_stat_title' ".$onclick.">".$hud_stat_title."</span></span>\n";
+				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
+				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$hud_stat_title."</span>\n";
 			}
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-feature']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-used']."</th>\n";
@@ -736,14 +743,13 @@
 			}
 
 			$hud[$n]['html'] .= "</table>\n";
+			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
 
 
 	//system counts
 		if (in_array('counts', $selected_blocks) && permission_exists('xml_cdr_view')) {
-			$hud[$n]['title'] = $text['label-system_counts'];
-
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -767,14 +773,19 @@
 			else {
 				$show_stat = false;
 			}
+
+			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
+
 			if ($show_stat) {
-				$hud[$n]['html'] .= "<span class='hud_stat' ".$onclick.">".$hud_stat."<br><span class='hud_stat_title' ".$onclick.">".$hud_stat_title."</span></span>\n";
+				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
+				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$hud_stat_title."</span>\n";
 			}
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-disabled']."</th>\n";
+			$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-disabled']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
@@ -892,7 +903,7 @@
 				if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 					$hud[$n]['html'] .= "<tr>\n";
 					$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
-					$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center;'>".$text['label-new']."</th>\n";
+					$hud[$n]['html'] .= "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";
 					$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: center;'>".$text['label-total']."</th>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 
@@ -906,17 +917,18 @@
 				}
 
 			$hud[$n]['html'] .= "</table>\n";
+			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
 
 
 	//system status
 		if (in_array('system', $selected_blocks)) {
-			$hud[$n]['title'] = $text['label-system_status'];
-
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
+
+			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
@@ -927,21 +939,24 @@
 				foreach ($tmp as $stat) {
 					if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 				}
+
 				if ($percent_disk_usage != '') {
-					$hud[$n]['html'] .= "<span class='hud_stat' style='cursor: default;'>".$percent_disk_usage."<br><span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span></span>\n";
+					$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$percent_disk_usage."</span>";
+					$hud[$n]['html'] .= "<span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span>\n";
 				}
 			}
 
-			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 8px;'>\n";
+			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
+			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 			$hud[$n]['html'] .= "<tr>\n";
-			$hud[$n]['html'] .= "<th class='hud_heading' width='100%'>".$text['label-item']."</th>\n";
+			$hud[$n]['html'] .= "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
 			$hud[$n]['html'] .= "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 			$hud[$n]['html'] .= "</tr>\n";
 
 			//pbx version
 				$hud[$n]['html'] .= "<tr>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>FusionPBX</td>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".software_version()."</td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
 
@@ -955,7 +970,7 @@
 					if ($switch_version != '' && $switch_bits != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$switch_version." (".$switch_bits.")</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$switch_version." (".$switch_bits.")</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -973,7 +988,7 @@
 					if ($uptime != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$uptime."</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -996,7 +1011,7 @@
 					if ($uptime != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$uptime."</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1008,7 +1023,7 @@
 					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_memory."%</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_memory."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1020,7 +1035,7 @@
 					if ($percent_disk_usage != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_disk_usage."%</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1036,7 +1051,7 @@
 					if ($percent_cpu != '') {
 						$hud[$n]['html'] .= "<tr>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$percent_cpu."%</td>\n";
+						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
 						$c = ($c) ? 0 : 1;
 					}
@@ -1068,7 +1083,7 @@
 				if ($connections != '') {
 					$hud[$n]['html'] .= "<tr>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-database_connections']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$connections."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$connections."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -1083,7 +1098,7 @@
 					$channels = (is_numeric($tmp)) ? $tmp : 0;
 					$hud[$n]['html'] .= "<tr>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$channels."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -1096,12 +1111,13 @@
 					$tr_link = "href='".PROJECT_PATH."/app/registrations/status_registrations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a href='javascript:void(0);'>".$text['label-registrations']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; white-space: nowrap;'>".$registrations."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$registrations."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
 
 			$hud[$n]['html'] .= "</table>\n";
+			$hud[$n]['html'] .= "</div>";
 			$n++;
 		}
 
@@ -1126,55 +1142,81 @@
 			echo "</script>\n";
 		}
 
-		echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-bottom: 30px;'>\n";
-		echo "<tr>\n";
+		//define grid columns widths and when to use a clear fix
+		//-- $col_str[box_total][which_box]
+		//-- $clear_fix[box_total][after_box]
+		$col_str[1][1] = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
+		for ($n = 1; $n <= 2; $n++) { $col_str[2][$n] = "col-xs-12 col-sm-6 col-md-6 col-lg-6"; }
+		for ($n = 1; $n <= 3; $n++) { $col_str[3][$n] = "col-xs-12 col-sm-4 col-md-4 col-lg-4"; }
+		for ($n = 1; $n <= 4; $n++) { $col_str[4][$n] = "col-xs-12 col-sm-6 col-md-3 col-lg-3"; }
+		for ($n = 1; $n <= 3; $n++) { $col_str[5][$n] = "col-xs-12 col-sm-4 col-md-4 col-lg-2"; }
+		$col_str[5][4] = "col-xs-12 col-sm-6 col-md-6 col-lg-3";
+		$col_str[5][5] = "col-xs-12 col-sm-6 col-md-6 col-lg-3";
+		for ($n = 1; $n <= 6; $n++) { $col_str[6][$n] = "col-xs-12 col-sm-6 col-md-4 col-lg-2"; }
+
+		$clear_fix[4][2] = "visible-sm";
+		$clear_fix[5][3] = "visible-sm visible-md";
+		$clear_fix[6][2] = "visible-sm";
+		$clear_fix[6][3] = "visible-md";
+		$clear_fix[6][4] = "visible-sm";
+
+		echo "<div class='row' style='padding: 0 10px;'>";
 		foreach ($hud as $index => $block) {
-			echo "<td class='hud_box' style='width: ".(round((100 / sizeof($hud)), 2))."%;'>";
-			echo "	<span class='hud_title'>".$block['title']."</span>";
-			echo "	".$block['html'];
-			echo "</td>\n";
-			if ($index+1 < sizeof($hud)) { echo "<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; }
+			echo "<div class='".$col_str[sizeof($hud)][$index+1]."'>";
+			echo "	<div class='row' style='padding: 6px;'>";
+			echo "		<div class='col-md-12 hud_box' style='padding: 0;'>";
+			echo 			$block['html'];
+			echo "			<span class='hud_expander' onclick=\"$('#hud_'+".$index."+'_details').slideToggle('fast');\"><span class='glyphicon glyphicon-option-horizontal'></span></span>";
+			echo "		</div>";
+			echo "	</div>";
+			echo "</div>";
+			if (isset($clear_fix[sizeof($hud)][$index+1]) && $clear_fix[sizeof($hud)][$index+1] != '') {
+				echo "<div class='clearfix ".$clear_fix[sizeof($hud)][$index+1]."'></div>";
+			}
 		}
-		echo "</tr>";
-		echo "</table>";
-		unset($hud);
+		echo "</div>";
+
 	}
 
-if (!is_array($selected_blocks) || in_array('forwarding', $selected_blocks)) {
-	//call routing
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
-			if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-				$is_included = "true";
-				echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
-				echo "	<tr>\n";
-				echo "		<td valign='top'><b>".$text['header-call_routing']."</b><br><br></td>\n";
-				echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></td>\n";
-				echo "	</tr>\n";
-				echo "</table>\n";
-				require_once "app/calls/calls.php";
-				echo "<br>\n";
-			}
-		}
+if (!is_array($selected_blocks) || in_array('routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+	echo "<div class='row' style='margin-top: 30px;'>\n";
 
-	//reload language values
-		$language = new text;
-		$text = $language->get();
-
-	//ring group forward
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
-			if (permission_exists('ring_group_forward')) {
-				$is_included = "true";
-				echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
-				echo "	<tr>\n";
-				echo "		<td valign='top'><b>".$text['header-ring_groups']."</b><br><br></td>\n";
-				echo "		<td valign='top' style='text-align: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></td>\n";
-				echo "	</tr>\n";
-				echo "</table>\n";
-				require_once "app/ring_groups/ring_group_forward.php";
-				echo "<br>\n";
+	if (!is_array($selected_blocks) || in_array('routing', $selected_blocks)) {
+		//call routing
+			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+				if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+					$is_included = "true";
+					echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-7' style='margin: 0 0 20px 0;'>\n";
+					echo "	<div style='float: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></div>\n";
+					echo "	<div style='float: left;'><b>".$text['header-call_routing']."</b><br /><br /></div>\n";
+					require_once "app/calls/calls.php";
+					echo "</div>\n";
+				}
 			}
-		}
+	}
+
+	if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+
+		//reload language values
+			$language = new text;
+			$text = $language->get();
+
+		//ring group forward
+			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+				if (permission_exists('ring_group_forward')) {
+					$is_included = "true";
+					echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' style='margin: 0 0 50px 0;'>\n";
+					echo "	<div style='float: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></div>\n";
+					echo "	<div style='float: left;'><b>".$text['header-ring_groups']."</b><br /><br /></div>\n";
+					require_once "app/ring_groups/ring_group_forward.php";
+					echo "</div>\n";
+				}
+			}
+	}
+
+	echo "</div>\n";
 }
+
 
 //show the footer
 	require_once "resources/footer.php";

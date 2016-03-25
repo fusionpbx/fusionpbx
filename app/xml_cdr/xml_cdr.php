@@ -234,8 +234,12 @@ else {
 				echo "			".$text['label-start_range']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-				echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
-				echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+				echo "			<div class='row'>\n";
+				echo "				<div class='col-sm-12'>\n";
+				echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+				echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+				echo "				</div>\n";
+				echo "			</div>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
@@ -416,11 +420,7 @@ else {
 			$tmp_month = date("M", strtotime($row['start_stamp']));
 			$tmp_day = date("d", strtotime($row['start_stamp']));
 
-			if (defined('TIME_24HR') && TIME_24HR == 1) {
-				$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
-			} else {
-				$tmp_start_epoch = date("j M Y h:i:sa", $row['start_epoch']);
-			}
+			$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['start_epoch']) : date("j M Y H:i:s", $row['start_epoch']);
 
 			$hangup_cause = $row['hangup_cause'];
 			$hangup_cause = str_replace("_", " ", $hangup_cause);
