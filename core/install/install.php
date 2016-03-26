@@ -24,9 +24,10 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Matthew Vale <github@mafoo.org>
 */
-require_once "root.php";
-require_once "resources/functions.php";
-require_once "resources/classes/text.php";
+//add the required includes
+	require_once "root.php";
+	require_once "resources/functions.php";
+	require_once "resources/classes/text.php";
 
 //initialize variables we are going to use
 	$event_host = '';
@@ -49,76 +50,74 @@ require_once "resources/classes/text.php";
 	$db_create_username = '';
 	$db_create_password = '';
 
-//detect the iso country code from the locale
-//TBD $locale = Locale::getDefault();
-$timezone = 'UTC';
-if (is_link('/etc/localtime')) {
-    // Mac OS X (and older Linuxes)
-    // /etc/localtime is a symlink to the
-    // timezone in /usr/share/zoneinfo.
-    $filename = readlink('/etc/localtime');
-    if (strpos($filename, '/usr/share/zoneinfo/') === 0) {
-        $timezone = substr($filename, 20);
-    }
-} elseif (file_exists('/etc/timezone')) {
-    // Ubuntu / Debian.
-    $data = file_get_contents('/etc/timezone');
-    if ($data) {
-        $timezone = rtrim($data);
-    }
-} elseif (file_exists('/etc/sysconfig/clock')) {
-    // RHEL / CentOS
-    $data = parse_ini_file('/etc/sysconfig/clock');
-    if (!empty($data['ZONE'])) {
-        $timezone = $data['ZONE'];
-    }
-}
+//detect the iso country code from the locale - 
+	//TBD $locale = Locale::getDefault();
+	$timezone = 'UTC';
+	if (is_link('/etc/localtime')) {
+		// Mac OS X (and older Linuxes)
+		// /etc/localtime is a symlink to the
+		// timezone in /usr/share/zoneinfo.
+		$filename = readlink('/etc/localtime');
+		if (strpos($filename, '/usr/share/zoneinfo/') === 0) {
+			$timezone = substr($filename, 20);
+		}
+	} elseif (file_exists('/etc/timezone')) {
+		// Ubuntu / Debian.
+		$data = file_get_contents('/etc/timezone');
+		if ($data) {
+			$timezone = rtrim($data);
+		}
+	} elseif (file_exists('/etc/sysconfig/clock')) {
+		// RHEL / CentOS
+		$data = parse_ini_file('/etc/sysconfig/clock');
+		if (!empty($data['ZONE'])) {
+			$timezone = $data['ZONE'];
+		}
+	}
 
-date_default_timezone_set($timezone);
+//set the time zone
+	date_default_timezone_set($timezone);
 
-//detect install state
-$install_enabled = true;
-if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-	$install_enabled = false;
-} elseif (file_exists("/etc/fusionpbx/config.php")) {
-	$install_enabled = false;
-} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-	$install_enabled = false;
-}
-
-if(!$install_enabled) {
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	if (!if_group("superadmin")) {
+//if the config.php exists deny access to install.php
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+		echo "access denied";
+		exit;
+	} elseif (file_exists("/etc/fusionpbx/config.php")) {
+		echo "access denied";
+		exit;
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		echo "access denied";
 		exit;
 	}
-}
 
-$install_step = '';
-$return_install_step = '';
+//intialize variables
+	$install_step = '';
+	$return_install_step = '';
 
-if (count($_POST) > 0) {
-	$install_language = check_str($_POST["install_language"]);
-	$install_step = check_str($_POST["install_step"]);
-	$return_install_step = check_str($_POST["return_install_step"]);
-	if(isset($_POST["event_host"])){
-		$event_host		= check_str($_POST["event_host"]);
-		$event_port		= check_str($_POST["event_port"]);
-		$event_password	= check_str($_POST["event_password"]);
+//process the the HTTP POST
+	if (count($_POST) > 0) {
+		$install_language = check_str($_POST["install_language"]);
+		$install_step = check_str($_POST["install_step"]);
+		$return_install_step = check_str($_POST["return_install_step"]);
+		if(isset($_POST["event_host"])){
+			$event_host		= check_str($_POST["event_host"]);
+			$event_port		= check_str($_POST["event_port"]);
+			$event_password	= check_str($_POST["event_password"]);
+		}
+		if(isset($_POST["db_type"])){
+			$db_type					= $_POST["db_type"];
+			$admin_username				= $_POST["admin_username"];
+			$admin_password				= $_POST["admin_password"];
+			$install_default_country	= $_POST["install_default_country"];
+			$install_template_name		= $_POST["install_template_name"];
+			$domain_name				= $_POST["domain_name"];
+		}
 	}
-	if(isset($_POST["db_type"])){
-		$db_type					= $_POST["db_type"];
-		$admin_username				= $_POST["admin_username"];
-		$admin_password				= $_POST["admin_password"];
-		$install_default_country	= $_POST["install_default_country"];
-		$install_template_name		= $_POST["install_template_name"];
-		$domain_name				= $_POST["domain_name"];
-	}
-}
 
-if(!$install_step) { $install_step = 'select_language'; }
+//set the install step if it is not set
+	if(!$install_step) { $install_step = 'select_language'; }
 
+//set the language for the install
 	$_SESSION['domain']['language']['code'] = $install_language;
 
 //add multi-lingual support
@@ -132,14 +131,12 @@ if(!$install_step) { $install_step = 'select_language'; }
 	}
 
 //set a default enviroment if first_time
-	if($install_enabled){
-		//initialize some varibles to cut down on warnings
-		$_SESSION['message'] = '';
-		$v_link_label_play = '';
-		$v_link_label_pause = '';
-		$default_login = 0;
-		$onload = '';
-	}
+	//initialize some varibles to cut down on warnings
+	$_SESSION['message'] = '';
+	$v_link_label_play = '';
+	$v_link_label_pause = '';
+	$default_login = 0;
+	$onload = '';
 
 //get the contents of the template and save it to the template variable
 	$template = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/'.$default_template.'/template.php');
@@ -329,7 +326,7 @@ if(!$install_step) { $install_step = 'select_language'; }
 				echo "</pre>\n";
 				header("Location: ".PROJECT_PATH."/logout.php");
 				$_SESSION['message'] = 'Install complete';
-			}else{
+			}else {
 				echo "<form method='post' name='frm' action=''>\n";
 				echo "	<div style='text-align:right'>\n";
 				echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
@@ -343,17 +340,15 @@ if(!$install_step) { $install_step = 'select_language'; }
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
 
-if($install_enabled){
-	//get the default theme
-		$set_session_theme = 1;
-		$domains_processed = 1;
-		include "themes/".$default_template."/app_defaults.php";
-		unset($set_session_theme, $domains_processed);
-	//initialize some defaults so we can be 'logged in'
-		$_SESSION['username'] = 'install_enabled';
-		$_SESSION['permissions'][]['permission_name'] = 'superadmin';
-		$_SESSION['menu'] = '';
-}
+//get the default theme
+	$set_session_theme = 1;
+	$domains_processed = 1;
+	include "themes/".$default_template."/template.php";
+	unset($set_session_theme, $domains_processed);
+//initialize some defaults so we can be 'logged in'
+	//$_SESSION['username'] = 'install_enabled';
+	//$_SESSION['permissions'][]['permission_name'] = 'superadmin';
+	//$_SESSION['menu'] = '';
 
 //add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
