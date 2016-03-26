@@ -36,21 +36,21 @@
 	echo "			".$text['label-select_language']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
-	echo "			<fieldset class='container'>";
+	echo "			<table>";
 	foreach($_SESSION['app']['languages'] as $lang_code){
-		echo "			<fieldset class='container'>";
-		echo "				<label class='radio' style='width:200px;'>";
-		echo "				<input type='radio' name='install_language' value='$lang_code' id='lang_$lang_code' onchange='JavaScript:disable_next()'";
-		if($lang_code == $_SESSION['domain']['language']['code'])
-		{
+		echo "			<tr>";
+		echo "				<td>\n";
+		echo "					<input type='radio' name='install_language' value='$lang_code' id='lang_$lang_code' ";
+		if($lang_code == $_SESSION['domain']['language']['code']) {
 			echo " checked='checked'";
 		}
 		echo "/>";
-		echo "				<img src='<!--{project_path}-->/core/install/resources/images/flags/$lang_code.png' alt='$lang_code'/>&nbsp;".$text["language-$lang_code"];
-		echo "				</label>\n";
-		echo "			</fieldset>";
+
+		echo "					<img src='<!--{project_path}-->/core/install/resources/images/flags/$lang_code.png' alt='$lang_code'/>&nbsp;".$text["language-$lang_code"];
+		echo "				</td>";
+		echo "			</tr>";
 	}
-	echo "			</fieldset>";
+	echo "			</table>";
 	echo "			<br />\n";
 	echo "			".$text['description-select_language']."\n";
 	echo "		</td>\n";

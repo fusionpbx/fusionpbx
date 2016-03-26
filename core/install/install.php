@@ -50,8 +50,8 @@
 	$db_create_username = '';
 	$db_create_password = '';
 
-//detect the iso country code from the locale - 
-	//TBD $locale = Locale::getDefault();
+//detect the iso country code from the locale
+	//$locale = Locale::getDefault();
 	$timezone = 'UTC';
 	if (is_link('/etc/localtime')) {
 		// Mac OS X (and older Linuxes)
@@ -206,7 +206,7 @@
 		echo "	<input type='hidden' name='return_install_step' value='select_language'/>\n";
 		echo "	<input type='hidden' name='install_step' value='detect_config'/>\n";
 		echo "	<div style='text-align:right'>\n";
-		echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
+		echo "    <input type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
 		echo "	</div>\n";
 		echo "</form>\n";
 	} elseif($install_step == 'detect_config'){
@@ -336,12 +336,6 @@
 	//$_SESSION['permissions'][]['permission_name'] = 'superadmin';
 	//$_SESSION['menu'] = '';
 
-//show errors
-	ini_set('display_errors', '1');
-	//error_reporting (E_ALL); // Report everything
-	//error_reporting (E_ALL ^ E_NOTICE); // Report everything
-	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
-
 //add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
@@ -349,6 +343,7 @@
 //set a default template
 	$default_template = 'default';
 	$_SESSION['domain']['template']['name'] = $default_template;
+	$_SESSION['theme']['menu_brand_type']['text'] = "text";
 
 //set the default template path
 	$template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/'.$default_template.'/template.php';
@@ -369,7 +364,6 @@
 	eval('?>' . $template_content . '<?php ');
 	$content = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
-//echo $content;
 
 //send the content to the browser and then clear the variable
 	echo $content;
