@@ -204,8 +204,14 @@ else {
 					case '24h': echo "		".$text['label-24-hour']; break;
 				}
 			}
-			else if ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
-				echo "		".ucwords($row['user_setting_value']);
+			else if (
+				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
+				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
+				) {
+				echo "		".$text['label-'.$row['default_setting_value']];
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['user_setting_value']));

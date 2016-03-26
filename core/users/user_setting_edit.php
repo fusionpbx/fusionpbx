@@ -602,11 +602,37 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='false' ".(($row['user_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='true' ".(($row['user_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['user_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
 		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='image' ".(($row['user_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($row['user_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
 		echo "    	<option value='none' ".(($row['user_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_style" && $name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='fixed' ".(($row['user_setting_value'] == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
+		echo "    	<option value='static' ".(($row['user_setting_value'] == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
+		echo "    	<option value='inline' ".(($row['user_setting_value'] == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='top' ".(($row['user_setting_value'] == "top") ? "selected='selected'" : null).">".$text['label-top']."</option>\n";
+		echo "    	<option value='bottom' ".(($row['user_setting_value'] == "bottom") ? "selected='selected'" : null).">".$text['label-bottom']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "logo_align" && $name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='left' ".(($row['user_setting_value'] == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
+		echo "    	<option value='center' ".(($row['user_setting_value'] == "center") ? "selected='selected'" : null).">".$text['label-center']."</option>\n";
+		echo "    	<option value='right' ".(($row['user_setting_value'] == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
 		echo "    </select>\n";
 	}
 	else {
