@@ -363,7 +363,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '#69e5ff';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = '';
-		$x++;
+
 		if($set_session_theme){
 			foreach ($array as $index => $default_settings) {
 				$sub_category = $array[$index]['default_setting_subcategory'];
