@@ -202,11 +202,10 @@
 	if($install_step == 'select_language'){
 		echo "	<form method='post' name='frm' action=''>\n";
 		include "resources/page_parts/install_select_language.php";
-		echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 		echo "	<input type='hidden' name='return_install_step' value='select_language'/>\n";
 		echo "	<input type='hidden' name='install_step' value='detect_config'/>\n";
 		echo "	<div style='text-align:right'>\n";
-		echo "    <input type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
+		echo "    <input type='submit' class='btn' id='next' value='".$text['button-next']."'>\n";
 		echo "	</div>\n";
 		echo "</form>\n";
 	} elseif($install_step == 'detect_config'){
