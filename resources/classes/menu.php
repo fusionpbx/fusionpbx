@@ -386,12 +386,11 @@
 		//create the menu array
 			function menu_array($sql, $menu_item_level) {
 
-				//get the database connnection return immediately if it doesn't exist
-					if ($this->db) {
-						$db = $this->db;
-					}else {
-						return;
-					}
+				//get the database connnection
+					$db = $this->db;
+
+				//database ojbect does not exist return immediately
+					if (!$db) { return; }
 
 				//if there are no groups then set the public group
 					if (!isset($_SESSION['groups'])) {
@@ -460,12 +459,11 @@
 		//create the sub menus
 			function menu_child_array($menu_item_level, $menu_item_uuid) {
 
-				//get the database connnection return immediately if it doesn't exist
-					if ($this->db) {
-						$db = $this->db;
-					}else {
-						return;
-					}
+				//get the database connnection
+					$db = $this->db;
+
+				//database ojbect does not exist return immediately
+					if (!$db) { return; }
 
 				//set the level
 					$menu_item_level = $menu_item_level+1;
