@@ -499,7 +499,7 @@
 					$sql .= "order by l.menu_item_title, i.menu_item_order asc ";
 					$sub_prep_statement = $db->prepare($sql);
 					$sub_prep_statement->execute();
-					$sub_result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+					$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 				//save the child menu into an array
 					if (count($sub_result) > 0) {
