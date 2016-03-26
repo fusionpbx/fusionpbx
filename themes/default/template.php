@@ -1717,7 +1717,7 @@
 								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
 									<?php
 								// login form
-									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php" && !$default_login) {
+									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php" && !$default_login) {
 										if (strlen($_SESSION["username"]) == 0) {
 										//add multi-lingual support
 											require_once "core/user_settings/app_languages.php";

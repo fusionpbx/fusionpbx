@@ -61,7 +61,7 @@ require_once "resources/require.php";
 		}
 	}
 
-//start the output buffer
+//get the template
 	ob_start();
 	$template = $_SESSION["template_content"];
 	eval('?>' . $template . '<?php ');
