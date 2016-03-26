@@ -423,9 +423,14 @@
 					$sql .= ") ";
 					$sql .= "order by i.menu_item_order asc ";
 				}
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				try {
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				}
+				catch (Exception $e) {
+					//menu is not available
+				}
 
 				$x = 0;
 				foreach($result as $row) {
