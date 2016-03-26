@@ -503,11 +503,37 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='true' ".(($default_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='image' ".(($default_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($default_setting_value == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
 		echo "    	<option value='none' ".(($default_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_style" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='fixed' ".(($default_setting_value == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
+		echo "    	<option value='static' ".(($default_setting_value == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
+		echo "    	<option value='inline' ".(($default_setting_value == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='top' ".(($default_setting_value == "top") ? "selected='selected'" : null).">".$text['label-top']."</option>\n";
+		echo "    	<option value='bottom' ".(($default_setting_value == "bottom") ? "selected='selected'" : null).">".$text['label-bottom']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "logo_align" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='left' ".(($default_setting_value == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
+		echo "    	<option value='center' ".(($default_setting_value == "center") ? "selected='selected'" : null).">".$text['label-center']."</option>\n";
+		echo "    	<option value='right' ".(($default_setting_value == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {

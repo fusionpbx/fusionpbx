@@ -1542,118 +1542,176 @@
 	echo "</div>";
 	?>
 
-	<?php if (!$default_login) {
+	<?php
+
+	if (!$default_login) {
 
 		//*************** BOOTSTRAP MENU ********************************
+		function show_menu($menu_array, $menu_style, $menu_position) {
 
-		//retrieve menu array from database
-		$menu = new menu;
-		$menu->db = $db;
-		$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
-		$menu_array = $menu->menu_array();
-		unset($menu);
-		?>
+			//determine menu behavior
+				switch ($menu_style) {
+					case 'inline':
+						$menu_type = 'default';
+						$menu_width = 'calc(100% - 40px)';
+						$menu_brand = false;
+						break;
+					case 'static':
+						$menu_type = 'static-top';
+						$menu_width = 'calc(100% - 40px)';
+						$menu_brand = true;
+						break;
+					case 'fixed':
+					default:
+						$menu_position = ($menu_position != '') ? $menu_position : 'top';
+						$menu_type = 'fixed-'.$menu_position;
+						$menu_width = 'calc(90% - 40px)';
+						$menu_brand = true;
+				}
+			?>
 
-		<nav class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container-fluid" style='width: 90%; padding: 0;'>
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<?php
-					//define menu brand link
-						if (strlen(PROJECT_PATH) > 0) {
-							$menu_brand_link = PROJECT_PATH;
-						}
-						else if (!$default_login) {
-							$menu_brand_link = '/';
-						}
-					//define menu brand mark
-						$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
-						if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-							$menu_brand_image = (isset($_SESSION['theme']['menu_brand_image']['text'])) ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
-							echo "<img class='pull-left hidden-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\">";
-							echo "<img class='pull-left visible-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\" style='margin-left: 21px;'>";
-						}
-						else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-							echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
-						}
-					//domain name/selector
-						if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-							echo "<ul class='nav navbar-nav pull-right visible-xs'>\n";
-							echo "<li><a href='#' style='padding: 8px 4px 6px 0;' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>\n";
-							echo "</ul>\n";
-						}
-					?>
-				</div>
-				<div class="collapse navbar-collapse" id="main_navbar">
-					<ul class="nav navbar-nav">
+			<nav class="navbar navbar-inverse navbar-<?php echo $menu_type; ?>">
+				<div class="container-fluid" style='width: <?php echo $menu_width; ?>; padding: 0;'>
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
 						<?php
-						foreach ($menu_array as $index_main => $menu_parent) {
-							$submenu = false;
-							if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
-								$mod_li = "class='dropdown' ";
-								$mod_a_1 = "class='dropdown-toggle text-left' data-toggle='dropdown' ";
-								$submenu = true;
-							}
-							$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
-							$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-							switch ($menu_parent['menu_item_title']) {
-								case "Home": $glyph = 'home'; break;
-								case "Accounts": $glyph = 'user'; break;
-								case "Dialplan": $glyph = 'transfer'; break;
-								case "Apps": $glyph = 'send'; break;
-								case "Status": $glyph = 'equalizer'; break;
-								case "Advanced": $glyph = 'cog'; break;
-							}
-							echo "<li ".$mod_li.">\n";
-							echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3."><span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span><span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
-							if ($submenu) {
-								echo "<ul class='dropdown-menu'>\n";
-								foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
-									$mod_a_2 = ($menu_sub['menu_item_link'] != '') ? $menu_sub['menu_item_link'] : '#';
-									$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
-									if ($_SESSION['theme']['menu_sub_icons']) {
-										$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
-										switch ($menu_sub['menu_item_title']) {
-											case 'Logout': $mod_icon = "<span class='glyphicon glyphicon-log-out'></span>"; break;
-											default: $mod_icon = null;
-										}
-									}
-									echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$mod_icon.$mod_nw."</a></li>\n";
+						if ($menu_brand) {
+							//define menu brand link
+								if (strlen(PROJECT_PATH) > 0) {
+									$menu_brand_link = PROJECT_PATH;
 								}
-								echo "</ul>\n";
-							}
-							echo "</li>\n";
+								else if (!$default_login) {
+									$menu_brand_link = '/';
+								}
+							//define menu brand mark
+								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
+								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+									$menu_brand_image = (isset($_SESSION['theme']['menu_brand_image']['text'])) ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
+									echo "<img class='pull-left hidden-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\">";
+									echo "<img class='pull-left visible-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\" style='margin-left: 21px;'>";
+								}
+								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
+									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
+								}
 						}
-						?>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<?php
 						//domain name/selector
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<li class='hidden-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>";
-							}
-						//logout icon
-							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
-								$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-								echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
-								unset($username_full);
+								echo "<ul class='nav navbar-nav pull-right visible-xs'>\n";
+								echo "<li><a href='#' style='padding: 8px 4px 6px 0;' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>\n";
+								echo "</ul>\n";
 							}
 						?>
-					</ul>
+					</div>
+					<div class="collapse navbar-collapse" id="main_navbar">
+						<ul class="nav navbar-nav">
+							<?php
+							foreach ($menu_array as $index_main => $menu_parent) {
+								$submenu = false;
+								if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
+									$mod_li = "class='dropdown' ";
+									$mod_a_1 = "class='dropdown-toggle text-left' data-toggle='dropdown' ";
+									$submenu = true;
+								}
+								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
+								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
+								switch ($menu_parent['menu_item_title']) {
+									case "Home": $glyph = 'home'; break;
+									case "Accounts": $glyph = 'user'; break;
+									case "Dialplan": $glyph = 'transfer'; break;
+									case "Apps": $glyph = 'send'; break;
+									case "Status": $glyph = 'equalizer'; break;
+									case "Advanced": $glyph = 'cog'; break;
+								}
+								echo "<li ".$mod_li.">\n";
+								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3."><span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span><span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
+								if ($submenu) {
+									echo "<ul class='dropdown-menu'>\n";
+									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
+										$mod_a_2 = ($menu_sub['menu_item_link'] != '') ? $menu_sub['menu_item_link'] : '#';
+										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
+										if ($_SESSION['theme']['menu_sub_icons']) {
+											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
+											switch ($menu_sub['menu_item_title']) {
+												case 'Logout': $mod_icon = "<span class='glyphicon glyphicon-log-out'></span>"; break;
+												default: $mod_icon = null;
+											}
+										}
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$mod_icon.$mod_nw."</a></li>\n";
+									}
+									echo "</ul>\n";
+								}
+								echo "</li>\n";
+							}
+							?>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<?php
+							//domain name/selector
+								if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+									echo "<li class='hidden-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>";
+								}
+							//logout icon
+								if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+									$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
+									echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
+									unset($username_full);
+								}
+							?>
+						</ul>
+					</div>
 				</div>
-			</div>
-		</nav>
+			</nav>
 
-		<div class="container-fluid" style='width: 90%; padding: 0;' align='center'>
+			<?php
+		}
 
-			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+
+		//determine menu configuration
+			$menu = new menu;
+			$menu->db = $db;
+			$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+			$menu_array = $menu->menu_array();
+			unset($menu);
+
+			$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
+			$menu_position = ($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top';
+			$open_container = "<div class='container-fluid' style='width: 90%; padding: 0;' align='center'>";
+
+			switch ($menu_style) {
+				case 'inline':
+					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
+					echo str_replace("center", $logo_align, $open_container);
+					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
+						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/enhanced/images/logo.png";
+						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;'></a>";
+					}
+
+					show_menu($menu_array, $menu_style, $menu_position);
+					$body_top_style = "style='padding-top: 0px; margin-top: -8px;'";
+					break;
+				case 'static':
+					echo $open_container;
+					show_menu($menu_array, $menu_style, $menu_position);
+					$body_top_style = "style='padding-top: 10px;'";
+					break;
+				case 'fixed':
+					show_menu($menu_array, $menu_style, $menu_position);
+					echo $open_container;
+					switch ($menu_position) {
+						case 'bottom': $body_top_style = "style='padding-top: 30px;'"; break;
+						case 'top': $body_top_style = "style='margin-top: 65px;'"; break;
+					}
+			}
+			?>
+
+			<table width='100%' border='0' cellpadding='0' cellspacing='0' <?php echo $body_top_style; ?>>
 				<tr>
-					<td align='left' valign='top' style='padding-top: 65px;'>
+					<td align='left' valign='top'>
 						<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 							<tr>
 								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
