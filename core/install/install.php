@@ -124,12 +124,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//set a default template
-	$default_template = 'default';
-	if (isset($_SESSION['domain']['template']['name']) and strlen($_SESSION['domain']['template']['name']) != 0) {
-		$default_template = $_SESSION['domain']['template']['name'];
-	}
-
 //set a default enviroment if first_time
 	//initialize some varibles to cut down on warnings
 	$_SESSION['message'] = '';
@@ -137,9 +131,6 @@
 	$v_link_label_pause = '';
 	$default_login = 0;
 	$onload = '';
-
-//get the contents of the template and save it to the template variable
-	$template = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/'.$default_template.'/template.php');
 
 //buffer the content
 	ob_end_clean(); //clean the buffer
@@ -215,7 +206,7 @@
 		echo "	<input type='hidden' name='return_install_step' value='select_language'/>\n";
 		echo "	<input type='hidden' name='install_step' value='detect_config'/>\n";
 		echo "	<div style='text-align:right'>\n";
-		echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
+		echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
 		echo "	</div>\n";
 		echo "</form>\n";
 	} elseif($install_step == 'detect_config'){
@@ -232,14 +223,14 @@
 			echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
 			echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
 			echo "	<div style='text-align:right'>\n";
-			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-			echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
+			echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
+			echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
 		} else {
 			echo "<form method='post' name='frm' action=''>\n";
 			echo "	<div style='text-align:right'>\n";
-			echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
+			echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			echo "	</div>\n";
 			echo "</form>\n";
 		}
@@ -329,8 +320,8 @@
 			}else {
 				echo "<form method='post' name='frm' action=''>\n";
 				echo "	<div style='text-align:right'>\n";
-				echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-				echo "    <button type='button' onclick=\"location.reload(true);\">".$text['button-execute']."</button>\n";
+				echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
+				echo "    <button type='button' class='btn' onclick=\"location.reload(true);\">".$text['button-execute']."</button>\n";
 				echo "	</div>\n";
 				echo "</form>\n";
 			}
@@ -340,44 +331,47 @@
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
 
-//get the default theme
-	$set_session_theme = 1;
-	$domains_processed = 1;
-	include "themes/".$default_template."/template.php";
-	unset($set_session_theme, $domains_processed);
 //initialize some defaults so we can be 'logged in'
 	//$_SESSION['username'] = 'install_enabled';
 	//$_SESSION['permissions'][]['permission_name'] = 'superadmin';
 	//$_SESSION['menu'] = '';
 
+//show errors
+	ini_set('display_errors', '1');
+	//error_reporting (E_ALL); // Report everything
+	//error_reporting (E_ALL ^ E_NOTICE); // Report everything
+	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
+
 //add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
 
-	//replace known used constants
-	$body = str_replace ("<!--{project_path}-->", PROJECT_PATH, $body); //defined in /resources/menu.php
+//set a default template
+	$default_template = 'default';
+	$_SESSION['domain']['template']['name'] = $default_template;
 
+//set the default template path
+	$template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/'.$default_template.'/template.php';
+
+//get the content of the template
+	$template_content = file_get_contents($template_path);
+
+//replace the variables in the template
+	$template_content = str_replace ("<!--{title}-->", $document['title'], $template_content); //<!--{title}--> defined in each individual page
+	$template_content = str_replace ("<!--{head}-->", '', $template_content); //<!--{head}--> defined in each individual page
+	//$template_content = str_replace ("<!--{menu}-->", $_SESSION["menu"], $template_content); //included in the theme
+	$template_content = str_replace ("<!--{body}-->", $body, $template_content); //defined in /themes/default/template.php
+	$template_content = str_replace ("<!--{project_path}-->", PROJECT_PATH, $template_content); //defined in /themes/default/template.php
+
+//get the contents of the template and save it to the template variable
 	ob_start();
-	eval('?>' . $template . '<?php ');
-	$template = ob_get_contents(); //get the output from the buffer
+	require_once "resources/classes/menu.php";
+	eval('?>' . $template_content . '<?php ');
+	$content = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
+//echo $content;
 
-	$custom_head = '';
-	$output = str_replace ("<!--{title}-->", $document['title'], $template); //<!--{title}--> defined in each individual page
-	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
-	$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /resources/menu.php
-	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /resources/menu.php
-
-	$pos = strrpos($output, "<!--{body}-->");
-	if ($pos === false) {
-		$output = $body; //if tag not found just show the body
-	}
-	else {
-		//replace the body
-		$output = str_replace ("<!--{body}-->", $body, $output);
-	}
-
-	echo $output;
-	unset($output);
+//send the content to the browser and then clear the variable
+	echo $content;
 
 ?>
