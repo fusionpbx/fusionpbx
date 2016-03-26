@@ -1703,7 +1703,7 @@
 					show_menu($menu_array, $menu_style, $menu_position);
 					echo $open_container;
 					switch ($menu_position) {
-						case 'bottom': $body_top_style = "style='padding-top: 30px;'"; break;
+						case 'bottom': $body_top_style = "style='margin-top: 30px;'"; break;
 						case 'top': $body_top_style = "style='margin-top: 65px;'"; break;
 					}
 			}
