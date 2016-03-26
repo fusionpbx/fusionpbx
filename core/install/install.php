@@ -200,8 +200,8 @@
 
 	//view code
 	if($install_step == 'select_language'){
+		echo "	<form method='post' name='frm' action=''>\n";
 		include "resources/page_parts/install_select_language.php";
-		echo "<form method='post' name='frm' action=''>\n";
 		echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 		echo "	<input type='hidden' name='return_install_step' value='select_language'/>\n";
 		echo "	<input type='hidden' name='install_step' value='detect_config'/>\n";
