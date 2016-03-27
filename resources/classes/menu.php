@@ -563,12 +563,12 @@
 							$sql .= ") ";
 							$sql .= "values ";
 							$sql .= "(";
-							$sql .= "'".$menu_uuid."', ";
+							$sql .= "'".$this->menu_uuid."', ";
 							$sql .= "'$menu_name', ";
 							$sql .= "'$menu_language', ";
 							$sql .= "'$menu_description' ";
 							$sql .= ");";
-							$this->db->exec(check_sql($sql));
+							$this->db->exec($sql);
 
 						//add the menu items
 							$this->restore();
