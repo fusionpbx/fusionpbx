@@ -1,7 +1,7 @@
 <?php
 
 $apps[$x]['menu'][0]['title']['en-us'] = "Emails";
-$apps[$x]['menu'][0]['title']['es-cl'] = "Los Correos Electrónicos";
+$apps[$x]['menu'][0]['title']['es-cl'] = "Los Correos ElectrÃ³nico";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Courriels";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Emails";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Emails";
