@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -28,9 +28,9 @@
 	local log = require"resources.functions.log"["xml_handler"]
 
 -- needed for cli-command xml_locate dialplan
-        if not call_context then
-                call_context = freeswitch.getGlobalVariable("domain");
-        end
+	if (call_context == nil) then
+		call_context = "public";
+	end
 
 --get the cache
 	XML_STRING, err = cache.get("dialplan:" .. call_context)
