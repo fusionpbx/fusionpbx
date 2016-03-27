@@ -81,10 +81,10 @@ if ($domains_processed == 1) {
 			$event_socket_ip_address = $_SESSION['event_socket_ip_address'];
 			if(isset($_SESSION['event_socket_port'])) { $event_socket_port = $_SESSION['event_socket_port']; }
 			if(isset($_SESSION['event_socket_password'])) { $event_socket_password = $_SESSION['event_socket_password']; }
-			$sql = "update v_settings ";
-			$sql .= "set event_socket_ip_address = '$event_socket_ip_address' ";
-			$sql .= "set event_socket_port = '$event_socket_port' ";
-			$sql .= "set event_socket_password = '$event_socket_password' ";
+			$sql = "update v_settings set ";
+			$sql .= "event_socket_ip_address = '$event_socket_ip_address', ";
+			$sql .= "event_socket_port = '$event_socket_port', ";
+			$sql .= "event_socket_password = '$event_socket_password' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}
