@@ -26,14 +26,11 @@
 
 //if there are no items in the menu then add the default menu
 	if ($domains_processed == 1) {
-
 		require_once "resources/classes/menu.php";
 		$o = new menu;
 		$o->db = $db;
 		$o->menu_default();
 		unset($menu);
-
-
 	} //if
 
 ?>
