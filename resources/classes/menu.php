@@ -30,7 +30,7 @@
 		public $menu_language;
 
 		//delete items in the menu that are not protected
-			function delete() {
+			public function delete() {
 				//set the variable
 					$db = $this->db;
 				//remove existing menu languages
@@ -59,7 +59,7 @@
 			}
 
 		//restore the menu
-			function restore() {
+			public function restore() {
 				//set the variables
 					$db = $this->db;
 
@@ -238,12 +238,11 @@
 					if ($db_type == "sqlite") {
 						$db->commit();
 					}
-
 			} //end function
 
 
 		//create the menu
-			function build_html($menu_item_level = 0) {
+			public function build_html($menu_item_level = 0) {
 
 				$db = $this->db;
 				$menu_html_full = '';
@@ -317,10 +316,10 @@
 				} //end for each
 
 				return $menu_html_full;
-			}
+			} //end function
 
 		//create the sub menus
-			function build_child_html($menu_item_level, $submenu_array) {
+			private function build_child_html($menu_item_level, $submenu_array) {
 
 				$db = $this->db;
 				$menu_item_level = $menu_item_level+1;
@@ -381,10 +380,10 @@
 
 					return $submenu_html;
 				}
-			}
+			} //end function
 
 		//create the menu array
-			function menu_array($sql, $menu_item_level) {
+			public function menu_array($sql, $menu_item_level) {
 
 				//get the database connnection
 					$db = $this->db;
@@ -454,10 +453,10 @@
 
 				//return the array
 					return $a;
-			}
+			} //end function
 
 		//create the sub menus
-			function menu_child_array($menu_item_level, $menu_item_uuid) {
+			private function menu_child_array($menu_item_level, $menu_item_uuid) {
 
 				//get the database connnection
 					$db = $this->db;
@@ -534,7 +533,46 @@
 						return $a;
 					}
 					unset($sub_prep_statement, $sql);
-			}
+			} //end function
+
+		//add the default menu when no menu exists
+			public function default() {
+				//set the default menu_uuid
+					$this->menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+				//check to see if any menu exists
+					$sql = "select count(*) from v_menus ";
+					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+					unset($sql, $prep_statement);
+					if ($result['count'] == 0) {
+						//set the menu variables
+							$menu_name = 'default';
+							$menu_language = 'en-us';
+							$menu_description = 'Default Menu';
+
+						//add the menu
+							$sql = "insert into v_menus ";
+							$sql .= "(";
+							$sql .= "menu_uuid, ";
+							$sql .= "menu_name, ";
+							$sql .= "menu_language, ";
+							$sql .= "menu_description ";
+							$sql .= ") ";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".$menu_uuid."', ";
+							$sql .= "'$menu_name', ";
+							$sql .= "'$menu_language', ";
+							$sql .= "'$menu_description' ";
+							$sql .= ");";
+							$this->db->exec(check_sql($sql));
+
+						//add the menu items
+							$this->restore();
+					}
+			} //end function
 	}
 
 ?>
