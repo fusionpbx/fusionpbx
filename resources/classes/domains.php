@@ -332,8 +332,10 @@
 				}
 
 			//update config.lua
-				$obj = new scripts;
-				$obj->write_config();
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
+					$obj = new scripts;
+					$obj->write_config();
+				}
 
 			//clear the session variables
 				unset($_SESSION['domain']);

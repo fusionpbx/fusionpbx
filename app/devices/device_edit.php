@@ -587,17 +587,16 @@ require_once "resources/require.php";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	//echo "<input style='display:none;' type='password' name='autocomplete'>";
 	echo "<input type='hidden' name='file_action' id='file_action' value=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
+	echo "<td align='left' nowrap='nowrap' valign='top'>";
 	echo "	<b>".$text['header-device']."</b>";
 	echo "	<br><br>";
 	echo "	".$text['description-device'];
 	echo "	<br><br>";
 	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "<td align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
@@ -628,12 +627,14 @@ require_once "resources/require.php";
 	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_mac_address']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
 		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
 		echo "<br />\n";

@@ -343,7 +343,7 @@ else {
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 					permission_exists('default_setting_delete')
 					) {
-					echo "<th style='text-align: center; padding: 0px;'><input type='checkbox' id='chk_all_".$row['default_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+					echo "<th style='width: 30px; vertical-align: bottom; text-align: center; padding: 0px 3px 2px 8px;'><input type='checkbox' id='chk_all_".$row['default_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th width='23%'>".$text['label-subcategory']."</th>";
 				echo "<th width='7%'>".$text['label-type']."</th>";
@@ -352,7 +352,7 @@ else {
 				echo "<th width='40%'>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('default_setting_add')) {
-					echo "<a href='default_setting_edit.php?default_setting_category=".urlencode($row['default_setting_category'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo "<a href='javascript:void(0)' onclick=\"document.location.href='default_setting_edit.php?default_setting_category=".urlencode($row['default_setting_category'])."&search='+$('#default_setting_search').val();\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('default_setting_delete')) {
 					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -367,7 +367,7 @@ else {
 				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 				permission_exists("default_setting_delete")
 				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['default_setting_category']."').checked = false; }\"></td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['default_setting_category']."').checked = false; }\"></td>\n";
 				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -397,6 +397,21 @@ else {
 			}
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['default_setting_value']);
+			}
+			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
+				switch ($row['default_setting_value']) {
+					case '12h': echo "		".$text['label-12-hour']; break;
+					case '24h': echo "		".$text['label-24-hour']; break;
+				}
+			}
+			else if (
+				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
+				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
+				) {
+				echo "		".$text['label-'.$row['default_setting_value']];
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));

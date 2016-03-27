@@ -20,7 +20,7 @@ $apps[$x]['menu'][0]['groups'][] = "user";
 $apps[$x]['menu'][0]['groups'][] = "admin";
 $apps[$x]['menu'][0]['groups'][] = "superadmin";
 
-$apps[$x]['menu'][1]['title']['en-us'] = "User Dashboard";
+$apps[$x]['menu'][1]['title']['en-us'] = "Dashboard";
 $apps[$x]['menu'][1]['title']['es-cl'] = "Dashboard Usuario";
 $apps[$x]['menu'][1]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 $apps[$x]['menu'][1]['title']['pt-pt'] = "Painel de Controle do Usuário";

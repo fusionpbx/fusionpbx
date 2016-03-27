@@ -90,7 +90,6 @@ include "root.php";
 			$this->create_superuser();
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
-			$this->create_menus();
 			$this->write_progress("Install phase 1 complete for FusionPBX");
 		}
 
@@ -989,124 +988,77 @@ include "root.php";
 			}
 		}
 
-		protected function create_menus() {
-			$this->write_progress("\tCreating menus");
-		//set the defaults
-			$menu_name = 'default';
-			$menu_language = 'en-us';
-			$menu_description = 'Default Menu Set';
-
-			$this->write_progress("\tChecking if menu exists");
-			$sql = "select count(*) from v_menus ";
-			$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-			$sql .= "limit 1 ";
-			$this->write_debug($sql);
-			$prep_statement = $this->dbh->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			unset($sql, $prep_statement);
-			if ($result['count'] == 0) {
-				$this->write_progress("\t... creating menu '" . $menu_name. "'");
-				$sql = "insert into v_menus ";
-				$sql .= "(";
-				$sql .= "menu_uuid, ";
-				$sql .= "menu_name, ";
-				$sql .= "menu_language, ";
-				$sql .= "menu_description ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$this->menu_uuid."', ";
-				$sql .= "'$menu_name', ";
-				$sql .= "'$menu_language', ";
-				$sql .= "'$menu_description' ";
-				$sql .= ");";
-				if ($this->debug) {
-					$this->write_debug( $sql."\n");
-				}
-				$this->dbh->exec(check_sql($sql));
-				unset($sql);
-
-			//add the menu items
-				require_once "resources/classes/menu.php";
-				$menu = new menu;
-				$menu->db = $this->dbh;
-				$menu->menu_uuid = $this->menu_uuid;
-				$menu->restore();
-				unset($menu);
-			}
-		}
-
 		protected function app_defaults() {
-			$this->write_progress("\tRunning app_defaults");
+			//write a progress message
+				$this->write_progress("\tRunning app_defaults");
 
-		//set needed session settings
-			$_SESSION["username"] = $this->admin_username;
-			$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
-			require $this->config_php;
-			require "resources/require.php";
-			$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
-			$_SESSION['event_socket_port'] = $this->global_settings->event_port;
-			$_SESSION['event_socket_password'] = $this->global_settings->event_password;
-
-		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-			$sql = "SELECT * FROM v_group_users ";
-			$sql .= "where domain_uuid=:domain_uuid ";
-			$sql .= "and user_uuid=:user_uuid ";
-			$prep_statement = $this->dbh->prepare(check_sql($sql));
-			$prep_statement->bindParam(':domain_uuid', $this->global_settings->domain_uuid);
-			$prep_statement->bindParam(':user_uuid', $this->admin_uuid);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$_SESSION["groups"] = $result;
-			unset($sql, $row_count, $prep_statement);
-
-		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
-			$x = 0;
-			$sql = "select distinct(permission_name) from v_group_permissions ";
-			foreach($_SESSION["groups"] as $field) {
-				if (strlen($field['group_name']) > 0) {
-					if ($x == 0) {
-						$sql .= "where (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+			//set needed session settings
+				$_SESSION["username"] = $this->admin_username;
+				$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
+				require $this->config_php;
+				require "resources/require.php";
+				$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
+				$_SESSION['event_socket_port'] = $this->global_settings->event_port;
+				$_SESSION['event_socket_password'] = $this->global_settings->event_password;
+	
+			//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
+				$sql = "SELECT * FROM v_group_users ";
+				$sql .= "where domain_uuid=:domain_uuid ";
+				$sql .= "and user_uuid=:user_uuid ";
+				$prep_statement = $this->dbh->prepare(check_sql($sql));
+				$prep_statement->bindParam(':domain_uuid', $this->global_settings->domain_uuid);
+				$prep_statement->bindParam(':user_uuid', $this->admin_uuid);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$_SESSION["groups"] = $result;
+				unset($sql, $row_count, $prep_statement);
+	
+			//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
+				$x = 0;
+				$sql = "select distinct(permission_name) from v_group_permissions ";
+				foreach($_SESSION["groups"] as $field) {
+					if (strlen($field['group_name']) > 0) {
+						if ($x == 0) {
+							$sql .= "where (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						else {
+							$sql .= "or (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						$x++;
 					}
-					else {
-						$sql .= "or (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
-					}
-					$x++;
 				}
-			}
-			$prep_statement_sub = $this->dbh->prepare($sql);
-			$prep_statement_sub->execute();
-			$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
-			unset($sql, $prep_statement_sub);
-
-		//include the config.php
-			$db_type = $this->global_settings->db_type();
-			$db_path = $this->global_settings->db_path();
-			$db_host = $this->global_settings->db_host();
-			$db_port = $this->global_settings->db_port();
-			$db_name = $this->global_settings->db_name();
-			$db_username = $this->global_settings->db_username();
-			$db_password = $this->global_settings->db_password();
-
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			echo $schema->schema();
-
-		//run all app_defaults.php files
-			$default_language = $this->install_language;
-			$domain = new domains;
-			$domain->upgrade();
-
-		//synchronize the config with the saved settings
-			save_switch_xml();
-
-		//do not show the apply settings reminder on the login page
-			$_SESSION["reload_xml"] = false;
-
-		//clear the menu
-			$_SESSION["menu"] = "";
+				$prep_statement_sub = $this->dbh->prepare($sql);
+				$prep_statement_sub->execute();
+				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				unset($sql, $prep_statement_sub);
+	
+			//include the config.php
+				$db_type = $this->global_settings->db_type();
+				$db_path = $this->global_settings->db_path();
+				$db_host = $this->global_settings->db_host();
+				$db_port = $this->global_settings->db_port();
+				$db_name = $this->global_settings->db_name();
+				$db_username = $this->global_settings->db_username();
+				$db_password = $this->global_settings->db_password();
+	
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				echo $schema->schema();
+	
+			//run all app_defaults.php files
+				$default_language = $this->install_language;
+				$domain = new domains;
+				$domain->upgrade();
+	
+			//synchronize the config with the saved settings
+				save_switch_xml();
+	
+			//do not show the apply settings reminder on the login page
+				$_SESSION["reload_xml"] = false;
+	
+			//clear the menu
+				$_SESSION["menu"] = "";
 
 		}
 

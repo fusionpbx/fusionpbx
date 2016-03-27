@@ -200,7 +200,9 @@ else {
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' data-calendar=\"{format: '%Y-%m-%d %H:%M:%S', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='".$time_start."'>\n";
+	echo "	<div class='row'><div class='col-sm-12'>\n";
+	echo "		<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."'>\n";
+	echo "	</div></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -209,7 +211,9 @@ else {
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' data-calendar=\"{format: '%Y-%m-%d %H:%M:%S', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='".$time_stop."'>\n";
+	echo "	<div class='row'><div class='col-sm-12'>\n";
+	echo "		<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."'>\n";
+	echo "	</div></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -235,6 +239,17 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+	//apply bootstrap-datetimepicker WITH seconds
+		echo "<script language='JavaScript' type='text/javascript'>";
+		echo "	$(document).ready(function() {\n";
+		echo "		$(function() {\n";
+		echo "			$('.datetimepicker').datetimepicker({\n";
+		echo "				format: 'YYYY-MM-DD HH:mm:ss',\n";
+		echo "			});\n";
+		echo "		});\n";
+		echo "	});\n";
+		echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
