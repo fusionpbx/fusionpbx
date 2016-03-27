@@ -10,7 +10,7 @@ $text['title-view_email']['sv-se'] = "Visa E-post";
 $text['title-view_email']['de-at'] = "Email anzeigen";
 
 $text['title-emails']['en-us'] = "Emails";
-$text['title-emails']['es-cl'] = "Los Correos Electr�nicos";
+$text['title-emails']['es-cl'] = "Los Correos Electrónicos";
 $text['title-emails']['pt-pt'] = "Emails";
 $text['title-emails']['fr-fr'] = "Courriels";
 $text['title-emails']['pt-br'] = "Emails";
@@ -37,8 +37,8 @@ $text['message-message_resent']['sv-se'] = "Meddelande Skickades";
 $text['message-message_resent']['de-at'] = "Nachricht erneut gesendet";
 
 $text['message-invalid_email']['en-us'] = "Invalid Email";
-$text['message-invalid_email']['es-cl'] = "No V�lida de Correo Electr�nico";
-$text['message-invalid_email']['pt-pt'] = "E-mail Inv�lido";
+$text['message-invalid_email']['es-cl'] = "No Válida de Correo Electrónico";
+$text['message-invalid_email']['pt-pt'] = "E-mail Inválido";
 $text['message-invalid_email']['fr-fr'] = "Adresse de courriel invalide";
 $text['message-invalid_email']['pt-br'] = "Endereço de E-mail Inválido";
 $text['message-invalid_email']['pl'] = "Nieprawidłowy adres email";
@@ -46,7 +46,7 @@ $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
 $text['message-invalid_email']['de-at'] = "Ungültige E-Mail-Adresse";
 
 $text['message-decoding_error']['en-us'] = "MIME Message Decoding Error";
-$text['message-decoding_error']['es-cl'] = "MIME Mensaje Decodificaci�n de error";
+$text['message-decoding_error']['es-cl'] = "MIME Mensaje Descodificación  de error";
 $text['message-decoding_error']['pt-pt'] = "MIME Mensagem Decoding erro";
 $text['message-decoding_error']['fr-fr'] = "Erreur de décodage du message MIME";
 $text['message-decoding_error']['pt-br'] = "MIME mensagem decoding erro";
@@ -146,7 +146,7 @@ $text['label-reference_cdr']['de-at'] = "CDR";
 
 $text['label-reference']['en-us'] = "Reference";
 $text['label-reference']['es-cl'] = "Referencia";
-$text['label-reference']['pt-pt'] = "Refer�ncia";
+$text['label-reference']['pt-pt'] = "Referencia";
 $text['label-reference']['fr-fr'] = "Référence";
 $text['label-reference']['pt-br'] = "Referência";
 $text['label-reference']['pl'] = "Odniesienie";
@@ -191,7 +191,7 @@ $text['label-download']['de-at'] = "Download";
 
 $text['label-attachment']['en-us'] = "Attachment";
 $text['label-attachment']['es-cl'] = "Accesorio";
-$text['label-attachment']['pt-pt'] = "Acess�rio";
+$text['label-attachment']['pt-pt'] = "Accesorio";
 $text['label-attachment']['fr-fr'] = "Pièce jointe";
 $text['label-attachment']['pt-br'] = "Acessório";
 $text['label-attachment']['pl'] = "Załącznik";
@@ -208,7 +208,7 @@ $text['header-view_email']['sv-se'] = "Visa E-post";
 $text['header-view_email']['de-at'] = "Email anzeigen";
 
 $text['header-emails']['en-us'] = "Emails";
-$text['header-emails']['es-cl'] = "Los Correos Electr�nicos";
+$text['header-emails']['es-cl'] = "Los Correos Electrónico";
 $text['header-emails']['pt-pt'] = "Emails";
 $text['header-emails']['fr-fr'] = "Courriels";
 $text['header-emails']['pt-br'] = "Emails";
