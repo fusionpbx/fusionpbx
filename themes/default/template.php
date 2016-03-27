@@ -1558,7 +1558,7 @@
 						$menu_type = 'static-top';
 						$menu_width = 'calc(100% - 40px)';
 						$menu_brand = true;
-						$menu_corners = "style='-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;'";
+						$menu_corners = "style='-webkit-border-radius: 0 0 4px 4px; -moz-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;'";
 						break;
 					case 'fixed':
 					default:
