@@ -1558,6 +1558,7 @@
 						$menu_type = 'static-top';
 						$menu_width = 'calc(100% - 40px)';
 						$menu_brand = true;
+						$menu_corners = "style='-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;'";
 						break;
 					case 'fixed':
 					default:
@@ -1568,7 +1569,7 @@
 				}
 			?>
 
-			<nav class="navbar navbar-inverse navbar-<?php echo $menu_type; ?>">
+			<nav class="navbar navbar-inverse navbar-<?php echo $menu_type; ?>" <?php echo $menu_corners; ?>>
 				<div class="container-fluid" style='width: <?php echo $menu_width; ?>; padding: 0;'>
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
@@ -1695,7 +1696,7 @@
 				case 'static':
 					echo $open_container;
 					show_menu($menu_array, $menu_style, $menu_position);
-					$body_top_style = "style='padding-top: 10px;'";
+					$body_top_style = "style='padding: 0; margin-top: -5px;'";
 					break;
 				case 'fixed':
 					show_menu($menu_array, $menu_style, $menu_position);
