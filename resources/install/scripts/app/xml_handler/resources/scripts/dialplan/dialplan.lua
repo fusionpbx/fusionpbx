@@ -28,9 +28,9 @@
 	local log = require"resources.functions.log"["xml_handler"]
 
 -- needed for cli-command xml_locate dialplan
-        if not call_context then
-                call_context = freeswitch.getGlobalVariable("domain");
-        end
+	if not call_context then
+		call_context = freeswitch.getGlobalVariable("domain");
+	end
 
 --get the cache
 	XML_STRING, err = cache.get("dialplan:" .. call_context)
@@ -105,6 +105,8 @@
 			sql = sql .. "s.dialplan_detail_group asc, ";
 			sql = sql .. "CASE s.dialplan_detail_tag ";
 			sql = sql .. "WHEN 'condition' THEN 1 ";
+			-- fetching 'regex' from the DB
+			sql = sql .. "WHEN 'regex' THEN 1 ";
 			sql = sql .. "WHEN 'action' THEN 2 ";
 			sql = sql .. "WHEN 'anti-action' THEN 3 ";
 			sql = sql .. "ELSE 100 END, ";
@@ -158,7 +160,8 @@
 							dialplan_tag_status = "closed";
 							condition_tag_status = "closed";
 						else
-							if (previous_dialplan_detail_group ~= dialplan_detail_group and previous_dialplan_detail_tag == "condition") then
+							-- if (previous_dialplan_detail_group ~= dialplan_detail_group and previous_dialplan_detail_tag == "condition") then
+							if (previous_dialplan_detail_group ~= dialplan_detail_group and condition_tag_status == "open") then
 								table.insert(xml, [[			</condition>]]);
 								condition_tag_status = "closed";
 							end
@@ -197,6 +200,8 @@
 								condition_type = 'time';
 							elseif (dialplan_detail_type == "date-time") then
 								condition_type = 'time';
+							elseif (dialplan_detail_type == "regex") then
+								condition_type = 'regex';								
 							else
 								condition_type = 'default';
 							end
@@ -238,17 +243,23 @@
 							end
 							condition_expression = "";
 							condition = ""; --prevents a duplicate time condition
+						elseif (condition_type == "regex") then
+							condition = [[				<condition regex="]] .. dialplan_detail_data .. [["]] ..  condition_break;
 						else
 							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] ..  condition_break;
 						end
 						condition_tag_status = "open";
 					end
-					if (dialplan_detail_tag == "action" or dialplan_detail_tag == "anti-action") then
+					if (dialplan_detail_tag == "action" or dialplan_detail_tag == "anti-action" or dialplan_detail_tag == "regex") then
 						if (previous_dialplan_detail_tag == "condition") then
 							--add the condition ending
 							if (condition_type == "time") then
 								condition = [[				<condition ]] .. condition_attribute .. condition_break;
 								condition_attribute = ""; --prevents the condition attribute from being used on every condition
+							elseif (condition_type == "regex") then
+								if (previous_dialplan_detail_type) then
+									condition = [[				<condition regex="]] .. previous_dialplan_detail_data .. [["]] .. condition_break;
+								end
 							else
 								if (previous_dialplan_detail_type) then
 									condition = [[				<condition field="]] .. previous_dialplan_detail_type .. [[" expression="]] .. previous_dialplan_detail_data .. [["]] .. condition_break;
@@ -274,6 +285,9 @@
 								first_action = false;
 							end
 						end
+					end
+					if (dialplan_detail_tag == "regex") then
+						table.insert(xml, [[					<regex field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] .. detail_inline .. [[/>]]);
 					end
 					if (dialplan_detail_tag == "action") then
 						table.insert(xml, [[					<action application="]] .. dialplan_detail_type .. [[" data="]] .. dialplan_detail_data .. [["]] .. detail_inline .. [[/>]]);
