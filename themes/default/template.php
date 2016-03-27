@@ -177,7 +177,7 @@
 		?>
 		background-repeat: no-repeat;
 		background-attachment: fixed;
-	}
+		}
 
 	div#footer {
 		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
@@ -685,6 +685,11 @@
 
 	input.fileinput {
 		padding: 1px;
+		}
+
+	label {
+		font-weight: normal;
+		vertical-align: middle;
 		}
 
 /* TABLES *****************************************************************/
