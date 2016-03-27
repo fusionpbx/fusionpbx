@@ -328,7 +328,8 @@
 		cursor: pointer;
 		}
 
-	.domain_selector_domain {
+	/* domain name: xs only */
+	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain {
 		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
 		white-space: nowrap;
 		opacity: 0.8;
@@ -338,8 +339,29 @@
 		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
 		}
 
-	.domain_selector_domain:hover {
-		filter: alpha(opacity=100);
+	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:hover,
+	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:focus,
+	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:active {
+		opacity: 1;
+		-moz-opacity: 1;
+		-khtml-opacity: 1;
+		cursor: pointer;
+		}
+
+	/* domain name: sm and larger */
+	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain {
+		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
+		white-space: nowrap;
+		opacity: 0.8;
+		-moz-opacity: 0.8;
+		-khtml-opacity: 0.8;
+		font-size: 9.5pt;
+		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+		}
+
+	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:hover,
+	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:focus,
+	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:active {
 		opacity: 1;
 		-moz-opacity: 1;
 		-khtml-opacity: 1;
