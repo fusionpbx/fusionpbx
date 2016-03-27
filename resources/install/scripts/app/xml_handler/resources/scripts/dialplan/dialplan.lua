@@ -27,6 +27,11 @@
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
+-- needed for cli-command xml_locate dialplan
+        if not call_context then
+                call_context = freeswitch.getGlobalVariable("domain");
+        end
+
 --get the cache
 	XML_STRING, err = cache.get("dialplan:" .. call_context)
 
