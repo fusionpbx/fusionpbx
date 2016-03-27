@@ -446,16 +446,6 @@
 			)) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
 			background-attachment: fixed;
-			<?php
-			if ($_SESSION['theme']['body_opacity']['text'] != '') {
-				?>
-				opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
-				filter:alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['body_opacity']['text'])?>);
-				-moz-opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
-				-khtml-opacity: <?php echo $_SESSION['theme']['body_opacity']['text']?>;
-				<?php
-			}
-			?>
 			-webkit-border-radius: 4px;
 			-moz-border-radius: 4px;
 			border-radius: 4px;
