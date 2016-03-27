@@ -68,9 +68,6 @@ require_once "resources/require.php";
 	$template = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
 
-//get the menu
-	require_once "resources/menu.php";
-
 //prepare the template to display the output
 	$custom_head = '';
 
