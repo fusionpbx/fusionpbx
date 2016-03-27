@@ -65,13 +65,6 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set a secondary background color, for a gradient effect.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_opacity';
-		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '0.35';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = 'Set the opacity of the login box (decimal).';
-		$x++;
-		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_shadow_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#888888';
@@ -348,4 +341,4 @@ if ($domains_processed == 1) {
 		unset($array);
 }
 
-?>
+?>                                                                                                                                                                                                                                                                                                                                                                                
