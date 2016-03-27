@@ -103,14 +103,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_subcategory'] = 'footer_background_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#000000';
-		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the background color (and opacity) for the footer bar.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'footer_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#ffffff';
-		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the text color (and opacity) for the footer bar.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';

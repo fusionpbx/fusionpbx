@@ -180,7 +180,7 @@
 	}
 
 	div#footer {
-		background: <?php echo $_SESSION['theme']['footer_background_color']['text']; ?>;
+		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
 		text-align: center;
 		vertical-align: middle;
 		padding: 8px;
@@ -193,10 +193,13 @@
 		font-size: 11px;
 		font-family: arial;
 		line-height: 14px;
-		color: <?php echo $_SESSION['theme']['footer_color']['text']; ?>;
+		color: <?php echo ($_SESSION['theme']['footer_color']['text'] != '') ? $_SESSION['theme']['footer_color']['text'] : 'rgba(255,255,255,0.3)'; ?>;
 		white-space: nowrap;
 		}
 
+	.footer > a:hover {
+		color: <?php echo ($_SESSION['theme']['footer_color']['text'] != '') ? $_SESSION['theme']['footer_color']['text'] : 'rgba(255,255,255,0.3)'; ?>;
+		}
 
 /* BOOTSTRAP MENU: BEGIN ******************************************************************/
 
