@@ -26,8 +26,9 @@
 
 //define the menu class
 	class menu {
-		public $menu_uuid;
-		public $menu_language;
+		//define the variables
+			public $menu_uuid;
+			public $menu_language;
 
 		//delete items in the menu that are not protected
 			public function delete() {
@@ -536,7 +537,7 @@
 			} //end function
 
 		//add the default menu when no menu exists
-			public function default() {
+			public function menu_default() {
 				//set the default menu_uuid
 					$this->menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 				//check to see if any menu exists
