@@ -139,16 +139,16 @@
 		}
 		else if ($_SESSION['theme']['background_color'][0] != '' && $_SESSION['theme']['background_color'][1] != '') { // vertical gradient
 			$background_color = "background: ".$_SESSION['theme']['background_color'][0].";\n";
-			$background_color .= "background-image: -ms-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background-image: -moz-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background-image: -o-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$_SESSION['theme']['background_color'][0]."), color-stop(1, ".$_SESSION['theme']['background_color'][1]."));\n";
-			$background_color .= "background-image: -webkit-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background-image: linear-gradient(to bottom, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+			$background_color .= "background: -ms-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+			$background_color .= "background: -moz-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+			$background_color .= "background: -o-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+			$background_color .= "background: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$_SESSION['theme']['background_color'][0]."), color-stop(1, ".$_SESSION['theme']['background_color'][1]."));\n";
+			$background_color .= "background: -webkit-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+			$background_color .= "background: linear-gradient(to bottom, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
 		}
-		else { // default: white
-			$background_color = "background: #fff;";
-		}
+	}
+	else { // default: white
+		$background_color = "background: #fff;\n";
 	}
 ?>
 
@@ -169,29 +169,18 @@
 		if ($_SESSION['background_image'] != '') {
 			echo "background-image: url('".$_SESSION['background_image']."');\n";
 			echo "background-size: 100% 100%;\n";
-			echo "background-repeat: no-repeat;\n";
 			echo "background-position: top;\n";
-			echo "background-attachment: fixed;\n";
 		}
 		else {
 			echo $background_color;
 		}
 		?>
+		background-repeat: no-repeat;
+		background-attachment: fixed;
 	}
 
 	div#footer {
 		background: <?php echo $_SESSION['theme']['footer_background_color']['text']; ?>;
-		<?php
-		if ($_SESSION['theme']['footer_opacity']['text'] != '') {
-			?>
-			-khtml-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
-			-moz-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
-			filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['footer_opacity']['text']); ?>);
-			filter: progid:DXImageTransform.Microsoft.Alpha(opacity=<?php echo $_SESSION['theme']['footer_opacity']['text']; ?>);
-			opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
-			<?php
-		}
-		?>
 		text-align: center;
 		vertical-align: middle;
 		padding: 8px;
@@ -261,8 +250,27 @@
 		margin: 1px 7px 0 0;
 		}
 
-	.dropdown:hover .dropdown-menu {
-		display: block;
+	@media(min-width: 768px) {
+		.dropdown:hover .dropdown-menu {
+			display: block;
+			}
+	}
+
+	/* xs menu toggle button */
+	.navbar-inverse .navbar-toggle {
+		border: none;
+		}
+
+	.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:active {
+		background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
+		}
+
+	.navbar-inverse .navbar-toggle .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
+		}
+
+	.navbar-inverse .navbar-toggle:hover > .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		}
 
 	/* sub menu container */
@@ -303,7 +311,7 @@
 		}
 
 	#logout_icon {
-		color: #ffffff;
+		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
 		font-size: 11pt;
 		margin: 16px 19px 0 5px;
 		filter: alpha(opacity=80);
@@ -1565,7 +1573,7 @@
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
 							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
+							<span class="icon-bar" style='margin-top: 1px;'></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
@@ -1624,7 +1632,7 @@
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
 										$mod_a_2 = ($menu_sub['menu_item_link'] != '') ? $menu_sub['menu_item_link'] : '#';
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
-										if ($_SESSION['theme']['menu_sub_icons']) {
+										if ($_SESSION['theme']['menu_sub_icons']['boolean'] == 'true') {
 											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
 											switch ($menu_sub['menu_item_title']) {
 												case 'Logout': $mod_icon = "<span class='glyphicon glyphicon-log-out'></span>"; break;
@@ -1677,7 +1685,7 @@
 					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
 					echo str_replace("center", $logo_align, $open_container);
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
-						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/enhanced/images/logo.png";
+						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;'></a>";
 					}
 
