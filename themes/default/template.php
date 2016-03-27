@@ -1617,12 +1617,12 @@
 								}
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
-								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image') {
 									$menu_brand_image = (isset($_SESSION['theme']['menu_brand_image']['text'])) ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
 									echo "<img class='pull-left hidden-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\">";
 									echo "<img class='pull-left visible-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\" style='margin-left: 21px;'>";
 								}
-								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
+								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
 									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
 								}
 						}
