@@ -177,7 +177,7 @@
 		?>
 		background-repeat: no-repeat;
 		background-attachment: fixed;
-	}
+		}
 
 	div#footer {
 		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
@@ -685,6 +685,11 @@
 
 	input.fileinput {
 		padding: 1px;
+		}
+
+	label {
+		font-weight: normal;
+		vertical-align: middle;
 		}
 
 /* TABLES *****************************************************************/
@@ -1554,23 +1559,21 @@
 		</div>
 		<?php
 	}
-	?>
 
-	<?php
+
 	// qr code container for contacts
 	echo "<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>";
 	echo "		<span id='qr_code' onclick=\"$('#qr_code_container').fadeOut(400);\"></span>";
 	echo "	</td></tr></table>";
 	echo "</div>";
-	?>
 
-	<?php
 
 	if (!$default_login) {
 
 		//*************** BOOTSTRAP MENU ********************************
 		function show_menu($menu_array, $menu_style, $menu_position) {
+			global $text;
 
 			//determine menu behavior
 				switch ($menu_style) {
@@ -1682,7 +1685,7 @@
 							//logout icon
 								if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 									$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-									echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
+									echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
 									unset($username_full);
 								}
 							?>
@@ -1831,8 +1834,14 @@
 						</span>
 					</td>
 				</tr>
+				<tr>
+					<td style='width: 100%; height: 40px; vertical-align: bottom;'>
+						<div id='footer' style='width: 100%;'><span class='footer'>&copy; Copyright 2008 - <?php echo date("Y"); ?> <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>. All rights reserved.</span></div>
+					</td>
+				</tr>
 			</table>
 		</div>
+
 		<?php
 	}
 	?>
