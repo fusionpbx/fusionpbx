@@ -95,8 +95,8 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'domain_color';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '#000000';
-		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_value'] = '#69e5ff';
+		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the text color (and opacity) for domain name.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
