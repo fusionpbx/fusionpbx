@@ -31,7 +31,6 @@ $apps[$x]['menu'][1]['uuid'] = "597c483a-51a9-f95a-8d54-ea7d87ada2b8";
 $apps[$x]['menu'][1]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 $apps[$x]['menu'][1]['category'] = "internal";
 $apps[$x]['menu'][1]['path'] = "/app/call_centers/call_center_agent_status.php";
-$apps[$x]['menu'][1]['groups'][] = "agent_admin";
 $apps[$x]['menu'][1]['groups'][] = "admin";
 $apps[$x]['menu'][1]['groups'][] = "superadmin";
 
