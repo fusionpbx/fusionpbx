@@ -41,7 +41,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap><b>".$text['header-event_socket']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' name='detect' class='btn' onclick=\"location.reload();\" value='".$text['button-detect']."'/>\n";
+	//echo "	<input type='button' name='detect' class='btn' onclick=\"location.reload();\" value='".$text['button-detect']."'/>\n";
 	echo "	<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
 	echo "	<input type='submit' name='next' class='btn' value='".$text['button-next']."'/>\n";
 	echo "</td>\n";
