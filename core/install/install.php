@@ -209,31 +209,31 @@
 		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
 			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
 		}
-		include "resources/page_parts/install_event_socket.php";
-		if($detect_ok){
+		//if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
+			include "resources/page_parts/install_event_socket.php";
 			echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 			echo "	<input type='hidden' name='return_install_step' value='detect_config'/>\n";
 			echo "	<input type='hidden' name='install_step' value='config_detail'/>\n";
 			echo "	<input type='hidden' name='event_host' value='$event_host'/>\n";
 			echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
 			echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
-			echo "	<div style='text-align:right'>\n";
-			echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-			echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
-			echo "	</div>\n";
+			//echo "	<div style='text-align:right'>\n";
+			//echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
+			//echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
+			//echo "	</div>\n";
 			echo "</form>\n";
-		} else {
-			echo "<form method='post' name='frm' action=''>\n";
-			echo "	<div style='text-align:right'>\n";
-			echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-			echo "	</div>\n";
-			echo "</form>\n";
-		}
+		//} else {
+		//	echo "<form method='post' name='frm' action=''>\n";
+		//	echo "	<div style='text-align:right'>\n";
+		//	echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
+		//	echo "	</div>\n";
+		//	echo "</form>\n";
+		//}
 	}
 	elseif($install_step == 'config_detail'){
-		if(!$domain_name){
 		//get the domain
+		if(!$domain_name){
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
 		}
@@ -253,8 +253,8 @@
 		try {
 			$detect_switch->detect();
 		} catch(Exception $e){
-			echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
-			$detect_ok = false;
+			//echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
+			//$detect_ok = false;
 		}
 		if($detect_ok){
 			$install_ok = true;
@@ -277,7 +277,7 @@
 			try {
 				require_once "resources/classes/global_settings.php";
 				$global_settings = new global_settings($detect_switch, $domain_name);
-				if(is_null($global_settings)){ throw new Exception("Error global_settings came back with null");	}
+				if(is_null($global_settings)){ throw new Exception("Error global_settings came back with null"); }
 				require_once "resources/classes/install_fusionpbx.php";
 				$system = new install_fusionpbx($global_settings);
 				$system->admin_username = $admin_username;
@@ -313,7 +313,7 @@
 				echo "</pre>\n";
 				header("Location: ".PROJECT_PATH."/logout.php");
 				$_SESSION['message'] = 'Install complete';
-			}else {
+			} else {
 				echo "<form method='post' name='frm' action=''>\n";
 				echo "	<div style='text-align:right'>\n";
 				echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
@@ -328,9 +328,9 @@
 	}
 
 //initialize some defaults so we can be 'logged in'
-	//$_SESSION['username'] = 'install_enabled';
-	//$_SESSION['permissions'][]['permission_name'] = 'superadmin';
-	//$_SESSION['menu'] = '';
+	$_SESSION['username'] = 'install_enabled';
+	$_SESSION['permissions'][]['permission_name'] = 'superadmin';
+	$_SESSION['menu'] = '';
 
 //add the content to the template and then send output
 	$body = ob_get_contents(); //get the output from the buffer

@@ -44,7 +44,10 @@
 
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>".$text['header-config_database']."</b></td>\n";
-	echo "<td width='70%' align='right'>&nbsp;</td>\n";
+	echo "<td width='70%' align='right'>\n";
+	echo "		<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	echo "		<input type='submit' name='execute' class='".$text['button-execute']."'>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	if ($db_type == "sqlite") {
@@ -274,8 +277,8 @@
 
 	echo "</table>";
 	echo "	<div style='text-align:right'>\n";
-	echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-	echo "    <button type='submit'>".$text['button-execute']."</button>\n";
+	echo "		<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	echo "		<input type='submit' name='execute' class='".$text['button-execute']."'>\n";
 	echo "	</div>\n";
 	echo "</form>\n";
 ?>

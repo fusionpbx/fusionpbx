@@ -994,7 +994,7 @@ include "root.php";
 		//set the defaults
 			$menu_name = 'default';
 			$menu_language = 'en-us';
-			$menu_description = 'Default Menu Set';
+			$menu_description = 'Default Menu';
 
 			$this->write_progress("\tChecking if menu exists");
 			$sql = "select count(*) from v_menus ";
