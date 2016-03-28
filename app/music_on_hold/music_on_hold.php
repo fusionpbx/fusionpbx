@@ -313,9 +313,9 @@ else {
 		echo "<input name='type' type='hidden' value='moh'>\n";
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td style='padding-right: 15px;' nowrap>\n";
+		echo "		<td style='padding-right: 15px; white-space: nowrap'>\n";
 		echo "			".$text['label-file-path'];
-		echo "			<input name='upload_file' id='upload_file' type='file' class='formfld fileinput' style='width: 300px; margin-right: 3px;' onchange=\"check_filetype(this);\">";
+		echo "			<input name='upload_file' id='upload_file' type='file' class='formfld fileinput' style='width: 300px; margin-right: 3px; display: inline;' onchange=\"check_filetype(this);\">";
 		echo 			"<input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file'); document.getElementById('sampling_rate').style.display='inline';\">\n";
 		echo "		</td>\n";
 		echo "		<td id='sampling_rate' style='padding-right: 15px;' nowrap>";
