@@ -102,6 +102,7 @@ else {
 
 //rework select data query
 	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+	$sql .= ' order by extension';
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 
 //execute select data query
