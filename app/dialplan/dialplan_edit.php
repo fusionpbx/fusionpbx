@@ -521,7 +521,7 @@ else {
 		//display the results
 			if ($result_count > 0) {
 
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px;'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px; border-collapse: separate; border-spacing: 2px;'>\n";
 
 				$x = 0;
 				foreach($details as $group) {
@@ -760,7 +760,7 @@ else {
 						//end the row
 							echo "</tr>\n";
 							if ($index != 999) {
-								echo "<tr><td colspan='7'><img src='about:blank;' style='width: 100%; height: 1px; border-bottom: 1px solid #e5e9f0;'></td></tr>";
+								echo "<tr><td colspan='7' style='margin: 0; padding: 0;'><img src='about:blank;' style='width: 100%; height: 1px; border-bottom: 1px solid #e5e9f0; margin: 0; padding: 0; display: block;'></td></tr>";
 							}
 						//increment the value
 							$x++;
