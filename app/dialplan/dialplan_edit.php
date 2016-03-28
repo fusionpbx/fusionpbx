@@ -656,7 +656,7 @@ else {
 							//echo "	<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' style='visibility:hidden;' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 							echo "</td>\n";
 						//data
-							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; _text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
