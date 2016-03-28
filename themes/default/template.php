@@ -232,6 +232,7 @@
 	/* menu brand text */
 	.navbar-header > div > a.navbar-brand {
 		color: <?php echo ($_SESSION['theme']['menu_brand_text_color']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color']['text'] : 'rgba(255,255,255,0.80)'; ?>;
+		white-space: nowrap;
 		}
 
 	.navbar-header > div > a.navbar-brand:hover {
