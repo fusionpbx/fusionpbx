@@ -38,6 +38,10 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//retrieve order by
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+
 //set the voicemail id and voicemail uuid arrays
 	foreach ($_SESSION['user']['extension'] as $index => $row) {
 		if (strlen($row['number_alias']) > 0) {
@@ -104,7 +108,6 @@ else {
 	$rows_per_page = 150;
 	$param = "";
 	if ($search != '') { $param .= "&search=".$search; }
-	if ($order_by != '') { $param .= "&order_by=".$order_by."&order=".$order; }
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -112,7 +115,12 @@ else {
 
 //get the list
 	$sql = str_replace('count(*) as num_rows', '*', $sql);
-	$sql .= ($order_by != '') ? "order by ".$order_by." ".$order." " : "order by voicemail_id asc ";
+	if (strlen($order_by) > 0) {
+		$sql .= ($order_by == 'voicemail_id') ? "order by cast(voicemail_id as int) ".$order." " : "order by ".$order_by." ".$order." ";
+	}
+	else {
+		$sql .= "order by cast(voicemail_id as int) asc ";
+	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
