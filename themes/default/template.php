@@ -1659,7 +1659,15 @@
 								if ($submenu) {
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
-										$mod_a_2 = ($menu_sub['menu_item_link'] != '') ? $menu_sub['menu_item_link'] : '#';
+										$mod_a_2 = $menu_sub['menu_item_link'];
+										if($mod_a_2 == ''){
+											$mod_a_2 = '#';
+										}
+										else if (($menu_sub['menu_item_category'] == 'internal') ||
+											(($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2, 0,1) == "/"))
+										{
+											$mod_a_2 = PROJECT_PATH . $mod_a_2;
+										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] == 'true') {
 											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
