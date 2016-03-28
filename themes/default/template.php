@@ -1109,7 +1109,7 @@
 	span.playback_progress_bar {
 		background-color: #c43e42;
 		height: 1px;
-		display: inline-block;
+		display: block;
 		}
 
 /* USER DASHBOARD: BEGIN *****************************************************/
@@ -1413,47 +1413,6 @@
 			$("input.txt, textarea.txt, .formfld").autosizeInput();
 
 
-		//audio playback functions
-			img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_play.png";
-			img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_pause.png";
-
-			var recording_audio;
-
-			function recording_play(recording_id) {
-				if (document.getElementById('recording_progress_bar_'+recording_id)) {
-					document.getElementById('recording_progress_bar_'+recording_id).style.display='';
-				}
-				recording_audio = document.getElementById('recording_audio_'+recording_id)
-
-				if (recording_audio.paused) {
-					recording_audio.volume = 1;
-					recording_audio.play();
-					document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
-				}
-				else {
-					recording_audio.pause();
-					document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
-				}
-			}
-
-			function recording_reset(recording_id) {
-				if (document.getElementById('recording_progress_bar_'+recording_id)) {
-					document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
-				}
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
-			}
-
-			function update_progress(recording_id) {
-				recording_audio = document.getElementById('recording_audio_'+recording_id);
-				var recording_progress = document.getElementById('recording_progress_'+recording_id);
-				var value = 0;
-				if (recording_audio.currentTime > 0) {
-					value = (100 / recording_audio.duration) * recording_audio.currentTime;
-				}
-				recording_progress.style.width = value + "%";
-			}
-
-
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
@@ -1482,6 +1441,46 @@
 			});
 
 	});
+
+	//audio playback functions
+		img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_play.png";
+		img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_pause.png";
+
+		var recording_audio;
+
+		function recording_play(recording_id) {
+			if (document.getElementById('recording_progress_bar_'+recording_id)) {
+				document.getElementById('recording_progress_bar_'+recording_id).style.display='';
+			}
+			recording_audio = document.getElementById('recording_audio_'+recording_id)
+
+			if (recording_audio.paused) {
+				recording_audio.volume = 1;
+				recording_audio.play();
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+			}
+			else {
+				recording_audio.pause();
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			}
+		}
+
+		function recording_reset(recording_id) {
+			if (document.getElementById('recording_progress_bar_'+recording_id)) {
+				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
+			}
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+		}
+
+		function update_progress(recording_id) {
+			recording_audio = document.getElementById('recording_audio_'+recording_id);
+			var recording_progress = document.getElementById('recording_progress_'+recording_id);
+			var value = 0;
+			if (recording_audio.currentTime > 0) {
+				value = (100 / recording_audio.duration) * recording_audio.currentTime;
+			}
+			recording_progress.style.width = value + "%";
+		}
 
 </script>
 

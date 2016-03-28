@@ -307,7 +307,7 @@ require_once "resources/check_auth.php";
 		foreach($result as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td class='".$row_style[$c]."' style='border: none; padding: 0;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
 			}
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
