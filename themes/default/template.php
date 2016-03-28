@@ -201,7 +201,7 @@
 		color: <?php echo ($_SESSION['theme']['footer_color']['text'] != '') ? $_SESSION['theme']['footer_color']['text'] : 'rgba(255,255,255,0.3)'; ?>;
 		}
 
-/* BOOTSTRAP MENU: BEGIN ******************************************************************/
+/* MENU: BEGIN ******************************************************************/
 
 	/* main menu container */
 	.navbar {
@@ -371,6 +371,77 @@
 		-khtml-opacity: 1;
 		cursor: pointer;
 		}
+
+/* BUTTONS ********************************************************************/
+
+	/* default buttons */
+	button.btn-default {
+		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		padding: 4px 8px;
+		color: #fff;
+		font-weight: bold;
+		font-size: 8pt;
+		border: 1px solid #26242a;
+		background: #3e3e3e;
+		background-image: -moz-linear-gradient(top, #000 25%, #3e3e3e 64%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #000), color-stop(0.64, #3e3e3e));
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-khtml-border-radius: 3px;
+		border-radius: 3px;
+		text-align: center;
+		text-transform: uppercase;
+		text-shadow: 0px 0px 1px rgba(0,0,0,0.9);
+		opacity: 0.9;
+		-moz-opacity: 0.9;
+		}
+
+	button.btn-default:hover, .btn-default:active, .btn-default:focus {
+		cursor: pointer;
+		color: #fff;
+		border: 1px solid #26242a;
+		box-shadow: 0 0 5px #cddaf0;
+		-webkit-box-shadow: 0 0 5px #cddaf0;
+		-moz-box-shadow: 0 0 5px #cddaf0;
+		opacity: 1.0;
+		-moz-opacity: 1.0;
+		}
+
+	/* control icons */
+	button.control_icon {
+		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		padding: 2px;
+		color: #fff;
+		font-weight: normal;
+		font-size: 10.5pt;
+		width: 24px;
+		height: 24px;
+		margin: 1px;
+		border: 1px solid #26242a;
+		background: #3e3e3e;
+		background-image: -moz-linear-gradient(top, #000 25%, #3e3e3e 64%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #000), color-stop(0.64, #3e3e3e));
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-khtml-border-radius: 3px;
+		border-radius: 3px;
+		text-align: center;
+		text-shadow: 0px 0px 1px rgba(0,0,0,1.0);
+		opacity: 0.3;
+		-moz-opacity: 0.3;
+		}
+
+	button.control_icon:hover, button.control_icon:active, button.control_icon:focus {
+		cursor: pointer;
+		color: #fff;
+		border: 1px solid #26242a;
+		box-shadow: 0 0 5px #cddaf0;
+		-webkit-box-shadow: 0 0 5px #cddaf0;
+		-moz-box-shadow: 0 0 5px #cddaf0;
+		opacity: 1.0;
+		-moz-opacity: 1.0;
+		}
+
 
 /* DOMAIN SELECTOR ***********************************************************/
 
@@ -546,9 +617,9 @@
 
 	td.list_control_icons {
 		/* multiple icons exist (horizontally) */
+		width: 52px;
 		padding: none;
 		padding-left: 2px;
-		width: 50px;
 		text-align: right;
 		vertical-align: top;
 		white-space: nowrap;
@@ -556,9 +627,9 @@
 
 	td.list_control_icon {
 		/* a single icon exists */
+		width: 26px;
 		padding: none;
-		padding-left: 3px;
-		width: 25px;
+		padding-left: 2px;
 		text-align: right;
 		vertical-align: top;
 		white-space: nowrap;
