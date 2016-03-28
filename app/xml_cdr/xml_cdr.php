@@ -461,7 +461,7 @@ else {
 
 			//recording playback
 				if (permission_exists('recording_play') && $recording_file_path != '') {
-					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td class='".$row_style[$c]."' style='border: none; padding: 0;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 				}
 
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
