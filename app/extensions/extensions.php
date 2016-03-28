@@ -40,10 +40,8 @@ else {
 
 //get the http values and set them as variables
 	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
-	}
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //handle search term
 	$search = check_str($_GET["search"]);
@@ -100,11 +98,11 @@ require_once "resources/paging.php";
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_mod; //add search mod from above
-	if (isset($order_by)) {
-		$sql .= "order by $order_by $order ";
+	if (strlen($order_by) > 0) {
+		$sql .= ($order_by == 'extension') ? "order by cast(extension as int) ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by extension asc ";
+		$sql .= "order by cast(extension as int) asc ";
 	}
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
