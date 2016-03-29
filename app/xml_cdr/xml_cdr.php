@@ -44,7 +44,7 @@ else {
 	require_once "resources/paging.php";
 
 //xml cdr include
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd

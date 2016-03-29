@@ -124,7 +124,7 @@ else {
 	}
 	unset($prep_statement, $result);
 
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	if (strlen($app_uuid) > 0) { $param = "&app_uuid=".$app_uuid; }
 	$page = $_GET['page'];
