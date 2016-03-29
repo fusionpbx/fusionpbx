@@ -461,4 +461,15 @@ $text['check-false']['uk'] = "Ні";
 $text['check-false']['fr-fr'] = "";
 $text['check-false']['de-at'] = "Aus";
 
+$text['button-view_all']['en-us'] = "View All";
+$text['button-view_all']['es-cl'] = "Mostrar Todos";
+$text['button-view_all']['pt-pt'] = "Mostrar Todos";
+$text['button-view_all']['fr-fr'] = "Tout Montrer";
+$text['button-view_all']['pl'] = "Pokaż wszystkie";
+$text['button-view_all']['uk'] = "Показати всі";
+$text['button-view_all']['sv-se'] = "Visa Allt";
+$text['button-view_all']['ro'] = "";
+$text['button-view_all']['de-at'] = "Alle anzeigen";
+$text['button-view_all']['he'] = "הצג הכל";
+
 ?>
