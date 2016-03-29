@@ -84,11 +84,8 @@ else {
 	$result_count = $row['count'];
 	unset ($prep_statement, $row);
 
-	if ($is_included == 'true') {
+	if ($is_included) {
 		$rows_per_page = 10;
-		if ($result_count > 10) {
-			echo "<script>document.getElementById('btn_viewall_callrouting').style.display = 'inline-block';</script>\n";
-		}
 	}
 	else {
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -115,61 +112,102 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	if ($is_included != "true") {
-		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-		echo "  <tr>\n";
-		echo "	<td align='left' width='100%'><b>".$text['title']."</b><br>\n";
-		echo "	".$text['description-2']."\n";
-		echo "	".$text['description-3']."\n";
-		echo "	</td>\n";
-		echo "		<form method='get' action=''>\n";
-		echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "<div style='float: left;'>";
+	echo "	<b>".$text['header-call_routing']."</b><br />";
+	if (!$is_included) {
+		echo $text['description-call_routing']."<br />";
+	}
+	echo "	<br />";
+	echo "</div>\n";
+
+	echo "<div style='float: right; margin-bottom: 10px;'>";
+	echo "	<form method='get' action=''>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "  	<tr>\n";
+	echo "			<td style='vertical-align: top; white-space: nowrap;'>\n";
+	if ($result_count > 10 && $is_included) {
+		echo "			<input id='btn_viewall_callrouting' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\">";
+	}
+	if (!$is_included) {
 		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 		if ($paging_controls_mini != '') {
 			echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 		}
-		echo "			</td>\n";
-		echo "		</form>\n";
-		echo "  </tr>\n";
-		echo "</table>\n";
-		echo "<br />";
 	}
+	echo "			</td>\n";
+	echo "  	</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['table-extension']."</th>\n";
-	echo "<th>".$text['table-tools']."</th>\n";
-	echo "<th>".$text['table-description']."</th>\n";
+	if (permission_exists('call_forward')) { echo "<th>".$text['label-call-forward']."</th>\n"; }
+	if (permission_exists('follow_me')) { echo "<th>".$text['label-follow-me']."</th>\n"; }
+	if (permission_exists('do_not_disturb')) { echo "<th>".$text['label-dnd']."</th>\n"; }
+	if (!$is_included) {
+		echo "<th class='hidden-xs'>".$text['table-description']."</th>\n";
+	}
+	echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid'];
+			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			if (permission_exists('call_forward')) { 	echo "<a href='".$tr_url."'>".$text['label-call-forward']."</a>&nbsp;&nbsp;&nbsp;"; }
-			if (permission_exists('follow_me')) {		echo "<a href='".$tr_url."'>".$text['label-follow-me']."</a>&nbsp;&nbsp;&nbsp;"; }
-			if (permission_exists('do_not_disturb')) {	echo "<a href='".$tr_url."'>".$text['label-dnd']."</a>"; }
-			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";
+			if (permission_exists('call_forward')) {
+				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? format_phone($row['forward_all_destination']) : '&nbsp;')."</td>";
+			}
+			if (permission_exists('follow_me')) {
+				if ($row['follow_me_uuid'] != '') {
+					//check if follow me is enabled
+						$sql = "select follow_me_enabled from v_follow_me where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
+						$follow_me_enabled = ($row_x['follow_me_enabled'] == 'true') ? true : false;
+						unset($sql, $prep_statement, $row_x);
+					//get destination count if enabled
+						if ($follow_me_enabled) {
+							$sql = "select count(follow_me_destination_uuid) as destination_count from v_follow_me_destinations where follow_me_uuid = '".$row['follow_me_uuid']."' and domain_uuid = '".$domain_uuid."'";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$row_x = $prep_statement->fetch(PDO::FETCH_NAMED);
+							$follow_me_destination_count = $row_x['destination_count'];
+							unset($sql, $prep_statement, $row_x);
+						}
+				}
+				else {
+					$follow_me_enabled = false;
+				}
+				echo "<td valign='top' class='".$row_style[$c]."'>".(($follow_me_enabled) ? $text['label-enabled']." (".$follow_me_destination_count.")" : '&nbsp;')."</td>";
+			}
+			if (permission_exists('do_not_disturb')) {
+				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['do_not_disturb'] == 'true') ? $text['label-enabled'] : '&nbsp;')."</td>";
+			}
+			if (!$is_included) {
+				echo "<td valign='top' class='row_stylebg hidden-xs'>".$row['description']."&nbsp;</td>\n";
+			}
+			echo "	<td class='list_control_icon'><a href='".$tr_url."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a></td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = ($c) ? 0 : 1;
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
 
 	echo "</table>";
-	echo "<br>";
+	echo "<br />";
 
-	if (strlen($paging_controls) > 0 && ($is_included != "true")) {
+	if (strlen($paging_controls) > 0 && (!$is_included)) {
 		echo "<center>".$paging_controls."</center>\n";
-		echo "<br><br>\n";
+		echo "<br /><br />\n";
 	}
 
-	if ($is_included != "true") {
+	if (!$is_included) {
+		echo "<br />";
 		require_once "resources/footer.php";
 	}
 

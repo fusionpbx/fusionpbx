@@ -286,6 +286,20 @@ $text['label-call-forward']['sv-se'] = "Vidarekoppling ";
 $text['label-call-forward']['uk'] = "Переадресація";
 $text['label-call-forward']['de-at'] = "Rufumleitung";
 
+$text['header-call_routing']['en-us'] = "Call Routing";
+$text['header-call_routing']['es-cl'] = "Enrutamiento de Llamadas";
+$text['header-call_routing']['pt-pt'] = "Roteamento de Chamadas";
+$text['header-call_routing']['fr-fr'] = "Routage des Appels";
+$text['header-call_routing']['pt-br'] = "Roteamento de Chamadas";
+$text['header-call_routing']['pl'] = "Trasy połączeń";
+$text['header-call_routing']['he'] = "ניתוב שיחות";
+$text['header-call_routing']['uk'] = "маршрутизація викликів";
+$text['header-call_routing']['sv-se'] = "samtals Rutter";
+$text['header-call_routing']['de-at'] = "Anrufrouten";
+$text['header-call_routing']['ro'] = "Маршрутизация вызовов";
+$text['header-call_routing']['fa'] = "";
+$text['header-call_routing']['ar-eg'] = "توجيه الدعوة";
+
 $text['description-on-busy']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
 $text['description-on-busy']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
 $text['description-on-busy']['pt-pt'] = "Se ativado, ele substitui o valor de correio de voz que permite em extensão.";
@@ -349,25 +363,15 @@ $text['description-call-prompt']['sv-se'] = "Kräv verifiering för att ta emot 
 $text['description-call-prompt']['uk'] = "";
 $text['description-call-prompt']['de-at'] = "Nachfragen, ob der Anruf auch wirklich durchgestellt werden soll.";
 
-$text['description-3']['en-us'] = "The following list the extensions that have been assigned to this user account.";
-$text['description-3']['es-cl'] = "El siguiente listado muestra las extensiones que han sido asignadas a esta cuenta de usuario.";
-$text['description-3']['pt-pt'] = "A tabela seguinte lista as extensões que foram atribuídas a esta conta de utilizador.";
-$text['description-3']['fr-fr'] = "Ici la liste des extensions assignées à cet usager.";
-$text['description-3']['pt-br'] = "Utilize os campos para filtrar a informação sobre os registos de chamadas desejados.";
-$text['description-3']['pl'] = "Widoczne są numery wewnętrzne przypisane to danego konta użytkownika.";
-$text['description-3']['sv-se'] = "Följande listar anknytningar som har knytets mot användarkontot. ";
-$text['description-3']['uk'] = "";
-$text['description-3']['de-at'] = "Nachfolgend werden alle Nebenstellen aufgelistet, die diesem Benutzerkonto zugeordnet sind.";
-
-$text['description-2']['en-us'] = "Use the links to configure call forward follow me, or do not disturb.";
-$text['description-2']['es-cl'] = "Utilice los links para configurar reenvio de llamada, sígueme o no Molestar.";
-$text['description-2']['pt-pt'] = "Utilizar os links para definir as funcinalidades de encaminhamento de chamada, seguimento ou de não perturbar.";
-$text['description-2']['fr-fr'] = "Utiliser les liens afin de configurer le renvoi 'follow me', ou ne pas déranger.";
-$text['description-2']['pt-br'] = "A informação contem a origem, destino, duração e outros detalhes úteis da chamada.";
-$text['description-2']['pl'] = "Za pomocą poniższych linków można skonfigurować przekierowania, usługę „Podążaj z mną” lub „Nie przeszkadzać” (DnD).";
-$text['description-2']['sv-se'] = "Använd länkarna för att konfigurera Vidarekoppling, Följ Mig och Stör Ej. ";
-$text['description-2']['uk'] = "";
-$text['description-2']['de-at'] = "Benutzen Sie die Funktionen um Rufumleitung, Anrufweiterschaltung oder Nicht stören zu konfigurieren.";
+$text['description-call_routing']['en-us'] = "Define alternate inbound call handling for the following extensions.";
+$text['description-call_routing']['es-cl'] = "Definir alternativa para el manejo de las siguientes extensiones de llamadas entrantes.";
+$text['description-call_routing']['pt-pt'] = "Definir alternativo chamada de entrada assistência para as seguintes extensões.";
+$text['description-call_routing']['fr-fr'] = "Définir la manipulation pour les extensions suivantes alternent appel entrant.";
+$text['description-call_routing']['pt-br'] = "Definir alternativo chamada de entrada assistência para as seguintes extensões.";
+$text['description-call_routing']['pl'] = "Definiowanie alternatywnego połączenia przychodzącego obsługi dla następujących rozszerzeń.";
+$text['description-call_routing']['sv-se'] = "Definiera alternativa inkommande samtalshantering för följande tillägg.";
+$text['description-call_routing']['uk'] = "Визначити обробку для наступних розширень альтернативного вхідного дзвінка.";
+$text['description-call_routing']['de-at'] = "Definieren Sie alternative eingehende Anruf für die folgenden Erweiterungen der Handhabung.";
 
 $text['description']['en-us'] = "Directs incoming calls for extension:";
 $text['description']['es-cl'] = "Dirige las llamadas entrantes hacia una extensión:";

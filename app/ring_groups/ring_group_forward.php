@@ -98,7 +98,7 @@ require_once "resources/paging.php";
 	}
 
 //prepare to page the results
-	if ($is_included == 'true') {
+	if ($is_included) {
 		$rows_per_page = 10;
 	}
 	else {
