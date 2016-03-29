@@ -139,7 +139,7 @@ else {
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = check_str($_GET['page']);
 	if (strlen($page) == 0) { $page = 0; }

@@ -292,12 +292,15 @@ else {
 			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
 				$num_rows = $_SESSION['cdr']['limit']['numeric'];
 			}
-			if ($rows_per_page > $_SESSION['cdr']['limit']['numeric']) {
-				$rows_per_page = $_SESSION['cdr']['limit']['numeric'];
+			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
+				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+			}
+			else {
+				$rows_per_page = 50;
 			}
 
 		//prepare to page the results
-			//$rows_per_page = 150; //set on the page that includes this page
+			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
 			$page = $_GET['page'];
 			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 			list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top

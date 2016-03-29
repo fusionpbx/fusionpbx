@@ -98,7 +98,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if ($_GET['showall'] && permission_exists('device_all')) {
 		$param = "&showall=true";
 	} else {

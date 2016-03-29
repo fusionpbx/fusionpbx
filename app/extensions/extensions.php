@@ -86,7 +86,7 @@ require_once "resources/paging.php";
 	unset($prep_statement, $result);
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);

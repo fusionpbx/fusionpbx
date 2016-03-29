@@ -105,7 +105,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	if ($search != '') { $param .= "&search=".$search; }
 	$page = $_GET['page'];
