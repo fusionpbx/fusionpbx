@@ -625,7 +625,6 @@
 	input.btn, input.button {
 		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 		padding: 3px 8px 4px 8px;
-		margin-top: -1px;
 		color: #fff;
 		font-weight: bold;
 		cursor: pointer;
@@ -643,6 +642,8 @@
 		text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.85);
 		opacity: 0.9;
 		-moz-opacity: 0.9;
+		height: 27px;
+		margin: 1px;
 		}
 
 	input.btn:hover, input.button:hover, img.list_control_icon:hover,
@@ -662,8 +663,9 @@
 		font-size: 12px;
 		color: #000;
 		text-align: left;
+		height: 27px;
 		padding: 4px 6px;
-		margin: 0 1px 1px 0;
+		margin: 1px;
 		border: 1px solid #c0c0c0;
 		background-color: #fff;
 		box-shadow: 0 0 3px #cddaf0 inset;
@@ -690,6 +692,7 @@
 	select.formfld {
 		height: 27px;
 		padding: 4px;
+		margin: 1px;
 		}
 
 	.formfld_highlight_bad {
@@ -704,10 +707,6 @@
 		-webkit-box-shadow: 0 0 3px #2fb22f inset;
 		-moz-box-shadow: 0 0 3px #2fb22f inset;
 		box-shadow: 0 0 3px #2fb22f inset;
-		}
-
-	input.txt {
-		width: 98.75%;
 		}
 
 	/* removes spinners (increment/decrement controls) inside input fields */
@@ -881,7 +880,8 @@
 		}
 
 	.row_style_slim {
-		padding: 0;
+		padding-top: 0;
+		padding-bottom: 0;
 		white-space: nowrap;
 		}
 

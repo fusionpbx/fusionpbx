@@ -1078,17 +1078,6 @@ $text['header-user_dashboard']['ro'] = "Panou control utilizator";
 $text['header-user_dashboard']['fa'] = "";
 $text['header-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
-$text['header-ring_groups']['en-us'] = "Ring Groups";
-$text['header-ring_groups']['es-cl'] = "Grupo de llamado";
-$text['header-ring_groups']['fr-fr'] = "Groupes de Sonnerie";
-$text['header-ring_groups']['pt-pt'] = "Grupos";
-$text['header-ring_groups']['pt-br'] = "Configurações da Conta";
-$text['header-ring_groups']['pl'] = "Grupy odbiorców rozmów";
-$text['header-ring_groups']['sv-se'] = "Ringgrupper";
-$text['header-ring_groups']['uk'] = "Групи";
-$text['header-ring_groups']['de-at'] = "Rufgruppen";
-$text['header-ring_groups']['he'] = "קבוצות חיוג";
-
 $text['header-call_routing']['en-us'] = "Call Routing";
 $text['header-call_routing']['es-cl'] = "Enrutamiento de Llamadas";
 $text['header-call_routing']['pt-pt'] = "Roteamento de Chamadas";
@@ -1293,4 +1282,4 @@ $text['button-view_all']['ro'] = "";
 $text['button-view_all']['de-at'] = "Alle anzeigen";
 $text['button-view_all']['he'] = "הצג הכל";
 
-?>
+?>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
