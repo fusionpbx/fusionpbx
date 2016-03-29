@@ -50,6 +50,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'outbound,loopback,lcr';
 		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'paging';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '100';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the maximum number of records displayed per page. (Default: 50)';
+		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_length';
 		$array[$x]['default_setting_name'] = 'var';

@@ -82,7 +82,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 200;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -211,12 +211,20 @@ else {
 				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
 				) {
-				echo "		".$text['label-'.$row['default_setting_value']];
+				echo "		".$text['label-'.$row['user_setting_value']];
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['user_setting_value']));
 			}
 			else {
+				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+					$border = (
+						substr_count(strtolower($row['user_setting_value']), '#fff') > 0 ||
+						substr_count(strtolower($row['user_setting_value']), '#ffffff') > 0 ||
+						substr_count(str_replace(' ','',strtolower($row['user_setting_value'])), '255,255,255,') > 0
+					) ? "border: 1px solid #ccc; padding: -1px;" : null;
+					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['user_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; ".$border."'>";
+				}
 				echo "		".htmlspecialchars($row['user_setting_value']);
 			}
 			echo "		&nbsp;\n";

@@ -88,6 +88,20 @@ $text['option-voicemail_file_attach']['uk'] = "Приєднати аудіофа
 $text['option-voicemail_file_attach']['de-at'] = "Audiodatei als Anhang";
 $text['option-voicemail_file_attach']['he'] = "";
 
+$text['message-toggled']['en-us'] = "Toggle Completed";
+$text['message-toggled']['es-cl'] = "Alternar Completado";
+$text['message-toggled']['pt-pt'] = "Alternar Concluído";
+$text['message-toggled']['fr-fr'] = "Basculer Terminé";
+$text['message-toggled']['pt-br'] = "Alternar Concluído";
+$text['message-toggled']['pl'] = "Przegubowe Zakończony";
+$text['message-toggled']['he'] = "הושלם Toggle";
+$text['message-toggled']['uk'] = "переключити Завершений";
+$text['message-toggled']['sv-se'] = "Växla Avslutade";
+$text['message-toggled']['de-at'] = "Toggle Completed";
+$text['message-toggled']['ro'] = "Completat toggle";
+$text['message-toggled']['fa'] = "";
+$text['message-toggled']['ar-eg'] = "الانتهاء من تبديل";
+
 $text['message-messages_not_found']['en-us'] = "No messages found.";
 $text['message-messages_not_found']['es-cl'] = "No hay mensajes encontrados.";
 $text['message-messages_not_found']['pt-pt'] = "Nenhuma mensagem encontrada.";
@@ -661,6 +675,20 @@ $text['description-caller_id_name']['sv-se'] = "Namnpresentation";
 $text['description-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['description-caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['description-caller_id_name']['he'] = "";
+
+$text['button-toggle']['en-us'] = "Toggle";
+$text['button-toggle']['es-cl'] = "Palanca";
+$text['button-toggle']['pt-pt'] = "Alternar";
+$text['button-toggle']['fr-fr'] = "Basculer";
+$text['button-toggle']['pt-br'] = "Alternar";
+$text['button-toggle']['pl'] = "Przełącznik";
+$text['button-toggle']['he'] = "לְמַתֵג";
+$text['button-toggle']['uk'] = "тумблер";
+$text['button-toggle']['sv-se'] = "toggle";
+$text['button-toggle']['de-at'] = "Umschalten";
+$text['button-toggle']['ro'] = "Comutare";
+$text['button-toggle']['fa'] = "";
+$text['button-toggle']['ar-eg'] = "تبديل";
 
 $text['button-settings']['en-us'] = "Settings";
 $text['button-settings']['es-cl'] = "Configuraciones";

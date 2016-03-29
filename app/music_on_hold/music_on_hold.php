@@ -313,7 +313,7 @@ else {
 		echo "<input name='type' type='hidden' value='moh'>\n";
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td style='padding-right: 15px;' nowrap>\n";
+		echo "		<td style='padding-right: 15px; white-space: nowrap'>\n";
 		echo "			".$text['label-file-path'];
 		echo "			<input name='upload_file' id='upload_file' type='file' class='formfld fileinput' style='width: 300px; margin-right: 3px;' onchange=\"check_filetype(this);\">";
 		echo 			"<input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file'); document.getElementById('sampling_rate').style.display='inline';\">\n";
@@ -376,7 +376,6 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 //show the default category
 	if (permission_exists('music_on_hold_default_view')) {
@@ -411,7 +410,7 @@ else {
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
@@ -485,7 +484,7 @@ else {
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

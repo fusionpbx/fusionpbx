@@ -250,11 +250,11 @@
 
 		public function message_waiting() {
 			//send the message waiting status
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-			}
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "luarun app.lua voicemail mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
 		}
 
 		public function message_delete() {
@@ -300,13 +300,54 @@
 				$this->message_waiting();
 		}
 
+		public function message_toggle() {
+			//get the voicemail_id
+				if (!isset($this->voicemail_id)) {
+					$sql = "select voicemail_id from v_voicemails ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($result as &$row) {
+						$this->voicemail_id = $row["voicemail_id"];
+					}
+					unset ($prep_statement);
+				}
+
+			//get message status
+				$sql = "select message_status from v_voicemail_messages ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$sql .= "and voicemail_message_uuid = '".$this->voicemail_message_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+				$new_status = ($row['message_status'] == 'saved') ? 'null' : "'saved'";
+				unset($sql, $prep_statement, $row);
+
+			//set message status
+				$sql = "update v_voicemail_messages set ";
+				$sql .= "message_status = ".$new_status." ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$sql .= "and voicemail_message_uuid = '".$this->voicemail_message_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+
+			//check the message waiting status
+				$this->message_waiting();
+		}
+
+
 		public function message_saved() {
 			//set the voicemail status to saved
 				$sql = "update v_voicemail_messages set ";
 				$sql .= "message_status = 'saved' ";
-				$sql .= "where domain_uuid = '$this->domain_uuid' ";
-				$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
-				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid'";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$sql .= "and voicemail_message_uuid = '".$this->voicemail_message_uuid."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				unset($sql, $prep_statement);

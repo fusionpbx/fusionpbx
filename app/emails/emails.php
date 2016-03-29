@@ -58,7 +58,7 @@ else {
 	if ($_REQUEST['a'] == 'resend' && permission_exists('email_resend')) {
 		$email_uuid = check_str($_REQUEST["id"]);
 		$resend = true;
-		
+
 		$msg_found = false;
 
 		if ($email_uuid != '') {
@@ -147,7 +147,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 50;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		if (permission_exists('emails_all') && $_REQUEST['showall'] == 'true') {
 				$param .= "&showall=true";
 		} else {

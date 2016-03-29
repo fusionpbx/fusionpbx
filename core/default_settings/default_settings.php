@@ -417,6 +417,14 @@ else {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
 			else {
+				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+					$border = (
+						substr_count(strtolower($row['default_setting_value']), '#fff') > 0 ||
+						substr_count(strtolower($row['default_setting_value']), '#ffffff') > 0 ||
+						substr_count(str_replace(' ','',strtolower($row['default_setting_value'])), '255,255,255,') > 0
+					) ? "border: 1px solid #ccc; padding: -1px;" : null;
+					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['default_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; ".$border."'>";
+				}
 				echo "		".htmlspecialchars($row['default_setting_value']);
 			}
 			echo "		&nbsp;\n";

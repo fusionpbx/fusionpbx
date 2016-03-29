@@ -91,7 +91,7 @@ else {
 		}
 	}
 	else {
-		$rows_per_page = 150;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	}
 	$param = "&search=".$search;
 	$page = $_GET['page'];
@@ -102,6 +102,7 @@ else {
 
 //rework select data query
 	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+	$sql .= ' order by cast(extension as int) asc';
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 
 //execute select data query

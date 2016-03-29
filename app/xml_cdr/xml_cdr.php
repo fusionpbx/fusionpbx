@@ -44,7 +44,7 @@ else {
 	require_once "resources/paging.php";
 
 //xml cdr include
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd
@@ -461,7 +461,7 @@ else {
 
 			//recording playback
 				if (permission_exists('recording_play') && $recording_file_path != '') {
-					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td class='".$row_style[$c]."' style='border: none; padding: 0;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 				}
 
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -529,7 +529,7 @@ else {
 			//recording
 				if (permission_exists('recording_play') || permission_exists('recording_download')) {
 					if ($recording_file_path != '') {
-						echo "	<td valign='top' align='center' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void' nowrap='nowrap'>";
+						echo "	<td valign='top' align='center' class='".$row_style[$c]." row_style_slim tr_link_void' nowrap='nowrap'>";
 						if (permission_exists('recording_play')) {
 							echo 	"<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row['uuid']."')\" onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 							echo 	"<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";

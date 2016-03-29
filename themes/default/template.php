@@ -154,6 +154,11 @@
 
 <style type='text/css'>
 
+	html {
+		height: 100%;
+		width: 100%;
+		}
+
 	body {
 		z-index: 1;
 		position: absolute;
@@ -177,6 +182,10 @@
 		?>
 		background-repeat: no-repeat;
 		background-attachment: fixed;
+		webkit-background-size:cover;
+		-moz-background-size:cover;
+		-o-background-size:cover;
+		background-size:cover;
 		}
 
 	div#footer {
@@ -201,7 +210,7 @@
 		color: <?php echo ($_SESSION['theme']['footer_color']['text'] != '') ? $_SESSION['theme']['footer_color']['text'] : 'rgba(255,255,255,0.3)'; ?>;
 		}
 
-/* BOOTSTRAP MENU: BEGIN ******************************************************************/
+/* MENU: BEGIN ******************************************************************/
 
 	/* main menu container */
 	.navbar {
@@ -232,6 +241,7 @@
 	/* menu brand text */
 	.navbar-header > div > a.navbar-brand {
 		color: <?php echo ($_SESSION['theme']['menu_brand_text_color']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color']['text'] : 'rgba(255,255,255,0.80)'; ?>;
+		white-space: nowrap;
 		}
 
 	.navbar-header > div > a.navbar-brand:hover {
@@ -371,6 +381,78 @@
 		cursor: pointer;
 		}
 
+/* BUTTONS ********************************************************************/
+
+	/* default buttons */
+	button.btn-default {
+		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		padding: 4px 8px;
+		color: #fff;
+		font-weight: bold;
+		font-size: 8pt;
+		border: 1px solid #26242a;
+		background: #3e3e3e;
+		background-image: -moz-linear-gradient(top, #000 25%, #3e3e3e 64%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #000), color-stop(0.64, #3e3e3e));
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-khtml-border-radius: 3px;
+		border-radius: 3px;
+		text-align: center;
+		text-transform: uppercase;
+		text-shadow: 0px 0px 1px rgba(0,0,0,0.9);
+		opacity: 0.9;
+		-moz-opacity: 0.9;
+		}
+
+	button.btn-default:hover, .btn-default:active, .btn-default:focus {
+		cursor: pointer;
+		color: #fff;
+		border: 1px solid #26242a;
+		box-shadow: 0 0 5px #cddaf0;
+		-webkit-box-shadow: 0 0 5px #cddaf0;
+		-moz-box-shadow: 0 0 5px #cddaf0;
+		opacity: 1.0;
+		-moz-opacity: 1.0;
+		}
+
+	/* control icons */
+	button.list_control_icon,
+	button.list_control_icon_disabled {
+		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		padding: 2px;
+		color: #fff;
+		font-weight: normal;
+		font-size: 10.5pt;
+		width: 24px;
+		height: 24px;
+		margin: 1px;
+		border: 1px solid #26242a;
+		background: #3e3e3e;
+		background-image: -moz-linear-gradient(top, #000 25%, #3e3e3e 64%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #000), color-stop(0.64, #3e3e3e));
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-khtml-border-radius: 3px;
+		border-radius: 3px;
+		text-align: center;
+		text-shadow: 0px 0px 1px rgba(0,0,0,1.0);
+		opacity: 0.3;
+		-moz-opacity: 0.3;
+		}
+
+	button.list_control_icon:hover, button.list_control_icon:active, button.list_control_icon:focus {
+		cursor: pointer;
+		color: #fff;
+		border: 1px solid #26242a;
+		box-shadow: 0 0 5px #cddaf0;
+		-webkit-box-shadow: 0 0 5px #cddaf0;
+		-moz-box-shadow: 0 0 5px #cddaf0;
+		opacity: 1.0;
+		-moz-opacity: 1.0;
+		}
+
+
 /* DOMAIN SELECTOR ***********************************************************/
 
 	#domains_container {
@@ -492,97 +574,52 @@
 		text-align: left;
 		}
 
+	/* default body padding */
+	.container-fluid {
+		width: 90%;
+		}
+
+	/* maximize viewport usage on xs displays */
+	@media(min-width: 0px) and (max-width: 767px) {
+		.container-fluid {
+			width: 100%;
+			}
+
+		#main_content {
+			padding: 8px;
+		}
+		}
+
 /* GENERAL ELEMENTS *****************************************************************/
 
 	img {
 		border: none;
 		}
 
+	.title, b {
+		color: <?php echo ($_SESSION['theme']['heading_text_color']['text'] != '') ? $_SESSION['theme']['heading_text_color']['text'] : '#952424'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['heading_text_size']['text'] != '') ? $_SESSION['theme']['heading_text_size']['text'] : '15px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['heading_text_font']['text'] != '') ? $_SESSION['theme']['heading_text_font']['text'] : 'arial'; ?>;
+		font-weight: bold
+		}
+
 	a {
-		color: #004083;
+		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		width: 100%;
 		}
 
 	a:hover {
-		color: #5082ca;
-		}
-
-	.title {
-		color: #952424;
-		font-size: 15px;
-		font-family: arial;
-		font-weight: bold
-		}
-
-	b {
-		color: #952424;
-		font-size: 15px;
-		font-family: arial;
-		}
-
-	th {
-		border-bottom: 1px solid #a4aebf;
-		text-align: left;
-		color: #3164AD;
-		font-size: 12px;
-		font-family: arial;
-		padding-top: 4px;
-		padding-bottom: 4px;
-		padding-right: 7px;
-		padding-left: 0;
-		}
-
-	th a:link{ color:#3164AD; text-decoration: none; }
-	th a:visited{ color:#3164AD; }
-	th a:hover{ color:#5082ca; text-decoration: underline; }
-	th a:active{ color:#3164AD; }
-
-	td {
-		color: #5f5f5f;
-		font-size: 12px;
-		font-family: arial;
-		}
-
-	td.list_control_icons {
-		/* multiple icons exist (horizontally) */
-		padding: none;
-		padding-left: 2px;
-		width: 50px;
-		text-align: right;
-		vertical-align: top;
-		white-space: nowrap;
-		}
-
-	td.list_control_icon {
-		/* a single icon exists */
-		padding: none;
-		padding-left: 3px;
-		width: 25px;
-		text-align: right;
-		vertical-align: top;
-		white-space: nowrap;
-		}
-
-	img.list_control_icon {
-		margin: 2px;
-		width: 21px;
-		height: 21px;
-		border: none;
-		opacity: 0.4;
-		-moz-opacity: 0.4;
-		}
-
-	img.list_control_icon_disabled {
-		margin: 2px;
-		width: 21px;
-		height: 21px;
-		border: none;
-		opacity: 0.4;
-		-moz-opacity: 0.4;
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
 		}
 
 	form {
 		margin: 0;
+		}
+
+	.frm {
+		border: solid 1px #ccc;
+		color: #666;
+		background-color: #EFEFEF;
 		}
 
 	input.btn, input.button {
@@ -685,6 +722,7 @@
 
 	input.fileinput {
 		padding: 1px;
+		display: inline;
 		}
 
 	label {
@@ -692,7 +730,67 @@
 		vertical-align: middle;
 		}
 
+	span.playback_progress_bar {
+		background-color: #c43e42;
+		height: 1px;
+		display: block;
+		}
+
 /* TABLES *****************************************************************/
+
+	th {
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_heading_border_color']['text'] != '') ? $_SESSION['theme']['table_heading_border_color']['text'] : '#a4aebf'; ?>;
+		text-align: left;
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_heading_background_color']['text'] != '') ? $_SESSION['theme']['table_heading_background_color']['text'] : 'none'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['table_heading_text_size']['text'] != '') ? $_SESSION['theme']['table_heading_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_heading_text_font']['text'] != '') ? $_SESSION['theme']['table_heading_text_font']['text'] : 'arial'; ?>;
+		padding: 4px 7px 4px 0;
+		padding: 4px 7px;
+		}
+
+	th a, th a:visited, th a:active {
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		text-decoration: none;
+		}
+
+	th a:hover {
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		text-decoration: underline;
+		}
+
+	td {
+		color: <?php echo ($_SESSION['theme']['body_text_color']['text'] != '') ? $_SESSION['theme']['body_text_color']['text'] : '#5f5f5f'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_text_size']['text'] != '') ? $_SESSION['theme']['body_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['body_text_font']['text'] != '') ? $_SESSION['theme']['body_text_font']['text'] : 'arial'; ?>;
+		}
+
+	table.tr_hover tr {
+		cursor: default;
+		}
+
+	table.tr_hover tr:hover td,
+	table.tr_hover tr:hover td a {
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		}
+
+	td.list_control_icons {
+		width: 52px;
+		padding: none;
+		padding-left: 2px;
+		text-align: right;
+		vertical-align: top;
+		white-space: nowrap;
+		}
+
+	td.list_control_icon {
+		width: 26px;
+		padding: none;
+		padding-left: 2px;
+		text-align: right;
+		vertical-align: top;
+		white-space: nowrap;
+		}
 
 	.vncell {
 		border-bottom: 1px solid #fff;
@@ -762,141 +860,39 @@
 		height: 33px;
 		}
 
-	.listbg {
-		border-bottom: 1px solid #a4aebf;
-		font-size: 11px;
-		background-color: #990000;
-		color: #000;
-		padding: 4px 16px 4px 6px;
-		}
-
-	table.tr_hover tr {
-		background-color: transparent;
-		cursor: default;
-		}
-
-	table.tr_hover tr:hover td,
-	table.tr_hover tr:hover td a {
-		color: #5082ca;
-		}
-
 	.row_style0 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #e5e9f0;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
 		}
 
 	.row_style1 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #fff;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_light']['text'] != '') ? $_SESSION['theme']['table_row_background_color_light']['text'] : '#fff'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
 		}
 
-	.row_style2 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #fff;
-		color: #000;
-		text-align: center;
-		padding: 0 1px 0 1px;
-		width: 51px;
+	.row_style_slim {
+		padding: 0;
 		white-space: nowrap;
 		}
 
-	.row_style_hor_mir_grad {
-		background: -moz-linear-gradient(left, #e5e9f0 0%, #fff 25%, #fff 75%, #e5e9f0 100%);
-		background: -webkit-gradient(linear, left top, right top, color-stop(0%,#e5e9f0), color-stop(25%,#fff), color-stop(75%,#fff), color-stop(100%,#e5e9f0));
-		background: -webkit-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: -o-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: -ms-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: linear-gradient(to right, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e9f0', endColorstr='#e5e9f0',GradientType=1 );
-		}
-
 	.row_stylebg {
-		border-bottom: 1px solid #b9c5d8;
-		background-color: #f0f2f6;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>; /* #b9c5d8 */
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_medium']['text'] != '') ? $_SESSION['theme']['table_row_background_color_medium']['text'] : '#f0f2f6'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
-		}
-
-	table th {
-		padding:4px 7px
-		}
-
-	table tr.even td {
-		background:#eee;
-		background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
-		border-bottom: 1px solid #a4aebf;
-		color: #333333;
-		}
-
-	table tr.odd td {
-		border-bottom: 1px solid #a4aebf;
-		color: #000000;
-		}
-
-	table tr:first-child th:first-child {
-		-moz-border-radius-topleft:7px;
-		-webkit-border-top-left-radius:7px;
-		border-top-left-radius:7px;
-		}
-
-	table tr:first-child th:last-of-type {
-		-moz-border-radius-topright:7px;
-		-webkit-border-top-right-radius:7px;
-		border-top-right-radius:7px;
-		}
-
-	table tr:nth-last-child(-5) td:first-of-type {
-		-moz-border-radius-bottomleft:7px;
-		-webkit-border-bottom-left-radius:7px;
-		border-bottom-left-radius:7px;
-		}
-
-	table tr:nth-last-child(-5) td:first-of-type {
-		-moz-border-radius-topleft:7px;
-		-webkit-border-top-left-radius:7px;
-		border-bottom-top-radius:7px;
-		}
-
-	.border {
-		border: solid 1px #a4aebf;
-		}
-
-	.frm {
-		border: solid 1px #ccc;
-		color: #666;
-		background-color: #EFEFEF;
-		}
-
-	.smalltext {
-		color: #bbb;
-		font-size: 11px;
-		font-family: arial;
-		}
-
-	fieldset {
-		padding: 8px;
-		text-align: left;
-		border: 1px solid #aeb7c6;
-		border-radius: 3px;
-		-moz-border-radius: 3px;
-		-webkit-border-radius: 3px;
-		margin: 0;
-		}
-
-	legend {
-		font-size: 13px;
-		font-family: arial;
-		font-weight: bold;
-		color: #3164ad;
-		padding-bottom: 8px;
-		padding-right: 2px;
 		}
 
 /* RESPONSE MESSAGES *******************************************************/
@@ -956,7 +952,7 @@
 		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 		}
 
-/* OPERATOR PANEL: BEGIN ********************************************************/
+/* OPERATOR PANEL ****************************************************************/
 
 	div.op_ext {
 		float: left;
@@ -1103,15 +1099,7 @@
 		border: 1px solid #5d5f5a;
 		}
 
-/* OPERATOR PANEL: END *******************************************************/
-
-	span.playback_progress_bar {
-		background-color: #c43e42;
-		height: 1px;
-		display: inline-block;
-		}
-
-/* USER DASHBOARD: BEGIN *****************************************************/
+/* USER DASHBOARD ****************************************************************/
 
 	/* login message */
 	div.login_message {
@@ -1412,47 +1400,6 @@
 			$("input.txt, textarea.txt, .formfld").autosizeInput();
 
 
-		//audio playback functions
-			img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_play.png";
-			img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_pause.png";
-
-			var recording_audio;
-
-			function recording_play(recording_id) {
-				if (document.getElementById('recording_progress_bar_'+recording_id)) {
-					document.getElementById('recording_progress_bar_'+recording_id).style.display='';
-				}
-				recording_audio = document.getElementById('recording_audio_'+recording_id)
-
-				if (recording_audio.paused) {
-					recording_audio.volume = 1;
-					recording_audio.play();
-					document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
-				}
-				else {
-					recording_audio.pause();
-					document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
-				}
-			}
-
-			function recording_reset(recording_id) {
-				if (document.getElementById('recording_progress_bar_'+recording_id)) {
-					document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
-				}
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
-			}
-
-			function update_progress(recording_id) {
-				recording_audio = document.getElementById('recording_audio_'+recording_id);
-				var recording_progress = document.getElementById('recording_progress_'+recording_id);
-				var value = 0;
-				if (recording_audio.currentTime > 0) {
-					value = (100 / recording_audio.duration) * recording_audio.currentTime;
-				}
-				recording_progress.style.width = value + "%";
-			}
-
-
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
@@ -1481,6 +1428,46 @@
 			});
 
 	});
+
+	//audio playback functions
+		img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_play.png";
+		img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_pause.png";
+
+		var recording_audio;
+
+		function recording_play(recording_id) {
+			if (document.getElementById('recording_progress_bar_'+recording_id)) {
+				document.getElementById('recording_progress_bar_'+recording_id).style.display='';
+			}
+			recording_audio = document.getElementById('recording_audio_'+recording_id)
+
+			if (recording_audio.paused) {
+				recording_audio.volume = 1;
+				recording_audio.play();
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+			}
+			else {
+				recording_audio.pause();
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			}
+		}
+
+		function recording_reset(recording_id) {
+			if (document.getElementById('recording_progress_bar_'+recording_id)) {
+				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
+			}
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+		}
+
+		function update_progress(recording_id) {
+			recording_audio = document.getElementById('recording_audio_'+recording_id);
+			var recording_progress = document.getElementById('recording_progress_'+recording_id);
+			var value = 0;
+			if (recording_audio.currentTime > 0) {
+				value = (100 / recording_audio.duration) * recording_audio.currentTime;
+			}
+			recording_progress.style.width = value + "%";
+		}
 
 </script>
 
@@ -1617,12 +1604,12 @@
 								}
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
-								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image') {
+								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
 									$menu_brand_image = (isset($_SESSION['theme']['menu_brand_image']['text'])) ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
 									echo "<img class='pull-left hidden-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\">";
 									echo "<img class='pull-left visible-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\" style='margin-left: 21px;'>";
 								}
-								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
 									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
 								}
 						}
@@ -1659,7 +1646,15 @@
 								if ($submenu) {
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
-										$mod_a_2 = ($menu_sub['menu_item_link'] != '') ? $menu_sub['menu_item_link'] : '#';
+										$mod_a_2 = $menu_sub['menu_item_link'];
+										if($mod_a_2 == ''){
+											$mod_a_2 = '#';
+										}
+										else if (($menu_sub['menu_item_category'] == 'internal') ||
+											(($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2, 0,1) == "/"))
+										{
+											$mod_a_2 = PROJECT_PATH . $mod_a_2;
+										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] == 'true') {
 											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
@@ -1707,7 +1702,7 @@
 
 			$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 			$menu_position = ($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top';
-			$open_container = "<div class='container-fluid' style='width: 90%; padding: 0;' align='center'>";
+			$open_container = "<div class='container-fluid' style='padding: 0;' align='center'>";
 
 			switch ($menu_style) {
 				case 'inline':
