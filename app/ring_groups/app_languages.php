@@ -758,4 +758,17 @@ $text['description-cid-name-prefix']['pl'] = "Prefiks prezentacji nazwy dzwonią
 $text['description-cid-name-prefix']['sv-se'] = "Ange namnpresentation prefix.";
 $text['description-cid-name-prefix']['uk'] = "";
 $text['description-cid-name-prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)";
-$text['description-cid-name-prefix
+$text['description-cid-name-prefix']['he'] = "";
+
+$text['description']['en-us'] = "A ring group is a set of destinations that can be called with a ring strategy.";
+$text['description']['es-cl'] = "Un grupo de llamado es un conjunto de destino que pueden ser llamados con una estrategía de llamado.";
+$text['description']['fr-fr'] = "Un groupe de sonnerie est un groupe de destinations pouvant être appelé via une stratégie de sonnerie.";
+$text['description']['pt-pt'] = "Um grupo é um conjunto de destinos que podem ser chamados segunda uma determinada estratégia.";
+$text['description']['pt-br'] = "Editar informações da conta.";
+$text['description']['pl'] = "Grupa odbiorców rozmowy składa się z kilku destynacji (numery kom, stacjonarne lub numery wew) na które można dzwonić za pomocą różnych strategii.";
+$text['description']['sv-se'] = "En ringgrupp är en uppsättning av destinationer som kan anropas med en ringstrategi.";
+$text['description']['uk'] = "Редагування інформації облікового запису";
+$text['description']['de-at'] = "Rufgruppen sind gruppierte Ziele, welche über eine vordefinierte Rufstrategie angerufen werden.";
+$text['description']['he'] = "ערוך את פרטי החשבון";
+
+?>
