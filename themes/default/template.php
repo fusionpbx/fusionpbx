@@ -565,6 +565,22 @@
 		text-align: left;
 		}
 
+	/* default body padding */
+	.container-fluid {
+		width: 90%;
+		}
+
+	/* maximize viewport usage on xs displays */
+	@media(min-width: 0px) and (max-width: 767px) {
+		.container-fluid {
+			width: 100%;
+			}
+
+		#main_content {
+			padding: 8px;
+		}
+		}
+
 /* GENERAL ELEMENTS *****************************************************************/
 
 	img {
@@ -1677,7 +1693,7 @@
 
 			$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 			$menu_position = ($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top';
-			$open_container = "<div class='container-fluid' style='width: 90%; padding: 0;' align='center'>";
+			$open_container = "<div class='container-fluid' style='padding: 0;' align='center'>";
 
 			switch ($menu_style) {
 				case 'inline':
