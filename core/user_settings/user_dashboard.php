@@ -1178,10 +1178,10 @@
 
 	}
 
-if (!is_array($selected_blocks) || in_array('routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
 	echo "<div class='row' style='margin-top: 30px;'>\n";
 
-	if (!is_array($selected_blocks) || in_array('routing', $selected_blocks)) {
+	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
 		//call routing
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
 				if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
