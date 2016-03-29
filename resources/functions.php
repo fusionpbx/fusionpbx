@@ -54,7 +54,7 @@
 
 	if (!function_exists('check_str')) {
 		function check_str($string) {
-			global $db_type;
+			global $db_type, $db;
 			//when code in db is urlencoded the ' does not need to be modified
 			if ($db_type == "sqlite") {
 				if (function_exists('sqlite_escape_string')) {
@@ -68,7 +68,12 @@
 				$string = pg_escape_string($string);
 			}
 			if ($db_type == "mysql") {
-				$tmp_str = mysql_real_escape_string($string);
+				if(function_exists('mysql_real_escape_string')){
+					$tmp_str = mysql_real_escape_string($string);
+				}
+				else{
+					$tmp_str = mysqli_real_escape_string($db, $string);
+				}
 				if (strlen($tmp_str)) {
 					$string = $tmp_str;
 				}
