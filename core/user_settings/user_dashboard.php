@@ -1186,7 +1186,7 @@ if (!is_array($selected_blocks) || in_array('routing', $selected_blocks) || in_a
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
 				if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 					$is_included = "true";
-					echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-7' style='margin: 0 0 20px 0;'>\n";
+					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-7' style='margin: 0 0 20px 0;'>\n";
 					echo "	<div style='float: right;'><input id='btn_viewall_callrouting' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\"></div>\n";
 					echo "	<div style='float: left;'><b>".$text['header-call_routing']."</b><br /><br /></div>\n";
 					require_once "app/calls/calls.php";
@@ -1196,7 +1196,6 @@ if (!is_array($selected_blocks) || in_array('routing', $selected_blocks) || in_a
 	}
 
 	if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
-
 		//reload language values
 			$language = new text;
 			$text = $language->get();
@@ -1205,11 +1204,9 @@ if (!is_array($selected_blocks) || in_array('routing', $selected_blocks) || in_a
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
 				if (permission_exists('ring_group_forward')) {
 					$is_included = "true";
-					echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' style='margin: 0 0 50px 0;'>\n";
-					echo "	<div style='float: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' style='display: none;' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></div>\n";
-					echo "	<div style='float: left;'><b>".$text['header-ring_groups']."</b><br /><br /></div>\n";
+					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-5' style='margin: 0 0 50px 0;'>\n";
 					require_once "app/ring_groups/ring_group_forward.php";
-					echo "</div>\n";
+					echo "</div>";
 				}
 			}
 	}
