@@ -1078,20 +1078,6 @@ $text['header-user_dashboard']['ro'] = "Panou control utilizator";
 $text['header-user_dashboard']['fa'] = "";
 $text['header-user_dashboard']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 
-$text['header-call_routing']['en-us'] = "Call Routing";
-$text['header-call_routing']['es-cl'] = "Enrutamiento de Llamadas";
-$text['header-call_routing']['pt-pt'] = "Roteamento de Chamadas";
-$text['header-call_routing']['fr-fr'] = "Routage des Appels";
-$text['header-call_routing']['pt-br'] = "Roteamento de Chamadas";
-$text['header-call_routing']['pl'] = "Trasy połączeń";
-$text['header-call_routing']['he'] = "ניתוב שיחות";
-$text['header-call_routing']['uk'] = "маршрутизація викликів";
-$text['header-call_routing']['sv-se'] = "samtals Rutter";
-$text['header-call_routing']['de-at'] = "Anrufrouten";
-$text['header-call_routing']['ro'] = "Маршрутизация вызовов";
-$text['header-call_routing']['fa'] = "";
-$text['header-call_routing']['ar-eg'] = "توجيه الدعوة";
-
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
 $text['description-user_language']['pt-pt'] = "Selecione o idioma.";
@@ -1282,4 +1268,4 @@ $text['button-view_all']['ro'] = "";
 $text['button-view_all']['de-at'] = "Alle anzeigen";
 $text['button-view_all']['he'] = "הצג הכל";
 
-?>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+?>
