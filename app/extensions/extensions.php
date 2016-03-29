@@ -61,12 +61,21 @@ $document['title'] = $text['title-extensions'];
 require_once "resources/paging.php";
 
 //get total extension count from the database
-	$sql = "select count(*) as num_rows from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select ";
+	$sql .= "(select count(*) as num_rows from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') ";
+	if ($db_type == "pgsql") {
+		$sql .= ",(select count(*) as numeric_extensions from v_extensions ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and extension ~ '^[0-9]+$')";
+	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		$total_extensions = $row['num_rows'];
+		if ($db_type == "pgsql") {
+			$numeric_extensions = $row['numeric_extensions'];
+		}
 	}
 	unset($prep_statement, $row);
 
@@ -94,15 +103,23 @@ require_once "resources/paging.php";
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $_GET['page'];
 
+//to cast or not to cast
+	if ($db_type == "pgsql") {
+		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as int)" : "extension asc";
+	}
+	else {
+		$order_text = "extension asc";
+	}
+
 //get the extensions
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_mod; //add search mod from above
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'extension') ? "order by cast(extension as int) ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by cast(extension as int) asc ";
+		$sql .= "order by $order_text ";
 	}
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
