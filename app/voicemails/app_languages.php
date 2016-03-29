@@ -682,4 +682,34 @@ $text['button-toggle']['pt-pt'] = "Alternar";
 $text['button-toggle']['fr-fr'] = "Basculer";
 $text['button-toggle']['pt-br'] = "Alternar";
 $text['button-toggle']['pl'] = "Przełącznik";
-$t
+$text['button-toggle']['he'] = "לְמַתֵג";
+$text['button-toggle']['uk'] = "тумблер";
+$text['button-toggle']['sv-se'] = "toggle";
+$text['button-toggle']['de-at'] = "Umschalten";
+$text['button-toggle']['ro'] = "Comutare";
+$text['button-toggle']['fa'] = "";
+$text['button-toggle']['ar-eg'] = "تبديل";
+
+$text['button-settings']['en-us'] = "Settings";
+$text['button-settings']['es-cl'] = "Configuraciones";
+$text['button-settings']['pt-pt'] = "Definições";
+$text['button-settings']['fr-fr'] = "Configurations";
+$text['button-settings']['pt-br'] = "Definições";
+$text['button-settings']['pl'] = "Ustawienia";
+$text['button-settings']['sv-se'] = "Inställningar";
+$text['button-settings']['uk'] = "Налаштування";
+$text['button-settings']['de-at'] = "Einstellungen";
+$text['button-settings']['he'] = "הגדרות";
+
+$text['button-greetings']['en-us'] = "Greetings";
+$text['button-greetings']['es-cl'] = "Bienvenida";
+$text['button-greetings']['pt-pt'] = "Saudações";
+$text['button-greetings']['fr-fr'] = "Salutations";
+$text['button-greetings']['pt-br'] = "Saudações";
+$text['button-greetings']['pl'] = "Powitania";
+$text['button-greetings']['sv-se'] = "Hälsning";
+$text['button-greetings']['uk'] = "Привітання";
+$text['button-greetings']['de-at'] = "Begrüßungen";
+$text['button-greetings']['he'] = "";
+
+?>
