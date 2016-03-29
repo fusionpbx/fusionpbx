@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -102,7 +102,7 @@ else {
 
 //rework select data query
 	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
-	$sql .= ' order by cast(extension as int) asc';
+	$sql .= ' order by extension asc';
 	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 
 //execute select data query
