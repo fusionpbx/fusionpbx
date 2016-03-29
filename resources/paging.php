@@ -27,7 +27,7 @@
 function paging($num_rows, $param, $rows_per_page, $mini = false) {
 
 	if (strlen($rows_per_page)==0) {
-		$rows_per_page = "5"; //default number of rows per page
+		$rows_per_page = 50; //default number of rows per page
 	}
 
 

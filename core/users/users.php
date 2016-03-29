@@ -103,7 +103,7 @@ else {
 		}
 	}
 	unset ($prep_statement, $result, $sql);
-	$rows_per_page = 200;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "search=".$search_value;
 	if (permission_exists('user_all') && $_GET['showall'] == 'true') {
 		$param .= "&showall=true";

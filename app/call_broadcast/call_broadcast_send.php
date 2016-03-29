@@ -242,7 +242,7 @@ require_once "resources/header.php";
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
-	echo "<tr class='border'>\n";
+	echo "<tr>\n";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
 

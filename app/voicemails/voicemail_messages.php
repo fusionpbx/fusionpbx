@@ -93,12 +93,11 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 //loop through the voicemail messages
 	if (count($voicemails) > 0) {
 
-		echo "<form name='frm' id='frm' method='post' action='voicemail_message_delete.php'>\n";
+		echo "<form name='frm' id='frm' method='post' action=''>\n";
 
 		echo "<br />";
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -113,11 +112,12 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
 				echo "	<td colspan='".(($_SESSION['voicemail']['storage_type']['text'] != 'base64') ? 3 : 2)."' valign='bottom' align='right'>\n";
+				echo "		<input type='button' class='btn' alt='".$text['button-toggle']."' onclick=\"$('#frm').attr('action', 'voicemail_message_toggle.php').submit();\" value='".$text['button-toggle']."'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
-					echo "		<input type='button' class='btn' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
+					echo "	<input type='button' class='btn' alt='".$text['button-greetings']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
 				}
 				if (permission_exists('voicemail_edit')) {
-					echo "		<input type='button' class='btn' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
+					echo "	<input type='button' class='btn' alt='".$text['button-settings']."' onclick=\"document.location.href='voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
 				}
 				echo "		<br /><br />";
 				echo "	</td>\n";
@@ -139,7 +139,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 					}
 					if (permission_exists('voicemail_message_delete')) {
 						echo "<td class='list_control_icons' style='width: 25px;'>";
-						echo 	"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+						echo 	"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { $('#frm').attr('action', 'voicemail_message_delete.php').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 						echo "</td>";
 					}
 					echo "</tr>\n";
@@ -164,7 +164,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap='nowrap'>".$row['created_date']."</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
-					echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void' onclick=\"$(this).closest('tr').children('td').css('font-weight','normal');\">";
+					echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' onclick=\"$(this).closest('tr').children('td').css('font-weight','normal');\">";
 						$recording_file_path = $file;
 						$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 						$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
@@ -174,7 +174,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 							case "ogg" : $recording_type = "audio/ogg"; break;
 						}
 						echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' ontimeupdate=\"update_progress('".$row['voicemail_message_uuid']."')\" preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
-						echo "<span id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."');\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+						echo "<a id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."');\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</a>";
 						echo "<a href=\"voicemail_messages.php?action=download&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 					echo "	</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
