@@ -154,6 +154,11 @@
 
 <style type='text/css'>
 
+	html {
+		height: 100%;
+		width: 100%;
+		}
+
 	body {
 		z-index: 1;
 		position: absolute;
@@ -177,6 +182,10 @@
 		?>
 		background-repeat: no-repeat;
 		background-attachment: fixed;
+		webkit-background-size:cover;
+		-moz-background-size:cover;
+		-o-background-size:cover;
+		background-size:cover;
 		}
 
 	div#footer {
