@@ -352,7 +352,6 @@ require_once "resources/check_auth.php";
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -397,7 +396,7 @@ require_once "resources/check_auth.php";
 				echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap>".$tmp_filesize."</td>\n";
 			}
 			if (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) {
-				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 				if (permission_exists('voicemail_greeting_play')) {
 					$greeting_file_path = $row['greeting_filename'];
 					$greeting_file_name = strtolower(pathinfo($greeting_file_path, PATHINFO_BASENAME));

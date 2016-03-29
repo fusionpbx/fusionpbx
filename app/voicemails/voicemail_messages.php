@@ -93,7 +93,6 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 //loop through the voicemail messages
 	if (count($voicemails) > 0) {
@@ -165,7 +164,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap='nowrap'>".$row['created_date']."</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
-					echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void' onclick=\"$(this).closest('tr').children('td').css('font-weight','normal');\">";
+					echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' onclick=\"$(this).closest('tr').children('td').css('font-weight','normal');\">";
 						$recording_file_path = $file;
 						$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 						$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

@@ -544,36 +544,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['user_setting_value']."\">\n";
 	}
-	elseif (
-		$category == "theme" && $subcategory == "body_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "body_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
-		$category == "theme" && $subcategory == "login_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "domain_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "domain_selector_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_default_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_default_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_negative_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_negative_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_alert_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "message_alert_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_main_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_main_text_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_main_text_color_hover" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_main_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_sub_background_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_sub_background_color_hover" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_sub_text_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_sub_text_color_hover" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_sub_shadow_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_brand_text_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "menu_brand_text_color_hover" && $name == "text"
-		) {
+	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
 	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {

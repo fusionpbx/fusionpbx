@@ -408,7 +408,8 @@
 		}
 
 	/* control icons */
-	button.control_icon {
+	button.list_control_icon,
+	button.list_control_icon_disabled {
 		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 		padding: 2px;
 		color: #fff;
@@ -431,7 +432,7 @@
 		-moz-opacity: 0.3;
 		}
 
-	button.control_icon:hover, button.control_icon:active, button.control_icon:focus {
+	button.list_control_icon:hover, button.list_control_icon:active, button.list_control_icon:focus {
 		cursor: pointer;
 		color: #fff;
 		border: 1px solid #26242a;
@@ -570,91 +571,30 @@
 		border: none;
 		}
 
+	.title, b {
+		color: <?php echo ($_SESSION['theme']['heading_text_color']['text'] != '') ? $_SESSION['theme']['heading_text_color']['text'] : '#952424'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['heading_text_size']['text'] != '') ? $_SESSION['theme']['heading_text_size']['text'] : '15px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['heading_text_font']['text'] != '') ? $_SESSION['theme']['heading_text_font']['text'] : 'arial'; ?>;
+		font-weight: bold
+		}
+
 	a {
-		color: #004083;
+		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		width: 100%;
 		}
 
 	a:hover {
-		color: #5082ca;
-		}
-
-	.title {
-		color: #952424;
-		font-size: 15px;
-		font-family: arial;
-		font-weight: bold
-		}
-
-	b {
-		color: #952424;
-		font-size: 15px;
-		font-family: arial;
-		}
-
-	th {
-		border-bottom: 1px solid #a4aebf;
-		text-align: left;
-		color: #3164AD;
-		font-size: 12px;
-		font-family: arial;
-		padding-top: 4px;
-		padding-bottom: 4px;
-		padding-right: 7px;
-		padding-left: 0;
-		}
-
-	th a:link{ color:#3164AD; text-decoration: none; }
-	th a:visited{ color:#3164AD; }
-	th a:hover{ color:#5082ca; text-decoration: underline; }
-	th a:active{ color:#3164AD; }
-
-	td {
-		color: #5f5f5f;
-		font-size: 12px;
-		font-family: arial;
-		}
-
-	td.list_control_icons {
-		/* multiple icons exist (horizontally) */
-		width: 52px;
-		padding: none;
-		padding-left: 2px;
-		text-align: right;
-		vertical-align: top;
-		white-space: nowrap;
-		}
-
-	td.list_control_icon {
-		/* a single icon exists */
-		width: 26px;
-		padding: none;
-		padding-left: 2px;
-		text-align: right;
-		vertical-align: top;
-		white-space: nowrap;
-		}
-
-	img.list_control_icon {
-		margin: 2px;
-		width: 21px;
-		height: 21px;
-		border: none;
-		opacity: 0.4;
-		-moz-opacity: 0.4;
-		}
-
-	img.list_control_icon_disabled {
-		margin: 2px;
-		width: 21px;
-		height: 21px;
-		border: none;
-		opacity: 0.4;
-		-moz-opacity: 0.4;
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
 		}
 
 	form {
 		margin: 0;
+		}
+
+	.frm {
+		border: solid 1px #ccc;
+		color: #666;
+		background-color: #EFEFEF;
 		}
 
 	input.btn, input.button {
@@ -765,7 +705,67 @@
 		vertical-align: middle;
 		}
 
+	span.playback_progress_bar {
+		background-color: #c43e42;
+		height: 1px;
+		display: block;
+		}
+
 /* TABLES *****************************************************************/
+
+	th {
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_heading_border_color']['text'] != '') ? $_SESSION['theme']['table_heading_border_color']['text'] : '#a4aebf'; ?>;
+		text-align: left;
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_heading_background_color']['text'] != '') ? $_SESSION['theme']['table_heading_background_color']['text'] : 'none'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['table_heading_text_size']['text'] != '') ? $_SESSION['theme']['table_heading_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_heading_text_font']['text'] != '') ? $_SESSION['theme']['table_heading_text_font']['text'] : 'arial'; ?>;
+		padding: 4px 7px 4px 0;
+		padding: 4px 7px;
+		}
+
+	th a, th a:visited, th a:active {
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		text-decoration: none;
+		}
+
+	th a:hover {
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		text-decoration: underline;
+		}
+
+	td {
+		color: <?php echo ($_SESSION['theme']['body_text_color']['text'] != '') ? $_SESSION['theme']['body_text_color']['text'] : '#5f5f5f'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_text_size']['text'] != '') ? $_SESSION['theme']['body_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['body_text_font']['text'] != '') ? $_SESSION['theme']['body_text_font']['text'] : 'arial'; ?>;
+		}
+
+	table.tr_hover tr {
+		cursor: default;
+		}
+
+	table.tr_hover tr:hover td,
+	table.tr_hover tr:hover td a {
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		}
+
+	td.list_control_icons {
+		width: 52px;
+		padding: none;
+		padding-left: 2px;
+		text-align: right;
+		vertical-align: top;
+		white-space: nowrap;
+		}
+
+	td.list_control_icon {
+		width: 26px;
+		padding: none;
+		padding-left: 2px;
+		text-align: right;
+		vertical-align: top;
+		white-space: nowrap;
+		}
 
 	.vncell {
 		border-bottom: 1px solid #fff;
@@ -835,141 +835,39 @@
 		height: 33px;
 		}
 
-	.listbg {
-		border-bottom: 1px solid #a4aebf;
-		font-size: 11px;
-		background-color: #990000;
-		color: #000;
-		padding: 4px 16px 4px 6px;
-		}
-
-	table.tr_hover tr {
-		background-color: transparent;
-		cursor: default;
-		}
-
-	table.tr_hover tr:hover td,
-	table.tr_hover tr:hover td a {
-		color: #5082ca;
-		}
-
 	.row_style0 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #e5e9f0;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
 		}
 
 	.row_style1 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #fff;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_light']['text'] != '') ? $_SESSION['theme']['table_row_background_color_light']['text'] : '#fff'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
 		}
 
-	.row_style2 {
-		border-bottom: 1px solid #c5d1e5;
-		background-color: #fff;
-		color: #000;
-		text-align: center;
-		padding: 0 1px 0 1px;
-		width: 51px;
+	.row_style_slim {
+		padding: 0;
 		white-space: nowrap;
 		}
 
-	.row_style_hor_mir_grad {
-		background: -moz-linear-gradient(left, #e5e9f0 0%, #fff 25%, #fff 75%, #e5e9f0 100%);
-		background: -webkit-gradient(linear, left top, right top, color-stop(0%,#e5e9f0), color-stop(25%,#fff), color-stop(75%,#fff), color-stop(100%,#e5e9f0));
-		background: -webkit-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: -o-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: -ms-linear-gradient(left, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		background: linear-gradient(to right, #e5e9f0 0%,#fff 25%,#fff 75%,#e5e9f0 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e9f0', endColorstr='#e5e9f0',GradientType=1 );
-		}
-
 	.row_stylebg {
-		border-bottom: 1px solid #b9c5d8;
-		background-color: #f0f2f6;
-		color: #000;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>; /* #b9c5d8 */
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_medium']['text'] != '') ? $_SESSION['theme']['table_row_background_color_medium']['text'] : '#f0f2f6'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>
 		text-align: left;
 		padding: 4px 7px;
-		}
-
-	table th {
-		padding:4px 7px
-		}
-
-	table tr.even td {
-		background:#eee;
-		background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
-		border-bottom: 1px solid #a4aebf;
-		color: #333333;
-		}
-
-	table tr.odd td {
-		border-bottom: 1px solid #a4aebf;
-		color: #000000;
-		}
-
-	table tr:first-child th:first-child {
-		-moz-border-radius-topleft:7px;
-		-webkit-border-top-left-radius:7px;
-		border-top-left-radius:7px;
-		}
-
-	table tr:first-child th:last-of-type {
-		-moz-border-radius-topright:7px;
-		-webkit-border-top-right-radius:7px;
-		border-top-right-radius:7px;
-		}
-
-	table tr:nth-last-child(-5) td:first-of-type {
-		-moz-border-radius-bottomleft:7px;
-		-webkit-border-bottom-left-radius:7px;
-		border-bottom-left-radius:7px;
-		}
-
-	table tr:nth-last-child(-5) td:first-of-type {
-		-moz-border-radius-topleft:7px;
-		-webkit-border-top-left-radius:7px;
-		border-bottom-top-radius:7px;
-		}
-
-	.border {
-		border: solid 1px #a4aebf;
-		}
-
-	.frm {
-		border: solid 1px #ccc;
-		color: #666;
-		background-color: #EFEFEF;
-		}
-
-	.smalltext {
-		color: #bbb;
-		font-size: 11px;
-		font-family: arial;
-		}
-
-	fieldset {
-		padding: 8px;
-		text-align: left;
-		border: 1px solid #aeb7c6;
-		border-radius: 3px;
-		-moz-border-radius: 3px;
-		-webkit-border-radius: 3px;
-		margin: 0;
-		}
-
-	legend {
-		font-size: 13px;
-		font-family: arial;
-		font-weight: bold;
-		color: #3164ad;
-		padding-bottom: 8px;
-		padding-right: 2px;
 		}
 
 /* RESPONSE MESSAGES *******************************************************/
@@ -1029,7 +927,7 @@
 		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 		}
 
-/* OPERATOR PANEL: BEGIN ********************************************************/
+/* OPERATOR PANEL ****************************************************************/
 
 	div.op_ext {
 		float: left;
@@ -1176,15 +1074,7 @@
 		border: 1px solid #5d5f5a;
 		}
 
-/* OPERATOR PANEL: END *******************************************************/
-
-	span.playback_progress_bar {
-		background-color: #c43e42;
-		height: 1px;
-		display: block;
-		}
-
-/* USER DASHBOARD: BEGIN *****************************************************/
+/* USER DASHBOARD ****************************************************************/
 
 	/* login message */
 	div.login_message {
