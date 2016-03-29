@@ -58,9 +58,7 @@ else {
 	else {
 		$action = "add";
 	}
-
-//get the app uuid
-	if (is_uuid($_REQUEST["app_uuid"])) {
+	if (strlen($_REQUEST["app_uuid"]) > 0) {
 		$app_uuid = $_REQUEST["app_uuid"];
 	}
 
@@ -523,7 +521,7 @@ else {
 		//display the results
 			if ($result_count > 0) {
 
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px;'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px; border-collapse: separate; border-spacing: 2px;'>\n";
 
 				$x = 0;
 				foreach($details as $group) {
@@ -658,7 +656,7 @@ else {
 							//echo "	<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' style='visibility:hidden;' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 							echo "</td>\n";
 						//data
-							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; _text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								$dialplan_detail_data_mod = $dialplan_detail_data;
 								if ($dialplan_detail_type == 'bridge') {
@@ -762,7 +760,7 @@ else {
 						//end the row
 							echo "</tr>\n";
 							if ($index != 999) {
-								echo "<tr><td colspan='7'><img src='about:blank;' style='width: 100%; height: 1px; border-bottom: 1px solid #e5e9f0;'></td></tr>";
+								echo "<tr><td colspan='7' style='margin: 0; padding: 0;'><img src='about:blank;' style='width: 100%; height: 1px; border-bottom: 1px solid #e5e9f0; margin: 0; padding: 0; display: block;'></td></tr>";
 							}
 						//increment the value
 							$x++;
@@ -788,7 +786,7 @@ else {
 	echo "<br><br>\n";
 	echo "</form>";
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo "<p>".$text['billing-warning']."</p>";
 	}
 

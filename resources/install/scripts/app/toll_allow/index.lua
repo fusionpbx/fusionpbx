@@ -22,159 +22,184 @@
 --	Contributor(s):
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 --	Philippe Rioual <bhouba@gmail.com>
+--	Alexey Melnichuck <alexeymelnichuck@gmail.com>
 
---debug
-	debug["toll_type"] = false
-	
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+--Configuration
+	-- Define known template names
+		local known_templates = {
+			["mobile"       ] = true,
+			["landline"     ] = true,
+			["international"] = true,
+			["tollfree"     ] = true,
+			["sharedcharge" ] = true,
+			["premium"      ] = true,
+			["unknown"      ] = true,
+		}
+
+	--Define templates for every toll type for your country
+		local templates = {
+			IT = {
+				{"mobile",        "[35]%d%d%d%d%d%d+"                                                                                                     },
+				{"landline",      "0[123456789]%d+"                                                                                                       },
+				{"international", "00%d+"                                                                                                                 },
+				{"tollfree",      "119|1[3456789]%d|19[24]%d|192[01]%d%d|800%d%d%d%d%d+|803%d%d%d+|456%d%d%d%d%d%d+|11[2345678]|15%d%d|116%d%d%d|196%d%d" },
+				{"sharedcharge",  "84[0178]%d%d%d%d+|199%d%d%d%d%d+|178%d%d%d%d%d+|12%d%d|10%d%d%d+|1482|149%d+|4[012]%d+|70%d%d%d%d%d+"                  },
+				{"premium",       "89[2459]%d%d%d+|16[456]%d%d%d+|144%d%d%d+|4[346789]%d%d+"                                                              },
+				{"unknown",       "%d%d+"                                                                                                                 },
+			};
+			FR = {
+				{"mobile",        "0[67]%d%d%d%d%d%d%d%d"                                                },
+				{"landline",      "0[1234589]%d%d%d%d%d%d%d%d"                                           },
+				{"international", "00%d+"                                                                },
+				{"tollfree",      "15|17|18|112|114|115|116%d%d%d|118%d%d%d|119|19[16]|1[06]%d%d|080%d+" },
+				{"sharedcharge",  "081%d+|082[0156]%d+|0884%d+|089[0123789]%d+"                          },
+				{"premium",       "%d%d+"                                                                },
+				{"unknown",       "%d%d+"                                                                },
+			};
+			US = {
+				{"unknown",       "%d+"},
+			};
+			RU = {
+				{"international", "810%d+|8[89]40%d+|87%d%d%d%d%d%d%d%d%d"};
+				{"mobile",        "89%d%d%d%d%d%d%d%d%d"                  };
+				{"tollfree",      "8800%d%d%d%d%d%d%d|10[1-9]"            };
+				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d%d"           };
+				{"unknown",       ""                                      };
+			};
+		}
+
+	--Set to true to allow all calls for extensions without toll_allow
+		local ACCEPT_EMPTY_TOLL_ALLOW = false
+
+	--debug
+		debug["toll_type"] = false
+
+	require "resources.functions.explode";
 
 --create the api object and get variables
-	api = freeswitch.API()
-	uuid = argv[2]
-	
+	local api = freeswitch.API()
+	local uuid = argv[2]
+
 	if not uuid or uuid == "" then
 		return
 	end
-	
-	template_indexes = { "mobile", "landline", "international", "tollfree", "sharedcharge", "premium", "unknown"}
 
---Define templates for every toll type for your country
-	function get_toll_types_it()
-		if (debug["toll_type"]) then
-			freeswitch.consoleLog("NOTICE", "[toll_allow] using IT toll types\n")
+	local function hungup()
+		session:hangup("OUTGOING_CALL_BARRED")
+	end
+
+	local function log(level, msg)
+		freeswitch.consoleLog(level, "[toll_allow] " .. msg .. "\n")
+	end
+
+	local function logf(level, ...)
+		return log(level, string.format(...))
+	end
+
+	local function trace(type, ...)
+		if debug[type] then log(...) end
+	end
+
+	local function tracef(type, ...)
+		if debug[type] then logf(...) end
+	end
+
+	local function channel_variable(uuid, name)
+		local result = api:executeString("uuid_getvar " .. uuid .. " " .. name)
+
+		tracef("toll_type", "NOTICE", "channel_variable %s - %s", name, result)
+
+		if result:sub(1, 4) == '-ERR' then return nil end
+		return result
+	end
+
+	local function template_match(prefix, template, called)
+		local parts = explode("|", template)
+
+		for index,part in ipairs(parts) do
+			local pattern = "^" .. prefix .. part .. "$"
+			if ( string.match(called, pattern) ~= nil ) then
+				return pattern
+			end
 		end
-		
-		templates["mobile"]        = "[35]%d%d%d%d%d%d+"
-		templates["landline"]      = "0[123456789]%d+"
-		templates["international"] = "00%d+"
-		templates["tollfree"]      = "119|1[3456789]%d|19[24]%d|192[01]%d%d|800%d%d%d%d%d+|803%d%d%d+|456%d%d%d%d%d%d+|11[2345678]|15%d%d|116%d%d%d|196%d%d"
-		templates["sharedcharge"]  = "84[0178]%d%d%d%d+|199%d%d%d%d%d+|178%d%d%d%d%d+|12%d%d|10%d%d%d+|1482|149%d+|4[012]%d+|70%d%d%d%d%d+"
-		templates["premium"]       = "89[2459]%d%d%d+|16[456]%d%d%d+|144%d%d%d+|4[346789]%d%d+"
-		templates["unknown"]       = "%d%d+"
 	end
 
-	function get_toll_types_us()
-		if (debug["toll_type"]) then
-			freeswitch.consoleLog("NOTICE", "[toll_allow] using US toll types\n")
+	local function get_toll_type(prefix, templates, called)
+		for _,params in ipairs(templates) do
+			local label, template = params[1], params[2]
+			if not known_templates[label] then
+				logf("WARNING", "unknown template name: %s in country template array", label)
+			end
+
+			trace("toll_type", "NOTICE", "checking toll type " .. label .. " template: " .. template)
+
+			local pattern = template_match(prefix, template, called)
+			if pattern then
+				trace("toll_type", "NOTICE", "destination number " .. called .. " matches " .. label .. " pattern: " .. pattern)
+				return label
+			end
 		end
-		
-		templates["unknown"]       = "%d+"
 	end
 
-	function get_toll_types_fr()
-		if (debug["toll_type"]) then
-			freeswitch.consoleLog("NOTICE", "[toll_allow] using FR toll types\n")
-		end 
-      
-		templates["mobile"]        = "0[67]%d%d%d%d%d%d%d%d"
-		templates["landline"]      = "0[1234589]%d%d%d%d%d%d%d%d"
-		templates["international"] = "00%d+"
-		templates["tollfree"]      = "15|17|18|112|114|115|116%d%d%d|118%d%d%d|119|19[16]|1[06]%d%d|080%d+"
-		templates["sharedcharge"]  = "081%d+|082[0156]%d+|0884%d+|089[0123789]%d+"
-		templates["premium"]       = "%d%d+"
-		templates["unknown"]       = "%d%d+" 
+	local function is_undef(str)
+		return (not str) or (#str == 0) or (str == "_undef_")
 	end
-   
-	called  = api:executeString("uuid_getvar " .. uuid .. " destination_number")
-	prefix  = api:executeString("uuid_getvar " .. uuid .. " outbound_prefix")
-	country = api:executeString("uuid_getvar " .. uuid .. " default_country")
-	toll_allow = api:executeString("uuid_getvar " .. uuid .. " toll_allow")
-	domain_name = api:executeString("uuid_getvar " .. uuid .. " domain_name")
-	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number")
-		
+
+	local called     = channel_variable(uuid, "destination_number") or ""
+	local caller     = channel_variable(uuid, "caller_id_number")   or ""
+	local prefix     = channel_variable(uuid, "outbound_prefix")    or ""
+	local country    = channel_variable(uuid, "default_country")    or ""
+	local toll_allow = channel_variable(uuid, "toll_allow")         or ""
+
 	if (debug["toll_type"]) then
-		freeswitch.consoleLog("NOTICE", "[toll_allow] called: " .. called .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_allow] prefix: " .. prefix .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_allow] country: " .. country .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_allow] tollAllow: " .. toll_allow .. "\n")
+		logf("NOTICE", "called: %s", called)
+		logf("NOTICE", "prefix: %s", prefix)
+		logf("NOTICE", "country: %s", country)
+		logf("NOTICE", "tollAllow: %s", toll_allow)
 	end
-	
-	templates = {}
-	local toll_type = "unknown"
-		
-	if ((prefix == nil) or (string.len(prefix) == 0) or (prefix == "_undef_") ) then
+
+	if is_undef(toll_allow) then
+		if ACCEPT_EMPTY_TOLL_ALLOW then
+			logf("NOTICE", "unknown call authorized from %s to %s", caller, called)
+			return
+		end
+		logf("WARNING", "unknown call not authorized from %s to %s : OUTGOING_CALL_BARRED", caller, called)
+		return hungup()
+	end
+
+	if is_undef(prefix) then
 		prefix = ""
 	end
-		
 
-	if ((country ~= nil) and (string.len(country) > 0)) then		
-	--set templates for default country
-		if     country == "IT" then get_toll_types_it()
-		elseif country == "US" then get_toll_types_us()
-		elseif country == "FR" then get_toll_types_fr()
-		else
-			if (debug["toll_type"]) then
-				freeswitch.consoleLog("NOTICE", "[toll_allow] toll type: " .. toll_type .. "\n")
-			end
-			return toll_type
-		end
-		
-	--set toll_type
-		local found = false
-		for i,label in pairs(template_indexes) do
-			template = templates[label]
-			if (debug["toll_type"]) then
-				freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll type " .. label .. " template: " .. template .. "\n")
-			end
-			
-		--Doing split on | character
-			parts = explode("|", template)
+	if is_undef(country) then
+		log("WARNING", "undefined country")
+		return
+	end
 
-			for index,part in pairs(parts) do
-				pattern = "^" .. prefix .. part .. "$"
-				if (debug["toll_type"]) then
-					--freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll type " .. label .. " pattern: " .. pattern .. "\n")
-				end
-				
-				if ( string.match(called, pattern) ~= nil ) then
-					if (debug["toll_type"]) then
-						freeswitch.consoleLog("NOTICE", "[toll_allow] destination number " .. called .. " matches " .. label .. " pattern: " .. pattern .. "\n")
-					end
-					toll_type = label
-					found = true
-					break
-				end
-			end
-			
-			if (found) then
-				break
-			end
+	local templates = templates[country]
+	if not templates then
+		log("WARNING", "undefined templates")
+		return
+	end
+
+--set toll_type
+	local toll_type = get_toll_type(prefix, templates, called) or "unknown"
+
+	log("NOTICE", "toll type: " .. toll_type)
+
+	local parts = explode(",", toll_allow)
+
+	for i,part in ipairs(parts) do
+		if not known_templates[part] then
+			logf("WARNING", "unknown toll_allow name: %s in extension", part)
 		end
-	
-		freeswitch.consoleLog("NOTICE", "[toll_allow] toll type: " .. toll_type .. "\n")
-	--	api:executeString("uuid_setvar " .. uuid .. " toll_type " .. toll_type);
-	--	session:setVariable('toll_type', toll_type);
-		
-		
-	--check toll allow
-		allow = false
-		
-		if ((toll_allow ~= nil) and (string.len(toll_allow) > 0) and (toll_allow ~= "_undef_")) then
-			parts = explode(",", toll_allow)
-			
-			for i,part in pairs(parts) do
-				if (debug["toll_type"]) then
-					freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll allow part " .. part .. "\n")
-				end
-				
-				if ( part == toll_type ) then
-					allow = true
-					break
-				end
-			end
-		else
-			freeswitch.consoleLog("WARNING", "[toll_allow] toll_allow not defined for extension " .. caller .. "\n")
-			
-			-- Uncomment following line to allow all calls for extensions without toll_allow
-			-- allow = true
-		end
-		
-	--hangup not allowed calls
-		if ( not allow ) then
-			freeswitch.consoleLog("WARNING", "[toll_allow] " .. toll_type .. " call not authorized from " .. caller .. " to " .. called .. " : OUTGOING_CALL_BARRED\n")
-			session:hangup("OUTGOING_CALL_BARRED")
-		else
-			freeswitch.consoleLog("NOTICE", "[toll_allow] " .. toll_type .. " call authorized from " .. caller .. " to " .. called .. "\n")
+
+		tracef("toll_type", "NOTICE", "checking toll allow part " .. part)
+		if ( part == toll_type ) then
+			logf("NOTICE", "%s call authorized from %s to %s", toll_type, caller, called)
+			return
 		end
 	end
-	
+
+	logf("WARNING", "%s call not authorized from %s to %s : OUTGOING_CALL_BARRED", toll_type, caller, called)
+	return hungup()

@@ -47,9 +47,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the contact uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -58,81 +59,91 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$time_description = check_str($_POST["time_description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the form data
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_time_uuid = check_str($_POST["contact_time_uuid"]);
-	}
+		//set the uuid
+			if ($action == "update") {
+				$contact_time_uuid = check_str($_POST["contact_time_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
 
+				//update last modified
+				$sql = "update v_contacts set ";
+				$sql .= "last_mod_date = now(), ";
+				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and contact_uuid = '".$contact_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-		if ($action == "add") {
-			$contact_time_uuid = uuid();
-			$sql = "insert into v_contact_times ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_time_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "user_uuid, ";
-			$sql .= "time_start, ";
-			$sql .= "time_stop, ";
-			$sql .= "time_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "( ";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$contact_time_uuid."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$_SESSION["user"]["user_uuid"]."', ";
-			$sql .= "'".$time_start."', ";
-			$sql .= "'".$time_stop."', ";
-			$sql .= "'".$time_description."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				if ($action == "add") {
+					$contact_time_uuid = uuid();
+					$sql = "insert into v_contact_times ";
+					$sql .= "( ";
+					$sql .= "domain_uuid, ";
+					$sql .= "contact_time_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "user_uuid, ";
+					$sql .= "time_start, ";
+					$sql .= "time_stop, ";
+					$sql .= "time_description ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "( ";
+					$sql .= "'".$domain_uuid."', ";
+					$sql .= "'".$contact_time_uuid."', ";
+					$sql .= "'".$contact_uuid."', ";
+					$sql .= "'".$_SESSION["user"]["user_uuid"]."', ";
+					$sql .= "'".$time_start."', ";
+					$sql .= "'".$time_stop."', ";
+					$sql .= "'".$time_description."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "add")
+					$_SESSION["message"] = $text['message-add'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "add")
 
-		if ($action == "update") {
-			$sql = "update v_contact_times ";
-			$sql .= "set ";
-			$sql .= "time_start = '".$time_start."', ";
-			$sql .= "time_stop = '".$time_stop."', ";
-			$sql .= "time_description = '".$time_description."' ";
-			$sql .= "where ";
-			$sql .= "contact_time_uuid = '".$contact_time_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				if ($action == "update") {
+					$sql = "update v_contact_times ";
+					$sql .= "set ";
+					$sql .= "time_start = '".$time_start."', ";
+					$sql .= "time_stop = '".$time_stop."', ";
+					$sql .= "time_description = '".$time_description."' ";
+					$sql .= "where ";
+					$sql .= "contact_time_uuid = '".$contact_time_uuid."' ";
+					$sql .= "and domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_uuid = '".$contact_uuid."' ";
+					$sql .= "and user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+					$_SESSION["message"] = $text['message-update'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
@@ -189,7 +200,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' data-calendar=\"{format: '%Y-%m-%d %H:%M:%S', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='".$time_start."'>\n";
+	echo "	<div class='row'><div class='col-sm-12'>\n";
+	echo "		<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."'>\n";
+	echo "	</div></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -198,7 +211,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' data-calendar=\"{format: '%Y-%m-%d %H:%M:%S', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='".$time_stop."'>\n";
+	echo "	<div class='row'><div class='col-sm-12'>\n";
+	echo "		<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."'>\n";
+	echo "	</div></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -224,6 +239,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+	//apply bootstrap-datetimepicker WITH seconds
+		echo "<script language='JavaScript' type='text/javascript'>";
+		echo "	$(document).ready(function() {\n";
+		echo "		$(function() {\n";
+		echo "			$('.datetimepicker').datetimepicker({\n";
+		echo "				format: 'YYYY-MM-DD HH:mm:ss',\n";
+		echo "			});\n";
+		echo "		});\n";
+		echo "	});\n";
+		echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

@@ -366,7 +366,7 @@ include "root.php";
 			$keys=array_keys($data);
 			$values=array_values($data);
 			for($i=0;$i<$count;$i++){
-				$keys[$i]= str_replace("-", "_", $keys[$i]); 
+				$keys[$i]= str_replace("-", "_", $keys[$i]);
 				$this->{$keys[$i]}=$values[$i];
 			}
 		}
@@ -443,7 +443,7 @@ include "root.php";
 				$xml .= "      <param name=\"auth-acl\" value=\"" . $this->auth_acl . "\"/>\n";
 			}
 			$xml .= "    </params>\n";
-			
+
 			$xml .= "    <variables>\n";
 			if (strlen($this->hold_music)) {
 				$xml .= "      <variable name=\"hold_music\" value=\"" . $this->hold_music . "\"/>\n";
@@ -608,7 +608,7 @@ include "root.php";
 				$xml .= "\n";
 				$xml .= "<include>\n";
 				$xml .= "	<!--the domain or ip (the right hand side of the @ in the addr-->\n";
-				if ($extension_dir_name == "default") { 
+				if ($extension_dir_name == "default") {
 					$xml .= "	<domain name=\"\$\${domain}\">\n";
 				}
 				else {

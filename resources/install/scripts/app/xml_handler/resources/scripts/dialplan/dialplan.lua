@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -24,18 +24,30 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local cache = require"resources.functions.cache"
+	local log = require"resources.functions.log"["xml_handler"]
+
+-- needed for cli-command xml_locate dialplan
+	if (call_context == nil) then
+		call_context = "public";
+	end
+
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get dialplan:" .. call_context));
-	else
-		XML_STRING = "-ERR NOT FOUND";
+	XML_STRING, err = cache.get("dialplan:" .. call_context)
+
+	if debug['cache'] then
+		if XML_STRING then
+			log.notice("dialplan:"..call_context.." source: memcache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error get element from cache: " .. err);
+		end
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if not XML_STRING then
 
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--exits the script if we didn't connect properly
@@ -61,17 +73,6 @@
 					end
 			end
 
-	
-		--get the domain name
-			function get_domain_name(domains, domain_uuid)
-				for key,value in ipairs(domains) do
-					if (value.domain_uuid == domain_uuid) then
-						return value.domain_name;
-					end
-				end
-			  	return nil;
-			end	
-
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -89,19 +90,18 @@
 			condition_tag_status = "closed";
 
 		--get the dialplan and related details
-			sql = "select * from v_dialplans as d, v_dialplan_details as s ";
+			sql = "select * from v_dialplans as p, v_dialplan_details as s ";
 			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
-				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
+				sql = sql .. "where p.dialplan_context = '" .. call_context .. "' ";
 			else
-				sql = sql .. "where (d.dialplan_context = '" .. call_context .. "' or d.dialplan_context = '${domain_name}') ";
-				sql = sql .. "and (d.domain_uuid = '" .. domain_uuid .. "' or d.domain_uuid is null )";
+				sql = sql .. "where (p.dialplan_context = '" .. call_context .. "' or p.dialplan_context = '${domain_name}') ";
 			end
-			sql = sql .. "and d.dialplan_enabled = 'true' ";
-			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
+			sql = sql .. "and p.dialplan_enabled = 'true' ";
+			sql = sql .. "and p.dialplan_uuid = s.dialplan_uuid ";
 			sql = sql .. "order by ";
-			sql = sql .. "d.dialplan_order asc, ";
-			sql = sql .. "d.dialplan_name asc, ";
-			sql = sql .. "d.dialplan_uuid asc, ";
+			sql = sql .. "p.dialplan_order asc, ";
+			sql = sql .. "p.dialplan_name asc, ";
+			sql = sql .. "p.dialplan_uuid asc, ";
 			sql = sql .. "s.dialplan_detail_group asc, ";
 			sql = sql .. "CASE s.dialplan_detail_tag ";
 			sql = sql .. "WHEN 'condition' THEN 1 ";
@@ -110,10 +110,14 @@
 			sql = sql .. "ELSE 100 END, ";
 			sql = sql .. "s.dialplan_detail_order asc ";
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				log.notice("SQL: " .. sql);
 			end
-			x = 0;
+			local x = 0;
+			local pass
 			dbh:query(sql, function(row)
+				--clear flag pass
+					pass = false
+
 				--get the dialplan
 					domain_uuid = row.domain_uuid;
 					dialplan_uuid = row.dialplan_uuid;
@@ -171,25 +175,27 @@
 						--determine the type of condition
 							if (dialplan_detail_type == "hour") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "minute") then 
+							elseif (dialplan_detail_type == "minute") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "minute-of-day") then 
+							elseif (dialplan_detail_type == "minute-of-day") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mday") then 
+							elseif (dialplan_detail_type == "mday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mweek") then 
+							elseif (dialplan_detail_type == "mweek") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "mon") then 
+							elseif (dialplan_detail_type == "mon") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "time-of-day") then 
+							elseif (dialplan_detail_type == "time-of-day") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "yday") then 
+							elseif (dialplan_detail_type == "yday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "year") then 
+							elseif (dialplan_detail_type == "year") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "wday") then 
+							elseif (dialplan_detail_type == "wday") then
 								condition_type = 'time';
-							elseif (dialplan_detail_type == "week") then 
+							elseif (dialplan_detail_type == "week") then
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "date-time") then
 								condition_type = 'time';
 							else
 								condition_type = 'default';
@@ -252,19 +258,20 @@
 							condition = ""; --prevents duplicate time conditions
 						end
 					end
-					
-					if (call_context == "public") then
+
+					if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
+								table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
-									--domain_name = get_domain_name(domains, domain_uuid);
 									domain_name = domains[domain_uuid];
-									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
+								end
+								if (domain_name ~= nil and domain_name ~= '') then
 									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
 									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
-									first_action = false;
 								end
+								first_action = false;
 							end
 						end
 					end
@@ -284,7 +291,27 @@
 
 				--increment the x
 					x = x + 1;
+
+				--set flag pass
+					pass = true
 			end);
+
+		-- prevent partial dialplan (pass=nil may be error in sql or empty resultset)
+			if pass == false then
+				--send a message to the log
+					log.errf('context: %s, extension: %s, type: %s, data: %s ',
+						call_context,
+						dialplan_name or '----',
+						dialplan_detail_tag or '----',
+						dialplan_detail_data or '----'
+					)
+
+				--close the database connection
+					dbh:release();
+
+				--show an error
+					error('error while build context: ' .. call_context)
+			end
 
 		--close the extension tag if it was left open
 			if (dialplan_tag_status == "open") then
@@ -299,8 +326,9 @@
 			XML_STRING = table.concat(xml, "\n");
 
 		--set the cache
-			tmp = XML_STRING:gsub("\\", "\\\\");
-			result = trim(api:execute("memcache", "set dialplan:" .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
+			if cache.support() then
+				cache.set("dialplan:" .. call_context, XML_STRING, expire["dialplan"])
+			end
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
@@ -311,17 +339,9 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
+				log.notice("dialplan:"..call_context.." source: database");
 			end
 
 		--close the database connection
 			dbh:release();
-	else
-		--replace the &#39 back to a single quote
-			XML_STRING = XML_STRING:gsub("&#39;", "'");
-
-		--send to the console
-			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
-			end
 	end

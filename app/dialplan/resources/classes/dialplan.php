@@ -73,7 +73,12 @@ include "root.php";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".check_str($this->domain_uuid)."', ";
+				if (strlen($this->domain_uuid) > 0) {
+					$sql .= "'".check_str($this->domain_uuid)."', ";
+				}
+				else {
+					$sql .= "null, ";
+				}
 				$sql .= "'".check_str($this->app_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_name)."', ";
@@ -99,7 +104,7 @@ include "root.php";
 				$sql .= "dialplan_context = '".check_str($this->dialplan_context)."', ";
 				$sql .= "dialplan_enabled = '".check_str($this->dialplan_enabled)."', ";
 				$sql .= "dialplan_description = '".check_str($this->dialplan_description)."' ";
-				$sql .= "where domain_uuid = '".check_str($this->domain_uuid)."' ";
+				$sql .= "where (domain_uuid = '".check_str($this->domain_uuid)."' or domain_uuid is null) ";
 				$sql .= "and dialplan_uuid = '".check_str($this->dialplan_uuid)."' ";
 				//echo "sql: ".$sql."<br />";
 				$db->query($sql);
@@ -125,7 +130,12 @@ include "root.php";
 				$sql .= "values ";
 				$sql .= "( ";
 				$sql .= "'".$dialplan_detail_uuid."', ";
-				$sql .= "'".check_str($this->domain_uuid)."', ";
+				if (strlen($this->domain_uuid) == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'".check_str($this->domain_uuid)."', ";
+				}
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_detail_tag)."', ";
 				$sql .= "'".check_str($this->dialplan_detail_order)."', ";
@@ -171,7 +181,7 @@ include "root.php";
 					$sql .= "dialplan_detail_group = '".check_str($this->dialplan_detail_group)."', ";
 				}
 				$sql .= "dialplan_detail_tag = '".check_str($this->dialplan_detail_tag)."' ";
-				$sql .= "where domain_uuid = '".check_str($this->domain_uuid)."' ";
+				$sql .= "where (domain_uuid = '".check_str($this->domain_uuid)."' or domain_uuid is null) ";
 				$sql .= "and dialplan_uuid = '".check_str($this->dialplan_uuid)."' ";
 				//echo "sql: ".$sql."<br />";
 				$db->query($sql);
@@ -192,18 +202,10 @@ include "root.php";
 						$file_default_path = $src_dir.'/dialplan/default.xml';
 						$file_default_contents = file_get_contents($file_default_path);
 					//prepare the file contents and the path
-						if (count($_SESSION['domains']) < 2) {
-							//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-								$file_default_contents = str_replace("{v_domain}", 'default', $file_default_contents);
-							//set the file path
-								$file_path = $switch_dialplan_dir.'/default.xml';
-						}
-						else {
-							//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-								$file_default_contents = str_replace("{v_domain}", $_SESSION['domain_name'], $file_default_contents);
-							//set the file path
-								$file_path = $switch_dialplan_dir.'/'.$_SESSION['domain_name'].'.xml';
-						}
+						//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+							$file_default_contents = str_replace("{v_domain}", $_SESSION['domain_name'], $file_default_contents);
+						//set the file path
+							$file_path = $switch_dialplan_dir.'/'.$_SESSION['domain_name'].'.xml';
 					//write the default dialplan
 						$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
 						fwrite($fh, $file_default_contents);
@@ -216,7 +218,7 @@ include "root.php";
 			private function app_uuid_exists() {
 				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
 				$sql .= "and app_uuid = '".$this->app_uuid."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
@@ -235,7 +237,7 @@ include "root.php";
 			public function dialplan_exists() {
 				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null)";
 				$sql .= "and dialplan_uuid = '".$this->dialplan_uuid."' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
@@ -270,7 +272,7 @@ include "root.php";
 						$dialplan = json_decode($json, true);
 				}
 
-				//ensure the condition array uniform
+				//ensure the condition array is uniform
 					if (is_array($dialplan)) {
 						if (!is_array($dialplan['extension']['condition'][0])) {
 							$tmp = $dialplan['extension']['condition'];
@@ -291,6 +293,11 @@ include "root.php";
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 							$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 							$this->dialplan_context = $dialplan['@attributes']['name'];
+							if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
+								if ($dialplan['extension']['@attributes']['global'] == "true") {
+									$this->domain_uuid = null;
+								}
+							}
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";
 							}
@@ -389,7 +396,11 @@ include "root.php";
 					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-							$sql .= "where d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "where ";
+							$sql .= "( ";
+							$sql .= "d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "or d.domain_uuid is null ";
+							$sql .= ") ";
 							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 							$sql .= "and d.dialplan_enabled = 'true' ";
 							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
@@ -474,7 +485,7 @@ include "root.php";
 										$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-										$this->bridges = $dialplan_detail_data; 
+										$this->bridges = $dialplan_detail_data;
 									}
 							}
 						}

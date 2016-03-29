@@ -119,7 +119,7 @@ require_once "resources/require.php";
 	$row_style["1"] = "row_style1";
 
 	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	$echo .= "<tr class='border'>\n";
+	$echo .= "<tr>\n";
 	if (permission_exists('group_all') && $_GET['showall'] == 'true') {
 		$echo .= "	<th nowrap>".$text['label-domain']."</th>\n";
 	}

@@ -23,16 +23,8 @@
 --      Mark J Crane <markjcrane@fusionpbx.com>
 --		Errol Samuels <voiptology@gmail.com>
 
---define explode
-	function explode ( seperator, str )
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+--define the explode function
+	require "resources.functions.explode";
 
 --usage
 	--luarun app.lua event_notify internal reboot 1003@domain.fusionpbx.com yealink
@@ -76,6 +68,16 @@
 --cisco
 	if (vendor == "cisco") then
 		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync');
+		end
+	end
+
+--cisco-spa
+	if (vendor == "cisco-spa") then
+		if (command == "reboot") then
 			event:addHeader('event-string', 'reboot=true');
 		end
 		if (command == "check_sync") then
@@ -90,6 +92,16 @@
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync;reboot=false');
+		end
+	end
+
+--linksys
+	if (vendor == "linksys") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'reboot=true');
 		end
 	end
 

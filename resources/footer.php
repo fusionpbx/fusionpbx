@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,53 +30,47 @@ require_once "resources/require.php";
 	$body = $content_from_db.ob_get_contents();
 	ob_end_clean(); //clean the buffer
 
-//set a default template
-	if (strlen($_SESSION['domain']['template']['name']) == 0) { $_SESSION['domain']['template']['name'] = 'default'; }
-
 //clear the template
 	if ($_SESSION['theme']['cache']['boolean'] == "false") {
-			$_SESSION["template_content"] = '';
+		$_SESSION["template_content"] = '';
 	}
 
 //set a default template
 	if (strlen($_SESSION["template_content"]) == 0) { //build template if session template has no length
-		$v_template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
+		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 		if (strlen($template_rss_sub_category) > 0) {
 			//this template was assigned by the content manager
 				//get the contents of the template and save it to the template variable
-				$template_full_path = $v_template_path.'/'.$template_rss_sub_category.'/template.php';
+				$template_full_path = $template_base_path.'/'.$template_rss_sub_category.'/template.php';
 				if (!file_exists($template_full_path)) {
 					$_SESSION['domain']['template']['name'] = 'default';
-					$template_full_path = $v_template_path.'/default/template.php';
+					$template_full_path = $template_base_path.'/default/template.php';
 				}
 				$template = file_get_contents($template_full_path);
 				$_SESSION["template_content"] = $template;
 		}
 		else {
 			//get the contents of the template and save it to the template variable
-				$template_full_path = $v_template_path.'/'.$_SESSION['domain']['template']['name'].'/template.php';
+				$template_full_path = $template_base_path.'/'.$_SESSION['domain']['template']['name'].'/template.php';
 				if (!file_exists($template_full_path)) {
 					$_SESSION['domain']['template']['name'] = 'default';
-					$template_full_path = $v_template_path.'/default/template.php';
+					$template_full_path = $template_base_path.'/default/template.php';
 				}
 				$template = file_get_contents($template_full_path);
 				$_SESSION["template_content"] = $template;
 		}
 	}
 
-//start the output buffer
+//get the template
 	ob_start();
 	$template = $_SESSION["template_content"];
 	eval('?>' . $template . '<?php ');
 	$template = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
 
-//get the menu
-	require_once "resources/menu.php";
-
 //prepare the template to display the output
 	$custom_head = '';
-	
+
 	if (isset($_SESSION["theme"]["title"]["text"])) {
 		if (strlen($_SESSION["theme"]["title"]["text"]) > 0) {
 			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["theme"]["title"]["text"];

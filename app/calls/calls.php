@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,6 +38,15 @@ else {
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//handle search term
+	$search = check_str($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_mod = "and ( ";
+		$sql_mod .= "extension like '%".$search."%' ";
+		$sql_mod .= "or description like '%".$search."%' ";
+		$sql_mod .= ") ";
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/calls');
@@ -46,20 +55,9 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
-	if ($is_included != "true") {
-		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-		echo "		<tr>\n";
-		echo "		<td align='left'><b>".$text['title']."</b><br>\n";
-		echo "			".$text['description-2']."\n";
-		echo "			".$text['description-3']." \n";
-		echo "		</td>\n";
-		echo "		</tr>\n";
-		echo "		</table>\n";
-		echo "		<br />";
-	}
-
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+//define select count query
+	$sql = "select count(extension_uuid) as count from v_extensions ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -77,60 +75,66 @@ else {
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	if (strlen($order_by)> 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
+	$sql .= $sql_mod; //add search mod from above
+
+//execute select count query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$num_rows = count($result);
-	unset ($prep_statement, $result, $sql);
+	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$result_count = $row['count'];
+	unset ($prep_statement, $row);
 
-	$rows_per_page = 150;
-	$param = "";
+	if ($is_included == 'true') {
+		$rows_per_page = 10;
+		if ($result_count > 10) {
+			echo "<script>document.getElementById('btn_viewall_callrouting').style.display = 'inline-block';</script>\n";
+		}
+	}
+	else {
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	}
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page, $var_3) = paging($result_count, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and enabled = 'true' ";
-	if (!(if_group("admin") || if_group("superadmin"))) {
-		if (count($_SESSION['user']['extension']) > 0) {
-			$sql .= "and (";
-			$x = 0;
-			foreach($_SESSION['user']['extension'] as $row) {
-				if ($x > 0) { $sql .= "or "; }
-				$sql .= "extension = '".$row['user']."' ";
-				$x++;
-			}
-			$sql .= ")";
-		}
-		else {
-			//hide any results when a user has not been assigned an extension
-			$sql .= "and extension = 'disabled' ";
-		}
-	}
-	if (strlen($order_by)> 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
-	$sql .= " limit $rows_per_page offset $offset ";
+//rework select data query
+	$sql = str_replace('count(extension_uuid) as count', '*', $sql);
+	$sql .= ' order by extension asc';
+	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+
+//execute select data query
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+	if ($is_included != "true") {
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "  <tr>\n";
+		echo "	<td align='left' width='100%'><b>".$text['title']."</b><br>\n";
+		echo "	".$text['description-2']."\n";
+		echo "	".$text['description-3']."\n";
+		echo "	</td>\n";
+		echo "		<form method='get' action=''>\n";
+		echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+		if ($paging_controls_mini != '') {
+			echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		}
+		echo "			</td>\n";
+		echo "		</form>\n";
+		echo "  </tr>\n";
+		echo "</table>\n";
+		echo "<br />";
+	}
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -157,20 +161,13 @@ else {
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	if (strlen($paging_controls) > 0) {
-		echo "<tr>\n";
-		echo "<td colspan='5' align='left'>\n";
-		echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "	</tr>\n";
-		echo "	</table>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
 	echo "</table>";
-	echo "<br><br>";
+	echo "<br>";
+
+	if (strlen($paging_controls) > 0 && ($is_included != "true")) {
+		echo "<center>".$paging_controls."</center>\n";
+		echo "<br><br>\n";
+	}
 
 	if ($is_included != "true") {
 		require_once "resources/footer.php";

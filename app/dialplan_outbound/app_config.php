@@ -41,4 +41,6 @@
 		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][5]['description'] = "Add outbound routes for any gateways on any domain.";
 
+		$apps[$x]['permissions'][6]['name'] = "outbound_route_toll_allow_lua";
+
 ?>

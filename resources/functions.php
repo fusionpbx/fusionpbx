@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '3.9.0';
+			return '4.1.0';
 		}
 	}
 
@@ -144,27 +144,78 @@
 	}
 
 	if (!function_exists('recursive_copy')) {
-		function recursive_copy($src,$dst) {
-			$dir = opendir($src);
-			if (!$dir) {
-				throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
-			}
-			if (!is_dir($dst)) {
-				if (!mkdir($dst)) {
-					throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+		if (file_exists('/bin/cp')) {
+			function recursive_copy($src, $dst, $options = '') {
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
+					//copy -R recursive, preserve attributes for SUN
+					$cmd = 'cp -Rp '.$src.'/* '.$dst;
+				} else {
+					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
+					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
 				}
+				//$this->write_debug($cmd);
+				exec ($cmd);
 			}
-			while(false !== ( $file = readdir($dir)) ) {
-				if (( $file != '.' ) && ( $file != '..' )) {
-					if ( is_dir($src . '/' . $file) ) {
-						recursive_copy($src . '/' . $file,$dst . '/' . $file);
-					}
-					else {
-						copy($src . '/' . $file,$dst . '/' . $file);
+		} elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			function recursive_copy($src, $dst, $options = '') {
+				$src = normalize_path_to_os($src);
+				$dst = normalize_path_to_os($dst);
+				exec("xcopy /E /Y \"$src\" \"$dst\"");
+			}
+		} else {
+			function recursive_copy($src, $dst, $options = '') {
+				$dir = opendir($src);
+				if (!$dir) {
+					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
+				}
+				if (!is_dir($dst)) {
+					if (!mkdir($dst)) {
+						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 					}
 				}
+				while(false !== ( $file = readdir($dir)) ) {
+					if (( $file != '.' ) && ( $file != '..' )) {
+						if ( is_dir($src . '/' . $file) ) {
+							recursive_copy($src . '/' . $file,$dst . '/' . $file);
+						}
+						else {
+							copy($src . '/' . $file,$dst . '/' . $file);
+						}
+					}
+				}
+				closedir($dir);
 			}
-			closedir($dir);
+		}
+	}
+
+	if (!function_exists('recursive_delete')) {
+		if (file_exists('/bin/rm')) {
+			function recursive_delete($dir) {
+				//$this->write_debug('rm -Rf '.$dir.'/*');
+				exec ('rm -Rf '.$dir.'/*');
+				clearstatcache();
+			}
+		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+			function recursive_delete($dir) {
+				$dst = normalize_path_to_os($dst);
+				//$this->write_debug("del /S /F /Q \"$dir\"");
+				exec("del /S /F /Q \"$dir\"");
+				clearstatcache();
+			}
+		}else{
+			function recursive_delete($dir) {
+				foreach (glob($dir) as $file) {
+					if (is_dir($file)) {
+						//$this->write_debug("rm dir: ".$file);
+						recursive_delete("$file/*");
+						rmdir($file);
+					} else {
+						//$this->write_debug("delete file: ".$file);
+						unlink($file);
+					}
+				}
+				clearstatcache();
+			}
 		}
 	}
 
@@ -600,6 +651,19 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
+	if ( !function_exists('normalize_path')) {
+		//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
+		function normalize_path($path) {
+			return str_replace(array('/','\\'), '/', $path);
+		}
+	}
+
+	if ( !function_exists('normalize_path_to_os')) {
+		function normalize_path_to_os($path) {
+			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
+		}
+	}
+
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
 			global $db, $domain_uuid;
@@ -771,6 +835,7 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
+		$phone_number = trim($phone_number, "+");
 		if (is_numeric($phone_number)) {
 			foreach ($_SESSION["format"]["phone"] as &$format) {
 				$format_count = substr_count($format, 'x');
@@ -1313,5 +1378,68 @@ function number_pad($number,$n) {
 			return strtoupper($string);
 		}
 	}
+
+//email validate
+	function email_validate($strEmail){
+		$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+		// search email text for regular exp matches
+		preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+		if (count($matches) == 0) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	}
+
+//converts a string to a regular expression
+	function string_to_regex($string) {
+		//escape the plus
+			if (substr($string, 0, 1) == "+") {
+				$string = "^\\+(".substr($string, 1).")$";
+			}
+		//convert N,X,Z syntax to regex
+			$string = str_ireplace("N", "[2-9]", $string);
+			$string = str_ireplace("X", "[0-9]", $string);
+			$string = str_ireplace("Z", "[1-9]", $string);
+		//add ^ to the start of the string if missing
+			if (substr($string, 0, 1) != "^") {
+				$string = "^".$string;
+			}
+		//add $ to the end of the string if missing
+			if (substr($string, -1) != "$") {
+				$string = $string."$";
+			}
+		//add the round brackgets ( and )
+			if (!strstr($string, '(')) {
+				if (strstr($string, '^')) {
+					$string = str_replace("^", "^(", $string);
+				}
+				else {
+					$string = '^('.$string;
+				}
+			}
+			if (!strstr($string, ')')) {
+				if (strstr($string, '$')) {
+					$string = str_replace("$", ")$", $string);
+				}
+				else {
+					$string = $string.')$';
+				}
+			}
+		//return the result
+			return $string;
+	}
+	//$string = "+12089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "12089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^(20890682[0-9][0-9])$"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "1208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "nxxnxxxxxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^(2089068227"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "^2089068227)"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227$"; echo $string." ".string_to_regex($string)."\n";
+	//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
 
 ?>

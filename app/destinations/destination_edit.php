@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013-2015
+	Portions created by the Initial Developer are Copyright (C) 2013-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -35,7 +35,7 @@ else {
 	exit;
 }
 
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")) {
+if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) {
 	require_once "app/billing/resources/functions/currency.php";
 	require_once "app/billing/resources/functions/rating.php";
 }
@@ -83,7 +83,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 			$destination_type = check_str($_POST["destination_type"]);
 			$destination_number = check_str($_POST["destination_number"]);
 			$db_destination_number = check_str($_POST["db_destination_number"]);
-			$regex_destination_number = str_replace("+", "\\+", $destination_number);
 			$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 			$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 			$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
@@ -97,6 +96,9 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 			$currency_buy = check_str($_POST["currency_buy"]);
 			$destination_accountcode = check_str($_POST["destination_accountcode"]);
 			$destination_carrier = check_str($_POST["destination_carrier"]);
+		//convert the number to a regular expression
+			$destination_number_regex = string_to_regex($destination_number);
+			$_POST["destination_number_regex"] = $destination_number_regex;
 	}
 
 //unset the db_destination_number
@@ -214,23 +216,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 						$dialplan_detail_order = 10;
 
-						//add the public condition
-							$y = 0;
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
 
 						//check the destination number
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $regex_destination_number;
+							if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+							}
+							else {
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+							}
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
@@ -369,7 +367,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (!permission_exists('destination_domain')) {
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 							}
-							echo $sql."<br><br>";
+							//echo $sql."<br><br>";
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
@@ -441,7 +439,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
 					// billing
-					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 						$db2 = new database;
 						$db2->sql = "select currency, billing_uuid, balance from v_billings where type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
@@ -475,6 +473,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
+
+
+//initialize the destinations object
+	$destination = new destinations;
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -541,6 +543,50 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$document['title'] = $text['title-destination-add'];
 	}
 
+//js controls
+	echo "<script type='text/javascript'>\n";
+	echo "	function type_control(dir) {\n";
+	echo "		if (dir == 'outbound') {\n";
+	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_actions').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
+	echo "			document.getElementById('destination_context').value = '".$_SESSION['domain_name']."'";
+	echo "		}\n";
+	echo "		else if (dir == 'inbound') {\n";
+	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = ''; }\n";
+	echo "			document.getElementById('tr_actions').style.display = '';\n";
+	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = ''; }\n";
+	echo "			document.getElementById('tr_cid_name_prefix').style.display = '';\n";
+	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
+	echo "			document.getElementById('tr_account_code').style.display = '';\n";
+	echo "			document.getElementById('destination_context').value = 'public'";
+	echo "		}\n";
+	echo "		";
+	echo "	}\n";
+	echo "	\n";
+	echo "	function context_control() {\n";
+	echo "		destination_type = document.getElementById('destination_type');\n";
+	echo" 		destination_domain = document.getElementById('destination_domain');\n";
+	echo "		if (destination_type.options[destination_type.selectedIndex].value == 'outbound') {\n";
+	echo "			if (destination_domain.options[destination_domain.selectedIndex].value != '') {\n";
+	echo "				document.getElementById('destination_context').value = destination_domain.options[destination_domain.selectedIndex].innerHTML;\n";
+	echo "			}\n";
+	echo "			else {\n";
+	echo "				document.getElementById('destination_context').value = '\${domain_name}';\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -567,7 +613,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='destination_type'>\n";
+	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);'>\n";
 	switch ($destination_type) {
 		case "inbound" : 	$selected[1] = "selected='selected'";	break;
 		case "outbound" : 	$selected[2] = "selected='selected'";	break;
@@ -593,7 +639,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	if (permission_exists('outbound_caller_id_select')) {
-		echo "<tr>\n";
+		echo "<tr id='tr_caller_id_name'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_name']."\n";
 		echo "</td>\n";
@@ -604,7 +650,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
+		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_number']."\n";
 		echo "</td>\n";
@@ -621,13 +667,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_context']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_context' maxlength='255' value=\"$destination_context\">\n";
+	echo "	<input class='formfld' type='text' name='destination_context' id='destination_context' maxlength='255' value=\"$destination_context\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_context']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id='tr_actions'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-detail_action']."\n";
 	echo "</td>\n";
@@ -640,7 +686,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($row["dialplan_detail_tag"] != "condition") {
 			if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
 			echo "				<tr>\n";
-			echo "					<td>\n";
+			echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
 				echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
 			}
@@ -651,8 +697,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$label = explode("XML", $data);
 			$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 			$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-			switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][dialplan_detail_data]", $detail_action, "width: 60%;", $row['dialplan_detail_type']);
-
+			echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
 			echo "					</td>\n";
 			echo "					<td class='list_control_icons' style='width: 25px;'>";
 			if (strlen($row['destination_uuid']) > 0) {
@@ -668,37 +713,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/app_config.php")){
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-fax_uuid']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/fax/app_config.php")){
 		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "order by fax_name asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
-		echo "	<option value=''></option>\n";
-		foreach ($result as &$row) {
-			if ($row["fax_uuid"] == $fax_uuid) {
-				echo "		<option value='".$row["fax_uuid"]."' selected='selected'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
-			}
-			else {
-				echo "		<option value='".$row["fax_uuid"]."'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
-			}
-		}
-		echo "	</select>\n";
 		unset ($prep_statement, $extension);
-		echo "	<br />\n";
-		echo "	".$text['description-fax_uuid']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (is_array($result) && sizeof($result) > 0) {
+			echo "<tr id='tr_fax_detection'>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-fax_uuid']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
+			echo "	<option value=''></option>\n";
+			foreach ($result as &$row) {
+				if ($row["fax_uuid"] == $fax_uuid) {
+					echo "		<option value='".$row["fax_uuid"]."' selected='selected'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+				}
+				else {
+					echo "		<option value='".$row["fax_uuid"]."'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+				}
+			}
+			echo "	</select>\n";
+			echo "	<br />\n";
+			echo "	".$text['description-fax_uuid']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
-	echo "<tr>\n";
+	echo "<tr id='tr_cid_name_prefix'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_cid_name_prefix']."\n";
 	echo "</td>\n";
@@ -710,8 +757,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	// billing
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
-		echo "<tr>\n";
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+		echo "<tr id='tr_sell'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "  ".$text['label-monthly_price']."\n";
 		echo "</td>\n";
@@ -723,7 +770,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
+		echo "<tr id='tr_buy'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "  ".$text['label-monthly_price_buy']."\n";
 		echo "</td>\n";
@@ -735,7 +782,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
+		echo "<tr id='tr_carrier'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-carrier']."\n";
 		echo "</td>\n";
@@ -749,7 +796,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "add") { $destination_accountcode = $_SESSION['domain_name']; }
 	}
 
-	echo "<tr>\n";
+	echo "<tr id='tr_account_code'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-account_code']."\n";
 	echo "</td>\n";
@@ -757,7 +804,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
 	echo "<br />\n";
 	echo $text['description-account_code']."\n";
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		echo " ".$text['billing-warning'];
 	}
 	echo "</td>\n";
@@ -768,7 +815,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
+		echo "    <select class='formfld' name='domain_uuid' id='destination_domain' onchange='context_control();'>\n";
 		if (strlen($domain_uuid) == 0) {
 			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
 		}
@@ -836,6 +883,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+//adjust form if outbound destination
+	if ($destination_type == 'outbound') {
+		echo "<script type='text/javascript'>type_control('outbound');</script>\n";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

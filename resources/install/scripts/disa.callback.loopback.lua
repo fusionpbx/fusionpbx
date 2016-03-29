@@ -27,12 +27,10 @@
 	debug["sql"] = true;
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 	api = freeswitch.API();
@@ -61,7 +59,7 @@ freeswitch.consoleLog("info", "[disa.callback] calling " .. aleg_number .. "\n")
 freeswitch.msleep(2000);
 
 while (session1:ready() and not session1:answered()) do
-	if os.time() > t_started + 30 then 
+	if os.time() > t_started + 30 then
 		freeswitch.consoleLog("info", "[disa.callback] timed out for " .. aleg_number .. "\n");
 		session1:hangup();
 	else
@@ -80,7 +78,7 @@ if session1:ready() and session1:answered() then
 
 	session2 = freeswitch.Session(b_dialstring);
 	while (session2:ready() and not session2:answered()) do
-		if os.time() > t_started2 + 30 then 
+		if os.time() > t_started2 + 30 then
 			freeswitch.consoleLog("info", "[disa.callback] timed out for " .. bleg_number .. "\n");
 			session2:hangup();
 		else

@@ -25,8 +25,8 @@
 */
 
 //if the recordings directory doesn't exist then create it
-	if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-		if (!is_readable($_SESSION['switch']['recordings']['dir'])) { mkdir($_SESSION['switch']['recordings']['dir'],0777,true); }
+	if (strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
+		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) { mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name,0777,true); }
 	}
 
 if ($domains_processed == 1) {
@@ -45,7 +45,7 @@ if ($domains_processed == 1) {
 						$recording_domain_uuid = $row['domain_uuid'];
 						$recording_filename = $row['recording_filename'];
 						//set recording directory
-							$recording_directory = $_SESSION['switch']['recordings']['dir'];
+							$recording_directory = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name;
 						//encode recording file (if exists)
 							if (file_exists($recording_directory.'/'.$recording_filename)) {
 								$recording_base64 = base64_encode(file_get_contents($recording_directory.'/'.$recording_filename));
@@ -78,7 +78,7 @@ if ($domains_processed == 1) {
 						$recording_filename = $row['recording_filename'];
 						$recording_base64 = $row['recording_base64'];
 						//set recording directory
-							$recording_directory = $_SESSION['switch']['recordings']['dir'];
+							$recording_directory = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name;
 						//remove local file, if any
 							if (file_exists($recording_directory.'/'.$recording_filename)) {
 								@unlink($recording_directory.'/'.$recording_filename);

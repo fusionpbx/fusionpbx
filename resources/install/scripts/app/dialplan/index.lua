@@ -19,8 +19,8 @@
 --	the Initial Developer. All Rights Reserved.
 
 --add functions
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
+	require "resources.functions.file_exists";
+	require "resources.functions.trim";
 
 --set the api object
 	api = freeswitch.API();
@@ -36,7 +36,6 @@
 	destination_number = session:getVariable("destination_number");
 	call_direction = session:getVariable("call_direction");
 	domain_name = session:getVariable("domain_name");
-	recordings_dir = session:getVariable("recordings_dir");
 
 --determine the call direction
 	if (call_direction == nil) then

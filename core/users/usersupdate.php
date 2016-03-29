@@ -341,7 +341,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 
 	// if call center installed
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
 
 		// update agent and tiers tables
 			$sql  = "update v_call_center_agents set agent_name = '".$username."' where domain_uuid = '".$domain_uuid."' and agent_name = '".$username_old."' ";
@@ -368,7 +368,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		$_SESSION["message"] = $text['message-update'];
-		if ($_REQUEST['submit'] == $text['button-add']) {
+		if ($_REQUEST['action'] == $text['button-add']) {
 			header("Location: usersupdate.php?id=".$user_uuid);
 		}
 		else {
@@ -435,13 +435,13 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "	}";
 	echo "</script>";
 
-	echo "<form method='post' action=''>";
-
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<input type='hidden' name='action' id='action' value=''>\n";
 	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_edit']."</b></td>\n";
 	echo "<td align='right' nowrap>\n";
 	echo "	<input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -462,7 +462,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "		<input type='txt' autocomplete='off' class='formfld' name='username' value='".$username."' required='required'>";
+		echo "		<input type='txt' class='formfld' name='username' value='".$username."' required='required'>";
 	}
 	else {
 		echo "		".$username;
@@ -472,7 +472,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-password']."</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-confirm_password']."</td>";
@@ -570,7 +570,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			}
 		}
 		echo "</select>";
-		echo "<input type='submit' name='submit' class='btn' value=\"".$text['button-add']."\">\n";
+		echo "<input type='button' class='btn' value=\"".$text['button-add']."\" onclick=\"document.getElementById('action').value = '".$text['button-add']."'; submit_form();\">\n";
 	}
 	unset($sql, $prep_statement, $result);
 
@@ -745,12 +745,29 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
 	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
+
+	if (permission_exists('user_setting_view')) {
+		require "user_settings.php";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

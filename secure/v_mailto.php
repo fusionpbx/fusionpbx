@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -102,7 +102,7 @@
 	}
 	else {
 		//get the headers
-			print_r($decoded[0]);
+			//print_r($decoded[0]);
 			$headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
 			$subject = $decoded[0]["Headers"]["subject:"];
 			$from = $decoded[0]["Headers"]["from:"];
@@ -196,7 +196,7 @@
 	echo "Reply-to: ".$reply_to."\n";
 	echo "To: ".$to."\n";
 	echo "Date: ".$date."\n";
-	echo "Body: ".$body."\n";
+	//echo "Body: ".$body."\n";
 
 //add to, from, fromname, custom headers and subject to the email
 	$mail->From = $smtp['from'] ;
@@ -275,7 +275,7 @@
 
 //add the body to the email
 	$body_plain = rip_tags($body);
-	echo "body_plain = $body_plain\n";
+	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body;
@@ -292,29 +292,38 @@
 		$mailer_error = $mail->ErrorInfo;
 		echo "Mailer Error: ".$mailer_error."\n\n";
 
-		// log/store message in database for review
-		$email_uuid = uuid();
-		$sql = "insert into v_emails ( ";
-		$sql .= "email_uuid, ";
-		$sql .= "call_uuid, ";
-		$sql .= "domain_uuid, ";
-		$sql .= "sent_date, ";
-		$sql .= "type, ";
-		$sql .= "status, ";
-		$sql .= "email ";
-		$sql .= ") values ( ";
-		$sql .= "'".$email_uuid."', ";
-		$sql .= "'".$headers["X-FusionPBX-Call-UUID"]."', ";
-		$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-		$sql .= "now(),";
-		$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-		$sql .= "'failed', ";
-		$sql .= "'".str_replace("'", "''", $msg)."' ";
-		$sql .= ") ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		$call_uuid = $headers["X-FusionPBX-Call-UUID"];
+		if ($resend == true) {
+			echo "Retained in v_emails \n";
+		} else {
+			// log/store message in database for review
+			$email_uuid = uuid();
+			$sql = "insert into v_emails ( ";
+			$sql .= "email_uuid, ";
+			if ($call_uuid) {
+				$sql .= "call_uuid, ";
+			}
+			$sql .= "domain_uuid, ";
+			$sql .= "sent_date, ";
+			$sql .= "type, ";
+			$sql .= "status, ";
+			$sql .= "email ";
+			$sql .= ") values ( ";
+			$sql .= "'".$email_uuid."', ";
+			if ($call_uuid) {
+				$sql .= "'".$call_uuid."', ";
+			}
+			$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+			$sql .= "now(),";
+			$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+			$sql .= "'failed', ";
+			$sql .= "'".str_replace("'", "''", $msg)."' ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
-		echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+		}
 
 	}
 	else {

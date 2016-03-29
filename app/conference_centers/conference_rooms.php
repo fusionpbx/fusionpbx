@@ -151,7 +151,7 @@ else {
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
+	echo "			<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-conference_rooms']."</b></td>\n";
 	echo "			<td width='50%' align='right' valign='top'>\n";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
@@ -175,7 +175,7 @@ else {
 		$row_count = $conference_center->room_count();
 
 	//prepare to page the results
-		$rows_per_page = 150;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
 		$page = check_str($_GET['page']);
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -212,7 +212,7 @@ else {
 		//echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 		echo th_order_by('record', $text['label-record'], $order_by, $order);
 		//echo th_order_by('max_members', 'Max', $order_by, $order);
-		echo th_order_by('wait_mod', $text['label-wait-moderator'], $order_by, $order);
+		echo th_order_by('wait_mod', $text['label-wait_moderator'], $order_by, $order);
 		echo th_order_by('announce', $text['label-announce'], $order_by, $order);
 		//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
 		echo th_order_by('mute', $text['label-mute'], $order_by, $order);

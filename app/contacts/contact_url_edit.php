@@ -48,12 +48,13 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the contact uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$url_label = check_str($_POST["url_label"]);
 		$url_label_custom = check_str($_POST["url_label_custom"]);
 		$url_address = check_str($_POST["url_address"]);
@@ -64,87 +65,98 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$url_label = ($url_label_custom != '') ? $url_label_custom : $url_label;
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the form data
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$contact_url_uuid = check_str($_POST["contact_url_uuid"]);
-	}
+		//set the uuid
+			if ($action == "update") {
+				$contact_url_uuid = check_str($_POST["contact_url_uuid"]);
+			}
 
-	//check for all required data
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
 
-		//if primary, unmark other primary numbers
-		if ($url_primary) {
-			$sql = "update v_contact_urls set url_primary = 0 ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
+				//update last modified
+				$sql = "update v_contacts set ";
+				$sql .= "last_mod_date = now(), ";
+				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and contact_uuid = '".$contact_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-		if ($action == "add") {
-			$contact_url_uuid = uuid();
-			$sql = "insert into v_contact_urls ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "contact_url_uuid, ";
-			$sql .= "url_label, ";
-			$sql .= "url_address, ";
-			$sql .= "url_primary, ";
-			$sql .= "url_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$contact_url_uuid."', ";
-			$sql .= "'".$url_label."', ";
-			$sql .= "'".$url_address."', ";
-			$sql .= (($url_primary) ? 1 : 0).", ";
-			$sql .= "'".$url_description."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				//if primary, unmark other primary numbers
+				if ($url_primary) {
+					$sql = "update v_contact_urls set url_primary = 0 ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
+					$sql .= "and contact_uuid = '".$contact_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "add")
+				if ($action == "add") {
+					$contact_url_uuid = uuid();
+					$sql = "insert into v_contact_urls ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "contact_url_uuid, ";
+					$sql .= "url_label, ";
+					$sql .= "url_address, ";
+					$sql .= "url_primary, ";
+					$sql .= "url_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					$sql .= "'".$contact_uuid."', ";
+					$sql .= "'".$contact_url_uuid."', ";
+					$sql .= "'".$url_label."', ";
+					$sql .= "'".$url_address."', ";
+					$sql .= (($url_primary) ? 1 : 0).", ";
+					$sql .= "'".$url_description."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-		if ($action == "update") {
-			$sql = "update v_contact_urls set ";
-			$sql .= "contact_uuid = '".$contact_uuid."', ";
-			$sql .= "url_label = '".$url_label."', ";
-			$sql .= "url_address = '".$url_address."', ";
-			$sql .= "url_primary = ".(($url_primary) ? 1 : 0).", ";
-			$sql .= "url_description = '".$url_description."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and contact_url_uuid = '".$contact_url_uuid."'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+					$_SESSION["message"] = $text['message-add'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "add")
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: contact_edit.php?id=".$contact_uuid);
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+				if ($action == "update") {
+					$sql = "update v_contact_urls set ";
+					$sql .= "contact_uuid = '".$contact_uuid."', ";
+					$sql .= "url_label = '".$url_label."', ";
+					$sql .= "url_address = '".$url_address."', ";
+					$sql .= "url_primary = ".(($url_primary) ? 1 : 0).", ";
+					$sql .= "url_description = '".$url_description."' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and contact_url_uuid = '".$contact_url_uuid."'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$_SESSION["message"] = $text['message-update'];
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {

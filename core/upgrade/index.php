@@ -52,7 +52,7 @@ if (sizeof($_POST) > 0) {
 
 	// run source update
 	if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
-		chdir("/var/www/fusionpbx/");
+		chdir($_SERVER["PROJECT_ROOT"]);
 		exec("git pull", $response_source_update);
 		$update_failed = true;
 		if (sizeof($response_source_update) > 0) {
@@ -72,10 +72,8 @@ if (sizeof($_POST) > 0) {
 			//update scripts folder, if allowed (default)
 				if ($_SESSION['switch']['scripts']['dir'] != '') {
 					//copy the files and directories from resources/install
-						$install = new install;
-						$install->domain_uuid = $domain_uuid;
-						$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-						$install->copy_scripts();
+						$obj = new install_switch;
+						$obj->upgrade();
 					//set the message
 						$response_message = $text['message-upgrade_source_scripts'];
 				}
@@ -131,7 +129,7 @@ if (sizeof($_POST) > 0) {
 	header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 	exit;
 
-} // if
+} // end if
 
 
 require_once "resources/header.php";
@@ -144,7 +142,7 @@ echo "<br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
-if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
+if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";

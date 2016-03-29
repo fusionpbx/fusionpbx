@@ -22,14 +22,14 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
+--include config.lua
+	require "resources.functions.config";
+
 --set variables
 	digit_timeout = "5000";
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists"
 
 --run if the session is ready
 	if ( session:ready() ) then
@@ -66,7 +66,7 @@
 
 		--if the screen file is found then set confirm to true
 			if (domain_name ~= nil) then
-				call_screen_file = "/tmp/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
+				call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
 				if (file_exists(call_screen_file)) then
 					confirm = "true";
 				end
@@ -83,7 +83,7 @@
 						digit = '';
 						if (file_exists(call_screen_file)) then
 							max_tries = "1";
-							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file, "", "\\d+");
+							digit = session:playAndGetDigits(min_digits, max_digits, max_tries, "500", "#", call_screen_file:gsub("\\","/"), "", "\\d+");
 						end
 						if (string.len(digit) == 0) then
 							max_tries = "3";

@@ -33,8 +33,10 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "resources/header.php";
-require_once "resources/paging.php";
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -44,18 +46,7 @@ require_once "resources/paging.php";
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
-//show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['title']."</span>";
-	echo "			<br /><br />\n";
-	echo "			".$text['description']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
-
+//get the fax extensions
 	if (if_group("superadmin") || if_group("admin")) {
 		//show all fax extensions
 		$sql = "select count(*) as num_rows from v_fax ";
@@ -81,7 +72,7 @@ require_once "resources/paging.php";
 	}
 	unset($prep_statement, $result);
 
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = check_str($_GET['page']);
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -109,8 +100,19 @@ require_once "resources/paging.php";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
+
+//show the content
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left'>\n";
+	echo "			<span class=\"title\">".$text['title-fax']." (".$num_rows.")</span>";
+	echo "			<br /><br />\n";
+	echo "			".$text['description']."\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -130,7 +132,7 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
+	if ($num_rows > 0) {
 		foreach($result as $row) {
 			//remove the backslash
 				$row['fax_email'] = str_replace("\\", "", $row['fax_email']);
@@ -168,6 +170,9 @@ require_once "resources/paging.php";
 				if (permission_exists('fax_log_view')) {
 					echo "		<a href='fax_logs.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
 				}
+				if (permission_exists('fax_active_view')) {
+					echo "		<a href='fax_active.php?id=".$row['fax_uuid']."'>".$text['label-active']."</a>";
+				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
@@ -182,7 +187,7 @@ require_once "resources/paging.php";
 			//alternate the CSS class
 				if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $result);
 	} //end if results
 
 	echo "<tr>\n";

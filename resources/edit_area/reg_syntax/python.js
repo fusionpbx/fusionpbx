@@ -1,8 +1,8 @@
 /**
- * Python syntax v 1.1 
- * 
+ * Python syntax v 1.1
+ *
  * v1.1 by Andre Roberge (2006/12/27)
- *   
+ *
 **/
 editAreaLoader.load_syntax["python"] = {
 	'COMMENT_SINGLE' : {1 : '#'}
@@ -17,7 +17,7 @@ editAreaLoader.load_syntax["python"] = {
 		*/
 		'reserved' : [
 			'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif',
-			'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 
+			'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if',
 			'import', 'is', 'in', 'lambda', 'not', 'or', 'pass', 'print', 'raise',
 			'return', 'try', 'while', 'with', 'yield'
 			//the following are *almost* reserved; we'll treat them as such
@@ -26,15 +26,15 @@ editAreaLoader.load_syntax["python"] = {
 		/*
 		** Set 2: builtins
 		** http://python.org/doc/current/lib/built-in-funcs.html
-		*/	
+		*/
 		,'builtins' : [
-			'__import__', 'abs', 'basestring', 'bool', 'callable', 'chr', 'classmethod', 'cmp', 
-			'compile', 'complex', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval', 'execfile', 
+			'__import__', 'abs', 'basestring', 'bool', 'callable', 'chr', 'classmethod', 'cmp',
+			'compile', 'complex', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval', 'execfile',
 			'file', 'filter', 'float', 'frozenset', 'getattr', 'globals', 'hasattr', 'hash', 'help',
 			'hex', 'id', 'input', 'int', 'isinstance', 'issubclass', 'iter', 'len', 'list', 'locals',
 			'long', 'map', 'max', 'min', 'object', 'oct', 'open', 'ord', 'pow', 'property', 'range',
 			'raw_input', 'reduce', 'reload', 'repr', 'reversed', 'round', 'set', 'setattr', 'slice',
-			'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode', 
+			'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode',
 			'vars', 'xrange', 'zip',
 			// Built-in constants: http://www.python.org/doc/2.4.1/lib/node35.html
 			//'False', 'True', 'None' have been included in 'reserved'
@@ -48,7 +48,7 @@ editAreaLoader.load_syntax["python"] = {
 			'UnboundlocalError', 'UnicodeError', 'UnicodeEncodeError', 'UnicodeDecodeError',
 			'UnicodeTranslateError', 'ValueError', 'WindowsError', 'ZeroDivisionError', 'Warning',
 			'UserWarning', 'DeprecationWarning', 'PendingDeprecationWarning', 'SyntaxWarning',
-			'RuntimeWarning', 'FutureWarning',		
+			'RuntimeWarning', 'FutureWarning',
 			// we will include the string methods as well
 			// http://python.org/doc/current/lib/string-methods.html
 			'capitalize', 'center', 'count', 'decode', 'encode', 'endswith', 'expandtabs',
@@ -100,14 +100,14 @@ editAreaLoader.load_syntax["python"] = {
 		*/
 		,'special' : [
 			// Basic customization: http://python.org/doc/current/ref/customization.html
-			'__new__', '__init__', '__del__', '__repr__', '__str__', 
+			'__new__', '__init__', '__del__', '__repr__', '__str__',
 			'__lt__', '__le__', '__eq__', '__ne__', '__gt__', '__ge__', '__cmp__', '__rcmp__',
 			'__hash__', '__nonzero__', '__unicode__', '__dict__',
 			// Attribute access: http://python.org/doc/current/ref/attribute-access.html
 			'__setattr__', '__delattr__', '__getattr__', '__getattribute__', '__get__', '__set__',
 			'__delete__', '__slots__',
 			// Class creation, callable objects
-			'__metaclass__', '__call__', 
+			'__metaclass__', '__call__',
 			// Container types: http://python.org/doc/current/ref/sequence-types.html
 			'__len__', '__getitem__', '__setitem__', '__delitem__', '__iter__', '__contains__',
 			'__getslice__', '__setslice__', '__delslice__',
@@ -139,6 +139,6 @@ editAreaLoader.load_syntax["python"] = {
 			}
 		,'OPERATORS' : 'color: #993300;'
 		,'DELIMITERS' : 'color: #993300;'
-				
+
 	}
 };

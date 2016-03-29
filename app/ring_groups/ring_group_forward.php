@@ -51,7 +51,7 @@ require_once "resources/paging.php";
 	if (!$is_included) {
 		echo "<table width='100%' border='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
+		echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
 		echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 		echo "	</tr>\n";
 		echo "	<tr>\n";
@@ -89,7 +89,15 @@ require_once "resources/paging.php";
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		if ($is_included == 'true') {
+			$rows_per_page = 10;
+			if ($num_rows > 10) {
+				echo "<script>document.getElementById('btn_viewall_ringgroups').style.display = 'inline';</script>\n";
+			}
+		}
+		else {
+			$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+		}
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -126,29 +134,20 @@ require_once "resources/paging.php";
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	//echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('ring_group_extension', $text['label-ring-group-extension'], $order_by, $order);
-	//echo th_order_by('ring_group_context', 'Context', $order_by, $order);
-	//echo th_order_by('ring_group_strategy', 'Strategy', $order_by, $order);
-	//echo th_order_by('ring_group_timeout_app', 'Timeout App', $order_by, $order);
-	//echo th_order_by('ring_group_timeout_data', 'Timeout Data', $order_by, $order);
-	//echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>";
 	echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order);
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_name']."&nbsp;</td>\n";
+			$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."'";
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_extension']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_context']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_strategy']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."&return_url=".urlencode($_SERVER['PHP_SELF'])."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
@@ -158,21 +157,11 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<center>".$paging_controls."</center>\n";
+
 	echo "</div>";
 
 //include the footer

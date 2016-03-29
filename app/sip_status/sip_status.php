@@ -93,16 +93,25 @@ if ($_GET['a'] == "download") {
 	}
 
 //get the gateways
-	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name from v_gateways as g, v_domains as d ";
-	$sql .= "where d.domain_uuid = g.domain_uuid ";
+	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name ";
+	$sql .= "from v_gateways as g left outer join v_domains as d on d.domain_uuid = g.domain_uuid";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+	if ($fp) {
+		$hostname = trim(event_socket_request($fp, 'api switchname'));
+	}
+
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
+	if ($hostname) {
+		$sql .= "and (sip_profile_hostname = '" . check_str($hostname) . "' ";
+		$sql .= "or sip_profile_hostname = '' ";
+		$sql .= "or sip_profile_hostname is null ) ";
+	}
 	$sql .= "order by sip_profile_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

@@ -38,7 +38,7 @@
 		--check to see if the greeting file exists
 			if (storage_type == "base64" or storage_type == "http_cache") then
 				greeting_invalid = true;
-				sql = [[SELECT * FROM v_voicemail_greetings 
+				sql = [[SELECT * FROM v_voicemail_greetings
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_id = ']].. voicemail_id.. [['
 					AND greeting_id = ']].. greeting_id.. [[' ]];
@@ -59,20 +59,20 @@
 			end
 
 		--validate the greeting_id
-			if (greeting_id == "0" 
-				or greeting_id == "1" 
-				or greeting_id == "2" 
-				or greeting_id == "3" 
-				or greeting_id == "4" 
-				or greeting_id == "5" 
-				or greeting_id == "6" 
-				or greeting_id == "7" 
-				or greeting_id == "8" 
+			if (greeting_id == "0"
+				or greeting_id == "1"
+				or greeting_id == "2"
+				or greeting_id == "3"
+				or greeting_id == "4"
+				or greeting_id == "5"
+				or greeting_id == "6"
+				or greeting_id == "7"
+				or greeting_id == "8"
 				or greeting_id == "9") then
 
 				--valid greeting_id update the database
 					if (session:ready()) then
-						if (greeting_id == "0") then 
+						if (greeting_id == "0") then
 							sql = [[UPDATE v_voicemails SET greeting_id = null ]];
 						else
 							sql = [[UPDATE v_voicemails SET greeting_id = ']]..greeting_id..[[' ]];
@@ -87,7 +87,7 @@
 
 				--get the greeting from the database
 					if (storage_type == "base64") then
-						sql = [[SELECT * FROM v_voicemail_greetings 
+						sql = [[SELECT * FROM v_voicemail_greetings
 							WHERE domain_uuid = ']] .. domain_uuid ..[['
 							AND voicemail_id = ']].. voicemail_id.. [['
 							AND greeting_id = ']].. greeting_id.. [[' ]];
@@ -96,7 +96,7 @@
 						end
 						status = dbh:query(sql, function(row)
 							--add functions
-								dofile(scripts_dir.."/resources/functions/base64.lua");
+								require "resources.functions.base64";
 
 							--set the voicemail message path
 								greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;

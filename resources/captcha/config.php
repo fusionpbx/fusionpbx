@@ -38,7 +38,7 @@ $pathtofonts = "/captcha/fonts/"; //path from the root of the website
           <td align='right'><input type="text" name="captcha" size="15"></td>
         </tr>
         </table>
-        
+
     //Option2:  or add this to the html form
 				<br>
 					<script language="JavaScript" type="text/javascript">
@@ -63,7 +63,7 @@ $pathtofonts = "/captcha/fonts/"; //path from the root of the website
     //add this to the top of the page where the form is submitted to
 
         //--- begin captcha verification ---------------------
-          //session_start(); //make sure sessions are started
+          //ini_set("session.cookie_httponly", True); session_start(); //make sure sessions are started
           if (strtolower($_SESSION["captcha"]) != strtolower($_REQUEST["captcha"]) || strlen($_SESSION["captcha"]) == 0) {
 
               echo "       <span class=\"h2\">Sorry!</span>\n";

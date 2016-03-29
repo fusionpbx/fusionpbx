@@ -10,7 +10,7 @@ $text['title-view_email']['sv-se'] = "Visa E-post";
 $text['title-view_email']['de-at'] = "Email anzeigen";
 
 $text['title-emails']['en-us'] = "Emails";
-$text['title-emails']['es-cl'] = "Los Correos Electr�nicos";
+$text['title-emails']['es-cl'] = "Los Correos Electrónicos";
 $text['title-emails']['pt-pt'] = "Emails";
 $text['title-emails']['fr-fr'] = "Courriels";
 $text['title-emails']['pt-br'] = "Emails";
@@ -37,25 +37,16 @@ $text['message-message_resent']['sv-se'] = "Meddelande Skickades";
 $text['message-message_resent']['de-at'] = "Nachricht erneut gesendet";
 
 $text['message-invalid_email']['en-us'] = "Invalid Email";
-$text['message-invalid_email']['es-cl'] = "No V�lida de Correo Electr�nico";
-$text['message-invalid_email']['pt-pt'] = "E-mail Inv�lido";
+$text['message-invalid_email']['es-cl'] = "No Válida de Correo Electrónico";
+$text['message-invalid_email']['pt-pt'] = "E-mail Inválido";
 $text['message-invalid_email']['fr-fr'] = "Adresse de courriel invalide";
 $text['message-invalid_email']['pt-br'] = "Endereço de E-mail Inválido";
 $text['message-invalid_email']['pl'] = "Nieprawidłowy adres email";
 $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
 $text['message-invalid_email']['de-at'] = "Ungültige E-Mail-Adresse";
 
-$text['message-delete']['en-us'] = "Delete Complete";
-$text['message-delete']['es-cl'] = "Eliminaci�n Completada";
-$text['message-delete']['pt-pt'] = "Remo��o Efectuada";
-$text['message-delete']['fr-fr'] = "Suppression effectuée";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
 $text['message-decoding_error']['en-us'] = "MIME Message Decoding Error";
-$text['message-decoding_error']['es-cl'] = "MIME Mensaje Decodificaci�n de error";
+$text['message-decoding_error']['es-cl'] = "MIME Mensaje Descodificación  de error";
 $text['message-decoding_error']['pt-pt'] = "MIME Mensagem Decoding erro";
 $text['message-decoding_error']['fr-fr'] = "Erreur de décodage du message MIME";
 $text['message-decoding_error']['pt-br'] = "MIME mensagem decoding erro";
@@ -71,6 +62,15 @@ $text['label-type_voicemail']['pt-br'] = "Correio de voz";
 $text['label-type_voicemail']['pl'] = "Poczta głosowa";
 $text['label-type_voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-type_voicemail']['de-at'] = "Mailbox";
+
+$text['label-type_email2fax']['en-us'] = "Email to fax report";
+$text['label-type_email2fax']['es-cl'] = "";
+$text['label-type_email2fax']['pt-pt'] = "";
+$text['label-type_email2fax']['fr-fr'] = "";
+$text['label-type_email2fax']['pt-br'] = "";
+$text['label-type_email2fax']['pl'] = "";
+$text['label-type_email2fax']['sv-se'] = "";
+$text['label-type_email2fax']['de-at'] = "";
 
 $text['label-type']['en-us'] = "Type";
 $text['label-type']['es-cl'] = "Tipo";
@@ -146,7 +146,7 @@ $text['label-reference_cdr']['de-at'] = "CDR";
 
 $text['label-reference']['en-us'] = "Reference";
 $text['label-reference']['es-cl'] = "Referencia";
-$text['label-reference']['pt-pt'] = "Refer�ncia";
+$text['label-reference']['pt-pt'] = "Referencia";
 $text['label-reference']['fr-fr'] = "Référence";
 $text['label-reference']['pt-br'] = "Referência";
 $text['label-reference']['pl'] = "Odniesienie";
@@ -191,7 +191,7 @@ $text['label-download']['de-at'] = "Download";
 
 $text['label-attachment']['en-us'] = "Attachment";
 $text['label-attachment']['es-cl'] = "Accesorio";
-$text['label-attachment']['pt-pt'] = "Acess�rio";
+$text['label-attachment']['pt-pt'] = "Accesorio";
 $text['label-attachment']['fr-fr'] = "Pièce jointe";
 $text['label-attachment']['pt-br'] = "Acessório";
 $text['label-attachment']['pl'] = "Załącznik";
@@ -208,7 +208,7 @@ $text['header-view_email']['sv-se'] = "Visa E-post";
 $text['header-view_email']['de-at'] = "Email anzeigen";
 
 $text['header-emails']['en-us'] = "Emails";
-$text['header-emails']['es-cl'] = "Los Correos Electr�nicos";
+$text['header-emails']['es-cl'] = "Los Correos Electrónico";
 $text['header-emails']['pt-pt'] = "Emails";
 $text['header-emails']['fr-fr'] = "Courriels";
 $text['header-emails']['pt-br'] = "Emails";
@@ -225,15 +225,6 @@ $text['description-emails']['pl'] = "Zarządzaj wiadomościami e-mail, które ni
 $text['description-emails']['sv-se'] = "Hantera misslyckade e-post meddelanden.";
 $text['description-emails']['de-at'] = "Fehlgeschlagene Email Nachrichten verwalten.";
 
-$text['confirm-delete']['en-us'] = "Are you sure you want to delete this?";
-$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
 $text['button-resend']['en-us'] = "Resend";
 $text['button-resend']['es-cl'] = "Vuelva a Enviar";
 $text['button-resend']['pt-pt'] = "Reenviar";
@@ -242,32 +233,5 @@ $text['button-resend']['pt-br'] = "Reenviar";
 $text['button-resend']['pl'] = "Wyślij ponownie";
 $text['button-resend']['sv-se'] = "Skicka Igen";
 $text['button-resend']['de-at'] = "Erneut senden";
-
-$text['button-refresh']['en-us'] = "Refresh";
-$text['button-refresh']['es-cl'] = "Actualizar";
-$text['button-refresh']['pt-pt'] = "Actualizar";
-$text['button-refresh']['fr-fr'] = "Rafraichir";
-$text['button-refresh']['pt-br'] = "Atualizar";
-$text['button-refresh']['pl'] = "Odśwież";
-$text['button-refresh']['sv-se'] = "Uppdatera";
-$text['button-refresh']['de-at'] = "Aktualisieren";
-
-$text['button-download']['en-us'] = "Download";
-$text['button-download']['es-cl'] = "Descargar";
-$text['button-download']['pt-pt'] = "Descarregar";
-$text['button-download']['fr-fr'] = "Télécharger";
-$text['button-download']['pt-br'] = "Download";
-$text['button-download']['pl'] = "Pobierz";
-$text['button-download']['sv-se'] = "Ladda Ned";
-$text['button-download']['de-at'] = "Download";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['de-at'] = "Zurück";
 
 ?>

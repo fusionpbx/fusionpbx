@@ -59,7 +59,7 @@
 	table.insert(xml, [[					<control action="vol listen dn" digits="4"/>]]);
 	table.insert(xml, [[					<control action="hangup" digits=""/>]]);
 	table.insert(xml, [[					<control action="execute_application" digits="0" data="lua app/conference_center/resources/scripts/mute.lua non_moderator"/>]]);
-	table.insert(xml, [[					<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>]]);	
+	table.insert(xml, [[					<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>]]);
 	table.insert(xml, [[				</group>]]);
 	table.insert(xml, [[				<group name="page">]]);
 	table.insert(xml, [[					<control action="mute" digits="0"/>]]);
@@ -103,7 +103,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="/tmp/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="wideband">]]);
@@ -131,7 +131,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="/tmp/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="ultrawideband">]]);
@@ -159,7 +159,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="/tmp/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="cdquality">]]);
@@ -187,7 +187,7 @@
 	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
 	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
 	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="/tmp/test.wav"/>]]);
+	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
 	table.insert(xml, [[				</profile>]]);
 
 	table.insert(xml, [[				<profile name="sla">]]);
@@ -261,7 +261,7 @@
 
 --send the xml to the console
 	if (debug["xml_string"]) then
-		local file = assert(io.open("/tmp/conference.conf.xml", "w"));
+		local file = assert(io.open(temp_dir .."/conference.conf.xml", "w"));
 		file:write(XML_STRING);
 		file:close();
 	end

@@ -305,7 +305,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"lua(streamfile.lua ".$row["recording_filename"].")\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$row["recording_filename"]."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -470,7 +470,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			if ($field['phrase_detail_function'] == 'play-file') {
 				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
 			}
 			echo "<tr>\n";
 			echo "	<td class='vtable'>".$phrase_detail_function."&nbsp;</td>\n";

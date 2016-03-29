@@ -24,12 +24,10 @@
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 if (session:ready()) then
@@ -49,29 +47,29 @@ if (session:ready()) then
 	fifo_count = api:executeString("fifo count " .. extension_queue);
 
 	-- freeswitch.consoleLog("notice", "fifo count " .. fifo_count .. "]\n");
-	
+
 	-- Parsing queue info
 	i = 0;
-	v = {};    
+	v = {};
 	for w in string.gmatch(fifo_count,"[^:]+") do
 		v[i] = w;
 		i = i + 1;
 	end
-	
+
 	fifo_name = v[0];
 	consumer_count = v[1];
 	caller_count = v[2];
 	member_count = v[3];
 	ring_consumer_count = v[4];
 	idle_consumer_count = v[5];
-	
+
 	if( not (member_count == "0") ) then
-		freeswitch.consoleLog("notice", "Adding member [" .. extension .. "] to fifo " .. extension_queue .. " \n");     
+		freeswitch.consoleLog("notice", "Adding member [" .. extension .. "] to fifo " .. extension_queue .. " \n");
 
 		session:execute("set", "fifo_member_add_result=${fifo_member(add " .. extension_queue .." {fifo_member_wait=nowait}user/" .. extension .. " " ..fifo_simo .. " " ..fifo_timeout .. " " .. fifo_lag .. "} )"); --simo timeout lag
 	end;
-  
-	-- Answerinf the call  
+
+	-- Answerinf the call
 	session:answer();
 	session:execute( "fifo", extension_queue .. " in" );
 end

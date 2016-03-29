@@ -661,7 +661,7 @@
 
 			//define singular function to convert a word in english to singular
 				private function singular($word) {
-					//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add 
+					//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 					if (substr($word, -2) == "es") {
 						if (substr($word, -3, 1) == "x") {
 							return substr($word,0,-2);

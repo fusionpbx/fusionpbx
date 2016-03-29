@@ -5,7 +5,7 @@
 	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 	<!--aliases are other names that will work as a valid profile name for this profile-->
 	<settings>
-		<param name="user-agent-string" value="FreeSWITCH Rocks!" enabled="false"/>
+		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
 		<param name="debug" value="0"/>
 		<param name="sip-trace" value="no"/>
 		<param name="context" value="public"/>
@@ -28,7 +28,7 @@
 		<param name="apply-inbound-acl" value="domains"/>
 		<param name="apply-register-acl" value="domains" enabled="false"/>
 		<param name="dtmf-type" value="info" enabled="false"/>
-		<param name="record-template" value="$${recordings_dir}/${caller_id_number}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
+		<param name="record-template" value="$${recordings_dir}/${caller_id_number}.${strftime(%Y-%m-%d-%H-%M-%S)}.${record_ext}"/>
 		<!--enable to use presence and mwi -->
 		<param name="manage-presence" value="true"/>
 		<!-- This setting is for AAL2 bitpacking on G726 -->

@@ -41,37 +41,48 @@ else {
 //set the variables
 	if (count($_GET)>0) {
 		$id = check_str($_GET["id"]);
-		$menu_uuid = check_str($_GET["menu_uuid"]);
 	}
 
-if (strlen($id)>0) {
-	//start the database transaction
-		$db->beginTransaction();
+//delete the data
+	if (strlen($id) == 36) {
+		//start the database transaction
+			$db->beginTransaction();
 
-	//delete the menu
-		$sql = "delete from v_menus ";
-		$sql .= "where menu_uuid = '$menu_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete the menu
+			$sql = "delete from v_menus ";
+			$sql .= "where menu_uuid = '$id'; ";
+			//echo $sql."\n";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 
-	//delete the items in the menu
-		$sql = "delete from v_menu_items ";
-		$sql .= "where menu_uuid = '$menu_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete the items in the menu
+			$sql = "delete from v_menu_items ";
+			$sql .= "where menu_uuid = '$id'; ";
+			//echo $sql."\n";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 
-	//delete the menu permissions
-		$sql = "delete from v_menu_item_groups ";
-		$sql .= "where menu_uuid = '$menu_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete the menu permissions
+			$sql = "delete from v_menu_item_groups ";
+			$sql .= "where menu_uuid = '$id'; ";
+			//echo $sql."\n";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 
-	//save the changes to the database
-		$db->commit();
-}
+		//delete the menu languages
+			$sql = "delete from v_menu_languages ";
+			$sql .= "where menu_uuid = '$id'; ";
+			//echo $sql."\n";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+
+		//save the changes to the database
+			$db->commit();
+	}
 
 //redirect the user
 	$_SESSION["message"] = $text['message-delete'];

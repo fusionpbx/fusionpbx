@@ -34,26 +34,24 @@
 	recording_prefix = "";
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
 
 --add functions
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+	require "resources.functions.mkdir";
+	require "resources.functions.explode";
 
 --initialize the recordings
 	api = freeswitch.API();
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -72,11 +70,12 @@
 			end
 		end
 	end
-	temp_dir = "";
-	if (settings['server'] ~= nil) then
-		if (settings['server']['temp'] ~= nil) then
-			if (settings['server']['temp']['dir'] ~= nil) then
-				temp_dir = settings['server']['temp']['dir'];
+	if (not temp_dir) or (#temp_dir == 0) then
+		if (settings['server'] ~= nil) then
+			if (settings['server']['temp'] ~= nil) then
+				if (settings['server']['temp']['dir'] ~= nil) then
+					temp_dir = settings['server']['temp']['dir'];
+				end
 			end
 		end
 	end
@@ -101,6 +100,8 @@
 			recording_slots = session:getVariable("recording_slots");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
+			record_ext = session:getVariable("record_ext");
+			domain_name = session:getVariable("domain_name");
 
 		--select the recording number
 			if (recording_slots) then
@@ -108,7 +109,7 @@
 				max_digits = 20;
 				session:sleep(1000);
 				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
-				recording_name = recording_prefix..recording_number..".wav";
+				recording_name = recording_prefix..recording_number.."."..record_ext;
 			end
 
 		--set the default recording name if one was not provided
@@ -116,7 +117,7 @@
 				--recording name is provided do nothing
 			else
 				--set a default recording_name
-				recording_name = "temp_"..session:get_uuid()..".wav";
+				recording_name = "temp_"..session:get_uuid().."."..record_ext;
 			end
 
 		--prompt for the recording
@@ -126,7 +127,7 @@
 		--begin recording
 			if (storage_type == "base64") then
 				--include the base64 function
-					dofile(scripts_dir.."/resources/functions/base64.lua");
+					require "resources.functions.base64";
 
 				--make the directory
 					mkdir(recordings_dir);
@@ -257,20 +258,9 @@ if ( session:ready() ) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
 
-	--set the base recordings dir
-		base_recordings_dir = recordings_dir;
+	--add the domain name to the recordings directory
+		recordings_dir = recordings_dir .. "/"..domain_name;
 
-	--use the recording_dir when the variable is set
-		if (session:getVariable("recordings_dir")) then
-			if (base_recordings_dir ~= session:getVariable("recordings_dir")) then
-				recordings_dir = session:getVariable("recordings_dir");
-			end
-		end
-
-	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
-		if (domain_count > 1) then
-			recordings_dir = recordings_dir .. "/" .. domain_name;
-		end
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

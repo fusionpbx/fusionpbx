@@ -1,0 +1,9 @@
+<context name="{v_context}">
+	<extension name="cidlookup" number="" continue="true" app_uuid="a0cb498c-6e09-441f-83ea-a7684565c44e" enabled="false">
+		<condition field="${user_exists}" expression="^true$"/>
+		<condition field="${call_direction}" expression="^inbound$">
+		<condition field="${module_exists(mod_cidlookup)}" expression="^true$"/>
+			<action application="set" data="effective_caller_id_name=${cidlookup(${caller_id_number})}"/>
+		</condition>
+	</extension>
+</context>

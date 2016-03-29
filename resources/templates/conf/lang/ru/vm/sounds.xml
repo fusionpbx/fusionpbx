@@ -55,7 +55,7 @@
       <match>
 	<action function="play-file" data="voicemail/vm-you_have.wav"/>
 	<action function="say" data="$1" method="pronounced" type="MESSAGES"/>
-	<action function="play-file" data="voicemail/vm-$2.wav"/> 
+	<action function="play-file" data="voicemail/vm-$2.wav"/>
 	<action function="play-file" data="voicemail/vm-message.wav"/>
 <!--	<action function="play-file" data="voicemail/vm-in_folder.wav"/>-->
       </match>
@@ -65,16 +65,16 @@
       <match>
 	<action function="play-file" data="voicemail/vm-you_have.wav"/>
 	<action function="say" data="$1" method="pronounced" type="MESSAGES"/>
-	<action function="play-file" data="voicemail/vm-$2x.wav"/> 
+	<action function="play-file" data="voicemail/vm-$2x.wav"/>
 	<action function="play-file" data="voicemail/vm-messagex.wav"/>
 <!--	<action function="play-file" data="voicemail/vm-in_folder.wav"/>-->
       </match>
     </input>
-    <input pattern="^(\d+[0,2-9][2-4]|[2-9][2-4]|[2-4]):(.*)$"> 
+    <input pattern="^(\d+[0,2-9][2-4]|[2-9][2-4]|[2-4]):(.*)$">
       <match>
 	<action function="play-file" data="voicemail/vm-you_have.wav"/>
 	<action function="say" data="$1" method="pronounced" type="MESSAGES"/>
-	<action function="play-file" data="voicemail/vm-$2x.wav"/> 
+	<action function="play-file" data="voicemail/vm-$2x.wav"/>
 	<action function="play-file" data="voicemail/vm-messages.wav"/>
 	<action function="play-file" data="voicemail/vm-in_folder.wav"/>
       </match>
@@ -299,9 +299,9 @@
   <macro name="voicemail_say_message_number">
     <input pattern="^([a-z]+):(\d+)$">
       <match>
-	<action function="play-file" data="voicemail/vm-$1.wav"/> 
+	<action function="play-file" data="voicemail/vm-$1.wav"/>
 	<action function="play-file" data="voicemail/vm-message_number.wav"/>
-	<action function="say" data="$2" method="pronounced" type="items"/> 
+	<action function="say" data="$2" method="pronounced" type="items"/>
       </match>
     </input>
   </macro>
@@ -322,7 +322,7 @@
     </input>
   </macro>
   <!-- Note: Update this to marked-urgent,emailed and saved once new sound files are recorded -->
-  <macro name="voicemail_ack"> 
+  <macro name="voicemail_ack">
     <input pattern="^(too-small)$">
       <match>
 	<action function="play-file" data="voicemail/vm-too-small.wav"/>

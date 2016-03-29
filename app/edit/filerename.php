@@ -93,7 +93,7 @@ else { //display form
 	echo "	  <td colspan='1' align='right'>";
 	echo "          <input type='hidden' name='folder' value='$folder'>";
 	echo "          <input type='hidden' name='filename' value='$filename'>";
-	echo "		    <input type='submit' value='".$text['button-rename-file']."'>";
+	echo "		    <input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-rename-file']."'>";
 	echo "    </td>";
 	echo "	</tr>";
 	echo "</table>";

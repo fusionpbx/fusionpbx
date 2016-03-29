@@ -199,11 +199,12 @@ require_once "resources/header.php";
 //refresh controls
 	function refresh_stop() {
 		clearInterval(interval_timer_id);
-		document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">"; }
 	}
 
 	function refresh_start() {
 		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
+		refresh_stop();
 		interval_timer_id = setInterval( function() {
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
@@ -356,7 +357,7 @@ require_once "resources/header.php";
 	}
 
 	function get_record_cmd(uuid) {
-		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
+		cmd = "uuid_record " + uuid + " start <?php echo $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']; ?>/archive/<?php echo date('Y')?>/<?php echo date('M')?>/<?php echo date('d')?>/" + uuid + ".wav";
 		return cmd;
 	}
 

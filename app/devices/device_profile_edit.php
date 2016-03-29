@@ -138,7 +138,7 @@ require_once "resources/require.php";
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
+					if (strlen($_SESSION['provision']['path']['text']) > 0) {
 						require_once "app/provision/provision_write.php";
 					}
 
@@ -257,6 +257,7 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_profiles.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php'\" value='".$text['button-copy']."'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -448,12 +449,69 @@ require_once "resources/require.php";
 				<?php
 				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 			}
+			if (strtolower($device_vendor) == "mitel" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
+				echo "<optgroup label='Mitel'>";
+				?>
+				<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-not_programmed'] ?></option>
+				<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
+				<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
+				<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
+				<option value='2' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>><?php echo $text['label-call_log'] ?></option>
+				<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>><?php echo $text['label-phone_book'] ?></option>
+				<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>><?php echo $text['label-forward'] ?></option>
+				<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
+				<option value='3' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>><?php echo $text['label-advisory_message'] ?></option>
+				<option value='18' <?php if ($row['device_key_type'] == "18") { echo $selected;$found=true; } ?>><?php echo $text['label-pc_application'] ?></option>
+				<option value='4' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>><?php echo $text['label-headset_on_off'] ?></option>
+				<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-rss_feed'] ?></option>
+				<option value='27' <?php if ($row['device_key_type'] == "27") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial_blf'] ?></option>
+				<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
+				<!--
+				0 - not programmed
+				1 - speed dial
+				2 - callLog
+				3 - advisoryMsg (on/off)
+				4 - headset(on/off)
+				5 - shared line
+				6 - Line 1
+				7 - Line 2
+				8 - Line 3
+				9 - Line 4
+				10 - Line 5
+				11 - Line 6
+				12 - Line 7
+				13 - Line 8
+				15 - phonebook
+				16 - call forwarding
+				17 - do not disturb
+				18 - PC Application
+				19 - RSS Feed URL / Branding /Notes
+				21 - Superkey (5304 set only)
+				22 - Redial key (5304 set only)
+				23 - Hold key (5304 set only)
+				24 - Trans/Conf key (5304 set only)
+				25 - Message key (5304 set only)
+				26 - Cancel key (5304 set only)
+				27 - Speed Dial & BLF
+
+				Mitel web interface shows html_application
+				-->
+				<?php
+				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
+			}
 			if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0) {
 				if (strlen($device_vendor) == 0) { echo "<optgroup label='Polycom'>"; }
 				?>
 				<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
 				<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
 				<option value='normal' <?php if ($row['device_key_type'] == "normal") { echo $selected;$found=true; } ?>><?php echo $text['label-normal'] ?></option>
+				<option value='Messages' <?php if ($row['device_key_type'] == "Messages") { echo $selected;$found=true; } ?>><?php echo $text['label-messages'] ?></option>
+				<option value='MicMute' <?php if ($row['device_key_type'] == "MicMute") { echo $selected;$found=true; } ?>><?php echo $text['label-micmute'] ?></option>
+				<option value='Redial' <?php if ($row['device_key_type'] == "Redial") { echo $selected;$found=true; } ?>><?php echo $text['label-redial'] ?></option>
+				<option value='Null' <?php if ($row['device_key_type'] == "Null") { echo $selected;$found=true; } ?>><?php echo $text['label-null'] ?></option>
+				<option value='SpeedDial' <?php if ($row['device_key_type'] == "SpeedDial") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddial'] ?></option>
+				<option value='SpeedDialMenu' <?php if ($row['device_key_type'] == "SpeedDialMenu") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddialmenu'] ?></option>
+				<option value='URL' <?php if ($row['device_key_type'] == "URL") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
 				<?php
 				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 			}

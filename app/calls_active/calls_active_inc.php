@@ -93,7 +93,21 @@ else {
 			echo "	</tr>";
 			echo "</table>";
 
-			echo "<b>".$text['title']."</b>";
+			$rows = array();
+			foreach ($results["rows"] as &$row) {
+				//determine show all
+					if (!($show == 'all' && permission_exists('call_active_all'))) {
+						$foreign_call = true;
+						foreach ($row as $key => $value) {
+							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
+						}
+						if ($foreign_call) { continue; }
+					}
+				// append call
+					$rows[] = $row;
+			}
+
+			echo "<b>".$text['title']." (" . count($rows) . ")"."</b>";
 			echo "<br><br>\n";
 			echo $text['description']."\n";
 			echo "<br><br>\n";
@@ -123,15 +137,7 @@ else {
 			echo "<td class='list_control_icon'></td>\n";
 			echo "</tr>\n";
 
-			foreach ($results["rows"] as $row) {
-				//determine show all
-					if (!($show == 'all' && permission_exists('call_active_all'))) {
-						$foreign_call = true;
-						foreach ($row as $key => $value) {
-							if (substr_count($value, $_SESSION['domain_name']) > 0) { $foreign_call = false; }
-						}
-						if ($foreign_call) { continue; }
-					}
+			foreach ($rows as &$row) {
 				//set the php variables
 					foreach ($row as $key => $value) {
 						$$key = $value;
@@ -177,6 +183,11 @@ else {
 						}
 					}
 
+				// reduce too long app data
+					if(strlen($application_data) > 512) {
+						$application_data = substr($application_data, 0, 512) . ' <b>...</b>';
+					}
+
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$sip_profile."&nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$created."&nbsp;</td>\n";
@@ -205,7 +216,7 @@ else {
 	//park
 		echo "	<a href='javascript:void(0);' onclick=\"send_cmd('calls_exec.php?cmd='+get_park_cmd(escape('$uuid'), '".$tmp_domain."'));\">".$text['label-park']."</a>&nbsp;\n";
 	//record start/stop
-		$tmp_dir = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d");
+		$tmp_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
 		mkdir($tmp_dir, 0777, true);
 		$tmp_file = $tmp_dir."/".$uuid.".wav";
 		if (file_exists($tmp_file)) {

@@ -25,7 +25,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --exits the script if we didn't connect properly
@@ -36,7 +36,7 @@
 	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 	table.insert(xml, [[<document type="freeswitch/xml">]]);
 	table.insert(xml, [[	<section name="directory">]]);
-	sql = "SELECT * FROM v_domains ";
+	sql = "SELECT domain_name FROM v_domains ";
 	dbh:query(sql, function(row)
 		table.insert(xml, [[		<domain name="]]..row.domain_name..[[" />]]);
 	end);

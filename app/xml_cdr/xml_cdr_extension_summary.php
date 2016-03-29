@@ -92,11 +92,15 @@ require_once "resources/require.php";
 	$result_count = count($result);
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$extensions[$row['extension']]['domain_uuid'] = $row['domain_uuid'];
-			$extensions[$row['extension']]['extension'] = $row['extension'];
-			$extensions[$row['extension']]['extension_uuid'] = $row['extension_uuid'];
-			$extensions[$row['extension']]['number_alias'] = $row['number_alias'];
-			$extensions[$row['extension']]['description'] = $row['description'];
+			$ext = $row['extension'];
+			if(strlen($row['number_alias']) > 0) {
+				$ext = $row['number_alias'];
+			}
+			$extensions[$ext]['domain_uuid'] = $row['domain_uuid'];
+			$extensions[$ext]['extension'] = $row['extension'];
+			$extensions[$ext]['extension_uuid'] = $row['extension_uuid'];
+			$extensions[$ext]['number_alias'] = $row['number_alias'];
+			$extensions[$ext]['description'] = $row['description'];
 		}
 	}
 	unset ($sql, $prep_statement, $result, $row_count);
@@ -226,7 +230,9 @@ require_once "resources/require.php";
 		echo "						".$text['label-start_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+		echo "						<div class='row'><div class='col-sm-12'>\n";
+		echo "							<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+		echo "						</div></div>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
@@ -239,7 +245,9 @@ require_once "resources/require.php";
 		echo "						".$text['label-end_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-		echo "						<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+		echo "						<div class='row'><div class='col-sm-12'>\n";
+		echo "							<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+		echo "						</div></div>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";

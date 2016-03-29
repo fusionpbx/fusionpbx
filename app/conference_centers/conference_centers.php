@@ -55,7 +55,7 @@ else {
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference-centers']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_centers']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	if (permission_exists('conference_active_advanced_view')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
@@ -65,11 +65,11 @@ else {
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<br />\n";
-	echo $text['description-conference-centers']."\n";
+	echo $text['description-conference_centers']."\n";
 	echo "<br /><br />\n";
 
 	//prepare to page the results
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 			//show all extensions
 			$sql = "select count(*) as num_rows from v_conference_centers ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -95,7 +95,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -103,7 +103,7 @@ else {
 		$offset = $rows_per_page * $page;
 
 	//get the list
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
 			//show all extensions
 			$sql = "select * from v_conference_centers ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -165,7 +165,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_extension']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_order']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['conference_center_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['conference_center_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_center_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_center_edit')) {

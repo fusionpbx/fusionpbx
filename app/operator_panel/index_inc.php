@@ -100,7 +100,7 @@ echo "					</td>";
 if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				<td valign='top' nowrap='nowrap'>";
 	if (sizeof($_SESSION['user']['extensions']) > 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extensions'][0] : $_REQUEST['eavesdrop_dest'])."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : $_REQUEST['eavesdrop_dest'])."\">";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		foreach ($_SESSION['user']['extensions'] as $user_extension) {
@@ -109,7 +109,7 @@ if (permission_exists('operator_panel_eavesdrop')) {
 		echo "				</select>\n";
 	}
 	else if (sizeof($_SESSION['user']['extensions']) == 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extensions'][0]."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extension'][0]['destination']."\">";
 	}
 	echo "				</td>";
 }
@@ -173,8 +173,8 @@ foreach ($activity as $extension => $ext) {
 			$call_number = $ext['dest'];
 		}
 		else {
-			$call_name = $activity[(int) $ext['dest']]['effective_caller_id_name'];
-			$call_number = format_phone((int) $ext['dest']);
+			$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
+			$call_number = format_phone($ext['dest']);
 		}
 		$dir_icon = 'outbound';
 	}
@@ -182,13 +182,13 @@ foreach ($activity as $extension => $ext) {
 		if ($ext['callstate'] == 'ACTIVE') {
 			$ext_state = 'active';
 			if ($ext['direction'] == 'inbound') {
-				$call_name = $activity[(int) $ext['dest']]['effective_caller_id_name'];
-				$call_number = format_phone((int) $ext['dest']);
+				$call_name = $activity[$ext['dest']]['effective_caller_id_name'];
+				$call_number = format_phone($ext['dest']);
 				$dir_icon = 'outbound';
 			}
 			else if ($ext['direction'] == 'outbound') {
-				$call_name = $activity[(int) $ext['cid_num']]['effective_caller_id_name'];
-				$call_number = format_phone((int) $ext['cid_num']);
+				$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+				$call_number = format_phone($ext['cid_num']);
 				$dir_icon = 'inbound';
 			}
 		}
@@ -201,8 +201,8 @@ foreach ($activity as $extension => $ext) {
 			$ext_state = 'active';
 		}
 		$dir_icon = 'inbound';
-		$call_name = $activity[(int) $ext['cid_num']]['effective_caller_id_name'];
-		$call_number = format_phone((int) $ext['cid_num']);
+		$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
+		$call_number = format_phone($ext['cid_num']);
 	}
 	else {
 		unset($ext_state, $dir_icon, $call_name, $call_number);
@@ -219,7 +219,12 @@ foreach ($activity as $extension => $ext) {
 		$call_identifier = $ext['variable_bridge_uuid'];
 	}
 	else {
-		$call_identifier = $ext['call_uuid']; // transfer all other call types
+		if( $ext['call_uuid'] ) {
+			$call_identifier = $ext['call_uuid']; // transfer all other call types
+		}
+		else {
+			$call_identifier = $ext['uuid']; // e.g. voice menus
+		}
 	}
 
 	//determine extension draggable state
@@ -328,7 +333,7 @@ foreach ($activity as $extension => $ext) {
 		}
 		//eavesdrop
 		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$ext['destination']."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
 		}
 		//kill
 		if (permission_exists('operator_panel_kill') || in_array($extension, $_SESSION['user']['extensions'])) {

@@ -20,7 +20,7 @@ $apps[$x]['menu'][0]['groups'][] = "user";
 $apps[$x]['menu'][0]['groups'][] = "admin";
 $apps[$x]['menu'][0]['groups'][] = "superadmin";
 
-$apps[$x]['menu'][1]['title']['en-us'] = "User Dashboard";
+$apps[$x]['menu'][1]['title']['en-us'] = "Dashboard";
 $apps[$x]['menu'][1]['title']['es-cl'] = "Dashboard Usuario";
 $apps[$x]['menu'][1]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 $apps[$x]['menu'][1]['title']['pt-pt'] = "Painel de Controle do Usuário";
@@ -29,7 +29,7 @@ $apps[$x]['menu'][1]['title']['pl'] = "Panel użytkowników";
 $apps[$x]['menu'][1]['title']['he'] = "ממשק משתמש";
 $apps[$x]['menu'][1]['title']['uk'] = "Панель користувача";
 $apps[$x]['menu'][1]['title']['sv-se'] = "Användarpanel";
-$apps[$x]['menu'][1]['title']['de-at'] = "Benutzer-Übersichtsseite";
+$apps[$x]['menu'][1]['title']['de-at'] = "Benutzerübersicht";
 $apps[$x]['menu'][1]['title']['ro'] = "Panou control utilizator";
 $apps[$x]['menu'][1]['title']['ar-eg'] = "الصفحه الرئيسيه للمستخدم";
 $apps[$x]['menu'][1]['uuid'] = "92c8ffdb-3c82-4f08-aec0-82421ec41bb5";

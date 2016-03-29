@@ -3,12 +3,10 @@
 	file_name = argv[1];
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --get the variables
@@ -25,7 +23,7 @@
 	if (not default_voice) then default_voice = 'callie'; end
 
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -44,31 +42,28 @@
 			end
 		end
 	end
-	temp_dir = "";
-	if (settings['server'] ~= nil) then
-		if (settings['server']['temp'] ~= nil) then
-			if (settings['server']['temp']['dir'] ~= nil) then
-				temp_dir = settings['server']['temp']['dir'];
+
+	if (not temp_dir) or (#temp_dir == 0) then
+		if (settings['server'] ~= nil) then
+			if (settings['server']['temp'] ~= nil) then
+				if (settings['server']['temp']['dir'] ~= nil) then
+					temp_dir = settings['server']['temp']['dir'];
+				end
 			end
 		end
 	end
 
 --set the recordings directory
-	if (domain_count > 1) then
-		recordings_dir = recordings_dir .. "/"..domain_name;
-	end
+	recordings_dir = recordings_dir .. "/"..domain_name;
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists";
 
 --define the on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
 			session:setVariable("dtmf_digits", obj['digit']);
-			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
+			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n");
 			if (obj['digit'] == "*") then
 				return("false"); --return to previous
 			elseif (obj['digit'] == "0") then
@@ -97,7 +92,7 @@
 --if base64, get from db, create temp file
 	if (storage_type == "base64") then
 		if (not file_exists(recordings_dir.."/"..file_name_only)) then
-			sql = [[SELECT * FROM v_recordings 
+			sql = [[SELECT * FROM v_recordings
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND recording_filename = ']].. file_name_only.. [[' ]];
 			if (debug["sql"]) then
@@ -105,7 +100,7 @@
 			end
 			status = dbh:query(sql, function(row)
 				--add functions
-					dofile(scripts_dir.."/resources/functions/base64.lua");
+					require "resources.functions.base64";
 				--add the path to filename
 					file_name = recordings_dir.."/"..file_name_only;
 				--save the recording to the file system
@@ -115,13 +110,13 @@
 						file:close();
 					end
 			end);
-		else 
+		else
 			file_name = recordings_dir.."/"..file_name_only;
 		end
-	end 
+	end
 
 --adjust file path
-	if (not file_exists(file_name)) then 
+	if (not file_exists(file_name)) then
 		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only)) then
 			file_name = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..file_name_only;
 		elseif (file_exists(recordings_dir.."/"..file_name_only)) then
@@ -133,20 +128,21 @@
 	if (session:ready()) then
 		session:answer();
 		slept = session:getVariable("slept");
-		if (slept == nil or slept == "false") then 
+		if (slept == nil or slept == "false") then
 			freeswitch.consoleLog("notice", "[ivr_menu] sleeping (1s)\n");
 			session:sleep(1000);
-			if (slept == "false") then 
+			if (slept == "false") then
 				session:setVariable("slept", "true");
 			end
 		end
 		session:setInputCallback("on_dtmf", "");
 		session:streamFile(file_name);
+		session:unsetInputCallback();
 	end
 
 --if base64, remove temp file (increases responsiveness when files remain local)
 	if (storage_type == "base64") then
 		if (file_exists(file_name)) then
 			--os.remove(file_name);
-		end 
+		end
 	end

@@ -180,6 +180,16 @@ $text['label-upgrade_apps']['sv-se'] = "App Standard";
 $text['label-upgrade_apps']['uk'] = "Типові значення додатків";
 $text['label-upgrade_apps']['de-at'] = "Applikationen zurücksetzen";
 
+$text['label-upgrade_switch']['en-us'] = "Switch Upgrade";
+$text['label-upgrade_switch']['es-cl'] = "";
+$text['label-upgrade_switch']['pt-pt'] = "";
+$text['label-upgrade_switch']['fr-fr'] = "";
+$text['label-upgrade_switch']['pt-br'] = "";
+$text['label-upgrade_switch']['pl'] = "";
+$text['label-upgrade_switch']['sv-se'] = "";
+$text['label-upgrade_switch']['uk'] = "";
+$text['label-upgrade_switch']['de-at'] = "";
+
 $text['label-upgrade']['en-us'] = "Upgrade";
 $text['label-upgrade']['es-cl'] = "Actualizar";
 $text['label-upgrade']['pt-pt'] = "Actualizar";
@@ -310,16 +320,6 @@ $text['header-source_update_results']['sv-se'] = "Resultat";
 $text['header-source_update_results']['uk'] = "Результати";
 $text['header-source_update_results']['de-at'] = "Ergebnisse";
 
-$text['header-message']['en-us'] = "Message";
-$text['header-message']['es-cl'] = "Mensaje";
-$text['header-message']['pt-pt'] = "Mensagem";
-$text['header-message']['fr-fr'] = "Message";
-$text['header-message']['pt-br'] = "Mensagem";
-$text['header-message']['pl'] = "Wiadomość";
-$text['header-message']['sv-se'] = "Meddelande";
-$text['header-message']['uk'] = "Повідомлення";
-$text['header-message']['de-at'] = "Nachricht";
-
 $text['header-database_type']['en-us'] = "Database Type";
 $text['header-database_type']['es-cl'] = "Tipo de base de datos";
 $text['header-database_type']['pt-pt'] = "Tipo de Base de Dados";
@@ -389,6 +389,16 @@ $text['description-upgrade_apps']['pl'] = "Przywraca domyślne ustawienia każde
 $text['description-upgrade_apps']['sv-se'] = "Återställer standardinställningar för alla applikationer.";
 $text['description-upgrade_apps']['uk'] = "Встановлює типові значення для додатків";
 $text['description-upgrade_apps']['de-at'] = "Setzt alle Applikationen auf die Standardeinstellungen zurück.";
+
+$text['description-upgrade_switch']['en-us'] = "Runs the upgrade switch routine.";
+$text['description-upgrade_switch']['es-cl'] = "";
+$text['description-upgrade_switch']['pt-pt'] = "";
+$text['description-upgrade_switch']['fr-fr'] = "";
+$text['description-upgrade_switch']['pt-br'] = "";
+$text['description-upgrade_switch']['pl'] = "";
+$text['description-upgrade_switch']['sv-se'] = "";
+$text['description-upgrade_switch']['uk'] = "";
+$text['description-upgrade_switch']['de-at'] = "";
 
 $text['description-upgrade']['en-us'] = "Select the actions below you wish to perform.";
 $text['description-upgrade']['es-cl'] = "Seleccione las acciones a continuación que desea realizar.";

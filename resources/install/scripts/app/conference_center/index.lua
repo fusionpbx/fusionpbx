@@ -13,7 +13,7 @@
 --	notice, this list of conditions and the following disclaimer in the
 --	documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED AS ''IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -26,7 +26,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx> 
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set variables
 	flags = "";
@@ -37,19 +37,19 @@
 	debug["sql"] = false;
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 --prepare the api object
 	api = freeswitch.API();
 
 --general functions
-	dofile(scripts_dir.."/resources/functions/base64.lua");
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
-	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
-	dofile(scripts_dir.."/resources/functions/mkdir.lua");
+	require "resources.functions.base64";
+	require "resources.functions.trim";
+	require "resources.functions.file_exists";
+	require "resources.functions.explode";
+	require "resources.functions.format_seconds";
+	require "resources.functions.mkdir";
 
 --get the session variables
 	uuid = session:getVariable("uuid");
@@ -80,7 +80,7 @@
 					end
 
 				--get the moderator_pin
-					sql = [[SELECT moderator_pin FROM v_meetings 
+					sql = [[SELECT moderator_pin FROM v_meetings
 					WHERE meeting_uuid = ']] .. meeting_uuid ..[[']];
 					freeswitch.consoleLog("notice", "[voicemail] sql: " .. sql .. "\n");
 					status = dbh:query(sql, function(row)
@@ -148,17 +148,18 @@
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
 			--recording = session:getVariable("recording");
+			domain_name = session:getVariable("domain_name");
 
 		--set the end epoch
 			end_epoch = os.time();
 
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--get the conference sessions
 			if (conference_session_uuid) then
-				sql = [[SELECT count(*) as num_rows 
+				sql = [[SELECT count(*) as num_rows
 					FROM v_conference_sessions
 					WHERE conference_session_uuid = ']] .. conference_session_uuid ..[[']];
 				status = dbh:query(sql, function(row)
@@ -339,6 +340,9 @@
 			--freeswitch.consoleLog("notice", "[conference center] destination_number: " .. destination_number .. "\n");
 			--freeswitch.consoleLog("notice", "[conference center] caller_id_number: " .. caller_id_number .. "\n");
 
+		--add the domain name to the recordings directory
+			recordings_dir = recordings_dir .. "/"..domain_name;
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -385,7 +389,7 @@
 			end
 
 		--check if someone has already joined the conference
-			local_hostname = trim(api:execute("hostname", ""));
+			local_hostname = trim(api:execute("switchname", ""));
 			freeswitch.consoleLog("notice", "[conference center] local_hostname is " .. local_hostname .. "\n");
 			sql = "SELECT hostname FROM channels WHERE application = 'conference' AND dest = '" .. destination_number .. "' AND cid_num <> '".. caller_id_number .."' LIMIT 1";
 			if (debug["sql"]) then
@@ -411,10 +415,6 @@
 
 		--add the domain to the recording directory
 			freeswitch.consoleLog("notice", "[conference center] domain_count: " .. domain_count .. "\n");
-			if (domain_count > 1) then
-				recordings_dir = recordings_dir.."/"..domain_name;
-				freeswitch.consoleLog("notice", "[conference center] recordings_dir: " .. recordings_dir .. "\n");
-			end
 
 		--sounds
 			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";
@@ -435,7 +435,7 @@
 		--define the function get_pin_number
 			function get_pin_number(domain_uuid, prompt_audio_file)
 				--if the pin number is provided then require it
-					if (not pin_number) then 
+					if (not pin_number) then
 						min_digits = 2;
 						max_digits = 20;
 						max_tries = 1;
@@ -447,16 +447,16 @@
 						WHERE r.domain_uuid = ']] .. domain_uuid ..[['
 						AND r.meeting_uuid = m.meeting_uuid
 						AND m.domain_uuid = ']] .. domain_uuid ..[['
-						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[') 
+						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
 						AND r.enabled = 'true'
-						AND r.enabled = 'true'
+						AND m.enabled = 'true'
 						AND (
-								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
-								( r.start_datetime = '' OR r.start_datetime is null ) 
+								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+								( r.start_datetime = '' OR r.start_datetime is null )
 							)
 						AND (
-								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
-								( r.stop_datetime = '' OR r.stop_datetime is null ) 
+								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+								( r.stop_datetime = '' OR r.stop_datetime is null )
 							) ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
@@ -496,7 +496,9 @@
 					AND r.conference_center_uuid = ']] .. conference_center_uuid ..[['
 					AND m.domain_uuid = ']] .. domain_uuid ..[['
 					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-					AND r.enabled = 'true' ]];
+					AND r.enabled = 'true'
+					AND m.enabled = 'true'
+					]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
 				end
@@ -589,7 +591,7 @@
 							max_len_seconds = 5;
 							silence_threshold = "500";
 							silence_secs = "3";
-							session:recordFile("/tmp/conference-"..uuid..".wav", max_len_seconds, silence_threshold, silence_secs);
+							session:recordFile(temp_dir:gsub("\\","/") .. "/conference-"..uuid..".wav", max_len_seconds, silence_threshold, silence_secs);
 					end
 
 				--play a message that the conference is being a recorded
@@ -678,7 +680,7 @@
 				--announce the caller
 					if (announce == "true") then
 						--announce the caller - play the recording
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." play /tmp/conference-"..uuid..".wav";
+							cmd = "conference "..meeting_uuid.."-"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 							response = api:executeString(cmd);
 						--play has entered the conference
@@ -707,7 +709,7 @@
 						--there is one other member in this conference
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
 					elseif (member_count == "0") then
-						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-alone.wav");
+						--conference profile defines the alone sound file
 					else
 						--say the count
 							session:execute("say", default_language.." number pronounced "..member_count);

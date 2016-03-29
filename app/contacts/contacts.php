@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,7 +55,8 @@ else {
 	foreach ($_SESSION['groups'] as $group_data) {
 		$user_group_uuids[] = $group_data['group_uuid'];
 	}
-	//add user's uuid to group uuid list to include private (non-shared) contacts
+
+//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //get contact sync sources
@@ -71,7 +72,7 @@ else {
 	$sql .= "and contact_setting_name = 'array' ";
 	$sql .= "and contact_setting_value <> '' ";
 	$sql .= "and contact_setting_value is not null ";
-	if (sizeof($user_group_uuids) > 0) {
+	if (!(if_group("superadmin") || if_group("admin"))) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
@@ -81,7 +82,8 @@ else {
 		$sql .= "	or \n";
 		$sql .= "	contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
@@ -99,17 +101,18 @@ else {
 	$sql = "select count(*) as num_rows ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (sizeof($user_group_uuids) > 0) {
+	if (!(if_group("superadmin") || if_group("admin"))) {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
 		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
-		$sql .= "	or \n";
-		$sql .= "	contact_uuid not in ( \n";
-		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "	or contact_uuid in ( \n";
+		$sql .= "		select contact_uuid from v_contact_users ";
+		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "";
 		$sql .= "	) \n";
 		$sql .= ") \n";
 	}
@@ -163,7 +166,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -177,7 +180,10 @@ else {
 		$sql .= "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+		$sql .= "order by last_mod_date desc ";
+		if ($db_type == "pgsql") {
+			$sql .= "nulls last ";
+		}
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));

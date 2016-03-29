@@ -207,7 +207,7 @@ else {
 						$label = $text['label-11d'];
 						$abbrv = "11d";
 						break;
-					case "^\+?1?(\d{10})$":
+					case "^(?:\+?1)?(\d{10})$":
 						$label = $text['label-north-america'];
 						$abbrv = "10-11d";
 						break;
@@ -401,13 +401,6 @@ else {
 							$dialplan_detail_group = '0';
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 						}
-
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'sip_h_X-Tag=';
-						$dialplan_detail_order = '015';
-						$dialplan_detail_group = '0';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
@@ -427,7 +420,12 @@ else {
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
+						if ($dialplan_expression == '^(911)$') {
+							$dialplan_detail_data = 'effective_caller_id_name=${emergency_caller_id_name}';
+						}
+						else {
+							$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
+						}
 						$dialplan_detail_order = '030';
 						$dialplan_detail_group = '0';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -937,19 +935,21 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-toll_allow']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='toll_allow_enabled'>\n";
-	echo "		<option value='true'                 >".$text['label-true']."</option>\n";
-	echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-enable-toll_allow']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('outbound_route_toll_allow_lua')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-toll_allow']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='toll_allow_enabled'>\n";
+		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-enable-toll_allow']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";

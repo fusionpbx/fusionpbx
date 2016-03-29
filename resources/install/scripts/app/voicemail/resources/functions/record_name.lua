@@ -44,7 +44,7 @@
 			--record and save the file
 				if (storage_type == "base64") then
 					--include the base64 function
-						dofile(scripts_dir.."/resources/functions/base64.lua");
+						require "resources.functions.base64";
 
 					--set the location
 						voicemail_name_location = voicemail_dir.."/"..voicemail_id.."/recorded_name.wav";

@@ -40,10 +40,15 @@ require_once "resources/header.php";
 	$language = new text;
 	$text = $language->get();
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //load available presets
-	foreach ($_SESSION['time_conditions']['preset'] as $json) {
+	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
+	foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
 		$available_presets[] = json_decode($json, true);
 	}
+	unset($preset_region);
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -245,7 +250,14 @@ require_once "resources/header.php";
 			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 			//set group and order number
-			$dialplan_detail_group = $group_id;
+
+			$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
+			if($dialplan_detail_group_user!='') {
+				$dialplan_detail_group = $dialplan_detail_group_user;
+			} else {
+				$dialplan_detail_group = $group_id;
+			}
+
 			$dialplan_detail_order = 0;
 
 			foreach ($conditions as $cond_num => $cond_var) {
@@ -722,7 +734,7 @@ require_once "resources/header.php";
 		tb.id = obj.id;
 		tb.className = 'formfld';
 		tb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
-		tb.setAttribute('data-calendar', "{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}");
+		tb.addClass('datetimepicker');
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 	}
@@ -731,6 +743,7 @@ require_once "resources/header.php";
 		sb = document.createElement('SELECT');
 		sb.name = obj.name;
 		sb.id = obj.id;
+		sb.removeClass('datetimepicker');
 		sb.className = 'formfld';
 		sb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px;');
 		obj.parentNode.insertBefore(sb, obj);
@@ -785,7 +798,7 @@ echo "<form method='post' name='frm' action='' onsubmit=\"return check_submit();
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
 echo "		<td align='left' valign='top'>\n";
-echo "			<span class='title'>".$text['title-time-conditions']."</span>";
+echo "			<span class='title'>".$text['title-time_conditions']."</span>";
 echo "			<br /><br />\n";
 echo "			".$text['description-time_conditions']."\n";
 echo "		</td>\n";
@@ -826,14 +839,14 @@ echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
-function add_custom_condition($group_id, $dialplan_action = '') {
+function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	global $text, $v_link_label_add;
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-settings'];
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0' style='margin: -2px;'>\n";
 	echo "		<tr>\n";
 	echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
 	echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
@@ -843,10 +856,16 @@ function add_custom_condition($group_id, $dialplan_action = '') {
 	echo "		<tr>";
 	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
 	echo "		</tr>";
+	echo "		</tr>";
+	echo "			<td colspan='2' class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
+	//echo "			<td colspan='2' class='vtable'>".$text['label-group']."</td>\n";
+	echo "		</tr>";
 	echo "		<tr>";
-	echo "			<td colspan='4' style='padding-top: 10px;'>";
-						switch_select_destination("dialplan", '', "dialplan_action[".$group_id."]", $dialplan_action, 'width: 300px;', '');
+	echo "			<td colspan='2' style='padding-top: 3px; padding-right: 3px; white-space: nowrap;'>";
+	//$destination = new destinations;
+	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
 	echo "			</td>";
+	echo "			<td colspan='2' style='padding-top: 3px;'><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
 	echo "		</tr>";
 	echo "	</table>";
 	echo "	<br />";
@@ -859,7 +878,7 @@ if ($action == 'update') {
 	$largest_group_id = 0;
 	foreach ($current_conditions as $group_id => $conditions) {
 		if (!is_array($current_presets) || (is_array($current_presets) && !in_array($group_id, $current_presets))) {
-			add_custom_condition($group_id, $dialplan_actions[$group_id]);
+			add_custom_condition($destination, $group_id, $dialplan_actions[$group_id]);
 			foreach ($conditions as $cond_var => $cond_val) {
 				$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
 				$tmp = explode($range_indicator, $cond_val);
@@ -905,7 +924,7 @@ if ($action == 'update') {
 	else {
 		$group_id = $largest_group_id += 5;
 	}
-	add_custom_condition($group_id);
+	add_custom_condition($destination, $group_id);
 	echo "<script>";
 	echo "	add_condition(".$group_id.",'custom');";
 	if ($action == 'add' || ($action == 'update' && $largest_group_id == 0)) {
@@ -945,7 +964,7 @@ if ($action == 'update') {
 				echo "		</tr>";
 				echo "		<tr>";
 				echo "			<td colspan='4' style='padding-top: 10px;'>";
-									switch_select_destination("dialplan", $text['label-select_destination'], "dialplan_action[".$preset_group_id."]", $dialplan_action, 'width: 300px;', '', 'alternate_destination_required();');
+				echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_action);
 				echo "			</td>";
 				echo "		</tr>";
 				echo "	</table>";
@@ -1013,7 +1032,7 @@ if ($action == 'update') {
 		echo "			<td>";
 		echo "				<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });\" value='".$text['button-advanced']."'>\n";
 		echo "				<span id='default_preset_destination' style=' display: none;'>";
-								switch_select_destination("dialplan", $text['label-select_default_destination'], "default_preset_action", $dialplan_action, 'width: 300px;', '', 'alternate_destination_required();');
+		echo 				$destination->select('dialplan', 'default_preset_action', $dialplan_action);
 		echo "				</span>";
 		echo "			</td>";
 		echo "		</tr>";
@@ -1029,7 +1048,7 @@ echo "<td id='td_alt_dest' class='vncell' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-alternate-destination']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-		switch_select_destination("dialplan", ' ', "dialplan_anti_action", $dialplan_anti_action, 'width: 300px;', '');
+echo 				$destination->select('dialplan', 'dialplan_anti_action', $dialplan_anti_action);
 echo "</td>\n";
 echo "</tr>\n";
 

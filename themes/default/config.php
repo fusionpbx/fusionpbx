@@ -1,9 +1,12 @@
 <?php
 
 //define the link labels
-	$v_link_label_edit = "<img src='".PROJECT_PATH."/themes/default/images/icon_e.png' width='17' height='17' alt='edit' border='0'>";
-	$v_link_label_add = "<img src='".PROJECT_PATH."/themes/default/images/icon_plus.png' width='17' height='17' border='0' alt='add'>";
-	$v_link_label_delete = "<img src='".PROJECT_PATH."/themes/default/images/icon_x.png' width='17' height='17' alt='delete' border='0'>";
-	$v_link_label_view = "<img src='".PROJECT_PATH."/themes/default/images/icon_view.gif' width='17' height='17' border='0' alt='add'>";
+	$v_link_label_edit = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-pencil'></span></button>";
+	$v_link_label_add = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-plus'></span></button>";
+	$v_link_label_delete = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-remove'></span></button>";
+	$v_link_label_view = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-eye-open'></span></button>";
+	$v_link_label_play = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-play'></span></button>";
+	$v_link_label_pause = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-pause'></span></button>";
+	$v_link_label_download = "<button type='button' class='btn btn-default list_control_icon'><span class='glyphicon glyphicon-cloud-download'></span></button>";
 
 ?>

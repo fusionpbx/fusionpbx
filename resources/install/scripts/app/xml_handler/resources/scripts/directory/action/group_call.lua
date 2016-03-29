@@ -34,7 +34,7 @@
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") then
 		--connect to the database
-			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
 		--exits the script if we didn't connect properly
@@ -57,9 +57,9 @@
 
 		--build the call group array
 			sql = [[
-			select * from v_extensions 
-			where domain_uuid = ']]..domain_uuid..[[' 
-			order by call_group asc 
+			select * from v_extensions
+			where domain_uuid = ']]..domain_uuid..[['
+			order by call_group asc
 			]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");

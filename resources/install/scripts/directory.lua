@@ -34,21 +34,17 @@
 	search_count = 0;
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
-
---include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+--include functions
+	require "resources.functions.format_ringback"
+
 --settings
-	dofile(scripts_dir.."/resources/functions/settings.lua");
+	require "resources.functions.settings";
 	settings = settings(domain_uuid);
 	storage_type = "";
 	storage_path = "";
@@ -95,51 +91,22 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--set ringback
+			directory_ringback = format_ringback(session:getVariable("ringback"));
+			session:setVariable("ringback", directory_ringback);
+			session:setVariable("transfer_ringback", directory_ringback);
+
 		--set the sounds path for the language, dialect and voice
-			ringback = session:getVariable("ringback");
-			if (ringback) then
-				ringback = ringback:gsub("$", "");
-				ringback = ringback:gsub("{", "");
-				ringback = ringback:gsub("}", "");
-			end
 			session:setVariable("instant_ringback", "true");
 			session:setVariable("ignore_early_media", "true");
-			if (not ringback) then
-				session:execute("set", "ringback=local_stream://default"); --set to ringtone
-				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
-			elseif (ringback == "uk-ring") then
-				session:setVariable("ringback", "%(400,200,400,450);%(400,2200,400,450)");
-				session:setVariable("transfer_ringback", "%(400,200,400,450);%(400,2200,400,450)");
-			elseif (ringback == "us-ring") then
-				session:setVariable("ringback", "%(2000, 4000, 440.0, 480.0)");
-				session:setVariable("transfer_ringback", "%(2000, 4000, 440.0, 480.0)");
-			elseif (ringback == "pt-ring") then
-				session:setVariable("ringback", "%(1000, 5000, 400.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 5000, 400.0, 0.0)");
-			elseif (ringback == "fr-ring") then
-				session:setVariable("ringback", "%(1500, 3500, 440.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1500, 3500, 440.0, 0.0)");
-			elseif (ringback == "rs-ring") then
-				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
-			elseif (ringback == "it-ring") then
-				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
-			else
-				session:execute("set", "ringback=local_stream://default"); --set to ringtone
-				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
-			end
 
 		--define the sounds directory
 			sounds_dir = session:getVariable("sounds_dir");
 			sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice;
 	end
 
---get session variables
-	base_dir = session:getVariable("base_dir");
-
 --set the voicemail_dir
-	voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
+	voicemail_dir = settings['switch']['voicemail']['dir'].."/default/"..domain_name;
 	if (debug["info"]) then
 		freeswitch.consoleLog("notice", "[directory] voicemail_dir: " .. voicemail_dir .. "\n");
 	end
@@ -158,16 +125,8 @@
 		end
 	end
 
---define explode
-	function explode ( seperator, str ) 
-		local pos, arr = 0, {}
-		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-			pos = sp + 1 -- jump past current divider
-		end
-		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-		return arr
-	end
+--define the explode function
+	require "resources.functions.explode"
 
 --define a function to convert dialpad letters to numbers
 	function dialpad_to_digit(letter)
@@ -200,18 +159,13 @@
 		return count
 	end
 
---define trim
-	function trim (s)
-		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-	end
+--define the trim function
+	require "resources.functions.trim"
 
 --check if a file exists
-	function file_exists(name)
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
-	end
+	require "resources.functions.file_exists"
 
---define select_entry function 
+--define select_entry function
 	function select_entry()
 		dtmf_digits = "";
 		digit_timeout = "500";
@@ -228,7 +182,7 @@
 		return dtmf_digits;
 	end
 
---define prompt_for_name function 
+--define prompt_for_name function
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
@@ -242,7 +196,7 @@
 		--get the digits for the name
 			dtmf_digits = prompt_for_name();
 
-		--show the dtmf digits 
+		--show the dtmf digits
 			freeswitch.consoleLog("notice", "[directory] first 3 letters of first or last name: " .. dtmf_digits .. "\n");
 
 		--loop through the extensions to find matches
@@ -257,10 +211,10 @@
 				--end
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
-					if (row.first_name and row.last_name) then
+					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemails 
+								sql = [[SELECT * FROM v_voicemails
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. row.extension.. [[' ]];
 								if (debug["sql"]) then
@@ -268,7 +222,7 @@
 								end
 								status = dbh:query(sql, function(field)
 									--add functions
-										dofile(scripts_dir.."/resources/functions/base64.lua");
+										require "resources.functions.base64";
 
 									--set the voicemail message path
 										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";
@@ -287,7 +241,9 @@
 											--announce the first and last names
 											session:execute("say", "en name_spelled iterated "..row.first_name);
 											--session:execute("sleep", "500");
-											session:execute("say", "en name_spelled iterated "..row.last_name);
+											if (row.last_name ~= nil) then
+												session:execute("say", "en name_spelled iterated "..row.last_name);
+											end
 										end
 								end);
 							elseif (storage_type == "http_cache") then
@@ -304,8 +260,10 @@
 								else
 									--announce the first and last names
 										session:execute("say", "en name_spelled iterated "..row.first_name);
-										--session:execute("sleep", "500");
-										session:execute("say", "en name_spelled iterated "..row.last_name);
+										if (row.last_name ~= nil) then
+											--session:execute("sleep", "500");
+											session:execute("say", "en name_spelled iterated "..row.last_name);
+										end
 								end
 							end
 

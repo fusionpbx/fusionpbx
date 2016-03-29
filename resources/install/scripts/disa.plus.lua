@@ -31,29 +31,19 @@ digit_timeout = "5000";
 	debug["sql"] = true;
 
 --include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
+	require "resources.functions.config";
 
 --connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
 	api = freeswitch.API();
 
-function trim (s)
-	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-end
+--define the trim function
+	require "resources.functions.trim";
 
-function explode ( seperator, str ) 
-	local pos, arr = 0, {}
-	for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
-		table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
-		pos = sp + 1 -- jump past current divider
-	end
-	table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
-	return arr
-end
+--define the explode function
+	require "resources.functions.explode";
 
 if ( session:ready() ) then
 	session:answer( );
@@ -205,7 +195,7 @@ if ( session:ready() ) then
 			end
 
 			--contact exists
-			--looks for caller_id_name and caller_id_name 
+			--looks for caller_id_name and caller_id_name
 		end
 
 	--if a predefined_destination is provided then set the number to the predefined_destination
@@ -231,7 +221,7 @@ if ( session:ready() ) then
 			else
 				caller_id_number = session:getVariable("effective_caller_id_number");
 			end
-		else 
+		else
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
@@ -254,7 +244,7 @@ if ( session:ready() ) then
 			freeswitch.consoleLog("notice", "[disa] cmd "..cmd.."\n");
 			api:executeString(cmd);
 			session:hangup("NORMAL_CLEARING");
-			return;		
+			return;
 		end
 
 

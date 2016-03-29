@@ -70,7 +70,7 @@
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //add rating functions if the billing is installed
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 		require_once "app/billing/resources/functions/rating.php";
 	}
 
@@ -80,10 +80,10 @@
 			global $debug;
 
 		//fix the xml by escaping the contents of <sip_full_XXX>
-			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/", 
+			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/",
 				function ($matches) {
 					return '<' . $matches[1] . '>' .
-						str_replace(">", "&gt;", 
+						str_replace(">", "&gt;",
 							str_replace("<", "&lt;", $matches[2])
 						) .
 					'</' . $matches[1] . '>';
@@ -192,6 +192,12 @@
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
 			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
+		//get the domain name from sip_req_host
+			if (strlen($domain_name) == 0) {
+				$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+			}
+
+		//send the domain name to the cdr log
 			xml_cdr_log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
 
 		//get the domain_uuid with the domain_name
@@ -205,21 +211,19 @@
 				}
 				$row = $db->query($sql)->fetch();
 				$domain_uuid = $row['domain_uuid'];
-				if (strlen($domain_uuid) == 0) {
-					$sql = "select domain_name, domain_uuid from v_domains ";
-					$row = $db->query($sql)->fetch();
-					$domain_uuid = $row['domain_uuid'];
-					if (strlen($domain_name) == 0) { $domain_name = $row['domain_name']; }
-				}
 			}
 
 		//set values in the database
-			$database->domain_uuid = $domain_uuid;
-			$database->fields['domain_uuid'] = $domain_uuid;
-			$database->fields['domain_name'] = $domain_name;
+			if (strlen($domain_uuid) > 0) {
+				$database->domain_uuid = $domain_uuid;
+				$database->fields['domain_uuid'] = $domain_uuid;
+			}
+			if (strlen($domain_name) > 0) {
+				$database->fields['domain_name'] = $domain_name;
+			}
 
 		//check whether a recording exists
-			$recording_relative_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+			$recording_relative_path = '/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			if (file_exists($_SESSION['switch']['recordings']['dir'].$recording_relative_path.'/'.$uuid.'.wav')) {
 				$recording_file = $recording_relative_path.'/'.$uuid.'.wav';
 			}
@@ -246,7 +250,7 @@
 			}
 
 		//billing information
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
@@ -290,7 +294,7 @@
 					case "inbound":
 							$callee_number = check_str(urldecode($row->caller_profile->destination_number));
 							$callee_number_serie = number_series($callee_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment FROM v_lcr JOIN v_billings ON v_billings.type_value='$accountcode' WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND v_lcr.lcr_profile=v_billings.lcr_profile AND NOW() >= v_lcr.date_start AND NOW() < v_lcr.date_end AND digits IN ($callee_number_serie) ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";

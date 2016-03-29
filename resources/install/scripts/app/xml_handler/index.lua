@@ -23,25 +23,10 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
---set defaults
-	expire = {}
-	expire["directory"] = "3600";
-	expire["dialplan"] = "3600";
-	expire["languages"] = "3600";
-	expire["sofia.conf"] = "3600";
-	load_balancing = false;
-
---set the debug options
-	debug["params"] = false;
-	debug["sql"] = false;
-	debug["xml_request"] = false;
-	debug["xml_string"] = false;
-	debug["cache"] = false;
-
 --general functions
-	dofile(scripts_dir.."/resources/functions/trim.lua");
-	dofile(scripts_dir.."/resources/functions/file_exists.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
+	require "resources.functions.trim";
+	require "resources.functions.file_exists";
+	require "resources.functions.explode";
 
 --if the params class and methods do not exist then add them to prevent errors
 	if (not params) then
