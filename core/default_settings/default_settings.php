@@ -427,16 +427,13 @@ else {
 			}
 			else {
 				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					$border = (
-						substr_count(strtolower($row['default_setting_value']), '#fff') > 0 ||
-						substr_count(strtolower($row['default_setting_value']), '#ffffff') > 0 ||
-						substr_count(str_replace(' ','',strtolower($row['default_setting_value'])), '255,255,255,') > 0
-					) ? "border: 1px solid #ccc; padding: -1px;" : null;
-					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['default_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; ".$border."'>";
+					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['default_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['default_setting_value'], -0.18))."; padding: -1px;'>";
+					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['default_setting_value'])."</span>\n";
 				}
-				echo "		".htmlspecialchars($row['default_setting_value']);
+				else {
+					echo "		".htmlspecialchars($row['default_setting_value'])."\n";
+				}
 			}
-			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			if (permission_exists('default_setting_edit')) {
