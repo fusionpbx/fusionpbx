@@ -62,11 +62,11 @@ require_once "resources/paging.php";
 
 //get total extension count from the database
 	$sql = "select ";
-	$sql .= "(select count(*) as num_rows from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') ";
+	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') as num_rows ";
 	if ($db_type == "pgsql") {
-		$sql .= ",(select count(*) as numeric_extensions from v_extensions ";
+		$sql .= ",(select count(*) from v_extensions ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension ~ '^[0-9]+$')";
+		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions";
 	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
