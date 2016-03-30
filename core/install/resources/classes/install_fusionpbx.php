@@ -332,12 +332,20 @@ include "root.php";
 				if ($this->global_settings->db_create()) {
 					//attempt to create new Postgres role and database
 						$this->write_progress("\tCreating database");
+						$db_create_username = $this->global_settings->db_create_username();
+						$db_create_password = $this->global_settings->db_create_password();
+						$db_host            = $this->global_settings->db_host();
+						$db_port            = $this->global_settings->db_port();
+						if(strlen($db_create_username) == 0){
+							$db_create_username = $this->global_settings->db_username();
+							$db_create_password = $this->global_settings->db_password();
+						}
+						if (strlen($db_host) == 0) {
+							$db_host = 'localhost';
+						}
+
 						try {
-							if (strlen($this->global_settings->db_host()) > 0) {
-								$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-							} else {
-								$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-							}
+							$this->dbh = new PDO("pgsql:host=$db_host port=$db_port user=$db_create_username password=$db_create_password dbname=template1");
 						} catch (PDOException $error) {
 							throw new Exception("error connecting to database in order to create: " . $error->getMessage());
 						}
@@ -346,11 +354,12 @@ include "root.php";
 						if($this->dbh->exec("CREATE DATABASE {$this->global_settings->db_name()}") === false) {
 							throw new Exception("Failed to create database {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
 						}
-						if($this->global_settings->db_username() != $this->global_settings->db_create_username()){
+						if($this->global_settings->db_username() != $db_create_username){
 							if($this->dbh->exec("CREATE USER {$this->global_settings->db_username()} WITH PASSWORD '{$this->global_settings->db_password()}'") === false){
-								throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+								// user may be already exists
+								// throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
 							}
-							if($this->dbh->exec("GRANT ALL ON {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
+							if($this->dbh->exec("GRANT ALL ON DATABASE {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
 								throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
 							}
 						}
@@ -410,128 +419,148 @@ include "root.php";
 		}
 
 		protected function create_database_mysql() {
-				//database connection
-					$connect_string;
-					if (strlen($this->global_settings->db_host()) == 0 && strlen($this->global_settings->db_port()) == 0) {
-						//if both host and port are empty use the unix socket
-						$connect_string = "mysql:host=$this->global_settings->db_host();unix_socket=/var/run/mysqld/mysqld.sock;";
-					}
-					elseif (strlen($this->global_settings->db_port()) == 0) {
-						//leave out port if it is empty
-						$connect_string = "mysql:host=$this->global_settings->db_host();";
-					}
-					else {
-						$connect_string = "mysql:host=$this->global_settings->db_host();port=$this->global_settings->db_port();";
-					}
+			//database connection
+				$connect_string;
+				if (strlen($this->global_settings->db_host()) == 0 && strlen($this->global_settings->db_port()) == 0) {
+					//if both host and port are empty use the unix socket
+					$connect_string = "mysql:host={$this->global_settings->db_host()};unix_socket=/var/run/mysqld/mysqld.sock;";
+				}
+				elseif (strlen($this->global_settings->db_port()) == 0) {
+					//leave out port if it is empty
+					$connect_string = "mysql:host={$this->global_settings->db_host()};";
+				}
+				else {
+					$connect_string = "mysql:host={$this->global_settings->db_host()};port={$this->global_settings->db_port()};";
+				}
 
-				//create the table, user and set the permissions only if the db_create_username was provided
-					if ($this->global_settings->db_create_username()) {
+			//if we need create new database
+				if ($this->global_settings->db_create()) {
+					//attempt to create new user and database
 						$this->write_progress("\tCreating database");
+						$db_create_username = $this->global_settings->db_create_username();
+						$db_create_password = $this->global_settings->db_create_password();
+
+						if(strlen($db_create_username) == 0){
+							$db_create_username = $this->global_settings->db_username();
+							$db_create_password = $this->global_settings->db_password();
+						}
+
+					//connect to MySQL
 						try {
-							$this->dbh = new PDO($connect_string, $this->global_settings->db_create_username(), $this->global_settings->db_create_password(), array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+							$this->dbh = new PDO($connect_string, $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 							$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 						}
 						catch (PDOException $error) {
-							throw new Exception("error connecting to database for ccreate: " . $error->getMessage() . "\n" . $sql );
+							throw new Exception("error connecting to database for create: " . $error->getMessage() . "\n" . $sql );
 						}
-						//select the mysql database
-							try {
-								$this->dbh->query("USE mysql;");
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
 
-						//create user and set the permissions
-							try {
-								$tmp_sql = "CREATE USER '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
+					//select the mysql database
+						try {
+							$this->dbh->query("USE mysql;");
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
 
-						//set account to unlimited use
-							try {
-								if ($this->global_settings->db_host() == "localhost" || $this->global_settings->db_host() == "127.0.0.1") {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'localhost' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$this->dbh->query($tmp_sql);
-
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'127.0.0.1' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+					//create user if we use separeate user to access and create
+						if($this->global_settings->db_username() != $db_create_username) {
+							//create user and set the permissions
+								try {
+									$tmp_sql = "CREATE USER '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
 									$this->dbh->query($tmp_sql);
 								}
-								else {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'".$this->global_settings->db_host()."' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$this->dbh->query($tmp_sql);
+								catch (PDOException $error) {
+									// ignore error here because user may already exists
+									// (e.g. reinstall can be done via remove db)
+									// throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 								}
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
 
-						//create the database and set the create user with permissions
-							try {
-								$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$this->global_settings->db_name()."; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
+							//set account to unlimited use
+								try {
+									if ($this->global_settings->db_host() == "localhost" || $this->global_settings->db_host() == "127.0.0.1") {
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'localhost' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
 
-						//set user permissions
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'127.0.0.1' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
+									}
+									else {
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'".$this->global_settings->db_host()."' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
+									}
+								}
+								catch (PDOException $error) {
+									throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+								}
+						}
+
+					//create the database and set the create user with permissions
+						try {
+							$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$this->global_settings->db_name()."; ";
+							$this->dbh->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
+
+					//set user permissions
+						if($this->global_settings->db_username() != $db_create_username) {
 							try {
 								$this->dbh->query("GRANT ALL PRIVILEGES ON ".$this->global_settings->db_name().".* TO '".$this->global_settings->db_username()."'@'%'; ");
 							}
 							catch (PDOException $error) {
 								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
+						}
 
-						//make the changes active
-							try {
-								$tmp_sql = "FLUSH PRIVILEGES; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
-							$this->dbh = null;
-					} //if (strlen($this->global_settings->db_create_username()) > 0)
+					//make the changes active
+						try {
+							$tmp_sql = "FLUSH PRIVILEGES; ";
+							$this->dbh->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
+						$this->dbh = null;
+				}
 
-					$this->write_progress("\tInstalling data to database");
+				$this->write_progress("\tInstalling data to database");
 
-				//select the database
-					try {
-						$this->dbh = new PDO($connect_string, $this->global_settings->db_username(), db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-						$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-						$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-					}
-					catch (PDOException $error) {
-						throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
-					}
-					try {
-						$this->dbh->query("USE ".$this->global_settings->db_name().";");
-					}
-					catch (PDOException $error) {
-						throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-					}
+			//connect to the database
+				try {
+					$this->dbh = new PDO($connect_string, $this->global_settings->db_username(), $this->global_settings->db_password(), array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+					$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+				}
+				catch (PDOException $error) {
+					throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
+				}
 
-				//add the database structure
-					require_once "resources/classes/schema.php";
-					$schema = new schema;
-					$schema->db = $this->dbh;
-					$schema->db_type = $this->global_settings->db_type();
-					$schema->sql();
-					$schema->exec();
+			//select the database
+				try {
+					$this->dbh->query("USE ".$this->global_settings->db_name().";");
+				}
+				catch (PDOException $error) {
+					throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+				}
 
-				//add the defaults data into the database
-					//get the contents of the sql file
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
+
+			//add the defaults data into the database
+				//get the contents of the sql file
 					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
 						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
 					}
@@ -540,28 +569,28 @@ include "root.php";
 					}
 					$file_contents = file_get_contents($filename);
 
-					//replace \r\n with \n then explode on \n
-						$file_contents = str_replace("\r\n", "\n", $file_contents);
+				//replace \r\n with \n then explode on \n
+					$file_contents = str_replace("\r\n", "\n", $file_contents);
 
-					//loop line by line through all the lines of sql code
-						$string_array = explode("\n", $file_contents);
-						$x = 0;
-						foreach($string_array as $sql) {
-							if (strlen($sql) > 3) {
-								try {
-									if ($this->debug) {
-										$this->write_debug( $sql."\n");
-									}
-									$this->dbh->query($sql);
+				//loop line by line through all the lines of sql code
+					$string_array = explode("\n", $file_contents);
+					$x = 0;
+					foreach($string_array as $sql) {
+						if (strlen($sql) > 3) {
+							try {
+								if ($this->debug) {
+									$this->write_debug( $sql."\n");
 								}
-								catch (PDOException $error) {
-									//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
-									//die();
-								}
+								$this->dbh->query($sql);
 							}
-							$x++;
+							catch (PDOException $error) {
+								//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
+								//die();
+							}
 						}
-						unset ($file_contents, $sql);
+						$x++;
+					}
+					unset ($file_contents, $sql);
 		}
 
 		protected function create_domain() {
@@ -1000,7 +1029,7 @@ include "root.php";
 				$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
 				$_SESSION['event_socket_port'] = $this->global_settings->event_port;
 				$_SESSION['event_socket_password'] = $this->global_settings->event_password;
-	
+
 			//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 				$sql = "SELECT * FROM v_group_users ";
 				$sql .= "where domain_uuid=:domain_uuid ";
@@ -1012,7 +1041,7 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				$_SESSION["groups"] = $result;
 				unset($sql, $row_count, $prep_statement);
-	
+
 			//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
 				$x = 0;
 				$sql = "select distinct(permission_name) from v_group_permissions ";
@@ -1031,7 +1060,7 @@ include "root.php";
 				$prep_statement_sub->execute();
 				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
 				unset($sql, $prep_statement_sub);
-	
+
 			//include the config.php
 				$db_type = $this->global_settings->db_type();
 				$db_path = $this->global_settings->db_path();
@@ -1040,23 +1069,23 @@ include "root.php";
 				$db_name = $this->global_settings->db_name();
 				$db_username = $this->global_settings->db_username();
 				$db_password = $this->global_settings->db_password();
-	
+
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
 				echo $schema->schema();
-	
+
 			//run all app_defaults.php files
 				$default_language = $this->install_language;
 				$domain = new domains;
 				$domain->upgrade();
-	
+
 			//synchronize the config with the saved settings
 				save_switch_xml();
-	
+
 			//do not show the apply settings reminder on the login page
 				$_SESSION["reload_xml"] = false;
-	
+
 			//clear the menu
 				$_SESSION["menu"] = "";
 
