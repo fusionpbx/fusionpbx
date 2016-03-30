@@ -390,7 +390,7 @@
 					$db = $this->db;
 
 				//database ojbect does not exist return immediately
-					if (!$db) { return; }
+					if (!$db) { return Array(); }
 
 				//if there are no groups then set the public group
 					if (!isset($_SESSION['groups'])) {
@@ -435,6 +435,7 @@
 
 				//save the menu into an array
 					$x = 0;
+					$a = Array();
 					foreach($result as $row) {
 						//add the row to the array
 							$a[$x] = $row;
