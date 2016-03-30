@@ -244,6 +244,18 @@ else {
 		echo "</script>";
 	}
 
+//prevent enter key submit on search field
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	$(document).ready(function() {\n";
+	echo "		$('#default_setting_search').keydown(function(event){\n";
+	echo "			if (event.keyCode == 13) {\n";
+	echo "				event.preventDefault();\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	});\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
@@ -266,7 +278,10 @@ else {
 			echo "		<option value='".$domain["domain_uuid"]."'>".$domain["domain_name"]."</option>\n";
 		}
 		echo "		</select>\n";
-		echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick='document.forms.frm.submit();'>";
+		echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', 'default_settings.php?search='+$('#default_setting_search').val()).submit();\">";
+	}
+	if (permission_exists('default_setting_edit')) {
+		echo "		<input type='button' class='btn' alt='".$text['button-toggle']."' onclick=\"$('#frm').attr('action', 'default_setting_toggle.php').submit();\" value='".$text['button-toggle']."'>\n";
 	}
 	echo "			<input type='button' class='btn' id='button_reload' alt='".$text['button-reload']."' value='".$text['button-reload']."' onclick=\"document.location.href='default_settings_reload.php?search='+$('#default_setting_search').val();\">";
 	echo "		</td>\n";
@@ -339,10 +354,7 @@ else {
 
 				echo "<table class='tr_hover' style='margin-top: 5px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
-				if (
-					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-					permission_exists('default_setting_delete')
-					) {
+				if ( (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) || permission_exists('default_setting_delete') ) {
 					echo "<th style='width: 30px; vertical-align: bottom; text-align: center; padding: 0px 3px 2px 8px;'><input type='checkbox' id='chk_all_".$row['default_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th width='23%'>".$text['label-subcategory']."</th>";
@@ -355,7 +367,7 @@ else {
 					echo "<a href='javascript:void(0)' onclick=\"document.location.href='default_setting_edit.php?default_setting_category=".urlencode($row['default_setting_category'])."&search='+$('#default_setting_search').val();\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('default_setting_delete')) {
-					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; $('#frm').attr('action', 'default_settings.php?search='+$('#default_setting_search').val()).submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 				}
 				echo "</td>\n";
 				echo "</tr>\n";
@@ -363,10 +375,7 @@ else {
 
 			$tr_link = (permission_exists('default_setting_edit')) ? "href=\"javascript:document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."&search='+$('#default_setting_search').val();\"" : null;
 			echo "<tr id='setting_".$row['default_setting_uuid']."' ".$tr_link.">\n";
-			if (
-				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-				permission_exists("default_setting_delete")
-				) {
+			if ( (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) || permission_exists("default_setting_delete") ) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['default_setting_category']."').checked = false; }\"></td>\n";
 				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
 			}
@@ -400,8 +409,8 @@ else {
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
 				switch ($row['default_setting_value']) {
-					case '12h': echo "		".$text['label-12-hour']; break;
-					case '24h': echo "		".$text['label-24-hour']; break;
+					case '12h': echo $text['label-12-hour']; break;
+					case '24h': echo $text['label-24-hour']; break;
 				}
 			}
 			else if (
@@ -430,7 +439,12 @@ else {
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href=\"javascript:document.location.href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."&search='+$('#default_setting_search').val();\">".$text['label-'.$row['default_setting_enabled']]."</a>\n";
+			if (permission_exists('default_setting_edit')) {
+				echo "	<a href=\"javascript:document.location.href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."&search='+$('#default_setting_search').val();\">".$text['label-'.$row['default_setting_enabled']]."</a>\n";
+			}
+			else {
+				echo "	".$text['label-'.$row['default_setting_enabled']]."\n";
+			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap='nowrap'>";

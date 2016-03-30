@@ -66,6 +66,20 @@ $text['option-voicemail_file_attach']['sv-se'] = "Ljudfil Bifogad";
 $text['option-voicemail_file_attach']['uk'] = "Приєднати аудіофайл";
 $text['option-voicemail_file_attach']['de-at'] = "Audiodatei als Anhang";
 
+$text['message-toggled']['en-us'] = "Toggle Completed";
+$text['message-toggled']['es-cl'] = "Alternar Completado";
+$text['message-toggled']['pt-pt'] = "Alternar Concluído";
+$text['message-toggled']['fr-fr'] = "Basculer Terminé";
+$text['message-toggled']['pt-br'] = "Alternar Concluído";
+$text['message-toggled']['pl'] = "Przegubowe Zakończony";
+$text['message-toggled']['he'] = "הושלם Toggle";
+$text['message-toggled']['uk'] = "переключити Завершений";
+$text['message-toggled']['sv-se'] = "Växla Avslutade";
+$text['message-toggled']['de-at'] = "Toggle Completed";
+$text['message-toggled']['ro'] = "Completat toggle";
+$text['message-toggled']['fa'] = "";
+$text['message-toggled']['ar-eg'] = "الانتهاء من تبديل";
+
 $text['message-settings_reloaded']['en-us'] = "Settings Reloaded";
 $text['message-settings_reloaded']['es-cl'] = "Ajustes Reloaded";
 $text['message-settings_reloaded']['pt-pt'] = "Configurações Reloaded";
@@ -401,5 +415,19 @@ $text['description-default_setting-add']['pl'] = "Ustawienia stosowane dla wszys
 $text['description-default_setting-add']['sv-se'] = "Inställning används för alla domäner.";
 $text['description-default_setting-add']['uk'] = "Налаштування використовується для всіх доменів";
 $text['description-default_setting-add']['de-at'] = "Einstellungen für alle Domains.";
+
+$text['button-toggle']['en-us'] = "Toggle";
+$text['button-toggle']['es-cl'] = "Palanca";
+$text['button-toggle']['pt-pt'] = "Alternar";
+$text['button-toggle']['fr-fr'] = "Basculer";
+$text['button-toggle']['pt-br'] = "Alternar";
+$text['button-toggle']['pl'] = "Przełącznik";
+$text['button-toggle']['he'] = "לְמַתֵג";
+$text['button-toggle']['uk'] = "тумблер";
+$text['button-toggle']['sv-se'] = "toggle";
+$text['button-toggle']['de-at'] = "Umschalten";
+$text['button-toggle']['ro'] = "Comutare";
+$text['button-toggle']['fa'] = "";
+$text['button-toggle']['ar-eg'] = "تبديل";
 
 ?>
