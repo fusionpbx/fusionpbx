@@ -384,7 +384,7 @@
 			} //end function
 
 		//create the menu array
-			public function menu_array($sql, $menu_item_level) {
+			public function menu_array($sql = '', $menu_item_level = 0) {
 
 				//get the database connnection
 					$db = $this->db;
