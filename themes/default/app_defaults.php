@@ -499,7 +499,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_heading_text_size';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '12pt';
+		$array[$x]['default_setting_value'] = '10.5pt';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the size of the Dashboard block heading text.';
 		$x++;
