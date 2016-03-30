@@ -142,15 +142,9 @@
 		echo "		Create Database Options\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='none'";
-		if($db_create_option=='none') { echo " checked='checked'"; }
-		echo "/>Do not create database</label>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='same'";
-		if($db_create_option=='same') { echo " checked='checked'"; }
-		echo "/>Create database using above username/password</label>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='user'";
-		if($db_create_option=='user') { echo " checked='checked'"; }
-		echo "/>Create database using below username/password</label>\n";
+		if($db_create=='1') { $checked = "checked='checked'"; } else { $checked = ''; }
+		echo "	<input type='checkbox' name='db_create' value='1' $checked />&nbsp;";
+		echo "Create the database\n";
 		echo "<br />\n";
 		echo "Choose whether to create the database\n";
 		echo "</td>\n";
