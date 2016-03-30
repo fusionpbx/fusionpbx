@@ -156,6 +156,20 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = 'recent';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'call_routing';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'ring_groups';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the users group.';
 
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
