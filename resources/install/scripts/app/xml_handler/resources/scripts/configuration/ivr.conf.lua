@@ -221,7 +221,9 @@
 		--exit sound
 			if (not file_exists(ivr_menu_exit_sound)) then
 				if (file_exists(recordings_dir.."/"..ivr_menu_exit_sound)) then
-					ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
+					if (ivr_menu_exit_sound ~= nil and ivr_menu_exit_sound ~= "") then
+						ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
+					end
 				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_exit_sound)) then
 					ivr_menu_exit_sound = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_exit_sound;
 				end
@@ -266,7 +268,7 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="${cond(${user_exists id $1 ]]..domain_name..[[}?$1 XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
 			end
 
 		--close the extension tag if it was left open
