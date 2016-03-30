@@ -1147,9 +1147,9 @@ function number_pad($number,$n) {
 		}
 	}
 
-//function to convert hexidecimal color value to rgb value
-	if (!function_exists('hex2rgb')) {
-		function hex2rgb($hex, $delim = '') {
+//function to convert hexidecimal color value to rgb string/array value
+	if (!function_exists('hex_to_rgb')) {
+		function hex_to_rgb($hex, $delim = '') {
 			$hex = str_replace("#", "", $hex);
 
 			if (strlen($hex) == 3) {
@@ -1170,6 +1170,178 @@ function number_pad($number,$n) {
 			else {
 				return $rgb; // return array of rgb values
 			}
+		}
+	}
+
+//function to lighten or darken a hexidecimal, rgb, or rgba color value by a percentage (requires functions rgb_to_hsl and hsl_to_rgb, also below)
+	if (!function_exists('color_adjust')) {
+		function color_adjust($color, $percent) {
+			/*
+			USAGE
+				20% Lighter
+					color_adjust('#3f4265', 0.2);
+					color_adjust('234,120,6,0.3', 0.2);
+				20% Darker
+					color_adjust('#3f4265', -0.2); //
+					color_adjust('rgba(234,120,6,0.3)', -0.2);
+			RETURNS
+				Same color format provided (hex in = hex out, rgb(a) in = rgb(a) out)
+			*/
+
+			//convert hex to rgb
+			if (substr_count($color, ',') == 0) {
+				$color = str_replace(' ', '', $color);
+				if (substr_count($color, '#') > 0) {
+					$color = str_replace('#', '', $color);
+					$hash = '#';
+				}
+				if (strlen($color) == 3) {
+					$r = hexdec(substr($color,0,1).substr($color,0,1));
+					$g = hexdec(substr($color,1,1).substr($color,1,1));
+					$b = hexdec(substr($color,2,1).substr($color,2,1));
+				}
+				else {
+					$r = hexdec(substr($color,0,2));
+					$g = hexdec(substr($color,2,2));
+					$b = hexdec(substr($color,4,2));
+				}
+				$color = $r.','.$g.','.$b;
+			}
+
+			//color to array, pop alpha
+			if (substr_count($color, ',') > 0) {
+				$color = str_replace(' ', '', $color);
+				$wrapper = false;
+				if (substr_count($color, 'rgb') != 0) {
+					$color = str_replace('rgb', '', $color);
+					$color = str_replace('a(', '', $color);
+					$color = str_replace(')', '', $color);
+					$wrapper = true;
+				}
+				$colors = explode(',', $color);
+				$alpha = (sizeof($colors) == 4) ? array_pop($colors) : null;
+				$color = $colors;
+				unset($colors);
+
+				//adjust color using rgb > hsl > rgb conversion
+				$hsl = rgb_to_hsl($color[0], $color[1], $color[2]);
+				$hsl[2] = $hsl[2] + $percent;
+				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
+
+				//return adjusted color in format received
+				if ($hash == '#') { //hex
+					for ($i = 0; $i <= 2; $i++) {
+						$hex_color = dechex($color[$i]);
+						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
+						$hex .= $hex_color;
+					}
+					return $hash.$hex;
+				}
+				else { //rgb(a)
+					$rgb = implode(',', $color);
+					if ($alpha != '') { $rgb .= ','.$alpha; $a = 'a'; }
+					if ($wrapper) { $rgb = 'rgb'.$a.'('.$rgb.')'; }
+					return $rgb;
+				}
+			}
+
+			return $color;
+		}
+	}
+
+//function to convert an rgb color array to an hsl color array
+	if (!function_exists('rgb_to_hsl')) {
+		function rgb_to_hsl($r, $g, $b) {
+			$r /= 255;
+			$g /= 255;
+			$b /= 255;
+
+			$max = max($r, $g, $b);
+			$min = min($r, $g, $b);
+
+			$h;
+			$s;
+			$l = ($max + $min) / 2;
+			$d = $max - $min;
+
+			if ($d == 0) {
+				$h = $s = 0; // achromatic
+			}
+			else {
+				$s = $d / (1 - abs((2 * $l) - 1));
+				switch($max){
+					case $r:
+						$h = 60 * fmod((($g - $b) / $d), 6);
+						if ($b > $g) { $h += 360; }
+						break;
+					case $g:
+						$h = 60 * (($b - $r) / $d + 2);
+						break;
+					case $b:
+						$h = 60 * (($r - $g) / $d + 4);
+						break;
+				}
+			}
+
+			return array(round($h, 2), round($s, 2), round($l, 2));
+		}
+	}
+
+//function to convert an hsl color array to an rgb color array
+	if (!function_exists('hsl_to_rgb')) {
+		function hsl_to_rgb($h, $s, $l){
+			$r;
+			$g;
+			$b;
+
+			$c = (1 - abs((2 * $l) - 1)) * $s;
+			$x = $c * (1 - abs(fmod(($h / 60), 2) - 1));
+			$m = $l - ($c / 2);
+
+			if ($h < 60) {
+				$r = $c;
+				$g = $x;
+				$b = 0;
+			}
+			else if ($h < 120) {
+				$r = $x;
+				$g = $c;
+				$b = 0;
+			}
+			else if ($h < 180) {
+				$r = 0;
+				$g = $c;
+				$b = $x;
+			}
+			else if ($h < 240) {
+				$r = 0;
+				$g = $x;
+				$b = $c;
+			}
+			else if ($h < 300) {
+				$r = $x;
+				$g = 0;
+				$b = $c;
+			}
+			else {
+				$r = $c;
+				$g = 0;
+				$b = $x;
+			}
+
+			$r = ($r + $m) * 255;
+			$g = ($g + $m) * 255;
+			$b = ($b + $m) * 255;
+
+			if ($r > 255) { $r = 255; }
+			if ($g > 255) { $g = 255; }
+			if ($b > 255) { $b = 255; }
+
+			if ($r < 0) { $r = 0; }
+			if ($g < 0) { $g = 0; }
+			if ($b < 0) { $b = 0; }
+
+			return array(floor($r), floor($g), floor($b));
 		}
 	}
 
