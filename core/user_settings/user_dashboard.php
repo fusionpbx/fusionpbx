@@ -363,7 +363,7 @@
 				$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
 
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$messages['new']."</span>";
-				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-new_messages']."</span>\n";
+				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-new_messages']."</span>\n";
 
 				$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 				if (sizeof($voicemails) > 0) {
@@ -452,7 +452,7 @@
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</span>";
 
 			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
-			$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-last_24_hours']."</span>\n";
+			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -566,7 +566,7 @@
 			$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>";
 
 			$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$result_count."</span>";
-			$hud[$n]['html'] .= "<span class='hud_stat_title'>".$text['label-last_24_hours']."</span>\n";
+			$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
 			$hud[$n]['html'] .= "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -686,7 +686,7 @@
 
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
-				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$hud_stat_title."</span>\n";
+				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat_title."</span>\n";
 			}
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
@@ -778,7 +778,7 @@
 
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
-				$hud[$n]['html'] .= "<span class='hud_stat_title'>".$hud_stat_title."</span>\n";
+				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat_title."</span>\n";
 			}
 
 			$hud[$n]['html'] .= "<div class='hud_details' id='hud_".$n."_details'>";
@@ -942,7 +942,7 @@
 
 				if ($percent_disk_usage != '') {
 					$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$percent_disk_usage."</span>";
-					$hud[$n]['html'] .= "<span class='hud_stat_title' style='cursor: default;'>".$text['label-disk_usage']." (%)</span>\n";
+					$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\" style='cursor: default;'>".$text['label-disk_usage']." (%)</span>\n";
 				}
 			}
 
