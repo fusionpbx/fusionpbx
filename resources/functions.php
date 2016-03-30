@@ -1173,7 +1173,42 @@ function number_pad($number,$n) {
 		}
 	}
 
-//function to lighten or darken a hexidecimal, rgb, or rgba color value by a percentage (requires functions rgb_to_hsl and hsl_to_rgb, also below)
+//function to get a color's luminence level -- dependencies: rgb_to_hsl()
+	if (!function_exists('get_color_luminence')) {
+		function get_color_luminence($color) {
+			//convert hex to rgb
+			if (substr_count($color, ',') == 0) {
+				$color = str_replace(' ', '', $color);
+				$color = str_replace('#', '', $color);
+				if (strlen($color) == 3) {
+					$r = hexdec(substr($color,0,1).substr($color,0,1));
+					$g = hexdec(substr($color,1,1).substr($color,1,1));
+					$b = hexdec(substr($color,2,1).substr($color,2,1));
+				}
+				else {
+					$r = hexdec(substr($color,0,2));
+					$g = hexdec(substr($color,2,2));
+					$b = hexdec(substr($color,4,2));
+				}
+				$color = $r.','.$g.','.$b;
+			}
+
+			//color to array, pop alpha
+			if (substr_count($color, ',') > 0) {
+				$color = str_replace(' ', '', $color);
+				$color = str_replace('rgb', '', $color);
+				$color = str_replace('a(', '', $color);
+				$color = str_replace(')', '', $color);
+				$color = explode(',', $color);
+				$hsl = rgb_to_hsl($color[0], $color[1], $color[2]);
+			}
+
+			//return luminence value
+			return (is_array($hsl) && is_numeric($hsl[2])) ? $hsl[2] : null;
+		}
+	}
+
+//function to lighten or darken a hexidecimal, rgb, or rgba color value by a percentage -- dependencies: rgb_to_hsl(), hsl_to_rgb()
 	if (!function_exists('color_adjust')) {
 		function color_adjust($color, $percent) {
 			/*
