@@ -14,6 +14,20 @@ $text['language-name']['de-at'] = "Deutsch - Österreich";
 $text['language-name']['ar-eg'] = "العربية - مصر";
 $text['language-name']['ru-ru'] = 'Русский - Россия';
 
+//language for `Select Language` install page
+$text['language-en-us']['en-us'] = "English - United States";
+$text['language-es-cl']['en-us'] = "Español - Chile";
+$text['language-pt-pt']['en-us'] = "Português - Portugal";
+$text['language-fr-fr']['en-us'] = "Français - France";
+$text['language-nl-nl']['en-us'] = "Nederlands - De Nederland";
+$text['language-pt-br']['en-us'] = "Brasileiro - Português";
+$text['language-pl'   ]['en-us'] = "Polski - Polska";
+$text['language-sv-se']['en-us'] = "Svenska - Sverige";
+$text['language-uk'   ]['en-us'] = "Українська - Україна";
+$text['language-de-at']['en-us'] = "Deutsch - Österreich";
+$text['language-ar-eg']['en-us'] = "العربية - مصر";
+$text['language-ru-ru']['en-us'] = 'Русский - Россия';
+
 //message
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
