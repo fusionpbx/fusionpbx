@@ -46,21 +46,30 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 	$maxpage = ceil($num_rows/$rows_per_page);
 
 	// print the link to access each page
-	$self = $_SERVER['PHP_SELF'];
+	$params = Array();
+	parse_str($_SERVER['QUERY_STRING'], $params);
+	unset($params['page']);
+	$params = http_build_query($params);
+	$self = $_SERVER['PHP_SELF'] . '?';
+	if (strlen($params) > 0) {
+		$self .= $params . '&';
+	}
+	unset($params);
+
 	$nav = '';
 	for($page = 1; $page <= $maxpage; $page++){
 		if ($page == $pagenum) {
 			$nav .= " $page ";   // no need to create a link to current page
 		}
 		else {
-			$nav .= " <a href=\"$self?page=$page\">$page</a> \n";
+			$nav .= " <a href=\"{$self}page=$page\">$page</a> \n";
 		}
 	}
 
 	if ($pagenum > 0) {
-        $page = $pagenum - 1;
-		$prev = "<input class='btn' type='button' value='&#9664;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$first = "<input class='btn' type='button' value='&#9650;' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
+		$page = $pagenum - 1;
+		$prev = "<input class='btn' type='button' value='&#9664;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."page=$page".$param."';\">\n";
+		$first = "<input class='btn' type='button' value='&#9650;' onClick=\"window.location = '".$self."page=1".$param."';\">\n";
 
 	}
 	else {
@@ -69,12 +78,12 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 
 	if (($pagenum + 1) < $maxpage) {
         $page = $pagenum + 1;
-		$next = "<input class='btn' type='button' value='&#9654;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$next = "<input class='btn' type='button' value='&#9654;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."page=$page".$param."';\">\n";
+		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."page=$maxpage".$param."';\">\n";
 
 	}
 	else {
-		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."page=$maxpage".$param."';\">\n";
 		$next = "<input class='btn' type='button' disabled value='&#9654;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
 
 	}
@@ -115,7 +124,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 							"// action to peform when enter is hit\n".
 							"if (page_num < 1) { page_num = 1; }\n".
 							"if (page_num > ".$maxpage.") { page_num = ".$maxpage."; }\n".
-							"document.location.href = '".$self."?page='+(--page_num)+'".$param."';\n".
+							"document.location.href = '".$self."page='+(--page_num)+'".$param."';\n".
 						"}\n".
 					"}\n".
 				"</script>\n";
