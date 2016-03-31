@@ -733,7 +733,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='user_enabled'>\n";
 	echo "		<option value='true'>".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(($user_enabled == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
