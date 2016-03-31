@@ -74,7 +74,9 @@ require_once "resources/require.php";
 	$prep_statement->execute();
 	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset($sql, $prep_statement);
-	$system_groups = array('superadmin','admin','user','public','agent');
+	//$system_groups = array('superadmin','admin','user','public','agent');
+	$system_groups = array();
+
 
 //get group counts
 	$sql = "select group_uuid, count(user_uuid) as group_count from v_group_users ";
