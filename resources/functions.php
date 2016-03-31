@@ -1592,66 +1592,135 @@ function number_pad($number,$n) {
 	}
 
 //email validate
-	function email_validate($strEmail){
-		$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-		// search email text for regular exp matches
-		preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
-		if (count($matches) == 0) {
-			return 0;
+	if (!function_exists('email_validate')) {
+		function email_validate($strEmail){
+			$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+			// search email text for regular exp matches
+			preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+			if (count($matches) == 0) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
 		}
-		else {
-			return 1;
+	}
+
+//write javascript function that detects select key combinations to perform designated actions
+	if (!function_exists('key_press')) {
+		function key_press($key, $direction = 'up', $subject = 'document', $exceptions = array(), $prompt = null, $action = null, $script_wrapper = true) {
+			//determine key code
+				switch (strtolower($key)) {
+					case 'escape':
+						$key_code = '(e.which == 27)';
+						break;
+					case 'delete':
+						$key_code = '(e.which == 46)';
+						break;
+					case 'enter':
+						$key_code = '(e.which == 13)';
+						break;
+					case 'backspace':
+						$key_code = '(e.which == 8)';
+						break;
+					case 'ctrl+s':
+						$key_code = '(((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+q':
+						$key_code = '(((e.which == 113 || e.which == 81) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+a':
+						$key_code = '(((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+enter':
+						$key_code = '(((e.which == 13 || e.which == 10) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					default:
+						return;
+				}
+			//check for element exceptions
+				if (sizeof($exceptions) > 0) {
+					$exceptions = "!$(e.target).is('".implode(',', $exceptions)."') && ";
+				}
+			//quote if selector is id or class
+				$subject = ($subject != 'window' && $subject != 'document') ? "'".$subject."'" : $subject;
+			//output script
+				echo "\n\n\n";
+				if ($script_wrapper) {
+					echo "<script language='JavaScript' type='text/javascript'>\n";
+				}
+				echo "	$(".$subject.").key".$direction."(function(e) {\n";
+				echo "		if (".$exceptions.$key_code.") {\n";
+				if ($prompt != '') {
+					$action = ($action != '') ? $action : "alert('".$key."');";
+					echo "			if (confirm('".$prompt."')) {\n";
+					echo "				e.preventDefault();\n";
+					echo "				".$action."\n";
+					echo "			}\n";
+				}
+				else {
+					echo "			e.preventDefault();\n";
+					echo "			".$action."\n";
+				}
+				echo "		}\n";
+				echo "	});\n";
+				if ($script_wrapper) {
+					echo "</script>\n";
+				}
+				echo "\n\n\n";
 		}
 	}
 
 //converts a string to a regular expression
-	function string_to_regex($string) {
-		//escape the plus
-			if (substr($string, 0, 1) == "+") {
-				$string = "^\\+(".substr($string, 1).")$";
-			}
-		//convert N,X,Z syntax to regex
-			$string = str_ireplace("N", "[2-9]", $string);
-			$string = str_ireplace("X", "[0-9]", $string);
-			$string = str_ireplace("Z", "[1-9]", $string);
-		//add ^ to the start of the string if missing
-			if (substr($string, 0, 1) != "^") {
-				$string = "^".$string;
-			}
-		//add $ to the end of the string if missing
-			if (substr($string, -1) != "$") {
-				$string = $string."$";
-			}
-		//add the round brackgets ( and )
-			if (!strstr($string, '(')) {
-				if (strstr($string, '^')) {
-					$string = str_replace("^", "^(", $string);
+	if (!function_exists('string_to_regex')) {
+		function string_to_regex($string) {
+			//escape the plus
+				if (substr($string, 0, 1) == "+") {
+					$string = "^\\+(".substr($string, 1).")$";
 				}
-				else {
-					$string = '^('.$string;
+			//convert N,X,Z syntax to regex
+				$string = str_ireplace("N", "[2-9]", $string);
+				$string = str_ireplace("X", "[0-9]", $string);
+				$string = str_ireplace("Z", "[1-9]", $string);
+			//add ^ to the start of the string if missing
+				if (substr($string, 0, 1) != "^") {
+					$string = "^".$string;
 				}
-			}
-			if (!strstr($string, ')')) {
-				if (strstr($string, '$')) {
-					$string = str_replace("$", ")$", $string);
+			//add $ to the end of the string if missing
+				if (substr($string, -1) != "$") {
+					$string = $string."$";
 				}
-				else {
-					$string = $string.')$';
+			//add the round brackgets ( and )
+				if (!strstr($string, '(')) {
+					if (strstr($string, '^')) {
+						$string = str_replace("^", "^(", $string);
+					}
+					else {
+						$string = '^('.$string;
+					}
 				}
-			}
-		//return the result
-			return $string;
+				if (!strstr($string, ')')) {
+					if (strstr($string, '$')) {
+						$string = str_replace("$", ")$", $string);
+					}
+					else {
+						$string = $string.')$';
+					}
+				}
+			//return the result
+				return $string;
+		}
+		//$string = "+12089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "12089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^(20890682[0-9][0-9])$"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "1208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "nxxnxxxxxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^(2089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^2089068227)"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227$"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
 	}
-	//$string = "+12089068227"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "12089068227"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "2089068227"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "^(20890682[0-9][0-9])$"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "1208906xxxx"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "nxxnxxxxxxx"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "208906xxxx"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "^(2089068227"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "^2089068227)"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "2089068227$"; echo $string." ".string_to_regex($string)."\n";
-	//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
 
 ?>

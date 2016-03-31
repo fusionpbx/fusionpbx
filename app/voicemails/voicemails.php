@@ -138,7 +138,7 @@ else {
 	echo "		</td>\n";
 	echo "			<td width='30%' align='right' valign='top'>\n";
 	echo "				<form method='get' action=''>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "				</form>\n";
 	echo "			</td>\n";
@@ -241,12 +241,19 @@ else {
 		if (sizeof($vm_ids) > 0) {
 			echo "<script>\n";
 			echo "	function check(what) {\n";
+			echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
 			foreach ($vm_ids as $vm_id) {
-				echo "document.getElementById('".$vm_id."').checked = (what == 'all') ? true : false;\n";
+				echo "		document.getElementById('".$vm_id."').checked = (what == 'all') ? true : false;\n";
 			}
 			echo "	}\n";
 			echo "</script>\n";
 		}
+
+		// check all checkboxes
+		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
+
+		// delete checked
+		key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], 'document.forms.frm.submit();', true);
 
 	}
 	else {

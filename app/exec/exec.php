@@ -425,18 +425,9 @@ else {
 			document.getElementById('editor').style.fontSize='<?php echo $setting_size;?>';
 			focus_editor();
 
-		//keyboard shortcuts
-			$(window).keypress(function(event) {
-				//execute command [Ctrl+Enter]
-				if (((event.which == 13 || event.which == 10) && event.ctrlKey) || (event.which == 19)) {
-					$('form#frm').submit();
-					return false;
-				}
-				//otherwise, default action
-				else {
-					return true;
-				}
-			});
+		//keyboard shortcut to execute command
+			<?php key_press('ctrl+enter', 'down', 'window', null, null, "$('form#frm').submit();", false); ?>
+
 		//remove certain keyboard shortcuts
 			editor.commands.bindKey("Ctrl-T", null); //new browser tab
 	</script>
