@@ -748,26 +748,28 @@
 		}
 
 
-	//system counts
-		if (in_array('counts', $selected_blocks) && permission_exists('xml_cdr_view')) {
+	//system/domain counts
+		if (in_array('counts', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
+			$scope = (permission_exists('dialplan_add')) ? 'system' : 'domain';
+
 			$show_stat = true;
 			if (permission_exists('domain_view')) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php'\"";
-				$hud_stat = $stats['system']['domains']['total'] - $stats['system']['domains']['disabled'];
+				$hud_stat = $stats[$scope]['domains']['total'] - $stats[$scope]['domains']['disabled'];
 				$hud_stat_title = $text['label-active_domains'];
 			}
 			else if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
-				$hud_stat = $stats['system']['extensions']['total'] - $stats['system']['extensions']['disabled'];
+				$hud_stat = $stats[$scope]['extensions']['total'] - $stats[$scope]['extensions']['disabled'];
 				$hud_stat_title = $text['label-active_extensions'];
 			}
 			else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
 				$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/index.php'\"";
-				$hud_stat = $stats['system']['users']['total'] - $stats['system']['users']['disabled'];
+				$hud_stat = $stats[$scope]['users']['total'] - $stats[$scope]['users']['disabled'];
 				$hud_stat_title = $text['label-active_users'];
 			}
 			else {
@@ -794,8 +796,8 @@
 					$tr_link = "href='".PROJECT_PATH."/core/domain_settings/domains.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-domains']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['domains']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['domains']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['domains']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -805,8 +807,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-devices']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['devices']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['devices']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['devices']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -816,8 +818,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-extensions']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['extensions']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['extensions']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['extensions']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -827,8 +829,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-gateways']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['gateways']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['gateways']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['gateways']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -838,8 +840,8 @@
 					$tr_link = "href='".PROJECT_PATH."/core/users/index.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['users']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['users']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['users']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -849,8 +851,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-destinations']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['destinations']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['destinations']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['destinations']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -860,8 +862,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['call_center_queues']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['call_center_queues']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['call_center_queues']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -871,8 +873,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ivr_menus']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ivr_menus']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ivr_menus']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -882,8 +884,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ring_groups']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['ring_groups']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['ring_groups']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -893,8 +895,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['voicemails']['disabled']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['voicemails']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['disabled']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['voicemails']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -910,8 +912,8 @@
 					$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-messages']."</a></td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['messages']['new']."</td>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats['system']['messages']['total']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['new']."</td>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$stats[$scope]['messages']['total']."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
