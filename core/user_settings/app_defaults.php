@@ -69,6 +69,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'counts';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Counts block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
 		$array[$x]['default_setting_value'] = 'call_routing';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the admin group.';
