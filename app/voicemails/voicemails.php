@@ -145,34 +145,35 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
+	echo "<form name='frm' method='post' action='voicemail_delete.php'>\n";
+
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	if (permission_exists('voicemail_delete') && $num_rows > 0) {
+		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
+	}
+	echo th_order_by('voicemail_id', $text['label-voicemail_id'], $order_by, $order);
+	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
+	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order);
+	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order);
+	echo "<th>".$text['label-tools']."</th>\n";
+	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
+	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order);
+	echo "<td class='list_control_icon'>";
+	if (permission_exists('voicemail_add') || permission_exists('voicemail_edit')) {
+		echo "<a href='voicemail_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+	}
+	if (permission_exists('voicemail_delete') && $num_rows > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+	}
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
 	if ($num_rows > 0) {
-
-		echo "<form name='frm' method='post' action='voicemail_delete.php'>\n";
-		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		if (permission_exists('voicemail_delete') && $num_rows > 0) {
-			echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
-		}
-		echo th_order_by('voicemail_id', $text['label-voicemail_id'], $order_by, $order);
-		echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
-		echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order);
-		echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order);
-		echo "<th>".$text['label-tools']."</th>\n";
-		echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
-		echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order);
-		echo "<td class='list_control_icons' style='width: 25px;'>";
-		if (permission_exists('voicemail_add') || permission_exists('voicemail_edit')) {
-			echo "<a href='voicemail_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-		if (permission_exists('voicemail_delete')) {
-			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-		}
-		echo "</td>\n";
-		echo "</tr>\n";
 
 		foreach($voicemails as $row) {
 			$tr_link = (permission_exists('voicemail_edit')) ? "href='voicemail_edit.php?id=".$row['voicemail_uuid']."'" : null;
@@ -215,53 +216,53 @@ else {
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $voicemails, $row_count);
+			$c = ($c) ? 0 : 1;
+		}
+		unset($voicemails, $row);
 
+	}
+
+	if ($num_rows > 0) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
 		if (permission_exists('voicemail_add')) {
 			echo "<a href='voicemail_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
-		if (permission_exists('voicemail_delete') && $num_rows > 0) {
+		if (permission_exists('voicemail_delete')) {
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
+	}
 
-		echo "</table>";
-		echo "</form>";
+	echo "</table>";
+	echo "</form>";
 
-		if (strlen($paging_controls) > 0) {
-			echo "<center>".$paging_controls."</center>\n";
+	if (strlen($paging_controls) > 0) {
+		echo "<center>".$paging_controls."</center>\n";
+	}
+
+	echo "<br /><br />".(($num_rows == 0) ? "<br /><br />" : null);
+
+	// check or uncheck all checkboxes
+	if (sizeof($vm_ids) > 0) {
+		echo "<script>\n";
+		echo "	function check(what) {\n";
+		echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
+		foreach ($vm_ids as $vm_id) {
+			echo "		document.getElementById('".$vm_id."').checked = (what == 'all') ? true : false;\n";
 		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
 
-		// check or uncheck all checkboxes
-		if (sizeof($vm_ids) > 0) {
-			echo "<script>\n";
-			echo "	function check(what) {\n";
-			echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
-			foreach ($vm_ids as $vm_id) {
-				echo "		document.getElementById('".$vm_id."').checked = (what == 'all') ? true : false;\n";
-			}
-			echo "	}\n";
-			echo "</script>\n";
-		}
-
+	if ($num_rows > 0) {
 		// check all checkboxes
 		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
 
 		// delete checked
 		key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], 'document.forms.frm.submit();', true);
-
 	}
-	else {
-		echo "<br />";
-		echo $text['message-mailbox_not_found'];
-	}
-
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

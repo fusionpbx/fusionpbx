@@ -138,7 +138,7 @@ require_once "resources/paging.php";
 	if (if_group("superadmin")) {
 		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='extension_download.php'\">\n";
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	if ($paging_controls_mini != '') {
 		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -165,7 +165,7 @@ require_once "resources/paging.php";
 	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>\n";
+	echo "<td class='list_control_icon'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
@@ -178,6 +178,7 @@ require_once "resources/paging.php";
 	echo "</tr>\n";
 
 	if ($num_rows > 0) {
+
 		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -209,24 +210,26 @@ require_once "resources/paging.php";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $extensions, $row_count);
-	} //end if results
-
-	echo "	<tr>\n";
-	echo "		<td colspan='20' class='list_control_icons'>\n";
-	if (permission_exists('extension_add')) {
-		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
-			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			$c = ($c) ? 0 : 1;
 		}
-	}
-	if (permission_exists('extension_delete') && $num_rows > 0) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
+		unset($extensions, $row);
 
+	}
+
+	if ($num_rows > 0) {
+		echo "<tr>\n";
+		echo "	<td colspan='20' class='list_control_icons'>\n";
+		if (permission_exists('extension_add')) {
+			if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
+				echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			}
+		}
+		if (permission_exists('extension_delete')) {
+			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+		}
+		echo "	</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "</table>";
 	echo "</form>";
@@ -235,17 +238,26 @@ require_once "resources/paging.php";
 		echo "<center>".$paging_controls."</center>\n";
 	}
 
-	echo "<br><br>\n";
+	echo "<br /><br />".(($num_rows == 0) ? "<br /><br />" : null);
 
 	// check or uncheck all checkboxes
 	if (sizeof($ext_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what) {\n";
+		echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
 		foreach ($ext_ids as $ext_id) {
-			echo "document.getElementById('".$ext_id."').checked = (what == 'all') ? true : false;\n";
+			echo "		document.getElementById('".$ext_id."').checked = (what == 'all') ? true : false;\n";
 		}
 		echo "	}\n";
 		echo "</script>\n";
+	}
+
+	if ($num_rows > 0) {
+		// check all checkboxes
+		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
+
+		// delete checked
+		key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], 'document.forms.frm.submit();', true);
 	}
 
 //show the footer
