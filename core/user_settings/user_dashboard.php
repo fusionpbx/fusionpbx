@@ -393,7 +393,7 @@
 					$hud[$n]['html'] .= "</table>";
 				}
 				else {
-					$hud[$n]['html'] .= "<center><br><br>".$text['label-no_voicemail_assigned']."</center>";
+					$hud[$n]['html'] .= "<br />".$text['label-no_voicemail_assigned'];
 				}
 				$hud[$n]['html'] .= "</div>";
 				$n++;

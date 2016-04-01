@@ -180,29 +180,15 @@ echo "</SCRIPT>";
 
 // keyboard shortcut bindings
 echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/jquery/jquery-1.11.1.js'></script>\n";
-echo "<script>\n";
-echo "	$(window).keypress(function(event) {\n";
-echo "		//save file [Ctrl+S]\n";
-echo "		if ((event.which == 115 && event.ctrlKey) || (event.which == 19)) {\n";
-echo "			parent.$('form#frm_edit').submit();\n";
-echo "			return false;\n";
-echo "		}\n";
-echo "		//open file manager/clip library pane [Ctrl+Q]\n";
-echo "		else if ((event.which == 113 && event.ctrlKey) || (event.which == 19)) {\n";
-echo "			parent.toggle_sidebar();\n";
-echo "			parent.focus_editor();\n";
-echo "			return false;\n";
-echo "		}\n";
-echo "		//block backspace\n";
-echo "		else if (event.which == 8) {\n";
-echo "			return false;\n";
-echo "		}\n";
-echo "		//otherwise, default action\n";
-echo "		else {\n";
-echo "			return true;\n";
-echo "		}\n";
-echo "	});\n";
-echo "</script>";
+
+//save file
+key_press('ctrl+s', 'down', 'window', null, null, "parent.$('form#frm_edit').submit(); return false;", true);
+
+//open file manager/clip library pane
+key_press('ctrl+q', 'down', 'window', null, null, 'parent.toggle_sidebar(); parent.focus_editor(); return false;', true);
+
+//prevent backspace (browser history back)
+key_press('backspace', 'down', 'window', null, null, 'return false;', true);
 
 echo "</head>\n";
 echo "<body style='margin: 0px; padding: 5px;'>\n";
