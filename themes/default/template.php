@@ -165,6 +165,7 @@
 		margin: 0;
 		padding: 0;
 		overflow: auto;
+		-ms-overflow-style: scrollbar; /* stops ie10+ from displaying auto-hiding scroll bar on top of the body content (the domain selector, specifically) */
 		top: 0;
 		right: 0;
 		bottom: 0;
@@ -1403,45 +1404,45 @@
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
 
 
-		//domain selector controls
-			$(".domain_selector_domain").click(function() { show_domains(); });
-			$("#domains_hide").click(function() { hide_domains(); });
+		<?php
+		if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+			?>
 
-			function show_domains() {
-				var scrollbar_width = (window.innerWidth - $(window).width()); //gold: only solution that worked with body { overflow:auto }, even when scrollbar not visible
-				if (scrollbar_width > 0) {
-					$("body").css({'margin-right':scrollbar_width, 'overflow':'hidden'}); //disable body scroll bars
-					$(".navbar").css('margin-right',scrollbar_width); //adjust navbar margin to compensate
-					$("#domains_container").css('right',-scrollbar_width); //domain container right position to compensate
+			//domain selector controls
+				$(".domain_selector_domain").click(function() { show_domains(); });
+				$("#domains_hide").click(function() { hide_domains(); });
+
+				function show_domains() {
+					var scrollbar_width = (window.innerWidth - $(window).width()); //gold: only solution that worked with body { overflow:auto } (add -ms-overflow-style: scrollbar; to <body> style for ie 10+)
+					if (scrollbar_width > 0) {
+						$("body").css({'margin-right':scrollbar_width, 'overflow':'hidden'}); //disable body scroll bars
+						$(".navbar").css('margin-right',scrollbar_width); //adjust navbar margin to compensate
+						$("#domains_container").css('right',-scrollbar_width); //domain container right position to compensate
+					}
+					$("#domains_container").css({top: $(document).scrollTop(), height: window.innerHeight}).show();
+					$("#domains_block").animate({marginRight: '+=300'}, 400);
+					$("#domain_filter").focus();
+					document.getElementById('domains_visible').value = 1;
 				}
-				$("#domains_container").show();
-				$("#domains_block").animate({marginRight: '+=300'}, 400);
-				$("#domain_filter").focus();
-				document.getElementById('domains_visible').value = 1;
-			}
 
-			function hide_domains() {
-				$(document).ready(function() {
-					$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
-						$("#domain_filter").val('');
-						domain_search($("#domain_filter").val());
-						$(".navbar").css('margin-right','0'); //restore navbar margin
-						$("#domains_container").css('right','0'); //domain container right position
-						$("#domains_container").hide();
-						$("body").css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
+				function hide_domains() {
+					$(document).ready(function() {
+						$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
+							$("#domain_filter").val('');
+							domain_search($("#domain_filter").val());
+							$(".navbar").css('margin-right','0'); //restore navbar margin
+							$("#domains_container").css('right','0'); //domain container right position
+							$("#domains_container").hide();
+							$("body").css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
+						});
 					});
-				});
-				document.getElementById('domains_visible').value = 0;
-			}
+					document.getElementById('domains_visible').value = 0;
+				}
 
-			$(document).keyup(function(e) { //escape toggles visibility
-				if (e.keyCode == 27 && document.getElementById('domains_visible').value == 0) {
-					show_domains();
-				}
-				else if (e.keyCode == 27 && document.getElementById('domains_visible').value == 1) {
-					hide_domains();
-				}
-			});
+			<?php
+			key_press('escape', 'up', 'document', null, null, "if (document.getElementById('domains_visible').value == 0) { show_domains(); } else if (document.getElementById('domains_visible').value == 1) { hide_domains(); }", false);
+		}
+		?>
 
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
