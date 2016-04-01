@@ -1,4 +1,4 @@
-{if isset($cisco_time_zone)}
+{if isset($cisco_image_version)}
 # Image version
 image_version: "{$cisco_image_version}"
 {/if}
