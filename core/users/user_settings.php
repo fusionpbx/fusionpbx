@@ -200,8 +200,8 @@ else {
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
 				switch ($row['user_setting_value']) {
-					case '12h': echo "		".$text['label-12-hour']; break;
-					case '24h': echo "		".$text['label-24-hour']; break;
+					case '12h': echo $text['label-12-hour']; break;
+					case '24h': echo $text['label-24-hour']; break;
 				}
 			}
 			else if (
@@ -218,16 +218,13 @@ else {
 			}
 			else {
 				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					$border = (
-						substr_count(strtolower($row['user_setting_value']), '#fff') > 0 ||
-						substr_count(strtolower($row['user_setting_value']), '#ffffff') > 0 ||
-						substr_count(str_replace(' ','',strtolower($row['user_setting_value'])), '255,255,255,') > 0
-					) ? "border: 1px solid #ccc; padding: -1px;" : null;
-					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['user_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; ".$border."'>";
+					echo "		".(img_spacer('15px', '15px', 'background: '.$row['user_setting_value'].'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
+					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['user_setting_value'])."</span>\n";
 				}
-				echo "		".htmlspecialchars($row['user_setting_value']);
+				else {
+					echo "		".htmlspecialchars($row['user_setting_value'])."\n";
+				}
 			}
-			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			echo "		<a href='?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";

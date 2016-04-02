@@ -760,7 +760,7 @@ else {
 						//end the row
 							echo "</tr>\n";
 							if ($index != 999) {
-								echo "<tr><td colspan='7' style='margin: 0; padding: 0;'><img src='about:blank;' style='width: 100%; height: 1px; border-bottom: 1px solid #e5e9f0; margin: 0; padding: 0; display: block;'></td></tr>";
+								echo "<tr><td colspan='7' style='margin: 0; padding: 0;'>".(img_spacer('100%', '1px', 'border-bottom: 1px solid #e5e9f0; margin: 0; padding: 0; display: block;'))."</td></tr>";
 							}
 						//increment the value
 							$x++;

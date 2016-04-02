@@ -61,18 +61,18 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th id='th_filler' style='display: none; padding: 0px;'>".img_spacer('21px', '1px', 'none')."</th>\n";
+	echo "<th id='th_filler' style='display: none; padding: 0px;'>".img_spacer('21px', '1px')."</th>\n";
 	echo "<th width='20%'>".$text['label-time_user']."</th>\n";
 	echo "<th width='20%'>".$text['label-time_start']."</th>\n";
 	echo "<th width='20%'>".$text['label-time_duration']."</th>\n";
 	echo "<th width='40%'>".$text['label-time_description']."</th>\n";
 	echo "<td class='list_control_icons' nowrap>";
-	echo 	img_spacer('25px', '1px', 'none');
+	echo 	img_spacer('25px', '1px');
 	if (permission_exists('contact_time_add')) {
 		echo "<a href='contact_time_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
-		echo img_spacer('25px', '1px', 'none');
+		echo img_spacer('25px', '1px');
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
