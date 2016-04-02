@@ -24,45 +24,4 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//process this only one time
-if ($domains_processed == 1) {
-
-	//add switch call_center dir if it is missing
-		$sql = "select count(*) as num_rows from v_default_settings ";
-		$sql .= "where default_setting_category = 'switch' ";
-		$sql .= "and default_setting_subcategory = 'call_center' ";
-		$sql .= "and default_setting_name = 'dir' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "insert into v_default_settings ";
-				$sql .= "(";
-				$sql .= "default_setting_uuid, ";
-				$sql .= "default_setting_category, ";
-				$sql .= "default_setting_subcategory, ";
-				$sql .= "default_setting_name, ";
-				$sql .= "default_setting_value, ";
-				$sql .= "default_setting_enabled, ";
-				$sql .= "default_setting_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'switch', ";
-				$sql .= "'call_center', ";
-				$sql .= "'dir', ";
-				$sql .= "'".$_SESSION['switch']['conf']['dir']."/autoload_configs', ";
-				$sql .= "'false', ";
-				$sql .= "'' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-			unset($prep_statement, $row);
-		}
-
-}
-
 ?>

@@ -1,0 +1,244 @@
+<?php
+
+/**
+ * switch class provides access methods related to FreeSWITCH
+ *
+ * @method settings will add missing switch directories to default settings
+ */
+class switch {
+
+	public $event_socket_ip_address;
+	public $event_socket_port;
+	public $event_socket_password;
+
+	/**
+	 * Called when the object is created
+	 */
+	public function __construct() {
+		//place holder
+	}
+
+	/**
+	 * Called when there are no references to a particular object
+	 * unset the variables used in the class
+	 */
+	public function __destruct() {
+		foreach ($this as $key => $value) {
+			unset($this->$key);
+		}
+	}
+
+	/**
+	 * settings Set switch directories in default settings
+	 */
+	public function settings() {
+
+		//define the variables
+			if (!isset($this->event_socket_ip_address) {
+				$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
+			}
+			if (!isset($this->event_socket_port) {
+				$this->event_socket_port = $_SESSION['event_socket_port'];
+			}
+			if (!isset($this->event_socket_password) {
+				$this->event_socket_password = $_SESSION['event_socket_password'];
+			}
+
+		//connect to event socket
+			$fp = event_socket_create($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
+			if ($fp === false) {
+				return false;
+			}
+
+		//run the api command
+			$result = event_socket_request($fp, 'api global_getvar');
+
+		//close event socket
+			fclose($fp);
+
+		//set the result as a named array
+			$vars = array();
+			foreach (explode("\n", $result) as $row) {
+				$a = explode("=", $row);
+				if (substr($a[0], -4) == "_dir") {
+					$vars[$a[0]] = $a[1];
+				}
+			}
+
+		//set the bin directory
+			if ($vars['base_dir'] == "/usr/local/freeswitch") {
+				$bin = "/usr/local/freeswitch/bin"; 
+			} else {
+				$bin = "";
+			}
+
+		//create the default settings array
+			$x=0;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'bin';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $bin;
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'base';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['base_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'call_center';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/autoload_configs';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'conf';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'db';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['db_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'dialplan';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/dialplan';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'extensions';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/directory';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'grammar';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['grammar_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'log';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['log_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'mod';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['mod_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'phrases';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/lang';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'recordings';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['recordings_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'scripts';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['script_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'sip_profiles';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/sip_profiles';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'sounds';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['sounds_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'storage';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['storage_dir'];
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'switch';
+			$array[$x]['default_setting_subcategory'] = 'voicemail';
+			$array[$x]['default_setting_name'] = 'dir';
+			$array[$x]['default_setting_value'] = $vars['storage_dir'].'/voicemail';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+
+		//get an array of the default settings
+			$sql = "select * from v_default_settings ";
+			$sql .= "where default_setting_category = 'theme' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset ($prep_statement, $sql);
+
+		//find the missing default settings
+			$x = 0;
+			foreach ($array as $setting) {
+				$found = false;
+				$missing[$x] = $setting;
+				foreach ($default_settings as $row) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+						$found = true;
+						//remove items from the array that were found
+						unset($missing[$x]);
+					}
+				}
+				$x++;
+			}
+
+		//add the missing default settings
+			foreach ($missing as $row) {
+				//add the default settings
+				$orm = new orm;
+				$orm->name('default_settings');
+				$orm->save($row);
+				$message = $orm->message;
+				unset($orm);
+				//print_r($message);
+			}
+			unset($missing);
+
+		//set the default settings
+			foreach ($array as $row) {
+				if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
+					$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
+				}
+			}
+
+		//unset the array variable
+			unset($array);
+	}
+}
+
+?>
