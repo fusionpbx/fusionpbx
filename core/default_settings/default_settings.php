@@ -427,7 +427,7 @@ else {
 			}
 			else {
 				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['default_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['default_setting_value'], -0.18))."; padding: -1px;'>";
+					echo "		".(img_spacer('15px', '15px', 'background: '.$row['default_setting_value'].'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['default_setting_value'], -0.18)).'; padding: -1px;'));
 					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['default_setting_value'])."</span>\n";
 				}
 				else {

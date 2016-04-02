@@ -224,13 +224,13 @@ if (sizeof($_REQUEST) > 1) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 			}
-			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['domain_setting_value']);
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
-				switch ($row['domain_setting_value'] == '12h') {
-					case '12h': echo "		".$text['label-12-hour']; break;
-					case '24h': echo "		".$text['label-24-hour']; break;
+				switch ($row['domain_setting_value']) {
+					case '12h': echo $text['label-12-hour']; break;
+					case '24h': echo $text['label-24-hour']; break;
 				}
 			}
 			else if (
@@ -247,16 +247,13 @@ if (sizeof($_REQUEST) > 1) {
 			}
 			else {
 				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					$border = (
-						substr_count(strtolower($row['domain_setting_value']), '#fff') > 0 ||
-						substr_count(strtolower($row['domain_setting_value']), '#ffffff') > 0 ||
-						substr_count(str_replace(' ','',strtolower($row['domain_setting_value'])), '255,255,255,') > 0
-					) ? "border: 1px solid #ccc; padding: -1px;" : null;
-					echo "		<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='background: ".$row['domain_setting_value']."; width: 15px; height: 15px; margin-right: 4px; vertical-align: middle; ".$border."'>";
+					echo "		".(img_spacer('15px', '15px', 'background: '.$row['domain_setting_value'].'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
+					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['domain_setting_value'])."</span>\n";
 				}
-				echo "		".htmlspecialchars($row['domain_setting_value']);
+				else {
+					echo "		".htmlspecialchars($row['domain_setting_value'])."\n";
+				}
 			}
-			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
 			echo "		<a href='?domain_id=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['domain_setting_enabled']]."</a>\n";
