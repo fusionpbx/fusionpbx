@@ -1889,7 +1889,17 @@
 				</tr>
 				<tr>
 					<td style='width: 100%; height: 40px; vertical-align: bottom;'>
-						<div id='footer' style='width: 100%;'><span class='footer'>&copy; Copyright 2008 - <?php echo date("Y"); ?> <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>. All rights reserved.</span></div>
+						<div id='footer' style='width: 100%;'><span class='footer'>
+							<?php
+							if (isset($_SESSION['theme']['footer']['text'])) {
+								echo $_SESSION['theme']['footer']['text'];
+							}
+							else {
+								echo "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")."<a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>".$text['theme-label-all_rights_reserved'];
+							}
+							?>
+							</span>
+						</div>
 					</td>
 				</tr>
 			</table>

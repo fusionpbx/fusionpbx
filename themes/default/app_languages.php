@@ -48,4 +48,20 @@ $text['theme-label-search']['pl'] = "Poszukiwanie...";
 $text['theme-label-search']['uk'] = "Пошук...";
 $text['theme-label-search']['sv-se'] = "Sök...";
 
+$text['theme-label-copyright']['en-us'] = "Copyright";
+$text['theme-label-copyright']['es-cl'] = "";
+$text['theme-label-copyright']['pt-pt'] = "";
+$text['theme-label-copyright']['fr-fr'] = "";
+$text['theme-label-copyright']['pl'] = "";
+$text['theme-label-copyright']['uk'] = "";
+$text['theme-label-copyright']['sv-se'] = "";
+
+$text['theme-label-all_rights_reserved']['en-us'] = "All rights reserved.";
+$text['theme-label-all_rights_reserved']['es-cl'] = "";
+$text['theme-label-all_rights_reserved']['pt-pt'] = "";
+$text['theme-label-all_rights_reserved']['fr-fr'] = "";
+$text['theme-label-all_rights_reserved']['pl'] = "";
+$text['theme-label-all_rights_reserved']['uk'] = "";
+$text['theme-label-all_rights_reserved']['sv-se'] = "";
+
 ?>
