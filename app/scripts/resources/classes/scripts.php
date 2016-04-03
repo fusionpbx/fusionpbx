@@ -99,7 +99,7 @@ class scripts {
 	 * Writes the config.lua
 	 */
 	public function write_config() {
-		if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+		if (is_dir($_SESSION['switch']['scripts']['dir'])) {
 
 			//define the global variables
 				global $db;
