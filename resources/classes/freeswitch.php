@@ -7,7 +7,7 @@
  */
 class freeswitch {
 
-	public $db
+	public $db;
 	public $event_socket_ip_address;
 	public $event_socket_port;
 	public $event_socket_password;
