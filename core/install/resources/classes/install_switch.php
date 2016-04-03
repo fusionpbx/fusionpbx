@@ -98,6 +98,11 @@ include "root.php";
 		function install_phase_2() {
 			$this->write_progress("Install phase 2 started for switch");
 			//$this->create_config_lua();
+
+			//run all app_defaults.php files
+			$domain = new domains;
+			$domain->upgrade();
+
 			$this->restart_switch();
 			$this->write_progress("Install phase 2 completed for switch");
 		}
