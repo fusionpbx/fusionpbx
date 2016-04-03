@@ -28,7 +28,7 @@
 	if ($domains_processed == 1) {
 
 		//add missing switch directories in default settings
-			$obj = new freeswitch;
+			$obj = new switch_settings;
 			$obj->settings();
 			unset($obj);
 

@@ -1,11 +1,11 @@
 <?php
 
 /**
- * freeswitch class provides access methods related to FreeSWITCH
+ * switch_settings class provides access methods related to FreeSWITCH
  *
  * @method settings will add missing switch directories to default settings
  */
-class freeswitch {
+class switch_settings {
 
 	public $db;
 	public $event_socket_ip_address;
@@ -232,8 +232,10 @@ class freeswitch {
 
 		//set the default settings
 			foreach ($array as $row) {
-				if (!isset($_SESSION['switch'][$row['default_setting_subcategory']] && $row['default_setting_enabled'] != "false")) {
-					$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
+				if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
+					if ($row['default_setting_enabled'] != "false") {
+						$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
+					}
 				}
 			}
 
