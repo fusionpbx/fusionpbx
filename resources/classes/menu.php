@@ -177,6 +177,10 @@
 						}
 					}
 
+				//make sure the default user groups exist
+					$group = new groups;
+					$group->defaults();
+
 				//get default global group_uuids
 					$sql = "select group_uuid, group_name from v_groups ";
 					$sql .= "where domain_uuid is null ";
