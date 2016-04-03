@@ -26,11 +26,9 @@
 
 //process this only one time
 if ($domains_processed == 1) {
-	if (isset($_SESSION['switch']['scripts']['dir'])) {
-		$obj = new scripts;
-		$obj->copy_files();
-		$obj->write_config();
-	}
+	$obj = new scripts;
+	$obj->copy_files();
+	$obj->write_config();
 }
 
 ?>
