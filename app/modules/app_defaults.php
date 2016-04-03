@@ -28,9 +28,9 @@
 	if ($domains_processed == 1) {
 
 		//add missing switch directories in default settings
-			$switch = new switch;
-			$switch->settings();
-			unset($switch);
+			$obj = new freeswitch;
+			$obj->settings();
+			unset($obj);
 
 		//use the module class to get the list of modules from the db and add any missing modules
 			if (isset($_SESSION['switch']['mod']['dir'])) {

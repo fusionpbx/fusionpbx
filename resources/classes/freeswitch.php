@@ -1,11 +1,11 @@
 <?php
 
 /**
- * switch class provides access methods related to FreeSWITCH
+ * freeswitch class provides access methods related to FreeSWITCH
  *
  * @method settings will add missing switch directories to default settings
  */
-class switch {
+class freeswitch {
 
 	public $event_socket_ip_address;
 	public $event_socket_port;
@@ -45,13 +45,11 @@ class switch {
 			}
 
 		//connect to event socket
-			$fp = event_socket_create($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
-			if ($fp === false) {
-				return false;
-			}
+			$esl = new event_socket;
+			$esl->connect($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
 
 		//run the api command
-			$result = event_socket_request($fp, 'api global_getvar');
+			$result = $esl->request('api global_getvar');
 
 		//close event socket
 			fclose($fp);
