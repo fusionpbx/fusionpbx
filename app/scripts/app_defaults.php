@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,9 +26,11 @@
 
 //process this only one time
 if ($domains_processed == 1) {
-	$obj = new scripts;
-	$obj->copy_files();
-	$obj->write_config();
+	if (isset($_SESSION['switch']['scripts']['dir'])) {
+		$obj = new scripts;
+		$obj->copy_files();
+		$obj->write_config();
+	}
 }
 
 ?>
