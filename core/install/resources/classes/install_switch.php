@@ -29,7 +29,7 @@ include "root.php";
 	class install_switch {
 
 		protected $global_settings;
-		protected $config_lua;
+		//protected $config_lua;
 		protected $dbh;
 
 		public $debug = false;
@@ -43,6 +43,7 @@ include "root.php";
 				throw new Exception('The parameter $global_settings must be a global_settings object (or a subclass of)');
 			}
 			$this->global_settings = $global_settings;
+/*
 			if (is_dir("/etc/fusionpbx")){
 				$this->config_lua = "/etc/fusionpbx/config.lua";
 			}elseif (is_dir("/usr/local/etc/fusionpbx")){
@@ -53,6 +54,7 @@ include "root.php";
 				throw new Exception("Could not work out where to put the config.lua");
 			}
 			$this->config_lua = normalize_path($this->config_lua);
+*/
 		}
 
 		//utility Functions
@@ -89,20 +91,20 @@ include "root.php";
 		function install_phase_1() {
 			$this->write_progress("Install phase 1 started for switch");
 			$this->copy_conf();
-			$this->copy_scripts();
+			//$this->copy_scripts();
 			$this->write_progress("Install phase 1 completed for switch");
 		}
 
 		function install_phase_2() {
 			$this->write_progress("Install phase 2 started for switch");
-			$this->create_config_lua();
+			//$this->create_config_lua();
 			$this->restart_switch();
 			$this->write_progress("Install phase 2 completed for switch");
 		}
 
 		function upgrade() {
-			$this->copy_scripts();
-			$this->create_config_lua();
+			//$this->copy_scripts();
+			//$this->create_config_lua();
 		}
 
 		protected function copy_conf() {
@@ -190,6 +192,7 @@ include "root.php";
 			}
 		}
 
+/*
 		public function create_config_lua() {
 			//define the database connection as global
 				global $db;
@@ -346,7 +349,7 @@ include "root.php";
 				unset($tmp);
 				fclose($fout);
 		}
-
+*/
 		protected function restart_switch() {
 			$esl = new event_socket;
 			if(!$esl->connect($this->global_settings->switch_event_host(), $this->global_settings->switch_event_port(), $this->global_settings->switch_event_password())) {

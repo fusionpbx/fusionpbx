@@ -663,7 +663,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'template';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-
+/*
 				//switch settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $switch_bin_dir;
@@ -767,7 +767,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'dialplan';
 				$tmp[$x]['enabled'] = 'false';
 				$x++;
-
+*/
 				//server settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->global_settings->switch_temp_dir();
@@ -824,6 +824,7 @@ include "root.php";
 					$x++;
 				}
 
+/*
 			//add the groups
 				$x = 0;
 				$tmp[$x]['group_name'] = 'superadmin';
@@ -895,6 +896,7 @@ include "root.php";
 					}
 				}
 				$this->dbh->commit();
+*/
 			}
 		}
 
@@ -919,41 +921,42 @@ include "root.php";
 				$sql .= "where USER_uuid = '".$this->admin_uuid."' ";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
-			}else{
-				$this->write_progress("\t... creating super user");
-			//add a user and then add the user to the superadmin group
-			//prepare the values
-				$this->admin_uuid = uuid();
-				$contact_uuid = uuid();
-			//set a sessiong variable
-				$_SESSION["user_uuid"] = $user_uuid;
-			//salt used with the password to create a one way hash
-			//add the user account
-				$sql = "insert into v_users ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "user_uuid, ";
-				$sql .= "contact_uuid, ";
-				$sql .= "username, ";
-				$sql .= "password, ";
-				$sql .= "salt, ";
-				$sql .= "add_date, ";
-				$sql .= "add_user ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$this->global_settings->domain_uuid()."', ";
-				$sql .= "'".$this->admin_uuid."', ";
-				$sql .= "'$contact_uuid', ";
-				$sql .= "'".$this->admin_username."', ";
-				$sql .= "'".md5($salt.$this->admin_password)."', ";
-				$sql .= "'$salt', ";
-				$sql .= "now(), ";
-				$sql .= "'".$this->admin_username."' ";
-				$sql .= ");";
-				$this->write_debug( $sql."\n");
-				$this->dbh->exec(check_sql($sql));
-				unset($sql);
+			} else {
+				//message
+					$this->write_progress("\t... creating super user");
+				//add a user and then add the user to the superadmin group
+				//prepare the values
+					$this->admin_uuid = uuid();
+					$contact_uuid = uuid();
+				//set a sessiong variable
+					$_SESSION["user_uuid"] = $user_uuid;
+				//salt used with the password to create a one way hash
+				//add the user account
+					$sql = "insert into v_users ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "user_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "username, ";
+					$sql .= "password, ";
+					$sql .= "salt, ";
+					$sql .= "add_date, ";
+					$sql .= "add_user ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$this->global_settings->domain_uuid()."', ";
+					$sql .= "'".$this->admin_uuid."', ";
+					$sql .= "'$contact_uuid', ";
+					$sql .= "'".$this->admin_username."', ";
+					$sql .= "'".md5($salt.$this->admin_password)."', ";
+					$sql .= "'$salt', ";
+					$sql .= "now(), ";
+					$sql .= "'".$this->admin_username."' ";
+					$sql .= ");";
+					$this->write_debug( $sql."\n");
+					$this->dbh->exec(check_sql($sql));
+					unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser contact exists");
 			$sql = "select count(*) from v_contacts ";
@@ -996,7 +999,7 @@ include "root.php";
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['count'] == 0) {
-			//add the user to the superadmin group
+				//add the user to the superadmin group
 				$sql = "insert into v_group_users ";
 				$sql .= "(";
 				$sql .= "group_user_uuid, ";
