@@ -156,7 +156,7 @@ if ($domains_processed == 1) {
 			unset ($prep_statement);
 		}
 
-	//if there are no permissions listed in v_group_permissions then set the default permissions
+	//if user_enabled is null then set to enabled true
 		$sql = "select count(*) as count from v_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_enabled is null ";
