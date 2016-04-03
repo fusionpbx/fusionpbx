@@ -153,11 +153,15 @@ class scripts {
 					$config = "/usr/local/etc/fusionpbx/config.lua";
 				}
 				else {
-					$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+					//connect to event socket
+					$esl = new event_socket;
+					$esl->connect($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
+					$script_dir = trim($esl->request('api global_getvar script_dir'));
+					$config = $script_dir."/resources/config.lua";
 				}
 				$fout = fopen($config,"w");
 				if(!$fout){
-					throw new Exception("Failed to open '$config' for writing");
+					return;
 				}
 
 			//make the config.lua
