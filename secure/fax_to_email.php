@@ -301,7 +301,7 @@ if(!function_exists('fax_split_dtmf')) {
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "resources/require.php";
-	include "resources/classes/EventSocket.php";
+	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 

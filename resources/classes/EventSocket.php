@@ -37,13 +37,12 @@ class Buffer {
 		return $tmp;
 	}
 }
-
 //$b = new Buffer;
 //$b->append("hello\nworld\n");
 //print($b->read_line());
 //print($b->read_line());
 
-class EventSocket {
+class event_socket {
 	private $buffer;
 	private $fp;
 
@@ -173,7 +172,7 @@ class EventSocket {
 
 /*
 function event_socket_create($host, $port, $password) {
-	$esl = new EventSocket;
+	$esl = new event_socket;
 	if ($esl->connect($host, $port, $password)) {
 		return $esl->reset_fp();
 	}
@@ -181,14 +180,14 @@ function event_socket_create($host, $port, $password) {
 }
 
 function event_socket_request($fp, $cmd) {
-	$esl = new EventSocket($fp);
+	$esl = new event_socket($fp);
 	$result = $esl->request($cmd);
 	$esl->reset_fp();
 	return $result;
 }
 */
 
-// $esl = new EventSocket;
+// $esl = new event_socket;
 // $esl->connect('127.0.0.1', 8021, 'ClueCon');
 // print($esl->request('api sofia status'));
 

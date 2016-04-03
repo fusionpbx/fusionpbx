@@ -25,7 +25,7 @@
 
 */
 require_once "root.php";
-require_once "resources/classes/EventSocket.php";
+require_once "resources/classes/event_socket.php";
 
 //define the install class
 	class detect_switch {
@@ -144,7 +144,7 @@ require_once "resources/classes/EventSocket.php";
 		}
 
 		protected function connect_event_socket(){
-			$esl = new EventSocket;
+			$esl = new event_socket;
 			if ($esl->connect($this->event_host, $this->event_port, $this->event_password)) {
 				$this->event_socket = $esl->reset_fp();
 				return true;
@@ -153,7 +153,7 @@ require_once "resources/classes/EventSocket.php";
 		}
 
 		protected function event_socket_request($cmd) {
-			$esl = new EventSocket($this->event_socket);
+			$esl = new event_socket($this->event_socket);
 			$result = $esl->request($cmd);
 			$esl->reset_fp();
 			return $result;

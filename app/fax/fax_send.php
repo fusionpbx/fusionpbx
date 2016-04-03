@@ -111,7 +111,7 @@ if (!$included) {
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
 else{
-	require_once "resources/classes/EventSocket.php";
+	require_once "resources/classes/event_socket.php";
 }
 
 if(!function_exists('correct_path')) {

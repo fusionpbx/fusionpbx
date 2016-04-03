@@ -348,7 +348,7 @@ include "root.php";
 		}
 
 		protected function restart_switch() {
-			$esl = new EventSocket;
+			$esl = new event_socket;
 			if(!$esl->connect($this->global_settings->switch_event_host(), $this->global_settings->switch_event_port(), $this->global_settings->switch_event_password())) {
 				throw new Exception("Failed to connect to switch");
 			}

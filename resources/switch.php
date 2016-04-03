@@ -111,7 +111,7 @@ function load_extensions() {
 load_extensions();
 
 function event_socket_create($host, $port, $password) {
-	$esl = new EventSocket;
+	$esl = new event_socket;
 	if ($esl->connect($host, $port, $password)) {
 		return $esl->reset_fp();
 	}
@@ -119,7 +119,7 @@ function event_socket_create($host, $port, $password) {
 }
 
 function event_socket_request($fp, $cmd) {
-	$esl = new EventSocket($fp);
+	$esl = new event_socket($fp);
 	$result = $esl->request($cmd);
 	$esl->reset_fp();
 	return $result;
@@ -142,7 +142,7 @@ function event_socket_request_cmd($cmd) {
 		unset ($prep_statement);
 	}
 
-	$esl = new EventSocket;
+	$esl = new event_socket;
 	if (!$esl->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
 		return false;
 	}
