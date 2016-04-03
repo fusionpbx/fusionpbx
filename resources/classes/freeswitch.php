@@ -93,7 +93,7 @@ class freeswitch {
 			$array[$x]['default_setting_subcategory'] = 'call_center';
 			$array[$x]['default_setting_name'] = 'dir';
 			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/autoload_configs';
-			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'switch';
@@ -114,14 +114,14 @@ class freeswitch {
 			$array[$x]['default_setting_subcategory'] = 'dialplan';
 			$array[$x]['default_setting_name'] = 'dir';
 			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/dialplan';
-			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'switch';
 			$array[$x]['default_setting_subcategory'] = 'extensions';
 			$array[$x]['default_setting_name'] = 'dir';
 			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/directory';
-			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'switch';
@@ -149,7 +149,7 @@ class freeswitch {
 			$array[$x]['default_setting_subcategory'] = 'phrases';
 			$array[$x]['default_setting_name'] = 'dir';
 			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/lang';
-			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'switch';
@@ -170,7 +170,7 @@ class freeswitch {
 			$array[$x]['default_setting_subcategory'] = 'sip_profiles';
 			$array[$x]['default_setting_name'] = 'dir';
 			$array[$x]['default_setting_value'] = $vars['conf_dir'].'/sip_profiles';
-			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'switch';
@@ -232,7 +232,7 @@ class freeswitch {
 
 		//set the default settings
 			foreach ($array as $row) {
-				if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
+				if (!isset($_SESSION['switch'][$row['default_setting_subcategory']] && $row['default_setting_enabled'] != "false")) {
 					$_SESSION['switch'][$row['default_setting_subcategory']] = $row['default_setting_value'];
 				}
 			}
