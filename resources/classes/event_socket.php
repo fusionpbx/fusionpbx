@@ -1,6 +1,6 @@
 <?php
 
-class Buffer {
+class buffer {
 	private $content;
 	private $eol;
 
@@ -37,7 +37,7 @@ class Buffer {
 		return $tmp;
 	}
 }
-//$b = new Buffer;
+//$b = new buffer;
 //$b->append("hello\nworld\n");
 //print($b->read_line());
 //print($b->read_line());
@@ -47,7 +47,7 @@ class event_socket {
 	private $fp;
 
 	public function __construct($fp = false) {
-		$this->buffer = new Buffer;
+		$this->buffer = new buffer;
 		$this->fp = $fp;
 	}
 
