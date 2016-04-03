@@ -7,6 +7,7 @@
  */
 class freeswitch {
 
+	public $db
 	public $event_socket_ip_address;
 	public $event_socket_port;
 	public $event_socket_password;
@@ -15,7 +16,9 @@ class freeswitch {
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		//place holder
+		//set the database connection
+		global $db;
+		$this->db = $db;
 	}
 
 	/**
@@ -195,7 +198,7 @@ class freeswitch {
 		//get an array of the default settings
 			$sql = "select * from v_default_settings ";
 			$sql .= "where default_setting_category = 'theme' ";
-			$prep_statement = $db->prepare($sql);
+			$prep_statement = $this->db->prepare($sql);
 			$prep_statement->execute();
 			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset ($prep_statement, $sql);
