@@ -140,32 +140,39 @@ class groups {
 			$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			unset ($prep_statement);
 			if ($result['count'] == 0) {
+				//build the apps array
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+					$x = 0;
+					foreach ($config_list as &$config_path) {
+						include($config_path);
+						$x++;
+					}
 				//no permissions found add the defaults
-				$db->beginTransaction();
-				foreach($apps as $app) {
-					foreach ($app['permissions'] as $row) {
-						foreach ($row['groups'] as $group) {
-							//add the record
-							$sql = "insert into v_group_permissions ";
-							$sql .= "(";
-							$sql .= "group_permission_uuid, ";
-							$sql .= "domain_uuid, ";
-							$sql .= "permission_name, ";
-							$sql .= "group_name ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'".uuid()."', ";
-							$sql .= "null, ";
-							$sql .= "'".$row['name']."', ";
-							$sql .= "'".$group."' ";
-							$sql .= ")";
-							$db->exec($sql);
-							unset($sql);
+					$db->beginTransaction();
+					foreach($apps as $app) {
+						foreach ($app['permissions'] as $row) {
+							foreach ($row['groups'] as $group) {
+								//add the record
+								$sql = "insert into v_group_permissions ";
+								$sql .= "(";
+								$sql .= "group_permission_uuid, ";
+								$sql .= "domain_uuid, ";
+								$sql .= "permission_name, ";
+								$sql .= "group_name ";
+								$sql .= ")";
+								$sql .= "values ";
+								$sql .= "(";
+								$sql .= "'".uuid()."', ";
+								$sql .= "null, ";
+								$sql .= "'".$row['name']."', ";
+								$sql .= "'".$group."' ";
+								$sql .= ")";
+								$db->exec($sql);
+								unset($sql);
+							}
 						}
 					}
-				}
-				$db->commit();
+					$db->commit();
 			}
 	}
 
