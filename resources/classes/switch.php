@@ -34,13 +34,13 @@ class switch {
 	public function settings() {
 
 		//define the variables
-			if (!isset($this->event_socket_ip_address) {
+			if (!isset($this->event_socket_ip_address)) {
 				$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
 			}
-			if (!isset($this->event_socket_port) {
+			if (!isset($this->event_socket_port)) {
 				$this->event_socket_port = $_SESSION['event_socket_port'];
 			}
-			if (!isset($this->event_socket_password) {
+			if (!isset($this->event_socket_password)) {
 				$this->event_socket_password = $_SESSION['event_socket_password'];
 			}
 
