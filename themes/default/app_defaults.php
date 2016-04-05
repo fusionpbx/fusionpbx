@@ -229,7 +229,7 @@ if ($domains_processed == 1) {
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_main_icons';
-		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_name'] = 'boolean';
 		$array[$x]['default_setting_value'] = 'false';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Show icons next to main menu items.';
