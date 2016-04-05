@@ -43,9 +43,6 @@
 
 			--record and save the file
 				if (storage_type == "base64") then
-					--include the base64 function
-						require "resources.functions.base64";
-
 					--set the location
 						voicemail_name_location = voicemail_dir.."/"..voicemail_id.."/recorded_name.wav";
 
@@ -58,10 +55,11 @@
 						freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. "\n");
 
 					--base64 encode the file
-						local f = io.open(voicemail_name_location, "rb");
-						local file_content = f:read("*all");
-						f:close();
-						voicemail_name_base64 = base64.encode(file_content);
+						--include the file io
+							local file = require "resources.functions.file"
+
+						--read file content as base64 string
+							voicemail_name_base64 = assert(file.read_base64(voicemail_name_location));
 
 					--update the voicemail name
 						sql = "UPDATE v_voicemails ";
@@ -72,13 +70,10 @@
 							freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
 						end
 						if (storage_type == "base64") then
-							array = explode("://", database["system"]);
-							local luasql = require "luasql.postgres";
-							local env = assert (luasql.postgres());
-							local dbh = env:connect(array[2]);
-							res, serr = dbh:execute(sql);
-							dbh:close();
-							env:close();
+							local Database = require "resources.functions.database"
+							local dbh = Database.new('system', 'base64');
+							dbh:query(sql);
+							dbh:release();
 						else
 							dbh:query(sql);
 						end

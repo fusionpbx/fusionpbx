@@ -24,6 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 	local send_mail = require 'resources.functions.send_mail'
+	local Database = require "resources.functions.database"
 
 --define a function to send email
 	function send_email(id, uuid)
@@ -56,6 +57,12 @@
 				--include languages file
 					local Text = require "resources.functions.text"
 					local text = Text.new("app.voicemail.app_languages")
+					local dbh = dbh
+
+				--connect using other backend if needed
+					if storage_type == "base64" then
+						dbh = Database.new('system', 'base64/read')
+					end
 
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
@@ -75,20 +82,24 @@
 							--message_priority = row["message_priority"];
 						--get the recordings from the database
 							if (storage_type == "base64") then
-								--add functions
-									require "resources.functions.base64";
-
 								--set the voicemail message path
 									message_location = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 
 								--save the recording to the file system
 									if (string.len(row["message_base64"]) > 32) then
-										local f = io.open(message_location, "w");
-										f:write(base64.decode(row["message_base64"]));
-										f:close();
+										--include the file io
+											local file = require "resources.functions.file"
+
+										--write decoded string to file
+											file.write_base64(message_location, row["message_base64"]);
 									end
 							end
 					end);
+
+				--close temporary connection
+					if storage_type == "base64" then
+						dbh:release()
+					end
 
 				--format the message length and date
 					message_length_formatted = format_seconds(message_length);
