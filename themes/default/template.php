@@ -250,17 +250,23 @@
 		}
 
 	/* main menu item */
-	.navbar-nav > li > a.dropdown-toggle, .navbar-nav > li > a.dropdown-toggle, .navbar-nav > li > a.dropdown-toggle {
-		font-size: 10.25pt;
+	.navbar .navbar-nav > li > a,
+	.navbar .navbar-nav > li > a.first-letter,
+	.navbar .navbar-nav > li > a.current-menu-item {
+		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
 		padding-right: 9px;
 		}
 
-	.navbar-nav > li > a.dropdown-toggle:hover, .navbar-nav > li > a.dropdown-toggle:focus, .navbar-nav > li > a.dropdown-toggle:active {
+	.navbar .navbar-nav > li > a:hover,
+	.navbar .navbar-nav > li > a:focus,
+	.navbar .navbar-nav > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
+		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>
 		}
 
-	.navbar-nav > li > a > span.glyphicon {
+	.navbar .navbar-nav > li > a > span.glyphicon {
 		margin: 1px 7px 0 0;
 		}
 
@@ -275,7 +281,9 @@
 		border: none;
 		}
 
-	.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:active {
+	.navbar-inverse .navbar-toggle:hover,
+	.navbar-inverse .navbar-toggle:focus,
+	.navbar-inverse .navbar-toggle:active {
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		}
 
@@ -300,13 +308,16 @@
 
 	/* sub menu item */
 	.dropdown-menu > li > a {
+		font-family: <?php echo ($_SESSION['theme']['menu_sub_text_font']['text'] != '') ? $_SESSION['theme']['menu_sub_text_font']['text'] : 'arial'; ?>;
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color']['text'] : '#fff'; ?>;
-		font-size: 10pt;
+		font-size: <?php echo ($_SESSION['theme']['menu_sub_text_size']['text'] != '') ? $_SESSION['theme']['menu_sub_text_size']['text'] : '10pt'; ?>;
 		margin: 0;
 		padding: 3px 15px;
 		}
 
-	.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > li > a:active {
+	.dropdown-menu > li > a:hover,
+	.dropdown-menu > li > a:focus,
+	.dropdown-menu > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color_hover']['text'] : '#141414'; ?>;
 		}
@@ -1691,16 +1702,20 @@
 								}
 								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-								switch ($menu_parent['menu_item_title']) {
-									case "Home": $glyph = 'home'; break;
-									case "Accounts": $glyph = 'user'; break;
-									case "Dialplan": $glyph = 'transfer'; break;
-									case "Apps": $glyph = 'send'; break;
-									case "Status": $glyph = 'equalizer'; break;
-									case "Advanced": $glyph = 'cog'; break;
+								if ($_SESSION['theme']['menu_main_icons']['boolean'] == 'true' || $_SESSION['theme']['menu_main_icons']['boolean'] == '') {
+									switch ($menu_parent['menu_item_title']) {
+										case "Home": $glyph = 'home'; break;
+										case "Accounts": $glyph = 'user'; break;
+										case "Dialplan": $glyph = 'transfer'; break;
+										case "Apps": $glyph = 'send'; break;
+										case "Status": $glyph = 'equalizer'; break;
+										case "Advanced": $glyph = 'cog'; break;
+										default: $glyph = null;
+									}
+									$menu_main_icon = ($glyph != '') ? "<span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span>" : null;
 								}
 								echo "<li ".$mod_li.">\n";
-								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3."><span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span><span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
+								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3.">".$menu_main_icon."<span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
 								if ($submenu) {
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
