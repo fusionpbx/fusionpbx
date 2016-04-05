@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -155,7 +155,7 @@ class scripts {
 				else {
 					//connect to event socket
 					$esl = new event_socket;
-					$esl->connect($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
+					$esl->connect($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					$script_dir = trim($esl->request('api global_getvar script_dir'));
 					$config = $script_dir."/resources/config.lua";
 				}
