@@ -27,7 +27,7 @@
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
--- needed for cli-command xml_locate dialplan
+--needed for cli-command xml_locate dialplan
 	if (call_context == nil) then
 		call_context = "public";
 	end
