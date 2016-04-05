@@ -234,6 +234,7 @@ if (sizeof($_REQUEST) > 1) {
 				}
 			}
 			else if (
+				( $category == "theme" && $subcategory == "menu_main_icons" && $name == "boolean" ) ||
 				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
 				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
