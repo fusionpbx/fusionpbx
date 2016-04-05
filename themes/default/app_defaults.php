@@ -211,14 +211,28 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = 'center';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the alignment of the header logo (Inline menu only)';
-		/* menu elements */
 		$x++;
+		/* menu elements */
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_main_background_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#ff0000';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set a background color (and opacity) of the main menu bar.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_background_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ff0000';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set a background hover color (and opacity) of the main menu items.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_icons';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'false';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Show icons next to main menu items.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_main_background_image';
@@ -249,6 +263,20 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the text hover color of the main menu items.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_text_font';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'Arial';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the font of the main menu items.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_text_size';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '10.25pt';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the text size of the main menu items.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_position';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = 'top';
@@ -262,6 +290,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the style of the main menu.';
 		$x++;
+		/* sub menu items */
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_sub_background_color';
 		$array[$x]['default_setting_name'] = 'text';
@@ -303,8 +332,22 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '#69e5ff';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the hover text color (and opacity) of sub menu items.';
-		/* body elements */
 		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_sub_text_font';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'Arial';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the font of the sub menu items.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_sub_text_size';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '10pt';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the text size of the sub menu items.';
+		$x++;
+		/* body elements */
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'heading_text_font';
 		$array[$x]['default_setting_name'] = 'text';
@@ -360,8 +403,8 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '#5082ca';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the hover color (and opacity) of text links outside tables.';
-		/* data tables */
 		$x++;
+		/* data tables */
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'table_heading_text_font';
 		$array[$x]['default_setting_name'] = 'text';
@@ -386,7 +429,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'table_heading_background_color';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'none';
+		$array[$x]['default_setting_value'] = '#ffffff';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the background color (and opacity) of table header rows.';
 		$x++;
