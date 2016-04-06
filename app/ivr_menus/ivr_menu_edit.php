@@ -429,7 +429,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//misc optgroup
 		if (if_group("superadmin")) {
 			echo "<optgroup label='Misc'>\n";
-			echo "	<option value='phrase:'>phrase:</option>\n";
 			echo "	<option value='say:'>say:</option>\n";
 			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
@@ -507,6 +506,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				else if (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
 					echo "	<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
 				}
+				else {
+					echo "	<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+				}
 				echo "</optgroup>\n";
 			}
 			unset($tmp_selected);
@@ -527,7 +529,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//misc
 		if (if_group("superadmin")) {
 			echo "<optgroup label='Misc'>\n";
-			echo "	<option value='phrase:'>phrase:</option>\n";
 			echo "	<option value='say:'>say:</option>\n";
 			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
