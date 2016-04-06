@@ -225,7 +225,16 @@
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
-		border: none;
+		border-color: <?php echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? $_SESSION['theme']['menu_main_border_color']['text'] : '#ffffff'; ?>;
+		border-size: <?php echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? $_SESSION['theme']['menu_main_border_size']['text'] : '0'; ?>;
+		<?php
+		switch ($_SESSION['theme']['menu_style']['text']) {
+			case 'inline': $default_radius = '4px'; break;
+			case 'static': $default_radius = '0 0 4px 4px'; break;
+			default: $default_radius = '0';
+		}
+		?>
+		border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : $default_radius; ?>;
 		}
 
 	/* main menu logo */
@@ -299,11 +308,13 @@
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
 		padding-bottom: 10px;
-		border: none;
+		border-color: <?php echo ($_SESSION['theme']['menu_sub_border_color']['text'] != '') ? $_SESSION['theme']['menu_sub_border_color']['text'] : '#ffffff'; ?>;
+		border-size: <?php echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? $_SESSION['theme']['menu_sub_border_size']['text'] : '0'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
 		box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
+		border-radius: <?php echo ($_SESSION['theme']['menu_sub_border_radius']['text'] != '') ? $_SESSION['theme']['menu_sub_border_radius']['text'] : '0 0 4px 4px'; ?>;
 		}
 
 	/* sub menu item */
