@@ -764,6 +764,11 @@
 
 /* TABLES *****************************************************************/
 
+	table {
+		border-collapse: separate;
+		border-spacing: 0;
+		}
+
 	th {
 		padding: 4px 7px 4px 0;
 		padding: 4px 7px;
