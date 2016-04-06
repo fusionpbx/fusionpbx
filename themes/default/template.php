@@ -225,8 +225,8 @@
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
-		border-color: <?php echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? $_SESSION['theme']['menu_main_border_color']['text'] : '#ffffff'; ?>;
-		border-size: <?php echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? $_SESSION['theme']['menu_main_border_size']['text'] : '0'; ?>;
+		<?php echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_main_border_color']['text'].';' : null; ?>
+		<?php echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_main_border_size']['text'].';' : null; ?>
 		<?php
 		switch ($_SESSION['theme']['menu_style']['text']) {
 			case 'inline': $default_radius = '4px'; break;
@@ -308,8 +308,8 @@
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
 		padding-bottom: 10px;
-		border-color: <?php echo ($_SESSION['theme']['menu_sub_border_color']['text'] != '') ? $_SESSION['theme']['menu_sub_border_color']['text'] : '#ffffff'; ?>;
-		border-size: <?php echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? $_SESSION['theme']['menu_sub_border_size']['text'] : '0'; ?>;
+		<?php echo ($_SESSION['theme']['menu_sub_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_sub_border_color']['text'].';' : null; ?>
+		<?php echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_sub_border_size']['text'].';' : null; ?>
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
