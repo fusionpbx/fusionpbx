@@ -1430,7 +1430,8 @@
 						$(".navbar").css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$("#domains_container").css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$("#domains_container").css({top: $(document).scrollTop(), height: window.innerHeight}).show();
+					$('body').scrollTop();
+					$("#domains_container").show();
 					$("#domains_block").animate({marginRight: '+=300'}, 400);
 					$("#domain_filter").focus();
 					document.getElementById('domains_visible').value = 1;
