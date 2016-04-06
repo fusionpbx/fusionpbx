@@ -671,7 +671,7 @@ else {
 						echo "	<td class='vtable'>".$field['group_name']."</td>\n";
 						echo "	<td>\n";
 						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
-							echo "	<a href='contact_group_delete.php?id=".$contact_group_uuid."&contact_uuid=".$contact_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+							echo "	<a href='contact_group_delete.php?id=".$field['contact_group_uuid']."&contact_uuid=".$contact_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
