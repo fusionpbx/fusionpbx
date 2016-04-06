@@ -225,7 +225,17 @@
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
 		box-shadow: <?php echo ($_SESSION['theme']['menu_main_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_main_shadow_color']['text'] : 'none';?>;
-		border: none;
+		<?php
+		echo ($_SESSION['theme']['menu_main_border_color']['text'] == '' && $_SESSION['theme']['menu_main_border_size']['text'] == '') ? "border: 0;\n" : null;
+		echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_main_border_color']['text'].";\n" : null;
+		echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_main_border_size']['text'].";\n" : null;
+		switch ($_SESSION['theme']['menu_style']['text']) {
+			case 'inline': $default_radius = '4px'; break;
+			case 'static': $default_radius = '0 0 4px 4px'; break;
+			default: $default_radius = '0';
+		}
+		?>
+		border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : $default_radius; ?>;
 		}
 
 	/* main menu logo */
@@ -250,17 +260,23 @@
 		}
 
 	/* main menu item */
-	.navbar-nav > li > a.dropdown-toggle, .navbar-nav > li > a.dropdown-toggle, .navbar-nav > li > a.dropdown-toggle {
-		font-size: 10.25pt;
+	.navbar .navbar-nav > li > a,
+	.navbar .navbar-nav > li > a.first-letter,
+	.navbar .navbar-nav > li > a.current-menu-item {
+		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
 		padding-right: 9px;
 		}
 
-	.navbar-nav > li > a.dropdown-toggle:hover, .navbar-nav > li > a.dropdown-toggle:focus, .navbar-nav > li > a.dropdown-toggle:active {
+	.navbar .navbar-nav > li > a:hover,
+	.navbar .navbar-nav > li > a:focus,
+	.navbar .navbar-nav > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
+		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>
 		}
 
-	.navbar-nav > li > a > span.glyphicon {
+	.navbar .navbar-nav > li > a > span.glyphicon {
 		margin: 1px 7px 0 0;
 		}
 
@@ -275,7 +291,9 @@
 		border: none;
 		}
 
-	.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:active {
+	.navbar-inverse .navbar-toggle:hover,
+	.navbar-inverse .navbar-toggle:focus,
+	.navbar-inverse .navbar-toggle:active {
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		}
 
@@ -291,22 +309,30 @@
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
 		padding-bottom: 10px;
-		border: none;
+		<?php
+		echo ($_SESSION['theme']['menu_sub_border_color']['text'] == '' && $_SESSION['theme']['menu_sub_border_size']['text'] == '') ? "border: 0;\n" : null;
+		echo ($_SESSION['theme']['menu_sub_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_sub_border_color']['text'].";\n" : null;
+		echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_sub_border_size']['text'].";\n" : null;
+		?>
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
 		box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
+		border-radius: <?php echo ($_SESSION['theme']['menu_sub_border_radius']['text'] != '') ? $_SESSION['theme']['menu_sub_border_radius']['text'] : '0 0 4px 4px'; ?>;
 		}
 
 	/* sub menu item */
 	.dropdown-menu > li > a {
+		font-family: <?php echo ($_SESSION['theme']['menu_sub_text_font']['text'] != '') ? $_SESSION['theme']['menu_sub_text_font']['text'] : 'arial'; ?>;
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color']['text'] : '#fff'; ?>;
-		font-size: 10pt;
+		font-size: <?php echo ($_SESSION['theme']['menu_sub_text_size']['text'] != '') ? $_SESSION['theme']['menu_sub_text_size']['text'] : '10pt'; ?>;
 		margin: 0;
 		padding: 3px 15px;
 		}
 
-	.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > li > a:active {
+	.dropdown-menu > li > a:hover,
+	.dropdown-menu > li > a:focus,
+	.dropdown-menu > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color_hover']['text'] : '#141414'; ?>;
 		}
@@ -737,6 +763,11 @@
 		}
 
 /* TABLES *****************************************************************/
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0;
+		}
 
 	th {
 		padding: 4px 7px 4px 0;
@@ -1419,7 +1450,8 @@
 						$(".navbar").css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$("#domains_container").css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$("#domains_container").css({top: $(document).scrollTop(), height: window.innerHeight}).show();
+					$('body').scrollTop();
+					$("#domains_container").show();
 					$("#domains_block").animate({marginRight: '+=300'}, 400);
 					$("#domain_filter").focus();
 					document.getElementById('domains_visible').value = 1;
@@ -1691,16 +1723,20 @@
 								}
 								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-								switch ($menu_parent['menu_item_title']) {
-									case "Home": $glyph = 'home'; break;
-									case "Accounts": $glyph = 'user'; break;
-									case "Dialplan": $glyph = 'transfer'; break;
-									case "Apps": $glyph = 'send'; break;
-									case "Status": $glyph = 'equalizer'; break;
-									case "Advanced": $glyph = 'cog'; break;
+								if ($_SESSION['theme']['menu_main_icons']['boolean'] == 'true' || $_SESSION['theme']['menu_main_icons']['boolean'] == '') {
+									switch ($menu_parent['menu_item_title']) {
+										case "Home": $glyph = 'home'; break;
+										case "Accounts": $glyph = 'user'; break;
+										case "Dialplan": $glyph = 'transfer'; break;
+										case "Apps": $glyph = 'send'; break;
+										case "Status": $glyph = 'equalizer'; break;
+										case "Advanced": $glyph = 'cog'; break;
+										default: $glyph = null;
+									}
+									$menu_main_icon = ($glyph != '') ? "<span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span>" : null;
 								}
 								echo "<li ".$mod_li.">\n";
-								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3."><span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span><span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
+								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3.">".$menu_main_icon."<span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
 								if ($submenu) {
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
