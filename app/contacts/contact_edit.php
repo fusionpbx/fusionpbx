@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,6 +50,7 @@ else {
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$user_uuid = check_str($_POST["user_uuid"]);
+		$group_uuid = $_POST['group_uuid'];
 		$contact_type = check_str($_POST["contact_type"]);
 		$contact_organization = check_str($_POST["contact_organization"]);
 		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
