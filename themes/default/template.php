@@ -1463,20 +1463,22 @@
 				$("#domains_hide").click(function() { hide_domains(); });
 
 				function show_domains() {
+					$('#domains_visible').val(1);
 					var scrollbar_width = (window.innerWidth - $(window).width()); //gold: only solution that worked with body { overflow:auto } (add -ms-overflow-style: scrollbar; to <body> style for ie 10+)
 					if (scrollbar_width > 0) {
 						$("body").css({'margin-right':scrollbar_width, 'overflow':'hidden'}); //disable body scroll bars
 						$(".navbar").css('margin-right',scrollbar_width); //adjust navbar margin to compensate
 						$("#domains_container").css('right',-scrollbar_width); //domain container right position to compensate
 					}
-					$('body').scrollTop();
+					$(document).scrollTop(0);
 					$("#domains_container").show();
-					$("#domains_block").animate({marginRight: '+=300'}, 400);
-					$("#domain_filter").focus();
-					document.getElementById('domains_visible').value = 1;
+					$("#domains_block").animate({marginRight: '+=300'}, 400, function() {
+						$("#domain_filter").focus();
+					});
 				}
 
 				function hide_domains() {
+					$('#domains_visible').val(0);
 					$(document).ready(function() {
 						$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
 							$("#domain_filter").val('');
@@ -1487,11 +1489,10 @@
 							$("body").css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
 						});
 					});
-					document.getElementById('domains_visible').value = 0;
 				}
 
 			<?php
-			key_press('escape', 'up', 'document', null, null, "if (document.getElementById('domains_visible').value == 0) { show_domains(); } else if (document.getElementById('domains_visible').value == 1) { hide_domains(); }", false);
+			key_press('escape', 'up', 'document', null, null, "if ($('#domains_visible').val() == 0) { show_domains(); } else { hide_domains(); }", false);
 		}
 		?>
 
