@@ -1750,9 +1750,13 @@
 										default: $glyph = null;
 									}
 									$menu_main_icon = ($glyph != '') ? "<span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span>" : null;
+									$menu_main_item = "<span class='hidden-sm'>".$menu_parent['menu_language_title']."</span>";
+								}
+								else {
+									$menu_main_item = $menu_parent['menu_language_title'];
 								}
 								echo "<li ".$mod_li.">\n";
-								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3.">".$menu_main_icon."<span class='hidden-sm'>".$menu_parent['menu_language_title'].$mod_title."</span></a>\n";
+								echo "<a ".$mod_a_1." href='".$mod_a_2."' ".$mod_a_3.">".$menu_main_icon.$menu_main_item."</a>\n";
 								if ($submenu) {
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
