@@ -181,7 +181,7 @@ if (sizeof($result) != 0) {
 
 					//get email body (if any) for cover page
 					$fax_message = parse_message($connection, $email_id, FT_UID);
-					if ($fax_message == '') {
+					if ($fax_message != '') {
 						$fax_message = strip_tags($fax_message);
 						$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
 					}
