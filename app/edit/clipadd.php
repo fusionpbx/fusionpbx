@@ -48,6 +48,11 @@ if (count($_POST)>0) {
 	$clip_order = check_str($_POST["clip_order"]);
 	if (strlen($clip_order) == 0) { $clip_order = 0; }
 
+	//no slashes
+	$clip_name = str_replace('/', '|', $clip_name);
+	$clip_name = str_replace('\\', '|', $clip_name);
+
+	//sql insert
 	$sql = "insert into v_clips ";
 	$sql .= "(";
 	$sql .= "clip_uuid, ";

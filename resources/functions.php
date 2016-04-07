@@ -53,7 +53,7 @@
 	}
 
 	if (!function_exists('check_str')) {
-		function check_str($string) {
+		function check_str($string, $trim = true) {
 			global $db_type, $db;
 			//when code in db is urlencoded the ' does not need to be modified
 			if ($db_type == "sqlite") {
@@ -83,7 +83,8 @@
 					$string = str_replace($search, $replace, $string);
 				}
 			}
-			return trim($string); //remove white space
+			$string = ($trim) ? trim($string) : $string;
+			return $string;
 		}
 	}
 
