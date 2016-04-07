@@ -1540,9 +1540,6 @@
 	});
 
 	//audio playback functions
-		img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_play.png";
-		img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/default/images/icon_pause.png";
-
 		var recording_audio;
 
 		function recording_play(recording_id) {
