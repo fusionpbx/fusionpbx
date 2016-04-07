@@ -1920,7 +1920,7 @@
 				</tr>
 			</table>
 			<div id='footer' style='width: 100%; margin-bottom: 60px;'>
-				<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")."<a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>".$text['theme-label-all_rights_reserved']; ?></span>
+				<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
 			</div>
 		</div>
 
@@ -1944,7 +1944,7 @@
 				<tr>
 					<td style='width: 100%; height: 40px; vertical-align: bottom;'>
 						<div id='footer' style='width: 100%;'>
-							<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")."<a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>".$text['theme-label-all_rights_reserved']; ?></span>
+							<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
 						</div>
 					</td>
 				</tr>
