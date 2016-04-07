@@ -1409,28 +1409,27 @@
 
 <script language="JavaScript" type="text/javascript">
 
-	$(document).ready(function() {
-
-		//display message bar via js
-			function display_message(msg, mood, delay) {
-				var mood = (typeof mood !== 'undefined') ? mood : 'default';
-				var delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
-				if (msg != '') {
-					var inner_width = $(window).width();
-					// add class by mood
-					$("#message_container").addClass('message_container_mood_'+mood);
-					$("#message_text").addClass('message_text_mood_'+mood);
-					// output message
-					$("#message_text").html(msg);
-					$("#message_container").css({height: $("#message_text").css("height")});
-					$("#message_container").css({width: inner_width});
-					$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0});
-					$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
-						$("#message_container").removeClass('message_container_mood_'+mood);
-					});
-				}
+	//display message bar via js
+		function display_message(msg, mood, delay) {
+			var mood = (typeof mood !== 'undefined') ? mood : 'default';
+			var delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
+			if (msg != '') {
+				var inner_width = $(window).width();
+				// add class by mood
+				$("#message_container").addClass('message_container_mood_'+mood);
+				$("#message_text").addClass('message_text_mood_'+mood);
+				// output message
+				$("#message_text").html(msg);
+				$("#message_container").css({height: $("#message_text").css("height")});
+				$("#message_container").css({width: inner_width});
+				$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0});
+				$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
+					$("#message_container").removeClass('message_container_mood_'+mood);
+				});
 			}
+		}
 
+	$(document).ready(function() {
 
 		//set response message, if any
 			<?php
