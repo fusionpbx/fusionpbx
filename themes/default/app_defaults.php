@@ -533,6 +533,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the border hover color (and opacity) of the Dashboard block.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'dashboard_border_radius';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '5px';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the border radius of the Dashboard block.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_heading_background_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#8e96a5';
