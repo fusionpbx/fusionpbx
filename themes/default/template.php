@@ -261,17 +261,17 @@
 
 	/* main menu item */
 	.navbar .navbar-nav > li > a,
-	.navbar .navbar-nav > li > a.first-letter,
-	.navbar .navbar-nav > li > a.current-menu-item {
+	.navbar .navbar-nav > li.current-menu-item > a {
 		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
-		padding-right: 9px;
+		padding-right: 10px;
+		padding-left: 10px;
 		}
 
-	.navbar .navbar-nav > li > a:hover,
-	.navbar .navbar-nav > li > a:focus,
-	.navbar .navbar-nav > li > a:active {
+	.navbar .navbar-nav > li:hover > a,
+	.navbar .navbar-nav > li:focus > a,
+	.navbar .navbar-nav > li:active > a {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>
 		}
@@ -308,6 +308,7 @@
 	/* sub menu container */
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
+		padding-top: 0;
 		padding-bottom: 10px;
 		<?php
 		echo ($_SESSION['theme']['menu_sub_border_color']['text'] == '' && $_SESSION['theme']['menu_sub_border_size']['text'] == '') ? "border: 0;\n" : null;
