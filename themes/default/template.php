@@ -228,7 +228,7 @@
 		<?php
 		echo ($_SESSION['theme']['menu_main_border_color']['text'] == '' && $_SESSION['theme']['menu_main_border_size']['text'] == '') ? "border: 0;\n" : null;
 		echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_main_border_color']['text'].";\n" : null;
-		echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_main_border_size']['text'].";\n" : null;
+		echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['menu_main_border_size']['text'].";\n" : null;
 		switch ($_SESSION['theme']['menu_style']['text']) {
 			case 'inline': $default_radius = '4px'; break;
 			case 'static': $default_radius = '0 0 4px 4px'; break;
@@ -312,7 +312,7 @@
 		<?php
 		echo ($_SESSION['theme']['menu_sub_border_color']['text'] == '' && $_SESSION['theme']['menu_sub_border_size']['text'] == '') ? "border: 0;\n" : null;
 		echo ($_SESSION['theme']['menu_sub_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_sub_border_color']['text'].";\n" : null;
-		echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? 'border-size: '.$_SESSION['theme']['menu_sub_border_size']['text'].";\n" : null;
+		echo ($_SESSION['theme']['menu_sub_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['menu_sub_border_size']['text'].";\n" : null;
 		?>
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['menu_sub_shadow_color']['text'] != '') ? '0 0 5px '.$_SESSION['theme']['menu_sub_shadow_color']['text'] : 'none';?>;
@@ -549,7 +549,7 @@
 
 	#default_login {
 		display: inline-block;
-		padding: 30px;
+		padding: <?php echo ($_SESSION['theme']['login_padding']['text'] != '') ? $_SESSION['theme']['login_padding']['text'] : '30px'; ?>;
 		margin-bottom: 28px;
 		<?php
 		if (
@@ -558,20 +558,29 @@
 			$_SESSION['theme']['background_color'][1] != ''
 			) { ?>
 			background: <?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? $_SESSION['theme']['login_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
-			-webkit-border-radius: 4px;
-			-moz-border-radius: 4px;
-			border-radius: 4px;
-			-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none';?>;
-			-moz-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none';?>;
-			box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none';?>;
+			-webkit-border-radius: <?php echo ($_SESSION['theme']['login_border_radius']['text'] != '') ? $_SESSION['theme']['login_border_radius']['text'] : '4px'; ?>;
+			-moz-border-radius: <?php echo ($_SESSION['theme']['login_border_radius']['text'] != '') ? $_SESSION['theme']['login_border_radius']['text'] : '4px'; ?>;
+			border-radius: <?php echo ($_SESSION['theme']['login_border_radius']['text'] != '') ? $_SESSION['theme']['login_border_radius']['text'] : '4px'; ?>;
+			<?php if ($_SESSION['theme']['login_border_size']['text'] != '' || $_SESSION['theme']['login_border_color']['text'] != '') { echo "border-style: solid;\n"; } ?>
+			<?php echo ($_SESSION['theme']['login_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['login_border_size']['text'].";\n" : null; ?>
+			<?php echo ($_SESSION['theme']['login_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['login_border_color']['text'].";\n" : null; ?>
+			-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
+			-moz-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
+			box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
 			<?php
 		}
 		?>
 		}
 
-	a.login_box_link {
-		font-size: 11px;
-		text-shadow: 0 0 2px <?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? $_SESSION['theme']['login_background_color']['text'] : "#ffffff"; ?>;
+	a.login_link {
+		color: <?php echo ($_SESSION['theme']['login_link_text_color']['text'] != '') ? $_SESSION['theme']['login_link_text_color']['text'] : '#004083'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['login_link_text_size']['text'] != '') ? $_SESSION['theme']['login_link_text_size']['text'] : '11px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['login_link_text_font']['text'] != '') ? $_SESSION['theme']['login_link_text_font']['text'] : 'Arial'; ?>;
+		text-decoration: none;
+		}
+
+	a.login_link:hover {
+		color: <?php echo ($_SESSION['theme']['login_link_text_color_hover']['text'] != '') ? $_SESSION['theme']['login_link_text_color_hover']['text'] : '#5082ca'; ?>;
 		cursor: pointer;
 		text-decoration: underline;
 		}
@@ -630,12 +639,14 @@
 		}
 
 	a {
-		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		width: 100%;
+		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
+		text-decoration: none;
 		}
 
 	a:hover {
 		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		text-decoration: underline;
 		}
 
 	form {
@@ -760,6 +771,13 @@
 		height: 1px;
 		display: block;
 		}
+
+	/* style placeholder text (for browsers that support the attribute) - note: can't stack, each must be seperate */
+	::-webkit-input-placeholder { color: #999999; opacity: 1.0; } /* chrome/opera/safari */
+	::-moz-placeholder { color: #999999; opacity: 1.0; } /* ff 19+ */
+	:-moz-placeholder { color: #999999; opacity: 1.0; } /* ff 18- */
+	:-ms-input-placeholder { color: #999999; opacity: 1.0; } /* ie 10+ */
+	::placeholder { color: #999999; opacity: 1.0; } /* official standard */
 
 /* TABLES *****************************************************************/
 
@@ -1852,59 +1870,60 @@
 							<tr>
 								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
 									<?php
-								// login form
-									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php" && !$default_login) {
-										if (strlen($_SESSION["username"]) == 0) {
-										//add multi-lingual support
-											require_once "core/user_settings/app_languages.php";
-											foreach($text as $key => $value) {
-												$text[$key] = $value[$_SESSION['domain']['language']['code']];
-											}
-										//set a default login destination
-											if (strlen($_SESSION['login']['destination']['url']) == 0) {
-												$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
-											}
-										//login form
-											echo "<div align='right'>\n";
-											echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-											echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
-											echo "		<table width='200' border='0'>\n";
-											echo "			<tr>\n";
-											echo "				<td>\n";
-											echo "		  			<input type='text' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
-											echo "				</td>\n";
-											echo "				<td align='left'>\n";
-											echo "					<input type='password' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
-											echo "				</td>\n";
+									// login form
+										if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php" && !$default_login) {
+											if (strlen($_SESSION["username"]) == 0) {
+											//add multi-lingual support
+												require_once "core/user_settings/app_languages.php";
+												foreach($text as $key => $value) {
+													$text[$key] = $value[$_SESSION['domain']['language']['code']];
+												}
+											//set a default login destination
+												if (strlen($_SESSION['login']['destination']['url']) == 0) {
+													$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+												}
+											//login form
+												echo "<div align='right'>\n";
+												echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
+												echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
+												echo "		<table width='200' border='0'>\n";
+												echo "			<tr>\n";
+												echo "				<td>\n";
+												echo "		  			<input type='text' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
+												echo "				</td>\n";
+												echo "				<td align='left'>\n";
+												echo "					<input type='password' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
+												echo "				</td>\n";
 
-											if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
-												echo "			<td align='left'>\n";
-												echo "				<strong>".$text['label-domain'].":</strong>\n";
-												echo "			</td>\n";
-												echo "			<td>\n";
-												if (count($_SESSION['login']['domain_name']) > 0) {
-													echo "    		<select style='width: 150px;' class='formfld' name='domain_name'>\n";
-													echo "    			<option value=''></option>\n";
-													foreach ($_SESSION['login']['domain_name'] as &$row) {
-														echo "    		<option value='$row'>$row</option>\n";
+												if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
+													echo "			<td align='left'>\n";
+													echo "				<strong>".$text['label-domain'].":</strong>\n";
+													echo "			</td>\n";
+													echo "			<td>\n";
+													if (count($_SESSION['login']['domain_name']) > 0) {
+														echo "    		<select name='domain_name' class='formfld' style='color: #999999; width: 150px; text-align: center; text-align-last: center;' onclick=\"this.style.color='#000000';\" onchange=\"this.style.color='#000000';\">\n";
+														echo "    			<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
+														sort($_SESSION['login']['domain_name']);
+														foreach ($_SESSION['login']['domain_name'] as &$row) {
+															echo "    		<option value='$row'>$row</option>\n";
+														}
+														echo "    		</select>\n";
 													}
-													echo "    		</select>\n";
+													else {
+														echo "  		<input type='text' name='domain_name' class='formfld' style='text-align: center; min-width: 150px; width: 150px;' placeholder=\"".$text['label-domain']."\">\n";
+													}
+													echo "			</td>\n";
 												}
-												else {
-													echo "  		<input type='text' style='min-width: 150px; width: 150px;' class='formfld' name='domain_name'>\n";
-												}
-												echo "			</td>\n";
-											}
 
-											echo "				<td align='right'>\n";
-											echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
-											echo "				</td>\n";
-											echo "			</tr>\n";
-											echo "		</table>\n";
-											echo "	</form>";
-											echo "</div>";
+												echo "				<td align='right'>\n";
+												echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
+												echo "				</td>\n";
+												echo "			</tr>\n";
+												echo "		</table>\n";
+												echo "	</form>";
+												echo "</div>";
+											}
 										}
-									}
 									?>
 								</td>
 							</tr>
@@ -1940,7 +1959,7 @@
 				<tr>
 					<td align='center' valign='middle'>
 						<span id='default_login'>
-							<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' width='250'></a><br />
+							<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' style='width: 250px; height: auto;'></a><br />
 							<!--{body}-->
 						</span>
 					</td>
