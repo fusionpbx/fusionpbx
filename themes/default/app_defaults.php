@@ -913,6 +913,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the padding of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'login_width';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '100%';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the width of the login box.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_border_radius';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '4px';

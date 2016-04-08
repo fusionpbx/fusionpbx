@@ -549,10 +549,9 @@
 /* DOMAIN SELECTOR: END ********************************************************/
 
 	#default_login {
-		display: inline-block;
 		padding: <?php echo ($_SESSION['theme']['login_padding']['text'] != '') ? $_SESSION['theme']['login_padding']['text'] : '30px'; ?>;
-		margin-bottom: 28px;
 		<?php
+		echo ($_SESSION['theme']['login_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_width']['text'].";\n" : null;
 		if (
 			isset($_SESSION['theme']['background_image']) ||
 			$_SESSION['theme']['background_color'][0] != '' ||
@@ -2013,14 +2012,14 @@
 			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 				<tr>
 					<td align='center' valign='middle'>
-						<span id='default_login'>
+						<div id='default_login'>
 							<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' style='width: 250px; height: auto;'></a><br />
 							<!--{body}-->
-						</span>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td style='width: 100%; height: 40px; vertical-align: bottom;'>
+					<td style='width: 100%; height: 35px; vertical-align: bottom;'>
 						<div id='footer' style='width: 100%;'>
 							<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
 						</div>
