@@ -956,7 +956,7 @@
 			$hud[$n]['html'] .= "</tr>\n";
 
 			//pbx version
-				$hud[$n]['html'] .= "<tr>\n";
+				$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>FusionPBX</td>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
@@ -970,7 +970,7 @@
 					$switch_version = $matches[1];
 					$switch_bits = $matches[2];
 					if ($switch_version != '' && $switch_bits != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$switch_version." (".$switch_bits.")</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -988,7 +988,7 @@
 					$uptime .= (($tmp[7]) ? $tmp[3].'m ' : null);
 					$uptime .= (($tmp[9]) ? $tmp[3].'s' : null);
 					if ($uptime != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -1011,7 +1011,7 @@
 					$uptime .= (($tmp['m'] != 0 && $tmp['m'] != '') ? $tmp['m'].'m ' : null);
 					$uptime .= (($tmp['s'] != 0 && $tmp['s'] != '') ? $tmp['s'].'s' : null);
 					if ($uptime != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_uptime']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -1023,7 +1023,7 @@
 				if (stristr(PHP_OS, 'Linux')) {
 					$percent_memory = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
 					if ($percent_memory != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_memory."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -1035,7 +1035,7 @@
 				if (stristr(PHP_OS, 'Linux')) {
 					//calculated above
 					if ($percent_disk_usage != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_disk_usage."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -1051,7 +1051,7 @@
 					$tmp = explode(' ', trim($tmp));
 					$percent_cpu = $tmp[0];
 					if ($percent_cpu != '') {
-						$hud[$n]['html'] .= "<tr>\n";
+						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$percent_cpu."%</td>\n";
 						$hud[$n]['html'] .= "</tr>\n";
@@ -1083,7 +1083,7 @@
 					unset ($sql, $prep_statement, $result);
 				}
 				if ($connections != '') {
-					$hud[$n]['html'] .= "<tr>\n";
+					$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-database_connections']."</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$connections."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
@@ -1098,7 +1098,7 @@
 					$tmp = explode(' ', $tmp);
 					$tmp = $tmp[0];
 					$channels = (is_numeric($tmp)) ? $tmp : 0;
-					$hud[$n]['html'] .= "<tr>\n";
+					$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
