@@ -211,11 +211,13 @@
 		echo "<div id='login_form'>\n";
 		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
 		echo "<input type='hidden' name='path' value='".$path."'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
 		if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
 			if (count($_SESSION['login']['domain_name']) > 0) {
-				echo "<select name='domain_name' class='formfld' style='color: #999999; width: 200px; text-align: center; text-align-last: center; margin-bottom: 8px;' onclick=\"this.style.color='#000000';\" onchange=\"this.style.color='#000000';\">\n";
+				$click_change_color = ($_SESSION['theme']['login_input_text_color']['text'] != '') ? $_SESSION['theme']['login_input_text_color']['text'] : (($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000');
+				$placeholder_color = ($_SESSION['theme']['login_input_text_placeholder_color']['text'] != '') ? 'color: '.$_SESSION['theme']['login_input_text_placeholder_color']['text'].';' : 'color: #999999;';
+				echo "<select name='domain_name' class='txt login' style='".$placeholder_color." width: 200px; text-align: center; text-align-last: center; margin-bottom: 8px;' onclick=\"this.style.color='".$click_change_color."';\" onchange=\"this.style.color='".$click_change_color."';\">\n";
 				echo "	<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
 				sort($_SESSION['login']['domain_name']);
 				foreach ($_SESSION['login']['domain_name'] as &$row) {
@@ -224,7 +226,7 @@
 				echo "</select><br />\n";
 			}
 			else {
-				echo "<input type='text' name='domain_name' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' placeholder=\"".$text['label-domain']."\"><br />\n";
+				echo "<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' placeholder=\"".$text['label-domain']."\"><br />\n";
 			}
 		}
 		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
@@ -242,7 +244,7 @@
 		echo "<div id='request_form' style='display: none;'>\n";
 		echo "<form name='request' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='request'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
 		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
 		echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('request_form','login_form','username');\">".$text['label-cancel']."</a>";
 		echo "</form>";
@@ -255,9 +257,9 @@
 		echo "<form name='reset' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='reset'>\n";
 		echo "<input type='hidden' name='au' value='".md5($_SESSION['login']['password_reset_key']['text'].$username)."'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_new' autocomplete='off' placeholder=\"".$text['label-new_password']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_repeat' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\"><br />\n";
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_new' autocomplete='off' placeholder=\"".$text['label-new_password']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_repeat' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\"><br />\n";
 		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-save']."'>\n";
 		echo "<br><br><a class='login_link' onclick=\"document.location.href='login.php';\">".$text['label-cancel']."</a>";
 		echo "</form>";
