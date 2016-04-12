@@ -53,16 +53,51 @@
 	}
 	echo "<link rel='icon' href='".$favicon."'>\n";
 
+//determine which background image/color settings to use (login or standard)
+	$background_images_enabled = false;
+	if ($default_login) {
+		//try using login background images/colors
+		if ($_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
+			$background_images_enabled = true;
+			$background_images = $_SESSION['theme']['login_background_image'];
+		}
+		else if ($_SESSION['theme']['login_background_color'][0] != '' || $_SESSION['theme']['login_background_color'][1] != '') {
+			$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
+			$background_colors[1] = $_SESSION['theme']['login_background_color'][1];
+		}
+		else {
+			//otherwise, use standard background images/colors
+			if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+				$background_images_enabled = true;
+				$background_images = $_SESSION['theme']['background_image'];
+			}
+			else {
+				$background_colors[0] = $_SESSION['theme']['background_color'][0];
+				$background_colors[1] = $_SESSION['theme']['background_color'][1];
+			}
+		}
+	}
+	else {
+		//use standard background images/colors
+		if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+			$background_images_enabled = true;
+			$background_images = $_SESSION['theme']['background_image'];
+		}
+		else {
+			$background_colors[0] = $_SESSION['theme']['background_color'][0];
+			$background_colors[1] = $_SESSION['theme']['background_color'][1];
+		}
+	}
 
 //check for background image
-	if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && isset($_SESSION['theme']['background_image'])) {
+	if ($background_images_enabled) {
 		// background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
-		if (count($_SESSION['theme']['background_image']) > 0) {
+		if (count($background_images) > 0) {
 
 			if (strlen($_SESSION['background_image']) == 0) {
-				$_SESSION['background_image'] = $_SESSION['theme']['background_image'][array_rand($_SESSION['theme']['background_image'])];
+				$_SESSION['background_image'] = $background_images[array_rand($background_images)];
 				$background_image = $_SESSION['background_image'];
 			}
 
@@ -127,28 +162,28 @@
 
 // check for background color
 	else if (
-		$_SESSION['theme']['background_color'][0] != '' ||
-		$_SESSION['theme']['background_color'][1] != ''
+		$background_colors[0] != '' ||
+		$background_colors[1] != ''
 		) { // background color 1 or 2 is enabled
 
-		if ($_SESSION['theme']['background_color'][0] != '' && $_SESSION['theme']['background_color'][1] == '') { // use color 1
-			$background_color = "background: ".$_SESSION['theme']['background_color'][0].";";
+		if ($background_colors[0] != '' && $background_colors[1] == '') { // use color 1
+			$background_color = "background: ".$background_colors[0].";";
 		}
-		else if ($_SESSION['theme']['background_color'][0] == '' && $_SESSION['theme']['background_color'][1] != '') { // use color 2
-			$background_color = "background: ".$_SESSION['theme']['background_color'][1].";";
+		else if ($background_colors[0] == '' && $background_colors[1] != '') { // use color 2
+			$background_color = "background: ".$background_colors[1].";";
 		}
-		else if ($_SESSION['theme']['background_color'][0] != '' && $_SESSION['theme']['background_color'][1] != '') { // vertical gradient
-			$background_color = "background: ".$_SESSION['theme']['background_color'][0].";\n";
-			$background_color .= "background: -ms-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background: -moz-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background: -o-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$_SESSION['theme']['background_color'][0]."), color-stop(1, ".$_SESSION['theme']['background_color'][1]."));\n";
-			$background_color .= "background: -webkit-linear-gradient(top, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
-			$background_color .= "background: linear-gradient(to bottom, ".$_SESSION['theme']['background_color'][0]." 0%, ".$_SESSION['theme']['background_color'][1]." 100%);\n";
+		else if ($background_colors[0] != '' && $background_colors[1] != '') { // vertical gradient
+			$background_color = "background: ".$background_colors[0].";\n";
+			$background_color .= "background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: -moz-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: -o-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: -webkit-gradient(linear, left top, left bottom, color-stop(0, ".$background_colors[0]."), color-stop(1, ".$background_colors[1]."));\n";
+			$background_color .= "background: -webkit-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: linear-gradient(to bottom, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 		}
 	}
 	else { // default: white
-		$background_color = "background: #fff;\n";
+		$background_color = "background: #ffffff;\n";
 	}
 ?>
 
@@ -637,33 +672,22 @@
 /* DOMAIN SELECTOR: END ********************************************************/
 
 	#default_login {
-		padding: <?php echo ($_SESSION['theme']['login_padding']['text'] != '') ? $_SESSION['theme']['login_padding']['text'] : '30px'; ?>;
-		<?php
-		echo ($_SESSION['theme']['login_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_width']['text'].";\n" : null;
-		if (
-			isset($_SESSION['theme']['background_image']) ||
-			$_SESSION['theme']['background_color'][0] != '' ||
-			$_SESSION['theme']['background_color'][1] != ''
-			) { ?>
-			background: <?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? $_SESSION['theme']['login_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
-			<?php $br = format_border_radius($_SESSION['theme']['login_border_radius']['text'], '4px'); ?>
-			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
-			<?php unset($br); ?>
-			<?php if ($_SESSION['theme']['login_border_size']['text'] != '' || $_SESSION['theme']['login_border_color']['text'] != '') { echo "border-style: solid;\n"; } ?>
-			<?php echo ($_SESSION['theme']['login_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['login_border_size']['text'].";\n" : null; ?>
-			<?php echo ($_SESSION['theme']['login_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['login_border_color']['text'].";\n" : null; ?>
-			-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
-			-moz-box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
-			box-shadow: <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_shadow_color']['text'] : 'none'; ?>;
-			<?php
+		padding: <?php echo ($_SESSION['theme']['login_body_padding']['text'] != '') ? $_SESSION['theme']['login_body_padding']['text'] : '30px'; ?>;
+		<?php echo ($_SESSION['theme']['login_body_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_body_width']['text'].";\n" : null; ?>
+		background: <?php echo ($_SESSION['theme']['login_body_background_color']['text'] != '') ? $_SESSION['theme']['login_body_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['login_body_border_radius']['text'], '4px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		<?php if ($_SESSION['theme']['login_body_border_size']['text'] != '' || $_SESSION['theme']['login_body_border_color']['text'] != '') { echo "border-style: solid;\n"; } ?>
+		<?php echo ($_SESSION['theme']['login_body_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['login_body_border_size']['text'].";\n" : null; ?>
+		<?php echo ($_SESSION['theme']['login_body_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['login_body_border_color']['text'].";\n" : null; ?>
+		-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
+		-moz-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
+		box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
 		}
-		?>
-		}
-
-
 
 	a.login_link {
 		color: <?php echo ($_SESSION['theme']['login_link_text_color']['text'] != '') ? $_SESSION['theme']['login_link_text_color']['text'] : '#004083'; ?>;
@@ -683,9 +707,9 @@
 		if (
 			strlen($_SESSION["username"]) > 0 &&
 			(
-				isset($_SESSION['theme']['background_image']) ||
-				$_SESSION['theme']['background_color'][0] != '' ||
-				$_SESSION['theme']['background_color'][1] != ''
+				isset($background_images) ||
+				$background_colors[0] != '' ||
+				$background_colors[1] != ''
 			)) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
 			background-attachment: fixed;
@@ -2209,6 +2233,7 @@
 		</div>
 
 		<?php
+		unset($_SESSION['background_image']);
 	}
 	?>
 
