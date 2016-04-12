@@ -42,10 +42,14 @@ if (count($_POST)>0) {
 	$clip_uuid = check_str($_POST["id"]);
 	$clip_name = check_str($_POST["clip_name"]);
 	$clip_folder = check_str($_POST["clip_folder"]);
-	$clip_text_start = check_str($_POST["clip_text_start"]);
-	$clip_text_end = check_str($_POST["clip_text_end"]);
+	$clip_text_start = check_str($_POST["clip_text_start"], false);
+	$clip_text_end = check_str($_POST["clip_text_end"], false);
 	$clip_desc = check_str($_POST["clip_desc"]);
 	$clip_order = check_str($_POST["clip_order"]);
+
+	//no slashes
+	$clip_name = str_replace('/', '|', $clip_name);
+	$clip_name = str_replace('\\', '|', $clip_name);
 
 	//sql update
 	$sql  = "update v_clips set ";

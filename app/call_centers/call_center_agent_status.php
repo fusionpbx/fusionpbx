@@ -173,7 +173,7 @@ else {
 	echo $text['description-call_center_agent_status']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "</tr></table>\n";
+	echo "</table>\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -185,11 +185,11 @@ else {
 	echo "<th>".$text['label-agent']."</th>\n";
 	echo "<th>".$text['label-status']."</th>\n";
 	echo "<th>".$text['label-options']."</th>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 	$x = 0;
 	foreach($agents as $row) {
 		$str = '';
-		$str .= "<tr >\n";
+		$str .= "<tr>\n";
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
 		$str .= "	<td valign='middle' class='".$row_style[$c]."'>";

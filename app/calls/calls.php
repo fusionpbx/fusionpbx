@@ -121,7 +121,6 @@ else {
 	echo "</div>\n";
 
 	echo "<div style='float: right; margin-bottom: 10px;'>";
-	echo "	<form method='get' action=''>\n";
 	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "  	<tr>\n";
 	echo "			<td style='vertical-align: top; white-space: nowrap;'>\n";
@@ -129,8 +128,10 @@ else {
 		echo "			<input id='btn_viewall_callrouting' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\">";
 	}
 	if (!$is_included) {
+		echo "				<form method='get' action='' style='display: inline-block;'>\n";
 		echo "				<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+		echo "				</form>\n";
 		if ($paging_controls_mini != '') {
 			echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 		}

@@ -53,7 +53,7 @@
 	}
 
 	if (!function_exists('check_str')) {
-		function check_str($string) {
+		function check_str($string, $trim = true) {
 			global $db_type, $db;
 			//when code in db is urlencoded the ' does not need to be modified
 			if ($db_type == "sqlite") {
@@ -83,7 +83,8 @@
 					$string = str_replace($search, $replace, $string);
 				}
 			}
-			return trim($string); //remove white space
+			$string = ($trim) ? trim($string) : $string;
+			return $string;
 		}
 	}
 
@@ -1668,6 +1669,58 @@ function number_pad($number,$n) {
 					echo "</script>\n";
 				}
 				echo "\n\n\n";
+		}
+	}
+
+//format border radius values
+	if (!function_exists('format_border_radius')) {
+		function format_border_radius($radius_value, $default = 5) {
+			$radius_value = ($radius_value != '') ? $radius_value : $default;
+			$br_a = explode(' ', $radius_value);
+			foreach ($br_a as $index => $br) {
+				if (substr_count($br, '%') > 0) {
+					$br_b[$index]['number'] = str_replace('%', '', $br);
+					$br_b[$index]['unit'] = '%';
+				}
+				else {
+					$br_b[$index]['number'] = str_replace('px', '', strtolower($br));
+					$br_b[$index]['unit'] = 'px';
+				}
+			}
+			unset($br_a, $br);
+			if (sizeof($br_b) == 4) {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[1]['number'];
+				$br['br']['n'] = $br_b[2]['number'];
+				$br['bl']['n'] = $br_b[3]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[1]['unit'];
+				$br['br']['u'] = $br_b[2]['unit'];
+				$br['bl']['u'] = $br_b[3]['unit'];
+			}
+			else if (sizeof($br_b) == 2) {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[0]['number'];
+				$br['br']['n'] = $br_b[1]['number'];
+				$br['bl']['n'] = $br_b[1]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[0]['unit'];
+				$br['br']['u'] = $br_b[1]['unit'];
+				$br['bl']['u'] = $br_b[1]['unit'];
+			}
+			else {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[0]['number'];
+				$br['br']['n'] = $br_b[0]['number'];
+				$br['bl']['n'] = $br_b[0]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[0]['unit'];
+				$br['br']['u'] = $br_b[0]['unit'];
+				$br['bl']['u'] = $br_b[0]['unit'];
+			}
+			unset($br_b);
+
+			return $br; //array
 		}
 	}
 

@@ -474,7 +474,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    </select>\n";
 	}
-	elseif ($category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) {
+	elseif (
+		($category == "theme" && $subcategory == "menu_main_icons" && $name == "boolean") ||
+		($category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean")
+		) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='true' ".(($default_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";

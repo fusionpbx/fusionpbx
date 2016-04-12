@@ -158,7 +158,7 @@ require_once "resources/paging.php";
 	if (!$is_included) {
 		echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order);
 	}
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	$c = 0;
 	if ($result_count > 0) {
@@ -183,7 +183,6 @@ require_once "resources/paging.php";
 		unset($sql, $result, $row_count);
 	}
 
-	echo "<tr>\n";
 	echo "</table>";
 	echo "<br>";
 

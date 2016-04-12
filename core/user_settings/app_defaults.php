@@ -9,7 +9,22 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = generate_password('20', '4');
 		$array[$x]['default_setting_enabled'] = 'false';
-		$array[$x]['default_setting_description'] = 'Reset Password link visible on login page when populated and enabled.';
+		$array[$x]['default_setting_description'] = 'Display a Reset Password link on the login box (requires smtp_host be defined).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'login';
+		$array[$x]['default_setting_subcategory'] = 'domain_name_visible';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Displays a domain input or select box (if domain_name array defined) on the login box.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'login';
+		$array[$x]['default_setting_subcategory'] = 'domain_name';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'pbx1.yourdomain.com';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Domain select option displayed on the login box.';
+		$x++;
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
