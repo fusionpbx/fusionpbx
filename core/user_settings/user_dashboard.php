@@ -984,9 +984,9 @@
 					$tmp = explode(' ', $tmp);
 					$uptime = (($tmp[1]) ? $tmp[1].'y ' : null);
 					$uptime .= (($tmp[3]) ? $tmp[3].'d ' : null);
-					$uptime .= (($tmp[5]) ? $tmp[3].'h ' : null);
-					$uptime .= (($tmp[7]) ? $tmp[3].'m ' : null);
-					$uptime .= (($tmp[9]) ? $tmp[3].'s' : null);
+					$uptime .= (($tmp[5]) ? $tmp[5].'h ' : null);
+					$uptime .= (($tmp[7]) ? $tmp[7].'m ' : null);
+					$uptime .= (($tmp[9]) ? $tmp[9].'s' : null);
 					if ($uptime != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
