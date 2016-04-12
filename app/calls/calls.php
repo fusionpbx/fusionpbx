@@ -158,7 +158,7 @@ else {
 			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".$row['extension']."</a></td>\n";
 			if (permission_exists('call_forward')) {
 				echo "<td valign='top' class='".$row_style[$c]."'>".(($row['forward_all_enabled'] == 'true') ? format_phone($row['forward_all_destination']) : '&nbsp;')."</td>";
 			}
