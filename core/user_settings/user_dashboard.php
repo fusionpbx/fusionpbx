@@ -1096,8 +1096,9 @@
 					$matches = Array();
 					preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 					$channels = $matches[1] ? $matches[1] : 0;
-					$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
+					$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
+					$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>\n";
+					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'><a href='javascript:void(0);'>".$text['label-channels']."</a></td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
 					$hud[$n]['html'] .= "</tr>\n";
 					$c = ($c) ? 0 : 1;
