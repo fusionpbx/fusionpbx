@@ -1092,12 +1092,10 @@
 
 			//channel count
 				if ($fp) {
-					$tmp = event_socket_request($fp, 'api show channels');
-					$tmp = explode("\n", $tmp);
-					$tmp = preg_replace('!\s+!', ' ', trim($tmp[3]));
-					$tmp = explode(' ', $tmp);
-					$tmp = $tmp[0];
-					$channels = (is_numeric($tmp)) ? $tmp : 0;
+					$tmp = event_socket_request($fp, 'api status');
+					$matches = Array();
+					preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
+					$channels = $matches[1] ? $matches[1] : 0;
 					$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
 					$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
