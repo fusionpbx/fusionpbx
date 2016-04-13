@@ -199,10 +199,8 @@ else {
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<div class='row'><div class='col-sm-12'>\n";
-	echo "		<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."'>\n";
-	echo "	</div></div>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld datetimepicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -210,10 +208,8 @@ else {
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<div class='row'><div class='col-sm-12'>\n";
-	echo "		<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."'>\n";
-	echo "	</div></div>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld datetimepicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

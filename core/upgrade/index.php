@@ -149,10 +149,7 @@ if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpb
 	echo "		".$text['label-upgrade_source'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_source'>";
-	echo "			<input type='checkbox' class='formfld' name='do[source]' id='do_source' value='1'>";
-	echo "			".$text['description-upgrade_source'];
-	echo "		</label>\n";
+	echo "		<label for='do_source'><input type='checkbox' name='do[source]' id='do_source' value='1'> ".$text['description-upgrade_source']."</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -165,10 +162,7 @@ if (permission_exists("upgrade_schema")) {
 	echo "		".$text['label-upgrade_schema'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_schema'>";
-	echo "			<input type='checkbox' class='formfld' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\">";
-	echo "			".$text['description-upgrade_schema'];
-	echo "		</label>\n";
+	echo "		<label for='do_schema'><input type='checkbox' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\"> ".$text['description-upgrade_schema']."</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -180,10 +174,7 @@ if (permission_exists("upgrade_schema")) {
 	echo "		".$text['label-upgrade_data_types'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_data_types'>";
-	echo "			<input type='checkbox' class='formfld' name='do[data_types]' id='do_data_types' value='true'>";
-	echo "			".$text['description-upgrade_data_types'];
-	echo "		</label>\n";
+	echo "		<label for='do_data_types'><input type='checkbox' name='do[data_types]' id='do_data_types' value='true'> ".$text['description-upgrade_data_types']."</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -197,10 +188,7 @@ if (permission_exists("upgrade_apps")) {
 	echo "		".$text['label-upgrade_apps'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_apps'>";
-	echo "			<input type='checkbox' class='formfld' name='do[apps]' id='do_apps' value='1'>";
-	echo "			".$text['description-upgrade_apps'];
-	echo "		</label>\n";
+	echo "		<label for='do_apps'><input type='checkbox' name='do[apps]' id='do_apps' value='1'> ".$text['description-upgrade_apps']."</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -213,22 +201,20 @@ if (permission_exists("menu_restore")) {
 	echo "		".$text['label-upgrade_menu'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<table cellpadding='0' cellspacing='0' border='0'>";
-	echo "			<tr><td>";
-	echo "				<input type='checkbox' class='formfld' name='do[menu]' id='do_menu' value='1' onchange=\"$('#td_sel_menu').fadeToggle('fast');\">";
-	echo "			</td><td id='td_sel_menu' style='display: none; padding: 0px 3px 0px 8px;'>";
-	echo "				<select name='sel_menu' id='sel_menu' class='formfld'>\n";
-		$sql = "select * from v_menus ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>\n";
-		}
-		unset ($sql, $result, $prep_statement);
-	echo "				</select>\n";
-	echo "			</td><td class='vtable' style='border: none; padding: 3px;'><label for='do_menu'>".$text['description-upgrade_menu']."</label></td></tr>";
-	echo "		</table>";
+	echo "		<label for='do_menu'>";
+	echo 			"<input type='checkbox' name='do[menu]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
+	echo 			"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;'>";
+	$sql = "select * from v_menus ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+	}
+	unset ($sql, $result, $prep_statement);
+	echo 			"</select>";
+	echo 			" ".$text['description-upgrade_menu'];
+	echo 		"</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -241,10 +227,7 @@ if (permission_exists("group_edit")) {
 	echo "		".$text['label-upgrade_permissions'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<label for='do_permissions'>";
-	echo "			<input type='checkbox' class='formfld' name='do[permissions]' id='do_permissions' value='1'>";
-	echo "			".$text['description-upgrade_permissions'];
-	echo "		</label>\n";
+	echo "		<label for='do_permissions'><input type='checkbox' name='do[permissions]' id='do_permissions' value='1'> ".$text['description-upgrade_permissions']."</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

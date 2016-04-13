@@ -742,7 +742,7 @@
 
 		#main_content {
 			padding: 8px;
-		}
+			}
 		}
 
 /* GENERAL ELEMENTS *****************************************************************/
@@ -781,10 +781,16 @@
 	:-ms-input-placeholder { color: <?php echo $placeholder_color; ?> } /* ie 10+ */
 	::placeholder { color: <?php echo $placeholder_color; ?> } /* official standard */
 
-	input.txt,
-	textarea.txt,
 	select.txt,
-	.formfld {
+	textarea.txt,
+	input[type=text].txt,
+	input[type=number].txt,
+	input[type=password].txt,
+	select.formfld,
+	textarea.formfld,
+	input[type=text].formfld,
+	input[type=number].formfld,
+	input[type=password].formfld {
 		font-family: <?php echo ($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['input_text_size']['text'] != '') ? $_SESSION['theme']['input_text_size']['text'] : '12px'; ?>;
 		color: <?php echo ($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000'; ?>;
@@ -821,8 +827,14 @@
 		vertical-align: middle;
 		}
 
-	input.txt,
-	.formfld {
+	textarea.txt,
+	input[type=text].txt,
+	input[type=number].txt,
+	input[type=password].txt,
+	textarea.formfld,
+	input[type=text].formfld,
+	input[type=number].formfld,
+	input[type=password].formfld {
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
 		-webkit-transition: width 0.25s;
@@ -834,13 +846,25 @@
 		padding: 4px 2px;
 		}
 
-	input.txt:hover,
-	.formfld:hover {
+	textarea.txt:hover,
+	input[type=text].txt:hover,
+	input[type=number].txt:hover,
+	input[type=password].txt:hover,
+	textarea.formfld:hover,
+	input[type=text].formfld:hover,
+	input[type=number].formfld:hover,
+	input[type=password].formfld:hover {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_hover']['text'] != '') ? $_SESSION['theme']['input_border_color_hover']['text'] : '#c0c0c0'; ?>;
 		}
 
-	input.txt:focus,
-	.formfld:focus {
+	textarea.txt:focus,
+	input[type=text].txt:focus,
+	input[type=number].txt:focus,
+	input[type=password].txt:focus,
+	textarea.formfld:focus,
+	input[type=text].formfld:focus,
+	input[type=number].formfld:focus,
+	input[type=password].formfld:focus {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_focus']['text'] != '') ? $_SESSION['theme']['input_border_color_focus']['text'] : '#c0c0c0'; ?>;
 		/* first clear */
 		-webkit-box-shadow: none;
@@ -984,9 +1008,20 @@
 		display: inline;
 		}
 
+	textarea {
+		min-height: 75px;
+		}
+
 	label {
 		font-weight: normal;
 		vertical-align: middle;
+		}
+
+	label input[type=checkbox],
+	label input[type=radio] {
+		vertical-align: -2px;
+		margin: 0;
+		padding: 0;
 		}
 
 	span.playback_progress_bar {
@@ -1728,7 +1763,6 @@
 		//hide message bar on hover
 			$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
 
-
 		<?php
 		if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
 			?>
@@ -1771,7 +1805,6 @@
 		}
 		?>
 
-
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
 			$('.tr_hover tr').each(function(i,e) {
 			  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').click(function() {
@@ -1780,15 +1813,16 @@
 			  });
 			});
 
-
 		//apply the auto-size jquery script to all text inputs
-			$("input.txt, textarea.txt, .formfld").autosizeInput();
-
+			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker').autosizeInput();
 
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
-					format: 'YYYY-MM-DD HH:mm'
+					format: 'YYYY-MM-DD HH:mm',
+					showTodayButton: true,
+					showClear: true,
+					showClose: true,
 				});
 			});
 
