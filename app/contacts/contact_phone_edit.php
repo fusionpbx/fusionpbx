@@ -288,10 +288,10 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-phone_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input type='checkbox' name='phone_type_voice' id='phone_type_voice' value='1' ".(($phone_type_voice) ? "checked='checked'" : null)."><label for='phone_type_voice'>&nbsp;".$text['label-voice']."</label>&nbsp;\n";
-	echo "	<input type='checkbox' name='phone_type_fax' id='phone_type_fax' value='1' ".(($phone_type_fax) ? "checked='checked'" : null)."><label for='phone_type_fax'>&nbsp;".$text['label-fax']."</label>&nbsp;\n";
-	echo "	<input type='checkbox' name='phone_type_video' id='phone_type_video' value='1' ".(($phone_type_video) ? "checked='checked'" : null)."><label for='phone_type_video'>&nbsp;".$text['label-video']."</label>&nbsp;\n";
-	echo "	<input type='checkbox' name='phone_type_text' id='phone_type_text' value='1' ".(($phone_type_text) ? "checked='checked'" : null)."><label for='phone_type_text'>&nbsp;".$text['label-text']."</label>\n";
+	echo "	<label><input type='checkbox' name='phone_type_voice' id='phone_type_voice' value='1' ".(($phone_type_voice) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='phone_type_fax' id='phone_type_fax' value='1' ".(($phone_type_fax) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='phone_type_video' id='phone_type_video' value='1' ".(($phone_type_video) ? "checked='checked'" : null)."> ".$text['label-video']."</label>&nbsp;\n";
+	echo "	<label><input type='checkbox' name='phone_type_text' id='phone_type_text' value='1' ".(($phone_type_text) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
 	echo "<br />\n";
 	echo $text['description-phone_type']."\n";
 	echo "</td>\n";

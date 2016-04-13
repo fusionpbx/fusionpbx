@@ -73,16 +73,16 @@ require_once "resources/header.php";
 
 echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "	<tr>\n";
-echo "		<td align=\"left\" valign='middle' width='100%' style='padding-right: 15px;' nowrap>\n";
+echo "		<td align='left' valign='top' width='100%' style='padding-right: 15px;' nowrap>\n";
 echo "			<b>".$text['label-log-viewer']."</b><br />\n";
 echo "		</td>\n";
 echo "		<td align='right' valign='middle' nowrap>\n";
-echo "			<form action=\"log_viewer.php\" method=\"POST\">\n";
-echo "			<label for='filter' style='margin-right: 20px;'>".$text['label-filter']." <input type=\"text\" class=\"formfld\" style=\"width: 150px; text-align: center;\" name=\"filter\" value=\"".$_POST['filter']."\" onclick=\"this.select();\"></label>";
-echo "			<label for='ln' style='margin-right: 20px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> ".$text['label-line-num']."</label>";
-echo "			<label for='ord' style='margin-right: 20px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
-echo "			Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> ".$text['label-kb']."";
-echo "			<input type=\"submit\" class=\"btn\" style=\"margin-left: 20px;\" name=\"submit\" value=\"".$text['button-reload']."\">";
+echo "			<form action='log_viewer.php' method='POST'>\n";
+echo "			".$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".$_POST['filter']."\" onclick='this.select();'>";
+echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> ".$text['label-line-num']."</label>";
+echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
+echo "			Display <input type='text' class='formfld' style='width: 50px; text-align: center;' name='fs' value=\"".$_POST['fs']."\" onclick='this.select();'> ".$text['label-kb']."";
+echo "			<input type='submit' class='btn' style='margin-left: 20px;' name='submit' value=\"".$text['button-reload']."\">";
 if (permission_exists('log_download')) {
 	echo "		<input type='button' class='btn' value='".$text['button-download']."' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
 }
@@ -161,12 +161,12 @@ if (permission_exists('log_view')) {
 		}
 		if (strlen($_REQUEST['filter']) > 0){
 			$uuid_filter = $_REQUEST['filter'];
-			echo "		<td style=\"text-align: left; color: #FFFFFF;\">".$text['description-filter']." ".$uuid_filter."</td>";
+			echo "		<td style='text-align: left; color: #FFFFFF;'>".$text['description-filter']." ".$uuid_filter."</td>";
 		}
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
-	echo "				<td style=\"text-align: right;color: #FFFFFF;\">".$text['label-displaying']." ".number_format($user_filesize,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].". </td>";
+	echo "				<td style='text-align: right;color: #FFFFFF;'>".$text['label-displaying']." ".number_format($user_filesize,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].". </td>";
 	echo "			</tr>";
 	echo "		</table>";
 	echo "		<hr size='1' style='color: #fff;'>";
