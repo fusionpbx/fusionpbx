@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('exec_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//permissions
+	if (permission_exists('exec_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -51,7 +55,7 @@ else {
 	$handler = ($_REQUEST["handler"] != '') ? trim($_REQUEST["handler"]) : ((permission_exists('exec_switch')) ? 'switch' : null);
 	$cmd = trim($_POST["cmd"]);
 
-//set editor mode
+//set editor moder
 	switch ($handler) {
 		case 'php': $mode = 'php'; break;
 		case 'sql': $mode = 'sql'; break;
@@ -72,7 +76,7 @@ else {
 	<script language="JavaScript" type="text/javascript">
 		function submit_check() {
 			document.getElementById('cmd').value = editor.getSession().getValue();
-			if (document.getElementById('handler_sql') && document.getElementById('handler_sql').checked) {
+			if (document.getElementById('mode').value == 'sql') {
 				$('#frm').prop('target', 'iframe').prop('action', 'sql_query_result.php');
 				$('#sql_response').show();
 			}
@@ -204,29 +208,72 @@ else {
 <?php
 
 //show the header
-	echo "<table cellpadding='0' cellspacing='0' border='0'>";
+	echo "<form method='post' name='frm' id='frm' action='exec.php' style='margin: 0;' onsubmit='return submit_check();'>\n";
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 	echo "	<tr>";
-	echo "		<td valign='top' align='left' width='100%'>";
+	echo "		<td valign='top' align='left' width='50%'>";
 	echo "			<b>".$text['label-execute']."</b>\n";
-	echo "			<br><br>";
-	echo 			$text['description-execute']."\n";
 	echo "		</td>";
+	echo "		<td valign='top' align='right' nowrap='nowrap'>";
+
+	if (permission_exists('exec_switch') || permission_exists('exec_php') || permission_exists('exec_command') || permission_exists('exec_sql')) {
+		echo "				<select name='handler' id='handler' class='formfld' style='width:100px;' onchange=\"handler=this.value;set_handler(this.value);\">\n";
+		echo "						<option value=''></option>\n";
+		if (permission_exists('exec_switch')) { echo "<option value='switch' ".(($handler == 'switch') ? "selected='selected'" : null).">".$text['label-switch']."</option>\n"; }
+		if (permission_exists('exec_php')) { echo "<option value='php' ".(($handler == 'php') ? "selected='selected'" : null).">".$text['label-php']."</option>\n"; }
+		if (permission_exists('exec_command')) { echo "<option value='shell' ".(($handler == 'shell') ? "selected='selected'" : null).">".$text['label-shell']."</option>\n"; }
+		if (permission_exists('exec_sql')) { echo "<option value='sql' ".(($handler == 'sql') ? "selected='selected'" : null).">".$text['label-sql']."</option>\n"; }
+		echo "				</select>\n";
+	}
+
+	//sql controls
 	if (permission_exists('exec_sql')) {
-		echo "		<td valign='top' align='right' nowrap>";
+		echo "				<span class='sql_controls' ".(($handler != 'sql') ? "style='display: none;'" : null).">";
+		//echo "					".$text['label-table']."<br />";
+		echo "					<select name='table_name' id='table_name' class='formfld'>\n";
+		echo "						<option value=''></option>\n";
+		switch ($db_type) {
+			case 'sqlite': $sql = "select name from sqlite_master where type='table' order by name;"; break;
+			case 'pgsql': $sql = "select table_name as name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name"; break;
+			case 'mysql': $sql = "show tables"; break;
+		}
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$row = array_values($row);
+			echo "					<option value='".$row[0]."'>".$row[0]."</option>\n";
+		}
+		echo "					</select>\n";
+		//echo "					<br /><br />\n";
+		//echo "					".$text['label-result_type']."<br />";
+		echo "					<select name='sql_type' id='sql_type' class='formfld'>\n";
+		echo "						<option value=''>".$text['option-result_type_view']."</option>\n";
+		echo "						<option value='csv'>".$text['option-result_type_csv']."</option>\n";
+		echo "						<option value='inserts'>".$text['option-result_type_insert']."</option>\n";
+		echo "					</select>\n";
+		echo "				</span>";
+	}
+	echo "					<input type='button' class='btn' style='margin-top: 0px;' title=\"".$text['button-execute']." [Ctrl+Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
+	echo "					<input type='button' class='btn' style='margin-top: 0px;' title=\"\" value=\"    ".$text['button-reset']."    \" onclick=\"reset_editor();\">";
+
+	if (permission_exists('exec_sql')) {
 		echo "			<span class='sql_controls' ".(($handler != 'sql') ? "style='display: none;'" : null).">";
-		echo "				<input type='button' class='btn' alt='".$text['button-select_database']."' onclick=\"document.location.href='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
+		//echo "				<input type='button' class='btn' alt='".$text['button-select_database']."' onclick=\"document.location.href='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
 		if (permission_exists('exec_sql_backup')) {
 			echo "			<input type='button' class='btn' alt='".$text['button-backup']."' onclick=\"document.location.href='sql_backup.php".((strlen($_REQUEST['id']) > 0) ? "?id=".$_REQUEST['id'] : null)."'\" value='".$text['button-backup']."'>\n";
 		}
 		echo "			</span>";
-		echo "		</td>";
 	}
+	echo "		</td>";
 	echo "	</tr>";
+	echo "	<tr><td colspan='2'>\n";
+	echo 			$text['description-execute']."\n";
+	echo "	</tr>\n";
 	echo "</table>";
 	echo "<br>";
 
 //html form
-	echo "<form method='post' name='frm' id='frm' action='exec.php' style='margin: 0;' onsubmit='return submit_check();'>\n";
 	echo "<input type='hidden' name='id' value='".$_REQUEST['id']."'>\n"; //sql db id
 	echo "<textarea name='cmd' id='cmd' style='display: none;'></textarea>";
 	echo "<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
@@ -234,51 +281,6 @@ else {
 	echo "		<td style='width: 210px;' valign='top' nowrap>";
 
 	echo "			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>";
-	if (permission_exists('exec_switch') || permission_exists('exec_php') || permission_exists('exec_command') || permission_exists('exec_sql')) {
-		echo "			<tr>";
-		echo "				<td valign='top'>";
-		echo "					<table cellpadding='0' cellspacing='0' border='0'>\n";
-		if (permission_exists('exec_switch')) { echo "<tr><td valign='middle'><input type='radio' name='handler' id='handler_switch' value='switch' ".(($handler == 'switch') ? 'checked' : null)." onclick=\"set_handler('switch');\"></td><td valign='middle' style='padding: 3px 0 0 3px;'><label for='handler_switch' style='padding-top: 3px;'> ".$text['label-switch']."</label></td></tr>\n"; }
-		if (permission_exists('exec_php')) { echo "<tr><td valign='middle'><input type='radio' name='handler' id='handler_php' value='php' ".(($handler == 'php') ? 'checked' : null)." onclick=\"set_handler('php');\"></td><td valign='middle' style='padding: 4px 0 0 3px;'><label for='handler_php'> ".$text['label-php']."</label></td></tr>\n"; }
-		if (permission_exists('exec_command')) { echo "<tr><td valign='middle'><input type='radio' name='handler' id='handler_shell' value='shell' ".(($handler == 'shell') ? 'checked' : null)." onclick=\"set_handler('shell');\"></td><td valign='middle' style='padding: 4px 0 0 3px;'><label for='handler_shell'> ".$text['label-shell']."</label></td></tr>\n"; }
-		if (permission_exists('exec_sql')) { echo "<tr><td valign='middle'><input type='radio' name='handler' id='handler_sql' value='sql' ".(($handler == 'sql') ? 'checked' : null)." onclick=\"set_handler('sql');\"></td><td valign='middle' style='padding: 4px 0 0 3px;'><label for='handler_sql'> ".$text['label-sql']."</label></td></tr>\n"; }
-		echo "					</table>\n";
-		echo "					<br />";
-		//sql controls
-		if (permission_exists('exec_sql')) {
-			echo "				<span class='sql_controls' ".(($handler != 'sql') ? "style='display: none;'" : null).">";
-			echo "					".$text['label-table']."<br />";
-			echo "					<select name='table_name' id='table_name' class='formfld' style='width: calc(100% - 15px);'>\n";
-			echo "						<option value=''></option>\n";
-			switch ($db_type) {
-				case 'sqlite': $sql = "select name from sqlite_master where type='table' order by name;"; break;
-				case 'pgsql': $sql = "select table_name as name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name"; break;
-				case 'mysql': $sql = "show tables"; break;
-			}
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$row = array_values($row);
-				echo "					<option value='".$row[0]."'>".$row[0]."</option>\n";
-			}
-			echo "					</select>\n";
-			echo "					<br /><br />\n";
-			echo "					".$text['label-result_type']."<br />";
-			echo "					<select name='sql_type' id='sql_type' class='formfld'>\n";
-			echo "						<option value=''>".$text['option-result_type_view']."</option>\n";
-			echo "						<option value='csv'>".$text['option-result_type_csv']."</option>\n";
-			echo "						<option value='inserts'>".$text['option-result_type_insert']."</option>\n";
-			echo "					</select>\n";
-			echo "					<br /><br />\n";
-			echo "				</span>";
-		}
-		echo "					<input type='button' class='btn' style='margin-top: 5px;' title=\"".$text['button-execute']." [Ctrl+Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
-		echo "					&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0)' onclick='reset_editor();'>".$text['label-reset']."</a>\n";
-		echo "					<br /><br />";
-		echo "				</td>";
-		echo "			</tr>";
-	}
 	if (permission_exists('script_editor_view') && file_exists($_SERVER["PROJECT_ROOT"]."/app/edit/")) {
 		echo "			<tr>";
 		echo "				<td valign='top' height='100%'>";
@@ -289,7 +291,7 @@ else {
 	echo "			</table>";
 
 	echo "		</td>";
-	echo "		<td valign='top' style='height: 450px;'>"
+	echo "		<td valign='top' style='height: 300px;'>"
 	?>
 	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 		<tr>
@@ -469,7 +471,8 @@ else {
 			}
 		}
 	}
-	//for sql
+
+//sql result
 	if (permission_exists('exec_sql')) {
 		echo "<span id='sql_response' style='display: none;'>";
 		echo "<b>".$text['label-results']."</b>\n";
@@ -480,4 +483,5 @@ else {
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
