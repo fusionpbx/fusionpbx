@@ -290,27 +290,27 @@
 							--end
 						end
 					--send the email addresses
-						sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
-							WHERE m.domain_uuid = ']] .. domain_uuid ..[['
-							AND u.user_uuid = m.user_uuid
-							AND m.meeting_uuid = ']] .. meeting_uuid ..[['
-							and u.contact_uuid = c.contact_uuid]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[conference center] <email> SQL: " .. sql .. "\n");
-						end
-						status = dbh:query(sql, function(row)
-							if (row["contact_email"] ~= nil) then
-								contact_email = string.lower(row["contact_email"]);
-								if (string.len(contact_email) > 3) then
-									freeswitch.consoleLog("notice", "[conference center] contact_email: " .. contact_email .. "\n");
-									if (record == "true") then
-										if (file_exists(conference_recording..".wav")) then
-											send_email(contact_email, "", default_language, default_dialect);
-										end
-									end
-								end
-							end
-						end);
+						--sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
+						--	WHERE m.domain_uuid = ']] .. domain_uuid ..[['
+						--	AND u.user_uuid = m.user_uuid
+						--	AND m.meeting_uuid = ']] .. meeting_uuid ..[['
+						--	and u.contact_uuid = c.contact_uuid]];
+						--if (debug["sql"]) then
+						--	freeswitch.consoleLog("notice", "[conference center] <email> SQL: " .. sql .. "\n");
+						--end
+						--status = dbh:query(sql, function(row)
+						--	if (row["contact_email"] ~= nil) then
+						--		contact_email = string.lower(row["contact_email"]);
+						--		if (string.len(contact_email) > 3) then
+						--			freeswitch.consoleLog("notice", "[conference center] contact_email: " .. contact_email .. "\n");
+						--			if (record == "true") then
+						--				if (file_exists(conference_recording..".wav")) then
+						--					send_email(contact_email, "", default_language, default_dialect);
+						--				end
+						--			end
+						--		end
+						--	end
+						--end);
 				end
 			end
 
