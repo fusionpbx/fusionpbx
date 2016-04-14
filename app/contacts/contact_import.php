@@ -91,7 +91,7 @@ else {
 							$contact_name_given = $data['FirstName'];
 							$contact_name_family = $data['LastName'];
 							$contact_organization = $data['Company'];
-							$contact_email = $data['EmailAddress'];
+							//$contact_email = $data['EmailAddress'];
 							$contact_note = $data['Notes'];
 							$contact_url = $data['Web Page'];
 
@@ -108,7 +108,6 @@ else {
 							//$sql .= "contact_nickname, ";
 							$sql .= "contact_title, ";
 							//$sql .= "contact_role, ";
-							$sql .= "contact_email, ";
 							$sql .= "contact_url, ";
 							//$sql .= "contact_time_zone, ";
 							$sql .= "contact_note ";
@@ -124,7 +123,6 @@ else {
 							//$sql .= "'$contact_nickname', ";
 							$sql .= "'$contact_title', ";
 							//$sql .= "'$contact_role', ";
-							$sql .= "'$contact_email', ";
 							$sql .= "'$contact_url', ";
 							//$sql .= "'$contact_time_zone', ";
 							$sql .= "'$contact_note' ";
@@ -340,7 +338,7 @@ else {
 			echo "<tr>\n";
 			echo "	<th>".$text['label-contact_name']."</th>\n";
 			echo "	<th>".$text['label-contact_organization']."</th>\n";
-			echo "	<th>".$text['label-contact_email']."</th>\n";
+			//echo "	<th>".$text['label-contact_email']."</th>\n";
 			echo "	<th>".$text['label-contact_url']."</th>\n";
 			echo "</tr>\n";
 			foreach($results as $row) {
