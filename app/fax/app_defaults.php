@@ -5,6 +5,27 @@ if ($domains_processed == 1) {
 	//define array of settings
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '.pdf';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x = 0;
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '.tif';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x = 0;
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '.tiff';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'cover_logo';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '';
