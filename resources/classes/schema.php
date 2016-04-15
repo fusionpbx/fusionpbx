@@ -27,6 +27,7 @@ include "root.php";
 
 //define the schema class
 	class schema {
+
 		//define variables
 			public $db;
 			public $apps;
