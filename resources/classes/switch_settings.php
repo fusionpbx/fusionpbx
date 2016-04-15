@@ -16,9 +16,13 @@ class switch_settings {
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		//set the database connection
-		global $db;
-		$this->db = $db;
+		//connect to the database if not connected
+		if (!$this->db) {
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$this->db = $database->db;
+		}
 	}
 
 	/**
