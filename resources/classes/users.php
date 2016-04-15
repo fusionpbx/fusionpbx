@@ -31,43 +31,44 @@
  * @method string add
  * @method boolean delete
  */
-class users {
+if (!class_exists('users')) {
+	class users {
 
-	/**
-	 * Called when the object is created
-	 */
-	public function __construct() {
-		//place holder
-	}
-
-	/**
-	 * Called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
+		/**
+		 * Called when the object is created
+		 */
+		public function __construct() {
+			//place holder
 		}
-	}
 
-	/**
-	 * add a user
-	 */
-	public function add($username, $password) {
-		$id = uuid();
-		//return $id;
-		return false;
-	}
+		/**
+		 * Called when there are no references to a particular object
+		 * unset the variables used in the class
+		 */
+		public function __destruct() {
+			foreach ($this as $key => $value) {
+				unset($this->$key);
+			}
+		}
 
-	/**
-	 * delete a user
-	 */
-	public function delete($id) {
-		return false;
-	}
+		/**
+		 * add a user
+		 */
+		public function add($username, $password) {
+			$id = uuid();
+			//return $id;
+			return false;
+		}
 
-} //end scripts class
+		/**
+		 * delete a user
+		 */
+		public function delete($id) {
+			return false;
+		}
 
+	} //end scripts class
+}
 /*
 //example use
 	$user = new users;

@@ -25,6 +25,7 @@
 	sreis
 */
 
+if (!class_exists('domains')) {
 	class domains {
 
 		//define variables
@@ -352,5 +353,6 @@
 
 		}
 	}
+}
 
 ?>
