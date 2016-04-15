@@ -30,7 +30,7 @@
 		$o = new menu;
 		$o->db = $db;
 		$o->menu_default();
-		unset($menu);
+		unset($o);
 	} //if
 
 ?>
