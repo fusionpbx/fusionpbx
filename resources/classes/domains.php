@@ -27,22 +27,33 @@
 
 	class domains {
 
+		//define variables
+		public $db;
+
+		//class constructor
+		public function __construct() {
+			//connect to the database if not connected
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
+		}
+
 		public function set() {
 
-			//set the global variable
-				global $db;
-
 			//set the PDO error mode
-				$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				try {
-					$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
+					$prep_statement = $this->db->prepare($sql . " order by default_setting_order asc ");
 					$prep_statement->execute();
 				}
 				catch(PDOException $e) {
-					$prep_statement = $db->prepare($sql);
+					$prep_statement = $this->db->prepare($sql);
 					$prep_statement->execute();
 				}
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -82,11 +93,11 @@
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and domain_setting_enabled = 'true' ";
 					try {
-						$prep_statement = $db->prepare($sql . " order by domain_setting_order asc ");
+						$prep_statement = $this->db->prepare($sql . " order by domain_setting_order asc ");
 						$prep_statement->execute();
 					}
 					catch(PDOException $e) {
-						$prep_statement = $db->prepare($sql);
+						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute();
 					}
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -131,11 +142,11 @@
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
 					try {
-						$prep_statement = $db->prepare($sql . " order by user_setting_order asc ");
+						$prep_statement = $this->db->prepare($sql . " order by user_setting_order asc ");
 						$prep_statement->execute();
 					}
 					catch(PDOException $e) {
-						$prep_statement = $db->prepare($sql);
+						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute();
 					}
 					if ($prep_statement) {
@@ -171,7 +182,7 @@
 				}
 
 			//set the PDO error mode
-				$db->setAttribute(PDO::ATTR_ERRMODE, '');
+				$this->db->setAttribute(PDO::ATTR_ERRMODE, '');
 
 			//set the values from the session variables
 				if (strlen($_SESSION['domain']['time_zone']['name']) > 0) {
@@ -222,7 +233,7 @@
 
 			//get the domain_uuid
 				$sql = "select * from v_domains ";
-				$prep_statement = $db->prepare($sql);
+				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($result as $row) {
@@ -244,13 +255,13 @@
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
-				$prep_statement = $db->prepare($sql);
+				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 			//loop through all domains
 				$sql = "select * from v_domains ";
-				$v_prep_statement = $db->prepare(check_sql($sql));
+				$v_prep_statement = $this->db->prepare(check_sql($sql));
 				$v_prep_statement->execute();
 				$main_result = $v_prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				$domain_count = count($main_result);
@@ -298,7 +309,7 @@
 						$sql = "select * from v_domain_settings ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
 						$sql .= "and domain_setting_enabled = 'true' ";
-						$prep_statement = $db->prepare($sql);
+						$prep_statement = $this->db->prepare($sql);
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						foreach($result as $row) {
