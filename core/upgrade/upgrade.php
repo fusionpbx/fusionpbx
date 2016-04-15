@@ -48,8 +48,8 @@
 		$format = 'html';
 	}
 
-		require_once "resources/classes/text.php";
 //add multi-lingual support
+	require_once "resources/classes/text.php";
 	$language = new text;
 	$text = $language->get();
 
@@ -67,10 +67,7 @@
 	$obj = new schema;
 	echo $obj->schema("text");
 
-//request the switch to perform upgrade functions
-	$obj = new install_switch;
-	$obj->upgrade();
-
+//run all app_defaults.php files
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
 	$domain->upgrade();
