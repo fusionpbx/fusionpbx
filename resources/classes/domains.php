@@ -201,9 +201,6 @@
 
 		public function upgrade() {
 
-			//set the global variable
-				global $db;
-
 			//get the db variables
 				$config = new config;
 				$config_exists = $config->exists();
@@ -225,6 +222,7 @@
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 				unset($config_list_1,$config_list_2);
+				$db = $this->db;
 				$x=0;
 				foreach ($config_list as &$config_path) {
 					include($config_path);
