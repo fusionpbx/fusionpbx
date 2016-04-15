@@ -34,11 +34,19 @@
  */
 class groups {
 
+	public $db;
+
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		//place holder
+		//connect to the database if not connected
+		if (!$this->db) {
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$this->db = $database->db;
+		}
 	}
 
 	/**
