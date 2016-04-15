@@ -33,8 +33,17 @@ include "root.php";
 			public $db_type;
 			public $result;
 
-		//get the list of installed apps from the core and mod directories
+		//class constructor
 			public function __construct() {
+				//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+
+				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
