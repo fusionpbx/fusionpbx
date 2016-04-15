@@ -836,6 +836,7 @@ include "root.php";
 		}
 
 		protected function app_defaults() {
+
 			//write a progress message
 				$this->write_progress("\tRunning app_defaults");
 
