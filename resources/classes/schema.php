@@ -26,6 +26,7 @@
 include "root.php";
 
 //define the schema class
+if (!class_exists('schema')) {
 	class schema {
 
 		//define variables
@@ -873,8 +874,8 @@ include "root.php";
 					//else if ($output == "return") {
 						return $response;
 					//}
-
 			} //end function
+	}
 }
 
 //example use
