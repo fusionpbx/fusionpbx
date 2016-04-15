@@ -1326,30 +1326,52 @@ if ($domains_processed == 1) {
 		unset ($prep_statement, $sql);
 
 	//find the missing default settings
-		$x = 0;
+		$i = 0;
 		foreach ($array as $setting) {
 			$found = false;
-			$missing[$x] = $setting;
+			$missing[$i] = $setting;
 			foreach ($default_settings as $row) {
 				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
 					$found = true;
 					//remove items from the array that were found
-					unset($missing[$x]);
+					unset($missing[$i]);
 				}
 			}
-			$x++;
+			$i++;
 		}
 
+	//get the missing count
+		$i = 0;
+		foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
 	//add the missing default settings
+		$sql = "insert into v_default_settings (";
+		$sql .= "default_setting_uuid, ";
+		$sql .= "default_setting_category, ";
+		$sql .= "default_setting_subcategory, ";
+		$sql .= "default_setting_name, ";
+		$sql .= "default_setting_value, ";
+		$sql .= "default_setting_enabled, ";
+		$sql .= "default_setting_description ";
+		$sql .= ") values \n";
+		$i = 1;
 		foreach ($missing as $row) {
-			//add the default settings
-			$orm = new orm;
-			$orm->name('default_settings');
-			$orm->save($row);
-			$message = $orm->message;
-			unset($orm);
-			//print_r($message);
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'".check_str($row['default_setting_category'])."', ";
+			$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+			$sql .= "'".check_str($row['default_setting_name'])."', ";
+			$sql .= "'".check_str($row['default_setting_value'])."', ";
+			$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+			$sql .= "'".check_str($row['default_setting_description'])."' ";
+			$sql .= ")";
+			if ($missing_count != $i) { 
+				$sql .= ",\n";
+			}
+			$i++;
 		}
+		$db->exec(check_sql($sql));
 		unset($missing);
 
 	//unset the array variable
