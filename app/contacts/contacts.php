@@ -143,7 +143,6 @@ else {
 				$sql .= "		lower(contact_title) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_category) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_role) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_email) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_url) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_time_zone) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_note) like '%".$search_all."%' or \n";
