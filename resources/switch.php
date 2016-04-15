@@ -449,7 +449,13 @@ function save_gateway_xml() {
 }
 
 function save_module_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$xml = "";
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
@@ -487,7 +493,13 @@ function save_module_xml() {
 }
 
 function save_var_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	//open the vars.xml file
 	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
