@@ -68,20 +68,6 @@ if (sizeof($_POST) > 0) {
 			$_SESSION["message_mood"] = 'negative';
 			$response_message = $text['message-upgrade_source_failed'];
 		}
-		else {
-			//update scripts folder, if allowed (default)
-				if ($_SESSION['switch']['scripts']['dir'] != '') {
-					//copy the files and directories from resources/install
-						$obj = new install_switch;
-						$obj->upgrade();
-					//set the message
-						$response_message = $text['message-upgrade_source_scripts'];
-				}
-				else {
-					//set the message
-						$response_message = $text['message-upgrade_source'];
-				}
-		}
 	}
 
 	// load an array of the database schema and compare it with the active database
@@ -238,7 +224,6 @@ echo "<div style='text-align: right;'><input type='submit' class='btn' value='".
 echo "<br><br>";
 echo "</form>\n";
 
-
 // output result of source update
 if (sizeof($_SESSION["response_source_update"]) > 0) {
 	echo "<br />";
@@ -250,7 +235,6 @@ if (sizeof($_SESSION["response_source_update"]) > 0) {
 	echo "<br /><br />";
 	unset($_SESSION["response_source_update"]);
 }
-
 
 // output result of upgrade schema
 if ($_SESSION["schema"]["response"] != '') {
