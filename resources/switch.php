@@ -50,7 +50,7 @@ require_once "resources/require.php";
 function load_extensions() {
 	global $db;
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+		if ($db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
 				$sql = "select ";
