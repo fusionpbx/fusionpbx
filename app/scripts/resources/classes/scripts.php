@@ -34,11 +34,19 @@
  */
 class scripts {
 
+	public $db;
+
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		//place holder
+		//connect to the database if not connected
+		if (!$this->db) {
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$this->db = $database->db;
+		}
 	}
 
 	/**
@@ -102,7 +110,6 @@ class scripts {
 		if (is_dir($_SESSION['switch']['scripts']['dir'])) {
 
 			//define the global variables
-				global $db;
 				global $db_type;
 				global $db_name;
 				global $db_host;
@@ -117,7 +124,7 @@ class scripts {
 			//get the odbc information
 				$sql = "select count(*) as num_rows from v_databases ";
 				$sql .= "where database_driver = 'odbc' ";
-				$prep_statement = $db->prepare($sql);
+				$prep_statement = $this->db->prepare($sql);
 				if ($prep_statement) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
@@ -127,7 +134,7 @@ class scripts {
 
 						$sql = "select * from v_databases ";
 						$sql .= "where database_driver = 'odbc' ";
-						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement = $this->db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						foreach ($result as &$row) {
