@@ -80,14 +80,11 @@ class groups {
 	 */
 	public function defaults() {
 
-		//get the global database connection
-			global $db;
-
 		//if the are no groups add the default groups
 			$sql = "SELECT * FROM v_groups ";
 			$sql .= "WHERE domain_uuid is null ";
-			$result = $db->query($sql)->fetch();
-			$prep_statement = $db->prepare(check_sql($sql));
+			$result = $this->db->query($sql)->fetch();
+			$prep_statement = $this->db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -112,7 +109,7 @@ class groups {
 					$tmp[$x]['group_name'] = 'agent';
 					$tmp[$x]['group_description'] = 'Call Center Agent Group';
 					$tmp[$x]['group_protected'] = 'false';
-					$db->beginTransaction();
+					$this->db->beginTransaction();
 					foreach($tmp as $row) {
 						if (strlen($row['group_name']) > 0) {
 							$sql = "insert into v_groups ";
@@ -131,11 +128,11 @@ class groups {
 							$sql .= "'".$row['group_description']."', ";
 							$sql .= "'".$row['group_protected']."' ";
 							$sql .= ")";
-							$db->exec($sql);
+							$this->db->exec($sql);
 							unset($sql);
 						}
 					}
-					$db->commit();
+					$this->db->commit();
 				}
 				unset($prep_statement, $result);
 			}
@@ -143,7 +140,7 @@ class groups {
 		//if there are no permissions listed in v_group_permissions then set the default permissions
 			$sql = "select count(*) as count from v_group_permissions ";
 			$sql .= "where domain_uuid is null ";
-			$prep_statement = $db->prepare($sql);
+			$prep_statement = $this->db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			unset ($prep_statement);
@@ -156,7 +153,7 @@ class groups {
 						$x++;
 					}
 				//no permissions found add the defaults
-					$db->beginTransaction();
+					$this->db->beginTransaction();
 					foreach($apps as $app) {
 						foreach ($app['permissions'] as $row) {
 							foreach ($row['groups'] as $group) {
@@ -175,12 +172,12 @@ class groups {
 								$sql .= "'".$row['name']."', ";
 								$sql .= "'".$group."' ";
 								$sql .= ")";
-								$db->exec($sql);
+								$this->db->exec($sql);
 								unset($sql);
 							}
 						}
 					}
-					$db->commit();
+					$this->db->commit();
 			}
 	}
 
