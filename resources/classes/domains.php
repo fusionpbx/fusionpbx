@@ -230,13 +230,32 @@ if (!class_exists('domains')) {
 					$x++;
 				}
 
-			//get the domain_uuid
+			//get the domains
 				$sql = "select * from v_domains ";
 				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					if (count($result) == 1) {
+				$domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($prep_statement);
+
+			//get the domain_settings
+				$sql = "select * from v_domain_settings ";
+				$sql .= "where domain_setting_enabled = 'true' ";
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$domain_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($prep_statement);
+
+			//get the default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_enabled = 'true' ";
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$database_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($prep_statement);
+
+			//get the domain_uuid
+				foreach($domains as $row) {
+					if (count($domains) == 1) {
 						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 						$_SESSION["domain_name"] = $row['domain_name'];
 					}
@@ -249,23 +268,11 @@ if (!class_exists('domains')) {
 						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
 					}
 				}
-				unset($result, $prep_statement);
-
-			//get the default settings
-				$sql = "select * from v_default_settings ";
-				$sql .= "where default_setting_enabled = 'true' ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$result_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 			//loop through all domains
-				$sql = "select * from v_domains ";
-				$v_prep_statement = $this->db->prepare(check_sql($sql));
-				$v_prep_statement->execute();
-				$main_result = $v_prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				$domain_count = count($main_result);
+				$domain_count = count($domains);
 				$domains_processed = 1;
-				foreach ($main_result as &$row) {
+				foreach ($domains as &$row) {
 					//get the values from database and set them as php variables
 						$domain_uuid = $row["domain_uuid"];
 						$domain_name = $row["domain_name"];
@@ -281,7 +288,7 @@ if (!class_exists('domains')) {
 						}
 
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
-						foreach($result_defaults_settings as $row) {
+						foreach($database_default_settings as $row) {
 							$name = $row['default_setting_name'];
 							$category = $row['default_setting_category'];
 							$subcategory = $row['default_setting_subcategory'];
@@ -304,24 +311,20 @@ if (!class_exists('domains')) {
 							}
 						}
 
-					//get the domains settings
-						$sql = "select * from v_domain_settings ";
-						$sql .= "where domain_uuid = '".$domain_uuid."' ";
-						$sql .= "and domain_setting_enabled = 'true' ";
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach($result as $row) {
-							$name = $row['domain_setting_name'];
-							$category = $row['domain_setting_category'];
-							$subcategory = $row['domain_setting_subcategory'];
-							if (strlen($subcategory) == 0) {
-								//$$category[$name] = $row['domain_setting_value'];
-								$_SESSION[$category][$name] = $row['domain_setting_value'];
-							}
-							else {
-								//$$category[$subcategory][$name] = $row['domain_setting_value'];
-								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+					//get the domains settings for the current domain
+						foreach($domain_settings as $row) {
+							if ($row['domain_uuid'] == $domain_uuid) {
+								$name = $row['domain_setting_name'];
+								$category = $row['domain_setting_category'];
+								$subcategory = $row['domain_setting_subcategory'];
+								if (strlen($subcategory) == 0) {
+									//$$category[$name] = $row['domain_setting_value'];
+									$_SESSION[$category][$name] = $row['domain_setting_value'];
+								}
+								else {
+									//$$category[$subcategory][$name] = $row['domain_setting_value'];
+									$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+								}
 							}
 						}
 
@@ -334,7 +337,6 @@ if (!class_exists('domains')) {
 					//track of the number of domains processed
 						$domains_processed++;
 				}
-				unset ($v_prep_statement);
 
 			//synchronize the dialplan
 				if (function_exists('save_dialplan_xml')) {
