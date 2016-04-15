@@ -196,7 +196,7 @@
 	echo "<br>\n";
 
 	if (permission_exists('xml_cdr_search')) {
-		echo "<form name='frm' id='frm' method='post' action=''>\n";
+		echo "<form name='frm' id='frm' method='get' action=''>\n";
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
