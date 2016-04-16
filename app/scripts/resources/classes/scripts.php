@@ -36,18 +36,35 @@ if (!class_exists('scripts')) {
 	class scripts {
 
 		public $db;
+		public $db_type;
+		public $db_name;
+		public $db_host;
+		public $db_port;
+		public $db_path;
+		public $db_username;
+		public $db_password;
+		public $dsn_name;
+		public $dsn_username;
+		public $dsn_password;
 
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
 			//connect to the database if not connected
+			require_once "resources/classes/database.php";
+			$database = new database;
 			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
 				$database->connect();
-				$this->db = $database->db;
 			}
+			$this->db = $database->db;
+			$this->db_type = $database->type;
+			$this->db_name = $database->db_name;
+			$this->db_host = $database->host;
+			$this->db_port = $database->port;
+			$this->db_path = $database->path;
+			$this->db_username = $database->username;
+			$this->db_password = $database->password;
 		}
 
 		/**
@@ -110,17 +127,8 @@ if (!class_exists('scripts')) {
 		public function write_config() {
 			if (is_dir($_SESSION['switch']['scripts']['dir'])) {
 
-				//define the global variables
-					global $db_type;
-					global $db_name;
-					global $db_host;
-					global $db_port;
-					global $db_path;
-					global $db_username;
-					global $db_password;
-
 				//replace the backslash with a forward slash
-					$db_path = str_replace("\\", "/", $db_path);
+					$this->db_path = str_replace("\\", "/", $this->db_path);
 
 				//get the odbc information
 					$sql = "select count(*) as num_rows from v_databases ";
@@ -139,9 +147,9 @@ if (!class_exists('scripts')) {
 							$prep_statement->execute();
 							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 							foreach ($result as &$row) {
-								$dsn_name = $row["database_name"];
-								$dsn_username = $row["database_username"];
-								$dsn_password = $row["database_password"];
+								$this->dsn_name = $row["database_name"];
+								$this->dsn_username = $row["database_username"];
+								$this->dsn_password = $row["database_password"];
 								break; //limit to 1 row
 							}
 							unset ($prep_statement);
@@ -161,7 +169,7 @@ if (!class_exists('scripts')) {
 						$config = "/usr/local/etc/fusionpbx/config.lua";
 					}
 					else {
-						$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+						$config = $_SESSION['switch']['scripts']['dir']."/config.lua";
 					}
 					$fout = fopen($config,"w");
 					if(!$fout){
@@ -202,27 +210,27 @@ if (!class_exists('scripts')) {
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= "\n";
 
-					if ((strlen($db_type) > 0) || (strlen($dsn_name) > 0)) {
+					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
 						$tmp .= "--database information\n";
 						$tmp .= "	database = {}\n";
-						$tmp .= "	database.type = \"".$db_type."\";\n";
-						$tmp .= "	database.name = \"".$db_name."\";\n";
-						$tmp .= $this->correct_path("	database.path = [[".$db_path."]];\n");
+						$tmp .= "	database.type = \"".$this->db_type."\";\n";
+						$tmp .= "	database.name = \"".$this->db_name."\";\n";
+						$tmp .= $this->correct_path("	database.path = [[".$this->db_path."]];\n");
 
-						if (strlen($dsn_name) > 0) {
-							$tmp .= "	database.system = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
-							$tmp .= "	database.switch = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
+						if (strlen($this->dsn_name) > 0) {
+							$tmp .= "	database.system = \"odbc://".$this->dsn_name.":".$this->dsn_username.":".$this->dsn_password."\";\n";
+							$tmp .= "	database.switch = \"odbc://freeswitch:".$this->dsn_username.":".$this->dsn_password."\";\n";
 						}
-						elseif ($db_type == "pgsql") {
-							if ($db_host == "localhost") { $db_host = "127.0.0.1"; }
-							$tmp .= "	database.system = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
-							$tmp .= "	database.switch = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
+						elseif ($this->db_type == "pgsql") {
+							if ($this->db_host == "localhost") { $this->db_host = "127.0.0.1"; }
+							$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options='' application_name='".$this->db_name."'\";\n";
+							$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options='' application_name='freeswitch'\";\n";
 						}
-						elseif ($db_type == "sqlite") {
-							$tmp .= "	database.system = \"sqlite://".$db_path."/".$db_name."\";\n";
+						elseif ($this->db_type == "sqlite") {
+							$tmp .= "	database.system = \"sqlite://".$this->db_path."/".$this->db_name."\";\n";
 							$tmp .= "	database.switch = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 						}
-						elseif ($db_type == "mysql") {
+						elseif ($this->db_type == "mysql") {
 							$tmp .= "	database.system = \"\";\n";
 							$tmp .= "	database.switch = \"\";\n";
 						}
@@ -271,6 +279,8 @@ if (!class_exists('scripts')) {
 	} //end scripts class
 }
 /*
+//example use
+
 //update config.lua
 	$obj = new scripts;
 	$obj->write_config();
