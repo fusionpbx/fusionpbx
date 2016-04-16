@@ -37,7 +37,7 @@
 	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
 		//bsd
 	} else {
-		header("Location: ".PROJECT_PATH."/resources/install.php");
+		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
 	}
 
