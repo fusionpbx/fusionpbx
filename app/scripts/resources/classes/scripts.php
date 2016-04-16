@@ -167,7 +167,7 @@ if (!class_exists('scripts')) {
 						$config = "/usr/local/etc/fusionpbx/config.lua";
 					}
 					else {
-						$config = $_SESSION['switch']['scripts']['dir']."/config.lua";
+						$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
 					}
 					$fout = fopen($config,"w");
 					if(!$fout){
