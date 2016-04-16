@@ -899,6 +899,40 @@ include "root.php";
 				$domain = new domains;
 				$domain->upgrade();
 
+			//get the switch default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_category = 'switch' ";
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($default_settings as $row) {
+					$name = $row['default_setting_name'];
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
+					if (strlen($subcategory) == 0) {
+						if ($name == "array") {
+							$_SESSION[$category][] = $row['default_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$name] = $row['default_setting_value'];
+						}
+					}
+					else {
+						if ($name == "array") {
+							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+						}
+					}
+				}
+				unset ($prep_statement, $sql);
+
+			//update config.lua
+				$obj = new scripts;
+				$obj->write_config();
+
 			//synchronize the config with the saved settings
 				save_switch_xml();
 
