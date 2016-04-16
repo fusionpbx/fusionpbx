@@ -250,7 +250,7 @@ if (!class_exists('switch_settings')) {
 						}
 						$i++;
 					}
-					$db->exec(check_sql($sql));
+					$this->db->exec(check_sql($sql));
 					unset($missing);
 				}
 
