@@ -54,9 +54,7 @@ if (!class_exists('scripts')) {
 			//connect to the database if not connected
 			require_once "resources/classes/database.php";
 			$database = new database;
-			if (!$this->db) {
-				$database->connect();
-			}
+			$database->connect();
 			$this->db = $database->db;
 			$this->db_type = $database->type;
 			$this->db_name = $database->db_name;
