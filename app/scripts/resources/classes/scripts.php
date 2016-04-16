@@ -161,11 +161,7 @@ if (!class_exists('scripts')) {
 						$config = "/usr/local/etc/fusionpbx/config.lua";
 					}
 					else {
-						//connect to event socket
-						$esl = new event_socket;
-						$esl->connect($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						$script_dir = trim($esl->request('api global_getvar script_dir'));
-						$config = $script_dir."/resources/config.lua";
+						$script_dir = $_SESSION['switch']['scripts']['dir'];
 					}
 					$fout = fopen($config,"w");
 					if(!$fout){
