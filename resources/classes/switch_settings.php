@@ -43,13 +43,28 @@ if (!class_exists('switch_settings')) {
 
 			//define the variables
 				if (!isset($this->event_socket_ip_address)) {
-					$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
+					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+						$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
+					}
+					else {
+						$this->event_socket_ip_address = '127.0.0.1';
+					}
 				}
 				if (!isset($this->event_socket_port)) {
-					$this->event_socket_port = $_SESSION['event_socket_port'];
+					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+						$this->event_socket_port = $_SESSION['event_socket_port'];
+					}
+					else {
+						$this->event_socket_port = '8021';
+					}
 				}
 				if (!isset($this->event_socket_password)) {
-					$this->event_socket_password = $_SESSION['event_socket_password'];
+					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+						$this->event_socket_password = $_SESSION['event_socket_password'];
+					}
+					else {
+						$this->event_socket_password = 'ClueCon';
+					}
 				}
 
 			//connect to event socket
