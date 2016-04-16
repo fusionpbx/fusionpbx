@@ -902,7 +902,7 @@ include "root.php";
 			//get the switch default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_category = 'switch' ";
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->dbh->prepare($sql);
 				$prep_statement->execute();
 				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($default_settings as $row) {
