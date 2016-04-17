@@ -11,5 +11,6 @@ $apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 $apps[$x]['menu'][0]['category'] = "internal";
 $apps[$x]['menu'][0]['path'] = "/app/backup/index.php";
 $apps[$x]['menu'][0]['groups'][] = "superadmin";
+$apps[$x]['menu'][0]['title']['zh-cn'] = "备份";
 
 ?>
