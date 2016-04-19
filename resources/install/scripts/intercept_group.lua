@@ -15,4 +15,7 @@
 --	The Original Code is FusionPBX
 --
 
+-- shift arguments
+	argv[1], argv[2] = nil, argv[1]
+
 require "intercept"
