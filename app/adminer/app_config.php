@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Adminer (anteriormente phpMinAdmin) é uma ferramenta completa para gestão de bases de dados escrita em PHP. O Adminer está disponível para MySQL, PostgreSQL, SQLite, MS SQL e Oracle.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['it-it'] = "Adminer";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "adminer";
