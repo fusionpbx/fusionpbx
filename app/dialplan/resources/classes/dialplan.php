@@ -266,8 +266,9 @@ include "root.php";
 			public function import() {
 				if (strlen($this->xml) > 0) {
 					//replace the variables
+						$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
 						$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
-						$this->xml = str_replace("{v_pin_number}", generate_password(8, 1), $this->xml);
+						$this->xml = str_replace("{v_pin_number}", generate_password($length , 1), $this->xml);
 						$this->xml = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $this->xml);
 					//convert the xml string to an xml object
 						$xml = simplexml_load_string($this->xml);
