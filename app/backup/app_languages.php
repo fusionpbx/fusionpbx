@@ -110,7 +110,7 @@ $text['label-source_paths']['uk'] = "Об’єкти для резервного
 $text['label-source_paths']['de-at'] = "Quell Pfade";
 $text['label-source_paths']['it-it'] = "Percorso sorgente";
 
-$text['label-select_backup']['it-it'] = "Select Backup File";
+$text['label-select_backup']['en-us'] = "Select Backup File";
 $text['label-select_backup']['es-cl'] = "Seleccione Copia de Seguridad";
 $text['label-select_backup']['pt-pt'] = "Selecione Backup";
 $text['label-select_backup']['fr-fr'] = "Sélectionnez le Fichier de Sauvegarde";
