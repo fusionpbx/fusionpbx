@@ -9,6 +9,7 @@ $text['title-apps']['pl'] = "Menedżer aplikacji";
 $text['title-apps']['sv-se'] = "App Inställningar";
 $text['title-apps']['uk'] = "Керування додатками";
 $text['title-apps']['de-at'] = "App Verwaltung";
+$text['title-apps']['it-it'] = "Gestore applicazioni";
 
 $text['title-app-edit']['en-us'] = "App Edit";
 $text['title-app-edit']['es-cl'] = "Editar Aplicaciones";
@@ -19,6 +20,7 @@ $text['title-app-edit']['pl'] = "Edytuj aplikację ";
 $text['title-app-edit']['sv-se'] = "Ändra App";
 $text['title-app-edit']['uk'] = "Редагувати додаток";
 $text['title-app-edit']['de-at'] = "Applikationen Editieren";
+$text['title-app-edit']['it-it'] = "Modifica applicazioni";
 
 $text['label-version']['en-us'] = "Version";
 $text['label-version']['es-cl'] = "Versión";
@@ -29,6 +31,7 @@ $text['label-version']['pl'] = "Wersja";
 $text['label-version']['sv-se'] = "Version";
 $text['label-version']['uk'] = "Версія";
 $text['label-version']['de-at'] = "Version";
+$text['label-version']['it-it'] = "Versione";
 
 $text['header-apps']['en-us'] = "App Manager";
 $text['header-apps']['es-cl'] = "Administrador de Aplicaciones";
@@ -39,6 +42,7 @@ $text['header-apps']['pl'] = "Menedżer aplikacji";
 $text['header-apps']['sv-se'] = "App Inställningar";
 $text['header-apps']['uk'] = "Керування додатками";
 $text['header-apps']['de-at'] = "App Verwaltung";
+$text['header-apps']['it-it'] = "Gestore applicazioni";
 
 $text['header-app-edit']['en-us'] = "App Edit";
 $text['header-app-edit']['es-cl'] = "Editar Aplicaciones";
@@ -49,6 +53,7 @@ $text['header-app-edit']['pl'] = "Edytuj aplikację ";
 $text['header-app-edit']['sv-se'] = "Ändra App";
 $text['header-app-edit']['uk'] = "Редагувати додаток";
 $text['header-app-edit']['de-at'] = "Applikation bearbeiten";
+$text['header-app-edit']['it-it'] = "Modifica applicazione";
 
 $text['description-apps']['en-us'] = "Manage the applications that are installed.";
 $text['description-apps']['es-cl'] = "Administre las aplicaciones instaladas.";
@@ -59,6 +64,7 @@ $text['description-apps']['pl'] = "Zarządzajnie zainstalowanymi aplikacjami.";
 $text['description-apps']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-apps']['uk'] = "Керування встановленими додатками";
 $text['description-apps']['de-at'] = "Verwalten Sie die installierten Applikationen";
+$text['description-apps']['it-it'] = "Gestione applicazioni installate.";
 
 $text['description-app-edit']['en-us'] = "Manage the applications that are installed.";
 $text['description-app-edit']['es-cl'] = "Administre las aplicaciones instaladas.";
@@ -69,5 +75,6 @@ $text['description-app-edit']['pl'] = "Zarządzajnie zainstalowanymi aplikacjami
 $text['description-app-edit']['sv-se'] = "Hantera de applikationer som är installerade.";
 $text['description-app-edit']['uk'] = "Керування встановленими додатками";
 $text['description-app-edit']['de-at'] = "Verwalten Sie die installierten Applikationen";
+$text['description-app-edit']['it-it'] = "Gestire le applicazioni installate.";
 
 ?>

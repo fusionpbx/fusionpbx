@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['it-it'] = "";
 
 	//permission details
 		$y = 0;
