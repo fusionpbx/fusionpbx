@@ -957,7 +957,7 @@
 
 			//pbx version
 				$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>FusionPBX</td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
