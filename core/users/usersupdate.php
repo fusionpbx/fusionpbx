@@ -462,7 +462,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "		<input type='txt' class='formfld' name='username' value='".$username."' required='required'>";
+		echo "		<input type='text' class='formfld' name='username' value='".$username."' required='required'>";
 	}
 	else {
 		echo "		".$username;
