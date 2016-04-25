@@ -786,13 +786,11 @@
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
-	input[type=email].txt,
 	select.formfld,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
-	input[type=password].formfld,
-	input[type=email].formfld {
+	input[type=password].formfld {
 		font-family: <?php echo ($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['input_text_size']['text'] != '') ? $_SESSION['theme']['input_text_size']['text'] : '12px'; ?>;
 		color: <?php echo ($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000'; ?>;
@@ -833,12 +831,10 @@
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
-	input[type=email].txt,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
-	input[type=password].formfld,
-	input[type=email].formfld {
+	input[type=password].formfld {
 		transition: width 0.25s;
 		-moz-transition: width 0.25s;
 		-webkit-transition: width 0.25s;
@@ -854,12 +850,10 @@
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
-	input[type=email].txt:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
-	input[type=password].formfld:hover,
-	input[type=email].formfld:hover {
+	input[type=password].formfld:hover {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_hover']['text'] != '') ? $_SESSION['theme']['input_border_color_hover']['text'] : '#c0c0c0'; ?>;
 		}
 
@@ -867,12 +861,10 @@
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
-	input[type=email].txt:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
-	input[type=password].formfld:focus,
-	input[type=email].formfld:focus {
+	input[type=password].formfld:focus {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_focus']['text'] != '') ? $_SESSION['theme']['input_border_color_focus']['text'] : '#c0c0c0'; ?>;
 		/* first clear */
 		-webkit-box-shadow: none;
