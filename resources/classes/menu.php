@@ -203,7 +203,7 @@ if (!class_exists('menu')) {
 				//if there are no groups listed in v_menu_item_groups under menu_item_uuid then add the default groups
 					foreach($apps as $app) {
 						foreach ($app['menu'] as $sub_row) {
-							foreach ($sub_row['groups'] as $group) {
+							if (isset($sub_row['groups'])) foreach ($sub_row['groups'] as $group) {
 								$sql = "select count(*) as count from v_menu_item_groups ";
 								$sql .= "where menu_item_uuid = '".$sub_row['uuid']."' ";
 								$sql .= "and menu_uuid = '".$this->menu_uuid."' ";
@@ -547,7 +547,7 @@ if (!class_exists('menu')) {
 				//set the default menu_uuid
 					$this->menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 				//check to see if any menu exists
-					$sql = "select count(*) from v_menus ";
+					$sql = "select count(*) as count from v_menus ";
 					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
