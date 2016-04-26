@@ -25,14 +25,17 @@
 */
 
 //check the permission
+
 	if(defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		require_once "resources/require.php";
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
+//		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
+//		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
+//		$document_root = $matches[1];
+//		set_include_path($document_root);
 		$format = 'text'; //html, text
+            	include "root.php";
+		require_once "resources/require.php";
+
+//		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 	}
 	else {
 		include "root.php";
