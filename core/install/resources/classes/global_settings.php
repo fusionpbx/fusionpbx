@@ -161,7 +161,7 @@ require_once "root.php";
 				$this->_domain_count = count($_SESSION["domains"]);
 
 				// collect db_info
-				global $db_type, $db_path, $db_host, $db_port, $db_name, $db_username, $db_password;
+				global $db_type, $db_path, $db_host, $db_port, $db_name, $db_username, $db_password, $db_create;
 				$this->_db_type = $db_type;
 				$this->_db_path = $db_path;
 				$this->_db_host = $db_host;
@@ -194,10 +194,9 @@ require_once "root.php";
 						$this->$o_key = $value;
 					}
 				}
-				if($this->_db_create and strlen($this->_db_create_username) == 0)
-				{
-					$this->_db_create_username = $this->_db_username;
-					$this->_db_create_password = $this->_db_password;
+				if($this->_db_create== 1) {
+                                    if (strlen($this->_db_create_username)==0) $this->_db_create_username='root';
+                                    if (strlen($this->_db_create_password)==0) $this->_db_password;
 				}
 				if (strlen($this->_db_port) == 0) { $this->_db_port = "5432"; }
 
