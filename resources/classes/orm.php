@@ -286,13 +286,13 @@
 					}
 
 				//add a record
+        				//set the message index
+					$m = 0;
 					if ($action == "add") {
 						if (permission_exists($this->singular($this->name).'_add')) {
 							//start the atomic transaction
 								$this->db->beginTransaction();
 
-							//set the message index
-								$m = 0;
 
 							//parent data
 								if (isset($this->uuid)) {
