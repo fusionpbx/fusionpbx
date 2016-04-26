@@ -48,9 +48,6 @@
 					else {
 						$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
 						$xml_string .= "	<network-lists>\n";
-						$xml_string .= "		<list name=\"lan\" default=\"allow\">\n";
-						$xml_string .= "			<node type=\"allow\" cidr=\"192.168.42.42/32\"/>\n";
-						$xml_string .= "		</list>\n";
 						$xml_string .= "		<list name=\"domains\" default=\"deny\">\n";
 						$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
 						$xml_string .= "		</list>\n";

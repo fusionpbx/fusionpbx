@@ -116,10 +116,10 @@ else {
 //get the list
 	$sql = str_replace('count(*) as num_rows', '*', $sql);
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'voicemail_id') ? "order by voicemail_id ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'voicemail_id') ? "order by cast(voicemail_id as int) ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by voicemail_id asc ";
+		$sql .= "order by cast(voicemail_id as int) asc ";
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));

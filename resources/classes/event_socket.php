@@ -164,7 +164,7 @@ class event_socket {
 
 	public function close() {
 		if ($this->fp) {
-			fclose($fp->fp);
+			fclose($this->fp);
 			$this->fp = false;
 		}
 	}
