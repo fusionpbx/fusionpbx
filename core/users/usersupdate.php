@@ -565,7 +565,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		foreach($result as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!in_array($field["group_uuid"], $assigned_groups)) {
+			if (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups)) {
 				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}

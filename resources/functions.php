@@ -843,7 +843,7 @@ function format_string ($format, $data) {
 	function format_phone($phone_number) {
 		$phone_number = trim($phone_number, "+");
 		if (is_numeric($phone_number)) {
-			foreach ($_SESSION["format"]["phone"] as &$format) {
+			if (isset($_SESSION["format"]["phone"])) foreach ($_SESSION["format"]["phone"] as &$format) {
 				$format_count = substr_count($format, 'x');
 				$format_count = $format_count + substr_count($format, 'R');
 				$format_count = $format_count + substr_count($format, 'r');
@@ -1148,7 +1148,7 @@ function number_pad($number,$n) {
 					}
 				}
 			}
-			ksort($dir_array, SORT_STRING);
+			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
 			closedir($dir_list);
 		}
 	}

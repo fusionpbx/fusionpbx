@@ -29,7 +29,7 @@ require_once "resources/require.php";
 
 //check for login return preference
 	if ($_SESSION["user_uuid"] != '') {
-		if ($_SESSION['login']['destination_last']['boolean'] == 'true') {
+		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
 					$referrer = substr($_SERVER['HTTP_REFERER'], strpos($_SERVER['HTTP_REFERER'], $_SERVER["HTTP_HOST"]) + strlen($_SERVER["HTTP_HOST"]));

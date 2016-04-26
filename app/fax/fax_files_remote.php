@@ -235,7 +235,7 @@ else {
 	echo "<br><br>";
 
 /* close the connection */
-imap_close($inbox);
+imap_close($connection);
 
 
 //show the footer

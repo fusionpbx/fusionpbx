@@ -29,7 +29,7 @@ class destinations {
 			}
 			$i = 0;
 			foreach ($apps as $x => &$app) {
-				foreach ($app['destinations'] as &$row) {
+				if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
 					$this->destinations[] = $row;
 				}
 			}

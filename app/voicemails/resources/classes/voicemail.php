@@ -42,7 +42,7 @@
 				}
 
 			//set the voicemail id and voicemail uuid arrays
-				foreach ($_SESSION['user']['extension'] as $index => $row) {
+				if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
 					if (strlen($row['number_alias']) > 0) {
 						$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
 					}
@@ -50,7 +50,7 @@
 						$voicemail_ids[$index]['voicemail_id'] = $row['user'];
 					}
 				}
-				foreach ($_SESSION['user']['voicemail'] as $row) {
+				if (isset($_SESSION['user']['voicemail'])) foreach ($_SESSION['user']['voicemail'] as $row) {
 					if (strlen($row['voicemail_uuid']) > 0) {
 						$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 					}
