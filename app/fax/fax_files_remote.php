@@ -217,23 +217,20 @@ else {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 			$message = parse_message($connection, $email_id, FT_UID);
 			$attachment = $message['attachments'][0];
-
-			if($attachment){
-				$file_name = $attachment['name'];
-				$caller_id_name = substr($file_name, 0, strpos($file_name, '-'));
-				$caller_id_number = (is_numeric($caller_id_name)) ? format_phone((int) $caller_id_name) : null;
-				echo "	<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
-				echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_name."</td>\n";
-				echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_number."</td>\n";
-				echo "		<td valign='top' class='".$row_style[$c]."'><a href='?id=".$fax_uuid."&email_id=".$email_id."&download'>".$file_name."</a></td>\n";
-				echo "		<td valign='top' class='".$row_style[$c]."'>".byte_convert($attachment['size'])."</td>\n";
-				echo "		<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
-				if (permission_exists('fax_inbox_delete')) {
-					echo "		<td style='width: 25px;' class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a></td>\n";
-				}
-				echo "	</tr>\n";
-				$c = ($c) ? 0 : 1;
+			$file_name = $attachment['name'];
+			$caller_id_name = substr($file_name, 0, strpos($file_name, '-'));
+			$caller_id_number = (is_numeric($caller_id_name)) ? format_phone((int) $caller_id_name) : null;
+			echo "	<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_name."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_number."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'><a href='?id=".$fax_uuid."&email_id=".$email_id."&download'>".$file_name."</a></td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".byte_convert($attachment['size'])."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
+			if (permission_exists('fax_inbox_delete')) {
+				echo "		<td style='width: 25px;' class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a></td>\n";
 			}
+			echo "	</tr>\n";
+			$c = ($c) ? 0 : 1;
 
 		}
 
