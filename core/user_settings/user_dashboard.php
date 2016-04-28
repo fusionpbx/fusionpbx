@@ -934,7 +934,8 @@
 
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$tmp = shell_exec("df /home");
+				$df = shell_exec("which df");
+				$tmp = shell_exec($df." /home");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -999,7 +1000,8 @@
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
-					$uptime = shell_exec("cut -d. -f1 /proc/uptime");
+					$cut = shell_exec("which cut");
+					$uptime = shell_exec($cut." -d. -f1 /proc/uptime");
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
 					$tmp['h'] = $uptime/60/60%24;
@@ -1021,7 +1023,9 @@
 
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
-					$percent_memory = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
+					$free = shell_exec("which free");
+					$awk = shell_exec("which awk");
+					$percent_memory = round(shell_exec($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
 					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
@@ -1045,7 +1049,9 @@
 
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$tmp = shell_exec("ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'");
+					$ps = shell_exec("which ps");
+					$sed = shell_exec("which sed");
+					$tmp = shell_exec($ps." -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | ".$sed." '/^ 0.0 /d'");
 					$tmp = explode("\n", $tmp);
 					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 					$tmp = explode(' ', trim($tmp));
