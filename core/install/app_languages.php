@@ -10,6 +10,7 @@ $text['title-install']['sv-se'] = "Installera";
 $text['title-install']['uk'] = "Перший раз Встановіть";
 $text['title-install']['de-at'] = "Erstinstallation";
 $text['title-install']['ar-eg'] = "للمرة الأولى قم بتثبيت";
+$text['title-install']['zh-cn'] = "安装";
 
 $text['title-detected_configuration']['en-us'] = "Detected Configuration";
 $text['title-detected_configuration']['es-cl'] = "Configuración detectado";
@@ -21,6 +22,7 @@ $text['title-detected_configuration']['sv-se'] = "Detekterad Konfiguration";
 $text['title-detected_configuration']['uk'] = "виявлено Конфігурація";
 $text['title-detected_configuration']['de-at'] = "Erkannt Configuration";
 $text['title-detected_configuration']['ar-eg'] = "تكوين الكشف عن";
+$text['title-detected_configuration']['zh-cn'] = "检测配置文件";
 
 $text['title-assumed_configuration']['en-us'] = "Assumed Configuration";
 $text['title-assumed_configuration']['es-cl'] = "Configuración adoptada";
@@ -32,8 +34,9 @@ $text['title-assumed_configuration']['sv-se'] = "Antagen Konfiguration";
 $text['title-assumed_configuration']['uk'] = "передбачуваний Конфігурація";
 $text['title-assumed_configuration']['de-at'] = "Angenommene Configuration";
 $text['title-assumed_configuration']['ar-eg'] = "تكوين المفترضة";
-
+$text['title-assumed_configuration']['zh-cn'] = "已设配置";
 $text['label-ft-install']['en-us'] = "First Time Install";
+$text['label-ft-install']['zh-cn'] = "首次安装";
 $text['label-ft-install']['es-cl'] = "La primera instalación";
 $text['label-ft-install']['pt-pt'] = "First Time Install";
 $text['label-ft-install']['fr-fr'] = "Première installation";
@@ -67,6 +70,7 @@ $text['label-add-switch']['de-at'] = "Fügen Sie einen neuen Schalter";
 $text['label-add-switch']['ar-eg'] = "إضافة مفتاح جديد";
 
 $text['label-select_language']['en-us'] = "Language";
+$text['label-select_language']['zh-cn'] = "语言";
 $text['label-select_language']['es-cl'] = "Idioma";
 $text['label-select_language']['pt-pt'] = "Idioma";
 $text['label-select_language']['fr-fr'] = "Langue";
@@ -78,6 +82,7 @@ $text['label-select_language']['de-at'] = "Sprache";
 $text['label-select_language']['ar-eg'] = "لغة";
 
 $text['label-event_host']['en-us'] = "Host address";
+$text['label-event_host']['zh-cn'] = "主机地址";
 $text['label-event_host']['es-cl'] = "Dirección de host";
 $text['label-event_host']['pt-pt'] = "Endereço do host";
 $text['label-event_host']['fr-fr'] = "Adresse de l'hôte";
@@ -89,6 +94,7 @@ $text['label-event_host']['de-at'] = "Host-Adresse";
 $text['label-event_host']['ar-eg'] = "عنوان المضيف";
 
 $text['label-event_port']['en-us'] = "Port";
+$text['label-event_port']['zh-cn'] = "端口";
 $text['label-event_port']['es-cl'] = "Puerto";
 $text['label-event_port']['pt-pt'] = "Porto";
 $text['label-event_port']['fr-fr'] = "Port";
@@ -100,6 +106,7 @@ $text['label-event_port']['de-at'] = "Port";
 $text['label-event_port']['ar-eg'] = "منفذ";
 
 $text['label-event_password']['en-us'] = "Password";
+$text['label-event_password']['zh-cn'] = "密码";
 $text['label-event_password']['es-cl'] = "Contreseña";
 $text['label-event_password']['pt-pt'] = "Palavra-Chave";
 $text['label-event_password']['fr-fr'] = "Mot de Passe";
@@ -111,6 +118,7 @@ $text['label-event_password']['de-at'] = "Passwort";
 $text['label-event_password']['ar-eg'] = "كلمة السر";
 
 $text['label-username']['en-us'] = "Username";
+$text['label-username']['zh-cn'] = "用户名";
 $text['label-username']['es-cl'] = "Nombre de usuario";
 $text['label-username']['pt-pt'] = "Utilizador";
 $text['label-username']['fr-fr'] = "Utilisateur";
@@ -166,6 +174,7 @@ $text['label-driver']['de-at'] = "Treiber";
 $text['label-driver']['ar-eg'] = "سائق";
 
 $text['header-install']['en-us'] = "Install";
+$text['header-install']['zh-cn'] = "安装";
 $text['header-install']['es-cl'] = "Instalar";
 $text['header-install']['pt-pt'] = "Instalar";
 $text['header-install']['fr-fr'] = "Installer";
@@ -177,6 +186,7 @@ $text['header-install']['de-at'] = "Installieren";
 $text['header-install']['ar-eg'] = "تثبيت";
 
 $text['header-select_language']['en-us'] = "Select Language";
+$text['header-select_language']['zh-cn'] = "选择语言";
 $text['header-select_language']['es-cl'] = "Selecciona idioma";
 $text['header-select_language']['pt-pt'] = "Selecione o idioma";
 $text['header-select_language']['fr-fr'] = "Sélectionnez la langue";
@@ -199,6 +209,7 @@ $text['header-event_socket']['de-at'] = "Veranstaltungssockelkonfiguration";
 $text['header-event_socket']['ar-eg'] = "تكوين المقبس الحدث";
 
 $text['header-config_detail']['en-us'] = "Admin Configuration";
+$text['header-config_detail']['zh-cn'] = "管理员配置";
 $text['header-config_detail']['es-cl'] = "Configuración de administración";
 $text['header-config_detail']['pt-pt'] = "Configuração de administrador";
 $text['header-config_detail']['fr-fr'] = "Configuration Admin";
@@ -210,6 +221,7 @@ $text['header-config_detail']['de-at'] = "Admin-Konfiguration";
 $text['header-config_detail']['ar-eg'] = "تكوين المشرف";
 
 $text['header-config_database']['en-us'] = "Database Configuration";
+$text['header-config_database']['zh-cn'] = "数据库配置";
 $text['header-config_database']['es-cl'] = "Configuración de la base de datos";
 $text['header-config_database']['pt-pt'] = "Configuration Database";
 $text['header-config_database']['fr-fr'] = "Configuration de base de données";
@@ -221,6 +233,7 @@ $text['header-config_database']['de-at'] = "Datenbankkonfiguration ";
 $text['header-config_database']['ar-eg'] = "تكوين قاعدة بيانات";
 
 $text['header-installing']['en-us'] = "Executing Install";
+$text['header-installing']['zh-cn'] = "执行安装";
 $text['header-installing']['es-cl'] = "Instalar la ejecución";
 $text['header-installing']['pt-pt'] = "Execução Instalar";
 $text['header-installing']['fr-fr'] = "Installez exécution";
@@ -408,6 +421,7 @@ $text['button-detect']['de-at'] = "Detect-Konfiguration";
 $text['button-detect']['ar-eg'] = "كشف تكوين";
 
 $text['button-select']['en-us'] = "Select";
+$text['button-select']['zh-cn'] = "选择";
 $text['button-select']['es-cl'] = "Seleccionar";
 $text['button-select']['pt-pt'] = "Selecionar";
 $text['button-select']['fr-fr'] = "Sélectionner";
