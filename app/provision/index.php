@@ -373,7 +373,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: ' . filesize($file_contents));
+			header('Content-Length: ' . strlen($file_contents));
 	}
 	else {
 		$cfg_ext = ".cfg";
