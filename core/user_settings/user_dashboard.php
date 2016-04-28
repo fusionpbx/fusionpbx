@@ -934,7 +934,7 @@
 
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$df = shell_exec("which df");
+				$df = shell_exec("/usr/bin/which df");
 				$tmp = shell_exec($df." /home");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
@@ -1000,7 +1000,7 @@
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
-					$cut = shell_exec("which cut");
+					$cut = shell_exec("/usr/bin/which cut");
 					$uptime = shell_exec($cut." -d. -f1 /proc/uptime");
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
@@ -1023,8 +1023,8 @@
 
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
-					$free = shell_exec("which free");
-					$awk = shell_exec("which awk");
+					$free = shell_exec("/usr/bin/which free");
+					$awk = shell_exec("/usr/bin/which awk");
 					$percent_memory = round(shell_exec($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
 					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
@@ -1049,8 +1049,8 @@
 
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$ps = shell_exec("which ps");
-					$sed = shell_exec("which sed");
+					$ps = shell_exec("/usr/bin/which ps");
+					$sed = shell_exec("/usr/bin/which sed");
 					$tmp = shell_exec($ps." -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | ".$sed." '/^ 0.0 /d'");
 					$tmp = explode("\n", $tmp);
 					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
@@ -1150,7 +1150,7 @@
 		}
 
 		//define grid columns widths and when to use a clear fix
-		//-- $col_str[box_total][which_box]
+		//-- $col_str[box_total][/usr/bin/which_box]
 		//-- $clear_fix[box_total][after_box]
 		$col_str[1][1] = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
 		for ($n = 1; $n <= 2; $n++) { $col_str[2][$n] = "col-xs-12 col-sm-6 col-md-6 col-lg-6"; }
