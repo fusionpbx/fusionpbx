@@ -42,7 +42,7 @@
 	}
 
 //class auto loader
-	if (!class_exists(auto_loader)) {
+	if (!class_exists('auto_loader')) {
 		class auto_loader {
 			public function __construct() {
 				spl_autoload_register(array($this, 'loader'));
@@ -76,7 +76,7 @@
 	require_once "resources/switch.php";
 
 //change language on the fly - for translate tool (if available)
-	if ($_REQUEST['view_lang_code'] != '') {
+	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
 ?>

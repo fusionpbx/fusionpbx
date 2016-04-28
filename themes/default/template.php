@@ -57,7 +57,7 @@
 	$background_images_enabled = false;
 	if ($default_login) {
 		//try using login background images/colors
-		if ($_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
+		if (isset($_SESSION['theme']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 			$background_images_enabled = true;
 			$background_images = $_SESSION['theme']['login_background_image'];
 		}
@@ -79,7 +79,7 @@
 	}
 	else {
 		//use standard background images/colors
-		if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+		if (isset($_SESSION['theme']) && isset($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
 			$background_images_enabled = true;
 			$background_images = $_SESSION['theme']['background_image'];
 		}
@@ -96,7 +96,7 @@
 
 		if (count($background_images) > 0) {
 
-			if (strlen($_SESSION['background_image']) == 0) {
+			if ((!isset($_SESSION['background_image'])) or strlen($_SESSION['background_image']) == 0) {
 				$_SESSION['background_image'] = $background_images[array_rand($background_images)];
 				$background_image = $_SESSION['background_image'];
 			}

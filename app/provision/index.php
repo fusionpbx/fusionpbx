@@ -80,7 +80,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
 			$sql .= "WHERE device_mac_address = '".$mac."' ";

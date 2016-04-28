@@ -105,10 +105,10 @@
 	}
 	unset ($sql, $prep_statement, $result, $row_count);
 	// create list of extensions for query below
-	foreach ($extensions as $extension => $blah) {
+	if (isset($extensions)) foreach ($extensions as $extension => $blah) {
 		$ext_array[] = $extension;
 	}
-	$ext_list = implode("','", $ext_array);
+	$ext_list = (isset($ext_array)) ? implode("','", $ext_array) : "";
 
 //calculate the summary data
 	$sql = "select ";
@@ -300,7 +300,7 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	foreach ($extensions as $extension => $ext) {
+	if (isset($extensions)) foreach ($extensions as $extension => $ext) {
 		$seconds['inbound'] = $summary[$extension]['inbound']['seconds'];
 		$seconds['outbound'] = $summary[$extension]['outbound']['seconds'];
 		if ($summary[$extension]['missed'] == null) {
@@ -320,7 +320,7 @@
 		$volume = $summary[$extension]['inbound']['count'] + $summary[$extension]['outbound']['count'];
 
 		//average length of call
-		$summary[$extension]['aloc'] = ($seconds['inbound'] + $seconds['outbound']) / ($volume - $missed);
+		$summary[$extension]['aloc'] = $volume==0 ? 0 : ($seconds['inbound'] + $seconds['outbound']) / ($volume - $missed);
 
 		$tr_link = "xhref='xml_cdr.php?'";
 		echo "<tr ".$tr_link.">\n";

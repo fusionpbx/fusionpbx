@@ -43,7 +43,7 @@ else {
 	$order = check_str($_GET["order"]);
 
 //set the voicemail id and voicemail uuid arrays
-	foreach ($_SESSION['user']['extension'] as $index => $row) {
+	if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
 		if (strlen($row['number_alias']) > 0) {
 			$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
 		}
@@ -51,7 +51,7 @@ else {
 			$voicemail_ids[$index]['voicemail_id'] = $row['user'];
 		}
 	}
-	foreach ($_SESSION['user']['voicemail'] as $row) {
+	if (isset($_SESSION['user']['voicemail'])) foreach ($_SESSION['user']['voicemail'] as $row) {
 		if (strlen($row['voicemail_uuid']) > 0) {
 			$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 		}
@@ -116,10 +116,10 @@ else {
 //get the list
 	$sql = str_replace('count(*) as num_rows', '*', $sql);
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'voicemail_id') ? "order by voicemail_id ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'voicemail_id') ? "order by cast(voicemail_id as int) ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by voicemail_id asc ";
+		$sql .= "order by cast(voicemail_id as int) asc ";
 	}
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
