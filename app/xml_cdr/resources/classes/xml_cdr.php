@@ -72,7 +72,7 @@ if (!class_exists('xml_cdr')) {
 				if (!$fp) {
 					return;
 				}
-				fwrite($fp, $msg);
+				fwrite($fp, $message);
 				fclose($fp);
 		}
 
@@ -81,61 +81,58 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function fields() {
 
-			$array[] = "uuid";
-			$array[] = "domain_uuid";
-			$array[] = "extension_uuid";
-			$array[] = "domain_name";
-			$array[] = "accountcode";
-			$array[] = "direction";
-			$array[] = "default_language";
-			$array[] = "context";
-			$array[] = "xml";
-			$array[] = "json";
-			$array[] = "caller_id_name";
-			$array[] = "caller_id_number";
-			$array[] = "destination_number";
-			$array[] = "start_epoch";
-			$array[] = "start_stamp";
-			$array[] = "answer_stamp";
-			$array[] = "answer_epoch";
-			$array[] = "end_epoch";
-			$array[] = "end_stamp";
-			$array[] = "duration";
-			$array[] = "mduration";
-			$array[] = "billsec";
-			$array[] = "billmsec";
-			$array[] = "bridge_uuid";
-			$array[] = "read_codec";
-			$array[] = "read_rate";
-			$array[] = "write_codec";
-			$array[] = "write_rate";
-			$array[] = "remote_media_ip";
-			$array[] = "network_addr";
-			$array[] = "recording_file";
-			$array[] = "leg";
-			$array[] = "pdd_ms";
-			$array[] = "rtp_audio_in_mos";
-			$array[] = "last_app";
-			$array[] = "last_arg";
-			$array[] = "cc_side";
-			$array[] = "cc_member_uuid";
-			$array[] = "cc_queue_joined_epoch";
-			$array[] = "cc_queue";
-			$array[] = "cc_member_session_uuid";
-			$array[] = "cc_agent";
-			$array[] = "cc_agent_type";
-			$array[] = "waitsec";
-			$array[] = "conference_name";
-			$array[] = "conference_uuid";
-			$array[] = "conference_member_id";
-			$array[] = "digits_dialed";
-			$array[] = "pin_number";
-			$array[] = "hangup_cause";
-			$array[] = "hangup_cause_q850";
-			$array[] = "sip_hangup_disposition";
-			$this->fields($array);
-			unset($array);
-
+			$this->fields[] = "uuid";
+			$this->fields[] = "domain_uuid";
+			$this->fields[] = "extension_uuid";
+			$this->fields[] = "domain_name";
+			$this->fields[] = "accountcode";
+			$this->fields[] = "direction";
+			$this->fields[] = "default_language";
+			$this->fields[] = "context";
+			$this->fields[] = "xml";
+			$this->fields[] = "json";
+			$this->fields[] = "caller_id_name";
+			$this->fields[] = "caller_id_number";
+			$this->fields[] = "destination_number";
+			$this->fields[] = "start_epoch";
+			$this->fields[] = "start_stamp";
+			$this->fields[] = "answer_stamp";
+			$this->fields[] = "answer_epoch";
+			$this->fields[] = "end_epoch";
+			$this->fields[] = "end_stamp";
+			$this->fields[] = "duration";
+			$this->fields[] = "mduration";
+			$this->fields[] = "billsec";
+			$this->fields[] = "billmsec";
+			$this->fields[] = "bridge_uuid";
+			$this->fields[] = "read_codec";
+			$this->fields[] = "read_rate";
+			$this->fields[] = "write_codec";
+			$this->fields[] = "write_rate";
+			$this->fields[] = "remote_media_ip";
+			$this->fields[] = "network_addr";
+			$this->fields[] = "recording_file";
+			$this->fields[] = "leg";
+			$this->fields[] = "pdd_ms";
+			$this->fields[] = "rtp_audio_in_mos";
+			$this->fields[] = "last_app";
+			$this->fields[] = "last_arg";
+			$this->fields[] = "cc_side";
+			$this->fields[] = "cc_member_uuid";
+			$this->fields[] = "cc_queue_joined_epoch";
+			$this->fields[] = "cc_queue";
+			$this->fields[] = "cc_member_session_uuid";
+			$this->fields[] = "cc_agent";
+			$this->fields[] = "cc_agent_type";
+			$this->fields[] = "waitsec";
+			$this->fields[] = "conference_name";
+			$this->fields[] = "conference_uuid";
+			$this->fields[] = "conference_member_id";
+			$this->fields[] = "digits_dialed";
+			$this->fields[] = "pin_number";
+			$this->fields[] = "hangup_cause";
+			$this->fields[] = "hangup_cause_q850";
+			$this->fields[] = "sip_hangup_disposition";
 		}
 
 		/**
@@ -143,11 +140,19 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function save() {
 
+			$this->fields();
 			$field_count = sizeof($this->fields);
 
 			$sql = "insert into v_xml_cdr (";
+			$f = 1;
 			foreach ($this->fields as $field) {
-				$sql .= "$field, ";
+				if ($field_count == $f) {
+					$sql .= "$field ";
+				}
+				else {
+					$sql .= "$field, ";
+				}
+				$f++;
 			}
 			$sql .= ")\n";
 			$sql .= "values \n";
@@ -156,15 +161,15 @@ if (!class_exists('xml_cdr')) {
 			$i = 0;
 			foreach ($this->array as $row) {
 				$sql .= "(";
-				$f = 0;
+				$f = 1;
 				foreach ($this->fields as $field) {
-					if (isset($row[$field])) {
+					if (isset($row[$field]) && strlen($row[$field]) > 0) {
 						$sql .= "'".$row[$field]."'";
 					}
 					else {
 						$sql .= "null";
 					}
-					if ($field_count != $i) {
+					if ($field_count != $f) {
 						$sql .= ",";
 					}
 					$f++;
@@ -174,6 +179,9 @@ if (!class_exists('xml_cdr')) {
 					$sql .= ",\n";
 				}
 				$i++;
+			}
+			if (substr($sql,-2) == ",\n") {
+				$sql = substr($sql,0,-2);
 			}
 			$this->db->exec(check_sql($sql));
 			unset($sql);
@@ -199,15 +207,15 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//parse the xml to get the call detail record info
-				//try {
-				//	xml_cdr_log($xml_string);
-				//	$xml = simplexml_load_string($xml_string);
-				//	xml_cdr_log("\nxml load done\n");
-				//}
-				//catch(Exception $e) {
-				//	echo $e->getMessage();
-				//	xml_cdr_log("\nfail loadxml: " . $e->getMessage() . "\n");
-				//}
+				try {
+					//$this->log($xml_string);
+					$xml = simplexml_load_string($xml_string);
+					//$this->log("\nxml load done\n");
+				}
+				catch(Exception $e) {
+					echo $e->getMessage();
+					//$this->log("\nfail loadxml: " . $e->getMessage() . "\n");
+				}
 
 			//misc
 				$uuid = check_str(urldecode($xml->variables->uuid));
@@ -262,15 +270,15 @@ if (!class_exists('xml_cdr')) {
 
 			//get the values from the callflow.
 				$x = 0;
-				foreach ($xml->callflow as $row) {
+				foreach ($xml->callflow as $callflow) {
 					if ($x == 0) {
-						$context = check_str(urldecode($row->caller_profile->context));
-						$this->array[$row]['destination_number'] = check_str(urldecode($row->caller_profile->destination_number));
+						$context = check_str(urldecode($callflow->caller_profile->context));
+						$this->array[$row]['destination_number'] = check_str(urldecode($callflow->caller_profile->destination_number));
 						$this->array[$row]['context'] = $context;
-						$this->array[$row]['network_addr'] = check_str(urldecode($row->caller_profile->network_addr));
+						$this->array[$row]['network_addr'] = check_str(urldecode($callflow->caller_profile->network_addr));
 					}
-					$this->array[$row]['caller_id_name'] = check_str(urldecode($row->caller_profile->caller_id_name));
-					$this->array[$row]['caller_id_number'] = check_str(urldecode($row->caller_profile->caller_id_number));
+					$this->array[$row]['caller_id_name'] = check_str(urldecode($callflow->caller_profile->caller_id_name));
+					$this->array[$row]['caller_id_number'] = check_str(urldecode($callflow->caller_profile->caller_id_number));
 					$x++;
 				}
 				unset($x);
@@ -300,7 +308,7 @@ if (!class_exists('xml_cdr')) {
 				}
 
 			//send the domain name to the cdr log
-				//xml_cdr_log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
+				//$this->log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
 
 			//get the domain_uuid with the domain_name
 				if (strlen($domain_uuid) == 0) {
@@ -349,14 +357,6 @@ if (!class_exists('xml_cdr')) {
 			//insert the check_str($extension_uuid)
 				if (strlen($xml->variables->extension_uuid) > 0) {
 					$this->array[$row]['extension_uuid'] = check_str(urldecode($xml->variables->extension_uuid));
-				}
-
-			//insert xml_cdr into the db
-				if (strlen($start_stamp) > 0) {
-					$database->add();
-					if ($this->debug) {
-						echo $database->sql."\n";
-					}
 				}
 
 			//insert the values
@@ -472,7 +472,7 @@ if (!class_exists('xml_cdr')) {
 			if (isset($_POST["cdr"])) {
 				//debug method
 					if ($this->debug){
-						print_r ($_POST["cdr"]);
+						print_r($_POST["cdr"]);
 					}
 
 				//authentication for xml cdr http post
