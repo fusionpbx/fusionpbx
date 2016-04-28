@@ -672,6 +672,7 @@
 /* DOMAIN SELECTOR: END ********************************************************/
 
 	#default_login {
+		display: inline-block;
 		padding: <?php echo ($_SESSION['theme']['login_body_padding']['text'] != '') ? $_SESSION['theme']['login_body_padding']['text'] : '30px'; ?>;
 		<?php echo ($_SESSION['theme']['login_body_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_body_width']['text'].";\n" : null; ?>
 		background: <?php echo ($_SESSION['theme']['login_body_background_color']['text'] != '') ? $_SESSION['theme']['login_body_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
