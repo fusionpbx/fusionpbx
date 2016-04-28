@@ -141,6 +141,9 @@
 	if (!extension_loaded('PDO')) {
 		$messages[] = "<b>PHP PDO was not detected</b>. Please install it before proceeding";
 	}
+	if (!(extension_loaded('pdo_pgsql') or extension_loaded('pdo_mysql') or extension_loaded('pdo_sqlite'))) {
+		$messages[] = "<b>no database PDO driver was detected</b>. Please install one of pgsql, mysql or sqlite before proceeding";
+	}
 
 	echo "<div align='center'>\n";
 	$msg = '';
