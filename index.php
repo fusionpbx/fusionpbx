@@ -56,7 +56,7 @@ include "root.php";
 	require_once "resources/require.php";
 
 // if logged in, redirect to login destination
-	if (strlen($_SESSION["username"]) > 0) {
+	if (isset($_SESSION["username"]) and (strlen($_SESSION["username"]) > 0)) {
 		if (strlen($_SESSION['login']['destination']['url']) > 0) {
 			header("Location: ".$_SESSION['login']['destination']['url']);
 		} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_settings/user_dashboard.php")) {

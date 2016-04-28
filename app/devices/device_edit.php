@@ -698,13 +698,11 @@ require_once "resources/require.php";
 										}
 									}
 								}
-								closedir($dh_sub);
 							}
 							echo "</optgroup>";
 						}
 					}
 				}
-				closedir($dh);
 			}
 		echo "</select>\n";
 		echo "<br />\n";

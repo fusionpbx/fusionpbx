@@ -182,27 +182,25 @@ if ($db_type == "mysql") {
 	//database connection
 	try {
 		//required for mysql_real_escape_string
-			if (function_exists(mysql_connect)) {
+			if (function_exists('mysql_connect')) {
 				$mysql_connection = @mysql_connect($db_host, $db_username, $db_password);
 				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link));
 			}
 		//mysql pdo connection
 			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
 				//if both host and port are empty use the unix socket
-				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name;charset=utf8;", $db_username, $db_password);
 			}
 			else {
 				if (strlen($db_port) == 0) {
 					//leave out port if it is empty
-					$db = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_username, $db_password, array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+					$db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
 				}
 				else {
-					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;", $db_username, $db_password, array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
@@ -233,7 +231,7 @@ if ($db_type == "pgsql") {
 } //end if db_type pgsql
 
 //domain list
-	if (strlen($_SESSION["domain_uuid"]) == 0) {
+	if ( ( !isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		//get the domains from the database
@@ -303,7 +301,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the domain cidr range
-	if (is_array($_SESSION['domain']["cidr"])) {
+	if (array_key_exists('cidr',$_SESSION['domain']) and is_array($_SESSION['domain']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['domain']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
@@ -318,7 +316,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the api cidr range
-	if (is_array($_SESSION['api']["cidr"])) {
+	if (array_key_exists('api',$_SESSION) and is_array($_SESSION['api']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['api']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {

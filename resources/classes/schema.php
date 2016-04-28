@@ -60,14 +60,14 @@ if (!class_exists('schema')) {
 				$sql = '';
 				$sql_schema = '';
 				foreach ($this->apps as $app) {
-					if (count($app['db'])) {
+					if (isset($app['db']) && count($app['db'])) {
 						foreach ($app['db'] as $row) {
 							//create the sql string
 								$table_name = $row['table'];
 								$sql = "CREATE TABLE " . $row['table'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
-									if ($field['deprecated'] == "true") {
+									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
 										//skip this field
 									}
 									else {
@@ -84,10 +84,10 @@ if (!class_exists('schema')) {
 										else {
 											$sql .= $field['type'];
 										}
-										if ($field['key']['type'] == "primary") {
+ 										if (isset($field['key']) && isset($field['key']['type']) && ($field['key']['type'] == "primary")) {
 											$sql .= " PRIMARY KEY";
 										}
-										if ($field['key']['type'] == "foreign") {
+										if (isset($field['key']) && isset($field['key']['type']) && ($field['key']['type'] == "foreign")) {
 											if ($this->db_type == "pgsql") {
 												//$sql .= " references ".$field['key']['reference']['table']."(".$field['key']['reference']['field'].")";
 											}
@@ -456,10 +456,11 @@ if (!class_exists('schema')) {
 			}
 
 		//datatase schema
-			public function schema ($format) {
-
-				//set the global variable
-					global $upgrade_data_types, $text;
+			public function schema ($format = '') {
+ 
+ 				//set the global variable
+					global $db, $upgrade_data_types, $text,$output_format;
+                                        if ($format=='') $format = $output_format;
 
 				//get the db variables
 					$config = new config;
@@ -520,7 +521,7 @@ if (!class_exists('schema')) {
 				//update the app db array add exists true or false
 					$sql = '';
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
 							}
@@ -571,7 +572,7 @@ if (!class_exists('schema')) {
 
 				//add missing tables and fields
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
 								if (!$this->db_table_exists($db_type, $db_name, $row['table']['text'])) {
@@ -707,7 +708,7 @@ if (!class_exists('schema')) {
 					}
 				//rebuild and populate the table
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
 							}
@@ -764,7 +765,7 @@ if (!class_exists('schema')) {
 						//build the html while looping through the app db array
 							$sql = '';
 							foreach ($apps as &$app) {
-								foreach ($app['db'] as $row) {
+								if (isset($app['db'])) foreach ($app['db'] as $row) {
 									if (is_array($row['table'])) {
 										$table_name = $row['table']['text'];
 									}

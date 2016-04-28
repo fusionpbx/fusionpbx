@@ -23,8 +23,8 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-	//error_reporting(E_ALL ^ E_NOTICE); //hide notices
-		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
+	error_reporting(E_ALL ^ E_NOTICE); //hide notices
+		//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 		//error_reporting(E_ALL);
 
 	//session handling
@@ -32,7 +32,7 @@
 			ini_set("session.cookie_httponly", True);
 			session_start();
 		//regenerate sessions to avoid session id attacks such as session fixation
-			if ($_SESSION['security']['session_rotate']['boolean'] == "true") {
+			if (array_key_exists('security',$_SESSION) and $_SESSION['security']['session_rotate']['boolean'] == "true") {
 				$_SESSION['session']['last_activity'] = time();
 				if (!isset($_SESSION['session']['created'])) {
 					$_SESSION['session']['created'] = time();

@@ -207,27 +207,27 @@ else {
 					if (strlen($db_host) == 0 && strlen($db_port) == 0) {
 						//if both host and port are empty use the unix socket
 						if (strlen($db_create_username) == 0) {
-							$db_dest = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+							$db_dest = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;charset=utf8;", $db_username, $db_password);
 						}
 						else {
-							$db_dest = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));						}
+							$db_dest = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;charset=utf8;", $db_create_username, $db_create_password);						}
 					}
 					else {
 						if (strlen($db_port) == 0) {
 							//leave out port if it is empty
 							if (strlen($db_create_username) == 0) {
-								$db_dest = new PDO("mysql:host=$db_host;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+								$db_dest = new PDO("mysql:host=$db_host;charset=utf8;", $db_username, $db_password);
 							}
 							else {
-								$db_dest = new PDO("mysql:host=$db_host;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+								$db_dest = new PDO("mysql:host=$db_host;charset=utf8;", $db_create_username, $db_create_password);
 							}
 						}
 						else {
 							if (strlen($db_create_username) == 0) {
-								$db_dest = new PDO("mysql:host=$db_host;port=$db_port;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+								$db_dest = new PDO("mysql:host=$db_host;port=$db_port;charset=utf8;", $db_username, $db_password);
 							}
 							else {
-								$db_dest = new PDO("mysql:host=$db_host;port=$db_port;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+								$db_dest = new PDO("mysql:host=$db_host;port=$db_port;charset=utf8;", $db_create_username, $db_create_password);
 							}
 						}
 					}
