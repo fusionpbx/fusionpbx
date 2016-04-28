@@ -13,6 +13,7 @@ $text['language-name']['uk'] = "Українська - Україна";
 $text['language-name']['de-at'] = "Deutsch - Österreich";
 $text['language-name']['ar-eg'] = "العربية - مصر";
 $text['language-name']['ru-ru'] = 'Русский - Россия';
+$text['language-name']['zh-cn'] = "简体中文";
 
 //language for `Select Language` install page
 $text['language-en-us']['en-us'] = "English - United States";
@@ -27,6 +28,7 @@ $text['language-uk'   ]['en-us'] = "Українська - Україна";
 $text['language-de-at']['en-us'] = "Deutsch - Österreich";
 $text['language-ar-eg']['en-us'] = "العربية - مصر";
 $text['language-ru-ru']['en-us'] = 'Русский - Россия';
+$text['language-en-us']['zh-cn'] = "简体中文";
 
 //message
 $text['message-update']['en-us'] = "Update Completed";
@@ -41,6 +43,7 @@ $text['message-update']['ro'] = "Actualizare completă";
 $text['message-update']['uk'] = "Оновлення завершено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['ar-eg'] = "تحديث مكتمل";
+$text['message-update']['zh-cn'] = "完成更新";
 
 $text['message-required']['en-us'] = "Please provide: ";
 $text['message-required']['es-cl'] = "Por favor indique:";
@@ -54,6 +57,7 @@ $text['message-required']['ro'] = "Vă rugăm să oferiți";
 $text['message-required']['uk'] = "Будь ласка, вкажіть:";
 $text['message-required']['sv-se'] = "Var god uppge:";
 $text['message-required']['ar-eg'] = "يرجى تقديم:";
+$text['message-required']['zh-cn'] = "请提供: ";
 
 $text['message-delete']['en-us'] = "Delete Completed";
 $text['message-delete']['es-cl'] = "Eliminación Completada";
@@ -67,6 +71,7 @@ $text['message-delete']['ro'] = "Ștergere completă";
 $text['message-delete']['uk'] = "Видалено";
 $text['message-delete']['sv-se'] = "Borttagning Klar";
 $text['message-delete']['ar-eg'] = "تم المسح";
+$text['message-delete']['zh-cn'] = "成功删除";
 
 $text['message-delete_failed']['en-us'] = "Delete Failed";
 $text['message-delete_failed']['es-cl'] = "Eliminar Error";
@@ -78,6 +83,7 @@ $text['message-delete_failed']['sv-se'] = "Borttagning Misslyckades";
 $text['message-delete_failed']['de-at'] = "Löschen fehlgeschlagen";
 $text['message-delete_failed']['ro'] = "Ștergere eșuată";
 $text['message-delete_failed']['he'] = "";
+$text['message-delete_failed']['zh-cn'] = "删除失败";
 
 $text['message-add']['en-us'] = "Add Completed";
 $text['message-add']['es-cl'] = "Agregar Completado";
@@ -365,6 +371,7 @@ $text['button-execute']['pl'] = "Wykonaj";
 $text['button-execute']['sv-se'] = "Kör";
 $text['button-execute']['uk'] = "Виконати";
 $text['button-execute']['de-at'] = "Ausführen";
+$text['button-execute']['zh-cn'] = "执行";
 
 $text['button-view']['en-us'] = "View";
 $text['button-view']['es-cl'] = "Ver";
