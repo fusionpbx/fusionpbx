@@ -48,9 +48,15 @@ require_once "resources/require.php";
 
 //get the extensions that are assigned to this user
 function load_extensions() {
-	global $db;
+
+	//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
+
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+		if ($db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
 				$sql = "select ";
@@ -126,7 +132,11 @@ function event_socket_request($fp, $cmd) {
 }
 
 function event_socket_request_cmd($cmd) {
-	global $db;
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		$sql = "select * from v_settings ";
@@ -189,7 +199,13 @@ function ListFiles($dir) {
 }
 
 function save_setting_xml() {
-	global $db, $domain_uuid, $host, $config;
+	global $domain_uuid, $host, $config;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$sql = "select * from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -298,7 +314,13 @@ function save_gateway_xml() {
 		}
 
 	//declare the global variables
-		global $db, $domain_uuid, $config;
+		global $domain_uuid, $config;
+
+	//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 	//delete all old gateways to prepare for new ones
 		if (count($_SESSION["domains"]) > 1) {
@@ -427,7 +449,13 @@ function save_gateway_xml() {
 }
 
 function save_module_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$xml = "";
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
@@ -465,7 +493,13 @@ function save_module_xml() {
 }
 
 function save_var_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	//open the vars.xml file
 	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
@@ -512,7 +546,11 @@ function save_var_xml() {
 }
 
 function outbound_route_to_bridge ($domain_uuid, $destination_number) {
-	global $db;
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -597,7 +635,14 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 //}
 
 function extension_exists($extension) {
-	global $db, $domain_uuid;
+	global $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and (extension = '$extension' ";
@@ -631,7 +676,14 @@ function get_recording_filename($id) {
 }
 
 function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid) {
-	global $db, $db_type;
+	global $db_type;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$sql = "insert into v_dialplans ";
 	$sql .= "(";
 	$sql .= "domain_uuid, ";
@@ -663,7 +715,13 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 }
 
 function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
-	global $db;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$dialplan_detail_uuid = uuid();
 	$sql = "insert into v_dialplan_details ";
 	$sql .= "(";
@@ -711,7 +769,13 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 }
 
 function save_dialplan_xml() {
-	global $db, $domain_uuid;
+	global $domain_uuid;
+
+	//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 	//get the context based from the domain_uuid
 		$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -1036,7 +1100,13 @@ if (!function_exists('phone_letter_to_number')) {
 
 if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
-		global $db, $domain_uuid;
+		global $domain_uuid;
+
+		//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 		if (strlen($_SESSION['switch']['call_center']['dir']) > 0) {
 
@@ -1259,7 +1329,13 @@ if (!function_exists('save_call_center_xml')) {
 if (!function_exists('switch_conf_xml')) {
 	function switch_conf_xml() {
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the contents of the template
 			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -1320,7 +1396,13 @@ if (!function_exists('xml_cdr_conf_xml')) {
 	function xml_cdr_conf_xml() {
 
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the contents of the template
 		 	if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -1367,7 +1449,13 @@ if (!function_exists('save_sip_profile_xml')) {
 			if (!is_readable($profile_dir)) { mkdir($profile_dir,0775,true); }
 
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles";

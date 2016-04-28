@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2015
+	Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -88,6 +88,7 @@ include "root.php";
 			$this->create_database();
 			$this->create_domain();
 			$this->create_superuser();
+			$this->app_defaults();
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
 			$this->write_progress("Install phase 1 complete for FusionPBX");
@@ -96,12 +97,8 @@ include "root.php";
 		function install_phase_2() {
 			ini_set('max_execution_time',3600);
 			$this->write_progress("Install phase 2 started for FusionPBX");
-			$this->app_defaults();
+			//$this->app_defaults();
 			$this->write_progress("Install phase 2 complete for FusionPBX");
-		}
-
-		function upgrade() {
-			$this->app_defaults();
 		}
 
 		protected function create_config_php() {
@@ -663,111 +660,7 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'template';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-/*
-				//switch settings
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $switch_bin_dir;
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'bin';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_base_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'base';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_conf_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'conf';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_db_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'db';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_log_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'log';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_mod_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'mod';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_script_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'scripts';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_grammar_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'grammar';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_storage_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'storage';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_voicemail_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'voicemail';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_recordings_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'recordings';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_sounds_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'sounds';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_phrases_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'phrases';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = '';
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'provision';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_extensions_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'extensions';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_sip_profiles_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'sip_profiles';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_dialplan_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'dialplan';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-*/
+
 				//server settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->global_settings->switch_temp_dir();
@@ -775,12 +668,6 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'temp';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-				#throw new Exception("I don't know how to find /etc/init.d for server > startup_scripts");
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = '';
-				$tmp[$x]['category'] = 'server';
-				$tmp[$x]['subcategory'] = 'startup_script';
-				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->global_settings->switch_backup_vdir();
@@ -823,80 +710,6 @@ include "root.php";
 					include($config_path);
 					$x++;
 				}
-
-/*
-			//add the groups
-				$x = 0;
-				$tmp[$x]['group_name'] = 'superadmin';
-				$tmp[$x]['group_description'] = 'Super Administrator Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'admin';
-				$tmp[$x]['group_description'] = 'Administrator Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'user';
-				$tmp[$x]['group_description'] = 'User Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'public';
-				$tmp[$x]['group_description'] = 'Public Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'agent';
-				$tmp[$x]['group_description'] = 'Call Center Agent Group';
-				$this->dbh->beginTransaction();
-				foreach($tmp as $row) {
-					$sql = "insert into v_groups ";
-					$sql .= "(";
-					$sql .= "group_uuid, ";
-					$sql .= "group_name, ";
-					$sql .= "group_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$row['group_name']."', ";
-					$sql .= "'".$row['group_description']."' ";
-					$sql .= ");";
-					$this->write_debug($sql);
-					$this->dbh->exec(check_sql($sql));
-					unset($sql);
-				}
-				unset($tmp);
-				$this->dbh->commit();
-				//assign the default permissions to the groups
-				$this->dbh->beginTransaction();
-				foreach($apps as $app) {
-					if ($app['permissions']) {
-						foreach ($app['permissions'] as $row) {
-							if ($this->debug) {
-								$this->write_debug( "v_group_permissions\n");
-								$this->write_debug( json_encode($row)."\n\n");
-							}
-							if ($row['groups']) {
-								foreach ($row['groups'] as $group) {
-									//add the record
-									$sql = "insert into v_group_permissions ";
-									$sql .= "(";
-									$sql .= "group_permission_uuid, ";
-									$sql .= "permission_name, ";
-									$sql .= "group_name ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "(";
-									$sql .= "'".uuid()."', ";
-									$sql .= "'".$row['name']."', ";
-									$sql .= "'".$group."' ";
-									$sql .= ");";
-									if ($this->debug) {
-										$this->write_debug( $sql."\n");
-									}
-									$this->dbh->exec(check_sql($sql));
-									unset($sql);
-								}
-							}
-						}
-					}
-				}
-				$this->dbh->commit();
-*/
 			}
 		}
 
@@ -941,7 +754,8 @@ include "root.php";
 					$sql .= "password, ";
 					$sql .= "salt, ";
 					$sql .= "add_date, ";
-					$sql .= "add_user ";
+					$sql .= "add_user, ";
+					$sql .= "user_enabled ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -952,7 +766,8 @@ include "root.php";
 					$sql .= "'".md5($salt.$this->admin_password)."', ";
 					$sql .= "'$salt', ";
 					$sql .= "now(), ";
-					$sql .= "'".$this->admin_username."' ";
+					$sql .= "'".$this->admin_username."', ";
+					$sql .= "'true' ";
 					$sql .= ");";
 					$this->write_debug( $sql."\n");
 					$this->dbh->exec(check_sql($sql));
@@ -1021,6 +836,7 @@ include "root.php";
 		}
 
 		protected function app_defaults() {
+
 			//write a progress message
 				$this->write_progress("\tRunning app_defaults");
 
@@ -1082,6 +898,29 @@ include "root.php";
 				$default_language = $this->install_language;
 				$domain = new domains;
 				$domain->upgrade();
+
+			//get the switch default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_category = 'switch' ";
+				$sql .= "and default_setting_enabled = 'true' ";
+				$prep_statement = $this->dbh->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($default_settings as $row) {
+					$name = $row['default_setting_name'];
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
+					if ($category == "switch") {
+						$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+						$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+					}
+				}
+				unset ($prep_statement, $sql);
+
+			//update config.lua
+				$obj = new scripts;
+				$obj->copy_files();
+				$obj->write_config();
 
 			//synchronize the config with the saved settings
 				save_switch_xml();

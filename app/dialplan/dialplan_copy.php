@@ -64,15 +64,15 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$log->log("debug", $result);
 	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
-		$database_dialplan_uuid = $row["dialplan_uuid"];
-		$app_uuid = $row["app_uuid"];
-		$dialplan_name = $row["dialplan_name"];
-		$dialplan_order = $row["dialplan_order"];
-		$dialplan_continue = $row["dialplan_continue"];
-		$dialplan_context = $row["dialplan_context"];
-		$dialplan_enabled = $row["dialplan_enabled"];
-		$dialplan_description = "copy: ".$row["dialplan_description"];
+		$domain_uuid = check_str($row["domain_uuid"]);
+		$database_dialplan_uuid = check_str($row["dialplan_uuid"]);
+		$app_uuid = check_str($row["app_uuid"]);
+		$dialplan_name = check_str($row["dialplan_name"]);
+		$dialplan_order = check_str($row["dialplan_order"]);
+		$dialplan_continue = check_str($row["dialplan_continue"]);
+		$dialplan_context = check_str($row["dialplan_context"]);
+		$dialplan_enabled = check_str($row["dialplan_enabled"]);
+		$dialplan_description = check_str("copy: ".$row["dialplan_description"]);
 		break; //limit to 1 row
 	}
 	unset ($prep_statement);

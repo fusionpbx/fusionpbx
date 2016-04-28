@@ -143,8 +143,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if($db_create=='1') { $checked = "checked='checked'"; } else { $checked = ''; }
-		echo "	<input type='checkbox' name='db_create' value='1' $checked />&nbsp;";
-		echo "Create the database\n";
+		echo "	<label><input type='checkbox' name='db_create' value='1' $checked /> Create the database</label>\n";
 		echo "<br />\n";
 		echo "Choose whether to create the database\n";
 		echo "</td>\n";
@@ -240,8 +239,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if($db_create=='1') { $checked = "checked='checked'"; } else { $checked = ''; }
-		echo "	<input type='checkbox' name='db_create' value='1' $checked />&nbsp;";
-		echo "Create the database\n";
+		echo "	<label><input type='checkbox' name='db_create' value='1' $checked /> Create the database</label>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 

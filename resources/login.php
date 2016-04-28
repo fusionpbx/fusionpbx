@@ -229,7 +229,7 @@
 				echo "<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' placeholder=\"".$text['label-domain']."\"><br />\n";
 			}
 		}
-		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
+		echo "<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
 		if (
 			function_exists('mcrypt_encrypt') &&
 			$_SESSION['login']['password_reset_key']['text'] != '' &&
@@ -245,7 +245,7 @@
 		echo "<form name='request' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='request'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
-		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
+		echo "<input type='submit' id='btn_reset' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
 		echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('request_form','login_form','username');\">".$text['label-cancel']."</a>";
 		echo "</form>";
 		echo "</div>";

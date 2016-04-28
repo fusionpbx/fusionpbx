@@ -42,6 +42,13 @@ if ($domains_processed == 1) {
 					$array[$x]['default_setting_enabled'] = 'false';
 					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
 					$x++;
+					$array[$x]['default_setting_category'] = 'theme';
+					$array[$x]['default_setting_subcategory'] = 'login_background_image';
+					$array[$x]['default_setting_name'] = 'array';
+					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
+					$array[$x]['default_setting_enabled'] = 'false';
+					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
+					$x++;
 				}
 				if ($x > 300) { break; };
 			}
@@ -167,7 +174,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_name'] = 'boolean';
 		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'false';
-		if($background_image_enabled) { $array[$x]['default_setting_enabled'] = 'true'; }
+		if ($background_image_enabled) { $array[$x]['default_setting_enabled'] = 'true'; }
 		$array[$x]['default_setting_description'] = 'Enable use of background images.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
@@ -907,48 +914,71 @@ if ($domains_processed == 1) {
 		/* login box */
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_background_color';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '#6c89b5';
+		$array[$x]['default_setting_order'] = '0';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the background color of the login page.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'login_background_color';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '#144794';
+		$array[$x]['default_setting_order'] = '1';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set a secondary background color of the login page, for a gradient effect.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'login_background_image_enabled';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enable use of background images on the login page.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'login_body_background_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = 'rgba(255,255,255,0.3)';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the background color for the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_shadow_color';
+		$array[$x]['default_setting_subcategory'] = 'login_body_shadow_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = 'rgba(140,140,140,0.3)';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the shadow color of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_padding';
+		$array[$x]['default_setting_subcategory'] = 'login_body_padding';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '30px';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the padding of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_width';
+		$array[$x]['default_setting_subcategory'] = 'login_body_width';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '100%';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the width of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_border_radius';
+		$array[$x]['default_setting_subcategory'] = 'login_body_border_radius';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '4px';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the border radius of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_border_size';
+		$array[$x]['default_setting_subcategory'] = 'login_body_border_size';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '1px';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the border size of the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'login_border_color';
+		$array[$x]['default_setting_subcategory'] = 'login_body_border_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#ffffff';
 		$array[$x]['default_setting_enabled'] = 'false';
@@ -1296,30 +1326,52 @@ if ($domains_processed == 1) {
 		unset ($prep_statement, $sql);
 
 	//find the missing default settings
-		$x = 0;
+		$i = 0;
 		foreach ($array as $setting) {
 			$found = false;
-			$missing[$x] = $setting;
+			$missing[$i] = $setting;
 			foreach ($default_settings as $row) {
 				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
 					$found = true;
 					//remove items from the array that were found
-					unset($missing[$x]);
+					unset($missing[$i]);
 				}
 			}
-			$x++;
+			$i++;
 		}
 
+	//get the missing count
+		$i = 0;
+		foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
 	//add the missing default settings
+		$sql = "insert into v_default_settings (";
+		$sql .= "default_setting_uuid, ";
+		$sql .= "default_setting_category, ";
+		$sql .= "default_setting_subcategory, ";
+		$sql .= "default_setting_name, ";
+		$sql .= "default_setting_value, ";
+		$sql .= "default_setting_enabled, ";
+		$sql .= "default_setting_description ";
+		$sql .= ") values \n";
+		$i = 1;
 		foreach ($missing as $row) {
-			//add the default settings
-			$orm = new orm;
-			$orm->name('default_settings');
-			$orm->save($row);
-			$message = $orm->message;
-			unset($orm);
-			//print_r($message);
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'".check_str($row['default_setting_category'])."', ";
+			$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+			$sql .= "'".check_str($row['default_setting_name'])."', ";
+			$sql .= "'".check_str($row['default_setting_value'])."', ";
+			$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+			$sql .= "'".check_str($row['default_setting_description'])."' ";
+			$sql .= ")";
+			if ($missing_count != $i) { 
+				$sql .= ",\n";
+			}
+			$i++;
 		}
+		$db->exec(check_sql($sql));
 		unset($missing);
 
 	//unset the array variable

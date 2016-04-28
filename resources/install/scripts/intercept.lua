@@ -25,6 +25,7 @@
 
 --user defined variables
 	local extension = argv[1];
+	local direction = argv[2] or extension and 'inbound' or 'all';
 
 -- we can use any number because other box should check sip_h_X_*** headers first
 	local pickup_number = '*8' -- extension and '**' or '*8'
@@ -254,9 +255,20 @@
 			-- next check should prevent pickup call from extension
 			-- e.g. if extension 100 dial some cell phone and some one else dial *8
 			-- he can pickup this call.
-			if not extension then
-				sql = sql .. "AND direction = 'outbound' ";
+			if not direction:find('all') then
+				sql = sql .. "AND (1 <> 1 "
+				-- calls from freeswitch to user
+					if direction:find('inbound') then
+						sql = sql .. "OR direction = 'outbound' ";
+					end
+
+				-- calls from user to freeswitch
+					if direction:find('outbound') then
+						sql = sql .. "OR direction = 'inbound' ";
+					end
+				sql = sql .. ")"
 			end
+
 			sql = sql .. "AND (1<>1 ";
 			for key,extension in pairs(extensions) do
 				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";

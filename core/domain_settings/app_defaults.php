@@ -24,16 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//remove external from the end of the gateway path
-	if (substr($v_gateways_dir, -8) == "external") {
-		//$v_gateways_dir = substr($v_gateways_dir, 0, (strlen($v_gateways_dir)-9));
-		//$sql = "update v_domain_settings set ";
-		//$sql .= "v_gateways_dir = '$v_gateways_dir' ";
-		//$sql .= "where domain_uuid = '$domain_uuid'";
-		//$db->exec($sql);
-		//unset($sql);
-	}
-
 //proccess this only one time
 	if ($domains_processed == 1) {
 		//set domains with enabled status of empty or null to true

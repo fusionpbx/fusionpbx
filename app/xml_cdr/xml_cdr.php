@@ -233,13 +233,9 @@ else {
 				echo "		<td class='vncell' valign='top' nowrap='nowrap'>\n";
 				echo "			".$text['label-start_range']."\n";
 				echo "		</td>\n";
-				echo "		<td class='vtable' align='left' style='white-space: nowrap;'>\n";
-				echo "			<div class='row'>\n";
-				echo "				<div class='col-sm-12'>\n";
-				echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
-				echo "					<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
-				echo "				</div>\n";
-				echo "			</div>\n";
+				echo "		<td class='vtable' align='left' style='position: relative; min-width: 250px;'>\n";
+				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+				echo "			<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px;' name='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
