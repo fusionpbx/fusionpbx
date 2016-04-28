@@ -135,11 +135,11 @@
 //prepare smtp server settings
 	// load default smtp settings
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
-        if (isset($_SESSION['email']['smtp_port'])) {
-            $smtp['port']       =  (int)$_SESSION['email']['smtp_port']['numeric'];
-        } else {
-            $smtp['port']       = 0;
-        }
+	if (isset($_SESSION['email']['smtp_port'])) {
+		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
+	} else {
+		$smtp['port'] = 0;
+	}
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
@@ -178,17 +178,17 @@
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
-        if (isset($_SESSION['email']['method'])) {
-            switch($_SESSION['email']['method']['text']) {
-                case 'sendmail': $mail->IsSendmail(); break;
-                case 'qmail': $mail->IsQmail(); break;
-                case 'mail': $mail->IsMail(); break;
-                default: $mail->IsSMTP(); break;
-            }
-        } else $mail->IsSMTP();
+	if (isset($_SESSION['email']['method'])) {
+		switch($_SESSION['email']['method']['text']) {
+			case 'sendmail': $mail->IsSendmail(); break;
+			case 'qmail': $mail->IsQmail(); break;
+			case 'mail': $mail->IsMail(); break;
+			default: $mail->IsSMTP(); break;
+		}
+	} else $mail->IsSMTP();
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
-        if ($smtp['port']!=0) $mail->Port=$smtp['port'];
+	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
 	if ($smtp['secure'] != '') {
 		$mail->SMTPSecure = $smtp['secure'];
 	}

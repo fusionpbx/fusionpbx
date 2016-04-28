@@ -49,7 +49,7 @@
 	$db_create = '';
 	$db_create_username = '';
 	$db_create_password = '';
-        $db = NULL;
+	$db = NULL;
 
 //detect the iso country code from the locale
 	//$locale = Locale::getDefault();

@@ -460,7 +460,7 @@ if (!class_exists('schema')) {
  
  				//set the global variable
 					global $db, $upgrade_data_types, $text,$output_format;
-                                        if ($format=='') $format = $output_format;
+					if ($format=='') $format = $output_format;
 
 				//get the db variables
 					$config = new config;

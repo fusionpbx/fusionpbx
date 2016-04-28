@@ -25,7 +25,7 @@
 */
 
 // make sure the PATH_SEPARATOR is defined
-        umask(2);
+	umask(2);
 	if (!defined("PATH_SEPARATOR")) {
 		if (strpos($_ENV["OS"], "Win") !== false) {
 			define("PATH_SEPARATOR", ";");
@@ -34,8 +34,8 @@
 		}
 	}
 
-        if (!isset($output_format)) $output_format = (PHP_SAPI == 'cli') ? 'text' : 'html';
-        
+	if (!isset($output_format)) $output_format = (PHP_SAPI == 'cli') ? 'text' : 'html';
+
 	// make sure the document_root is set
 	$_SERVER["SCRIPT_FILENAME"] = str_replace("\\", '/', $_SERVER["SCRIPT_FILENAME"]);
 	if(PHP_SAPI == 'cli'){

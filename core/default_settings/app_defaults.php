@@ -98,7 +98,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '0';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'use non-default port if enabled and non-zero';
-                $x++;
+		$x++;
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_from';
 		$array[$x]['default_setting_name'] = 'var';
