@@ -2216,8 +2216,8 @@
 												echo "		</table>\n";
 												echo "	</form>";
 												echo "</div>";
+												*/
 											}
-											*/
 										}
 									?>
 								</td>
