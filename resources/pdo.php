@@ -167,7 +167,7 @@ if ($db_type == "sqlite") {
 				$db->sqliteCreateFunction('md5', 'php_md5', 1);
 				$db->sqliteCreateFunction('unix_timestamp', 'php_unix_timestamp', 1);
 				$db->sqliteCreateFunction('now', 'php_now', 0);
-				$db->sqliteCreateFunction('sqlitedatatype', 'phpsqlitedatatype', 2);
+				$db->sqliteCreateFunction('sqlitedatatype', 'php_sqlite_data_type', 2);
 				$db->sqliteCreateFunction('strleft', 'php_left', 2);
 				$db->sqliteCreateFunction('strright', 'php_right', 2);
 		}
