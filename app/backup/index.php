@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -55,7 +55,7 @@ else {
 					default : $cmd = 'tar -zvcf ';
 				}
 				$cmd .= $backup_path.'/'.$backup_file.' ';
-				foreach ($_SESSION['backup']['path'] as $value) {
+				if (isset($_SESSION['backup']['path'])) foreach ($_SESSION['backup']['path'] as $value) {
 					$cmd .= $value.' ';
 				}
 				exec($cmd);
@@ -174,7 +174,7 @@ else {
 	echo "	".$text['label-source_paths']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	foreach ($_SESSION['backup']['path'] as $backup_path) {
+	if (isset($_SESSION['backup']['path'])) foreach ($_SESSION['backup']['path'] as $backup_path) {
 		echo $backup_path."<br>\n";
 	}
 	echo "</td>";
