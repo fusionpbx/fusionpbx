@@ -45,7 +45,6 @@ else {
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
-		$result = '';
 		if (trim(strtoupper($tmp_array[0])) != "+OK") {
 			$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 			$x = 0;
@@ -57,6 +56,10 @@ else {
 						$tmp_name = $tmp_field_name_array[$y];
 						if (trim(strtoupper($tmp_value)) != "+OK") {
 							$result[$x][$tmp_name] = $tmp_value;
+							return $result;
+						}
+						else {
+							return false;
 						}
 						$y++;
 					}
@@ -65,7 +68,6 @@ else {
 			}
 			unset($row);
 		}
-		return $result;
 	}
 
 //alternate the color of the row
@@ -116,7 +118,7 @@ else {
 				}
 
 			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING
-				array_multisort($tier_result, SORT_ASC);
+				if (isset($tier_result)) { array_multisort($tier_result, SORT_ASC); }
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
