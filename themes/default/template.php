@@ -2176,6 +2176,7 @@
 													$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
 												}
 											//login form
+												/*
 												echo "<div align='right'>\n";
 												echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
 												echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
@@ -2216,6 +2217,7 @@
 												echo "	</form>";
 												echo "</div>";
 											}
+											*/
 										}
 									?>
 								</td>
