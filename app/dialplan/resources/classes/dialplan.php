@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2015
+	Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -325,7 +325,7 @@ include "root.php";
 							$x = 0;
 							$group = 0;
 							$order = 5;
-							foreach ($dialplan['extension']['condition'] as &$row) {
+							if (isset($dialplan['extension']['condition'])) foreach ($dialplan['extension']['condition'] as &$row) {
 								unset($this->dialplan_detail_break);
 								unset($this->dialplan_detail_inline);
 								$this->dialplan_detail_tag = 'condition';
@@ -356,7 +356,7 @@ include "root.php";
 									$order = $order + 5;
 									unset($this->dialplan_detail_break);
 									unset($this->dialplan_detail_inline);
-									foreach ($row['action'] as &$row2) {
+									if (isset($row['action'])) foreach ($row['action'] as &$row2) {
 										$this->dialplan_detail_tag = 'action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
@@ -368,7 +368,7 @@ include "root.php";
 										$this->dialplan_detail_add();
 										$order = $order + 5;
 									}
-									foreach ($row['anti-action'] as &$row2) {
+									if (isset($row['action-action'])) foreach ($row['anti-action'] as &$row2) {
 										$this->dialplan_detail_tag = 'anti-action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
@@ -426,7 +426,7 @@ include "root.php";
 							$prep_statement->execute();
 							$dialplans = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 							$x = 0; $y = 0;
-							foreach ($dialplans as &$row) {
+							if (isset($dialplans)) foreach ($dialplans as &$row) {
 								//if the previous dialplan uuid has not been set then set it
 									if (!isset($previous_dialplan_uuid)) { $previous_dialplan_uuid = $row['dialplan_uuid']; }
 
@@ -460,8 +460,8 @@ include "root.php";
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
 					}
 				//find the matching outbound routes
-					foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
-						foreach ($row['dialplan_details'] as $field) {
+					if (isset($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
+						if (isset($row['dialplan_details'])) foreach ($row['dialplan_details'] as $field) {
 							if ($field['dialplan_detail_tag'] == "condition") {
 								if ($field['dialplan_detail_type'] == "destination_number") {
 									$dialplan_detail_data = $field['dialplan_detail_data'];
