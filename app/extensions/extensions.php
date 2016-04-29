@@ -105,7 +105,7 @@ require_once "resources/paging.php";
 
 //to cast or not to cast
 	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as int)" : "extension asc";
+		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension asc";
 	}
 	else {
 		$order_text = "extension asc";
