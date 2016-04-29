@@ -84,7 +84,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the voicemail id.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_password";
