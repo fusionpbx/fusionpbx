@@ -25,6 +25,7 @@
 */
 
 //define the directory class
+if (!class_exists('extension')) {
 	class extension {
 		public $db;
 		public $domain_uuid;
@@ -504,5 +505,6 @@
 			}
 		}
 	}
+}
 
 ?>

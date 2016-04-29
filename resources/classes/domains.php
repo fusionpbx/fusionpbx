@@ -138,7 +138,7 @@ if (!class_exists('domains')) {
 				}
 
 			//get the user settings
-				if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0) {
+				if (array_key_exists("domain_uuid",$_SESSION) and array_key_exists("user_uuid",$_SESSION) and strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0) {
 					$sql = "select * from v_user_settings ";
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";

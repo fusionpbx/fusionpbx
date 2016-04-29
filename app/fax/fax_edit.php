@@ -221,7 +221,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$php_bin = 'php.exe';
 		}
 		else {
-			$php_bin = 'php';
+			$php_bin = 'php5';
 		}
 
 	//add or update the database
@@ -658,7 +658,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$sql = "SELECT * FROM v_users ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				foreach($assigned_user_uuids as $assigned_user_uuid) {
+				if (isset($assigned_user_id)) foreach($assigned_user_uuids as $assigned_user_uuid) {
 					$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
 				}
 				unset($assigned_user_uuids);

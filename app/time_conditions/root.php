@@ -25,6 +25,7 @@
 */
 
 // make sure the PATH_SEPARATOR is defined
+	umask(2);
 	if (!defined("PATH_SEPARATOR")) {
 		if (strpos($_ENV["OS"], "Win") !== false) {
 			define("PATH_SEPARATOR", ";");
@@ -33,10 +34,12 @@
 		}
 	}
 
+ 	if (!isset($output_format)) $output_format = (PHP_SAPI == 'cli') ? 'text' : 'html';
+
 	// make sure the document_root is set
 	$_SERVER["SCRIPT_FILENAME"] = str_replace("\\", '/', $_SERVER["SCRIPT_FILENAME"]);
 	if(PHP_SAPI == 'cli'){
-		chdir(pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME));
+		chdir(pathinfo(realpath($_SERVER["PHP_SELF"]), PATHINFO_DIRNAME));
 		$script_full_path = str_replace("\\", '/', getcwd() . '/' . $_SERVER["SCRIPT_FILENAME"]);
 		$dirs = explode('/', pathinfo($script_full_path, PATHINFO_DIRNAME));
 		if (file_exists('/project_root.php')) {

@@ -110,12 +110,27 @@ require_once "resources/require.php";
 					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
 						$domain_name = check_str($_REQUEST["domain_name"]);
 					}
-					$connect = ldap_connect($_SESSION["ldap"]["server_host"]["text"], $_SESSION["ldap"]["server_port"]["numeric"])
+					if (isset($_SESSION["ldap"]["certpath"])) {
+						$s="LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
+						putenv($s);
+					}
+					if (isset($_SESSION["ldap"]["certkey"])) {
+						$s="LDAPTLS_KEY=" . $_SESSION["ldap"]["certkey"]["text"];
+						 putenv($s);
+					}
+					$host=$_SESSION["ldap"]["server_host"]["text"];
+					$port=$_SESSION["ldap"]["server_port"]["numeric"];
+					$connect = ldap_connect($host)
 						or die("Could not connect to the LDAP server.");
-					ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
+					//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
 					ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
+					//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 					$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$username.",".$_SESSION["ldap"]["user_dn"]["text"];
-					$bind = ldap_bind($connect, $bind_dn, $_REQUEST["password"]);
+					$bind_pw = $_REQUEST["password"];
+					//Note: As of 4/16, the call below will fail randomly.  PHP debug reports ldap_bind
+					//called below with all arguments '*uninitialized*'.  However, the debugger
+					//single-stepping just before the failing call correctly displays all the values.
+					$bind = ldap_bind($connect, $bind_dn, $bind_pw);
 					if ($bind) {
 						$_SESSION['username'] = $username;
 					}

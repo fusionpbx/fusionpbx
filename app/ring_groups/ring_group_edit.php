@@ -703,7 +703,7 @@ else {
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<table width='52%'>\n";
-	foreach($ring_group_users as $field) {
+	if (isset($ring_group_users)) foreach($ring_group_users as $field) {
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$field['username']."</td>\n";
 		echo "				<td>\n";

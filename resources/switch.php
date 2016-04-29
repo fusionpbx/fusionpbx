@@ -30,7 +30,7 @@ require_once "resources/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
+		if ((! isset($_SESSION['event_socket_ip_address'])) or strlen($_SESSION['event_socket_ip_address']) == 0) {
 			$sql = "select * from v_settings ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
@@ -56,7 +56,7 @@ function load_extensions() {
 		$db = $database->db;
 
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-		if ($db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+		if (isset($_SESSION["user"]) && isset($_SESSION["user_uuid"]) && $db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
 				$sql = "select ";
@@ -1356,7 +1356,7 @@ if (!function_exists('switch_conf_xml')) {
 
 				$v_mail_bat = path_join($secure_path, 'mailto.bat');
 				$v_mail_cmd = '@' .
-					'"' . str_replace('/', '\\', path_join($bindir, 'php.exe')) . '" ' .
+					'"' . str_replace('/', '\\', path_join($bindir, 'php5.exe')) . '" ' .
 					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
 
 				$fout = fopen($v_mail_bat, "w+");

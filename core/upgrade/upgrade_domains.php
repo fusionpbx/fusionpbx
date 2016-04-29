@@ -52,6 +52,7 @@
 	}
 
 //run all app_defaults.php files
+	require_once "resources/classes/config.php";
 	require_once "resources/classes/domains.php";
 	$domain = new domains;
 	$domain->upgrade();

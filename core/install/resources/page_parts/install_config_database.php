@@ -80,6 +80,7 @@
 		//set defaults
 			if (strlen($db_host) == 0) { $db_host = 'localhost'; }
 			if (strlen($db_port) == 0) { $db_port = '3306'; }
+			if (is_null($db_create)) { $db_create = '0'; }
 			//if (strlen($db_name) == 0) { $db_name = 'fusionpbx'; }
 
 		echo "<tr>\n";

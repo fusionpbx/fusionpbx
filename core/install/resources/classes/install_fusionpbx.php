@@ -84,8 +84,8 @@ include "root.php";
 			$this->write_progress("\tExecuting config.php");
 			require $this->config_php;
 			global $db;
-			$db = $this->dbh;
 			$this->create_database();
+			$db = $this->dbh;
 			$this->create_domain();
 			$this->create_superuser();
 			$this->app_defaults();
@@ -193,8 +193,8 @@ include "root.php";
 			$tmp_config .= "	//show errors\n";
 			$tmp_config .= "		ini_set('display_errors', '1');\n";
 			$tmp_config .= "		//error_reporting (E_ALL); // Report everything\n";
-			$tmp_config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
-			$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
+			$tmp_config .= "		error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
+			$tmp_config .= "		//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 			$tmp_config .= "\n";
 			$tmp_config .= "?>";
 
@@ -727,6 +727,8 @@ include "root.php";
 			$salt = generate_password('20', '4');
 			if ($result) {
 				$this->admin_uuid = $result['user_uuid'];
+                                $user_uuid = $result['user_uuid'];
+                                $_SESSION["user_uuid"] = $this->admin_uuid;
 				$this->write_progress("... superuser exists as '" . $this->admin_uuid . "', updating password");
 				$sql = "update v_users ";
 				$sql .= "set password = '".md5($salt.$this->admin_password)."' ";
@@ -739,7 +741,7 @@ include "root.php";
 					$this->write_progress("\t... creating super user");
 				//add a user and then add the user to the superadmin group
 				//prepare the values
-					$this->admin_uuid = uuid();
+					$user_uuid = $this->admin_uuid = uuid();
 					$contact_uuid = uuid();
 				//set a sessiong variable
 					$_SESSION["user_uuid"] = $user_uuid;

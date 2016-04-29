@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -123,7 +123,7 @@ require_once "resources/require.php";
 
 //list all the permissions in the database
 	foreach($apps as $app) {
-		foreach ($app['permissions'] as $row) {
+		if (isset($app['permissions'])) foreach ($app['permissions'] as $row) {
 			if ($permissions_db[$row['name']] == "true") {
 				$permissions_db_checklist[$row['name']] = "true";
 			}
