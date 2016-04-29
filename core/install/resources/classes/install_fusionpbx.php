@@ -193,8 +193,8 @@ include "root.php";
 			$tmp_config .= "	//show errors\n";
 			$tmp_config .= "		ini_set('display_errors', '1');\n";
 			$tmp_config .= "		//error_reporting (E_ALL); // Report everything\n";
-			$tmp_config .= "		error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
-			$tmp_config .= "		//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
+			$tmp_config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
+			$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 			$tmp_config .= "\n";
 			$tmp_config .= "?>";
 
