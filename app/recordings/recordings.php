@@ -313,9 +313,15 @@ require_once "resources/check_auth.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_name']."</td>\n";
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_filename']."</td>\n";
-				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename']);
-				$tmp_filesize = byte_convert($tmp_filesize);
-				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'];
+				if (file_exists($file_name)) {
+					$file_size = filesize($file_name);
+					$file_size = byte_convert($file_size);
+				}
+				else {
+					$file_size = '';
+				}
+				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$file_size."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
 				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
