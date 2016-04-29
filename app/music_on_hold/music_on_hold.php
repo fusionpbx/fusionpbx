@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -396,7 +396,8 @@ else {
 		echo "	</tr>";
 
 		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
-			if ($handle = opendir($music_on_hold_dir."/".$sampling_rate_dir)) {
+			$directory = $music_on_hold_dir."/".$sampling_rate_dir;
+			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != ".." && is_file($music_on_hold_dir."/".$sampling_rate_dir."/".$file)) {
 						$row_uuid = uuid();
@@ -470,12 +471,13 @@ else {
 		$moh_found = false;
 
 		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
-			if ($handle = opendir($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir)) {
+			$directory = $music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir;
+			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
-					if ($file != "." && $file != ".." && is_file($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file)) {
+					if ($file != "." && $file != ".." && is_file($directory."/".$file)) {
 						$row_uuid = uuid();
 
-						$file_size = filesize($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file);
+						$file_size = filesize($directory."/".$file);
 						$file_size = byte_convert($file_size);
 
 						//playback progress bar
