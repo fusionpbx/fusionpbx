@@ -153,6 +153,28 @@ if ($db_type == "sqlite") {
 				return substr($string, (strlen($string)-$num), strlen($string));
 			}
 		}
+		if (!function_exists('php_sqlite_data_type')) {
+			function php_sqlite_data_type($string, $field) {
+
+				//get the string between the start and end characters
+				$start = '(';
+				$end = ')';
+				$ini = stripos($string,$start);
+				if ($ini == 0) return "";
+				$ini += strlen($start);
+				$len = stripos($string,$end,$ini) - $ini;
+				$string = substr($string,$ini,$len);
+
+				$str_data_type = '';
+				$string_array = explode(',', $string);
+				foreach($string_array as $lnvalue) {
+					$fieldlistarray = explode (" ", $value);
+					unset($fieldarray, $string, $field);
+				}
+
+				return $str_data_type;
+			}
+		}
 
 	//database connection
 		try {
