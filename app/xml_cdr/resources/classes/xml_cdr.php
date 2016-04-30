@@ -57,7 +57,7 @@ if (!class_exists('xml_cdr')) {
 		 * unset the variables used in the class
 		 */
 		public function __destruct() {
-			foreach ($this as $key => $value) {
+			if (isset($this)) foreach ($this as $key => $value) {
 				unset($this->$key);
 			}
 		}
@@ -145,7 +145,7 @@ if (!class_exists('xml_cdr')) {
 
 			$sql = "insert into v_xml_cdr (";
 			$f = 1;
-			foreach ($this->fields as $field) {
+			if (isset($this->fields)) foreach ($this->fields as $field) {
 				if ($field_count == $f) {
 					$sql .= "$field ";
 				}
@@ -159,10 +159,10 @@ if (!class_exists('xml_cdr')) {
 			$row_count = sizeof($this->array);
 			//$field_count = sizeof($this->fields);
 			$i = 0;
-			foreach ($this->array as $row) {
+			if (isset($this->array)) foreach ($this->array as $row) {
 				$sql .= "(";
 				$f = 1;
-				foreach ($this->fields as $field) {
+				if (isset($this->fields)) foreach ($this->fields as $field) {
 					if (isset($row[$field]) && strlen($row[$field]) > 0) {
 						$sql .= "'".$row[$field]."'";
 					}
@@ -270,7 +270,7 @@ if (!class_exists('xml_cdr')) {
 
 			//get the values from the callflow.
 				$x = 0;
-				foreach ($xml->callflow as $callflow) {
+				if (isset($xml->callflow)) foreach ($xml->callflow as $callflow) {
 					if ($x == 0) {
 						$context = check_str(urldecode($callflow->caller_profile->context));
 						$this->array[$row]['destination_number'] = check_str(urldecode($callflow->caller_profile->destination_number));
@@ -325,7 +325,6 @@ if (!class_exists('xml_cdr')) {
 
 			//set values in the database
 				if (strlen($domain_uuid) > 0) {
-					$database->domain_uuid = $domain_uuid;
 					$this->array[$row]['domain_uuid'] = $domain_uuid;
 				}
 				if (strlen($domain_name) > 0) {
@@ -432,7 +431,6 @@ if (!class_exists('xml_cdr')) {
 			$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
 			$dir_handle = opendir($xml_cdr_dir);
 			$x = 0;
-			$cdr = new $xml_cdr;
 			while($file = readdir($dir_handle)) {
 				if ($file != '.' && $file != '..') {
 					if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
@@ -450,7 +448,7 @@ if (!class_exists('xml_cdr')) {
 							$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
 						//parse the xml and insert the data into the db
-							$cdr->xml_array($x, $leg, $xml_string);
+							$this->xml_array($x, $leg, $xml_string);
 
 						//delete the file after it has been imported
 							unlink($xml_cdr_dir.'/'.$file);
@@ -460,7 +458,7 @@ if (!class_exists('xml_cdr')) {
 					}
 				}
 			}
-			$cdr->save();
+			$this->save();
 			closedir($dir_handle);
 		}
 		//$this->read_files();
@@ -488,7 +486,7 @@ if (!class_exists('xml_cdr')) {
 								catch(Exception $e) {
 									echo $e->getMessage();
 								}
-								foreach ($conf_xml->settings->param as $row) {
+								if (isset($conf_xml->settings->param)) foreach ($conf_xml->settings->param as $row) {
 									if ($row->attributes()->name == "cred") {
 										$auth_array = explode(":", $row->attributes()->value);
 										//echo "username: ".$auth_array[0]."<br />\n";
@@ -544,9 +542,8 @@ if (!class_exists('xml_cdr')) {
 					//xml_cdr_log("process cdr via post\n");
 
 				//parse the xml and insert the data into the database
-					$cdr = new $xml_cdr;
-					$cdr->xml_array(0, $leg, $xml_string);
-					$cdr->save();
+					$this->xml_array(0, $leg, $xml_string);
+					$this->save();
 			}
 		}
 		//$this->post();
@@ -556,6 +553,6 @@ if (!class_exists('xml_cdr')) {
 /*
 //example use
 	$cdr = new xml_cdr;
-	$csv -> $cdr->extension_summary('csv');
+	$cdr->read_files();
 */
 ?>
