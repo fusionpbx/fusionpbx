@@ -444,17 +444,49 @@ if (!class_exists('xml_cdr')) {
 								$file_prefix = substr($file, 0, 1);
 							}
 
-						//get the xml cdr string
-							$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
+						//set the limit
+							if (isset($_SERVER["argv"][1]) && is_numeric($_SERVER["argv"][1])) {
+								$limit = $_SERVER["argv"][1];
+							}
+							else {
+								$limit = 1;
+							}
 
-						//parse the xml and insert the data into the db
-							$this->xml_array($x, $leg, $xml_string);
+						//filter for specific files based on the file prefix
+							if (isset($_SERVER["argv"][2])) {
+								if (strpos($_SERVER["argv"][2], $file_prefix) !== FALSE) {
+									$import = true;
+								}
+								else {
+									$import = false;
+								}
+							}
+							else {
+								$import = true;
+							}
 
-						//delete the file after it has been imported
-							unlink($xml_cdr_dir.'/'.$file);
+						//import the call detail record
+							if ($import) {
+								//get the xml cdr string
+									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
-						//increment
-							$x++;
+								//parse the xml and insert the data into the db
+									$this->xml_array($x, $leg, $xml_string);
+
+								//delete the file after it has been imported
+									unlink($xml_cdr_dir.'/'.$file);
+							}
+
+						//increment the value
+							if ($import) {
+								$x++;
+							}
+
+						//if limit exceeded exit the loop
+							if ($limit == $x) {
+								//echo "limit: $limit count: $x if\n";
+								break;
+							}
 					}
 				}
 			}
