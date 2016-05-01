@@ -368,7 +368,7 @@ include "root.php";
 										$this->dialplan_detail_add();
 										$order = $order + 5;
 									}
-									if (isset($row['action-action'])) foreach ($row['anti-action'] as &$row2) {
+									if (isset($row['anti-action'])) foreach ($row['anti-action'] as &$row2) {
 										$this->dialplan_detail_tag = 'anti-action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
