@@ -99,6 +99,7 @@ if (!class_exists('menu')) {
 								$menu_item_uuid = $menu['uuid'];
 								$menu_item_parent_uuid = $menu['parent_uuid'];
 								$menu_item_category = $menu['category'];
+								$menu_item_icon = $menu['icon'];
 								$menu_item_path = $menu['path'];
 								$menu_item_order = $menu['order'];
 								$menu_item_description = $menu['desc'];
@@ -120,6 +121,7 @@ if (!class_exists('menu')) {
 											$sql .= "menu_item_title, ";
 											$sql .= "menu_item_link, ";
 											$sql .= "menu_item_category, ";
+											$sql .= "menu_item_icon, ";
 											if (strlen($menu_item_order) > 0) {
 												$sql .= "menu_item_order, ";
 											}
@@ -135,6 +137,7 @@ if (!class_exists('menu')) {
 											$sql .= "'".check_str($menu_item_title)."', ";
 											$sql .= "'$menu_item_path', ";
 											$sql .= "'$menu_item_category', ";
+											$sql .= "'$menu_item_icon', ";
 											if (strlen($menu_item_order) > 0) {
 												$sql .= "'$menu_item_order', ";
 											}
@@ -404,7 +407,7 @@ if (!class_exists('menu')) {
 
 				//get the menu from the database
 					if (strlen($sql) == 0) { //default sql for base of the menu
-						$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid ";
+						$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
 						$sql .= "from v_menu_items as i, v_menu_languages as l ";
 						$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 						$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
@@ -475,7 +478,7 @@ if (!class_exists('menu')) {
 					$menu_item_level = $menu_item_level+1;
 
 				//get the child menu from the database
-					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid ";
+					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_icon, i.menu_item_uuid, i.menu_item_parent_uuid ";
 					$sql .= "from v_menu_items as i, v_menu_languages as l ";
 					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
@@ -513,6 +516,7 @@ if (!class_exists('menu')) {
 							//set the variables
 								$menu_item_link = $row['menu_item_link'];
 								$menu_item_category = $row['menu_item_category'];
+								$menu_item_icon = $row['menu_item_icon'];
 								$menu_item_uuid = $row['menu_item_uuid'];
 								$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
 
