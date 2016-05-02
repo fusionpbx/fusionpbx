@@ -2048,17 +2048,13 @@
 								}
 								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-								if ($_SESSION['theme']['menu_main_icons']['boolean'] == 'true' || $_SESSION['theme']['menu_main_icons']['boolean'] == '') {
-									switch ($menu_parent['menu_item_title']) {
-										case "Home": $glyph = 'home'; break;
-										case "Accounts": $glyph = 'user'; break;
-										case "Dialplan": $glyph = 'transfer'; break;
-										case "Apps": $glyph = 'send'; break;
-										case "Status": $glyph = 'equalizer'; break;
-										case "Advanced": $glyph = 'cog'; break;
-										default: $glyph = null;
+								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
+									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
+										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".$menu_parent['menu_language_title']."\"></span>";
 									}
-									$menu_main_icon = ($glyph != '') ? "<span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span>" : null;
+									else {
+										unset($menu_main_icon);
+									}
 									$menu_main_item = "<span class='hidden-sm'>".$menu_parent['menu_language_title']."</span>";
 								}
 								else {
@@ -2079,14 +2075,15 @@
 											$mod_a_2 = PROJECT_PATH . $mod_a_2;
 										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
-										if ($_SESSION['theme']['menu_sub_icons']['boolean'] == 'true') {
-											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
-											switch ($menu_sub['menu_item_title']) {
-												case 'Logout': $mod_icon = "<span class='glyphicon glyphicon-log-out'></span>"; break;
-												default: $mod_icon = null;
+										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
+											if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'glyphicon-') > 0) {
+												$menu_sub_icon = "<span class='glyphicon ".$menu_sub['menu_item_icon']."'></span>";
+											}
+											else {
+												unset($menu_sub_icon);
 											}
 										}
-										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$mod_icon.$mod_nw."</a></li>\n";
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$menu_sub_icon."</a></li>\n";
 									}
 									echo "</ul>\n";
 								}
