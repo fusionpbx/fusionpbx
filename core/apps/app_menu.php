@@ -12,6 +12,7 @@ $apps[$x]['menu'][0]['title']['de-at'] = "Applikationen";
 $apps[$x]['menu'][0]['uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 $apps[$x]['menu'][0]['parent_uuid'] = "";
 $apps[$x]['menu'][0]['category'] = "internal";
+$apps[$x]['menu'][0]['icon'] = "glyphicon-send";
 $apps[$x]['menu'][0]['path'] = "";
 $apps[$x]['menu'][0]['order'] = "20";
 $apps[$x]['menu'][0]['groups'][] = "user";
