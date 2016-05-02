@@ -80,6 +80,7 @@ else {
 		$menu_item_title = check_str($_POST["menu_item_title"]);
 		$menu_item_link = check_str($_POST["menu_item_link"]);
 		$menu_item_category = check_str($_POST["menu_item_category"]);
+		$menu_item_icon = check_str($_POST["menu_item_icon"]);
 		$menu_item_description = check_str($_POST["menu_item_description"]);
 		$menu_item_protected = check_str($_POST["menu_item_protected"]);
 		//$menu_item_uuid = check_str($_POST["menu_item_uuid"]);
@@ -149,6 +150,7 @@ else {
 					$sql .= "menu_item_title, ";
 					$sql .= "menu_item_link, ";
 					$sql .= "menu_item_category, ";
+					$sql .= "menu_item_icon, ";
 					$sql .= "menu_item_description, ";
 					$sql .= "menu_item_protected, ";
 					$sql .= "menu_item_uuid, ";
@@ -165,6 +167,7 @@ else {
 					$sql .= "'$menu_item_title', ";
 					$sql .= "'$menu_item_link', ";
 					$sql .= "'$menu_item_category', ";
+					$sql .= "'$menu_item_icon', ";
 					$sql .= "'$menu_item_description', ";
 					$sql .= "'$menu_item_protected', ";
 					$sql .= "'".$menu_item_uuid."', ";
@@ -188,6 +191,7 @@ else {
 					$sql .= "menu_item_title = '$menu_item_title', ";
 					$sql .= "menu_item_link = '$menu_item_link', ";
 					$sql .= "menu_item_category = '$menu_item_category', ";
+					$sql .= "menu_item_icon = '$menu_item_icon', ";
 					$sql .= "menu_item_description = '$menu_item_description', ";
 					$sql .= "menu_item_protected = '$menu_item_protected', ";
 					if (strlen($menu_item_parent_uuid) == 0) {
@@ -307,6 +311,7 @@ else {
 			$menu_item_title = $row["menu_item_title"];
 			$menu_item_link = $row["menu_item_link"];
 			$menu_item_category = $row["menu_item_category"];
+			$menu_item_icon = $row["menu_item_icon"];
 			$menu_item_description = $row["menu_item_description"];
 			$menu_item_protected = $row["menu_item_protected"];
 			$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
@@ -351,10 +356,12 @@ else {
 	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
 	echo "	</tr>";
+
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
 	echo "	</tr>";
+
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-category']."</td>";
 	echo "		<td class='vtable'>";
@@ -364,6 +371,49 @@ else {
 	if ($menu_item_category == "email") { echo "<option value=\"email\" selected>".$text['option-email']."</option>\n"; } else { echo "<option value=\"email\">".$text['option-email']."</option>\n"; }
 	echo "            </select>";
 	echo "        </td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-icon']."</td>";
+	echo "		<td class='vtable' style='vertical-align: bottom;'>";
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json')) {
+		$tmp_array = json_decode(file_get_contents($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json'), true);
+		if (is_array($tmp_array['icons']) && sizeof($tmp_array['icons']) > 0) {
+			// rebuild and sort array
+			foreach ($tmp_array['icons'] as $i => $glyphicon) {
+				$tmp_string = str_replace('glyphicon-', '', $glyphicon['id']);
+				$tmp_string = str_replace('-', ' ', $tmp_string);
+				$tmp_string = ucwords($tmp_string);
+				$glyphicons[$glyphicon['id']] = $tmp_string;
+			}
+			asort($glyphicons, SORT_STRING);
+			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td>\n";
+			echo "			<select class='formfld' name='menu_item_icon' id='menu_item_icon' onchange=\"$('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+			echo "				<option value=''></option>\n";
+			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
+				$selected = ($menu_item_icon == $glyphicon_class) ? "selected" : null;
+				echo "			<option value='".$glyphicon_class."' ".$selected.">".$glyphicon_name."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+			echo "		<td style='padding: 0 0 0 5px;'>\n";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#glyphicons').slideToggle(); $(this).fadeOut();\"><span class='glyphicon glyphicon-th'></span></button>";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
+			echo "<div id='glyphicons' style='clear: both; display: none; padding-top: 10px; color: #000;'>";
+			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
+				echo "<span class='glyphicon ".$glyphicon_class."' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".$glyphicon_name."' onclick=\"$('#menu_item_icon').val('".$glyphicon_class."'); $('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+			}
+			echo "</div>";
+		}
+	}
+	else {
+		echo "		<input type='text' class='formfld' name='menu_item_icon' value='".$menu_item_icon."'>";
+	}
+	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
