@@ -706,12 +706,10 @@
 	#main_content {
 		<?php
 		if (
-			strlen($_SESSION["username"]) > 0 &&
-			(
-				isset($background_images) ||
-				$background_colors[0] != '' ||
-				$background_colors[1] != ''
-			)) { ?>
+			(strlen($_SESSION["username"]) > 0 || !$default_login)
+			&&
+			(isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '')
+			) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
 			background-attachment: fixed;
 			<?php $br = format_border_radius($_SESSION['theme']['body_border_radius']['text'], '4px'); ?>
@@ -2177,7 +2175,7 @@
 														$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
 													}
 												//login form
-	
+
 													echo "<div align='right'>\n";
 													echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
 													echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
@@ -2189,7 +2187,7 @@
 													echo "				<td align='left'>\n";
 													echo "					<input type='password' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
 													echo "				</td>\n";
-	
+
 													if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
 														echo "			<td align='left'>\n";
 														echo "				<strong>".$text['label-domain'].":</strong>\n";
@@ -2209,7 +2207,7 @@
 														}
 														echo "			</td>\n";
 													}
-	
+
 													echo "				<td align='right'>\n";
 													echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
 													echo "				</td>\n";
