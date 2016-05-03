@@ -706,12 +706,10 @@
 	#main_content {
 		<?php
 		if (
-			strlen($_SESSION["username"]) > 0 &&
-			(
-				isset($background_images) ||
-				$background_colors[0] != '' ||
-				$background_colors[1] != ''
-			)) { ?>
+			(strlen($_SESSION["username"]) > 0 || !$default_login)
+			&&
+			(isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '')
+			) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
 			background-attachment: fixed;
 			<?php $br = format_border_radius($_SESSION['theme']['body_border_radius']['text'], '4px'); ?>
@@ -2050,17 +2048,13 @@
 								}
 								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-								if ($_SESSION['theme']['menu_main_icons']['boolean'] == 'true' || $_SESSION['theme']['menu_main_icons']['boolean'] == '') {
-									switch ($menu_parent['menu_item_title']) {
-										case "Home": $glyph = 'home'; break;
-										case "Accounts": $glyph = 'user'; break;
-										case "Dialplan": $glyph = 'transfer'; break;
-										case "Apps": $glyph = 'send'; break;
-										case "Status": $glyph = 'equalizer'; break;
-										case "Advanced": $glyph = 'cog'; break;
-										default: $glyph = null;
+								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
+									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
+										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".$menu_parent['menu_language_title']."\"></span>";
 									}
-									$menu_main_icon = ($glyph != '') ? "<span class='glyphicon glyphicon-".$glyph."' title=\"".$menu_parent['menu_language_title']."\"></span>" : null;
+									else {
+										unset($menu_main_icon);
+									}
 									$menu_main_item = "<span class='hidden-sm'>".$menu_parent['menu_language_title']."</span>";
 								}
 								else {
@@ -2081,14 +2075,15 @@
 											$mod_a_2 = PROJECT_PATH . $mod_a_2;
 										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
-										if ($_SESSION['theme']['menu_sub_icons']['boolean'] == 'true') {
-											$mod_nw = ($menu_sub['menu_item_category'] == 'external') ? "<span class='glyphicon glyphicon-new-window'></span>" : null;
-											switch ($menu_sub['menu_item_title']) {
-												case 'Logout': $mod_icon = "<span class='glyphicon glyphicon-log-out'></span>"; break;
-												default: $mod_icon = null;
+										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
+											if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'glyphicon-') > 0) {
+												$menu_sub_icon = "<span class='glyphicon ".$menu_sub['menu_item_icon']."'></span>";
+											}
+											else {
+												unset($menu_sub_icon);
 											}
 										}
-										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$mod_icon.$mod_nw."</a></li>\n";
+										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$menu_sub_icon."</a></li>\n";
 									}
 									echo "</ul>\n";
 								}
@@ -2165,57 +2160,60 @@
 									<?php
 									// login form
 										if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php" && !$default_login) {
+											/*
 											if (strlen($_SESSION["username"]) == 0) {
-											//add multi-lingual support
-												require_once "core/user_settings/app_languages.php";
-												foreach($text as $key => $value) {
-													$text[$key] = $value[$_SESSION['domain']['language']['code']];
-												}
-											//set a default login destination
-												if (strlen($_SESSION['login']['destination']['url']) == 0) {
-													$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
-												}
-											//login form
-												echo "<div align='right'>\n";
-												echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-												echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
-												echo "		<table width='200' border='0'>\n";
-												echo "			<tr>\n";
-												echo "				<td>\n";
-												echo "		  			<input type='text' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
-												echo "				</td>\n";
-												echo "				<td align='left'>\n";
-												echo "					<input type='password' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
-												echo "				</td>\n";
+												//add multi-lingual support
+													require_once "core/user_settings/app_languages.php";
+													foreach($text as $key => $value) {
+														$text[$key] = $value[$_SESSION['domain']['language']['code']];
+													}
+												//set a default login destination
+													if (strlen($_SESSION['login']['destination']['url']) == 0) {
+														$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+													}
+												//login form
 
-												if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
-													echo "			<td align='left'>\n";
-													echo "				<strong>".$text['label-domain'].":</strong>\n";
-													echo "			</td>\n";
-													echo "			<td>\n";
-													if (count($_SESSION['login']['domain_name']) > 0) {
-														echo "    		<select name='domain_name' class='txt login' style='color: #999999; width: 150px; text-align: center; text-align-last: center;' onclick=\"this.style.color='#000000';\" onchange=\"this.style.color='#000000';\">\n";
-														echo "    			<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
-														sort($_SESSION['login']['domain_name']);
-														foreach ($_SESSION['login']['domain_name'] as &$row) {
-															echo "    		<option value='$row'>$row</option>\n";
+													echo "<div align='right'>\n";
+													echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
+													echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
+													echo "		<table width='200' border='0'>\n";
+													echo "			<tr>\n";
+													echo "				<td>\n";
+													echo "		  			<input type='text' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
+													echo "				</td>\n";
+													echo "				<td align='left'>\n";
+													echo "					<input type='password' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
+													echo "				</td>\n";
+
+													if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
+														echo "			<td align='left'>\n";
+														echo "				<strong>".$text['label-domain'].":</strong>\n";
+														echo "			</td>\n";
+														echo "			<td>\n";
+														if (count($_SESSION['login']['domain_name']) > 0) {
+															echo "    		<select name='domain_name' class='txt login' style='color: #999999; width: 150px; text-align: center; text-align-last: center;' onclick=\"this.style.color='#000000';\" onchange=\"this.style.color='#000000';\">\n";
+															echo "    			<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
+															sort($_SESSION['login']['domain_name']);
+															foreach ($_SESSION['login']['domain_name'] as &$row) {
+																echo "    		<option value='$row'>$row</option>\n";
+															}
+															echo "    		</select>\n";
 														}
-														echo "    		</select>\n";
+														else {
+															echo "  		<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 150px; width: 150px;' placeholder=\"".$text['label-domain']."\">\n";
+														}
+														echo "			</td>\n";
 													}
-													else {
-														echo "  		<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 150px; width: 150px;' placeholder=\"".$text['label-domain']."\">\n";
-													}
-													echo "			</td>\n";
-												}
 
-												echo "				<td align='right'>\n";
-												echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
-												echo "				</td>\n";
-												echo "			</tr>\n";
-												echo "		</table>\n";
-												echo "	</form>";
-												echo "</div>";
+													echo "				<td align='right'>\n";
+													echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
+													echo "				</td>\n";
+													echo "			</tr>\n";
+													echo "		</table>\n";
+													echo "	</form>";
+													echo "</div>";
 											}
+											*/
 										}
 									?>
 								</td>

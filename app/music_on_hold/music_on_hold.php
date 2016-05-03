@@ -132,7 +132,7 @@ else {
 					if ($_POST['upload_category'] == '_NEW_CAT_' && $_POST['upload_category_new'] != '') {
 						$new_category_name = str_replace(' ', '_', $_POST['upload_category_new']);
 						//process sampling rate(s)
-							foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
 									@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
 								}
@@ -147,7 +147,7 @@ else {
 				//use existing category directory
 					else if ($_POST['upload_category'] != '' && $_POST['upload_category'] != '_NEW_CAT_') {
 						//process sampling rate(s)
-							foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
 									@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
 								}
@@ -163,7 +163,7 @@ else {
 					else if ($_POST['upload_category'] == '') {
 						if (permission_exists('music_on_hold_default_add')) {
 							//process sampling rate(s)
-								foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+								if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 									if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
 										@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
 									}
@@ -249,7 +249,7 @@ else {
 					}
 
 				// remove sampling rate directory (if any)
-					foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+					if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 						rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir))."/".$sampling_rate_dir);
 					}
 
@@ -395,7 +395,7 @@ else {
 		echo "		<td width='22px' align=\"center\"></td>\n";
 		echo "	</tr>";
 
-		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+		if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 			$directory = $music_on_hold_dir."/".$sampling_rate_dir;
 			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
@@ -453,7 +453,7 @@ else {
 	echo "<br><br>\n";
 
 //show additional categories
-	foreach ($category_dirs as $category_number => $category_dir) {
+	if (isset($category_dirs)) foreach ($category_dirs as $category_number => $category_dir) {
 		$c = 0;
 
 		echo "<b>".(str_replace('_', ' ', $category_dir))."</b>\n";
@@ -470,7 +470,7 @@ else {
 
 		$moh_found = false;
 
-		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+		if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 			$directory = $music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir;
 			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
