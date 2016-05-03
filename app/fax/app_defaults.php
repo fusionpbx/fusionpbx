@@ -10,14 +10,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '.pdf';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
-		$x = 0;
+		$x++;
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
 		$array[$x]['default_setting_name'] = 'array';
 		$array[$x]['default_setting_value'] = '.tif';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
-		$x = 0;
+		$x++;
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
 		$array[$x]['default_setting_name'] = 'array';
