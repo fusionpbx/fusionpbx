@@ -1,0 +1,12 @@
+Source: fusionpbx-app-access_controls
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-access_controls
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-access_controls:  access_controls
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

@@ -1,0 +1,12 @@
+Source: fusionpbx-app-modules
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-modules
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-modules: Modules extend the features of the system. Use this page to enable or disable modules.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

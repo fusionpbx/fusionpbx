@@ -1,0 +1,6 @@
+fussionpbx-app-dialplan-outbound
+--------------------
+Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.
+
+ -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
+

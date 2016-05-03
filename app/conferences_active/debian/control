@@ -1,0 +1,12 @@
+Source: fusionpbx-app-conferences-active
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-conferences-active
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-conferences-active: AJAX tool to view and manage all active callers in a conference room. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

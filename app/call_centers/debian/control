@@ -1,0 +1,12 @@
+Source: fusionpbx-app-call-center
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-call-center
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-call-center:  Queues for managing inbound calls and routing those calls to available agents.. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

@@ -1,0 +1,12 @@
+Source: fusionpbx-app-contacts
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-contacts
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-contacts: Provides a place to store contact information for individuals and organizations.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

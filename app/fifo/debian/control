@@ -1,0 +1,12 @@
+Source: fusionpbx-app-fifo
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-fifo
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-fifo: Queues are used to setup waiting lines for callers.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

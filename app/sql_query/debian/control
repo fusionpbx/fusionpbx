@@ -1,0 +1,12 @@
+Source: fusionpbx-app-sql-query
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-sql-query
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-sql-query: Run Structur Query Language commands
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

@@ -1,0 +1,5 @@
+fusionpbx-scripts (3.8.4-1) stable; urgency=low
+
+  * new deb pkg for fusionpbx-scripts
+
+ -- FusionPBX <debian@fusionpbx.com>  Wed, 03 Dec 2014 08:30:00 -0600

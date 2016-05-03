@@ -1,0 +1,12 @@
+Source: fusionpbx-app-call-center-active
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-call-center-active
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-call-center-acvtive:  Shows active calls, and agents in the call center queue.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

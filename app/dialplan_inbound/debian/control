@@ -1,0 +1,12 @@
+Source: fusionpbx-app-dialplan-inbound
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-dialplan-inbound
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-dialplan-inbound: The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
