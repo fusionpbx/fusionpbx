@@ -239,7 +239,7 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//add the missing default settings
-				if (is_array($missing)) {
+				if (count($missing) > 0) {
 					$sql = "insert into v_default_settings (";
 					$sql .= "default_setting_uuid, ";
 					$sql .= "default_setting_category, ";

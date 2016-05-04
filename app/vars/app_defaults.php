@@ -101,7 +101,7 @@ EOD;
 		function set_country_vars($db, $x) {
 			require "resources/countries.php";
 
-	//		$country_iso=$_SESSION['domain']['country']['iso_code'];
+			//$country_iso=$_SESSION['domain']['country']['iso_code'];
 
 			$sql = "select default_setting_value as value from v_default_settings ";
 			$sql .= "where default_setting_name = 'iso_code' ";

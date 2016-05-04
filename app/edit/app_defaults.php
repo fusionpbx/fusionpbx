@@ -70,7 +70,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the missing default settings
-		foreach ($missing as $row) {
+		if (count($missing) > 0) foreach ($missing as $row) {
 			//add the default settings
 			$orm = new orm;
 			$orm->name('default_settings');
