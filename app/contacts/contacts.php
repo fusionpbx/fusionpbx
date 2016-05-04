@@ -76,13 +76,13 @@ else {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= "	or \n";
 		$sql .= "	contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		where group_uuid = '".$_SESSION['user_uuid']."' ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= ") \n";
@@ -105,7 +105,7 @@ else {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= "	or contact_uuid in ( \n";
