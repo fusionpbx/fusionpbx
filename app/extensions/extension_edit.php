@@ -926,7 +926,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //get the users
 	$sql = "SELECT * FROM v_users ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	foreach($assigned_user_uuids as $assigned_user_uuid) {
+	if (isset($assigned_user_uuids)) foreach($assigned_user_uuids as $assigned_user_uuid) {
 		$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
 	}
 	unset($assigned_user_uuids);
@@ -1289,13 +1289,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 										}
 									}
 								}
-								closedir($dh_sub);
 							}
 							echo "</optgroup>";
 						}
 					}
 				}
-				closedir($dh);
 			}
 			echo "</select>\n";
 			echo "		</td>\n";

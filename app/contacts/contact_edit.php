@@ -350,7 +350,12 @@ else {
 	echo "		});";
 	echo "	});";
 	echo "</script>";
-	echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
+	if (isset($_SESSION['theme']['qr_image'])) {
+		echo "<img id='img-buffer' src='".$_SESSION["theme"]["qr_image"]["text"]."' style='display: none;'>";
+	}
+	else {
+		echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
+	}
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";

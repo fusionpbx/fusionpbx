@@ -49,6 +49,7 @@
 	$db_create = '';
 	$db_create_username = '';
 	$db_create_password = '';
+	$db = NULL;
 
 //detect the iso country code from the locale
 	//$locale = Locale::getDefault();
@@ -133,12 +134,15 @@
 	$onload = '';
 
 //buffer the content
-	ob_end_clean(); //clean the buffer
+	if (sizeof(ob_get_status())!=0) ob_end_clean(); //clean the buffer
 	ob_start();
 
 	$messages = array();
 	if (!extension_loaded('PDO')) {
 		$messages[] = "<b>PHP PDO was not detected</b>. Please install it before proceeding";
+	}
+	if (!(extension_loaded('pdo_pgsql') or extension_loaded('pdo_mysql') or extension_loaded('pdo_sqlite'))) {
+		$messages[] = "<b>no database PDO driver was detected</b>. Please install one of pgsql, mysql or sqlite before proceeding";
 	}
 
 	echo "<div align='center'>\n";
@@ -243,7 +247,7 @@
 		include "resources/page_parts/install_config_database.php";
 	}
 	elseif($install_step == 'execute'){
-		echo "<p><b>".$text['header-installing']."</b></p>\n";
+		echo "<p><b>".$text['header-installing'][$install_language]."</b></p>\n";
 		//$protocol = 'http';
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";

@@ -934,7 +934,8 @@
 
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$tmp = shell_exec("df /home");
+				$df = shell_exec("/usr/bin/which df");
+				$tmp = shell_exec($df." /home");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -957,7 +958,7 @@
 
 			//pbx version
 				$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>FusionPBX</td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
@@ -999,7 +1000,8 @@
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
-					$uptime = shell_exec("cut -d. -f1 /proc/uptime");
+					$cut = shell_exec("/usr/bin/which cut");
+					$uptime = shell_exec($cut." -d. -f1 /proc/uptime");
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
 					$tmp['h'] = $uptime/60/60%24;
@@ -1021,7 +1023,9 @@
 
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
-					$percent_memory = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
+					$free = shell_exec("/usr/bin/which free");
+					$awk = shell_exec("/usr/bin/which awk");
+					$percent_memory = round(shell_exec($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
 					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
@@ -1045,7 +1049,9 @@
 
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$tmp = shell_exec("ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'");
+					$ps = shell_exec("/usr/bin/which ps");
+					$sed = shell_exec("/usr/bin/which sed");
+					$tmp = shell_exec($ps." -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | ".$sed." '/^ 0.0 /d'");
 					$tmp = explode("\n", $tmp);
 					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 					$tmp = explode(' ', trim($tmp));
@@ -1144,7 +1150,7 @@
 		}
 
 		//define grid columns widths and when to use a clear fix
-		//-- $col_str[box_total][which_box]
+		//-- $col_str[box_total][/usr/bin/which_box]
 		//-- $clear_fix[box_total][after_box]
 		$col_str[1][1] = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
 		for ($n = 1; $n <= 2; $n++) { $col_str[2][$n] = "col-xs-12 col-sm-6 col-md-6 col-lg-6"; }

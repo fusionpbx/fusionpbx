@@ -64,7 +64,7 @@ require_once "resources/paging.php";
 	$sql = "select ";
 	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') as num_rows ";
 	if ($db_type == "pgsql") {
-		$sql .= ",(select count(*) from v_extensions ";
+		$sql .= ",(select count(*) as count from v_extensions ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions";
 	}
@@ -73,7 +73,7 @@ require_once "resources/paging.php";
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		$total_extensions = $row['num_rows'];
-		if ($db_type == "pgsql") {
+		if (($db_type == "pgsql") or ($db_type == "mysql")) {
 			$numeric_extensions = $row['numeric_extensions'];
 		}
 	}
@@ -105,7 +105,7 @@ require_once "resources/paging.php";
 
 //to cast or not to cast
 	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as int)" : "extension asc";
+		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension asc";
 	}
 	else {
 		$order_text = "extension asc";

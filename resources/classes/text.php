@@ -29,6 +29,10 @@ class text {
 	 * @var string $app_path		examples: app/exec or core/domains
 	 */
 	public function get($language_code = null, $app_path = null, $exclude_global = false) {
+
+		//define the text array
+			$text = array();
+
 		//get the global app_languages.php
 			if (!$exclude_global){
 				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";

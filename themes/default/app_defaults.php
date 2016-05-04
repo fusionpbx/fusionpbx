@@ -322,7 +322,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_sub_background_color';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_value'] = '#000000';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the background color (and opacity) of the sub menus.';
 		$x++;
@@ -1346,33 +1346,35 @@ if ($domains_processed == 1) {
 		$missing_count = $i;
 
 	//add the missing default settings
-		$sql = "insert into v_default_settings (";
-		$sql .= "default_setting_uuid, ";
-		$sql .= "default_setting_category, ";
-		$sql .= "default_setting_subcategory, ";
-		$sql .= "default_setting_name, ";
-		$sql .= "default_setting_value, ";
-		$sql .= "default_setting_enabled, ";
-		$sql .= "default_setting_description ";
-		$sql .= ") values \n";
-		$i = 1;
-		foreach ($missing as $row) {
-			$sql .= "(";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".check_str($row['default_setting_category'])."', ";
-			$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-			$sql .= "'".check_str($row['default_setting_name'])."', ";
-			$sql .= "'".check_str($row['default_setting_value'])."', ";
-			$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-			$sql .= "'".check_str($row['default_setting_description'])."' ";
-			$sql .= ")";
-			if ($missing_count != $i) { 
-				$sql .= ",\n";
+		if (count($missing) > 0) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".check_str($row['default_setting_category'])."', ";
+				$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+				$sql .= "'".check_str($row['default_setting_name'])."', ";
+				$sql .= "'".check_str($row['default_setting_value'])."', ";
+				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+				$sql .= "'".check_str($row['default_setting_description'])."' ";
+				$sql .= ")";
+				if ($missing_count != $i) { 
+					$sql .= ",\n";
+				}
+				$i++;
 			}
-			$i++;
+			$db->exec(check_sql($sql));
+			unset($missing);
 		}
-		$db->exec(check_sql($sql));
-		unset($missing);
 
 	//unset the array variable
 		unset($array);

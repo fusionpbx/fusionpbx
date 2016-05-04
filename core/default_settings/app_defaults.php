@@ -86,6 +86,20 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = '';
 		$x++;
 		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'method';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'smtp';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'smtp|sendmail|mail|qmail';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_port';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '0';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'use non-default port if enabled and non-zero';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_from';
 		$array[$x]['default_setting_name'] = 'var';
 		$array[$x]['default_setting_value'] = '';
@@ -123,7 +137,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
 		$array[$x]['default_setting_name'] = 'var';
-		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_value'] = 'tls';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
@@ -316,33 +330,35 @@ if ($domains_processed == 1) {
 		$missing_count = $i;
 
 	//add the missing default settings
-		$sql = "insert into v_default_settings (";
-		$sql .= "default_setting_uuid, ";
-		$sql .= "default_setting_category, ";
-		$sql .= "default_setting_subcategory, ";
-		$sql .= "default_setting_name, ";
-		$sql .= "default_setting_value, ";
-		$sql .= "default_setting_enabled, ";
-		$sql .= "default_setting_description ";
-		$sql .= ") values \n";
-		$i = 1;
-		foreach ($missing as $row) {
-			$sql .= "(";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".check_str($row['default_setting_category'])."', ";
-			$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-			$sql .= "'".check_str($row['default_setting_name'])."', ";
-			$sql .= "'".check_str($row['default_setting_value'])."', ";
-			$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-			$sql .= "'".check_str($row['default_setting_description'])."' ";
-			$sql .= ")";
-			if ($missing_count != $i) { 
-				$sql .= ",\n";
+		if (count($missing) > 0) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".check_str($row['default_setting_category'])."', ";
+				$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+				$sql .= "'".check_str($row['default_setting_name'])."', ";
+				$sql .= "'".check_str($row['default_setting_value'])."', ";
+				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+				$sql .= "'".check_str($row['default_setting_description'])."' ";
+				$sql .= ")";
+				if ($missing_count != $i) { 
+					$sql .= ",\n";
+				}
+				$i++;
 			}
-			$i++;
+			$db->exec(check_sql($sql));
+			unset($missing);
 		}
-		$db->exec(check_sql($sql));
-		unset($missing);
 
 	//move the dynamic provision variables that from v_vars table to v_default_settings
 		if (count($_SESSION['provision']) == 0) {
