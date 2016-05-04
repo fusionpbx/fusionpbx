@@ -1,4 +1,36 @@
 <all>
+	<Privisions>
+		<!-- protocol
+			0 - tftp
+			1 - http
+			2 - ftp
+			3 - https
+		-->
+		<privision
+			PNP="1"
+			AutoPrivisionFlag="1"
+			DHCPOptionFlag="1"
+			DHCPOptionValue="66"
+			protocol="1"
+			Firmware="{$domain_name}{$project_path}/app/provision"
+			username=""
+			password=""
+			Freqency="168"
+			time="24"
+			DownloadBroadsoft="0"
+			DownloadFirmwar="0"
+			DownloadKernel="0"
+			DownloadExtension="1"
+			Downloadconfig="1"
+			DownloadPhonebook="0"
+			DownloadPersonPhonebook="0"
+			Bootingchecked="0"
+			ExtensionNumber=""
+			BootingcheckedMode="0"
+			DownloadFilename="0"
+		/>
+	</Privisions>
+
 	<sipUsers>
 	{foreach $lines as $row}
 		{if $row.line_number neq ""}
