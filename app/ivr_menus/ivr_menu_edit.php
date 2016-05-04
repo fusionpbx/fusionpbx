@@ -250,6 +250,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//clear the cache
 				$cache = new cache;
 				$cache->delete("dialplan:".$_SESSION["context"]);
+				$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
 
 			//redirect the user
 				$_SESSION["message"] = $text['message-update'];
