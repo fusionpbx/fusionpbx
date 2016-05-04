@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-sqldb/usr/share/examples/fusionpbx/resources/install/
-	cp -pr sql debian/fusionpbx-sqldb/usr/share/examples/fusionpbx/resources/install
+	mkdir -p debian/fusionpbx-sqldb/usr/share/examples/fusionpbx/resources/install/sql
+	cp -pr *.sql debian/fusionpbx-sqldb/usr/share/examples/fusionpbx/resources/install/sql
 
 build-indep: build install
 

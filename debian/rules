@@ -61,7 +61,7 @@ install: build
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/storage/voicemail
 	mkdir -p debian/fusionpbx-core/var/www/fusionpbx
 	mkdir -p debian/fusionpbx-core/var/www/fusionpbx/themes
-	cp -pr core resources secure *.php debian/fusionpbx-core/var/www/fusionpbx
+	cp -pr core resources secure *.php .htaccess debian/fusionpbx-core/var/www/fusionpbx
 	
 build-indep: build install
 
