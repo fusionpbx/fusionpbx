@@ -79,6 +79,10 @@
 //includes
 	require('resources/pop3/mime_parser.php');
 	require('resources/pop3/rfc822_addresses.php');
+	
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php")) {
+		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php");
+	}
 
 //parse the email message
 	$mime=new mime_parser_class;
@@ -282,6 +286,13 @@
 
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
+					if (function_exists(get_transcription)) {
+						$attachments_array=$mail->GetAttachments();
+						$transcription=get_transcription($attachments_array[0]);
+						echo "Transcription: " . $transcription;
+					} else {
+						$transcription = '';
+					}
 			}
 		}
 	}
@@ -291,13 +302,13 @@
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
-		$mail->Body = $body;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body."<br><br>".nl2br($transcription);
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 	else {
 		// $mail->Body = ($body != '') ? $body : $body_plain;
-		$mail->Body = $body_plain;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body_plain."\n\n$transcription";
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 
 //send the email
