@@ -524,13 +524,15 @@ function save_var_xml() {
 					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
 				}
 			}
-			if (strlen($row['var_hostname']) == 0 && $row['var_cat'] =='Exec-Set') {
-				$xml .= "<X-PRE-PROCESS cmd=\"exec-set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
-			} elseif (strlen($row['var_hostname']) == 0) {
-				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
-			} elseif ($row['var_hostname'] == $hostname) {
-				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
-			}
+		$varcmd = 'set';
+		if ($row['var_cat'] == 'Exec-Set') {
+				$varcmd = 'exec-set';
+		}
+		if (strlen($row['var_hostname']) == 0) {
+			$xml .= "<X-PRE-PROCESS cmd=\"".$varcmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+		} elseif ($row['var_hostname'] == $hostname) {
+			$xml .= "<X-PRE-PROCESS cmd=\"".$varcmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+		}
 		}
 		$prev_var_cat = $row['var_cat'];
 	}
