@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,11 +30,32 @@ if ($domains_processed == 1) {
 	//define array of settings
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'time_zone';
+		$array[$x]['default_setting_name'] = 'name';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'language';
 		$array[$x]['default_setting_name'] = 'code';
 		$array[$x]['default_setting_value'] = 'en-us';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'bridge';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'outbound';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'outbound,loopback,lcr';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'paging';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '100';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the maximum number of records displayed per page. (Default: 50)';
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_length';
@@ -63,6 +84,20 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'method';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'smtp';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'smtp|sendmail|mail|qmail';
+		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_port';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '0';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'use non-default port if enabled and non-zero';
 		$x++;
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_from';
@@ -102,10 +137,170 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
 		$array[$x]['default_setting_name'] = 'var';
-		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_value'] = 'tls';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_category'] = 'login';
+		$array[$x]['default_setting_subcategory'] = 'password_reset_key';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = generate_password('20', '4');
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Display a Reset Password link on the login box (requires smtp_host be defined).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'login';
+		$array[$x]['default_setting_subcategory'] = 'domain_name_visible';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Displays a domain input or select box (if domain_name array defined) on the login box.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'login';
+		$array[$x]['default_setting_subcategory'] = 'domain_name';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'pbx1.yourdomain.com';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Domain select option displayed on the login box.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'voicemail';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'missed';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'recent';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'limits';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Limits block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'counts';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Counts block for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'call_routing';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'admin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'ring_groups';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the admin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'voicemail';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'missed';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'recent';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'limits';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Limits block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'counts';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard System Counts block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'system';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard System Status block for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'call_routing';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'superadmin';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'ring_groups';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the superadmin group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'voicemail';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'missed';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'recent';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'call_routing';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the users group.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'dashboard';
+		$array[$x]['default_setting_subcategory'] = 'user';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'ring_groups';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the users group.';
 
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
@@ -129,17 +324,41 @@ if ($domains_processed == 1) {
 			$x++;
 		}
 
+	//get the missing count
+		$i = 0;
+		foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
 	//add the missing default settings
-		foreach ($missing as $row) {
-			//add the default settings
-			$orm = new orm;
-			$orm->name('default_settings');
-			$orm->save($row);
-			$message = $orm->message;
-			unset($orm);
-			//print_r($message);
+		if (count($missing) > 0) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".check_str($row['default_setting_category'])."', ";
+				$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+				$sql .= "'".check_str($row['default_setting_name'])."', ";
+				$sql .= "'".check_str($row['default_setting_value'])."', ";
+				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+				$sql .= "'".check_str($row['default_setting_description'])."' ";
+				$sql .= ")";
+				if ($missing_count != $i) { 
+					$sql .= ",\n";
+				}
+				$i++;
+			}
+			$db->exec(check_sql($sql));
+			unset($missing);
 		}
-		unset($missing);
 
 	//move the dynamic provision variables that from v_vars table to v_default_settings
 		if (count($_SESSION['provision']) == 0) {
@@ -357,19 +576,6 @@ if ($domains_processed == 1) {
 			unset($prep_statement, $row);
 		}
 
-	//set the sip_profiles directory for older installs
-		if (isset($_SESSION['switch']['gateways']['dir'])) {
-			$orm = new orm;
-			$orm->name('default_settings');
-			$orm->uuid($_SESSION['switch']['gateways']['uuid']);
-			$array['default_setting_category'] = 'switch';
-			$array['default_setting_subcategory'] = 'sip_profiles';
-			$array['default_setting_name'] = 'dir';
-			//$array['default_setting_value'] = '';
-			//$array['default_setting_enabled'] = 'true';
-			$orm->save($array);
-			unset($array);
-		}
 }
 
 ?>

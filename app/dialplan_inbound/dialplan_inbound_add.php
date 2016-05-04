@@ -145,12 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
 	//set the context
-		if (count($_SESSION["domains"]) > 1) {
-			$context = 'default';
-		}
-		else {
-			$context = '$${domain_name}';
-		}
+		$context = '$${domain_name}';
 
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
@@ -180,33 +175,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'public', ";
 		$sql .= "'$dialplan_enabled', ";
 		$sql .= "'$dialplan_description' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
-
-	//add condition public context
-		$dialplan_detail_uuid = uuid();
-		$sql = "insert into v_dialplan_details ";
-		$sql .= "(";
-		$sql .= "domain_uuid, ";
-		$sql .= "dialplan_uuid, ";
-		$sql .= "dialplan_detail_uuid, ";
-		$sql .= "dialplan_detail_tag, ";
-		$sql .= "dialplan_detail_type, ";
-		$sql .= "dialplan_detail_data, ";
-		$sql .= "dialplan_detail_group, ";
-		$sql .= "dialplan_detail_order ";
-		$sql .= ") ";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'$domain_uuid', ";
-		$sql .= "'$dialplan_uuid', ";
-		$sql .= "'$dialplan_detail_uuid', ";
-		$sql .= "'condition', ";
-		$sql .= "'context', ";
-		$sql .= "'public', ";
-		$sql .= "'0', ";
-		$sql .= "'10' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
@@ -749,32 +717,31 @@ $destination = new destinations;
 ?>
 
 <script type="text/javascript">
-<!--
 	function type_onchange(dialplan_detail_type) {
-	var field_value = document.getElementById(dialplan_detail_type).value;
-	if (dialplan_detail_type == "condition_field_1") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "expression: 5551231234";
+		var field_value = document.getElementById(dialplan_detail_type).value;
+		if (dialplan_detail_type == "condition_field_1") {
+			if (field_value == "destination_number") {
+				document.getElementById("desc_condition_expression_1").innerHTML = "expression: 5551231234";
+			}
+			else if (field_value == "zzz") {
+				document.getElementById("desc_condition_expression_1").innerHTML = "";
+			}
+			else {
+				document.getElementById("desc_condition_expression_1").innerHTML = "";
+			}
 		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
+		if (dialplan_detail_type == "condition_field_2") {
+			if (field_value == "destination_number") {
+				document.getElementById("desc_condition_expression_2").innerHTML = "expression: 5551231234";
+			}
+			else if (field_value == "zzz") {
+				document.getElementById("desc_condition_expression_2").innerHTML = "";
+			}
+			else {
+				document.getElementById("desc_condition_expression_2").innerHTML = "";
+			}
 		}
 	}
-	if (dialplan_detail_type == "condition_field_2") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "expression: 5551231234";
-		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-	}
--->
 </script>
 
 <?php
@@ -811,10 +778,10 @@ $destination = new destinations;
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."<br />\n";

@@ -11,10 +11,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //get the id
 	if (count($_GET)>0) {
@@ -29,10 +27,11 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
+		remove_config_from_cache('configuration:acl.conf');
 	}
 
 //redirect the user
 	$_SESSION['message'] = $text['message-delete'];
-	header('Location: access_control_node_edit.php?id='.$access_control_uuid);
+	header('Location: access_control_edit.php?id='.$access_control_uuid);
 
 ?>

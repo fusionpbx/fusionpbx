@@ -2,9 +2,9 @@
 
 	$apps[$x]['menu'][0]['title']['en-us'] = "Follow Me";
 	$apps[$x]['menu'][0]['title']['es-mx'] = "Sígueme";
-	$apps[$x]['menu'][0]['title']['de-de'] = "";
-	$apps[$x]['menu'][0]['title']['de-ch'] = "";
-	$apps[$x]['menu'][0]['title']['de-at'] = "";
+	$apps[$x]['menu'][0]['title']['de-de'] = "Follow Me";
+	$apps[$x]['menu'][0]['title']['de-ch'] = "Follow Me";
+	$apps[$x]['menu'][0]['title']['de-at'] = "Follow Me";
 	$apps[$x]['menu'][0]['title']['fr-fr'] = "Follow Me";
 	$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 	$apps[$x]['menu'][0]['title']['fr-ch'] = "";

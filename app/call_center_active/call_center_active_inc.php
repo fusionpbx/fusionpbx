@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,18 +45,21 @@ else {
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
-		$result = '';
 		if (trim(strtoupper($tmp_array[0])) != "+OK") {
 			$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 			$x = 0;
-			foreach ($tmp_array as $row) {
+			if (isset($tmp_array)) foreach ($tmp_array as $row) {
 				if ($x > 0) {
 					$tmp_field_value_array = explode ($tmp_delimiter, $tmp_array[$x]);
 					$y = 0;
-					foreach ($tmp_field_value_array as $tmp_value) {
+					if (isset($tmp_field_value_array)) foreach ($tmp_field_value_array as $tmp_value) {
 						$tmp_name = $tmp_field_name_array[$y];
 						if (trim(strtoupper($tmp_value)) != "+OK") {
 							$result[$x][$tmp_name] = $tmp_value;
+							return $result;
+						}
+						else {
+							return false;
 						}
 						$y++;
 					}
@@ -65,7 +68,6 @@ else {
 			}
 			unset($row);
 		}
-		return $result;
 	}
 
 //alternate the color of the row
@@ -106,7 +108,7 @@ else {
 
 			//prepare the result for array_multisort
 				$x = 0;
-				foreach ($result as $row) {
+				if (isset($result)) foreach ($result as $row) {
 					$tier_result[$x]['level'] = $row['level'];
 					$tier_result[$x]['position'] = $row['position'];
 					$tier_result[$x]['agent'] = $row['agent'];
@@ -116,7 +118,7 @@ else {
 				}
 
 			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING
-				array_multisort($tier_result, SORT_ASC);
+				if (isset($tier_result)) { array_multisort($tier_result, SORT_ASC); }
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
@@ -141,7 +143,7 @@ else {
 					echo "<th>".$text['label-options']."</th>\n";
 				}
 				echo "</tr>\n";
-				foreach ($tier_result as $tier_row) {
+				if (isset($tier_result)) foreach ($tier_result as $tier_row) {
 					//$queue = $tier_row['queue'];
 					//$queue = str_replace('@'.$_SESSION['domain_name'], '', $queue);
 					$agent = $tier_row['agent'];
@@ -150,7 +152,7 @@ else {
 					$tier_level = $tier_row['level'];
 					$tier_position = $tier_row['position'];
 
-					foreach ($agent_result as $agent_row) {
+					if (isset($agent_result)) foreach ($agent_result as $agent_row) {
 						if ($tier_row['agent'] == $agent_row['name']) {
 							$name = $agent_row['name'];
 							$name = str_replace('@'.$_SESSION['domain_name'], '', $name);
@@ -261,7 +263,7 @@ else {
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "	<td align='right' valign='top'>";
-				foreach ($result as $row) {
+				if (isset($result)) foreach ($result as $row) {
 					$state = $row['state'];
 					$q_trying += ($state == "Trying") ? 1 : 0;
 					$q_waiting += ($state == "Waiting") ? 1 : 0;
@@ -288,7 +290,7 @@ else {
 			echo "<th>".$text['label-agent']."</th>\n";
 			echo "</tr>\n";
 
-			foreach ($result as $row) {
+			if (isset($result)) foreach ($result as $row) {
 				$queue = $row['queue'];
 				$system = $row['system'];
 				$uuid = $row['uuid'];
@@ -354,7 +356,6 @@ else {
 			echo "<br />\n";
 			echo "<br />\n";
 			echo "<br />\n";
-
-
 	}
+
 ?>

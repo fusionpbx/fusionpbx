@@ -129,7 +129,11 @@
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
 <Resync_Trigger_2 group="Provisioning/Configuration_Profile" />
 <Resync_Fails_On_FNF group="Provisioning/Configuration_Profile">Yes</Resync_Fails_On_FNF>
+{if isset ($http_auth_username)}
+<Profile_Rule group="Provisioning/Configuration_Profile">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
 <Profile_Rule group="Provisioning/Configuration_Profile">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
 <Profile_Rule_B group="Provisioning/Configuration_Profile" />
 <Profile_Rule_C group="Provisioning/Configuration_Profile" />
 <Profile_Rule_D group="Provisioning/Configuration_Profile" />

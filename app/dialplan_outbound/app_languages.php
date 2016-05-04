@@ -7,13 +7,6 @@ $text['title-dialplan-outbound-add']['fr-fr'] = "Routage d'appel sortant";
 $text['title-dialplan-outbound-add']['pl'] = "Przesyłanie (routing) rozmów wychodzących.";
 $text['title-dialplan-outbound-add']['uk'] = "Маршрутизація вихідних дзвінків";
 
-$text['message-update']['en-us'] = "Update Complete";
-$text['message-update']['es-cl'] = "Actualización Completa";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "Оновлення завершено";
-
 $text['message-provide']['en-us'] = "Please Provide";
 $text['message-provide']['es-cl'] = "Por favor indique";
 $text['message-provide']['pt-pt'] = "Por favor indique";
@@ -42,13 +35,6 @@ $text['message-add-options']['fr-fr'] = "Choisir la passerelle utilisée par cet
 $text['message-add-options']['pl'] = "Wybierz Bramę Wyjściową przez którą zostanie przesłana rozmowa wychodząca.";
 $text['message-add-options']['uk'] = "Виберіть шлюз для цього вихідного маршруту";
 
-$text['label-true']['en-us'] = "True";
-$text['label-true']['es-cl'] = "Verdadero";
-$text['label-true']['pt-pt'] = "Sim";
-$text['label-true']['fr-fr'] = "Oui";
-$text['label-true']['pl'] = "Tak";
-$text['label-true']['uk'] = "Так";
-
 $text['label-toll_allow']['en-us'] = "Toll allow";
 $text['label-toll_allow']['es-cl'] = "Permitir Tarifas Especiales";
 $text['label-toll_allow']['pt-pt'] = "Permissões";
@@ -76,13 +62,6 @@ $text['label-outbound-routes']['pt-pt'] = "Rotas de Saída";
 $text['label-outbound-routes']['fr-fr'] = "Routes Sortantes";
 $text['label-outbound-routes']['pl'] = "Trasy wyjściowe";
 $text['label-outbound-routes']['uk'] = "Вихідні маршрути";
-
-$text['label-order']['en-us'] = "Order";
-$text['label-order']['es-cl'] = "Orden";
-$text['label-order']['pt-pt'] = "Ordem";
-$text['label-order']['fr-fr'] = "Ordre";
-$text['label-order']['pl'] = "Kolejność";
-$text['label-order']['uk'] = "Інше";
 
 $text['label-north-america-intl']['en-us'] = "North America International";
 $text['label-north-america-intl']['es-cl'] = "America del Norte Internacional";
@@ -126,13 +105,6 @@ $text['label-gateway']['fr-fr'] = "Passerelle";
 $text['label-gateway']['pl'] = "Brama wyjściowa";
 $text['label-gateway']['uk'] = "Шлюз";
 
-$text['label-false']['en-us'] = "False";
-$text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "Não";
-$text['label-false']['fr-fr'] = "Non";
-$text['label-false']['pl'] = "Nie";
-$text['label-false']['uk'] = "Ні";
-
 $text['label-europe-intl']['en-us'] = "Europe International";
 $text['label-europe-intl']['es-cl'] = "Europa Internacional";
 $text['label-europe-intl']['pt-pt'] = "Europa Internacional";
@@ -140,26 +112,12 @@ $text['label-europe-intl']['fr-fr'] = "Europe International";
 $text['label-europe-intl']['pl'] = "Europa międzynarodowy";
 $text['label-europe-intl']['uk'] = "Європа (міжнародний)";
 
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activo";
-$text['label-enabled']['pt-pt'] = "Habilitado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pl'] = "Numer wew włączony?";
-$text['label-enabled']['uk'] = "Включено";
-
 $text['label-dialplan-expression']['en-us'] = "Dialplan Expression";
 $text['label-dialplan-expression']['es-cl'] = "Expresión de plan de marcado";
 $text['label-dialplan-expression']['pt-pt'] = "Expressão do dialplan";
 $text['label-dialplan-expression']['fr-fr'] = "Expression du Plan de numérotation";
 $text['label-dialplan-expression']['pl'] = "Wyrażenie dialplanu";
 $text['label-dialplan-expression']['uk'] = "Вираз маршрутизації";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['uk'] = "Опис";
 
 $text['label-custom-outbound-prefix']['en-us'] = "Dial custom prefix, then Digits";
 $text['label-custom-outbound-prefix']['es-cl'] = "Marcar prefijo personalizados, luego Dígitos";
@@ -433,39 +391,11 @@ $text['description-enable-toll_allow']['fr-fr'] = "Choisir Oui pour activer droi
 $text['description-enable-toll_allow']['pl'] = "Wybierz TAK aby zezwolić na połaczenia specjalne (toll-free).";
 $text['description-enable-toll_allow']['uk'] = "Встановіть 'Так' щоб дозволити номери TOLL";
 
-$text['description-description']['en-us'] = "Enter a description for the outbound route.";
-$text['description-description']['es-cl'] = "Ingrese una descripción para la ruta de salida.";
-$text['description-description']['pt-pt'] = "Introduza uma descrição para a rota de saída.";
-$text['description-description']['fr-fr'] = "";
-$text['description-description']['pl'] = "Wprowadź opis trasy wyjściowej.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
 $text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.";
 $text['description-accountcode']['pt-pt'] = "Introduza a conta.";
 $text['description-accountcode']['fr-fr'] = "";
 $text['description-accountcode']['pl'] = "Wpisz numer billingowy (nagłówek dodany do SIP INVITE).";
 $text['description-accountcode']['uk'] = "Введіть код облікового запису";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['uk'] = "Зберегти";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['uk'] = "Назад";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['uk'] = "Додати";
 
 ?>

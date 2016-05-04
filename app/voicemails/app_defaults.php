@@ -48,11 +48,17 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Define whether to keep voicemail files on the local system after sending attached via email.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'storage_type';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'base64';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Define which storage type (base_64 stores in the database).';
+		$x++;
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
-
-		//add the default setting
+			//add the default setting
 			$sql = "select count(*) as num_rows from v_default_settings ";
 			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
 			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
@@ -71,8 +77,22 @@ if ($domains_processed == 1) {
 				}
 				unset($row);
 			}
-
 		}
+
+	//add that the directory structure for voicemail each domain and voicemail id is
+		$sql = "select d.domain_name, v.voicemail_id ";
+		$sql .= "from v_domains as d, v_voicemails as v ";
+		$sql .= "where v.domain_uuid = d.domain_uuid ";
+		$prep_statement = $db->prepare($sql);
+		$prep_statement->execute();
+		$voicemails = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($voicemails as $row) {
+			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$row['domain_name'].'/'.$row['voicemail_id'];
+			if (!file_exists($path)) {
+				mkdir($path, 0777, true);
+			}
+		}
+		unset ($prep_statement, $sql);
 
 }
 

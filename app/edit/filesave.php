@@ -39,17 +39,34 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-$filename = $_POST["file"]; //filename with the path
-$filename = str_replace ("\\", "/", $filename);
-$content = $_POST["content"];
+	$filepath = $_POST["filepath"];
+	if ($filepath != '') {
 
-$handle = fopen($filename, 'wb') or die($text['message-error']);
-fwrite($handle, $content);
-fclose($handle);
+		try {
+			//save file content
+				$filepath = realpath($filepath); //filepath
+				$filepath = str_replace ('//', '/', $filepath);
+				$filepath = str_replace ("\\", "/", $filepath);
+				$content = $_POST["content"];
 
-//set the reload_xml value to true
-	$_SESSION["reload_xml"] = true;
+				$handle = fopen($filepath, 'wb');
+				if (!$handle) {
+					throw new Exception('Write Failed - Check File Owner & Permissions');
+				}
+				fwrite($handle, $content);
+				fclose($handle);
 
-echo $content;
+			//set the reload_xml value to true
+				$_SESSION["reload_xml"] = true;
+
+			//alert user of success
+				echo "<script>alert('Changes Saved'); parent.focus_editor();</script>";
+		}
+		catch(Exception $e) {
+		  //alert error
+		  echo "<script>alert('".$e->getMessage()."'); parent.focus_editor();</script>";
+		}
+
+	}
 
 ?>

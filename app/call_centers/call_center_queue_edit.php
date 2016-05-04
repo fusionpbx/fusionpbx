@@ -255,8 +255,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-			//syncrhonize the configuration
+			//synchronize the configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			//delete the dialplan context from memcache
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -265,7 +266,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-			$_SESSION["message"] = $text['message-add'];
+			//set the message
+				$_SESSION["message"] = $text['message-add'];
 		} //if ($action == "add")
 
 		if ($action == "update") {
@@ -310,22 +312,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				unset ($prep_statement);
 
-			//dialplan add or update
-				$c = new call_center;
-				$c->db = $db;
-				$c->domain_uuid = $_SESSION['domain_uuid'];
-				$c->call_center_queue_uuid = $call_center_queue_uuid;
-				$c->dialplan_uuid = $dialplan_uuid;
-				$c->queue_name = $queue_name;
-				$c->queue_name = $queue_name;
-				$c->queue_cid_prefix = $queue_cid_prefix;
-				$c->queue_timeout_action = $queue_timeout_action;
-				$c->queue_description = $queue_description;
-				$c->destination_number = $queue_extension;
-				$a = $c->dialplan();
-
 			//synchronize the configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 
 			//clear the cache
 				$cache = new cache;
@@ -334,6 +323,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//set the update message
 				$_SESSION["message"] = $text['message-update'];
 		} //if ($action == "update")
+
+	//dialplan add or update
+		$c = new call_center;
+		$c->db = $db;
+		$c->domain_uuid = $_SESSION['domain_uuid'];
+		$c->call_center_queue_uuid = $call_center_queue_uuid;
+		$c->dialplan_uuid = $dialplan_uuid;
+		$c->queue_name = $queue_name;
+		$c->queue_name = $queue_name;
+		$c->queue_cid_prefix = $queue_cid_prefix;
+		$c->queue_timeout_action = $queue_timeout_action;
+		$c->queue_description = $queue_description;
+		$c->destination_number = $queue_extension;
+		$a = $c->dialplan();
 
 	//add agent/tier to queue
 		$agent_name = check_str($_POST["agent_name"]);
@@ -393,11 +396,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//syncrhonize configuration
 				save_call_center_xml();
+				remove_config_from_cache('configuration:callcenter.conf');
 		}
 
 		//redirect
-			header("Location: call_center_queue_edit.php?id=".$call_center_queue_uuid);
-			return;
+		header("Location: call_center_queue_edit.php?id=".$call_center_queue_uuid);
+		return;
 
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -736,7 +740,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$record_ext=($_SESSION['record_ext']=='mp3'?'mp3':'wav');
-	$record_template = $_SESSION['switch']['recordings']['dir']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.".$record_ext;
+	$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.".$record_ext;
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	if (strlen($queue_record_template) > 0) {
 		echo "	<option value='$record_template' selected='selected' >".$text['option-true']."</option>\n";

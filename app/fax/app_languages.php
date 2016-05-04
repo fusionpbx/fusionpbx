@@ -1,6 +1,6 @@
 <?php
 
-$text['title-fax']['en-us'] = "Fax Server";
+$text['title-fax']['en-us'] = "Fax Servers";
 $text['title-fax']['es-cl'] = "Servidor de Fax";
 $text['title-fax']['pt-pt'] = "Servidor de Fax";
 $text['title-fax']['fr-fr'] = "Serveur de Fax";
@@ -154,28 +154,6 @@ $text['option-false']['de-at'] = "Aus";
 $text['option-false']['ro'] = "";
 $text['option-false']['he'] = "";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Finalizada";
-$text['message-update']['pt-pt'] = "Atualização Concluída";
-$text['message-update']['fr-fr'] = "Mise à Jour Terminée";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-$text['message-update']['ro'] = "Actualizare completă";
-$text['message-update']['he'] = "עידכון הושלם";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Sírvanse proporcionar: ";
-$text['message-required']['pt-pt'] = "Por favor, forneça: ";
-$text['message-required']['fr-fr'] = "Se il vous plaît fournir: ";
-$text['message-required']['pt-br'] = "Por favor Indique:";
-$text['message-required']['pl'] = "Wprowadź:";
-$text['message-required']['sv-se'] = "Var god uppge:";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
-$text['message-required']['ro'] = "Vă rog introduceți:";
-$text['message-required']['he'] = "";
-
 $text['message-no_faxes_found']['en-us'] = "No Faxes Found";
 $text['message-no_faxes_found']['es-cl'] = "No Hay Faxes Encontrados";
 $text['message-no_faxes_found']['pt-pt'] = "Não Faxes Encontrado";
@@ -198,28 +176,6 @@ $text['message-invalid-fax']['de-at'] = "Ungültiges Fax - Bitte geben Sie eine 
 $text['message-invalid-fax']['ro'] = "Fax invalid - Vă rog introduceți un mesaj sau selectați un fișier pentru a fi trimis.";
 $text['message-invalid-fax']['he'] = "";
 
-$text['message-delete_failed']['en-us'] = "Delete Failed";
-$text['message-delete_failed']['es-cl'] = "Eliminar Error";
-$text['message-delete_failed']['pt-pt'] = "Falha na exclusão";
-$text['message-delete_failed']['fr-fr'] = "Echec de la suppression";
-$text['message-delete_failed']['pt-br'] = "Falha na exclusão";
-$text['message-delete_failed']['pl'] = "Próba usunięcia zakończyła się niepowodzeniem";
-$text['message-delete_failed']['sv-se'] = "Borttagning Misslyckades";
-$text['message-delete_failed']['de-at'] = "Löschen fehlgeschlagen";
-$text['message-delete_failed']['ro'] = "Ștergere eșuată";
-$text['message-delete_failed']['he'] = "";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['message-delete']['ro'] = "Ștergere completă";
-$text['message-delete']['he'] = "";
-
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
 $text['message-cannot_connect']['es-cl'] = "Error de Conexión";
 $text['message-cannot_connect']['pt-pt'] = "Falha na Conexão";
@@ -230,17 +186,6 @@ $text['message-cannot_connect']['sv-se'] = "Connection Misslyckades";
 $text['message-cannot_connect']['de-at'] = "Verbindung fehlgeschlagen";
 $text['message-cannot_connect']['ro'] = "Conexiune eșuată";
 $text['message-cannot_connect']['he'] = "";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Añadir Completado";
-$text['message-add']['pt-pt'] = "Adicionar Concluído";
-$text['message-add']['fr-fr'] = "Ajouter Terminé";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-$text['message-add']['ro'] = "Adăugare completă";
-$text['message-add']['he'] = "הוספה הושלמה";
 
 $text['label-user-list']['en-us'] = "User List";
 $text['label-user-list']['es-cl'] = "Lista de usuarios";
@@ -308,17 +253,6 @@ $text['label-new']['de-at'] = "Neu";
 $text['label-new']['ro'] = "Nou";
 $text['label-new']['he'] = "חדש";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['ro'] = "Nume";
-$text['label-name']['he'] = "שם";
-
 $text['label-log']['en-us'] = "Log";
 $text['label-log']['es-cl'] = "Log";
 $text['label-log']['pt-pt'] = "Log";
@@ -329,6 +263,17 @@ $text['label-log']['sv-se'] = "Log";
 $text['label-log']['de-at'] = "Log";
 $text['label-log']['ro'] = "Log";
 $text['label-log']['he'] = "";
+
+$text['label-active']['en-us'] = "Active";
+$text['label-active']['es-cl'] = "";
+$text['label-active']['pt-pt'] = "";
+$text['label-active']['fr-fr'] = "";
+$text['label-active']['pt-br'] = "";
+$text['label-active']['pl'] = "";
+$text['label-active']['sv-se'] = "";
+$text['label-active']['de-at'] = "";
+$text['label-active']['ro'] = "";
+$text['label-active']['he'] = "";
 
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['es-cl'] = "Localización";
@@ -1056,17 +1001,6 @@ $text['label-destination-number']['de-at'] = "Ziel Nummer";
 $text['label-destination-number']['ro'] = "Număr destinație";
 $text['label-destination-number']['he'] = "מספר יעד";
 
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['ro'] = "Descriere";
-$text['label-description']['he'] = "תיאור";
-
 $text['label-caller-id-number']['en-us'] = "Caller ID Number";
 $text['label-caller-id-number']['es-cl'] = "Número de Caller ID";
 $text['label-caller-id-number']['pt-pt'] = "Número do Originador";
@@ -1110,6 +1044,28 @@ $text['label-accountcode']['sv-se'] = "Kontokod";
 $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['he'] = "קוד חשבון";
+
+$text['label-fax_send_greeting']['en-us'] = "Greeting";
+$text['label-fax_send_greeting']['es-cl'] = "";
+$text['label-fax_send_greeting']['pt-pt'] = "";
+$text['label-fax_send_greeting']['fr-fr'] = "";
+$text['label-fax_send_greeting']['pt-br'] = "";
+$text['label-fax_send_greeting']['pl'] = "";
+$text['label-fax_send_greeting']['sv-se'] = "";
+$text['label-fax_send_greeting']['de-at'] = "";
+$text['label-fax_send_greeting']['ro'] = "";
+$text['label-fax_send_greeting']['he'] = "";
+
+$text['label-fax_send_channels']['en-us'] = "Number of channels";
+$text['label-fax_send_channels']['es-cl'] = "";
+$text['label-fax_send_channels']['pt-pt'] = "";
+$text['label-fax_send_channels']['fr-fr'] = "";
+$text['label-fax_send_channels']['pt-br'] = "";
+$text['label-fax_send_channels']['pl'] = "";
+$text['label-fax_send_channels']['sv-se'] = "";
+$text['label-fax_send_channels']['de-at'] = "";
+$text['label-fax_send_channels']['ro'] = "";
+$text['label-fax_send_channels']['he'] = "";
 
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['es-cl'] = "Los Faxes Enviados";
@@ -1870,17 +1826,6 @@ $text['confirm-ext']['de-at'] = "Bitte geben Sie eine Nebenstelle an.";
 $text['confirm-ext']['ro'] = "";
 $text['confirm-ext']['he'] = "";
 
-$text['confirm-delete']['en-us'] = "Are you sure you want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen radera detta?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-$text['confirm-delete']['ro'] = "";
-$text['confirm-delete']['he'] = "";
-
 $text['confirm-copy-info']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy-info']['es-cl'] = "¿Desea realmente copiar esto?";
 $text['confirm-copy-info']['pt-pt'] = "Deseja realmente copiar isto?";
@@ -1936,28 +1881,6 @@ $text['button-send']['de-at'] = "Senden";
 $text['button-send']['ro'] = "Trimite";
 $text['button-send']['he'] = "נשלח";
 
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['de-at'] = "Speichern";
-$text['button-save']['ro'] = "Salvează";
-$text['button-save']['he'] = "שמור";
-
-$text['button-refresh']['en-us'] = "Refresh";
-$text['button-refresh']['es-cl'] = "Actualizar";
-$text['button-refresh']['pt-pt'] = "Actualizar";
-$text['button-refresh']['fr-fr'] = "rafraîchir";
-$text['button-refresh']['pt-br'] = "Atualizar";
-$text['button-refresh']['pl'] = "Odśwież";
-$text['button-refresh']['sv-se'] = "Uppdatera";
-$text['button-refresh']['de-at'] = "Aktualisieren";
-$text['button-refresh']['ro'] = "Reîmprospătare";
-$text['button-refresh']['he'] = "רענן";
-
 $text['button-preview']['en-us'] = "Preview";
 $text['button-preview']['es-cl'] = "Prevista";
 $text['button-preview']['pt-pt'] = "Pré-Visualização";
@@ -1969,81 +1892,38 @@ $text['button-preview']['de-at'] = "Vorschau";
 $text['button-preview']['ro'] = "Previzualizare";
 $text['button-preview']['he'] = "תצוגה מקדימה";
 
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['ro'] = "Editare";
-$text['button-edit']['he'] = "עריכה";
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+$text['button-show_all']['pt-br'] = "Mostrar Todos";
+$text['button-show_all']['pl'] = "Pokaż Wszystkie";
+$text['button-show_all']['uk'] = "Показати всі";
+$text['button-show_all']['de-at'] = "Alle anzeigen";
+$text['button-show_all']['he'] = "";
 
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['ro'] = "Șterge";
-$text['button-delete']['he'] = "מחיקה";
+$text['fax-active_title']['en-us'] = "Fax queue";
 
-$text['button-copy']['en-us'] = "Copy";
-$text['button-copy']['es-cl'] = "Copiar";
-$text['button-copy']['pt-pt'] = "Copiar";
-$text['button-copy']['fr-fr'] = "Copier";
-$text['button-copy']['pt-br'] = "Copiar";
-$text['button-copy']['pl'] = "Kopiuj";
-$text['button-copy']['sv-se'] = "Kopiera";
-$text['button-copy']['de-at'] = "Kopieren";
-$text['button-copy']['ro'] = "Copiază";
-$text['button-copy']['he'] = "העתקה";
+$text['fax-active_description']['en-us'] = "Current status of fax queue";
 
-$text['button-clear']['en-us'] = "Clear";
-$text['button-clear']['es-cl'] = "Limpiar";
-$text['button-clear']['pt-pt'] = "Apagar";
-$text['button-clear']['fr-fr'] = "Nettoyer";
-$text['button-clear']['pt-br'] = "Claro";
-$text['button-clear']['pl'] = "Wyczyść";
-$text['button-clear']['sv-se'] = "Rensa";
-$text['button-clear']['de-at'] = "Zurücksetzen";
-$text['button-clear']['ro'] = "Curătă";
-$text['button-clear']['he'] = "נקה";
+$text['fax-active_title_fax_server']['en-us'] = "Fax";
 
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['ro'] = "Înapoi";
-$text['button-back']['he'] = "חזרה";
+$text['fax-active_title_enabled']['en-us'] = "Enabled";
 
-$text['button-advanced']['en-us'] = "Advanced";
-$text['button-advanced']['es-cl'] = "Avanzado";
-$text['button-advanced']['pt-pt'] = "Avançadas";
-$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
-$text['button-advanced']['pt-br'] = "Avançar";
-$text['button-advanced']['pl'] = "Zaawansowane";
-$text['button-advanced']['sv-se'] = "Avancerat";
-$text['button-advanced']['de-at'] = "Erweitert";
-$text['button-advanced']['ro'] = "Avansat";
-$text['button-advanced']['he'] = "מתקדם";
+$text['fax-active_title_status']['en-us'] = "Status";
 
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['de-at'] = "Hinzufügen";
-$text['button-add']['ro'] = "Adaugă";
-$text['button-add']['he'] = "הוספה";
+$text['fax-active_title_next_time']['en-us'] = "Next time";
+
+$text['fax-active_title_files']['en-us'] = "Files";
+
+$text['fax-active_title_uri']['en-us'] = "URI";
+
+$text['fax-active_status_wait']['en-us'] = "Wait";
+
+$text['fax-active_status_execute']['en-us'] = "Execute";
+
+$text['fax-active_status_success']['en-us'] = "Success";
+
+$text['fax-active_status_fail']['en-us'] = "Fail";
 
 ?>

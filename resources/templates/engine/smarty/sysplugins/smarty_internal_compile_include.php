@@ -81,7 +81,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
                 $_parent_scope = Smarty::SCOPE_GLOBAL;
             }
         }
-        
+
         $_caching = Smarty::CACHING_OFF;
 
         // flag if included template code should be merged into caller

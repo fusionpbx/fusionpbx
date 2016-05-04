@@ -61,7 +61,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 50;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "&id=".$fax_uuid."&order_by=".$order_by."&order=".$order;
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }

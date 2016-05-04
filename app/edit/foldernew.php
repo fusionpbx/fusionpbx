@@ -56,7 +56,7 @@ else { //display form
 	echo "<table>";
 	echo "	<tr>";
 	echo "		<td>".$text['label-path']."</td>";
-	echo "	</tr>";   
+	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td>".$folder."</td>";
 	echo "	</tr>";
@@ -76,7 +76,7 @@ else { //display form
 	echo "	<tr>";
 	echo "		<td colspan='1' align='right'>";
 	echo "      <input type='hidden' name='folder' value='$folder'>";
-	echo "		  <input type='submit' value='".$text['button-new-folder']."'>";
+	echo "		  <input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-new-folder']."'>";
 	echo "    </td>";
 	echo "	</tr>";
 	echo "</table>";

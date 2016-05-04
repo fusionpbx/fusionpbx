@@ -66,59 +66,11 @@ $text['option-action']['pt-pt'] = "Acção";
 $text['option-action']['fr-fr'] = "Action";
 $text['option-action']['pl'] = "Operacja";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Por favor ingrese: ";
-$text['message-required']['pt-pt'] = "Por favor indique: ";
-$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-$text['message-required']['pl'] = "Wpisz:";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pl'] = "Dodano poprawnie";
-
-$text['label-value']['en-us'] = "Value";
-$text['label-value']['es-cl'] = "Valor";
-$text['label-value']['pt-pt'] = "Valor";
-$text['label-value']['fr-fr'] = "Valeur";
-$text['label-value']['pl'] = "Wartość";
-
-$text['label-type']['en-us'] = "Type";
-$text['label-type']['es-cl'] = "Tipo";
-$text['label-type']['pt-pt'] = "Tipo";
-$text['label-type']['fr-fr'] = "Type";
-$text['label-type']['pl'] = "Typ";
-
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['es-cl'] = "Etiqueta";
 $text['label-tag']['pt-pt'] = "Tag";
 $text['label-tag']['fr-fr'] = "Tag";
 $text['label-tag']['pl'] = "Tag";
-
-$text['label-order']['en-us'] = "Order";
-$text['label-order']['es-cl'] = "Orden";
-$text['label-order']['pt-pt'] = "Ordem";
-$text['label-order']['fr-fr'] = "Ordre";
-$text['label-order']['pl'] = "Kolejność";
-
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pl'] = "Nazwa";
 
 $text['label-field']['en-us'] = "Field";
 $text['label-field']['es-cl'] = "Campo";
@@ -137,18 +89,6 @@ $text['label-expression']['es-cl'] = "Expresión";
 $text['label-expression']['pt-pt'] = "Expressão";
 $text['label-expression']['fr-fr'] = "Expression";
 $text['label-expression']['pl'] = "Wyrażenie";
-
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activado";
-$text['label-enabled']['pt-pt'] = "Habilitado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pl'] = "Kolejka włączona?";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pl'] = "Opis";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -281,41 +221,5 @@ $text['description-agent_loginout_extension']['es-cl'] = "Los agentes usan este 
 $text['description-agent_loginout_extension']['pt-pt'] = "Os agentes utilizam este número de extensão para entrarem ou sairem da fila. Depois desta configuração o agente receberá chamadas com destino a esta fila.";
 $text['description-agent_loginout_extension']['fr-fr'] = "Numéro utilisé par l'agent pour se connecter/déconnecter de la queue. Après s'être connecté, l'agent sera prêt à recevoir des les appels de la queue.";
 $text['description-agent_loginout_extension']['pl'] = "Agenci używają numeru wew aby się zalogować lub wylogować z kolejki. Po zalogowaniu agent jest gotowy do odbierania rozmów.";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Desja realmente remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment faire cela?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pl'] = "Zachowaj";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pl'] = "Edytuj";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pl'] = "Usuń";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pl'] = "Wróć";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pl'] = "Dodaj";
 
 ?>

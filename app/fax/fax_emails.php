@@ -28,7 +28,8 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
-require_once "resources/functions/parse_attachments.php";
+require_once "resources/functions/parse_message.php";
+require_once "resources/classes/text.php";
 
 //get accounts to monitor
 $sql = "select * from v_fax ";
@@ -38,6 +39,17 @@ $prep_statement = $db->prepare(check_sql($sql));
 $prep_statement->execute();
 $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 unset($sql, $prep_statement);
+
+function arr_to_map(&$arr){
+	if(is_array($arr)){
+		$map = Array();
+		foreach($arr as &$val){
+			$map[$val] = true;
+		}
+		return $map;
+	}
+	return false;
+}
 
 if (sizeof($result) != 0) {
 
@@ -53,6 +65,18 @@ if (sizeof($result) != 0) {
 	$event_socket['port'] = $record['event_socket_port'];
 	$event_socket['password'] = $record['event_socket_password'];
 	unset($sql, $prep_statement, $record);
+
+	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
+	if(strlen($fax_send_mode_default) == 0){
+		$fax_send_mode_default = 'direct';
+	}
+	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
+
+	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
+	if($fax_allowed_extension_default == false){
+		$tmp = Array('.pdf', '.tiff', '.tif');
+		$fax_allowed_extension_default = arr_to_map($tmp);
+	}
 
 	foreach ($result as $row) {
 		//get fax server and account connection details
@@ -73,11 +97,27 @@ if (sizeof($result) != 0) {
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
+		$fax_send_greeting = $row["fax_send_greeting"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
+
+		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
+		if(strlen($fax_send_mode) == 0){
+			$fax_send_mode = $fax_send_mode_default;
+		}
+
+		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
+		if(strlen($fax_cover_font) == 0){
+			$fax_cover_font = $fax_cover_font_default;
+		}
+
+		$fax_allowed_extension = arr_to_map($_SESSION['fax']['allowed_extension']);
+		if($fax_allowed_extension == false){
+			$fax_allowed_extension = $fax_allowed_extension_default;
+		}
 
 		//load event socket connection parameters
 		$_SESSION['event_socket_ip_address'] = $event_socket['ip_address'];
@@ -158,49 +198,83 @@ if (sizeof($result) != 0) {
 					else {
 						$fax_numbers[] = $tmp;
 					}
-					foreach ($fax_numbers as $index => $fax_number) {
-						$fax_numbers[$index] = preg_replace("~[^0-9]~", "", $fax_number);
-						if ($fax_numbers[$index] == '') { unset($fax_numbers[$index]); }
-					}
 					unset($fax_subject); //clear so not on cover page
 
+					$message = parse_message($connection, $email_id, FT_UID);
+
 					//get email body (if any) for cover page
-					$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
-					$fax_message = strip_tags($fax_message);
-					$fax_message = trim($fax_message);
-					if ($fax_message == '') {
-						$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
-						$fax_message = strip_tags($fax_message);
-						$fax_message = trim($fax_message);
+					$fax_message = '';
+
+					//Debug print
+					print('attachments:' . "\n");
+					foreach($message['attachments'] as &$attachment){
+						print(' - ' . $attachment['type'] . ' - ' . $attachment['name'] . ': ' . $attachment['size'] . ' disposition: ' . $attachment['disposition'] . "\n");
 					}
-					$fax_message = str_replace("\r\n\r\n","\r\n", $fax_message);
+					print('messages:' . "\n");
+					foreach($message['messages'] as &$msg){
+						print(' - ' . $msg['type'] . ' - ' . $msg['size'] . "\n");
+						// print($msg['data']);
+						// print("\n--------------------------------------------------------\n");
+					}
+
+					foreach($message['messages'] as &$msg){
+						if(($msg['size'] > 0) && ($msg['type'] == 'text/plain')) {
+							$fax_message = $msg['data'];
+							break;
+						}
+					}
+
+					if ($fax_message != '') {
+						$fax_message = strip_tags($fax_message);
+						$fax_message = str_replace("\r\n\r\n", "\r\n", $fax_message);
+					}
 
 					// set fax directory (used for pdf creation - cover and/or attachments)
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.(($domain_name != '') ? '/'.$domain_name : null);
 
 					//handle attachments (if any)
-					$attachments = parse_attachments($connection, $email_id, FT_UID);
+					$emailed_files = Array();
+					$attachments = $message['attachments'];
 					if (sizeof($attachments) > 0) {
-						$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
-						foreach ($attachments as $attachment['num'] => $attachment) {
-							$fax_file_extension = pathinfo($attachment['filename'], PATHINFO_EXTENSION);
-							if (in_array($fax_file_extension, $disallowed_file_extensions) || $fax_file_extension == '') { continue; } //block unauthorized files
+						foreach ($attachments as &$attachment) {
+							$fax_file_extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+
+							//block unknown files
+								if ($fax_file_extension == '') {continue; }
+							//block unauthorized files
+								if (!$fax_allowed_extension['.' . $fax_file_extension]) { continue; } 
+							//support only attachments
+								if($attachment['disposition'] != 'attachment'){ continue; } 
 
 							//store attachment in local fax temp folder
-							$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$attachment['filename'];
-							file_put_contents($local_filepath, $attachment['attachment']);
+								$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$attachment['name'];
+								file_put_contents($local_filepath, $attachment['data']);
 
 							//load files array with attachments
-							$emailed_files['error'][$attachment['num']] = 0;
-							$emailed_files['size'][$attachment['num']] = $attachment['size'];
-							$emailed_files['tmp_name'][$attachment['num']] = $attachment['filename'];
-							$emailed_files['name'][$attachment['num']] = $attachment['filename'];
+								$emailed_files['error'][] = 0;
+								$emailed_files['size'][] = $attachment['size'];
+								$emailed_files['tmp_name'][] = $attachment['name'];
+								$emailed_files['name'][] = $attachment['name'];
 						}
 					}
 
+					//Debug print
+					print('***********************' . "\n");
+					print('fax message:' . "\n");
+					print(' - length: ' . strlen($fax_message) . "\n");
+					print('fax files [' . sizeof($emailed_files['name']) . ']:' . "\n");
+					for($i = 0; $i < sizeof($emailed_files['name']);++$i){
+						print(' - ' . $emailed_files['name'][$i] . ' - ' . $emailed_files['size'][$i] . "\n");
+					}
+					print('***********************' . "\n");
+
 					//send fax
+					$cwd = getcwd();
 					$included = true;
 					require("fax_send.php");
+					if($cwd){
+						chdir($cwd);
+					}
 
 					//reset variables
 					unset($fax_numbers);

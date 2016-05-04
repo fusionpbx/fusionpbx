@@ -25,106 +25,10 @@
 */
 
 if ($domains_processed == 1) {
-	//if the are no groups add the default groups
-		$sql = "SELECT * FROM v_groups ";
-		$sql .= "WHERE domain_uuid is null ";
-		$sub_result = $db->query($sql)->fetch();
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$sub_result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			if (count($sub_result) == 0) {
-				$x = 0;
-				$tmp[$x]['group_name'] = 'superadmin';
-				$tmp[$x]['group_description'] = 'Super Administrator Group';
-				$tmp[$x]['group_protected'] = 'false';
-				$x++;
-				$tmp[$x]['group_name'] = 'admin';
-				$tmp[$x]['group_description'] = 'Administrator Group';
-				$tmp[$x]['group_protected'] = 'false';
-				$x++;
-				$tmp[$x]['group_name'] = 'user';
-				$tmp[$x]['group_description'] = 'User Group';
-				$tmp[$x]['group_protected'] = 'false';
-				$x++;
-				$tmp[$x]['group_name'] = 'public';
-				$tmp[$x]['group_description'] = 'Public Group';
-				$tmp[$x]['group_protected'] = 'false';
-				$x++;
-				$tmp[$x]['group_name'] = 'agent';
-				$tmp[$x]['group_description'] = 'Call Center Agent Group';
-				$tmp[$x]['group_protected'] = 'false';
-				$db->beginTransaction();
-				foreach($tmp as $row) {
-					if (strlen($row['group_name']) > 0) {
-						$sql = "insert into v_groups ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "group_uuid, ";
-						$sql .= "group_name, ";
-						$sql .= "group_description, ";
-						$sql .= "group_protected ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "null, ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".$row['group_name']."', ";
-						$sql .= "'".$row['group_description']."', ";
-						$sql .= "'".$row['group_protected']."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-				}
-				$db->commit();
-			}
-			unset($prep_statement, $sub_result);
-		}
 
-	//if there are no permissions listed in v_group_permissions then set the default permissions
-		$sql = "select count(*) as count from v_group_permissions ";
-		$sql .= "where domain_uuid is null ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		unset ($prep_statement);
-		if ($sub_result['count'] > 0) {
-			if ($display_type == "text") {
-				echo "	Group Permissions:	no change\n";
-			}
-		}
-		else {
-			if ($display_type == "text") {
-				echo "	Group Permissions:	added\n";
-			}
-			//no permissions found add the defaults
-			$db->beginTransaction();
-			foreach($apps as $app) {
-				foreach ($app['permissions'] as $sub_row) {
-					foreach ($sub_row['groups'] as $group) {
-						//add the record
-						$sql = "insert into v_group_permissions ";
-						$sql .= "(";
-						$sql .= "group_permission_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "permission_name, ";
-						$sql .= "group_name ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "null, ";
-						$sql .= "'".$sub_row['name']."', ";
-						$sql .= "'".$group."' ";
-						$sql .= ")";
-						$db->exec($sql);
-						unset($sql);
-					}
-				}
-			}
-			$db->commit();
-		}
+	//if the default groups do not exist add them
+		$group = new groups;
+		$group->defaults();
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_group_users ";
@@ -156,7 +60,7 @@ if ($domains_processed == 1) {
 			unset ($prep_statement);
 		}
 
-	//if there are no permissions listed in v_group_permissions then set the default permissions
+	//if user_enabled is null then set to enabled true
 		$sql = "select count(*) as count from v_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_enabled is null ";

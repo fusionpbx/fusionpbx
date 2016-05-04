@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010-2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -89,6 +89,7 @@ include "root.php";
 
 			//add the fax
 				if (strlen($this->fax_extension) > 0) {
+
 					//add the dialplan
 						$database = new database;
 						$database->table = "v_dialplans";
@@ -114,7 +115,7 @@ include "root.php";
 						$database->fields['dialplan_detail_order'] = '005';
 						$database->add();
 
-						if (file_exists(PHP_BINDIR."/php")) { define(PHP_BIN, 'php'); }
+						if (file_exists(PHP_BINDIR."/php5")) { define(PHP_BIN, 'php5'); }
 						if (file_exists(PHP_BINDIR."/php.exe")) {  define(PHP_BIN, 'php.exe'); }
 						$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
 						$dialplan_detail_data .= "email=".$this->fax_email." ";
@@ -190,12 +191,7 @@ include "root.php";
 						$database->fields['dialplan_detail_uuid'] = uuid();
 						$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 						$database->fields['dialplan_detail_type'] = 'rxfax';
-						if (count($_SESSION["domains"]) > 1) {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
-						}
-						else {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/${last_fax}.tif';
-						}
+						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domains'][$this->domain_uuid]['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
 						$database->fields['dialplan_detail_data'] = $dialplan_detail_data;
 						$database->fields['dialplan_detail_order'] = '040';
 						$database->add();
@@ -322,13 +318,12 @@ include "root.php";
 							$database->update();
 						}
 						else {
-//							$this->dialplan_uuid = uuid();
 							$database->fields['domain_uuid'] = $this->domain_uuid;
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
 							$database->add();
 						}
 
-					//delete the old dialplan details to prepare for new details 
+					//delete the old dialplan details to prepare for new details
 						$database = new database;
 						$database->table = "v_dialplan_details";
 						$database->where[0]['name'] = 'domain_uuid';
@@ -427,12 +422,7 @@ include "root.php";
 						$database->fields['dialplan_detail_uuid'] = uuid();
 						$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 						$database->fields['dialplan_detail_type'] = 'rxfax';
-						if (count($_SESSION["domains"]) > 1) {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
-						}
-						else {
-							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$this->fax_extension.'/inbox/${last_fax}.tif';
-						}
+						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domains'][$this->domain_uuid]['domain_name'].'/'.$this->fax_extension.'/inbox/${last_fax}.tif';
 						$database->fields['dialplan_detail_data'] = $dialplan_detail_data;
 						$database->fields['dialplan_detail_order'] = '040';
 						$database->add();

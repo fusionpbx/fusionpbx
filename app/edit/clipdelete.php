@@ -52,10 +52,6 @@ else {
 	}
 
 //redirect the browser
-	require_once "header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
-	echo $text['message-delete'];
-	require_once "footer.php";
-	return;
+	header("Location: clipoptions.php");
 
 ?>

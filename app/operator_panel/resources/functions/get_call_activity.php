@@ -27,7 +27,7 @@ function get_call_activity() {
 		unset ($prep_statement, $sql);
 
 	//store extension status by user uuid
-		foreach($extensions as &$row) {
+		if (isset($extensions)) foreach($extensions as &$row) {
 			if ($row['user_uuid'] != '') {
 				$ext_user_status[$row['user_uuid']] = $row['user_status'];
 				unset($row['user_status']);
@@ -44,7 +44,7 @@ function get_call_activity() {
 
 	//build the response
 		$x = 0;
-		foreach($extensions as &$row) {
+		if (isset($extensions)) foreach($extensions as &$row) {
 			$user = $row['extension'];
 			if (strlen($row['number_alias']) >0 ) {
 				$user = $row['number_alias'];
@@ -89,7 +89,7 @@ function get_call_activity() {
 
 			//add the active call details
 				$found = false;
-				foreach($json_array['rows'] as &$field) {
+				if (isset($json_array['rows'])) foreach($json_array['rows'] as &$field) {
 					$presence_id = $field['presence_id'];
 					$presence = explode("@", $presence_id);
 					$presence_id = $presence[0];
@@ -153,7 +153,7 @@ function get_call_activity() {
 							$switch_cmd = 'uuid_dump '.$field['uuid'].' json';
 							$dump_result = event_socket_request($fp, 'api '.$switch_cmd);
 							$dump_array = json_decode($dump_result, true);
-							foreach ($dump_array as $dump_var_name => $dump_var_value) {
+							if (isset($dump_array)) foreach ($dump_array as $dump_var_name => $dump_var_value) {
 								$array[$x][$dump_var_name] = trim($dump_var_value);
 							}
 						}
@@ -166,9 +166,11 @@ function get_call_activity() {
 		}
 
 		//reindex array using extension instead of auto-incremented value
-		foreach ($array as $index => $subarray) {
-			foreach ($subarray as $field => $value) {
-				$array[$subarray['extension']][$field] = $array[$index][$field];
+		$result = array();
+		if (isset($array)) foreach ($array as $index => $subarray) {
+			$extension = $subarray['extension'];
+			if (isset($subarray)) foreach ($subarray as $field => $value) {
+				$result[$extension][$field] = $array[$index][$field];
 				unset($array[$index][$field]);
 			}
 			unset($array[$subarray['extension']]['extension']);
@@ -176,5 +178,7 @@ function get_call_activity() {
 		}
 
 	//return array
-		return $array;
+		return $result;
 }
+
+?>

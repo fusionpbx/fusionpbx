@@ -81,7 +81,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 150;
+		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -146,7 +146,7 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 					$tmp_name = $row['conference_session_uuid'].".mp3";

@@ -57,7 +57,7 @@ else {
 	echo "<table>";
 	echo "	<tr>";
 	echo "		<td>".$text['label-path']."</td>";
-	echo "	</tr>";   
+	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td>".$folder.$file."</td>";
 	echo "	</tr>";

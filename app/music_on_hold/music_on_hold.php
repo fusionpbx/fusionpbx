@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -132,7 +132,7 @@ else {
 					if ($_POST['upload_category'] == '_NEW_CAT_' && $_POST['upload_category_new'] != '') {
 						$new_category_name = str_replace(' ', '_', $_POST['upload_category_new']);
 						//process sampling rate(s)
-							foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
 									@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
 								}
@@ -147,7 +147,7 @@ else {
 				//use existing category directory
 					else if ($_POST['upload_category'] != '' && $_POST['upload_category'] != '_NEW_CAT_') {
 						//process sampling rate(s)
-							foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
 									@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
 								}
@@ -163,7 +163,7 @@ else {
 					else if ($_POST['upload_category'] == '') {
 						if (permission_exists('music_on_hold_default_add')) {
 							//process sampling rate(s)
-								foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+								if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 									if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
 										@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
 									}
@@ -249,7 +249,7 @@ else {
 					}
 
 				// remove sampling rate directory (if any)
-					foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+					if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 						rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir))."/".$sampling_rate_dir);
 					}
 
@@ -313,7 +313,7 @@ else {
 		echo "<input name='type' type='hidden' value='moh'>\n";
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td style='padding-right: 15px;' nowrap>\n";
+		echo "		<td style='padding-right: 15px; white-space: nowrap'>\n";
 		echo "			".$text['label-file-path'];
 		echo "			<input name='upload_file' id='upload_file' type='file' class='formfld fileinput' style='width: 300px; margin-right: 3px;' onchange=\"check_filetype(this);\">";
 		echo 			"<input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file'); document.getElementById('sampling_rate').style.display='inline';\">\n";
@@ -376,7 +376,6 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 //show the default category
 	if (permission_exists('music_on_hold_default_view')) {
@@ -396,8 +395,9 @@ else {
 		echo "		<td width='22px' align=\"center\"></td>\n";
 		echo "	</tr>";
 
-		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
-			if ($handle = opendir($music_on_hold_dir."/".$sampling_rate_dir)) {
+		if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+			$directory = $music_on_hold_dir."/".$sampling_rate_dir;
+			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != ".." && is_file($music_on_hold_dir."/".$sampling_rate_dir."/".$file)) {
 						$row_uuid = uuid();
@@ -411,7 +411,7 @@ else {
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
@@ -453,7 +453,7 @@ else {
 	echo "<br><br>\n";
 
 //show additional categories
-	foreach ($category_dirs as $category_number => $category_dir) {
+	if (isset($category_dirs)) foreach ($category_dirs as $category_number => $category_dir) {
 		$c = 0;
 
 		echo "<b>".(str_replace('_', ' ', $category_dir))."</b>\n";
@@ -470,13 +470,14 @@ else {
 
 		$moh_found = false;
 
-		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
-			if ($handle = opendir($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir)) {
+		if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+			$directory = $music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir;
+			if (file_exists($directory) && $handle = opendir($directory)) {
 				while (false !== ($file = readdir($handle))) {
-					if ($file != "." && $file != ".." && is_file($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file)) {
+					if ($file != "." && $file != ".." && is_file($directory."/".$file)) {
 						$row_uuid = uuid();
 
-						$file_size = filesize($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file);
+						$file_size = filesize($directory."/".$file);
 						$file_size = byte_convert($file_size);
 
 						//playback progress bar
@@ -485,7 +486,7 @@ else {
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						if (strlen($file) > 0) {
-							echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+							echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 							$recording_file_path = $file;
 							$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);

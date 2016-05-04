@@ -312,9 +312,9 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 				});
 				setTimeout(ajax_get, refresh);
 			};
-			<? if ($timer_state == 'running') { ?>
+			<?php if ($timer_state == 'running') { ?>
 				ajax_get();
-			<? } ?>
+			<?php } ?>
 		});
 
 	//set window title to time when timer is running
@@ -350,11 +350,11 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	</table>
 	<br>
 	<center>
-	<? if ($timer_state == 'running') { ?>
+	<?php if ($timer_state == 'running') { ?>
 		<input type='submit' class='btn' value="<?php echo $text['button-stop']; ?>">
-	<? } else if ($timer_state == 'stopped') { ?>
+	<?php } else if ($timer_state == 'stopped') { ?>
 		<input type='submit' class='btn' value="<?php echo $text['button-start']; ?>">
-	<? } ?>
+	<?php } ?>
 	</center>
 	</form>
 </body>

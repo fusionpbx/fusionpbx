@@ -61,6 +61,12 @@
 						end);
 					end
 				end
+
+			--end the session if this is an invalid voicemail box
+				if (not voicemail_uuid) or (#voicemail_uuid == 0) then
+					return session:hangup();
+				end
+
 			--please enter your password followed by pound
 				dtmf_digits = '';
 				password = macro(session, "voicemail_password", 20, 5000, '');

@@ -2,21 +2,21 @@
 /*
 	graph.php
 	part of m0n0wall (http://m0n0.ch/wall)
-	
+
 	Copyright (C) 2004-2006 T. Lechat <dev@lechat.org>, Manuel Kasper <mk@neon1.net>
 	and Jonathan Watt <jwatt@jwatt.org>.
 	All rights reserved.
-	
+
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
-	
+
 	1. Redistributions of source code must retain the above copyright notice,
 	   this list of conditions and the following disclaimer.
-	
+
 	2. Redistributions in binary form must reproduce the above copyright
 	   notice, this list of conditions and the following disclaimer in the
 	   documentation and/or other materials provided with the distribution.
-	
+
 	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
@@ -197,7 +197,7 @@ function fetch_data() {
 function plot_data(obj) {
   // Show datetimelegend
   var now = new Date();
-  var datetime = (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ' ' + 
+  var datetime = (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ' ' +
     LZ(now.getHours()) + ":" + LZ(now.getMinutes()) + ":" + LZ(now.getSeconds());
   SVGDoc.getElementById('datetime').firstChild.data = datetime;
 
@@ -223,7 +223,7 @@ function plot_data(obj) {
   last_ugmt = ugmt;
   last_ifin = ifin;
   last_ifout = ifout;
-  
+
   switch (plot_in.length) {
   	case 0:
   		SVGDoc.getElementById("collect_initial").setAttributeNS(null, 'visibility', 'visible');
@@ -296,7 +296,7 @@ function plot_data(obj) {
         rmax *= 1.25;
       else
         rmax *= 2;
-      
+
       if (i == 8)
         rmax *= 1.024;
     }

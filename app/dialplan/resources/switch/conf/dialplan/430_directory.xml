@@ -1,7 +1,7 @@
 <context name="{v_context}">
 	<extension name="directory" number="*411" continue="false" app_uuid="a223dc70-28a1-4979-834e-8af813cd8ea6">
 		<condition field="destination_number" expression="^\*411$">
-			<action application="lua" data="directory.lua"/> 
+			<action application="lua" data="directory.lua"/>
 		</condition>
 	</extension>
 </context>

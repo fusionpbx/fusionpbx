@@ -100,6 +100,8 @@
 			recording_slots = session:getVariable("recording_slots");
 			recording_prefix = session:getVariable("recording_prefix");
 			recording_name = session:getVariable("recording_name");
+			record_ext = session:getVariable("record_ext");
+			domain_name = session:getVariable("domain_name");
 
 		--select the recording number
 			if (recording_slots) then
@@ -107,7 +109,7 @@
 				max_digits = 20;
 				session:sleep(1000);
 				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
-				recording_name = recording_prefix..recording_number..".wav";
+				recording_name = recording_prefix..recording_number.."."..record_ext;
 			end
 
 		--set the default recording name if one was not provided
@@ -115,7 +117,7 @@
 				--recording name is provided do nothing
 			else
 				--set a default recording_name
-				recording_name = "temp_"..session:get_uuid()..".wav";
+				recording_name = "temp_"..session:get_uuid().."."..record_ext;
 			end
 
 		--prompt for the recording
@@ -256,20 +258,9 @@ if ( session:ready() ) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
 
-	--set the base recordings dir
-		base_recordings_dir = recordings_dir;
+	--add the domain name to the recordings directory
+		recordings_dir = recordings_dir .. "/"..domain_name;
 
-	--use the recording_dir when the variable is set
-		if (session:getVariable("recordings_dir")) then
-			if (base_recordings_dir ~= session:getVariable("recordings_dir")) then
-				recordings_dir = session:getVariable("recordings_dir");
-			end
-		end
-
-	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
-		if (domain_count > 1) then
-			recordings_dir = recordings_dir .. "/" .. domain_name;
-		end
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");

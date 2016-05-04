@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2015
+	Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,7 @@ include "root.php";
 	if (!class_exists('dialplan')) {
 		class dialplan {
 			//variables
+			public $db;
 			public $result;
 			public $domain_uuid;
 			public $dialplan_uuid;
@@ -56,8 +57,19 @@ include "root.php";
 			public $dialplan_detail_inline;
 			public $dialplan_detail_group;
 
+			//class constructor
+			public function __construct() {
+				//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+			}
+
 			public function dialplan_add() {
-				global $db;
+
 				$sql = "insert into v_dialplans ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
@@ -73,7 +85,12 @@ include "root.php";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".check_str($this->domain_uuid)."', ";
+				if (strlen($this->domain_uuid) > 0) {
+					$sql .= "'".check_str($this->domain_uuid)."', ";
+				}
+				else {
+					$sql .= "null, ";
+				}
 				$sql .= "'".check_str($this->app_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_name)."', ";
@@ -84,12 +101,12 @@ include "root.php";
 				$sql .= "'".check_str($this->dialplan_enabled)."', ";
 				$sql .= "'".check_str($this->dialplan_description)."' ";
 				$sql .= ")";
-				$db->exec(check_sql($sql));
+				$this->db->exec(check_sql($sql));
 				unset($sql);
 			} //end function
 
 			public function dialplan_update() {
-				global $db;
+
 				$sql = "update v_dialplans set ";
 				$sql .= "dialplan_name = '".check_str($this->dialplan_name)."', ";
 				if (strlen($this->dialplan_continue) > 0) {
@@ -99,15 +116,15 @@ include "root.php";
 				$sql .= "dialplan_context = '".check_str($this->dialplan_context)."', ";
 				$sql .= "dialplan_enabled = '".check_str($this->dialplan_enabled)."', ";
 				$sql .= "dialplan_description = '".check_str($this->dialplan_description)."' ";
-				$sql .= "where domain_uuid = '".check_str($this->domain_uuid)."' ";
+				$sql .= "where (domain_uuid = '".check_str($this->domain_uuid)."' or domain_uuid is null) ";
 				$sql .= "and dialplan_uuid = '".check_str($this->dialplan_uuid)."' ";
 				//echo "sql: ".$sql."<br />";
-				$db->query($sql);
+				$this->db->query($sql);
 				unset($sql);
 			}
 
 			public function dialplan_detail_add() {
-				global $db;
+
 				$dialplan_detail_uuid = uuid();
 				$sql = "insert into v_dialplan_details ";
 				$sql .= "(";
@@ -125,7 +142,12 @@ include "root.php";
 				$sql .= "values ";
 				$sql .= "( ";
 				$sql .= "'".$dialplan_detail_uuid."', ";
-				$sql .= "'".check_str($this->domain_uuid)."', ";
+				if (strlen($this->domain_uuid) == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'".check_str($this->domain_uuid)."', ";
+				}
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_detail_tag)."', ";
 				$sql .= "'".check_str($this->dialplan_detail_order)."', ";
@@ -151,12 +173,12 @@ include "root.php";
 				}
 				$sql .= ")";
 				//echo $sql."\n\n";
-				$db->exec(check_sql($sql));
+				$this->db->exec(check_sql($sql));
 				unset($sql);
 			} //end function
 
 			public function dialplan_detail_update() {
-				global $db;
+
 				$sql = "update v_dialplans set ";
 				$sql .= "dialplan_detail_order = '".check_str($this->dialplan_detail_order)."', ";
 				$sql .= "dialplan_detail_type = '".check_str($this->dialplan_detail_type)."', ";
@@ -171,10 +193,10 @@ include "root.php";
 					$sql .= "dialplan_detail_group = '".check_str($this->dialplan_detail_group)."', ";
 				}
 				$sql .= "dialplan_detail_tag = '".check_str($this->dialplan_detail_tag)."' ";
-				$sql .= "where domain_uuid = '".check_str($this->domain_uuid)."' ";
+				$sql .= "where (domain_uuid = '".check_str($this->domain_uuid)."' or domain_uuid is null) ";
 				$sql .= "and dialplan_uuid = '".check_str($this->dialplan_uuid)."' ";
 				//echo "sql: ".$sql."<br />";
-				$db->query($sql);
+				$this->db->query($sql);
 				unset($sql);
 			} //end function
 
@@ -206,11 +228,10 @@ include "root.php";
 			}
 
 			private function app_uuid_exists() {
-				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
 				$sql .= "and app_uuid = '".$this->app_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $this->db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
@@ -225,11 +246,10 @@ include "root.php";
 			}
 
 			public function dialplan_exists() {
-				global $db;
 				$sql = "select count(*) as num_rows from v_dialplans ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null)";
 				$sql .= "and dialplan_uuid = '".$this->dialplan_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $this->db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
@@ -244,7 +264,6 @@ include "root.php";
 			}
 
 			public function import() {
-				global $db;
 				if (strlen($this->xml) > 0) {
 					//replace the variables
 						$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
@@ -262,7 +281,7 @@ include "root.php";
 						$dialplan = json_decode($json, true);
 				}
 
-				//ensure the condition array uniform
+				//ensure the condition array is uniform
 					if (is_array($dialplan)) {
 						if (!is_array($dialplan['extension']['condition'][0])) {
 							$tmp = $dialplan['extension']['condition'];
@@ -277,12 +296,17 @@ include "root.php";
 					}
 					else {
 						//start the transaction
-							$db->beginTransaction();
+							$this->db->beginTransaction();
 						//get the attributes
 							$this->dialplan_uuid = uuid();
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 							$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 							$this->dialplan_context = $dialplan['@attributes']['name'];
+							if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
+								if ($dialplan['extension']['@attributes']['global'] == "true") {
+									$this->domain_uuid = null;
+								}
+							}
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";
 							}
@@ -301,7 +325,7 @@ include "root.php";
 							$x = 0;
 							$group = 0;
 							$order = 5;
-							foreach ($dialplan['extension']['condition'] as &$row) {
+							if (isset($dialplan['extension']['condition'])) foreach ($dialplan['extension']['condition'] as &$row) {
 								unset($this->dialplan_detail_break);
 								unset($this->dialplan_detail_inline);
 								$this->dialplan_detail_tag = 'condition';
@@ -332,7 +356,7 @@ include "root.php";
 									$order = $order + 5;
 									unset($this->dialplan_detail_break);
 									unset($this->dialplan_detail_inline);
-									foreach ($row['action'] as &$row2) {
+									if (isset($row['action'])) foreach ($row['action'] as &$row2) {
 										$this->dialplan_detail_tag = 'action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
@@ -344,7 +368,7 @@ include "root.php";
 										$this->dialplan_detail_add();
 										$order = $order + 5;
 									}
-									foreach ($row['anti-action'] as &$row2) {
+									if (isset($row['anti-action'])) foreach ($row['anti-action'] as &$row2) {
 										$this->dialplan_detail_tag = 'anti-action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
@@ -366,13 +390,11 @@ include "root.php";
 								$x++;
 							}
 						//end the transaction
-							$db->commit();
+							$this->db->commit();
 					}
 			}
 
 			public function outbound_routes($destination_number) {
-				//get the database connection
-					global $db;
 
 				//normalize the destination number
 					$destination_number = trim($destination_number);
@@ -381,7 +403,11 @@ include "root.php";
 					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
 						//get the outbound routes from the database
 							$sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-							$sql .= "where d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "where ";
+							$sql .= "( ";
+							$sql .= "d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "or d.domain_uuid is null ";
+							$sql .= ") ";
 							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 							$sql .= "and d.dialplan_enabled = 'true' ";
 							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
@@ -396,11 +422,11 @@ include "root.php";
 							$sql .= "WHEN 'anti-action' THEN 3 ";
 							$sql .= "ELSE 100 END, ";
 							$sql .= "s.dialplan_detail_order asc ";
-							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$dialplans = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 							$x = 0; $y = 0;
-							foreach ($dialplans as &$row) {
+							if (isset($dialplans)) foreach ($dialplans as &$row) {
 								//if the previous dialplan uuid has not been set then set it
 									if (!isset($previous_dialplan_uuid)) { $previous_dialplan_uuid = $row['dialplan_uuid']; }
 
@@ -434,8 +460,8 @@ include "root.php";
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
 					}
 				//find the matching outbound routes
-					foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
-						foreach ($row['dialplan_details'] as $field) {
+					if (isset($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
+						if (isset($row['dialplan_details'])) foreach ($row['dialplan_details'] as $field) {
 							if ($field['dialplan_detail_tag'] == "condition") {
 								if ($field['dialplan_detail_type'] == "destination_number") {
 									$dialplan_detail_data = $field['dialplan_detail_data'];
@@ -466,7 +492,7 @@ include "root.php";
 										$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
 										$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-										$this->bridges = $dialplan_detail_data; 
+										$this->bridges = $dialplan_detail_data;
 									}
 							}
 						}

@@ -11,10 +11,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //get the id
 	if (count($_GET)>0) {
@@ -36,6 +34,9 @@ else {
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($sql);
+
+		// clear cache
+			remove_config_from_cache('configuration:acl.conf');
 	}
 
 //redirect the user

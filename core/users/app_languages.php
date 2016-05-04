@@ -1,5 +1,15 @@
 <?php
 
+$text['title-user_setting-edit']['en-us'] = "User Setting";
+$text['title-user_setting-edit']['es-cl'] = "Configuración de Usuario";
+$text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
+$text['title-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+
+$text['title-user_setting-add']['en-us'] = "User Setting Add";
+$text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
+$text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
+$text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+
 $text['title-user_manager']['en-us'] = "User Manager";
 $text['title-user_manager']['es-cl'] = "Administración de Usuarios";
 $text['title-user_manager']['pt-pt'] = "Gestão de Utilizadores";
@@ -187,39 +197,6 @@ $text['message-username_exists']['ro'] = "";
 $text['message-username_exists']['de-at'] = "Benutzername existiert bereits";
 $text['message-username_exists']['he'] = "שם משתמש כבר קיים";
 
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mise à jour effectuée";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['uk'] = "Оновлено";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['ro'] = "Actualizare completă";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-$text['message-update']['he'] = "עידכון הושלם";
-
-$text['message-restore']['en-us'] = "Restore Completed";
-$text['message-restore']['es-cl'] = "Restauración Completada";
-$text['message-restore']['pt-pt'] = "Restauração Efectuada";
-$text['message-restore']['fr-fr'] = "Restauré";
-$text['message-restore']['pl'] = "Przywrócenie zakończone";
-$text['message-restore']['uk'] = "Відновлено";
-$text['message-restore']['sv-se'] = "Återställning Klar";
-$text['message-restore']['ro'] = "";
-$text['message-restore']['de-at'] = "Widerherstellung durchgeführt";
-$text['message-restore']['he'] = "שחזור הושלם";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Por favor indique: ";
-$text['message-required']['pt-pt'] = "Por favor indique: ";
-$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-$text['message-required']['pl'] = "Wpisz:";
-$text['message-required']['uk'] = "Будь ласка, вкажіть:";
-$text['message-required']['sv-se'] = "Var god uppge:";
-$text['message-required']['ro'] = "";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
-$text['message-required']['he'] = "נא ספק";
-
 $text['message-password_mismatch']['en-us'] = "Password Mismatch";
 $text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
 $text['message-password_mismatch']['pt-pt'] = "As passwords não correspondem.";
@@ -286,17 +263,6 @@ $text['message-group_exists']['ro'] = "";
 $text['message-group_exists']['de-at'] = "Gruppe existiert bereits";
 $text['message-group_exists']['he'] = "הקבוצה כבר קיימת";
 
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Suppression effectuée";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['ro'] = "Ștergere completă";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['message-delete']['he'] = "מחיקה הושלמה";
-
 $text['message-default_system_group']['en-us'] = "Default system groups cannot be edited or deleted.";
 $text['message-default_system_group']['es-cl'] = "Grupos predeterminados del sistema no pueden ser editados o eliminados.";
 $text['message-default_system_group']['pt-pt'] = "Grupos de sistema padrão não podem ser editados ou apagados.";
@@ -329,17 +295,6 @@ $text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt 
 $text['message-cannot_delete_own_account']['ro'] = "";
 $text['message-cannot_delete_own_account']['de-at'] = "Sie können nicht ihren eigenen Benutzer löschen. Bitte melden Sie sich mit einem anderen Benutzer an und versuchen Sie es erneut.";
 $text['message-cannot_delete_own_account']['he'] = "";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['ro'] = "Adăugare completă";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-$text['message-add']['he'] = "הוספה הושלמה";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de usuario";
@@ -374,6 +329,20 @@ $text['label-user_info']['ro'] = "";
 $text['label-user_info']['de-at'] = "Benutzer Information";
 $text['label-user_info']['he'] = "פרטי משתמש";
 
+$text['label-top']['en-us'] = "Top";
+$text['label-top']['es-cl'] = "encima";
+$text['label-top']['pt-pt'] = "Topo";
+$text['label-top']['fr-fr'] = "Meilleur";
+$text['label-top']['pt-br'] = "Topo";
+$text['label-top']['pl'] = "Top";
+$text['label-top']['he'] = "עליון";
+$text['label-top']['uk'] = "топ";
+$text['label-top']['sv-se'] = "Topp";
+$text['label-top']['de-at'] = "Oben";
+$text['label-top']['ro'] = "Top";
+$text['label-top']['fa'] = "";
+$text['label-top']['ar-eg'] = "أعلى";
+
 $text['label-time_zone']['en-us'] = "Time Zone";
 $text['label-time_zone']['es-cl'] = "Zona Horaria";
 $text['label-time_zone']['pt-pt'] = "Fuso Horário";
@@ -384,6 +353,20 @@ $text['label-time_zone']['sv-se'] = "Tidszon";
 $text['label-time_zone']['ro'] = "";
 $text['label-time_zone']['de-at'] = "Zeitzone";
 $text['label-time_zone']['he'] = "אזור זמן";
+
+$text['label-text']['en-us'] = "Text";
+$text['label-text']['es-cl'] = "Texto";
+$text['label-text']['pt-pt'] = "Texto";
+$text['label-text']['fr-fr'] = "Texte";
+$text['label-text']['pt-br'] = "Texto";
+$text['label-text']['pl'] = "Tekst";
+$text['label-text']['he'] = "טֶקסט";
+$text['label-text']['uk'] = "текст";
+$text['label-text']['sv-se'] = "Text";
+$text['label-text']['de-at'] = "Text";
+$text['label-text']['ro'] = "Text";
+$text['label-text']['fa'] = "";
+$text['label-text']['ar-eg'] = "نص";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -396,18 +379,33 @@ $text['label-status']['ro'] = "Stare";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['he'] = "סטטוס";
 
-$text['label-search']['en-us'] = "Search...";
-$text['label-search']['es-cl'] = "Buscar...";
-$text['label-search']['pt-pt'] = "Pesquisa...";
-$text['label-search']['fr-fr'] = "Recherche...";
-$text['label-search']['nl-nl'] = "";
-$text['label-search']['pt-br'] = "Pesquisa...";
-$text['label-search']['pl'] = "Szukaj ...";
-$text['label-search']['sv-se'] = "Sök ...";
-$text['label-search']['ro'] = "";
-$text['label-search']['uk'] = "Результати пошуку";
-$text['label-search']['de-at'] = "Suche...";
-$text['label-search']['he'] = "תוצאות חיפוש";
+$text['label-static']['en-us'] = "Static";
+$text['label-static']['es-cl'] = "Estático";
+$text['label-static']['pt-pt'] = "Estático";
+$text['label-static']['fr-fr'] = "Statique";
+$text['label-static']['pt-br'] = "Estático";
+$text['label-static']['pl'] = "Statyczny";
+$text['label-static']['he'] = "סטָטִי";
+$text['label-static']['uk'] = "статичний";
+$text['label-static']['sv-se'] = "Statisk";
+$text['label-static']['de-at'] = "Statisch";
+$text['label-static']['ro'] = "Static";
+$text['label-static']['fa'] = "";
+$text['label-static']['ar-eg'] = "ساكن";
+
+$text['label-right']['en-us'] = "Right";
+$text['label-right']['es-cl'] = "Derecha";
+$text['label-right']['pt-pt'] = "Certo";
+$text['label-right']['fr-fr'] = "Droite";
+$text['label-right']['pt-br'] = "Certo";
+$text['label-right']['pl'] = "Dobrze";
+$text['label-right']['he'] = "יָמִינָה";
+$text['label-right']['uk'] = "правий";
+$text['label-right']['sv-se'] = "Höger";
+$text['label-right']['de-at'] = "Recht";
+$text['label-right']['ro'] = "Dreapta";
+$text['label-right']['fa'] = "";
+$text['label-right']['ar-eg'] = "حق";
 
 $text['label-permission_permissions']['en-us'] = "Permissions";
 $text['label-permission_permissions']['es-cl'] = "Permisos";
@@ -442,6 +440,34 @@ $text['label-password']['ro'] = "Parolă";
 $text['label-password']['de-at'] = "Passwort";
 $text['label-password']['he'] = "סיסמה";
 
+$text['label-none']['en-us'] = "None";
+$text['label-none']['es-cl'] = "Ninguna";
+$text['label-none']['pt-pt'] = "Nenhum";
+$text['label-none']['fr-fr'] = "Aucun";
+$text['label-none']['pt-br'] = "Nenhum";
+$text['label-none']['pl'] = "Żaden";
+$text['label-none']['he'] = "אף לא אחד";
+$text['label-none']['uk'] = "жоден";
+$text['label-none']['sv-se'] = "Ingen";
+$text['label-none']['de-at'] = "Keiner";
+$text['label-none']['ro'] = "Nici unul";
+$text['label-none']['fa'] = "";
+$text['label-none']['ar-eg'] = "لا شيء";
+
+$text['label-left']['en-us'] = "Left";
+$text['label-left']['es-cl'] = "Izquierda";
+$text['label-left']['pt-pt'] = "Esquerda";
+$text['label-left']['fr-fr'] = "À gauche";
+$text['label-left']['pt-br'] = "Esquerda";
+$text['label-left']['pl'] = "Lewo";
+$text['label-left']['he'] = "שְׁמֹאל";
+$text['label-left']['uk'] = "лівий";
+$text['label-left']['sv-se'] = "Vänster";
+$text['label-left']['de-at'] = "Links";
+$text['label-left']['ro'] = "Stânga";
+$text['label-left']['fa'] = "";
+$text['label-left']['ar-eg'] = "اليسار";
+
 $text['label-last_name']['en-us'] = "Last Name";
 $text['label-last_name']['es-cl'] = "Apellido";
 $text['label-last_name']['pt-pt'] = "Último Nome";
@@ -452,6 +478,34 @@ $text['label-last_name']['sv-se'] = "Efternamn";
 $text['label-last_name']['ro'] = "";
 $text['label-last_name']['de-at'] = "Nachname";
 $text['label-last_name']['he'] = "שם משפחה";
+
+$text['label-inline']['en-us'] = "Inline";
+$text['label-inline']['es-cl'] = "En línea";
+$text['label-inline']['pt-pt'] = "Na linha";
+$text['label-inline']['fr-fr'] = "En ligne";
+$text['label-inline']['pt-br'] = "Na linha";
+$text['label-inline']['pl'] = "inline";
+$text['label-inline']['he'] = "בשורה";
+$text['label-inline']['uk'] = "В лінію";
+$text['label-inline']['sv-se'] = "I kö";
+$text['label-inline']['de-at'] = "In der Reihe";
+$text['label-inline']['ro'] = "In linie";
+$text['label-inline']['fa'] = "";
+$text['label-inline']['ar-eg'] = "في النسق";
+
+$text['label-image']['en-us'] = "Image";
+$text['label-image']['es-cl'] = "Imagen";
+$text['label-image']['pt-pt'] = "Imagem";
+$text['label-image']['fr-fr'] = "image";
+$text['label-image']['pt-br'] = "Imagem";
+$text['label-image']['pl'] = "Obraz";
+$text['label-image']['he'] = "תמונה";
+$text['label-image']['uk'] = "зображення";
+$text['label-image']['sv-se'] = "Bild";
+$text['label-image']['de-at'] = "Image";
+$text['label-image']['ro'] = "Imagine";
+$text['label-image']['fa'] = "";
+$text['label-image']['ar-eg'] = "صورة";
 
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['es-cl'] = "Grupos";
@@ -552,6 +606,20 @@ $text['label-global']['ro'] = "";
 $text['label-global']['de-at'] = "Global";
 $text['label-global']['he'] = "כללי";
 
+$text['label-fixed']['en-us'] = "Fixed";
+$text['label-fixed']['es-cl'] = "Fijo";
+$text['label-fixed']['pt-pt'] = "Fixo";
+$text['label-fixed']['fr-fr'] = "Fixé";
+$text['label-fixed']['pt-br'] = "Fixo";
+$text['label-fixed']['pl'] = "Naprawiony";
+$text['label-fixed']['he'] = "קָבוּעַ";
+$text['label-fixed']['uk'] = "фіксований";
+$text['label-fixed']['sv-se'] = "Fast";
+$text['label-fixed']['de-at'] = "fest";
+$text['label-fixed']['ro'] = "Fix";
+$text['label-fixed']['fa'] = "";
+$text['label-fixed']['ar-eg'] = "ثابت";
+
 $text['label-first_name']['en-us'] = "First Name";
 $text['label-first_name']['es-cl'] = "Nombre";
 $text['label-first_name']['pt-pt'] = "Primeiro Nome";
@@ -562,17 +630,6 @@ $text['label-first_name']['sv-se'] = "Förnamn";
 $text['label-first_name']['ro'] = "";
 $text['label-first_name']['de-at'] = "Vorname";
 $text['label-first_name']['he'] = "שם";
-
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activo";
-$text['label-enabled']['pt-pt'] = "Habilitado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pl'] = "Włączony";
-$text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['ro'] = "";
-$text['label-enabled']['de-at'] = "An";
-$text['label-enabled']['he'] = "מופעל";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "Email";
@@ -629,6 +686,34 @@ $text['label-company_name']['ro'] = "";
 $text['label-company_name']['de-at'] = "Firmenname";
 $text['label-company_name']['he'] = "שם חברה";
 
+$text['label-center']['en-us'] = "Center";
+$text['label-center']['es-cl'] = "Centrar";
+$text['label-center']['pt-pt'] = "Centro";
+$text['label-center']['fr-fr'] = "centre";
+$text['label-center']['pt-br'] = "Centro";
+$text['label-center']['pl'] = "Centrum";
+$text['label-center']['he'] = "מֶרְכָּז";
+$text['label-center']['uk'] = "центр";
+$text['label-center']['sv-se'] = "Centrum";
+$text['label-center']['de-at'] = "Center";
+$text['label-center']['ro'] = "Centru";
+$text['label-center']['fa'] = "";
+$text['label-center']['ar-eg'] = "مركز";
+
+$text['label-bottom']['en-us'] = "Bottom";
+$text['label-bottom']['es-cl'] = "Fondo";
+$text['label-bottom']['pt-pt'] = "Inferior";
+$text['label-bottom']['fr-fr'] = "Bas";
+$text['label-bottom']['pt-br'] = "Inferior";
+$text['label-bottom']['pl'] = "Dolny";
+$text['label-bottom']['he'] = "תַחתִית";
+$text['label-bottom']['uk'] = "дно";
+$text['label-bottom']['sv-se'] = "Botten";
+$text['label-bottom']['de-at'] = "Boden";
+$text['label-bottom']['ro'] = "Fund";
+$text['label-bottom']['fa'] = "";
+$text['label-bottom']['ar-eg'] = "أسفل";
+
 $text['label-api_key']['en-us'] = "API Key";
 $text['label-api_key']['es-cl'] = "API Key";
 $text['label-api_key']['pt-pt'] = "API Key";
@@ -651,7 +736,45 @@ $text['label-additional_info']['ro'] = "";
 $text['label-additional_info']['de-at'] = "Zusätzliche Information";
 $text['label-additional_info']['he'] = "מידע נוסף";
 
-$text['header-user_manager']['en-us'] = "User Manager";
+$text['label-24-hour']['en-us'] = "24-Hour";
+$text['label-24-hour']['es-cl'] = "24 horas";
+$text['label-24-hour']['pt-pt'] = "24 horas";
+$text['label-24-hour']['fr-fr'] = "24 heures";
+$text['label-24-hour']['pt-br'] = "24 horas";
+$text['label-24-hour']['pl'] = "24-godzinny";
+$text['label-24-hour']['he'] = "24 שעות";
+$text['label-24-hour']['uk'] = "24-годинний";
+$text['label-24-hour']['sv-se'] = "24-timmars";
+$text['label-24-hour']['de-at'] = "24 Stunden";
+$text['label-24-hour']['ro'] = "24 de ore";
+$text['label-24-hour']['fa'] = "";
+$text['label-24-hour']['ar-eg'] = "24 ساعة";
+
+$text['label-12-hour']['en-us'] = "12-Hour";
+$text['label-12-hour']['es-cl'] = "12 horas";
+$text['label-12-hour']['pt-pt'] = "12 horas";
+$text['label-12-hour']['fr-fr'] = "12 heures";
+$text['label-12-hour']['pt-br'] = "12 horas";
+$text['label-12-hour']['pl'] = "12-godzinny";
+$text['label-12-hour']['he'] = "12 שעות";
+$text['label-12-hour']['uk'] = "12-годинний";
+$text['label-12-hour']['sv-se'] = "12-timmars";
+$text['label-12-hour']['de-at'] = "12 Stunden";
+$text['label-12-hour']['ro'] = "12 de ore";
+$text['label-12-hour']['fa'] = "";
+$text['label-12-hour']['ar-eg'] = "12 ساعة";
+
+$text['header-user_setting-edit']['en-us'] = "User Setting";
+$text['header-user_setting-edit']['es-cl'] = "Configuración de Usuario";
+$text['header-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
+$text['header-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+
+$text['header-user_setting-add']['en-us'] = "User Setting Add";
+$text['header-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
+$text['header-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
+$text['header-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+
+$text['header-user_manager']['en-us'] = "Users";
 $text['header-user_manager']['es-cl'] = "Administración de Usuario";
 $text['header-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 $text['header-user_manager']['fr-fr'] = "Gestion des utilisateurs";
@@ -738,6 +861,16 @@ $text['header-group_add']['sv-se'] = "Lägg Till Grupp";
 $text['header-group_add']['ro'] = "";
 $text['header-group_add']['de-at'] = "Gruppe hinzufügen";
 $text['header-group_add']['he'] = "הוסף קבוצה";
+
+$text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
+$text['description-user_setting-edit']['es-cl'] = "Editar un escenario de este usuario.";
+$text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
+$text['description-user_setting-edit']['fr-fr'] = "Modifier un réglage pour cet utilisateur.";
+
+$text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
+$text['description-user_setting-add']['es-cl'] = "Añadir un entorno para este usuario.";
+$text['description-user_setting-add']['pt-pt'] = "Adicionar uma definição para esse usuário.";
+$text['description-user_setting-add']['fr-fr'] = "Ajouter un cadre pour cet utilisateur.";
 
 $text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-user_manager']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";
@@ -904,39 +1037,6 @@ $text['button-show_all']['ro'] = "";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "הצג הכל";
 
-$text['button-search']['en-us'] = "Search";
-$text['button-search']['es-cl'] = "Buscar";
-$text['button-search']['pt-pt'] = "Pesquisar";
-$text['button-search']['fr-fr'] = "Chercher";
-$text['button-search']['pl'] = "Wyszukaj";
-$text['button-search']['uk'] = "Пошук";
-$text['button-search']['sv-se'] = "Sök";
-$text['button-search']['ro'] = "";
-$text['button-search']['de-at'] = "Suchen";
-$text['button-search']['he'] = "חפש";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['ro'] = "Salvează";
-$text['button-save']['de-at'] = "Speichern";
-$text['button-save']['he'] = "שמור";
-
-$text['button-restore']['en-us'] = "Restore Default";
-$text['button-restore']['es-cl'] = "Restaurar Predeterminados";
-$text['button-restore']['pt-pt'] = "Restaurar Predefinições";
-$text['button-restore']['fr-fr'] = "Restaurer";
-$text['button-restore']['pl'] = "Przywróć ustawienia domyślne";
-$text['button-restore']['uk'] = "Відновити типові значення";
-$text['button-restore']['sv-se'] = "Aktivera Standard Inställningar";
-$text['button-restore']['ro'] = "";
-$text['button-restore']['de-at'] = "Zurücksetzen";
-$text['button-restore']['he'] = "שחזר למקור";
-
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['es-cl'] = "Generar";
 $text['button-generate']['pt-pt'] = "Geração";
@@ -947,28 +1047,6 @@ $text['button-generate']['sv-se'] = "Generera";
 $text['button-generate']['ro'] = "";
 $text['button-generate']['de-at'] = "Generieren";
 $text['button-generate']['he'] = "יצר";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Modifier";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['ro'] = "";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['he'] = "ערוך";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remoção";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['ro'] = "";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['he'] = "מחק";
 
 $text['button-create_account']['en-us'] = "Create Account";
 $text['button-create_account']['es-cl'] = "Crear Cuenta";
@@ -981,28 +1059,6 @@ $text['button-create_account']['ro'] = "";
 $text['button-create_account']['de-at'] = "Konto hinzufügen";
 $text['button-create_account']['he'] = "צור חשבון";
 
-$text['button-copy']['en-us'] = "Copy";
-$text['button-copy']['es-cl'] = "Copiar";
-$text['button-copy']['pt-pt'] = "Copiar";
-$text['button-copy']['fr-fr'] = "Copier";
-$text['button-copy']['pl'] = "Kopiuj";
-$text['button-copy']['uk'] = "Копіювати";
-$text['button-copy']['sv-se'] = "Kopiera";
-$text['button-copy']['ro'] = "";
-$text['button-copy']['de-at'] = "Kopieren";
-$text['button-copy']['he'] = "העתק";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['ro'] = "Înapoi";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['he'] = "חזרה";
-
 $text['button-add_member']['en-us'] = "Add Member";
 $text['button-add_member']['es-cl'] = "Agregar Miembro";
 $text['button-add_member']['pt-pt'] = "Adicionar Membro";
@@ -1013,16 +1069,5 @@ $text['button-add_member']['sv-se'] = "Lägg Till Medlem";
 $text['button-add_member']['ro'] = "";
 $text['button-add_member']['de-at'] = "Mitglied hinzufügen";
 $text['button-add_member']['he'] = "הוסף משתמש";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['uk'] = "Додати";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['ro'] = "";
-$text['button-add']['de-at'] = "Hinzufügen";
-$text['button-add']['he'] = "הוסף";
 
 ?>

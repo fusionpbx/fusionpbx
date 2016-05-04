@@ -61,7 +61,7 @@ else {
 	echo "<table>";
 	echo "	<tr>";
 	echo "		<td>Path:</td>";
-	echo "	</tr>";   
+	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td>".$folder.$file."</td>";
 	echo "	</tr>";
@@ -81,7 +81,7 @@ else {
 	echo "	<tr>";
 	echo "		<td colspan='1' align='right'>";
 	echo "			<input type='hidden' name='folder' value='$folder'>";
-	echo "			<input type='submit' value='".$text['button-new-file']."'>";
+	echo "			<input type='button' value='".$text['button-back']."' onclick='history.back()'><input type='submit' value='".$text['button-new-file']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";

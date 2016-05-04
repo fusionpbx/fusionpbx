@@ -86,6 +86,7 @@ if (count($_GET)>0) {
 
 //synchronize configuration
 	save_call_center_xml();
+	remove_config_from_cache('configuration:callcenter.conf');
 
 //redirect the browser
 	$_SESSION["message"] = $text['message-delete'];

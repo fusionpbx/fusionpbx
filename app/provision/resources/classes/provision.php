@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014-2015
+	Copyright (C) 2014-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 */
 include "root.php";
 
-//define the directory class
+//define the provision class
 	class provision {
 		public $db;
 		public $domain_uuid;
@@ -126,7 +126,45 @@ include "root.php";
 				}
 		}
 
-		function render() {
+		//set the mac address in the correct format for the specific vendor
+		public function format_mac($mac, $vendor) {
+			switch (strtolower($vendor)) {
+			case "aastra":
+				$mac = strtoupper($mac);
+				break;
+			case "cisco":
+				$mac = strtoupper($mac);
+				break;
+			case "linksys":
+				$mac = strtolower($mac);
+				break;
+			case "mitel":
+				$mac = strtoupper($mac);
+				break;
+			case "polycom":
+				$mac = strtolower($mac);
+				break;
+			case "snom":
+				$mac = strtolower($mac);
+				break;
+			default:
+				$mac = strtolower($mac);
+				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+			}
+			return $mac;
+		}
+
+		//define a function to check if a contact exists in the contacts array
+		private function contact_exists($contacts, $uuid) {
+			if (is_array($contacts[$uuid])) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		public function render() {
 
 			//debug
 				$debug = $_REQUEST['debug']; // array
@@ -137,6 +175,9 @@ include "root.php";
 				$template_dir = $this->template_dir;
 				$mac = $this->mac;
 				$file = $this->file;
+
+			//set the mac address to lower case to be consistent with the database
+				$mac = strtolower($mac);
 
 			//get the device template
 				if (strlen($_REQUEST['template']) > 0) {
@@ -180,11 +221,17 @@ include "root.php";
 							if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_mac_address=:mac ";
+								if($provision['http_domain_filter'] == "true") {
+									$sql  .= "AND domain_uuid=:domain_uuid ";
+								}
 								//$sql .= "WHERE device_mac_address= '$mac' ";
 								$prep_statement_2 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_2) {
 									//use the prepared statement
 										$prep_statement_2->bindParam(':mac', $mac);
+										if($provision['http_domain_filter'] == "true") {
+											$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
+										}
 										$prep_statement_2->execute();
 										$row = $prep_statement_2->fetch();
 									//set the variables from values in the database
@@ -195,7 +242,7 @@ include "root.php";
 										}
 										$device_model = $row["device_model"];
 										$device_firmware_version = $row["device_firmware_version"];
-										$device_provision_enable = $row["device_provision_enable"];
+										$device_enabled = $row["device_enabled"];
 										$device_template = $row["device_template"];
 										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_description = $row["device_description"];
@@ -216,7 +263,7 @@ include "root.php";
 									$device_vendor = strtolower($row["device_vendor"]);
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
-									$device_provision_enable = $row["device_provision_enable"];
+									$device_enabled = $row["device_enabled"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
@@ -275,7 +322,7 @@ include "root.php";
 								$sql .= "device_mac_address, ";
 								$sql .= "device_vendor, ";
 								$sql .= "device_model, ";
-								$sql .= "device_provision_enable, ";
+								$sql .= "device_enabled, ";
 								$sql .= "device_template, ";
 								$sql .= "device_description ";
 								$sql .= ") ";
@@ -300,8 +347,14 @@ include "root.php";
 				if (strlen($device_uuid) > 0) {
 					$sql = "SELECT * FROM v_devices ";
 					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+					if($provision['http_domain_filter'] == "true") {
+						$sql  .= "AND domain_uuid=:domain_uuid ";
+					}
 					$prep_statement_3 = $this->db->prepare(check_sql($sql));
 					if ($prep_statement_3) {
+						if($provision['http_domain_filter'] == "true") {
+							$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
+						}
 						$prep_statement_3->execute();
 						$row = $prep_statement_3->fetch();
 						$device_uuid_alternate = $row["device_uuid_alternate"];
@@ -311,13 +364,19 @@ include "root.php";
 							//get the new devices information
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+								if($provision['http_domain_filter'] == "true") {
+									$sql  .= "AND domain_uuid=:domain_uuid ";
+								}
 								$prep_statement_4 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_4) {
+									if($provision['http_domain_filter'] == "true") {
+										$prep_statement_4->bindParam(':domain_uuid', $domain_uuid);
+									}
 									$prep_statement_4->execute();
 									$row = $prep_statement_4->fetch();
 									$device_label = $row["device_label"];
 									$device_firmware_version = $row["device_firmware_version"];
-									$device_provision_enable = $row["device_provision_enable"];
+									$device_enabled = $row["device_enabled"];
 									//keep the original template
 									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
@@ -381,24 +440,6 @@ include "root.php";
 				//create a mac address with back slashes for backwards compatability
 					$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
-				//get the contacts array and add to the template engine
-					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['directory']['boolean'] == "true") {
-						//get contacts from the database
-							$sql = "select c.contact_organization, c.contact_name_given, c.contact_name_family, p.phone_number, p.phone_extension ";
-							$sql .= "from v_contacts as c, v_contact_phones as p ";
-							$sql .= "where c.domain_uuid = '".$domain_uuid."' ";
-							$sql .= "and c.contact_uuid = p.contact_uuid ";
-							$sql .= "and p.phone_type_voice = '1' ";
-							$sql .= "order by c.contact_organization desc, c.contact_name_given asc, c.contact_name_family asc ";
-							$prep_statement = $this->db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							unset ($prep_statement, $sql);
-
-						//assign the contacts array
-							$view->assign("contacts", $contacts);
-					}
-
 				//get the provisioning information from device lines table
 					if (strlen($device_uuid) > 0) {
 						//get the device lines array
@@ -455,6 +496,158 @@ include "root.php";
 							unset ($prep_statement);
 					}
 
+				//get the list of contact directly assigned to the user
+					//get the user_uuid to find the contacts assigned to the user and the groups the user is a member of.
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
+						foreach ($device_lines as &$line) {
+							//get the user_uuid assigned to the extension_uuid
+								if ($_SESSION['provision']['contact_users']['boolean'] == "true" || $_SESSION['provision']['contact_groups']['boolean'] == "true") {
+									$sql = "select user_uuid from v_extension_users ";
+									$sql .= "where extension_uuid in ( ";
+									$sql .= "	select extension_uuid from v_extensions ";
+									$sql .= "	where (extension = '".$line["user_id"]."' or number_alias = '".$line["user_id"]."') ";
+									$sql .= "	and domain_uuid = '$domain_uuid' ";
+									$sql .= ") ";
+									$sql .= "and domain_uuid = '$domain_uuid' ";
+									$prep_statement = $this->db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$extension_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									unset($prep_statement);
+									foreach ($extension_users as &$row) {
+										$user_uuid = $row["user_uuid"];
+									}
+								}
+
+							//get the contacts assigned to the groups and add to the contacts array
+								if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
+									$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
+									$sql .= "c.contact_type, c.contact_category, p.phone_label,";
+									$sql .= "p.phone_number, p.phone_extension ";
+									$sql .= "from v_contacts as c, v_contact_phones as p ";
+									$sql .= "where c.contact_uuid in ( ";
+									$sql .= "	select contact_uuid from v_contact_groups ";
+									$sql .= "	where group_uuid in (' ";
+									$sql .= "		select group_uuid from v_group_users ";
+									$sql .= "		where user_uuid = '".$user_uuid."' ";
+									$sql .= "		and domain_uuid = '$domain_uuid' ";
+									$sql .= "	) ";
+									$sql .= "and domain_uuid = '$domain_uuid' ";
+									$sql .= ") ";
+									//echo $sql."\n";
+									$prep_statement = $this->db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$contact_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									unset($prep_statement);
+									foreach ($contact_groups as $row) {
+										//get the contact_uuid
+											$uuid = $row['contact_uuid'];
+										//add the contacts to the contact array
+											if (!$this->contact_exists($contacts, $uuid)) {
+												$contacts[$uuid]['category'] = 'groups';
+												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+												$contacts[$uuid]['contact_type'] = $row['contact_type'];
+												$contacts[$uuid]['contact_category'] = $row['contact_category'];
+												$contacts[$uuid]['contact_organization'] = $row['contact_organization'];
+												$contacts[$uuid]['contact_name_given'] = $row['contact_name_given'];
+												$contacts[$uuid]['contact_name_family'] = $row['contact_name_family'];
+												$contacts[$uuid]['phone_label'] = $row['phone_label'];
+												$contacts[$uuid]['phone_number'] = $row['phone_number'];
+												$contacts[$uuid]['phone_extension'] = $row['phone_extension'];
+											}
+									}
+								}
+
+							//get the contacts assigned to the user and add to the contacts array
+								if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
+									$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
+									$sql .= "c.contact_type, c.contact_category, p.phone_label,";
+									$sql .= "p.phone_number, p.phone_extension ";
+									$sql .= "from v_contacts as c, v_contact_phones as p ";
+									$sql .= "where c.contact_uuid in ( ";
+									$sql .= "	select contact_uuid from v_contact_users ";
+									$sql .= "	where user_uuid = '".$user_uuid."' ";
+									$sql .= "	and domain_uuid = '$domain_uuid' ";
+									$sql .= ") ";
+									$sql .= "and c.contact_uuid = p.contact_uuid ";
+									$sql .= "and p.phone_type_voice = '1' ";
+									$sql .= "and c.domain_uuid = '$domain_uuid' ";
+									//echo $sql."\n";
+									$prep_statement = $this->db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									unset($prep_statement);
+									foreach ($user_contacts as $row) {
+										//get the contact_uuid
+											$uuid = $row['contact_uuid'];
+										//add the contacts to the contact array
+											if (!$this->contact_exists($contacts, $uuid)) {
+												$contacts[$uuid]['category'] = 'users';
+												$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+												$contacts[$uuid]['contact_type'] = $row['contact_type'];
+												$contacts[$uuid]['contact_category'] = $row['contact_category'];
+												$contacts[$uuid]['contact_organization'] = $row['contact_organization'];
+												$contacts[$uuid]['contact_name_given'] = $row['contact_name_given'];
+												$contacts[$uuid]['contact_name_family'] = $row['contact_name_family'];
+												$contacts[$uuid]['phone_label'] = $row['phone_label'];
+												$contacts[$uuid]['phone_number'] = $row['phone_number'];
+												$contacts[$uuid]['phone_extension'] = $row['phone_extension'];
+											}
+									}
+								}
+						}
+					}
+
+				//get the extensions and add them to the contacts array
+					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0 and $_SESSION['provision']['contact_extensions']['boolean'] == "true") {
+						//get contacts from the database
+							$sql = "select extension_uuid as contact_uuid, directory_full_name, ";
+							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
+							$sql .= "number_alias, extension ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = '".$domain_uuid."' ";
+							$sql .= "and enabled = 'true' ";
+							$sql .= "order by number_alias, extension asc ";
+							$prep_statement = $this->db->prepare($sql);
+							if ($prep_statement) {
+								$prep_statement->execute();
+								$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+								foreach ($extensions as $row) {
+									//get the contact_uuid
+										$uuid = $row['contact_uuid'];
+									//get the names
+										if (strlen($row['directory_full_name']) > 0) {
+											$name_array = explode(" ", $row['directory_full_name']);
+										} else {
+											$name_array = explode(" ", $row['effective_caller_id_name']);
+										}
+										$contact_name_given = array_shift($name_array);
+										$contact_name_family = trim(implode(' ', $name_array));
+									//get the phone_extension
+										if (is_numeric($row['extension'])) {
+											$phone_extension = $row['extension'];
+										}
+										else {
+											$phone_extension = $row['number_alias'];
+										}
+									//save the contact array values
+										$contacts[$uuid]['category'] = 'extensions';
+										$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
+										$contacts[$uuid]['contact_category'] = 'extensions';
+										$contacts[$uuid]['contact_name_given'] = $contact_name_given;
+										$contacts[$uuid]['contact_name_family'] = $contact_name_family;
+										$contacts[$uuid]['phone_extension'] = $phone_extension;
+									//unset the variables
+										unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
+								}
+							}
+					}
+
+				//assign the contacts array to the template
+					if (is_array($contacts)) {
+						$view->assign("contacts", $contacts);
+						unset($contacts);
+					}
+
 				//get the provisioning information from device keys
 					if (strlen($device_uuid) > 0) {
 						//get the device keys array
@@ -465,7 +658,7 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
-							$sql .= "AND (device_key_vendor = '".$device_vendor."' or device_key_vendor is null) ";
+							$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
 							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
@@ -623,21 +816,21 @@ include "root.php";
 										case "ldap search": $device_key_type  = "21"; break;
 									}
 								}
-								if ($device_key_category == "memory") {
-										switch ($device_key_type) {
-											case "speed dial": $device_key_type  = "0"; break;
-											case "blf": $device_key_type  = "1"; break;
-											case "presence watcher": $device_key_type  = "2"; break;
-											case "eventlist blf": $device_key_type  = "3"; break;
-											case "speed dial active": $device_key_type  = "4"; break;
-											case "dial dtmf": $device_key_type  = "5"; break;
-											case "voicemail": $device_key_type  = "6"; break;
-											case "call return": $device_key_type  = "7"; break;
-											case "transfer": $device_key_type  = "8"; break;
-											case "call park": $device_key_type  = "9"; break;
-											case "intercom": $device_key_type  = "10"; break;
-											case "ldap search": $device_key_type  = "11"; break;
-										}
+								if ($device_key_category == "memory" || $device_key_category == "expansion") {
+									switch ($device_key_type) {
+										case "speed dial": $device_key_type  = "0"; break;
+										case "blf": $device_key_type  = "1"; break;
+										case "presence watcher": $device_key_type  = "2"; break;
+										case "eventlist blf": $device_key_type  = "3"; break;
+										case "speed dial active": $device_key_type  = "4"; break;
+										case "dial dtmf": $device_key_type  = "5"; break;
+										case "voicemail": $device_key_type  = "6"; break;
+										case "call return": $device_key_type  = "7"; break;
+										case "transfer": $device_key_type  = "8"; break;
+										case "call park": $device_key_type  = "9"; break;
+										case "intercom": $device_key_type  = "10"; break;
+										case "ldap search": $device_key_type  = "11"; break;
+									}
 								}
 							}
 
@@ -662,20 +855,7 @@ include "root.php";
 					unset ($prep_statement);
 
 				//set the mac address in the correct format
-					switch (strtolower($device_vendor)) {
-					case "aastra":
-						$mac = strtoupper($mac);
-						break;
-					case "snom":
-						$mac = strtolower($mac);
-						break;
-					case "polycom":
-						$mac = strtolower($mac);
-						break;
-					default:
-						$mac = strtolower($mac);
-						$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
-					}
+					$mac = $this->format_mac($mac, $device_vendor);
 
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 					$view->assign("mac" , $mac);
@@ -761,6 +941,13 @@ include "root.php";
 				$tmp_array = '';
 				$i = 0;
 
+			//build the provision array
+				foreach($_SESSION['provision'] as $key=>$val) {
+					if (strlen($val['var']) > 0) { $value = $val['var']; }
+					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					$provision[$key] = $value;
+				}
+
 			//get the devices
 				$sql = "select * from v_devices ";
 				//$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
@@ -776,7 +963,7 @@ include "root.php";
 						$device_vendor = strtolower($row["device_vendor"]);
 						$device_model = $row["device_model"];
 						$device_firmware_version = $row["device_firmware_version"];
-						$device_provision_enable = $row["device_provision_enable"];
+						$device_enabled = $row["device_enabled"];
 						$device_template = $row["device_template"];
 						$device_username = $row["device_username"];
 						$device_password = $row["device_password"];
@@ -823,8 +1010,8 @@ include "root.php";
 										//$file_size = round(filesize($new_path)/1024, 2);
 										//echo $this->template_dir."/".$device_template."/".$file_name." $file_size\n";
 									//write the configuration to the directory
-										if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
-											$dir_array = explode(";", $_SESSION['switch']['provision']['dir']);
+										if (strlen($provision["path"]) > 0) {
+											$dir_array = explode(";", $provision["path"]);
 											foreach($dir_array as $directory) {
 
 												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {
@@ -835,15 +1022,11 @@ include "root.php";
 															$this->file = $file_name;
 															$file_contents = $this->render();
 
+													//format the mac address
+														$mac = $this->format_mac($device_mac_address, $device_vendor);
+
 													//replace {$mac} in the file name
-														if ($device_vendor == "aastra" || $device_vendor == "cisco") {
-															//upper case the mac address for aastra phones
-															$file_name = str_replace("{\$mac}", strtoupper($device_mac_address), $file_name);
-														}
-														else {
-															//all other phones
-															$file_name = str_replace("{\$mac}", $device_mac_address, $file_name);
-														}
+														$file_name = str_replace("{\$mac}", $mac, $file_name);
 
 													//write the file
 														//echo $directory.'/'.$file_name."\n";

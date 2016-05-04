@@ -74,7 +74,9 @@ require_once "resources/require.php";
 	$prep_statement->execute();
 	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset($sql, $prep_statement);
-	$system_groups = array('superadmin','admin','user','public','agent');
+	//$system_groups = array('superadmin','admin','user','public','agent');
+	$system_groups = array();
+
 
 //get group counts
 	$sql = "select group_uuid, count(user_uuid) as group_count from v_group_users ";
@@ -119,7 +121,7 @@ require_once "resources/require.php";
 	$row_style["1"] = "row_style1";
 
 	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	$echo .= "<tr class='border'>\n";
+	$echo .= "<tr>\n";
 	if (permission_exists('group_all') && $_GET['showall'] == 'true') {
 		$echo .= "	<th nowrap>".$text['label-domain']."</th>\n";
 	}

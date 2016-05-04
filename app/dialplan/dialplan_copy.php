@@ -64,18 +64,27 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$log->log("debug", $result);
 	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
-		$database_dialplan_uuid = $row["dialplan_uuid"];
-		$app_uuid = $row["app_uuid"];
-		$dialplan_name = $row["dialplan_name"];
-		$dialplan_order = $row["dialplan_order"];
-		$dialplan_continue = $row["dialplan_continue"];
-		$dialplan_context = $row["dialplan_context"];
-		$dialplan_enabled = $row["dialplan_enabled"];
-		$dialplan_description = "copy: ".$row["dialplan_description"];
+		$domain_uuid = check_str($row["domain_uuid"]);
+		$database_dialplan_uuid = check_str($row["dialplan_uuid"]);
+		$app_uuid = check_str($row["app_uuid"]);
+		$dialplan_name = check_str($row["dialplan_name"]);
+		$dialplan_order = check_str($row["dialplan_order"]);
+		$dialplan_continue = check_str($row["dialplan_continue"]);
+		$dialplan_context = check_str($row["dialplan_context"]);
+		$dialplan_enabled = check_str($row["dialplan_enabled"]);
+		$dialplan_description = check_str("copy: ".$row["dialplan_description"]);
 		break; //limit to 1 row
 	}
 	unset ($prep_statement);
+
+//create a new app_uuid when copying a dialplan except for these exceptions
+	switch ($app_uuid) {
+		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": break; //inbound routes
+		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": break; //outbound routes
+		case "4b821450-926b-175a-af93-a03c441818b1": break; //time conditions
+		default:
+			$app_uuid = uuid();
+	}
 
 //copy the dialplan
 	$dialplan_uuid = uuid();

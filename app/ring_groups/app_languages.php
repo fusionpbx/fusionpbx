@@ -33,17 +33,6 @@ $text['option-ukring']['uk'] = "uk-ring";
 $text['option-ukring']['de-at'] = "uk-ring";
 $text['option-ukring']['he'] = "צלצול אנגלי";
 
-$text['option-true']['en-us'] = "True";
-$text['option-true']['es-cl'] = "Verdadero";
-$text['option-true']['fr-fr'] = "Oui";
-$text['option-true']['pt-pt'] = "Sim";
-$text['option-true']['pt-br'] = "Sim";
-$text['option-true']['pl'] = "Tak";
-$text['option-true']['sv-se'] = "Sann";
-$text['option-true']['uk'] = "Так";
-$text['option-true']['de-at'] = "Ein";
-$text['option-true']['he'] = "חוקי";
-
 $text['option-simultaneous']['en-us'] = "Simultaneous";
 $text['option-simultaneous']['es-cl'] = "Simultaneos";
 $text['option-simultaneous']['fr-fr'] = "Simultané";
@@ -88,6 +77,17 @@ $text['option-rollover']['uk'] = "";
 $text['option-rollover']['de-at'] = "Überrollen";
 $text['option-rollover']['he'] = "";
 
+$text['option-random']['en-us'] = "Random";
+$text['option-random']['es-cl'] = "Aleatorio";
+$text['option-random']['pt-pt'] = "";
+$text['option-random']['fr-fr'] = "";
+$text['option-random']['pt-br'] = "";
+$text['option-random']['pl'] = "";
+$text['option-random']['sv-se'] = "";
+$text['option-random']['uk'] = "";
+$text['option-random']['de-at'] = "";
+$text['option-random']['he'] = "";
+
 $text['option-ptring']['en-us'] = "pt-ring";
 $text['option-ptring']['es-cl'] = "pt-ring";
 $text['option-ptring']['fr-fr'] = "Portugal";
@@ -121,17 +121,6 @@ $text['option-frring']['uk'] = "fr-ring";
 $text['option-frring']['de-at'] = "fr-ring";
 $text['option-frring']['he'] = "צלצול צרפתי";
 
-$text['option-false']['en-us'] = "False";
-$text['option-false']['es-cl'] = "Falso";
-$text['option-false']['fr-fr'] = "Non";
-$text['option-false']['pt-pt'] = "Não";
-$text['option-false']['pt-br'] = "Não";
-$text['option-false']['pl'] = "Nie";
-$text['option-false']['sv-se'] = "Falsk";
-$text['option-false']['uk'] = "Ні";
-$text['option-false']['de-at'] = "Aus";
-$text['option-false']['he'] = "לא חוקי";
-
 $text['option-enterprise']['en-us'] = "Enterprise";
 $text['option-enterprise']['es-cl'] = "Compañia";
 $text['option-enterprise']['fr-fr'] = "Entreprise";
@@ -164,17 +153,6 @@ $text['option-disabled']['sv-se'] = "Avaktiverad";
 $text['option-disabled']['uk'] = "Виключено";
 $text['option-disabled']['de-at'] = "Deaktiviert";
 $text['option-disabled']['he'] = "מנוטרל";
-
-$text['message-update']['en-us'] = "Update Complete";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['uk'] = "Оновлення завершено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-$text['message-update']['he'] = "עידכון הושלם";
 
 $text['message-timeout-action']['en-us'] = "Please provide: Timeout Action";
 $text['message-timeout-action']['es-cl'] = "Por favor indique: Acción en timeout";
@@ -220,15 +198,6 @@ $text['message-name']['uk'] = "";
 $text['message-name']['de-at'] = "Bitte geben Sie folgendes an: Name";
 $text['message-name']['he'] = "";
 
-$text['message-message']['es-cl'] = "Mensaje";
-$text['message-message']['pt-br'] = "Mensagem";
-$text['message-message']['pl'] = "Wiadomość";
-$text['message-message']['sv-se'] = "";
-$text['message-message']['fr-fr'] = "";
-$text['message-message']['uk'] = "Повідомлення";
-$text['message-message']['de-at'] = "";
-$text['message-message']['he'] = "הודעה";
-
 $text['message-maximum_ring_groups']['en-us'] = "Maximum Ring Groups:";
 $text['message-maximum_ring_groups']['es-cl'] = "Grupos máximos Anillo Animales:";
 $text['message-maximum_ring_groups']['pt-pt'] = "Grupos Máximo Anel de Estimação:";
@@ -250,28 +219,6 @@ $text['message-enabled']['sv-se'] = "Ange: Aktiverad";
 $text['message-enabled']['uk'] = "";
 $text['message-enabled']['de-at'] = "Bitte geben Sie folgendes an: Aktiviert";
 $text['message-enabled']['he'] = "";
-
-$text['message-delete']['en-us'] = "Delete Complete";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-$text['message-delete']['he'] = "המחיקה הושלמה";
-
-$text['message-add']['en-us'] = "Add Complete";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-$text['message-add']['he'] = "הוספה הושלמה";
 
 $text['link-call-forward']['en-us'] = "Call Forward";
 $text['link-call-forward']['es-cl'] = "Desvío de llamados";
@@ -305,17 +252,6 @@ $text['label-url']['uk'] = "URL";
 $text['label-url']['sv-se'] = "URL";
 $text['label-url']['de-at'] = "URL";
 $text['label-url']['he'] = "";
-
-$text['label-tools']['en-us'] = "Tools";
-$text['label-tools']['es-cl'] = "Herramientas";
-$text['label-tools']['fr-fr'] = "Outils";
-$text['label-tools']['pt-pt'] = "Ferramentas";
-$text['label-tools']['pt-br'] = "Ferramentas";
-$text['label-tools']['pl'] = "Narzędzia";
-$text['label-tools']['sv-se'] = "Verktyg";
-$text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Funktionen";
-$text['label-tools']['he'] = "כלים";
 
 $text['label-timeout_destination']['en-us'] = "Timeout Destination";
 $text['label-timeout_destination']['es-cl'] = "Timeout de destino";
@@ -405,17 +341,6 @@ $text['label-ring-group']['uk'] = "";
 $text['label-ring-group']['de-at'] = "Rufgruppe";
 $text['label-ring-group']['he'] = "קבוצת חיוג";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-$text['label-name']['he'] = "שם";
-
 $text['label-missed_call']['en-us'] = "Missed Call";
 $text['label-missed_call']['es-cl'] = "Llamada Perdida";
 $text['label-missed_call']['pt-pt'] = "Chamada Perdida";
@@ -426,6 +351,20 @@ $text['label-missed_call']['uk'] = "пропущений Дзвінок";
 $text['label-missed_call']['sv-se'] = "Missat Samtal";
 $text['label-missed_call']['de-at'] = "Verpasster Anruf";
 $text['label-missed_call']['he'] = "שיחה שלא נענתה";
+
+$text['label-forwarding']['en-us'] = "Forwarding";
+$text['label-forwarding']['es-cl'] = "reenvío";
+$text['label-forwarding']['pt-pt'] = "encaminhando";
+$text['label-forwarding']['fr-fr'] = "Expéditeur";
+$text['label-forwarding']['pt-br'] = "encaminhando";
+$text['label-forwarding']['pl'] = "Przekierowanie";
+$text['label-forwarding']['he'] = "שילוח";
+$text['label-forwarding']['uk'] = "експедиція";
+$text['label-forwarding']['sv-se'] = "Spedition";
+$text['label-forwarding']['de-at'] = "Weiterleiten";
+$text['label-forwarding']['ro'] = "expediere";
+$text['label-forwarding']['fa'] = "";
+$text['label-forwarding']['ar-eg'] = "إعادة توجيه";
 
 $text['label-forward_destination']['en-us'] = "Number";
 $text['label-forward_destination']['es-cl'] = "Número";
@@ -448,17 +387,6 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk'] = "Розширення (Extention)";
 $text['label-extension']['de-at'] = "Nebenstelle";
 $text['label-extension']['he'] = "שלוחה";
-
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activado";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pt-pt'] = "Activado";
-$text['label-enabled']['pt-br'] = "Habilitado";
-$text['label-enabled']['pl'] = "Włączony";
-$text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['de-at'] = "An";
-$text['label-enabled']['he'] = "מופעל";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "Email";
@@ -579,17 +507,6 @@ $text['label-destination_delay']['sv-se'] = "Fördröjning";
 $text['label-destination_delay']['uk'] = "Затримка";
 $text['label-destination_delay']['de-at'] = "Verzögerung";
 $text['label-destination_delay']['he'] = "השהיהה";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
-$text['label-description']['he'] = "תיאור";
 
 $text['label-delay']['en-us'] = "Delay";
 $text['label-delay']['es-cl'] = "Retardo";
@@ -734,16 +651,16 @@ $text['description-ringback']['uk'] = "";
 $text['description-ringback']['de-at'] = "Definiert was der Anrufer hört, während die Ziele angerufen werden.";
 $text['description-ringback']['he'] = "";
 
-$text['description-ring-group-forward']['en-us'] = "Forwards calls to an alternate destination for extension ";
-$text['description-ring-group-forward']['es-cl'] = "Desvía las llamadas a un destino alternativo";
-$text['description-ring-group-forward']['fr-fr'] = "Renvoyer les appels vers une destination alternative ";
-$text['description-ring-group-forward']['pt-pt'] = "Encaminhar chamadas para um destino alternativo.";
-$text['description-ring-group-forward']['pt-br'] = "Encaminhar chamadas para um destino alternativo";
+$text['description-ring-group-forward']['en-us'] = "Forward a called Ring Group to an alternate destination.";
+$text['description-ring-group-forward']['es-cl'] = "Reenviar una llamada de grupo de anillo a un destino alternativo.";
+$text['description-ring-group-forward']['fr-fr'] = "Transférer un groupe appelé Anneau vers une autre destination.";
+$text['description-ring-group-forward']['pt-pt'] = "Encaminhar uma chamada Grupo de toque em um destino alternativo.";
+$text['description-ring-group-forward']['pt-br'] = "Encaminhar uma chamada Grupo de toque em um destino alternativo.";
 $text['description-ring-group-forward']['pl'] = "Przekazuje rozmowy na alternatywny numer.";
 $text['description-ring-group-forward']['sv-se'] = "Vidarekoppla samtal till en alternativ destination för anknytning.";
-$text['description-ring-group-forward']['uk'] = "";
+$text['description-ring-group-forward']['uk'] = "Перенаправлення під назвою Ring Group в альтернативне місце призначення.";
 $text['description-ring-group-forward']['de-at'] = "Leitet Anrufe an ein alternatives Ziel weiter.";
-$text['description-ring-group-forward']['he'] = "";
+$text['description-ring-group-forward']['he'] = "קדימה שנקראה טבעת קבוצת יעד חלופי.";
 
 $text['description-name']['en-us'] = "Enter a name.";
 $text['description-name']['es-cl'] = "Ingrese un nombre.";
@@ -821,17 +738,6 @@ $text['description-destinations']['uk'] = "Вхідні номери можут�
 $text['description-destinations']['de-at'] = "Fügt Ziele und Parameter einer Rufgruppe zu.";
 $text['description-destinations']['he'] = "";
 
-$text['description-description']['en-us'] = "Enter a description (optional).";
-$text['description-description']['es-cl'] = "Ingrese una descripción (opcional)";
-$text['description-description']['fr-fr'] = "Entrez une description, si vous le souhaitez.";
-$text['description-description']['pt-pt'] = "Introduzir uma descrição (opcional)";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wpisz opis (opcjonalne)";
-$text['description-description']['sv-se'] = "Fyll i en beskrivning (frivillig).";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-$text['description-description']['he'] = "";
-
 $text['description-cid-number-prefix']['en-us'] = "Set a prefix on the caller ID number.";
 $text['description-cid-number-prefix']['es-cl'] = "Establezca un prefijo del número de identificación de llamadas.";
 $text['description-cid-number-prefix']['fr-fr'] = "Ajouter un préfixe au numéro de l'appelant";
@@ -865,81 +771,15 @@ $text['description']['uk'] = "Редагування інформації обл
 $text['description']['de-at'] = "Rufgruppen sind gruppierte Ziele, welche über eine vordefinierte Rufstrategie angerufen werden.";
 $text['description']['he'] = "ערוך את פרטי החשבון";
 
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-$text['confirm-delete']['he'] = "?בטוח שאתה רוצה למחוק";
-
-$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
-$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
-$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
-$text['confirm-copy']['pt-pt'] = "Tem a certeza que pretende copiar isto?";
-$text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
-$text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
-$text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
-$text['confirm-copy']['uk'] = "";
-$text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
-$text['confirm-copy']['he'] = "?בטוח שאתה רוצה להעתיק";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-$text['button-save']['he'] = "שמור";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-$text['button-edit']['he'] = "עריכה";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-$text['button-delete']['he'] = "מחיקה";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-$text['button-back']['he'] = "חזרה";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['uk'] = "Додати";
-$text['button-add']['de-at'] = "Hinzufügen";
-$text['button-add']['he'] = "הוספה";
+$text['button-view_all']['en-us'] = "View All";
+$text['button-view_all']['es-cl'] = "Mostrar Todos";
+$text['button-view_all']['pt-pt'] = "Mostrar Todos";
+$text['button-view_all']['fr-fr'] = "Tout Montrer";
+$text['button-view_all']['pl'] = "Pokaż wszystkie";
+$text['button-view_all']['uk'] = "Показати всі";
+$text['button-view_all']['sv-se'] = "Visa Allt";
+$text['button-view_all']['ro'] = "";
+$text['button-view_all']['de-at'] = "Alle anzeigen";
+$text['button-view_all']['he'] = "הצג הכל";
 
 ?>

@@ -44,6 +44,15 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	//	$device_template = check_str($_REQUEST['template']);
 	//}
 
+//get the mac address for Cisco 79xx in the URL as &name=SEP000000000000
+	if (empty($mac)){
+		$name = check_str($_REQUEST['name']);
+		if (substr($name, 0, 3) == "SEP") {
+			$mac = strtolower(substr($name, 3, 12));
+			unset($name);
+		}
+	}
+
 // Escence make request based on UserID for Memory keys
 /*
 The file name is fixed to `Account1_Extern.xml`.
@@ -67,6 +76,11 @@ The file name is fixed to `Account1_Extern.xml`.
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
@@ -82,7 +96,7 @@ The file name is fixed to `Account1_Extern.xml`.
 	}
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
 			$sql .= "WHERE device_mac_address = '".$mac."' ";
@@ -93,6 +107,7 @@ The file name is fixed to `Account1_Extern.xml`.
 				$domain_uuid = $row["domain_uuid"];
 			}
 			unset($result, $prep_statement);
+			$_SESSION['domain_uuid'] = $domain_uuid;
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -250,13 +265,75 @@ The file name is fixed to `Account1_Extern.xml`.
 		}
 	}
 
-//http authentication
-	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0) {
+//http authentication - digest
+	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
+	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] == "digest") {
+		//function to parse the http auth header
+			function http_digest_parse($txt) {
+				//protect against missing data
+				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+				$data = array();
+				$keys = implode('|', array_keys($needed_parts));
+				preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
+				foreach ($matches as $m) {
+					$data[$m[1]] = $m[3] ? $m[3] : $m[4];
+					unset($needed_parts[$m[1]]);
+				}
+				return $needed_parts ? false : $data;
+			}
+
+		//function to request digest authentication
+			function http_digest_request($realm) {
+				header('HTTP/1.1 401 Authorization Required');
+				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
+				header("Content-Type: text/html");
+				$content = 'Authorization Cancelled';
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
+				die();
+			}
+
+		//set the realm
+			$realm = $_SESSION['domain_name'];
+
+		//request authentication
+			if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
+				http_digest_request($realm);
+			}
+
+		//check for valid digest authentication details
+			if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
+				header('HTTP/1.1 401 Unauthorized');
+				header("Content-Type: text/html");
+				$content = 'Unauthorized '.$__line__;
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
+				exit;
+			}
+
+		//generate the valid response
+			$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $provision["http_auth_password"]);
+			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
+			$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+			if ($data['response'] != $valid_response) {
+				header('HTTP/1.0 401 Unauthorized');
+				header("Content-Type: text/html");
+				$content = 'Unauthorized '.$__line__;
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
+				exit;
+			}
+	}
+
+//http authentication - basic
+	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0 && $provision["http_auth_type"] == "basic") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
-			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
-			header('HTTP/1.0 401 Unauthorized');
-			header("Content-Type: text/plain");
-			echo 'Authorization Required';
+			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
+			header('HTTP/1.0 401 Authorization Required');
+			header("Content-Type: text/html");
+			$content = 'Authorization Required';
+			header("Content-Length: ".strval(strlen($content)));
+			echo $content;
 			exit;
 		} else {
 			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
@@ -264,10 +341,12 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 			else {
 				//access denied
-				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
+				header('HTTP/1.0 401 Unauthorized');
+				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
-				usleep(rand(1000000,3000000));//1-3 seconds.
-				echo 'Authorization Required';
+				$content = 'Unauthorized';
+				header("Content-Length: ".strval(strlen($content)));
+				echo $content;
 				exit;
 			}
 		}
@@ -281,7 +360,6 @@ The file name is fixed to `Account1_Extern.xml`.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			closelog();
-			usleep(rand(1000000,3000000));//1-3 seconds.
 			echo "access denied 4";
 			return;
 		}
@@ -296,35 +374,41 @@ The file name is fixed to `Account1_Extern.xml`.
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
-	$cfg_ext = ".cfg";
-	if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strlen($file_contents));
-	} else if ($device_vendor === "yealink") {
-		header("Content-Type: text/plain");
-		header("Content-Length: ".strval(strlen($file_contents)));
-	} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
-		$file_contents = utf8_decode($file_contents);
-		header("Content-Type: text/plain; charset=iso-8859-1");
-		header("Content-Length: ".strlen($file_contents));
-	} else {
-		header("Content-Type: text/xml; charset=utf-8");
-		header("Content-Length: ".strlen($file_contents));
+	if ($_REQUEST['content_type'] == 'application/octet-stream') {
+		//format the mac address and
+			$mac = $prov->format_mac($mac, $device_vendor);
+
+		//replace the variable name with the value
+			$file_name = str_replace("{\$mac}", $mac, $file);
+
+		//set the headers
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="'.basename($file_name).'"');
+			header('Content-Transfer-Encoding: binary');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Content-Length: ' . strlen($file_contents));
+	}
+	else {
+		$cfg_ext = ".cfg";
+		if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strlen($file_contents));
+		} else if ($device_vendor === "yealink") {
+			header("Content-Type: text/plain");
+			header("Content-Length: ".strval(strlen($file_contents)));
+		} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
+			$file_contents = utf8_decode($file_contents);
+			header("Content-Type: text/plain; charset=iso-8859-1");
+			header("Content-Length: ".strlen($file_contents));
+		} else {
+			header("Content-Type: text/xml; charset=utf-8");
+			header("Content-Length: ".strlen($file_contents));
+		}
 	}
 	echo $file_contents;
 	closelog();
-
-	function http_digest_parse($txt){
-		// protect against missing data
-		$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
-		$data = array();
-		$keys = implode('|', array_keys($needed_parts));
-		preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
-		foreach ($matches as $m) {
-			$data[$m[1]] = $m[3] ? $m[3] : $m[4];
-			unset($needed_parts[$m[1]]);
-		}
-		return $needed_parts ? false : $data;
-	}
 
 ?>

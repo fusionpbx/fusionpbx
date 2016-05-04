@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,11 @@
 
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
+
+		--set a default value
+			if (expire["sofia"] == nil) then
+				expire["sofia"]= "3600";
+			end
 
 		--connect to the database
 			require "resources.functions.database_handle";
@@ -116,9 +121,10 @@
 								sql = sql .. "and g.enabled = 'true' ";
 								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							else
-								sql = "select * from v_gateways ";
-								sql = sql .. "where enabled = 'true' and profile = '"..sip_profile_name.."' ";
+								sql = "select * from v_gateways as g ";
+								sql = sql .. "where g.enabled = 'true' and g.profile = '"..sip_profile_name.."' ";
 							end
+							sql = sql .. "and (g.hostname = '" .. hostname.. "' or g.hostname is null or g.hostname = '') ";
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
@@ -257,7 +263,7 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
+			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia"]));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then

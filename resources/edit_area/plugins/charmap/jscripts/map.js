@@ -2,9 +2,9 @@ var editArea;
 
 
 /**
- *  UTF-8 list taken from http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec 
- */  
- 
+ *  UTF-8 list taken from http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
+ */
+
 
 /*
 var char_range_list={
@@ -324,10 +324,10 @@ function map_load(){
 	document.title= editArea.get_translation(document.title, "template");
 	document.body.innerHTML= editArea.get_translation(document.body.innerHTML, "template");
 	//document.title= editArea.get_translation(document.getElementBytitle, "template");
-	
+
 	var selected_lang=opener.EditArea_charmap.default_language.toLowerCase();
 	var selected=0;
-	
+
 	var select= document.getElementById("select_range")
 	for(var i in char_range_list){
 		if(i.toLowerCase()==selected_lang)

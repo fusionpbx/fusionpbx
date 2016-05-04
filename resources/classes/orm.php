@@ -286,13 +286,13 @@
 					}
 
 				//add a record
+        				//set the message index
+					$m = 0;
 					if ($action == "add") {
 						if (permission_exists($this->singular($this->name).'_add')) {
 							//start the atomic transaction
 								$this->db->beginTransaction();
 
-							//set the message index
-								$m = 0;
 
 							//parent data
 								if (isset($this->uuid)) {
@@ -661,7 +661,7 @@
 
 			//define singular function to convert a word in english to singular
 				private function singular($word) {
-					//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add 
+					//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 					if (substr($word, -2) == "es") {
 						if (substr($word, -3, 1) == "x") {
 							return substr($word,0,-2);

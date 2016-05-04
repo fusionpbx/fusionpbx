@@ -37,7 +37,7 @@
 <user_name idx="1" perm="">{$user_id_1}</user_name>
 <user_pass idx="1" perm="">{$user_password_1}</user_pass>
 <user_host idx="1" perm="">{$server_address_1}:{$sip_port_1};transport={$sip_transport_1}</user_host>
-<user_subscription_expiry idx="1" perm="">{$register_expires_1}</user_subscription_expiry>  
+<user_subscription_expiry idx="1" perm="">{$register_expires_1}</user_subscription_expiry>
 <user_server_type idx="1" perm="">Default</user_server_type>
 <user_srtp idx="1" perm="">off</user_srtp>
 <user_mailbox idx="1" perm="">*97</user_mailbox>
@@ -45,7 +45,7 @@
 <user_name idx="2" perm="">{$user_id_2}</user_name>
 <user_pass idx="2" perm="">{$user_password_2}</user_pass>
 <user_host idx="2" perm="">{$server_address_2}:{$sip_port_2};transport={$sip_transport_2}</user_host>
-<user_subscription_expiry idx="2" perm="">{$register_expires_2}</user_subscription_expiry>  
+<user_subscription_expiry idx="2" perm="">{$register_expires_2}</user_subscription_expiry>
 <user_server_type idx="2" perm="">Default</user_server_type>
 <user_srtp idx="2" perm="">off</user_srtp>
 <user_mailbox idx="2" perm="">*97</user_mailbox>
@@ -53,7 +53,7 @@
 <user_name idx="3" perm="">{$user_id_3}</user_name>
 <user_pass idx="3" perm="">{$user_password_3}</user_pass>
 <user_host idx="3" perm="">{$server_address_3}:{$sip_port_3};transport={$sip_transport_3}</user_host>
-<user_subscription_expiry idx="3" perm="">{$register_expires_3}</user_subscription_expiry>  
+<user_subscription_expiry idx="3" perm="">{$register_expires_3}</user_subscription_expiry>
 <user_server_type idx="3" perm="">Default</user_server_type>
 <user_srtp idx="3" perm="">off</user_srtp>
 <user_mailbox idx="3" perm="">*97</user_mailbox>
@@ -61,7 +61,7 @@
 <user_name idx="4" perm="">{$user_id_4}</user_name>
 <user_pass idx="4" perm="">{$user_password_4}</user_pass>
 <user_host idx="4" perm="">{$server_address_4}:{$sip_port_4};transport={$sip_transport_4}</user_host>
-<user_subscription_expiry idx="4" perm="">{$register_expires_4}</user_subscription_expiry>  
+<user_subscription_expiry idx="4" perm="">{$register_expires_4}</user_subscription_expiry>
 <user_server_type idx="4" perm="">Default</user_server_type>
 <user_srtp idx="4" perm="">off</user_srtp>
 <user_mailbox idx="4" perm="">*97</user_mailbox>
@@ -69,7 +69,7 @@
 <user_name idx="5" perm="">{$user_id_5}</user_name>
 <user_pass idx="5" perm="">{$user_password_5}</user_pass>
 <user_host idx="5" perm="">{$server_address_5}:{$sip_port_5};transport={$sip_transport_5}</user_host>
-<user_subscription_expiry idx="5" perm="">{$register_expires_5}</user_subscription_expiry>  
+<user_subscription_expiry idx="5" perm="">{$register_expires_5}</user_subscription_expiry>
 <user_server_type idx="5" perm="">Default</user_server_type>
 <user_srtp idx="5" perm="">off</user_srtp>
 <user_mailbox idx="5" perm="">*97</user_mailbox>

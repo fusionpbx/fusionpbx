@@ -391,14 +391,14 @@
 		--email_cmd = "/bin/echo '"..email_message_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
 
 		--to keep the originate command shorter these are things we always send. One place to adjust for all.
-		originate_same = "for_fax=1,absolute_codec_string='PCMU,PCMA',accountcode='"..accountcode.."',domain_uuid="..domain_uuid..",domain_name="..domain_name..",mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
+		originate_same = "for_fax=1,accountcode='"..accountcode.."',domain_uuid="..domain_uuid..",domain_name="..domain_name..",mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
 
-		if (fax_retry_attempts < fax_retry_limit) then 
+		if (fax_retry_attempts < fax_retry_limit) then
 
 			--timed out waitng for comm or on first message, or busy code
 			if (fax_result_code == "2"  or fax_result_code == "3" or hangup_cause_q850 == 17) then
 				--do nothing. don't want to increment
-				freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n"); 
+				freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n");
 				fax_busy_attempts = fax_busy_attempts + 1;
 				if (fax_busy_attempts > fax_busy_limit) then
 					fax_retry_attempts = 17;
@@ -457,8 +457,8 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY_STATS FAILURE BAD NUMBER: GATEWAY[".. fax_uri .."]");
 				email_message_fail = email_message_fail.."We tried sending, but the number entered was not a working phone number "
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was INVALID",
 									email_message_fail ,
 									fax_file
@@ -470,8 +470,8 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE BUSY: GATEWAY[".. fax_uri .."], BUSY NUMBER");
 				email_message_fail = email_message_fail.."  We tried sending, but the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was BUSY",
 									email_message_fail ,
 									fax_file
@@ -485,8 +485,8 @@
 				email_message_fail = email_message_fail.."  We tried sending 5 times ways.  You may also want to know that the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
 
-				freeswitch.email("",
-									"",
+				freeswitch.email(email_address,
+									email_address,
 									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." FAILED",
 									email_message_fail ,
 									fax_file
@@ -521,8 +521,8 @@
 		freeswitch.consoleLog("INFO", "[FAX] RETRY STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]");
 		email_address = email_address:gsub("\\,", ",");
 
-		freeswitch.email("",
-				"",
+		freeswitch.email(email_address,
+				email_address,
 				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
 				email_message_success ,
 				fax_file

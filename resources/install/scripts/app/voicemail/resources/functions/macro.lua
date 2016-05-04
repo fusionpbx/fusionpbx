@@ -136,7 +136,7 @@
 						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
 						table.insert(actions, {app="streamFile",data="digits/3.wav"});
 					end
-				--At the tone please record your name press any key or stop talking to end the recording 
+				--At the tone please record your name press any key or stop talking to end the recording
 					if (name == "record_name") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name1.wav"});
 						table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});

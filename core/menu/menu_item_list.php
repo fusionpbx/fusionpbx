@@ -84,7 +84,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					foreach ($sub_result as &$sub_row) {
 						$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
 					}
-					$group_list = implode(', ', $group_list);
+					$group_list = isset($group_list) ? implode(', ', $group_list) : '';
 					unset ($sub_prep_statement);
 				//display the main body of the list
 					switch ($menu_item_category) {

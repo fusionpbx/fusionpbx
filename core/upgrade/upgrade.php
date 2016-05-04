@@ -48,8 +48,8 @@
 		$format = 'html';
 	}
 
-		require_once "resources/classes/text.php";
 //add multi-lingual support
+	require_once "resources/classes/text.php";
 	$language = new text;
 	$text = $language->get();
 

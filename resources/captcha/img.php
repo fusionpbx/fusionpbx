@@ -26,8 +26,10 @@
 include "root.php";
 require_once "config.php";
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
-session_start();
 
+//start the session
+ini_set("session.cookie_httponly", True);
+session_start();
 
 // Captcha verification image -----------------------
 // Description this page is used to verify the captcha

@@ -92,7 +92,7 @@
 		--set the dial string
 			if (enabled == "true") then
 				local user = (number_alias and #number_alias > 0) and number_alias or extension;
-				dial_string = "loopback/*99"..user;
+				dial_string = "error/user_busy";
 			end
 
 		--set do not disturb
@@ -142,10 +142,43 @@
 			end
 			dbh:query(sql);
 
+		--determine whether to update the dial string
+			sql = "select * from v_extension_users as e, v_users as u ";
+			sql = sql .. "where e.extension_uuid = '"..extension_uuid.."' ";
+			sql = sql .. "and e.user_uuid = u.user_uuid ";
+			sql = sql .. "and e.domain_uuid = '"..domain_uuid.."' ";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+			end
+			status = dbh:query(sql, function(row)
+				--update the call center status
+					if (enabled == "true") then
+						user_status = "Logged Out";
+						api:execute("callcenter_config", "agent set status "..row.username.."@"..domain_name.." '"..user_status.."'");
+					end
+
+				--update the database user_status
+					if (enabled == "true") then
+						user_status = "Do Not Disturb";
+					else
+						user_status = "Available";
+					end
+					sql = "update v_users set ";
+					sql = sql .. "user_status = '"..user_status.."' ";
+					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+					sql = sql .. "and user_uuid = '"..row.user_uuid.."' ";
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+					end
+					dbh:query(sql);
+			end);
+
 		--clear the cache
 			if (extension ~= nil) then
+				freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..extension.."@"..domain_name);
 				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
 				if #number_alias > 0 then
+					freeswitch.consoleLog("notice", "[do_not_disturb] memcache delete directory:"..number_alias.."@"..domain_name);
 					api:execute("memcache", "delete directory:"..number_alias.."@"..domain_name);
 				end
 			end

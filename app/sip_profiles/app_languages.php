@@ -30,85 +30,6 @@ $text['title-setting']['sv-se'] = "Profilinställning";
 $text['title-setting']['uk'] = "Налаштування профілю";
 $text['title-setting']['de-at'] = "Profil Einstellungen";
 
-$text['option-true']['en-us'] = "True";
-$text['option-true']['es-cl'] = "Verdadero";
-$text['option-true']['pt-pt'] = "Sim";
-$text['option-true']['fr-fr'] = "Oui";
-$text['option-true']['pt-br'] = "Sim";
-$text['option-true']['pl'] = "Tak";
-$text['option-true']['sv-se'] = "Sann";
-$text['option-true']['uk'] = "Так";
-$text['option-true']['de-at'] = "Ein";
-
-$text['option-false']['en-us'] = "False";
-$text['option-false']['es-cl'] = "Falso";
-$text['option-false']['pt-pt'] = "Não";
-$text['option-false']['fr-fr'] = "Non";
-$text['option-false']['pt-br'] = "Não";
-$text['option-false']['pl'] = "Nie";
-$text['option-false']['sv-se'] = "Falsk";
-$text['option-false']['uk'] = "Ні";
-$text['option-false']['de-at'] = "Aus";
-
-$text['message-update']['en-us'] = "Update Completed";
-$text['message-update']['es-cl'] = "Actualización Completada";
-$text['message-update']['pt-pt'] = "Actualização Efectuada";
-$text['message-update']['fr-fr'] = "Mis à jour";
-$text['message-update']['pt-br'] = "Atualização Efetuada";
-$text['message-update']['pl'] = "Zaktualizowano poprawnie";
-$text['message-update']['sv-se'] = "Uppdatering Klar";
-$text['message-update']['uk'] = "Оновлено";
-$text['message-update']['de-at'] = "Aktualisierung durchgeführt";
-
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['es-cl'] = "Por favor indique: ";
-$text['message-required']['pt-pt'] = "Por favor indique: ";
-$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-$text['message-required']['pt-br'] = "Por favor Indique:";
-$text['message-required']['pl'] = "Wpisz:";
-$text['message-required']['sv-se'] = "Var god uppge:";
-$text['message-required']['uk'] = "Будь ласка, вкажіть:";
-$text['message-required']['de-at'] = "Bitte geben Sie folgendes an:";
-
-$text['message-delete']['en-us'] = "Delete Completed";
-$text['message-delete']['es-cl'] = "Eliminación Completada";
-$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-$text['message-delete']['fr-fr'] = "Supprimé";
-$text['message-delete']['pt-br'] = "Remoção Efetuada";
-$text['message-delete']['pl'] = "Usunięto poprawnie";
-$text['message-delete']['sv-se'] = "Borttagning Klar";
-$text['message-delete']['uk'] = "Видалено";
-$text['message-delete']['de-at'] = "Erfolgreich gelöscht";
-
-$text['message-copy']['en-us'] = "Copy Completed";
-$text['message-copy']['pt-pt'] = "Cópia Efectuada";
-$text['message-copy']['fr-fr'] = "Copié";
-$text['message-copy']['pt-br'] = "Cópia Efetuada";
-$text['message-copy']['pl'] = "Skopiowano poprawnie";
-$text['message-copy']['sv-se'] = "Kopiering Slutförd";
-$text['message-copy']['uk'] = "Скопійовано";
-$text['message-copy']['de-at'] = "Erfolgreich kopiert";
-
-$text['message-add']['en-us'] = "Add Completed";
-$text['message-add']['es-cl'] = "Agregar Completado";
-$text['message-add']['pt-pt'] = "Adição Efectuada";
-$text['message-add']['fr-fr'] = "Ajouté";
-$text['message-add']['pt-br'] = "Criação Efetuada";
-$text['message-add']['pl'] = "Dodano poprawnie";
-$text['message-add']['sv-se'] = "Tillagd";
-$text['message-add']['uk'] = "Додано";
-$text['message-add']['de-at'] = "Erfolgreich hinzugefügt";
-
-$text['label-true']['en-us'] = "True";
-$text['label-true']['es-cl'] = "Verdadero";
-$text['label-true']['pt-pt'] = "Sim";
-$text['label-true']['fr-fr'] = "Oui";
-$text['label-true']['pt-br'] = "Sim";
-$text['label-true']['pl'] = "Tak";
-$text['label-true']['uk'] = "Так";
-$text['label-true']['sv-se'] = "Sann";
-$text['label-true']['de-at'] = "Ein";
-
 $text['label-setting_value']['en-us'] = "Value";
 $text['label-setting_value']['es-cl'] = "Valor";
 $text['label-setting_value']['pt-pt'] = "Valor";
@@ -149,16 +70,6 @@ $text['label-setting_description']['sv-se'] = "Beskrivning";
 $text['label-setting_description']['uk'] = "Опис";
 $text['label-setting_description']['de-at'] = "Beschreibung";
 
-$text['label-name']['en-us'] = "Name";
-$text['label-name']['es-cl'] = "Nombre";
-$text['label-name']['pt-pt'] = "Nome";
-$text['label-name']['fr-fr'] = "Nom";
-$text['label-name']['pt-br'] = "Nome";
-$text['label-name']['pl'] = "Nazwa";
-$text['label-name']['sv-se'] = "Namn";
-$text['label-name']['uk'] = "Назва";
-$text['label-name']['de-at'] = "Name";
-
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['pt-pt'] = "Hostname";
 $text['label-hostname']['fr-fr'] = "Nom d'hôte";
@@ -167,36 +78,6 @@ $text['label-hostname']['pl'] = "Nazwa hosta";
 $text['label-hostname']['sv-se'] = "Hostname";
 $text['label-hostname']['uk'] = "Назва хоста";
 $text['label-hostname']['de-at'] = "Hostname";
-
-$text['label-false']['en-us'] = "False";
-$text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "Não";
-$text['label-false']['fr-fr'] = "Non";
-$text['label-false']['pt-br'] = "Não";
-$text['label-false']['pl'] = "Nie";
-$text['label-false']['uk'] = "Ні";
-$text['label-false']['sv-se'] = "Falsk";
-$text['label-false']['de-at'] = "Aus";
-
-$text['label-enabled']['en-us'] = "Enabled";
-$text['label-enabled']['es-cl'] = "Activado";
-$text['label-enabled']['pt-pt'] = "Habilitada";
-$text['label-enabled']['fr-fr'] = "Actif";
-$text['label-enabled']['pt-br'] = "Habilitado";
-$text['label-enabled']['pl'] = "Numer wew włączony?";
-$text['label-enabled']['uk'] = "Включено";
-$text['label-enabled']['sv-se'] = "Aktiverad";
-$text['label-enabled']['de-at'] = "Aktiv";
-
-$text['label-description']['en-us'] = "Description";
-$text['label-description']['es-cl'] = "Descripción";
-$text['label-description']['pt-pt'] = "Descrição";
-$text['label-description']['fr-fr'] = "Description";
-$text['label-description']['pt-br'] = "Descrição";
-$text['label-description']['pl'] = "Opis";
-$text['label-description']['sv-se'] = "Beskrivning";
-$text['label-description']['uk'] = "Опис";
-$text['label-description']['de-at'] = "Beschreibung";
 
 $text['header_settings']['en-us'] = "Settings";
 $text['header_settings']['es-cl'] = "Configuraciones";
@@ -333,94 +214,5 @@ $text['description-enabled']['pl'] = "Kontroluj stan profilu.";
 $text['description-enabled']['sv-se'] = "Styr tillståndet i profilen.";
 $text['description-enabled']['uk'] = "Керування станом профілю";
 $text['description-enabled']['de-at'] = "Setzen Sie den Status dieses Profils.";
-
-$text['description-description']['en-us'] = "Enter the description.";
-$text['description-description']['es-cl'] = "Ingrese una descripción.";
-$text['description-description']['pt-pt'] = "Introduza a descrição.";
-$text['description-description']['fr-fr'] = "Entrer la description.";
-$text['description-description']['pt-br'] = "Insira a descrição, caso desejar";
-$text['description-description']['pl'] = "Wprowadź opis";
-$text['description-description']['sv-se'] = "Ange en beskrivning.";
-$text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
-
-$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
-$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
-$text['confirm-delete']['pt-br'] = "Deseja realmente remover isto?";
-$text['confirm-delete']['pl'] = "Czy na pewno chcesz to usunąć?";
-$text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
-$text['confirm-delete']['uk'] = "Ви дійсно бажаєте це видалити?";
-$text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
-
-$text['confirm-copy']['en-us'] = "Enter the SIP Profile name.";
-$text['confirm-copy']['es-cl'] = "Ingrese el nombre de perfil SIP.";
-$text['confirm-copy']['pt-pt'] = "Introduza o nome do perfil SIP.";
-$text['confirm-copy']['fr-fr'] = "Entrer le nom du Profile SIP.";
-$text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?";
-$text['confirm-copy']['pl'] = "Czy na pewno chcesz to skopiować?";
-$text['confirm-copy']['sv-se'] = "Ange SIP Profil namnet.";
-$text['confirm-copy']['uk'] = "Вкажіть назву профілю";
-$text['confirm-copy']['de-at'] = "Geben Sie den SIP Profilnamen an.";
-
-$text['button-save']['en-us'] = "Save";
-$text['button-save']['es-cl'] = "Guardar";
-$text['button-save']['pt-pt'] = "Guardar";
-$text['button-save']['fr-fr'] = "Sauvegarder";
-$text['button-save']['pt-br'] = "Salvar";
-$text['button-save']['pl'] = "Zachowaj";
-$text['button-save']['sv-se'] = "Spara";
-$text['button-save']['uk'] = "Зберегти";
-$text['button-save']['de-at'] = "Speichern";
-
-$text['button-edit']['en-us'] = "Edit";
-$text['button-edit']['es-cl'] = "Editar";
-$text['button-edit']['pt-pt'] = "Editar";
-$text['button-edit']['fr-fr'] = "Editer";
-$text['button-edit']['pt-br'] = "Editar";
-$text['button-edit']['pl'] = "Edytuj";
-$text['button-edit']['sv-se'] = "Editera";
-$text['button-edit']['uk'] = "Редагувати";
-$text['button-edit']['de-at'] = "Bearbeiten";
-
-$text['button-delete']['en-us'] = "Delete";
-$text['button-delete']['es-cl'] = "Eliminar";
-$text['button-delete']['pt-pt'] = "Remover";
-$text['button-delete']['fr-fr'] = "Supprimer";
-$text['button-delete']['pt-br'] = "Remover";
-$text['button-delete']['pl'] = "Usuń";
-$text['button-delete']['sv-se'] = "Ta Bort";
-$text['button-delete']['uk'] = "Видалити";
-$text['button-delete']['de-at'] = "Löschen";
-
-$text['button-copy']['en-us'] = "Copy";
-$text['button-copy']['pt-pt'] = "Copiar";
-$text['button-copy']['fr-fr'] = "Copier";
-$text['button-copy']['pt-br'] = "Copiar";
-$text['button-copy']['pl'] = "Kopiuj";
-$text['button-copy']['sv-se'] = "Kopiera";
-$text['button-copy']['uk'] = "Копіювати";
-$text['button-copy']['de-at'] = "Kopieren";
-
-$text['button-back']['en-us'] = "Back";
-$text['button-back']['es-cl'] = "Volver";
-$text['button-back']['pt-pt'] = "Voltar";
-$text['button-back']['fr-fr'] = "Retour";
-$text['button-back']['pt-br'] = "Voltar";
-$text['button-back']['pl'] = "Wróć";
-$text['button-back']['sv-se'] = "Tillbaka";
-$text['button-back']['uk'] = "Назад";
-$text['button-back']['de-at'] = "Zurück";
-
-$text['button-add']['en-us'] = "Add";
-$text['button-add']['es-cl'] = "Agregar";
-$text['button-add']['pt-pt'] = "Adicionar";
-$text['button-add']['fr-fr'] = "Ajouter";
-$text['button-add']['pt-br'] = "Adicionar";
-$text['button-add']['pl'] = "Dodaj";
-$text['button-add']['sv-se'] = "Lägg Till";
-$text['button-add']['uk'] = "Додати";
-$text['button-add']['de-at'] = "Hinzufügen";
 
 ?>

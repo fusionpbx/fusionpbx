@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,6 +68,13 @@
 			$array[$x]['default_setting_description'] = '';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'http_auth_type';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = 'digest';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'http_auth_username';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = '';
@@ -97,6 +104,13 @@
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'admin_password';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'path';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = '';
 			$array[$x]['default_setting_enabled'] = 'false';
@@ -138,6 +152,55 @@
 			$array[$x]['default_setting_description'] = '3600 * GMT offset';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'polycom_digitmap';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '[*]xxxx|[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-9]xxT|**x.T';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_start_month';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '3';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_start_day';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '13';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_start_time';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '2';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_stop_month';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '11';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_stop_day';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '6';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'daylight_savings_stop_time';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '2';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'http_domain_filter';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = 'false';
@@ -166,21 +229,35 @@
 			$array[$x]['default_setting_description'] = '0-WWW MMM DD (default), 1-DD-MMM-YY, 2-YYYY-MM-DD, 3-DD/MM/YYYY, 4-MM/DD/YY, 5-DD MMM YYYY, 6-WWW DD MMM';
 			$x++;
 			$array[$x]['default_setting_category'] = 'provision';
-			$array[$x]['default_setting_subcategory'] = 'directory';
+			$array[$x]['default_setting_subcategory'] = 'contact_users';
 			$array[$x]['default_setting_name'] = 'boolean';
 			$array[$x]['default_setting_value'] = 'true';
 			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
-			$array[$x]['default_setting_category'] = 'ntp_server_primary';
-			$array[$x]['default_setting_subcategory'] = 'directory';
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'contact_groups';
+			$array[$x]['default_setting_name'] = 'boolean';
+			$array[$x]['default_setting_value'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'contact_extensions';
+			$array[$x]['default_setting_name'] = 'boolean';
+			$array[$x]['default_setting_value'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = 'allow extensions to be provisioned as contacts as $extensions in provision templates';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'ntp_server_primary';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = 'pool.ntp.org';
 			$array[$x]['default_setting_enabled'] = 'true';
 			$array[$x]['default_setting_description'] = '';
 			$x++;
-			$array[$x]['default_setting_category'] = 'ntp_server_secondary';
-			$array[$x]['default_setting_subcategory'] = 'directory';
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'ntp_server_secondary';
 			$array[$x]['default_setting_name'] = 'text';
 			$array[$x]['default_setting_value'] = '2.us.pool.ntp.org';
 			$array[$x]['default_setting_enabled'] = 'true';
@@ -210,7 +287,7 @@
 			}
 
 		//add the missing default settings
-			foreach ($missing as $row) {
+			if (count($missing) > 0) foreach ($missing as $row) {
 				//add the default settings
 				$orm = new orm;
 				$orm->name('default_settings');

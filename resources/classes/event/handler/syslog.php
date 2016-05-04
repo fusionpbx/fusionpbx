@@ -21,7 +21,7 @@ class Syslog extends Event_Handler{
 		if ($_SESSION['event']['syslog']['enable'] <> 0){
 			closelog();
 		}
-	} 
+	}
 
 	public function log_event($event_type, $params){
 		if ($_SESSION['event']['syslog']['enable'] <> 0){
