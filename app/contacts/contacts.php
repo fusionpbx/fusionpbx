@@ -82,7 +82,7 @@ else {
 		$sql .= "	or \n";
 		$sql .= "	contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		where group_uuid = '".$_SESSION['group_uuid']."' ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= ") \n";
