@@ -49,9 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-app-xml-cdr/var/www/fusionpbx/app
-	cp -pr xml_cdr debian/fusionpbx-app-xml-cdr/var/www/fusionpbx/app
-
+	mkdir -p debian/fusionpbx-app-xml-cdr/var/www/fusionpbx/app/xml_cdr
+	cp -pr *.php resources debian/fusionpbx-app-xml-cdr/var/www/fusionpbx/app/xml_cdr
 build-indep: build install
 
 # Build architecture-independent files here.
