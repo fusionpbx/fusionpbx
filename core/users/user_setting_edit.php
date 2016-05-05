@@ -547,6 +547,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
 	}
+	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
+		$row['user_setting_value'] = str_replace('"', "'", $row['user_setting_value']);
+		if ($fonts = get_available_fonts('alpha')) {
+			echo "	<select class='formfld' id='sel_user_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_user_setting_value option').length - 1) { $('#txt_user_setting_value').val('').fadeIn('fast'); $('#txt_user_setting_value').focus(); } else { $('#txt_user_setting_value').fadeOut('fast', function(){ $('#txt_user_setting_value').val($('#sel_user_setting_value').val()) }); } \">\n";
+			echo "		<option value=''></option>\n";
+			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
+			$option_found = false;
+			foreach ($fonts as $n => $font) {
+				if ($row['user_setting_value'] == $font) {
+					$selected = 'selected';
+					$option_found = true;
+				}
+				else {
+					unset($selected);
+				}
+				echo "		<option value='".$font."' ".$selected.">".$font."</option>\n";
+			}
+			echo "		</optgroup>\n";
+			echo "		<option value='' disabled='disabled'></option>\n";
+			echo "		<option value='' ".(($row['user_setting_value'] != '' && $option_found == false) ? 'selected' : null).">".$text['label-other']."...</option>\n";
+			echo "	</select>";
+			echo "	<input type='text' class='formfld' ".(($row['user_setting_value'] == '' || $option_found) ? "style='display: none;'" : null)." id='txt_user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
+		}
+		else {
+			echo "	<input type='text' class='formfld' id='user_setting_value' name='user_setting_value' value=\"".$row['user_setting_value']."\">\n";
+		}
+	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value='letter' ".(($row['user_setting_value'] == 'letter') ? 'selected' : null).">Letter</option>";
@@ -614,6 +641,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
+	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
+		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://www.google.com/fonts' target='_blank'>".$text['label-web_fonts']."</a>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

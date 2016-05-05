@@ -591,7 +591,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_heading_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block heading text.';
 		$x++;
@@ -647,7 +647,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_number_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block number.';
 		$x++;
@@ -682,7 +682,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_number_title_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block number title.';
 		$x++;
@@ -1079,7 +1079,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'button_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Candara, Calibri, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of button text.';
 		$x++;
@@ -1316,6 +1316,35 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the color (and opacity) of input placeholder text on the login box.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_loader';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enables the dynamic loading of web fonts (requires an Internet connection).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_loader_version';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '1.6.16';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = "Set the web font loader version to use - specific (e.g. '1.6.16') or latest in branch (e.g. '1').";
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_retrieval';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'asynchronous';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the retrieval method for the web font loader (default: synchronous).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_source_key';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = "API key that allows access to the available fonts list.";
+		$x++;
+
 
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
@@ -1367,7 +1396,7 @@ if ($domains_processed == 1) {
 				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
 				$sql .= "'".check_str($row['default_setting_description'])."' ";
 				$sql .= ")";
-				if ($missing_count != $i) { 
+				if ($missing_count != $i) {
 					$sql .= ",\n";
 				}
 				$i++;

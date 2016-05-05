@@ -6,6 +6,32 @@ header("Content-type: text/css; charset: UTF-8");
 
 $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
+//parse fonts (add surrounding single quotes to each font name)
+	if (is_array($_SESSION['theme']) && sizeof($_SESSION['theme']) > 0) {
+		foreach ($_SESSION['theme'] as $subcategory => $type) {
+			if (substr_count($subcategory, '_font') > 0) {
+				$font_string = $type['text'];
+				if ($font_string != '') {
+					if (substr_count($font_string, ',') > 0) {
+						$tmp_array = explode(',', $font_string);
+					}
+					else {
+						$tmp_array[] = $font_string;
+					}
+					foreach ($tmp_array as $font_name) {
+						$font_name = trim($font_name, "'");
+						$font_name = trim($font_name, '"');
+						$font_name = trim($font_name);
+						$fonts[] = $font_name;
+					}
+					if (sizeof($fonts) == 1 && strtolower($fonts[0]) != 'arial') { $fonts[] = 'Arial'; } //fall back font
+					$_SESSION['theme'][$subcategory]['text'] = "'".implode("','", $fonts)."'";
+				}
+			}
+			unset($fonts, $tmp_array);
+		}
+	}
+
 //determine which background image/color settings to use (login or standard)
 	$background_images_enabled = false;
 	if ($default_login) {
