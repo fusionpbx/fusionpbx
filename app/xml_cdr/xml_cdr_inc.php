@@ -300,7 +300,7 @@ else {
 			}
 
 		//disable the paging
-			if ($_REQUEST['export_format'] != "csv") {
+			if ($_REQUEST['export_format'] == "csv") {
 				$rows_per_page = 0;
 			}
 
