@@ -36,7 +36,7 @@
 		$config_exists = true;
 		include "/usr/local/etc/fusionpbx/config.php";
 	}
-	elseif (file_exists("resources/config.php")) {
+	elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php")) {
 		$config_exists = true;
 		include "resources/config.php";
 	}
