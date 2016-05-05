@@ -113,6 +113,20 @@ $text['message-copy_failed']['sv-se'] = "Ingen inställning markerad eller ogilt
 $text['message-copy_failed']['uk'] = "";
 $text['message-copy_failed']['de-at'] = "Keine Einstellungen ausgewählt oder ungültige Domain";
 
+$text['label-web_fonts']['en-us'] = "Web Fonts";
+$text['label-web_fonts']['es-cl'] = "Fuentes web";
+$text['label-web_fonts']['pt-pt'] = "Fontes da web";
+$text['label-web_fonts']['fr-fr'] = "Polices Web";
+$text['label-web_fonts']['pt-br'] = "Polices Web";
+$text['label-web_fonts']['pl'] = "Czcionki sieci";
+$text['label-web_fonts']['he'] = "גופני אינטרנט";
+$text['label-web_fonts']['uk'] = "веб-шрифти";
+$text['label-web_fonts']['sv-se'] = "web teckensnitt";
+$text['label-web_fonts']['de-at'] = "Web Fonts";
+$text['label-web_fonts']['ro'] = "Fonturi web";
+$text['label-web_fonts']['fa'] = "";
+$text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
+
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['es-cl'] = "encima";
 $text['label-top']['pt-pt'] = "Topo";
@@ -166,6 +180,20 @@ $text['label-static']['ro'] = "Static";
 $text['label-static']['fa'] = "";
 $text['label-static']['ar-eg'] = "ساكن";
 
+$text['label-reference']['en-us'] = "See";
+$text['label-reference']['es-cl'] = "Referencia";
+$text['label-reference']['pt-pt'] = "Referência";
+$text['label-reference']['fr-fr'] = "Référence";
+$text['label-reference']['pt-br'] = "Referência";
+$text['label-reference']['pl'] = "Odniesienie";
+$text['label-reference']['he'] = "התייחסות";
+$text['label-reference']['uk'] = "посилання";
+$text['label-reference']['sv-se'] = "Referens";
+$text['label-reference']['de-at'] = "Referenz";
+$text['label-reference']['ro'] = "Referinţă";
+$text['label-reference']['fa'] = "";
+$text['label-reference']['ar-eg'] = "مرجع";
+
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['es-cl'] = "Derecha";
 $text['label-right']['pt-pt'] = "Certo";
@@ -179,6 +207,17 @@ $text['label-right']['de-at'] = "Recht";
 $text['label-right']['ro'] = "Dreapta";
 $text['label-right']['fa'] = "";
 $text['label-right']['ar-eg'] = "حق";
+
+$text['label-other']['en-us'] = "Other";
+$text['label-other']['es-cl'] = "Otro";
+$text['label-other']['pt-pt'] = "Outro";
+$text['label-other']['fr-fr'] = "Autre";
+$text['label-other']['pt-br'] = "Outro";
+$text['label-other']['pl'] = "Inne";
+$text['label-other']['uk'] = "";
+$text['label-other']['sv-se'] = "Annat";
+$text['label-other']['de-at'] = "Andere";
+$text['label-other']['he'] = "אחר";
 
 $text['label-normal']['en-us'] = "Normal";
 $text['label-normal']['es-cl'] = "Normal";
