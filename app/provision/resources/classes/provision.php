@@ -526,7 +526,7 @@ include "root.php";
 									$sql .= "from v_contacts as c, v_contact_phones as p ";
 									$sql .= "where c.contact_uuid in ( ";
 									$sql .= "	select contact_uuid from v_contact_groups ";
-									$sql .= "	where group_uuid in (' ";
+									$sql .= "	where group_uuid in ( ";
 									$sql .= "		select group_uuid from v_group_users ";
 									$sql .= "		where user_uuid = '".$user_uuid."' ";
 									$sql .= "		and domain_uuid = '$domain_uuid' ";
