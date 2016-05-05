@@ -51,6 +51,16 @@
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-colorpicker.js"></script>
+<?php
+//web font loader
+	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
+		if ($_SESSION['theme']['font_retrieval']['text'] != 'asynchronous') {
+			$font_loader_version = ($_SESSION['theme']['font_loader_version']['text'] != '') ? $_SESSION['theme']['font_loader_version']['text'] : 1;
+			echo "<script language='JavaScript' type='text/javascript' src='//ajax.googleapis.com/ajax/libs/webfont/".$font_loader_version."/webfont.js'></script>\n";
+		}
+		echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/fonts/web_font_loader.php?v=".$font_loader_version."'></script>\n";
+	}
+?>
 <script language="JavaScript" type="text/javascript">
 
 	//display message bar via js
