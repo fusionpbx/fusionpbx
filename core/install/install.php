@@ -33,6 +33,7 @@
 	session_start();
 
 //set theme settings
+	$_SESSION['theme']['footer_color'] = '#cccccc';
 	$_SESSION['theme']['footer_background_color'] = '#ffffff';
 
 //initialize variables we are going to use
