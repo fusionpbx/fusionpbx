@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-provisioning-template-polycom/usr/share/examples/fusionpbx/resources/templates/provision
-	cp -pr polycom debian/fusionpbx-provisioning-template-polycom/usr/share/examples/fusionpbx/resources/templates/provision
+	mkdir -p debian/fusionpbx-provisioning-template-polycom/usr/share/examples/fusionpbx/resources/templates/provision/polycom
+	cp -pr 4.x 5.x 650 8030 vvx debian/fusionpbx-provisioning-template-polycom/usr/share/examples/fusionpbx/resources/templates/provision/polycom
 
 build-indep: build install
 

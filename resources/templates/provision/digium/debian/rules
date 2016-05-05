@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-provisioning-template-digium/usr/share/examples/fusionpbx/resources/templates/provision
-	cp -pr digium debian/fusionpbx-provisioning-template-digium/usr/share/examples/fusionpbx/resources/templates/provision
+	mkdir -p debian/fusionpbx-provisioning-template-digium/usr/share/examples/fusionpbx/resources/templates/provision/digium
+	cp -pr d50 debian/fusionpbx-provisioning-template-digium/usr/share/examples/fusionpbx/resources/templates/provision/digium
 
 build-indep: build install
 

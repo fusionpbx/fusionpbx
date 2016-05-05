@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-provisioning-template-mitel/usr/share/examples/fusionpbx/resources/templates/provision
-	cp -pr mitel debian/fusionpbx-provisioning-template-mitel/usr/share/examples/fusionpbx/resources/templates/provision
+	mkdir -p debian/fusionpbx-provisioning-template-mitel/usr/share/examples/fusionpbx/resources/templates/provision/mitel
+	cp -pr 5324 5330 5340 debian/fusionpbx-provisioning-template-mitel/usr/share/examples/fusionpbx/resources/templates/provision/mitel
 
 build-indep: build install
 

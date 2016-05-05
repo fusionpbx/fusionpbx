@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-provisioning-template-panasonic/usr/share/examples/fusionpbx/resources/templates/provision
-	cp -pr panasonic debian/fusionpbx-provisioning-template-panasonic/usr/share/examples/fusionpbx/resources/templates/provision
+	mkdir -p debian/fusionpbx-provisioning-template-panasonic/usr/share/examples/fusionpbx/resources/templates/provision/panasonic
+	cp -pr tgp500 tgp550 ut113 ut123 ut133 ut136 ut670 debian/fusionpbx-provisioning-template-panasonic/usr/share/examples/fusionpbx/resources/templates/provision/panasonic
 
 build-indep: build install
 

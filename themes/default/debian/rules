@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-theme-default/var/www/fusionpbx/themes
-	cp -pr default debian/fusionpbx-theme-default/var/www/fusionpbx/themes
+	mkdir -p debian/fusionpbx-theme-default/var/www/fusionpbx/themes/default
+	cp -pr *.ico *.php images debian/fusionpbx-theme-default/var/www/fusionpbx/themes/default
 
 build-indep: build install
 

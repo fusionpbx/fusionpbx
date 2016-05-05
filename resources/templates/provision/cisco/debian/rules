@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-provisioning-template-cisco/usr/share/examples/fusionpbx/resources/templates/provision
-	cp -pr cisco debian/fusionpbx-provisioning-template-cisco/usr/share/examples/fusionpbx/resources/templates/provision
+	mkdir -p debian/fusionpbx-provisioning-template-cisco/usr/share/examples/fusionpbx/resources/templates/provision/cisco
+	cp -pr 7940 7960 spa112 spa122 spa301 spa303 spa501g spa502g spa504g spa508g spa509g spa512g spa514g spa525g debian/fusionpbx-provisioning-template-cisco/usr/share/examples/fusionpbx/resources/templates/provision/cisco
 
 build-indep: build install
 
