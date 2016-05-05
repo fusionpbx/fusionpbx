@@ -29,6 +29,12 @@
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
 
+//start a php session
+	session_start();
+
+//set theme settings
+	$_SESSION['theme']['footer_background_color'] = '#ffffff';
+
 //initialize variables we are going to use
 	$event_host = '';
 	$event_port = '';
