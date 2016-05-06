@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-app-ivr-menu/var/www/fusionpbx/app/ivr_menus
-	cp -pr *.php resources debian/fusionpbx-app-ivr-menu/var/www/fusionpbx/appivr_menus
+	cp -pr *.php resources debian/fusionpbx-app-ivr-menu/var/www/fusionpbx/app/ivr_menus
 
 build-indep: build install
 
