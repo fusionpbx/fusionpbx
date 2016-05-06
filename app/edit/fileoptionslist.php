@@ -49,7 +49,7 @@ else {
 		$htmlfilelist = '';
 		$dirlist = opendir($dir);
 		$dir_array = array();
-		while (false !== ($file = readdir($dirlist))) {
+		if($dirlist !== false) while (false !== ($file = readdir($dirlist))) {
 			if ($file != "." AND $file != ".."){
 				$newpath = $dir.'/'.$file;
 				$level = explode('/',$newpath);
