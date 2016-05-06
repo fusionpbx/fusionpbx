@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-provisioning-template-snom/usr/share/examples/fusionpbx/resources/templates/provision/snom
-	cp -pr 3xx 7xx 8xx 300 30 360 720 820 m3 debian/fusionpbx-provisioning-template-snom/usr/share/examples/fusionpbx/resources/templates/provision/snom
+	cp -pr 3xx 7xx 8xx 300 320 360 720 820 m3 debian/fusionpbx-provisioning-template-snom/usr/share/examples/fusionpbx/resources/templates/provision/snom
 
 build-indep: build install
 
