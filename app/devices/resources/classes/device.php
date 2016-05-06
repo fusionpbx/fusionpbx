@@ -104,6 +104,9 @@ include "root.php";
 				case "001565":
 					$device_vendor = "yealink";
 					break;
+				case "00268B":
+					$device_vendor = "escene";
+					break;
 				default:
 					$device_vendor = "";
 				}

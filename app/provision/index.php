@@ -26,6 +26,7 @@
 
 include "root.php";
 require_once "resources/require.php";
+require_once "resources/functions/device_by.php";
 openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
@@ -38,6 +39,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 //define PHP variables from the HTTP values
 	$mac = check_str($_REQUEST['mac']);
 	$file = check_str($_REQUEST['file']);
+	$ext = check_str($_REQUEST['ext']);
 	//if (strlen(check_str($_REQUEST['template'])) > 0) {
 	//	$device_template = check_str($_REQUEST['template']);
 	//}
@@ -48,6 +50,20 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		if (substr($name, 0, 3) == "SEP") {
 			$mac = strtolower(substr($name, 3, 12));
 			unset($name);
+		}
+	}
+
+// Escence make request based on UserID for Memory keys
+/*
+The file name is fixed to `Account1_Extern.xml`.
+(Account1 is the first account you register)
+*/
+	if(empty($mac) && !empty($ext)){
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+		$domain_name = $domain_array[0];
+		$device = device_by_ext($db, $ext, $domain_name);
+		if(($device !== false)&&($device['device_vendor']=='escene')){
+			$mac = $device['device_mac_address'];
 		}
 	}
 
