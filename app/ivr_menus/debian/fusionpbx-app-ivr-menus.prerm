@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
   remove|upgrade|deconfigure)
-    if [ -d /var/www/fusionpbx/app/ivr-menu ]; then
+    if [ -d /var/www/fusionpbx/app/ivr-menus ]; then
       echo "We're about to remove a configured fusionpbx ivr-menu app..." >&2
     fi
     ;;

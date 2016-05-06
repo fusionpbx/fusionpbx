@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
   install|upgrade)
-    if [ -d /var/www/fusionpbx/app/ivr_menu ]; then
+    if [ -d /var/www/fusionpbx/app/ivr_menus ]; then
       echo "It looks like you have FusionPBX ivr menu app installed !." >&2
     fi
     ;;

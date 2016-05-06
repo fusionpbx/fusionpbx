@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-app-dialplan-inbound/var/www/fusionpbx/app
-	cp -pr dialplan_inbound debian/fusionpbx-app-dialplan-inbound/var/www/fusionpbx/app
+	mkdir -p debian/fusionpbx-app-dialplan-inbound/var/www/fusionpbx/app/dialplan_inbound
+	cp -pr *.php debian/fusionpbx-app-dialplan-inbound/var/www/fusionpbx/app/dialplan_inbound
 
 build-indep: build install
 

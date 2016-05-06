@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-app-conference-centers/var/www/fusionpbx/app
-	cp -pr conference_centers debian/fusionpbx-app-conference-centers/var/www/fusionpbx/app
+	mkdir -p debian/fusionpbx-app-conference-centers/var/www/fusionpbx/app/conference_centers
+	cp -pr *.php resources debian/fusionpbx-app-conference-centers/var/www/fusionpbx/app/conference_centers
 
 build-indep: build install
 
