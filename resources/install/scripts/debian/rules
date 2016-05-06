@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-scripts/usr/share/examples/fusionpbx/resources/install/scripts
-	cp -pr *.lua reaources app debian/fusionpbx-scripts/usr/share/examples/fusionpbx/resources/install/scripts
+	cp -pr *.lua resources app debian/fusionpbx-scripts/usr/share/examples/fusionpbx/resources/install/scripts
 	
 	
 build-indep: build install
