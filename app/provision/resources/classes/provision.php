@@ -925,11 +925,12 @@ include "root.php";
 						fwrite($fh, $tmp_string);
 						fclose($fh);
 					}
+
+					$this->file = $file;
 				//returned the rendered template
 					return $file_contents;
 
 		} //end render function
-
 
 		function write() {
 
