@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
   remove|upgrade|deconfigure)
-    if [ -d /var/www/fusionpbx/app/access_control]; then
+    if [ -d /var/www/fusionpbx/app/access_controls ]; then
       echo "We're about to remove a configured fusionpbx access control app..." >&2
     fi
     ;;

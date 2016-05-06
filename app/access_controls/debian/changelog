@@ -1,5 +1,5 @@
 fusionpbx-app-access-controls (3.8.4-1) stable; urgency=low
 
-  * new deb pkg for fusionpbx-app-access_controls
+  * new deb pkg for fusionpbx-app-access-controls
 
  -- FusionPBX <debian@fusionpbx.com>  Wed, 03 Dec 2014 08:30:00 -0600

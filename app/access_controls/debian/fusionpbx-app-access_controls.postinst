@@ -4,7 +4,7 @@ set -e
 case "$1" in
   configure)
     for x in \
-      /var/www/fusionpbx/app/access_control
+      /var/www/fusionpbx/app/access_controls
     do
       chown -R www-data:www-data $x
     done

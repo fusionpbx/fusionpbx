@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
   install|upgrade)
-    if [ -d /var/www/fusionpbx/app/access_control ]; then
+    if [ -d /var/www/fusionpbx/app/access_controls ]; then
       echo "It looks like you have FusionPBX access control app installed !." >&2
     fi
     ;;
