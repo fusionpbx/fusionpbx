@@ -1776,4 +1776,136 @@ function number_pad($number,$n) {
 		//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
 	}
 
+//dynamically load available web fonts
+	if (!function_exists('get_available_fonts')) {
+		function get_available_fonts($sort = 'alpha') {
+			if ($_SESSION['theme']['font_source_key']['text'] != '') {
+				if (!is_array($_SESSION['fonts_available']) || sizeof($_SESSION['fonts_available']) == 0) {
+					/*
+					sort options:
+						alpha 		- alphabetically
+						date 		- by date added (most recent font added or updated first)
+						popularity 	- by popularity (most popular family first)
+						style 		- by number of styles available (family with most styles first)
+						trending 	- by families seeing growth in usage (family seeing the most growth first)
+					*/
+					$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key='.$_SESSION['theme']['font_source_key']['text'].'&sort='.$sort;
+					$response = file_get_contents($google_api_url);
+					if ($response != '') {
+						$data = json_decode($response, true);
+						$items = $data['items'];
+						foreach ($items as $item) {
+							$fonts[] = $item['family'];
+						}
+						//echo "<pre>".print_r($font_list, true)."</pre>";
+					}
+					$_SESSION['fonts_available'] = $fonts;
+					unset($fonts);
+				}
+				return (is_array($_SESSION['fonts_available']) && sizeof($_SESSION['fonts_available']) > 0) ? $_SESSION['fonts_available'] : array();
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+//dynamically import web fonts (by reading static css file)
+	if (!function_exists('import_fonts')) {
+		function import_fonts($file_to_parse, $line_styles_begin = null) {
+			/*
+			This function reads the contents of $file_to_parse, beginning at $line_styles_begin (if set),
+			and attempts to parse the specified google fonts used.  The assumption is that each curly brace
+			will be on its own line, each CSS style (attribute: value;) will be on its own line, a single
+			Google Fonts name will be used per selector, and that it will be surrounded by SINGLE quotes,
+			as shown in the example below:
+
+				.class_name {
+					font-family: 'Google Font';
+					font-weight: 300;
+					font-style: italic;
+					}
+
+			If the CSS styles are formatted as described, the necessary @import string should be generated
+			correctly.
+			*/
+
+			$file = file_get_contents($_SERVER["DOCUMENT_ROOT"].$file_to_parse);
+			$lines = explode("\n", $file);
+
+			$style_counter = 0;
+			foreach ($lines as $line_number => $line) {
+				if ($line_styles_begin != '' && $line_number < $line_styles_begin - 1) { continue; }
+				if (substr_count($line, "{") > 0) {
+					$style_lines[$style_counter]['begins'] = $line_number;
+				}
+				if (substr_count($line, "}") > 0) {
+					$style_lines[$style_counter]['ends'] = $line_number;
+					$style_counter++;
+				}
+			}
+			//echo "\n\n".print_r($style_lines, true)."\n\n";
+
+			if (is_array($style_lines) && sizeof($style_lines) > 0) {
+
+				foreach ($style_lines as $index => $style_line) {
+					for ($l = $style_line['begins']+1; $l < $style_line['ends']; $l++) {
+						$tmp[] = $lines[$l];
+					}
+					$style_groups[] = $tmp;
+					unset($tmp);
+				}
+				//echo "\n\n".print_r($style_groups, true)."\n\n";
+
+				if (is_array($style_groups) && sizeof($style_groups) > 0) {
+
+					foreach ($style_groups as $style_group_index => $style_group) {
+						foreach ($style_group as $style_index => $style) {
+							$tmp = explode(':', $style);
+							$attribute = trim($tmp[0]);
+							$value = trim(trim($tmp[1]),';');
+							$style_array[$attribute] = $value;
+						}
+						$style_groups[$style_group_index] = $style_array;
+						unset($style_array);
+					}
+					//echo "\n\n".print_r($style_groups, true)."\n\n";
+
+					foreach ($style_groups as $style_group_index => $style_group) {
+						$style_value = $style_group['font-family'];
+						if (substr_count($style_value, "'") > 0) {
+							//determine font
+								$font_begin = strpos($style_value, "'")+1;
+								$font_end = strpos($style_value, "'", $font_begin);
+								$font_name = substr($style_value, $font_begin, $font_end - $font_begin);
+							//determine modifiers
+								$weight = (is_numeric($style_group['font-weight']) || strtolower($style_group['font-weight']) == 'bold') ? strtolower($style_group['font-weight']) : null;
+								$italic = (strtolower($style_group['font-style']) == 'italic') ? 'italic' : null;
+							//add font to array
+								$fonts[$font_name][] = $weight.$italic;
+						}
+					}
+					//echo "\n\n/*".print_r($fonts, true)."*/\n\n";
+
+					if (is_array($fonts)) {
+						foreach ($fonts as $font_name => $modifiers) {
+							$modifiers = array_unique($modifiers);
+							$import_font_string = str_replace(' ', '+', $font_name);
+							if (is_array($modifiers) && sizeof($modifiers) > 0) {
+								$import_font_string .= ':'.implode(',', $modifiers);
+							}
+							$import_fonts[] = $import_font_string;
+						}
+						//echo "\n\n/*".print_r($import_fonts, true)."*/\n\n";
+						$import_string = "@import url(//fonts.googleapis.com/css?family=".implode('|', $import_fonts).");";
+						echo $import_string."\n";
+					}
+
+				}
+
+			}
+
+		}
+	}
+
 ?>

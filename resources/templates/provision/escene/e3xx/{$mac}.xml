@@ -1,0 +1,86 @@
+<all>
+	<Privisions>
+		<!-- protocol
+			0 - tftp
+			1 - http
+			2 - ftp
+			3 - https
+		-->
+		<privision
+			PNP="1"
+			AutoPrivisionFlag="1"
+			DHCPOptionFlag="1"
+			DHCPOptionValue="66"
+			protocol="1"
+			Firmware="{$domain_name}{$project_path}/app/provision"
+			username=""
+			password=""
+			Freqency="168"
+			time="24"
+			DownloadBroadsoft="0"
+			DownloadFirmwar="0"
+			DownloadKernel="0"
+			DownloadExtension="1"
+			Downloadconfig="1"
+			DownloadPhonebook="0"
+			DownloadPersonPhonebook="0"
+			Bootingchecked="0"
+			ExtensionNumber=""
+			BootingcheckedMode="0"
+			DownloadFilename="0"
+		/>
+	</Privisions>
+
+	<sipUsers>
+	{foreach $lines as $row}
+		{if $row.line_number neq ""}
+			{$line_subscribe_tmp=$line_subscribe_{$row.line_number}}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
+			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$row.register_expires}  {/if}
+			{if $line_subscribe_tmp<"120"} {$line_subscribe_tmp="120"} {/if}
+
+		<sipUser id="{$row.line_number-1}"
+			EnableAccount="{($row.enabled=='true')?'1':'0'}"
+			Describe="MyLabel"
+			DomainName="{$row.server_address}"
+			UserName="{$row.display_name}"
+			UserNumber="{$row.user_id}"
+			approveName="{$row.auth_id}"
+			Password="{$row.password}"
+			ProxyServerAddress="{if $row.outbound_proxy neq ''}{$row.outbound_proxy}{else}{$row.server_address}{/if}{if $row.sip_port neq '5060'}:{$row.sip_port}{/if}"
+			LinkUse="{if $row.sip_transport=='tcp'}1{elseif $row.sip_transport=='tls'}2{else}0{/if}"
+			PossessNumber="1"
+			SecondProxyServerAddress=""
+			PollingRegistrationTime="32"
+			RefreshTime="{$row.register_expires}"
+			Subscribe="{$line_subscribe_tmp}"
+			SecondDomainName=""
+			STUNAddress=""
+			STUNEnableFlag="0"
+			flag="0"
+			SupportNumber="8"
+			RTPBegin="10000" RTPEND="10128"
+			AccountMode="0"
+			RegisterMethod="0"
+			BLAEnableFlag="0"
+			BLANum=""
+			AnonymousCall="0"
+			UserSessionTimerEnable="0"
+			SessionTimer="300"
+			AllowEventsEnable="0"
+			DNSSRVEnable="0"
+			RegisteredNAT="1"
+			RingFilename=""
+			KeepaliveEnable="1"
+			KeepaliveInterval="30"
+			AnonymousCallReject="0"
+			ProxyEnableFlag="0"
+			AutoAnsEnableFlag="0"
+			SessionTimerRefresher="0"
+			UserphoneEnable="0"
+			UserSessionTimerRefresher="0"
+		/>
+		{/if}
+	{/foreach}
+	</sipUsers>
+</all>
