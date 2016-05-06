@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-provisioning-template-yealink/usr/share/examples/fusionpbx/resources/templates/provision/yealink
-	cp -pr cp860 t20p t21p t22p t23g t23p t26p t27p t28p t29g t32g t41g t42g t46g t48g t49g vp530 w52p debian/fusionpbx-provisioning-template-yealink/usr/share/examples/fusionpbx/resources/templates/provision/yealink
+	cp -pr cp860 t20p t21p t22p t23g t23p t26p t27p t28p t29g t32g t41p t42g t46g t48g t49g vp530 w52p debian/fusionpbx-provisioning-template-yealink/usr/share/examples/fusionpbx/resources/templates/provision/yealink
 
 build-indep: build install
 

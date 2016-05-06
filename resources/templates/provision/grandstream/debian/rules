@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-provisioning-template-grandstream/usr/share/examples/fusionpbx/resources/templates/provision/grandstream
-	cp -pr dp715 dp715.sm gpx20xx gpx21xx gpx21xxbk gpx110x gpx116x gpx140x gpx140xbk gpx1450 gpx2124 gpx2200 gpx3240 gpx3275 gpv300x gpv3140 gpv3175 gpv3175v2 gxv3504 gxw40xx gxw42xx gxw4004 gxw4008 ht502 ht503 ht701 ht702 ht704 debian/fusionpbx-provisioning-template-grandstream/usr/share/examples/fusionpbx/resources/templates/provision/grandstream
+	cp -pr dp715 dp715.sm gxp20xx gxp21xx gxp21xxbk gxp110x gxp116x gxp140x gxp140xbk gxp1450 gxp2124 gxp2200 gxp3240 gxp3275 gvp300x gvp3140 gvp3175 gvp3175v2 gxv3504 gxw40xx gxw42xx gxw4004 gxw4008 ht502 ht503 ht701 ht702 ht704 debian/fusionpbx-provisioning-template-grandstream/usr/share/examples/fusionpbx/resources/templates/provision/grandstream
 
 build-indep: build install
 
