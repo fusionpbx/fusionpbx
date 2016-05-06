@@ -28,26 +28,30 @@ header("Content-type: text/javascript; charset: UTF-8");
 							}
 						}
 					}
-					unset($fonts, $tmp_array);
+					unset($tmp_array);
 				}
 			}
+
 		//optimize fonts array
-			$fonts = array_unique($fonts);
-			$common_fonts = 'arial,arial black,arial narrow,calibri,'.
-				'candara,apple gothic,geneva,tahoma,microsoft sans serif,'.
-				'lucidia,lucidia console,monaco,lucidia sans unicode,'.
-				'lucidiagrande,consolas,menlo,trebuchet,trebuchet ms,'.
-				'helvetica,times,times new roman,courier,courier new,'.
-				'impact,comic sans,comic sans ms,georgia,palatino,'.
-				'palatino linotype,verdana,franklin gothic,'.
-				'franklin gothic medium,gill sans,gill sans mt,'.
-				'brush script,corbel';
-			$common_fonts = array(explode(',', $common_fonts));
-			foreach ($fonts as $index => $font) {
-				if (in_array(strtolower($font), $common_fonts)) {
-					unset($fonts[$index]);
+			if (is_array($fonts) && sizeof($fonts) > 0) {
+				$fonts = array_unique($fonts);
+				$common_fonts = 'serif,sans-serif,arial,arial black,arial narrow,calibri,'.
+					'candara,apple gothic,geneva,tahoma,microsoft sans serif,'.
+					'lucidia,lucidia console,monaco,lucidia sans unicode,'.
+					'lucidiagrande,consolas,menlo,trebuchet,trebuchet ms,'.
+					'helvetica,times,times new roman,courier,courier new,'.
+					'impact,comic sans,comic sans ms,georgia,palatino,'.
+					'palatino linotype,verdana,franklin gothic,'.
+					'franklin gothic medium,gill sans,gill sans mt,'.
+					'brush script,corbel,segoe,segoe ui,optima,';
+				$common_fonts = explode(',', $common_fonts);
+				foreach ($fonts as $index => $font) {
+					if (in_array(strtolower($font), $common_fonts)) {
+						unset($fonts[$index]);
+					}
 				}
 			}
+
 		//load fonts
 			if (is_array($fonts) && sizeof($fonts) > 0) {
 				if ($_SESSION['theme']['font_retrieval']['text'] == 'asynchronous') {
