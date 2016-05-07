@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-APPNAME := fusionpbx-app-sql-query
+APPNAME := fusionpbx-app-scripts
 
 CFLAGS = -Wall -g
 
@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-app-sql-query/var/www/fusionpbx/app/scripts
-	cp -pr *.php debian/fusionpbx-app-sql-query/var/www/fusionpbx/app/scripts
+	mkdir -p debian/fusionpbx-app-scripts/var/www/fusionpbx/app/scripts
+	cp -pr *.php debian/fusionpbx-app-scripts/var/www/fusionpbx/app/scripts
 
 build-indep: build install
 

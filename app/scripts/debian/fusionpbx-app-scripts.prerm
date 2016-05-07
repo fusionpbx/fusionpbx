@@ -3,8 +3,8 @@ set -e
 
 case "$1" in
   remove|upgrade|deconfigure)
-    if [ -d /var/www/fusionpbx/app/sql-query ]; then
-      echo "We're about to remove a configured fusionpbx sql-query app..." >&2
+    if [ -d /var/www/fusionpbx/app/scripts ]; then
+      echo "We're about to remove a configured fusionpbx scripts app..." >&2
     fi
     ;;
   failed-upgrade)
