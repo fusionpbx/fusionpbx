@@ -156,7 +156,7 @@ require_once "resources/paging.php";
 	echo "<form name='frm' method='post' action='extension_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('extension_delete') && $num_rows > 0) {
+	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
@@ -171,7 +171,7 @@ require_once "resources/paging.php";
 			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
-	if (permission_exists('extension_delete') && $num_rows > 0) {
+	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "</td>\n";
@@ -216,7 +216,7 @@ require_once "resources/paging.php";
 
 	}
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
 		if (permission_exists('extension_add')) {
@@ -238,7 +238,7 @@ require_once "resources/paging.php";
 		echo "<center>".$paging_controls."</center>\n";
 	}
 
-	echo "<br /><br />".(($num_rows == 0) ? "<br /><br />" : null);
+	echo "<br /><br />".((is_array($extensions)) ? "<br /><br />" : null);
 
 	// check or uncheck all checkboxes
 	if (sizeof($ext_ids) > 0) {
@@ -252,7 +252,7 @@ require_once "resources/paging.php";
 		echo "</script>\n";
 	}
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 		// check all checkboxes
 		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
 
