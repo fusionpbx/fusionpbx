@@ -269,6 +269,7 @@ else {
 	echo "<th width='70%'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 	foreach($array["variables"] as $key => $value) {
+		if (is_array($value)) { $value = implode($value); }
 		$value = urldecode($value);
 		if ($key != "digits_dialed" && $key != "dsn") {
 			echo "<tr >\n";
@@ -445,9 +446,11 @@ else {
 			echo "			<th width='70%'>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["caller_profile"] as $key => $value) {
+				if (is_array($value)) { $value = implode($value); }
 				$value = urldecode($value);
 				echo "		<tr >\n";
 				if ($key != "originatee") {
+					if (is_array($value)) { $value = implode($value); }
 					$value = urldecode($value);
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -456,7 +459,7 @@ else {
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 					echo "			<td class='".$row_style[$c]."'>\n";
 					echo "				<table width='100%'>\n";
-					foreach($child["originatee_caller_profile"] as $key => $value) {
+					if (isset($child["originatee_caller_profile"])) foreach($child["originatee_caller_profile"] as $key => $value) {
 						//print_r($tmp_child);
 						echo "				<tr >\n";
 						echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
