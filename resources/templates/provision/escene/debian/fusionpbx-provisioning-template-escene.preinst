@@ -3,8 +3,8 @@ set -e
 
 case "$1" in
   install|upgrade)
-    if [ -d /usr/share/examples/fusionpbx/resources/templates/provision/digium ]; then
-      echo "It looks like you have FusionPBX digium provisioning template installed !." >&2
+    if [ -d /usr/share/examples/fusionpbx/resources/templates/provision/escene ]; then
+      echo "It looks like you have FusionPBX escene provisioning template installed !." >&2
     fi
     ;;
   abort-upgrade)

@@ -4,7 +4,7 @@ set -e
 case "$1" in
   configure)
     for x in \
-      /usr/share/examples/fusionpbx/resources/templates/provision/digium
+      /usr/share/examples/fusionpbx/resources/templates/provision/escene
     do  
       chown -R www-data:www-data $x
     done
