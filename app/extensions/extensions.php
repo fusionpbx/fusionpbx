@@ -121,7 +121,7 @@ require_once "resources/paging.php";
 	else {
 		$sql .= "order by $order_text ";
 	}
-	$sql .= " limit $rows_per_page offset $offset ";
+	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -177,7 +177,7 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 
 		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
