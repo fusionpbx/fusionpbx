@@ -62,11 +62,11 @@ require_once "resources/paging.php";
 
 //get total extension count from the database
 	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') as num_rows ";
+	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ".$sql_mod.") as num_rows ";
 	if ($db_type == "pgsql") {
 		$sql .= ",(select count(*) as count from v_extensions ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions";
+		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
 	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
@@ -79,28 +79,13 @@ require_once "resources/paging.php";
 	}
 	unset($prep_statement, $row);
 
-//get the number of extensions (reuse $sql from above)
-	$sql .= $sql_mod; //add search mod from above
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
-	unset($prep_statement, $result);
-
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
-	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
+	list($paging_controls, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $_GET['page'];
 
 //to cast or not to cast
@@ -130,7 +115,7 @@ require_once "resources/paging.php";
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$num_rows.")</b><br>\n";
+	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
 	echo "		".$text['description-extensions']."\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
@@ -213,7 +198,6 @@ require_once "resources/paging.php";
 			$c = ($c) ? 0 : 1;
 		}
 		unset($extensions, $row);
-
 	}
 
 	if (is_array($extensions)) {
