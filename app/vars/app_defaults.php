@@ -24,6 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+if ($domains_processed == 1) {
+
+//create a json string
 $vars = <<<EOD
 [
 {"var_name":"domain","var_value":"\$\${local_ip_v4}","var_cat":"Domain","var_enabled":"true","var_description":"U2V0cyB0aGUgZGVmYXVsdCBkb21haW4u"},
@@ -97,200 +100,199 @@ $vars = <<<EOD
 ]
 EOD;
 
-// Set country depend variables as country code and international direct dialing code (exit code)
-	if (!function_exists('set_country_vars')) {
-		function set_country_vars($db, $x) {
-			require "resources/countries.php";
-
-			//$country_iso=$_SESSION['domain']['country']['iso_code'];
-
-			$sql = "select default_setting_value as value from v_default_settings ";
-			$sql .= "where default_setting_name = 'iso_code' ";
-			$sql .= "and default_setting_category = 'domain' ";
-			$sql .= "and default_setting_subcategory = 'country' ";
-			$sql .= "and default_setting_enabled = 'true';";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				if ( count($result)> 0) {
-					$country_iso = $result[0]["value"];
-				}
-			}
-			unset($prep_statement, $sql, $result);
-
-			if ( $country_iso===NULL ) {
-				return;
-			}
-
-			if(isset($countries[$country_iso])){
-				$country = $countries[$country_iso];
-
-		// Set default Country ISO code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_country' ";
-				$sql .= "and var_cat = 'Defaults' ";
+	// Set country depend variables as country code and international direct dialing code (exit code)
+		if (!function_exists('set_country_vars')) {
+			function set_country_vars($db, $x) {
+				require "resources/countries.php";
+	
+				//$country_iso=$_SESSION['domain']['country']['iso_code'];
+	
+				$sql = "select default_setting_value as value from v_default_settings ";
+				$sql .= "where default_setting_name = 'iso_code' ";
+				$sql .= "and default_setting_category = 'domain' ";
+				$sql .= "and default_setting_subcategory = 'country' ";
+				$sql .= "and default_setting_enabled = 'true';";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_country', ";
-						$sql .= "'".$country["isocode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					if ( count($result)> 0) {
+						$country_iso = $result[0]["value"];
 					}
 				}
-				unset($prep_statement, $sql);
-
-		// Set default Country code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_countrycode' ";
-				$sql .= "and var_cat = 'Defaults' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_countrycode', ";
-						$sql .= "'".$country["countrycode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
-					}
+				unset($prep_statement, $sql, $result);
+	
+				if ( $country_iso===NULL ) {
+					return;
 				}
-				unset($prep_statement, $sql);
-
-		// Set default International Direct Dialing code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_exitcode' ";
-				$sql .= "and var_cat = 'Defaults' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_exitcode', ";
-						$sql .= "'".$country["exitcode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
+	
+				if(isset($countries[$country_iso])){
+					$country = $countries[$country_iso];
+	
+			// Set default Country ISO code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_country' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+	
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_country', ";
+							$sql .= "'".$country["isocode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
 					}
+					unset($prep_statement, $sql);
+	
+			// Set default Country code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_countrycode' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_countrycode', ";
+							$sql .= "'".$country["countrycode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
+					}
+					unset($prep_statement, $sql);
+	
+			// Set default International Direct Dialing code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_exitcode' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_exitcode', ";
+							$sql .= "'".$country["exitcode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
+					}
+					unset($prep_statement, $sql);
+	
+					unset($countries);
 				}
-				unset($prep_statement, $sql);
-
-				unset($countries);
 			}
 		}
-	}
-
-	$x = 1;
-
-//if there are no variables in the vars table then add them
-	if ($domains_processed == 1) {
-
-		$result = json_decode($vars, true);
-		foreach($result as $row) {
-
-			$sql = "select count(*) as num_rows from v_vars ";
-			$sql .= "where var_name = '".$row['var_name']."' ";
-			$sql .= "and var_cat = '".$row['var_cat']."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row2['num_rows'] == 0) {
-
-					$sql = "insert into v_vars ";
-					$sql .= "(";
-					$sql .= "var_uuid, ";
-					$sql .= "var_name, ";
-					$sql .= "var_value, ";
-					$sql .= "var_cat, ";
-					$sql .= "var_enabled, ";
-					$sql .= "var_order, ";
-					$sql .= "var_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$row['var_name']."', ";
-					$sql .= "'".$row['var_value']."', ";
-					$sql .= "'".$row['var_cat']."', ";
-					$sql .= "'".$row['var_enabled']."', ";
-					$sql .= "'".$x."', ";
-					$sql .= "'".$row['var_description']."' ";
-					$sql .= ");";
-					$db->exec($sql);
-					unset($sql);
-					$x++;
-
+	
+		$x = 1;
+	
+	//if there are no variables in the vars table then add them
+		if ($domains_processed == 1) {
+	
+			$result = json_decode($vars, true);
+			foreach($result as $row) {
+	
+				$sql = "select count(*) as num_rows from v_vars ";
+				$sql .= "where var_name = '".$row['var_name']."' ";
+				$sql .= "and var_cat = '".$row['var_cat']."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row2['num_rows'] == 0) {
+	
+						$sql = "insert into v_vars ";
+						$sql .= "(";
+						$sql .= "var_uuid, ";
+						$sql .= "var_name, ";
+						$sql .= "var_value, ";
+						$sql .= "var_cat, ";
+						$sql .= "var_enabled, ";
+						$sql .= "var_order, ";
+						$sql .= "var_description ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$row['var_name']."', ";
+						$sql .= "'".$row['var_value']."', ";
+						$sql .= "'".$row['var_cat']."', ";
+						$sql .= "'".$row['var_enabled']."', ";
+						$sql .= "'".$x."', ";
+						$sql .= "'".$row['var_description']."' ";
+						$sql .= ");";
+						$db->exec($sql);
+						unset($sql);
+						$x++;
+	
+					}
 				}
+				unset($prep_statement, $row2);
+	
 			}
-			unset($prep_statement, $row2);
-
+			unset($result, $row);
 		}
-		unset($result, $row);
-	}
 
-//adjust the variables required variables
-	if ($domains_processed == 1) {
+	//adjust the variables required variables
 		//set variables that depend on the number of domains
 			if (count($_SESSION['domains']) > 1) {
 				//disable the domain and domain_uuid for systems with multiple domains
@@ -341,5 +343,5 @@ EOD;
 
 		//save the vars.xml file
 			save_var_xml();
-	}
+}
 ?>
