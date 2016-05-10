@@ -410,19 +410,10 @@ require_once "resources/require.php";
 						$sql .= "	e.user_context, ";
 						$sql .= "	e.extension_uuid, ";
 						$sql .= "	e.outbound_caller_id_name, ";
-						$sql .= "	e.outbound_caller_id_number, ";
-						$sql .= "	v.voicemail_uuid ";
+						$sql .= "	e.outbound_caller_id_number ";
 						$sql .= "from ";
 						$sql .= "	v_extension_users as u, ";
 						$sql .= "	v_extensions as e ";
-						$sql .= "		left outer join v_voicemails as v on ( ";
-						$sql .= "			e.domain_uuid = v.domain_uuid ";
-						$sql .= "			and v.voicemail_enabled = 'true' ";
-						$sql .= "			and ( ";
-						$sql .= "				e.extension = v.voicemail_id ";
-						$sql .= "				or e.number_alias = v.voicemail_id ";
-						$sql .= "			) ";
-						$sql .= "		) ";
 						$sql .= "where ";
 						$sql .= "	e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 						$sql .= "	and e.extension_uuid = u.extension_uuid ";
@@ -445,9 +436,6 @@ require_once "resources/require.php";
 								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-								if ($row['voicemail_uuid'] != '') {
-									$_SESSION['user']['voicemail'][]['voicemail_uuid'] = $row['voicemail_uuid'];
-								}
 								$_SESSION['user_context'] = $row["user_context"];
 								$x++;
 							}
