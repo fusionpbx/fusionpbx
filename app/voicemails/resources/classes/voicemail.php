@@ -192,7 +192,7 @@
 
 			//delete voicemail recordings folder (includes greetings)
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
-				if (isset(glob($file_path."/*.*"))) foreach (glob($file_path."/*.*") as $file_name) {
+				foreach (glob($file_path."/*.*") as $file_name) {
 					unlink($file_name);
 				}
 				@rmdir($file_path);
@@ -275,17 +275,13 @@
 			//delete the recording
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				if ($this->voicemail_message_uuid != '') {
-					if (is_array(glob($file_path."/msg_".$this->voicemail_message_uuid.".*"))) {
-						foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
-							unlink($file_name);
-						}
+					foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
+						unlink($file_name);
 					}
 				}
 				else {
-					if (is_array(glob($file_path."/msg_*.*"))) {
-						foreach (glob($file_path."/msg_*.*") as $file_name) { 
-							unlink($file_name); //remove all recordings
-						}
+					foreach (glob($file_path."/msg_*.*") as $file_name) { 
+						unlink($file_name); //remove all recordings
 					}
 				}
 
