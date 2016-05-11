@@ -1,0 +1,119 @@
+GMT Greenwich Mean Time                                   - 12
+GMT+00:00 Denmark-Faroe Islands(Torshavn)                 - 67
+GMT+00:00 Greenland                                       - 66
+GMT+00:00 Irelan(Dublin)                                  - 68
+GMT+00:00 Morocco                                         - 72
+GMT+00:00 Portugal(Lisboa, Porto, Funchal)                - 69
+GMT+00:00 Spain-Canary Islands(Las Palmas)                - 70
+GMT+00:00 United-Kingdom(London)                          - 71
+GMT+01:00 Albania(Tirane)                                 - 73
+GMT+01:00 Austria(Vienna)                                 - 74
+GMT+01:00 Belgium(Brussels)                               - 75
+GMT+01:00 Caicos                                          - 76
+GMT+01:00 Chad                                            - 77
+GMT+01:00 Croatia(Zagreb)                                 - 79
+GMT+01:00 Czech Republic(Prague)                          - 80
+GMT+01:00 Denmark(Kopenhagen)                             - 81
+GMT+01:00 France(Paris)                                   - 82
+GMT+01:00 Germany(Berlin)                                 - 13
+GMT+01:00 Hungary(Budapest)                               - 83
+GMT+01:00 Italy(Rome)                                     - 84
+GMT+01:00 Luxembourg(Luxembourg)                          - 85
+GMT+01:00 Macedonia(Skopje)                               - 86
+GMT+01:00 Namibia(Windhoek)                               - 88
+GMT+01:00 Netherlands(Amsterdam)                          - 87
+GMT+01:00 Spain(Madrid)                                   - 78
+GMT+02:00 Egypt(Cairo)                                    - 14
+GMT+02:00 Estonia(Tallinn)                                - 89
+GMT+02:00 Finland(Helsinki)                               - 90
+GMT+02:00 Gaza Strip(Gaza)                                - 91
+GMT+02:00 Greece(Athens)                                  - 92
+GMT+02:00 Israel(Tel Aviv)                                - 45
+GMT+02:00 Jordan(Amman)                                   - 93
+GMT+02:00 Latvia(Riga)                                    - 94
+GMT+02:00 Lebanon(Beirut)                                 - 95
+GMT+02:00 Moldova(Kishinev)                               - 96
+GMT+02:00 Romania(Bucharest)                              - 48
+GMT+02:00 Russia(Kaliningrad)                             - 97
+GMT+02:00 Syria(Damascus)                                 - 98
+GMT+02:00 Turkey(Ankara)                                  - 99
+GMT+02:00 Ukraine(Kyiv, Odessa)                           - 100
+GMT+03:00 Bahrain,Russia(Moscow)                          - 15
+GMT+03:00 East Africa Time                                - 101
+GMT+03:00 Iraq(Baghdad)                                   - 102
+GMT+03:30 Iran(Teheran)                                   - 47
+GMT+04:00 Armenia(Yerevan)                                - 103
+GMT+04:00 Azerbaijan(Baku)                                - 104
+GMT+04:00 Georgia(Tbilisi)                                - 105
+GMT+04:00 Kazakhstan(Aktau)                               - 106
+GMT+04:00 Muscat                                          - 16
+GMT+04:00 Russia(Samara)                                  - 107
+GMT+04:30 Afghanistan                                     - 108
+GMT+05:00 Kazakhstan(Aqtobe)                              - 109
+GMT+05:00 Kyrgyzstan(Bishkek)                             - 110
+GMT+05:00 Pakistan(Islamabad)                             - 17
+GMT+05:00 Russia(Chelyabinsk)                             - 111
+GMT+05:30 India                                           - 26
+GMT+06:00 Kazakhstan(Astana, Almaty)                      - 112
+GMT+06:00 Russia(Novosibirsk, Omsk)                       - 18
+GMT+06:30 Myanmar                                         - 46
+GMT+07:00 Russia(Krasnoyarsk)                             - 113
+GMT+07:00 Thailand(Bangkok)                               - 19
+GMT+08:00 Australia(Perth)                                - 115
+GMT+08:00 China(Beijing)                                  - 20
+GMT+08:00 Singapore(Singapore)                            - 114
+GMT+09:00 Japan(Tokyo)                                    - 21
+GMT+09:00 Korea(Seoul)                                    - 116
+GMT+09:30 Australia(Adelaide, Darwin)                     - 117
+GMT+09:30 Australia-Central                               - 44
+GMT+10:00 Russia(Vladivostok)                             - 118
+GMT+10:00 Sydney,Melbourne,Canberra,Brisbane,Hobart       - 22
+GMT+10:30 Australia(Lord Howe Islands)                    - 119
+GMT+11:00 New Caledonia(Noumea)                           - 120
+GMT+11:00 Solomon Islands                                 - 23
+GMT+12:00 New Zealand(Wellington, Auckland)               - 24
+GMT+12:45 New Zealand(Chatham Islands)                    - 121
+GMT+13:00 Tonga(Nukualofa)                                - 25
+GMT-01:00 Arquipelago Dos Acores                          - 11
+GMT-01:00 Portugal(Azores)                                - 65
+GMT-02:00 UTC-02                                          - 10
+GMT-03:00 Argentina(Buenos Aires)                         - 64
+GMT-03:00 Brasil(Brasilia)                                - 9 
+GMT-03:00 Denmark-Greenland(Nuuk)                         - 63
+GMT-03:30 Canada-Newfoundland(St. Johns)                  - 43
+GMT-04:00 Canada-Atlantic                                 - 42
+GMT-04:00 Paraguay(Asuncion)                              - 59
+GMT-04:00 Santiago de Chile                               - 8 
+GMT-04:00 Trinidad &amp; Tobago                           - 62
+GMT-04:00 United kingdom(Falkland Islands)                - 61
+GMT-04:00 United kingdom-Bermuda(Bermuda)                 - 60
+GMT-04:30 Venezuela(Caracas)                              - 58
+GMT-05:00 Bahamas(Nassau)                                 - 55
+GMT-05:00 Canada(Montreal, Ottawa, Quebec)                - 56
+GMT-05:00 Cuba(Havana)                                    - 57
+GMT-05:00 Lima                                            - 7 
+GMT-05:00 US-East-Indiana                                 - 38
+GMT-05:00 US-Eastern                                      - 32
+GMT-05:00 US-Michigan                                     - 34
+GMT-06:00 Canada-Manitoba(Winnipeg)                       - 53
+GMT-06:00 Chile(Easter Islands)                           - 54
+GMT-06:00 Mexico(Mexico City, Acapulco)                   - 6 
+GMT-06:00 US-Central                                      - 37
+GMT-06:00 US-Indiana-Starke                               - 39
+GMT-07:00 Canada(Edmonton, Calgary)                       - 51
+GMT-07:00 LaPaz                                           - 5 
+GMT-07:00 Mexico(Mazatlan, Chihuahua)                     - 52
+GMT-07:00 US-Arizona                                      - 31
+GMT-07:00 US-Mountain                                     - 40
+GMT-08:00 California                                      - 4 
+GMT-08:00 Canada(Vancouver, Whitehorse)                   - 49
+GMT-08:00 Mexico(Tijuana, Mexicali)                       - 50
+GMT-08:00 US-Pacific                                      - 35
+GMT-09:00 US-Alaska                                       - 30
+GMT-09:00 UTC-9                                           - 3 
+GMT-10:00 US-Aleutian                                     - 36
+GMT-10:00 US-Hawaii                                       - 33
+GMT-10:00 UTC-10                                          - 2 
+GMT-11:00 US-Samoa                                        - 41
+GMT-11:00 UTC-11                                          - 1 
+GMT-12:00 UTC-12                                          - 0 
