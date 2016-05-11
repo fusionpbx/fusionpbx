@@ -224,7 +224,7 @@ if (!class_exists('xml_cdr')) {
 
 				if ($xml->variables->current_application == "bridge") {
 					$current_application_data = urldecode($xml->variables->current_application_data);
-					$bridge_array = explode("/", current_application_data);
+					$bridge_array = explode("/", $current_application_data);
 					$destination_number = end($bridge_array);
 				}
 				else {
