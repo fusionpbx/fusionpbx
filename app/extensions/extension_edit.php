@@ -417,7 +417,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "domain_uuid, ";
 							$sql .= "extension_uuid, ";
 							$sql .= "extension, ";
-							$sql .= "number_alias, ";
+							if (permission_exists('number_alias')) {
+								$sql .= "number_alias, ";
+							}
 							$sql .= "password, ";
 							if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 								$sql .= "accountcode, ";
@@ -477,7 +479,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'".$domain_uuid."', ";
 							$sql .= "'$extension_uuid', ";
 							$sql .= "'$extension', ";
-							$sql .= "'$number_alias', ";
+							if (permission_exists('number_alias')) {
+								$sql .= "'$number_alias', ";
+							}
 							$sql .= "'$password', ";
 							if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 								$sql .= "'$accountcode', ";
@@ -562,7 +566,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$ext->db = $db;
 								$ext->domain_uuid = $domain_uuid;
 								$ext->extension = $extension;
-								$ext->number_alias = $number_alias;
+								if (permission_exists('number_alias')) {
+									$ext->number_alias = $number_alias;
+								}
 								$ext->voicemail_password = $voicemail_password;
 								$ext->voicemail_mail_to = $voicemail_mail_to;
 								$ext->voicemail_file = $voicemail_file;
@@ -623,7 +629,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "domain_uuid = '$domain_uuid', ";
 					}
 					$sql .= "extension = '$extension', ";
-					$sql .= "number_alias = '$number_alias', ";
+					if (permission_exists('number_alias')) {
+						$sql .= "number_alias = '$number_alias', ";
+					}
 					if (permission_exists('extension_password')) {
 						$sql .= "password = '$password', ";
 					}
@@ -711,7 +719,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$ext->db = $db;
 						$ext->domain_uuid = $domain_uuid;
 						$ext->extension = $extension;
-						$ext->number_alias = $number_alias;
+						if (permission_exists('number_alias')) {
+							$ext->number_alias = $number_alias;
+						}
 						$ext->voicemail_password = $voicemail_password;
 						$ext->voicemail_mail_to = $voicemail_mail_to;
 						$ext->voicemail_file = $voicemail_file;
@@ -753,7 +763,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("directory:".$extension."@".$user_context);
-					if (strlen($number_alias) > 0) {
+					if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 						$cache->delete("directory:".$number_alias."@".$user_context);
 					}
 			}
@@ -1036,16 +1046,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-number_alias']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='number_alias' autocomplete='off' maxlength='255' min='0' step='1' value=\"$number_alias\">\n";
-	echo "<br />\n";
-	echo $text['description-number_alias']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('number_alias')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-number_alias']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='number' name='number_alias' autocomplete='off' maxlength='255' min='0' step='1' value=\"$number_alias\">\n";
+		echo "<br />\n";
+		echo $text['description-number_alias']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('extension_password') && $action == "update") {
 		echo "<tr>\n";
