@@ -94,6 +94,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "caller_id_name";
 			$this->fields[] = "caller_id_number";
 			$this->fields[] = "destination_number";
+			$this->fields[] = "source_number";
 			$this->fields[] = "start_epoch";
 			$this->fields[] = "start_stamp";
 			$this->fields[] = "answer_stamp";
@@ -220,6 +221,22 @@ if (!class_exists('xml_cdr')) {
 			//misc
 				$uuid = check_str(urldecode($xml->variables->uuid));
 				$this->array[$row]['uuid'] = $uuid;
+
+				if ($xml->variables->current_application == "bridge") {
+					$current_application_data = urldecode($xml->variables->current_application_data);
+					$bridge_array = explode("/", current_application_data);
+					$destination_number = end($bridge_array);
+				}
+				else {
+					$destination_number = urldecode($xml->variables->callee_id_number);
+				}
+				$this->array[$row]['destination_number'] = check_str($destination_number);
+				$this->array[$row]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
+				$this->array[$row]['user_context'] = check_str(urldecode($xml->variables->user_context));
+				$this->array[$row]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
+				$this->array[$row]['caller_id_name'] = check_str(urldecode($xml->variables->effective_caller_id_number));
+				$this->array[$row]['caller_id_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
+
 				$this->array[$row]['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 				$this->array[$row]['default_language'] = check_str(urldecode($xml->variables->default_language));
 				$this->array[$row]['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
@@ -267,21 +284,6 @@ if (!class_exists('xml_cdr')) {
 				if (strlen($rtp_audio_in_mos) > 0) {
 					$this->array[$row]['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 				}
-
-			//get the values from the callflow.
-				$x = 0;
-				if (isset($xml->callflow)) foreach ($xml->callflow as $callflow) {
-					if ($x == 0) {
-						$context = check_str(urldecode($callflow->caller_profile->context));
-						$this->array[$row]['destination_number'] = check_str(urldecode($callflow->caller_profile->destination_number));
-						$this->array[$row]['context'] = $context;
-						$this->array[$row]['network_addr'] = check_str(urldecode($callflow->caller_profile->network_addr));
-					}
-					$this->array[$row]['caller_id_name'] = check_str(urldecode($callflow->caller_profile->caller_id_name));
-					$this->array[$row]['caller_id_number'] = check_str(urldecode($callflow->caller_profile->caller_id_number));
-					$x++;
-				}
-				unset($x);
 
 			//store the call leg
 				$this->array[$row]['leg'] = $leg;
