@@ -1,6 +1,6 @@
 <configuration name="local_stream.conf" description="stream files from local dir">
 	<!-- fallback to default if requested moh class isn't found -->
-	<directory name="default" path="$${sounds_dir}/music/8000">
+	<directory name="default" path="$${sounds_dir}/music/default/8000">
 		<param name="rate" value="8000"/>
 		<param name="shuffle" value="true"/>
 		<param name="channels" value="1"/>
