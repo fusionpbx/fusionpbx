@@ -226,9 +226,13 @@ if (!class_exists('xml_cdr')) {
 					$current_application_data = urldecode($xml->variables->current_application_data);
 					$bridge_array = explode("/", $current_application_data);
 					$destination_number = end($bridge_array);
+					if (strpos($destination_number,'@') !== FALSE) {
+						$destination_array = explode("@", $destination_number);
+						$destination_number = $destination_array[0];
+					}
 				}
 				else {
-					$destination_number = urldecode($xml->variables->callee_id_number);
+					$destination_number = urldecode($xml->variables->sip_to_user);
 				}
 				$this->array[$row]['destination_number'] = check_str($destination_number);
 				$this->array[$row]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
