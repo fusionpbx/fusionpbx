@@ -32,6 +32,7 @@ RewriteRule     ^.*/([A-Fa-f0-9]{12})-web.cfg$						app/provision/?mac=$1&file=w
 RewriteRule     ^.*/([A-Fa-f0-9]{12})-directory.xml$					app/provision/?mac=$1&file=directory.xml [QSA]
 
 #Escene
-RewriteRule     ^.*/provision/([A-Fa-f0-9]+)_Extern.xml$              app/provision/?ext=$1&file={$mac}_extern.xml [QSA]
+RewriteRule     ^.*/provision/([0-9]{1,11})_Extern.xml$              app/provision/?ext=$1&file={$mac}_extern.xml [QSA]
+RewriteRule     ^.*/provision/([0-9]{1,11})_Phonebook.xml$           app/provision/?ext=$1&file={$mac}_phonebook.xml [QSA]
 
 Options -Indexes
