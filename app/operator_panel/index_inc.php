@@ -41,10 +41,10 @@ else {
 
 $activity = get_call_activity();
 
-foreach ($activity as $extension => $fields) {
+if (isset($activity)) foreach ($activity as $extension => $fields) {
 	if (substr_count($fields['call_group'], ',')) {
 		$tmp = explode(',', $fields['call_group']);
-		foreach ($tmp as $tmp_index => $tmp_value) {
+		if (isset($tmp)) foreach ($tmp as $tmp_index => $tmp_value) {
 			if (trim($tmp_value) == '') { unset($tmp[$tmp_index]); }
 			else { $groups[] = $tmp_value; }
 		}
@@ -84,7 +84,7 @@ if (sizeof($_SESSION['user']['extensions']) > 0) {
 	$status_options[5]['label'] = $text['label-status_logged_out'];
 	$status_options[5]['style'] = "op_btn_status_logged_out";
 
-	foreach ($status_options as $status_option) {
+	if (isset($status_options)) foreach ($status_options as $status_option) {
 		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."')); this.disabled='disabled'; refresh_start();\" ".$onhover_pause_refresh.">\n";
 	}
 }
@@ -103,7 +103,7 @@ if (permission_exists('operator_panel_eavesdrop')) {
 		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : $_REQUEST['eavesdrop_dest'])."\">";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
-		foreach ($_SESSION['user']['extensions'] as $user_extension) {
+		if (isset($_SESSION['user']['extensions'])) foreach ($_SESSION['user']['extensions'] as $user_extension) {
 			echo "				<option value='".$user_extension."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".$user_extension."</option>\n";
 		}
 		echo "				</select>\n";
@@ -122,7 +122,7 @@ if (sizeof($groups) > 0) {
 		echo "				<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		echo "					<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
 		echo "					<option value=''>".$text['button-all']."</option>";
-		foreach ($groups as $group) {
+		if (isset($groups)) foreach ($groups as $group) {
 			echo "				<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
 		}
 		echo "				</select>\n";
@@ -130,7 +130,7 @@ if (sizeof($groups) > 0) {
 	else {
 		//show buttons
 		echo "				<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\" ".$onhover_pause_refresh.">";
-		foreach ($groups as $group) {
+		if (isset($groups)) foreach ($groups as $group) {
 			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\" ".$onhover_pause_refresh.">";
 		}
 	}
@@ -145,7 +145,7 @@ echo "	</tr>";
 echo "</table>";
 echo "<br>";
 
-foreach ($activity as $extension => $ext) {
+if (isset($activity)) foreach ($activity as $extension => $ext) {
 	unset($block);
 
 	//filter by group, if defined
@@ -406,7 +406,7 @@ foreach ($activity as $extension => $ext) {
 
 if (sizeof($user_extensions) > 0) {
 	echo "<table width='100%'><tr><td>";
-	foreach ($user_extensions as $ext_block) {
+	if (isset($user_extensions)) foreach ($user_extensions as $ext_block) {
 		echo $ext_block;
 	}
 	echo "</td></tr></table>";
@@ -425,7 +425,7 @@ else if (sizeof($user_extensions) > 0) {
 
 if (sizeof($other_extensions) > 0) {
 	echo "<table width='100%'><tr><td>";
-	foreach ($other_extensions as $ext_block) {
+	if (isset($other_extensions)) foreach ($other_extensions as $ext_block) {
 		echo $ext_block;
 	}
 	echo "</td></tr></table>";
