@@ -67,7 +67,7 @@
 					else {
 						//ensure that the requested voicemail box is assigned to this user
 						$found = false;
-						foreach($voicemail_uuids as $row) {
+						if (is_array($voicemail_uuids)) foreach($voicemail_uuids as $row) {
 							if ($voicemail_uuid == $row['voicemail_uuid']) {
 								$sql .= "and voicemail_uuid = '".$row['voicemail_uuid']."' ";
 								$found = true;
@@ -85,7 +85,7 @@
 					if (count($voicemail_ids) > 0) {
 						//show only the assigned voicemail ids
 						$sql .= "and (";
-						foreach($voicemail_ids as $row) {
+						if (is_array($voicemail_ids)) foreach($voicemail_ids as $row) {
 							if ($x == 0) {
 								$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
 							}
@@ -114,7 +114,7 @@
 				$voicemails = $this->voicemails();
 
 			//add the voicemail messages to the array
-				foreach ($voicemails as &$row) {
+				if (is_array($voicemails)) foreach ($voicemails as &$row) {
 					//get the voicemail messages
 					$this->voicemail_uuid = $row['voicemail_uuid'];
 					$this->voicemail_id = $row['voicemail_id'];
@@ -134,7 +134,7 @@
 			if (is_array($this->voicemail_id)) {
 				$sql .= "and (";
 				$x = 0;
-				foreach($this->voicemail_id as $row) {
+				if (is_array($this->voicemail_id)) foreach($this->voicemail_id as $row) {
 					if ($x > 0) {
 						$sql .= "or ";
 					}
@@ -159,7 +159,7 @@
 			$result_count = count($result);
 			unset ($prep_statement, $sql);
 			if ($result_count > 0) {
-				foreach($result as &$row) {
+				if (is_array($result)) foreach($result as &$row) {
 					//set the greeting directory
 					$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 					if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
@@ -192,7 +192,7 @@
 
 			//delete voicemail recordings folder (includes greetings)
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
-				foreach (glob($file_path."/*.*") as $file_name) {
+				if (isset(glob($file_path."/*.*"))) foreach (glob($file_path."/*.*") as $file_name) {
 					unlink($file_name);
 				}
 				@rmdir($file_path);
@@ -266,7 +266,7 @@
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
+					if (is_array($result)) foreach ($result as &$row) {
 						$this->voicemail_id = $row["voicemail_id"];
 					}
 					unset ($prep_statement);
@@ -275,13 +275,17 @@
 			//delete the recording
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				if ($this->voicemail_message_uuid != '') {
-					foreach (
-						glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) { unlink($file_name);
+					if (is_array(glob($file_path."/msg_".$this->voicemail_message_uuid.".*"))) {
+						foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
+							unlink($file_name);
+						}
 					}
 				}
 				else {
-					foreach (
-						glob($file_path."/msg_*.*") as $file_name) { unlink($file_name); //remove all recordings
+					if (is_array(glob($file_path."/msg_*.*"))) {
+						foreach (glob($file_path."/msg_*.*") as $file_name) { 
+							unlink($file_name); //remove all recordings
+						}
 					}
 				}
 
@@ -309,7 +313,7 @@
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
+					if (is_array($result)) foreach ($result as &$row) {
 						$this->voicemail_id = $row["voicemail_id"];
 					}
 					unset ($prep_statement);
@@ -382,7 +386,7 @@
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 					if (count($result) > 0) {
-						foreach($result as &$row) {
+						if (is_array($result)) foreach($result as &$row) {
 							if ($row['message_base64'] != '') {
 								$message_decoded = base64_decode($row['message_base64']);
 								file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
