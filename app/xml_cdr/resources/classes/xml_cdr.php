@@ -218,10 +218,7 @@ if (!class_exists('xml_cdr')) {
 					//$this->log("\nfail loadxml: " . $e->getMessage() . "\n");
 				}
 
-			//misc
-				$uuid = check_str(urldecode($xml->variables->uuid));
-				$this->array[$row]['uuid'] = $uuid;
-
+			//get the destination number
 				if ($xml->variables->current_application == "bridge") {
 					$current_application_data = urldecode($xml->variables->current_application_data);
 					$bridge_array = explode("/", $current_application_data);
@@ -234,12 +231,24 @@ if (!class_exists('xml_cdr')) {
 				else {
 					$destination_number = urldecode($xml->variables->sip_to_user);
 				}
+
+			//get the caller id
+				$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
+				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
+					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
+					$caller_id_number = urldecode($row->caller_profile->caller_id_number);
+				}
+
+			//misc
+				$uuid = check_str(urldecode($xml->variables->uuid));
+				$this->array[$row]['uuid'] = $uuid;
 				$this->array[$row]['destination_number'] = check_str($destination_number);
 				$this->array[$row]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
 				$this->array[$row]['user_context'] = check_str(urldecode($xml->variables->user_context));
 				$this->array[$row]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
-				$this->array[$row]['caller_id_name'] = check_str(urldecode($xml->variables->effective_caller_id_number));
-				$this->array[$row]['caller_id_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
+				$this->array[$row]['caller_id_name'] = check_str($caller_id_name);
+				$this->array[$row]['caller_id_number'] = check_str($caller_id_number));
 
 				$this->array[$row]['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 				$this->array[$row]['default_language'] = check_str(urldecode($xml->variables->default_language));
