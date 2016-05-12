@@ -62,11 +62,11 @@ require_once "resources/paging.php";
 
 //get total extension count from the database
 	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."') as num_rows ";
+	$sql .= "(select count(*) from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' ".$sql_mod.") as num_rows ";
 	if ($db_type == "pgsql") {
 		$sql .= ",(select count(*) as count from v_extensions ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions";
+		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
 	}
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
@@ -79,28 +79,13 @@ require_once "resources/paging.php";
 	}
 	unset($prep_statement, $row);
 
-//get the number of extensions (reuse $sql from above)
-	$sql .= $sql_mod; //add search mod from above
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
-	unset($prep_statement, $result);
-
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
-	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
+	list($paging_controls, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page); //bottom
 	$offset = $rows_per_page * $_GET['page'];
 
 //to cast or not to cast
@@ -121,7 +106,7 @@ require_once "resources/paging.php";
 	else {
 		$sql .= "order by $order_text ";
 	}
-	$sql .= " limit $rows_per_page offset $offset ";
+	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -130,7 +115,7 @@ require_once "resources/paging.php";
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$num_rows.")</b><br>\n";
+	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
 	echo "		".$text['description-extensions']."\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
@@ -156,7 +141,7 @@ require_once "resources/paging.php";
 	echo "<form name='frm' method='post' action='extension_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('extension_delete') && $num_rows > 0) {
+	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
@@ -171,13 +156,13 @@ require_once "resources/paging.php";
 			echo "<a href='extension_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
-	if (permission_exists('extension_delete') && $num_rows > 0) {
+	if (permission_exists('extension_delete') && is_array($extensions)) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 
 		foreach($extensions as $row) {
 			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
@@ -213,10 +198,9 @@ require_once "resources/paging.php";
 			$c = ($c) ? 0 : 1;
 		}
 		unset($extensions, $row);
-
 	}
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
 		if (permission_exists('extension_add')) {
@@ -238,7 +222,7 @@ require_once "resources/paging.php";
 		echo "<center>".$paging_controls."</center>\n";
 	}
 
-	echo "<br /><br />".(($num_rows == 0) ? "<br /><br />" : null);
+	echo "<br /><br />".((is_array($extensions)) ? "<br /><br />" : null);
 
 	// check or uncheck all checkboxes
 	if (sizeof($ext_ids) > 0) {
@@ -252,7 +236,7 @@ require_once "resources/paging.php";
 		echo "</script>\n";
 	}
 
-	if ($num_rows > 0) {
+	if (is_array($extensions)) {
 		// check all checkboxes
 		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
 
