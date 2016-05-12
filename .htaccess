@@ -36,3 +36,8 @@ RewriteRule     ^.*/provision/([0-9]{1,11})_Extern.xml$              app/provisi
 RewriteRule     ^.*/provision/([0-9]{1,11})_Phonebook.xml$           app/provision/?ext=$1&file={$mac}_phonebook.xml [QSA]
 
 Options -Indexes
+
+#PHP settings
+php_value upload_max_filesize	25M
+php_value post_max_size			35M
+php_value memory_limit			512M
