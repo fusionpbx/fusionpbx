@@ -248,7 +248,7 @@ if (!class_exists('xml_cdr')) {
 				$this->array[$row]['user_context'] = check_str(urldecode($xml->variables->user_context));
 				$this->array[$row]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
 				$this->array[$row]['caller_id_name'] = check_str($caller_id_name);
-				$this->array[$row]['caller_id_number'] = check_str($caller_id_number));
+				$this->array[$row]['caller_id_number'] = check_str($caller_id_number);
 
 				$this->array[$row]['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 				$this->array[$row]['default_language'] = check_str(urldecode($xml->variables->default_language));
