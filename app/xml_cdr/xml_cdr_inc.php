@@ -328,6 +328,7 @@ else {
 	$sql .= "billsec, ";
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
+	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
 	$sql .= "accountcode, ";
 	$sql .= "answer_stamp, ";
