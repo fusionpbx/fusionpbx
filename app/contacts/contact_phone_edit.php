@@ -66,7 +66,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$phone_description = check_str($_POST["phone_description"]);
 
 		//remove any phone number formatting
-		$phone_number = preg_replace('{\D}', '', $phone_number);
+		$phone_number = preg_replace('{(?!^\+)[\D]}', '', $phone_number);
 
 		//use custom label if set
 		$phone_label = ($phone_label_custom != '') ? $phone_label_custom : $phone_label;
