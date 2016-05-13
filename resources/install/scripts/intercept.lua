@@ -247,6 +247,13 @@
 
 		--connect to FS database
 			--local dbh = Database.new('switch')
+			if (file_exists(database_dir.."/core.db")) then
+				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+			else
+				dofile(scripts_dir.."/resources/functions/database_handle.lua");
+				dbh = database_handle('switch');
+			end
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
@@ -280,9 +287,6 @@
 				log.notice("sql "..sql);
 			end
 			local is_child
-
-			require "resources.functions.database_handle";
-			local dbh = database_handle('switch');
 			dbh:query(sql, function(row)
 				-- for key, val in pairs(row) do
 				-- 	log.notice("row "..key.." "..val);
