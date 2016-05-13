@@ -291,8 +291,8 @@ include "root.php";
 					$dial_string .= ",extension_uuid=".$this->extension_uuid;
 					$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
 
-					$dial_string_caller_id_name = "\${caller_id_name}";
-					$dial_string_caller_id_number = "\${caller_id_number}";
+					$dial_string_caller_id_name = "\${effective_caller_id_name}";
+					$dial_string_caller_id_number = "\${effective_caller_id_number}";
 
 					if (strlen($this->follow_me_caller_id_uuid) > 0){
 						$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
