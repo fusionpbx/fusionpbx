@@ -1,4 +1,5 @@
 <all>
+	{if $smarty.server.HTTPS == "on"}{$https=true}{else}{$https=false}{/if}
 	<SipDSPs>
 		<!-- JITTERBUFFER 0 - adjust, 1 - fixed -->
 		<dsp
@@ -106,7 +107,7 @@
 			AutoPrivisionFlag="1"
 			DHCPOptionFlag="1"
 			DHCPOptionValue="66"
-			protocol="1"
+			protocol={if $https}"3"{else}"1"{/if}
 			Firmware="{$domain_name}{$project_path}/app/provision"
 			username=""
 			password=""
@@ -116,7 +117,7 @@
 			Downloadconfig="1"
 			DownloadExtension="1"
 			DownloadPhonebook="0"
-			DownloadPersonPhonebook="0"
+			DownloadPersonPhonebook="1"
 			Bootingchecked="1"
 			ZeroActive="0"
 			WaitTime="10"
