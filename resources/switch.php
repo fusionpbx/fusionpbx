@@ -391,7 +391,7 @@ function save_module_xml() {
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
 	$xml .= "	<modules>\n";
 
-	$sql = "select * from v_modules order by module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
+	$sql = "select * from v_modules order by module_name='mod_commands' OR module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$prev_module_cat = '';
