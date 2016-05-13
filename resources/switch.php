@@ -459,6 +459,13 @@ function save_var_xml() {
 			} elseif ($row['var_hostname'] == $hostname) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			}
+			$var_cmd = 'set';
+			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; }
+			if (strlen($row['var_hostname']) == 0) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			} elseif ($row['var_hostname'] == $hostname) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			}
 		}
 		$prev_var_cat = $row['var_cat'];
 	}
