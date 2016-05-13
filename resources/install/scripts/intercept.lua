@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2015
+--	Copyright (C) 2010 - 2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -246,7 +246,7 @@
 			end
 
 		--connect to FS database
-			local dbh = Database.new('switch')
+			--local dbh = Database.new('switch')
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
@@ -280,6 +280,9 @@
 				log.notice("sql "..sql);
 			end
 			local is_child
+
+			require "resources.functions.database_handle";
+			local dbh = database_handle('switch');
 			dbh:query(sql, function(row)
 				-- for key, val in pairs(row) do
 				-- 	log.notice("row "..key.." "..val);
