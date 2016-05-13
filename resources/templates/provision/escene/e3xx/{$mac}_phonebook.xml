@@ -1,0 +1,26 @@
+<all>
+	{foreach $contacts as $contact}
+		{$contact_groups[$contact.contact_category]=true}
+	{/foreach}
+
+	<PhoneGroups>
+		{$i=0}
+		{foreach $contact_groups as $name => $true}
+		<group id="{$i}" groupid="{$i}" name="{$name}" Descriptor="" RingType="" />
+		{$i=$i+1}
+		{/foreach}
+	</PhoneGroups>
+
+	<PhoneBooks>
+		{$i=0}
+		{foreach $contacts as $contact}
+		<book 
+			id="{$i}" Bookid="{$i}" speedid="0" accountid="127" NewVer="1" ISUseBLF="0"
+			GroupName="{$contact.contact_category}" GroupNameTwo="" FirstName="{$contact.contact_name_given}" LastName="{$contact.contact_name_family}"
+			MobileNum="{$contact.phone_number_mobile}" OfficeNum="{$contact.phone_number_work}" OtherNum=""
+			Username="{$contact.contact_name_given}{$contact.contact_name_family}" 
+		/>
+		{$i=$i+1}
+		{/foreach}
+	</PhoneBooks>
+</all>
