@@ -16,7 +16,7 @@ case "$1" in
       /var/lib/fusionpbx/sounds\
       /var/lib/fusionpbx/storage;
     do
-      chown www-data:www-data $x
+      chown -R www-data:www-data $x
     done
     for y in \
       /var/lib/fusionpbx/recordings \
