@@ -391,7 +391,7 @@ function save_module_xml() {
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
 	$xml .= "	<modules>\n";
 
-	$sql = "select * from v_modules order by module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
+	$sql = "select * from v_modules order by module_name='mod_commands' OR module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$prev_module_cat = '';
@@ -458,6 +458,13 @@ function save_var_xml() {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			} elseif ($row['var_hostname'] == $hostname) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			}
+			$var_cmd = 'set';
+			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; }
+			if (strlen($row['var_hostname']) == 0) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			} elseif ($row['var_hostname'] == $hostname) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			}
 		}
 		$prev_var_cat = $row['var_cat'];

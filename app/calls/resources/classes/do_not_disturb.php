@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -77,18 +77,16 @@ include "root.php";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) > 0) {
-					foreach ($result as &$row) {
-						if (strlen($this->extension_uuid) == 0) {
-							$this->extension_uuid = $row["extension_uuid"];
+				if (is_array($result)) foreach ($result as &$row) {
+					if (strlen($this->extension_uuid) == 0) {
+						$this->extension_uuid = $row["extension_uuid"];
+					}
+					if (strlen($this->extension) == 0) {
+						if(strlen($row["number_alias"]) == 0) {
+							$this->extension = $row["extension"];
 						}
-						if (strlen($this->extension) == 0) {
-							if(strlen($row["number_alias"]) == 0) {
-								$this->extension = $row["extension"];
-							}
-							else {
-								$this->extension = $row["number_alias"];
-							}
+						else {
+							$this->extension = $row["number_alias"];
 						}
 					}
 				}

@@ -94,8 +94,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_missed_call";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
 		$y = 0; //table array index
