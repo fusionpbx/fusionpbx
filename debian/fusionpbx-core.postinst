@@ -25,7 +25,7 @@ case "$1" in
       /var/lib/fusionpbx/storage/fax \
       /var/lib/fusionpbx/storage/voicemail;
     do
-      chown -R www-data:freeswitch 
+      chown -R www-data:freeswitch $y
     done
     ;;
   abort-upgrade|abort-remove|abort-deconfigure)
