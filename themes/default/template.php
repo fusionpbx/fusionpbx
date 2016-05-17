@@ -157,12 +157,18 @@
 			});
 
 		//apply the auto-size jquery script to all text inputs
-			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker').autosizeInput();
+			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker,.datepicker').autosizeInput();
 
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
 					format: 'YYYY-MM-DD HH:mm',
+					showTodayButton: true,
+					showClear: true,
+					showClose: true,
+				});
+				$('.datepicker').datetimepicker({
+					format: 'YYYY-MM-DD',
 					showTodayButton: true,
 					showClear: true,
 					showClose: true,
