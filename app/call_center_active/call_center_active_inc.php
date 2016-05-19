@@ -45,6 +45,7 @@ else {
 //convert the string to a named array
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
+		$result = '';
 		if (trim(strtoupper($tmp_array[0])) != "+OK") {
 			$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
 			$x = 0;
@@ -56,10 +57,6 @@ else {
 						$tmp_name = $tmp_field_name_array[$y];
 						if (trim(strtoupper($tmp_value)) != "+OK") {
 							$result[$x][$tmp_name] = $tmp_value;
-							return $result;
-						}
-						else {
-							return false;
 						}
 						$y++;
 					}
@@ -68,6 +65,7 @@ else {
 			}
 			unset($row);
 		}
+		return $result;
 	}
 
 //alternate the color of the row
@@ -244,13 +242,13 @@ else {
 			echo "<br />";
 			echo "<br />";
 
-
 		//get the queue list
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
 				$switch_cmd = 'callcenter_config queue list members '.$queue_name;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$result = str_to_named_array($event_socket_str, '|');
+				if (strlen($result) == 0) { unset($result); }
 
 			//show the title
 				$q_waiting=0;

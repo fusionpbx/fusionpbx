@@ -1049,13 +1049,15 @@
 
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$ps = shell_exec("/usr/bin/which ps");
-					$sed = shell_exec("/usr/bin/which sed");
-					$tmp = shell_exec($ps." -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | ".$sed." '/^ 0.0 /d'");
-					$tmp = explode("\n", $tmp);
-					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
-					$tmp = explode(' ', trim($tmp));
-					$percent_cpu = $tmp[0];
+					$result = shell_exec('ps -A -o pcpu');
+					$percent_cpu = 0;
+					foreach (explode("\n", $result) as $value) {
+						if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
+					}
+					$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
+					$cores = count(explode("\n", $result));
+					if ($percent_cpu > 1) { $percent_cpu = $percent_cpu / $cores; }
+					$percent_cpu = round($percent_cpu, 2);
 					if ($percent_cpu != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";

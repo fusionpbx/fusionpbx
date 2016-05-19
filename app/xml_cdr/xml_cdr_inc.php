@@ -299,6 +299,11 @@ else {
 				$rows_per_page = 50;
 			}
 
+		//disable the paging
+			if ($_REQUEST['export_format'] == "csv") {
+				$rows_per_page = 0;
+			}
+
 		//prepare to page the results
 			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
 			$page = $_GET['page'];
@@ -323,6 +328,7 @@ else {
 	$sql .= "billsec, ";
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
+	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
 	$sql .= "accountcode, ";
 	$sql .= "answer_stamp, ";
@@ -348,11 +354,13 @@ else {
 	}
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
-	if ($rows_per_page == 0) {
-		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
-	}
-	else {
-		$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+	if ($_REQUEST['export_format'] != "csv") {
+		if ($rows_per_page == 0) {
+			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
+		}
+		else {
+			$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+		}
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);

@@ -429,6 +429,21 @@ require_once "resources/require.php";
 				<?php
 				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 			}
+			if (strtolower($device_vendor) == "escene" || strlen($device_vendor) == 0) {
+				if (strlen($device_vendor) == 0) { echo "<optgroup label='Escene'>"; }
+				?>
+				<option value='1'  <?php if ($row['device_key_type'] == '1' ) { echo $selected;$found=true; } ?>><?php echo $text['label-blf']               ?></option>
+				<option value='7'  <?php if ($row['device_key_type'] == '7' ) { echo $selected;$found=true; } ?>><?php echo $text['label-call_park']         ?></option>
+				<option value='4'  <?php if ($row['device_key_type'] == '4' ) { echo $selected;$found=true; } ?>><?php echo $text['label-dtmf']              ?></option>
+				<option value='5'  <?php if ($row['device_key_type'] == '5' ) { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial']        ?></option>
+				<option value='2'  <?php if ($row['device_key_type'] == '2' ) { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial_prefix'] ?></option>
+				<option value='8'  <?php if ($row['device_key_type'] == '8' ) { echo $selected;$found=true; } ?>><?php echo $text['label-intercom']          ?></option>
+				<option value='9'  <?php if ($row['device_key_type'] == '9' ) { echo $selected;$found=true; } ?>><?php echo $text['label-pickup']            ?></option>
+				<option value='11' <?php if ($row['device_key_type'] == '11') { echo $selected;$found=true; } ?>><?php echo $text['label-broadsoft_group']   ?></option>
+				<?php /*BLA type 2 Paging type ?*/ ?>
+				<?php
+				if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
+			}
 			if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0) {
 				if (strlen($device_vendor) == 0) { echo "<optgroup label='Grandstream'>"; }
 				?>

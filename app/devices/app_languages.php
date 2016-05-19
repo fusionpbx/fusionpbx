@@ -325,6 +325,19 @@ $text['label-speed_dial']['de-at'] = "Schnellwahl";
 $text['label-speed_dial']['ar-eg'] = "";
 $text['label-speed_dial']['he'] = "חיוג מהיר";
 
+$text['label-speed_dial_prefix']['en-us'] = "Speed Dial Prefix";
+$text['label-speed_dial_prefix']['es-cl'] = "";
+$text['label-speed_dial_prefix']['pt-pt'] = "";
+$text['label-speed_dial_prefix']['fr-fr'] = "";
+$text['label-speed_dial_prefix']['pt-br'] = "";
+$text['label-speed_dial_prefix']['pl'] = "";
+$text['label-speed_dial_prefix']['uk'] = "";
+$text['label-speed_dial_prefix']['sv-se'] = "";
+$text['label-speed_dial_prefix']['ro'] = "";
+$text['label-speed_dial_prefix']['de-at'] = "";
+$text['label-speed_dial_prefix']['ar-eg'] = "";
+$text['label-speed_dial_prefix']['he'] = "";
+
 $text['label-sms']['en-us'] = "SMS";
 $text['label-sms']['es-cl'] = "SMS";
 $text['label-sms']['pt-pt'] = "SMS";
@@ -454,6 +467,19 @@ $text['label-record']['ro'] = "";
 $text['label-record']['de-at'] = "Aufnehmen";
 $text['label-record']['ar-eg'] = "تسجيل";
 $text['label-record']['he'] = "הקלטה";
+
+$text['label-pickup']['en-us'] = "Pickup";
+$text['label-pickup']['es-cl'] = "";
+$text['label-pickup']['pt-pt'] = "";
+$text['label-pickup']['fr-fr'] = "";
+$text['label-pickup']['pt-br'] = "";
+$text['label-pickup']['pl'] = "";
+$text['label-pickup']['uk'] = "";
+$text['label-pickup']['sv-se'] = "";
+$text['label-pickup']['ro'] = "";
+$text['label-pickup']['de-at'] = "";
+$text['label-pickup']['ar-eg'] = "";
+$text['label-pickup']['he'] = "";
 
 $text['label-public_hold']['en-us'] = "Public Hold";
 $text['label-public_hold']['es-cl'] = "Hold Pública";

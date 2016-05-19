@@ -114,8 +114,6 @@ if (!class_exists('scripts')) {
 					}
 					chmod($dst_dir, 0775);
                                         unset($dst_dir);
-				} else {
-					throw new Exception("Scripts directory doesn't exist");
 				}
 			}
 		}
