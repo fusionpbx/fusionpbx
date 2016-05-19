@@ -18,7 +18,7 @@ class text {
 	 * unset the variables used in the class
 	 */
 	public function __destruct() {
-		foreach ($this as $key => $value) {
+		if (is_array($this)) foreach ($this as $key => $value) {
 			unset($this->$key);
 		}
 	}
@@ -34,7 +34,7 @@ class text {
 			$text = array();
 
 		//get the global app_languages.php
-			if (!$exclude_global){
+			if (!$exclude_global && file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
 				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
 			}
 
@@ -50,15 +50,17 @@ class text {
 			}
 
 		//get the available languages
-			krsort($text);
-			foreach ($text as $lang_label => $lang_codes) {
-				foreach ($lang_codes as $lang_code => $lang_text) {
-					if ($lang_text != '') {
-						$app_languages[] = $lang_code;
+			if (is_array($text)) {
+				krsort($text);
+				foreach ($text as $lang_label => $lang_codes) {
+					if (is_array($lang_codes)) foreach ($lang_codes as $lang_code => $lang_text) {
+						if ($lang_text != '') {
+							$app_languages[] = $lang_code;
+						}
 					}
 				}
 			}
-			$_SESSION['app']['languages'] = array_unique($app_languages);
+			if (is_array($app_languages)) { $_SESSION['app']['languages'] = array_unique($app_languages); }
 
 		//check the session language
 			if (isset($_SESSION['domain']) and $language_code == null){
@@ -69,7 +71,7 @@ class text {
 
 		//reduce to specific language
 			if ($language_code != 'all') {
-				foreach ($text as $key => $value) {
+				if (is_array($text)) foreach ($text as $key => $value) {
 					if (strlen($value[$language_code]) > 0) {
 						$text[$key] = $value[$language_code];
 					} else {

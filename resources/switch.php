@@ -46,76 +46,6 @@ require_once "resources/require.php";
 		}
 	}
 
-//get the extensions that are assigned to this user
-function load_extensions() {
-
-	//get the database connection
-		require_once "resources/classes/database.php";
-		$database = new database;
-		$database->connect();
-		$db = $database->db;
-
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-		if (isset($_SESSION["user"]) && isset($_SESSION["user_uuid"]) && $db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
-			//get the user extension list
-				unset($_SESSION['user']['extension']);
-				$sql = "select ";
-				$sql .= "	e.extension, ";
-				$sql .= "	e.number_alias, ";
-				$sql .= "	e.user_context, ";
-				$sql .= "	e.extension_uuid, ";
-				$sql .= "	e.outbound_caller_id_name, ";
-				$sql .= "	e.outbound_caller_id_number, ";
-				$sql .= "	v.voicemail_uuid ";
-				$sql .= "from ";
-				$sql .= "	v_extension_users as u, ";
-				$sql .= "	v_extensions as e ";
-				$sql .= "		left outer join v_voicemails as v on ( ";
-				$sql .= "			e.domain_uuid = v.domain_uuid ";
-				$sql .= "			and v.voicemail_enabled = 'true' ";
-				$sql .= "			and ( ";
-				$sql .= "				e.extension = v.voicemail_id ";
-				$sql .= "				or e.number_alias = v.voicemail_id ";
-				$sql .= "			) ";
-				$sql .= "		) ";
-				$sql .= "where ";
-				$sql .= "	e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "	and e.extension_uuid = u.extension_uuid ";
-				$sql .= "	and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-				$sql .= "	and e.enabled = 'true' ";
-				$sql .= "order by ";
-				$sql .= "	e.extension asc ";
-				$query = $db->query($sql);
-				if($query !== false) {
-					$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-					$x = 0;
-					foreach($result as $row) {
-						$destination = $row['extension'];
-						if (strlen($row['number_alias']) > 0) {
-							$destination = $row['number_alias'];
-						}
-						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
-						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
-						$_SESSION['user']['extension'][$x]['destination'] = $destination;
-						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
-						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-						if ($row['voicemail_uuid'] != '') {
-							$_SESSION['user']['voicemail'][]['voicemail_uuid'] = $row['voicemail_uuid'];
-						}
-						$_SESSION['user_context'] = $row["user_context"];
-						$x++;
-					}
-				}
-			//if no extension has been assigned then setting the user_context will still need to be set
-				if (strlen($_SESSION['user_context']) == 0) {
-					$_SESSION['user_context'] = $_SESSION['domain_name'];
-				}
-		}
-	}
-}
-load_extensions();
-
 function event_socket_create($host, $port, $password) {
 	$esl = new event_socket;
 	if ($esl->connect($host, $port, $password)) {
@@ -461,7 +391,7 @@ function save_module_xml() {
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
 	$xml .= "	<modules>\n";
 
-	$sql = "select * from v_modules order by module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
+	$sql = "select * from v_modules order by module_name='mod_commands' OR module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$prev_module_cat = '';
@@ -528,6 +458,13 @@ function save_var_xml() {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			} elseif ($row['var_hostname'] == $hostname) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			}
+			$var_cmd = 'set';
+			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; }
+			if (strlen($row['var_hostname']) == 0) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			} elseif ($row['var_hostname'] == $hostname) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			}
 		}
 		$prev_var_cat = $row['var_cat'];

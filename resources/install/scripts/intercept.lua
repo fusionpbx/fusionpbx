@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2015
+--	Copyright (C) 2010 - 2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -246,7 +246,14 @@
 			end
 
 		--connect to FS database
-			local dbh = Database.new('switch')
+			--local dbh = Database.new('switch')
+			if (file_exists(database_dir.."/core.db")) then
+				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+			else
+				dofile(scripts_dir.."/resources/functions/database_handle.lua");
+				dbh = database_handle('switch');
+			end
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";

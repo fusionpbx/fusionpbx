@@ -23,9 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-	error_reporting(E_ALL ^ E_NOTICE); //hide notices
-		//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
-		//error_reporting(E_ALL);
 
 	//session handling
 		//start the session
