@@ -146,6 +146,8 @@ require_once "resources/require.php";
 				}
 				unset ($prep_statement);
 			}
+		//get assigned user
+			$user_uuid = check_str($_POST["user_uuid"]);
 		//devices
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
@@ -343,6 +345,7 @@ require_once "resources/require.php";
 			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			$device_label = $row["device_label"];
+			$user_uuid = $row["user_uuid"];
 			$device_username = $row["device_username"];
 			$device_password = $row["device_password"];
 			$device_vendor = $row["device_vendor"];
@@ -435,6 +438,14 @@ require_once "resources/require.php";
 	$device_settings[$x]['device_setting_value'] = '';
 	$device_settings[$x]['enabled'] = '';
 	$device_settings[$x]['device_setting_description'] = '';
+
+//get the users
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+	$sql .= "ORDER by username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
@@ -1333,6 +1344,26 @@ require_once "resources/require.php";
 			echo "			</table>\n";
 			echo "			</td>\n";
 			echo "			</tr>\n";
+	}
+
+	if (permission_exists('device_username')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-users']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "			<option value=\"\"></option>\n";
+		foreach($users as $field) {
+			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+		}
+		echo "			</select>";
+		if ($action == "update") {
+			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		}
+		unset($users);
+		echo "			<br>\n";
+		echo "			".$text['description-users']."\n";
 	}
 
 	if (permission_exists('device_username_password')) {

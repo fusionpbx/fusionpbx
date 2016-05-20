@@ -195,6 +195,17 @@ $text['label-voicemail']['de-at'] = "Sprachnachricht";
 $text['label-voicemail']['ar-eg'] = "البريد الصوتي";
 $text['label-voicemail']['he'] = "תיבה קולית";
 
+$text['label-users']['en-us'] = "Users";
+$text['label-users']['es-cl'] = "Usuarios";
+$text['label-users']['pt-pt'] = "Utilizadores";
+$text['label-users']['fr-fr'] = "Utilisateurs";
+$text['label-users']['pt-br'] = "Usuários";
+$text['label-users']['pl'] = "Użytkownicy";
+$text['label-users']['sv-se'] = "Användare";
+$text['label-users']['uk'] = "Користувачі";
+$text['label-users']['de-at'] = "Benutzer";
+$text['label-users']['he'] = "";
+
 $text['label-user_id']['en-us'] = "User ID";
 $text['label-user_id']['es-cl'] = "ID de usuario";
 $text['label-user_id']['pt-pt'] = "ID do utilizador";
@@ -1863,6 +1874,16 @@ $text['header-device']['ro'] = "";
 $text['header-device']['de-at'] = "Gerät";
 $text['header-device']['ar-eg'] = "";
 $text['header-device']['he'] = "מכשיר";
+
+$text['description-users']['en-us'] = "Assign additional users as administrators of this conference room.";
+$text['description-users']['es-cl'] = "Asignar usuarios adicionales como administradores de esta sala de conferencia.";
+$text['description-users']['pt-pt'] = "Atribuir utilizadores adicionais como administradores da sala de conferência.";
+$text['description-users']['fr-fr'] = "Ajouter des utilisateurs comme administrateurs des cette salle de conférence.";
+$text['description-users']['pt-br'] = "Atribuir usuários adicionais como administradores da sala de conferência. ";
+$text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako administratorów tego pokoju konferencyjnego.";
+$text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
+$text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
+$text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
 
 $text['description-user_id']['en-us'] = "Enter the user ID.";
 $text['description-user_id']['es-cl'] = "Ingrese el ID de usuario.";
