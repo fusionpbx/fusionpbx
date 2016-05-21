@@ -217,6 +217,18 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		<?php unset($br); ?>
 		}
 
+	div#footer_login {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
+		text-align: center;
+		vertical-align: middle;
+		padding: 8px;
+		}
+
 	.footer {
 		font-size: 11px;
 		font-family: arial;
@@ -653,7 +665,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 /* DOMAIN SELECTOR: END ********************************************************/
 
 	#default_login {
-		display: inline-block;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		-khtml-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
 		padding: <?php echo ($_SESSION['theme']['login_body_padding']['text'] != '') ? $_SESSION['theme']['login_body_padding']['text'] : '30px'; ?>;
 		<?php echo ($_SESSION['theme']['login_body_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_body_width']['text'].";\n" : null; ?>
 		background: <?php echo ($_SESSION['theme']['login_body_background_color']['text'] != '') ? $_SESSION['theme']['login_body_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
@@ -669,6 +687,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
 		box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
+		}
+
+	#login_logo {
+		width: 250px;
+		height: auto;
 		}
 
 	a.login_link {

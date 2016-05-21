@@ -531,26 +531,13 @@
 	else {
 		$logo = (isset($_SESSION['theme']['logo']['text'])) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 		?>
-		<div id="main_content" style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
-				<tr>
-					<td align='center' valign='middle'>
-						<div id='default_login'>
-							<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' style='width: 250px; height: auto;'></a><br />
-							<!--{body}-->
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td style='width: 100%; height: 35px; vertical-align: bottom;'>
-						<div id='footer' style='width: 100%;'>
-							<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<div id='default_login'>
+			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo $logo; ?>'></a><br />
+			<!--{body}-->
 		</div>
-
+		<div id='footer_login'>
+			<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
+		</div>
 		<?php
 		unset($_SESSION['background_image']);
 	}
