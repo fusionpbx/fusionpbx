@@ -238,24 +238,10 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='49' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('user_add')) {
-		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
-			echo "<a href='signup.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
-	echo "</table>";
-	echo "<br><br>";
+	echo $paging_controls."\n";
+	echo "<br /><br />\n";
 
 ?>
