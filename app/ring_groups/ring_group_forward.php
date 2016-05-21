@@ -199,5 +199,7 @@ require_once "resources/paging.php";
 	}
 
 //include the footer
-	require_once "resources/footer.php";
+	if (!$is_included) {
+		require_once "resources/footer.php";
+	}
 ?>
