@@ -174,7 +174,7 @@ if (!class_exists('extension')) {
 				//write the xml files
 					$sql = "SELECT * FROM v_extensions AS e, v_voicemails AS v ";
 					$sql .= "WHERE e.domain_uuid = '$domain_uuid' ";
-					$sql .= "AND (e.extension = v.voicemail_id or e.number_alias = v.voicemail_id) ";
+					$sql .= "AND AND COALESCE(NULLIF(e.number_alias,''),e.extension) = CAST(v.voicemail_id as VARCHAR) ";
 					$sql .= "ORDER BY e.call_group ASC ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
