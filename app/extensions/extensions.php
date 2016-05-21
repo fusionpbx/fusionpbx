@@ -219,7 +219,8 @@ require_once "resources/paging.php";
 	echo "</form>";
 
 	if (strlen($paging_controls) > 0) {
-		echo "<center>".$paging_controls."</center>\n";
+		echo "<br />";
+		echo $paging_controls."\n";
 	}
 
 	echo "<br /><br />".((is_array($extensions)) ? "<br /><br />" : null);
