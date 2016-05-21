@@ -202,9 +202,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	div#footer {
+		display: inline-block;
+		width: 100%;
 		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
 		text-align: center;
 		vertical-align: middle;
+		margin-bottom: 60px;
 		padding: 8px;
 		<?php $br = format_border_radius($_SESSION['theme']['footer_border_radius']['text'], '0 0 4px 4px'); ?>
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
@@ -261,7 +264,8 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border: none;
 		height: 27px;
 		width: auto;
-		margin: 11px 13px 0 7px;
+		margin: 11px 0 0 7px;
+		padding-right: 13px;
 		cursor: pointer;
 		float: left;
 		display: inline;
@@ -295,14 +299,14 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	.navbar .navbar-nav > li > a > span.glyphicon {
-		margin: 1px 7px 0 0;
+		margin: 1px 2px 0 0;
 		}
 
 	@media(min-width: 768px) {
 		.dropdown:hover .dropdown-menu {
 			display: block;
 			}
-	}
+		}
 
 	/* xs menu toggle button */
 	.navbar-inverse .navbar-toggle {
@@ -680,7 +684,25 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: underline;
 		}
 
+	<?php
+	//determine body padding & margins (overides on main_content style below) based on menu selection
+		$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
+		$menu_position = ($_SESSION['theme']['menu_position']['text']) ? $_SESSION['theme']['menu_position']['text'] : 'top';
+		switch ($menu_style) {
+			case 'inline': $body_top_style = "margin-top: -8px;"; break;
+			case 'static': $body_top_style = "margin-top: -5px;"; break;
+			case 'fixed':
+				switch ($menu_position) {
+					case 'bottom': $body_top_style = "margin-top: 30px;"; break;
+					case 'top':
+					default: $body_top_style = "margin-top: 65px;"; break;
+				}
+		}
+	?>
+
 	#main_content {
+		display: inline-block;
+		width: 100%;
 		<?php
 		if (
 			(strlen($_SESSION["username"]) > 0 || !$default_login)
@@ -698,10 +720,14 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			-webkit-box-shadow: <?php echo ($_SESSION['theme']['body_shadow_color']['text'] != '') ? '0 1px 4px '.$_SESSION['theme']['body_shadow_color']['text'] : 'none';?>;
 			-moz-box-shadow: <?php echo ($_SESSION['theme']['body_shadow_color']['text'] != '') ? '0 1px 4px '.$_SESSION['theme']['body_shadow_color']['text'] : 'none';?>;
 			box-shadow: <?php echo ($_SESSION['theme']['body_shadow_color']['text'] != '') ? '0 1px 4px '.$_SESSION['theme']['body_shadow_color']['text'] : 'none';?>;
-			padding: 15px 20px 20px 20px;
-		<?php } else { ?>
-			padding: 5px 10px 10px 10px;
-		<?php } ?>
+			padding: 20px;
+			<?php
+		}
+		else {
+			?>padding: 5px 10px 10px 10px;<?php
+		}
+		echo $body_top_style;
+		?>
 		text-align: left;
 		}
 
