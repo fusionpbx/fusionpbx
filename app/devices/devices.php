@@ -253,24 +253,11 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='8'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>".$paging_controls."</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('device_add')) {
-		if ($_SESSION['limit']['devices']['numeric'] == '' || ($_SESSION['limit']['devices']['numeric'] != '' && $total_devices < $_SESSION['limit']['devices']['numeric'])) {
-			echo "		<a href='device_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+
+	echo $paging_controls."\n";
+	echo "<br /><br />\n";
 
 //include the footer
 	require_once "resources/footer.php";
