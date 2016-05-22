@@ -116,7 +116,7 @@
 						match_tag = "open";
 						x = 0;
 						dbh:query(sql, function(row)
-							--phrase_uuid,domain_uuid,phrase_name,phrase_language	
+							--phrase_uuid,domain_uuid,phrase_name,phrase_language
 							--phrase_description,phrase_enabled,phrase_detail_uuid
 							--phrase_detail_group,phrase_detail_tag,phrase_detail_pattern
 							--phrase_detail_function,phrase_detail_data,phrase_detail_method
@@ -141,39 +141,42 @@
 							table.insert(xml, [[						</input>]]);
 							table.insert(xml, [[					</macro>]]);
 						end
-						
-						--read root xml language file, parse included xml files
-							local xml_file_paths = {}
-							local file_handle = io.open(phrases_dir.."/"..language.."/"..language..".xml", "r");
-							if (file_handle ~= nil) then
-								for file_line in file_handle:lines() do
-									if (string.find(file_line, 'cmd="include" data="', 0, true) ~= nil) then
-										pos_beg = string.find(file_line, 'cmd="include" data="', 0, true) + 20;
-										pos_end = string.find(file_line, '"/>', 0, true) - 1;
-										xml_file_path = string.sub(file_line, pos_beg, pos_end);
-										table.insert(xml_file_paths, phrases_dir.."/"..language.."/"..xml_file_path);
-										--freeswitch.consoleLog("notice", "file path = "..xml_file_path.."\n");
+
+					--if nil do nt include language xml from the file system the phrases directory is not set in default settings - category: switch name: phrases_dir or its false
+						--it also can be nil if config.lua is not writable so that it can be defined in it
+						if (phrases_dir ~= nil) then
+							--read root xml language file, parse included xml files
+								local xml_file_paths = {}
+								local file_handle = io.open(phrases_dir.."/"..language.."/"..language..".xml", "r");
+								if (file_handle ~= nil) then
+									for file_line in file_handle:lines() do
+										if (string.find(file_line, 'cmd="include" data="', 0, true) ~= nil) then
+											pos_beg = string.find(file_line, 'cmd="include" data="', 0, true) + 20;
+											pos_end = string.find(file_line, '"/>', 0, true) - 1;
+											xml_file_path = string.sub(file_line, pos_beg, pos_end);
+											table.insert(xml_file_paths, phrases_dir.."/"..language.."/"..xml_file_path);
+											--freeswitch.consoleLog("notice", "file path = "..xml_file_path.."\n");
+										end
+									end
+									file_handle:close();
+								end
+							--iterate array of file paths, get contents of other xml macro files
+								for key, xml_file_path in pairs(xml_file_paths) do
+									if (file_exists(xml_file_path)) then
+										xml_file = io.open(xml_file_path, "r");
+										if (xml_file ~= nil) then
+											xml_file_content = xml_file:read("*a");
+											xml_file_content = string.gsub(xml_file_content, "<include>", '');
+											xml_file_content = string.gsub(xml_file_content, "</include>", '');
+											table.insert(xml, xml_file_content);
+											--freeswitch.consoleLog("notice", "file contents...\n\n"..xml_file_content.."\n");
+										end
+										xml_file:close();
 									end
 								end
-								file_handle:close();
-							end
+						end
 
-						--iterate array of file paths, get contents of other xml macro files
-							for key, xml_file_path in pairs(xml_file_paths) do 
-								if (file_exists(xml_file_path)) then
-									xml_file = io.open(xml_file_path, "r");
-									if (xml_file ~= nil) then
-										xml_file_content = xml_file:read("*a");
-										xml_file_content = string.gsub(xml_file_content, "<include>", '');
-										xml_file_content = string.gsub(xml_file_content, "</include>", '');
-										table.insert(xml, xml_file_content);
-										--freeswitch.consoleLog("notice", "file contents...\n\n"..xml_file_content.."\n");
-									end 
-									xml_file:close();
-								end
-							end
-						
-						--output xml & close previous file
+					--output xml & close previous file
 						table.insert(xml, [[				</macros>]]);
 						table.insert(xml, [[			</phrases>]]);
 						table.insert(xml, [[		</language>]]);

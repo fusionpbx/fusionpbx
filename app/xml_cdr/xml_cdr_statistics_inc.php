@@ -125,7 +125,7 @@ else {
          } else {
              $mos_comparison = '';
         }
-		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);		
+		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
 
@@ -326,8 +326,8 @@ else {
 		$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
 		$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-		$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
-		$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / 60;
+		$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
+		$stats[$i]['avg_min'] = (($stats[$i]['volume']==0) ? 0 : $stats[$i]['volume'] - $stats[$i]['missed']) / 60;
 
 		//answer / seizure ratio
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
@@ -338,10 +338,10 @@ else {
 		$where .= " billsec = '0' and ";
 		$where .= " direction = 'inbound' and ";
 		$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-		$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
+		$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 : (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
 
 		//average length of call
-		$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+		$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
 	}
 
 //call info for a day
@@ -356,7 +356,7 @@ else {
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
+	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
 	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		$where = "where ";
@@ -366,8 +366,8 @@ else {
 	$where .= " billsec = '0' and ";
 	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
+	$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
 	$i++;
 
 //call info for a week
@@ -381,8 +381,8 @@ else {
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
-	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*7);
+	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['seconds'] / $stats[$i]['volume'];
+	$stats[$i]['avg_min'] = ($stats[$i]['volume']==0) ? 0 :($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*7);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		$where = "where ";
 	} else {
@@ -391,8 +391,8 @@ else {
 	$where .= " billsec = '0' and ";
 	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
+	$stats[$i]['aloc'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
 	$i++;
 
 //call info for a month
@@ -406,7 +406,7 @@ else {
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
+	$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 :$stats[$i]['seconds'] / $stats[$i]['volume'];
 	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*30);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		$where = "where ";
@@ -416,8 +416,8 @@ else {
 	$where .= " billsec = '0' and ";
 	$where .= " direction = 'inbound' and ";
 	$stats[$i]['missed'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where);
-	$stats[$i]['asr'] = (($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
-	$stats[$i]['aloc'] = $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
+	$stats[$i]['asr'] = ($stats[$i]['volume']==0) ? 0 :(($stats[$i]['volume'] - $stats[$i]['missed']) / ($stats[$i]['volume']) * 100);
+	$stats[$i]['aloc'] =($stats[$i]['volume']==0) ? 0 : $stats[$i]['minutes'] / ($stats[$i]['volume'] - $stats[$i]['missed']);
 	$i++;
 
 //show the graph

@@ -44,7 +44,10 @@
 
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>".$text['header-config_database']."</b></td>\n";
-	echo "<td width='70%' align='right'>&nbsp;</td>\n";
+	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	echo "	<input type='submit' name='next' class='btn' value='".$text['button-next']."'/>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	if ($db_type == "sqlite") {
@@ -77,6 +80,7 @@
 		//set defaults
 			if (strlen($db_host) == 0) { $db_host = 'localhost'; }
 			if (strlen($db_port) == 0) { $db_port = '3306'; }
+			if (is_null($db_create)) { $db_create = '0'; }
 			//if (strlen($db_name) == 0) { $db_name = 'fusionpbx'; }
 
 		echo "<tr>\n";
@@ -139,15 +143,8 @@
 		echo "		Create Database Options\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='none'";
-		if($db_create_option=='none') { echo " checked='checked'"; }
-		echo "/>Do not create database</label>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='same'";
-		if($db_create_option=='same') { echo " checked='checked'"; }
-		echo "/>Create database using above username/password</label>\n";
-		echo "	<label class='radio'><input type='radio' name='create_db_option' value='user'";
-		if($db_create_option=='user') { echo " checked='checked'"; }
-		echo "/>Create database using below username/password</label>\n";
+		if($db_create=='1') { $checked = "checked='checked'"; } else { $checked = ''; }
+		echo "	<label><input type='checkbox' name='db_create' value='1' $checked /> Create the database</label>\n";
 		echo "<br />\n";
 		echo "Choose whether to create the database\n";
 		echo "</td>\n";
@@ -242,9 +239,8 @@
 		echo "		Create Database Options\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<label class='radio'><input type='checkbox' name='db_create' value='1'";
-		if($db_create=='1') { echo " checked='checked'"; }
-		echo "/>Create the database</label>\n";
+		if($db_create=='1') { $checked = "checked='checked'"; } else { $checked = ''; }
+		echo "	<label><input type='checkbox' name='db_create' value='1' $checked /> Create the database</label>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -273,9 +269,9 @@
 	}
 
 	echo "</table>";
-	echo "	<div style='text-align:right'>\n";
-	echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-	echo "    <button type='submit'>".$text['button-execute']."</button>\n";
-	echo "	</div>\n";
+	//echo "	<div style='text-align:right'>\n";
+	//echo "		<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	//echo "		<input type='submit' name='execute' class='btn' name='".$text['button-execute']."'>\n";
+	//echo "	</div>\n";
 	echo "</form>\n";
 ?>

@@ -48,6 +48,11 @@ if (count($_POST)>0) {
 	$clip_order = check_str($_POST["clip_order"]);
 	if (strlen($clip_order) == 0) { $clip_order = 0; }
 
+	//no slashes
+	$clip_name = str_replace('/', '|', $clip_name);
+	$clip_name = str_replace('\\', '|', $clip_name);
+
+	//sql insert
 	$sql = "insert into v_clips ";
 	$sql .= "(";
 	$sql .= "clip_uuid, ";
@@ -80,18 +85,15 @@ if (count($_POST)>0) {
 
 //show the content
 	require_once "header.php";
-	echo "<div align='left'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
+	echo "<tr>\n";
 	echo "	<td align=\"left\">\n";
 
-	//echo "Clip Library";
-	//echo "<hr size='1'>";
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' border='0'>";
 	echo "	<tr>";
 	echo "		<td>Name</td>";
-	echo "		<td><input type='text' class='txt' name='clip_name'></td>";
+	echo "		<td><input type='text' class='txt' name='clip_name' id='clip_name'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -117,7 +119,9 @@ if (count($_POST)>0) {
 	echo "		</td>";
 	echo "	</tr>";
 
-	echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='".$text['button-add']."'></td>";
+	echo "	<tr>";
+	echo "		<td align='left'><input type='button' value='".$text['button-back']."' onclick='history.back()'></td>";
+	echo "		<td align='right'><input type='submit' name='submit' value='".$text['button-add']."'></td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
@@ -125,7 +129,8 @@ if (count($_POST)>0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
+
+	echo "<script>document.getElementById('clip_name').focus();</script>";
 
 	require_once "footer.php";
 ?>

@@ -42,10 +42,14 @@ if (count($_POST)>0) {
 	$clip_uuid = check_str($_POST["id"]);
 	$clip_name = check_str($_POST["clip_name"]);
 	$clip_folder = check_str($_POST["clip_folder"]);
-	$clip_text_start = check_str($_POST["clip_text_start"]);
-	$clip_text_end = check_str($_POST["clip_text_end"]);
+	$clip_text_start = check_str($_POST["clip_text_start"], false);
+	$clip_text_end = check_str($_POST["clip_text_end"], false);
 	$clip_desc = check_str($_POST["clip_desc"]);
 	$clip_order = check_str($_POST["clip_order"]);
+
+	//no slashes
+	$clip_name = str_replace('/', '|', $clip_name);
+	$clip_name = str_replace('\\', '|', $clip_name);
 
 	//sql update
 	$sql  = "update v_clips set ";
@@ -57,7 +61,6 @@ if (count($_POST)>0) {
 	$sql .= "clip_order = '$clip_order' ";
 	$sql .= "where clip_uuid = '$clip_uuid' ";
 	$count = $db->exec(check_sql($sql));
-	//echo "affected rows: ".$count;
 
 	//redirect the browser
 	require_once "header.php";
@@ -89,9 +92,8 @@ else {
 
 //show the content
 	require_once "header.php";
-	echo "<div align='left'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
+	echo "<tr>\n";
 	echo "	<td align=\"left\">\n";
 
 	echo "<form method='post' action=''>";
@@ -125,9 +127,10 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2' align='right'>";
-	echo "     <input type='hidden' name='id' value='$clip_uuid'>";
-	echo "     <input type='submit' name='submit' value='Update'>";
+	echo "		<td align='left'><input type='button' value='".$text['button-back']."' onclick='history.back()'></td>";
+	echo "		<td align='right'>";
+	echo "			<input type='hidden' name='id' value='$clip_uuid'>";
+	echo "			<input type='submit' name='submit' value='Update'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
@@ -136,7 +139,6 @@ else {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
 
 	require_once "footer.php";
 ?>

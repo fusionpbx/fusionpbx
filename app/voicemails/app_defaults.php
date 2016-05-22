@@ -79,7 +79,7 @@ if ($domains_processed == 1) {
 			}
 		}
 
-	//add that the directory structure for voicemail each domain and voicemail id is 
+	//add that the directory structure for voicemail each domain and voicemail id is
 		$sql = "select d.domain_name, v.voicemail_id ";
 		$sql .= "from v_domains as d, v_voicemails as v ";
 		$sql .= "where v.domain_uuid = d.domain_uuid ";
@@ -88,7 +88,9 @@ if ($domains_processed == 1) {
 		$voicemails = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($voicemails as $row) {
 			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$row['domain_name'].'/'.$row['voicemail_id'];
-			mkdir($path, 0777, true);
+			if (!file_exists($path)) {
+				mkdir($path, 0777, true);
+			}
 		}
 		unset ($prep_statement, $sql);
 

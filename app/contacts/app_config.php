@@ -285,10 +285,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_email";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email address.";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_url";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the website address.";

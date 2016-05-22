@@ -76,13 +76,13 @@ else {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= "	or \n";
 		$sql .= "	contact_uuid not in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "		where group_uuid = '".$_SESSION['group_uuid']."' ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= ") \n";
@@ -105,7 +105,7 @@ else {
 		$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( \n";
 		$sql .= "		select contact_uuid from v_contact_groups ";
-		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+		$sql .= "		where group_uuid in ('".implode("','", array_filter($user_group_uuids))."') ";
 		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "	) \n";
 		$sql .= "	or contact_uuid in ( \n";
@@ -143,7 +143,6 @@ else {
 				$sql .= "		lower(contact_title) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_category) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_role) like '%".$search_all."%' or \n";
-				$sql .= "		lower(contact_email) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_url) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_time_zone) like '%".$search_all."%' or \n";
 				$sql .= "		lower(contact_note) like '%".$search_all."%' or \n";
@@ -166,7 +165,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }

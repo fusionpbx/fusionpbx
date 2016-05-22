@@ -115,7 +115,7 @@ if (sizeof($_REQUEST) > 1) {
 	}
 
 //prepare to page the results
-	$rows_per_page = 200;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 200;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -173,7 +173,7 @@ if (sizeof($_REQUEST) > 1) {
 					&& permission_exists("domain_setting_add")
 					&& count($_SESSION['domains']) > 1) ||
 					permission_exists('domain_setting_delete')) {
-						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
+						echo "<th style='width: 30px; vertical-align: bottom; text-align: center; padding: 0px 3px 2px 8px;'><input type='checkbox' id='chk_all_".$row['domain_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -196,7 +196,7 @@ if (sizeof($_REQUEST) > 1) {
 				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 				permission_exists("domain_setting_delete")
 				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['domain_setting_uuid']."' value='".$row['domain_setting_uuid']."'></td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".$row['domain_setting_uuid']."' value='".$row['domain_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['domain_setting_category']."').checked = false; }\"></td>\n";
 				$subcat_ids[strtolower($row['domain_setting_category'])][] = 'checkbox_'.$row['domain_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -224,19 +224,40 @@ if (sizeof($_REQUEST) > 1) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 			}
-			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['domain_setting_value']);
+			}
+			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
+				switch ($row['domain_setting_value']) {
+					case '12h': echo $text['label-12-hour']; break;
+					case '24h': echo $text['label-24-hour']; break;
+				}
+			}
+			else if (
+				( $category == "theme" && $subcategory == "menu_main_icons" && $name == "boolean" ) ||
+				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
+				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
+				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
+				) {
+				echo "		".$text['label-'.$row['domain_setting_value']];
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['domain_setting_value']));
 			}
 			else {
-				echo "		".htmlspecialchars($row['domain_setting_value']);
+				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+					echo "		".(img_spacer('15px', '15px', 'background: '.$row['domain_setting_value'].'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
+					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['domain_setting_value'])."</span>\n";
+				}
+				else {
+					echo "		".htmlspecialchars($row['domain_setting_value'])."\n";
+				}
 			}
-			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?domain_id=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['domain_setting_enabled'])."</a>\n";
+			echo "		<a href='?domain_id=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['domain_setting_enabled']]."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -255,16 +276,7 @@ if (sizeof($_REQUEST) > 1) {
 	} //end if results
 
 	echo "<tr>\n";
-	if (
-		(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
-		permission_exists("domain_delete")
-		) {
-		$colspan = 7;
-	}
-	else {
-		$colspan = 6;
-	}
-	echo "<td colspan='".$colspan."' align='left'>\n";
+	echo "<td colspan='20' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
@@ -274,7 +286,7 @@ if (sizeof($_REQUEST) > 1) {
 		echo 		"<a href='domain_setting_edit.php?domain_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('domain_setting_delete') && $result_count > 0) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+		echo 		"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.getElementById('domain_frm').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

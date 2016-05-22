@@ -32,6 +32,23 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
+		//if ($_SESSION['ivr menu']['application']['text'] != "lua") {
+		//	$y++;
+		//	$apps[$x]['destinations'][$y]['type'] = "sql";
+		//	$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
+		//	$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		//	$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
+		//	$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		//	$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
+		//	$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
+		//	//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "ivr:\${ivr_menu_uuid}";
+		//	$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
+		//	$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		//}
+		//menu-top
+		//menu-exit
+		//menu-say-phrase
+		//menu-play-sound
 
 	//permission details
 		$y = 0;

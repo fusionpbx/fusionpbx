@@ -30,7 +30,7 @@ require_once "resources/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
-		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
+		if ((! isset($_SESSION['event_socket_ip_address'])) or strlen($_SESSION['event_socket_ip_address']) == 0) {
 			$sql = "select * from v_settings ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
@@ -46,72 +46,8 @@ require_once "resources/require.php";
 		}
 	}
 
-//get the extensions that are assigned to this user
-function load_extensions() {
-	global $db;
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
-			//get the user extension list
-				unset($_SESSION['user']['extension']);
-				$sql = "select ";
-				$sql .= "	e.extension, ";
-				$sql .= "	e.number_alias, ";
-				$sql .= "	e.user_context, ";
-				$sql .= "	e.extension_uuid, ";
-				$sql .= "	e.outbound_caller_id_name, ";
-				$sql .= "	e.outbound_caller_id_number, ";
-				$sql .= "	v.voicemail_uuid ";
-				$sql .= "from ";
-				$sql .= "	v_extension_users as u, ";
-				$sql .= "	v_extensions as e ";
-				$sql .= "		left outer join v_voicemails as v on ( ";
-				$sql .= "			e.domain_uuid = v.domain_uuid ";
-				$sql .= "			and v.voicemail_enabled = 'true' ";
-				$sql .= "			and ( ";
-				$sql .= "				e.extension = v.voicemail_id ";
-				$sql .= "				or e.number_alias = v.voicemail_id ";
-				$sql .= "			) ";
-				$sql .= "		) ";
-				$sql .= "where ";
-				$sql .= "	e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "	and e.extension_uuid = u.extension_uuid ";
-				$sql .= "	and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-				$sql .= "	and e.enabled = 'true' ";
-				$sql .= "order by ";
-				$sql .= "	e.extension asc ";
-				$query = $db->query($sql);
-				if($query !== false) {
-					$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-					$x = 0;
-					foreach($result as $row) {
-						$destination = $row['extension'];
-						if (strlen($row['number_alias']) > 0) {
-							$destination = $row['number_alias'];
-						}
-						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
-						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
-						$_SESSION['user']['extension'][$x]['destination'] = $destination;
-						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
-						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-						if ($row['voicemail_uuid'] != '') {
-							$_SESSION['user']['voicemail'][]['voicemail_uuid'] = $row['voicemail_uuid'];
-						}
-						$_SESSION['user_context'] = $row["user_context"];
-						$x++;
-					}
-				}
-			//if no extension has been assigned then setting the user_context will still need to be set
-				if (strlen($_SESSION['user_context']) == 0) {
-					$_SESSION['user_context'] = $_SESSION['domain_name'];
-				}
-		}
-	}
-}
-load_extensions();
-
 function event_socket_create($host, $port, $password) {
-	$esl = new EventSocket;
+	$esl = new event_socket;
 	if ($esl->connect($host, $port, $password)) {
 		return $esl->reset_fp();
 	}
@@ -119,14 +55,18 @@ function event_socket_create($host, $port, $password) {
 }
 
 function event_socket_request($fp, $cmd) {
-	$esl = new EventSocket($fp);
+	$esl = new event_socket($fp);
 	$result = $esl->request($cmd);
 	$esl->reset_fp();
 	return $result;
 }
 
 function event_socket_request_cmd($cmd) {
-	global $db;
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		$sql = "select * from v_settings ";
@@ -142,7 +82,7 @@ function event_socket_request_cmd($cmd) {
 		unset ($prep_statement);
 	}
 
-	$esl = new EventSocket;
+	$esl = new event_socket;
 	if (!$esl->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
 		return false;
 	}
@@ -189,7 +129,13 @@ function ListFiles($dir) {
 }
 
 function save_setting_xml() {
-	global $db, $domain_uuid, $host, $config;
+	global $domain_uuid, $host, $config;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$sql = "select * from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -298,7 +244,13 @@ function save_gateway_xml() {
 		}
 
 	//declare the global variables
-		global $db, $domain_uuid, $config;
+		global $domain_uuid, $config;
+
+	//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 	//delete all old gateways to prepare for new ones
 		if (count($_SESSION["domains"]) > 1) {
@@ -427,13 +379,19 @@ function save_gateway_xml() {
 }
 
 function save_module_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$xml = "";
 	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
 	$xml .= "	<modules>\n";
 
-	$sql = "select * from v_modules order by module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
+	$sql = "select * from v_modules order by module_name='mod_commands' OR module_category = 'Languages' OR  module_category = 'Loggers' DESC, module_category ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$prev_module_cat = '';
@@ -465,11 +423,21 @@ function save_module_xml() {
 }
 
 function save_var_xml() {
-	global $config, $db, $domain_uuid;
+	global $config, $domain_uuid;
 
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
+	//open the vars.xml file
 	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
-	$xml = '';
 
+	//get the hostname
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+
+	//build the xml
 	$sql = "select * from v_vars ";
 	$sql .= "where var_enabled = 'true' ";
 	$sql .= "order by var_cat, var_order asc ";
@@ -477,6 +445,7 @@ function save_var_xml() {
 	$prep_statement->execute();
 	$prev_var_cat = '';
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$xml = '';
 	foreach ($result as &$row) {
 		if ($row['var_cat'] != 'Provision') {
 			if ($prev_var_cat != $row['var_cat']) {
@@ -487,8 +456,15 @@ function save_var_xml() {
 			}
 			if (strlen($row['var_hostname']) == 0) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
-			} elseif ($row['var_hostname'] == system('hostname')) {
+			} elseif ($row['var_hostname'] == $hostname) {
 				$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			}
+			$var_cmd = 'set';
+			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; }
+			if (strlen($row['var_hostname']) == 0) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
+			} elseif ($row['var_hostname'] == $hostname) {
+				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n";
 			}
 		}
 		$prev_var_cat = $row['var_cat'];
@@ -507,7 +483,11 @@ function save_var_xml() {
 }
 
 function outbound_route_to_bridge ($domain_uuid, $destination_number) {
-	global $db;
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
 
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -592,7 +572,14 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 //}
 
 function extension_exists($extension) {
-	global $db, $domain_uuid;
+	global $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and (extension = '$extension' ";
@@ -626,7 +613,14 @@ function get_recording_filename($id) {
 }
 
 function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid) {
-	global $db, $db_type;
+	global $db_type;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$sql = "insert into v_dialplans ";
 	$sql .= "(";
 	$sql .= "domain_uuid, ";
@@ -658,7 +652,13 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 }
 
 function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
-	global $db;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
 	$dialplan_detail_uuid = uuid();
 	$sql = "insert into v_dialplan_details ";
 	$sql .= "(";
@@ -706,7 +706,13 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 }
 
 function save_dialplan_xml() {
-	global $db, $domain_uuid;
+	global $domain_uuid;
+
+	//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 	//get the context based from the domain_uuid
 		$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -1031,7 +1037,13 @@ if (!function_exists('phone_letter_to_number')) {
 
 if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
-		global $db, $domain_uuid;
+		global $domain_uuid;
+
+		//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
 		if (strlen($_SESSION['switch']['call_center']['dir']) > 0) {
 
@@ -1254,7 +1266,13 @@ if (!function_exists('save_call_center_xml')) {
 if (!function_exists('switch_conf_xml')) {
 	function switch_conf_xml() {
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the contents of the template
 			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -1274,8 +1292,8 @@ if (!function_exists('switch_conf_xml')) {
 				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
 
 				$v_mail_bat = path_join($secure_path, 'mailto.bat');
-				$v_mail_cmd = '@' . 
-					'"' . str_replace('/', '\\', path_join($bindir, 'php.exe')) . '" ' .
+				$v_mail_cmd = '@' .
+					'"' . str_replace('/', '\\', path_join($bindir, 'php5.exe')) . '" ' .
 					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
 
 				$fout = fopen($v_mail_bat, "w+");
@@ -1315,7 +1333,13 @@ if (!function_exists('xml_cdr_conf_xml')) {
 	function xml_cdr_conf_xml() {
 
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the contents of the template
 		 	if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -1362,7 +1386,13 @@ if (!function_exists('save_sip_profile_xml')) {
 			if (!is_readable($profile_dir)) { mkdir($profile_dir,0775,true); }
 
 		//get the global variables
-			global $db, $domain_uuid;
+			global $domain_uuid;
+
+		//get the database connection
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
 
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles";

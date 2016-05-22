@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -123,7 +123,7 @@ require_once "resources/require.php";
 
 //list all the permissions in the database
 	foreach($apps as $app) {
-		foreach ($app['permissions'] as $row) {
+		if (isset($app['permissions'])) foreach ($app['permissions'] as $row) {
 			if ($permissions_db[$row['name']] == "true") {
 				$permissions_db_checklist[$row['name']] = "true";
 			}
@@ -382,17 +382,17 @@ require_once "resources/require.php";
 
 			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
-			echo "		<th style='text-align: center; padding: 0px;'><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
-			echo "		<th width='33%'>".$text['label-permission_permissions']."</th>\n";
-			echo "		<th width='66%'>".$text['label-permission_description']."</th>\n";
+			echo "		<th style='text-align: center; padding: 0 7px;'><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
+			echo "		<th width='30%'>".$text['label-permission_permissions']."</th>\n";
+			echo "		<th width='70%'>".$text['label-permission_description']."</th>\n";
 			echo "	<tr>\n";
 
 			foreach ($app['permissions'] as $permission_index => $row) {
 				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
 				echo "<tr id='permission_".$row['name']."'>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
-				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
-				echo "	<td valign='top' width='70%' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
+				echo "	<td valign='top' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['name']."</td>\n";
+				echo "	<td valign='top' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".$row['description']."&nbsp;</td>\n";
 				echo "</tr>\n";
 				$c = ($c == 0) ? 1 : 0;
 

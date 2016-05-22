@@ -141,9 +141,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_uuid, ";
 				$sql .= "voicemail_id, ";
 				$sql .= "voicemail_password, ";
-				if (strlen($greeting_id) > 0) {
-					$sql .= "greeting_id, ";
-				}
+				$sql .= "greeting_id, ";
 				$sql .= "voicemail_mail_to, ";
 				$sql .= "voicemail_file, ";
 				$sql .= "voicemail_local_after_email, ";
@@ -156,9 +154,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".uuid()."', ";
 				$sql .= "'".$voicemail_id."', ";
 				$sql .= "'".$voicemail_password."', ";
-				if (strlen($greeting_id) > 0) {
-					$sql .= "'".$greeting_id."', ";
-				}
+				$sql .= (($greeting_id != '') ? "'".$greeting_id."'" : 'null').", ";
 				$sql .= "'".$voicemail_mail_to."', ";
 				$sql .= "'".$voicemail_file."', ";
 				$sql .= "'".$voicemail_local_after_email."', ";
@@ -175,12 +171,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql = "update v_voicemails set ";
 				$sql .= "voicemail_id = '".$voicemail_id."', ";
 				$sql .= "voicemail_password = '".$voicemail_password."', ";
-				if (strlen($greeting_id) > 0) {
-					$sql .= "greeting_id = '".$greeting_id."', ";
-				}
-				else {
-					$sql .= "greeting_id = null, ";
-				}
+				$sql .= "greeting_id = ".(($greeting_id != '') ? "'".$greeting_id."'" : 'null').", ";
 				$sql .= "voicemail_mail_to = '".$voicemail_mail_to."', ";
 				$sql .= "voicemail_file = '".$voicemail_file."', ";
 				$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
@@ -286,12 +277,23 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
 
+//get the greetings list
+	$sql = "select * from v_voicemail_greetings ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and voicemail_id = '".$voicemail_id."' ";
+	$sql .= "order by greeting_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$greetings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$greeting_count = count($greetings);
+	unset ($prep_statement, $sql);
+
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-voicemail'];
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
@@ -300,7 +302,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -328,12 +330,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-greeting_id']."\n";
+	echo "	".$text['label-greeting']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='greeting_id' maxlength='255' value='$greeting_id'>\n";
+	echo "	<select class='formfld' name='greeting_id'>\n";
+	echo "		<option value=''></option>\n";
+	if ($greeting_count > 0) {
+		foreach ($greetings as $greeting) {
+			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;
+			echo "<option value='".$greeting['greeting_id']."' ".$selected.">".$greeting['greeting_name']."</option>\n";
+		}
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-greeting_id']."\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -426,7 +436,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 
 		echo "					<td>\n";
-		echo "						<input type='submit' class='btn' value=\"".$text['button-add']."\">\n";
+		echo "						<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 	}
@@ -543,7 +553,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<option value='".$field['voicemail_uuid']."'>".$field['voicemail_id']."</option>\n";
 		}
 		echo "			</select>";
-		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
 		unset($sql, $result);
 		echo "			<br>\n";
 		echo "			".$text['description-forward_destinations']."\n";
@@ -595,12 +605,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "				<input type='hidden' name='referer_path' value='".$http_referer['path']."'>\n";
 	echo "				<input type='hidden' name='referer_query' value='".$http_referer['query']."'>\n";
 	echo "				<br>";
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
+
+	echo "<script>\n";
+//capture enter key to submit form
+	echo "	$(window).keypress(function(event){\n";
+	echo "		if (event.which == 13) { submit_form(); }\n";
+	echo "	});\n";
+// convert password fields to
+	echo "	function submit_form() {\n";
+	echo "		$('input:password').css('visibility','hidden');\n";
+	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

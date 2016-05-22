@@ -59,7 +59,7 @@
 	table.insert(xml, [[					<control action="vol listen dn" digits="4"/>]]);
 	table.insert(xml, [[					<control action="hangup" digits=""/>]]);
 	table.insert(xml, [[					<control action="execute_application" digits="0" data="lua app/conference_center/resources/scripts/mute.lua non_moderator"/>]]);
-	table.insert(xml, [[					<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>]]);	
+	table.insert(xml, [[					<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>]]);
 	table.insert(xml, [[				</group>]]);
 	table.insert(xml, [[				<group name="page">]]);
 	table.insert(xml, [[					<control action="mute" digits="0"/>]]);

@@ -70,6 +70,16 @@ $text['label-message']['sv-se'] = "Ogiltig Profil!";
 $text['label-message']['uk'] = "Хибний профіль!";
 $text['label-message']['de-at'] = "Ungültiges Profil!";
 
+$text['label-lan_ip']['en-us'] = "LAN IP";
+$text['label-lan_ip']['es-cl'] = "LAN IP";
+$text['label-lan_ip']['pt-pt'] = "LAN IP";
+$text['label-lan_ip']['fr-fr'] = "LAN IP";
+$text['label-lan_ip']['pt-br'] = "LAN IP";
+$text['label-lan_ip']['pl'] = "LAN IP";
+$text['label-lan_ip']['sv-se'] = "LAN IP";
+$text['label-lan_ip']['uk'] = "LAN IP";
+$text['label-lan_ip']['de-at'] = "LAN IP";
+
 $text['label-ip']['en-us'] = "IP";
 $text['label-ip']['es-cl'] = "IP";
 $text['label-ip']['pt-pt'] = "IP";

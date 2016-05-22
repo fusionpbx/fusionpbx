@@ -80,7 +80,7 @@ include "root.php";
 					$this->object->assign($key, $value);
 				}
 				if ($this->engine === 'twig') {
-					$this->var_array[$key] = $value; 
+					$this->var_array[$key] = $value;
 				}
 			}
 

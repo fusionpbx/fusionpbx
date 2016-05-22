@@ -115,7 +115,7 @@ include "root.php";
 						$database->fields['dialplan_detail_order'] = '005';
 						$database->add();
 
-						if (file_exists(PHP_BINDIR."/php")) { define(PHP_BIN, 'php'); }
+						if (file_exists(PHP_BINDIR."/php5")) { define(PHP_BIN, 'php5'); }
 						if (file_exists(PHP_BINDIR."/php.exe")) {  define(PHP_BIN, 'php.exe'); }
 						$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
 						$dialplan_detail_data .= "email=".$this->fax_email." ";
@@ -323,7 +323,7 @@ include "root.php";
 							$database->add();
 						}
 
-					//delete the old dialplan details to prepare for new details 
+					//delete the old dialplan details to prepare for new details
 						$database = new database;
 						$database->table = "v_dialplan_details";
 						$database->where[0]['name'] = 'domain_uuid';

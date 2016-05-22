@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,21 +46,16 @@ require_once "resources/require.php";
 		}
 	}
 
-//set a default template
-	if (!isset($_SESSION['domain']['template']['name'])) { $_SESSION['domain']['template']['name'] = 'default'; }
+//set the template base directory path
+	$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 
-//set a default template
-	$v_template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-	if (!isset($_SESSION['domain']['template']['name'])) {
-		//get the contents of the template and save it to the template variable
-		$template_full_path = $v_template_path.'/'.$_SESSION['domain']['template']['name'].'/template.php';
-		if (!file_exists($template_full_path)) {
-			$_SESSION['domain']['template']['name'] = 'default';
-		}
+//check if the template exists if it is missing then use the default
+	if (!file_exists($template_base_path.'/'.$_SESSION['domain']['template']['name'].'/template.php')) {
+		$_SESSION['domain']['template']['name'] = 'default';
 	}
 
 //start the output buffer
-	include $v_template_path.'/'.$_SESSION['domain']['template']['name'].'/config.php';
+	include $template_base_path.'/'.$_SESSION['domain']['template']['name'].'/config.php';
 
 //start the output buffer
 	ob_start();
@@ -134,4 +129,5 @@ require_once "resources/require.php";
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/translate")) {
 		require_once("app/translate/translate_header.php");
 	}
+
 ?>

@@ -23,19 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-/*
-echo "<br><br>";
-echo "</td></tr></table>";
 
-echo "<span class='smalltext'>";
-echo "fusionpbx ";
-echo "&nbsp; &nbsp;  &nbsp; &nbsp; ";
-echo "<a href='http://fusionpbx.com'>http://fusionpbx.com</a>";
-echo "&nbsp; &nbsp;  &nbsp; &nbsp; ";
-echo "Author: Mark J. Crane ";
-
-echo "</span>";
-*/
 echo "<div>";
 echo "</body>";
 echo "</html>";

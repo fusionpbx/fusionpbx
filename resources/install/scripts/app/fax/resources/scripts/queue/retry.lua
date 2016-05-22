@@ -12,12 +12,12 @@
 	local fax_task_uuid  = env:getHeader('fax_task_uuid')
 	if not fax_task_uuid then
 		log.warning("No [fax_task_uuid] channel variable")
-		return 
+		return
 	end
 	local task           = Tasks.select_task(fax_task_uuid)
 	if not task then
 		log.warningf("Can not find fax task: %q", tostring(fax_task_uuid))
-		return 
+		return
 	end
 
 -- show all channel variables
@@ -75,6 +75,7 @@
 	local fax_file                       = env:getHeader("fax_file")                       or task.fax_file
 	local wav_file                       = env:getHeader("wav_file")                       or task.wav_file
 	local fax_uuid                       = task.fax_uuid
+	local pdf_file                       = fax_file and string.gsub(fax_file, '(%.[^\\/]+)$', '.pdf')
 
 -- Email variables
 	local number_dialed = fax_uri:match("/([^/]-)%s*$")
@@ -169,7 +170,7 @@
 
 --settings
 	local settings = Settings.new(dbh, domain_name, domain_uuid)
-	local keep_local   = settings:get('fax', 'keep_local','boolean')
+	local keep_local   = settings:get('fax', 'keep_local', 'boolean')
 	local storage_type = (keep_local == "false") and "" or settings:get('fax', 'storage_type', 'text')
 
 	local function opt(v, default)
@@ -336,9 +337,11 @@
 			subject = "Fax to: " .. number_dialed .. " SENT"
 		end
 
-		Tasks.send_mail_task(task, {subject, body}, uuid, file_exists(fax_file))
+		local attachment = pdf_file and file_exists(pdf_file) or fax_file and file_exists(fax_file)
+		Tasks.send_mail_task(task, {subject, body}, uuid, attachment)
 
 		if keep_local == "false" then
+			os.remove(pdf_file);
 			os.remove(fax_file);
 		end
 	end
@@ -386,7 +389,13 @@
 					subject = "Fax to: " .. number_dialed .. " FAILED"
 				end
 
-				Tasks.send_mail_task(task, {subject, body}, uuid, file_exists(fax_file))
+				local attachment = pdf_file and file_exists(pdf_file) or fax_file and file_exists(fax_file)
+				Tasks.send_mail_task(task, {subject, body}, uuid, attachment)
+
+				if keep_local == "false" then
+					os.remove(pdf_file);
+					os.remove(fax_file);
+				end
 
 			end
 		end

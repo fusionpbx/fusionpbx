@@ -153,6 +153,28 @@ if ($db_type == "sqlite") {
 				return substr($string, (strlen($string)-$num), strlen($string));
 			}
 		}
+		if (!function_exists('php_sqlite_data_type')) {
+			function php_sqlite_data_type($string, $field) {
+
+				//get the string between the start and end characters
+				$start = '(';
+				$end = ')';
+				$ini = stripos($string,$start);
+				if ($ini == 0) return "";
+				$ini += strlen($start);
+				$len = stripos($string,$end,$ini) - $ini;
+				$string = substr($string,$ini,$len);
+
+				$str_data_type = '';
+				$string_array = explode(',', $string);
+				foreach($string_array as $lnvalue) {
+					$fieldlistarray = explode (" ", $value);
+					unset($fieldarray, $string, $field);
+				}
+
+				return $str_data_type;
+			}
+		}
 
 	//database connection
 		try {
@@ -167,7 +189,7 @@ if ($db_type == "sqlite") {
 				$db->sqliteCreateFunction('md5', 'php_md5', 1);
 				$db->sqliteCreateFunction('unix_timestamp', 'php_unix_timestamp', 1);
 				$db->sqliteCreateFunction('now', 'php_now', 0);
-				$db->sqliteCreateFunction('sqlitedatatype', 'phpsqlitedatatype', 2);
+				$db->sqliteCreateFunction('sqlitedatatype', 'php_sqlite_data_type', 2);
 				$db->sqliteCreateFunction('strleft', 'php_left', 2);
 				$db->sqliteCreateFunction('strright', 'php_right', 2);
 		}
@@ -182,27 +204,25 @@ if ($db_type == "mysql") {
 	//database connection
 	try {
 		//required for mysql_real_escape_string
-			if (function_exists(mysql_connect)) {
+			if (function_exists('mysql_connect')) {
 				$mysql_connection = @mysql_connect($db_host, $db_username, $db_password);
-				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link)); 
+				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link));
 			}
 		//mysql pdo connection
 			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
 				//if both host and port are empty use the unix socket
-				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name;charset=utf8;", $db_username, $db_password);
 			}
 			else {
 				if (strlen($db_port) == 0) {
 					//leave out port if it is empty
-					$db = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_username, $db_password, array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+					$db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
 				}
 				else {
-					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;", $db_username, $db_password, array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8;", $db_username, $db_password, array(
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
@@ -233,7 +253,7 @@ if ($db_type == "pgsql") {
 } //end if db_type pgsql
 
 //domain list
-	if (strlen($_SESSION["domain_uuid"]) == 0) {
+	if ( ( !isset($_SESSION["domain_uuid"])) or (strlen($_SESSION["domain_uuid"]) == 0)) {
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		//get the domains from the database
@@ -303,7 +323,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the domain cidr range
-	if (is_array($_SESSION['domain']["cidr"])) {
+	if (array_key_exists('cidr',$_SESSION['domain']) and is_array($_SESSION['domain']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['domain']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
@@ -318,7 +338,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the api cidr range
-	if (is_array($_SESSION['api']["cidr"])) {
+	if (array_key_exists('api',$_SESSION) and is_array($_SESSION['api']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['api']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {

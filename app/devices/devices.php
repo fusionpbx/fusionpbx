@@ -80,7 +80,7 @@ else {
 		$sql .= "	d.device_mac_address like '%".$search."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
 		$sql .= ") ";
@@ -98,7 +98,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if ($_GET['showall'] && permission_exists('device_all')) {
 		$param = "&showall=true";
 	} else {
@@ -131,7 +131,7 @@ else {
 		$sql .= "	d.device_mac_address like '%".$search."%' ";
 		$sql .= "	or d.device_label like '%".$search."%' ";
 		$sql .= "	or d.device_vendor like '%".$search."%' ";
-		$sql .= "	or d.device_provision_enable like '%".$search."%' ";
+		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
 		$sql .= ") ";
@@ -202,7 +202,7 @@ else {
 	}
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
-	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
+	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
@@ -236,7 +236,7 @@ else {
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_provision_enable']]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_edit')) {
@@ -253,24 +253,11 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='8'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>".$paging_controls."</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('device_add')) {
-		if ($_SESSION['limit']['devices']['numeric'] == '' || ($_SESSION['limit']['devices']['numeric'] != '' && $total_devices < $_SESSION['limit']['devices']['numeric'])) {
-			echo "		<a href='device_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+
+	echo $paging_controls."\n";
+	echo "<br /><br />\n";
 
 //include the footer
 	require_once "resources/footer.php";

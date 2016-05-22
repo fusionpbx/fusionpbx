@@ -53,8 +53,8 @@
 	}
 
 	if (!function_exists('check_str')) {
-		function check_str($string) {
-			global $db_type;
+		function check_str($string, $trim = true) {
+			global $db_type, $db;
 			//when code in db is urlencoded the ' does not need to be modified
 			if ($db_type == "sqlite") {
 				if (function_exists('sqlite_escape_string')) {
@@ -68,7 +68,12 @@
 				$string = pg_escape_string($string);
 			}
 			if ($db_type == "mysql") {
-				$tmp_str = mysql_real_escape_string($string);
+				if(function_exists('mysql_real_escape_string')){
+					$tmp_str = mysql_real_escape_string($string);
+				}
+				else{
+					$tmp_str = mysqli_real_escape_string($db, $string);
+				}
 				if (strlen($tmp_str)) {
 					$string = $tmp_str;
 				}
@@ -78,7 +83,8 @@
 					$string = str_replace($search, $replace, $string);
 				}
 			}
-			return trim($string); //remove white space
+			$string = ($trim) ? trim($string) : $string;
+			return $string;
 		}
 	}
 
@@ -657,7 +663,7 @@
 			return str_replace(array('/','\\'), '/', $path);
 		}
 	}
-	
+
 	if ( !function_exists('normalize_path_to_os')) {
 		function normalize_path_to_os($path) {
 			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
@@ -837,7 +843,7 @@ function format_string ($format, $data) {
 	function format_phone($phone_number) {
 		$phone_number = trim($phone_number, "+");
 		if (is_numeric($phone_number)) {
-			foreach ($_SESSION["format"]["phone"] as &$format) {
+			if (isset($_SESSION["format"]["phone"])) foreach ($_SESSION["format"]["phone"] as &$format) {
 				$format_count = substr_count($format, 'x');
 				$format_count = $format_count + substr_count($format, 'R');
 				$format_count = $format_count + substr_count($format, 'r');
@@ -1142,14 +1148,14 @@ function number_pad($number,$n) {
 					}
 				}
 			}
-			ksort($dir_array, SORT_STRING);
+			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
 			closedir($dir_list);
 		}
 	}
 
-//function to convert hexidecimal color value to rgb value
-	if (!function_exists('hex2rgb')) {
-		function hex2rgb($hex, $delim = '') {
+//function to convert hexidecimal color value to rgb string/array value
+	if (!function_exists('hex_to_rgb')) {
+		function hex_to_rgb($hex, $delim = '') {
 			$hex = str_replace("#", "", $hex);
 
 			if (strlen($hex) == 3) {
@@ -1170,6 +1176,213 @@ function number_pad($number,$n) {
 			else {
 				return $rgb; // return array of rgb values
 			}
+		}
+	}
+
+//function to get a color's luminence level -- dependencies: rgb_to_hsl()
+	if (!function_exists('get_color_luminence')) {
+		function get_color_luminence($color) {
+			//convert hex to rgb
+			if (substr_count($color, ',') == 0) {
+				$color = str_replace(' ', '', $color);
+				$color = str_replace('#', '', $color);
+				if (strlen($color) == 3) {
+					$r = hexdec(substr($color,0,1).substr($color,0,1));
+					$g = hexdec(substr($color,1,1).substr($color,1,1));
+					$b = hexdec(substr($color,2,1).substr($color,2,1));
+				}
+				else {
+					$r = hexdec(substr($color,0,2));
+					$g = hexdec(substr($color,2,2));
+					$b = hexdec(substr($color,4,2));
+				}
+				$color = $r.','.$g.','.$b;
+			}
+
+			//color to array, pop alpha
+			if (substr_count($color, ',') > 0) {
+				$color = str_replace(' ', '', $color);
+				$color = str_replace('rgb', '', $color);
+				$color = str_replace('a(', '', $color);
+				$color = str_replace(')', '', $color);
+				$color = explode(',', $color);
+				$hsl = rgb_to_hsl($color[0], $color[1], $color[2]);
+			}
+
+			//return luminence value
+			return (is_array($hsl) && is_numeric($hsl[2])) ? $hsl[2] : null;
+		}
+	}
+
+//function to lighten or darken a hexidecimal, rgb, or rgba color value by a percentage -- dependencies: rgb_to_hsl(), hsl_to_rgb()
+	if (!function_exists('color_adjust')) {
+		function color_adjust($color, $percent) {
+			/*
+			USAGE
+				20% Lighter
+					color_adjust('#3f4265', 0.2);
+					color_adjust('234,120,6,0.3', 0.2);
+				20% Darker
+					color_adjust('#3f4265', -0.2); //
+					color_adjust('rgba(234,120,6,0.3)', -0.2);
+			RETURNS
+				Same color format provided (hex in = hex out, rgb(a) in = rgb(a) out)
+			*/
+
+			//convert hex to rgb
+			if (substr_count($color, ',') == 0) {
+				$color = str_replace(' ', '', $color);
+				if (substr_count($color, '#') > 0) {
+					$color = str_replace('#', '', $color);
+					$hash = '#';
+				}
+				if (strlen($color) == 3) {
+					$r = hexdec(substr($color,0,1).substr($color,0,1));
+					$g = hexdec(substr($color,1,1).substr($color,1,1));
+					$b = hexdec(substr($color,2,1).substr($color,2,1));
+				}
+				else {
+					$r = hexdec(substr($color,0,2));
+					$g = hexdec(substr($color,2,2));
+					$b = hexdec(substr($color,4,2));
+				}
+				$color = $r.','.$g.','.$b;
+			}
+
+			//color to array, pop alpha
+			if (substr_count($color, ',') > 0) {
+				$color = str_replace(' ', '', $color);
+				$wrapper = false;
+				if (substr_count($color, 'rgb') != 0) {
+					$color = str_replace('rgb', '', $color);
+					$color = str_replace('a(', '', $color);
+					$color = str_replace(')', '', $color);
+					$wrapper = true;
+				}
+				$colors = explode(',', $color);
+				$alpha = (sizeof($colors) == 4) ? array_pop($colors) : null;
+				$color = $colors;
+				unset($colors);
+
+				//adjust color using rgb > hsl > rgb conversion
+				$hsl = rgb_to_hsl($color[0], $color[1], $color[2]);
+				$hsl[2] = $hsl[2] + $percent;
+				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
+
+				//return adjusted color in format received
+				if ($hash == '#') { //hex
+					for ($i = 0; $i <= 2; $i++) {
+						$hex_color = dechex($color[$i]);
+						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
+						$hex .= $hex_color;
+					}
+					return $hash.$hex;
+				}
+				else { //rgb(a)
+					$rgb = implode(',', $color);
+					if ($alpha != '') { $rgb .= ','.$alpha; $a = 'a'; }
+					if ($wrapper) { $rgb = 'rgb'.$a.'('.$rgb.')'; }
+					return $rgb;
+				}
+			}
+
+			return $color;
+		}
+	}
+
+//function to convert an rgb color array to an hsl color array
+	if (!function_exists('rgb_to_hsl')) {
+		function rgb_to_hsl($r, $g, $b) {
+			$r /= 255;
+			$g /= 255;
+			$b /= 255;
+
+			$max = max($r, $g, $b);
+			$min = min($r, $g, $b);
+
+			$h;
+			$s;
+			$l = ($max + $min) / 2;
+			$d = $max - $min;
+
+			if ($d == 0) {
+				$h = $s = 0; // achromatic
+			}
+			else {
+				$s = $d / (1 - abs((2 * $l) - 1));
+				switch($max){
+					case $r:
+						$h = 60 * fmod((($g - $b) / $d), 6);
+						if ($b > $g) { $h += 360; }
+						break;
+					case $g:
+						$h = 60 * (($b - $r) / $d + 2);
+						break;
+					case $b:
+						$h = 60 * (($r - $g) / $d + 4);
+						break;
+				}
+			}
+
+			return array(round($h, 2), round($s, 2), round($l, 2));
+		}
+	}
+
+//function to convert an hsl color array to an rgb color array
+	if (!function_exists('hsl_to_rgb')) {
+		function hsl_to_rgb($h, $s, $l){
+			$r;
+			$g;
+			$b;
+
+			$c = (1 - abs((2 * $l) - 1)) * $s;
+			$x = $c * (1 - abs(fmod(($h / 60), 2) - 1));
+			$m = $l - ($c / 2);
+
+			if ($h < 60) {
+				$r = $c;
+				$g = $x;
+				$b = 0;
+			}
+			else if ($h < 120) {
+				$r = $x;
+				$g = $c;
+				$b = 0;
+			}
+			else if ($h < 180) {
+				$r = 0;
+				$g = $c;
+				$b = $x;
+			}
+			else if ($h < 240) {
+				$r = 0;
+				$g = $x;
+				$b = $c;
+			}
+			else if ($h < 300) {
+				$r = $x;
+				$g = 0;
+				$b = $c;
+			}
+			else {
+				$r = $c;
+				$g = 0;
+				$b = $x;
+			}
+
+			$r = ($r + $m) * 255;
+			$g = ($g + $m) * 255;
+			$b = ($b + $m) * 255;
+
+			if ($r > 255) { $r = 255; }
+			if ($g > 255) { $g = 255; }
+			if ($b > 255) { $b = 255; }
+
+			if ($r < 0) { $r = 0; }
+			if ($g < 0) { $g = 0; }
+			if ($b < 0) { $b = 0; }
+
+			return array(floor($r), floor($g), floor($b));
 		}
 	}
 
@@ -1354,8 +1567,8 @@ function number_pad($number,$n) {
 
 //transparent gif
 	if (!function_exists('img_spacer')) {
-		function img_spacer($width = '1px', $height = '1px', $border = 'none') {
-			return "<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='width: ".$width."; height: ".$height."; border: ".$border.";'>";
+		function img_spacer($width = '1px', $height = '1px', $custom = null) {
+			return "<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' style='width: ".$width."; height: ".$height."; ".$custom."'>";
 		}
 	}
 
@@ -1380,17 +1593,319 @@ function number_pad($number,$n) {
 	}
 
 //email validate
-	function email_validate($strEmail){
-	   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-	   // search email text for regular exp matches
-	   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+	if (!function_exists('email_validate')) {
+		function email_validate($strEmail){
+			$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+			// search email text for regular exp matches
+			preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+			if (count($matches) == 0) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+	}
 
-	   if (count($matches) == 0) {
-		return 0;
-	   }
-	   else {
-		return 1;
-	   }
-}
+//write javascript function that detects select key combinations to perform designated actions
+	if (!function_exists('key_press')) {
+		function key_press($key, $direction = 'up', $subject = 'document', $exceptions = array(), $prompt = null, $action = null, $script_wrapper = true) {
+			//determine key code
+				switch (strtolower($key)) {
+					case 'escape':
+						$key_code = '(e.which == 27)';
+						break;
+					case 'delete':
+						$key_code = '(e.which == 46)';
+						break;
+					case 'enter':
+						$key_code = '(e.which == 13)';
+						break;
+					case 'backspace':
+						$key_code = '(e.which == 8)';
+						break;
+					case 'ctrl+s':
+						$key_code = '(((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+q':
+						$key_code = '(((e.which == 113 || e.which == 81) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+a':
+						$key_code = '(((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+enter':
+						$key_code = '(((e.which == 13 || e.which == 10) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					default:
+						return;
+				}
+			//check for element exceptions
+				if (sizeof($exceptions) > 0) {
+					$exceptions = "!$(e.target).is('".implode(',', $exceptions)."') && ";
+				}
+			//quote if selector is id or class
+				$subject = ($subject != 'window' && $subject != 'document') ? "'".$subject."'" : $subject;
+			//output script
+				echo "\n\n\n";
+				if ($script_wrapper) {
+					echo "<script language='JavaScript' type='text/javascript'>\n";
+				}
+				echo "	$(".$subject.").key".$direction."(function(e) {\n";
+				echo "		if (".$exceptions.$key_code.") {\n";
+				if ($prompt != '') {
+					$action = ($action != '') ? $action : "alert('".$key."');";
+					echo "			if (confirm('".$prompt."')) {\n";
+					echo "				e.preventDefault();\n";
+					echo "				".$action."\n";
+					echo "			}\n";
+				}
+				else {
+					echo "			e.preventDefault();\n";
+					echo "			".$action."\n";
+				}
+				echo "		}\n";
+				echo "	});\n";
+				if ($script_wrapper) {
+					echo "</script>\n";
+				}
+				echo "\n\n\n";
+		}
+	}
+
+//format border radius values
+	if (!function_exists('format_border_radius')) {
+		function format_border_radius($radius_value, $default = 5) {
+			$radius_value = ($radius_value != '') ? $radius_value : $default;
+			$br_a = explode(' ', $radius_value);
+			foreach ($br_a as $index => $br) {
+				if (substr_count($br, '%') > 0) {
+					$br_b[$index]['number'] = str_replace('%', '', $br);
+					$br_b[$index]['unit'] = '%';
+				}
+				else {
+					$br_b[$index]['number'] = str_replace('px', '', strtolower($br));
+					$br_b[$index]['unit'] = 'px';
+				}
+			}
+			unset($br_a, $br);
+			if (sizeof($br_b) == 4) {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[1]['number'];
+				$br['br']['n'] = $br_b[2]['number'];
+				$br['bl']['n'] = $br_b[3]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[1]['unit'];
+				$br['br']['u'] = $br_b[2]['unit'];
+				$br['bl']['u'] = $br_b[3]['unit'];
+			}
+			else if (sizeof($br_b) == 2) {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[0]['number'];
+				$br['br']['n'] = $br_b[1]['number'];
+				$br['bl']['n'] = $br_b[1]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[0]['unit'];
+				$br['br']['u'] = $br_b[1]['unit'];
+				$br['bl']['u'] = $br_b[1]['unit'];
+			}
+			else {
+				$br['tl']['n'] = $br_b[0]['number'];
+				$br['tr']['n'] = $br_b[0]['number'];
+				$br['br']['n'] = $br_b[0]['number'];
+				$br['bl']['n'] = $br_b[0]['number'];
+				$br['tl']['u'] = $br_b[0]['unit'];
+				$br['tr']['u'] = $br_b[0]['unit'];
+				$br['br']['u'] = $br_b[0]['unit'];
+				$br['bl']['u'] = $br_b[0]['unit'];
+			}
+			unset($br_b);
+
+			return $br; //array
+		}
+	}
+
+//converts a string to a regular expression
+	if (!function_exists('string_to_regex')) {
+		function string_to_regex($string) {
+			//escape the plus
+				if (substr($string, 0, 1) == "+") {
+					$string = "^\\+(".substr($string, 1).")$";
+				}
+			//convert N,X,Z syntax to regex
+				$string = str_ireplace("N", "[2-9]", $string);
+				$string = str_ireplace("X", "[0-9]", $string);
+				$string = str_ireplace("Z", "[1-9]", $string);
+			//add ^ to the start of the string if missing
+				if (substr($string, 0, 1) != "^") {
+					$string = "^".$string;
+				}
+			//add $ to the end of the string if missing
+				if (substr($string, -1) != "$") {
+					$string = $string."$";
+				}
+			//add the round brackgets ( and )
+				if (!strstr($string, '(')) {
+					if (strstr($string, '^')) {
+						$string = str_replace("^", "^(", $string);
+					}
+					else {
+						$string = '^('.$string;
+					}
+				}
+				if (!strstr($string, ')')) {
+					if (strstr($string, '$')) {
+						$string = str_replace("$", ")$", $string);
+					}
+					else {
+						$string = $string.')$';
+					}
+				}
+			//return the result
+				return $string;
+		}
+		//$string = "+12089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "12089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^(20890682[0-9][0-9])$"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "1208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "nxxnxxxxxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "208906xxxx"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^(2089068227"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "^2089068227)"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227$"; echo $string." ".string_to_regex($string)."\n";
+		//$string = "2089068227)$"; echo $string." ".string_to_regex($string)."\n";
+	}
+
+//dynamically load available web fonts
+	if (!function_exists('get_available_fonts')) {
+		function get_available_fonts($sort = 'alpha') {
+			if ($_SESSION['theme']['font_source_key']['text'] != '') {
+				if (!is_array($_SESSION['fonts_available']) || sizeof($_SESSION['fonts_available']) == 0) {
+					/*
+					sort options:
+						alpha 		- alphabetically
+						date 		- by date added (most recent font added or updated first)
+						popularity 	- by popularity (most popular family first)
+						style 		- by number of styles available (family with most styles first)
+						trending 	- by families seeing growth in usage (family seeing the most growth first)
+					*/
+					$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key='.$_SESSION['theme']['font_source_key']['text'].'&sort='.$sort;
+					$response = file_get_contents($google_api_url);
+					if ($response != '') {
+						$data = json_decode($response, true);
+						$items = $data['items'];
+						foreach ($items as $item) {
+							$fonts[] = $item['family'];
+						}
+						//echo "<pre>".print_r($font_list, true)."</pre>";
+					}
+					$_SESSION['fonts_available'] = $fonts;
+					unset($fonts);
+				}
+				return (is_array($_SESSION['fonts_available']) && sizeof($_SESSION['fonts_available']) > 0) ? $_SESSION['fonts_available'] : array();
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+//dynamically import web fonts (by reading static css file)
+	if (!function_exists('import_fonts')) {
+		function import_fonts($file_to_parse, $line_styles_begin = null) {
+			/*
+			This function reads the contents of $file_to_parse, beginning at $line_styles_begin (if set),
+			and attempts to parse the specified google fonts used.  The assumption is that each curly brace
+			will be on its own line, each CSS style (attribute: value;) will be on its own line, a single
+			Google Fonts name will be used per selector, and that it will be surrounded by SINGLE quotes,
+			as shown in the example below:
+
+				.class_name {
+					font-family: 'Google Font';
+					font-weight: 300;
+					font-style: italic;
+					}
+
+			If the CSS styles are formatted as described, the necessary @import string should be generated
+			correctly.
+			*/
+
+			$file = file_get_contents($_SERVER["DOCUMENT_ROOT"].$file_to_parse);
+			$lines = explode("\n", $file);
+
+			$style_counter = 0;
+			foreach ($lines as $line_number => $line) {
+				if ($line_styles_begin != '' && $line_number < $line_styles_begin - 1) { continue; }
+				if (substr_count($line, "{") > 0) {
+					$style_lines[$style_counter]['begins'] = $line_number;
+				}
+				if (substr_count($line, "}") > 0) {
+					$style_lines[$style_counter]['ends'] = $line_number;
+					$style_counter++;
+				}
+			}
+			//echo "\n\n".print_r($style_lines, true)."\n\n";
+
+			if (is_array($style_lines) && sizeof($style_lines) > 0) {
+
+				foreach ($style_lines as $index => $style_line) {
+					for ($l = $style_line['begins']+1; $l < $style_line['ends']; $l++) {
+						$tmp[] = $lines[$l];
+					}
+					$style_groups[] = $tmp;
+					unset($tmp);
+				}
+				//echo "\n\n".print_r($style_groups, true)."\n\n";
+
+				if (is_array($style_groups) && sizeof($style_groups) > 0) {
+
+					foreach ($style_groups as $style_group_index => $style_group) {
+						foreach ($style_group as $style_index => $style) {
+							$tmp = explode(':', $style);
+							$attribute = trim($tmp[0]);
+							$value = trim(trim($tmp[1]),';');
+							$style_array[$attribute] = $value;
+						}
+						$style_groups[$style_group_index] = $style_array;
+						unset($style_array);
+					}
+					//echo "\n\n".print_r($style_groups, true)."\n\n";
+
+					foreach ($style_groups as $style_group_index => $style_group) {
+						$style_value = $style_group['font-family'];
+						if (substr_count($style_value, "'") > 0) {
+							//determine font
+								$font_begin = strpos($style_value, "'")+1;
+								$font_end = strpos($style_value, "'", $font_begin);
+								$font_name = substr($style_value, $font_begin, $font_end - $font_begin);
+							//determine modifiers
+								$weight = (is_numeric($style_group['font-weight']) || strtolower($style_group['font-weight']) == 'bold') ? strtolower($style_group['font-weight']) : null;
+								$italic = (strtolower($style_group['font-style']) == 'italic') ? 'italic' : null;
+							//add font to array
+								$fonts[$font_name][] = $weight.$italic;
+						}
+					}
+					//echo "\n\n/*".print_r($fonts, true)."*/\n\n";
+
+					if (is_array($fonts)) {
+						foreach ($fonts as $font_name => $modifiers) {
+							$modifiers = array_unique($modifiers);
+							$import_font_string = str_replace(' ', '+', $font_name);
+							if (is_array($modifiers) && sizeof($modifiers) > 0) {
+								$import_font_string .= ':'.implode(',', $modifiers);
+							}
+							$import_fonts[] = $import_font_string;
+						}
+						//echo "\n\n/*".print_r($import_fonts, true)."*/\n\n";
+						$import_string = "@import url(//fonts.googleapis.com/css?family=".implode('|', $import_fonts).");";
+						echo $import_string."\n";
+					}
+
+				}
+
+			}
+
+		}
+	}
 
 ?>

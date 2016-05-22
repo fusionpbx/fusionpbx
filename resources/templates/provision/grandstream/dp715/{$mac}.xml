@@ -81,11 +81,11 @@
 		<!-- Periodic Inform Interval (default is 300) -->
 		<P4507>300</P4507>
 		<!-- Connection Request Username -->
-		<P4511></P4511>		
+		<P4511></P4511>
 		<!-- Connection Request Password -->
 		<P4512></P4512>
 		<!-- CPE SSL Certificate -->
-		<!-- P8220= --> 	
+		<!-- P8220= -->
 		<!-- CPE SSL Private Key -->
 		<!-- P8221= -->
 		<!-- Call Progress Tones  -->
@@ -250,7 +250,7 @@
 		<!-- UAC Specify Refresher. 0 - omit, 1 - UAC, 2 - UAS -->
 		<P266>0</P266>
 		<!-- UAS Specify Refresher. 1 - UAC, 2 - UAS -->
-		<P267>1</P267> 		
+		<P267>1</P267>
 		<!-- Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) 0 - No, 1 - Yes -->
 		<P265>0</P265>
 		<!-- Enable 100rel. 0 - No, 1 - Yes -->
@@ -350,7 +350,7 @@
 		<P743>0</P743>
 		<!-- SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
 		<!-- 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default 50. -->
-		<P440>50</P440>		
+		<P440>50</P440>
 		<!-- SIP T2 Interval. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses. -->
 		<!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec, 1600 - 16 sec, 3200 - 32 sec. Default 400. -->
 		<P441>400</P441>
@@ -365,7 +365,7 @@
 		<!-- Priority 3 -->
 		<P862>100</P862>
 		<!-- Disable DTMF Negotiation. 0 - No, 1 - Yes  -->
-		<P4826>0</P4826>	
+		<P4826>0</P4826>
 		<!-- Send Hook Flash Event. 0 - No, 1 - Yes  -->
 		<P774>0</P774>
 		<!-- Enable Call Features. 0 - No, 1 - Yes  -->
@@ -387,7 +387,7 @@
 		<!-- No Key Entry Timeout. Default - 4 seconds. -->
 		<P292>4</P292>
 		<!-- Early Dial. 0 - No, 1 - Yes (use "Yes" only if proxy supports 484 response) -->
-		<P729>0</P729>	
+		<P729>0</P729>
 		<!-- Dial Plan Prefix.(this prefix string is added to each dialed number) -->
 		<P766></P766>
 		<!-- Use # as Dial Key. 0 - No, 1 - Yes (if set to Yes, "#" will function as the "(Re-)Dial" key) -->
@@ -623,7 +623,7 @@
 		<!-- <value="TZN+0"> Gh, Casablanca, Monrovia) -->
 		<!-- <value="GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> Great Britain) -->
 		<!-- <value="WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> Gal) -->
-		<!-- <value="GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> GMT (Dublin, Ireland) -->    		
+		<!-- <value="GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"> GMT (Dublin, Ireland) -->
 		<!-- <value="TZO-1"> Gium, Brussels, Paris, Vienna, Warsaw) -->
 		<!-- <value="CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"> Gue, Berlin, Budapest, Amsterdam, Barcelona) -->
 		<!-- <value="TZP-2"> GMT+02:00 (Israel, Cairo, Athens, Istanbul, Bucharest) -->
@@ -643,7 +643,7 @@
 		<!-- <value="TZY-8"> G, Taipei, Kuala Lumpur, Irkutsk) -->
 		<!-- <value="SGT-8"> Gapore) -->
 		<!-- <value="ULAT-8"> Golia) -->
-		<!-- <value="WST-8"> GMT+08:00 (Perth) -->    		
+		<!-- <value="WST-8"> GMT+08:00 (Perth) -->
 		<!-- <value="TZZ-9"> GMT+09:00 (Japan, Korea, Yakutsk) -->
 		<!-- <value="CST-9:30CDT-10:30,M10.5.0/02:00:00,M3.5.0/03:00:00"> GMT+09:30 (Adelaide) -->
 		<!-- <value="CST-9:30"> GMT+09:30 (Darwin) -->
@@ -664,6 +664,6 @@
 
 		<!-- Language. 0 - English, 10 - Spanish IVR -->
 		<P342>0</P342>
-		
+
 	</config>
 </gs_provision>

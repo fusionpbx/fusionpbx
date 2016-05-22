@@ -165,7 +165,7 @@
 --check if a file exists
 	require "resources.functions.file_exists"
 
---define select_entry function 
+--define select_entry function
 	function select_entry()
 		dtmf_digits = "";
 		digit_timeout = "500";
@@ -182,7 +182,7 @@
 		return dtmf_digits;
 	end
 
---define prompt_for_name function 
+--define prompt_for_name function
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
@@ -196,7 +196,7 @@
 		--get the digits for the name
 			dtmf_digits = prompt_for_name();
 
-		--show the dtmf digits 
+		--show the dtmf digits
 			freeswitch.consoleLog("notice", "[directory] first 3 letters of first or last name: " .. dtmf_digits .. "\n");
 
 		--loop through the extensions to find matches
@@ -211,10 +211,10 @@
 				--end
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
-					if (row.first_name and row.last_name) then
+					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemails 
+								sql = [[SELECT * FROM v_voicemails
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. row.extension.. [[' ]];
 								if (debug["sql"]) then
@@ -241,7 +241,9 @@
 											--announce the first and last names
 											session:execute("say", "en name_spelled iterated "..row.first_name);
 											--session:execute("sleep", "500");
-											session:execute("say", "en name_spelled iterated "..row.last_name);
+											if (row.last_name ~= nil) then
+												session:execute("say", "en name_spelled iterated "..row.last_name);
+											end
 										end
 								end);
 							elseif (storage_type == "http_cache") then
@@ -258,8 +260,10 @@
 								else
 									--announce the first and last names
 										session:execute("say", "en name_spelled iterated "..row.first_name);
-										--session:execute("sleep", "500");
-										session:execute("say", "en name_spelled iterated "..row.last_name);
+										if (row.last_name ~= nil) then
+											--session:execute("sleep", "500");
+											session:execute("say", "en name_spelled iterated "..row.last_name);
+										end
 								end
 							end
 

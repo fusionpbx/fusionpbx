@@ -77,7 +77,7 @@
 		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 		$x = 0;
-		foreach ($array as $row) {
+		if (isset($array)) foreach ($array as $row) {
 			$found = false;
 			foreach ($default_settings as $field) {
 				if ($row['default_setting_subcategory'] == $field['default_setting_subcategory']) {

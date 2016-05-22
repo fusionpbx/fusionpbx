@@ -62,7 +62,6 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 			$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
 			$result = $voicemail->message_download();
 			unset($voicemail);
-			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 		}
 		exit;
 	}
@@ -94,26 +93,14 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 //loop through the voicemail messages
 	if (count($voicemails) > 0) {
 
-		echo "<br />";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<form name='frm' id='frm' method='post' action=''>\n";
 
-		//set the table header
-			$table_header = "<tr>\n";
-			$table_header .= th_order_by('created_epoch', $text['label-created_epoch'], $order_by, $order);
-			$table_header .= th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
-			$table_header .= th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
-			$table_header .= "<th>".$text['label-tools']."</th>\n";
-			$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "style='text-align: right;'");
-			if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
-				$table_header .= "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
-			}
-			$table_header .= "<td style='width: 25px;'>&nbsp;</td>";
-			$table_header .= "</tr>\n";
+		echo "<br />";
+		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		$previous_voicemail_id = '';
 		foreach($voicemails as $field) {
@@ -121,38 +108,63 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 				if ($previous_voicemail_id != '') {
 					echo "<tr><td colspan='20'><br /><br /><br /></td></tr>\n";
 				}
-				echo "<tr>\n";
-				echo "	<td colspan='3' align='left' valign='top'>\n";
+				echo "	<td colspan='4' align='left' valign='top'>\n";
 				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
 				echo "	<td colspan='".(($_SESSION['voicemail']['storage_type']['text'] != 'base64') ? 3 : 2)."' valign='bottom' align='right'>\n";
+				echo "		<input type='button' class='btn' alt='".$text['button-toggle']."' onclick=\"$('#frm').attr('action', 'voicemail_message_toggle.php').submit();\" value='".$text['button-toggle']."'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
-					echo "		<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
+					echo "	<input type='button' class='btn' alt='".$text['button-greetings']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
 				}
 				if (permission_exists('voicemail_edit')) {
-					echo "		<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
+					echo "	<input type='button' class='btn' alt='".$text['button-settings']."' onclick=\"document.location.href='voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
 				}
 				echo "		<br /><br />";
 				echo "	</td>\n";
 				echo "	<td>&nbsp;</td>\n";
 				echo "</tr>\n";
+
 				if (count($field['messages']) > 0) {
-					echo $table_header;
+					echo "<tr>\n";
+					if (permission_exists('voicemail_message_delete')) {
+						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all_".$field['voicemail_id']."' onchange=\"(this.checked) ? check('all', '".$field['voicemail_id']."') : check('none', '".$field['voicemail_id']."');\"></th>";
+					}
+					echo th_order_by('created_epoch', $text['label-created_epoch'], $order_by, $order);
+					echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
+					echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
+					echo "<th>".$text['label-tools']."</th>\n";
+					echo th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "style='text-align: right;'");
+					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+						echo "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
+					}
+					if (permission_exists('voicemail_message_delete')) {
+						echo "<td class='list_control_icons' style='width: 25px;'>";
+						echo 	"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { $('#frm').attr('action', 'voicemail_message_delete.php').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+						echo "</td>";
+					}
+					echo "</tr>\n";
 				}
 			}
 
 			if (count($field['messages']) > 0) {
 				foreach($field['messages'] as &$row) {
-					$style = ($row['message_status'] == '') ? "font-weight: bold;" : null;
+					$style = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? "font-weight: bold;" : null;
 
 					//playback progress bar
-					echo "<tr id='recording_progress_bar_".$row['voicemail_message_uuid']."' style='display: none;'><td colspan='6'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_message_uuid']."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".$row['voicemail_message_uuid']."' style='display: none;'><td colspan='".((permission_exists('voicemail_message_delete')) ? 7 : 6)."' class='".$row_style[$c]."' style='padding: 0px; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_message_uuid']."'></span></td></tr>\n";
 
-					echo "<tr>\n";
+					$tr_link = "href=\"javascript:recording_play('".$row['voicemail_message_uuid']."');\"";
+					echo "<tr ".$tr_link.">\n";
+					if (permission_exists('voicemail_message_delete')) {
+						echo "	<td valign='top' class='".$row_style[$c]." tr_checkbox tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
+						echo "		<input type='checkbox' name='voicemail_messages[".$row['voicemail_uuid']."][]' id='checkbox_".$row['voicemail_message_uuid']."' value='".$row['voicemail_message_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['voicemail_id']."').checked = false; }\">";
+						echo "	</td>";
+						$vm_msg_ids[$row['voicemail_id']][] = 'checkbox_'.$row['voicemail_message_uuid'];
+					}
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap='nowrap'>".$row['created_date']."</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
-					echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+					echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' onclick=\"$(this).closest('tr').children('td').css('font-weight','normal');\">";
 						$recording_file_path = $file;
 						$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 						$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
@@ -161,19 +173,19 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 							case "mp3" : $recording_type = "audio/mpeg"; break;
 							case "ogg" : $recording_type = "audio/ogg"; break;
 						}
-						echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' ontimeupdate=\"update_progress('".$row['voicemail_message_uuid']."')\" preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&type=vm&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
-						echo "<span id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-						echo "<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+						echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' ontimeupdate=\"update_progress('".$row['voicemail_message_uuid']."')\" preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
+						echo "<a id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."');\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</a>";
+						echo "<a href=\"voicemail_messages.php?action=download&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 					echo "	</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
 					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 						echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\" nowrap='nowrap'>".$row['file_size_label']."</td>\n";
 					}
-					echo "	<td class='list_control_icon' style='width: 25px;'>";
 					if (permission_exists('voicemail_message_delete')) {
-						echo 	"<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+						echo "	<td class='list_control_icon' style='width: 25px;'>";
+						echo 		"<a href='voicemail_message_delete.php?voicemail_messages[".$row['voicemail_uuid']."][]=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+						echo "	</td>\n";
 					}
-					echo "	</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
@@ -188,6 +200,9 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 		}
 		echo "</table>";
 		echo "<br /><br />";
+
+		echo "</form>";
+
 	}
 	else {
 		echo "<br />".$text['message-messages_not_found']."<br /><br />";
@@ -198,6 +213,36 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 	if (check_str($_REQUEST["action"]) == "autoplay" && check_str($_REQUEST["uuid"]) != '') {
 		echo "<script>recording_play('".check_str($_REQUEST["uuid"])."');</script>";
 	}
+
+//check or uncheck all voicemail checkboxes
+	if (sizeof($vm_msg_ids) > 0) {
+		echo "<script>\n";
+		echo "	function check(what, voicemail_id) {\n";
+		foreach ($vm_msg_ids as $voicemail_id => $checkbox_ids) {
+			echo "if (voicemail_id == '".$voicemail_id."') {\n";
+			foreach ($checkbox_ids as $index => $checkbox_id) {
+				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+			}
+			echo "}\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
+
+//$(this).children('td:not(.tr_link_void)').css('font-weight','normal');
+?>
+
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function() {
+		$('.tr_hover tr').each(function(i,e) {
+		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_checkbox)').click(function() {
+			 $(this).closest('tr').children('td').css('font-weight','normal');
+		  });
+		});
+	});
+</script>
+
+<?php
 
 //include the footer
 	require_once "resources/footer.php";

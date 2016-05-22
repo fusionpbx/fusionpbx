@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -94,7 +94,7 @@ else {
 			echo "</table>";
 
 			$rows = array();
-			foreach ($results["rows"] as &$row) {
+			if (isset($results["rows"])) foreach ($results["rows"] as &$row) {
 				//determine show all
 					if (!($show == 'all' && permission_exists('call_active_all'))) {
 						$foreign_call = true;

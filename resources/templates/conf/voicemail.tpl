@@ -5,7 +5,7 @@ Subject: Voicemail from "${voicemail_caller_id_name}" <${voicemail_caller_id_num
 X-Priority: ${voicemail_priority}
 X-Mailer: FreeSWITCH
 
-Content-Type: multipart/alternative; 
+Content-Type: multipart/alternative;
 	boundary="000XXX000"
 
 --000XXX000

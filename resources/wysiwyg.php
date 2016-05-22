@@ -169,17 +169,17 @@ tinyMCE_GZ.init({
             //error handling
         }
     }
-    
+
     function ajaxLoad(id, txt) {
     	var inst = tinyMCE.getInstanceById(id);
 
     	// Do you ajax call here
     	inst.setHTML(txt);
     }
-    
+
     function ajaxSave() {
     	var inst = tinyMCE.getInstanceById('content');
-    
+
     	// Do you ajax call here
     	alert(inst.getHTML());
     }

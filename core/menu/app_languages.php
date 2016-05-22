@@ -180,6 +180,16 @@ $text['label-language']['uk'] = "Мова";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['de-at'] = "Sprache";
 
+$text['label-icon']['en-us'] = "Icon";
+$text['label-icon']['es-cl'] = "Icono";
+$text['label-icon']['pt-pt'] = "Ícone";
+$text['label-icon']['fr-fr'] = "Icône";
+$text['label-icon']['pt-br'] = "Ícone";
+$text['label-icon']['pl'] = "Ikona";
+$text['label-icon']['uk'] = "іконка";
+$text['label-icon']['sv-se'] = "Ikon";
+$text['label-icon']['de-at'] = "Symbol";
+
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['es-cl'] = "Grupos";
 $text['label-groups']['pt-pt'] = "Grupos";

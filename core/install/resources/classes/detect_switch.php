@@ -22,10 +22,10 @@
 
 	Contributor(s):
 	Matthew Vale <github@mafoo.org>
-	
+
 */
 require_once "root.php";
-require_once "resources/classes/EventSocket.php";
+require_once "resources/classes/event_socket.php";
 
 //define the install class
 	class detect_switch {
@@ -135,30 +135,30 @@ require_once "resources/classes/EventSocket.php";
 					$this->$field = normalize_path($matches[2]);
 				}
 			}
-			$this->_voicemail_vdir = 	normalize_path($this->_storage_dir . DIRECTORY_SEPARATOR . "voicemail");
-			$this->_phrases_vdir = 		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "lang");
-			$this->_extensions_vdir = 	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "directory");
+			$this->_voicemail_vdir =	normalize_path($this->_storage_dir . DIRECTORY_SEPARATOR . "voicemail");
+			$this->_phrases_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "lang");
+			$this->_extensions_vdir =	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "directory");
 			$this->_sip_profiles_vdir =	normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "sip_profiles");
 			$this->_dialplan_vdir =		normalize_path($this->_conf_dir . DIRECTORY_SEPARATOR . "dialplan");
 			$this->_backup_vdir =		normalize_path(sys_get_temp_dir());
-		}	
-	
+		}
+
 		protected function connect_event_socket(){
-			$esl = new EventSocket;
+			$esl = new event_socket;
 			if ($esl->connect($this->event_host, $this->event_port, $this->event_password)) {
 				$this->event_socket = $esl->reset_fp();
 				return true;
 			}
 			return false;
 		}
-	
+
 		protected function event_socket_request($cmd) {
-			$esl = new EventSocket($this->event_socket);
+			$esl = new event_socket($this->event_socket);
 			$result = $esl->request($cmd);
 			$esl->reset_fp();
 			return $result;
 		}
-		
+
 		public function restart_switch() {
 			$this->connect_event_socket();
 			if(!$this->event_socket){

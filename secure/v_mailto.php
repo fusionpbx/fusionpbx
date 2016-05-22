@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -79,6 +79,10 @@
 //includes
 	require('resources/pop3/mime_parser.php');
 	require('resources/pop3/rfc822_addresses.php');
+	
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php")) {
+		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php");
+	}
 
 //parse the email message
 	$mime=new mime_parser_class;
@@ -102,7 +106,7 @@
 	}
 	else {
 		//get the headers
-			print_r($decoded[0]);
+			//print_r($decoded[0]);
 			$headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
 			$subject = $decoded[0]["Headers"]["subject:"];
 			$from = $decoded[0]["Headers"]["from:"];
@@ -135,6 +139,11 @@
 //prepare smtp server settings
 	// load default smtp settings
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
+	if (isset($_SESSION['email']['smtp_port'])) {
+		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
+	} else {
+		$smtp['port'] = 0;
+	}
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
@@ -164,7 +173,7 @@
 	}
 
 	// value adjustments
-	$smtp['auth'] 		= ($smtp['auth'] == "true") ? $smtp['auth'] : "false";
+	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
 	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
 	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
 	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
@@ -173,13 +182,21 @@
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
-	$mail->IsSMTP();
+	if (isset($_SESSION['email']['method'])) {
+		switch($_SESSION['email']['method']['text']) {
+			case 'sendmail': $mail->IsSendmail(); break;
+			case 'qmail': $mail->IsQmail(); break;
+			case 'mail': $mail->IsMail(); break;
+			default: $mail->IsSMTP(); break;
+		}
+	} else $mail->IsSMTP();
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
+	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
 	if ($smtp['secure'] != '') {
 		$mail->SMTPSecure = $smtp['secure'];
 	}
-	if ($smtp['auth'] == 'true') {
+	if ($smtp['auth']) {
 		$mail->Username = $smtp['username'];
 		$mail->Password = $smtp['password'];
 	}
@@ -196,7 +213,7 @@
 	echo "Reply-to: ".$reply_to."\n";
 	echo "To: ".$to."\n";
 	echo "Date: ".$date."\n";
-	echo "Body: ".$body."\n";
+	//echo "Body: ".$body."\n";
 
 //add to, from, fromname, custom headers and subject to the email
 	$mail->From = $smtp['from'] ;
@@ -269,6 +286,13 @@
 
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
+					if (function_exists(get_transcription)) {
+						$attachments_array=$mail->GetAttachments();
+						$transcription=get_transcription($attachments_array[0]);
+						echo "Transcription: " . $transcription;
+					} else {
+						$transcription = '';
+					}
 			}
 		}
 	}
@@ -278,13 +302,13 @@
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
-		$mail->Body = $body;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body."<br><br>".nl2br($transcription);
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 	else {
 		// $mail->Body = ($body != '') ? $body : $body_plain;
-		$mail->Body = $body_plain;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body_plain."\n\n$transcription";
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 
 //send the email
@@ -293,33 +317,37 @@
 		echo "Mailer Error: ".$mailer_error."\n\n";
 
 		$call_uuid = $headers["X-FusionPBX-Call-UUID"];
-		// log/store message in database for review
-		$email_uuid = uuid();
-		$sql = "insert into v_emails ( ";
-		$sql .= "email_uuid, ";
-		if ($call_uuid) {
-			$sql .= "call_uuid, ";
-		}
-		$sql .= "domain_uuid, ";
-		$sql .= "sent_date, ";
-		$sql .= "type, ";
-		$sql .= "status, ";
-		$sql .= "email ";
-		$sql .= ") values ( ";
-		$sql .= "'".$email_uuid."', ";
-		if ($call_uuid) {
-			$sql .= "'".$call_uuid."', ";
-		}
-		$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-		$sql .= "now(),";
-		$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-		$sql .= "'failed', ";
-		$sql .= "'".str_replace("'", "''", $msg)."' ";
-		$sql .= ") ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		if ($resend == true) {
+			echo "Retained in v_emails \n";
+		} else {
+			// log/store message in database for review
+			$email_uuid = uuid();
+			$sql = "insert into v_emails ( ";
+			$sql .= "email_uuid, ";
+			if ($call_uuid) {
+				$sql .= "call_uuid, ";
+			}
+			$sql .= "domain_uuid, ";
+			$sql .= "sent_date, ";
+			$sql .= "type, ";
+			$sql .= "status, ";
+			$sql .= "email ";
+			$sql .= ") values ( ";
+			$sql .= "'".$email_uuid."', ";
+			if ($call_uuid) {
+				$sql .= "'".$call_uuid."', ";
+			}
+			$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+			$sql .= "now(),";
+			$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+			$sql .= "'failed', ";
+			$sql .= "'".str_replace("'", "''", $msg)."' ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
-		echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+		}
 
 	}
 	else {

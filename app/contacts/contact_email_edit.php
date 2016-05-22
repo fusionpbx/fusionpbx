@@ -262,7 +262,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	echo "	".$text['label-email_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='email' name='email_address' maxlength='255' value=\"".$email_address."\">\n";
+	echo "	<input class='formfld' type='text' name='email_address' maxlength='255' value=\"".$email_address."\">\n";
 	echo "<br />\n";
 	echo $text['description-email_address']."\n";
 	echo "</td>\n";

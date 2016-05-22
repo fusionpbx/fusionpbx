@@ -364,8 +364,8 @@ else {
 		if (count($result) > 0) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($result as &$row) {
-				$selected = ($conference_center_greeting == "phrase:".$row["phrase_name"].".".$domain_uuid) ? true : false;
-				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
+				$selected = ($conference_center_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
+				echo "	<option value='phrase:".$row["phrase_uuid"]."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
 				if ($selected) { $tmp_selected = true; }
 			}
 			unset ($prep_statement);

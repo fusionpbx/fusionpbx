@@ -27,7 +27,7 @@
 function paging($num_rows, $param, $rows_per_page, $mini = false) {
 
 	if (strlen($rows_per_page)==0) {
-		$rows_per_page = "5"; //default number of rows per page
+		$rows_per_page = 50; //default number of rows per page
 	}
 
 
@@ -58,73 +58,71 @@ function paging($num_rows, $param, $rows_per_page, $mini = false) {
 	}
 
 	if ($pagenum > 0) {
-        //echo "currently middepage<br>";
         $page = $pagenum - 1;
-		$prev = "<input class='btn' type='button' name='next' value='&#9664;' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$first = "<input class='btn' type='button' name='last' value='&#9650;' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
+		$prev = "<input class='btn' type='button' value='&#9664;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
+		$first = "<input class='btn' type='button' value='&#9650;' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
 
 	}
 	else {
-		//echo "currently on the first page<br>";
-		$prev = "<input class='btn' type='button' disabled name='Prev' value='&#9664;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
-		//$first = "<input class='btn' type='button' name='First' value='First'>\n";
+		$prev = "<input class='btn' type='button' disabled value='&#9664;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
 	}
 
 	if (($pagenum + 1) < $maxpage) {
-        //echo "middle page<br>";
         $page = $pagenum + 1;
-		$next = "<input class='btn' type='button' name='next' value='&#9654;' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$last = "<input class='btn' type='button' name='last' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$next = "<input class='btn' type='button' value='&#9654;' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
+		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
 
 	}
 	else {
-        //echo "last page<br>";
-		$last = "<input class='btn' type='button' name='last' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
-		$next = "<input class='btn' type='button' disabled name='Next' value='&#9654;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
-		//$last = "<input class='btn' type='button' name='Last' value='Last'>\n";
+		$last = "<input class='btn' type='button' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$next = "<input class='btn' type='button' disabled value='&#9654;' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n";
 
 	}
 
 	$returnearray = array();
+	$code = '';
 	if ($maxpage > 1) {
-		//$returnearray[] = $first . $prev ." Page $pagenum of $maxpage " . $next . $last;
-		$returnearray[] = "<center nowrap>".$prev.((!$mini) ? "&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($pagenum+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$maxpage."</strong>&nbsp;&nbsp;&nbsp;&nbsp;" : null).$next."</center>\n".
-			"<script>\n".
-				"function go(e) {\n".
-					"var page_num;\n".
-					"page_num = document.getElementById('paging_page_num').value;\n".
+		//define javascript to include
+			$script = "<script>\n".
+					"function go(e) {\n".
+						"var page_num;\n".
+						"page_num = document.getElementById('paging_page_num').value;\n".
 
-					"do_action = false;\n".
-					"if (e != null) {\n".
-						"// called from a form field keypress event\n".
-						"var keyevent;\n".
-						"var keychar;\n".
+						"do_action = false;\n".
+						"if (e != null) {\n".
+							"// called from a form field keypress event\n".
+							"var keyevent;\n".
+							"var keychar;\n".
 
-						"if (window.event) { keyevent = e.keyCode; }\n".
-						"else if (e.which) { keyevent = e.which; }\n".
+							"if (window.event) { keyevent = e.keyCode; }\n".
+							"else if (e.which) { keyevent = e.which; }\n".
 
-						"keychar = keyevent;\n".
-						"if (keychar == 13) {\n".
-							"do_action = true;\n".
+							"keychar = keyevent;\n".
+							"if (keychar == 13) {\n".
+								"do_action = true;\n".
+							"}\n".
+							"else {\n".
+								"keychar;\n".
+								"return true;\n".
+							"}\n".
 						"}\n".
 						"else {\n".
-							"keychar;\n".
-							"return true;\n".
+							"// called from something else (non-keypress)\n".
+							"do_action = true;\n".
+						"}\n".
+
+						"if (do_action) {\n".
+							"// action to peform when enter is hit\n".
+							"if (page_num < 1) { page_num = 1; }\n".
+							"if (page_num > ".$maxpage.") { page_num = ".$maxpage."; }\n".
+							"document.location.href = '".$self."?page='+(--page_num)+'".$param."';\n".
 						"}\n".
 					"}\n".
-					"else {\n".
-						"// called from something else (non-keypress)\n".
-						"do_action = true;\n".
-					"}\n".
-
-					"if (do_action) {\n".
-						"// action to peform when enter is hit\n".
-						"if (page_num < 1) { page_num = 1; }\n".
-						"if (page_num > ".$maxpage.") { page_num = ".$maxpage."; }\n".
-						"document.location.href = '".$self."?page='+(--page_num)+'".$param."';\n".
-					"}\n".
-				"}\n".
-			"</script>\n";
+				"</script>\n";
+		//determine size
+			$code = ($mini) ? $prev.$next."\n".$script : "<center nowrap>".$prev."&nbsp;&nbsp;&nbsp;<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($pagenum+1)."' onfocus='this.select();' onkeypress='return go(event);'>&nbsp;&nbsp;<strong>".$maxpage."</strong>&nbsp;&nbsp;&nbsp;&nbsp;".$next."</center>\n".$script;
+		//add to array
+			$returnearray[] = $code;
 	}
 	else {
 		$returnearray[] = "";

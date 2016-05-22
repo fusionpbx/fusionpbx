@@ -26,13 +26,20 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('domain_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//redirect admin to app instead
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_parent') && permission_exists('domain_descendants')) {
+		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
+	}
+
+//check permission
+	if (permission_exists('domain_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -125,7 +132,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }

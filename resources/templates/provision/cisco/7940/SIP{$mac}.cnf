@@ -1,4 +1,4 @@
-{if isset($cisco_time_zone)}
+{if isset($cisco_image_version)}
 # Image version
 image_version: "{$cisco_image_version}"
 {/if}
@@ -67,7 +67,7 @@ cnf_join_enable: "1"     ; 0-Disabled, 1-Enabled (default)
 # Allow Transfer to be completed while target phone is still ringing
 semi_attended_transfer: "0"   ; 0-Disabled, 1-Enabled (default)
 
-# Telnet Level (enable or disable the ability to telnet into this phone 
+# Telnet Level (enable or disable the ability to telnet into this phone
 telnet_level: "2"      ; 0-Disabled (default), 1-Enabled, 2-Privileged
 
 # Inband DTMF Settings (0-disable, 1-enable (default))

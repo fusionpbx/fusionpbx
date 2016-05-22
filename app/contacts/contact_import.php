@@ -91,7 +91,7 @@ else {
 							$contact_name_given = $data['FirstName'];
 							$contact_name_family = $data['LastName'];
 							$contact_organization = $data['Company'];
-							$contact_email = $data['EmailAddress'];
+							//$contact_email = $data['EmailAddress'];
 							$contact_note = $data['Notes'];
 							$contact_url = $data['Web Page'];
 
@@ -108,7 +108,6 @@ else {
 							//$sql .= "contact_nickname, ";
 							$sql .= "contact_title, ";
 							//$sql .= "contact_role, ";
-							$sql .= "contact_email, ";
 							$sql .= "contact_url, ";
 							//$sql .= "contact_time_zone, ";
 							$sql .= "contact_note ";
@@ -124,7 +123,6 @@ else {
 							//$sql .= "'$contact_nickname', ";
 							$sql .= "'$contact_title', ";
 							//$sql .= "'$contact_role', ";
-							$sql .= "'$contact_email', ";
 							$sql .= "'$contact_url', ";
 							//$sql .= "'$contact_time_zone', ";
 							$sql .= "'$contact_note' ";
@@ -329,7 +327,7 @@ else {
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
-			echo "<td align=\"left\" colspan='2'>\n";
+			echo "<td align='left' colspan='2'>\n";
 			echo "	".$text['message-results']."<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -340,7 +338,7 @@ else {
 			echo "<tr>\n";
 			echo "	<th>".$text['label-contact_name']."</th>\n";
 			echo "	<th>".$text['label-contact_organization']."</th>\n";
-			echo "	<th>".$text['label-contact_email']."</th>\n";
+			//echo "	<th>".$text['label-contact_email']."</th>\n";
 			echo "	<th>".$text['label-contact_url']."</th>\n";
 			echo "</tr>\n";
 			foreach($results as $row) {
@@ -380,14 +378,14 @@ else {
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
-	echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+	echo "		<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
 
 	echo "<br />\n";
 
-	echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
 	echo "	<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
@@ -423,21 +421,21 @@ else {
 	echo "			".$text['label-import_file_upload']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" id=\"ulfile\">\n";
+	echo "			<input name='ulfile' type='file' class='formfld fileinput' id='ulfile'>\n";
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td valign=\"bottom\" class=\"label\">\n";
+	echo "		<td valign='bottom'>\n";
 	if (function_exists('curl_version') && $_SESSION['contact']['google_oauth_client_id']['text'] != '' && $_SESSION['contact']['google_oauth_client_secret']['text'] != '') {
 		echo "		<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	}
 	echo "		</td>\n";
-	echo "		<td valign=\"bottom\" align='right' class=\"label\" nowrap>\n";
-	echo "			<input name=\"type\" type=\"hidden\" value=\"csv\">\n";
+	echo "		<td valign='bottom' align='right' nowrap>\n";
+	echo "			<input name='type' type='hidden' value='csv'>\n";
 	echo "			<br />\n";
-	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+	echo "			<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";

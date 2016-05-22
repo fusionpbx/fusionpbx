@@ -21,7 +21,11 @@
 <Resync_Trigger_1></Resync_Trigger_1>
 <Resync_Trigger_2></Resync_Trigger_2>
 <Resync_Fails_On_FNF>Yes</Resync_Fails_On_FNF>
+{if isset ($http_auth_username)}
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/else}
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
 <Profile_Rule_B></Profile_Rule_B>
 <Profile_Rule_C></Profile_Rule_C>
 <Profile_Rule_D></Profile_Rule_D>
@@ -433,7 +437,7 @@
 <CWCID_Setting_1_>Yes</CWCID_Setting_1_>
 <Dist_Ring_Setting_1_>Yes</Dist_Ring_Setting_1_>
 <Secure_Call_Setting_1_>No</Secure_Call_Setting_1_>
-<Message_Waiting_1_>Yes</Message_Waiting_1_>
+<Message_Waiting_1_>No</Message_Waiting_1_>
 <Accept_Media_Loopback_Request_1_>automatic</Accept_Media_Loopback_Request_1_>
 <Media_Loopback_Mode_1_>source</Media_Loopback_Mode_1_>
 <Media_Loopback_Type_1_>media</Media_Loopback_Type_1_>
@@ -647,7 +651,7 @@
 <Feature_Invocation_Method>Default</Feature_Invocation_Method>
 <Protect_IVR_FactoryReset>No</Protect_IVR_FactoryReset>
 <Max_Session>2</Max_Session>
- 
+
 <router-configuration>
 <WAN_Interface>
 <WAN_Connection_Type>dh</WAN_Connection_Type> <!-- options: dh/st/pp -->

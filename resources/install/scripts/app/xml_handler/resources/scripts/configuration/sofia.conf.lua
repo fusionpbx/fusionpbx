@@ -35,6 +35,11 @@
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
 
+		--set a default value
+			if (expire["sofia"] == nil) then
+				expire["sofia"]= "3600";
+			end
+
 		--connect to the database
 			require "resources.functions.database_handle";
 			dbh = database_handle('system');
@@ -258,7 +263,7 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
+			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia"]));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then

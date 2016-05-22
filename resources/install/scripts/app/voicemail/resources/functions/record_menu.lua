@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -79,7 +79,7 @@
 										--delete the greeting (retain local for better responsiveness)
 										--os.remove(real_file);
 									end
-								
+
 								--if base64, encode file
 									if (storage_type == "base64") then
 										--include the base64 function
@@ -90,7 +90,7 @@
 											f:close();
 											greeting_base64 = base64.encode(file_content);
 									end
-									
+
 								--delete the previous recording
 									sql = "delete from v_voicemail_greetings ";
 									sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
@@ -144,7 +144,7 @@
 									else
 										dbh:query(sql);
 									end
-							
+
 								--use the new greeting
 									local array = {}
 									table.insert(array, "update v_voicemails ");
@@ -153,7 +153,7 @@
 									table.insert(array, "and voicemail_id = '".. voicemail_id .."' ");
 									sql = table.concat(array, "\n");
 									dbh:query(sql);
-							
+
 								advanced();
 							end
 							if (type == "name") then
@@ -170,7 +170,7 @@
 								--remove temporary greeting file, if any
 									if (file_exists(tmp_file)) then
 										os.remove(tmp_file);
-									end 
+									end
 								record_greeting(greeting_id);
 							end
 							if (type == "name") then
@@ -181,8 +181,8 @@
 							--remove temporary greeting file, if any
 								if (file_exists(tmp_file)) then
 									os.remove(tmp_file);
-								end 
-						end 
+								end
+						end
 						--hangup
 							if (session:ready()) then
 								dtmf_digits = '';
@@ -205,7 +205,7 @@
 									--remove temporary greeting file, if any
 										if (file_exists(tmp_file)) then
 											os.remove(tmp_file);
-										end 
+										end
 									advanced();
 								end
 								if (type == "name") then

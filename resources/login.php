@@ -79,7 +79,7 @@
 				//generate reset link
 				$key = encrypt($_SESSION['login']['password_reset_key']['text'], $result['username'].'|'.$_SESSION['domain_uuid'].'|'.$result['password']);
 				$reset_link = "https://".$_SESSION['domain_name'].PROJECT_PATH."/login.php?action=define&key=".urlencode($key);
-				$eml_body = "<a href='".$reset_link."'>".$reset_link."</a>";
+				$eml_body = "<a href='".$reset_link."' class='login_link'>".$reset_link."</a>";
 				//send reset link
 				if (!send_email($email, $text['label-reset_link'], $eml_body)) {
 					$_SESSION["message_mood"] = 'negative';
@@ -192,7 +192,8 @@
 //show the content
 	echo "<script>";
 	echo "	var speed = 350;";
-	echo "	function toggle_password_reset(hide_id, show_id, focus_id = '') {";
+	echo "	function toggle_password_reset(hide_id, show_id, focus_id) {";
+	echo "		if (focus_id == undefined) { focus_id = ''; }";
 	echo "		$('#'+hide_id).slideToggle(speed, function() {";
 	echo "			$('#'+show_id).slideToggle(speed, function() {";
 	echo "				if (focus_id != '') {";
@@ -210,25 +211,31 @@
 		echo "<div id='login_form'>\n";
 		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
 		echo "<input type='hidden' name='path' value='".$path."'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
-		if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
+		if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
 			if (count($_SESSION['login']['domain_name']) > 0) {
-				echo "<select style='width: 200px; margin-bottom: 8px;' class='formfld' name='domain_name'>\n";
-				echo "	<option value=''></option>\n";
+				$click_change_color = ($_SESSION['theme']['login_input_text_color']['text'] != '') ? $_SESSION['theme']['login_input_text_color']['text'] : (($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000');
+				$placeholder_color = ($_SESSION['theme']['login_input_text_placeholder_color']['text'] != '') ? 'color: '.$_SESSION['theme']['login_input_text_placeholder_color']['text'].';' : 'color: #999999;';
+				echo "<select name='domain_name' class='txt login' style='".$placeholder_color." width: 200px; text-align: center; text-align-last: center; margin-bottom: 8px;' onclick=\"this.style.color='".$click_change_color."';\" onchange=\"this.style.color='".$click_change_color."';\">\n";
+				echo "	<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
+				sort($_SESSION['login']['domain_name']);
 				foreach ($_SESSION['login']['domain_name'] as &$row) {
 					echo "	<option value='$row'>$row</option>\n";
 				}
-				echo "</select>\n";
-				echo "<br />";
+				echo "</select><br />\n";
 			}
 			else {
-				echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='domain_name' placeholder=\"".$text['label-domain']."\"><br />\n";
+				echo "<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' placeholder=\"".$text['label-domain']."\"><br />\n";
 			}
 		}
-		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
-		if ($_SESSION['login']['password_reset_key']['text'] != '' && function_exists('mcrypt_encrypt')) {
-			echo "<br><br><a class='login_box_link' onclick=\"toggle_password_reset('login_form','request_form','email');\">".$text['label-reset_password']."</a>";
+		echo "<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
+		if (
+			function_exists('mcrypt_encrypt') &&
+			$_SESSION['login']['password_reset_key']['text'] != '' &&
+			$_SESSION['email']['smtp_host']['var'] != ''
+			) {
+			echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('login_form','request_form','email');\">".$text['label-reset_password']."</a>";
 		}
 		echo "</form>";
 		echo "<script>document.getElementById('username').focus();</script>";
@@ -237,9 +244,9 @@
 		echo "<div id='request_form' style='display: none;'>\n";
 		echo "<form name='request' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='request'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
-		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
-		echo "<br><br><a class='login_box_link' onclick=\"toggle_password_reset('request_form','login_form','username');\">".$text['label-cancel']."</a>";
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
+		echo "<input type='submit' id='btn_reset' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
+		echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('request_form','login_form','username');\">".$text['label-cancel']."</a>";
 		echo "</form>";
 		echo "</div>";
 
@@ -250,11 +257,11 @@
 		echo "<form name='reset' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='reset'>\n";
 		echo "<input type='hidden' name='au' value='".md5($_SESSION['login']['password_reset_key']['text'].$username)."'>\n";
-		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_new' autocomplete='off' placeholder=\"".$text['label-new_password']."\"><br />\n";
-		echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_repeat' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\"><br />\n";
+		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_new' autocomplete='off' placeholder=\"".$text['label-new_password']."\"><br />\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_repeat' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\"><br />\n";
 		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-save']."'>\n";
-		echo "<br><br><a class='login_box_link' onclick=\"document.location.href='login.php';\">".$text['label-cancel']."</a>";
+		echo "<br><br><a class='login_link' onclick=\"document.location.href='login.php';\">".$text['label-cancel']."</a>";
 		echo "</form>";
 		echo "<script>document.getElementById('username').focus();</script>";
 		echo "</span>";

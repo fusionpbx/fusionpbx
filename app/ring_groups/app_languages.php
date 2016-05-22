@@ -253,17 +253,6 @@ $text['label-url']['sv-se'] = "URL";
 $text['label-url']['de-at'] = "URL";
 $text['label-url']['he'] = "";
 
-$text['label-tools']['en-us'] = "Tools";
-$text['label-tools']['es-cl'] = "Herramientas";
-$text['label-tools']['fr-fr'] = "Outils";
-$text['label-tools']['pt-pt'] = "Ferramentas";
-$text['label-tools']['pt-br'] = "Ferramentas";
-$text['label-tools']['pl'] = "Narzędzia";
-$text['label-tools']['sv-se'] = "Verktyg";
-$text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Funktionen";
-$text['label-tools']['he'] = "כלים";
-
 $text['label-timeout_destination']['en-us'] = "Timeout Destination";
 $text['label-timeout_destination']['es-cl'] = "Timeout de destino";
 $text['label-timeout_destination']['fr-fr'] = "Destination si non réponse";
@@ -362,6 +351,20 @@ $text['label-missed_call']['uk'] = "пропущений Дзвінок";
 $text['label-missed_call']['sv-se'] = "Missat Samtal";
 $text['label-missed_call']['de-at'] = "Verpasster Anruf";
 $text['label-missed_call']['he'] = "שיחה שלא נענתה";
+
+$text['label-forwarding']['en-us'] = "Forwarding";
+$text['label-forwarding']['es-cl'] = "reenvío";
+$text['label-forwarding']['pt-pt'] = "encaminhando";
+$text['label-forwarding']['fr-fr'] = "Expéditeur";
+$text['label-forwarding']['pt-br'] = "encaminhando";
+$text['label-forwarding']['pl'] = "Przekierowanie";
+$text['label-forwarding']['he'] = "שילוח";
+$text['label-forwarding']['uk'] = "експедиція";
+$text['label-forwarding']['sv-se'] = "Spedition";
+$text['label-forwarding']['de-at'] = "Weiterleiten";
+$text['label-forwarding']['ro'] = "expediere";
+$text['label-forwarding']['fa'] = "";
+$text['label-forwarding']['ar-eg'] = "إعادة توجيه";
 
 $text['label-forward_destination']['en-us'] = "Number";
 $text['label-forward_destination']['es-cl'] = "Número";
@@ -648,16 +651,16 @@ $text['description-ringback']['uk'] = "";
 $text['description-ringback']['de-at'] = "Definiert was der Anrufer hört, während die Ziele angerufen werden.";
 $text['description-ringback']['he'] = "";
 
-$text['description-ring-group-forward']['en-us'] = "Forwards calls to an alternate destination for extension ";
-$text['description-ring-group-forward']['es-cl'] = "Desvía las llamadas a un destino alternativo";
-$text['description-ring-group-forward']['fr-fr'] = "Renvoyer les appels vers une destination alternative ";
-$text['description-ring-group-forward']['pt-pt'] = "Encaminhar chamadas para um destino alternativo.";
-$text['description-ring-group-forward']['pt-br'] = "Encaminhar chamadas para um destino alternativo";
+$text['description-ring-group-forward']['en-us'] = "Forward a called Ring Group to an alternate destination.";
+$text['description-ring-group-forward']['es-cl'] = "Reenviar una llamada de grupo de anillo a un destino alternativo.";
+$text['description-ring-group-forward']['fr-fr'] = "Transférer un groupe appelé Anneau vers une autre destination.";
+$text['description-ring-group-forward']['pt-pt'] = "Encaminhar uma chamada Grupo de toque em um destino alternativo.";
+$text['description-ring-group-forward']['pt-br'] = "Encaminhar uma chamada Grupo de toque em um destino alternativo.";
 $text['description-ring-group-forward']['pl'] = "Przekazuje rozmowy na alternatywny numer.";
 $text['description-ring-group-forward']['sv-se'] = "Vidarekoppla samtal till en alternativ destination för anknytning.";
-$text['description-ring-group-forward']['uk'] = "";
+$text['description-ring-group-forward']['uk'] = "Перенаправлення під назвою Ring Group в альтернативне місце призначення.";
 $text['description-ring-group-forward']['de-at'] = "Leitet Anrufe an ein alternatives Ziel weiter.";
-$text['description-ring-group-forward']['he'] = "";
+$text['description-ring-group-forward']['he'] = "קדימה שנקראה טבעת קבוצת יעד חלופי.";
 
 $text['description-name']['en-us'] = "Enter a name.";
 $text['description-name']['es-cl'] = "Ingrese un nombre.";
@@ -767,5 +770,16 @@ $text['description']['sv-se'] = "En ringgrupp är en uppsättning av destination
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['de-at'] = "Rufgruppen sind gruppierte Ziele, welche über eine vordefinierte Rufstrategie angerufen werden.";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+
+$text['button-view_all']['en-us'] = "View All";
+$text['button-view_all']['es-cl'] = "Mostrar Todos";
+$text['button-view_all']['pt-pt'] = "Mostrar Todos";
+$text['button-view_all']['fr-fr'] = "Tout Montrer";
+$text['button-view_all']['pl'] = "Pokaż wszystkie";
+$text['button-view_all']['uk'] = "Показати всі";
+$text['button-view_all']['sv-se'] = "Visa Allt";
+$text['button-view_all']['ro'] = "";
+$text['button-view_all']['de-at'] = "Alle anzeigen";
+$text['button-view_all']['he'] = "הצג הכל";
 
 ?>

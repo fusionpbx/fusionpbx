@@ -40,12 +40,19 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (!permission_exists('domain_add') || (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_parent') && permission_exists('domain_descendants'))) {
+		//admin editing own domain/settings
+		$domain_uuid = $_SESSION['domain_uuid'];
 		$action = "update";
-		$domain_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
-		$action = "add";
+		if (isset($_REQUEST["id"])) {
+			$action = "update";
+			$domain_uuid = check_str($_REQUEST["id"]);
+		}
+		else {
+			$action = "add";
+		}
 	}
 
 //get http post variables and set them to php variables
@@ -573,17 +580,23 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//redirect the browser
 			if ($action == "update") {
 				$_SESSION["message"] = $text['message-update'];
+				if (!permission_exists('domain_add')) { //admin, updating own domain
+					header("Location: domain_edit.php");
+				}
+				else {
+					header("Location: domains.php"); //superadmin
+				}
 			}
 			if ($action == "add") {
 				$_SESSION["message"] = $text['message-add'];
+				header("Location: domains.php");
 			}
-			header("Location: domains.php");
 			return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
-//pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+//pre-populate the form (admin won't have domain_add permissions, but domain_uuid will already be set above)
+	if ((count($_GET) > 0 || (!permission_exists('domain_add') && $domain_uuid != '')) && $_POST["persistformvar"] != "true") {
 		$sql = "select * from v_domains ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -619,7 +632,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
+	if (permission_exists('domain_add')) { //only for superadmin, not admin editing their own domain
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
+	}
 	if (permission_exists('domain_export')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='".$text['button-export']."'>\n";
 	}

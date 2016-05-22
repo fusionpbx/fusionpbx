@@ -24,7 +24,7 @@ editAreaLoader.load_syntax["php"] = {
 			'PHP_OUTPUT_HANDLER_END', 'E_ERROR', 'E_WARNING', 'E_PARSE', 'E_NOTICE',
 			'E_CORE_ERROR', 'E_CORE_WARNING', 'E_COMPILE_ERROR', 'E_COMPILE_WARNING', 'E_USER_ERROR',
 			'E_USER_WARNING', 'E_USER_NOTICE', 'E_ALL'
-			
+
 		]
 		,'functions' : [
 			'func_num_args', 'func_get_arg', 'func_get_args', 'strlen', 'strcmp', 'strncmp', 'strcasecmp', 'strncasecmp', 'each', 'error_reporting', 'define', 'defined',
@@ -70,7 +70,7 @@ editAreaLoader.load_syntax["php"] = {
 		,'DELIMITERS' : 'color: #2B60FF;'
 		,'REGEXPS' : {
 			'variables' : 'color: #E0BD54;'
-		}		
+		}
 	}
 	,'AUTO_COMPLETION' :  {
 		"default": {	// the name of this definition group. It's posisble to have different rules inside the same definition file
@@ -129,16 +129,16 @@ editAreaLoader.load_syntax["php"] = {
 					]
 				}
 			}
-		,"live": {	
-			
+		,"live": {
+
 			// class NAME: /class\W+([a-z]+)\W+/gi
 			// method: /^(public|private|protected)?\s*function\s+([a-z][a-z0-9\_]*)\s*(\([^\{]*\))/gmi
-			// static: /^(public|private|protected)?\s+static\s+(public|private|protected)?\s*function\s+([a-z][a-z0-9\_]*)\s*(\([^\{]*\))/gmi 
-			// attributes: /(\$this\-\>|(?:var|public|protected|private)\W+\$)([a-z0-9\_]+)(?!\()\b/gi 
-			// 		v1 : /(\$this\-\>|var\W+|public\W+|protected\W+|private\W+)([a-z0-9\_]+)\W*(=|;)/gi 
-			// var type: /(\$(this\-\>)?[a-z0-9\_]+)\s*\=\s*new\s+([a-z0-9\_])+/gi 
-			
-			
+			// static: /^(public|private|protected)?\s+static\s+(public|private|protected)?\s*function\s+([a-z][a-z0-9\_]*)\s*(\([^\{]*\))/gmi
+			// attributes: /(\$this\-\>|(?:var|public|protected|private)\W+\$)([a-z0-9\_]+)(?!\()\b/gi
+			// 		v1 : /(\$this\-\>|var\W+|public\W+|protected\W+|private\W+)([a-z0-9\_]+)\W*(=|;)/gi
+			// var type: /(\$(this\-\>)?[a-z0-9\_]+)\s*\=\s*new\s+([a-z0-9\_])+/gi
+
+
 			"REGEXP": { "before_word": "[^a-zA-Z0-9_]|^"	// \\s|\\.|
 						,"possible_words_letters": "[a-zA-Z0-9_\$]+"
 						,"letter_after_word_must_match": "[^a-zA-Z0-9_]|$"

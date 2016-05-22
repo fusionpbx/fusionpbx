@@ -36,6 +36,15 @@ $text['title-ivr_menu']['pl'] = "Menu zapowiedzi głosowej (IVR)";
 $text['title-ivr_menu']['sv-se'] = "IVR Meny";
 $text['title-ivr_menu']['de-at'] = "Automatische Vermittlung";
 
+$text['title-ivr_menus_sub']['en-us'] = "IVR Menus - Sub";
+$text['title-ivr_menus_sub']['es-cl'] = "Menus IVR - Sub";
+$text['title-ivr_menus_sub']['pt-pt'] = "Menus de IVR - Sub";
+$text['title-ivr_menus_sub']['fr-fr'] = "Menus SVI - Sub";
+$text['title-ivr_menus_sub']['pt-br'] = "Menus de IVR - Sub";
+$text['title-ivr_menus_sub']['pl'] = "Menu zapowiedzi głosowych (IVR) - Sub";
+$text['title-ivr_menus_sub']['sv-se'] = "IVR Menyer - Sub";
+$text['title-ivr_menus_sub']['de-at'] = "Automatische Vermittlungen - Sub";
+
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['es-cl'] = "Máxima IVR Menús Animales:";
 $text['message-maximum_ivr_menus']['pt-pt'] = "Menus Máxima IVR de Estimação:";

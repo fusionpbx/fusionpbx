@@ -31,10 +31,9 @@
 	try {
 		$switch_detect->detect();
 	} catch(Exception $e){
-		echo "<p><b>Failed to detect configuration</b> detect_switch reported: " . $e->getMessage() ."</p>\n";
-		$detect_ok = false;
+		//echo "<p><b>Failed to detect configuration</b> detect_switch reported: " . $e->getMessage() ."</p>\n";
+		//$detect_ok = false;
 	}
-	echo "<form method='post' name='detect_switch' action=''>\n";
 	echo "<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 	echo "<input type='hidden' name='install_step' value='detect_config'/>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -42,7 +41,9 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap><b>".$text['header-event_socket']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-detect']."'/>\n";
+	//echo "	<input type='button' name='detect' class='btn' onclick=\"location.reload();\" value='".$text['button-detect']."'/>\n";
+	echo "	<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	echo "	<input type='submit' name='next' class='btn' value='".$text['button-next']."'/>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -51,7 +52,7 @@
 	echo "	".$text['label-event_host']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='event_host' maxlength='255' value=\"".$switch_detect->event_host."\" onchange='JavaScript:disable_next()'/>\n";
+	echo "	<input class='formfld' type='text' name='event_host' maxlength='255' value=\"".$switch_detect->event_host."\" />\n";
 	echo "<br />\n";
 	echo $text['description-event_host']."\n";
 	echo "</td>\n";
@@ -62,7 +63,7 @@
 	echo "	".$text['label-event_port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='event_port' maxlength='255' value=\"".$switch_detect->event_port."\" onchange='JavaScript:disable_next()'/>\n";
+	echo "	<input class='formfld' type='text' name='event_port' maxlength='255' value=\"".$switch_detect->event_port."\"/>\n";
 	echo "<br />\n";
 	echo $text['description-event_port']."\n";
 	echo "</td>\n";
@@ -73,7 +74,7 @@
 	echo "	".$text['label-event_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='password' name='event_password' maxlength='255' value=\"".$switch_detect->event_password."\" onchange='JavaScript:disable_next()'/>\n";
+	echo "	<input class='formfld' type='password' name='event_password' maxlength='255' value=\"".$switch_detect->event_password."\"/>\n";
 	echo "<br />\n";
 	echo $text['description-event_password']."\n";
 	echo "</td>\n";
@@ -86,10 +87,9 @@
 	echo "	</tr>";
 
 	echo "</table>";
-	echo "</form>";
 	if($detect_ok){
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	
+
 		echo "<tr>\n";
 		echo "<td colspan='4' align='left' nowrap><b>".$text['title-detected_configuration']."</b></td>\n";
 		echo "</tr>\n";
@@ -102,7 +102,7 @@
 		echo "<td class='vtable' width='35%' align='left'>\n";
 		echo "    ".$switch_detect->version()."\n";
 		echo "</td>\n";
-		
+
 		foreach ($switch_detect->get_dirs() as $folder)
 		{
 			if($id % 2 == 0){ echo "<tr>\n"; }
@@ -120,8 +120,7 @@
 		echo "<td colspan='4' align='left' nowrap><br/><b>".$text['title-assumed_configuration']."</b></td>\n";
 		echo "</tr>\n";
 		$id=0;
-		foreach ($switch_detect->get_vdirs() as $folder)
-		{
+		foreach ($switch_detect->get_vdirs() as $folder) {
 			if($id % 2 == 0){ echo "<tr>\n"; }
 			echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='15%'>\n";
 			echo $folder."\n";
@@ -132,13 +131,7 @@
 			if($id % 2 == 1){ echo "</tr>\n"; }
 			$id++;
 		}
-			
 		echo "</table>";
 	}
 
-
-?><script type='text/javascript'>
-function disable_next() {
-	document.getElementById("next").style.display = 'none';
-}
-</script>
+?>

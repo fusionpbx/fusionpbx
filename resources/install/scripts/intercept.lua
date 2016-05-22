@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2015
+--	Copyright (C) 2010 - 2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -25,6 +25,7 @@
 
 --user defined variables
 	local extension = argv[1];
+	local direction = argv[2] or extension and 'inbound' or 'all';
 
 -- we can use any number because other box should check sip_h_X_*** headers first
 	local pickup_number = '*8' -- extension and '**' or '*8'
@@ -245,7 +246,14 @@
 			end
 
 		--connect to FS database
-			local dbh = Database.new('switch')
+			--local dbh = Database.new('switch')
+			if (file_exists(database_dir.."/core.db")) then
+				--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+				dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+			else
+				dofile(scripts_dir.."/resources/functions/database_handle.lua");
+				dbh = database_handle('switch');
+			end
 
 		--check the database to get the uuid of a ringing call
 			call_hostname = "";
@@ -254,9 +262,20 @@
 			-- next check should prevent pickup call from extension
 			-- e.g. if extension 100 dial some cell phone and some one else dial *8
 			-- he can pickup this call.
-			if not extension then
-				sql = sql .. "AND direction = 'outbound' ";
+			if not direction:find('all') then
+				sql = sql .. "AND (1 <> 1 "
+				-- calls from freeswitch to user
+					if direction:find('inbound') then
+						sql = sql .. "OR direction = 'outbound' ";
+					end
+
+				-- calls from user to freeswitch
+					if direction:find('outbound') then
+						sql = sql .. "OR direction = 'inbound' ";
+					end
+				sql = sql .. ")"
 			end
+
 			sql = sql .. "AND (1<>1 ";
 			for key,extension in pairs(extensions) do
 				sql = sql .. "OR presence_id = '"..extension.."@"..domain_name.."' ";
@@ -306,7 +325,7 @@
 
 				else
 					log.noticef("Found child call on remote machine `%s`.", call_hostname)
-					-- we can not find parent on this box because channel on other box so we have to 
+					-- we can not find parent on this box because channel on other box so we have to
 					-- forward call to this box
 					session:execute("export", "sip_h_X-child_intercept_uuid="..uuid);
 					return make_proxy_call(pickup_number, call_hostname)

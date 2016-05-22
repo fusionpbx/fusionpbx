@@ -49,7 +49,7 @@ require_once "resources/header.php";
 		$available_presets[] = json_decode($json, true);
 	}
 	unset($preset_region);
-	
+
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -250,14 +250,14 @@ require_once "resources/header.php";
 			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 			//set group and order number
-			
+
 			$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
 			if($dialplan_detail_group_user!='') {
 				$dialplan_detail_group = $dialplan_detail_group_user;
 			} else {
 				$dialplan_detail_group = $group_id;
-			}	
-					
+			}
+
 			$dialplan_detail_order = 0;
 
 			foreach ($conditions as $cond_num => $cond_var) {
@@ -562,7 +562,7 @@ require_once "resources/header.php";
 		condition_id = Math.floor((Math.random() * 1000) + 1);
 		html = "<table cellpadding='0' cellspacing='0' border='0' style='margin-top: 3px;' width='100%'>";
 		html += "	<tr>";
-		html += "		<td style='vertical-align: middle; white-space: nowrap;' width='100%' nowrap>";
+		html += "		<td style='vertical-align: middle; min-width: 390px;' width='100%'>";
 		html += "			<select class='formfld' style='width: 120px;' name='variable[" + type + "][" + group_id + "][" + condition_id + "]' id='variable_" + group_id + "_" + condition_id + "' onchange=\"load_value_fields(" + group_id + ", " + condition_id + ", this.options[this.selectedIndex].value);\">";
 		html += "				<option value=''></option>";
 		<?php
@@ -728,23 +728,27 @@ require_once "resources/header.php";
 	}
 
 	function change_to_input(obj) {
-		tb = document.createElement('INPUT');
+		tb = document.createElement('input');
 		tb.type = 'text';
 		tb.name = obj.name;
 		tb.id = obj.id;
-		tb.className = 'formfld';
-		tb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
-		tb.setAttribute('data-calendar', "{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}");
+		tb_id = obj.id;
+		tb.className = 'formfld datetimepicker';
+		tb.setAttribute('style', 'position: relative; width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
+		$('#'+tb_id).wrap("<div style='position: relative; display: inline;'></div>"); //add parent div
+		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', showTodayButton: true, showClear: true, showClose: true, });
 	}
 
 	function change_to_select(obj) {
-		sb = document.createElement('SELECT');
+		sb = document.createElement('select');
 		sb.name = obj.name;
 		sb.id = obj.id;
+		tb_id = obj.id;
 		sb.className = 'formfld';
 		sb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px;');
+		$('#'+tb_id).unwrap(); //remove parent div
 		obj.parentNode.insertBefore(sb, obj);
 		obj.parentNode.removeChild(obj);
 	}
@@ -847,25 +851,27 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<table border='0' cellpadding='0' cellspacing='0' style='margin: -2px;'>\n";
 	echo "		<tr>\n";
-	echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
-	echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
-	echo "			<td class='vtable' style='width: 114px;'>".$text['label-condition_range']."</td>\n";
-	echo "			<td style='text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$group_id.",'custom');\">".$v_link_label_add."</a></td>\n";
+	echo "			<td class='vtable' style='width: 120px;'>".$text['label-condition']."</td>\n";
+	echo "			<td class='vtable' style='width: 135px;'>".$text['label-condition_value']."</td>\n";
+	echo "			<td class='vtable' style='width: 120px;'>".$text['label-condition_range']."</td>\n";
+	echo "			<td style='width: 1px; text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$group_id.",'custom');\">".$v_link_label_add."</a></td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>";
-	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
-	echo "		</tr>";
-	echo "		</tr>";
-	echo "			<td colspan='2' class='vtable' style='width: 108px;'>".$text['label-destination']."</td>\n";
-	echo "			<td colspan='2' class='vtable'>".$text['label-group']."</td>\n";
+	echo "			<td colspan='4' style='min-width: 390px;' id='group_".$group_id."'></td>";
 	echo "		</tr>";
 	echo "		<tr>";
-	echo "			<td colspan='2' style='padding-top: 3px; padding-right: 3px; white-space: nowrap;'>";
+	echo "			<td colspan='4' style='padding-top: 10px; white-space: nowrap;'>";
+	echo "				<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+	echo "					<tr>\n";
+	echo "						<td>\n";
 	//$destination = new destinations;
 	echo $destination->select('dialplan', 'dialplan_action['.$group_id.']', $dialplan_action);
-	echo "			</td>";
-	echo "			<td colspan='2' style='padding-top: 3px;'><input class='formfld' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
-	echo "		</tr>";
+	echo "						</td>\n";
+	echo "						<td width='100%'><input class='formfld' style='margin-left: 5px;' type='text' name='group_".$group_id."' id='group_".$group_id."' maxlength='255' value=\"".$group_id."\"></td>\n";
+	echo "					</tr>";
+	echo "				</table>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
 	echo "	</table>";
 	echo "	<br />";
 	echo "	".$text['description-settings'];
@@ -949,17 +955,17 @@ if ($action == 'update') {
 				else {
 					$label_preset_name = ucwords(str_replace(array("-", "_"), " ", $preset_name));
 				}
-				echo "<input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' onclick=\"alternate_destination_required();\" ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$label_preset_name."</a><br>\n";
+				echo "<label><input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' onclick=\"alternate_destination_required();\" ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$label_preset_name."</a></label><br>\n";
 				echo "<div id='preset_fields_".$preset_group_id."' style='display: none; margin: 4px 0px 0px 20px;'>";
 				echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px; margin-bottom: 10px;'>\n";
 				echo "		<tr>\n";
-				echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
-				echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
-				echo "			<td class='vtable' style='width: 114px;'>".$text['label-condition_range']."</td>\n";
-				echo "			<td style='text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$preset_group_id.",'preset');\">".$v_link_label_add."</a></td>\n";
+				echo "			<td class='vtable' style='width: 120px;'>".$text['label-condition']."</td>\n";
+				echo "			<td class='vtable' style='width: 135px;'>".$text['label-condition_value']."</td>\n";
+				echo "			<td class='vtable' style='width: 120px;'>".$text['label-condition_range']."</td>\n";
+				echo "			<td style='width: 1px; text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$preset_group_id.",'preset');\">".$v_link_label_add."</a></td>\n";
 				echo "		</tr>\n";
 				echo "		<tr>";
-				echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$preset_group_id."'></td>";
+				echo "			<td colspan='4' style='min-width: 390px;' id='group_".$preset_group_id."'></td>";
 				echo "		</tr>";
 				echo "		<tr>";
 				echo "			<td colspan='4' style='padding-top: 10px;'>";
