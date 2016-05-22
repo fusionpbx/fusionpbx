@@ -49,10 +49,12 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-core/etc/fusionpbx/switch/conf
+	mkdir -p debian/fusionpbx-core/etc/fusionpbx
 	mkdir -p debian/fusionpbx-core/etc/fusionpbx/resources/templates/provision/custom
 	mkdir -p debian/fusionpbx-core/var/fusionpbx/app
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/db
+	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/grammar
+	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/images
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/recordings
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/scripts
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/sounds/music

@@ -12,13 +12,15 @@ case "$1" in
     for x in \
       /var/lib/fusionpbx \
       /var/lib/fusionpbx/db \
+      /var/lib/fusionpbx/grammar \
       /var/lib/fusionpbx/scripts \
-      /var/lib/fusionpbx/sounds\
+      /var/lib/fusionpbx/sounds \
       /var/lib/fusionpbx/storage;
     do
       chown -R www-data:www-data $x
     done
     for y in \
+      /var/lib/fusionpbx/images \
       /var/lib/fusionpbx/recordings \
       /var/lib/fusionpbx/sounds/music \
       /var/lib/fusionpbx/sounds/custom \
