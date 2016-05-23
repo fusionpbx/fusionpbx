@@ -64,7 +64,7 @@
 <Resync_Fails_On_FNF ua="na">Yes</Resync_Fails_On_FNF>
 {if isset ($http_auth_username)}
 <Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
-{/else}
+{else}
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
 {/if}
 <Profile_Rule_B ua="na"></Profile_Rule_B>
