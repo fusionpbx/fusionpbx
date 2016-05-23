@@ -3,11 +3,6 @@ set -e
 
 case "$1" in
   configure)
-    for x in \
-      /usr/share/examples/fusionpbx/resources/templates/provision/snom
-    do
-      chown -R www-data:www-data $x
-    done
     ;;
   abort-upgrade|abort-remove|abort-deconfigure)
     ;;
