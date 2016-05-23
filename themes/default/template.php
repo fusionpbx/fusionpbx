@@ -157,12 +157,18 @@
 			});
 
 		//apply the auto-size jquery script to all text inputs
-			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker').autosizeInput();
+			$("input[type=text].txt,input[type=number].txt,input[type=password].txt,input[type=text].formfld,input[type=number].formfld,input[type=password].formfld").not('.datetimepicker,.datepicker').autosizeInput();
 
 		//apply bootstrap-datetime plugin
 			$(function() {
 				$('.datetimepicker').datetimepicker({
 					format: 'YYYY-MM-DD HH:mm',
+					showTodayButton: true,
+					showClear: true,
+					showClose: true,
+				});
+				$('.datepicker').datetimepicker({
+					format: 'YYYY-MM-DD',
 					showTodayButton: true,
 					showClear: true,
 					showClose: true,
@@ -188,6 +194,22 @@
 					}
 				});
 			});
+
+		<?php if ($_SESSION['theme']['menu_brand_image']['text'] != '' && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') { ?>
+			//crossfade menu brand images (if hover version set)
+				$(function(){
+					$('#menu_brand_image').mouseover(function(){
+						$(this).fadeOut('fast', function(){
+							$('#menu_brand_image_hover').fadeIn('fast');
+						});
+					});
+					$('#menu_brand_image_hover').mouseout(function(){
+						$(this).fadeOut('fast', function(){
+							$('#menu_brand_image').fadeIn('fast');
+						});
+					});
+				});
+		<?php } ?>
 
 	});
 
@@ -325,7 +347,7 @@
 				switch ($menu_style) {
 					case 'inline':
 						$menu_type = 'default';
-						$menu_width = 'calc(100% - 40px)';
+						$menu_width = 'calc(100% - 20px)';
 						$menu_brand = false;
 						break;
 					case 'static':
@@ -346,7 +368,7 @@
 			<nav class="navbar navbar-inverse navbar-<?php echo $menu_type; ?>" <?php echo $menu_corners; ?>>
 				<div class="container-fluid" style='width: <?php echo $menu_width; ?>; padding: 0;'>
 					<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
+						<button type="button" class="navbar-toggle collapsed" <?php echo ($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null; ?> data-toggle="collapse" data-target="#main_navbar" aria-expanded="false" aria-controls="navbar">
 							<span class="sr-only">Toggle navigation</span>
 							<span class="icon-bar" style='margin-top: 1px;'></span>
 							<span class="icon-bar"></span>
@@ -364,9 +386,13 @@
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = (isset($_SESSION['theme']['menu_brand_image']['text'])) ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
-									echo "<img class='pull-left hidden-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\">";
-									echo "<img class='pull-left visible-xs navbar-logo' src='".$menu_brand_image."' title=\"".$menu_brand_text."\" onclick=\"document.location.href='".$menu_brand_link."';\" style='margin-left: 21px;'>";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
+									echo "<a href='".$menu_brand_link."'>";
+									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
+									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
+										echo "<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".$menu_brand_text."\">";
+									}
+									echo "</a>";
 								}
 								else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
 									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
@@ -399,7 +425,7 @@
 									else {
 										unset($menu_main_icon);
 									}
-									$menu_main_item = "<span class='hidden-sm'>".$menu_parent['menu_language_title']."</span>";
+									$menu_main_item = "<span class='hidden-sm' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>";
 								}
 								else {
 									$menu_main_item = $menu_parent['menu_language_title'];
@@ -478,137 +504,40 @@
 					}
 
 					show_menu($menu_array, $menu_style, $menu_position);
-					$body_top_style = "style='padding-top: 0px; margin-top: -8px;'";
 					break;
 				case 'static':
 					echo $open_container;
 					show_menu($menu_array, $menu_style, $menu_position);
-					$body_top_style = "style='padding: 0; margin-top: -5px;'";
 					break;
 				case 'fixed':
 					show_menu($menu_array, $menu_style, $menu_position);
 					echo $open_container;
-					switch ($menu_position) {
-						case 'bottom': $body_top_style = "style='margin-top: 30px;'"; break;
-						case 'top': $body_top_style = "style='margin-top: 65px;'"; break;
-					}
 			}
 			?>
 
-			<table width='100%' border='0' cellpadding='0' cellspacing='0' <?php echo $body_top_style; ?>>
-				<tr>
-					<td align='left' valign='top'>
-						<table border='0' cellpadding='0' cellspacing='0' width='100%'>
-							<tr>
-								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
-									<?php
-									// login form
-										if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php" && !$default_login) {
-											/*
-											if (strlen($_SESSION["username"]) == 0) {
-												//add multi-lingual support
-													require_once "core/user_settings/app_languages.php";
-													foreach($text as $key => $value) {
-														$text[$key] = $value[$_SESSION['domain']['language']['code']];
-													}
-												//set a default login destination
-													if (strlen($_SESSION['login']['destination']['url']) == 0) {
-														$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
-													}
-												//login form
-
-													echo "<div align='right'>\n";
-													echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-													echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
-													echo "		<table width='200' border='0'>\n";
-													echo "			<tr>\n";
-													echo "				<td>\n";
-													echo "		  			<input type='text' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
-													echo "				</td>\n";
-													echo "				<td align='left'>\n";
-													echo "					<input type='password' class='txt login' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
-													echo "				</td>\n";
-
-													if ($_SESSION['login']['domain_name_visible']['boolean'] == "true") {
-														echo "			<td align='left'>\n";
-														echo "				<strong>".$text['label-domain'].":</strong>\n";
-														echo "			</td>\n";
-														echo "			<td>\n";
-														if (count($_SESSION['login']['domain_name']) > 0) {
-															echo "    		<select name='domain_name' class='txt login' style='color: #999999; width: 150px; text-align: center; text-align-last: center;' onclick=\"this.style.color='#000000';\" onchange=\"this.style.color='#000000';\">\n";
-															echo "    			<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
-															sort($_SESSION['login']['domain_name']);
-															foreach ($_SESSION['login']['domain_name'] as &$row) {
-																echo "    		<option value='$row'>$row</option>\n";
-															}
-															echo "    		</select>\n";
-														}
-														else {
-															echo "  		<input type='text' name='domain_name' class='txt login' style='text-align: center; min-width: 150px; width: 150px;' placeholder=\"".$text['label-domain']."\">\n";
-														}
-														echo "			</td>\n";
-													}
-
-													echo "				<td align='right'>\n";
-													echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
-													echo "				</td>\n";
-													echo "			</tr>\n";
-													echo "		</table>\n";
-													echo "	</form>";
-													echo "</div>";
-											}
-											*/
-										}
-									?>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td valign='top' align='center'>
-						<table cellpadding='0' cellspacing='0' border='0' align='center' width='100%'>
-							<tr>
-								<td id='main_content' valign='top' align='center'>
-									<!--{body}-->
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<div id='footer' style='width: 100%; margin-bottom: 60px;'>
+			<div id='main_content'>
+				<!--{body}-->
+			</div>
+			<div id='footer'>
 				<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
 			</div>
 		</div>
 
 		<?php
+		// note: div above matches $open_container
 	}
 
 	// default login being used
 	else {
 		$logo = (isset($_SESSION['theme']['logo']['text'])) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 		?>
-		<div id="main_content" style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
-				<tr>
-					<td align='center' valign='middle'>
-						<div id='default_login'>
-							<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' style='width: 250px; height: auto;'></a><br />
-							<!--{body}-->
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td style='width: 100%; height: 35px; vertical-align: bottom;'>
-						<div id='footer' style='width: 100%;'>
-							<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<div id='default_login'>
+			<a href='<?php echo PROJECT_PATH; ?>/'><img id='login_logo' src='<?php echo $logo; ?>'></a><br />
+			<!--{body}-->
 		</div>
-
+		<div id='footer_login'>
+			<span class='footer'><?php echo (isset($_SESSION['theme']['footer']['text'])) ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved']; ?></span>
+		</div>
 		<?php
 		unset($_SESSION['background_image']);
 	}
