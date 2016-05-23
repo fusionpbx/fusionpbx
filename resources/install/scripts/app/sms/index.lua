@@ -118,37 +118,56 @@
 		if (outbound_caller_id_number == nil) then
 			--get the outbound_caller_id_number using the domain_uuid and the extension number
 				if (domain_uuid ~= nil) then
-					sql = "SELECT outbound_caller_id_number, extension_uuid FROM v_extensions ";
-					sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. from .."' ";
+					sql = "SELECT outbound_caller_id_number, extension_uuid, carrier FROM v_extensions ";
+					sql = sql .. ", v_sms_destinations ";
+					sql = sql .. "WHERE outbound_caller_id_number = destination and  ";
+					sql = sql .. "v_extensions.domain_uuid = '" .. domain_uuid .. "' and extension = '" .. from .."' ";
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[sms] SQL: " .. sql .. "\n");
 					end
 					status = dbh:query(sql, function(rows)
 						outbound_caller_id_number = rows["outbound_caller_id_number"];
 						extension_uuid = rows["extension_uuid"];
+						carrier = rows["carrier"];
 					end);
 				end
 		end
 		
 		sql = "SELECT default_setting_value FROM v_default_settings ";
-		sql = sql .. "where default_setting_category = 'sms' and default_setting_subcategory = 'flowroute_access_key'";
+		sql = sql .. "where default_setting_category = 'sms' and default_setting_subcategory = '" .. carrier .. "_access_key'";
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[sms] SQL: " .. sql .. "\n");
 		end
 		status = dbh:query(sql, function(rows)
-			flowroute_access_key = rows["default_setting_value"];
+			access_key = rows["default_setting_value"];
 		end);
 
 		sql = "SELECT default_setting_value FROM v_default_settings ";
-		sql = sql .. "where default_setting_category = 'sms' and default_setting_subcategory = 'flowroute_secret_key'";
+		sql = sql .. "where default_setting_category = 'sms' and default_setting_subcategory = '" .. carrier .. "_secret_key'";
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[sms] SQL: " .. sql .. "\n");
 		end
 		status = dbh:query(sql, function(rows)
-			flowroute_secret_key = rows["default_setting_value"];
+			secret_key = rows["default_setting_value"];
 		end);
 
-		cmd = "curl -u ".. flowroute_access_key ..":" .. flowroute_secret_key .. " -H \"Content-Type: application/json\" -X POST -d '{\"to\":\"" .. to .. "\",\"from\":\"" .. outbound_caller_id_number .."\",\"body\":\"" .. body .. "\"}' https://api.flowroute.com/v2/messages"
+		sql = "SELECT default_setting_value FROM v_default_settings ";
+		sql = sql .. "where default_setting_category = 'sms' and default_setting_subcategory = '" .. carrier .. "_api_url'";
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[sms] SQL: " .. sql .. "\n");
+		end
+		status = dbh:query(sql, function(rows)
+			api_url = rows["default_setting_value"];
+		end);
+
+		if (carrier == "flowroute") then
+			cmd = "curl -u ".. access_key ..":" .. secret_key .. " -H \"Content-Type: application/json\" -X POST -d '{\"to\":\"" .. to .. "\",\"from\":\"" .. outbound_caller_id_number .."\",\"body\":\"" .. body .. "\"}' " .. api_url;
+		elseif (carrier == "twilio") then
+			cmd ="curl -X POST '" .. api_url .."' --data-urlencode 'To=+" .. to .."' --data-urlencode 'From=+" .. outbound_caller_id_number .. "' --data-urlencode 'Body=" .. body .. "' -u ".. access_key ..":" .. secret_key .. " --insecure";
+		end		
+		if (debug["info"]) then
+			freeswitch.consoleLog("notice", "[sms] CMD: " .. cmd .. "\n");
+		end
 		os.execute(cmd)
 
 	end
@@ -181,8 +200,8 @@
 			end
 	end
 	sql = "insert into v_sms_messages";
-   	sql = sql .. "(sms_message_uuid,extension_uuid,domain_uuid,start_stamp,from_numer,to_number,message,direction,response)";
-   	sql = sql .. " values ('" .. uuid() .. "','" .. extension_uuid .. "','" .. domain_uuid .."',now(),'" .. from .. "','" .. to .. "','" .. body .. "','" .. direction .. "','')";
+   	sql = sql .. "(sms_message_uuid,extension_uuid,domain_uuid,start_stamp,from_numer,to_number,message,direction,response,carrier)";
+   	sql = sql .. " values ('" .. uuid() .. "','" .. extension_uuid .. "','" .. domain_uuid .."',now(),'" .. from .. "','" .. to .. "','" .. body .. "','" .. direction .. "','','" .. carrier .."')";
    	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[sms] "..sql.."\n");
 	end
