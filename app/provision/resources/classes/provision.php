@@ -518,25 +518,6 @@ include "root.php";
 
 			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
-				//get the time zone
-					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
-					if (strlen($time_zone_name) > 0) {
-						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
-						$time_zone_offset_hours = floor($time_zone_offset_raw);
-						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
-						$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
-						if ($time_zone_offset_raw > 0) {
-							$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
-							$time_zone_offset_hours = "+".$time_zone_offset_hours;
-						}
-						else {
-							$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
-							$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
-						}
-						$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-						$view->assign("time_zone_offset" , $time_zone_offset);
-					}
-
 				//create a mac address with back slashes for backwards compatability
 					$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
@@ -888,6 +869,35 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+
+				//get the time zone
+					$time_zone_name = $_SESSION['domain']['time_zone']['name'];
+					if (strlen($time_zone_name) > 0) {
+						$time_zone_offset_raw = get_time_zone_offset($time_zone_name)/3600;
+						$time_zone_offset_hours = floor($time_zone_offset_raw);
+						$time_zone_offset_minutes = ($time_zone_offset_raw - $time_zone_offset_hours) * 60;
+						$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
+						if ($time_zone_offset_raw > 0) {
+							$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
+							$time_zone_offset_hours = "+".$time_zone_offset_hours;
+						}
+						else {
+							$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
+							$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
+						}
+						$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
+						if (!isset($provision["time_zone_offset"])) {
+							$provision["time_zone_offset"] = $time_zone_offset;
+						}
+					}
+
+				//set the daylight savings time
+					if (!isset($provision["yealink_time_zone_start_time"])) {
+						$provision["yealink_time_zone_start_time"] = $provision["daylight_savings_start_month"]."/".$provision["daylight_savings_start_day"]."/".$provision["daylight_savings_start_time"];
+					}
+					if (!isset($provision["yealink_time_zone_end_time"])) {
+						$provision["yealink_time_zone_end_time"] = $provision["daylight_savings_stop_month"]."/".$provision["daylight_savings_stop_day"]."/".$provision["daylight_savings_stop_time"];
+					}
 
 				//replace the dynamic provision variables that are defined in default, domain, and device settings
 					foreach($provision as $key=>$val) {
