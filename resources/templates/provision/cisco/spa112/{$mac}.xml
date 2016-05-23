@@ -13,7 +13,7 @@
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
 {if isset ($http_auth_username)}
 <Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
-{/else}
+{else}
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
 {/if}
 <Upgrade_Enable>Yes</Upgrade_Enable>
