@@ -39,11 +39,20 @@ $debug = false;
 require_once "resources/require.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$data = json_decode(file_get_contents("php://input"));
+	if  ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+		$data = json_decode(file_get_contents("php://input"));
+	} else {
+		error_log('REQUEST: ' .  print_r($_REQUEST, true));
+		$data = (object) ['body' => $_REQUEST['Body'],
+			'to' => str_replace("+", "", $_REQUEST['To']),
+			'from' => str_replace("+", "", $_REQUEST['From'])
+			];
+	}
 	
 	if ($debug) {
 		error_log('DATA: ' .  print_r($data, true));
 	}
+	
 	//create the even socket connection and send the event socket command
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if (!$fp) {

@@ -13,6 +13,19 @@ $text['title-sms']['de-at'] = "";
 $text['title-sms']['ar-eg'] = "";
 $text['title-sms']['he'] = "";
 
+$text['header-sms']['en-us'] = "SMS";
+$text['header-sms']['es-cl'] = "";
+$text['header-sms']['pt-pt'] = "";
+$text['header-sms']['fr-fr'] = "";
+$text['header-sms']['pt-br'] = "";
+$text['header-sms']['pl'] = "";
+$text['header-sms']['uk'] = "";
+$text['header-sms']['sv-se'] = "";
+$text['header-sms']['ro'] = "";
+$text['header-sms']['de-at'] = "";
+$text['header-sms']['ar-eg'] = "";
+$text['header-sms']['he'] = "";
+
 $text['title-sms-edit']['en-us'] = "SMS";
 $text['title-sms-edit']['es-cl'] = "";
 $text['title-sms-edit']['pt-pt'] = "";
@@ -91,6 +104,19 @@ $text['label-start']['de-at'] = "";
 $text['label-start']['ar-eg'] = "";
 $text['label-start']['he'] = "";
 
+$text['label-carrier']['en-us'] = "Carrier";
+$text['label-carrier']['es-cl'] = "";
+$text['label-carrier']['pt-pt'] = "";
+$text['label-carrier']['fr-fr'] = "";
+$text['label-carrier']['pt-br'] = "";
+$text['label-carrier']['pl'] = " ";
+$text['label-carrier']['uk'] = "";
+$text['label-carrier']['sv-se'] = "";
+$text['label-carrier']['ro'] = "";
+$text['label-carrier']['de-at'] = "";
+$text['label-carrier']['ar-eg'] = "";
+$text['label-carrier']['he'] = "";
+
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "";
 $text['label-message']['pt-pt'] = "";
@@ -103,5 +129,18 @@ $text['label-message']['ro'] = "";
 $text['label-message']['de-at'] = "";
 $text['label-message']['ar-eg'] = "";
 $text['label-message']['he'] = "";
+
+$text['button-mdr']['en-us'] = "MDRs";
+$text['button-mdr']['es-cl'] = "";
+$text['button-mdr']['pt-pt'] = "";
+$text['button-mdr']['fr-fr'] = "";
+$text['button-mdr']['pt-br'] = "";
+$text['button-mdr']['pl'] = " ";
+$text['button-mdr']['uk'] = "";
+$text['button-mdr']['sv-se'] = "";
+$text['button-mdr']['ro'] = "";
+$text['button-mdr']['de-at'] = "";
+$text['button-mdr']['ar-eg'] = "";
+$text['button-mdr']['he'] = "";
 
 ?>
