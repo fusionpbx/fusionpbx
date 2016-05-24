@@ -26,32 +26,6 @@
 
 //if the number of rows is 0 then read the sip profile xml into the database
 	if ($domains_processed == 1) {
-		//define the variables
-			$source = '';
-			$destination = '';
-		//check if the directory exists and set the paths
-			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
-				//linux
-				$source = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles';
-				$destination = '/etc/fusionpbx/resources/templates/conf/sip_profiles';
-			}
-			if (file_exists('/usr/local/share/fusionpbx/resources/templates/conf')) {
-				//bsd
-				$source = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles';
-				$destination = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles';
-			}
-		//copy the conf sip profiles to the /etc/fusionpbx/resources/templates/conf directory
-			if (strlen($source) > 0 && strlen($destination) > 0) {
-				if (!file_exists($destination)) {
-					if (file_exists($source)) {
-						//add the directory structure
-							mkdir($destination,0777,true);
-						//copy from source to destination
-							$obj = new install;
-							$obj->recursive_copy($source,$destination);
-					}
-				}
-			}
 
 		//add the sip profiles to the database
 			$sql = "select count(*) as num_rows from v_sip_profiles ";
