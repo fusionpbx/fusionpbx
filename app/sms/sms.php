@@ -1,36 +1,28 @@
 <?php
-/* $Id$ */
 /*
-	call.php
-	Copyright (C) 2008, 2009 Mark J Crane
-	All rights reserved.
+	FusionPBX
+	Version: MPL 1.1
 
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions are met:
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
 
-	1. Redistributions of source code must retain the above copyright notice,
-	   this list of conditions and the following disclaimer.
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
 
-	2. Redistributions in binary form must reproduce the above copyright
-	   notice, this list of conditions and the following disclaimer in the
-	   documentation and/or other materials provided with the distribution.
+	The Original Code is FusionPBX
 
-	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
-	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-	POSSIBILITY OF SUCH DAMAGE.
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	the Initial Developer. All Rights Reserved.
+
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	James Rose <james.o.rose@gmail.com>
-
 */
-
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
@@ -46,92 +38,192 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//include the header
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
+require_once "resources/header.php";
+$document['title'] = $text['title-sms'];
+
+require_once "resources/paging.php";
+
+//get total extension count from the database
+	$sql = "select ";
+	$sql .= "(select count(*) from v_sms_destinations where domain_uuid = '".$_SESSION['domain_uuid']."' ".$sql_mod.") as num_rows ";
+	if ($db_type == "pgsql") {
+		$sql .= ",(select count(*) as count from v_sms_destinations ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= ") as numeric_sms ";
+	}
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$total_sms_destinations = $row['num_rows'];
+		if (($db_type == "pgsql") or ($db_type == "mysql")) {
+			$numeric_sms = $row['numeric_sms'];
+		}
+	}
+	unset($prep_statement, $row);
+
+//prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "&search=".$search;
+	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
+	$_GET['page'] = check_str($_GET['page']);
+	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_sms_destinations, $param, $rows_per_page, true); //top
+	list($paging_controls, $rows_per_page, $var_3) = paging($total_sms_destinations, $param, $rows_per_page); //bottom
+	$offset = $rows_per_page * $_GET['page'];
 
-	$sql = "select domain_name, extension, sms_message_uuid,start_stamp,from_numer,to_number,message,direction from v_sms_messages, v_domains, v_extensions where v_sms_messages.domain_uuid = v_domains.domain_uuid and v_sms_messages.extension_uuid = v_extensions.extension_uuid and v_domains.domain_uuid = '" . $domain_uuid . "' order by start_stamp";
-	error_log("SQL: " . print_r($sql,true));
+//to cast or not to cast
+	if ($db_type == "pgsql") {
+		$order_text = ($total_sms_destinations == $numeric_sms) ? "cast(destination as bigint)" : "destination asc";
+	}
+	else {
+		$order_text = "extension asc";
+	}
+
+//get the extensions
+	$sql = "select * from v_sms_destinations ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= $sql_mod; //add search mod from above
+	if (strlen($order_by) > 0) {
+		$sql .= ($order_by == 'destination') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
+	}
+	else {
+		$sql .= "order by $order_text ";
+	}
+	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$result_count = count($result);
+	$sms_destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
+
+//show the content
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+	echo "  <tr>\n";
+	echo "	<td align='left' width='100%'><b>".$text['header-sms']." (".$total_sms_destinations.")</b><br>\n";
+	echo "		".$text['description-sms']."\n";
+	echo "	</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	if (if_group("superadmin")) {
+		echo "				<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-mdr']."' onclick=\"window.location.href='sms_mdr.php'\">\n";
+	}
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	if ($paging_controls_mini != '') {
+		echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "			</td>\n";
+	echo "		</form>\n";
+	echo "  </tr>\n";
+	echo "</table>\n";
+	echo "<br />";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-//mod paging parameters for inclusion in column sort heading links
-	$param = substr($param, 1); //remove leading '&'
-	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
-
-//show the results
-	$col_count = 6;
-	echo "<form name='frm' method='post' action='xml_cdr_delete.php'>\n";
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "<form name='frm' method='post' action='sms_delete.php'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>&nbsp;</th>\n";
-	if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
-		$col_count++;
+	if (permission_exists('sms_delete') && is_array($sms_destinations)) {
+		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, null, $param);
-	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
-	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
-	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
-	echo th_order_by('message', $text['label-message'], $order_by, $order, null, null, $param);
+	echo th_order_by('destination', $text['label-destination'], $order_by, $order);
+	echo th_order_by('carrier', $text['label-carrier'], $order_by, $order);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('description', $text['label-description'], $order_by, $order);
+	echo "<td class='list_control_icon'>\n";
+	if (permission_exists('sms_add')) {
+			echo "<a href='sms_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+	}
+	if (permission_exists('sms_delete') && is_array($sms_destinations)) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+	}
+	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		echo "<tr>\n";
+	if (is_array($sms_destinations)) {
 
-		//determine if theme images exist
-			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
-			$theme_cdr_images_exist = (
-				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
-				file_exists($theme_image_path."icon_cdr_inbound_voicemail.png") &&
-				file_exists($theme_image_path."icon_cdr_inbound_cancelled.png") &&
-				file_exists($theme_image_path."icon_cdr_inbound_failed.png") &&
-				file_exists($theme_image_path."icon_cdr_outbound_answered.png") &&
-				file_exists($theme_image_path."icon_cdr_outbound_cancelled.png") &&
-				file_exists($theme_image_path."icon_cdr_outbound_failed.png") &&
-				file_exists($theme_image_path."icon_cdr_local_answered.png") &&
-				file_exists($theme_image_path."icon_cdr_local_voicemail.png") &&
-				file_exists($theme_image_path."icon_cdr_local_cancelled.png") &&
-				file_exists($theme_image_path."icon_cdr_local_failed.png")
-				) ? true : false;
-
-		foreach($result as $index => $row) {
-
-			$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("j M Y g:i:sa", $row['start_stamp']) : date("j M Y H:i:s", $row['start_epoch']);
-
-			//determine call result and appropriate icon
-			echo "<td valign='top' class='".$row_style[$c]."'>\n";
-			if ($theme_cdr_images_exist) {
-				$call_result = 'answered';
-				echo "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+		foreach($sms_destinations as $row) {
+			$tr_link = (permission_exists('sms_edit')) ? " href='sms_edit.php?id=".$row['sms_destination_uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			if (permission_exists('sms_delete')) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['sms_destination_uuid']."' value='".$row['sms_destination_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
+				echo "	</td>";
+				$ext_ids[] = 'checkbox_'.$row['sms_destination_uuid'];
 			}
-			else { echo "&nbsp;"; }
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('sms_edit')) {
+				echo "<a href='sms_edit.php?id=".$row['sms_destination_uuid']."'>".$row['destination']."</a>";
+			}
+			else {
+				echo $row['destination'];
+			}
 			echo "</td>\n";
-		//domain name
-			if ($_REQUEST['showall'] && permission_exists('xml_cdr_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>";
-				echo 	$row['domain_name'].'&nbsp;';
-				echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['carrier']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
+			if (permission_exists('sms_edit')) {
+				echo "<a href='sms_edit.php?id=".$row['sms_destination_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['start_stamp']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['from_numer']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['to_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message']."&nbsp;</td>\n";
+			if (permission_exists('sms_delete')) {
+				echo "<a href='sms_delete.php?id[]=".$row['sms_destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			}
+			echo "</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} // end foreach
-		unset($sql, $result, $row_count);
-	} // end if
+		}
+		unset($sms_destinations, $row);
+	}
+
+	if (is_array($sms_destinations)) {
+		echo "<tr>\n";
+		echo "	<td colspan='20' class='list_control_icons'>\n";
+		if (permission_exists('sms_add')) {
+				echo "<a href='sms_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+		}
+		if (permission_exists('sms_delete')) {
+			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+		}
+		echo "	</td>\n";
+		echo "</tr>\n";
+	}
+
+	echo "</table>";
+	echo "</form>";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<center>".$paging_controls."</center>\n";
+	}
+
+	echo "<br /><br />".((is_array($sms_destinations)) ? "<br /><br />" : null);
+
+	// check or uncheck all checkboxes
+	if (sizeof($ext_ids) > 0) {
+		echo "<script>\n";
+		echo "	function check(what) {\n";
+		echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
+		foreach ($ext_ids as $ext_id) {
+			echo "		document.getElementById('".$ext_id."').checked = (what == 'all') ? true : false;\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
+
+	if (is_array($sms_destinations)) {
+		// check all checkboxes
+		key_press('ctrl+a', 'down', 'document', null, null, "check('all');", true);
+
+		// delete checked
+		key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], 'document.forms.frm.submit();', true);
+	}
+
 //show the footer
 	require_once "resources/footer.php";
 ?>
