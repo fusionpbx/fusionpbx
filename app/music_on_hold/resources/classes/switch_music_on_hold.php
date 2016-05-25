@@ -192,8 +192,8 @@ include "root.php";
 					$default_moh_prefix = 'music';
 				}
 			//replace the variables
-				$file_contents = preg_replace("music\/default", $default_moh_prefix, $file_contents);
-				$file_contents = preg_replace("[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?", $this->xml, $file_contents);
+				$file_contents = preg_replace("/music\/default/", $default_moh_prefix, $file_contents);
+				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
 
 			//write the XML config file
 				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
