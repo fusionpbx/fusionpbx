@@ -416,7 +416,7 @@
 									$mod_a_1 = "class='dropdown-toggle text-left' data-toggle='dropdown' ";
 									$submenu = true;
 								}
-								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
+								$mod_a_2 = ($menu_parent['menu_item_link'] != '' && !$submenu) ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
 									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
