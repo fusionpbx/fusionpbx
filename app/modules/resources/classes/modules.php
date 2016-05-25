@@ -359,6 +359,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Lua';
 						$mod['module_category'] = 'Languages';
 						$mod['module_description'] = 'Lua script.';
+						$mod['module_order'] = 100;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -526,6 +527,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Sofia';
 						$mod['module_category'] = 'Endpoints';
 						$mod['module_description'] = 'SIP module.';
+						$mod['module_order'] = 300;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -729,6 +731,13 @@ echo $mod->dir."\n";
 										$mod = $this->info($name);
 									//append the module label
 										$modules_new .= "<li>".$mod['module_label']."</li>\n";
+									//set the order
+										if (isset($mod['module_order'])) {
+											$order = $mod['module_order'];
+										}
+										else {
+											$order = 200;
+										}
 									//insert the data
 										$module_uuid = uuid();
 										$sql = "insert into v_modules ";
@@ -738,6 +747,7 @@ echo $mod->dir."\n";
 										$sql .= "module_name, ";
 										$sql .= "module_description, ";
 										$sql .= "module_category, ";
+										$sql .= "module_order, ";
 										$sql .= "module_enabled, ";
 										$sql .= "module_default_enabled ";
 										$sql .= ")";
@@ -748,6 +758,7 @@ echo $mod->dir."\n";
 										$sql .= "'".$mod['module_name']."', ";
 										$sql .= "'".$mod['module_description']."', ";
 										$sql .= "'".$mod['module_category']."', ";
+										$sql .= "'".$order."', ";
 										$sql .= "'".$mod['module_enabled']."', ";
 										$sql .= "'".$mod['module_default_enabled']."' ";
 										$sql .= ")";
