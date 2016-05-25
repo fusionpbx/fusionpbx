@@ -134,7 +134,7 @@ else {
 						//process sampling rate(s)
 							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
-									@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
+									mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 2777, true);
 								}
 								if (is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
 									copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir."/".$new_file_name);
@@ -149,7 +149,7 @@ else {
 						//process sampling rate(s)
 							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
-									@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
+									mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 2777, true);
 								}
 								if (is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
 									copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir."/".$new_file_name);
@@ -165,7 +165,7 @@ else {
 							//process sampling rate(s)
 								if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 									if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
-										@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
+										mkdir($music_on_hold_dir."/".$sampling_rate_dir, 2777, true);
 									}
 									if (is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
 										copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$sampling_rate_dir."/".$new_file_name);
