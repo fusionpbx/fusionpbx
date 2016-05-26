@@ -179,7 +179,7 @@ if($fp){
 			}
 			echo "	</td>\n";
 			if($esl_alive) {
-				if ($mod->active($row["module_name"])) {
+				if ($module->active($row["module_name"])) {
 					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
 					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 				}
