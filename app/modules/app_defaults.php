@@ -48,7 +48,7 @@
 						$mod = $module->info($row['module_name']);
 					//update the module order
 						$sql = "update v_modules set ";
-						$sql .= "module_order = '".$mod['module_order']."', ";
+						$sql .= "module_order = '".$mod['module_order']."' ";
 						$sql .= "where module_uuid = '".$row['module_uuid']."' ";
 						$db->exec(check_sql($sql));
 						unset($sql);
