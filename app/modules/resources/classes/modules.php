@@ -736,7 +736,6 @@ include "root.php";
 					}
 					closedir($handle);
 					if ($module_found) {
-						//save_module_xml();
 						$msg = "<strong>Added New Modules:</strong><br />\n";
 						$msg .= "<ul>\n";
 						$msg .= $modules_new;
@@ -744,6 +743,50 @@ include "root.php";
 						$this->msg = $msg;
 					}
 				}
+			}
+
+		//save the modules.conf.xml file
+			function xml() {
+				//set the globals
+					global $config, $domain_uuid;
+
+				//get the database connection
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$db = $database->db;
+
+					$xml = "<configuration name=\"modules.conf\" description=\"Modules\">\n";
+					$xml .= "	<modules>\n";
+
+					$sql = "select * from v_modules ";
+					$sql .= "order by module_order ASC, ";
+					$sql .= "module_category ASC";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$prev_module_cat = '';
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					foreach ($result as $row) {
+						if ($prev_module_cat != $row['module_category']) {
+							$xml .= "\n		<!-- ".$row['module_category']." -->\n";
+						}
+						if ($row['module_enabled'] == "true"){
+							$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
+						}
+						$prev_module_cat = $row['module_category'];
+					}
+					$xml .= "\n";
+					$xml .= "	</modules>\n";
+					$xml .= "</configuration>";
+
+					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/modules.conf.xml","w");
+					fwrite($fout, $xml);
+					unset($xml);
+					fclose($fout);
+
+				//apply settings
+					$_SESSION["reload_xml"] = true;
+
 			}
 	} //class
 
