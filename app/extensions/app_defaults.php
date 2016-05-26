@@ -27,7 +27,7 @@
 //if the extensions dir doesn't exist then create it
 	if ($domains_processed == 1) {
 		if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-			if (!is_dir($_SESSION['switch']['extensions']['dir'])) { mkdir($_SESSION['switch']['extensions']['dir'],2770,true); }
+			if (!is_dir($_SESSION['switch']['extensions']['dir'])) { mkdir($_SESSION['switch']['extensions']['dir'],02770,true); }
 		}
 	}
 
