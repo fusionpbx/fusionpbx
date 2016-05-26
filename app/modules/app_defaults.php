@@ -34,15 +34,13 @@
 
 		//use the module class to get the list of modules from the db and add any missing modules
 			if (isset($_SESSION['switch']['mod']['dir'])) {
-				$mod = new modules;
-				$mod->db = $db;
-				$mod->dir = $_SESSION['switch']['mod']['dir'];
-				$mod->get_modules();
-				$mod->synch();
-				$msg = $mod->msg;
-
-				//save the modules.conf
-				save_module_xml();
+				$module = new modules;
+				$module->db = $db;
+				$module->dir = $_SESSION['switch']['mod']['dir'];
+				$module->get_modules();
+				$module->synch();
+				$module->xml();
+				$msg = $module->msg;
 			}
 	}
 

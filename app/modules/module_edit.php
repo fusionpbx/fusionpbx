@@ -114,7 +114,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				save_module_xml();
+				$module new modules;;
+				$module->xml();
 
 				$_SESSION["message"] = $text['message-add'];
 				header("Location: modules.php");
@@ -134,7 +135,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				save_module_xml();
+				$module new modules;;
+				$module->xml();
 
 				$_SESSION["message"] = $text['message-update'];
 				header("Location: modules.php");
