@@ -132,7 +132,7 @@ include "root.php";
 						$mod['module_label'] = 'Console';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to the console.';
-						$mod['module_order'] = 300;
+						$mod['module_order'] = 400;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -308,7 +308,7 @@ include "root.php";
 						$mod['module_label'] = 'Log File';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to the local file system.';
-						$mod['module_order'] = 300;
+						$mod['module_order'] = 400;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -332,7 +332,7 @@ include "root.php";
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'API for memcached.';
 						$mod['module_enabled'] = 'true';
-						$mod['module_order'] = 100;
+						$mod['module_order'] = 150;
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_native_file":
@@ -549,7 +549,7 @@ include "root.php";
 						$mod['module_label'] = 'Syslog';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to a remote syslog server.';
-						$mod['module_order'] = 300;
+						$mod['module_order'] = 400;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -702,7 +702,7 @@ include "root.php";
 											$order = $mod['module_order'];
 										}
 										else {
-											$order = 500;
+											$order = 800;
 										}
 									//insert the data
 										$module_uuid = uuid();
