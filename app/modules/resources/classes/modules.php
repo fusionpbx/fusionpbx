@@ -17,52 +17,13 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-
-//add the database structure
-/*
-require_once "resources/classes/modules.php";
-$mod = new modules;
-$mod->dir = $_SESSION['switch']['mod']['dir'];
-echo $mod->dir."\n";
-//database connection object
-	$mod->db = $db;
-//get modules from the database
-	$mod->get_modules();
-//module exists
-	if ($mod->exists("mod_lua")) {
-		echo "exists true\n";
-	}
-	else {
-		echo "exists false\n";
-	}
-//module active
-	if ($mod->active("mod_lua")) {
-		echo "active true\n";
-	}
-	else {
-		echo "active false\n";
-	}
-//synch
-	$mod->synch();
-	echo $mod->msg;
-//show module info
-	$result = $mod->info("mod_lua");
-	echo "<pre>\n";
-	print_r($result);
-	echo "</pre>\n";
-//list modules
-	//$result = $mod->modules
-	//echo "<pre>\n";
-	//print_r($result);
-	//echo "</pre>\n";
-*/
 
 //define the directory class
 	class modules {
@@ -156,6 +117,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Commands';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'API interface commands.';
+						$mod['module_order'] = 100;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -170,6 +132,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Console';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to the console.';
+						$mod['module_order'] = 300;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -345,6 +308,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Log File';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to the local file system.';
+						$mod['module_order'] = 300;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -359,7 +323,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Lua';
 						$mod['module_category'] = 'Languages';
 						$mod['module_description'] = 'Lua script.';
-						$mod['module_order'] = 100;
+						$mod['module_order'] = 200;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -368,6 +332,7 @@ echo $mod->dir."\n";
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'API for memcached.';
 						$mod['module_enabled'] = 'true';
+						$mod['module_order'] = 100;
 						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_native_file":
@@ -584,6 +549,7 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Syslog';
 						$mod['module_category'] = 'Loggers';
 						$mod['module_description'] = 'Send logs to a remote syslog server.';
+						$mod['module_order'] = 300;
 						$mod['module_enabled'] = 'true';
 						$mod['module_default_enabled'] = 'true';
 						break;
@@ -736,7 +702,7 @@ echo $mod->dir."\n";
 											$order = $mod['module_order'];
 										}
 										else {
-											$order = 200;
+											$order = 500;
 										}
 									//insert the data
 										$module_uuid = uuid();
@@ -780,5 +746,44 @@ echo $mod->dir."\n";
 				}
 			}
 	} //class
+
+	//add the database structure
+/*
+require_once "resources/classes/modules.php";
+$mod = new modules;
+$mod->dir = $_SESSION['switch']['mod']['dir'];
+echo $mod->dir."\n";
+//database connection object
+	$mod->db = $db;
+//get modules from the database
+	$mod->get_modules();
+//module exists
+	if ($mod->exists("mod_lua")) {
+		echo "exists true\n";
+	}
+	else {
+		echo "exists false\n";
+	}
+//module active
+	if ($mod->active("mod_lua")) {
+		echo "active true\n";
+	}
+	else {
+		echo "active false\n";
+	}
+//synch
+	$mod->synch();
+	echo $mod->msg;
+//show module info
+	$result = $mod->info("mod_lua");
+	echo "<pre>\n";
+	print_r($result);
+	echo "</pre>\n";
+//list modules
+	//$result = $mod->modules
+	//echo "<pre>\n";
+	//print_r($result);
+	//echo "</pre>\n";
+*/
 
 ?>
