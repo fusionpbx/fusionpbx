@@ -89,7 +89,7 @@ if ($domains_processed == 1) {
 		foreach ($voicemails as $row) {
 			$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$row['domain_name'].'/'.$row['voicemail_id'];
 			if (!file_exists($path)) {
-				mkdir($path, 0777, true);
+				mkdir($path, 2777, true);
 			}
 		}
 		unset ($prep_statement, $sql);

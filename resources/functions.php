@@ -175,7 +175,7 @@
 					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
 				}
 				if (!is_dir($dst)) {
-					if (!mkdir($dst)) {
+					if (!mkdir($dst,2770,true)) {
 						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 					}
 				}

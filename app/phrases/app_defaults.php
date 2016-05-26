@@ -69,7 +69,7 @@ if ($domains_processed == 1) {
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
-						mkdir($conf_lang_folder."/phrases/", 0777);
+						mkdir($conf_lang_folder."/phrases/", 2777);
 					}
 					//parse language, open xml file
 					$conf_lang = substr($conf_lang_folder, -2);
