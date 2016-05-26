@@ -27,18 +27,20 @@ include "root.php";
 
 //define the directory class
 	class modules {
-		public $db;
-		public $dir;
-		public $fp;
-		public $modules;
-		public $msg;
+		//define the variables
+			public $db;
+			public $dir;
+			public $fp;
+			public $modules;
+			public $msg;
 
-		// get the additional information about a specific module
+		//get the additional information about a specific module
 			public function info($name) {
 				$module_label = substr($name, 4);
 				$module_label = ucwords(str_replace("_", " ", $module_label));
 				$mod['module_label'] = $module_label;
 				$mod['module_name'] = $name;
+				$mod['module_order'] = '800';
 				$mod['module_enabled'] = 'false';
 				$mod['module_default_enabled'] = 'false';
 				$mod['module_description'] = '';
@@ -698,12 +700,7 @@ include "root.php";
 									//append the module label
 										$modules_new .= "<li>".$mod['module_label']."</li>\n";
 									//set the order
-										if (isset($mod['module_order'])) {
-											$order = $mod['module_order'];
-										}
-										else {
-											$order = 800;
-										}
+										$order = $mod['module_order'];
 									//insert the data
 										$module_uuid = uuid();
 										$sql = "insert into v_modules ";
