@@ -1349,7 +1349,7 @@ require_once "resources/require.php";
 	if (permission_exists('device_username')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-users']."\n";
+		echo "	".$text['label-user']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
@@ -1360,7 +1360,7 @@ require_once "resources/require.php";
 		echo "			</select>";
 		unset($users);
 		echo "			<br>\n";
-		echo "			".$text['description-users']."\n";
+		echo "			".$text['description-user']."\n";
 	}
 
 	if (permission_exists('device_username_password')) {
