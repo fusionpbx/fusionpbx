@@ -1358,9 +1358,6 @@ require_once "resources/require.php";
 			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 		}
 		echo "			</select>";
-		if ($action == "update") {
-			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		}
 		unset($users);
 		echo "			<br>\n";
 		echo "			".$text['description-users']."\n";
