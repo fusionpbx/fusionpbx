@@ -1355,7 +1355,8 @@ require_once "resources/require.php";
 		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 		echo "			<option value=\"\"></option>\n";
 		foreach($users as $field) {
-			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			if ($field['user_uuid'] == $user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
 		}
 		echo "			</select>";
 		unset($users);
