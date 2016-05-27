@@ -1875,15 +1875,15 @@ $text['header-device']['de-at'] = "Gerät";
 $text['header-device']['ar-eg'] = "";
 $text['header-device']['he'] = "מכשיר";
 
-$text['description-users']['en-us'] = "Assign additional users as administrators of this conference room.";
-$text['description-users']['es-cl'] = "Asignar usuarios adicionales como administradores de esta sala de conferencia.";
-$text['description-users']['pt-pt'] = "Atribuir utilizadores adicionais como administradores da sala de conferência.";
-$text['description-users']['fr-fr'] = "Ajouter des utilisateurs comme administrateurs des cette salle de conférence.";
-$text['description-users']['pt-br'] = "Atribuir usuários adicionais como administradores da sala de conferência. ";
-$text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako administratorów tego pokoju konferencyjnego.";
-$text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
-$text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
-$text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
+$text['description-users']['en-us'] = "Assign a user to this device.";
+$text['description-users']['es-cl'] = "Asignar un usuario a este dispositivo.";
+$text['description-users']['pt-pt'] = "Atribuir um usuário a este dispositivo.";
+$text['description-users']['fr-fr'] = "Affectation d'un utilisateur à cet appareil.";
+$text['description-users']['pt-br'] = "Atribuir um usuário a este dispositivo.";
+$text['description-users']['pl'] = "Przypisywanie użytkownika do tego urządzenia.";
+$text['description-users']['sv-se'] = "Tilldela en användare till den här enheten.";
+$text['description-users']['uk'] = "Призначення користувача Цей пристрій.";
+$text['description-users']['de-at'] = "Zuweisen eines Benutzers zu diesem Gerät.";
 
 $text['description-user_id']['en-us'] = "Enter the user ID.";
 $text['description-user_id']['es-cl'] = "Ingrese el ID de usuario.";
