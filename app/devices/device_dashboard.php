@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2015 All Rights Reserved.
+	Copyright (C) 2008-2016 All Rights Reserved.
 
 */
 
@@ -27,7 +27,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('device_add') || permission_exists('device_edit')) {
+	if (permission_exists('device_key_add') || permission_exists('device_key_edit')) {
 		//access granted
 	}
 	else {
@@ -55,25 +55,62 @@
 					foreach ($_POST['device_keys'] as &$row) {
 						//validate the data
 							$valid_data = true;
-							if (!is_uuid($row["device_key_uuid"])) { $valid_data = false; }
+							//if (!is_uuid($row["device_key_uuid"])) { $valid_data = false; }
 							if (!is_numeric($row["device_key_id"])) { $valid_data = false; }
 							if (strlen($row["device_key_type"]) > 25) { $valid_data = false; }
 							if (strlen($row["device_key_value"]) > 25) { $valid_data = false; }
 							if (strlen($row["device_key_label"]) > 25) { $valid_data = false; }
 						//escape characters in the string
+							$device_uuid = check_str($row["device_uuid"]);
 							$device_key_uuid = check_str($row["device_key_uuid"]);
 							$device_key_id = check_str($row["device_key_id"]);
 							$device_key_type = check_str($row["device_key_type"]);
+							$device_key_line = check_str($row["device_key_line"]);
 							$device_key_value = check_str($row["device_key_value"]);
 							$device_key_label = check_str($row["device_key_label"]);
+							$device_key_category = check_str($row["device_key_category"]);
+							$device_key_vendor = check_str($row["device_key_vendor"]);
 						//sql update
-							$sql = "update v_device_keys set ";
-							$sql .= "device_key_id = '".$device_key_id."', ";
-							$sql .= "device_key_type = '".$device_key_type."', ";
-							$sql .= "device_key_value = '".$device_key_value."', ";
-							$sql .= "device_key_label = '".$device_key_label."' ";
-							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-							$sql .= "and device_key_uuid = '".$device_key_uuid."' ";
+							if (strlen($device_key_uuid) == 0) {
+								if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
+									$device_key_uuid = uuid();
+									$sql = "insert into v_device_keys ";
+									$sql .= "(";
+									$sql .= "domain_uuid, ";
+									$sql .= "device_key_uuid, ";
+									$sql .= "device_uuid, ";
+									$sql .= "device_key_id, ";
+									$sql .= "device_key_type, ";
+									$sql .= "device_key_line, ";
+									$sql .= "device_key_value, ";
+									$sql .= "device_key_label, ";
+									$sql .= "device_key_category, ";
+									$sql .= "device_key_vendor ";
+									$sql .= ") ";
+									$sql .= "VALUES (";
+									$sql .= "'".$_SESSION['domain_uuid']."', ";
+									$sql .= "'".$device_key_uuid."', ";
+									$sql .= "'".$device_uuid."', ";
+									$sql .= "'".$device_key_id."', ";
+									$sql .= "'".$device_key_type."', ";
+									$sql .= "'".$device_key_line."', ";
+									$sql .= "'".$device_key_value."', ";
+									$sql .= "'".$device_key_label."', ";
+									$sql .= "'".$device_key_category."', ";
+									$sql .= "'".$device_key_vendor."' ";
+									$sql .= ")";
+									//echo $sql;
+								}
+							}
+							else {
+								$sql = "update v_device_keys set ";
+								$sql .= "device_key_id = '".$device_key_id."', ";
+								$sql .= "device_key_type = '".$device_key_type."', ";
+								$sql .= "device_key_value = '".$device_key_value."', ";
+								$sql .= "device_key_label = '".$device_key_label."' ";
+								$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+								$sql .= "and device_key_uuid = '".$device_key_uuid."' ";
+							}
 							if ($valid_data) {
 								$db->exec(check_sql($sql));
 								//echo "valid: ".$sql."\n";
@@ -136,6 +173,33 @@
 	$prep_statement->execute();
 	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get the vendor count and last and device information
+	$vendor_count = 0;
+	foreach($device_keys as $row) {
+		if ($previous_vendor != $row['device_key_vendor']) {
+			$previous_vendor = $row['device_key_vendor'];
+			$device_uuid = $row['device_uuid'];
+			$device_key_vendor = $row['device_key_vendor'];
+			$device_key_id = $row['device_key_id'];
+			$device_key_line = $row['device_key_line'];
+			$device_key_category = $row['device_key_category'];
+			$vendor_count++;
+		}
+	}
+
+//add a new key
+	if (permission_exists('device_key_add')) {
+		$device_keys[$x]['device_key_category'] = $device_key_category;
+		$device_keys[$x]['device_key_id'] = '';
+		$device_keys[$x]['device_uuid'] = $device_uuid;
+		$device_keys[$x]['device_key_vendor'] = $device_key_vendor;
+		$device_keys[$x]['device_key_type'] = '';
+		$device_keys[$x]['device_key_line'] = '';
+		$device_keys[$x]['device_key_value'] = '';
+		$device_keys[$x]['device_key_extension'] = '';
+		$device_keys[$x]['device_key_label'] = '';
+	}
+
 //show the header
 	//require_once "resources/header.php";
 
@@ -158,13 +222,6 @@
 	echo "</div>\n";
 
 	if (permission_exists('device_key_edit')) {
-		$vendor_count = 0;
-		foreach($device_keys as $row) {
-			if ($previous_vendor != $row['device_key_vendor']) {
-				$previous_vendor = $row['device_key_vendor'];
-				$vendor_count++;
-			}
-		}
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		$x = 0;
 		foreach($device_keys as $row) {
@@ -199,7 +256,10 @@
 			//add the primary key uuid
 				if (strlen($row['device_key_uuid']) > 0) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
+					
+					
 				}
+
 			//show all the rows in the array
 				/*
 				echo "			<tr>\n";
@@ -277,7 +337,12 @@
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
 
 				?>
+
 				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
+				<input class='formfld' type='hidden' id='key_category_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_category]' value="<?php echo $device_key_category; ?>">
+				<input class='formfld' type='hidden' id='key_uuid_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_uuid]' value="<?php echo $device_uuid; ?>">
+				<input class='formfld' type='hidden' id='key_key_line_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_line]' value="<?php echo $device_key_line; ?>">
+
 				<?php $selected = "selected='selected'"; ?>
 				<?php $found = false; ?>
 				<select class='formfld' style='width: 95px;' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();" >
