@@ -104,7 +104,9 @@
 							}
 							else {
 								$sql = "update v_device_keys set ";
-								$sql .= "device_key_id = '".$device_key_id."', ";
+								if (permission_exists('device_key_id')) {
+									$sql .= "device_key_id = '".$device_key_id."', ";
+								}
 								$sql .= "device_key_type = '".$device_key_type."', ";
 								$sql .= "device_key_value = '".$device_key_value."', ";
 								$sql .= "device_key_label = '".$device_key_label."' ";
@@ -322,15 +324,20 @@
 				*/
 
 				echo "<td class='row_style".$c."' style='padding: 2px 2px;' valign='top' align='left' nowrap='nowrap'>\n";
-				$selected = "selected='selected'";
-				echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
-				echo "	<option value=''></option>\n";
-				$i = 1;
-				while ($i < 100) {
-					echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
-					$i++;
+				if (permission_exists('device_key_id') || permission_exists('device_key_add')) {
+					$selected = "selected='selected'";
+					echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
+					echo "	<option value=''></option>\n";
+					$i = 1;
+					while ($i < 100) {
+						echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
+						$i++;
+					}
+					echo "	</select>\n";
 				}
-				echo "	</select>\n";
+				else {
+					echo "&nbsp;&nbsp;".$row['device_key_id'];
+				}
 				echo "</td>\n";
 
 				echo "<td class='row_style".$c."' style='padding: 1px 1px;' align='left' nowrap='nowrap'>\n";
