@@ -115,6 +115,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_key_id';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_key_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
