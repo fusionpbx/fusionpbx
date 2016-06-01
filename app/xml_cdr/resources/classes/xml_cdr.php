@@ -232,6 +232,11 @@ if (!class_exists('xml_cdr')) {
 					$destination_number = urldecode($xml->variables->sip_to_user);
 				}
 
+			//if last_sent_callee_id_number is set use it for the destination_number
+				if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+					$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
+				}
+
 			//get the caller id
 				$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);

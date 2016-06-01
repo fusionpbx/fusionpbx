@@ -173,6 +173,11 @@
 			}
 			unset($x);
 
+		//if last_sent_callee_id_number is set use it for the destination_number
+			if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+				$database->fields['destination_number'] = urldecode($xml->variables->last_sent_callee_id_number);
+			}
+
 		//store the call leg
 			$database->fields['leg'] = $leg;
 
@@ -269,7 +274,7 @@
 
 							$db2->sql = $sql_rate;
 							$db2->result = $db2->execute();
-//							print_r($db2->result);
+							//print_r($db2->result);
 							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
