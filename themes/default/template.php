@@ -360,7 +360,7 @@
 					default:
 						$menu_position = ($menu_position != '') ? $menu_position : 'top';
 						$menu_type = 'fixed-'.$menu_position;
-						$menu_width = 'calc(90% - 40px)';
+						$menu_width = 'calc(90% - 20px)';
 						$menu_brand = true;
 				}
 			?>
@@ -398,11 +398,9 @@
 									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
 								}
 						}
-						//domain name/selector
+						//domain name/selector (xs)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<ul class='nav navbar-nav pull-right visible-xs'>\n";
-								echo "<li><a href='#' style='padding: 8px 4px 6px 0;' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>\n";
-								echo "</ul>\n";
+								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></span>\n";
 							}
 						?>
 					</div>
@@ -461,20 +459,20 @@
 							}
 							?>
 						</ul>
-						<ul class="nav navbar-nav navbar-right">
-							<?php
-							//domain name/selector
-								if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-									echo "<li class='hidden-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>";
-								}
-							//logout icon
-								if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
-									$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-									echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
-									unset($username_full);
-								}
-							?>
-						</ul>
+						<?php
+						echo "<span class='pull-right hidden-xs' style='white-space: nowrap;'>";
+						//domain name/selector (sm+)
+							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a>";
+							}
+						//logout icon
+							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+								$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
+								echo "<a href='".PROJECT_PATH."/logout.php' class='logout_icon' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a>";
+								unset($username_full);
+							}
+						echo "</span>";
+						?>
 					</div>
 				</div>
 			</nav>
