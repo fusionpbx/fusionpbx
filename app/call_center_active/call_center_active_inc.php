@@ -248,7 +248,6 @@ else {
 				$switch_cmd = 'callcenter_config queue list members '.$queue_name;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$result = str_to_named_array($event_socket_str, '|');
-				if (strlen($result) == 0) { unset($result); }
 
 			//show the title
 				$q_waiting=0;
