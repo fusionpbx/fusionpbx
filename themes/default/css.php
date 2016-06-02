@@ -320,25 +320,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			}
 		}
 
-	/* xs menu toggle button */
-	.navbar-inverse .navbar-toggle {
-		border: none;
-		}
-
-	.navbar-inverse .navbar-toggle:hover,
-	.navbar-inverse .navbar-toggle:focus,
-	.navbar-inverse .navbar-toggle:active {
-		background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
-		}
-
-	.navbar-inverse .navbar-toggle .icon-bar {
-		background: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
-		}
-
-	.navbar-inverse .navbar-toggle:hover > .icon-bar {
-		background: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
-		}
-
 	/* sub menu container */
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
@@ -380,72 +361,63 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.dropdown-menu > li > a > span.glyphicon {
 		display: inline-block;
 		font-size: 8pt;
-		margin: 0px 0 8px 8px;
+		margin: 0 0 8px 8px;
 		opacity: 0.30;
 		text-align: top;
 		}
 
-	/* menu toggle button */
-	.navbar-header > button.navbar-toggle {
-		margin-left: 20px;
+	/* domain name/selector */
+	a.domain_selector_domain {
+		display: inline-block;
+		white-space: nowrap;
+		font-size: 9.5pt;
+		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
+		padding: 16px 0 14px 0;
 		}
 
-	#logout_icon {
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	a.domain_selector_domain:hover,
+	a.domain_selector_domain:focus,
+	a.domain_selector_domain:active {
+		color: <?php echo ($_SESSION['theme']['domain_color_hover']['text'] != '') ? $_SESSION['theme']['domain_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
+		}
+
+	/* logout icon */
+	a.logout_icon {
+		display: inline-block;
+		color: <?php echo ($_SESSION['theme']['logout_icon_color']['text'] != '') ? $_SESSION['theme']['logout_icon_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
 		font-size: 11pt;
-		margin: 16px 19px 0 5px;
-		filter: alpha(opacity=80);
-		opacity: 0.80;
-		-moz-opacity: 0.80;
-		-khtml-opacity: 0.80;
+		padding: 16px 10px 13px 10px;
+		margin-left: 10px;
 		}
 
-	#logout_icon:hover {
-		filter: alpha(opacity=100);
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	a.logout_icon:hover,
+	a.logout_icon:focus,
+	a.logout_icon:active {
+		color: <?php echo ($_SESSION['theme']['logout_icon_color_hover']['text'] != '') ? $_SESSION['theme']['logout_icon_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
 		}
 
-	/* domain name: xs only */
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain {
-		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
-		white-space: nowrap;
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
-		font-size: 9.5pt;
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	/* xs menu toggle button */
+	.navbar-inverse .navbar-toggle {
+		background: transparent;
+		border: none;
+		padding: 16px 7px 17px 20px;
+		margin: 0 8px;
 		}
 
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:hover,
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:focus,
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:active {
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	.navbar-inverse .navbar-toggle:hover,
+	.navbar-inverse .navbar-toggle:focus,
+	.navbar-inverse .navbar-toggle:active {
+		background: transparent;
 		}
 
-	/* domain name: sm and larger */
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain {
-		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
-		white-space: nowrap;
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
-		font-size: 9.5pt;
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	.navbar-inverse .navbar-toggle .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_toggle_color']['text'] != '') ? $_SESSION['theme']['menu_main_toggle_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
 		}
 
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:hover,
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:focus,
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:active {
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	.navbar-inverse .navbar-toggle:hover > .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_toggle_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_toggle_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
 		}
 
 /* BUTTONS ********************************************************************/
@@ -784,7 +756,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	a {
-		width: 100%;
 		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		text-decoration: none;
 		}

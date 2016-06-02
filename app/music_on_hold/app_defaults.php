@@ -17,13 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Matthew Vale <github@mafoo.org>
 */
 
-//if the extensions dir doesn't exist then create it
+	if ($domains_processed == 1) {
+
+		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+		$moh = new switch_music_on_hold;
+		$moh->xml();
+		$moh->save();
+	}
 
 ?>

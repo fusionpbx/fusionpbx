@@ -121,15 +121,15 @@ EOD;
 					}
 				}
 				unset($prep_statement, $sql, $result);
-	
+
 				if ( $country_iso===NULL ) {
 					return;
 				}
-	
+
 				if(isset($countries[$country_iso])){
 					$country = $countries[$country_iso];
-	
-			// Set default Country ISO code
+
+					// Set default Country ISO code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_country' ";
 					$sql .= "and var_cat = 'Defaults' ";
@@ -165,8 +165,8 @@ EOD;
 						}
 					}
 					unset($prep_statement, $sql);
-	
-			// Set default Country code
+
+					//Set default Country code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_countrycode' ";
 					$sql .= "and var_cat = 'Defaults' ";
@@ -201,8 +201,8 @@ EOD;
 						}
 					}
 					unset($prep_statement, $sql);
-	
-			// Set default International Direct Dialing code
+
+					// Set default International Direct Dialing code
 					$sql = "select count(*) as num_rows from v_vars ";
 					$sql .= "where var_name = 'default_exitcode' ";
 					$sql .= "and var_cat = 'Defaults' ";
@@ -242,15 +242,15 @@ EOD;
 				}
 			}
 		}
-	
+
 		$x = 1;
-	
+
 	//if there are no variables in the vars table then add them
 		if ($domains_processed == 1) {
-	
+
 			$result = json_decode($vars, true);
 			foreach($result as $row) {
-	
+
 				$sql = "select count(*) as num_rows from v_vars ";
 				$sql .= "where var_name = '".$row['var_name']."' ";
 				$sql .= "and var_cat = '".$row['var_cat']."' ";
@@ -259,7 +259,7 @@ EOD;
 					$prep_statement->execute();
 					$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
 					if ($row2['num_rows'] == 0) {
-	
+
 						$sql = "insert into v_vars ";
 						$sql .= "(";
 						$sql .= "var_uuid, ";
@@ -283,11 +283,9 @@ EOD;
 						$db->exec($sql);
 						unset($sql);
 						$x++;
-	
 					}
 				}
 				unset($prep_statement, $row2);
-	
 			}
 			unset($result, $row);
 		}

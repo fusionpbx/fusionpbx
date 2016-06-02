@@ -89,18 +89,18 @@ if($fp){
 	}
 
 //use the module class to get the list of modules from the db and add any missing modules
-	$mod = new modules;
-	$mod->db = $db;
-	$mod->dir = $_SESSION['switch']['mod']['dir'];
-	$mod->get_modules();
-	$result = $mod->modules;
+	$module = new modules;
+	$module->db = $db;
+	$module->dir = $_SESSION['switch']['mod']['dir'];
+	$module->get_modules();
+	$result = $module->modules;
 	$module_count = count($result);
-	$mod->synch();
-	$msg = $mod->msg;
+	$module->synch();
+	$module->xml();
+	$msg = $module->msg;
 
 //show the msg
 	if ($msg) {
-		save_module_xml();
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -179,7 +179,7 @@ if($fp){
 			}
 			echo "	</td>\n";
 			if($esl_alive) {
-				if ($mod->active($row["module_name"])) {
+				if ($module->active($row["module_name"])) {
 					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
 					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 				}

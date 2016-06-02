@@ -323,8 +323,8 @@
 				}
 				unset ($sql, $prep_statement, $result);
 			}
-
 	}
+
 
 //build hud block html
 	$n = 0;
@@ -1187,41 +1187,49 @@
 
 	}
 
-if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
-	echo "<div class='row' style='margin-top: 30px;'>\n";
+//additional items for the dashbaord
+	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+		echo "<div class='row' style='margin-top: 30px;'>\n";
 
-	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
-		//call routing
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
-				if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-					$is_included = true;
-					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-7' style='margin: 0 0 50px 0;'>\n";
-					require_once "app/calls/calls.php";
-					echo "</div>\n";
+		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
+			//call routing
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+					if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/calls/calls.php";
+						echo "</div>\n";
+					}
 				}
-			}
-	}
+		}
 
-	if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
-		//reload language values
-			$language = new text;
-			$text = $language->get();
-
-		//ring group forward
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
-				if (permission_exists('ring_group_forward')) {
-					$is_included = true;
-					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-5' style='margin: 0 0 50px 0;'>\n";
-					require_once "app/ring_groups/ring_group_forward.php";
-					echo "</div>";
+		if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+			//ring group forward
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+					if (permission_exists('ring_group_forward')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/ring_groups/ring_group_forward.php";
+						echo "</div>";
+					}
 				}
-			}
+		}
+
+		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
+			//device key management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
+					if (permission_exists('device_key_edit')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/devices/device_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+		echo "</div>\n";
 	}
-
-	echo "</div>\n";
-}
-
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

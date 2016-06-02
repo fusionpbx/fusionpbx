@@ -184,11 +184,16 @@ include "root.php";
 					$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
 				else {
-					$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
-
-			//replace the variable
-				$file_contents = str_replace("{v_moh_categories}", $this->xml, $file_contents);
+			//check where the default music is stored
+				$default_moh_prefix = 'music/default';
+				if(file_exists($_SESSION['switch']['sounds']['dir'].'/music/8000')) {
+					$default_moh_prefix = 'music';
+				}
+			//replace the variables
+				$file_contents = preg_replace("/music\/default/", $default_moh_prefix, $file_contents);
+				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
 
 			//write the XML config file
 				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
@@ -198,6 +203,7 @@ include "root.php";
 			//reload the XML
 				$this->reload();
 		}
+
 	}
 
 //build and save the XML
