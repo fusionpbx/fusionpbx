@@ -1,4 +1,19 @@
 <?php
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permission
+	if (permission_exists('adminer')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 /** Adminer - Compact database management
 * @link http://www.adminer.org/
 * @author Jakub Vrana, http://www.vrana.cz/
