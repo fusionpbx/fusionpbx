@@ -1220,7 +1220,7 @@
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
 					if (permission_exists('device_key_edit')) {
 						$is_included = true;
-						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 15px 0 30px 0;'>\n";
 						require_once "app/devices/device_dashboard.php";
 						echo "</div>";
 					}

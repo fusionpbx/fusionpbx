@@ -258,14 +258,14 @@
 			//add the primary key uuid
 				if (strlen($row['device_key_uuid']) > 0) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
-					
-					
+
+
 				}
 
 			//show all the rows in the array
 				/*
 				echo "			<tr>\n";
-				echo "<td valign='top' style='padding: 1px 1px;' align='left' nowrap='nowrap'>\n";
+				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_category]'>\n";
 				echo "	<option value=''></option>\n";
 				if ($row['device_key_category'] == "line") {
@@ -323,7 +323,7 @@
 				echo "</td>\n";
 				*/
 
-				echo "<td class='row_style".$c."' style='padding: 2px 2px;' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "<td class='row_style".$c." row_style_slim' valign='top' nowrap='nowrap'>\n";
 				if (permission_exists('device_key_id') || permission_exists('device_key_add')) {
 					$selected = "selected='selected'";
 					echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
@@ -340,7 +340,7 @@
 				}
 				echo "</td>\n";
 
-				echo "<td class='row_style".$c."' style='padding: 1px 1px;' align='left' nowrap='nowrap'>\n";
+				echo "<td class='row_style".$c." row_style_slim' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
 
 				?>
@@ -558,16 +558,16 @@
 				//echo "	</select>\n";
 				//echo "</td>\n";
 
-				echo "<td class='row_style".$c."' style='padding: 1px 1px;' align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 10px; ' maxlength='255' value=\"".$row['device_key_value']."\">\n";
+				echo "<td class='row_style".$c." row_style_slim'>\n";
+				echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_value]' maxlength='255' value=\"".$row['device_key_value']."\">\n";
 				echo "</td>\n";
 
 				//echo "<td align='left'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
 				//echo "</td>\n";
 
-				echo "<td class='row_style".$c."' style='padding: 1px 1px;' align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 10px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+				echo "<td class='row_style".$c." row_style_slim'>\n";
+				echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
 				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
