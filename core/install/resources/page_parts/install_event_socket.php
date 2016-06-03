@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,8 +31,8 @@
 	try {
 		$switch_detect->detect();
 	} catch(Exception $e){
-		//echo "<p><b>Failed to detect configuration</b> detect_switch reported: " . $e->getMessage() ."</p>\n";
-		//$detect_ok = false;
+		echo "<p><b>Failed to detect configuration</b> detect_switch reported: " . $e->getMessage() ."</p>\n";
+		$detect_ok = false;
 	}
 	echo "<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
 	echo "<input type='hidden' name='install_step' value='detect_config'/>\n";
@@ -41,7 +41,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap><b>".$text['header-event_socket']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right'>";
-	//echo "	<input type='button' name='detect' class='btn' onclick=\"location.reload();\" value='".$text['button-detect']."'/>\n";
+	echo "	<input type='submit' name='re_detect_switch' class='btn' value='".$text['button-detect']."'/>\n";
 	echo "	<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
 	echo "	<input type='submit' name='next' class='btn' value='".$text['button-next']."'/>\n";
 	echo "</td>\n";
