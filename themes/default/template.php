@@ -51,7 +51,7 @@
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-colorpicker.js"></script>
-<script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-pwstrength.min.js"></script>
+<?php //<script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-pwstrength.min.js"></script>?>
 <?php
 //web font loader
 	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
