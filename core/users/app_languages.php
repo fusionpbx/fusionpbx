@@ -219,6 +219,17 @@ $text['message-password_blank']['ro'] = "";
 $text['message-password_blank']['de-at'] = "Falsches Passwort";
 $text['message-password_blank']['he'] = "סיסמא לא קיימת";
 
+$text['message-password_requirements']['en-us'] = "Password Requirements";
+$text['message-password_requirements']['es-cl'] = "Requisitos de Contraseña";
+$text['message-password_requirements']['pt-pt'] = "Requisitos Senha";
+$text['message-password_requirements']['fr-fr'] = "Mot de passe requis";
+$text['message-password_requirements']['pl'] = "Wymagania Hasło";
+$text['message-password_requirements']['uk'] = "вимоги до паролю";
+$text['message-password_requirements']['sv-se'] = "lösenordskrav ";
+$text['message-password_requirements']['ro'] = "Cerințe privind parola";
+$text['message-password_requirements']['de-at'] = "Kennwortanforderungen ";
+$text['message-password_requirements']['he'] = "דרישות סיסמא";
+
 $text['message-new_group_name']['en-us'] = "Enter a Name for the new Group...";
 $text['message-new_group_name']['es-cl'] = "Introduzca un Nombre para el nuevo Grupo...";
 $text['message-new_group_name']['pt-pt'] = "Digite um Nome para o novo Grupo...";
@@ -343,6 +354,20 @@ $text['label-user_info']['ro'] = "";
 $text['label-user_info']['de-at'] = "Benutzer Information";
 $text['label-user_info']['he'] = "פרטי משתמש";
 
+$text['label-uppercase_letters']['en-us'] = "Uppercase Letters";
+$text['label-uppercase_letters']['es-cl'] = "Letras mayúsculas";
+$text['label-uppercase_letters']['pt-pt'] = "Letras maiúsculas";
+$text['label-uppercase_letters']['fr-fr'] = "Lettres capitales";
+$text['label-uppercase_letters']['pt-br'] = "Letras maiúsculas";
+$text['label-uppercase_letters']['pl'] = "Wielkie litery";
+$text['label-uppercase_letters']['he'] = "אותיות רישיות";
+$text['label-uppercase_letters']['uk'] = "Великі літери";
+$text['label-uppercase_letters']['sv-se'] = "Versala bokstäver";
+$text['label-uppercase_letters']['de-at'] = "Großbuchstaben";
+$text['label-uppercase_letters']['ro'] = "Litere mari";
+$text['label-uppercase_letters']['fa'] = "";
+$text['label-uppercase_letters']['ar-eg'] = "الأحرف الكبيرة";
+
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['es-cl'] = "encima";
 $text['label-top']['pt-pt'] = "Topo";
@@ -406,6 +431,20 @@ $text['label-static']['de-at'] = "Statisch";
 $text['label-static']['ro'] = "Static";
 $text['label-static']['fa'] = "";
 $text['label-static']['ar-eg'] = "ساكن";
+
+$text['label-special_characters']['en-us'] = "Special Characters";
+$text['label-special_characters']['es-cl'] = "Caracteres especiales";
+$text['label-special_characters']['pt-pt'] = "Caracteres especiais";
+$text['label-special_characters']['fr-fr'] = "Caractères spéciaux";
+$text['label-special_characters']['pt-br'] = "Caracteres especiais";
+$text['label-special_characters']['pl'] = "Znaki specjalne";
+$text['label-special_characters']['he'] = "תווים מיוחדים";
+$text['label-special_characters']['uk'] = "спеціальні символи";
+$text['label-special_characters']['sv-se'] = "Speciella karaktärer";
+$text['label-special_characters']['de-at'] = "Spezielle Charaktere";
+$text['label-special_characters']['ro'] = "caractere speciale";
+$text['label-special_characters']['fa'] = "";
+$text['label-special_characters']['ar-eg'] = "أحرف خاصة";
 
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['es-cl'] = "Derecha";
@@ -479,6 +518,20 @@ $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['de-at'] = "Andere";
 $text['label-other']['he'] = "אחר";
 
+$text['label-numbers']['en-us'] = "Numbers";
+$text['label-numbers']['es-cl'] = "Números";
+$text['label-numbers']['pt-pt'] = "Números";
+$text['label-numbers']['fr-fr'] = "Nombres";
+$text['label-numbers']['pt-br'] = "Números";
+$text['label-numbers']['pl'] = "Liczby";
+$text['label-numbers']['he'] = "מספרים";
+$text['label-numbers']['uk'] = "чисел";
+$text['label-numbers']['sv-se'] = "Tal";
+$text['label-numbers']['de-at'] = "Nummern";
+$text['label-numbers']['ro'] = "numere";
+$text['label-numbers']['fa'] = "";
+$text['label-numbers']['ar-eg'] = "أرقام";
+
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguna";
 $text['label-none']['pt-pt'] = "Nenhum";
@@ -492,6 +545,20 @@ $text['label-none']['de-at'] = "Keiner";
 $text['label-none']['ro'] = "Nici unul";
 $text['label-none']['fa'] = "";
 $text['label-none']['ar-eg'] = "لا شيء";
+
+$text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
+$text['label-lowercase_letters']['es-cl'] = "Letras minusculas";
+$text['label-lowercase_letters']['pt-pt'] = "Letras minúsculas";
+$text['label-lowercase_letters']['fr-fr'] = "Minuscules";
+$text['label-lowercase_letters']['pt-br'] = "Letras minúsculas";
+$text['label-lowercase_letters']['pl'] = "Małe litery";
+$text['label-lowercase_letters']['he'] = "אותיות קטנות";
+$text['label-lowercase_letters']['uk'] = "Букви нижнього регістру";
+$text['label-lowercase_letters']['sv-se'] = "Gemener";
+$text['label-lowercase_letters']['de-at'] = "Kleinbuchstaben";
+$text['label-lowercase_letters']['ro'] = "Litere mici";
+$text['label-lowercase_letters']['fa'] = "";
+$text['label-lowercase_letters']['ar-eg'] = "أحرف صغيرة";
 
 $text['label-left']['en-us'] = "Left";
 $text['label-left']['es-cl'] = "Izquierda";
@@ -724,6 +791,20 @@ $text['label-company_name']['sv-se'] = "Företags Namn";
 $text['label-company_name']['ro'] = "";
 $text['label-company_name']['de-at'] = "Firmenname";
 $text['label-company_name']['he'] = "שם חברה";
+
+$text['label-characters']['en-us'] = "Characters";
+$text['label-characters']['es-cl'] = "Caracteres";
+$text['label-characters']['pt-pt'] = "Personagens";
+$text['label-characters']['fr-fr'] = "Personnages";
+$text['label-characters']['pt-br'] = "Personagens";
+$text['label-characters']['pl'] = "Postacie";
+$text['label-characters']['he'] = "דמויות";
+$text['label-characters']['uk'] = "персонажі";
+$text['label-characters']['sv-se'] = "tecken";
+$text['label-characters']['de-at'] = "Figuren";
+$text['label-characters']['ro'] = "caractere";
+$text['label-characters']['fa'] = "";
+$text['label-characters']['ar-eg'] = "الشخصيات";
 
 $text['label-center']['en-us'] = "Center";
 $text['label-center']['es-cl'] = "Centrar";
