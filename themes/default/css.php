@@ -356,6 +356,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.dropdown-menu > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color_hover']['text'] : '#141414'; ?>;
+		outline: none;
 		}
 
 	.dropdown-menu > li > a > span.glyphicon {
@@ -975,14 +976,20 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input.login:-ms-input-placeholder { color: <?php echo $placeholder_color; ?> } /* ie 10+ */
 	input.login::placeholder { color: <?php echo $placeholder_color; ?> } /* official standard */
 
-	.formfld_highlight_bad {
+	input[type=password].formfld_highlight_bad,
+	input[type=password].formfld_highlight_bad:hover,
+	input[type=password].formfld_highlight_bad:active,
+	input[type=password].formfld_highlight_bad:focus {
 		border-color: #aa2525;
 		-webkit-box-shadow: 0 0 3px #aa2525 inset;
 		-moz-box-shadow: 0 0 3px #aa2525 inset;
 		box-shadow: 0 0 3px #aa2525 inset;
 		}
 
-	.formfld_highlight_good {
+	input[type=password].formfld_highlight_good,
+	input[type=password].formfld_highlight_good:hover,
+	input[type=password].formfld_highlight_good:active,
+	input[type=password].formfld_highlight_good:focus {
 		border-color: #2fb22f;
 		-webkit-box-shadow: 0 0 3px #2fb22f inset;
 		-moz-box-shadow: 0 0 3px #2fb22f inset;
@@ -1024,6 +1031,32 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		background-color: #c43e42;
 		height: 1px;
 		display: block;
+		}
+
+	div.pwstrength_progress {
+		display: none;
+		}
+
+	div.pwstrength_progress > div.progress {
+		max-width: 200px;
+		height: 6px;
+		margin: 1px 0 0 1px;
+		background: <?php echo ($_SESSION['theme']['input_background_color']['text'] != '') ? $_SESSION['theme']['input_background_color']['text'] : 'rgb(245, 245, 245)'; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['input_border_radius']['text'], '3px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		}
+
+	div.pwstrength_progress_password_reset > div.progress {
+		margin: 0 auto 4px auto;
+		width: 200px;
+		max-width: 200px;
+		background: <?php echo ($_SESSION['theme']['login_input_background_color']['text'] != '') ? $_SESSION['theme']['login_input_background_color']['text'] : (($_SESSION['theme']['input_background_color']['text'] != '') ? $_SESSION['theme']['input_background_color']['text'] : '#ffffff'); ?>;
+		border-width: <?php echo ($_SESSION['theme']['login_input_border_size']['text'] != '') ? $_SESSION['theme']['login_input_border_size']['text'] : (($_SESSION['theme']['input_border_size']['text'] != '') ? $_SESSION['theme']['input_border_size']['text'] : '1px'); ?>;
+		border-color: <?php echo ($_SESSION['theme']['login_input_border_color']['text'] != '') ? $_SESSION['theme']['login_input_border_color']['text'] : (($_SESSION['theme']['input_border_color']['text'] != '') ? $_SESSION['theme']['input_border_color']['text'] : '#c0c0c0'); ?>;
 		}
 
 /* TABLES *****************************************************************/

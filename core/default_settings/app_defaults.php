@@ -59,14 +59,42 @@ if ($domains_processed == 1) {
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_length';
-		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '10';
 		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = 'Sets the default length for system generated passwords.';
+		$array[$x]['default_setting_description'] = 'Set the required/default length for user/system generated passwords.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_number';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set whether to require at least one number in user passwords.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_lowercase';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set whether to require at least one lowecase letter in user passwords.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_uppercase';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set whether to require at least one uppercase letter in user passwords.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'security';
+		$array[$x]['default_setting_subcategory'] = 'password_special';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set whether to require at least one special character in user passwords.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_strength';
-		$array[$x]['default_setting_name'] = 'var';
+		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '4';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters.';
@@ -315,7 +343,7 @@ if ($domains_processed == 1) {
 			$found = false;
 			$missing[$x] = $setting;
 			foreach ($default_settings as $row) {
-				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
 					$found = true;
 					//remove items from the array that were found
 					unset($missing[$x]);
@@ -351,7 +379,7 @@ if ($domains_processed == 1) {
 				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
 				$sql .= "'".check_str($row['default_setting_description'])."' ";
 				$sql .= ")";
-				if ($missing_count != $i) { 
+				if ($missing_count != $i) {
 					$sql .= ",\n";
 				}
 				$i++;

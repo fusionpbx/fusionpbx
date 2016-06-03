@@ -116,16 +116,22 @@
 			$password_repeat != '' &&
 			$password_new == $password_repeat
 			) {
-			$salt = generate_password('20', '4');
-			$sql  = "update v_users set ";
-			$sql .= "password = '".md5($salt.$password_new)."', ";
-			$sql .= "salt = '".$salt."' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and username = '".$username."' ";
-			$db->exec(check_sql($sql));
 
-			$_SESSION["message"] = $text['message-password_reset'];
-			$password_reset = false;
+			if (!check_password_strength($password_new, $text)) {
+				$password_reset = true;
+			}
+			else {
+				$salt = generate_password('20', '4');
+				$sql  = "update v_users set ";
+				$sql .= "password = '".md5($salt.$password_new)."', ";
+				$sql .= "salt = '".$salt."' ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and username = '".$username."' ";
+				$db->exec(check_sql($sql));
+
+				$_SESSION["message"] = $text['message-password_reset'];
+				$password_reset = false;
+			}
 		}
 		else {
 			//not found
@@ -253,17 +259,100 @@
 	}
 	else {
 
+		echo "<script>\n";
+		echo "	function compare_passwords() {\n";
+		echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('password_confirm') === document.activeElement) {\n";
+		echo "			if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+		echo "				if ($('#password').val() != $('#password_confirm').val()) {\n";
+		echo "					$('#password').removeClass('formfld_highlight_good');\n";
+		echo "					$('#password_confirm').removeClass('formfld_highlight_good');\n";
+		echo "					$('#password').addClass('formfld_highlight_bad');\n";
+		echo "					$('#password_confirm').addClass('formfld_highlight_bad');\n";
+		echo "				}\n";
+		echo "				else {\n";
+		echo "					$('#password').removeClass('formfld_highlight_bad');\n";
+		echo "					$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+		echo "					$('#password').addClass('formfld_highlight_good');\n";
+		echo "					$('#password_confirm').addClass('formfld_highlight_good');\n";
+		echo "				}\n";
+		echo "			}\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#password').removeClass('formfld_highlight_bad');\n";
+		echo "			$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+		echo "			$('#password').removeClass('formfld_highlight_good');\n";
+		echo "			$('#password_confirm').removeClass('formfld_highlight_good');\n";
+		echo "		}\n";
+		echo "	}\n";
+
+		$req['length'] = $_SESSION['security']['password_length']['numeric'];
+		$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+		$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+		$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+		$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+
+		echo "	function check_password_strength(pwd) {\n";
+		echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+		echo "			var msg_errors = [];\n";
+		if (is_numeric($req['length']) && $req['length'] != 0) {
+			echo "		var re = /.{".$req['length'].",}/;\n"; //length
+			echo "		if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-characters']."'); }\n";
+		}
+		if ($req['number']) {
+			echo "		var re = /(?=.*[\d])/;\n";  //number
+			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-numbers']."'); }\n";
+		}
+		if ($req['lowercase']) {
+			echo "		var re = /(?=.*[a-z])/;\n";  //lowercase
+			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-lowercase_letters']."'); }\n";
+		}
+		if ($req['uppercase']) {
+			echo "		var re = /(?=.*[A-Z])/;\n";  //uppercase
+			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-uppercase_letters']."'); }\n";
+		}
+		if ($req['special']) {
+			echo "		var re = /(?=.*[\W])/;\n";  //special
+			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-special_characters']."'); }\n";
+		}
+		echo "			if (msg_errors.length > 0) {\n";
+		echo "				var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
+		echo "				display_message(msg, 'negative', '6000');\n";
+		echo "				return false;\n";
+		echo "			}\n";
+		echo "			else {\n";
+		echo "				return true;\n";
+		echo "			}\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			return true;\n";
+		echo "		}\n";
+		echo "	}\n";
+
+		echo "	function show_strenth_meter() {\n";
+		echo "		$('#pwstrength_progress').slideDown();\n";
+		echo "	}\n";
+		echo "</script>\n";
+
 		echo "<span id='reset_form'>\n";
-		echo "<form name='reset' method='post' action=''>\n";
+		echo "<form name='reset' id='frm' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='reset'>\n";
 		echo "<input type='hidden' name='au' value='".md5($_SESSION['login']['password_reset_key']['text'].$username)."'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
-		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_new' autocomplete='off' placeholder=\"".$text['label-new_password']."\"><br />\n";
-		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password_repeat' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\"><br />\n";
-		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-save']."'>\n";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 4px;' name='password_new' id='password' autocomplete='off' placeholder=\"".$text['label-new_password']."\" onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
+		echo "<div id='pwstrength_progress' class='pwstrength_progress pwstrength_progress_password_reset'></div>";
+		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-top: 4px; margin-bottom: 8px;' name='password_repeat' id='password_confirm' autocomplete='off' placeholder=\"".$text['label-repeat_password']."\" onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";
+		echo "<input type='button' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">\n";
 		echo "<br><br><a class='login_link' onclick=\"document.location.href='login.php';\">".$text['label-cancel']."</a>";
 		echo "</form>";
-		echo "<script>document.getElementById('username').focus();</script>";
+		echo "<script>\n";
+		echo "	document.getElementById('username').focus();\n";
+		// convert password fields to text
+			echo "	function submit_form() {\n";
+			echo "		$('input:password').css('visibility','hidden');\n";
+			echo "		$('input:password').attr({type:'text'});\n";
+			echo "		$('form#frm').submit();\n";
+			echo "	}\n";
+		echo "</script>\n";
 		echo "</span>";
 
 	}

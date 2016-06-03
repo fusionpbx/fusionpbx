@@ -126,6 +126,39 @@ $text['message-password_reset']['ro'] = "Resetare parolă";
 $text['message-password_reset']['fa'] = "";
 $text['message-password_reset']['ar-eg'] = "اعادة تعيين كلمة السر";
 
+$text['message-password_requirements']['en-us'] = "Password Requirements";
+$text['message-password_requirements']['es-cl'] = "Requisitos de Contraseña";
+$text['message-password_requirements']['pt-pt'] = "Requisitos Senha";
+$text['message-password_requirements']['fr-fr'] = "Mot de passe requis";
+$text['message-password_requirements']['pl'] = "Wymagania Hasło";
+$text['message-password_requirements']['uk'] = "вимоги до паролю";
+$text['message-password_requirements']['sv-se'] = "lösenordskrav ";
+$text['message-password_requirements']['ro'] = "Cerințe privind parola";
+$text['message-password_requirements']['de-at'] = "Kennwortanforderungen ";
+$text['message-password_requirements']['he'] = "דרישות סיסמא";
+
+$text['message-password_mismatch']['en-us'] = "Password Mismatch";
+$text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
+$text['message-password_mismatch']['pt-pt'] = "As passwords não correspondem.";
+$text['message-password_mismatch']['fr-fr'] = "Les mots de passe ne correspondent pas";
+$text['message-password_mismatch']['pl'] = "Wprowadzone hasła nie są takie same";
+$text['message-password_mismatch']['uk'] = "Паролі не співпадають";
+$text['message-password_mismatch']['sv-se'] = "Lösenordet Stämmer Inte";
+$text['message-password_mismatch']['ro'] = "";
+$text['message-password_mismatch']['de-at'] = "Passwörter stimmen nicht überein.";
+$text['message-password_mismatch']['he'] = "הסיסמא לא נכונה";
+
+$text['message-password_blank']['en-us'] = "Invalid Password";
+$text['message-password_blank']['es-cl'] = "Contraseña No Válida";
+$text['message-password_blank']['pt-pt'] = "Senha Inválida";
+$text['message-password_blank']['fr-fr'] = "Mot de Passe Incorrect";
+$text['message-password_blank']['pl'] = "Nieprawidłowe hasło";
+$text['message-password_blank']['uk'] = "Неправильний пароль";
+$text['message-password_blank']['sv-se'] = "Ogiltigt Lösenord";
+$text['message-password_blank']['ro'] = "";
+$text['message-password_blank']['de-at'] = "Falsches Passwort";
+$text['message-password_blank']['he'] = "סיסמא לא קיימת";
+
 $text['message-invalid_username_mismatch_passwords']['en-us'] = "Invalid Username and/or Mismatched Passwords";
 $text['message-invalid_username_mismatch_passwords']['es-cl'] = "Nombre de usuario válido y/o contraseñas no coincidentes";
 $text['message-invalid_username_mismatch_passwords']['pt-pt'] = "Nome de usuário inválido e/ou palavras-passe não correspondentes";
@@ -281,6 +314,20 @@ $text['label-used']['ro'] = "Folosit";
 $text['label-used']['fa'] = "";
 $text['label-used']['ar-eg'] = "مستعمل";
 
+$text['label-uppercase_letters']['en-us'] = "Uppercase Letters";
+$text['label-uppercase_letters']['es-cl'] = "Letras mayúsculas";
+$text['label-uppercase_letters']['pt-pt'] = "Letras maiúsculas";
+$text['label-uppercase_letters']['fr-fr'] = "Lettres capitales";
+$text['label-uppercase_letters']['pt-br'] = "Letras maiúsculas";
+$text['label-uppercase_letters']['pl'] = "Wielkie litery";
+$text['label-uppercase_letters']['he'] = "אותיות רישיות";
+$text['label-uppercase_letters']['uk'] = "Великі літери";
+$text['label-uppercase_letters']['sv-se'] = "Versala bokstäver";
+$text['label-uppercase_letters']['de-at'] = "Großbuchstaben";
+$text['label-uppercase_letters']['ro'] = "Litere mari";
+$text['label-uppercase_letters']['fa'] = "";
+$text['label-uppercase_letters']['ar-eg'] = "الأحرف الكبيرة";
+
 $text['label-total_extensions']['en-us'] = "Total Extensions";
 $text['label-total_extensions']['es-cl'] = "Las extensiones totales";
 $text['label-total_extensions']['pt-pt'] = "total de extensões";
@@ -410,6 +457,20 @@ $text['label-status']['ro'] = "Stare";
 $text['label-status']['fa'] = "";
 $text['label-status']['ar-eg'] = "الحالة";
 
+$text['label-special_characters']['en-us'] = "Special Characters";
+$text['label-special_characters']['es-cl'] = "Caracteres especiales";
+$text['label-special_characters']['pt-pt'] = "Caracteres especiais";
+$text['label-special_characters']['fr-fr'] = "Caractères spéciaux";
+$text['label-special_characters']['pt-br'] = "Caracteres especiais";
+$text['label-special_characters']['pl'] = "Znaki specjalne";
+$text['label-special_characters']['he'] = "תווים מיוחדים";
+$text['label-special_characters']['uk'] = "спеціальні символи";
+$text['label-special_characters']['sv-se'] = "Speciella karaktärer";
+$text['label-special_characters']['de-at'] = "Spezielle Charaktere";
+$text['label-special_characters']['ro'] = "caractere speciale";
+$text['label-special_characters']['fa'] = "";
+$text['label-special_characters']['ar-eg'] = "أحرف خاصة";
+
 $text['label-ring_groups']['en-us'] = "Ring Groups";
 $text['label-ring_groups']['es-cl'] = "Grupo de llamado";
 $text['label-ring_groups']['fr-fr'] = "Groupes de Sonnerie";
@@ -523,6 +584,20 @@ $text['label-outbound']['uk'] = "";
 $text['label-outbound']['de-at'] = "Ausgehend";
 $text['label-outbound']['he'] = "";
 
+$text['label-numbers']['en-us'] = "Numbers";
+$text['label-numbers']['es-cl'] = "Números";
+$text['label-numbers']['pt-pt'] = "Números";
+$text['label-numbers']['fr-fr'] = "Nombres";
+$text['label-numbers']['pt-br'] = "Números";
+$text['label-numbers']['pl'] = "Liczby";
+$text['label-numbers']['he'] = "מספרים";
+$text['label-numbers']['uk'] = "чисел";
+$text['label-numbers']['sv-se'] = "Tal";
+$text['label-numbers']['de-at'] = "Nummern";
+$text['label-numbers']['ro'] = "numere";
+$text['label-numbers']['fa'] = "";
+$text['label-numbers']['ar-eg'] = "أرقام";
+
 $text['label-no_voicemail_assigned']['en-us'] = "No Voicemail Assigned";
 $text['label-no_voicemail_assigned']['es-cl'] = "No Asignado correo de voz";
 $text['label-no_voicemail_assigned']['pt-pt'] = "Sem Voicemail Assigned";
@@ -624,6 +699,20 @@ $text['label-memory_usage']['de-at'] = "Speichernutzung";
 $text['label-memory_usage']['ro'] = "Folosirea memoriei";
 $text['label-memory_usage']['fa'] = "";
 $text['label-memory_usage']['ar-eg'] = "استخدام الذاكرة";
+
+$text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
+$text['label-lowercase_letters']['es-cl'] = "Letras minusculas";
+$text['label-lowercase_letters']['pt-pt'] = "Letras minúsculas";
+$text['label-lowercase_letters']['fr-fr'] = "Minuscules";
+$text['label-lowercase_letters']['pt-br'] = "Letras minúsculas";
+$text['label-lowercase_letters']['pl'] = "Małe litery";
+$text['label-lowercase_letters']['he'] = "אותיות קטנות";
+$text['label-lowercase_letters']['uk'] = "Букви нижнього регістру";
+$text['label-lowercase_letters']['sv-se'] = "Gemener";
+$text['label-lowercase_letters']['de-at'] = "Kleinbuchstaben";
+$text['label-lowercase_letters']['ro'] = "Litere mici";
+$text['label-lowercase_letters']['fa'] = "";
+$text['label-lowercase_letters']['ar-eg'] = "أحرف صغيرة";
 
 $text['label-local']['en-us'] = "Local";
 $text['label-local']['es-cl'] = "Local";
@@ -942,6 +1031,20 @@ $text['label-cid_name']['sv-se'] = "Namn";
 $text['label-cid_name']['uk'] = "Назва";
 $text['label-cid_name']['de-at'] = "Name";
 $text['label-cid_name']['he'] = "שם";
+
+$text['label-characters']['en-us'] = "Characters";
+$text['label-characters']['es-cl'] = "Caracteres";
+$text['label-characters']['pt-pt'] = "Personagens";
+$text['label-characters']['fr-fr'] = "Personnages";
+$text['label-characters']['pt-br'] = "Personagens";
+$text['label-characters']['pl'] = "Postacie";
+$text['label-characters']['he'] = "דמויות";
+$text['label-characters']['uk'] = "персонажі";
+$text['label-characters']['sv-se'] = "tecken";
+$text['label-characters']['de-at'] = "Figuren";
+$text['label-characters']['ro'] = "caractere";
+$text['label-characters']['fa'] = "";
+$text['label-characters']['ar-eg'] = "الشخصيات";
 
 $text['label-channels']['en-us'] = "Channels";
 $text['label-channels']['es-cl'] = "Canales";

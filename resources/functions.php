@@ -988,8 +988,8 @@ function format_string ($format, $data) {
 		$password = '';
 		$charset = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["security"]["password_length"]["var"])) ? $_SESSION["security"]["password_length"]["var"] : 10;
-			$strength = (is_numeric($_SESSION["security"]["password_strength"]["var"])) ? $_SESSION["security"]["password_strength"]["var"] : 4;
+			$length = (is_numeric($_SESSION["security"]["password_length"]["numeric"])) ? $_SESSION["security"]["password_length"]["numeric"] : 10;
+			$strength = (is_numeric($_SESSION["security"]["password_strength"]["numeric"])) ? $_SESSION["security"]["password_strength"]["numeric"] : 4;
 		}
 		if ($strength >= 1) { $charset .= "0123456789"; }
 		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
@@ -1002,7 +1002,42 @@ function format_string ($format, $data) {
 		}
 		return $password;
 	}
-	//echo generate_password(4, 4);
+
+//check password strength against requirements (if any)
+	function check_password_strength($password, $text) {
+		if ($password != '') {
+			$req['length'] = $_SESSION['security']['password_length']['numeric'];
+			$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+			$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+			$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+			$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{'.$req['length'].',})\S*$', $password)) { // length
+				$msg_errors[] = $req['length'].'+ '.$text['label-characters'];
+			}
+			if ($req['number'] && !preg_match_all('$\S*(?=\S*[\d])\S*$', $password)) { //number
+				$msg_errors[] = '1+ '.$text['label-numbers'];
+			}
+			if ($req['lowercase'] && !preg_match_all('$\S*(?=\S*[a-z])\S*$', $password)) { //lowercase
+				$msg_errors[] = '1+ '.$text['label-lowercase_letters'];
+			}
+			if ($req['uppercase'] && !preg_match_all('$\S*(?=\S*[A-Z])\S*$', $password)) { //uppercase
+				$msg_errors[] = '1+ '.$text['label-uppercase_letters'];
+			}
+			if ($req['special'] && !preg_match_all('$\S*(?=\S*[\W])\S*$', $password)) { //special
+				$msg_errors[] = '1+ '.$text['label-special_characters'];
+			}
+			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
+				$_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors);
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message_delay'] = '6000';
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return true;
+	}
 
 //based on Wez Furlong do_post_request
 	if (!function_exists('send_http_request')) {

@@ -51,6 +51,7 @@
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-colorpicker.js"></script>
+<script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-pwstrength.min.js"></script>
 <?php
 //web font loader
 	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
@@ -193,6 +194,24 @@
 						}
 					}
 				});
+			});
+
+		//apply password strength plugin
+			$('#password').pwstrength({
+				common: {
+					minChar: 8,
+					usernameField: '#username',
+				},
+				/* rules: { },  */
+				ui: {
+					//				very weak weak		normal	   medium	  strong	 very strong
+					colorClasses: ["danger", "warning", "warning", "warning", "success", "success"],
+					progressBarMinPercentage: 15,
+					showVerdicts: false,
+					viewports: {
+						progress: "#pwstrength_progress"
+					}
+				}
 			});
 
 		<?php if ($_SESSION['theme']['menu_brand_image']['text'] != '' && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') { ?>
