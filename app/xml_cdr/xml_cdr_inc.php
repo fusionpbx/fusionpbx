@@ -274,7 +274,8 @@ else {
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
 		//get the number of rows in the v_xml_cdr
-			$sql = "select count(*) as num_rows from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
+			$sql = "select count(*) as num_rows from v_xml_cdr ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
@@ -330,12 +331,14 @@ else {
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$sql .= $field.", ";
+		}
+	}
 	$sql .= "accountcode, ";
 	$sql .= "answer_stamp, ";
 	$sql .= "sip_hangup_disposition, ";
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-		$sql .= "call_sell, ";
-	}
 	if (permission_exists("xml_cdr_pdd")) {
 		$sql .= "pdd_ms, ";
 	}
