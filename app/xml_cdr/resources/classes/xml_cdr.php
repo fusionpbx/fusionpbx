@@ -45,7 +45,6 @@ if (!class_exists('xml_cdr')) {
 		public $start_stamp_begin;
 		public $start_stamp_end;
 		public $include_internal;
-		public $quick_select;
 		public $extensions;
 
 		/**
