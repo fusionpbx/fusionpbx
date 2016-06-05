@@ -39,6 +39,15 @@ if (!class_exists('xml_cdr')) {
 		public $debug;
 		public $fields;
 
+		//user summary
+		public $domain_uuid;
+		public $quick_select;
+		public $start_stamp_begin;
+		public $start_stamp_end;
+		public $include_internal;
+		public $quick_select;
+		public $extensions;
+
 		/**
 		 * Called when the object is created
 		 */
@@ -599,6 +608,144 @@ if (!class_exists('xml_cdr')) {
 			}
 		}
 		//$this->post();
+
+		/**
+		 * user summary returns an array
+		 */
+		public function user_summary() {
+			//get current extension info
+				$sql = "select ";
+				$sql .= "domain_uuid, ";
+				$sql .= "extension_uuid, ";
+				$sql .= "extension, ";
+				$sql .= "number_alias, ";
+				$sql .= "description ";
+				$sql .= "from ";
+				$sql .= "v_extensions ";
+				$sql .= "where ";
+				$sql .= "enabled = 'true' ";
+				if (!($_GET['showall'] == 'true' && permission_exists('xml_cdr_all'))) {
+					$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
+				}
+				if (!(if_group("admin") || if_group("superadmin"))) {
+					if (count($_SESSION['user']['extension']) > 0) {
+						$sql .= "and (";
+						$x = 0;
+						foreach($_SESSION['user']['extension'] as $row) {
+							if ($x > 0) { $sql .= "or "; }
+							$sql .= "extension = '".$row['user']."' ";
+							$x++;
+						}
+						$sql .= ")";
+					}
+					else {
+						//used to hide any results when a user has not been assigned an extension
+						$sql .= "and extension = 'disabled' ";
+					}
+				}
+				$sql .= "order by ";
+				$sql .= "extension asc";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$result_count = count($result);
+				if ($result_count > 0) {
+					foreach($result as $row) {
+						$ext = $row['extension'];
+						if(strlen($row['number_alias']) > 0) {
+							$ext = $row['number_alias'];
+						}
+						$extensions[$ext]['domain_uuid'] = $row['domain_uuid'];
+						$extensions[$ext]['extension'] = $row['extension'];
+						$extensions[$ext]['extension_uuid'] = $row['extension_uuid'];
+						$extensions[$ext]['number_alias'] = $row['number_alias'];
+						$extensions[$ext]['description'] = $row['description'];
+					}
+				}
+				unset ($sql, $prep_statement, $result, $row_count);
+
+				// create list of extensions for query below
+				if (isset($extensions)) {
+					foreach ($extensions as $extension => $blah) {
+						$ext_array[] = $extension;
+					}
+					$this->extensions = $extensions;
+				}
+				$ext_list = (isset($ext_array)) ? implode("','", $ext_array) : "";
+
+			//calculate the summary data
+				$sql = "select ";
+				$sql .= "caller_id_number, ";
+				$sql .= "destination_number, ";
+				$sql .= "billsec, ";
+				$sql .= "hangup_cause ";
+				$sql .= "from v_xml_cdr ";
+				$sql .= "where ";
+				if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
+					$sql .= " domain_uuid = '".$this->domain_uuid."' and ";
+				}
+				$sql .= "( ";
+				$sql .= "	caller_id_number in ('".$ext_list."') or ";
+				$sql .= "	destination_number in ('".$ext_list."') ";
+				$sql .= ") ";
+				if (!$include_internal) {
+					$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
+				}
+				if (strlen($start_stamp_begin) > 0 || strlen($start_stamp_end) > 0) {
+					unset($quick_select);
+					if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
+						$sql .= " and start_stamp between '".$start_stamp_begin.":00.000' and '".$start_stamp_end.":59.999'";
+					}
+					else {
+						if (strlen($start_stamp_begin) > 0) { $sql .= "and start_stamp >= '".$start_stamp_begin.":00.000' "; }
+						if (strlen($start_stamp_end) > 0) { $sql .= "and start_stamp <= '".$start_stamp_end.":59.999' "; }
+					}
+				}
+				else {
+					switch ($quick_select) {
+						case 1: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; break; //last 7 days
+						case 2: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; break; //last hour
+						case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' "; break; //today
+						case 4: $sql .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' "; break; //yesterday
+						case 5: $sql .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' "; break; //this week
+						case 6: $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' "; break; //this month
+						case 7: $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' "; break; //this year
+					}
+				}
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$result_count = count($result);
+
+				if ($result_count > 0) {
+					foreach($result as $row) {
+						if ($summary[$row['destination_number']]['missed'] == null) {
+							$summary[$row['destination_number']]['missed'] = 0;
+						}
+						if (in_array($row['caller_id_number'], $ext_array)) {
+							$summary[$row['caller_id_number']]['outbound']['count']++;
+							$summary[$row['caller_id_number']]['outbound']['seconds'] += $row['billsec'];
+						}
+						if (in_array($row['destination_number'], $ext_array)) {
+							$summary[$row['destination_number']]['inbound']['count']++;
+							$summary[$row['destination_number']]['inbound']['seconds'] += $row['billsec'];
+							if ($row['billsec'] == "0") {
+								$summary[$row['destination_number']]['missed']++;
+							}
+						}
+						if ($row['hangup_cause'] == "NO_ANSWER") {
+							$summary[$row['destination_number']]['no_answer']++;
+						}
+						if ($row['hangup_cause'] == "USER_BUSY") {
+							$summary[$row['destination_number']]['busy']++;
+						}
+					} //end foreach
+				} //end if results
+				unset ($sql, $prep_statement, $result, $row_count);
+
+			//return the array
+				return $summary;
+		}
 
 	} //end scripts class
 }
