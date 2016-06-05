@@ -60,8 +60,8 @@
 	$cdr->start_stamp_end = $start_stamp_end;
 	$cdr->include_internal = $include_internal;
 	$cdr->quick_select = $quick_select;
+	$extensions = $cdr->extensions;
 	$summary = $cdr->user_summary();
-	$extensions = $cdr->extensions();
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
