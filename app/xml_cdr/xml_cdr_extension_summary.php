@@ -55,13 +55,14 @@
 
 //get the summary
 	$cdr = new xml_cdr;
+	$cdr->domain_uuid = $_SESSION['domain_uuid'];
 	$cdr->quick_select = $quick_select;
 	$cdr->start_stamp_begin = $start_stamp_begin;
 	$cdr->start_stamp_end = $start_stamp_end;
 	$cdr->include_internal = $include_internal;
 	$cdr->quick_select = $quick_select;
-	$extensions = $cdr->extensions;
 	$summary = $cdr->user_summary();
+	$extensions = $cdr->extensions;
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
