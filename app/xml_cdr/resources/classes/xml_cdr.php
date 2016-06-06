@@ -687,21 +687,21 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "	caller_id_number in ('".$ext_list."') or ";
 				$sql .= "	destination_number in ('".$ext_list."') ";
 				$sql .= ") ";
-				if (!$include_internal) {
+				if (!$this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
 				}
-				if (strlen($start_stamp_begin) > 0 || strlen($start_stamp_end) > 0) {
-					unset($quick_select);
-					if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-						$sql .= " and start_stamp between '".$start_stamp_begin.":00.000' and '".$start_stamp_end.":59.999'";
+				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
+					unset($this->quick_select);
+					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
+						$sql .= " and start_stamp between '".$this->start_stamp_begin.":00.000' and '".$this->start_stamp_end.":59.999'";
 					}
 					else {
-						if (strlen($start_stamp_begin) > 0) { $sql .= "and start_stamp >= '".$start_stamp_begin.":00.000' "; }
-						if (strlen($start_stamp_end) > 0) { $sql .= "and start_stamp <= '".$start_stamp_end.":59.999' "; }
+						if (strlen($this->start_stamp_begin) > 0) { $sql .= "and start_stamp >= '".$this->start_stamp_begin.":00.000' "; }
+						if (strlen($this->start_stamp_end) > 0) { $sql .= "and start_stamp <= '".$this->start_stamp_end.":59.999' "; }
 					}
 				}
 				else {
-					switch ($quick_select) {
+					switch ($this->quick_select) {
 						case 1: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; break; //last 7 days
 						case 2: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; break; //last hour
 						case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' "; break; //today
