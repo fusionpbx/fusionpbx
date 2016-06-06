@@ -733,13 +733,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//update devices having extension assigned to line(s) with new password
-					$sql = "update v_device_lines set ";
-					$sql .= "password = '".$password."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
-					$sql .= "and user_id = '".$extension."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					if (permission_exists('extension_password')) {
+						$sql = "update v_device_lines set ";
+						$sql .= "password = '".$password."' ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
+						$sql .= "and user_id = '".$extension."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 
 			} //if ($action == "update")
 
