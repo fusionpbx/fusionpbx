@@ -1943,4 +1943,17 @@ function number_pad($number,$n) {
 		}
 	}
 
+//retrieve array of countries
+	if (!function_exists('get_countries')) {
+		function get_countries($db) {
+			$sql = "select * from v_countries order by country asc";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			return ($result_count > 0) ? $result : false;
+			unset ($prep_statement, $sql);
+		}
+	}
+
 ?>
