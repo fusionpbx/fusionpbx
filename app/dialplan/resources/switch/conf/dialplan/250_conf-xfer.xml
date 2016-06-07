@@ -3,7 +3,7 @@
   set `conf_xfer_number` and do transfer to `conf_xfer_from_dialplan`
 
 <action application="export" data="conf_xfer_number=xfer-${create_uuid foo}-${domain_name}">
-<action application="bind_digit_action" data="local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@${domain_name}, ${bind_target}"/>
+<action application="bind_digit_action" data="local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@${domain_name},${bind_target}"/>
 
 Control DTMF sequence
 	`*0` transfer `self` to enter number and `peer` leg to conference room
