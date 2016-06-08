@@ -97,6 +97,7 @@
 //intialize variables
 	$install_step = '';
 	$return_install_step = '';
+	$re_detect_switch = false;
 
 //process the the HTTP POST
 	if (count($_POST) > 0) {
@@ -115,6 +116,9 @@
 			$install_default_country	= $_POST["install_default_country"];
 			$install_template_name		= $_POST["install_template_name"];
 			$domain_name				= $_POST["domain_name"];
+		}
+		if($install_step == 'config_detail' and strlen(check_str($_POST["re_detect_switch"])) > 0 ){
+			$re_detect_switch = true;
 		}
 	}
 
@@ -177,7 +181,10 @@
 		elseif (strlen($admin_password) < 5) { $messages[] = "Please provide an Admin Password that is 5 or more characters.<br>\n"; }
 		if ( count($messages) > $existing_errors) { $install_step = 'config_detail'; }
 	}
-
+	if($re_detect_switch == true ){
+		$install_step = 'detect_config';
+	}
+	
 	if($install_step =='execute') {
 		//set the max execution time to 1 hour
 		ini_set('max_execution_time',3600);
@@ -214,17 +221,17 @@
 		echo "</form>\n";
 	} elseif($install_step == 'detect_config'){
 		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
-			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
+			echo "<p><b>Warning</b> you have chosen a value other than localhost for event_host, this is unsupported at present</p>\n";
 		}
 		//if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
 			include "resources/page_parts/install_event_socket.php";
-			echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
-			echo "	<input type='hidden' name='return_install_step' value='detect_config'/>\n";
-			echo "	<input type='hidden' name='install_step' value='config_detail'/>\n";
-			echo "	<input type='hidden' name='event_host' value='$event_host'/>\n";
-			echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
-			echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
+			//echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
+			//echo "	<input type='hidden' name='return_install_step' value='detect_config'/>\n";
+			//echo "	<input type='hidden' name='install_step' value='config_detail'/>\n";
+			//echo "	<input type='hidden' name='event_host' value='$event_host'/>\n";
+			//echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
+			//echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
 			//echo "	<div style='text-align:right'>\n";
 			//echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			//echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
