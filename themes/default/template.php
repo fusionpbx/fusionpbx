@@ -3,7 +3,7 @@
 	$user_agent = http_user_agent();
 	$browser_version =  $user_agent['version'];
 	$browser_name =  $user_agent['name'];
-	$browser_version_array = explode('.', $browser_version);
+	$browser_version_array = explode('.', $browser_version);f
 
 //set the doctype
 	echo ($browser_name != "Internet Explorer") ? "<!DOCTYPE html>\n" : "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -405,7 +405,7 @@
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 									echo "<a href='".$menu_brand_link."'>";
 									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
