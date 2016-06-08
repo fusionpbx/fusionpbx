@@ -869,6 +869,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: none;
 		<?php
 		/* then set */
+		$shadow_inset = $shadow_outset = '';
 		if ($_SESSION['theme']['input_shadow_inner_color_focus']['text'] != '') {
 			$inner_color = $_SESSION['theme']['input_shadow_inner_color_focus']['text'];
 			$shadow_inset = "0 0 3px ".$inner_color." inset";
@@ -944,6 +945,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: none;
 		<?php
 		/* then set */
+		$shadow_inset = $shadow_outset = '';
 		if ($_SESSION['theme']['login_input_shadow_inner_color_focus']['text'] != '') {
 			$inner_color = $_SESSION['theme']['login_input_shadow_inner_color_focus']['text'];
 			$shadow_inset = "0 0 3px ".$inner_color." inset";
