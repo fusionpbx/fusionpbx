@@ -28,6 +28,7 @@ require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/classes/logging.php";
+require_once "resources/classes/ringbacks.php";
 if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
 	//access granted
 }
@@ -305,6 +306,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 		unset ($prep_statement);
+	}else{
+		$ivr_menu_ringback = 'default_ringback';
 	}
 
 //set defaults
@@ -789,57 +792,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$select_options = "";
-	if ($ivr_menu_ringback == "\${us-ring}" || $ivr_menu_ringback == "us-ring") {
-		$select_options .= "		<option value='\${us-ring}' selected='selected'>us-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${us-ring}'>us-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "\${pt-ring}" || $ivr_menu_ringback == "pt-ring") {
-		$select_options .= "		<option value='\${pt-ring}' selected='selected'>pt-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${pt-ring}'>pt-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "\${fr-ring}" || $ivr_menu_ringback == "fr-ring") {
-		$select_options .= "		<option value='\${fr-ring}' selected='selected'>fr-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${fr-ring}'>fr-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "\${uk-ring}" || $ivr_menu_ringback == "uk-ring") {
-		$select_options .= "		<option value='\${uk-ring}' selected='selected'>uk-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${uk-ring}'>uk-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "\${rs-ring}" || $ivr_menu_ringback == "rs-ring") {
-		$select_options .= "		<option value='\${rs-ring}' selected='selected'>rs-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${rs-ring}'>rs-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "\${it-ring}" || $ivr_menu_ringback == "it-ring") {
-		$select_options .= "		<option value='\${it-ring}' selected='selected'>it-ring</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${it-ring}'>it-ring</option>\n";
-	}
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-		$moh = new switch_music_on_hold;
-		$moh->select_name = "ivr_menu_ringback";
-		$moh->select_value = $ivr_menu_ringback;
-		$moh->select_options = $select_options;
-		echo $moh->select();
-	}
-	else {
-		echo "	<select class='formfld' name='ivr_menu_ringback'>\n";
-		//echo "	<option value=''></option>\n";
-		echo $select_options;
-		echo "	</select>\n";
-	}
+	$ringbacks = new ringbacks;
+	echo $ringbacks->select('ivr_menu_ringback', $ivr_menu_ringback);
 
 	echo "<br />\n";
 	echo $text['description-ring_back']."\n";
