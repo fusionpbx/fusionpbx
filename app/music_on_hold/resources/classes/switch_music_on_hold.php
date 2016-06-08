@@ -202,7 +202,10 @@ include "root.php";
 				}
 			//replace the variables
 				$file_contents = preg_replace("/music\/default/", $default_moh_prefix, $file_contents);
+			//old template
 				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
+			//new template
+				$file_contents = preg_replace("/[\t ]*<!--{v_moh_categories_start}-->.*<!--{v_moh_categories_end}-->/", $this->xml, $file_contents);
 
 			//write the XML config file
 				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
