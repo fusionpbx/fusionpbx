@@ -3,7 +3,7 @@
 	$user_agent = http_user_agent();
 	$browser_version =  $user_agent['version'];
 	$browser_name =  $user_agent['name'];
-	$browser_version_array = explode('.', $browser_version);f
+	$browser_version_array = explode('.', $browser_version);
 
 //set the doctype
 	echo ($browser_name != "Internet Explorer") ? "<!DOCTYPE html>\n" : "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
