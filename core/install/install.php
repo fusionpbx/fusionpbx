@@ -181,10 +181,10 @@
 		elseif (strlen($admin_password) < 5) { $messages[] = "Please provide an Admin Password that is 5 or more characters.<br>\n"; }
 		if ( count($messages) > $existing_errors) { $install_step = 'config_detail'; }
 	}
-	if($re_detect_switch == true ){
+	if($re_detect_switch === true ){
 		$install_step = 'detect_config';
 	}
-	
+
 	if($install_step =='execute') {
 		//set the max execution time to 1 hour
 		ini_set('max_execution_time',3600);
