@@ -30,9 +30,15 @@ include "root.php";
 	class switch_recordings {
 
 		public $domain_uuid;
+		private $db;
 
 		public function __construct() {
-			require_once "resources/classes/database.php";
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 		}
 

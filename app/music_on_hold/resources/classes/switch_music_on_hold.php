@@ -35,9 +35,15 @@ include "root.php";
 		public $select_value;
 		public $select_options;
 		private $xml;
+		private $db;
 
 		public function __construct() {
-			require_once "resources/classes/database.php";
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 		}
 
@@ -76,7 +82,7 @@ include "root.php";
 			//recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
 					require_once "app/recordings/resources/classes/switch_recordings.php";
-					$recordings_c = new recordings;
+					$recordings_c = new switch_recordings;
 					$recordings = $recordings_c->list_recordings();
 					if (sizeof($recordings) > 0) {
 						$select .= "<optgroup label='".$text['label-recordings']."'>";
