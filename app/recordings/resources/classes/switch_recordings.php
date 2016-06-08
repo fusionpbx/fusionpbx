@@ -51,7 +51,7 @@ include "root.php";
 		public function list_recordings() {
 			$sql = "select recording_uuid, recording_filename, recording_base64 from v_recordings ";
 			$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
