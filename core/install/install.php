@@ -32,10 +32,6 @@
 //start a php session
 	session_start();
 
-//set theme settings
-	$_SESSION['theme']['footer_color'] = '#cccccc';
-	$_SESSION['theme']['footer_background_color'] = '#ffffff';
-
 //initialize variables we are going to use
 	$event_host = '';
 	$event_port = '';
@@ -337,6 +333,7 @@
 	else {
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
+	echo "</div>\n";
 
 //initialize some defaults so we can be 'logged in'
 	$_SESSION['username'] = 'install_enabled';
@@ -350,6 +347,10 @@
 //set a default template
 	$default_template = 'default';
 	$_SESSION['domain']['template']['name'] = $default_template;
+	$set_session_theme = 1;
+	$domains_processed = 1;
+	include "themes/$default_template/app_defaults.php";
+	unset($set_session_theme, $domains_processed);
 	$_SESSION['theme']['menu_brand_type']['text'] = "text";
 
 //set the default template path
