@@ -724,10 +724,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 	$moh= new switch_music_on_hold;
-	$moh->select_name = "queue_moh_sound";
-	$moh->select_value = $queue_moh_sound;
-	$moh->select_options = $select_options;
-	echo $moh->select();
+	echo $moh->select("queue_moh_sound", $queue_moh_sound, $select_options);
 
 	echo "<br />\n";
 	echo $text['description-music_on_hold']."\n";
