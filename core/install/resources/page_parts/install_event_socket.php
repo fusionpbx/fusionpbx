@@ -35,7 +35,8 @@
 		$detect_ok = false;
 	}
 	echo "<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
-	echo "<input type='hidden' name='install_step' value='detect_config'/>\n";
+	echo "<input type='hidden' name='install_step' value='config_detail'/>\n";
+	echo "<input type='hidden' name='return_install_step' value='select_language'/>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
