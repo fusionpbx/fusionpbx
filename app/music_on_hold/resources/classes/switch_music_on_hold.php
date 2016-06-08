@@ -98,7 +98,6 @@ include "root.php";
 				$language = new text;
 				$text = $language->get(null, 'app/music_on_hold');
 
-				$moh_list[''] = $text['opt-default'];
 				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
 				$array = array_merge(glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR), glob($music_on_hold_dir."/".$_SESSION['domain_name']."/*/*", GLOB_ONLYDIR));
 				foreach($array as $moh_dir) {
@@ -120,6 +119,9 @@ include "root.php";
 					}
 					else {
 						$moh_value = "local_stream://".$moh_name;
+					}
+					if($moh_name == 'default') {
+						$moh_name = $text['opt-default'];
 					}
 					$moh_list[$moh_value] = str_replace('_', ' ', $moh_name);
 				}
