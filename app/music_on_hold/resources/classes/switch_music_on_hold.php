@@ -31,9 +31,6 @@ include "root.php";
 	class switch_music_on_hold {
 
 		public $domain_uuid;
-		public $select_name;
-		public $select_value;
-		public $select_options;
 		private $xml;
 		private $db;
 
@@ -53,31 +50,24 @@ include "root.php";
 			}
 		}
 
-		//it is NOT recommended to use this function anymore you should be using the ringback class
+		//it is NOT recommended to use this function if you want to include ringback you should be using the ringback class
 		//see app/ring_groups/ring_group_edit.php for example
-		public function select() {
-			$trace = debug_backtrace();
-			$caller = $trace[1];
-			$what = $caller['function'];
-			if (isset($caller['class'])) {
-				$what .=  " in {$caller['class']}";
-			}
-			trigger_error("Legacy call to select in switch_music_on_hold class by $what", E_USER_WARNING);
+		public function select($name, $selected, $options) {
 			//add multi-lingual support
 				$language = new text;
 				$text = $language->get();
 
 			//start the select
-				$select = "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
+				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
 			//moh
 				$options = $this->list_moh();
 				if (sizeof($options) > 0) {
-					$select .= "<optgroup label='".$text['label-music_on_hold']."'>";
+					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
 					foreach($options as $moh_value => $moh_name) {
-						$select .= "<option value='".$moh_value."' ".(($this->select_value == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
+						$select .= "		<option value='".$moh_value."' ".(($selected == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
 					}
-					$select .= "</optgroup>\n";
+					$select .= "	</optgroup>\n";
 				}
 			//recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
@@ -85,21 +75,21 @@ include "root.php";
 					$recordings_c = new switch_recordings;
 					$recordings = $recordings_c->list_recordings();
 					if (sizeof($recordings) > 0) {
-						$select .= "<optgroup label='".$text['label-recordings']."'>";
+						$select .= "	<optgroup label='".$text['label-recordings']."'>";
 						foreach($recordings as $recording_value => $recording_name){
-							$select .= "<option value='".$recording_value."' ".(($this->select_value == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
+							$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
 						}
-						$select .= "</optgroup>\n";
+						$select .= "	</optgroup>\n";
 					}
 				}
 			//add additional options
-				if (sizeof($this->select_options) > 0) {
-					$select .= "<optgroup label='".$text['label-others']."'>";
-					$select .= $this->select_options;
-					$select .= "</optgroup>\n";
+				if (sizeof($options) > 0) {
+					$select .= "	<optgroup label='".$text['label-others']."'>";
+					$select .= $options;
+					$select .= "	</optgroup>\n";
 				}
 			//end the select and return it
-				$select .= "	</select>\n";
+				$select .= "</select>\n";
 				return $select;
 		}
 
