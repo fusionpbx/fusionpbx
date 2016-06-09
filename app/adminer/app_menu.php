@@ -13,7 +13,8 @@
 	$apps[$x]['menu'][0]['uuid'] = "1f59d07b-b4f7-4f9e-bde9-312cf491d66e";
 	$apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][0]['category'] = "external";
-	$apps[$x]['menu'][0]['path'] = "<!--{project_path}-->/app/adminer/index.php";
+	$apps[$x]['menu'][0]['icon'] = "glyphicon-new-window";
+	$apps[$x]['menu'][0]['path'] = "<!--{project_path}-->/app/adminer/index.php".(($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? '?'.$_SESSION['adminer']['database_type']['text']."=&username=auto&db=fusionpbx&ns=public" : null);
 	$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 ?>

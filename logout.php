@@ -29,7 +29,7 @@ require_once "resources/require.php";
 
 //check for login return preference
 	if ($_SESSION["user_uuid"] != '') {
-		if ($_SESSION['login']['destination_last']['boolean'] == 'true') {
+		if (isset($_SESSION['login']['destination_last']) && ($_SESSION['login']['destination_last']['boolean'] == 'true')) {
 			if ($_SERVER['HTTP_REFERER'] != '') {
 				//convert to relative path
 					$referrer = substr($_SERVER['HTTP_REFERER'], strpos($_SERVER['HTTP_REFERER'], $_SERVER["HTTP_HOST"]) + strlen($_SERVER["HTTP_HOST"]));
@@ -89,18 +89,6 @@ require_once "resources/require.php";
 						unset($sql);
 					}
 			}
-		}
-		else {
-			//disable if not to remember last
-				$sql = "update v_user_settings set ";
-				$sql .= "user_setting_enabled = 'false' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and user_uuid = '".$_SESSION["user_uuid"]."' ";
-				$sql .= "and user_setting_category = 'login' ";
-				$sql .= "and user_setting_subcategory = 'destination' ";
-				$sql .= "and user_setting_name = 'url' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
 		}
 	}
 

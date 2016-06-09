@@ -40,6 +40,9 @@
 	require "resources.functions.database_handle";
 	dbh = database_handle('system');
 
+--include functions
+	require "resources.functions.format_ringback"
+
 --settings
 	require "resources.functions.settings";
 	settings = settings(domain_uuid);
@@ -88,40 +91,14 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--set ringback
+			directory_ringback = format_ringback(session:getVariable("ringback"));
+			session:setVariable("ringback", directory_ringback);
+			session:setVariable("transfer_ringback", directory_ringback);
+
 		--set the sounds path for the language, dialect and voice
-			ringback = session:getVariable("ringback");
-			if (ringback) then
-				ringback = ringback:gsub("$", "");
-				ringback = ringback:gsub("{", "");
-				ringback = ringback:gsub("}", "");
-			end
 			session:setVariable("instant_ringback", "true");
 			session:setVariable("ignore_early_media", "true");
-			if (not ringback) then
-				session:execute("set", "ringback=local_stream://default"); --set to ringtone
-				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
-			elseif (ringback == "uk-ring") then
-				session:setVariable("ringback", "%(400,200,400,450);%(400,2200,400,450)");
-				session:setVariable("transfer_ringback", "%(400,200,400,450);%(400,2200,400,450)");
-			elseif (ringback == "us-ring") then
-				session:setVariable("ringback", "%(2000, 4000, 440.0, 480.0)");
-				session:setVariable("transfer_ringback", "%(2000, 4000, 440.0, 480.0)");
-			elseif (ringback == "pt-ring") then
-				session:setVariable("ringback", "%(1000, 5000, 400.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 5000, 400.0, 0.0)");
-			elseif (ringback == "fr-ring") then
-				session:setVariable("ringback", "%(1500, 3500, 440.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1500, 3500, 440.0, 0.0)");
-			elseif (ringback == "rs-ring") then
-				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
-			elseif (ringback == "it-ring") then
-				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
-				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
-			else
-				session:execute("set", "ringback=local_stream://default"); --set to ringtone
-				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
-			end
 
 		--define the sounds directory
 			sounds_dir = session:getVariable("sounds_dir");
@@ -188,7 +165,7 @@
 --check if a file exists
 	require "resources.functions.file_exists"
 
---define select_entry function 
+--define select_entry function
 	function select_entry()
 		dtmf_digits = "";
 		digit_timeout = "500";
@@ -205,7 +182,7 @@
 		return dtmf_digits;
 	end
 
---define prompt_for_name function 
+--define prompt_for_name function
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
@@ -219,7 +196,7 @@
 		--get the digits for the name
 			dtmf_digits = prompt_for_name();
 
-		--show the dtmf digits 
+		--show the dtmf digits
 			freeswitch.consoleLog("notice", "[directory] first 3 letters of first or last name: " .. dtmf_digits .. "\n");
 
 		--loop through the extensions to find matches
@@ -234,10 +211,10 @@
 				--end
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
-					if (row.first_name and row.last_name) then
+					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemails 
+								sql = [[SELECT * FROM v_voicemails
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. row.extension.. [[' ]];
 								if (debug["sql"]) then
@@ -264,7 +241,9 @@
 											--announce the first and last names
 											session:execute("say", "en name_spelled iterated "..row.first_name);
 											--session:execute("sleep", "500");
-											session:execute("say", "en name_spelled iterated "..row.last_name);
+											if (row.last_name ~= nil) then
+												session:execute("say", "en name_spelled iterated "..row.last_name);
+											end
 										end
 								end);
 							elseif (storage_type == "http_cache") then
@@ -281,8 +260,10 @@
 								else
 									--announce the first and last names
 										session:execute("say", "en name_spelled iterated "..row.first_name);
-										--session:execute("sleep", "500");
-										session:execute("say", "en name_spelled iterated "..row.last_name);
+										if (row.last_name ~= nil) then
+											--session:execute("sleep", "500");
+											session:execute("say", "en name_spelled iterated "..row.last_name);
+										end
 								end
 							end
 

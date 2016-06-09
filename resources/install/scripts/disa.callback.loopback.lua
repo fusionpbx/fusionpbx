@@ -59,7 +59,7 @@ freeswitch.consoleLog("info", "[disa.callback] calling " .. aleg_number .. "\n")
 freeswitch.msleep(2000);
 
 while (session1:ready() and not session1:answered()) do
-	if os.time() > t_started + 30 then 
+	if os.time() > t_started + 30 then
 		freeswitch.consoleLog("info", "[disa.callback] timed out for " .. aleg_number .. "\n");
 		session1:hangup();
 	else
@@ -78,7 +78,7 @@ if session1:ready() and session1:answered() then
 
 	session2 = freeswitch.Session(b_dialstring);
 	while (session2:ready() and not session2:answered()) do
-		if os.time() > t_started2 + 30 then 
+		if os.time() > t_started2 + 30 then
 			freeswitch.consoleLog("info", "[disa.callback] timed out for " .. bleg_number .. "\n");
 			session2:hangup();
 		else

@@ -28,6 +28,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/ringbacks.php";
 if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
 	//access granted
 }
@@ -102,6 +103,8 @@ else {
 			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
 			$ring_group_missed_call_app = check_str($_POST["ring_group_missed_call_app"]);
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
+			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
+			$ring_group_forward_destination = check_str($_POST["ring_group_forward_destination"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -392,6 +395,8 @@ else {
 			$ring_group_skip_active = $row["ring_group_skip_active"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
+			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
+			$ring_group_forward_destination = $row["ring_group_forward_destination"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -400,12 +405,14 @@ else {
 		if (strlen($ring_group_timeout_app) > 0) {
 			$ring_group_timeout_action = $ring_group_timeout_app.":".$ring_group_timeout_data;
 		}
+	}else{
+		$ring_group_ringback = 'default_ringback';
 	}
 
 //get the ring group destination array
 	if ($action == "add") { $x = 0; $limit = 5; }
 	if (strlen($ring_group_uuid) > 0) {
-		$sql = "SELECT * FROM v_ring_group_destinations ";
+		$sql = "select * from v_ring_group_destinations ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and ring_group_uuid = '".$ring_group_uuid."' ";
 		$sql .= "order by destination_delay, destination_number asc ";
@@ -427,7 +434,7 @@ else {
 
 //get the ring group users
 	if (strlen($ring_group_uuid) > 0) {
-		$sql = "SELECT u.username, r.user_uuid, r.ring_group_uuid FROM v_ring_group_users as r, v_users as u ";
+		$sql = "select u.username, r.user_uuid, r.ring_group_uuid from v_ring_group_users as r, v_users as u ";
 		$sql .= "where r.user_uuid = u.user_uuid  ";
 		$sql .= "and u.user_enabled = 'true' ";
 		$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -455,14 +462,14 @@ else {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-ring-group']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['label-ring-group']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='ring_groups.php'\" value='".$text['button-back']."'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo "<td align='left' colspan='2' valign='top'>\n";
 	echo $text['description']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -638,57 +645,8 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$select_options = "";
-	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") {
-		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${pt-ring}" || $ring_group_ringback == "pt-ring") {
-		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
-		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") {
-		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") {
-		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${it-ring}" || $ring_group_ringback == "it-ring") {
-		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
-	}
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-		$moh = new switch_music_on_hold;
-		$moh->select_name = "ring_group_ringback";
-		$moh->select_value = $ring_group_ringback;
-		$moh->select_options = $select_options;
-		echo $moh->select();
-	}
-	else {
-		echo "	<select class='formfld' name='ring_group_ringback'>\n";
-		//echo "	<option value=''></option>\n";
-		echo $select_options;
-		echo "	</select>\n";
-	}
+	$ringbacks = new ringbacks;
+	echo $ringbacks->select('ring_group_ringback', $ring_group_ringback);
 
 	echo "<br />\n";
 	echo $text['description-ringback']."\n";
@@ -699,7 +657,7 @@ else {
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
 	echo "			<table width='52%'>\n";
-	foreach($ring_group_users as $field) {
+	if (isset($ring_group_users)) foreach($ring_group_users as $field) {
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$field['username']."</td>\n";
 		echo "				<td>\n";
@@ -773,6 +731,21 @@ else {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-forwarding']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
+	echo "		<option value='false'>".$text['option-disabled']."</option>";
+	echo "		<option value='true' ".(($ring_group_forward_enabled == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+	echo "	</select>";
+	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".$ring_group_forward_destination."\">";
+	echo "<br />\n";
+	echo $text['description-ring-group-forward']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	if (if_group("superadmin")) {
 		echo "<tr>\n";

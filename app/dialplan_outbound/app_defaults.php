@@ -26,6 +26,7 @@
 
 //make sure that enum uses sofia internal in the enum.conf.xml file
 	if ($domains_processed == 1) {
+		$switch_conf_dir = $_SESSION['switch']['conf']['dir'];
 		$file_contents = file_get_contents($switch_conf_dir."/autoload_configs/enum.conf.xml");
 		$file_contents_new = str_replace("service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/\${use_profile}/\$1", "service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/internal/\$1", $file_contents);
 		if ($file_contents != $file_contents_new) {

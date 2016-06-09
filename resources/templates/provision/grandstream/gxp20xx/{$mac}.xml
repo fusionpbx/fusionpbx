@@ -49,7 +49,7 @@
 <P72>1</P72>
 
 <!--  Local RTP port (1024-65535, default 5004) -->
-<P39>5004</P39> 
+<P39>5004</P39>
 
 <!--  Use Random Port. 0 - no, 1 - yes -->
 <P78>0</P78>
@@ -64,7 +64,7 @@
 <P76></P76>
 
 
-<!--  Firmware Upgrade --> 
+<!--  Firmware Upgrade -->
 
 
 <!--  Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
@@ -117,12 +117,12 @@
 <P330>0</P330>
 
 <!--  Phonebook XML Server Path -->
-<!--  This is a string of up to 128 characters that should contain a path to the XML file. -->  
+<!--  This is a string of up to 128 characters that should contain a path to the XML file. -->
 <!--  It MUST be in the host/path format. For example: "directory.grandstream.com/engineering" -->
 <P331></P331>
 
 <!--  Phonebook Download Interval -->
-<!--  This is an integer variable in hours.  --> 
+<!--  This is an integer variable in hours.  -->
 <!--  Valid value range is 0-720 (default 0), and greater values will default to 720 -->
 <P332>0</P332>
 
@@ -143,7 +143,7 @@
 <!--  2 = YES, TFTP -->
 <P340>0</P340>
 
-<!--  Download Screen XML At Boot-up. 0 - no, 1 - yes --> 
+<!--  Download Screen XML At Boot-up. 0 - no, 1 - yes -->
 <P1349>0</P1349>
 
 <!--  Use Custom File Name. 0 - no, 1 - yes  -->
@@ -317,10 +317,10 @@
 <P270>{$display_name_1}</P270>
 
 <!--  SIP Server -->
-<P47>{$server_address_1}</P47> 
+<P47>{$server_address_1}</P47>
 
 <!--  Outbound Proxy -->
-<P48></P48> 
+<P48></P48>
 
 <!--  SIP User ID -->
 <P35>{$user_id_1}</P35>
@@ -383,7 +383,7 @@
 
 <!--  PUBLISH for Presence. 0 - no, 1 - yes -->
 <P188>0</P188>
- 
+
 <!--  Proxy-Require (A SIP extension to enable firewall penetration) -->
 <P197></P197>
 
@@ -452,7 +452,7 @@
 
 <!--  Anonymous Method. 0 - Use From Header, 1 - Use Privacy Header. -->
 <P268>0</P268>
-      
+
 <!--  Anonymous Call Rejection. 0 - no, 1 - yes -->
 <P129>0</P129>
 
@@ -475,25 +475,25 @@
 <P137>0</P137>
 
 <!--  Preferred Vocoder -->
-<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, --> 
-<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->		
+<!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA, -->
+<!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1.  -->  
+<!--  choice 1.  -->
 <P57>0</P57>
 
 <!--  choice 2.   -->
 <P58>8</P58>
 
-<!--  choice 3.   --> 
+<!--  choice 3.   -->
 <P59>4</P59>
 
 <!--  choice 4.    -->
 <P60>18</P60>
 
-<!--  choice 5.   --> 
+<!--  choice 5.   -->
 <P61>2</P61>
 
-<!--  choice 6.   --> 
+<!--  choice 6.   -->
 <P62>98</P62>
 
 <!--  choice 7.  -->
@@ -527,7 +527,7 @@
 <!-- Account Name -->
 <P417>{$display_name_2}</P417>
 
-<!--  SIP Server -->                                             
+<!--  SIP Server -->
 <P402>{$server_address_2}</P402>
 
 <!--  Outbound Proxy Server -->
@@ -600,12 +600,12 @@
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
 <P426>*97</P426>
- 
+
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
 <!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
 <P416>8</P416>
- 
+
 <!--  Early Dial. 0 - no, 1 - yes -->
 <P422>0</P422>
 
@@ -689,28 +689,28 @@
 <!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
 <!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1.  -->  
+<!--  choice 1.  -->
 <P451>0</P451>
 
-<!--  choice 2.  --> 
+<!--  choice 2.  -->
 <P452>8</P452>
 
-<!--  choice 3   --> 
+<!--  choice 3   -->
 <P453>4</P453>
 
-<!--  choice 4.  --> 
+<!--  choice 4.  -->
 <P454>18</P454>
 
-<!--  choice 5.  -->  
+<!--  choice 5.  -->
 <P455>2</P455>
 
-<!--  choice 6.  -->  
+<!--  choice 6.  -->
 <P456>98</P456>
 
 <!--  choice 7.  -->
 <P457>9</P457>
 
-<!--  choice 8. -->  
+<!--  choice 8. -->
 <P458>3</P458>
 
 <!--  SRTP Mode -->
@@ -811,7 +811,7 @@
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
 <P526>*97</P526>
- 
+
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
 <!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
@@ -881,7 +881,7 @@
 
 <!--  Auto Answer. 0 - no, 1 - yes -->
 <P525>0</P525>
- 
+
 <!--  Allow Auto Answer by Call-Info. 0 - no, 1 - yes -->
 <P538>0</P538>
 
@@ -901,22 +901,22 @@
 <!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
 <!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1.  -->  
+<!--  choice 1.  -->
 <P551>0</P551>
 
-<!--  choice 2.  --> 
+<!--  choice 2.  -->
 <P552>8</P552>
 
-<!--  choice 3.   --> 
+<!--  choice 3.   -->
 <P553>4</P553>
 
-<!--  choice 4.   --> 
+<!--  choice 4.   -->
 <P554>18</P554>
 
-<!--  choice 5.  -->  
+<!--  choice 5.  -->
 <P555>2</P555>
 
-<!--  choice 6.  -->  
+<!--  choice 6.  -->
 <P556>98</P556>
 
 <!--  choice 7.  -->
@@ -936,7 +936,7 @@
 <!--  N/A for GXP1200 and GXP280 -->
 <P544></P544>
 
-<!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, --> 
+<!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM, 109 - RNK, -->
 <!--  110 - Sylantro, 111 - Huawei, 114 - ZTE, 118 - Philips (GXP2000 only) -->
 <P524>100</P524>
 
@@ -948,7 +948,7 @@
 <P601>1</P601>
 
 <!-- Account Name -->
-<P617>{$display_name_4}</P617> 
+<P617>{$display_name_4}</P617>
 
 <!--  SIP Server -->
 <P602>{$server_address_4}</P602>
@@ -960,13 +960,13 @@
 <P604>{$user_id_4}</P604>
 
 <!--  Authenticate ID -->
-<P605>{$user_id_4}</P605> 
+<P605>{$user_id_4}</P605>
 
 <!--  Authenticate Password -->
-<P606>{$user_password_4}</P606> 
+<P606>{$user_password_4}</P606>
 
 <!--  Display Name (John Doe) -->
-<P607>{$display_name_4}</P607> 
+<P607>{$display_name_4}</P607>
 
 <!--  Use DNS SRV. 0 - no, 1 - yes. -->
 <P608>0</P608>
@@ -1023,7 +1023,7 @@
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
 <P626>*97</P626>
- 
+
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
 <!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
@@ -1112,22 +1112,22 @@
 <!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
 <!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1. -->   
+<!--  choice 1. -->
 <P651>0</P651>
 
-<!--  choice 2.  --> 
+<!--  choice 2.  -->
 <P652>8</P652>
 
-<!--  choice 3.   --> 
+<!--  choice 3.   -->
 <P653>4</P653>
 
-<!--  choice 4. -->   
-<P654>18</P654> 
+<!--  choice 4. -->
+<P654>18</P654>
 
-<!--  choice 5.  -->  
+<!--  choice 5.  -->
 <P655>2</P655>
 
-<!--  choice 6. -->   
+<!--  choice 6. -->
 <P656>98</P656>
 
 <!--  choice 7.  -->
@@ -1234,7 +1234,7 @@
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
 <P1726>*97</P1726>
- 
+
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
 <!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
@@ -1323,28 +1323,28 @@
 <!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
 <!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1.  --> 
+<!--  choice 1.  -->
 <P1751>0</P1751>
 
 <!--  choice 2.   -->
 <P1752>8</P1752>
 
-<!--  choice 3.  -->  
+<!--  choice 3.  -->
 <P1753>4</P1753>
 
-<!--  choice 4.   --> 
+<!--  choice 4.   -->
 <P1754>18</P1754>
 
-<!--  choice 5. -->  
+<!--  choice 5. -->
 <P1755>2</P1755>
 
-<!--  choice 6. -->   
+<!--  choice 6. -->
 <P1756>98</P1756>
 
-<!--  choice 7. --> 
+<!--  choice 7. -->
 <P1757>9</P1757>
 
-<!--  choice 8. -->  
+<!--  choice 8. -->
 <P1758>3</P1758>
 
 <!--  SRTP Mode -->
@@ -1368,7 +1368,7 @@
 <P1801>1</P1801>
 
 <!-- Account Name -->
-<P1817>{$display_name_6}</P1817> 
+<P1817>{$display_name_6}</P1817>
 
 <!--  SIP Server -->
 <P1802>{$server_address_6}</P1802>
@@ -1443,7 +1443,7 @@
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
 <P1826>*97</P1826>
- 
+
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
 <!--  10 - IN Audio & SIP INFO, 3 - RTP & SIP INFO -->
@@ -1532,28 +1532,28 @@
 <!--  0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,  -->
 <!--  9 - G.722, 18 - G.729A/B, 98 - iLBC -->
 
-<!--  choice 1.   --> 
+<!--  choice 1.   -->
 <P1851>0</P1851>
 
-<!--  choice 2. -->  
+<!--  choice 2. -->
 <P1852>8</P1852>
 
-<!--  choice 3.  -->  
+<!--  choice 3.  -->
 <P1853>4</P1853>
 
-<!--  choice 4. -->   
+<!--  choice 4. -->
 <P1854>18</P1854>
 
-<!--  choice 5. -->   
+<!--  choice 5. -->
 <P1855>2</P1855>
 
-<!--  choice 6.  -->  
+<!--  choice 6.  -->
 <P1856>98</P1856>
 
 <!--  choice 7.  -->
 <P1857>9</P1857>
 
-<!--  choice 8.1858  --> 
+<!--  choice 8.1858  -->
 <P1858>3</P1858>
 
 <!--  SRTP Mode -->
@@ -1684,7 +1684,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P326></P326>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
 <P310></P310>
 
@@ -1791,7 +1791,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P365></P365>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
 <P366></P366>
 
@@ -1819,7 +1819,7 @@
 <!--  Multi Purpose Key 13 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P373></P373> 
+<P373></P373>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <!--  For GXP2020, 4 - Account 5, 5 - Account 6 -->
@@ -2012,7 +2012,7 @@
 <!--  EXT Key 4 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6004></P6004> 
+<P6004></P6004>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6204></P6204>
@@ -2082,7 +2082,7 @@
 <!--  EXT Key 9 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6009></P6009> 
+<P6009></P6009>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6209></P6209>
@@ -2110,7 +2110,7 @@
 <!--  EXT Key 11 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6011></P6011> 
+<P6011></P6011>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6211></P6211>
@@ -2140,7 +2140,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P6013></P6013>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <P6213></P6213>
 
 <!--  Name -->
@@ -2180,7 +2180,7 @@
 <!--  EXT Key 16 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6016></P6016> 
+<P6016></P6016>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6216></P6216>
@@ -2280,7 +2280,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P6023></P6023>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <P6223></P6223>
 
 <!--  Name -->
@@ -2642,7 +2642,7 @@
 <!--  EXT Key 49 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6049></P6049> 
+<P6049></P6049>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6249></P6249>
@@ -2672,7 +2672,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P6051></P6051>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <P6251></P6251>
 
 <!--  Name -->
@@ -2698,7 +2698,7 @@
 <!--  EXT Key 53 -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-<P6053></P6053> 
+<P6053></P6053>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6253></P6253>
@@ -2742,7 +2742,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
 <P6056></P6056>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
 <P6256></P6256>
 
 <!--  Name -->
@@ -3082,7 +3082,7 @@
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
 <P6080></P6080>
 
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  --> 
+<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
 <P6280></P6280>
 
 <!--  Name  -->
@@ -3164,7 +3164,7 @@
 <!--  EXT Key 86  -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6086></P6086> 
+<P6086></P6086>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
 <P6286></P6286>
@@ -3178,7 +3178,7 @@
 <!--  EXT Key 87  -->
 
 <!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6087></P6087> 
+<P6087></P6087>
 
 <!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
 <P6287></P6287>

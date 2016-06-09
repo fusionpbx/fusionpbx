@@ -80,10 +80,10 @@
 			global $debug;
 
 		//fix the xml by escaping the contents of <sip_full_XXX>
-			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/", 
+			$xml_string = preg_replace_callback("/<([^><]+)>(.*?[><].*?)<\/\g1>/",
 				function ($matches) {
 					return '<' . $matches[1] . '>' .
-						str_replace(">", "&gt;", 
+						str_replace(">", "&gt;",
 							str_replace("<", "&lt;", $matches[2])
 						) .
 					'</' . $matches[1] . '>';
@@ -173,6 +173,11 @@
 			}
 			unset($x);
 
+		//if last_sent_callee_id_number is set use it for the destination_number
+			if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+				$database->fields['destination_number'] = urldecode($xml->variables->last_sent_callee_id_number);
+			}
+
 		//store the call leg
 			$database->fields['leg'] = $leg;
 
@@ -192,6 +197,12 @@
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
 			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
+		//get the domain name from sip_req_host
+			if (strlen($domain_name) == 0) {
+				$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+			}
+
+		//send the domain name to the cdr log
 			xml_cdr_log("\ndomain_name is `$domain_name`; domain_uuid is '$domain_uuid'\n");
 
 		//get the domain_uuid with the domain_name
@@ -205,18 +216,16 @@
 				}
 				$row = $db->query($sql)->fetch();
 				$domain_uuid = $row['domain_uuid'];
-				if (strlen($domain_uuid) == 0) {
-					$sql = "select domain_name, domain_uuid from v_domains ";
-					$row = $db->query($sql)->fetch();
-					$domain_uuid = $row['domain_uuid'];
-					if (strlen($domain_name) == 0) { $domain_name = $row['domain_name']; }
-				}
 			}
 
 		//set values in the database
-			$database->domain_uuid = $domain_uuid;
-			$database->fields['domain_uuid'] = $domain_uuid;
-			$database->fields['domain_name'] = $domain_name;
+			if (strlen($domain_uuid) > 0) {
+				$database->domain_uuid = $domain_uuid;
+				$database->fields['domain_uuid'] = $domain_uuid;
+			}
+			if (strlen($domain_name) > 0) {
+				$database->fields['domain_name'] = $domain_name;
+			}
 
 		//check whether a recording exists
 			$recording_relative_path = '/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
@@ -265,7 +274,7 @@
 
 							$db2->sql = $sql_rate;
 							$db2->result = $db2->execute();
-//							print_r($db2->result);
+							//print_r($db2->result);
 							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
@@ -436,7 +445,7 @@
 				catch(PDOException $e) {
 					$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 					if(!file_exists($tmp_dir)) {
-						mkdir($tmp_dir, 0777, true);
+						mkdir($tmp_dir, 02770, true);
 					}
 					if ($_SESSION['cdr']['format']['text'] == "xml") {
 						$tmp_file = $uuid.'.xml';
@@ -463,7 +472,7 @@
 						$tmp_day = date("d", $tmp_time);
 						$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 						if(!file_exists($tmp_dir)) {
-							mkdir($tmp_dir, 0777, true);
+							mkdir($tmp_dir, 02770, true);
 						}
 						if ($_SESSION['cdr']['format']['text'] == "xml") {
 							$tmp_file = $uuid.'.xml';

@@ -46,7 +46,7 @@
 	number_alias_string = "";
 	vm_mailto = "";
 
--- event source 
+-- event source
 	local event_calling_function = params:getHeader("Event-Calling-Function")
 	local event_calling_file = params:getHeader("Event-Calling-File")
 
@@ -67,7 +67,7 @@
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/directory.lua");
 	else
 		--handle action
-			--all other directory actions: sip_auth, user_call 
+			--all other directory actions: sip_auth, user_call
 			--except for the action: group_call
 
 		-- Do we need use proxy to make call to ext. reged on different FS

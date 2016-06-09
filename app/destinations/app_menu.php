@@ -19,5 +19,6 @@ $apps[$x]['menu'][0]['parent_uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 $apps[$x]['menu'][0]['category'] = "internal";
 $apps[$x]['menu'][0]['path'] = "/app/destinations/destinations.php";
 $apps[$x]['menu'][0]['groups'][] = "superadmin";
+$apps[$x]['menu'][0]['groups'][] = "admin";
 
 ?>

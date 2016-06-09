@@ -264,7 +264,7 @@ require_once "resources/check_auth.php";
 	$num_rows = count($result);
 	unset ($prep_statement, $result, $sql);
 
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&order_by=".$order_by."&order=".$order;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -284,7 +284,6 @@ require_once "resources/check_auth.php";
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	$row_style["2"] = "row_style2";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -307,19 +306,25 @@ require_once "resources/check_auth.php";
 		foreach($result as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td class='".$row_style[$c]."' style='border: none; padding: 0;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
 			}
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_name']."</td>\n";
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_filename']."</td>\n";
-				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename']);
-				$tmp_filesize = byte_convert($tmp_filesize);
-				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'];
+				if (file_exists($file_name)) {
+					$file_size = filesize($file_name);
+					$file_size = byte_convert($file_size);
+				}
+				else {
+					$file_size = '';
+				}
+				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$file_size."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				echo "	<td valign='top' class='".$row_style["2"]." ".((!$c) ? "row_style_hor_mir_grad" : null)." tr_link_void'>";
+				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 				if (permission_exists('recording_play')) {
 					$recording_file_path = $row['recording_filename'];
 					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));

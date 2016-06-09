@@ -38,7 +38,10 @@
 
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>".$text['header-config_detail']."</b></td>\n";
-	echo "<td width='70%' align='right'>&nbsp;</td>\n";
+	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	echo "	<input type='submit' name='next' class='btn' value='".$text['button-next']."'/>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -68,7 +71,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select id='install_default_country' name='install_default_country' class='formfld' style=''>\n";
 	require "resources/countries.php";
- 
+
 	foreach ($countries as $iso_code => $country ){
 		if($iso_code == $install_default_country){
 			echo "			<option value='$iso_code' selected='selected'>".$country['country']."</option>\n";
@@ -129,9 +132,9 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='db_type' id='db_type' class='formfld' id='form_tag' onchange='db_type_onchange();'>\n";
-	if (extension_loaded('pdo_pgsql')) {	echo "	<option value='pgsql'>postgresql</option>\n"; }
+	if (extension_loaded('pdo_pgsql')) {	echo "	<option value='pgsql' selected='selected'>postgresql</option>\n"; } //set postgresql as the default
 	if (extension_loaded('pdo_mysql')) {	echo "	<option value='mysql'>mysql</option>\n"; }
-	if (extension_loaded('pdo_sqlite')) {	echo "	<option value='sqlite' selected='selected'>sqlite</option>\n"; } //set sqlite as the default
+	if (extension_loaded('pdo_sqlite')) {	echo "	<option value='sqlite'>sqlite</option>\n"; }
 	echo "	</select><br />\n";
 	echo "		Select the database type.\n";
 	echo "\n";
@@ -139,9 +142,9 @@
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "	<div style='text-align:right'>\n";
-	echo "    <button type='button' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-	echo "    <button type='submit' id='next'>".$text['button-next']."</button>\n";
-	echo "	</div>\n";
+	//echo "	<div style='text-align:right'>\n";
+	//echo "		<input type='button' name='back' class='btn' onclick=\"history.go(-1);\" value='".$text['button-back']."'/>\n";
+	//echo "		<input type='submit' class='btn' name='execute' name='".$text['button-next']."'>\n";
+	//echo "	</div>\n";
 	echo "</form>\n";
 ?>

@@ -40,10 +40,8 @@ else {
 
 //get the http values and set them as variables
 	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
-	}
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //includes and title
 	require_once "resources/header.php";
@@ -82,7 +80,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
 	if ($_GET['showall'] && permission_exists('destination_all')) {
 		$param .= "&showall=true";
@@ -113,7 +111,17 @@ else {
 		$sql .= " 	or destination_description like '%".$search."%' ";
 		$sql .= ") ";
 	}
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) > 0) {
+		if ($order_by == 'destination_type') {
+			$sql .= "order by destination_type ".$order.", destination_number asc ";
+		}
+		else {
+			$sql .= "order by ".$order_by." ".$order." ";
+		}
+	}
+	else {
+		$sql .= "order by destination_type asc, destination_number asc ";
+	}
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -179,7 +187,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".format_phone($row['destination_number'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_enabled'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['destination_enabled']]."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['destination_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('destination_edit')) {

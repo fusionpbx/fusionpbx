@@ -36,7 +36,7 @@ editAreaLoader.load_syntax["css"] = {
 		,'values' : [
 			'above', 'absolute', 'always', 'armenian', 'aural', 'auto', 'avoid',
 			'baseline', 'behind', 'below', 'bidi-override', 'black', 'blue', 'blink', 'block', 'bold', 'bolder', 'both',
-			'capitalize', 'center-left', 'center-right', 'center', 'circle', 'cjk-ideographic', 
+			'capitalize', 'center-left', 'center-right', 'center', 'circle', 'cjk-ideographic',
             'close-quote', 'collapse', 'condensed', 'continuous', 'crop', 'crosshair', 'cross', 'cursive',
 			'dashed', 'decimal-leading-zero', 'decimal', 'default', 'digits', 'disc', 'dotted', 'double',
 			'e-resize', 'embed', 'extra-condensed', 'extra-expanded', 'expanded',
@@ -79,6 +79,6 @@ editAreaLoader.load_syntax["css"] = {
 			}
 		,'OPERATORS' : 'color: #FF00FF;'
 		,'DELIMITERS' : 'color: #60CA00;'
-				
+
 	}
 };

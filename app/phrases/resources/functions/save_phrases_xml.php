@@ -5,8 +5,17 @@ function save_phrases_xml() {
 		if (strlen($_SESSION['switch']['phrases']['dir']) == 0) {
 			return;
 		}
+
 	//declare the global variables
-		global $db, $domain_uuid, $config;
+		global $domain_uuid, $config;
+
+	//connect to the database if not connected
+		if (!$db) {
+			require_once "resources/classes/database.php";
+			$database = new database;
+			$database->connect();
+			$db = $database->db;
+		}
 
 	//remove old phrase files for the domain
 		$phrase_list = glob($_SESSION['switch']['phrases']['dir']."/*/phrases/".$domain_uuid.".xml");
@@ -42,7 +51,7 @@ function save_phrases_xml() {
 			}
 
 			//build xml
-			$xml .= "	<macro name=\"".$row['phrase_name'].".".$domain_uuid."\">\n";
+			$xml .= "	<macro name=\"".$row['phrase_uuid']."\">\n";
 			$xml .= "		<input pattern=\"(.*)\">\n";
 			$xml .= "			<match>\n";
 

@@ -74,6 +74,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
+				remove_config_from_cache('configuration:acl.conf');
 				$_SESSION['message'] = $text['message-add'];
 				header('Location: access_controls.php');
 				return;
@@ -89,12 +90,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
+				remove_config_from_cache('configuration:acl.conf');
 				$_SESSION['message'] = $text['message-update'];
 				header('Location: access_controls.php');
 				return;
 
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -118,18 +120,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-access_control']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control']."</b><br><br></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='access_controls.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
@@ -153,13 +148,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='access_control_default'>\n";
 	echo "	<option value=''></option>\n";
-	if ($access_control_default == "allow") { 
+	if ($access_control_default == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}
 	else {
 		echo "	<option value='allow'>".$text['label-allow']."</option>\n";
 	}
-	if ($access_control_default == "deny") { 
+	if ($access_control_default == "deny") {
 		echo "	<option value='deny' selected='selected'>".$text['label-deny']."</option>\n";
 	}
 	else {
@@ -186,20 +181,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='access_control_uuid' value='$access_control_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
+	echo "<br><br>";
 
 	if ($action == "update") {
 		require "access_control_nodes.php";
+		echo "<br><br>";
 	}
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

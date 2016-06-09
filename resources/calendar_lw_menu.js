@@ -55,32 +55,32 @@ var nNowAt = 0
 
 function displayMenuItem(menuId) {
 	var sHTML
-	
+
 	if (menu[menuId].parentId>0)
 	{
-		ItemForeground = subItemForeground 
-		Border = subItemBorder 
-		Background = subItemBackground 
+		ItemForeground = subItemForeground
+		Border = subItemBorder
+		Background = subItemBackground
 
-		HoverForeground = subItemHoverForeground 
-		HoverBorder = subItemHoverBorder 
-		HoverBackground = subItemHoverBackground 
+		HoverForeground = subItemHoverForeground
+		HoverBorder = subItemHoverBorder
+		HoverBackground = subItemHoverBackground
 	}
 	else
 	{
-		ItemForeground = mainItemForeground 
-		Border = mainItemBorder 
-		Background = mainItemBackground 
+		ItemForeground = mainItemForeground
+		Border = mainItemBorder
+		Background = mainItemBackground
 
-		HoverForeground = mainItemHoverForeground 
-		HoverBorder = mainItemHoverBorder 
-		HoverBackground = mainItemHoverBackground 
+		HoverForeground = mainItemHoverForeground
+		HoverBorder = mainItemHoverBorder
+		HoverBackground = mainItemHoverBackground
 	}
 
 	if ((orientation==1)||(menu[menuId].levelId>0))
 	{
 		sHTML += "<tr>"
-	}	
+	}
 
 	if (menu[menuId].description!='-')
 	{
@@ -145,7 +145,7 @@ function displayMenuItem(menuId) {
 	if ((orientation==1)||(menu[menuId].levelId>0))
 	{
 		sHTML += "</tr>"
-	}	
+	}
 	return sHTML
 }
 
@@ -153,13 +153,13 @@ function clearAll(levelId, parentId) {
 
 	if (levelId>0)
 	{
-		Border = subItemBorder 
-		Background = subItemBackground 
+		Border = subItemBorder
+		Background = subItemBackground
 	}
 	else
 	{
-		Border = mainItemBorder 
-		Background = mainItemBackground 
+		Border = mainItemBorder
+		Background = mainItemBackground
 	}
 
 	for (i=0;i<menuCounter;i++)
@@ -202,7 +202,7 @@ function showSubmenu(menuId,trigger) {
 
 function showActualSubmenu(menuId,trigger) {
 	var nLevel = 0
-	var leftpos = 0 
+	var leftpos = 0
 	var nIndex=0
 
 	if (menuId>0)
@@ -212,7 +212,7 @@ function showActualSubmenu(menuId,trigger) {
 		for (var i=0;i<menuCounter;i++)
 		{
 			if (menu[i].id==menuId)
-			{	
+			{
 				nLevel = menu[i].levelId
 				nIndex = i
 			}
@@ -246,7 +246,7 @@ function showActualSubmenu(menuId,trigger) {
 
 		document.getElementById("menu_level_"+nLevel+"_content").innerHTML=sHTML
 		lw_showLayer('menu_level_'+nLevel)
-	} 
+	}
 }
 
 function hideSubmenu(levelId) {
@@ -262,16 +262,16 @@ function DrawMenu ()  {
 	{
 		lw_createLayer("menu_level_"+i,0,0,0,0,"#ffffff","#d0d0d0",100)
 	}
-	
+
 	sHTML="<table width=100% cellpadding=2 cellspacing=0>"
 	for (var i=0; i<menuCounter; i++)
 	{
 		if (menu[i].parentId==0)
-		{		
+		{
 			sHTML += displayMenuItem (i)
 		}
 		else if (menu[i].parentId==-1)
-		{		
+		{
 			sHTML += "<tr><td valign='top'><img src='trans' height=2></td></tr><tr bgcolor='"+mainItemBackground+"'><td style='padding:5px'><b>" + menu[i].description + "</b></td></tr>"
 		}
 	}
@@ -291,7 +291,7 @@ function getLevel (menuId) {
 		for (var i=0;i<menuCounter;i++)
 		{
 			if (menu[i].id==pId)
-			{	
+			{
 				pId = menu[i].parentId
 			}
 		}
@@ -316,10 +316,10 @@ function AddMenuItem (id, parentId, url, description, img)  {
 		menu[menuCounter-1].levelId = getLevel(parentId)
 
 		if ( numLevel < menu[menuCounter-1].levelId)
-		{	
+		{
 			numLevel = menu[menuCounter-1].levelId
 		}
-	}	 
+	}
 	else if (parentId==0)
 	{
 		menu[menuCounter-1].levelId = 0

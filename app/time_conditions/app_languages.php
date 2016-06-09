@@ -11,6 +11,17 @@ $text['title-time_conditions']['uk'] = "Часові умови";
 $text['title-time_conditions']['de-at'] = "Zeitschaltung";
 $text['title-time_conditions']['he'] = "";
 
+$text['button-dialplan']['en-us'] = "Dialplan";
+$text['button-dialplan']['es-cl'] = "Plan de Marcado";
+$text['button-dialplan']['pt-pt'] = "Dialplan";
+$text['button-dialplan']['fr-fr'] = "Plan de num";
+$text['button-dialplan']['pt-br'] = "Dialplan";
+$text['button-dialplan']['pl'] = "Dialplan ";
+$text['button-dialplan']['sv-se'] = "Nummerplan";
+$text['button-dialplan']['uk'] = "";
+$text['button-dialplan']['de-at'] = "Wählplan";
+$text['button-dialplan']['he'] = "";
+
 $text['message-alternate_destination_required']['en-us'] = "Alternate Destination Required";
 $text['message-alternate_destination_required']['es-cl'] = "Destino Alternativo Requerido";
 $text['message-alternate_destination_required']['pt-pt'] = "Destino Alternativo Obrigatório";

@@ -24,6 +24,9 @@
 --      ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --      POSSIBILITY OF SUCH DAMAGE.
 
+--include functions
+	require "resources.functions.format_ringback"
+
 --get the cache
 	hostname = trim(api:execute("switchname", ""));
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
@@ -43,8 +46,13 @@
 			assert(dbh:connected());
 
 		--get the variables
-			dsn = trim(api:execute("global_getvar", "dsn"));
-			dsn_callcenter = trim(api:execute("global_getvar", "dsn_callcenter"));
+			dsn = trim(api:execute("global_getvar", "dsn")) or '';
+			dsn_callcenter = trim(api:execute("global_getvar", "dsn_callcenter")) or '';
+
+			if dsn:find("INVALID COMMAND", nil, true) then
+				freeswitch.consoleLog('err', '[xml_handler] Can not correctly load mod_callcenter becase mod_commands not loaded\n')
+				dsn, dsn_callcenter = '', ''
+			end
 
 		--start the xml array
 			local xml = {}
@@ -53,14 +61,12 @@
 			table.insert(xml, [[    <section name="configuration">]]);
 			table.insert(xml, [[            <configuration name="callcenter.conf" description="Call Center">]]);
 			table.insert(xml, [[                    <settings>]]);
-			if (dsn_callcenter) then
+			if #dsn_callcenter > 0 then
 				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..dsn_callcenter..[["/>]]);
-			else
-				if (string.len(dsn) > 0) then
-					table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
-				end
+			elseif #dsn > 0 then
+				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
 			end
-			--table.insert(xml, [[                          <param name="dbname" value="/usr/local/freeswitch/db/call_center.db"/>]]);
+			-- table.insert(xml, [[                          <param name="dbname" value="]]..database_dir..[[/call_center.db"/>]]);
 			table.insert(xml, [[                    </settings>]]);
 
 		--write the queues
@@ -95,25 +101,9 @@
 
 					table.insert(xml, [[                            <queue name="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
-					if (string.len(queue_moh_sound) == 0) then
-						table.insert(xml, [[                                    <param name="moh-sound" value="local_stream://default"/>]]);
-					else
-						if (string.sub(queue_moh_sound, 0, 14) == 'tone_stream://' or string.sub(queue_moh_sound, 0, 2) == '${') then
-							--given this string --tone_stream://${us-ring};loops=-1  --return us-ring
-							a, b, tone_string = string.find(queue_moh_sound, ".*{(.*)}.*");
-							if (tone_string ~= nil) then
-								tone_string = trim(api:execute("global_getvar", tone_string));
-								table.insert(xml, [[                                    <param name="moh-sound" value="tone_stream://]]..tone_string..[[;loops=-1"/>]]);
-							end
-						elseif (string.sub(queue_moh_sound, 0, 15) == 'local_stream://') then
-							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
-						else
-							if (queue_moh_sound == nil or queue_moh_sound == "") then
-								queue_moh_sound = "local_stream://default";
-							end
-							table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_moh_sound..[["/>]]);
-						end
-					end
+				--set ringback
+					queue_ringback = format_ringback(queue_moh_sound);
+					table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_ringback..[["/>]]);
 					if (queue_record_template ~= nil) then
 						table.insert(xml, [[                                    <param name="record-template" value="]]..queue_record_template..[["/>]]);
 					end

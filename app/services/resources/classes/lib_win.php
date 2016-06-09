@@ -154,7 +154,7 @@ if(function_exists('reg_open_key')){
 			HKEY_CLASSES_ROOT   => "HKCR",
 			HKEY_CURRENT_USER   => "HKCU",
 			HKEY_LOCAL_MACHINE  => "HKLM",
-			HKEY_USERS          => "HKU", 
+			HKEY_USERS          => "HKU",
 			HKEY_CURRENT_CONFIG => "HKCC",
 		);
 

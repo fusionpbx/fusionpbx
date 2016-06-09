@@ -26,7 +26,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx> 
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set variables
 	flags = "";
@@ -80,7 +80,7 @@
 					end
 
 				--get the moderator_pin
-					sql = [[SELECT moderator_pin FROM v_meetings 
+					sql = [[SELECT moderator_pin FROM v_meetings
 					WHERE meeting_uuid = ']] .. meeting_uuid ..[[']];
 					freeswitch.consoleLog("notice", "[voicemail] sql: " .. sql .. "\n");
 					status = dbh:query(sql, function(row)
@@ -159,7 +159,7 @@
 
 		--get the conference sessions
 			if (conference_session_uuid) then
-				sql = [[SELECT count(*) as num_rows 
+				sql = [[SELECT count(*) as num_rows
 					FROM v_conference_sessions
 					WHERE conference_session_uuid = ']] .. conference_session_uuid ..[[']];
 				status = dbh:query(sql, function(row)
@@ -290,27 +290,27 @@
 							--end
 						end
 					--send the email addresses
-						sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
-							WHERE m.domain_uuid = ']] .. domain_uuid ..[['
-							AND u.user_uuid = m.user_uuid
-							AND m.meeting_uuid = ']] .. meeting_uuid ..[['
-							and u.contact_uuid = c.contact_uuid]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[conference center] <email> SQL: " .. sql .. "\n");
-						end
-						status = dbh:query(sql, function(row)
-							if (row["contact_email"] ~= nil) then
-								contact_email = string.lower(row["contact_email"]);
-								if (string.len(contact_email) > 3) then
-									freeswitch.consoleLog("notice", "[conference center] contact_email: " .. contact_email .. "\n");
-									if (record == "true") then
-										if (file_exists(conference_recording..".wav")) then
-											send_email(contact_email, "", default_language, default_dialect);
-										end
-									end
-								end
-							end
-						end);
+						--sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
+						--	WHERE m.domain_uuid = ']] .. domain_uuid ..[['
+						--	AND u.user_uuid = m.user_uuid
+						--	AND m.meeting_uuid = ']] .. meeting_uuid ..[['
+						--	and u.contact_uuid = c.contact_uuid]];
+						--if (debug["sql"]) then
+						--	freeswitch.consoleLog("notice", "[conference center] <email> SQL: " .. sql .. "\n");
+						--end
+						--status = dbh:query(sql, function(row)
+						--	if (row["contact_email"] ~= nil) then
+						--		contact_email = string.lower(row["contact_email"]);
+						--		if (string.len(contact_email) > 3) then
+						--			freeswitch.consoleLog("notice", "[conference center] contact_email: " .. contact_email .. "\n");
+						--			if (record == "true") then
+						--				if (file_exists(conference_recording..".wav")) then
+						--					send_email(contact_email, "", default_language, default_dialect);
+						--				end
+						--			end
+						--		end
+						--	end
+						--end);
 				end
 			end
 
@@ -435,7 +435,7 @@
 		--define the function get_pin_number
 			function get_pin_number(domain_uuid, prompt_audio_file)
 				--if the pin number is provided then require it
-					if (not pin_number) then 
+					if (not pin_number) then
 						min_digits = 2;
 						max_digits = 20;
 						max_tries = 1;
@@ -447,16 +447,16 @@
 						WHERE r.domain_uuid = ']] .. domain_uuid ..[['
 						AND r.meeting_uuid = m.meeting_uuid
 						AND m.domain_uuid = ']] .. domain_uuid ..[['
-						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[') 
+						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
 						AND r.enabled = 'true'
 						AND m.enabled = 'true'
 						AND (
-								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
-								( r.start_datetime = '' OR r.start_datetime is null ) 
+								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+								( r.start_datetime = '' OR r.start_datetime is null )
 							)
 						AND (
-								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR 
-								( r.stop_datetime = '' OR r.stop_datetime is null ) 
+								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+								( r.stop_datetime = '' OR r.stop_datetime is null )
 							) ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
@@ -496,7 +496,7 @@
 					AND r.conference_center_uuid = ']] .. conference_center_uuid ..[['
 					AND m.domain_uuid = ']] .. domain_uuid ..[['
 					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-					AND r.enabled = 'true' 
+					AND r.enabled = 'true'
 					AND m.enabled = 'true'
 					]];
 				if (debug["sql"]) then

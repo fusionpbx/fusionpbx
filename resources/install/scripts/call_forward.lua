@@ -43,6 +43,7 @@
 	local cache = require "resources.functions.cache"
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
+	local route_to_bridge = require "resources.functions.route_to_bridge"
 
 	local function empty(t)
 		return (not t) or (#t == 0)
@@ -164,7 +165,7 @@
 	local forward_caller_id = ""
 	if enabled == "true" and not empty(forward_caller_id_uuid) then
 		local sql = "select destination_number, destination_description,"..
-			"destination_caller_id_number, destination_caller_id_name " .. 
+			"destination_caller_id_number, destination_caller_id_name " ..
 			"from v_destinations where domain_uuid = '" .. domain_uuid .. "' and " ..
 			"destination_type = 'inbound' and destination_uuid = '" .. forward_caller_id_uuid .. "'";
 		local row = dbh:first_row(sql)
@@ -244,7 +245,20 @@
 
 			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
 			dial_string = dial_string .. "}";
-			dial_string = dial_string .. "loopback/"..forward_all_destination;
+			local mode = settings:get('domain', 'bridge', 'text')
+			if mode == "outbound" or mode == "bridge" then
+				local bridge = route_to_bridge(dbh, domain_uuid, {
+					destination_number = forward_all_destination;
+					['${toll_allow}'] = toll_allow;
+				})
+				if bridge and bridge.bridge then
+					dial_string = dial_string .. bridge.bridge
+				else
+					log.warning('Can not build dialstring for call forward number.')
+				end
+			else
+				dial_string = dial_string .. "loopback/"..forward_all_destination;
+			end
 		end
 	end
 

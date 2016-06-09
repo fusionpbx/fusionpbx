@@ -31,7 +31,7 @@
 
 echo "<html>";
 echo "<head>";
-echo "<title></title>";
+echo "<title>".$title."</title>";
 //echo "<link href='style.css' rel='stylesheet' type='text/css'>";
 echo "<style type='text/css'>";
 echo "<!--\n";
@@ -82,7 +82,7 @@ echo "}\n";
 echo "//-->\n";
 echo "</SCRIPT>";
 echo "</head>";
-echo "<body>";
+echo "<body style='margin: 0; padding: 5px;'>";
 echo "<div align='center'>";
 
 ?>

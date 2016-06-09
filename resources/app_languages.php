@@ -1,31 +1,34 @@
 <?php
 
-// Fill in the value in the native language
-// rename the corerct flag in /theme/flags/*.png
+//language
+$text['language-name']['en-us'] = "English - United States";
+$text['language-name']['es-cl'] = "Español - Chile";
+$text['language-name']['pt-pt'] = "Português - Portugal";
+$text['language-name']['fr-fr'] = "Français - France";
+$text['language-name']['nl-nl'] = "Nederlands - De Nederland";
+$text['language-name']['pt-br'] = "Brasileiro - Português";
+$text['language-name']['pl'] = "Polski - Polska";
+$text['language-name']['sv-se'] = "Svenska - Sverige";
+$text['language-name']['uk'] = "Українська - Україна";
+$text['language-name']['de-at'] = "Deutsch - Österreich";
+$text['language-name']['ar-eg'] = "العربية - مصر";
+$text['language-name']['ru-ru'] = 'Русский - Россия';
 
-$language_name['en-us'] = "English - United States";
-$language_name['es-cl'] = "Español - Chile";
-$language_name['pt-pt'] = "Português - Portugal";
-$language_name['fr-fr'] = "Français - France";
-$language_name['nl-nl'] = "Nederlands - De Nederland";
-$language_name['pt-br'] = "Brasileiro - Português";
-$language_name['pl'] = "Polski - Polska";
-$language_name['sv-se'] = "Svenska - Sverige";
-$language_name['uk'] = "Українська - Україна";
-$language_name['de-at'] = "Deutsch - Österreich";
-$language_name['ar-eg'] = "العربية - مصر";
-$language_name['ru-ru'] = 'Русский - Россия';
-
-// pl should be pl-pl
-// ro should be ro-ro
-// uk should be uk-ua
-// he should be he-il
-
-// Common terms
-
+//language for `Select Language` install page
+$text['language-en-us']['en-us'] = "English - United States";
+$text['language-es-cl']['en-us'] = "Español - Chile";
+$text['language-pt-pt']['en-us'] = "Português - Portugal";
+$text['language-fr-fr']['en-us'] = "Français - France";
+$text['language-nl-nl']['en-us'] = "Nederlands - De Nederland";
+$text['language-pt-br']['en-us'] = "Brasileiro - Português";
+$text['language-pl'   ]['en-us'] = "Polski - Polska";
+$text['language-sv-se']['en-us'] = "Svenska - Sverige";
+$text['language-uk'   ]['en-us'] = "Українська - Україна";
+$text['language-de-at']['en-us'] = "Deutsch - Österreich";
+$text['language-ar-eg']['en-us'] = "العربية - مصر";
+$text['language-ru-ru']['en-us'] = 'Русский - Россия';
 
 //message
-
 $text['message-update']['en-us'] = "Update Completed";
 $text['message-update']['es-cl'] = "Actualización Completada";
 $text['message-update']['pt-pt'] = "Actualização Efectuada";
@@ -95,7 +98,7 @@ $text['message-failed']['pt-pt'] = "Falha na atualiza玢o - Contato com o suport
 $text['message-failed']['fr-fr'] = "Mise ?jour a 閏hou?- Contacter le support technique";
 $text['message-failed']['pt-br'] = "Falha na atualiza莽茫o  - Entre em contato com o suporte";
 $text['message-failed']['pl'] = "Aktualizacja nie powiod艂a si臋 - skontaktuj si臋 z pomoc膮";
-$text['message-failed']['uk'] = "袧械 胁写邪谢芯褋褟 芯薪芯胁懈褌懈 - 蟹胁'褟卸褨褌褜褋褟 蟹褨 褋谢褍卸斜芯褞 锌褨写褌褉懈屑泻懈";
+$text['message-failed']['uk'] = "";
 $text['message-failed']['sv-se'] = "Uppdatering Misslyckades - Kontakta Support";
 $text['message-failed']['de-at'] = "Aktualisierung fehlgeschlagen - Kontaktieren Sie den Support";
 
@@ -553,10 +556,10 @@ $text['label-true']['de-at'] = "Ein";
 $text['label-true']['ar-eg'] = "صحيح";
 $text['label-true']['he'] = "חיובי";
 
-$text['label-false']['en-us'] = "false";
+$text['label-false']['en-us'] = "False";
 $text['label-false']['es-cl'] = "Falso";
-$text['label-false']['pt-pt'] = "falso";
-$text['label-false']['fr-fr'] = "falso";
+$text['label-false']['pt-pt'] = "Falso";
+$text['label-false']['fr-fr'] = "Falso";
 $text['label-false']['pt-br'] = "Não";
 $text['label-false']['he'] = "לא חוקי";
 $text['label-false']['de-at'] = "Aus";
@@ -662,8 +665,117 @@ $text['label-delete']['sv-se'] = "Ta Bort";
 $text['label-delete']['uk'] = "Видалити";
 $text['label-delete']['de-at'] = "Löschen";
 
+$text['label-ringback']['en-us'] = "Ringback";
+$text['label-ringback']['es-cl'] = "Volver a llamar";
+$text['label-ringback']['pt-pt'] = "Ringback";
+$text['label-ringback']['pt-br'] = "Ringback";
+$text['label-ringback']['pl'] = "Oddzwonienie";
+$text['label-ringback']['fr-fr'] = "Rappeler";
+$text['label-ringback']['nl-nl'] = "Werombelje";
+$text['label-ringback']['sv-se'] = "Ring tillbaka";
+$text['label-ringback']['uk'] = "відповідний";
+$text['label-ringback']['de-at'] = "Zurückrufen";
+$text['label-ringback']['he'] = "לצלצל בחזרה";
+$text['label-ringback']['ru-ru'] = "Перезвонить";
 
-//option (present for compatibility, shoudl use label-true/false instead)
+$text['label-music_on_hold']['en-us'] = "Music on Hold";
+$text['label-music_on_hold']['es-cl'] = "Musica en Espera";
+$text['label-music_on_hold']['pt-pt'] = "Música em Espera";
+$text['label-music_on_hold']['pt-br'] = "Música de espera ";
+$text['label-music_on_hold']['fr-fr'] = "Musique d'attente";
+$text['label-music_on_hold']['nl-nl'] = "Music op Hold";
+$text['label-music_on_hold']['pl'] = "Muzyka na czekanie";
+$text['label-music_on_hold']['sv-se'] = "Väntmusik";
+$text['label-music_on_hold']['uk'] = "Музика на утриманні";
+$text['label-music_on_hold']['de-at'] = "Haltemusik";
+$text['label-music_on_hold']['he'] = "מוסיקה בהמתנה";
+$text['label-music_on_hold']['ar-eg'] = "موسيقى المؤجلة";
+$text['label-music_on_hold']['ru-ru'] = "Музыка на удержании";
+
+$text['label-recordings']['en-us'] = "Recordings";
+$text['label-recordings']['es-cl'] = "Grabaciones";
+$text['label-recordings']['pt-pt'] = "Gravações";
+$text['label-recordings']['pt-br'] = "Gravações";
+$text['label-recordings']['fr-fr'] = "Recordings";
+$text['label-recordings']['nl-nl'] = "Recordings";
+$text['label-recordings']['pl'] = "Nagrania";
+$text['label-recordings']['sv-se'] = "Inspelningar";
+$text['label-recordings']['uk'] = "записи";
+$text['label-recordings']['de-at'] = "Aufzeichnung";
+$text['label-recordings']['he'] = "הקלטות";
+$text['label-recordings']['ar-eg'] = "التسجيلات";
+$text['label-recordings']['ru-ru'] = "Записи";
+
+$text['label-default']['en-us'] = "Default";
+$text['label-default']['es-cl'] = "Defecto";
+$text['label-default']['pt-pt'] = "Padrão";
+$text['label-default']['pt-br'] = "Padrão";
+$text['label-default']['pl'] = "Domyślne";
+$text['label-default']['fr-fr'] = "Défaut";
+$text['label-default']['nl-nl'] = "	ôfwêzichheid";
+$text['label-default']['sv-se'] = "uteblivande";
+$text['label-default']['uk'] = "дефолт";
+$text['label-default']['de-at'] = "Default";
+$text['label-default']['he'] = "Default";
+$text['label-default']['ar-eg'] = "בְּרִירַת מֶחדָל";
+$text['label-default']['ru-ru'] = "По умолчанию";
+
+$text['label-us-ring']['en-us'] = "us-ring";
+$text['label-us-ring']['es-cl'] = "us-ring";
+$text['label-us-ring']['fr-fr'] = "États-Unis-ring";
+$text['label-us-ring']['pt-pt'] = "us-ring";
+$text['label-us-ring']['pt-br'] = "us-ring";
+$text['label-us-ring']['pl'] = "us-ring";
+$text['label-us-ring']['sv-se'] = "us-ring";
+$text['label-us-ring']['uk'] = "us-ring";
+$text['label-us-ring']['de-at'] = "us-ring";
+$text['label-us-ring']['he'] = "צלצול אמריקאי";
+
+$text['label-uk-ring']['en-us'] = "uk-ring";
+$text['label-uk-ring']['es-cl'] = "uk-ring";
+$text['label-uk-ring']['fr-fr'] = "Grande Bretagne-ring";
+$text['label-uk-ring']['pt-pt'] = "uk-ring";
+$text['label-uk-ring']['pt-br'] = "uk-ring";
+$text['label-uk-ring']['pl'] = "uk-ring ";
+$text['label-uk-ring']['sv-se'] = "uk-ring";
+$text['label-uk-ring']['uk'] = "uk-ring";
+$text['label-uk-ring']['de-at'] = "uk-ring";
+$text['label-uk-ring']['he'] = "צלצול אנגלי";
+
+$text['label-pt-ring']['en-us'] = "pt-ring";
+$text['label-pt-ring']['es-cl'] = "pt-ring";
+$text['label-pt-ring']['fr-fr'] = "Portugal-ring";
+$text['label-pt-ring']['pt-pt'] = "pt-ring";
+$text['label-pt-ring']['pt-br'] = "pt-ring";
+$text['label-pt-ring']['pl'] = "pt-ring ";
+$text['label-pt-ring']['sv-se'] = "pt-ring";
+$text['label-pt-ring']['uk'] = "pt-ring";
+$text['label-pt-ring']['de-at'] = "pt-ring";
+$text['label-pt-ring']['he'] = "צלצול פולני";
+
+$text['label-it-ring']['en-us'] = "it-ring";
+$text['label-it-ring']['es-cl'] = "it-ring";
+$text['label-it-ring']['fr-fr'] = "Italie-ring";
+$text['label-it-ring']['pt-pt'] = "it-ring";
+$text['label-it-ring']['pt-br'] = "it-ring";
+$text['label-it-ring']['pl'] = "it-ring ";
+$text['label-it-ring']['sv-se'] = "it-ring";
+$text['label-it-ring']['uk'] = "it-ring";
+$text['label-it-ring']['de-at'] = "it-ring";
+$text['label-it-ring']['he'] = "צלצול איטלקי";
+
+$text['label-fr-ring']['en-us'] = "fr-ring";
+$text['label-fr-ring']['es-cl'] = "fr-ring";
+$text['label-fr-ring']['fr-fr'] = "France-ring";
+$text['label-fr-ring']['pt-pt'] = "fr-ring";
+$text['label-fr-ring']['pt-br'] = "fr-ring";
+$text['label-fr-ring']['pl'] = "fr-ring ";
+$text['label-fr-ring']['sv-se'] = "fr-ring";
+$text['label-fr-ring']['uk'] = "fr-ring";
+$text['label-fr-ring']['de-at'] = "fr-ring";
+$text['label-fr-ring']['he'] = "צלצול צרפתי";
+
+//option (present for compatibility, should use label-true/false instead)
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "verdadero";

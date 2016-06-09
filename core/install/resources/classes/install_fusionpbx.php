@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2015
+	Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -37,13 +37,13 @@ include "root.php";
 		public $debug = false;
 		public $echo_progress = false;
 
-	 	public $install_language = 'en-us';
-	 	public $admin_username;
-	 	public $admin_password;
-	 	public $default_country = 'US';
+		public $install_language = 'en-us';
+		public $admin_username;
+		public $admin_password;
+		public $default_country = 'US';
 		public $template_name = 'enhanced';
 
-	 	function __construct($global_settings) {
+		function __construct($global_settings) {
 			if(is_null($global_settings)){
 				require_once "resources/classes/global_settings.php";
 				$global_settings = new global_settings();
@@ -70,7 +70,7 @@ include "root.php";
 				echo "$message\n";
 			}
 		}
-		
+
 		function write_progress($message) {
 			if($this->echo_progress){
 				echo "$message\n";
@@ -84,25 +84,21 @@ include "root.php";
 			$this->write_progress("\tExecuting config.php");
 			require $this->config_php;
 			global $db;
-			$db = $this->dbh;
 			$this->create_database();
+			$db = $this->dbh;
 			$this->create_domain();
 			$this->create_superuser();
+			$this->app_defaults();
 			$this->write_progress("\tRunning requires");
 			require "resources/require.php";
-			$this->create_menus();
 			$this->write_progress("Install phase 1 complete for FusionPBX");
 		}
-		
+
 		function install_phase_2() {
 			ini_set('max_execution_time',3600);
 			$this->write_progress("Install phase 2 started for FusionPBX");
-			$this->app_defaults();
+			//$this->app_defaults();
 			$this->write_progress("Install phase 2 complete for FusionPBX");
-		}
-		
-		function upgrade() {
-			$this->app_defaults();
 		}
 
 		protected function create_config_php() {
@@ -173,9 +169,14 @@ include "root.php";
 			$tmp_config .= "\n";
 			$tmp_config .= "	//pgsql: database connection information\n";
 			if ($this->global_settings->db_type() == "pgsql") {
-				$cmt_out = '';
-				if($this->global_settings->db_host() != 'localhost') { $cmt_out = "//"; }
-				$tmp_config .= "		$cmt_out\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
+				$db_host = $this->global_settings->db_host();
+				//Unix Socket - if localhost or 127.0.0.1 we want it to default to a Unix Socket.
+				//$comment_out = '';
+				//if ( $db_host == "localhost" or $db_host == "127.0.0.1") {
+				//	$comment_out = "//";
+				//}
+				//$tmp_config .= "		$comment_out\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
+				$tmp_config .= "		\$db_host = '".$this->global_settings->db_host()."'; //set the host only if the database is not local\n";
 				$tmp_config .= "		\$db_port = '".$this->global_settings->db_port()."';\n";
 				$tmp_config .= "		\$db_name = '".$this->global_settings->db_name()."';\n";
 				$tmp_config .= "		\$db_username = '".$this->global_settings->db_username()."';\n";
@@ -225,9 +226,9 @@ include "root.php";
 				}
 			}
 		}
-		
+
 		protected function create_odbc_database_connection() {
-		//needed for non native database support
+			//needed for non native database support
 				$database_uuid = uuid();
 				$sql = "insert into v_databases ";
 				$sql .= "(";
@@ -262,271 +263,301 @@ include "root.php";
 		}
 
 		protected function create_database_sqlite() {
-		//sqlite database will be created when the config.php is loaded and only if the database file does not exist
-			try {
-				$this->dbh = new PDO('sqlite:'.$this->global_settings->db_path().'/'.$this->global_settings->db_name()); //sqlite 3
-				//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
-			}
-			catch (PDOException $error) {
-				throw new Exception("Failed to create database: " . $error->getMessage());
-			}
-
-		//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
-			if (!function_exists('php_now')) {
-				function php_now() {
-					if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
-						@date_default_timezone_set(@date_default_timezone_get());
-					}
-					return date("Y-m-d H:i:s");
-				}
-			}
-			$this->dbh->sqliteCreateFunction('now', 'php_now', 0);
-
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			$schema->db = $this->dbh;
-			$schema->db_type = $this->global_settings->db_type();
-			$schema->sql();
-			$schema->exec();
-
-		//get the contents of the sql file
-			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
-				$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
-			}
-			else {
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
-			}
-			$file_contents = file_get_contents($filename);
-			unset($filename);
-
-		//replace \r\n with \n then explode on \n
-			$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-		//loop line by line through all the lines of sql code
-			$this->dbh->beginTransaction();
-			$string_array = explode("\n", $file_contents);
-			$x = 0;
-			foreach($string_array as $sql) {
+			//sqlite database will be created when the config.php is loaded and only if the database file does not exist
 				try {
-					$this->dbh->query($sql);
+					$this->dbh = new PDO('sqlite:'.$this->global_settings->db_path().'/'.$this->global_settings->db_name()); //sqlite 3
+					//$this->dbh = new PDO('sqlite::memory:'); //sqlite 3
 				}
 				catch (PDOException $error) {
-					throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
-				}
-				$x++;
-			}
-			unset ($file_contents, $sql);
-			$this->dbh->commit();
-
-		//set the file permissions
-			chmod($this->global_settings->db_path().'/'.$this->global_settings->db_name(), 0777);
-		}
-
-		protected function create_database_pgsql() {
-			if ($this->global_settings->db_create()) {
-			//Attempt to create new PG role and database
-				$this->write_progress("\tCreating database");
-				try {
-					if (strlen($this->global_settings->db_host()) > 0) {
-						$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-					} else {
-						$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_create_username()} password={$this->global_settings->db_create_password()} dbname=template1");
-					}
-				} catch (PDOException $error) {
-					throw new Exception("error connecting to database in order to create: " . $error->getMessage());
+					throw new Exception("Failed to create database: " . $error->getMessage());
 				}
 
-				//create the database, user, grant perms
-				if($this->dbh->exec("CREATE DATABASE {$this->global_settings->db_name()}") === false) {
-					throw new Exception("Failed to create database {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
-				}
-				if($this->global_settings->db_username() != $this->global_settings->db_create_username()){
-					if($this->dbh->exec("CREATE USER {$this->global_settings->db_username()} WITH PASSWORD '{$this->global_settings->db_password()}'") === false){
-						throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
-					}
-					if($this->dbh->exec("GRANT ALL ON {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
-						throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+			//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
+				if (!function_exists('php_now')) {
+					function php_now() {
+						if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
+							@date_default_timezone_set(@date_default_timezone_get());
+						}
+						return date("Y-m-d H:i:s");
 					}
 				}
+				$this->dbh->sqliteCreateFunction('now', 'php_now', 0);
 
-				//close database connection_aborted
-				$this->dbh = null;
-			}
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
 
-			$this->write_progress("\tInstalling data to database");				
-		//open database connection with $this->global_settings->db_name()
-			try {
-				if (strlen($this->global_settings->db_host()) > 0) {
-					$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} dbname={$this->global_settings->db_name()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()}");
-				} else {
-					$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()} dbname={$this->global_settings->db_name()}");
+			//get the contents of the sql file
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
 				}
-			}
-			catch (PDOException $error) {
-				throw new Exception("error connecting to database: " . $error->getMessage());
-			}
+				else {
+					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
+				}
+				$file_contents = file_get_contents($filename);
+				unset($filename);
 
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
 
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			$schema->db = $this->dbh;
-			$schema->db_type = $this->global_settings->db_type();
-			$schema->sql();
-			$schema->exec();
-
-		//get the contents of the sql file
-			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
-				$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
-			}
-			else {
-			$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
-			}
-			$file_contents = file_get_contents($filename);
-
-		//replace \r\n with \n then explode on \n
-			$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-		//loop line by line through all the lines of sql code
-			$string_array = explode("\n", $file_contents);
-			$x = 0;
-			foreach($string_array as $sql) {
-				if (strlen($sql) > 3) {
+			//loop line by line through all the lines of sql code
+				$this->dbh->beginTransaction();
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
 					try {
 						$this->dbh->query($sql);
 					}
 					catch (PDOException $error) {
 						throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
 					}
+					$x++;
 				}
-				$x++;
-			}
-			unset ($file_contents, $sql);
+				unset ($file_contents, $sql);
+				$this->dbh->commit();
+
+			//set the file permissions
+				chmod($this->global_settings->db_path().'/'.$this->global_settings->db_name(), 0777);
+		}
+
+		protected function create_database_pgsql() {
+			//create the database
+				if ($this->global_settings->db_create()) {
+					//attempt to create new Postgres role and database
+						$this->write_progress("\tCreating database");
+						$db_create_username = $this->global_settings->db_create_username();
+						$db_create_password = $this->global_settings->db_create_password();
+						$db_host            = $this->global_settings->db_host();
+						$db_port            = $this->global_settings->db_port();
+						if(strlen($db_create_username) == 0){
+							$db_create_username = $this->global_settings->db_username();
+							$db_create_password = $this->global_settings->db_password();
+						}
+						if (strlen($db_host) == 0) {
+							$db_host = 'localhost';
+						}
+
+						try {
+							$this->dbh = new PDO("pgsql:host=$db_host port=$db_port user=$db_create_username password=$db_create_password dbname=template1");
+						} catch (PDOException $error) {
+							throw new Exception("error connecting to database in order to create: " . $error->getMessage());
+						}
+
+					//create the database, user, grant perms
+						if($this->dbh->exec("CREATE DATABASE {$this->global_settings->db_name()}") === false) {
+							throw new Exception("Failed to create database {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+						}
+						if($this->global_settings->db_username() != $db_create_username){
+							if($this->dbh->exec("CREATE USER {$this->global_settings->db_username()} WITH PASSWORD '{$this->global_settings->db_password()}'") === false){
+								// user may be already exists
+								// throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+							}
+							if($this->dbh->exec("GRANT ALL ON DATABASE {$this->global_settings->db_name()} TO {$this->global_settings->db_username()}") === false){
+								throw new Exception("Failed to create user {$this->global_settings->db_name()}: " . join(":", $this->dbh->errorInfo()));
+							}
+						}
+
+					//close database connection_aborted
+						$this->dbh = null;
+				}
+				$this->write_progress("\tInstalling data to database");
+
+			//open database connection with $this->global_settings->db_name()
+				try {
+					if (strlen($this->global_settings->db_host()) > 0) {
+						$this->dbh = new PDO("pgsql:host={$this->global_settings->db_host()} port={$this->global_settings->db_port()} dbname={$this->global_settings->db_name()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()}");
+					} else {
+						$this->dbh = new PDO("pgsql:host=localhost port={$this->global_settings->db_port()} user={$this->global_settings->db_username()} password={$this->global_settings->db_password()} dbname={$this->global_settings->db_name()}");
+					}
+				}
+				catch (PDOException $error) {
+					throw new Exception("error connecting to database: " . $error->getMessage());
+				}
+
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
+
+			//get the contents of the sql file
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+				}
+				else {
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
+				}
+				$file_contents = file_get_contents($filename);
+
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
+
+			//loop line by line through all the lines of sql code
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
+					if (strlen($sql) > 3) {
+						try {
+							$this->dbh->query($sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error creating database: " . $error->getMessage() . "\n" . $sql );
+						}
+					}
+					$x++;
+				}
+				unset ($file_contents, $sql);
 		}
 
 		protected function create_database_mysql() {
-				//database connection
-					$connect_string;
-					if (strlen($this->global_settings->db_host()) == 0 && strlen($this->global_settings->db_port()) == 0) {
-						//if both host and port are empty use the unix socket
-						$connect_string = "mysql:host=$this->global_settings->db_host();unix_socket=/var/run/mysqld/mysqld.sock;";
-					}
-					elseif (strlen($this->global_settings->db_port()) == 0) {
-						//leave out port if it is empty
-						$connect_string = "mysql:host=$this->global_settings->db_host();";
-					}
-					else {
-						$connect_string = "mysql:host=$this->global_settings->db_host();port=$this->global_settings->db_port();";
-					}
+			//database connection
+				$connect_string;
+				if (strlen($this->global_settings->db_host()) == 0 && strlen($this->global_settings->db_port()) == 0) {
+					//if both host and port are empty use the unix socket
+					$connect_string = "mysql:host={$this->global_settings->db_host()};unix_socket=/var/run/mysqld/mysqld.sock;";
+				}
+				elseif (strlen($this->global_settings->db_port()) == 0) {
+					//leave out port if it is empty
+					$connect_string = "mysql:host={$this->global_settings->db_host()};";
+				}
+				else {
+					$connect_string = "mysql:host={$this->global_settings->db_host()};port={$this->global_settings->db_port()};";
+				}
 
-				//create the table, user and set the permissions only if the db_create_username was provided
-					if ($this->global_settings->db_create()) {
-						$this->write_progress("\tCreating database");				
+			//if we need create new database
+				if ($this->global_settings->db_create()) {
+					//attempt to create new user and database
+						$this->write_progress("\tCreating database");
+						$db_create_username = $this->global_settings->db_create_username();
+						$db_create_password = $this->global_settings->db_create_password();
+
+						if(strlen($db_create_username) == 0){
+							$db_create_username = $this->global_settings->db_username();
+							$db_create_password = $this->global_settings->db_password();
+						}
+
+					//connect to MySQL
 						try {
-							$this->dbh = new PDO($connect_string, $this->global_settings->db_create_username(), db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+							$this->dbh = new PDO($connect_string, $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 							$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 						}
 						catch (PDOException $error) {
-							throw new Exception("error connecting to database for ccreate: " . $error->getMessage() . "\n" . $sql );
+							throw new Exception("error connecting to database for create: " . $error->getMessage() . "\n" . $sql );
 						}
-						//select the mysql database
-							try {
-								$this->dbh->query("USE mysql;");
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
 
-						//create user and set the permissions
-							try {
-								$tmp_sql = "CREATE USER '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
+					//select the mysql database
+						try {
+							$this->dbh->query("USE mysql;");
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
 
-						//set account to unlimited use
-							try {
-								if ($this->global_settings->db_host() == "localhost" || $this->global_settings->db_host() == "127.0.0.1") {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'localhost' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$this->dbh->query($tmp_sql);
-
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'127.0.0.1' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+					//create user if we use separeate user to access and create
+						if($this->global_settings->db_username() != $db_create_username) {
+							//create user and set the permissions
+								try {
+									$tmp_sql = "CREATE USER '".$this->global_settings->db_username()."'@'%' IDENTIFIED BY '".$this->global_settings->db_password()."'; ";
 									$this->dbh->query($tmp_sql);
 								}
-								else {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'".$this->global_settings->db_host()."' ";
-									$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$this->dbh->query($tmp_sql);
+								catch (PDOException $error) {
+									// ignore error here because user may already exists
+									// (e.g. reinstall can be done via remove db)
+									// throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 								}
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
 
-						//create the database and set the create user with permissions
-							try {
-								$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$this->global_settings->db_name()."; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
+							//set account to unlimited use
+								try {
+									if ($this->global_settings->db_host() == "localhost" || $this->global_settings->db_host() == "127.0.0.1") {
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'localhost' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
 
-						//set user permissions
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'127.0.0.1' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
+									}
+									else {
+										$tmp_sql = "GRANT USAGE ON * . * TO '".$this->global_settings->db_username()."'@'".$this->global_settings->db_host()."' ";
+										$tmp_sql .= "IDENTIFIED BY '".$this->global_settings->db_password()."' ";
+										$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+										$this->dbh->query($tmp_sql);
+									}
+								}
+								catch (PDOException $error) {
+									throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+								}
+						}
+
+					//create the database and set the create user with permissions
+						try {
+							$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$this->global_settings->db_name()."; ";
+							$this->dbh->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
+
+					//set user permissions
+						if($this->global_settings->db_username() != $db_create_username) {
 							try {
 								$this->dbh->query("GRANT ALL PRIVILEGES ON ".$this->global_settings->db_name().".* TO '".$this->global_settings->db_username()."'@'%'; ");
 							}
 							catch (PDOException $error) {
 								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
 							}
+						}
 
-						//make the changes active
-							try {
-								$tmp_sql = "FLUSH PRIVILEGES; ";
-								$this->dbh->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-							}
-							$this->dbh = null;
-					} //if (strlen($this->global_settings->db_create_username()) > 0)
+					//make the changes active
+						try {
+							$tmp_sql = "FLUSH PRIVILEGES; ";
+							$this->dbh->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+						}
+						$this->dbh = null;
+				}
 
 				$this->write_progress("\tInstalling data to database");
-				//select the database
-					try {
-						$this->dbh = new PDO($connect_string, $this->global_settings->db_username(), db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-						$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-						$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-					}
-					catch (PDOException $error) {
-						throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
-					}
-					try {
-						$this->dbh->query("USE ".$this->global_settings->db_name().";");
-					}
-					catch (PDOException $error) {
-						throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
-					}
 
-				//add the database structure
-					require_once "resources/classes/schema.php";
-					$schema = new schema;
-					$schema->db = $this->dbh;
-					$schema->db_type = $this->global_settings->db_type();
-					$schema->sql();
-					$schema->exec();
+			//connect to the database
+				try {
+					$this->dbh = new PDO($connect_string, $this->global_settings->db_username(), $this->global_settings->db_password(), array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+					$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					$this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+				}
+				catch (PDOException $error) {
+					throw new Exception("error connecting to database: " . $error->getMessage() . "\n" . $sql );
+				}
 
-				//add the defaults data into the database
-					//get the contents of the sql file
+			//select the database
+				try {
+					$this->dbh->query("USE ".$this->global_settings->db_name().";");
+				}
+				catch (PDOException $error) {
+					throw new Exception("error in database: " . $error->getMessage() . "\n" . $sql );
+				}
+
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $this->dbh;
+				$schema->db_type = $this->global_settings->db_type();
+				$schema->sql();
+				$schema->exec();
+
+			//add the defaults data into the database
+				//get the contents of the sql file
 					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
 						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
 					}
@@ -535,28 +566,28 @@ include "root.php";
 					}
 					$file_contents = file_get_contents($filename);
 
-					//replace \r\n with \n then explode on \n
-						$file_contents = str_replace("\r\n", "\n", $file_contents);
+				//replace \r\n with \n then explode on \n
+					$file_contents = str_replace("\r\n", "\n", $file_contents);
 
-					//loop line by line through all the lines of sql code
-						$string_array = explode("\n", $file_contents);
-						$x = 0;
-						foreach($string_array as $sql) {
-							if (strlen($sql) > 3) {
-								try {
-									if ($this->debug) {
-										$this->write_debug( $sql."\n");
-									}
-									$this->dbh->query($sql);
+				//loop line by line through all the lines of sql code
+					$string_array = explode("\n", $file_contents);
+					$x = 0;
+					foreach($string_array as $sql) {
+						if (strlen($sql) > 3) {
+							try {
+								if ($this->debug) {
+									$this->write_debug( $sql."\n");
 								}
-								catch (PDOException $error) {
-									//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
-									//die();
-								}
+								$this->dbh->query($sql);
 							}
-							$x++;
+							catch (PDOException $error) {
+								//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
+								//die();
+							}
 						}
-						unset ($file_contents, $sql);
+						$x++;
+					}
+					unset ($file_contents, $sql);
 		}
 
 		protected function create_domain() {
@@ -630,110 +661,6 @@ include "root.php";
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
 
-				//switch settings
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $switch_bin_dir;
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'bin';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_base_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'base';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_conf_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'conf';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_db_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'db';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_log_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'log';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_mod_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'mod';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_script_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'scripts';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_grammar_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'grammar';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_storage_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'storage';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_voicemail_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'voicemail';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_recordings_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'recordings';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_sounds_dir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'sounds';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_phrases_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'phrases';
-				$tmp[$x]['enabled'] = 'true';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = '';
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'provision';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_extensions_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'extensions';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_sip_profiles_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'sip_profiles';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = $this->global_settings->switch_dialplan_vdir();
-				$tmp[$x]['category'] = 'switch';
-				$tmp[$x]['subcategory'] = 'dialplan';
-				$tmp[$x]['enabled'] = 'false';
-				$x++;
-
 				//server settings
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->global_settings->switch_temp_dir();
@@ -741,12 +668,6 @@ include "root.php";
 				$tmp[$x]['subcategory'] = 'temp';
 				$tmp[$x]['enabled'] = 'true';
 				$x++;
-				#throw new Exception("I don't know how to find /etc/init.d for server > startup_scripts");
-				$tmp[$x]['name'] = 'dir';
-				$tmp[$x]['value'] = '';
-				$tmp[$x]['category'] = 'server';
-				$tmp[$x]['subcategory'] = 'startup_script';
-				$tmp[$x]['enabled'] = 'true';
 				$x++;
 				$tmp[$x]['name'] = 'dir';
 				$tmp[$x]['value'] = $this->global_settings->switch_backup_vdir();
@@ -789,78 +710,6 @@ include "root.php";
 					include($config_path);
 					$x++;
 				}
-
-			//add the groups
-				$x = 0;
-				$tmp[$x]['group_name'] = 'superadmin';
-				$tmp[$x]['group_description'] = 'Super Administrator Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'admin';
-				$tmp[$x]['group_description'] = 'Administrator Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'user';
-				$tmp[$x]['group_description'] = 'User Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'public';
-				$tmp[$x]['group_description'] = 'Public Group';
-				$x++;
-				$tmp[$x]['group_name'] = 'agent';
-				$tmp[$x]['group_description'] = 'Call Center Agent Group';
-				$this->dbh->beginTransaction();
-				foreach($tmp as $row) {
-					$sql = "insert into v_groups ";
-					$sql .= "(";
-					$sql .= "group_uuid, ";
-					$sql .= "group_name, ";
-					$sql .= "group_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$row['group_name']."', ";
-					$sql .= "'".$row['group_description']."' ";
-					$sql .= ");";
-					$this->write_debug($sql);
-					$this->dbh->exec(check_sql($sql));
-					unset($sql);
-				}
-				unset($tmp);
-				$this->dbh->commit();
-				//assign the default permissions to the groups
-				$this->dbh->beginTransaction();
-				foreach($apps as $app) {
-					if ($app['permissions']) {
-						foreach ($app['permissions'] as $row) {
-							if ($this->debug) {
-								$this->write_debug( "v_group_permissions\n");
-								$this->write_debug( json_encode($row)."\n\n");
-							}
-							if ($row['groups']) {
-								foreach ($row['groups'] as $group) {
-									//add the record
-									$sql = "insert into v_group_permissions ";
-									$sql .= "(";
-									$sql .= "group_permission_uuid, ";
-									$sql .= "permission_name, ";
-									$sql .= "group_name ";
-									$sql .= ") ";
-									$sql .= "values ";
-									$sql .= "(";
-									$sql .= "'".uuid()."', ";
-									$sql .= "'".$row['name']."', ";
-									$sql .= "'".$group."' ";
-									$sql .= ");";
-									if ($this->debug) {
-										$this->write_debug( $sql."\n");
-									}
-									$this->dbh->exec(check_sql($sql));
-									unset($sql);
-								}
-							}
-						}
-					}
-				}
-				$this->dbh->commit();
 			}
 		}
 
@@ -878,6 +727,8 @@ include "root.php";
 			$salt = generate_password('20', '4');
 			if ($result) {
 				$this->admin_uuid = $result['user_uuid'];
+                                $user_uuid = $result['user_uuid'];
+                                $_SESSION["user_uuid"] = $this->admin_uuid;
 				$this->write_progress("... superuser exists as '" . $this->admin_uuid . "', updating password");
 				$sql = "update v_users ";
 				$sql .= "set password = '".md5($salt.$this->admin_password)."' ";
@@ -885,41 +736,44 @@ include "root.php";
 				$sql .= "where USER_uuid = '".$this->admin_uuid."' ";
 				$this->write_debug($sql);
 				$this->dbh->exec(check_sql($sql));
-			}else{
-				$this->write_progress("\t... creating super user");
-			//add a user and then add the user to the superadmin group
-			//prepare the values
-				$this->admin_uuid = uuid();
-				$contact_uuid = uuid();
-			//set a sessiong variable
-				$_SESSION["user_uuid"] = $user_uuid;
-			//salt used with the password to create a one way hash
-			//add the user account
-				$sql = "insert into v_users ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "user_uuid, ";
-				$sql .= "contact_uuid, ";
-				$sql .= "username, ";
-				$sql .= "password, ";
-				$sql .= "salt, ";
-				$sql .= "add_date, ";
-				$sql .= "add_user ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$this->global_settings->domain_uuid()."', ";
-				$sql .= "'".$this->admin_uuid."', ";
-				$sql .= "'$contact_uuid', ";
-				$sql .= "'".$this->admin_username."', ";
-				$sql .= "'".md5($salt.$this->admin_password)."', ";
-				$sql .= "'$salt', ";
-				$sql .= "now(), ";
-				$sql .= "'".$this->admin_username."' ";
-				$sql .= ");";
-				$this->write_debug( $sql."\n");
-				$this->dbh->exec(check_sql($sql));
-				unset($sql);
+			} else {
+				//message
+					$this->write_progress("\t... creating super user");
+				//add a user and then add the user to the superadmin group
+				//prepare the values
+					$user_uuid = $this->admin_uuid = uuid();
+					$contact_uuid = uuid();
+				//set a sessiong variable
+					$_SESSION["user_uuid"] = $user_uuid;
+				//salt used with the password to create a one way hash
+				//add the user account
+					$sql = "insert into v_users ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "user_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "username, ";
+					$sql .= "password, ";
+					$sql .= "salt, ";
+					$sql .= "add_date, ";
+					$sql .= "add_user, ";
+					$sql .= "user_enabled ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$this->global_settings->domain_uuid()."', ";
+					$sql .= "'".$this->admin_uuid."', ";
+					$sql .= "'$contact_uuid', ";
+					$sql .= "'".$this->admin_username."', ";
+					$sql .= "'".md5($salt.$this->admin_password)."', ";
+					$sql .= "'$salt', ";
+					$sql .= "now(), ";
+					$sql .= "'".$this->admin_username."', ";
+					$sql .= "'true' ";
+					$sql .= ");";
+					$this->write_debug( $sql."\n");
+					$this->dbh->exec(check_sql($sql));
+					unset($sql);
 			}
 			$this->write_progress("\tChecking if superuser contact exists");
 			$sql = "select count(*) from v_contacts ";
@@ -962,7 +816,7 @@ include "root.php";
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['count'] == 0) {
-			//add the user to the superadmin group
+				//add the user to the superadmin group
 				$sql = "insert into v_group_users ";
 				$sql .= "(";
 				$sql .= "group_user_uuid, ";
@@ -983,124 +837,101 @@ include "root.php";
 			}
 		}
 
-		protected function create_menus() {
-			$this->write_progress("\tCreating menus");
-		//set the defaults
-			$menu_name = 'default';
-			$menu_language = 'en-us';
-			$menu_description = 'Default Menu Set';
-
-			$this->write_progress("\tChecking if menu exists");
-			$sql = "select count(*) from v_menus ";
-			$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-			$sql .= "limit 1 ";
-			$this->write_debug($sql);
-			$prep_statement = $this->dbh->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			unset($sql, $prep_statement);
-			if ($result['count'] == 0) {
-				$this->write_progress("\t... creating menu '" . $menu_name. "'");
-				$sql = "insert into v_menus ";
-				$sql .= "(";
-				$sql .= "menu_uuid, ";
-				$sql .= "menu_name, ";
-				$sql .= "menu_language, ";
-				$sql .= "menu_description ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$this->menu_uuid."', ";
-				$sql .= "'$menu_name', ";
-				$sql .= "'$menu_language', ";
-				$sql .= "'$menu_description' ";
-				$sql .= ");";
-				if ($this->debug) {
-					$this->write_debug( $sql."\n");
-				}
-				$this->dbh->exec(check_sql($sql));
-				unset($sql);
-
-			//add the menu items
-				require_once "resources/classes/menu.php";
-				$menu = new menu;
-				$menu->db = $this->dbh;
-				$menu->menu_uuid = $this->menu_uuid;
-				$menu->restore();
-				unset($menu);
-			}
-		}
-
 		protected function app_defaults() {
-			$this->write_progress("\tRunning app_defaults");
 
-		//set needed session settings
-			$_SESSION["username"] = $this->admin_username;
-			$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
-			require $this->config_php;
-			require "resources/require.php";
-			$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
-			$_SESSION['event_socket_port'] = $this->global_settings->event_port;
-			$_SESSION['event_socket_password'] = $this->global_settings->event_password;
+			//write a progress message
+				$this->write_progress("\tRunning app_defaults");
 
-		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
-			$sql = "SELECT * FROM v_group_users ";
-			$sql .= "where domain_uuid=:domain_uuid ";
-			$sql .= "and user_uuid=:user_uuid ";
-			$prep_statement = $this->dbh->prepare(check_sql($sql));
-			$prep_statement->bindParam(':domain_uuid', $this->global_settings->domain_uuid);
-			$prep_statement->bindParam(':user_uuid', $this->admin_uuid);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$_SESSION["groups"] = $result;
-			unset($sql, $row_count, $prep_statement);
+			//set needed session settings
+				$_SESSION["username"] = $this->admin_username;
+				$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
+				require $this->config_php;
+				require "resources/require.php";
+				$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
+				$_SESSION['event_socket_port'] = $this->global_settings->event_port;
+				$_SESSION['event_socket_password'] = $this->global_settings->event_password;
 
-		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
-			$x = 0;
-			$sql = "select distinct(permission_name) from v_group_permissions ";
-			foreach($_SESSION["groups"] as $field) {
-				if (strlen($field['group_name']) > 0) {
-					if ($x == 0) {
-						$sql .= "where (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+			//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
+				$sql = "SELECT * FROM v_group_users ";
+				$sql .= "where domain_uuid=:domain_uuid ";
+				$sql .= "and user_uuid=:user_uuid ";
+				$prep_statement = $this->dbh->prepare(check_sql($sql));
+				$prep_statement->bindParam(':domain_uuid', $this->global_settings->domain_uuid);
+				$prep_statement->bindParam(':user_uuid', $this->admin_uuid);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$_SESSION["groups"] = $result;
+				unset($sql, $row_count, $prep_statement);
+
+			//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
+				$x = 0;
+				$sql = "select distinct(permission_name) from v_group_permissions ";
+				foreach($_SESSION["groups"] as $field) {
+					if (strlen($field['group_name']) > 0) {
+						if ($x == 0) {
+							$sql .= "where (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						else {
+							$sql .= "or (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						$x++;
 					}
-					else {
-						$sql .= "or (domain_uuid = '".$this->global_settings->domain_uuid."' and group_name = '".$field['group_name']."') ";
-					}
-					$x++;
 				}
-			}
-			$prep_statement_sub = $this->dbh->prepare($sql);
-			$prep_statement_sub->execute();
-			$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
-			unset($sql, $prep_statement_sub);
+				$prep_statement_sub = $this->dbh->prepare($sql);
+				$prep_statement_sub->execute();
+				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				unset($sql, $prep_statement_sub);
 
-		//include the config.php
-			$db_type = $this->global_settings->db_type();
-			$db_path = $this->global_settings->db_path();
-			$db_host = $this->global_settings->db_host();
-			$db_port = $this->global_settings->db_port();
-			$db_name = $this->global_settings->db_name();
-			$db_username = $this->global_settings->db_username();
-			$db_password = $this->global_settings->db_password();
+			//include the config.php
+				$db_type = $this->global_settings->db_type();
+				$db_path = $this->global_settings->db_path();
+				$db_host = $this->global_settings->db_host();
+				$db_port = $this->global_settings->db_port();
+				$db_name = $this->global_settings->db_name();
+				$db_username = $this->global_settings->db_username();
+				$db_password = $this->global_settings->db_password();
 
-		//add the database structure
-			require_once "resources/classes/schema.php";
-			$schema = new schema;
-			echo $schema->schema();
+			//add the database structure
+				require_once "resources/classes/schema.php";
+				$schema = new schema;
+				echo $schema->schema();
 
-		//run all app_defaults.php files
-			$default_language = $this->install_language;
-			$domain = new domains;
-			$domain->upgrade();
+			//run all app_defaults.php files
+				$default_language = $this->install_language;
+				$domain = new domains;
+				$domain->upgrade();
 
-		//synchronize the config with the saved settings
-			save_switch_xml();
+			//get the switch default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_category = 'switch' ";
+				$sql .= "and default_setting_enabled = 'true' ";
+				$prep_statement = $this->dbh->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($default_settings as $row) {
+					$name = $row['default_setting_name'];
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
+					if ($category == "switch") {
+						$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+						$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+					}
+				}
+				unset ($prep_statement, $sql);
 
-		//do not show the apply settings reminder on the login page
-			$_SESSION["reload_xml"] = false;
+			//update config.lua
+				$obj = new scripts;
+				$obj->copy_files();
+				$obj->write_config();
 
-		//clear the menu
-			$_SESSION["menu"] = "";
+			//synchronize the config with the saved settings
+				save_switch_xml();
+
+			//do not show the apply settings reminder on the login page
+				$_SESSION["reload_xml"] = false;
+
+			//clear the menu
+				$_SESSION["menu"] = "";
 
 		}
 

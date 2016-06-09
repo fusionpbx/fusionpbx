@@ -67,19 +67,40 @@ if (strlen($_GET["a"]) > 0) {
 	}
 }
 
+$esl_alive = false;
+if($fp){
+	$esl_alive = true;
+	fclose($fp);
+}
+
+//Warning if FS not start
+	if(!$esl_alive){
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
+		echo "<div align='center'>\n";
+		echo "<table width='40%'>\n";
+		echo "<tr>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+	}
+
 //use the module class to get the list of modules from the db and add any missing modules
-	$mod = new modules;
-	$mod->db = $db;
-	$mod->dir = $_SESSION['switch']['mod']['dir'];
-	$mod->get_modules();
-	$result = $mod->modules;
+	$module = new modules;
+	$module->db = $db;
+	$module->dir = $_SESSION['switch']['mod']['dir'];
+	$module->get_modules();
+	$result = $module->modules;
 	$module_count = count($result);
-	$mod->synch();
-	$msg = $mod->msg;
+	$module->synch();
+	$module->xml();
+	$msg = $module->msg;
 
 //show the msg
 	if ($msg) {
-		save_module_xml();
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -157,18 +178,24 @@ if (strlen($_GET["a"]) > 0) {
 				echo $row["module_label"];
 			}
 			echo "	</td>\n";
-			if ($mod->active($row["module_name"])) {
-				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
-			}
-			else {
-				if ($row['module_enabled']=="true") {
-					echo "   <td valign='top' class='".$row_style[$c]."'><b>".$text['label-stopped']."</b></td>\n";
+			if($esl_alive) {
+				if ($module->active($row["module_name"])) {
+					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 				}
 				else {
-					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".$notice."</td>\n";
+					if ($row['module_enabled']=="true") {
+						echo "   <td valign='top' class='".$row_style[$c]."'><b>".$text['label-stopped']."</b></td>\n";
+					}
+					else {
+						echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".$notice."</td>\n";
+					}
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
 				}
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
+			}
+			else{
+				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-unknown']."</td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-none']."</td>\n";
 			}
 			echo "   <td valign='top' class='".$row_style[$c]."'>";
 			if ($row["module_enabled"] == "true") {

@@ -31,7 +31,9 @@ require_once "resources/require.php";
 	}
 
 //start the session
+	ini_set("session.use_only_cookies", True);
 	ini_set("session.cookie_httponly", True);
+	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	session_start();
 
 //if the username session is not set the check username and password
@@ -108,12 +110,27 @@ require_once "resources/require.php";
 					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
 						$domain_name = check_str($_REQUEST["domain_name"]);
 					}
-					$connect = ldap_connect($_SESSION["ldap"]["server_host"]["text"], $_SESSION["ldap"]["server_port"]["numeric"])
+					if (isset($_SESSION["ldap"]["certpath"])) {
+						$s="LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
+						putenv($s);
+					}
+					if (isset($_SESSION["ldap"]["certkey"])) {
+						$s="LDAPTLS_KEY=" . $_SESSION["ldap"]["certkey"]["text"];
+						 putenv($s);
+					}
+					$host=$_SESSION["ldap"]["server_host"]["text"];
+					$port=$_SESSION["ldap"]["server_port"]["numeric"];
+					$connect = ldap_connect($host)
 						or die("Could not connect to the LDAP server.");
-					ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
+					//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
 					ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
+					//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
 					$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$username.",".$_SESSION["ldap"]["user_dn"]["text"];
-					$bind = ldap_bind($connect, $bind_dn, $_REQUEST["password"]);
+					$bind_pw = $_REQUEST["password"];
+					//Note: As of 4/16, the call below will fail randomly.  PHP debug reports ldap_bind
+					//called below with all arguments '*uninitialized*'.  However, the debugger
+					//single-stepping just before the failing call correctly displays all the values.
+					$bind = ldap_bind($connect, $bind_dn, $bind_pw);
 					if ($bind) {
 						$_SESSION['username'] = $username;
 					}
@@ -223,7 +240,7 @@ require_once "resources/require.php";
 					}
 					else {
 						$sql .= "where username=:username ";
-						//$sql .= "and username='".$username."' ";
+						//$sql .= "where username='".$username."' ";
 					}
 					//$sql .= "and domain_uuid='".$domain_uuid."' ";
 					if ($_SESSION["user"]["unique"]["text"] == "global") {
@@ -382,6 +399,50 @@ require_once "resources/require.php";
 				}
 			}
 
+		//get the extensions that are assigned to this user
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
+				if (isset($_SESSION["user"]) && isset($_SESSION["user_uuid"]) && $db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+					//get the user extension list
+						unset($_SESSION['user']['extension']);
+						$sql = "select ";
+						$sql .= "	e.extension, ";
+						$sql .= "	e.number_alias, ";
+						$sql .= "	e.user_context, ";
+						$sql .= "	e.extension_uuid, ";
+						$sql .= "	e.outbound_caller_id_name, ";
+						$sql .= "	e.outbound_caller_id_number ";
+						$sql .= "from ";
+						$sql .= "	v_extension_users as u, ";
+						$sql .= "	v_extensions as e ";
+						$sql .= "where ";
+						$sql .= "	e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "	and e.extension_uuid = u.extension_uuid ";
+						$sql .= "	and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+						$sql .= "	and e.enabled = 'true' ";
+						$sql .= "order by ";
+						$sql .= "	e.extension asc ";
+						$query = $db->query($sql);
+						if($query !== false) {
+							$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+							$x = 0;
+							foreach($result as $row) {
+								$destination = $row['extension'];
+								if (strlen($row['number_alias']) > 0) {
+									$destination = $row['number_alias'];
+								}
+								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
+								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
+								$_SESSION['user']['extension'][$x]['destination'] = $destination;
+								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
+								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
+								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$_SESSION['user_context'] = $row["user_context"];
+								$x++;
+							}
+						}
+				}
+			}
+
 		//redirect the user
 			if (check_str($_REQUEST["rdr"]) !== 'n'){
 				$path = check_str($_POST["path"]);
@@ -396,7 +457,7 @@ require_once "resources/require.php";
 			}
 
 		//get the domains
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/domains/app_config.php")){
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php")){
 				require_once "app/domains/resources/domains.php";
 			}
 

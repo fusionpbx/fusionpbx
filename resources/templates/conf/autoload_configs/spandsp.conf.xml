@@ -1,7 +1,7 @@
 <configuration name="spandsp.conf" description="SpanDSP config">
     <modem-settings>
 <!--
-    total-modems set to N will create that many soft-modems.  
+    total-modems set to N will create that many soft-modems.
     If you use them with Hylafax you need the following for each one numbered 0..N:
 
     1) A line like this in /etc/inittab:
@@ -24,7 +24,7 @@
     </modem-settings>
 
     <fax-settings>
-	<param name="use-ecm"		value="true"/>
+	<param name="use-ecm"		value="false"/>
 	<param name="verbose"		value="false"/>
 	<param name="disable-v17"	value="false"/>
 	<param name="ident"		value="SpanDSP Fax Ident"/>

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -50,7 +50,7 @@ if (strlen($id) > 0) {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		if (isset($result)) foreach ($result as &$row) {
 			$domain_name = $row["domain_name"];
 		}
 		unset ($prep_statement);
@@ -62,7 +62,7 @@ if (strlen($id) > 0) {
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($result as $row) {
+		if (isset($result)) foreach($result as $row) {
 			$name = $row['domain_setting_name'];
 			$category = $row['domain_setting_category'];
 			$subcategory = $row['domain_setting_subcategory'];
@@ -87,17 +87,17 @@ if (strlen($id) > 0) {
 	//get the $apps array from the installed apps from the core and mod directories
 		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 		$x=0;
-		foreach ($config_list as &$config_path) {
+		if (isset($config_list)) foreach ($config_list as &$config_path) {
 			include($config_path);
 			$x++;
 		}
 
 	//delete the domain data from all tables in the database
 		$db->beginTransaction();
-		foreach ($apps as &$app) {
-			foreach ($app['db'] as $row) {
+		if (isset($apps)) foreach ($apps as &$app) {
+			if (isset($app['db'])) foreach ($app['db'] as $row) {
 				$table_name = $row['table'];
-				foreach ($row['fields'] as $field) {
+				if (isset($row['fields'])) foreach ($row['fields'] as $field) {
 					if ($field['name'] == "domain_uuid") {
 						$sql = "delete from $table_name where domain_uuid = '$id' ";
 						$db->query($sql);

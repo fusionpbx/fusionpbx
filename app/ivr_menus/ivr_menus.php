@@ -75,7 +75,7 @@ else {
 	$total_ivr_menus = $num_rows;
 
 //prepare to page the results
-	$rows_per_page = 150;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 	$_GET['page'] = check_str($_GET['page']);
@@ -127,7 +127,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ivr_menu_direct_dial'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ivr_menu_enabled'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['ivr_menu_enabled']]."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ivr_menu_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ivr_menu_edit')) {

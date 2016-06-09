@@ -165,7 +165,7 @@
 	$text['opt-itring']['es-cl'] = "it-ring";
 	$text['opt-itring']['pt-pt'] = "it-ring";
 	$text['opt-itring']['fr-fr'] = "it-ring";
-	
+
 	$text['opt-moh']['en-us'] = "music";
 	$text['opt-moh']['es-cl'] = "musica";
 	$text['opt-moh']['pt-pt'] = "música";

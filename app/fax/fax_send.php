@@ -111,7 +111,7 @@ if (!$included) {
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
 else{
-	require_once "resources/classes/EventSocket.php";
+	require_once "resources/classes/event_socket.php";
 }
 
 if(!function_exists('correct_path')) {
@@ -151,15 +151,15 @@ if(!function_exists('fax_enqueue')) {
 			$date_utc_now_sql  = "datetime('now')";
 		}
 		$sql = <<<HERE
-INSERT INTO v_fax_tasks( fax_task_uuid, fax_uuid, 
-	task_next_time, task_lock_time, 
-	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf, 
+INSERT INTO v_fax_tasks( fax_task_uuid, fax_uuid,
+	task_next_time, task_lock_time,
+	task_fax_file, task_wav_file, task_uri, task_dial_string, task_dtmf,
 	task_interrupted, task_status, task_no_answer_counter, task_no_answer_retry_counter, task_retry_counter,
 	task_reply_address, task_description)
 VALUES (?, ?,
-	$date_utc_now_sql, NULL, 
-	?, ?, ?, ?, ?, 
-	'false', 0, 0, 0, 0, 
+	$date_utc_now_sql, NULL,
+	?, ?, ?, ?, ?,
+	'false', 0, 0, 0, 0,
 	?, ?);
 HERE;
 		$stmt = $db->prepare($sql);
@@ -206,32 +206,25 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir']);
-				chmod($_SESSION['switch']['storage']['dir'],0774);
+				mkdir($_SESSION['switch']['storage']['dir'],02770,true);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
-				mkdir($_SESSION['switch']['storage']['dir'].'/fax');
-				chmod($_SESSION['switch']['storage']['dir'].'/fax',0774);
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax',02770,true);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
-				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
-				chmod($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'],0774);
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'],02770,true);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				mkdir($fax_dir.'/'.$fax_extension,0774,true);
-				chmod($fax_dir.'/'.$fax_extension,0774);
+				mkdir($fax_dir.'/'.$fax_extension,02770,true);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				mkdir($dir_fax_inbox,0774,true);
-				chmod($dir_fax_inbox,0774);
+				mkdir($dir_fax_inbox,02770,true);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,0774,true);
-				chmod($dir_fax_sent,0774);
+				mkdir($dir_fax_sent,02770,true);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				mkdir($dir_fax_temp,0774,true);
-				chmod($dir_fax_temp,0774);
+				mkdir($dir_fax_temp,02770,true);
 			}
 	}
 

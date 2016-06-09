@@ -62,6 +62,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "follow_me_ignore_busy";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_name_prefix";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		//$apps[$x]['permissions'][$y]['groups'][] = "admin";

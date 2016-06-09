@@ -1,4 +1,5 @@
 <?php
+
 $iso_countries = array
 (
 	'AF' => 'Afghanistan',
@@ -247,4 +248,5 @@ $iso_countries = array
 	'ZM' => 'Zambia',
 	'ZW' => 'Zimbabwe',
 );
+
 ?>

@@ -3,9 +3,5 @@
 		<condition field="${call_direction}" expression="^(inbound|outbound|local)$" break="never">
 			<anti-action application="set" data="call_direction=local"/>
 		</condition>
-		<condition field="${user_exists}" expression="^false$"/>
-		<condition field="destination_number" expression="^\d{7,20}$">
-			<action application="set" data="call_direction=outbound"/>
-		</condition>
 	</extension>
 </context>

@@ -39,7 +39,7 @@ if ($domains_processed == 1) {
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
 
-		//add default settings
+			//add default settings
 			$sql = "select count(*) as num_rows from v_default_settings ";
 			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
 			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
@@ -69,7 +69,7 @@ if ($domains_processed == 1) {
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
-						mkdir($conf_lang_folder."/phrases/", 0777);
+						mkdir($conf_lang_folder."/phrases/", 02770);
 					}
 					//parse language, open xml file
 					$conf_lang = substr($conf_lang_folder, -2);

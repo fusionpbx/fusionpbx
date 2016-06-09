@@ -52,7 +52,7 @@
 //if the public directory doesn't exist then create it
 	if ($domains_processed == 1) {
 		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
-			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) { mkdir($_SESSION['switch']['dialplan']['dir'].'/public',0777,true); }
+			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) { mkdir($_SESSION['switch']['dialplan']['dir'].'/public',02770,true); }
 		}
 	}
 
@@ -60,8 +60,8 @@
 	if (count($_SESSION["domains"]) > 1) {
 		//make sure the public directory and xml file exist
 		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
-			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public'.$_SESSION['domains'][$domain_uuid]['domain_name'])) { 
-				mkdir($_SESSION['switch']['dialplan']['dir'].'/public/'.$_SESSION['domains'][$domain_uuid]['domain_name'],0777,true);
+			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public'.$_SESSION['domains'][$domain_uuid]['domain_name'])) {
+				mkdir($_SESSION['switch']['dialplan']['dir'].'/public/'.$_SESSION['domains'][$domain_uuid]['domain_name'],02770,true);
 			}
 			$file = $_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$domain_uuid]['domain_name'].".xml";
 			if (!file_exists($file)) {

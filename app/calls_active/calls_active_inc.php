@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -94,7 +94,7 @@ else {
 			echo "</table>";
 
 			$rows = array();
-			foreach ($results["rows"] as &$row) {
+			if (isset($results["rows"])) foreach ($results["rows"] as &$row) {
 				//determine show all
 					if (!($show == 'all' && permission_exists('call_active_all'))) {
 						$foreign_call = true;
@@ -217,7 +217,7 @@ else {
 		echo "	<a href='javascript:void(0);' onclick=\"send_cmd('calls_exec.php?cmd='+get_park_cmd(escape('$uuid'), '".$tmp_domain."'));\">".$text['label-park']."</a>&nbsp;\n";
 	//record start/stop
 		$tmp_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-		mkdir($tmp_dir, 0777, true);
+		mkdir($tmp_dir, 02770, true);
 		$tmp_file = $tmp_dir."/".$uuid.".wav";
 		if (file_exists($tmp_file)) {
 			//stop

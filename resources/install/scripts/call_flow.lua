@@ -125,7 +125,7 @@ if (session:ready()) then
 
 		--hangup the call
 			session:hangup();
-	else 
+	else
 		log.notice("execute " .. app .. " " .. data);
 
 		--exucute the application

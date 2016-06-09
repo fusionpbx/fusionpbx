@@ -15,6 +15,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "f1905fec-0577-daef-6045-59d09b7d3f94";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-new-window";
 	$apps[$x]['menu'][$y]['path'] = "/app/edit/index.php?dir=scripts";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -32,6 +33,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "16013877-606a-2a05-7d6a-c1b215839131";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-new-window";
 	$apps[$x]['menu'][$y]['path'] = "/app/edit/index.php?dir=xml";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -49,6 +51,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "57773542-a565-1a29-605d-6535da1a0870";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-new-window";
 	$apps[$x]['menu'][$y]['path'] = "/app/edit/index.php?dir=provision";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -66,6 +69,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "eae1f2d6-789b-807c-cc26-44501e848693";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-new-window";
 	$apps[$x]['menu'][$y]['path'] = "/app/edit/index.php?dir=php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
@@ -83,6 +87,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "c3db739e-89f9-0fa2-44ce-0f4c2ff43b1a";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-new-window";
 	$apps[$x]['menu'][$y]['path'] = "/app/edit/index.php?dir=grammar";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 

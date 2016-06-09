@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,6 +50,7 @@ else {
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$user_uuid = check_str($_POST["user_uuid"]);
+		$group_uuid = $_POST['group_uuid'];
 		$contact_type = check_str($_POST["contact_type"]);
 		$contact_organization = check_str($_POST["contact_organization"]);
 		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
@@ -234,7 +235,6 @@ else {
 
 				//handle redirect
 					if ($_POST['submit'] == $text['button-add']) {
-						$group_uuid = $_POST['group_uuid'];
 						$location = "contact_edit.php?id=".$contact_uuid;
 					}
 
@@ -350,7 +350,12 @@ else {
 	echo "		});";
 	echo "	});";
 	echo "</script>";
-	echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
+	if (isset($_SESSION['theme']['qr_image'])) {
+		echo "<img id='img-buffer' src='".$_SESSION["theme"]["qr_image"]["text"]."' style='display: none;'>";
+	}
+	else {
+		echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
+	}
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
@@ -671,7 +676,7 @@ else {
 						echo "	<td class='vtable'>".$field['group_name']."</td>\n";
 						echo "	<td>\n";
 						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
-							echo "	<a href='contact_group_delete.php?id=".$contact_group_uuid."&contact_uuid=".$field['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+							echo "	<a href='contact_group_delete.php?id=".$field['contact_group_uuid']."&contact_uuid=".$contact_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";

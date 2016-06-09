@@ -8,12 +8,16 @@
 
 require "resources.functions.trim";
 
-local api = api 
-if (not api) and freeswitch then api = freeswitch.API() else
-api = {}
-function api:execute()
-  return '-ERR UNSUPPORTTED'
-end
+local api = api
+if not api then
+  if freeswitch then
+    api = freeswitch.API()
+  else
+    api = {}
+    function api:execute()
+      return '-ERR UNSUPPORTTED'
+    end
+  end
 end
 
 local function send_event(action, key)
@@ -88,7 +92,7 @@ function Cache._self_test()
   local ok, err = Cache.get("a")
   assert(nil == ok)
   assert(err == "NOT FOUND")
-  
+
   local s = "hello \\ ' world"
   assert(true == Cache.set("a", s))
   assert(s == Cache.get("a"))

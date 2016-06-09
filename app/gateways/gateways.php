@@ -111,19 +111,12 @@ else {
 	unset($sql, $prep_statement, $row);
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_gateways ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "&order_by=".$order_by."&order=".$order;
+	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
+	$_GET['page'] = check_str($_GET['page']);
+	list($paging_controls, $rows_per_page, $var_3) = paging($total_gateways, $param, $rows_per_page);
+	$offset = $rows_per_page * $_GET['page'];
 
 //get the list
 	$sql = "select * from v_gateways ";
@@ -134,17 +127,11 @@ else {
 	else {
 		$sql .= "order by $order_by $order ";
 	}
+	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
-
-	$rows_per_page = 150;
-	$param = "";
-	$page = check_str($_GET['page']);
-	if (strlen($page) == 0) { $page = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -171,7 +158,7 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($num_rows > 0) {
+	if ($total_gateways > 0) {
 		foreach($gateways as $row) {
 			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -236,25 +223,11 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='9' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('gateway_add')) {
-		if ($_SESSION['limit']['gateways']['numeric'] == '' || ($_SESSION['limit']['gateways']['numeric'] != '' && $total_gateways < $_SESSION['limit']['gateways']['numeric'])) {
-			echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-	}
-	else {
-		echo "&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "<br />\n";
 
+	echo $paging_controls."\n";
+	echo "<br /><br />\n";
 
 //include the footer
 	require_once "resources/footer.php";

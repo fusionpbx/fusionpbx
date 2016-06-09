@@ -26,15 +26,26 @@
 include "root.php";
 
 //define the schema class
+if (!class_exists('schema')) {
 	class schema {
+
 		//define variables
 			public $db;
 			public $apps;
 			public $db_type;
 			public $result;
 
-		//get the list of installed apps from the core and mod directories
+		//class constructor
 			public function __construct() {
+				//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+
+				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
@@ -49,14 +60,14 @@ include "root.php";
 				$sql = '';
 				$sql_schema = '';
 				foreach ($this->apps as $app) {
-					if (count($app['db'])) {
+					if (isset($app['db']) && count($app['db'])) {
 						foreach ($app['db'] as $row) {
 							//create the sql string
 								$table_name = $row['table'];
 								$sql = "CREATE TABLE " . $row['table'] . " (\n";
 								$field_count = 0;
 								foreach ($row['fields'] as $field) {
-									if ($field['deprecated'] == "true") {
+									if (isset($field['deprecated']) and ($field['deprecated'] == "true")) {
 										//skip this field
 									}
 									else {
@@ -73,10 +84,10 @@ include "root.php";
 										else {
 											$sql .= $field['type'];
 										}
-										if ($field['key']['type'] == "primary") {
+ 										if (isset($field['key']) && isset($field['key']['type']) && ($field['key']['type'] == "primary")) {
 											$sql .= " PRIMARY KEY";
 										}
-										if ($field['key']['type'] == "foreign") {
+										if (isset($field['key']) && isset($field['key']['type']) && ($field['key']['type'] == "foreign")) {
 											if ($this->db_type == "pgsql") {
 												//$sql .= " references ".$field['key']['reference']['table']."(".$field['key']['reference']['field'].")";
 											}
@@ -196,9 +207,9 @@ include "root.php";
 			}
 
 		//database table exists alternate
-			private function db_table_exists_alternate ($db, $db_type, $table_name) {
+			private function db_table_exists_alternate ($db_type, $table_name) {
 				$sql = "select count(*) from $table_name ";
-				$result = $db->query($sql);
+				$result = $this->db->query($sql);
 				if ($result > 0) {
 					return true; //table exists
 				}
@@ -208,7 +219,7 @@ include "root.php";
 			}
 
 		//database table exists
-			private function db_table_exists ($db, $db_type, $db_name, $table_name) {
+			private function db_table_exists ($db_type, $db_name, $table_name) {
 				$sql = "";
 				if ($db_type == "sqlite") {
 					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
@@ -219,7 +230,7 @@ include "root.php";
 				if ($db_type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
-				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
@@ -231,7 +242,7 @@ include "root.php";
 			}
 
 		//database table information
-			private function db_table_info($db, $db_name, $db_type, $table_name) {
+			private function db_table_info($db_name, $db_type, $table_name) {
 				if (strlen($table_name) == 0) { return false; }
 				if ($db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
@@ -252,7 +263,7 @@ include "root.php";
 				if ($db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
-				$prep_statement = $db->prepare($sql);
+				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -293,11 +304,11 @@ include "root.php";
 			}
 
 		//database column exists
-			private function db_column_exists ($db, $db_type, $db_name, $table_name, $column_name) {
+			private function db_column_exists ($db_type, $db_name, $table_name, $column_name) {
 				global $display_type;
 
 				if ($db_type == "sqlite") {
-					$table_info = $this->db_table_info($db, $db_name, $db_type, $table_name);
+					$table_info = $this->db_table_info($db_name, $db_type, $table_name);
 					if ($this->db_sqlite_column_exists($table_info, $column_name)) {
 						return true;
 					}
@@ -313,7 +324,7 @@ include "root.php";
 					$sql = "show columns from $table_name where field = '$column_name' ";
 				}
 				if ($sql) {
-					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!$result) {
@@ -330,8 +341,8 @@ include "root.php";
 			}
 
 		//database column data type
-			private function db_column_data_type ($db, $db_type, $db_name, $table_name, $column_name) {
-				$table_info = $this->db_table_info($db, $db_name, $db_type, $table_name);
+			private function db_column_data_type ($db_type, $db_name, $table_name, $column_name) {
+				$table_info = $this->db_table_info($db_name, $db_type, $table_name);
 				return $this->db_data_type($db_type, $table_info, $column_name);
 			}
 
@@ -375,7 +386,7 @@ include "root.php";
 
 		//database insert
 			private function db_insert_into ($apps, $db_type, $table) {
-				global $db, $db_name;
+				global $db_name;
 				foreach ($apps as $x => &$app) {
 					foreach ($app['db'] as $y => $row) {
 						if ($row['table'] == $table) {
@@ -410,7 +421,7 @@ include "root.php";
 											if (is_array($field['name']['deprecated'])) {
 												$found = false;
 												foreach ($field['name']['deprecated'] as $row) {
-													if ($this->db_column_exists ($db, $db_type, $db_name, 'tmp_'.$table, $row)) {
+													if ($this->db_column_exists ($db_type, $db_name, 'tmp_'.$table, $row)) {
 														$sql .= $row;
 														$found = true;
 														break;
@@ -419,7 +430,7 @@ include "root.php";
 												if (!$found) { $sql .= "''"; }
 											}
 											else {
-												if ($this->db_column_exists ($db, $db_type, $db_name, 'tmp_'.$table, $field['name']['deprecated'])) {
+												if ($this->db_column_exists ($db_type, $db_name, 'tmp_'.$table, $field['name']['deprecated'])) {
 													$sql .= $field['name']['deprecated'];
 												}
 												else {
@@ -445,10 +456,11 @@ include "root.php";
 			}
 
 		//datatase schema
-			public function schema ($format) {
-
-				//set the global variable
-					global $db, $upgrade_data_types, $text;
+			public function schema ($format = '') {
+ 
+ 				//set the global variable
+					global $db, $upgrade_data_types, $text,$output_format;
+					if ($format=='') $format = $output_format;
 
 				//get the db variables
 					$config = new config;
@@ -509,7 +521,7 @@ include "root.php";
 				//update the app db array add exists true or false
 					$sql = '';
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
 							}
@@ -518,7 +530,7 @@ include "root.php";
 							}
 							if (strlen($table_name) > 0) {
 								//check if the table exists
-									if ($this->db_table_exists($db, $db_type, $db_name, $table_name)) {
+									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
 										$apps[$x]['db'][$y]['exists'] = 'true';
 									}
 									else {
@@ -537,7 +549,7 @@ include "root.php";
 												$field_name = $field['name'];
 											}
 											if (strlen(field_name) > 0) {
-												if ($this->db_column_exists ($db, $db_type, $db_name, $table_name, $field_name)) {
+												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
 												}
@@ -560,12 +572,12 @@ include "root.php";
 
 				//add missing tables and fields
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
-								if (!$this->db_table_exists($db, $db_type, $db_name, $row['table']['text'])) {
+								if (!$this->db_table_exists($db_type, $db_name, $row['table']['text'])) {
 									$row['exists'] = "true"; //testing
-									//if (db_table_exists($db, $db_type, $db_name, $row['table']['deprecated'])) {
+									//if (db_table_exists($db_type, $db_name, $row['table']['deprecated'])) {
 										if ($db_type == "pgsql") {
 											$sql_update .= "ALTER TABLE ".$row['table']['deprecated']." RENAME TO ".$row['table']['text'].";\n";
 										}
@@ -616,7 +628,7 @@ include "root.php";
 													}
 												//rename fields where the name has changed
 													if (is_array($field['name'])) {
-														if ($this->db_column_exists ($db, $db_type, $db_name, $table_name, $field['name']['deprecated'])) {
+														if ($this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
 															if ($db_type == "pgsql") {
 																$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
 															}
@@ -633,7 +645,7 @@ include "root.php";
 												//change the data type if it has been changed
 													//if the data type in the app db array is different than the type in the database then change the data type
 													if ($upgrade_data_types) {
-														$db_field_type = $this->db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
+														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
 														if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
@@ -656,7 +668,7 @@ include "root.php";
 																		//field type has not changed
 																	}
 																	else {
-																		//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name)."<br>";
+																		//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
 																		$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
 																	}
 																}
@@ -696,7 +708,7 @@ include "root.php";
 					}
 				//rebuild and populate the table
 					foreach ($apps as $x => &$app) {
-						foreach ($app['db'] as $y => &$row) {
+						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table'])) {
 								$table_name = $row['table']['text'];
 							}
@@ -753,7 +765,7 @@ include "root.php";
 						//build the html while looping through the app db array
 							$sql = '';
 							foreach ($apps as &$app) {
-								foreach ($app['db'] as $row) {
+								if (isset($app['db'])) foreach ($app['db'] as $row) {
 									if (is_array($row['table'])) {
 										$table_name = $row['table']['text'];
 									}
@@ -836,12 +848,12 @@ include "root.php";
 							if ($format == "text") {
 								$response .= "	".$text['label-schema']."\n";
 							}
-							//$db->beginTransaction();
+							//$this->db->beginTransaction();
 							$update_array = explode(";", $sql_update);
 							foreach($update_array as $sql) {
 								if (strlen(trim($sql))) {
 									try {
-										$db->query(trim($sql));
+										$this->db->query(trim($sql));
 										if ($format == "text") {
 											$response .= "	$sql\n";
 										}
@@ -851,7 +863,7 @@ include "root.php";
 									}
 								}
 							}
-							//$db->commit();
+							//$this->db->commit();
 							$response .= "\n";
 							unset ($file_contents, $sql_update, $sql);
 						}
@@ -863,8 +875,8 @@ include "root.php";
 					//else if ($output == "return") {
 						return $response;
 					//}
-
 			} //end function
+	}
 }
 
 //example use

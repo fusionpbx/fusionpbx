@@ -74,7 +74,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	session:setVariable("call_block", "")
 
 --send to the log
-	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"], 
+	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
 			params["cid_name"], params["userid"], params["domain_name"]));
 
 --get the cache
@@ -91,7 +91,7 @@ This method causes the script to get its manadatory arguments directly from the 
 			require "resources.functions.database_handle";
 			dbh = database_handle('system');
 
-		--log if not connect 
+		--log if not connect
 			if dbh:connected() == false then
 				logger("W", "NOTICE", "db was not connected")
 			end
@@ -108,7 +108,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				found_count = rows["call_block_count"];
 				end)
 			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
-		
+
 		--set the cache
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then

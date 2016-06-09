@@ -80,7 +80,7 @@ require_once "resources/require.php";
 	}
 
 //prepare to page the results
-	$rows_per_page = 100;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -139,7 +139,7 @@ require_once "resources/require.php";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['call_block_enabled'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['call_block_enabled']]."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

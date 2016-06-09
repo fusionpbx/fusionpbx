@@ -1,6 +1,6 @@
 <?php
 
-$apps[$x]['menu'][2]['title']['en-us'] = "User Manager";
+$apps[$x]['menu'][2]['title']['en-us'] = "Users";
 $apps[$x]['menu'][2]['title']['es-cl'] = "Gestor de Usuarios";
 $apps[$x]['menu'][2]['title']['fr-fr'] = "Gestion des utilisteurs";
 $apps[$x]['menu'][2]['title']['pt-pt'] = "Gestão de Utilizadores";

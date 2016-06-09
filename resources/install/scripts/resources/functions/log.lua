@@ -42,7 +42,7 @@ local function tracef(type, name, level, ...)
 end
 
 local LEVELS = {
-	'error',
+	'err',
 	'warning',
 	'notice',
 	'info',

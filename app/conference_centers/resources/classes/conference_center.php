@@ -41,11 +41,18 @@
 
 		public function room_count() {
 			//get the room count
-				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u, v_meetings as p ";
+				$not_admin = 1;
+				if (permission_exists("conference_room_view_all")) {
+					$not_admin = 0;
+				}
+				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meetings as p ";
+				if ($not_admin) {
+					$sql .= "v_meeting_users as u, ";
+				}
 				$sql .= "where r.domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
-				if (!if_group("admin") && !if_group("superadmin")) {
+				if ($not_admin) {
+					$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
 				}
 				if (isset($this->search)) {
@@ -71,14 +78,24 @@
 
 		public function rooms() {
 			//get the list of rooms
+				$not_admin = 1;
+				if (permission_exists("conference_room_view_all")) {
+					$not_admin = 0;
+				}
 				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, r.conference_room_name, max_members, ";
 				$fields .= "wait_mod, announce, mute, sounds, created, created_by, r.enabled, r.description, record, ";
-				$fields .= "profile, meeting_user_uuid, user_uuid, moderator_pin, participant_pin ";
-				$sql = "select ".$fields." from v_conference_rooms as r, v_meeting_users as u, v_meetings as p ";
+				$fields .= "profile, moderator_pin, participant_pin";
+				if ($not_admin) {
+					$fields .= ", meeting_user_uuid, user_uuid";
+				}
+				$sql = "select ".$fields." from v_conference_rooms as r, v_meetings as p ";
+				if ($not_admin) {
+					$sql .= ", v_meeting_users as u ";
+				}
 				$sql .= "where r.domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
-				if (!if_group("admin") && !if_group("superadmin")) {
+				if ($not_admin) {
+					$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
 				}
 				//if (is_numeric($this->search)) {

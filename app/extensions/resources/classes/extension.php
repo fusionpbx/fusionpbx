@@ -25,6 +25,7 @@
 */
 
 //define the directory class
+if (!class_exists('extension')) {
 	class extension {
 		public $db;
 		public $domain_uuid;
@@ -396,7 +397,7 @@
 							$xml .= "  </user>\n";
 
 							if (!is_readable($_SESSION['switch']['extensions']['dir']."/".$row['user_context'])) {
-								mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'],0755,true);
+								mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'],02770,true);
 							}
 							if (strlen($extension) > 0) {
 								$fout = fopen($_SESSION['switch']['extensions']['dir']."/".$row['user_context']."/v_".$extension.".xml","w");
@@ -504,5 +505,6 @@
 			}
 		}
 	}
+}
 
 ?>

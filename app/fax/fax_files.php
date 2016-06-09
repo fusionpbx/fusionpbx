@@ -145,24 +145,19 @@ else {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir']);
-				chmod($dir_fax_sent,0774);
+				mkdir($_SESSION['switch']['storage']['dir'],02770,true);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				mkdir($fax_dir.'/'.$fax_extension,0774,true);
-				chmod($fax_dir.'/'.$fax_extension,0774);
+				mkdir($fax_dir.'/'.$fax_extension,02770,true);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				mkdir($dir_fax_inbox,0774,true);
-				chmod($dir_fax_inbox,0774);
+				mkdir($dir_fax_inbox,02770,true);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,0774,true);
-				chmod($dir_fax_sent,0774);
+				mkdir($dir_fax_sent,02770,true);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				mkdir($dir_fax_temp,0774,true);
-				chmod($dir_fax_temp,0774);
+				mkdir($dir_fax_temp,02770,true);
 			}
 	}
 
@@ -193,7 +188,7 @@ else {
 	}
 
 //prepare to page the results
-	$rows_per_page = 50;
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&id=".$_GET['id']."&box=".$_GET['box']."&order_by=".$_GET['order_by']."&order=".$_GET['order'];
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }

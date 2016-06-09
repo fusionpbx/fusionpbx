@@ -2,7 +2,7 @@
 
 /**
  * events class provides an event system
- * 
+ *
  * @method void load_plugins
  * @method dynamic __call
  */
@@ -94,8 +94,8 @@ class events {
 	 * @param string $args
 	 *
 	 */
-	public function __call($method, $args) { 
-		if (! key_exists($method, $this->methods)) { 
+	public function __call($method, $args) {
+		if (! key_exists($method, $this->methods)) {
 			throw new Exception ("Call to undefined method: " . $method);
 		}
 		array_unshift($args, $this);

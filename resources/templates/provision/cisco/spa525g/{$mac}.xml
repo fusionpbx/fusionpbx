@@ -62,7 +62,11 @@
 <Resync_Trigger_1 ua="na"></Resync_Trigger_1>
 <Resync_Trigger_2 ua="na"></Resync_Trigger_2>
 <Resync_Fails_On_FNF ua="na">Yes</Resync_Fails_On_FNF>
+{if isset ($http_auth_username)}
+<Profile_Rule ua="na">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
 <Profile_Rule ua="na">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
 <Profile_Rule_B ua="na"></Profile_Rule_B>
 <Profile_Rule_C ua="na"></Profile_Rule_C>
 <Profile_Rule_D ua="na"></Profile_Rule_D>

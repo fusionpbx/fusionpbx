@@ -65,7 +65,7 @@ require_once "resources/paging.php";
 
 	//prepare to page the results
 		$rows_per_page = 200;
-		$param = "";
+		$param = "&id=".$sip_profile_uuid;
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);

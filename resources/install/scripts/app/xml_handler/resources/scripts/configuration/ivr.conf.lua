@@ -13,7 +13,7 @@
 --         notice, this list of conditions and the following disclaimer in the
 --         documentation and/or other materials provided with the distribution.
 --
---      THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--      THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --      INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --      AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --      AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -44,7 +44,7 @@
 			assert(dbh:connected());
 
 		--get the ivr menu from the database
-			sql = [[SELECT * FROM v_ivr_menus 
+			sql = [[SELECT * FROM v_ivr_menus
 				WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
 				AND ivr_menu_enabled = 'true' ]];
 			if (debug["sql"]) then
@@ -77,7 +77,157 @@
 				ivr_menu_description = row["ivr_menu_description"];
 			end);
 
-		--recording path
+		--get the recordings from the database
+			ivr_menu_greet_long_is_base64 = false;
+			ivr_menu_greet_short_is_base64 = false;
+			ivr_menu_invalid_sound_is_base64 = false;
+			ivr_menu_exit_sound_is_base64 = false;
+			if (storage_type == "base64") then
+				--greet long
+					if (string.len(ivr_menu_greet_long) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
+							sql = [[SELECT * FROM v_recordings
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_greet_long..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							end
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
+									ivr_menu_greet_long_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_greet_long, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
+					end
+				--greet short
+					if (string.len(ivr_menu_greet_short) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
+							sql = [[SELECT * FROM v_recordings
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_greet_short..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							end
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short;
+									ivr_menu_greet_short_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_greet_short, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
+					end
+				--invalid sound
+					if (string.len(ivr_menu_invalid_sound) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound)) then
+							sql = [[SELECT * FROM v_recordings
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_invalid_sound..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							end
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_invalid_sound = recordings_dir..domain_name.."/".."/"..ivr_menu_invalid_sound;
+									ivr_menu_invalid_sound_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_invalid_sound, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
+					end
+				--exit sound
+					if (string.len(ivr_menu_exit_sound) > 1) then
+						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound)) then
+							sql = [[SELECT * FROM v_recordings
+								WHERE domain_uuid = ']]..domain_uuid..[['
+								AND recording_filename = ']]..ivr_menu_exit_sound..[[' ]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+							end
+							status = dbh:query(sql, function(row)
+								--add functions
+									require "resources.functions.base64";
+								--add the path to filename
+									ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
+									ivr_menu_exit_sound_is_base64 = true;
+								--save the recording to the file system
+									if (string.len(row["recording_base64"]) > 32) then
+										local file = io.open(ivr_menu_exit_sound, "w");
+										file:write(base64.decode(row["recording_base64"]));
+										file:close();
+									end
+							end);
+						end
+					end
+			elseif (storage_type == "http_cache") then
+				--add the path to file name
+				ivr_menu_greet_long = storage_path.."/"..ivr_menu_greet_long;
+				ivr_menu_greet_short = storage_path.."/"..ivr_menu_greet_short;
+				ivr_menu_invalid_sound = storage_path.."/"..ivr_menu_invalid_sound;
+				ivr_menu_exit_sound = storage_path.."/"..ivr_menu_exit_sound;
+			end
+
+		--greet long
+			if (not file_exists(ivr_menu_greet_long)) then
+				if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
+					ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
+				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
+					ivr_menu_greet_long = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_long;
+				end
+			end
+
+		--greet short
+			if (string.len(ivr_menu_greet_short) > 1) then
+				if (not file_exists(ivr_menu_greet_short)) then
+					if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
+						ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
+					elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
+						ivr_menu_greet_short = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_long;
+					end
+				end
+			else
+				ivr_menu_greet_short = ivr_menu_greet_long;
+			end
+
+		--invalid sound
+			if (not file_exists(ivr_menu_invalid_sound)) then
+				if (file_exists(recordings_dir.."/"..domain_name.. "/"..ivr_menu_invalid_sound)) then
+					ivr_menu_invalid_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound;
+				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_invalid_sound)) then
+					ivr_menu_invalid_sound = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_invalid_sound;
+				end
+			end
+
+		--exit sound
+			if (not file_exists(ivr_menu_exit_sound)) then
+				if (file_exists(recordings_dir.."/"..ivr_menu_exit_sound)) then
+					if (ivr_menu_exit_sound ~= nil and ivr_menu_exit_sound ~= "") then
+						ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
+					end
+				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_exit_sound)) then
+					ivr_menu_exit_sound = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_exit_sound;
+				end
+			end
 
 		--start the xml array
 			local xml = {}
@@ -118,7 +268,7 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/(^(\d{2,5}))$/" param="transfer $1 XML features" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
 			end
 
 		--close the extension tag if it was left open

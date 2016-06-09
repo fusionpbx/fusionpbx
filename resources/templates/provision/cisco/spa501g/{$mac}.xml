@@ -182,7 +182,11 @@
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
 <Resync_Trigger_2 group="Provisioning/Configuration_Profile" />
 <Resync_Fails_On_FNF group="Provisioning/Configuration_Profile">Yes</Resync_Fails_On_FNF>
+{if isset ($http_auth_username)}
+<Profile_Rule group="Provisioning/Configuration_Profile">[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{else}
 <Profile_Rule group="Provisioning/Configuration_Profile">http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
+{/if}
 <Profile_Rule_B group="Provisioning/Configuration_Profile" />
 <Profile_Rule_C group="Provisioning/Configuration_Profile" />
 <Profile_Rule_D group="Provisioning/Configuration_Profile" />
@@ -305,7 +309,7 @@
 <Service_Annc_Base_Number group="Regional/Vertical_Service_Announcement_Codes" />
 <Service_Annc_Extension_Codes group="Regional/Vertical_Service_Announcement_Codes" />
 
-<!-- Regional/Outbound_Call_Codec_Selection_Codes -->	
+<!-- Regional/Outbound_Call_Codec_Selection_Codes -->
 <Prefer_G711u_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*017110</Prefer_G711u_Code>
 <Force_G711u_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*027110</Force_G711u_Code>
 <Prefer_G711a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*017111</Prefer_G711a_Code>
@@ -340,7 +344,7 @@
 <Station_Name group="Phone/General">{$display_name_1}</Station_Name>
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
-  
+
 {foreach $keys as $row}
 {if $row.device_key_category == "line"}
 {if $row.device_key_type == "line"}
@@ -449,7 +453,7 @@
 <NAT_Keep_Alive_Msg_1_ group="Ext_1/NAT_Settings">$NOTIFY</NAT_Keep_Alive_Msg_1_>
 <NAT_Keep_Alive_Dest_1_ group="Ext_1/NAT_Settings">$PROXY</NAT_Keep_Alive_Dest_1_>
 
-<!-- Ext_1/Network_Settings -->	
+<!-- Ext_1/Network_Settings -->
 <SIP_TOS_DiffServ_Value_1_ group="Ext_1/Network_Settings">0x68</SIP_TOS_DiffServ_Value_1_>
 <SIP_CoS_Value_1_ group="Ext_1/Network_Settings">3</SIP_CoS_Value_1_>
 <RTP_TOS_DiffServ_Value_1_ group="Ext_1/Network_Settings">0xb8</RTP_TOS_DiffServ_Value_1_>
@@ -457,7 +461,7 @@
 <Network_Jitter_Level_1_ group="Ext_1/Network_Settings">high</Network_Jitter_Level_1_>
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
-<!-- Ext_1/SIP_Settings -->	
+<!-- Ext_1/SIP_Settings -->
 <SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
@@ -557,7 +561,7 @@
 <!-- Ext_2/General -->
 <Line_Enable_2_ group="Ext_2/General">Yes</Line_Enable_2_>
 
-<!-- Ext_2/Share_Line_Appearance -->	
+<!-- Ext_2/Share_Line_Appearance -->
 <Share_Ext_2_ group="Ext_2/Share_Line_Appearance">private</Share_Ext_2_>
 <Shared_User_ID_2_ group="Ext_2/Share_Line_Appearance" />
 <Subscription_Expires_2_ group="Ext_2/Share_Line_Appearance">3600</Subscription_Expires_2_>
@@ -920,7 +924,7 @@
 <!-- Ext_5/General -->
 <Line_Enable_5_ group="Ext_5/General">Yes</Line_Enable_5_>
 
-<!-- Ext_5/Share_Line_Appearance -->	
+<!-- Ext_5/Share_Line_Appearance -->
 <Share_Ext_5_ group="Ext_5/Share_Line_Appearance">private</Share_Ext_5_>
 <Shared_User_ID_5_ group="Ext_5/Share_Line_Appearance" />
 <Subscription_Expires_5_ group="Ext_5/Share_Line_Appearance">3600</Subscription_Expires_5_>
@@ -1000,7 +1004,7 @@
 <Proxy_Redundancy_Method_5_ group="Ext_5/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_5_>
 <Dual_Registration_5_ group="Ext_5/Proxy_and_Registration">No</Dual_Registration_5_>
 
-<!-- Ext_5/Subscriber_Information -->	
+<!-- Ext_5/Subscriber_Information -->
 <Display_Name_5_ group="Ext_5/Subscriber_Information">{$display_name_5}</Display_Name_5_>
 <User_ID_5_ group="Ext_5/Subscriber_Information">{$user_id_5}</User_ID_5_>
 <Password_5_ group="Ext_5/Subscriber_Information">{$user_password_5}</Password_5_>
@@ -1032,7 +1036,7 @@
 <Use_Remote_Pref_Codec_5_ group="Ext_5/Audio_Configuration">No</Use_Remote_Pref_Codec_5_>
 <Codec_Negotiation_5_ group="Ext_5/Audio_Configuration">Default</Codec_Negotiation_5_>
 
-<!-- Ext_5/Dial_Plan -->	
+<!-- Ext_5/Dial_Plan -->
 <Dial_Plan_5_ group="Ext_5/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_5_>
 <Caller_ID_Map_5_ group="Ext_5/Dial_Plan" />
 <Enable_IP_Dialing_5_ group="Ext_5/Dial_Plan">Yes</Enable_IP_Dialing_5_>
@@ -1041,20 +1045,20 @@
 <!-- Ext_6/General -->
 <Line_Enable_6_ group="Ext_6/General">Yes</Line_Enable_6_>
 
-<!-- Ext_6/Share_Line_Appearance -->	
+<!-- Ext_6/Share_Line_Appearance -->
 <Share_Ext_6_ group="Ext_6/Share_Line_Appearance">private</Share_Ext_6_>
 <Shared_User_ID_6_ group="Ext_6/Share_Line_Appearance" />
 <Subscription_Expires_6_ group="Ext_6/Share_Line_Appearance">3600</Subscription_Expires_6_>
 <Restrict_MWI_6_ group="Ext_6/Share_Line_Appearance">No</Restrict_MWI_6_>
 <Monitor_User_ID_6_ group="Ext_6/Share_Line_Appearance" />
 
-<!-- Ext_6/NAT_Settings -->	
+<!-- Ext_6/NAT_Settings -->
 <NAT_Mapping_Enable_6_ group="Ext_6/NAT_Settings">No</NAT_Mapping_Enable_6_>
 <NAT_Keep_Alive_Enable_6_ group="Ext_6/NAT_Settings">No</NAT_Keep_Alive_Enable_6_>
 <NAT_Keep_Alive_Msg_6_ group="Ext_6/NAT_Settings">$NOTIFY</NAT_Keep_Alive_Msg_6_>
 <NAT_Keep_Alive_Dest_6_ group="Ext_6/NAT_Settings">$PROXY</NAT_Keep_Alive_Dest_6_>
 
-<!-- Ext_6/Network_Settings-->	
+<!-- Ext_6/Network_Settings-->
 <SIP_TOS_DiffServ_Value_6_ group="Ext_6/Network_Settings">0x68</SIP_TOS_DiffServ_Value_6_>
 <SIP_CoS_Value_6_ group="Ext_6/Network_Settings">3</SIP_CoS_Value_6_>
 <RTP_TOS_DiffServ_Value_6_ group="Ext_6/Network_Settings">0xb8</RTP_TOS_DiffServ_Value_6_>
@@ -1062,7 +1066,7 @@
 <Network_Jitter_Level_6_ group="Ext_6/Network_Settings">high</Network_Jitter_Level_6_>
 <Jitter_Buffer_Adjustment_6_ group="Ext_6/Network_Settings">up and down</Jitter_Buffer_Adjustment_6_>
 
-<!-- Ext_6/SIP_Settings -->	
+<!-- Ext_6/SIP_Settings -->
 <SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6|upper}</SIP_Transport_6_>
 <SIP_Port_6_ group="Ext_6/SIP_Settings">{$sip_port_6}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ group="Ext_6/SIP_Settings">No</SIP_100REL_Enable_6_>
@@ -1083,7 +1087,7 @@
 <Voice_Quality_Report_Address_6_ group="Ext_6/SIP_Settings" />
 <User_Equal_Phone_6_ group="Ext_6/SIP_Settings">No</User_Equal_Phone_6_>
 
-<!-- Ext_6/Call_Feature_Settings -->	
+<!-- Ext_6/Call_Feature_Settings -->
 <Blind_Attn-Xfer_Enable_6_ group="Ext_6/Call_Feature_Settings">No</Blind_Attn-Xfer_Enable_6_>
 <MOH_Server_6_ group="Ext_6/Call_Feature_Settings" />
 <Message_Waiting_6_ group="Ext_6/Call_Feature_Settings">No</Message_Waiting_6_>
@@ -1121,7 +1125,7 @@
 <Proxy_Redundancy_Method_6_ group="Ext_6/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_6_>
 <Dual_Registration_6_ group="Ext_6/Proxy_and_Registration">No</Dual_Registration_6_>
 
-<!-- Ext_6/Subscriber_Information -->	
+<!-- Ext_6/Subscriber_Information -->
 <Display_Name_6_ group="Ext_6/Subscriber_Information">{$display_name_6}</Display_Name_6_>
 <User_ID_6_ group="Ext_6/Subscriber_Information">{$user_id_6}</User_ID_6_>
 <Password_6_ group="Ext_6/Subscriber_Information">{$user_password_6}</Password_6_>
@@ -1133,7 +1137,7 @@
 <Resident_Online_Number_6_ group="Ext_6/Subscriber_Information" />
 <SIP_URI_6_ group="Ext_6/Subscriber_Information" />
 
-<!-- Ext_6/Audio_Configuration -->	
+<!-- Ext_6/Audio_Configuration -->
 <Preferred_Codec_6_ group="Ext_6/Audio_Configuration">G711u</Preferred_Codec_6_>
 <Use_Pref_Codec_Only_6_ group="Ext_6/Audio_Configuration">No</Use_Pref_Codec_Only_6_>
 <Second_Preferred_Codec_6_ group="Ext_6/Audio_Configuration">Unspecified</Second_Preferred_Codec_6_>
@@ -1153,29 +1157,29 @@
 <Use_Remote_Pref_Codec_6_ group="Ext_6/Audio_Configuration">No</Use_Remote_Pref_Codec_6_>
 <Codec_Negotiation_6_ group="Ext_6/Audio_Configuration">Default</Codec_Negotiation_6_>
 
-<!-- Ext_6/Dial_Plan -->	
+<!-- Ext_6/Dial_Plan -->
 <Dial_Plan_6_ group="Ext_6/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_6_>
 <Caller_ID_Map_6_ group="Ext_6/Dial_Plan" />
 <Enable_IP_Dialing_6_ group="Ext_6/Dial_Plan">Yes</Enable_IP_Dialing_6_>
 <Emergency_Number_6_ group="Ext_6/Dial_Plan" />
 
-<!-- Ext_7/General -->	
+<!-- Ext_7/General -->
 <Line_Enable_7_ group="Ext_7/General">Yes</Line_Enable_7_>
 
-<!-- Ext_7/Share_Line_Appearance -->	
+<!-- Ext_7/Share_Line_Appearance -->
 <Share_Ext_7_ group="Ext_7/Share_Line_Appearance">private</Share_Ext_7_>
 <Shared_User_ID_7_ group="Ext_7/Share_Line_Appearance" />
 <Subscription_Expires_7_ group="Ext_7/Share_Line_Appearance">3600</Subscription_Expires_7_>
 <Restrict_MWI_7_ group="Ext_7/Share_Line_Appearance">No</Restrict_MWI_7_>
 <Monitor_User_ID_7_ group="Ext_7/Share_Line_Appearance" />
 
-<!-- Ext_7/NAT_Settings -->	
+<!-- Ext_7/NAT_Settings -->
 <NAT_Mapping_Enable_7_ group="Ext_7/NAT_Settings">No</NAT_Mapping_Enable_7_>
 <NAT_Keep_Alive_Enable_7_ group="Ext_7/NAT_Settings">No</NAT_Keep_Alive_Enable_7_>
 <NAT_Keep_Alive_Msg_7_ group="Ext_7/NAT_Settings">$NOTIFY</NAT_Keep_Alive_Msg_7_>
 <NAT_Keep_Alive_Dest_7_ group="Ext_7/NAT_Settings">$PROXY</NAT_Keep_Alive_Dest_7_>
 
-<!-- Ext_7/Network_Settings -->		
+<!-- Ext_7/Network_Settings -->
 <SIP_TOS_DiffServ_Value_7_ group="Ext_7/Network_Settings">0x68</SIP_TOS_DiffServ_Value_7_>
 <SIP_CoS_Value_7_ group="Ext_7/Network_Settings">3</SIP_CoS_Value_7_>
 <RTP_TOS_DiffServ_Value_7_ group="Ext_7/Network_Settings">0xb8</RTP_TOS_DiffServ_Value_7_>
@@ -1204,7 +1208,7 @@
 <Voice_Quality_Report_Address_7_ group="Ext_7/SIP_Settings" />
 <User_Equal_Phone_7_ group="Ext_7/SIP_Settings">No</User_Equal_Phone_7_>
 
-<!-- Ext_7/Call_Feature_Settings -->	
+<!-- Ext_7/Call_Feature_Settings -->
 <Blind_Attn-Xfer_Enable_7_ group="Ext_7/Call_Feature_Settings">No</Blind_Attn-Xfer_Enable_7_>
 <MOH_Server_7_ group="Ext_7/Call_Feature_Settings" />
 <Message_Waiting_7_ group="Ext_7/Call_Feature_Settings">No</Message_Waiting_7_>
@@ -1225,7 +1229,7 @@
 <Feature_Key_Sync_7_ group="Ext_7/Call_Feature_Settings">No</Feature_Key_Sync_7_>
 <Call_Park_Monitor_Enable_7_ group="Ext_7/Call_Feature_Settings">No</Call_Park_Monitor_Enable_7_>
 
-<!-- Ext_7/Proxy_and_Registration -->	
+<!-- Ext_7/Proxy_and_Registration -->
 <Proxy_7_ group="Ext_7/Proxy_and_Registration">{$server_address_7}</Proxy_7_>
 <Outbound_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
 <Alternate_Proxy_7_ group="Ext_7/Proxy_and_Registration" />
@@ -1254,7 +1258,7 @@
 <Resident_Online_Number_7_ group="Ext_7/Subscriber_Information" />
 <SIP_URI_7_ group="Ext_7/Subscriber_Information" />
 
-<!-- Ext_7/Audio_Configuration -->	
+<!-- Ext_7/Audio_Configuration -->
 <Preferred_Codec_7_ group="Ext_7/Audio_Configuration">G711u</Preferred_Codec_7_>
 <Use_Pref_Codec_Only_7_ group="Ext_7/Audio_Configuration">No</Use_Pref_Codec_Only_7_>
 <Second_Preferred_Codec_7_ group="Ext_7/Audio_Configuration">Unspecified</Second_Preferred_Codec_7_>
@@ -1274,29 +1278,29 @@
 <Use_Remote_Pref_Codec_7_ group="Ext_7/Audio_Configuration">No</Use_Remote_Pref_Codec_7_>
 <Codec_Negotiation_7_ group="Ext_7/Audio_Configuration">Default</Codec_Negotiation_7_>
 
-<!-- Ext_7/Dial_Plan -->	
+<!-- Ext_7/Dial_Plan -->
 <Dial_Plan_7_ group="Ext_7/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_7_>
 <Caller_ID_Map_7_ group="Ext_7/Dial_Plan" />
 <Enable_IP_Dialing_7_ group="Ext_7/Dial_Plan">Yes</Enable_IP_Dialing_7_>
 <Emergency_Number_7_ group="Ext_7/Dial_Plan" />
 
-<!-- Ext_8/General -->	
+<!-- Ext_8/General -->
 <Line_Enable_8_ group="Ext_8/General">Yes</Line_Enable_8_>
 
-<!-- Ext_8/Share_Line_Appearance -->	
+<!-- Ext_8/Share_Line_Appearance -->
 <Share_Ext_8_ group="Ext_8/Share_Line_Appearance">private</Share_Ext_8_>
 <Shared_User_ID_8_ group="Ext_8/Share_Line_Appearance" />
 <Subscription_Expires_8_ group="Ext_8/Share_Line_Appearance">3600</Subscription_Expires_8_>
 <Restrict_MWI_8_ group="Ext_8/Share_Line_Appearance">No</Restrict_MWI_8_>
 <Monitor_User_ID_8_ group="Ext_8/Share_Line_Appearance" />
 
-<!-- Ext_8/NAT_Settings -->	
+<!-- Ext_8/NAT_Settings -->
 <NAT_Mapping_Enable_8_ group="Ext_8/NAT_Settings">No</NAT_Mapping_Enable_8_>
 <NAT_Keep_Alive_Enable_8_ group="Ext_8/NAT_Settings">No</NAT_Keep_Alive_Enable_8_>
 <NAT_Keep_Alive_Msg_8_ group="Ext_8/NAT_Settings">$NOTIFY</NAT_Keep_Alive_Msg_8_>
 <NAT_Keep_Alive_Dest_8_ group="Ext_8/NAT_Settings">$PROXY</NAT_Keep_Alive_Dest_8_>
 
-<!-- Ext_8/Network_Settings -->	
+<!-- Ext_8/Network_Settings -->
 <SIP_TOS_DiffServ_Value_8_ group="Ext_8/Network_Settings">0x68</SIP_TOS_DiffServ_Value_8_>
 <SIP_CoS_Value_8_ group="Ext_8/Network_Settings">3</SIP_CoS_Value_8_>
 <RTP_TOS_DiffServ_Value_8_ group="Ext_8/Network_Settings">0xb8</RTP_TOS_DiffServ_Value_8_>
@@ -1304,7 +1308,7 @@
 <Network_Jitter_Level_8_ group="Ext_8/Network_Settings">high</Network_Jitter_Level_8_>
 <Jitter_Buffer_Adjustment_8_ group="Ext_8/Network_Settings">up and down</Jitter_Buffer_Adjustment_8_>
 
-<!-- Ext_8/SIP_Settings -->	
+<!-- Ext_8/SIP_Settings -->
 <SIP_Transport_8_ group="Ext_8/SIP_Settings">{$sip_transport_8|upper}</SIP_Transport_8_>
 <SIP_Port_8_ group="Ext_8/SIP_Settings">{$sip_port_8}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ group="Ext_8/SIP_Settings">No</SIP_100REL_Enable_8_>
@@ -1325,7 +1329,7 @@
 <Voice_Quality_Report_Address_8_ group="Ext_8/SIP_Settings" />
 <User_Equal_Phone_8_ group="Ext_8/SIP_Settings">No</User_Equal_Phone_8_>
 
-<!-- Ext_8/Call_Feature_Settings -->	
+<!-- Ext_8/Call_Feature_Settings -->
 <Blind_Attn-Xfer_Enable_8_ group="Ext_8/Call_Feature_Settings">No</Blind_Attn-Xfer_Enable_8_>
 <MOH_Server_8_ group="Ext_8/Call_Feature_Settings" />
 <Message_Waiting_8_ group="Ext_8/Call_Feature_Settings">No</Message_Waiting_8_>
@@ -1346,7 +1350,7 @@
 <Feature_Key_Sync_8_ group="Ext_8/Call_Feature_Settings">No</Feature_Key_Sync_8_>
 <Call_Park_Monitor_Enable_8_ group="Ext_8/Call_Feature_Settings">No</Call_Park_Monitor_Enable_8_>
 
-<!-- Ext_8/Proxy_and_Registration -->	
+<!-- Ext_8/Proxy_and_Registration -->
 <Proxy_8_ group="Ext_8/Proxy_and_Registration">{$server_address_8}</Proxy_8_>
 <Outbound_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
 <Alternate_Proxy_8_ group="Ext_8/Proxy_and_Registration" />
@@ -1363,7 +1367,7 @@
 <Proxy_Redundancy_Method_8_ group="Ext_8/Proxy_and_Registration">Normal</Proxy_Redundancy_Method_8_>
 <Dual_Registration_8_ group="Ext_8/Proxy_and_Registration">No</Dual_Registration_8_>
 
-<!-- Ext_8/Subscriber_Information -->	
+<!-- Ext_8/Subscriber_Information -->
 <Display_Name_8_ group="Ext_8/Subscriber_Information">{$display_name_8}</Display_Name_8_>
 <User_ID_8_ group="Ext_8/Subscriber_Information">{$user_id_8}</User_ID_8_>
 <Password_8_ group="Ext_8/Subscriber_Information">{$user_password_8}</Password_8_>
@@ -1375,7 +1379,7 @@
 <Resident_Online_Number_8_ group="Ext_8/Subscriber_Information" />
 <SIP_URI_8_ group="Ext_8/Subscriber_Information" />
 
-<!-- Ext_8/Audio_Configuration -->	
+<!-- Ext_8/Audio_Configuration -->
 <Preferred_Codec_8_ group="Ext_8/Audio_Configuration">G711u</Preferred_Codec_8_>
 <Use_Pref_Codec_Only_8_ group="Ext_8/Audio_Configuration">No</Use_Pref_Codec_Only_8_>
 <Second_Preferred_Codec_8_ group="Ext_8/Audio_Configuration">Unspecified</Second_Preferred_Codec_8_>
@@ -1395,7 +1399,7 @@
 <Use_Remote_Pref_Codec_8_ group="Ext_8/Audio_Configuration">No</Use_Remote_Pref_Codec_8_>
 <Codec_Negotiation_8_ group="Ext_8/Audio_Configuration">Default</Codec_Negotiation_8_>
 
-<!-- Ext_8/Dial_Plan -->	
+<!-- Ext_8/Dial_Plan -->
 <Dial_Plan_8_ group="Ext_8/Dial_Plan">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_8_>
 <Caller_ID_Map_8_ group="Ext_8/Dial_Plan" />
 <Enable_IP_Dialing_8_ group="Ext_8/Dial_Plan">Yes</Enable_IP_Dialing_8_>
@@ -1408,7 +1412,7 @@
 <Cfwd_No_Ans_Dest group="User/Call_Forward" />
 <Cfwd_No_Ans_Delay group="User/Call_Forward">20</Cfwd_No_Ans_Delay>
 
-<!-- User/Speed_Dial -->	
+<!-- User/Speed_Dial -->
 <Speed_Dial_2 group="User/Speed_Dial" />
 <Speed_Dial_3 group="User/Speed_Dial" />
 <Speed_Dial_4 group="User/Speed_Dial" />
@@ -1418,7 +1422,7 @@
 <Speed_Dial_8 group="User/Speed_Dial" />
 <Speed_Dial_9 group="User/Speed_Dial" />
 
-<!-- User/Supplementary_Services -->	
+<!-- User/Supplementary_Services -->
 <CW_Setting group="User/Supplementary_Services">Yes</CW_Setting>
 <Block_CID_Setting group="User/Supplementary_Services">No</Block_CID_Setting>
 <Block_ANC_Setting group="User/Supplementary_Services">No</Block_ANC_Setting>
@@ -1441,7 +1445,7 @@
 <Log_Missed_Calls_for_EXT_8 group="User/Supplementary_Services">Yes</Log_Missed_Calls_for_EXT_8>
 <Shared_Line_DND_Cfwd_Enable group="User/Supplementary_Services">Yes</Shared_Line_DND_Cfwd_Enable>
 
-<!-- User/Audio -->	
+<!-- User/Audio -->
 <Ringer_Volume group="User/Audio">8</Ringer_Volume>
 <Speaker_Volume group="User/Audio">8</Speaker_Volume>
 <Handset_Volume group="User/Audio">10</Handset_Volume>
@@ -1450,7 +1454,7 @@
 <Deep_Bass group="User/Audio">Default</Deep_Bass>
 <Speakerphone_Enable group="User/Audio">Yes</Speakerphone_Enable>
 
-<!-- Attendant_Console/General -->	
+<!-- Attendant_Console/General -->
 <Subscribe_Expires group="Attendant_Console/General">1800</Subscribe_Expires>
 <Subscribe_Retry_Interval group="Attendant_Console/General">30</Subscribe_Retry_Interval>
 <Unit_1_Enable group="Attendant_Console/General">Yes</Unit_1_Enable>
@@ -1466,7 +1470,7 @@
 <Attendant_Console_Font_Size group="Attendant_Console/General">10</Attendant_Console_Font_Size>
 <Attendant_Console_LCD_Contrast group="Attendant_Console/General">7</Attendant_Console_LCD_Contrast>
 
-<!-- Attendant_Console/Attendant_Key_LED_Pattern -->	
+<!-- Attendant_Console/Attendant_Key_LED_Pattern -->
 <Application_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
 <Serv_Subscribe_Failed_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
 <Serv_Subscribing_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />

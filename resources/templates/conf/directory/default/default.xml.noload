@@ -6,8 +6,8 @@
 	Let it be known that this user can register without a password but since we do not assign
 	this user a user_context and we don't authenticate this user they will be put in context 'public'.
 
-	This isn't a security issue as the endpoint would be put into the same context 'public' as the 
-	sofia profile that starts on 5080 by default. If you're paranoid just remove this file and 
+	This isn't a security issue as the endpoint would be put into the same context 'public' as the
+	sofia profile that starts on 5080 by default. If you're paranoid just remove this file and
 	remove the external profile also.
 
     -->

@@ -2,7 +2,7 @@
 
 /**
  * cache class provides an abstracted cache
- * 
+ *
  * @method string set
  * @method string get
  * @method string delete

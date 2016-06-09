@@ -1547,16 +1547,16 @@ $text['checkbox-range']['ro'] = "Generare automată utilizator și extensie. Ext
 $text['checkbox-range']['ar-eg'] = "";
 $text['checkbox-range']['he'] = "";
 
-$text['button-calls']['en-us'] = "Call Control";
-$text['button-calls']['es-cl'] = "Control de Llamada";
-$text['button-calls']['pt-pt'] = "Controle de Chamadas";
-$text['button-calls']['fr-fr'] = "Call Control";
-$text['button-calls']['uk'] = "Керування дзвінками";
-$text['button-calls']['pl'] = "Kontrola rozmów";
-$text['button-calls']['sv-se'] = "Samtals Kontroll";
-$text['button-calls']['de-at'] = "Anruf Steuerung";
-$text['button-calls']['ro'] = "Control apel";
-$text['button-calls']['ar-eg'] = "";
-$text['button-calls']['he'] = "";
+$text['button-call_routing']['en-us'] = "Call Routing";
+$text['button-call_routing']['es-cl'] = "enrutamiento de llamadas";
+$text['button-call_routing']['pt-pt'] = "roteamento de chamadas";
+$text['button-call_routing']['fr-fr'] = "routage des appels";
+$text['button-call_routing']['uk'] = "маршрутизація викликів";
+$text['button-call_routing']['pl'] = "Call Routing";
+$text['button-call_routing']['sv-se'] = "Call Routing";
+$text['button-call_routing']['de-at'] = "Call Routing";
+$text['button-call_routing']['ro'] = "rutare de apel";
+$text['button-call_routing']['ar-eg'] = "توجيه الدعوة";
+$text['button-call_routing']['he'] = "ניתוב שיחות";
 
 ?>

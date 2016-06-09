@@ -717,32 +717,31 @@ $destination = new destinations;
 ?>
 
 <script type="text/javascript">
-<!--
 	function type_onchange(dialplan_detail_type) {
-	var field_value = document.getElementById(dialplan_detail_type).value;
-	if (dialplan_detail_type == "condition_field_1") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "expression: 5551231234";
+		var field_value = document.getElementById(dialplan_detail_type).value;
+		if (dialplan_detail_type == "condition_field_1") {
+			if (field_value == "destination_number") {
+				document.getElementById("desc_condition_expression_1").innerHTML = "expression: 5551231234";
+			}
+			else if (field_value == "zzz") {
+				document.getElementById("desc_condition_expression_1").innerHTML = "";
+			}
+			else {
+				document.getElementById("desc_condition_expression_1").innerHTML = "";
+			}
 		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
+		if (dialplan_detail_type == "condition_field_2") {
+			if (field_value == "destination_number") {
+				document.getElementById("desc_condition_expression_2").innerHTML = "expression: 5551231234";
+			}
+			else if (field_value == "zzz") {
+				document.getElementById("desc_condition_expression_2").innerHTML = "";
+			}
+			else {
+				document.getElementById("desc_condition_expression_2").innerHTML = "";
+			}
 		}
 	}
-	if (dialplan_detail_type == "condition_field_2") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "expression: 5551231234";
-		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-	}
--->
 </script>
 
 <?php
@@ -779,10 +778,10 @@ $destination = new destinations;
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."<br />\n";

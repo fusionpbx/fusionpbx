@@ -43,7 +43,7 @@
 
 						--get the greeting from the database
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemail_greetings 
+								sql = [[SELECT * FROM v_voicemail_greetings
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. voicemail_id.. [['
 									AND greeting_id = ']].. greeting_id.. [[' ]];
@@ -55,6 +55,7 @@
 										require "resources.functions.base64";
 
 									--set the voicemail message path
+										mkdir(voicemail_dir.."/"..voicemail_id);
 										greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 
 									--if not found, save greeting to local file system

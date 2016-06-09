@@ -17,14 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2014
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Errol Samuels <voiptology@gmail.com>
-	
+
 */
 include "root.php";
 
@@ -56,15 +56,13 @@ include "root.php";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) > 0) {
-					foreach ($result as &$row) {
-						$this->extension = $row["extension"];
-						$this->number_alias = $row["number_alias"];
-						$this->accountcode = $row["accountcode"];
-						$this->toll_allow = $row["toll_allow"];
-						$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
-						$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
-					}
+				if (is_array($result)) foreach ($result as &$row) {
+					$this->extension = $row["extension"];
+					$this->number_alias = $row["number_alias"];
+					$this->accountcode = $row["accountcode"];
+					$this->toll_allow = $row["toll_allow"];
+					$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
+					$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 				}
 				unset ($prep_statement);
 
