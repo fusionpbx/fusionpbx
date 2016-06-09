@@ -31,7 +31,7 @@ function adminer_object() {
 			// custom name in title and heading
 			return 'Adminer';
 		}
-
+		/*
 		function permanentLogin() {
 			// key used for permanent login
 			if ($_SESSION['adminer']['auto_login']['boolean'] == 'true') {
@@ -59,6 +59,7 @@ function adminer_object() {
 			// validate user submitted credentials
 			return ($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? true : false;
 		}
+		*/
 
     }
 
