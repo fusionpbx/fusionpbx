@@ -132,4 +132,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the description.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_sound_on";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the recording.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_sound_off";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the recording.";
+		$z++;
 ?>
