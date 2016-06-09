@@ -238,8 +238,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
 
-
-
 					// call flow sound on
 					$call_flow_sound_on = explode(' ',$call_flow_sound_on);
 					$call_flow_sound_on = array_pop($call_flow_sound_on);
@@ -271,8 +269,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan->dialplan_detail_order = '020';
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
-
-
 
 					//<action application="set" data="call_flow_uuid="/>
 					$dialplan = new dialplan;
