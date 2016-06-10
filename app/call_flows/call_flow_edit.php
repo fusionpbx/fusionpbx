@@ -22,7 +22,6 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Lewis Hallam <lewishallam80@gmail.com>
 */
 require_once "root.php";
 require_once "resources/require.php";
