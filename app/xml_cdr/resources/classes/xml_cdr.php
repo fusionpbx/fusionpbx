@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 
@@ -248,9 +249,9 @@ if (!class_exists('xml_cdr')) {
 			//get the caller id
 				$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 				$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
-				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $row) {
-					$caller_id_name = urldecode($row->caller_profile->caller_id_name);
-					$caller_id_number = urldecode($row->caller_profile->caller_id_number);
+				if (strlen($caller_id_number) == 0) foreach ($xml->callflow as $cf) {
+					$caller_id_name = urldecode($cf->caller_profile->caller_id_name);
+					$caller_id_number = urldecode($cf->caller_profile->caller_id_number);
 				}
 
 			//misc
