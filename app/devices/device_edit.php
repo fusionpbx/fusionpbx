@@ -1346,7 +1346,7 @@ require_once "resources/require.php";
 			echo "			</tr>\n";
 	}
 
-	if (permission_exists('device_username')) {
+	if (permission_exists('device_user')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-user']."\n";
