@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2016 All Rights Reserved.
+	Copyright (C) 2016 All Rights Reserved.
 
 */
 
@@ -40,10 +40,7 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
 
 //include the device class
-	require_once "app/devices/resources/classes/device.php";
-
-//action add or update
-	$action = "update";
+	//require_once "app/devices/resources/classes/device.php";
 
 //add or update the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -51,15 +48,17 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
-				//update the device keys
+				//add or update the device keys
 					foreach ($_POST['device_keys'] as &$row) {
 						//validate the data
 							$valid_data = true;
 							//if (!is_uuid($row["device_key_uuid"])) { $valid_data = false; }
-							if (!is_numeric($row["device_key_id"])) { $valid_data = false; }
-							if (strlen($row["device_key_type"]) > 25) { $valid_data = false; }
-							if (strlen($row["device_key_value"]) > 25) { $valid_data = false; }
-							if (strlen($row["device_key_label"]) > 25) { $valid_data = false; }
+							if (isset($row["device_key_id"])) {
+								if (!is_numeric($row["device_key_id"])) { $valid_data = false; echo $row["device_key_id"]." id "; }
+							}
+							if (strlen($row["device_key_type"]) > 25) { $valid_data = false; echo "type "; }
+							if (strlen($row["device_key_value"]) > 25) { $valid_data = false; echo "value "; }
+							if (strlen($row["device_key_label"]) > 25) { $valid_data = false; echo "label "; }
 						//escape characters in the string
 							$device_uuid = check_str($row["device_uuid"]);
 							$device_key_uuid = check_str($row["device_key_uuid"]);
@@ -70,48 +69,60 @@
 							$device_key_label = check_str($row["device_key_label"]);
 							$device_key_category = check_str($row["device_key_category"]);
 							$device_key_vendor = check_str($row["device_key_vendor"]);
+
 						//sql update
 							if (strlen($device_key_uuid) == 0) {
 								if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
-									$device_key_uuid = uuid();
-									$sql = "insert into v_device_keys ";
-									$sql .= "(";
-									$sql .= "domain_uuid, ";
-									$sql .= "device_key_uuid, ";
-									$sql .= "device_uuid, ";
-									$sql .= "device_key_id, ";
-									$sql .= "device_key_type, ";
-									$sql .= "device_key_line, ";
-									$sql .= "device_key_value, ";
-									$sql .= "device_key_label, ";
-									$sql .= "device_key_category, ";
-									$sql .= "device_key_vendor ";
-									$sql .= ") ";
-									$sql .= "VALUES (";
-									$sql .= "'".$_SESSION['domain_uuid']."', ";
-									$sql .= "'".$device_key_uuid."', ";
-									$sql .= "'".$device_uuid."', ";
-									$sql .= "'".$device_key_id."', ";
-									$sql .= "'".$device_key_type."', ";
-									$sql .= "'".$device_key_line."', ";
-									$sql .= "'".$device_key_value."', ";
-									$sql .= "'".$device_key_label."', ";
-									$sql .= "'".$device_key_category."', ";
-									$sql .= "'".$device_key_vendor."' ";
-									$sql .= ")";
-									//echo $sql;
+
+									//create the primary keys
+										$device_key_uuid = uuid();
+
+									//insert the keys
+										$sql = "insert into v_device_keys ";
+										$sql .= "(";
+										$sql .= "domain_uuid, ";
+										$sql .= "device_key_uuid, ";
+										$sql .= "device_uuid, ";
+										$sql .= "device_key_id, ";
+										$sql .= "device_key_type, ";
+										$sql .= "device_key_line, ";
+										$sql .= "device_key_value, ";
+										$sql .= "device_key_label, ";
+										$sql .= "device_key_category, ";
+										$sql .= "device_key_vendor ";
+										$sql .= ") ";
+										$sql .= "VALUES (";
+										$sql .= "'".$_SESSION['domain_uuid']."', ";
+										$sql .= "'".$device_key_uuid."', ";
+										$sql .= "'".$device_uuid."', ";
+										$sql .= "'".$device_key_id."', ";
+										$sql .= "'".$device_key_type."', ";
+										$sql .= "'".$device_key_line."', ";
+										$sql .= "'".$device_key_value."', ";
+										$sql .= "'".$device_key_label."', ";
+										$sql .= "'".$device_key_category."', ";
+										$sql .= "'".$device_key_vendor."' ";
+										$sql .= ");";
+										//echo $sql;
+
+									//action add or update
+										$action = "add";
 								}
 							}
 							else {
-								$sql = "update v_device_keys set ";
-								if (permission_exists('device_key_id')) {
-									$sql .= "device_key_id = '".$device_key_id."', ";
-								}
-								$sql .= "device_key_type = '".$device_key_type."', ";
-								$sql .= "device_key_value = '".$device_key_value."', ";
-								$sql .= "device_key_label = '".$device_key_label."' ";
-								$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-								$sql .= "and device_key_uuid = '".$device_key_uuid."' ";
+								//action add or update
+									$action = "update";
+
+								//update the device keys
+									$sql = "update v_device_keys set ";
+									if (permission_exists('device_key_id')) {
+										$sql .= "device_key_id = '".$device_key_id."', ";
+									}
+									$sql .= "device_key_type = '".$device_key_type."', ";
+									$sql .= "device_key_value = '".$device_key_value."', ";
+									$sql .= "device_key_label = '".$device_key_label."' ";
+									$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+									$sql .= "and device_key_uuid = '".$device_key_uuid."'; ";
 							}
 							if ($valid_data) {
 								$db->exec(check_sql($sql));
@@ -120,13 +131,12 @@
 							else {
 								//echo "invalid: ".$sql."\n";
 							}
-							unset($sql);
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['provision']['path']['text']) > 0) {
-						require_once "app/provision/provision_write.php";
-					}
+					//if (strlen($_SESSION['provision']['path']['text']) > 0) {
+						//require_once "app/provision/provision_write.php";
+					//}
 
 				//set the message
 					if (!isset($_SESSION['message'])) {
@@ -151,13 +161,19 @@
 	$x = "999";
 
 //get device keys
+	$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+	$sql .= "WHERE user_uuid = '".$_SESSION['user_uuid']."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$device_uuid = $row['device_uuid'];
+	$device_profile_uuid = $row['device_profile_uuid'];
+	unset($row);
+
+//get device keys
 	$sql = "SELECT * from v_device_keys ";
-	$sql .= "where device_uuid in ";
-	$sql .= "( ";
-	$sql .= " select device_uuid from ";
-	$sql .= " v_devices where user_uuid = '".$_SESSION['user_uuid']."' ";
-	$sql .= ") ";
-	$sql .= "ORDER by ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+	$sql .= "ORDER BY ";
 	$sql .= "device_key_vendor asc, ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
@@ -217,9 +233,6 @@
 	echo "	</div>\n";
 
 	echo "<div style='float: right;'>\n";
-	if ($num_rows > 10) {
-		echo "	<input id='btn_viewall_ringgroups' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\">\n";
-	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</div>\n";
 
