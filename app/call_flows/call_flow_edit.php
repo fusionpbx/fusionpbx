@@ -64,6 +64,8 @@ else {
 			$call_flow_sound_on = check_str($_POST["call_flow_sound_on"]);
 			$call_flow_sound_off = check_str($_POST["call_flow_sound_off"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+			$call_flow_sound_on = check_str($_POST["call_flow_sound_on"]);
+			$call_flow_sound_off = check_str($_POST["call_flow_sound_off"]);
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -237,6 +239,38 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
 
+					// call flow sound on
+					$call_flow_sound_on = explode(' ',$call_flow_sound_on);
+					$call_flow_sound_on = array_pop($call_flow_sound_on);
+					$dialplan = new dialplan;
+					$dialplan->domain_uuid = $domain_uuid;
+					$dialplan->dialplan_uuid = $dialplan_uuid;
+					$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan->dialplan_detail_type = 'set';
+					$dialplan->dialplan_detail_data = 'call_flow_sound_on=/usr/local/freeswitch/recordings/'.$_SESSION['domain_name'].'/'.$call_flow_sound_on;
+					$dialplan->dialplan_detail_break = '';
+					//$dialplan->dialplan_detail_inline = '';
+					$dialplan->dialplan_detail_group = '1';
+					$dialplan->dialplan_detail_order = '010';
+					$dialplan->dialplan_detail_add();
+					unset($dialplan);
+
+					// call flow sound off
+					$call_flow_sound_off = explode(' ',$call_flow_sound_off);
+					$call_flow_sound_off = array_pop($call_flow_sound_off);
+					$dialplan = new dialplan;
+					$dialplan->domain_uuid = $domain_uuid;
+					$dialplan->dialplan_uuid = $dialplan_uuid;
+					$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan->dialplan_detail_type = 'set';
+					$dialplan->dialplan_detail_data = 'call_flow_sound_off=/usr/local/freeswitch/recordings/'.$_SESSION['domain_name'].'/'.$call_flow_sound_off;
+					$dialplan->dialplan_detail_break = '';
+					//$dialplan->dialplan_detail_inline = '';
+					$dialplan->dialplan_detail_group = '1';
+					$dialplan->dialplan_detail_order = '020';
+					$dialplan->dialplan_detail_add();
+					unset($dialplan);
+
 					//<action application="set" data="call_flow_uuid="/>
 					$dialplan = new dialplan;
 					$dialplan->domain_uuid = $domain_uuid;
@@ -247,7 +281,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//$dialplan->dialplan_detail_break = '';
 					//$dialplan->dialplan_detail_inline = '';
 					$dialplan->dialplan_detail_group = '1';
-					$dialplan->dialplan_detail_order = '010';
+					$dialplan->dialplan_detail_order = '030';
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
 
@@ -261,7 +295,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//$dialplan->dialplan_detail_break = '';
 					//$dialplan->dialplan_detail_inline = '';
 					$dialplan->dialplan_detail_group = '1';
-					$dialplan->dialplan_detail_order = '020';
+					$dialplan->dialplan_detail_order = '040';
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
 
@@ -275,7 +309,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//$dialplan->dialplan_detail_break = '';
 					//$dialplan->dialplan_detail_inline = '';
 					$dialplan->dialplan_detail_group = '1';
-					$dialplan->dialplan_detail_order = '030';
+					$dialplan->dialplan_detail_order = '050';
 					$dialplan->dialplan_detail_add();
 					unset($dialplan);
 
@@ -704,6 +738,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	sound_select_list($call_flow_sound_on, 'call_flow_sound_on', 'sound_on', true);
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo " Recording If Changed\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if (strlen($call_flow_sound_on) > 0) {
+		$select_value = $call_flow_sound_on;
+	}
+	echo $destination->select('dialplan', 'call_flow_sound_on', $select_value);
+	unset($select_value);
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-destination']."\n";
 	echo "</td>\n";
@@ -733,6 +780,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	sound_select_list($call_flow_sound_off, 'call_flow_sound_off', 'sound_off', true);
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo " Recording If Changed\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if (strlen($call_flow_sound_off) > 0) {
+		$select_value = $call_flow_sound_off;
+	} else {
+		$select_value = '';
+	}
+	echo $destination->select('dialplan', 'call_flow_sound_off', $select_value);
+	unset($select_value);
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
