@@ -280,24 +280,54 @@ $text['description-alternate_destination']['sv-se'] = "Välj den alternativa des
 $text['description-alternate_destination']['uk'] = "";
 $text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
 
-$text['description-sound']['en-us'] = "Select the sound to play when the status is set to the destination.";
-$text['description-sound']['es-cl'] = "";
-$text['description-sound']['pt-pt'] = "";
-$text['description-sound']['fr-fr'] = "";
-$text['description-sound']['pt-br'] = "";
-$text['description-sound']['pl'] = "";
-$text['description-sound']['sv-se'] = "";
-$text['description-sound']['uk'] = "";
-$text['description-sound']['de-at'] = "";
+$text['description-sound']['en-us'] = "Select the sound to play when the status is set to the destinations.";
+$text['description-sound']['es-cl'] = "Seleccione el sonido a reproducir cuando el estado se establece en el destino.";
+$text['description-sound']['pt-pt'] = "Selecione o som para tocar quando o status é definido como o destino.";
+$text['description-sound']['fr-fr'] = "Sélectionnez le son à jouer lorsque l'état est réglé sur la destination.";
+$text['description-sound']['pt-br'] = "Selecione o som para tocar quando o status é definido como o destino.";
+$text['description-sound']['pl'] = "Wybierz dźwięk do odtworzenia, gdy status jest ustawiony do miejsca przeznaczenia.";
+$text['description-sound']['sv-se'] = "Välj ljud att spela när status är inställd på destinationen.";
+$text['description-sound']['uk'] = "Select the sound to play when the status is set to the destination.";
+$text['description-sound']['de-at'] = "Wählen Sie den Ton zu spielen, wenn der Status auf das Ziel festgelegt ist.";
 
 $text['description-alternate_sound']['en-us'] = "Select the sound to play when status is set to the alternate destination.";
-$text['description-alternate_sound']['es-cl'] = "";
-$text['description-alternate_sound']['pt-pt'] = "";
-$text['description-alternate_sound']['fr-fr'] = "";
-$text['description-alternate_sound']['pt-br'] = "";
-$text['description-alternate_sound']['pl'] = "";
-$text['description-alternate_sound']['sv-se'] = "";
-$text['description-alternate_sound']['uk'] = "";
-$text['description-alternate_sound']['de-at'] = "";
+$text['description-alternate_sound']['es-cl'] = "Seleccione el sonido a reproducir cuando el estado se establece en el destino alternativo.";
+$text['description-alternate_sound']['pt-pt'] = "Selecione o som para tocar quando o status é definido como o destino alternativo.";
+$text['description-alternate_sound']['fr-fr'] = "Sélectionnez le son à jouer lorsque l'état est réglé sur la destination alternative.";
+$text['description-alternate_sound']['pt-br'] = "Selecione o som para tocar quando o status é definido como o destino alternativo.";
+$text['description-alternate_sound']['pl'] = "Wybierz dźwięk do odtworzenia, gdy status jest ustawiony na alternatywnego przeznaczenia.";
+$text['description-alternate_sound']['sv-se'] = "Välj ljud att spela när status är inställd på den alternativa destinationen.";
+$text['description-alternate_sound']['uk'] = "Select the sound to play when status is set to the alternate destination.";
+$text['description-alternate_sound']['de-at'] = "Wählen Sie den Ton zu spielen, wenn der Status auf den alternativen Ziel gesetzt.";
+
+$text['recordings']['en-us'] = "Recordings";
+$text['recordings']['es-cl'] = "grabaciones";
+$text['recordings']['pt-pt'] = "gravações";
+$text['recordings']['fr-fr'] = "Recordings";
+$text['recordings']['pt-br'] = "gravações";
+$text['recordings']['pl'] = "nagrania";
+$text['recordings']['sv-se'] = "inspelningar";
+$text['recordings']['uk'] = "Recordings";
+$text['recordings']['de-at'] = "Aufnahmen";
+
+$text['miscellaneous']['en-us'] = "Miscellaneous";
+$text['miscellaneous']['es-cl'] = "Diverso";
+$text['miscellaneous']['pt-pt'] = "Variado";
+$text['miscellaneous']['fr-fr'] = "Divers";
+$text['miscellaneous']['pt-br'] = "Variado";
+$text['miscellaneous']['pl'] = "Różne";
+$text['miscellaneous']['sv-se'] = "Diverse";
+$text['miscellaneous']['uk'] = "Miscellaneous";
+$text['miscellaneous']['de-at'] = "Sonstiges";
+
+$text['sounds']['en-us'] = "Sounds";
+$text['sounds']['es-cl'] = "Sonidos";
+$text['sounds']['pt-pt'] = "Sons";
+$text['sounds']['fr-fr'] = "des sons";
+$text['sounds']['pt-br'] = "Sons";
+$text['sounds']['pl'] = "Dźwięki";
+$text['sounds']['sv-se'] = "Ljud";
+$text['sounds']['uk'] = "Sounds";
+$text['sounds']['de-at'] = "Geräusche";
 
 ?>
