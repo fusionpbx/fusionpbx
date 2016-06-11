@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Lewis Hallam <lewishallam80@gmail.com>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -479,7 +480,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
-				echo "<optgroup label='Misc'>\n";
+				echo "<optgroup label=".$text['miscellaneous'].">\n";
 				echo "	<option value='say:'>say:</option>\n";
 				echo "	<option value='tone_stream:'>tone_stream:</option>\n";
 				echo "</optgroup>\n";
@@ -487,7 +488,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//recordings
 			$tmp_selected = false;
 			if (count($recordings) > 0) {
-				echo "<optgroup label='Recordings'>\n";
+				echo "<optgroup label=".$text['recordings'].">\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
 					$recording_filename = $row["recording_filename"];
@@ -530,7 +531,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$dir_path = $_SESSION['switch']['sounds']['dir'];
 				recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 				if (count($dir_array) > 0) {
-					echo "<optgroup label='Sounds'>\n";
+					echo "<optgroup label=".$text["sounds"].">\n";
 					foreach ($dir_array as $key => $value) {
 						if (strlen($value) > 0) {
 							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
