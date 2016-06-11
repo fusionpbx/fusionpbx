@@ -273,25 +273,31 @@ else {
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-		//get the number of rows in the v_xml_cdr
-			$sql = "select count(*) as num_rows from v_xml_cdr ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] > 0) {
-					$num_rows = $row['num_rows'];
-				}
-				else {
-					$num_rows = '0';
-				}
+			if ($_SESSION['cdr']['count']['boolean'] == "true") {
+				//get the number of rows in the v_xml_cdr
+					$sql = "select count(*) as num_rows from v_xml_cdr ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] > 0) {
+							$num_rows = $row['num_rows'];
+						}
+						else {
+							$num_rows = '0';
+						}
+					}
+					unset($prep_statement, $result);
 			}
-			unset($prep_statement, $result);
-
-		//limit the number of results
-			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
-				$num_rows = $_SESSION['cdr']['limit']['numeric'];
+			else {
+				//limit the number of results
+					if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
+						$num_rows = $_SESSION['cdr']['limit']['numeric'];
+					}
+					else {
+						$num_rows = '1000';
+					}
 			}
 			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
 				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
