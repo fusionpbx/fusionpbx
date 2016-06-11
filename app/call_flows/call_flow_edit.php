@@ -136,14 +136,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_status, ";
 					$sql .= "call_flow_pin_number, ";
 					$sql .= "call_flow_label, ";
+					$sql .= "call_flow_sound, ";
 					$sql .= "call_flow_app, ";
 					$sql .= "call_flow_data, ";
 					$sql .= "call_flow_alternate_label, ";
+					$sql .= "call_flow_alternate_sound, ";
 					$sql .= "call_flow_alternate_app, ";
 					$sql .= "call_flow_alternate_data, ";
-					$sql .= "call_flow_description, ";
-					$sql .= "call_flow_sound, ";
-					$sql .= "call_flow_sound_off ";
+					$sql .= "call_flow_description ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
@@ -157,14 +157,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$call_flow_status', ";
 					$sql .= "'$call_flow_pin_number', ";
 					$sql .= "'$call_flow_label', ";
+					$sql .= "'$call_flow_sound', ";
 					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_data', ";
 					$sql .= "'$call_flow_alternate_label', ";
+					$sql .= "'$call_flow_alternate_sound' ";
 					$sql .= "'$call_flow_alternate_app', ";
 					$sql .= "'$call_flow_alternate_data', ";
-					$sql .= "'$call_flow_description', ";
-					$sql .= "'$call_flow_sound', ";
-					$sql .= "'$call_flow_alternate_sound' ";
+					$sql .= "'$call_flow_description' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -185,14 +185,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_status = '$call_flow_status', ";
 					$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
 					$sql .= "call_flow_label = '$call_flow_label', ";
+					$sql .= "call_flow_sound = '$call_flow_sound', ";
 					$sql .= "call_flow_app = '$call_flow_app', ";
 					$sql .= "call_flow_data = '$call_flow_data', ";
 					$sql .= "call_flow_alternate_label = '$call_flow_alternate_label', ";
+					$sql .= "call_flow_alternate_sound = '$call_flow_alternate_sound', ";
 					$sql .= "call_flow_alternate_app = '$call_flow_alternate_app', ";
 					$sql .= "call_flow_alternate_data = '$call_flow_alternate_data', ";
-					$sql .= "call_flow_description = '$call_flow_description', ";
-					$sql .= "call_flow_sound = '$call_flow_sound', ";
-					$sql .= "call_flow_sound_off = '$call_flow_alternate_sound' ";
+					$sql .= "call_flow_description = '$call_flow_description' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
 					$sql .= "and call_flow_uuid = '$call_flow_uuid'";
 					$db->exec(check_sql($sql));
@@ -382,15 +382,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_context = $row["call_flow_context"];
 				$call_flow_status = $row["call_flow_status"];
 				$call_flow_label = $row["call_flow_label"];
+				$call_flow_sound = $row["call_flow_sound"];
 				$call_flow_app = $row["call_flow_app"];
 				$call_flow_pin_number = $row["call_flow_pin_number"];
 				$call_flow_data = $row["call_flow_data"];
 				$call_flow_alternate_label = $row["call_flow_alternate_label"];
+				$call_flow_alternate_sound = $row["call_flow_sound_off"];
 				$call_flow_alternate_app = $row["call_flow_alternate_app"];
 				$call_flow_alternate_data = $row["call_flow_alternate_data"];
 				$call_flow_description = $row["call_flow_description"];
-				$call_flow_sound = $row["call_flow_sound"];
-				$call_flow_alternate_sound = $row["call_flow_sound_off"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 
 			//if superadmin show both the app and data
@@ -701,7 +701,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_sound, 'call_flow_sound', 'sound_on', true);
+	sound_select_list($call_flow_sound, 'call_flow_sound', 'sound', true);
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -732,7 +732,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_alternate_sound, 'call_flow_sound_off', 'sound_off', true);
+	sound_select_list($call_flow_alternate_sound, 'call_flow_alternate_sound', 'alternate_sound', true);
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
