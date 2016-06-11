@@ -57,12 +57,12 @@ else {
 			$call_flow_status = check_str($_POST["call_flow_status"]);
 			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
 			$call_flow_label = check_str($_POST["call_flow_label"]);
+			$call_flow_sound = check_str($_POST["call_flow_sound"]);
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
-			$call_flow_anti_label = check_str($_POST["call_flow_anti_label"]);
+			$call_flow_alternate_label = check_str($_POST["call_flow_alternate_label"]);
+			$call_flow_alternate_sound = check_str($_POST["call_flow_sound_off"]);
 			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
 			$call_flow_description = check_str($_POST["call_flow_description"]);
-			$call_flow_sound_on = check_str($_POST["call_flow_sound_on"]);
-			$call_flow_sound_off = check_str($_POST["call_flow_sound_off"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 
 		//seperate the action and the param
@@ -70,10 +70,10 @@ else {
 			$call_flow_app = array_shift($destination_array);
 			$call_flow_data = join(':', $destination_array);
 
-		//seperate the action and the param call_flow_anti_app
+		//seperate the action and the param call_flow_alternate_app
 			$alternate_destination_array = explode(":", $call_flow_alternate_destination);
-			$call_flow_anti_app = array_shift($alternate_destination_array);
-			$call_flow_anti_data = join(':', $alternate_destination_array);
+			$call_flow_alternate_app = array_shift($alternate_destination_array);
+			$call_flow_alternate_data = join(':', $alternate_destination_array);
 
 		//set the context for users that are not in the superadmin group
 			if (!if_group("superadmin")) {
@@ -100,9 +100,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($call_flow_label) == 0) { $msg .= $text['message-required'].$text['label-destination_label']."<br>\n"; }
 		//if (strlen($call_flow_app) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
 		//if (strlen($call_flow_data) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
-		//if (strlen($call_flow_anti_label) == 0) { $msg .= $text['message-required'].$text['label-alternate_label']."<br>\n"; }
-		//if (strlen($call_flow_anti_app) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
-		//if (strlen($call_flow_anti_data) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
+		//if (strlen($call_flow_alternate_label) == 0) { $msg .= $text['message-required'].$text['label-alternate_label']."<br>\n"; }
+		//if (strlen($call_flow_alternate_app) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
+		//if (strlen($call_flow_alternate_data) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
 		//if (strlen($call_flow_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -138,11 +138,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_label, ";
 					$sql .= "call_flow_app, ";
 					$sql .= "call_flow_data, ";
-					$sql .= "call_flow_anti_label, ";
-					$sql .= "call_flow_anti_app, ";
-					$sql .= "call_flow_anti_data, ";
+					$sql .= "call_flow_alternate_label, ";
+					$sql .= "call_flow_alternate_app, ";
+					$sql .= "call_flow_alternate_data, ";
 					$sql .= "call_flow_description, ";
-					$sql .= "call_flow_sound_on, ";
+					$sql .= "call_flow_sound, ";
 					$sql .= "call_flow_sound_off ";
 					$sql .= ")";
 					$sql .= "values ";
@@ -159,12 +159,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$call_flow_label', ";
 					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_data', ";
-					$sql .= "'$call_flow_anti_label', ";
-					$sql .= "'$call_flow_anti_app', ";
-					$sql .= "'$call_flow_anti_data', ";
+					$sql .= "'$call_flow_alternate_label', ";
+					$sql .= "'$call_flow_alternate_app', ";
+					$sql .= "'$call_flow_alternate_data', ";
 					$sql .= "'$call_flow_description', ";
-					$sql .= "'$call_flow_sound_on', ";
-					$sql .= "'$call_flow_sound_off' ";
+					$sql .= "'$call_flow_sound', ";
+					$sql .= "'$call_flow_alternate_sound' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -187,12 +187,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_label = '$call_flow_label', ";
 					$sql .= "call_flow_app = '$call_flow_app', ";
 					$sql .= "call_flow_data = '$call_flow_data', ";
-					$sql .= "call_flow_anti_label = '$call_flow_anti_label', ";
-					$sql .= "call_flow_anti_app = '$call_flow_anti_app', ";
-					$sql .= "call_flow_anti_data = '$call_flow_anti_data', ";
+					$sql .= "call_flow_alternate_label = '$call_flow_alternate_label', ";
+					$sql .= "call_flow_alternate_app = '$call_flow_alternate_app', ";
+					$sql .= "call_flow_alternate_data = '$call_flow_alternate_data', ";
 					$sql .= "call_flow_description = '$call_flow_description', ";
-					$sql .= "call_flow_sound_on = '$call_flow_sound_on', ";
-					$sql .= "call_flow_sound_off = '$call_flow_sound_off' ";
+					$sql .= "call_flow_sound = '$call_flow_sound', ";
+					$sql .= "call_flow_sound_off = '$call_flow_alternate_sound' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
 					$sql .= "and call_flow_uuid = '$call_flow_uuid'";
 					$db->exec(check_sql($sql));
@@ -385,12 +385,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_app = $row["call_flow_app"];
 				$call_flow_pin_number = $row["call_flow_pin_number"];
 				$call_flow_data = $row["call_flow_data"];
-				$call_flow_anti_label = $row["call_flow_anti_label"];
-				$call_flow_anti_app = $row["call_flow_anti_app"];
-				$call_flow_anti_data = $row["call_flow_anti_data"];
+				$call_flow_alternate_label = $row["call_flow_alternate_label"];
+				$call_flow_alternate_app = $row["call_flow_alternate_app"];
+				$call_flow_alternate_data = $row["call_flow_alternate_data"];
 				$call_flow_description = $row["call_flow_description"];
-				$call_flow_sound_on = $row["call_flow_sound_on"];
-				$call_flow_sound_off = $row["call_flow_sound_off"];
+				$call_flow_sound = $row["call_flow_sound"];
+				$call_flow_alternate_sound = $row["call_flow_sound_off"];
 				$dialplan_uuid = $row["dialplan_uuid"];
 
 			//if superadmin show both the app and data
@@ -403,10 +403,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//if superadmin show both the app and data
 				if (if_group("superadmin")) {
-					$alternate_destination_label = $call_flow_anti_app.':'.$call_flow_anti_data;
+					$alternate_destination_label = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 				}
 				else {
-					$alternate_destination_label = $call_flow_anti_data;
+					$alternate_destination_label = $call_flow_alternate_data;
 				}
 		}
 		unset ($prep_statement);
@@ -658,16 +658,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	}
 	if ($call_flow_status == "false") {
-		if (strlen($call_flow_anti_label) > 0) {
-			echo "	<option value='false' selected='selected'>$call_flow_anti_label</option>\n";
+		if (strlen($call_flow_alternate_label) > 0) {
+			echo "	<option value='false' selected='selected'>$call_flow_alternate_label</option>\n";
 		}
 		else {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 	}
 	else {
-		if (strlen($call_flow_anti_label) > 0) {
-			echo "	<option value='false'>$call_flow_anti_label</option>\n";
+		if (strlen($call_flow_alternate_label) > 0) {
+			echo "	<option value='false'>$call_flow_alternate_label</option>\n";
 		}
 		else {
 			echo "	<option value='false'>".$text['label-false']."</option>\n";
@@ -701,7 +701,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_sound_on, 'call_flow_sound_on', 'sound_on', true);
+	sound_select_list($call_flow_sound, 'call_flow_sound', 'sound_on', true);
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -726,13 +726,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-alternate_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_anti_label' maxlength='255' value=\"$call_flow_anti_label\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_alternate_label' maxlength='255' value=\"$call_flow_alternate_label\">\n";
 	echo "<br />\n";
 	echo $text['description-alternate_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	sound_select_list($call_flow_sound_off, 'call_flow_sound_off', 'sound_off', true);
+	sound_select_list($call_flow_alternate_sound, 'call_flow_sound_off', 'sound_off', true);
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -740,8 +740,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
-	if (strlen($call_flow_anti_app.$call_flow_anti_data) > 0) {
-		$select_value = $call_flow_anti_app.':'.$call_flow_anti_data;
+	if (strlen($call_flow_alternate_app.$call_flow_alternate_data) > 0) {
+		$select_value = $call_flow_alternate_app.':'.$call_flow_alternate_data;
 	}
 	echo $destination->select('dialplan', 'call_flow_alternate_destination', $select_value);
 	unset($select_value);
