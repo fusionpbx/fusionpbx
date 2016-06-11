@@ -280,7 +280,7 @@ $text['description-alternate_destination']['sv-se'] = "Välj den alternativa des
 $text['description-alternate_destination']['uk'] = "";
 $text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
 
-$text['description-sound']['en-us'] = "Select the sound.";
+$text['description-sound']['en-us'] = "Select the sound to play when the status is set to the destination.";
 $text['description-sound']['es-cl'] = "";
 $text['description-sound']['pt-pt'] = "";
 $text['description-sound']['fr-fr'] = "";
@@ -290,7 +290,7 @@ $text['description-sound']['sv-se'] = "";
 $text['description-sound']['uk'] = "";
 $text['description-sound']['de-at'] = "";
 
-$text['description-alternate_sound']['en-us'] = "Select the alternate sound.";
+$text['description-alternate_sound']['en-us'] = "Select the sound to play when status is set to the alternate destination.";
 $text['description-alternate_sound']['es-cl'] = "";
 $text['description-alternate_sound']['pt-pt'] = "";
 $text['description-alternate_sound']['fr-fr'] = "";
