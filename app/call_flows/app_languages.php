@@ -120,6 +120,26 @@ $text['label-alternate_destination']['sv-se'] = "Alternativ Destination";
 $text['label-alternate_destination']['uk'] = "";
 $text['label-alternate_destination']['de-at'] = "Alternatives Ziel";
 
+$text['label-sound_on']['en-us'] = "Sound";
+$text['label-sound_on']['es-cl'] = "";
+$text['label-sound_on']['pt-pt'] = "";
+$text['label-sound_on']['fr-fr'] = "";
+$text['label-sound_on']['pt-br'] = "";
+$text['label-sound_on']['pl'] = "";
+$text['label-sound_on']['sv-se'] = "";
+$text['label-sound_on']['uk'] = "";
+$text['label-sound_on']['de-at'] = "";
+
+$text['label-sound_off']['en-us'] = "Alternate Sound";
+$text['label-sound_off']['es-cl'] = "";
+$text['label-sound_off']['pt-pt'] = "";
+$text['label-sound_off']['fr-fr'] = "";
+$text['label-sound_off']['pt-br'] = "";
+$text['label-sound_off']['pl'] = "";
+$text['label-sound_off']['sv-se'] = "";
+$text['label-sound_off']['uk'] = "";
+$text['label-sound_off']['de-at'] = "";
+
 $text['header-call_flows']['en-us'] = "Call Flows";
 $text['header-call_flows']['es-cl'] = "flujo de Llamada";
 $text['header-call_flows']['pt-pt'] = "Fluxo de Chamadas";
@@ -259,5 +279,25 @@ $text['description-alternate_destination']['pl'] = "Wybierz alternatywną destyn
 $text['description-alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
 $text['description-alternate_destination']['uk'] = "";
 $text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
+
+$text['description-sound_on']['en-us'] = "Select the sound when on.";
+$text['description-sound_on']['es-cl'] = "";
+$text['description-sound_on']['pt-pt'] = "";
+$text['description-sound_on']['fr-fr'] = "";
+$text['description-sound_on']['pt-br'] = "";
+$text['description-sound_on']['pl'] = "";
+$text['description-sound_on']['sv-se'] = "";
+$text['description-sound_on']['uk'] = "";
+$text['description-sound_on']['de-at'] = "";
+
+$text['description-sound_off']['en-us'] = "Select the sound when off.";
+$text['description-sound_off']['es-cl'] = "";
+$text['description-sound_off']['pt-pt'] = "";
+$text['description-sound_off']['fr-fr'] = "";
+$text['description-sound_off']['pt-br'] = "";
+$text['description-sound_off']['pl'] = "";
+$text['description-sound_off']['sv-se'] = "";
+$text['description-sound_off']['uk'] = "";
+$text['description-sound_off']['de-at'] = "";
 
 ?>
