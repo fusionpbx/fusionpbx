@@ -2,7 +2,7 @@
 <Enable_Web_Server group="System/System_Configuration">Yes</Enable_Web_Server>
 <Web_Server_Port group="System/System_Configuration">80</Web_Server_Port>
 <Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
-<Admin_Passwd group="System/System_Configuration">$adminpassword</Admin_Passwd>
+<Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
 <User_Password group="System/System_Configuration"/>
 <Connection_Type group="System/Internet_Connection_Type_">DHCP</Connection_Type>
 <Static_IP group="System/_Static_IP_Settings"/>
