@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -60,7 +60,7 @@ else {
 			$call_flow_sound = check_str($_POST["call_flow_sound"]);
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
 			$call_flow_alternate_label = check_str($_POST["call_flow_alternate_label"]);
-			$call_flow_alternate_sound = check_str($_POST["call_flow_sound_off"]);
+			$call_flow_alternate_sound = check_str($_POST["call_flow_alternate_sound"]);
 			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
 			$call_flow_description = check_str($_POST["call_flow_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -161,7 +161,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_data', ";
 					$sql .= "'$call_flow_alternate_label', ";
-					$sql .= "'$call_flow_alternate_sound' ";
+					$sql .= "'$call_flow_alternate_sound', ";
 					$sql .= "'$call_flow_alternate_app', ";
 					$sql .= "'$call_flow_alternate_data', ";
 					$sql .= "'$call_flow_description' ";
@@ -387,7 +387,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_pin_number = $row["call_flow_pin_number"];
 				$call_flow_data = $row["call_flow_data"];
 				$call_flow_alternate_label = $row["call_flow_alternate_label"];
-				$call_flow_alternate_sound = $row["call_flow_sound_off"];
+				$call_flow_alternate_sound = $row["call_flow_alternate_sound"];
 				$call_flow_alternate_app = $row["call_flow_alternate_app"];
 				$call_flow_alternate_data = $row["call_flow_alternate_data"];
 				$call_flow_description = $row["call_flow_description"];
@@ -525,7 +525,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</optgroup>\n";
 			}
 		//sounds
-			if ($load_sound){
+			if ($load_sound) {
 				global $dir_path, $dir_array;
 				$dir_path = $_SESSION['switch']['sounds']['dir'];
 				recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
