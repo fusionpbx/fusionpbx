@@ -1,4 +1,4 @@
---	intercom.lua
+--	call_flow.lua
 --	Part of FusionPBX
 --	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -162,8 +162,8 @@ if (session:ready()) then
 			pin_number = row.call_flow_pin_number;
 			call_flow_label = row.call_flow_label;
 			call_flow_anti_label = row.call_flow_anti_label;
-			call_flow_sound_on = row.call_flow_sound_on or '';
-			call_flow_sound_off = row.call_flow_sound_off or '';
+			call_flow_sound = row.call_flow_sound or '';
+			call_flow_alternate_sound = row.call_flow_alternate_sound or '';
 
 			if #call_flow_status == 0 then
 				call_flow_status = "true";
@@ -204,7 +204,7 @@ if (session:ready()) then
 			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_anti_label
 
 		--play info message
-			local audio_file = (toggle == "false") and call_flow_sound_on or call_flow_sound_off
+			local audio_file = (toggle == "false") and call_flow_sound or call_flow_alternate_sound
 
 		--show in the console
 			log.noticef("label=%s,status=%s,uuid=%s,audio=%s", active_flow_label, toggle, call_flow_uuid, audio_file)
