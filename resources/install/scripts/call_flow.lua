@@ -161,7 +161,7 @@ if (session:ready()) then
 			call_flow_status = row.call_flow_status;
 			pin_number = row.call_flow_pin_number;
 			call_flow_label = row.call_flow_label;
-			call_flow_anti_label = row.call_flow_anti_label;
+			call_flow_alternate_label = row.call_flow_alternate_label;
 			call_flow_sound = row.call_flow_sound or '';
 			call_flow_alternate_sound = row.call_flow_alternate_sound or '';
 
@@ -172,8 +172,8 @@ if (session:ready()) then
 				app = row.call_flow_app;
 				data = row.call_flow_data
 			else
-				app = row.call_flow_anti_app;
-				data = row.call_flow_anti_data
+				app = row.call_flow_alternate_app;
+				data = row.call_flow_alternate_data
 			end
 		end);
 
@@ -201,7 +201,7 @@ if (session:ready()) then
 			);
 
 		--active label
-			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_anti_label
+			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_alternate_label
 
 		--play info message
 			local audio_file = (toggle == "false") and call_flow_sound or call_flow_alternate_sound
