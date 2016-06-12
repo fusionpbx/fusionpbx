@@ -13,7 +13,7 @@
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -204,7 +204,7 @@ if (session:ready()) then
 			local active_flow_label = (toggle == "true") and call_flow_label or call_flow_alternate_label
 
 		--play info message
-			local audio_file = (toggle == "false") and call_flow_sound or call_flow_alternate_sound
+			local audio_file = (toggle == "true") and call_flow_sound or call_flow_alternate_sound
 
 		--show in the console
 			log.noticef("label=%s,status=%s,uuid=%s,audio=%s", active_flow_label, toggle, call_flow_uuid, audio_file)
