@@ -101,30 +101,34 @@ include "root.php";
 				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
 				$array = array_merge(glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR), glob($music_on_hold_dir."/".$_SESSION['domain_name']."/*/*", GLOB_ONLYDIR));
 				foreach($array as $moh_dir) {
-				//set the directory
-					$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
-					if (stristr($moh_dir, $_SESSION['domain_name'])) {
-						$domain_moh = 1;
-						$moh_dir = substr($moh_dir, strlen($_SESSION['domain_name']."/"));
-					}
-				//get and set the rate
-					$sub_array = explode("/", $moh_dir);
-					$moh_rate = end($sub_array);
-				//set the name
-					$moh_name = $moh_dir;
-					$moh_name = substr($moh_dir, 0, strlen($moh_name)-(strlen($moh_rate)));
-					$moh_name = rtrim($moh_name, "/");
-					if ($domain_moh) {
-						$moh_value = "local_stream://".$_SESSION['domain_name']."/".$moh_name;
-					}
-					else {
-						$moh_value = "local_stream://".$moh_name;
-					}
-					if($moh_name == 'default') {
-						$moh_name = $text['opt-default'];
-					}
-					$moh_list[$moh_value] = str_replace('_', ' ', $moh_name);
+					//set the directory
+						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
+						if (stristr($moh_dir, $_SESSION['domain_name'])) {
+							$domain_moh = 1;
+							$moh_dir = substr($moh_dir, strlen($_SESSION['domain_name']."/"));
+						}
+					//get and set the rate
+						$sub_array = explode("/", $moh_dir);
+						$moh_rate = end($sub_array);
+					//set the name
+						$moh_name = $moh_dir;
+						$moh_name = substr($moh_dir, 0, strlen($moh_name)-(strlen($moh_rate)));
+						$moh_name = rtrim($moh_name, "/");
+						if ($domain_moh) {
+							$moh_value = "local_stream://".$_SESSION['domain_name']."/".$moh_name;
+						}
+						else {
+							$moh_value = "local_stream://".$moh_name;
+						}
+						if($moh_name == 'default') {
+							$moh_name = $text['opt-default'];
+						}
+						$moh_list[$moh_value] = str_replace('_', ' ', $moh_name);
 				}
+				//detect source installed moh
+					if(is_dir($music_on_hold_dir."/8000")) {
+						$moh_list["local_stream://default"] = $text['opt-default'];
+					}
 			return $moh_list;
 		}
 
