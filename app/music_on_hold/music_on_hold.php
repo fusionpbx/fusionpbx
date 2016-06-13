@@ -406,7 +406,7 @@ else {
 						$file_size = byte_convert($file_size);
 
 						//playback progress bar
-						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5'><span id='recording_progress_".$row_uuid."' style='background-color: #c43e42; height:1px; display: inline-block;'></span></td></tr>\n";
+						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5' class='".$row_style[$c]."' style='padding: 0px; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
