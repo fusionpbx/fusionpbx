@@ -22,9 +22,9 @@ Free Support
 --------------------------------------
 We provide several avenues for you to get your system up and running on your own and learn the basics of the system.
 
-1. [Current Documentation](http://wiki.fusionpbx.com/index.php?title=Main_Page)
-2. [New Documentation](http://fusionpbx-docs.readthedocs.org/en/latest/) COMING SOON
-3. [How to Contribute](http://fusionpbx.com) COMING SOON
+1. [Old Documentation](http://wiki.fusionpbx.com/index.php?title=Main_Page)
+2. [New Documentation](http://docs.fusionpbx.com)
+3. [How to Contribute](https://github.com/Fusionpbx/opensource)
 4. [IRC](http://webchat.freenode.net/) in the #fusionpbx channel
 
 Commercial Support
@@ -47,9 +47,9 @@ This is the distribution recommended by the FreeSwitch team
 
 Community
 --------------------------------------
-We have a pretty thriving community if you know how to get to us:
+We have a pretty thriving community. You can find us here:
 
-- [IRC](http://webchat.freenode.net/) in the fusionpbx channel
+- [IRC](http://webchat.freenode.net/) in the #fusionpbx channel
 - [Twitter](http://twitter.com/fusionpbx)
 - [Website](http://fusionpbx.com)
 
@@ -72,21 +72,22 @@ How to Install FusionPBX
 * As root do the following:
 
 ```bash
+apt-get update && apt-get upgrade && apt-get install -y git
+```
+```bash
 cd /usr/src
 ```
 ```bash
-apt-get install wget
+git clone https://github.com/fusionpbx/fusionpbx-install.sh.git
 ```
 ```bash
-wget https://raw.githubusercontent.com/fusionpbx/fusionpbx-scripts/master/install/ubuntu/install_fusionpbx.sh
+chmod 755 -R /usr/src/fusionpbx-install.sh
 ```
 ```bash
-chmod 755 install_fusionpbx.sh
+cd /usr/src/fusionpbx-install.sh/debian
 ```
 ```bash
-./install_fusionpbx.sh install-both user
+./install.sh
 ```
 
-Installation Questions:
-- During the install it will ask you to press continue after verifying that the command ran successfully. This is usually the case, so you can simply tell it to continue. The install also asks several questions.
-- Unless you have a reason to choose otherwise, PostgreSQL and Nginx is probably your best path and is recommended by the developers of FusionPBX
+This install script is designed to be an fast, simple, and in a modular way to install FusionPBX. Start with a minimal install of Debian 8 with SSH enabled. Run the following commands under root. The script installs FusionPBX, FreeSWITCH release package and its dependencies, IPTables, Fail2ban, NGINX, PHP FPM and PostgreSQL.
