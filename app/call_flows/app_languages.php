@@ -277,7 +277,7 @@ $text['description-alternate_destination']['fr-fr'] = "Choisir la destination al
 $text['description-alternate_destination']['pt-br'] = "Selecione um destino alternativo";
 $text['description-alternate_destination']['pl'] = "Wybierz alternatywną destynację";
 $text['description-alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
-$text['description-alternate_destination']['uk'] = Виберіть інше розташування.";
+$text['description-alternate_destination']['uk'] = "Виберіть інше розташування.";
 $text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
 
 $text['description-sound']['en-us'] = "Select the sound to play when the status is set to the destinations.";
