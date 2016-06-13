@@ -218,7 +218,6 @@
 
 	if (permission_exists('exec_switch') || permission_exists('exec_php') || permission_exists('exec_command') || permission_exists('exec_sql')) {
 		echo "				<select name='handler' id='handler' class='formfld' style='width:100px;' onchange=\"handler=this.value;set_handler(this.value);\">\n";
-		echo "						<option value=''></option>\n";
 		if (permission_exists('exec_switch')) { echo "<option value='switch' ".(($handler == 'switch') ? "selected='selected'" : null).">".$text['label-switch']."</option>\n"; }
 		if (permission_exists('exec_php')) { echo "<option value='php' ".(($handler == 'php') ? "selected='selected'" : null).">".$text['label-php']."</option>\n"; }
 		if (permission_exists('exec_command')) { echo "<option value='shell' ".(($handler == 'shell') ? "selected='selected'" : null).">".$text['label-shell']."</option>\n"; }
