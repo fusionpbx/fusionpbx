@@ -98,6 +98,10 @@
 
 				//rename the file
 					rename($xml_dir.'/local_stream.conf.xml', $xml_dir.'/local_stream.conf');
-	}
+
+			} //if num_rows
+		} //if prep_statement
+
+	} 
 
 ?>
