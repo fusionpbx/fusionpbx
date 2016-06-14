@@ -217,7 +217,7 @@ else {
 		echo "	<a href='javascript:void(0);' onclick=\"send_cmd('calls_exec.php?cmd='+get_park_cmd(escape('$uuid'), '".$tmp_domain."'));\">".$text['label-park']."</a>&nbsp;\n";
 	//record start/stop
 		$tmp_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-		mkdir($tmp_dir, 0777, true);
+		mkdir($tmp_dir, 02770, true);
 		$tmp_file = $tmp_dir."/".$uuid.".wav";
 		if (file_exists($tmp_file)) {
 			//stop

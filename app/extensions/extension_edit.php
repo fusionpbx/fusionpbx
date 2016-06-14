@@ -733,13 +733,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//update devices having extension assigned to line(s) with new password
-					$sql = "update v_device_lines set ";
-					$sql .= "password = '".$password."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
-					$sql .= "and user_id = '".$extension."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					if (permission_exists('extension_password')) {
+						$sql = "update v_device_lines set ";
+						$sql .= "password = '".$password."' ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
+						$sql .= "and user_id = '".$extension."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 
 			} //if ($action == "update")
 
@@ -1784,10 +1786,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
 		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-		$moh= new switch_music_on_hold;
-		$moh->select_name = "hold_music";
-		$moh->select_value = $hold_music;
-		echo $moh->select();
+		$moh = new switch_music_on_hold;
+		echo $moh->select('hold_music', $hold_music);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
 		echo "</td>\n";

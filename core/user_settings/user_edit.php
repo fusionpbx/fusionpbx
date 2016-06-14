@@ -78,30 +78,26 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
 	//get the HTTP values and set as variables
 		$password = check_str($_POST["password"]);
-		$confirm_password = check_str($_POST["confirm_password"]);
+		$password_confirm = check_str($_POST["password_confirm"]);
 		$user_status = check_str($_POST["user_status"]);
 		$user_template_name = check_str($_POST["user_template_name"]);
 		$user_language = check_str($_POST["user_language"]);
 		$user_time_zone = check_str($_POST["user_time_zone"]);
 		$group_member = check_str($_POST["group_member"]);
 
-	//set the required values
-		$msg = '';
-		//if (strlen($password) == 0) { $msg .= "Password cannot be blank.<br>\n"; }
-		if ($password != $confirm_password) { $msg .= "".$text['confirm-password']."<br>\n"; }
-		//if (strlen($user_time_zone) == 0) { $msg .= "Please provide an time zone.<br>\n"; }
-		if (strlen($msg) > 0) {
-			require_once "resources/header.php";
-			echo "<div align='center'>";
-			echo "<table><tr><td>";
-			echo $msg;
-			echo "</td></tr></table>";
-			echo "<br />\n";
-			require_once "resources/persist_form.php";
-			echo persistform($_POST);
-			echo "</div>";
-			require_once "resources/footer.php";
-			return;
+	//check required values
+		if ($password != $password_confirm) { $msg_error = $text['message-password_mismatch']; }
+
+		if ($msg_error != '') {
+			$_SESSION["message"] = $msg_error;
+			$_SESSION["message_mood"] = 'negative';
+			header("Location: user_edit.php");
+			exit;
+		}
+
+		if (!check_password_strength($password, $text)) {
+			header("Location: user_edit.php");
+			exit;
 		}
 
 	//check to see if user language is set
@@ -216,15 +212,9 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 			}
 		}
 
-	//if the template has not been assigned by the superadmin
-		//if (strlen($_SESSION['domain']['template']['name']) == 0) {
-			//set the session theme for the active user
-			//	$_SESSION['domain']['template']['name'] = $user_template_name;
-		//}
-
 	//sql update
 		$sql  = "update v_users set ";
-		if (strlen($password) > 0 && $confirm_password == $password) {
+		if (strlen($password) > 0 && $password_confirm == $password) {
 			//salt used with the password to create a one way hash
 				$salt = generate_password('20', '4');
 			//set the password
@@ -249,9 +239,6 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
 				$response = event_socket_request($fp, $cmd);
 		}
-
-	//clear the template so it will rebuild in case the template was changed
-		//$_SESSION["template_content"] = '';
 
 	//redirect the browser
 		$_SESSION["message"] = $text['confirm-update'];
@@ -282,6 +269,81 @@ else {
 
 //show the content
 	$table_width ='width="100%"';
+
+	echo "<script>\n";
+	echo "	function compare_passwords() {\n";
+	echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('password_confirm') === document.activeElement) {\n";
+	echo "			if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+	echo "				if ($('#password').val() != $('#password_confirm').val()) {\n";
+	echo "					$('#password').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password').addClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_bad');\n";
+	echo "				}\n";
+	echo "				else {\n";
+	echo "					$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password').addClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_good');\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password').removeClass('formfld_highlight_good');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	$req['length'] = $_SESSION['security']['password_length']['numeric'];
+	$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+	$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+	$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+	$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+
+	echo "	function check_password_strength(pwd) {\n";
+	echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+	echo "			var msg_errors = [];\n";
+	if (is_numeric($req['length']) && $req['length'] != 0) {
+		echo "		var re = /.{".$req['length'].",}/;\n"; //length
+		echo "		if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-characters']."'); }\n";
+	}
+	if ($req['number']) {
+		echo "		var re = /(?=.*[\d])/;\n";  //number
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-numbers']."'); }\n";
+	}
+	if ($req['lowercase']) {
+		echo "		var re = /(?=.*[a-z])/;\n";  //lowercase
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-lowercase_letters']."'); }\n";
+	}
+	if ($req['uppercase']) {
+		echo "		var re = /(?=.*[A-Z])/;\n";  //uppercase
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-uppercase_letters']."'); }\n";
+	}
+	if ($req['special']) {
+		echo "		var re = /(?=.*[\W])/;\n";  //special
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-special_characters']."'); }\n";
+	}
+	echo "			if (msg_errors.length > 0) {\n";
+	echo "				var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
+	echo "				display_message(msg, 'negative', '6000');\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "			else {\n";
+	echo "				return true;\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			return true;\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	echo "	function show_strenth_meter() {\n";
+	echo "		$('#pwstrength_progress').slideDown();\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 	echo "<form name='frm' id='frm' method='post' action=''>";
 
 	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
@@ -308,17 +370,24 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq' align='left' valign='top'>".$text['label-username']."</td>";
-	echo "		<td width='70%' class='vtable' align='left'>$username</td>";
+	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
+	echo "		<td width='70%' class='vtable'>";
+	echo "			".$username."<input type='hidden' id='username' value='".$username."'>\n";
+	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' align='left' valign='top'>".$text['label-password']."</td>";
-	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-password']."</td>";
+	echo "		<td class='vtable'>";
+	echo "			<input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div>";
+	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell' align='left' valign='top'>".$text['label-confirm-password']."</td>";
-	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-confirm-password']."</td>";
+	echo "		<td class='vtable'>";
+	echo "			<input type='password' autocomplete='off' class='formfld' name='password_confirm' id='password_confirm' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "		</td>";
 	echo "	</tr>";
 
 	echo "		</td>";
@@ -379,40 +448,6 @@ else {
 		echo "	</td>\n";
 		echo "	</tr>\n";
 	}
-
-	//if the template has not been assigned by the superadmin
-		/*
-		if (strlen($_SESSION['domain']['template']['name']) == 0) {
-			echo "	<tr>\n";
-			echo "	<td width='20%' class=\"vncell\">\n";
-			echo "		Template: \n";
-			echo "	</td>\n";
-			echo "	<td class=\"vtable\">\n";
-			echo "		<select id='user_template_name' name='user_template_name' class='formfld' style=''>\n";
-			echo "		<option value=''></option>\n";
-			$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-			if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
-				while (false !== ($dir_name = readdir($handle))) {
-					if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && is_dir($theme_dir.'/'.$dir_name)) {
-						$dir_label = str_replace('_', ' ', $dir_name);
-						$dir_label = str_replace('-', ' ', $dir_label);
-						if ($dir_name == $user_settings['domain']['template']['name']) {
-							echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
-						}
-						else {
-							echo "		<option value='$dir_name'>$dir_label</option>\n";
-						}
-					}
-				}
-				closedir($handle);
-			}
-			echo "	</select>\n";
-			echo "	<br />\n";
-			echo "	Select a template to set as the default and then press save.<br />\n";
-			echo "	</td>\n";
-			echo "	</tr>\n";
-		}
-		*/
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
@@ -475,15 +510,10 @@ else {
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
-	echo "<br>";
+	echo "<br />";
 
-	echo "<table $table_width>";
-	echo "	<tr>";
-	echo "		<td align='right'>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>";
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
+	echo "<div align='right'><input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\"></div>";
+	echo "<br />";
 
 	echo "</form>";
 
@@ -492,7 +522,7 @@ else {
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
-// convert password fields to
+// convert password fields to text
 	echo "	function submit_form() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
 	echo "		$('input:password').attr({type:'text'});\n";

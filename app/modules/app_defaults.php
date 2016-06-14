@@ -32,17 +32,36 @@
 			$obj->settings();
 			unset($obj);
 
+		//add the module object
+			$module = new modules;
+			$module->db = $db;
+
+		//add the access control list to the database
+			$sql = "select * from v_modules ";
+			$sql .= "where module_order is null ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$modules = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($modules as &$row) {
+					//get the module details
+						$mod = $module->info($row['module_name']);
+					//update the module order
+						$sql = "update v_modules set ";
+						$sql .= "module_order = '".$mod['module_order']."' ";
+						$sql .= "where module_uuid = '".$row['module_uuid']."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+				}
+			}
+
 		//use the module class to get the list of modules from the db and add any missing modules
 			if (isset($_SESSION['switch']['mod']['dir'])) {
-				$mod = new modules;
-				$mod->db = $db;
-				$mod->dir = $_SESSION['switch']['mod']['dir'];
-				$mod->get_modules();
-				$mod->synch();
-				$msg = $mod->msg;
-
-				//save the modules.conf
-				save_module_xml();
+				$module->dir = $_SESSION['switch']['mod']['dir'];
+				$module->get_modules();
+				$module->synch();
+				$module->xml();
+				$msg = $module->msg;
 			}
 	}
 

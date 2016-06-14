@@ -53,6 +53,7 @@ else {
 		$module_name = check_str($_POST["module_name"]);
 		$module_description = check_str($_POST["module_description"]);
 		$module_category = check_str($_POST["module_category"]);
+		$module_order = check_str($_POST["module_order"]);
 		$module_enabled = check_str($_POST["module_enabled"]);
 		$module_default_enabled = check_str($_POST["module_default_enabled"]);
 	}
@@ -95,6 +96,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "module_name, ";
 				$sql .= "module_description, ";
 				$sql .= "module_category, ";
+				$sql .= "module_order, ";
 				$sql .= "module_enabled, ";
 				$sql .= "module_default_enabled ";
 				$sql .= ")";
@@ -105,13 +107,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$module_name', ";
 				$sql .= "'$module_description', ";
 				$sql .= "'$module_category', ";
+				$sql .= "'$module_order', ";
 				$sql .= "'$module_enabled', ";
 				$sql .= "'$module_default_enabled' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				save_module_xml();
+				$module = new modules;;
+				$module->xml();
 
 				$_SESSION["message"] = $text['message-add'];
 				header("Location: modules.php");
@@ -124,13 +128,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "module_name = '$module_name', ";
 				$sql .= "module_description = '$module_description', ";
 				$sql .= "module_category = '$module_category', ";
+				$sql .= "module_order = '$module_order', ";
 				$sql .= "module_enabled = '$module_enabled', ";
 				$sql .= "module_default_enabled = '$module_default_enabled' ";
 				$sql .= "where module_uuid = '$module_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				save_module_xml();
+				$module = new modules;;
+				$module->xml();
 
 				$_SESSION["message"] = $text['message-update'];
 				header("Location: modules.php");
@@ -152,6 +158,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$module_name = $row["module_name"];
 			$module_description = $row["module_description"];
 			$module_category = $row["module_category"];
+			$module_order = $row["module_order"];
 			$module_enabled = $row["module_enabled"];
 			$module_default_enabled = $row["module_default_enabled"];
 			break; //limit to 1 row
@@ -202,6 +209,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_name' maxlength='255' value=\"$module_name\">\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-order']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='module_order' maxlength='255' value=\"$module_order\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";

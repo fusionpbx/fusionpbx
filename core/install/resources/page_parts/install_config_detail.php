@@ -132,9 +132,9 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='db_type' id='db_type' class='formfld' id='form_tag' onchange='db_type_onchange();'>\n";
-	if (extension_loaded('pdo_pgsql')) {	echo "	<option value='pgsql'>postgresql</option>\n"; }
+	if (extension_loaded('pdo_pgsql')) {	echo "	<option value='pgsql' selected='selected'>postgresql</option>\n"; } //set postgresql as the default
 	if (extension_loaded('pdo_mysql')) {	echo "	<option value='mysql'>mysql</option>\n"; }
-	if (extension_loaded('pdo_sqlite')) {	echo "	<option value='sqlite' selected='selected'>sqlite</option>\n"; } //set sqlite as the default
+	if (extension_loaded('pdo_sqlite')) {	echo "	<option value='sqlite'>sqlite</option>\n"; }
 	echo "	</select><br />\n";
 	echo "		Select the database type.\n";
 	echo "\n";

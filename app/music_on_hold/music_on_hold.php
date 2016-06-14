@@ -134,7 +134,7 @@ else {
 						//process sampling rate(s)
 							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
-									@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
+									mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 02770, true);
 								}
 								if (is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
 									copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir."/".$new_file_name);
@@ -149,7 +149,7 @@ else {
 						//process sampling rate(s)
 							if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 								if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
-									@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
+									mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 02770, true);
 								}
 								if (is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
 									copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir."/".$new_file_name);
@@ -165,7 +165,7 @@ else {
 							//process sampling rate(s)
 								if (isset($sampling_rate_dirs)) foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 									if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
-										@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
+										mkdir($music_on_hold_dir."/".$sampling_rate_dir, 02770, true);
 									}
 									if (is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
 										copy($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$sampling_rate_dir."/".$new_file_name);
@@ -406,7 +406,7 @@ else {
 						$file_size = byte_convert($file_size);
 
 						//playback progress bar
-						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5'><span id='recording_progress_".$row_uuid."' style='background-color: #c43e42; height:1px; display: inline-block;'></span></td></tr>\n";
+						echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='5' class='".$row_style[$c]."' style='padding: 0px; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";

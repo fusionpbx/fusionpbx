@@ -51,6 +51,7 @@
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-colorpicker.js"></script>
+<script language="JavaScript" type="text/javascript" src="<!--{project_path}-->/resources/bootstrap/js/bootstrap-pwstrength.min.js"></script>
 <?php
 //web font loader
 	if ($_SESSION['theme']['font_loader']['text'] == 'true') {
@@ -193,6 +194,24 @@
 						}
 					}
 				});
+			});
+
+		//apply password strength plugin
+			$('#password').pwstrength({
+				common: {
+					minChar: 8,
+					usernameField: '#username',
+				},
+				/* rules: { },  */
+				ui: {
+					//				very weak weak		normal	   medium	  strong	 very strong
+					colorClasses: ["danger", "warning", "warning", "warning", "success", "success"],
+					progressBarMinPercentage: 15,
+					showVerdicts: false,
+					viewports: {
+						progress: "#pwstrength_progress"
+					}
+				}
 			});
 
 		<?php if ($_SESSION['theme']['menu_brand_image']['text'] != '' && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') { ?>
@@ -360,7 +379,7 @@
 					default:
 						$menu_position = ($menu_position != '') ? $menu_position : 'top';
 						$menu_type = 'fixed-'.$menu_position;
-						$menu_width = 'calc(90% - 40px)';
+						$menu_width = 'calc(90% - 20px)';
 						$menu_brand = true;
 				}
 			?>
@@ -386,7 +405,7 @@
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 									echo "<a href='".$menu_brand_link."'>";
 									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
@@ -398,11 +417,9 @@
 									echo "<div class='pull-left'><a class='navbar-brand' href=\"".$menu_brand_link."\">".$menu_brand_text."</a></div>\n";
 								}
 						}
-						//domain name/selector
+						//domain name/selector (xs)
 							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<ul class='nav navbar-nav pull-right visible-xs'>\n";
-								echo "<li><a href='#' style='padding: 8px 4px 6px 0;' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>\n";
-								echo "</ul>\n";
+								echo "<span class='pull-right visible-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></span>\n";
 							}
 						?>
 					</div>
@@ -416,7 +433,7 @@
 									$mod_a_1 = "class='dropdown-toggle text-left' data-toggle='dropdown' ";
 									$submenu = true;
 								}
-								$mod_a_2 = ($menu_parent['menu_item_link'] != '') ? $menu_parent['menu_item_link'] : '#';
+								$mod_a_2 = ($menu_parent['menu_item_link'] != '' && !$submenu) ? $menu_parent['menu_item_link'] : '#';
 								$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
 								if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
 									if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'glyphicon-') > 0) {
@@ -436,13 +453,17 @@
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
 										$mod_a_2 = $menu_sub['menu_item_link'];
-										if($mod_a_2 == ''){
+										if ($mod_a_2 == '') {
 											$mod_a_2 = '#';
 										}
-										else if (($menu_sub['menu_item_category'] == 'internal') ||
-											(($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2, 0,1) == "/"))
-										{
-											$mod_a_2 = PROJECT_PATH . $mod_a_2;
+										else if (($menu_sub['menu_item_category'] == 'internal') || (($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2,0,1) == '/')) {
+											// accomodate adminer auto-login, if enabled
+												if (substr($mod_a_2,0,22) == '/app/adminer/index.php') {
+													global $db_type;
+													$mod_a_2 .= '?'.(($db_type == 'mysql') ? 'server' : $db_type).'&db=fusionpbx&ns=public';
+													$mod_a_2 .= ($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? "&username=auto" : null;
+												}
+											$mod_a_2 = PROJECT_PATH.$mod_a_2;
 										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
@@ -461,20 +482,20 @@
 							}
 							?>
 						</ul>
-						<ul class="nav navbar-nav navbar-right">
-							<?php
-							//domain name/selector
-								if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-									echo "<li class='hidden-xs'><a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a></li>";
-								}
-							//logout icon
-								if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
-									$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-									echo "<li class='hidden-xs'><a href='".PROJECT_PATH."/logout.php' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a></li>";
-									unset($username_full);
-								}
-							?>
-						</ul>
+						<?php
+						echo "<span class='pull-right hidden-xs' style='white-space: nowrap;'>";
+						//domain name/selector (sm+)
+							if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
+								echo "<a href='#' class='domain_selector_domain' title='".$text['theme-label-open_selector']."'>".$_SESSION['domain_name']."</a>";
+							}
+						//logout icon
+							if ($_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+								$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
+								echo "<a href='".PROJECT_PATH."/logout.php' class='logout_icon' title=\"".$text['theme-label-logout']."\" onclick=\"return confirm('".$text['theme-confirm-logout']."')\"><span class='glyphicon glyphicon-log-out'></span></a>";
+								unset($username_full);
+							}
+						echo "</span>";
+						?>
 					</div>
 				</div>
 			</nav>

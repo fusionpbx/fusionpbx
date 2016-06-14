@@ -99,7 +99,7 @@ include "root.php";
 
 			//make sure the conf directory exists
 				if (!is_dir($this->global_settings->switch_conf_dir())) {
-					if (!mkdir($this->global_settings->switch_conf_dir(), 0774, true)) {
+					if (!mkdir($this->global_settings->switch_conf_dir(), 02770, true)) {
 						throw new Exception("Failed to create the switch conf directory '".$this->global_settings->switch_conf_dir()."'. ");
 					}
 				}
@@ -117,9 +117,9 @@ include "root.php";
 					unset($src_dir, $dst_dir);
 				}
 				$fax_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_storage_dir(), 'fax'));
-				if (!is_readable($fax_dir)) { mkdir($fax_dir,0777,true); }
+				if (!is_readable($fax_dir)) { mkdir($fax_dir,02770,true); }
 				$voicemail_dir = join( DIRECTORY_SEPARATOR, array($this->global_settings->switch_storage_dir(), 'voicemail'));
-				if (!is_readable($voicemail_dir)) { mkdir($voicemail_dir,0777,true); }
+				if (!is_readable($voicemail_dir)) { mkdir($voicemail_dir,02770,true); }
 
 			//write the xml_cdr.conf.xml file
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/xml_cdr")) {

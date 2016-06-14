@@ -204,20 +204,26 @@ if (count($_POST)>0) {
 					$x = 1;
 					foreach ($column_array as $column) {
 						if ($column != "menuid" && $column != "menuparentid") {
-							echo $column.(($x < $column_array_count) ? "," : null);
+							$columns[] = $column;
 						}
 						$x++;
 					}
-					echo ") ";
-					echo "values ( ";
+					if (is_array($columns) && sizeof($columns) > 0) {
+						echo implode(', ', $columns);
+					}
+					echo ") values (";
 					$x = 1;
 					foreach ($column_array as $column) {
 						if ($column != "menuid" && $column != "menuparentid") {
-							echo (!is_null($row[$column])) ? "\"".check_str($row[$column])."\"".(($x < $column_array_count) ? ',' : null) : 'null';
+							$values[] = ($row[$column] != '') ? "'".check_str($row[$column])."'" : 'null';
 						}
 						$x++;
 					}
+					if (is_array($values) && sizeof($values) > 0) {
+						echo implode(', ', $values);
+					}
 					echo ");<br />\n";
+					unset($columns, $values);
 				}
 			}
 		echo $footer;
