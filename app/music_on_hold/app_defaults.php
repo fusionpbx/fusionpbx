@@ -64,6 +64,7 @@
 								$name = $p['@attributes']['name'];
 								$name = str_replace("-", "_", $name);
 								$$name = $p['@attributes']['value'];
+								$attributes[] = $name;
 							}
 
 						//insert the data into the database
@@ -94,6 +95,11 @@
 							//echo $sql."\n";
 							$db->exec(check_sql($sql));
 							unset($sql);
+							
+						//unset the attribute variables
+							foreach ($attributes as $value) {
+								unset($$value);
+							}
 					}
 
 				//rename the file
