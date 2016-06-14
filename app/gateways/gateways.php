@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,7 +101,12 @@ else {
 	echo "<br />\n";
 
 //get total gateway count from the database
-	$sql = "select count(*) as num_rows from v_gateways where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select count(*) as num_rows from v_gateways ";
+	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (permission_exists('gateway_domain') {
+		$sql .= "or domain_uuid is null ";
+	}
+	$sql .= ");";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -120,7 +125,11 @@ else {
 
 //get the list
 	$sql = "select * from v_gateways ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (permission_exists('gateway_domain') {
+		$sql .= "or domain_uuid is null ";
+	}
+	$sql .= ");";
 	if (strlen($order_by) == 0) {
 		$sql .= "order by gateway asc ";
 	}
