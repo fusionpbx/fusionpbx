@@ -155,7 +155,7 @@ require_once "resources/check_auth.php";
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (count($result) == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
 						//move the uploaded greeting
-							mkdir($v_greeting_dir, 0777, true);
+							mkdir($v_greeting_dir, 02770, true);
 							move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
 						//set newly uploaded greeting as active greeting for voicemail box
 							$sql = "update v_voicemails ";
@@ -383,9 +383,9 @@ require_once "resources/check_auth.php";
 			}
 			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td class='".$row_style[$c]." tr_link_void' width='30px;' valign='top'>";
+			echo "	<td class='".$row_style[$c]." row_style_slim tr_link_void' width='30px;' valign='top'>";
 			$selected = ($row['greeting_id'] == $selected_greeting_id) ? true : false;
-			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."&greeting_id=".$row['greeting_id']."&action=set&order_by=".$order_by."&order=".$order."';\" name='greeting_id' value='".$row['greeting_id']."' ".(($selected) ? "checked='checked'" : null).">\n";
+			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."&greeting_id=".$row['greeting_id']."&action=set&order_by=".$order_by."&order=".$order."';\" name='greeting_id' value='".$row['greeting_id']."' ".(($selected) ? "checked='checked'" : null)." style='margin-top: 7px;'>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_id']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";

@@ -27,7 +27,7 @@ $text['title-call_flow-add']['fr-fr'] = "Ajouter un flux";
 $text['title-call_flow-add']['pt-br'] = "Adicionar fluxo de chamada";
 $text['title-call_flow-add']['pl'] = "Dodaj przepływ rozmów";
 $text['title-call_flow-add']['sv-se'] = "Lägg Till Samtalsflöde";
-$text['title-call_flow-add']['uk'] = "";
+$text['title-call_flow-add']['uk'] = "Виклик Flow Додати";
 $text['title-call_flow-add']['de-at'] = "Anruf Steuerung hinzufügen";
 
 $text['label-status']['en-us'] = "Status";
@@ -77,7 +77,7 @@ $text['label-destination_label']['fr-fr'] = "Label de la destination";
 $text['label-destination_label']['pt-br'] = "Destino";
 $text['label-destination_label']['pl'] = "Etykieta destynacji";
 $text['label-destination_label']['sv-se'] = "Destination Etikett";
-$text['label-destination_label']['uk'] = "";
+$text['label-destination_label']['uk'] = "призначення етикетки";
 $text['label-destination_label']['de-at'] = "Ziel Kennzeichnung";
 
 $text['label-destination']['en-us'] = "Destination";
@@ -107,7 +107,7 @@ $text['label-alternate_label']['fr-fr'] = "Label alternatif";
 $text['label-alternate_label']['pt-br'] = "Etqueta alternativa";
 $text['label-alternate_label']['pl'] = "Alternatywna etykieta";
 $text['label-alternate_label']['sv-se'] = "Alternativ Etikett";
-$text['label-alternate_label']['uk'] = "";
+$text['label-alternate_label']['uk'] = "альтернативні етикетки";
 $text['label-alternate_label']['de-at'] = "Alternatives Ziel Beschreibung";
 
 $text['label-alternate_destination']['en-us'] = "Alternate Destination";
@@ -117,8 +117,28 @@ $text['label-alternate_destination']['fr-fr'] = "Destination alternative";
 $text['label-alternate_destination']['pt-br'] = "Destino alternativo";
 $text['label-alternate_destination']['pl'] = "Alternatywna destynacja";
 $text['label-alternate_destination']['sv-se'] = "Alternativ Destination";
-$text['label-alternate_destination']['uk'] = "";
+$text['label-alternate_destination']['uk'] = "альтернативні варіанти призначення";
 $text['label-alternate_destination']['de-at'] = "Alternatives Ziel";
+
+$text['label-sound']['en-us'] = "Sound";
+$text['label-sound']['es-cl'] = "Sonar";
+$text['label-sound']['pt-pt'] = "Som";
+$text['label-sound']['fr-fr'] = "Sonner";
+$text['label-sound']['pt-br'] = "Som";
+$text['label-sound']['pl'] = "Dźwięk";
+$text['label-sound']['sv-se'] = "Ljud";
+$text['label-sound']['uk'] = "звук";
+$text['label-sound']['de-at'] = "Klingen";
+
+$text['label-alternate_sound']['en-us'] = "Alternate Sound";
+$text['label-alternate_sound']['es-cl'] = "sonido alternativo";
+$text['label-alternate_sound']['pt-pt'] = "som alternativo";
+$text['label-alternate_sound']['fr-fr'] = "son suppléant";
+$text['label-alternate_sound']['pt-br'] = "som alternativo";
+$text['label-alternate_sound']['pl'] = "Alternatywny dźwięk";
+$text['label-alternate_sound']['sv-se'] = "alternativt ljud";
+$text['label-alternate_sound']['uk'] = "альтернативний звук";
+$text['label-alternate_sound']['de-at'] = "wechseln Klingen";
 
 $text['header-call_flows']['en-us'] = "Call Flows";
 $text['header-call_flows']['es-cl'] = "flujo de Llamada";
@@ -165,9 +185,9 @@ $text['description-pin_number']['es-cl'] = "Ingrese el número PIN.";
 $text['description-pin_number']['pt-pt'] = "Introduza o código PIN";
 $text['description-pin_number']['fr-fr'] = "Choisir le code PIN.";
 $text['description-pin_number']['pt-br'] = "Insira o código PIN";
-$text['description-pin_number']['pl'] = "";
+$text['description-pin_number']['pl'] = "Wprowadź numer PIN";
 $text['description-pin_number']['sv-se'] = "Ange PIN Kod.";
-$text['description-pin_number']['uk'] = "";
+$text['description-pin_number']['uk'] = "Введіть пін - код.";
 $text['description-pin_number']['de-at'] = "Geben Sie einen PIN ein.";
 
 $text['description-name']['en-us'] = "Enter the name.";
@@ -187,7 +207,7 @@ $text['description-feature_code']['fr-fr'] = "Choisir le code la fonction";
 $text['description-feature_code']['pt-br'] = "Insira o código de função";
 $text['description-feature_code']['pl'] = "Dodaj specjalny kod";
 $text['description-feature_code']['sv-se'] = "Ange Funktionskoden.";
-$text['description-feature_code']['uk'] = "";
+$text['description-feature_code']['uk'] = "Введіть код об'єкта.";
 $text['description-feature_code']['de-at'] = "Geben Sie den Stern-Code an.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
@@ -197,7 +217,7 @@ $text['description-extension']['fr-fr'] = "Choisir le numéro d'extension.";
 $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dispositivo";
 $text['description-extension']['pl'] = "Wprowadź alfanumeryczny numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
-$text['description-extension']['uk'] = "";
+$text['description-extension']['uk'] = "Введіть номер розширення.";
 $text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
 
 $text['description-destination_label']['en-us'] = "Enter the destination label.";
@@ -207,7 +227,7 @@ $text['description-destination_label']['fr-fr'] = "Choisir le label de la destin
 $text['description-destination_label']['pt-br'] = "Insira o destino";
 $text['description-destination_label']['pl'] = "Wprowadź opis destynacji";
 $text['description-destination_label']['sv-se'] = "Ange Destinations Etiketten.";
-$text['description-destination_label']['uk'] = "";
+$text['description-destination_label']['uk'] = "Введіть мітку призначення.";
 $text['description-destination_label']['de-at'] = "Geben Sie eine Beschreibung für das Ziel an.";
 
 $text['description-destination']['en-us'] = "Select the destination.";
@@ -227,7 +247,7 @@ $text['description-context']['fr-fr'] = "Choisir le contexte.";
 $text['description-context']['pt-br'] = "Insira o contexto";
 $text['description-context']['pl'] = "Wprowadź kontekst";
 $text['description-context']['sv-se'] = "Ange Context.";
-$text['description-context']['uk'] = "";
+$text['description-context']['uk'] = "Введіть контекст.";
 $text['description-context']['de-at'] = "Geben Sie den Kontext hier an.";
 
 $text['description-call_flows']['en-us'] = "Direct calls between two destinations by calling a feature code.";
@@ -237,7 +257,7 @@ $text['description-call_flows']['fr-fr'] = "Appels directs entre deux destinatio
 $text['description-call_flows']['pt-br'] = "Para chamadas direta entre dois destinos utilize um código ";
 $text['description-call_flows']['pl'] = "Kieruj rozmowy bezpośrednio pomiędzy dwoma destynacjami poprzez prowadzenie specjalnego kodu.";
 $text['description-call_flows']['sv-se'] = "Samtal mellan två destinationer genom att ringa en funktionskod.";
-$text['description-call_flows']['uk'] = "";
+$text['description-call_flows']['uk'] = "Прямі виклики між двома пунктами шляхом виклику коду функції.";
 $text['description-call_flows']['de-at'] = "Leiten Sie Anrufe zwischen zwei Zielen um indem Sie einen Stern-Code wählen.";
 
 $text['description-alternate_label']['en-us'] = "Enter the alternate destination label.";
@@ -247,7 +267,7 @@ $text['description-alternate_label']['fr-fr'] = "Choisir le label de la destinat
 $text['description-alternate_label']['pt-br'] = "Insira um destino alternativo";
 $text['description-alternate_label']['pl'] = "Wprowadź alternatywny opis destynacji";
 $text['description-alternate_label']['sv-se'] = "Ange den alternativa destinations etiketten.";
-$text['description-alternate_label']['uk'] = "";
+$text['description-alternate_label']['uk'] = "Введіть альтернативний ярлик призначення.";
 $text['description-alternate_label']['de-at'] = "Geben Sie eine Beschreibung für das alternative Ziel ein.";
 
 $text['description-alternate_destination']['en-us'] = "Select the alternate destination.";
@@ -257,7 +277,57 @@ $text['description-alternate_destination']['fr-fr'] = "Choisir la destination al
 $text['description-alternate_destination']['pt-br'] = "Selecione um destino alternativo";
 $text['description-alternate_destination']['pl'] = "Wybierz alternatywną destynację";
 $text['description-alternate_destination']['sv-se'] = "Välj den alternativa destinationen.";
-$text['description-alternate_destination']['uk'] = "";
+$text['description-alternate_destination']['uk'] = "Виберіть інше розташування.";
 $text['description-alternate_destination']['de-at'] = "Wählen Sie ein alternatives Ziel.";
+
+$text['description-sound']['en-us'] = "Select the sound to play when the status is set to the destinations.";
+$text['description-sound']['es-cl'] = "Seleccione el sonido a reproducir cuando el estado se establece en el destino.";
+$text['description-sound']['pt-pt'] = "Selecione o som para tocar quando o status é definido como o destino.";
+$text['description-sound']['fr-fr'] = "Sélectionnez le son à jouer lorsque l'état est réglé sur la destination.";
+$text['description-sound']['pt-br'] = "Selecione o som para tocar quando o status é definido como o destino.";
+$text['description-sound']['pl'] = "Wybierz dźwięk do odtworzenia, gdy status jest ustawiony do miejsca przeznaczenia.";
+$text['description-sound']['sv-se'] = "Välj ljud att spela när status är inställd på destinationen.";
+$text['description-sound']['uk'] = "Виберіть звук для відтворення , коли статус встановлений в пункти призначення.";
+$text['description-sound']['de-at'] = "Wählen Sie den Ton zu spielen, wenn der Status auf das Ziel festgelegt ist.";
+
+$text['description-alternate_sound']['en-us'] = "Select the sound to play when status is set to the alternate destination.";
+$text['description-alternate_sound']['es-cl'] = "Seleccione el sonido a reproducir cuando el estado se establece en el destino alternativo.";
+$text['description-alternate_sound']['pt-pt'] = "Selecione o som para tocar quando o status é definido como o destino alternativo.";
+$text['description-alternate_sound']['fr-fr'] = "Sélectionnez le son à jouer lorsque l'état est réglé sur la destination alternative.";
+$text['description-alternate_sound']['pt-br'] = "Selecione o som para tocar quando o status é definido como o destino alternativo.";
+$text['description-alternate_sound']['pl'] = "Wybierz dźwięk do odtworzenia, gdy status jest ustawiony na alternatywnego przeznaczenia.";
+$text['description-alternate_sound']['sv-se'] = "Välj ljud att spela när status är inställd på den alternativa destinationen.";
+$text['description-alternate_sound']['uk'] = "Виберіть звук для відтворення , коли встановлено стан альтернативного призначення.";
+$text['description-alternate_sound']['de-at'] = "Wählen Sie den Ton zu spielen, wenn der Status auf den alternativen Ziel gesetzt.";
+
+$text['recordings']['en-us'] = "Recordings";
+$text['recordings']['es-cl'] = "grabaciones";
+$text['recordings']['pt-pt'] = "gravações";
+$text['recordings']['fr-fr'] = "Recordings";
+$text['recordings']['pt-br'] = "gravações";
+$text['recordings']['pl'] = "nagrania";
+$text['recordings']['sv-se'] = "inspelningar";
+$text['recordings']['uk'] = "записи";
+$text['recordings']['de-at'] = "Aufnahmen";
+
+$text['miscellaneous']['en-us'] = "Miscellaneous";
+$text['miscellaneous']['es-cl'] = "Diverso";
+$text['miscellaneous']['pt-pt'] = "Variado";
+$text['miscellaneous']['fr-fr'] = "Divers";
+$text['miscellaneous']['pt-br'] = "Variado";
+$text['miscellaneous']['pl'] = "Różne";
+$text['miscellaneous']['sv-se'] = "Diverse";
+$text['miscellaneous']['uk'] = "Різне";
+$text['miscellaneous']['de-at'] = "Sonstiges";
+
+$text['sounds']['en-us'] = "Sounds";
+$text['sounds']['es-cl'] = "Sonidos";
+$text['sounds']['pt-pt'] = "Sons";
+$text['sounds']['fr-fr'] = "des sons";
+$text['sounds']['pt-br'] = "Sons";
+$text['sounds']['pl'] = "Dźwięki";
+$text['sounds']['sv-se'] = "Ljud";
+$text['sounds']['uk'] = "звуки";
+$text['sounds']['de-at'] = "Geräusche";
 
 ?>

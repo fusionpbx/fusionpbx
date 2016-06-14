@@ -17,28 +17,31 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Portions created by the Initial Developer are Copyright (C) 2010-2016
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
+	Matthew Vale <github@mafoo.org>
 */
 include "root.php";
 
-//define the directory class
+//define the switch_music_on_hold class
 	class switch_music_on_hold {
 
 		public $domain_uuid;
-		public $domain_name;
-		public $select_name;
-		public $select_value;
-		public $select_options;
 		private $xml;
+		private $db;
 
 		public function __construct() {
-			require_once "resources/classes/database.php";
-			$this->app_uuid = '';
+			if (!$this->db) {
+				require_once "resources/classes/database.php";
+				$database = new database;
+				$database->connect();
+				$this->db = $database->db;
+			}
+			$this->domain_uuid = $_SESSION['domain_uuid'];
 		}
 
 		public function __destruct() {
@@ -47,28 +50,63 @@ include "root.php";
 			}
 		}
 
-		public function select() {
-			//build the list of categories
-				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
-				if (count($_SESSION['domains']) > 1) {
-					$music_on_hold_dir = $music_on_hold_dir."/".$_SESSION['domain_name'];
-				}
-
+		//it is NOT recommended to use this function if you want to include ringback you should be using the ringback class
+		//see app/ring_groups/ring_group_edit.php for example
+		public function select($name, $selected, $options) {
 			//add multi-lingual support
 				$language = new text;
-				$text = $language->get($_SESSION['domain']['language']['code'], 'app/music_on_hold');
+				$text = $language->get();
 
 			//start the select
-				$select = "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
-				$select .= "		<option value='' style='font-style: italic;'>".$text['opt-default']."</option>\n";
+				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
-			//categories
-				$array = glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR);
-			//list the categories
-				$moh_xml = "";
+			//moh
+				$options = $this->list_moh();
+				if (sizeof($options) > 0) {
+					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
+					foreach($options as $moh_value => $moh_name) {
+						$select .= "		<option value='".$moh_value."' ".(($selected == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
+					}
+					$select .= "	</optgroup>\n";
+				}
+			//recordings
+				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
+					require_once "app/recordings/resources/classes/switch_recordings.php";
+					$recordings_c = new switch_recordings;
+					$recordings = $recordings_c->list_recordings();
+					if (sizeof($recordings) > 0) {
+						$select .= "	<optgroup label='".$text['label-recordings']."'>";
+						foreach($recordings as $recording_value => $recording_name){
+							$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
+						}
+						$select .= "	</optgroup>\n";
+					}
+				}
+			//add additional options
+				if (sizeof($options) > 0) {
+					$select .= "	<optgroup label='".$text['label-others']."'>";
+					$select .= $options;
+					$select .= "	</optgroup>\n";
+				}
+			//end the select and return it
+				$select .= "</select>\n";
+				return $select;
+		}
+
+		public function list_moh() {
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get(null, 'app/music_on_hold');
+
+				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
+				$array = array_merge(glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR), glob($music_on_hold_dir."/".$_SESSION['domain_name']."/*/*", GLOB_ONLYDIR));
 				foreach($array as $moh_dir) {
 					//set the directory
 						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
+						if (stristr($moh_dir, $_SESSION['domain_name'])) {
+							$domain_moh = 1;
+							$moh_dir = substr($moh_dir, strlen($_SESSION['domain_name']."/"));
+						}
 					//get and set the rate
 						$sub_array = explode("/", $moh_dir);
 						$moh_rate = end($sub_array);
@@ -76,49 +114,22 @@ include "root.php";
 						$moh_name = $moh_dir;
 						$moh_name = substr($moh_dir, 0, strlen($moh_name)-(strlen($moh_rate)));
 						$moh_name = rtrim($moh_name, "/");
-						if (count($_SESSION['domains']) > 1) {
+						if ($domain_moh) {
 							$moh_value = "local_stream://".$_SESSION['domain_name']."/".$moh_name;
 						}
 						else {
 							$moh_value = "local_stream://".$moh_name;
 						}
-						$options[$moh_value] = str_replace('_', ' ', $moh_name);
-				}
-				if (sizeof($options) > 0) {
-					foreach($options as $moh_value => $moh_name) {
-						$select .= "<option value='".$moh_value."' ".(($this->select_value == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
-					}
-				}
-			//recordings
-				$recordings_dir = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/";
-				if($dh = opendir($recordings_dir)) {
-					$tmp_selected = false;
-					$files = Array();
-					//$select .= "<optgroup label='recordings'>\n";
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($recordings_dir . $file)) {
-								//this is a directory
-							}
-							else {
-								if ($this->select_value == $recordings_dir . $file && strlen($this->select_value) > 0) {
-									$tmp_selected = true;
-									$select .= "		<option value='".$recordings_dir.$file."' selected='selected'>".$file."</option>\n";
-								}
-								else {
-									$select .= "		<option value='".$recordings_dir.$file."'>".$file."</option>\n";
-								}
-							}
+						if($moh_name == 'default') {
+							$moh_name = $text['opt-default'];
 						}
-					}
-					closedir($dh);
-					//$select .= "</optgroup>\n";
+						$moh_list[$moh_value] = str_replace('_', ' ', $moh_name);
 				}
-			//add additional options
-				$select .= $this->select_options;
-			//end the select and return it
-				$select .= "	</select>\n";
-				return $select;
+				//detect source installed moh
+					if(is_dir($music_on_hold_dir."/8000")) {
+						$moh_list["local_stream://default"] = $text['opt-default'];
+					}
+			return $moh_list;
 		}
 
 		public function reload() {
@@ -184,11 +195,16 @@ include "root.php";
 					$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
 				else {
-					$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+					$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"]."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 				}
-
-			//replace the variable
-				$file_contents = str_replace("{v_moh_categories}", $this->xml, $file_contents);
+			//check where the default music is stored
+				$default_moh_prefix = 'music/default';
+				if(file_exists($_SESSION['switch']['sounds']['dir'].'/music/8000')) {
+					$default_moh_prefix = 'music';
+				}
+			//replace the variables
+				$file_contents = preg_replace("/music\/default/", $default_moh_prefix, $file_contents);
+				$file_contents = preg_replace("/[\t ]*(?:<!--)?{v_moh_categories}(?:-->)?/", $this->xml, $file_contents);
 
 			//write the XML config file
 				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
@@ -198,6 +214,7 @@ include "root.php";
 			//reload the XML
 				$this->reload();
 		}
+
 	}
 
 //build and save the XML

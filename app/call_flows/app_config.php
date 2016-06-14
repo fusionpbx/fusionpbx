@@ -108,6 +108,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the label.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_sound";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the sound.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the application.";
@@ -116,20 +120,27 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the application data.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_anti_label";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_label";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alternate label.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_anti_app";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_alternate_sound";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the alternate sound.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_app";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alternate application.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_anti_data";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_data";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alernate application data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the description.";
-		$z++;
+
 ?>

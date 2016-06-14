@@ -101,7 +101,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$username_old = check_str($_POST["username_old"]);
 		$username = check_str($_POST["username"]);
 		$password = check_str($_POST["password"]);
-		$confirm_password = check_str($_POST["confirm_password"]);
+		$password_confirm = check_str($_POST["password_confirm"]);
 		$user_status = check_str($_POST["user_status"]);
 		$user_language = check_str($_POST["user_language"]);
 		$user_time_zone = check_str($_POST["user_time_zone"]);
@@ -124,11 +124,16 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 			unset($sql);
 		}
 
-		if ($password != $confirm_password) { $msg_error = $text['message-password_mismatch']; }
+		if ($password != $password_confirm) { $msg_error = $text['message-password_mismatch']; }
 
-		if ($msg_error) {
+		if ($msg_error != '') {
 			$_SESSION["message"] = $msg_error;
 			$_SESSION["message_mood"] = 'negative';
+			header("Location: usersupdate.php?id=".$user_uuid);
+			exit;
+		}
+
+		if (!check_password_strength($password, $text)) {
 			header("Location: usersupdate.php?id=".$user_uuid);
 			exit;
 		}
@@ -311,7 +316,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		if (strlen($username) > 0 && $username != $username_old) {
 			$sql .= "username = '".$username."', ";
 		}
-		if (strlen($password) > 0 && $confirm_password == $password) {
+		if (strlen($password) > 0 && $password_confirm == $password) {
 			//salt used with the password to create a one way hash
 				$salt = uuid();
 			//set the password
@@ -406,34 +411,79 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 //show the content
 	$table_width ='width="100%"';
 
-	echo "<script>";
-	echo "	function compare_passwords() {";
-	echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('confirmpassword') === document.activeElement) {";
-	echo "			if (document.getElementById('password').value != '' || document.getElementById('confirmpassword').value != '') {";
-	echo "				if (document.getElementById('password').value != document.getElementById('confirmpassword').value) {";
-	echo "					$('#password').removeClass('formfld_highlight_good');";
-	echo "					$('#confirmpassword').removeClass('formfld_highlight_good');";
-	echo "					$('#password').addClass('formfld_highlight_bad');";
-	echo "					$('#confirmpassword').addClass('formfld_highlight_bad');";
-	echo "				}";
-	echo "				else {";
-	echo "					$('#password').removeClass('formfld_highlight_bad');";
-	echo "					$('#confirmpassword').removeClass('formfld_highlight_bad');";
-	echo "					$('#password').addClass('formfld_highlight_good');";
-	echo "					$('#confirmpassword').addClass('formfld_highlight_good');";
-	echo "				}";
-	echo "			}";
-	echo "		}";
-	echo "		else {";
-	echo "			if (document.getElementById('password').value == document.getElementById('confirmpassword').value) {";
-	echo "				$('#password').removeClass('formfld_highlight_bad');";
-	echo "				$('#confirmpassword').removeClass('formfld_highlight_bad');";
-	echo "				$('#password').removeClass('formfld_highlight_good');";
-	echo "				$('#confirmpassword').removeClass('formfld_highlight_good');";
-	echo "			}";
-	echo "		}";
-	echo "	}";
-	echo "</script>";
+	echo "<script>\n";
+	echo "	function compare_passwords() {\n";
+	echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('password_confirm') === document.activeElement) {\n";
+	echo "			if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+	echo "				if ($('#password').val() != $('#password_confirm').val()) {\n";
+	echo "					$('#password').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "					$('#password').addClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_bad');\n";
+	echo "				}\n";
+	echo "				else {\n";
+	echo "					$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "					$('#password').addClass('formfld_highlight_good');\n";
+	echo "					$('#password_confirm').addClass('formfld_highlight_good');\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			$('#password').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_bad');\n";
+	echo "			$('#password').removeClass('formfld_highlight_good');\n";
+	echo "			$('#password_confirm').removeClass('formfld_highlight_good');\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	$req['length'] = $_SESSION['security']['password_length']['numeric'];
+	$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+	$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+	$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+	$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+
+	echo "	function check_password_strength(pwd) {\n";
+	echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
+	echo "			var msg_errors = [];\n";
+	if (is_numeric($req['length']) && $req['length'] != 0) {
+		echo "		var re = /.{".$req['length'].",}/;\n"; //length
+		echo "		if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-characters']."'); }\n";
+	}
+	if ($req['number']) {
+		echo "		var re = /(?=.*[\d])/;\n";  //number
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-numbers']."'); }\n";
+	}
+	if ($req['lowercase']) {
+		echo "		var re = /(?=.*[a-z])/;\n";  //lowercase
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-lowercase_letters']."'); }\n";
+	}
+	if ($req['uppercase']) {
+		echo "		var re = /(?=.*[A-Z])/;\n";  //uppercase
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-uppercase_letters']."'); }\n";
+	}
+	if ($req['special']) {
+		echo "		var re = /(?=.*[\W])/;\n";  //special
+		echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-special_characters']."'); }\n";
+	}
+	echo "			if (msg_errors.length > 0) {\n";
+	echo "				var msg = '".$text['message-password_requirements'].": ' + msg_errors.join(', ');\n";
+	echo "				display_message(msg, 'negative', '6000');\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "			else {\n";
+	echo "				return true;\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			return true;\n";
+	echo "		}\n";
+	echo "	}\n";
+
+	echo "	function show_strenth_meter() {\n";
+	echo "		$('#pwstrength_progress').slideDown();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
@@ -462,7 +512,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "		<input type='text' class='formfld' name='username' value='".$username."' required='required'>";
+		echo "		<input type='text' class='formfld' name='username' id='username' value='".$username."' required='required'>";
 	}
 	else {
 		echo "		".$username;
@@ -472,11 +522,17 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-password']."</td>";
-	echo "		<td class='vtable'><input style='display:none;' type='password' name='autocomplete'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'>";
+	echo "			<input style='display: none;' type='password'>";
+	echo "			<input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "			<div id='pwstrength_progress' class='pwstrength_progress'></div>";
+	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-confirm_password']."</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'>";
+	echo "			<input type='password' autocomplete='off' class='formfld' name='password_confirm' id='password_confirm' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'>";
+	echo "		</td>";
 	echo "	</tr>";
 
 	if (permission_exists('user_domain')) {
@@ -559,13 +615,13 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
 	if ($result_count > 0) {
-		echo "<br />\n";
+		if (isset($assigned_groups)) { echo "<br />\n"; }
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($result as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups)) {
+			if ( !isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups)) ) {
 				echo "	<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name'].(($field['domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
 			}
 		}
@@ -589,9 +645,9 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "	<tr>";
 	echo "		<td width='30%' class='vncell' valign='top'>".$text['label-contact']."</td>";
 	echo "		<td width='70%' class='vtable'>\n";
-	$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
+	$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname from v_contacts ";
 	$sql .= " where domain_uuid = '".$domain_uuid."' ";
-	$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc ";
+	$sql .= " order by contact_organization desc, contact_name_family asc, contact_name_given asc, contact_nickname asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -599,24 +655,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "<select name=\"contact_uuid\" id=\"contact_uuid\" class=\"formfld\">\n";
 	echo "<option value=\"\"></option>\n";
 	foreach($result as $row) {
-			$contact_name = '';
-			if (strlen($row['contact_organization']) > 0) {
-					$contact_name = $row['contact_organization'];
-			}
-			if (strlen($row['contact_name_family']) > 0) {
-					if (strlen($contact_name) > 0) { $contact_name .= ", "; }
-					$contact_name .= $row['contact_name_family'];
-			}
-			if (strlen($row['contact_name_given']) > 0) {
-					if (strlen($contact_name) > 0) { $contact_name .= ", "; }
-					$contact_name .= $row['contact_name_given'];
-			}
-			if ($row['contact_uuid'] == $contact_uuid) {
-					echo "<option value=\"".$row['contact_uuid']."\" selected=\"selected\">".$contact_name."</option>\n";
-			}
-			else {
-					echo "<option value=\"".$row['contact_uuid']."\">".$contact_name."</option>\n";
-			}
+			$contact_name = array();
+			if ($row['contact_organization'] != '') { $contact_name[] = $row['contact_organization']; }
+			if ($row['contact_name_family'] != '') { $contact_name[] = $row['contact_name_family']; }
+			if ($row['contact_name_given'] != '') { $contact_name[] = $row['contact_name_given']; }
+			if ($row['contact_name_family'] == '' && $row['contact_name_family'] == '' && $row['contact_nickname'] != '') { $contact_name[] = $row['contact_nickname']; }
+			echo "<option value='".$row['contact_uuid']."' ".(($row['contact_uuid'] == $contact_uuid) ? "selected='selected'" : null).">".implode(', ', $contact_name)."</option>\n";
 	}
 	unset($sql, $result, $row_count);
 	echo "</select>\n";
@@ -745,7 +789,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
 	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; submit_form();\">";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"document.getElementById('action').value = '".$text['button-save']."'; if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
@@ -753,16 +797,16 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "</form>";
 
 	echo "<script>\n";
-//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-// convert password fields to
-	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
-	echo "		$('form#frm').submit();\n";
-	echo "	}\n";
+	//capture enter key to submit form
+		echo "	$(window).keypress(function(event){\n";
+		echo "		if (event.which == 13) { submit_form(); }\n";
+		echo "	});\n";
+	// convert password fields to text
+		echo "	function submit_form() {\n";
+		echo "		$('input:password').css('visibility','hidden');\n";
+		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		$('form#frm').submit();\n";
+		echo "	}\n";
 	echo "</script>\n";
 
 	if (permission_exists('user_setting_view')) {

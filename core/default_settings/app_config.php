@@ -91,4 +91,34 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The language code.";
 		$z++;
 
+		$y = 2; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_countries";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "country_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "country";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The country name/title.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "iso_a2";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The 2-letter ISO abbreviation.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "iso_a3";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The 3-letter ISO abbreviation.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "num";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The numerical code.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "calling_code";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The calling code.";
+		$z++;
+
 ?>

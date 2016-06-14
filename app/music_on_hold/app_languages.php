@@ -11,6 +11,19 @@ $text['title-moh']['uk'] = "Музика на утриманні";
 $text['title-moh']['de-at'] = "Haltemusik";
 $text['title-moh']['he'] = "מוסיקה בהמתנה";
 
+$text['label-others']['en-us'] = "Others";
+$text['label-others']['pt-pt'] = "Outras";
+$text['label-others']['pt-br'] = "Outras";
+$text['label-others']['fr-fr'] = "Autres";
+$text['label-others']['nl-nl'] = "oaren";
+$text['label-others']['pl'] = "Pozostałe";
+$text['label-others']['sv-se'] = "Andra";
+$text['label-others']['uk'] = "інші";
+$text['label-others']['de-at'] = "Andere";
+$text['label-others']['he'] = "אחרים";
+$text['label-others']['ar-eg'] = "آخرون";
+$text['label-others']['ru-ru'] = "другие";
+
 $text['opt-new']['en-us'] = "New...";
 $text['opt-new']['es-cl'] = "Nuevo...";
 $text['opt-new']['pt-pt'] = "Novo...";
