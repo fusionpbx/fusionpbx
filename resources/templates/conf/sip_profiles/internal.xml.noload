@@ -281,9 +281,6 @@
 
 		<!--force suscription expires to a lower value than requested-->
 		<param name="force-subscription-expires" value="60" enabled="false"/>
-		<!-- disable register and transfer which may be undesirable in a public switch -->
-		<param name="disable-transfer" value="true" enabled="false"/>
-		<param name="disable-register" value="true" enabled="false"/>
 
 		<!--
 		enable-3pcc can be set to either 'true' or 'proxy', true accepts the call
