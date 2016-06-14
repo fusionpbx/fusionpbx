@@ -23,7 +23,7 @@
 	dbh:query(sql, function(row)
 
 		--replace the variable with the path to the sounds directory
-		music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sound_dir);
+		music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sounds_dir);
 
 		--build the xml ]]..row.music_on_hold_name..[["
 		table.insert(xml, [[	<directory name="]]..row.music_on_hold_name..[[" path="]]..music_on_hold_path..[[">]]);
