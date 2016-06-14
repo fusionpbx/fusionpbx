@@ -299,6 +299,7 @@ require_once "resources/require.php";
 	}
 	$x = 0;
 	foreach($device_keys as $row) {
+			$device_vendor = $row['device_key_vendor'];
 		//set the column names
 			if ($previous_device_key_vendor != $row['device_key_vendor']) {
 				echo "			<tr>\n";
