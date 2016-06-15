@@ -26,12 +26,28 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/resources/classes/status_registrations.php";
+
 if (permission_exists('extension_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
+}
+
+if (permission_exists('extension_show_registered')) {
+		//create the event socket connection
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if (!$fp) {
+			$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
+		}
+		$registrations = get_registrations('internal');
+		//order the array
+		require_once "resources/classes/array_order.php";
+		$order = new array_order();
+		$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
+
 }
 
 //add multi-lingual support
@@ -150,6 +166,10 @@ require_once "resources/paging.php";
 	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
+	if (permission_exists('extension_show_registered')) {
+		echo th_order_by('description', $text['label-is_registered'], $order_by, $order);
+	}
+
 	echo "<td class='list_control_icon'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
@@ -186,6 +206,24 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_context']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+			if (permission_exists('extension_show_registered')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				$found = false;
+				$found_count = 0;
+				foreach ($registrations as $arr) {
+					if (in_array($row['extension'],$arr)) {
+						$found = true;
+						$found_count++;
+					}
+				}
+				if ($found) {
+					echo "Yes ($found_count)";
+				} else {
+					echo "No";
+				}
+				echo "&nbsp;</td>\n";
+			}
+			
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
 				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
