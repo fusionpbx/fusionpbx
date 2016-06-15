@@ -646,6 +646,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and (answer_stamp is not null and bridge_uuid is not null) \n";
 				if ($this->include_internal) {
@@ -660,6 +661,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and (answer_stamp is not null and bridge_uuid is null) \n";
 				$sql .= "and direction = 'inbound' \n";
@@ -672,6 +674,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and hangup_cause = 'NO_ANSWER' \n";
 				if ($this->include_internal) {
@@ -686,6 +689,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and hangup_cause = 'USER_BUSY' \n";
 				if ($this->include_internal) {
@@ -700,6 +704,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select SUM(billsec) / count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				if (!$this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
@@ -710,6 +715,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
@@ -723,6 +729,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select SUM(billsec) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
@@ -736,6 +743,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(\n";
 				$sql .= "select count(*) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and direction = 'outbound' \n";
 				$sql .= $sql_date_range;
@@ -744,6 +752,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "(";
 				$sql .= "select SUM(billsec) from v_xml_cdr \n";
 				$sql .= "where (caller_id_number = e.extension or destination_number = e.extension) \n";
+				$sql .= "or (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias)) \n";
 				$sql .= "and domain_uuid = e.domain_uuid \n";
 				$sql .= "and direction = 'outbound' \n";
 				$sql .= $sql_date_range;
