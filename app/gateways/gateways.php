@@ -129,7 +129,7 @@ else {
 	if (permission_exists('gateway_domain')) {
 		$sql .= "or domain_uuid is null ";
 	}
-	$sql .= ");";
+	$sql .= ") ";
 	if (strlen($order_by) == 0) {
 		$sql .= "order by gateway asc ";
 	}
