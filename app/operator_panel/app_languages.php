@@ -161,7 +161,7 @@ $text['label-kill']['fr-fr'] = "Tuer Appel";
 $text['label-kill']['pt-br'] = "Chamada final";
 $text['label-kill']['pl'] = "WyÅ‚Ä…cz";
 $text['label-kill']['sv-se'] = "LÃ¤gg PÃ¥";
-$text['label-kill']['uk'] = "";
+$text['label-kill']['uk'] = "вбити";
 $text['label-kill']['de-at'] = "Abwürgen";
 $text['label-kill']['he'] = "הפסק";
 
@@ -172,7 +172,7 @@ $text['label-eavesdrop']['fr-fr'] = "Espionner";
 $text['label-eavesdrop']['pt-br'] = "Investigar";
 $text['label-eavesdrop']['pl'] = "PodsÅ‚uchiwanie";
 $text['label-eavesdrop']['sv-se'] = "Medlyssning";
-$text['label-eavesdrop']['uk'] = "";
+$text['label-eavesdrop']['uk'] = "підслуховувати";
 $text['label-eavesdrop']['de-at'] = "Mithören";
 $text['label-eavesdrop']['he'] = "";
 
@@ -183,7 +183,7 @@ $text['label-call_group']['fr-fr'] = "Groupe d'appel";
 $text['label-call_group']['pt-br'] = "Grupo";
 $text['label-call_group']['pl'] = "Grupa odbiorcÃ³w rozmowy";
 $text['label-call_group']['sv-se'] = "Ring Grupp";
-$text['label-call_group']['uk'] = "";
+$text['label-call_group']['uk'] = "груповий виклик";
 $text['label-call_group']['de-at'] = "Rufgruppe";
 $text['label-call_group']['he'] = "קבוצת חיוג";
 
@@ -194,7 +194,7 @@ $text['label-call_direction']['fr-fr'] = "Sens de l'appel";
 $text['label-call_direction']['pt-br'] = "DireÃ§Ã£o da chamada";
 $text['label-call_direction']['pl'] = "Kierunek rozmowy";
 $text['label-call_direction']['sv-se'] = "Samtals Riktning";
-$text['label-call_direction']['uk'] = "";
+$text['label-call_direction']['uk'] = "напрямок виклику";
 $text['label-call_direction']['de-at'] = "Richtung";
 $text['label-call_direction']['he'] = "כיוון שיחה";
 
@@ -205,7 +205,7 @@ $text['description-eavesdrop_destination']['fr-fr'] = "Sélectionnez le Eavesdro
 $text['description-eavesdrop_destination']['pt-br'] = "Selecione o eavesdrop de destino";
 $text['description-eavesdrop_destination']['pl'] = "Wybierz destynacjÄ™ podsÅ‚uchiwanych rozmÃ³w";
 $text['description-eavesdrop_destination']['sv-se'] = "VÃ¤lj Medlyssning Destination";
-$text['description-eavesdrop_destination']['uk'] = "";
+$text['description-eavesdrop_destination']['uk'] = "Виберіть пункт призначення підслуховувати";
 $text['description-eavesdrop_destination']['de-at'] = "Wählen Sie ein Ziel zum Mithören";
 $text['description-eavesdrop_destination']['he'] = "";
 
