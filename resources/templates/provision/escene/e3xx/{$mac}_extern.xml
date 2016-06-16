@@ -2,7 +2,7 @@
 	<hotlines>
 	{$is_first_line='true'}
 	{foreach $keys as $row}
-		{if $row.device_key_category=="programmable"}
+		{if $row.device_key_category=="memory"}
 			{if $row.device_key_id!=""}
 				{if $row.device_key_line==""}
 					{$row.device_key_line="127"}
