@@ -57,6 +57,7 @@ else {
 			$greeting_id = check_str($_POST["greeting_id"]);
 			$voicemail_options = $_POST["voicemail_options"];
 			$voicemail_mail_to = check_str($_POST["voicemail_mail_to"]);
+			$voicemail_sms_to = check_str($_POST["voicemail_sms_to"]);
 			$voicemail_file = check_str($_POST["voicemail_file"]);
 			$voicemail_local_after_email = check_str($_POST["voicemail_local_after_email"]);
 			$voicemail_enabled = check_str($_POST["voicemail_enabled"]);
@@ -143,6 +144,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_password, ";
 				$sql .= "greeting_id, ";
 				$sql .= "voicemail_mail_to, ";
+				$sql .= "voicemail_sms_to, ";
 				$sql .= "voicemail_file, ";
 				$sql .= "voicemail_local_after_email, ";
 				$sql .= "voicemail_enabled, ";
@@ -156,6 +158,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".$voicemail_password."', ";
 				$sql .= (($greeting_id != '') ? "'".$greeting_id."'" : 'null').", ";
 				$sql .= "'".$voicemail_mail_to."', ";
+				$sql .= "'".$voicemail_sms_to."', ";
 				$sql .= "'".$voicemail_file."', ";
 				$sql .= "'".$voicemail_local_after_email."', ";
 				$sql .= "'".$voicemail_enabled."', ";
@@ -173,6 +176,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_password = '".$voicemail_password."', ";
 				$sql .= "greeting_id = ".(($greeting_id != '') ? "'".$greeting_id."'" : 'null').", ";
 				$sql .= "voicemail_mail_to = '".$voicemail_mail_to."', ";
+				$sql .= "voicemail_sms_to = '".$voicemail_sms_to."', ";
 				$sql .= "voicemail_file = '".$voicemail_file."', ";
 				$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
 				$sql .= "voicemail_enabled = '".$voicemail_enabled."', ";
@@ -257,6 +261,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$voicemail_password = $row["voicemail_password"];
 			$greeting_id = $row["greeting_id"];
 			$voicemail_mail_to = $row["voicemail_mail_to"];
+			$voicemail_sms_to = $row["voicemail_sms_to"];
 			$voicemail_file = $row["voicemail_file"];
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
@@ -457,6 +462,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-voicemail_mail_to']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if(permission_exists('voicemail_sms_edit')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_sms_to']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='voicemail_sms_to' maxlength='255' value=\"$voicemail_sms_to\">\n";
+		echo "<br />\n";
+		echo $text['description-voicemail_sms_to']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

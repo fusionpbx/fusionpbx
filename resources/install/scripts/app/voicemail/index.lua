@@ -146,6 +146,18 @@
 						storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
 					end
 				end
+				if (settings['voicemail']['voicemail_to_sms'] ~= nil) then
+					if (settings['voicemail']['voicemail_to_sms']['boolean'] ~= nil) then
+						voicemail_to_sms = settings['voicemail']['voicemail_to_sms']['boolean'];
+					else
+						voicemail_to_sms = false;
+					end
+				end
+				if (settings['voicemail']['voicemail_to_sms'] ~= nil) then
+					if (settings['voicemail']['voicemail_to_sms_did']['text'] ~= nil) then
+						voicemail_to_sms_did = settings['voicemail']['voicemail_to_sms_did']['text'];
+					end
+				end
 			end
 			if (not temp_dir) or (#temp_dir == 0) then
 				if (settings['server'] ~= nil) then
@@ -227,6 +239,7 @@
 	require "app.voicemail.resources.functions.listen_to_recording";
 	require "app.voicemail.resources.functions.message_waiting";
 	require "app.voicemail.resources.functions.send_email";
+	require "app.voicemail.resources.functions.send_sms";
 	require "app.voicemail.resources.functions.delete_recording";
 	require "app.voicemail.resources.functions.message_saved";
 	require "app.voicemail.resources.functions.return_call";
@@ -470,6 +483,9 @@
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
+								if (voicemail_to_sms) then
+									send_sms(voicemail_id_copy, voicemail_message_uuid);
+								end
 							end
 					end --for
 
