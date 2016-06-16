@@ -129,6 +129,9 @@
 		/>
 	</Privisions>
 	<calls>
+		<!-- BLFTransferEnable - during call you can just press BLF key to do transfer
+			BLFTransferMode - 0: blind transfer; 1: attended transfer
+		-->
 		<call
 			PrefixPSTNNum=""
 			PrefixVOIPNum=""
