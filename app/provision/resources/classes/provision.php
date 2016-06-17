@@ -164,7 +164,7 @@ include "root.php";
 			}
 		}
 
-		private function contact_append(&$contacts, &$line, $domain_uuid, $user_uuid, $is_group){
+		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group){
 			$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 			$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 			$sql .= "p.phone_number, p.phone_extension, p.phone_primary ";
@@ -177,14 +177,14 @@ include "root.php";
 				$sql .= "	select contact_uuid from v_contact_groups ";
 				$sql .= "	where group_uuid in ( ";
 				$sql .= "		select group_uuid from v_group_users ";
-				$sql .= "		where user_uuid = '$user_uuid' ";
+				$sql .= "		where user_uuid = '$device_user_uuid' ";
 				$sql .= "		and domain_uuid = '$domain_uuid' ";
 				$sql .= "	)) ";
 			}
 			else {
 				$sql .= "and c.contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_users ";
-				$sql .= "	where user_uuid = '$user_uuid' ";
+				$sql .= "	where user_uuid = '$device_user_uuid' ";
 				$sql .= "	and domain_uuid = '$domain_uuid' ";
 				$sql .= ") ";
 			}
@@ -243,25 +243,6 @@ include "root.php";
 			}
 
 			unset($temp_contacts);
-		}
-
-		private function user_uuid_for_line(&$line, $domain_uuid){
-			$sql = "select user_uuid from v_extension_users ";
-			$sql .= "where extension_uuid in ( ";
-			$sql .= "	select extension_uuid from v_extensions ";
-			$sql .= "	where (extension = '".$line["user_id"]."' or number_alias = '".$line["user_id"]."') ";
-			$sql .= "	and domain_uuid = '$domain_uuid' ";
-			$sql .= ") ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$extension_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset($prep_statement, $sql);
-			foreach ($extension_users as &$row) {
-				return $row["user_uuid"];
-			}
-			return false;
 		}
 
 		public function render() {
@@ -340,6 +321,7 @@ include "root.php";
 										if (strlen($row["device_vendor"]) > 0) {
 											$device_vendor = strtolower($row["device_vendor"]);
 										}
+										$device_user_uuid = $row["device_user_uuid"];
 										$device_model = $row["device_model"];
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_enabled = $row["device_enabled"];
@@ -476,6 +458,7 @@ include "root.php";
 									$row = $prep_statement_4->fetch();
 									$device_label = $row["device_label"];
 									$device_firmware_version = $row["device_firmware_version"];
+									$device_user_uuid = $row["device_user_uuid"];
 									$device_enabled = $row["device_enabled"];
 									//keep the original template
 									$device_profile_uuid = $row["device_profile_uuid"];
@@ -580,22 +563,15 @@ include "root.php";
 				//get the list of contact directly assigned to the user
 					//get the user_uuid to find the contacts assigned to the user and the groups the user is a member of.
 					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
-						if ($_SESSION['provision']['contact_users']['boolean'] == "true" || $_SESSION['provision']['contact_groups']['boolean'] == "true") {
-							foreach ($device_lines as &$line) {
-								$user_uuid = $this->user_uuid_for_line($line, $domain_uuid);
-								if(!$user_uuid) continue;
+						//get the contacts assigned to the groups and add to the contacts array
+							if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
+								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, true);
+							}
 
-								//get the contacts assigned to the groups and add to the contacts array
-									if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
-										$this->contact_append($contacts, $line, $domain_uuid, $user_uuid, true);
-									}
-
-								//get the contacts assigned to the user and add to the contacts array
-									if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
-										$this->contact_append($contacts, $line, $domain_uuid, $user_uuid, false);
-									}
-								}
-						}
+						//get the contacts assigned to the user and add to the contacts array
+							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
+								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
+							}
 					}
 
 				//get the extensions and add them to the contacts array

@@ -232,6 +232,10 @@
 	echo "	<br />";
 	echo "	</div>\n";
 
+	echo "	<div style='float: right;'>";
+	echo "		<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+	echo "	</div>\n";
+
 	echo "<div style='float: right;'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</div>\n";
