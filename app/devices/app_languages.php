@@ -1822,6 +1822,84 @@ $text['label-speed_dial_blf']['de-at'] = "";
 $text['label-speed_dial_blf']['ar-eg'] = "";
 $text['label-speed_dial_blf']['he'] = "";
 
+$text['label-ent_phone_book']['en-us'] = "Enterprise Phonebook";
+$text['label-ent_phone_book']['es-cl'] = "";
+$text['label-ent_phone_book']['pt-pt'] = "";
+$text['label-ent_phone_book']['fr-fr'] = "";
+$text['label-ent_phone_book']['pt-br'] = "";
+$text['label-ent_phone_book']['pl'] = "";
+$text['label-ent_phone_book']['uk'] = "";
+$text['label-ent_phone_book']['sv-se'] = "";
+$text['label-ent_phone_book']['ro'] = "";
+$text['label-ent_phone_book']['de-at'] = "";
+$text['label-ent_phone_book']['ar-eg'] = "";
+$text['label-ent_phone_book']['he'] = "";
+
+$text['label-missed_calls']['en-us'] = "Missed Calls";
+$text['label-missed_calls']['es-cl'] = "";
+$text['label-missed_calls']['pt-pt'] = "";
+$text['label-missed_calls']['fr-fr'] = "";
+$text['label-missed_calls']['pt-br'] = "";
+$text['label-missed_calls']['pl'] = "";
+$text['label-missed_calls']['uk'] = "";
+$text['label-missed_calls']['sv-se'] = "";
+$text['label-missed_calls']['ro'] = "";
+$text['label-missed_calls']['de-at'] = "";
+$text['label-missed_calls']['ar-eg'] = "";
+$text['label-missed_calls']['he'] = "";
+
+$text['label-received_calls']['en-us'] = "Received Calls";
+$text['label-received_calls']['es-cl'] = "";
+$text['label-received_calls']['pt-pt'] = "";
+$text['label-received_calls']['fr-fr'] = "";
+$text['label-received_calls']['pt-br'] = "";
+$text['label-received_calls']['pl'] = "";
+$text['label-received_calls']['uk'] = "";
+$text['label-received_calls']['sv-se'] = "";
+$text['label-received_calls']['ro'] = "";
+$text['label-received_calls']['de-at'] = "";
+$text['label-received_calls']['ar-eg'] = "";
+$text['label-received_calls']['he'] = "";
+
+$text['label-dialed_calls']['en-us'] = "Dialed Calls";
+$text['label-dialed_calls']['es-cl'] = "";
+$text['label-dialed_calls']['pt-pt'] = "";
+$text['label-dialed_calls']['fr-fr'] = "";
+$text['label-dialed_calls']['pt-br'] = "";
+$text['label-dialed_calls']['pl'] = "";
+$text['label-dialed_calls']['uk'] = "";
+$text['label-dialed_calls']['sv-se'] = "";
+$text['label-dialed_calls']['ro'] = "";
+$text['label-dialed_calls']['de-at'] = "";
+$text['label-dialed_calls']['ar-eg'] = "";
+$text['label-dialed_calls']['he'] = "";
+
+$text['label-enable_account']['en-us'] = "Enable/Disable SIP Account";
+$text['label-enable_account']['es-cl'] = "";
+$text['label-enable_account']['pt-pt'] = "";
+$text['label-enable_account']['fr-fr'] = "";
+$text['label-enable_account']['pt-br'] = "";
+$text['label-enable_account']['pl'] = "";
+$text['label-enable_account']['uk'] = "";
+$text['label-enable_account']['sv-se'] = "";
+$text['label-enable_account']['ro'] = "";
+$text['label-enable_account']['de-at'] = "";
+$text['label-enable_account']['ar-eg'] = "";
+$text['label-enable_account']['he'] = "";
+
+$text['label-provison_now']['en-us'] = "Auto Provison Now";
+$text['label-provison_now']['es-cl'] = "";
+$text['label-provison_now']['pt-pt'] = "";
+$text['label-provison_now']['fr-fr'] = "";
+$text['label-provison_now']['pt-br'] = "";
+$text['label-provison_now']['pl'] = "";
+$text['label-provison_now']['uk'] = "";
+$text['label-provison_now']['sv-se'] = "";
+$text['label-provison_now']['ro'] = "";
+$text['label-provison_now']['de-at'] = "";
+$text['label-provison_now']['ar-eg'] = "";
+$text['label-provison_now']['he'] = "";
+
 //Additional translations
 $text['header-profiles']['en-us'] = "Profiles";
 $text['header-profiles']['es-cl'] = "Perfiles";

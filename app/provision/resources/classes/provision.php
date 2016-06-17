@@ -659,7 +659,12 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
-							$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
+							if(strtolower($device_vendor) == 'escene'){
+								$sql .= "AND (lower(device_key_vendor) = 'escene' or lower(device_key_vendor) = 'escene programmable' or device_key_vendor is null) ";
+							}
+							else {
+								$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
+							}
 							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
