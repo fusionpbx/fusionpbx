@@ -147,7 +147,7 @@ require_once "resources/require.php";
 				unset ($prep_statement);
 			}
 		//get assigned user
-			$user_uuid = check_str($_POST["user_uuid"]);
+			$device_user_uuid = check_str($_POST["device_user_uuid"]);
 		//devices
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
@@ -345,7 +345,7 @@ require_once "resources/require.php";
 			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			$device_label = $row["device_label"];
-			$user_uuid = $row["user_uuid"];
+			$device_user_uuid = $row["device_user_uuid"];
 			$device_username = $row["device_username"];
 			$device_password = $row["device_password"];
 			$device_vendor = $row["device_vendor"];
@@ -1400,11 +1400,11 @@ require_once "resources/require.php";
 		echo "	".$text['label-user']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "			<select name=\"device_user_uuid\" class='formfld' style='width: auto;'>\n";
 		echo "			<option value=\"\"></option>\n";
 		foreach($users as $field) {
-			if ($field['user_uuid'] == $user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
-			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
+			if ($field['device_user_uuid'] == $device_user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "			<option value='".$field['device_user_uuid']."' $selected>".$field['username']."</option>\n";
 		}
 		echo "			</select>";
 		unset($users);
