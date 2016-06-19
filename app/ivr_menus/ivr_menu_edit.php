@@ -306,12 +306,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 		unset ($prep_statement);
-	}else{
-		$ivr_menu_ringback = 'default_ringback';
 	}
 
-//set defaults
+//set the defaults
 	if (strlen($ivr_menu_timeout) == 0) { $ivr_menu_timeout = '3000'; }
+	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
 	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
