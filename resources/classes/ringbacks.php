@@ -70,6 +70,7 @@ if (!class_exists('ringbacks')) {
 				unset($ringback_list);
 			
 			//get the default_ringback label
+				/*
 				$sql = "select * from v_vars where var_name = 'ringback' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -84,6 +85,7 @@ if (!class_exists('ringbacks')) {
 				#}
 				$this->default_ringback_label = $label;
 				unset($results, $default_ringback, $label);
+				*/
 
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
@@ -130,7 +132,7 @@ if (!class_exists('ringbacks')) {
 					$selected_ringback = preg_replace('/\A\${/',"",$selected_ringback);
 					$selected_ringback = preg_replace('/}\z/',"",$selected_ringback);
 					$select .= "	<optgroup label='".$text['label-ringback']."'>";
-					$select .= "		<option value='default_ringback'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringback_label.")</option>\n";
+					//$select .= "		<option value='default_ringback'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringback_label.")</option>\n";
 					foreach($this->ringbacks as $ringback_value => $ringback_name) {
 						$select .= "		<option value='\${".$ringback_value."}'".(($selected_ringback == $ringback_value) ? ' selected="selected"' : '').">".$ringback_name."</option>\n";
 					}
