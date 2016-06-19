@@ -170,6 +170,12 @@
 	$device_profile_uuid = $row['device_profile_uuid'];
 	unset($row);
 
+//get device lines
+	$sql = "SELECT * from v_device_lines ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //get device keys
 	$sql = "SELECT * from v_device_keys ";
 	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
@@ -232,9 +238,9 @@
 	echo "	<br />";
 	echo "	</div>\n";
 
-	echo "	<div style='float: right;'>";
-	echo "		<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-	echo "	</div>\n";
+//	echo "	<div style='float: right;'>";
+//	echo "		<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+//	echo "	</div>\n";
 
 	echo "<div style='float: right;'>\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
