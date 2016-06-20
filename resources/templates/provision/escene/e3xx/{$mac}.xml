@@ -266,10 +266,11 @@
 			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
 			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$row.register_expires}  {/if}
 			{if $line_subscribe_tmp<"120"} {$line_subscribe_tmp="120"} {/if}
+			{if $line_label_{$row.line_number}== ""}{$line_label=$label}{else}{$line_label=$line_label_{$row.line_number}}{/if}
 
 		<sipUser id="{$row.line_number-1}"
 			EnableAccount="{($row.enabled=='true')?'1':'0'}"
-			Describe="MyLabel"
+			Describe="{$line_label}"
 			DomainName="{$row.server_address}"
 			UserName="{$row.display_name}"
 			UserNumber="{$row.user_id}"
