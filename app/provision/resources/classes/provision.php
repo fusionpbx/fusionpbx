@@ -289,10 +289,12 @@ include "root.php";
 				}
 
 			//build the provision array
+				$provision = Array();
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
 					if (strlen($val['text']) > 0) { $value = $val['text']; }
-					$provision[$key] = $value;
+					if (strlen($value) > 0) { $provision[$key] = $value; }
+					unset($value);
 				}
 
 			//check to see if the mac_address exists in devices
