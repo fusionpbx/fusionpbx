@@ -160,16 +160,6 @@ require_once "root.php";
 				// collect misc info
 				$this->_domain_count = count($_SESSION["domains"]);
 
-				// collect db_info
-				global $db_type, $db_path, $db_host, $db_port, $db_name, $db_username, $db_password, $db_create;
-				$this->_db_type = $db_type;
-				$this->_db_path = $db_path;
-				$this->_db_host = $db_host;
-				$this->_db_port = $db_port;
-				$this->_db_name = $db_name;
-				$this->_db_username = $db_username;
-				$this->_db_password = $db_password;
-
 			}elseif(!is_a($detect_switch, 'detect_switch')){
 				throw new Exception('The parameter $detect_switch must be a detect_switch object (or a subclass of)');
 
@@ -208,6 +198,18 @@ require_once "root.php";
 				//collect misc info
 				$this->_domain_count = 1;	//assumed to be one
 			}
+			// collect db_info
+			global $db_type, $db_path, $db_host, $db_port, $db_name, $db_username, $db_password, $db_create, $db_create_username, $db_create_password;
+
+			$this->_db_type = $db_type;
+			$this->_db_path = $db_path;
+			$this->_db_host = $db_host;
+			$this->_db_port = $db_port;
+			$this->_db_name = $db_name;
+			$this->_db_username = $db_username;
+			$this->_db_password = $db_password;
+			$this->_db_create_username = $db_create_username;
+			$this->_db_create_password = $db_create_password;
 		}
 	}
 ?>

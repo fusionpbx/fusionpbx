@@ -28,10 +28,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-datetimepicker.min.css" />
-<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css">
-<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo $_SESSION['domain']['template']['name']; ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>">
+<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/resources/bootstrap/css/bootstrap-colorpicker.min.css" />
+<link rel="stylesheet" type="text/css" href="<!--{project_path}-->/themes/<?php echo $_SESSION['domain']['template']['name']; ?>/css.php<?php echo ($default_login) ? '?login=default' : null; ?>" />
 <?php
 //load custom css
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
@@ -66,9 +66,9 @@
 
 	//display message bar via js
 		function display_message(msg, mood, delay) {
-			var mood = (typeof mood !== 'undefined') ? mood : 'default';
-			var delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
-			if (msg != '') {
+			mood = (typeof mood !== 'undefined') ? mood : 'default';
+			delay = (typeof delay !== 'undefined') ? delay : <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>;
+			if (msg !== '') {
 				var inner_width = $(window).width();
 				// add class by mood
 				$("#message_container").addClass('message_container_mood_'+mood);

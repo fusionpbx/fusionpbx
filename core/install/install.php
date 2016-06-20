@@ -257,85 +257,14 @@
 		include "resources/page_parts/install_config_database.php";
 	}
 	elseif($install_step == 'execute'){
-		echo "<p><b>".$text['header-installing'][$install_language]."</b></p>\n";
-		//$protocol = 'http';
-		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
-		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
-		require_once "core/install/resources/classes/detect_switch.php";
-		$detect_switch = new detect_switch($event_host, $event_port, $event_password);
-		$detect_ok = true;
-		try {
-			$detect_switch->detect();
-		} catch(Exception $e){
-			//echo "<p>Failed to detect configuration detect_switch reported: " . $e->getMessage() . "</p>\n";
-			//$detect_ok = false;
+		echo "<p><b>".$text['header-installing']."</b></p>\n";
+		$protocol = 'http';
+		if($_SERVER['HTTPS']) { $protocol = 'https'; }
+		$parms = Array();
+		foreach($_POST as $key => $value) {
+			$params[] = $key . "=" . urlencode($value);
 		}
-		if($detect_ok){
-			$install_ok = true;
-			echo "<pre style='text-align:left;'>\n";
-			function error_handler($err_severity, $errstr, $errfile, $errline ) {
-				if (0 === error_reporting()) { return false;}
-				switch($err_severity)
-				{
-					case E_ERROR:               throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_PARSE:               throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_CORE_ERROR:          throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_COMPILE_ERROR:       throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_USER_ERROR:          throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_STRICT:              throw new Exception ($errstr . " in $errfile line: $errline");
-					case E_RECOVERABLE_ERROR:   throw new Exception ($errstr . " in $errfile line: $errline");
-					default:                    return false;
-				}
-			}
-			#set_error_handler("error_handler");
-			try {
-				require_once "resources/classes/global_settings.php";
-				$global_settings = new global_settings($detect_switch, $domain_name);
-				if(is_null($global_settings)){ throw new Exception("Error global_settings came back with null"); }
-				require_once "resources/classes/install_fusionpbx.php";
-				$system = new install_fusionpbx($global_settings);
-				$system->admin_username = $admin_username;
-				$system->admin_password = $admin_password;
-				$system->default_country = $install_default_country;
-				$system->install_language = $install_language;
-				$system->template_name = $install_template_name;
-
-				require_once "resources/classes/install_switch.php";
-				$switch = new install_switch($global_settings);
-				//$switch->debug = true;
-				//$system->debug = true;
-				$switch->echo_progress = true;
-				$system->echo_progress = true;
-				$system->install_phase_1();
-				$switch->install_phase_1();
-				$system->install_phase_2();
-				$switch->install_phase_2();
-			} catch(Exception $e){
-				echo "</pre>\n";
-				echo "<p><b>Failed to install</b><br/>" . $e->getMessage() . "</p>\n";
-				try {
-					require_once "resources/classes/install_fusionpbx.php";
-					$system = new install_fusionpbx($global_settings);
-					$system->remove_config();
-				} catch(Exception $e){
-					echo "<p><b>Failed to remove config:</b> " . $e->getMessage() . "</p>\n";
-				}
-				$install_ok = false;
-			}
-			restore_error_handler();
-			if($install_ok){
-				echo "</pre>\n";
-				header("Location: ".PROJECT_PATH."/logout.php");
-				$_SESSION['message'] = 'Install complete';
-			} else {
-				echo "<form method='post' name='frm' action=''>\n";
-				echo "	<div style='text-align:right'>\n";
-				echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
-				echo "    <button type='button' class='btn' onclick=\"location.reload(true);\">".$text['button-execute']."</button>\n";
-				echo "	</div>\n";
-				echo "</form>\n";
-			}
-		}
+		echo "<iframe src='$protocol://$domain_name".PROJECT_PATH."/core/install/install_execute.php?".implode("&",$params)."' style='border:solid 1px #000;width:100%;height:60em'></iframe>";
 	}
 	else {
 		echo "<p>Unkown install_step '$install_step'</p>\n";
