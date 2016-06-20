@@ -405,7 +405,15 @@
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
+									if($_SESSION['theme']['menu_brand_image']['text'] != ''){
+										//custom menu_brand_image
+											$menu_brand_image = $_SESSION['theme']['menu_brand_image']['text'];
+									}else if(isset($_SESSION['theme']['logo']['text'])){
+										//fallback to theme logo
+											$menu_brand_image = $_SESSION['theme']['logo']['text'];
+									}else{
+										$menu_brand_image = PROJECT_PATH."/themes/default/images/logo.png";
+									}
 									echo "<a href='".$menu_brand_link."'>";
 									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
