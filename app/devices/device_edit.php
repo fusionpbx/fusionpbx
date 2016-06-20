@@ -1082,7 +1082,7 @@ require_once "resources/require.php";
 					<option value='19'  <?php if ($match_vendor && $row['device_key_type'] == '19') { echo $selected;$found=true; } ?>><?php echo $text['label-provison_now']     ?></option> <?php /* 19 - Auto Provison Now          */?>
 					<option value='20'  <?php if ($match_vendor && $row['device_key_type'] == '20') { echo $selected;$found=true; } ?>><?php echo $text['label-hot_desking']      ?></option> <?php /* 20 - Hot Desking                */?>
 					<?php /*<option value='18'  <?php if ($match_vendor && $row['device_key_type'] == '18') { echo $selected;$found=true; } ?>><?php echo $text['label-xml browser']   ?></option> */?> <?php /* 18 - XML Browser                */?>
-					<?php echo "</optgroup>"; ?>
+					<?php echo "</optgroup>";
 				}
 				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
 					echo "<optgroup label='Grandstream'>";
