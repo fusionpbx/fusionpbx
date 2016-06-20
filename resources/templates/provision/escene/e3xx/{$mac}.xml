@@ -115,6 +115,7 @@
 			DownloadFirmwar="0"
 			DownloadKernel="0"
 			Downloadconfig="1"
+			Download3CXconfig="0"
 			DownloadExtension="1"
 			DownloadPhonebook="0"
 			DownloadPersonPhonebook="1"
@@ -133,6 +134,9 @@
 			BLFTransferMode - 0: blind transfer; 1: attended transfer
 		-->
 		<call
+			AutoRedial="0"
+			AutoRedial_Interval="10"
+			AutoRedial_Times="10"
 			PrefixPSTNNum=""
 			PrefixVOIPNum=""
 			AutoAnswerNum="**"
@@ -278,6 +282,8 @@
 			PollingRegistrationTime="32"
 			RefreshTime="{$row.register_expires}"
 			Subscribe="{$line_subscribe_tmp}"
+			RPortEnable="1"
+			CallLeaveMessageNum="*97"
 			SecondDomainName=""
 			STUNAddress=""
 			STUNEnableFlag="0"
