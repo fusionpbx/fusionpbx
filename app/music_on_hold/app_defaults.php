@@ -75,7 +75,7 @@
 							$sql .= "music_on_hold_name, ";
 							if (isset($rate)) $sql .= "music_on_hold_rate, ";
 							if (isset($shuffle)) $sql .= "music_on_hold_shuffle, ";
-							if (isset($timer_name)) $sql .= "music_on_hold_timer, ";
+							if (isset($timer_name)) $sql .= "music_on_hold_timer_name, ";
 							if (isset($chime_list)) $sql .= "music_on_hold_chime_list, ";
 							if (isset($chime_freq)) $sql .= "music_on_hold_chime_freq, ";
 							if (isset($chime_max)) $sql .= "music_on_hold_chime_max, ";
@@ -95,7 +95,7 @@
 							//echo $sql."\n";
 							$db->exec(check_sql($sql));
 							unset($sql);
-							
+
 						//unset the attribute variables
 							foreach ($attributes as $value) {
 								unset($$value);
@@ -108,6 +108,6 @@
 			} //if num_rows
 		} //if prep_statement
 
-	} 
+	}
 
 ?>
