@@ -162,7 +162,7 @@
 
 //get device keys
 	$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
-	$sql .= "WHERE user_uuid = '".$_SESSION['user_uuid']."' ";
+	$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
