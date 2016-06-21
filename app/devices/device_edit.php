@@ -1403,8 +1403,8 @@ require_once "resources/require.php";
 		echo "			<select name=\"device_user_uuid\" class='formfld' style='width: auto;'>\n";
 		echo "			<option value=\"\"></option>\n";
 		foreach($users as $field) {
-			if ($field['device_user_uuid'] == $device_user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
-			echo "			<option value='".$field['device_user_uuid']."' $selected>".$field['username']."</option>\n";
+			if ($field['user_uuid'] == $device_user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "			<option value='".$field['user_uuid']."' $selected>".$field['username']."</option>\n";
 		}
 		echo "			</select>";
 		unset($users);
