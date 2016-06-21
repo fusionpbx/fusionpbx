@@ -563,8 +563,7 @@ include "root.php";
 					}
 
 				//get the list of contact directly assigned to the user
-					//get the user_uuid to find the contacts assigned to the user and the groups the user is a member of.
-					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
+					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
 						//get the contacts assigned to the groups and add to the contacts array
 							if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
 								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, true);
