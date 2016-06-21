@@ -648,22 +648,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	echo "<script>\n";
-//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-//hide/convert password fields then submit form
-	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
-	echo "		$('form#frm').submit();\n";
-	echo "	}\n";
-//define lowercase class
-	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
-//show order if array
-	echo "	$('#default_setting_name').keyup(function(){ \n";
-	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
-	echo "	});\n";
+	//capture enter key to submit form
+		echo "	$(window).keypress(function(event){\n";
+		echo "		if (event.which == 13) { submit_form(); }\n";
+		echo "	});\n";
+	//hide/convert password fields then submit form
+		echo "	function submit_form() {\n";
+		echo "		$('input:password').css('visibility','hidden');\n";
+		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		$('form#frm').submit();\n";
+		echo "	}\n";
+	//define lowercase class
+		echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+	//show order if array
+		echo "	$('#default_setting_name').keyup(function(){ \n";
+		echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
+		echo "	});\n";
 	echo "</script>\n";
 
 //include the footer
