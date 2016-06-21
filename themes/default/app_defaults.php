@@ -1379,6 +1379,21 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = "API key that allows access to the available fonts list.";
 		$x++;
+		/* icons */
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'body_icon_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'rgba(255,255,255,0.25)';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the color (and opacity) for the icons in the body.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'body_icon_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'rgba(255,255,255,0.50)';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the hover color (and opacity) for the icons in the body.';
+		$x++;
 
 
 		if(!$set_session_theme) {
@@ -1389,7 +1404,7 @@ if ($domains_processed == 1) {
 				$prep_statement->execute();
 				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset ($prep_statement, $sql);
-		
+
 			//find the missing default settings
 				$i = 0;
 				foreach ($array as $setting) {
@@ -1398,19 +1413,19 @@ if ($domains_processed == 1) {
 					foreach ($default_settings as $row) {
 						if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
 							$found = true;
-							
+
 							//remove items from the array that were found
 								unset($missing[$i]);
 						}
 					}
 					$i++;
 				}
-		
+
 			//get the missing count
 				$i = 0;
 				foreach ($missing as $row) { $i++; }
 				$missing_count = $i;
-		
+
 			//add the missing default settings
 				if (count($missing) > 0) {
 					$sql = "insert into v_default_settings (";
