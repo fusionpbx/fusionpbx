@@ -98,7 +98,7 @@
 						auth = true;
 					--set the accountcode
 						if (accountcode ~= nil) then
-							session:setVariable("accountcode", accountcode);
+							session:setVariable("sip_h_X-accountcode", accountcode);
 						end
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);
