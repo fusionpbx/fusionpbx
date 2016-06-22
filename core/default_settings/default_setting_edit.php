@@ -550,6 +550,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "provision" && $subcategory == "escene_time_zone" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		foreach(escene::time_zones as $time_zone){
+			$selected = ($time_zone[0] == $default_setting_value) ? "selected='selected'" : '';
+			echo "		<option value='" . $time_zone[0] . "' " . $selected . ">".$time_zone[1]."</option>\n";
+		}
+		echo "	</select>\n";
+	}
 	elseif (is_json($default_setting_value)) {
 		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier; white-space: nowrap; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
