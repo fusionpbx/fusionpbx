@@ -123,6 +123,23 @@ class escene {
 		Array(0,  "GMT-12:00 UTC-12"                                          ),
 	);
 
+	const date_formats = Array(
+		Array(0, "DD MM WWW"  ),
+		Array(1, "MM DD WWW"  ),
+		Array(2, "WWW MMM DD" ),
+		Array(3, "DD-MMM-YY"  ),
+		Array(4, "YYYY-MM-DD" ),
+		Array(5, "DD/MM/YYYY" ),
+		Array(6, "MM/DD/YY"   ),
+		Array(7, "DD MMM YYYY"),
+		Array(8, "WWW DD MMM" ),
+	);
+
+	const time_formats = Array(
+		Array(0, "24 Hour"  ),
+		Array(1, "12 Hour"  ),
+	);
+
 	public static function time_zone_name($id){
 		foreach(self::time_zones as &$time_zone){
 			if($time_zone[0] == $id){
@@ -136,6 +153,42 @@ class escene {
 		foreach(self::time_zones as &$time_zone){
 			if($time_zone[1] == $name){
 				return $time_zone[0];
+			}
+		}
+		return $name;
+	}
+
+	public static function date_format_name($id){
+		foreach(self::date_formats as &$date_format){
+			if($date_format[0] == $id){
+				return $date_format[1];
+			}
+		}
+		return $id;
+	}
+
+	public static function date_format_id($name){
+		foreach(self::date_formats as &$date_format){
+			if($date_format[1] == $name){
+				return $date_format[0];
+			}
+		}
+		return $name;
+	}
+
+	public static function time_format_name($id){
+		foreach(self::time_formats as &$time_format){
+			if($time_format[0] == $id){
+				return $time_format[1];
+			}
+		}
+		return $id;
+	}
+
+	public static function time_format_id($name){
+		foreach(self::time_formats as &$time_format){
+			if($time_format[1] == $name){
+				return $time_format[0];
 			}
 		}
 		return $name;

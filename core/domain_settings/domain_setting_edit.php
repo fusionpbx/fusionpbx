@@ -636,9 +636,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	elseif ($category == "provision" && $subcategory == "escene_time_zone" && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		foreach(escene::time_zones as $time_zone){
+		foreach(escene::time_zones as &$time_zone){
 			$selected = ($time_zone[0] == $row['domain_setting_value']) ? "selected='selected'" : '';
 			echo "		<option value='" . $time_zone[0] . "' " . $selected . ">".$time_zone[1]."</option>\n";
+		}
+		echo "	</select>\n";
+	}
+	elseif ($category == "provision" && $subcategory == "escene_time_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		foreach(escene::time_formats as &$time_format){
+			$selected = ($time_format[0] == $row['domain_setting_value']) ? "selected='selected'" : '';
+			echo "		<option value='" . $time_format[0] . "' " . $selected . ">".$time_format[1]."</option>\n";
+		}
+		echo "	</select>\n";
+	}
+	elseif ($category == "provision" && $subcategory == "escene_date_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		foreach(escene::date_formats as &$date_format){
+			$selected = ($date_format[0] == $row['domain_setting_value']) ? "selected='selected'" : '';
+			echo "		<option value='" . $date_format[0] . "' " . $selected . ">".$date_format[1]."</option>\n";
 		}
 		echo "	</select>\n";
 	}

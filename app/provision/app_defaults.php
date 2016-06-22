@@ -262,6 +262,27 @@
 			$array[$x]['default_setting_value'] = '2.us.pool.ntp.org';
 			$array[$x]['default_setting_enabled'] = 'true';
 			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'escene_time_zone';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '12';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'escene_time_format';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '0';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'escene_date_format';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '5';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
 
 		//get an array of the default settings
 			$sql = "select * from v_default_settings ";
