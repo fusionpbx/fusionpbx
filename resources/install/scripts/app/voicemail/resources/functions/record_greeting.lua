@@ -62,7 +62,7 @@
 					else
 						--prepare to record the greeting
 							if (session:ready()) then
-								max_len_seconds = 30;
+								max_len_seconds = 90;
 								silence_seconds = 5;
 								mkdir(voicemail_dir.."/"..voicemail_id);
 								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
