@@ -49,7 +49,7 @@ else {
 
 	//prepare to page the results
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
+		$param = "&id=".$access_control_uuid;
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
