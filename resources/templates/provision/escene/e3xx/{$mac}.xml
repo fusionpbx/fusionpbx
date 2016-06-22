@@ -240,7 +240,8 @@
 			NoSoundEnableFlag="0"
 			ScreenLightEnableFlag="1"
 			BackLightEnableFlag="0"
-			TimeFormat="0"
+			DateFormat="{if $escene_date_format == ""}0{else}{$escene_date_format}{/if}"
+			TimeFormat="{if $escene_time_format == ""}0{else}{$escene_time_format}{/if}"
 			TimeListSeparator="0"
 			TouchScreen="0"
 			CloseLightTime="60"
@@ -251,7 +252,6 @@
 			LockScreenEnable="0"
 			LockScreenMode="0"
 			LockScreenTime="60"
-			DateFormat="4"
 			LockKeys="0"
 			PhoneLockTimeOut="0"
 		/>
