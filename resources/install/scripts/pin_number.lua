@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -83,7 +83,6 @@
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);
 				end);
-				
 			else
 				pin_number_table = explode(",",pin_number);
 				for index,pin_number in pairs(pin_number_table) do
@@ -121,20 +120,20 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-	
+
 		--set defaults
 			if (digit_min_length) then
 				--do nothing
 			else
 				digit_min_length = "2";
 			end
-	
+
 			if (digit_max_length) then
 				--do nothing
 			else
 				digit_max_length = "11";
 			end
-	
+
 		--if the pin number is provided then require it
 			if (pin_number) then
 				check_pin_number();
