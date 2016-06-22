@@ -151,7 +151,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 					$style = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? "font-weight: bold;" : null;
 
 					//playback progress bar
-					echo "<tr id='recording_progress_bar_".$row['voicemail_message_uuid']."' style='display: none;'><td colspan='".((permission_exists('voicemail_message_delete')) ? 7 : 6)."' class='".$row_style[$c]."' style='padding: 0px; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_message_uuid']."'></span></td></tr>\n";
+					echo "<tr id='recording_progress_bar_".$row['voicemail_message_uuid']."' style='display: none;'><td colspan='".((permission_exists('voicemail_message_delete')) ? 7 : 6)."' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0px; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_message_uuid']."'></span></td></tr>\n";
 
 					$tr_link = "href=\"javascript:recording_play('".$row['voicemail_message_uuid']."');\"";
 					echo "<tr ".$tr_link.">\n";
