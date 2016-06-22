@@ -341,17 +341,11 @@ else {
 	echo "</script>\n";
 	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<b>".$text['label-moh']."</b>";
-	echo "			<br /><br />\n";
-	echo "			".$text['desc-moh']."\n";
-	echo "			<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
+	echo "<b>".$text['label-moh']."</b>";
+	echo "<br /><br />\n";
+	echo $text['desc-moh']."\n";
+	echo "<br /><br />\n";
+
 
 //show the upload form
 	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_global_add')) {
@@ -512,9 +506,9 @@ else {
 					}
 				echo "	<tr>\n";
 				echo "		<th class='listhdr'>".(($auto_rate) ? ($moh_rate/1000).' kHz / '.$text['option-default'] : ($moh_rate/1000)." kHz").$icons."</th>\n";
-				echo "		<th class='listhdr' style='width: 70px;'>&nbsp;</th>\n";
-				echo "		<th class='listhdr' style='width: 85px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
-				echo "		<th class='listhdr' style='width: 170px; text-align: right;'>".$text['label-uploaded']."</th>\n";
+				echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
+				echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
+				echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
 				echo "		<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
 				if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_edit')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_edit')) ) {
 					echo 		"<a href='music_on_hold_edit.php?id=".$moh_settings['uuid']."'>".$v_link_label_edit."</a>";
@@ -545,15 +539,15 @@ else {
 								echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='4' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
 								$tr_link = "href=\"javascript:recording_play('".$row_uuid."');\"";
 								echo "<tr ".$tr_link.">\n";
-								echo "	<td class='".$row_style[$c]."'>".$moh_file."</td>\n";
+								echo "	<td class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $moh_file)."</td>\n";
 								echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
 								echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' type='".$moh_file_type."'></audio>";
 								echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 								echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
 								echo "	</td>\n";
-								echo "	<td class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$moh_file_size."</td>\n";
-								echo "	<td class='".$row_style[$c]."' style='text-align: right;'>".$moh_file_date."</td>\n";
-								echo "	<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
+								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$moh_file_size."</td>\n";
+								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$moh_file_date."</td>\n";
+								echo "	<td valign='top' class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
 								echo 		"<a href='?action=download&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
 								if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
 									echo 	"<a href='?action=delete&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";

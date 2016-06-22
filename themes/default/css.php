@@ -738,6 +738,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		echo $body_top_style;
 		?>
 		text-align: left;
+		color: <?php echo ($_SESSION['theme']['body_text_color']['text'] != '') ? $_SESSION['theme']['body_text_color']['text'] : '#5f5f5f'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_text_size']['text'] != '') ? $_SESSION['theme']['body_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['body_text_font']['text'] != '') ? $_SESSION['theme']['body_text_font']['text'] : 'arial'; ?>;
 		}
 
 	/* default body padding */
