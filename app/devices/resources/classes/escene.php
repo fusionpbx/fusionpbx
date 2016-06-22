@@ -140,6 +140,43 @@ class escene {
 		Array(1, "12 Hour"  ),
 	);
 
+	const memory_key_functions = Array(
+		Array(1,  'label-blf'              ),
+		// Array(3,  'label-bla'              ),
+		Array(7,  'label-call_park'        ),
+		Array(4,  'label-dtmf'             ),
+		Array(5,  'label-speed_dial'       ),
+		Array(2,  'label-speed_dial_prefix'),
+		Array(8,  'label-intercom'         ),
+		Array(9,  'label-pickup'           ),
+		Array(6,  'label-paging'           ),
+		Array(11, 'label-broadsoft_group'  ),
+	);
+
+	const program_key_functions = Array(
+		Array(0,  'label-default'         ),  /* 0  - Default                    */
+		Array(1,  'label-redial'          ),  /* 1  - Redial                     */
+		Array(2,  'label-dnd'             ),  /* 2  - DND                        */
+		Array(3,  'label-phone_book'      ),  /* 3  - Contacts                   */
+		Array(4,  'label-ent_phone_book'  ),  /* 4  - Enterprise Phonebook       */
+		Array(5,  'label-ldap'            ),  /* 5  - LDAP                       */
+		Array(6,  'label-directory'       ),  /* 6  - Dir                        */
+		Array(7,  'label-speed_dial'      ),  /* 7  - Speed Dial                 */
+		Array(8,  'label-call_log'        ),  /* 8  - Call List                  */
+		Array(9,  'label-missed_calls'    ),  /* 9  - Missed Calls               */
+		Array(10, 'label-received_calls'  ),  /* 10 - Received Calls             */
+		Array(11, 'label-dialed_calls'    ),  /* 11 - Dialed Calls               */
+		Array(12, 'label-menu'            ),  /* 12 - Menu                       */
+		Array(13, 'label-sms'             ),  /* 13 - SMS                        */
+		Array(14, 'label-new_sms'         ),  /* 14 - New SMS                    */
+		Array(15, 'label-forward'         ),  /* 15 - Call Forward               */
+		Array(16, 'label-status'          ),  /* 16 - View Status                */
+		Array(17, 'label-enable_account'  ),  /* 17 - Enable/Disable SIP Account */
+		Array(19, 'label-provison_now'    ),  /* 19 - Auto Provison Now          */
+		Array(20, 'label-hot_desking'     ),  /* 20 - Hot Desking                */
+		// Array(18, 'label-xml browser'     ),  /* 18 - XML Browser                */
+	);
+
 	public static function time_zone_name($id){
 		foreach(self::time_zones as &$time_zone){
 			if($time_zone[0] == $id){

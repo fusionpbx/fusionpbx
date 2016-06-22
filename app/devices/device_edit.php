@@ -1046,43 +1046,23 @@ require_once "resources/require.php";
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
 				if (strtolower($device_vendor) == "escene" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-					?>
-					<?php echo "<optgroup label='Escene'>"; ?>
-					<?php $match_vendor = (strtolower($device_key_vendor) == "escene"); ?>
-					<option value='1'  <?php if ($match_vendor && $row['device_key_type'] == '1' ) { echo $selected;$found=true; } ?>><?php echo $text['label-blf']               ?></option>
-					<option value='7'  <?php if ($match_vendor && $row['device_key_type'] == '7' ) { echo $selected;$found=true; } ?>><?php echo $text['label-call_park']         ?></option>
-					<option value='4'  <?php if ($match_vendor && $row['device_key_type'] == '4' ) { echo $selected;$found=true; } ?>><?php echo $text['label-dtmf']              ?></option>
-					<option value='5'  <?php if ($match_vendor && $row['device_key_type'] == '5' ) { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial']        ?></option>
-					<option value='2'  <?php if ($match_vendor && $row['device_key_type'] == '2' ) { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial_prefix'] ?></option>
-					<option value='8'  <?php if ($match_vendor && $row['device_key_type'] == '8' ) { echo $selected;$found=true; } ?>><?php echo $text['label-intercom']          ?></option>
-					<option value='9'  <?php if ($match_vendor && $row['device_key_type'] == '9' ) { echo $selected;$found=true; } ?>><?php echo $text['label-pickup']            ?></option>
-					<option value='11' <?php if ($match_vendor && $row['device_key_type'] == '11') { echo $selected;$found=true; } ?>><?php echo $text['label-broadsoft_group']   ?></option>
-					<?php /*BLA type 3 Paging type 6*/ ?>
-					<?php echo "</optgroup>"; ?>
-					<?php echo "<optgroup label='Escene programmable'>"; ?>
-					<?php $match_vendor = (strtolower($device_key_vendor) == "escene programmable"); ?>
-					<option value='0'   <?php if ($match_vendor && $row['device_key_type'] == '0' ) { echo $selected;$found=true; } ?>><?php echo $text['label-default']          ?></option> <?php /* 0  - Default                    */?>
-					<option value='1'   <?php if ($match_vendor && $row['device_key_type'] == '1' ) { echo $selected;$found=true; } ?>><?php echo $text['label-redial']           ?></option> <?php /* 1  - Redial                     */?>
-					<option value='2'   <?php if ($match_vendor && $row['device_key_type'] == '2' ) { echo $selected;$found=true; } ?>><?php echo $text['label-dnd']              ?></option> <?php /* 2  - DND                        */?>
-					<option value='3'   <?php if ($match_vendor && $row['device_key_type'] == '3' ) { echo $selected;$found=true; } ?>><?php echo $text['label-phone_book']       ?></option> <?php /* 3  - Contacts                   */?>
-					<option value='4'   <?php if ($match_vendor && $row['device_key_type'] == '4' ) { echo $selected;$found=true; } ?>><?php echo $text['label-ent_phone_book']   ?></option> <?php /* 4  - Enterprise Phonebook       */?>
-					<option value='5'   <?php if ($match_vendor && $row['device_key_type'] == '5' ) { echo $selected;$found=true; } ?>><?php echo $text['label-ldap']             ?></option> <?php /* 5  - LDAP                       */?>
-					<option value='6'   <?php if ($match_vendor && $row['device_key_type'] == '6' ) { echo $selected;$found=true; } ?>><?php echo $text['label-directory']        ?></option> <?php /* 6  - Dir                        */?>
-					<option value='7'   <?php if ($match_vendor && $row['device_key_type'] == '7' ) { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial']       ?></option> <?php /* 7  - Speed Dial                 */?>
-					<option value='8'   <?php if ($match_vendor && $row['device_key_type'] == '8' ) { echo $selected;$found=true; } ?>><?php echo $text['label-call_log']         ?></option> <?php /* 8  - Call List                  */?>
-					<option value='9'   <?php if ($match_vendor && $row['device_key_type'] == '9' ) { echo $selected;$found=true; } ?>><?php echo $text['label-missed_calls']     ?></option> <?php /* 9  - Missed Calls               */?>
-					<option value='10'  <?php if ($match_vendor && $row['device_key_type'] == '10') { echo $selected;$found=true; } ?>><?php echo $text['label-received_calls']   ?></option> <?php /* 10 - Received Calls             */?>
-					<option value='11'  <?php if ($match_vendor && $row['device_key_type'] == '11') { echo $selected;$found=true; } ?>><?php echo $text['label-dialed_calls']     ?></option> <?php /* 11 - Dialed Calls               */?>
-					<option value='12'  <?php if ($match_vendor && $row['device_key_type'] == '12') { echo $selected;$found=true; } ?>><?php echo $text['label-menu']             ?></option> <?php /* 12 - Menu                       */?>
-					<option value='13'  <?php if ($match_vendor && $row['device_key_type'] == '13') { echo $selected;$found=true; } ?>><?php echo $text['label-sms']              ?></option> <?php /* 13 - SMS                        */?>
-					<option value='14'  <?php if ($match_vendor && $row['device_key_type'] == '14') { echo $selected;$found=true; } ?>><?php echo $text['label-new_sms']          ?></option> <?php /* 14 - New SMS                    */?>
-					<option value='15'  <?php if ($match_vendor && $row['device_key_type'] == '15') { echo $selected;$found=true; } ?>><?php echo $text['label-forward']          ?></option> <?php /* 15 - Call Forward               */?>
-					<option value='16'  <?php if ($match_vendor && $row['device_key_type'] == '16') { echo $selected;$found=true; } ?>><?php echo $text['label-status']           ?></option> <?php /* 16 - View Status                */?>
-					<option value='17'  <?php if ($match_vendor && $row['device_key_type'] == '17') { echo $selected;$found=true; } ?>><?php echo $text['label-enable_account']   ?></option> <?php /* 17 - Enable/Disable SIP Account */?>
-					<option value='19'  <?php if ($match_vendor && $row['device_key_type'] == '19') { echo $selected;$found=true; } ?>><?php echo $text['label-provison_now']     ?></option> <?php /* 19 - Auto Provison Now          */?>
-					<option value='20'  <?php if ($match_vendor && $row['device_key_type'] == '20') { echo $selected;$found=true; } ?>><?php echo $text['label-hot_desking']      ?></option> <?php /* 20 - Hot Desking                */?>
-					<?php /*<option value='18'  <?php if ($match_vendor && $row['device_key_type'] == '18') { echo $selected;$found=true; } ?>><?php echo $text['label-xml browser']   ?></option> */?> <?php /* 18 - XML Browser                */?>
-					<?php echo "</optgroup>";
+					echo "<optgroup label='Escene'>";
+					$match_vendor = (strtolower($device_key_vendor) == "escene");
+					foreach(escene::memory_key_functions as &$key){
+						$match_key = $match_vendor && ($row['device_key_type'] == $key[0]);
+						if(!$found) $found = $match_key;
+						echo "<option value='" . $key[0] . "' " . (($match_key)?$selected:'') . ">" . $text[ $key[1] ] . "</option>\n";
+					}
+					echo "</optgroup>";
+
+					echo "<optgroup label='Escene programmable'>";
+					$match_vendor = (strtolower($device_key_vendor) == "escene programmable");
+					foreach(escene::program_key_functions as &$key){
+						$match_key = $match_vendor && ($row['device_key_type'] == $key[0]);
+						if(!$found) $found = $match_key;
+						echo "<option value='" . $key[0] . "' " . (($match_key)?$selected:'') . ">" . $text[ $key[1] ] . "</option>\n";
+					}
+					echo "</optgroup>";
 				}
 				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
 					echo "<optgroup label='Grandstream'>";
