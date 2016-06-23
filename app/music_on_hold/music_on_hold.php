@@ -59,6 +59,7 @@ else {
 			$moh_name_only = (substr_count($row['music_on_hold_name'], '/') > 0) ? substr($row['music_on_hold_name'], 0, strpos($row['music_on_hold_name'], '/')) : $row['music_on_hold_name'];
 			$moh_domain_uuid = ($row['domain_uuid'] != '') ? $row['domain_uuid'] : '_global_';
 			$moh_rate = $row['music_on_hold_rate'];
+
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['uuid'] = $row['music_on_hold_uuid'];
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['name'] = $row['music_on_hold_name']; //value may include '/[rate]'
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['path'] = '/'.trim(str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']),'/');
