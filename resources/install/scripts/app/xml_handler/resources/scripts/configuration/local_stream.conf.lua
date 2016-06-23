@@ -65,9 +65,9 @@
 	table.insert(xml, [[	</section>]]);
 	table.insert(xml, [[</document>]]);
 	XML_STRING = table.concat(xml, "\n");
---	if (debug["xml_string"]) then
+	if (debug["xml_string"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
---	end
+	end
 
 --close the database connection
 	dbh:release();
