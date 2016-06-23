@@ -56,45 +56,55 @@ else {
 
 if (is_array($_POST) && sizeof($_POST) > 0) {
 	//retrieve posted values
-		$moh_uuid = check_str($_POST['uuid']);
-		$moh_shuffle = check_str($_POST['shuffle']);
-		$moh_channels = check_str($_POST['channels']);
-		$moh_interval = check_str($_POST['interval']);
-		$moh_chime_list = check_str($_POST['chime_list']);
-		$moh_chime_freq = check_str($_POST['chime_freq']);
-		$moh_chime_max = check_str($_POST['chime_max']);
-		$moh_domain_uuid = check_str($_POST['domain_uuid']);
-		$moh_path = check_str($_POST['path']);
+		$moh = $_POST;
 
-	//update the moh record
-		$sql = "update v_music_on_hold set ";
-		if (permission_exists('music_on_hold_domain')) {
-			$sql .= "domain_uuid = ".(($moh_domain_uuid != '') ? "'".$moh_domain_uuid."'" : 'null').", ";
+	//check required fields
+		if (permission_exists('music_on_hold_name') && $moh['name'] == '') { $missing_fields[] = $text['label-name']; }
+		if (permission_exists('music_on_hold_path') && $moh['path'] == '') { $missing_fields[] = $text['label-path']; }
+		if (is_array($missing_fields) && sizeof($missing_fields > 0)) {
+			//set message
+				$_SESSION["message_mood"] = 'negative';
+				$_SESSION["message"] = $text['message-missing_required_fields'].': '.implode(', ', $missing_fields);
 		}
-		if (permission_exists('music_on_hold_path')) {
-			$sql .= "music_on_hold_path = ".(($moh_path != '') ? "'".$moh_path."'" : '$${sounds_dir}/music').", ";
-		}
-		$sql .= "music_on_hold_shuffle = '".$moh_shuffle."', ";
-		$sql .= "music_on_hold_channels = ".$moh_channels.", ";
-		$sql .= "music_on_hold_interval = ".(($moh_interval != '') ? $moh_interval : '20').", ";
-		$sql .= "music_on_hold_timer_name = 'soft', ";
-		$sql .= "music_on_hold_chime_list = '".$moh_chime_list."', ";
-		$sql .= "music_on_hold_chime_freq = ".(($moh_chime_freq != '') ? $moh_chime_freq : 'null').", ";
-		$sql .= "music_on_hold_chime_max = ".(($moh_chime_max != '') ? $moh_chime_max : 'null')." ";
-		$sql .= "where music_on_hold_uuid = '".$moh_uuid."' ";
-		if (!permission_exists('music_on_hold_domain')) {
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-		}
-		//echo $sql."<br>"; exit;
-		$db->exec(check_sql($sql));
-		unset($sql);
+		else {
+			//check strings
+				foreach ($_POST as $field => $value) {
+					$moh[$field] = check_str($value);
+				}
 
-	//set message
-		$_SESSION["message"] = $text['message-update'];
+			//update the moh record
+				$sql = "update v_music_on_hold set ";
+				if (permission_exists('music_on_hold_domain')) {
+					$sql .= "domain_uuid = ".(($moh['domain_uuid'] != '') ? "'".$moh['domain_uuid']."'" : 'null').", ";
+				}
+				if (permission_exists('music_on_hold_name')) {
+					$sql .= "music_on_hold_name = '".$moh['name']."', ";
+				}
+				if (permission_exists('music_on_hold_path')) {
+					$sql .= "music_on_hold_path = ".(($moh['path'] != '') ? "'".$moh['path']."'" : '$${sounds_dir}/music').", ";
+				}
+				$sql .= "music_on_hold_shuffle = '".$moh['shuffle']."', ";
+				$sql .= "music_on_hold_channels = ".$moh['channels'].", ";
+				$sql .= "music_on_hold_interval = ".(($moh['interval'] != '') ? $moh['interval'] : '20').", ";
+				$sql .= "music_on_hold_timer_name = 'soft', ";
+				$sql .= "music_on_hold_chime_list = '".$moh['chime_list']."', ";
+				$sql .= "music_on_hold_chime_freq = ".(($moh['chime_freq'] != '') ? $moh['chime_freq'] : 'null').", ";
+				$sql .= "music_on_hold_chime_max = ".(($moh['chime_max'] != '') ? $moh['chime_max'] : 'null')." ";
+				$sql .= "where music_on_hold_uuid = '".$moh['uuid']."' ";
+				if (!permission_exists('music_on_hold_domain')) {
+					$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				}
+				//echo $sql."<br>"; exit;
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-	//redirect
-		header("Location: music_on_hold.php");
-		exit;
+			//set message
+				$_SESSION["message"] = $text['message-update'];
+
+			//redirect
+				header("Location: music_on_hold.php");
+				exit;
+		}
 }
 
 //show the header
@@ -145,6 +155,17 @@ if (is_array($_POST) && sizeof($_POST) > 0) {
 	echo "<br /><br />\n\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+	if (permission_exists('music_on_hold_name')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' width='30%'>\n";
+		echo "	".$text['label-name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' width='70%'>\n";
+		echo "	<input class='formfld' type='text' name='name' value='".$moh['name']."'>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' width='30%'>\n";
@@ -317,7 +338,7 @@ if (is_array($_POST) && sizeof($_POST) > 0) {
 
 	if (permission_exists('music_on_hold_path')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' width='30%'>\n";
+		echo "<td class='vncellreq' width='30%'>\n";
 		echo "	".$text['label-path']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' width='70%'>\n";
