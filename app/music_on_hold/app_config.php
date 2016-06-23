@@ -51,6 +51,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;

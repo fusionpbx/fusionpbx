@@ -101,6 +101,17 @@ $text['message-nofiles']['uk'] = "Файлів не знайдено";
 $text['message-nofiles']['de-at'] = "Es wurden keine Dateien gefunden.";
 $text['message-nofiles']['he'] = "לא נמצאו קבצים";
 
+$text['message-missing_required_fields']['en-us'] = "Missing Required Fields";
+$text['message-missing_required_fields']['es-cl'] = "Missing Campos requeridos";
+$text['message-missing_required_fields']['pt-pt'] = "Faltando Campos obrigatórios";
+$text['message-missing_required_fields']['fr-fr'] = "Manquant Champs obligatoires";
+$text['message-missing_required_fields']['pt-br'] = "Faltando Campos obrigatórios";
+$text['message-missing_required_fields']['pl'] = "Brakujące pola wymagane";
+$text['message-missing_required_fields']['sv-se'] = "Saknas Obligatoriska fält";
+$text['message-missing_required_fields']['uk'] = "Відсутні поля обов'язкові для заповнення";
+$text['message-missing_required_fields']['de-at'] = "Fehlende Pflichtangaben ";
+$text['message-missing_required_fields']['he'] = "חסרים שדות חובה";
+
 $text['message-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['message-event-socket']['es-cl'] = "Conexión a socket fallida.";
 $text['message-event-socket']['pt-pt'] = "A Conexão ao Event Socket falhou.";
