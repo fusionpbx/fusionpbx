@@ -31,7 +31,7 @@
 		table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
 		table.insert(xml, [[			<param name="channels" value="1"/>]]);
 		table.insert(xml, [[			<param name="interval" value="20"/>]]);
-		table.insert(xml, [[			<param name="timer-name" value="]]..row.music_on_hold_timer..[["/>]]);
+		table.insert(xml, [[			<param name="timer-name" value="]]..row.music_on_hold_timer_name..[["/>]]);
 		if (row.music_on_hold_chime_list ~= nil) then
 			table.insert(xml, [[			<param name="chime-list" value="]]..row.music_on_hold_chime_list..[["/>]]);
 		end
