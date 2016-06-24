@@ -108,17 +108,35 @@ include "root.php";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					//set the variables
-						$moh_name = $row['music_on_hold_name'];
-						$moh_rate = $row['music_on_hold_rate'];
 
-					//set the value
-						$moh_value = "local_stream://".$moh_name;
-						if($moh_name == 'default') {
-							$moh_name = $text['option-default'];
-						}
-						$array[$moh_value] = str_replace('_', ' ', $moh_name);
+			//build the names array without the rates
+				$names = array();
+				foreach($result as $row) {
+					//convert the strings into arrays
+					$name_array = explode("/", $row['music_on_hold_name']);
+
+					//name with the domain
+					if (count($name_array) == "3") {
+						$stream_name = $name_array[0].'/'.$name_array[1];
+					}
+					//name without the domain
+					if (count($name_array) == "2") {
+						$stream_name = $name_array[0];
+					}
+
+					//prevent duplicate names in the array
+					if (!in_array($stream_name, $names)) {
+						$names[] = $stream_name;
+					}
+				}
+
+			//add the value and name to the array before it is returned
+				foreach($names as $name) {
+					$value = "local_stream://".$name;
+					if($stream == 'default') {
+						$name = $text['option-default'];
+					}
+					$array[$value] = str_replace('_', ' ', $name);
 				}
 
 			//return the array
