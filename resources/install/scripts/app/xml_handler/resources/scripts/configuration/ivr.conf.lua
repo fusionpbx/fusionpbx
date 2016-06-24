@@ -82,7 +82,7 @@
 			ivr_menu_greet_short_is_base64 = false;
 			ivr_menu_invalid_sound_is_base64 = false;
 			ivr_menu_exit_sound_is_base64 = false;
-			if (storage_type == "base64") then
+			if (settings.recordings.storage_type == "base64") then
 				--greet long
 					if (string.len(ivr_menu_greet_long) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
@@ -179,7 +179,7 @@
 							end);
 						end
 					end
-			elseif (storage_type == "http_cache") then
+			elseif (settings.recordings.storage_type == "http_cache") then
 				--add the path to file name
 				ivr_menu_greet_long = storage_path.."/"..ivr_menu_greet_long;
 				ivr_menu_greet_short = storage_path.."/"..ivr_menu_greet_short;
