@@ -25,6 +25,10 @@
 
 --define a function to record the greeting
 	function record_greeting(greeting_id)
+		local db = dbh or Database.new('system')
+		local settings = Settings.new(db, domain_name, domain_uuid)
+
+		local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric');
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
@@ -62,7 +66,6 @@
 					else
 						--prepare to record the greeting
 							if (session:ready()) then
-								max_len_seconds = 90;
 								silence_seconds = 5;
 								mkdir(voicemail_dir.."/"..voicemail_id);
 								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
