@@ -245,6 +245,30 @@ if (!class_exists('scripts')) {
 					$tmp .= "	xml_handler = {}\n";
 					$tmp .= "	xml_handler.fs_path = false;\n";
 					$tmp .= "\n";
+					$tmp .= "--set settings\n";
+					$tmp .= "	settings = {}\n";
+					$tmp .= "	settings.recordings = {}\n";
+					$tmp .= "	settings.voicemail = {}\n";
+					$tmp .= "	settings.fax = {}\n";
+					if (isset($_SESSION['recordings']['storage_type']['text'])) {
+						$tmp .= "	settings.recordings.storage_type = \"".$_SESSION['recordings']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.recordings.storage_type = \"\";\n";
+					}
+					if (isset($_SESSION['voicemail']['storage_type']['text'])) {
+						$tmp .= "	settings.voicemail.storage_type = \"".$_SESSION['voicemail']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.voicemail.storage_type = \"\";\n";
+					}
+					if (isset($_SESSION['fax']['storage_type']['text'])) {
+						$tmp .= "	settings.fax.storage_type = \"".$_SESSION['fax']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.fax.storage_type = \"\";\n";
+					}
+					$tmp .= "\n";	
 					$tmp .= "--set the debug options\n";
 					$tmp .= "	debug.params = false;\n";
 					$tmp .= "	debug.sql = false;\n";
