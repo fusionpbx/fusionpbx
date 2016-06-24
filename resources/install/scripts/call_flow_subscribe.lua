@@ -29,9 +29,9 @@ where t2.domain_name = '%s' and t1.call_flow_feature_code = '%s'
 local function find_call_flow(user)
 	local ext, domain_name = split_first(user, '@', true)
 	if not domain_name then return end
-	local sql = string.format(find_call_flow_sql, domain_name, ext)
 	local dbh = Database.new('system')
 	if not dbh then return end
+	local sql = string.format(find_call_flow_sql, dbh:escape(domain_name), dbh:escape(ext))
 	local row = dbh:first_row(sql)
 	dbh:release()
 	if not row then return end
