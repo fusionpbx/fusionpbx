@@ -230,7 +230,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan->dialplan_uuid = $dialplan_uuid;
 					$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
 					$dialplan->dialplan_detail_type = 'destination_number';
-					$dialplan->dialplan_detail_data = '^'.str_replace('*', '\*', $call_flow_feature_code).'$';
+					$dialplan->dialplan_detail_data = '^'.str_replace('+', '\+', str_replace('*', '\*', $call_flow_feature_code)).'$';
 					$dialplan->dialplan_detail_break = 'on-true';
 					//$dialplan->dialplan_detail_inline = '';
 					$dialplan->dialplan_detail_group = '1';
@@ -287,7 +287,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan->dialplan_uuid = $dialplan_uuid;
 					$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
 					$dialplan->dialplan_detail_type = 'destination_number';
-					$dialplan->dialplan_detail_data = '^'.str_replace('*', '\*', $call_flow_extension).'$';
+					$dialplan->dialplan_detail_data = '^'.str_replace('+', '\+', str_replace('*', '\*', $call_flow_extension)).'$';
 					//$dialplan->dialplan_detail_break = '';
 					//$dialplan->dialplan_detail_inline = '';
 					$dialplan->dialplan_detail_group = '2';
