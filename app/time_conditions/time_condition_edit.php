@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -562,7 +562,7 @@ require_once "resources/header.php";
 		condition_id = Math.floor((Math.random() * 1000) + 1);
 		html = "<table cellpadding='0' cellspacing='0' border='0' style='margin-top: 3px;' width='100%'>";
 		html += "	<tr>";
-		html += "		<td style='vertical-align: middle; min-width: 390px;' width='100%'>";
+		html += "		<td style='vertical-align: middle; min-width: 390px;' width='100%' nowrap='nowrap'>";
 		html += "			<select class='formfld' style='width: 120px;' name='variable[" + type + "][" + group_id + "][" + condition_id + "]' id='variable_" + group_id + "_" + condition_id + "' onchange=\"load_value_fields(" + group_id + ", " + condition_id + ", this.options[this.selectedIndex].value);\">";
 		html += "				<option value=''></option>";
 		<?php
