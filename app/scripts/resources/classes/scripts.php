@@ -207,6 +207,11 @@ if (!class_exists('scripts')) {
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= "\n";
 
+					$tmp = "\n";
+					$tmp .= "--store settings in memcache\n";
+					$tmp .= $this->correct_path("	settings_in_cache = false;\n");
+					$tmp .= "\n";
+
 					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
 						$tmp .= "--database information\n";
 						$tmp .= "	database = {}\n";

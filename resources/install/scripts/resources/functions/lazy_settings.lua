@@ -55,6 +55,7 @@ function Settings.new(db, domain_name, domain_uuid)
   self._db          = db
   self._domain_name = domain_name
   self._domain_uuid = domain_uuid
+  self._use_cache   = not not settings_in_cache
 
   return self
 end
@@ -74,16 +75,18 @@ function Settings:get(category, subcategory, name)
   if v == NONE then return nil end
   if v ~= nil then return v end
 
-  local key = self:_cache_key(category, subcategory, name)
+  if self._use_cache then
+    local key = self:_cache_key(category, subcategory, name)
 
-  v = cache.get(key)
-  if v then
-    if v ~= NONE and name == 'array' then
-      v = split(v, '/+/', true)
+    v = cache.get(key)
+    if v then
+      if v ~= NONE and name == 'array' then
+        v = split(v, '/+/', true)
+      end
+      self:set(category, subcategory, name, v)
+      if v == NONE then return nil end
+      return v
     end
-    self:set(category, subcategory, name, v)
-    if v == NONE then return nil end
-    return v
   end
 
   return self:_load(category, subcategory, name)
@@ -97,6 +100,7 @@ function Settings:_load(category, subcategory, name)
   end
 
   local found = false
+
   --get the domain settings
   if domain_uuid then
     local sql = "SELECT domain_setting_uuid,domain_setting_category,domain_setting_subcategory,domain_setting_name,domain_setting_value "
@@ -120,6 +124,7 @@ function Settings:_load(category, subcategory, name)
     end)
   end
 
+  --get default settings
   if not found then
     local sql = "SELECT default_setting_uuid,default_setting_category,default_setting_subcategory,default_setting_name,default_setting_value "
     sql = sql .. "FROM v_default_settings ";
@@ -141,6 +146,11 @@ function Settings:_load(category, subcategory, name)
     end)
   end
 
+  if type(self._db) == 'string' then
+    db:release()
+  end
+
+  --set empty value for unknown setting
   if not found then
     self:set(category, subcategory, name, NONE)
   end
@@ -148,7 +158,8 @@ function Settings:_load(category, subcategory, name)
   local a = self._array
   local v = a[category] and a[category][subcategory] and a[category][subcategory][name]
 
-  if cache.support() then
+  --store settings in cache
+  if self._use_cache and cache.support() then
     local key = self:_cache_key(category, subcategory, name)
     local value = v
     if v ~= NONE and name == 'array' then
@@ -156,10 +167,6 @@ function Settings:_load(category, subcategory, name)
     end
     local exp = expire and expire["settings"] or 3600
     cache.set(key, value, exp)
-  end
-
-  if type(self._db) == 'string' then
-    db:release()
   end
 
   if v == NONE then return nil end

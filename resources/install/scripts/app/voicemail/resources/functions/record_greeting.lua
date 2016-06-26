@@ -32,7 +32,7 @@
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
-		local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric');
+		local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
