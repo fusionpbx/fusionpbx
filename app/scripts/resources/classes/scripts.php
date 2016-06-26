@@ -209,7 +209,7 @@ if (!class_exists('scripts')) {
 
 					$tmp = "\n";
 					$tmp .= "--store settings in memcache\n";
-					$tmp .= $this->correct_path("	settings_in_cache = false;\n");
+					$tmp .= "	settings_in_cache = false;\n";
 					$tmp .= "\n";
 
 					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
