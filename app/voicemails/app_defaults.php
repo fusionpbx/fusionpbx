@@ -59,37 +59,74 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_subcategory'] = 'message_max_length';
 		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '300';
-		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail (in seconds).';
 		$x++;
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'greeting_max_length';
 		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '90';
-		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail greeting (in seconds).';
 
-	//iterate and add each, if necessary
-		foreach ($array as $index => $default_settings) {
-			//add the default setting
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
-			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-			$sql .= "and default_setting_name = '".$default_settings['default_setting_name']."' ";
+	//get an array of the default settings
+		if (!is_array($default_settings)) {
+			$sql = "select * from v_default_settings ";
 			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$orm = new orm;
-					$orm->name('default_settings');
-					$orm->save($array[$index]);
-					$message = $orm->message;
-					//print_r($message);
+			$prep_statement->execute();
+			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			unset ($prep_statement, $sql);
+		}
+
+	//find the missing default settings
+		$x = 0;
+		foreach ($array as $setting) {
+			$found = false;
+			$missing[$x] = $setting;
+			foreach ($default_settings as $row) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
+					$found = true;
+					//remove items from the array that were found
+					unset($missing[$x]);
 				}
-				unset($row);
 			}
+			$x++;
+		}
+
+	//get the missing count
+		$i = 0;
+		foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
+	//add the missing default settings
+		if (count($missing) > 0) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".check_str($row['default_setting_category'])."', ";
+				$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+				$sql .= "'".check_str($row['default_setting_name'])."', ";
+				$sql .= "'".check_str($row['default_setting_value'])."', ";
+				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+				$sql .= "'".check_str($row['default_setting_description'])."' ";
+				$sql .= ")";
+				if ($missing_count != $i) {
+					$sql .= ",\n";
+				}
+				$i++;
+			}
+			$db->exec(check_sql($sql));
+			unset($missing);
 		}
 
 	//add that the directory structure for voicemail each domain and voicemail id is
