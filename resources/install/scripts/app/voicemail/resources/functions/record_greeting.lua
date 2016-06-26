@@ -23,6 +23,10 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--load libraries
+	local Database = require "resources.functions.database"
+	local Settings = require "resources.functions.lazy_settings"
+
 --define a function to record the greeting
 	function record_greeting(greeting_id)
 		local db = dbh or Database.new('system')
