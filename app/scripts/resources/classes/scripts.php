@@ -207,7 +207,6 @@ if (!class_exists('scripts')) {
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= "\n";
 
-					$tmp = "\n";
 					$tmp .= "--store settings in memcache\n";
 					$tmp .= "	settings_in_cache = false;\n";
 					$tmp .= "\n";
