@@ -32,7 +32,7 @@
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
-		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric');
+		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
