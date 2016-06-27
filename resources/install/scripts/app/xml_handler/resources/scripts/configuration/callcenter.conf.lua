@@ -46,13 +46,8 @@
 			assert(dbh:connected());
 
 		--get the variables
-			dsn = trim(api:execute("global_getvar", "dsn")) or '';
-			dsn_callcenter = trim(api:execute("global_getvar", "dsn_callcenter")) or '';
-
-			if dsn:find("INVALID COMMAND", nil, true) then
-				freeswitch.consoleLog('err', '[xml_handler] Can not correctly load mod_callcenter becase mod_commands not loaded\n')
-				dsn, dsn_callcenter = '', ''
-			end
+			dsn = freeswitch.getGlobalVariable("dsn") or ''
+			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
 
 		--start the xml array
 			local xml = {}
