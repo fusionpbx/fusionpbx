@@ -543,7 +543,7 @@ else {
 					if (isset($moh_settings['path'])) {
 						$moh_path = $moh_settings['path'];
 						if (file_exists($moh_path)) {
-							$moh_files = array_merge(glob($moh_path.'/*.wav'), glob($moh_path.'/*.mp3'), glob($moh_path.'/*.ogg'));
+							$moh_files = array_merge(glob(path_join($moh_path, '*.wav')), glob(path_join($moh_path, '*.mp3')), glob(path_join($moh_path, '*.ogg')));
 							foreach ($moh_files as $moh_file_path) {
 								$moh_file = strtolower(pathinfo($moh_file_path, PATHINFO_BASENAME));
 								$moh_file_size = byte_convert(filesize($moh_file_path));
