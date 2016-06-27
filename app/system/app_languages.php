@@ -108,7 +108,7 @@ $text['label-path']['pt-br'] = "Caminho do projeto";
 $text['label-path']['pl'] = "Ścieżka projektu";
 $text['label-path']['sv-se'] = "projekt Path";
 $text['label-path']['uk'] = "шлях проекту";
-$text['label-path']['de-at'] = "шлях проекту";
+$text['label-path']['de-at'] = "Projektpfad";
 
 $text['label-git_info']['en-us'] = "Git Information";
 $text['label-git_info']['es-cl'] = "Información Git";
