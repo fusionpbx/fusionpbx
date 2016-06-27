@@ -62,7 +62,7 @@ else {
 
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['uuid'] = $row['music_on_hold_uuid'];
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['name'] = $row['music_on_hold_name']; //value may include '/[rate]'
-			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['path'] = '/'.trim(str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']),'/');
+			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['path'] = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['shuffle'] = $row['music_on_hold_shuffle'];
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['channels'] = $row['music_on_hold_channels'];
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['interval'] = $row['music_on_hold_interval'];
@@ -71,7 +71,7 @@ else {
 			$mohs[$moh_domain_uuid][$moh_name_only][$moh_rate]['chime_max'] = $row['music_on_hold_chime_max'];
 
 			$moh_names[(($moh_domain_uuid == '_global_') ? 'global' : 'local')][] = $moh_name_only;
-			$moh_paths[$row['music_on_hold_uuid']] = '/'.trim(str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']),'/');
+			$moh_paths[$row['music_on_hold_uuid']] = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
 			$moh_domains[$row['music_on_hold_uuid']][] = $row['domain_uuid'];
 		}
 	}
@@ -87,10 +87,11 @@ else {
 	if ($_GET['action'] == "download") {
 		$moh_uuid = $_GET['id'];
 		$moh_file = base64_decode($_GET['file']);
+		$moh_full_path = path_join($moh_paths[$moh_uuid], $moh_file);
 
 		session_cache_limiter('public');
-		if (file_exists($moh_paths[$moh_uuid].'/'.$moh_file)) {
-			$fd = fopen($moh_paths[$moh_uuid].'/'.$moh_file, "rb");
+		if (file_exists($moh_full_path)) {
+			$fd = fopen($moh_full_path, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
@@ -108,7 +109,7 @@ else {
 			header('Content-Disposition: attachment; filename="'.$moh_file.'"');
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-			header("Content-Length: ".filesize($moh_paths[$moh_uuid].'/'.$moh_file));
+			header("Content-Length: ".filesize($moh_full_path));
 			fpassthru($fd);
 		}
 		exit;
@@ -157,7 +158,10 @@ else {
 						$moh_rate_auto = false;
 					}
 				//define default path
-					$moh_path = $_SESSION['switch']['sounds']['dir'].'/music/'.(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']).'/'.$moh_name_only.'/'.$moh_rate;
+					$moh_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
+						(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']),
+						$moh_name_only, $moh_rate
+					);
 					$moh_path_found = false;
 				//begin query
 					$music_on_hold_uuid = uuid();
@@ -178,11 +182,16 @@ else {
 					$sql .= ") values ";
 				//new name
 					if ($moh_new_name) {
+						$music_on_hold_name = $moh_name_only;
+						if (!$moh_rate_auto) {
+							$music_on_hold_name = path_join($music_on_hold_name, $moh_rate);
+						}
+						$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path);
 						$sql .= "( ";
 						$sql .= "'".$music_on_hold_uuid."',";
 						$sql .= (($moh_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
-						$sql .= "'".check_str($moh_name_only.((!$moh_rate_auto) ? '/'.$moh_rate : null))."', ";
-						$sql .= "'".check_str(str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path))."', ";
+						$sql .= "'".check_str($music_on_hold_name)."', ";
+						$sql .= "'".check_str($music_on_hold_path)."', ";
 						$sql .= "'".check_str($moh_rate)."', ";
 						$sql .= "'false', ";
 						$sql .= "1, ";
@@ -192,6 +201,7 @@ else {
 						$sql .= "null, ";
 						$sql .= "null ";
 						$sql .= ") ";
+						unset($music_on_hold_name, $music_on_hold_path);
 					}
 				//existing name
 					else {
@@ -199,18 +209,24 @@ else {
 							$moh_settings = $mohs[(($moh_scope == 'global') ? '_global_' : $domain_uuid)][$moh_name_only][$moh_rate];
 							if (
 								($moh_rate_auto && $moh_name_only == $moh_settings['name']) ||
-								(!$moh_rate_auto && $moh_name_only.'/'.$moh_rate == $moh_settings['name'])
+								(!$moh_rate_auto && path_join($moh_name_only, $moh_rate) == $moh_settings['name'])
 								) {
 								$moh_path = $moh_settings['path'];
 								$moh_path_found = true;
 							}
 						//not found, finish query
 							else {
+								$music_on_hold_name = $moh_name_only;
+								if (!$moh_rate_auto) {
+									$music_on_hold_name = path_join($music_on_hold_name, $moh_rate);
+								}
+								$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path);
+
 								$sql .= "( ";
 								$sql .= "'".$music_on_hold_uuid."',";
 								$sql .= (($moh_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
-								$sql .= "'".check_str($moh_name_only.((!$moh_rate_auto) ? '/'.$moh_rate : null))."', ";
-								$sql .= "'".check_str(str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path))."', ";
+								$sql .= "'".check_str($music_on_hold_name)."', ";
+								$sql .= "'".check_str($music_on_hold_path)."', ";
 								$sql .= "'".check_str($moh_rate)."', ";
 								$sql .= "'false', ";
 								$sql .= "1, ";
@@ -220,6 +236,7 @@ else {
 								$sql .= "null, ";
 								$sql .= "null ";
 								$sql .= ") ";
+								unset($music_on_hold_name, $music_on_hold_path);
 							}
 					}
 				//execute query
@@ -232,7 +249,7 @@ else {
 						mkdir($moh_path, 02770, true);
 					}
 					if (is_dir($moh_path)) {
-						if (copy($moh_file_name_temp, $moh_path.'/'.$moh_file_name)) {
+						if (copy($moh_file_name_temp, path_join($moh_path, $moh_file_name))) {
 							@unlink($moh_file_name_temp);
 						}
 					}
@@ -255,24 +272,25 @@ else {
 				($moh_domains[$moh_uuid] == '' && permission_exists('music_on_hold_global_delete')) ||
 				($moh_domains[$moh_uuid] != '' && permission_exists('music_on_hold_delete'))
 				) {
+					$moh_path = $moh_paths[$moh_uuid];
 				//remove specified file
 					if ($moh_file != '') {
-						@unlink($moh_paths[$moh_uuid].'/'.$moh_file);
+						@unlink(path_join($moh_path, $moh_file));
 					}
 				//remove all audio files
 					else {
-						array_map('unlink', glob($moh_paths[$moh_uuid].'/*.wav'));
-						array_map('unlink', glob($moh_paths[$moh_uuid].'/*.mp3'));
-						array_map('unlink', glob($moh_paths[$moh_uuid].'/*.ogg'));
+						array_map('unlink', glob(path_join($moh_path, '*.wav')));
+						array_map('unlink', glob(path_join($moh_path, '*.mp3')));
+						array_map('unlink', glob(path_join($moh_path, '*.ogg')));
 					}
 				//remove record and folder(s), if empty
 					$file_count = 0;
-					$file_count += ($files = glob($moh_paths[$moh_uuid].'/*.wav')) ? count($files) : 0;
-					$file_count += ($files = glob($moh_paths[$moh_uuid].'/*.mp3')) ? count($files) : 0;
-					$file_count += ($files = glob($moh_paths[$moh_uuid].'/*.ogg')) ? count($files) : 0;
+					$file_count += ($files = glob(path_join($moh_path, '*.wav'))) ? count($files) : 0;
+					$file_count += ($files = glob(path_join($moh_path, '*.mp3'))) ? count($files) : 0;
+					$file_count += ($files = glob(path_join($moh_path, '*.ogg'))) ? count($files) : 0;
 					if ($file_count == 0) {
 						//remove rate folder
-							rmdir($moh_paths[$moh_uuid]);
+							rmdir($moh_path);
 						//remove record
 							$sql = "delete from v_music_on_hold ";
 							$sql .= "where music_on_hold_uuid = '".$moh_uuid."' ";
@@ -284,8 +302,8 @@ else {
 							$prep_statement->execute();
 							unset($sql);
 						//remove parent folder, if empty
-							$parent_path = dirname($moh_paths[$moh_uuid]);
-							$parent_path_files = glob($parent_path.'/*');
+							$parent_path = dirname($moh_path);
+							$parent_path_files = glob(path_join($parent_path, '*'));
 							if (sizeof($parent_files) === 0) { rmdir($parent_path); }
 					}
 				//set message
