@@ -41,7 +41,7 @@
 		end
 
 		--set the default timer name to soft
-		if (row.music_on_hold_timer_name == nil) then
+		if (row.music_on_hold_timer_name == nil or row.music_on_hold_timer_name == '') then
 			timer_name = "soft";
 		else
 			timer_name = row.music_on_hold_timer_name;
