@@ -12,14 +12,3 @@ class aastra {
 		Array('xfer',      'label-xfer'       ),
 	);
 };
-
-
-// $a = new aastra;
-// if (defined(get_class($a).'::program_key_functions'))
-// 	print_r($a::program_key_functions);
-// 
-// if (defined(get_class($a).'::memory_key_functions'))
-// 	print_r($a::memory_key_functions);
-
-
-
