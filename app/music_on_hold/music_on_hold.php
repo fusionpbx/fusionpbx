@@ -666,6 +666,14 @@
 				echo "&nbsp;&nbsp;- ".$text['label-global']."\n";
 			}
 
+			$moh_scope = $row['domain_uuid'];
+			if (!$moh_scope) $moh_scope = '_global_';
+			$tmp = explode('/', $row['music_on_hold_name']);
+			$moh_name_only = $tmp[0];
+			$moh_rate = $row['music_on_hold_rate'];
+
+			$moh_settings = $mohs[$moh_scope][$moh_name_only][$moh_rate]; 
+
 			//start the table
 				echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px;'>\n";
 			//determine if rate was set to auto or not
