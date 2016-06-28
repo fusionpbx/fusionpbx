@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
+if (permission_exists("device_key_add") || permission_exists("device_key_edit") || if_group("superadmin")) {
 	//access granted
 }
 else {
@@ -51,13 +51,13 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
+
 		//prepare the command
 			if ($cmd == "unregister") {
 				$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
 			}
 			else {
 				$command = "lua app.lua event_notify ".$profile." ".$cmd." ".$user." ".$vendor;
-
 				//if ($cmd == "check_sync") {
 				//	$command = "sofia profile ".$profile." check_sync ".$user;
 				//}
@@ -65,8 +65,10 @@ else {
 		//send the command
 			$response = event_socket_request($fp, "api ".$command);
 			$response = event_socket_request($fp, "api log notice ".$command);
+
 		//show the response
 			$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
+
 		//close the connection
 			fclose($fp);
 	}
@@ -77,7 +79,15 @@ else {
 		echo $response;
 	}
 	else {
-		header("Location: status_registrations.php?profile=".$profile."&show=".$show);
+		//send the message
+			$_SESSION["message_delay"] = 3500;
+			$_SESSION["message_mood"] = 'positive';
+			$_SESSION["message"] = $text['button-applied'];
+
+		//send the redirect
+			if (isset($_SERVER['HTTP_REFERER'])) {
+				header("Location: ".$_SERVER['HTTP_REFERER']);
+			}
 	}
 
 ?>

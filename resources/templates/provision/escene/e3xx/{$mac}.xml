@@ -115,6 +115,7 @@
 			DownloadFirmwar="0"
 			DownloadKernel="0"
 			Downloadconfig="1"
+			Download3CXconfig="0"
 			DownloadExtension="1"
 			DownloadPhonebook="0"
 			DownloadPersonPhonebook="1"
@@ -129,7 +130,13 @@
 		/>
 	</Privisions>
 	<calls>
+		<!-- BLFTransferEnable - during call you can just press BLF key to do transfer
+			BLFTransferMode - 0: blind transfer; 1: attended transfer
+		-->
 		<call
+			AutoRedial="0"
+			AutoRedial_Interval="10"
+			AutoRedial_Times="10"
 			PrefixPSTNNum=""
 			PrefixVOIPNum=""
 			AutoAnswerNum="**"
@@ -184,7 +191,7 @@
 			SNTPAddressBackup="{$ntp_server_secondary}"
 			DaylightSaveingFlag="0"
 			SNTPEnableFlag="0"
-			TimeZoneType="15"
+			TimeZoneType="{if $escene_time_zone == ""}12{else}{$escene_time_zone}{/if}"
 			DaySet="24"
 			HourSet="0"
 			MinuteSet="0"
@@ -233,7 +240,8 @@
 			NoSoundEnableFlag="0"
 			ScreenLightEnableFlag="1"
 			BackLightEnableFlag="0"
-			TimeFormat="0"
+			DateFormat="{if $escene_date_format == ""}0{else}{$escene_date_format}{/if}"
+			TimeFormat="{if $escene_time_format == ""}0{else}{$escene_time_format}{/if}"
 			TimeListSeparator="0"
 			TouchScreen="0"
 			CloseLightTime="60"
@@ -244,7 +252,6 @@
 			LockScreenEnable="0"
 			LockScreenMode="0"
 			LockScreenTime="60"
-			DateFormat="4"
 			LockKeys="0"
 			PhoneLockTimeOut="0"
 		/>
@@ -259,10 +266,11 @@
 			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$line_subscribe} {/if}
 			{if $line_subscribe_tmp==""} {$line_subscribe_tmp=$row.register_expires}  {/if}
 			{if $line_subscribe_tmp<"120"} {$line_subscribe_tmp="120"} {/if}
+			{if $line_label_{$row.line_number}== ""}{$line_label=$label}{else}{$line_label=$line_label_{$row.line_number}}{/if}
 
 		<sipUser id="{$row.line_number-1}"
 			EnableAccount="{($row.enabled=='true')?'1':'0'}"
-			Describe="MyLabel"
+			Describe="{$line_label}"
 			DomainName="{$row.server_address}"
 			UserName="{$row.display_name}"
 			UserNumber="{$row.user_id}"
@@ -275,6 +283,8 @@
 			PollingRegistrationTime="32"
 			RefreshTime="{$row.register_expires}"
 			Subscribe="{$line_subscribe_tmp}"
+			RPortEnable="1"
+			CallLeaveMessageNum="*97"
 			SecondDomainName=""
 			STUNAddress=""
 			STUNEnableFlag="0"
@@ -289,7 +299,7 @@
 			UserSessionTimerEnable="0"
 			SessionTimer="300"
 			AllowEventsEnable="0"
-			DNSSRVEnable="0"
+			DNSSRVEnable="{if $row.sip_transport=='dns srv'}1{else}0{/if}"
 			RegisteredNAT="1"
 			RingFilename=""
 			KeepaliveEnable="1"

@@ -379,7 +379,7 @@ require_once "resources/check_auth.php";
 		foreach($result as $row) {
 			//playback progress bar
 			if (permission_exists('voicemail_greeting_play')) {
-				echo "<tr id='recording_progress_bar_".$row['voicemail_greeting_uuid']."' style='display: none;'><td colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_greeting_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".$row['voicemail_greeting_uuid']."' style='display: none;'><td colspan='".$colspan."' class='".$row_style[$c]." playback_progress_bar_background'><span class='playback_progress_bar' id='recording_progress_".$row['voicemail_greeting_uuid']."'></span></td></tr>\n";
 			}
 			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."'" : null;
 			echo "<tr ".$tr_link.">\n";

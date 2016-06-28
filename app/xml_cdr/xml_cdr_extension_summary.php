@@ -60,9 +60,46 @@
 	$cdr->start_stamp_begin = $start_stamp_begin;
 	$cdr->start_stamp_end = $start_stamp_end;
 	$cdr->include_internal = $include_internal;
-	$cdr->quick_select = $quick_select;
 	$summary = $cdr->user_summary();
-	$extensions = $cdr->extensions;
+
+//set the http header
+	if ($_REQUEST['type'] == "csv") {
+	
+		//set the headers
+			header('Content-type: application/octet-binary');
+			header('Content-Disposition: attachment; filename=cdr-statistics.csv');
+
+		//show the column names on the first line
+			$z = 0;
+			foreach($summary[1] as $key => $val) {
+				if ($z == 0) {
+					echo '"'.$key.'"';
+				}
+				else {
+					echo ',"'.$key.'"';
+				}
+				$z++;
+			}
+			echo "\n";
+		
+		//add the values to the csv
+			$x = 0;
+			foreach($summary as $users) {
+				$z = 0;
+				foreach($users as $key => $val) {
+					if ($z == 0) {
+						echo '"'.$summary[$x][$key].'"';
+					}
+					else {
+						echo ',"'.$summary[$x][$key].'"';
+					}
+					$z++;
+				}
+				echo "\n";
+				$x++;
+			}
+			exit;
+	}
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -184,43 +221,23 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	if (isset($extensions)) foreach ($extensions as $extension => $row) {
-		$seconds['inbound'] = $summary[$extension]['inbound']['seconds'];
-		$seconds['outbound'] = $summary[$extension]['outbound']['seconds'];
-		if ($summary[$extension]['missed'] == null) {
-			$summary[$extension]['missed'] = 0;
-		}
-		if ($summary[$extension]['no_answer'] == null) {
-			$summary[$extension]['no_answer'] = 0;
-		}
-		if ($summary[$extension]['busy'] == null) {
-			$summary[$extension]['busy'] = 0;
-		}
-
-		//missed
-		$missed = $summary[$extension]['missed'];
-
-		//volume
-		$volume = $summary[$extension]['inbound']['count'] + $summary[$extension]['outbound']['count'];
-
-		//average length of call
-		$summary[$extension]['aloc'] = $volume==0 ? 0 : ($seconds['inbound'] + $seconds['outbound']) / ($volume - $missed);
-
+	if (isset($summary)) foreach ($summary as $key => $row) {
 		$tr_link = "xhref='xml_cdr.php?'";
 		echo "<tr ".$tr_link.">\n";
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$extension."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_alias']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['missed']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['no_answer']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['busy']."&nbsp;</td>\n";
-		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$summary[$extension]['aloc'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['inbound']['count'] != '') ? $summary[$extension]['inbound']['count'] : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['inbound'] != '') ? gmdate("G:i:s", $seconds['inbound']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['outbound']['count'] != '') ? $summary[$extension]['outbound']['count'] : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['outbound'] != '') ? gmdate("G:i:s", $seconds['outbound']) : '0:00:00')."</td>\n";
+		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['answered']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['missed']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['no_answer']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['busy']."&nbsp;</td>\n";
+		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$row['aloc'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". $row['inbound_calls'] ."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? gmdate("G:i:s", $row['inbound_duration']) : '0:00:00')."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? $row['outbound_calls'] : "0")."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? gmdate("G:i:s", $row['outbound_duration']) : '0:00:00')."</td>\n";
 		echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = ($c==0) ? 1 : 0;
