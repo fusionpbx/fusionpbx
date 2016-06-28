@@ -350,7 +350,7 @@
 //get the list
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where (";
-	$sql .= "domain_uuid = '$domain_uuid' ";
+	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	if (permission_exists('music_on_hold_global_view')) {
 		$sql .= "or domain_uuid is null ";
 	}
