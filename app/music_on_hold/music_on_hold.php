@@ -231,7 +231,7 @@
 					}
 				//check target folder, move uploaded file
 					if (!is_dir($moh_path)) {
-						mkdir($moh_path, 02770, true);
+						event_socket_mkdir($moh_path);
 					}
 					if (is_dir($moh_path)) {
 						if (copy($moh_file_name_temp, $moh_path.'/'.$moh_file_name)) {

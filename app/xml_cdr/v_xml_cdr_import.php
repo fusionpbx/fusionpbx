@@ -445,7 +445,7 @@
 				catch(PDOException $e) {
 					$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 					if(!file_exists($tmp_dir)) {
-						mkdir($tmp_dir, 02770, true);
+						event_socket_mkdir($tmp_dir);
 					}
 					if ($_SESSION['cdr']['format']['text'] == "xml") {
 						$tmp_file = $uuid.'.xml';
@@ -472,7 +472,7 @@
 						$tmp_day = date("d", $tmp_time);
 						$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 						if(!file_exists($tmp_dir)) {
-							mkdir($tmp_dir, 02770, true);
+							event_socket_mkdir($tmp_dir);
 						}
 						if ($_SESSION['cdr']['format']['text'] == "xml") {
 							$tmp_file = $uuid.'.xml';

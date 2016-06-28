@@ -942,12 +942,12 @@ function save_dialplan_xml() {
 					$dialplan_filename = $dialplan_order."_v_".$dialplan_name.".xml";
 					if (strlen($row['dialplan_context']) > 0) {
 						if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
-							mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],02770,true);
+							event_socket_mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context']);
 						}
 						if ($row['dialplan_context'] == "public") {
 							if (count($_SESSION['domains']) > 1 && strlen($row['domain_uuid']) > 0) {
 								if (!is_dir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
-									mkdir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'],02770,true);
+									event_socket_mkdir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name']);
 								}
 								file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."/".$dialplan_filename, $tmp);
 							}
@@ -957,7 +957,7 @@ function save_dialplan_xml() {
 						}
 						else {
 							if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
-								mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],02770,true);
+								event_socket_mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context']);
 							}
 							file_put_contents($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context']."/".$dialplan_filename, $tmp);
 						}
@@ -1334,7 +1334,7 @@ if (!function_exists('save_sip_profile_xml')) {
 
 		// make profile dir if needed
 			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
-			if (!is_readable($profile_dir)) { mkdir($profile_dir,02770,true); }
+			if (!is_readable($profile_dir)) { event_socket_mkdir($profile_dir); }
 
 		//get the global variables
 			global $domain_uuid;
@@ -1399,7 +1399,7 @@ if (!function_exists('save_sip_profile_xml')) {
 						}
 
 					//if the directory does not exist then create it
-						if (!is_readable($profile_dir.'/'.$sip_profile_name)) { mkdir($profile_dir.'/'.$sip_profile_name,02770,true); }
+						if (!is_readable($profile_dir.'/'.$sip_profile_name)) { event_socket_mkdir($profile_dir.'/'.$sip_profile_name); }
 
 				} //end foreach
 				unset($sql, $result, $row_count);
