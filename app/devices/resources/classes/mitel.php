@@ -49,4 +49,3 @@ class mitel {
 27 - Speed Dial & BLF
 Mitel web interface shows html_application
 */
-

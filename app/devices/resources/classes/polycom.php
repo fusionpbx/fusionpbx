@@ -15,14 +15,3 @@ class polycom {
 		Array('URL',           'label-url'          ),
 	);
 };
-
-
-
-
-
-
-
-
-
-
-

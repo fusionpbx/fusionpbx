@@ -27,26 +27,3 @@ class snom {
 		Array('recorder',    'label-record'        ),
 	);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
