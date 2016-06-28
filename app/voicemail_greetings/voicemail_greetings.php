@@ -155,7 +155,7 @@ require_once "resources/check_auth.php";
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (count($result) == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
 						//move the uploaded greeting
-							mkdir($v_greeting_dir, 02770, true);
+							event_socket_mkdir($v_greeting_dir);
 							move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
 						//set newly uploaded greeting as active greeting for voicemail box
 							$sql = "update v_voicemails ";
