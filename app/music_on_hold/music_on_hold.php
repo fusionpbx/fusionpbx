@@ -24,25 +24,27 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-ini_set('max_execution_time', 7200);
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('music_on_hold_view') || permission_exists('music_on_hold_global_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('music_on_hold_view') || permission_exists('music_on_hold_global_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//include paging
-	require_once "resources/paging.php";
+//increase the exucution time
+	ini_set('max_execution_time', 7200);
 
 //get moh records, build array
 	$sql = "select * from v_music_on_hold ";
@@ -296,6 +298,71 @@ else {
 			exit;
 	}
 
+//get variables used to control the order
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+
+//add the search term
+	$search = check_str($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_search = "and (";
+		$sql_search .= "music_on_hold_name like '%".$search."%'";
+		$sql_search .= "or music_on_hold_path like '%".$search."%'";
+		$sql_search .= "or music_on_hold_rate like '%".$search."%'";
+		$sql_search .= "or music_on_hold_shuffle like '%".$search."%'";
+		$sql_search .= "or music_on_hold_channels like '%".$search."%'";
+		$sql_search .= "or music_on_hold_interval like '%".$search."%'";
+		$sql_search .= "or music_on_hold_timer_name like '%".$search."%'";
+		$sql_search .= "or music_on_hold_chime_list like '%".$search."%'";
+		$sql_search .= "or music_on_hold_chime_freq like '%".$search."%'";
+		$sql_search .= "or music_on_hold_chime_max like '%".$search."%'";
+		$sql_search .= ")";
+	}
+
+//additional includes
+	require_once "resources/paging.php";
+
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_music_on_hold ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= $sql_search;
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+		}
+		else {
+				$num_rows = '0';
+		}
+	}
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select * from v_music_on_hold ";
+	$sql .= "where (";
+	$sql .= "domain_uuid = '$domain_uuid' ";
+	if (permission_exists('music_on_hold_global_view')) {
+		$sql .= "or domain_uuid is null ";
+	}
+	$sql .= ") ";
+	$sql .= $sql_search;
+
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
 //include the header
 	require_once "resources/header.php";
@@ -346,7 +413,6 @@ else {
 	echo "<br /><br />\n";
 	echo $text['desc-moh']."\n";
 	echo "<br /><br />\n";
-
 
 //show the upload form
 	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_global_add')) {
@@ -453,124 +519,251 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+/*
+			//output moh list
+				foreach ($mohs as $domain_uuid => &$moh) {
 
-//output moh list
-	foreach ($mohs as $domain_uuid => &$moh) {
+					foreach ($moh as $moh_name => &$moh_rates) {
 
-		foreach ($moh as $moh_name => &$moh_rates) {
-
-			$moh_name = str_replace('_', ' ', $moh_name);
-			if ($domain_uuid == '_global_') {
-				echo "<b><i>".$moh_name."</i></b>&nbsp;&nbsp;- ".$text['label-global']."\n";
-			}
-			else {
-				echo "<b>".$moh_name."</b>\n";
-			}
-			echo "<br><br>\n";
-
-			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px;'>\n";
-
-			foreach ($moh_rates as $moh_rate => $moh_settings) {
-				$c = 0;
-
-				//determine if rate was set to auto or not
-					$auto_rate = (substr_count($moh_settings['name'], '/') == 0) ? true : false;
-
-				//determine icons to show
-					$moh_icons = array();
-					$i = 0;
-					if (permission_exists('music_on_hold_path')) {
-						$moh_icons[$i]['glyphicon'] = 'glyphicon-folder-open';
-						$moh_icons[$i]['title'] = $moh_paths[$moh_settings['uuid']];
-						$i++;
-					}
-					if ($moh_settings['shuffle'] == 'true') {
-						$moh_icons[$i]['glyphicon'] = 'glyphicon-random';
-						$moh_icons[$i]['title'] = $text['label-shuffle'];
-						$i++;
-					}
-					if ($moh_settings['chime_list'] != '') {
-						$moh_icons[$i]['glyphicon'] = 'glyphicon-bell';
-						$moh_icons[$i]['title'] = $text['label-chime_list'].': '.$moh_settings['chime_list'];
-						$i++;
-					}
-					if ($moh_settings['channels'] == '2') {
-						$moh_icons[$i]['glyphicon'] = 'glyphicon-headphones';
-						$moh_icons[$i]['title'] = $text['label-stereo'];
-						$moh_icons[$i]['margin'] = 6;
-						$i++;
-					}
-					if (is_array($moh_icons) && sizeof($moh_icons) > 0) {
-						foreach ($moh_icons as $moh_icon) {
-							$icons .= "<span class='glyphicon ".$moh_icon['glyphicon']." icon_glyphicon_body' title='".$moh_icon['title']."' style='width: 12px; height: 12px; margin-left: ".(($moh_icon['margin'] != '') ? $moh_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+						$moh_name = str_replace('_', ' ', $moh_name);
+						if ($domain_uuid == '_global_') {
+							echo "<b><i>".$moh_name."</i></b>&nbsp;&nbsp;- ".$text['label-global']."\n";
 						}
-					}
-				echo "	<tr>\n";
-				echo "		<th class='listhdr'>".(($auto_rate) ? ($moh_rate/1000).' kHz / '.$text['option-default'] : ($moh_rate/1000)." kHz").$icons."</th>\n";
-				echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
-				echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
-				echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
-				echo "		<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
-				if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_edit')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_edit')) ) {
-					echo 		"<a href='music_on_hold_edit.php?id=".$moh_settings['uuid']."'>".$v_link_label_edit."</a>";
-				}
-				if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
-					echo 		"<a href='?action=delete&id=".$moh_settings['uuid']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-				}
-				echo 		"</td>\n";
-				echo "	</tr>";
-				unset($moh_icons, $icons);
+						else {
+							echo "<b>".$moh_name."</b>\n";
+						}
+						echo "<br><br>\n";
 
-				//show moh files
-					if (isset($moh_settings['path'])) {
-						$moh_path = $moh_settings['path'];
-						if (file_exists($moh_path)) {
-							$moh_files = array_merge(glob($moh_path.'/*.wav'), glob($moh_path.'/*.mp3'), glob($moh_path.'/*.ogg'));
-							foreach ($moh_files as $moh_file_path) {
-								$moh_file = strtolower(pathinfo($moh_file_path, PATHINFO_BASENAME));
-								$moh_file_size = byte_convert(filesize($moh_file_path));
-								$moh_file_date = date("M d, Y H:i:s", filemtime($moh_file_path));
-								$moh_file_ext = pathinfo($moh_file, PATHINFO_EXTENSION);
-								switch ($moh_file_ext) {
-									case "wav" : $moh_file_type = "audio/wav"; break;
-									case "mp3" : $moh_file_type = "audio/mpeg"; break;
-									case "ogg" : $moh_file_type = "audio/ogg"; break;
+						echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px;'>\n";
+
+						foreach ($moh_rates as $moh_rate => $moh_settings) {
+							$c = 0;
+
+							//determine if rate was set to auto or not
+								$auto_rate = (substr_count($moh_settings['name'], '/') == 0) ? true : false;
+
+							//determine icons to show
+								$moh_icons = array();
+								$i = 0;
+								if (permission_exists('music_on_hold_path')) {
+									$moh_icons[$i]['glyphicon'] = 'glyphicon-folder-open';
+									$moh_icons[$i]['title'] = $moh_paths[$row['music_on_hold_uuid']];
+									$i++;
 								}
-								$row_uuid = uuid();
-								echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='4' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
-								$tr_link = "href=\"javascript:recording_play('".$row_uuid."');\"";
-								echo "<tr ".$tr_link.">\n";
-								echo "	<td class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $moh_file)."</td>\n";
-								echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
-								echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' type='".$moh_file_type."'></audio>";
-								echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-								echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
-								echo "	</td>\n";
-								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$moh_file_size."</td>\n";
-								echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$moh_file_date."</td>\n";
-								echo "	<td valign='top' class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
-								echo 		"<a href='?action=download&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
-								if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
-									echo 	"<a href='?action=delete&id=".$moh_settings['uuid']."&file=".base64_encode($moh_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+								if ($moh_settings['shuffle'] == 'true') {
+									$moh_icons[$i]['glyphicon'] = 'glyphicon-random';
+									$moh_icons[$i]['title'] = $text['label-shuffle'];
+									$i++;
 								}
-								echo "	</td>\n";
-								echo "</tr>\n";
-								$c = ($c) ? 0 : 1;
+								if ($moh_settings['chime_list'] != '') {
+									$moh_icons[$i]['glyphicon'] = 'glyphicon-bell';
+									$moh_icons[$i]['title'] = $text['label-chime_list'].': '.$moh_settings['chime_list'];
+									$i++;
+								}
+								if ($moh_settings['channels'] == '2') {
+									$moh_icons[$i]['glyphicon'] = 'glyphicon-headphones';
+									$moh_icons[$i]['title'] = $text['label-stereo'];
+									$moh_icons[$i]['margin'] = 6;
+									$i++;
+								}
+								if (is_array($moh_icons) && sizeof($moh_icons) > 0) {
+									foreach ($moh_icons as $moh_icon) {
+										$icons .= "<span class='glyphicon ".$moh_icon['glyphicon']." icon_glyphicon_body' title='".$moh_icon['title']."' style='width: 12px; height: 12px; margin-left: ".(($moh_icon['margin'] != '') ? $moh_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+									}
+								}
+							echo "	<tr>\n";
+							echo "		<th class='listhdr'>".(($auto_rate) ? ($moh_rate/1000).' kHz / '.$text['option-default'] : ($moh_rate/1000)." kHz").$icons."</th>\n";
+							echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
+							echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
+							echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
+							echo "		<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
+							if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_edit')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_edit')) ) {
+								echo 		"<a href='music_on_hold_edit.php?id=".$row['music_on_hold_uuid']."'>".$v_link_label_edit."</a>";
 							}
+							if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
+								echo 		"<a href='?action=delete&id=".$row['music_on_hold_uuid']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+							}
+							echo 		"</td>\n";
+							echo "	</tr>";
+							unset($moh_icons, $icons);
+
+							//show moh files
+								if (isset($moh_settings['path'])) {
+									$moh_path = $moh_settings['path'];
+									if (file_exists($moh_path)) {
+										$moh_files = array_merge(glob($moh_path.'/*.wav'), glob($moh_path.'/*.mp3'), glob($moh_path.'/*.ogg'));
+										foreach ($moh_files as $moh_file_path) {
+											$moh_file = strtolower(pathinfo($moh_file_path, PATHINFO_BASENAME));
+											$moh_file_size = byte_convert(filesize($moh_file_path));
+											$moh_file_date = date("M d, Y H:i:s", filemtime($moh_file_path));
+											$moh_file_ext = pathinfo($moh_file, PATHINFO_EXTENSION);
+											switch ($moh_file_ext) {
+												case "wav" : $moh_file_type = "audio/wav"; break;
+												case "mp3" : $moh_file_type = "audio/mpeg"; break;
+												case "ogg" : $moh_file_type = "audio/ogg"; break;
+											}
+											$row_uuid = uuid();
+											echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='4' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+											$tr_link = "href=\"javascript:recording_play('".$row_uuid."');\"";
+											echo "<tr ".$tr_link.">\n";
+											echo "	<td class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $moh_file)."</td>\n";
+											echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
+											echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' type='".$moh_file_type."'></audio>";
+											echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+											echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
+											echo "	</td>\n";
+											echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$moh_file_size."</td>\n";
+											echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$moh_file_date."</td>\n";
+											echo "	<td valign='top' class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
+											echo 		"<a href='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
+											if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
+												echo 	"<a href='?action=delete&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+											}
+											echo "	</td>\n";
+											echo "</tr>\n";
+											$c = ($c) ? 0 : 1;
+										}
+									}
+								}
+
+							echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 15px;'></div></td></tr>\n";
+
 						}
+
+						echo "</table>\n";
+						echo "<br>\n";
+
 					}
 
-				echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 15px;'></div></td></tr>\n";
+				}
+				echo "<br><br>\n";
+*/
 
+	//echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px;'>\n";
+
+	if (is_array($streams)) {
+		foreach($streams as $row) {
+			echo "<b><i>".$row['music_on_hold_name']."</i></b>\n";
+			if ($row['domain_uuid'] == null) { 
+				echo "&nbsp;&nbsp;- ".$text['label-global']."\n";
 			}
 
-			echo "</table>\n";
-			echo "<br>\n";
+			//start the table
+				echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px;'>\n";
+			//determine if rate was set to auto or not
+				$auto_rate = (substr_count($moh_settings['name'], '/') == 0) ? true : false;
 
-		}
+			//determine icons to show
+				$moh_icons = array();
+				$i = 0;
+				if (permission_exists('music_on_hold_path')) {
+					$moh_icons[$i]['glyphicon'] = 'glyphicon-folder-open';
+					$moh_icons[$i]['title'] = $moh_paths[$row['music_on_hold_uuid']];
+					$i++;
+				}
+				if ($moh_settings['shuffle'] == 'true') {
+					$moh_icons[$i]['glyphicon'] = 'glyphicon-random';
+					$moh_icons[$i]['title'] = $text['label-shuffle'];
+					$i++;
+				}
+				if ($moh_settings['chime_list'] != '') {
+					$moh_icons[$i]['glyphicon'] = 'glyphicon-bell';
+					$moh_icons[$i]['title'] = $text['label-chime_list'].': '.$moh_settings['chime_list'];
+					$i++;
+				}
+				if ($moh_settings['channels'] == '2') {
+					$moh_icons[$i]['glyphicon'] = 'glyphicon-headphones';
+					$moh_icons[$i]['title'] = $text['label-stereo'];
+					$moh_icons[$i]['margin'] = 6;
+					$i++;
+				}
+				if (is_array($moh_icons) && sizeof($moh_icons) > 0) {
+					foreach ($moh_icons as $moh_icon) {
+						$icons .= "<span class='glyphicon ".$moh_icon['glyphicon']." icon_glyphicon_body' title='".$moh_icon['title']."' style='width: 12px; height: 12px; margin-left: ".(($moh_icon['margin'] != '') ? $moh_icon['margin'] : 8)."px; vertical-align: text-top; cursor: help;'></span>";
+					}
+				}
+			echo "	<tr>\n";
+			echo "		<th class='listhdr'>".(($auto_rate) ? ($moh_rate/1000).' kHz / '.$text['option-default'] : ($moh_rate/1000)." kHz").$icons."</th>\n";
+			echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
+			echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
+			echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
+			echo "		<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
+			if (permission_exists('music_on_hold_edit')) {
+				echo "<a href='music_on_hold_edit.php?id=".$row['music_on_hold_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			}
+			if (permission_exists('music_on_hold_delete')) {
+				echo "<a href='music_on_hold_delete.php?id=".$row['music_on_hold_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			}
+			echo 		"</td>\n";
+			echo "	</tr>";
+			unset($moh_icons, $icons);
 
-	}
-	echo "<br><br>\n";
+			if (permission_exists('music_on_hold_edit')) {
+				$tr_link = "href='music_on_hold_edit.php?id=".$row['music_on_hold_uuid']."'";
+			}
+
+			//get the music on hold path
+			$moh_path = $row['music_on_hold_path'];
+			$moh_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'], $moh_path);
+
+			if (file_exists($moh_path)) {
+				$moh_files = array_merge(glob($moh_path.'/*.wav'), glob($moh_path.'/*.mp3'), glob($moh_path.'/*.ogg'));
+				foreach ($moh_files as $moh_file_path) {
+					$moh_file = strtolower(pathinfo($moh_file_path, PATHINFO_BASENAME));
+					$moh_file_size = byte_convert(filesize($moh_file_path));
+					$moh_file_date = date("M d, Y H:i:s", filemtime($moh_file_path));
+					$moh_file_ext = pathinfo($moh_file, PATHINFO_EXTENSION);
+					switch ($moh_file_ext) {
+						case "wav" : $moh_file_type = "audio/wav"; break;
+						case "mp3" : $moh_file_type = "audio/mpeg"; break;
+						case "ogg" : $moh_file_type = "audio/ogg"; break;
+					}
+					$row_uuid = uuid();
+					echo "<tr id='recording_progress_bar_".$row_uuid."' style='display: none;'><td colspan='4' class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;'><span class='playback_progress_bar' id='recording_progress_".$row_uuid."'></span></td></tr>\n";
+					$tr_link = "href=\"javascript:recording_play('".$row_uuid."');\"";
+					echo "<tr ".$tr_link.">\n";
+					echo "	<td class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $moh_file)."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
+					echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' type='".$moh_file_type."'></audio>";
+					echo 		"<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo 		"<span onclick=\"recording_stop('".$row_uuid."')\" title='".$text['label-stop']."'>".$v_link_label_stop."</span>";
+					echo "	</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$moh_file_size."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$moh_file_date."</td>\n";
+					echo "	<td valign='top' class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
+					echo 		"<a href='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
+					if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
+						echo 	"<a href='?action=delete&id=".$row['music_on_hold_uuid']."&file=".base64_encode($moh_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					}
+					echo "	</td>\n";
+					echo "</tr>\n";
+					$c = ($c) ? 0 : 1;
+				}
+			}
+
+			echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 15px;'></div></td></tr>\n";
+			echo "</table><br />\n";
+
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='11' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	echo "			&nbsp;";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
