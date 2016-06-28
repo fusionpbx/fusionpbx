@@ -1,8 +1,9 @@
 <?php
+
 class snom {
-	const vendor = 'snom';
-	const title  = 'Snom';
-	const memory_key_functions = Array(
+	public static $name  = 'snom';
+	public static $title = 'Snom';
+	public static $memory_key_functions = Array(
 		Array('none',        'label-none'          ),
 		Array('url',         'label-action_url'    ),
 		Array('auto_answer', 'label-auto_answer'   ),

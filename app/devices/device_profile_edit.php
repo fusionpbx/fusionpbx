@@ -41,14 +41,14 @@ require_once "resources/require.php";
 
 //known vendors
 	$vendor_devices = array(
-		new aastra(),
-		new cisco(),
-		new escene(),
-		new grandstream(),
-		new mitel(),
-		new polycom(),
-		new snom(),
-		new yealink(),
+		'aastra',
+		'cisco',
+		'escene',
+		'grandstream',
+		'mitel',
+		'polycom',
+		'snom',
+		'yealink',
 	);
 
 //action add or update
@@ -423,23 +423,23 @@ require_once "resources/require.php";
 			<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();">
 			<option value=''></option>
 			<?php
-			foreach($vendor_devices as &$device){
-				$match_vendor = (strtolower($device_vendor) == $device::vendor)
-					|| (strtolower($device_vendor) == $device::vendor . ' programmable');
+			foreach($vendor_devices as &$vendor){
+				$match_vendor = (strtolower($device_vendor) == $vendor::$name)
+					|| (strtolower($device_vendor) == $vendor::$name . ' programmable');
 				if ($match_vendor || strlen($device_vendor) == 0) {
-					echo "<optgroup label='".$device::title."'>";
-					$match_key_vendor = (strtolower($device_key_vendor) == $device::vendor);
-					foreach($device::memory_key_functions as &$key){
+					echo "<optgroup label='".$vendor::$title."'>";
+					$match_key_vendor = (strtolower($device_key_vendor) == $vendor::$name);
+					foreach($vendor::$memory_key_functions as &$key){
 						$match_key = $match_key_vendor && ($row['device_key_type'] == $key[0]);
 						echo "<option value='" . $key[0] . "' " . (($match_key)?$selected:'') . ">" . $text[ $key[1] ] . "</option>\n";
 					}
 					echo "</optgroup>";
 
-					if (!defined(get_class($device).'::program_key_functions')) continue;
+					if (!isset($vendor::$program_key_functions)) continue;
 
-					echo "<optgroup label='" . $device::title . " programmable'>";
-					$match_key_vendor = (strtolower($device_key_vendor) == $device::vendor . " programmable");
-					foreach($device::program_key_functions as &$key){
+					echo "<optgroup label='" . $vendor::$title . " programmable'>";
+					$match_key_vendor = (strtolower($device_key_vendor) == $vendor::$name . " programmable");
+					foreach($vendor::$program_key_functions as &$key){
 						$match_key = $match_key_vendor && ($row['device_key_type'] == $key[0]);
 						echo "<option value='" . $key[0] . "' " . (($match_key)?$selected:'') . ">" . $text[ $key[1] ] . "</option>\n";
 					}

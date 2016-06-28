@@ -1,8 +1,9 @@
 <?php
+
 class polycom {
-	const vendor = 'polycom';
-	const title  = 'Polycom';
-	const memory_key_functions = Array(
+	public static $name  = 'polycom';
+	public static $title = 'Polycom';
+	public static $memory_key_functions = Array(
 		Array('line',          'label-line'         ),
 		Array('automata',      'label-automata'     ),
 		Array('normal',        'label-normal'       ),

@@ -1,10 +1,10 @@
 <?php
 
 class escene {
-	const vendor = 'escene';
-	const title  = 'Escene';
+	public static $name = 'escene';
+	public static $title  = 'Escene';
 
-	const memory_key_functions = Array(
+	public static $memory_key_functions = Array(
 		Array(1,  'label-blf'              ),
 		// Array(3,  'label-bla'              ),
 		Array(7,  'label-call_park'        ),
@@ -17,7 +17,7 @@ class escene {
 		Array(11, 'label-broadsoft_group'  ),
 	);
 
-	const program_key_functions = Array(
+	public static $program_key_functions = Array(
 		Array(0,  'label-default'         ),  /* 0  - Default                    */
 		Array(1,  'label-redial'          ),  /* 1  - Redial                     */
 		Array(2,  'label-dnd'             ),  /* 2  - DND                        */
@@ -41,7 +41,7 @@ class escene {
 		// Array(18, 'label-xml browser'     ),  /* 18 - XML Browser                */
 	);
 
-	const time_zones = Array(
+	public static $time_zones = Array(
 		Array(12, "GMT Greenwich Mean Time"                                   ),
 		Array(67, "GMT+00:00 Denmark-Faroe Islands(Torshavn)"                 ),
 		Array(66, "GMT+00:00 Greenland"                                       ),
@@ -163,7 +163,7 @@ class escene {
 		Array(0,  "GMT-12:00 UTC-12"                                          ),
 	);
 
-	const date_formats = Array(
+	public static $date_formats = Array(
 		Array(0, "DD MM WWW"  ),
 		Array(1, "MM DD WWW"  ),
 		Array(2, "WWW MMM DD" ),
@@ -175,13 +175,13 @@ class escene {
 		Array(8, "WWW DD MMM" ),
 	);
 
-	const time_formats = Array(
+	public static $time_formats = Array(
 		Array(0, "24 Hour"  ),
 		Array(1, "12 Hour"  ),
 	);
 
 	public static function time_zone_name($id){
-		foreach(self::time_zones as &$time_zone){
+		foreach(self::$time_zones as &$time_zone){
 			if($time_zone[0] == $id){
 				return $time_zone[1];
 			}
@@ -190,7 +190,7 @@ class escene {
 	}
 
 	public static function time_zone_id($name){
-		foreach(self::time_zones as &$time_zone){
+		foreach(self::$time_zones as &$time_zone){
 			if($time_zone[1] == $name){
 				return $time_zone[0];
 			}
@@ -199,7 +199,7 @@ class escene {
 	}
 
 	public static function date_format_name($id){
-		foreach(self::date_formats as &$date_format){
+		foreach(self::$date_formats as &$date_format){
 			if($date_format[0] == $id){
 				return $date_format[1];
 			}
@@ -208,7 +208,7 @@ class escene {
 	}
 
 	public static function date_format_id($name){
-		foreach(self::date_formats as &$date_format){
+		foreach(self::$date_formats as &$date_format){
 			if($date_format[1] == $name){
 				return $date_format[0];
 			}
@@ -217,7 +217,7 @@ class escene {
 	}
 
 	public static function time_format_name($id){
-		foreach(self::time_formats as &$time_format){
+		foreach(self::$time_formats as &$time_format){
 			if($time_format[0] == $id){
 				return $time_format[1];
 			}
@@ -226,7 +226,7 @@ class escene {
 	}
 
 	public static function time_format_id($name){
-		foreach(self::time_formats as &$time_format){
+		foreach(self::$time_formats as &$time_format){
 			if($time_format[1] == $name){
 				return $time_format[0];
 			}

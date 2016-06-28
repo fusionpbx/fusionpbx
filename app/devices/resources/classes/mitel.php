@@ -1,8 +1,9 @@
 <?php
+
 class mitel {
-	const vendor = 'mitel';
-	const title  = 'Mitel';
-	const memory_key_functions = Array(
+	public static $name  = 'mitel';
+	public static $title = 'Mitel';
+	public static $memory_key_functions = Array(
 		Array(0,  'label-not_programmed'  ),
 		Array(1,  'label-speed_dial'      ),
 		Array(5,  'label-shared_line'     ),

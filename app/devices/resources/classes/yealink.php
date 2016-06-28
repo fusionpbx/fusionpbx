@@ -1,8 +1,9 @@
 <?php
+
 class yealink {
-	const vendor = 'yealink';
-	const title  = 'Yealink';
-	const memory_key_functions = Array(
+	public static $name  = 'yealink';
+	public static $title = 'Yealink';
+	public static $memory_key_functions = Array(
 		Array('0',  'label-na'                 ),
 		Array('15', 'label-line'               ),
 		Array('1',  'label-conference'         ),

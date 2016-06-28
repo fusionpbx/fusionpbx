@@ -1,9 +1,9 @@
 <?php
 
 class aastra {
-	const vendor = 'aastra';
-	const title  = 'Aastra';
-	const memory_key_functions = Array(
+	public static $name  = 'aastra';
+	public static $title = 'Aastra';
+	public static $memory_key_functions = Array(
 		Array('blf',       'label-blf'        ),
 		Array('blfxfer',   'label-blf_xfer'   ),
 		Array('callers',   'label-callers'    ),

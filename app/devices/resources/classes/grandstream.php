@@ -1,8 +1,9 @@
 <?php
+
 class grandstream {
-	const vendor = 'grandstream';
-	const title  = 'Grandstream';
-	const memory_key_functions = Array(
+	public static $name  = 'grandstream';
+	public static $title = 'Grandstream';
+	public static $memory_key_functions = Array(
 		Array('line',               'label-line'),
 		Array('shared line',        'label-shared_line'      ),
 		Array('speed dial',         'label-speed_dial'       ),
