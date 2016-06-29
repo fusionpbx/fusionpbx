@@ -185,12 +185,6 @@
 				//new name
 					if ($moh_new_name) {
 						$music_on_hold_name = $moh_name_only;
-						if ($moh_scope != 'global' ) {
-							$music_on_hold_name = path_join($_SESSION['domain_name'], $music_on_hold_name);
-						}
-						if (!$moh_rate_auto) {
-							$music_on_hold_name = path_join($music_on_hold_name, $moh_rate);
-						}
 						$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path);
 						$sql .= "( ";
 						$sql .= "'".$music_on_hold_uuid."',";
