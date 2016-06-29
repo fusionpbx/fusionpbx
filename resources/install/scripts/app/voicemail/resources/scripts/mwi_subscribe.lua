@@ -47,10 +47,10 @@ local function vm_message_count(account, use_cache)
 				dbh:escape(id), dbh:escape(domain_name)
 			)
 			uuid = dbh:first_value(sql)
-		end
 
-		if uuid and #uuid > 0 then
-			cache.set('voicemail_uuid:' .. account, uuid)
+			if uuid and #uuid > 0 then
+				cache.set('voicemail_uuid:' .. account, uuid, 3600)
+			end
 		end
 	end
 
