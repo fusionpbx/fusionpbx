@@ -13,6 +13,22 @@
 	table.insert(xml, [[	<section name="configuration">]]);
 	table.insert(xml, [[		<configuration name="local_stream.conf" description="stream files from local dir">]]);
 
+--set the default music on hold
+	table.insert(xml, [[		<!-- fallback to default if requested moh class isn't found -->]]);
+	table.insert(xml, [[		<directory name="default" path="]]..sounds_dir..[[/music/default/8000">]]);
+	table.insert(xml, [[			<param name="rate" value="8000"/>]]);
+	table.insert(xml, [[			<param name="shuffle" value="true"/>]]);
+	table.insert(xml, [[			<param name="channels" value="1"/>]]);
+	table.insert(xml, [[			<param name="interval" value="20"/>]]);
+	table.insert(xml, [[			<param name="timer-name" value="soft"/>]]);
+	table.insert(xml, [[			<!-- list of short files to break in with every so often -->]]);
+	table.insert(xml, [[			<!--<param name="chime-list" value="file1.wav,file2.wav"/>-->]]);
+	table.insert(xml, [[			<!-- frequency of break-in (seconds)-->]]);
+	table.insert(xml, [[			<!--<param name="chime-freq" value="30"/>-->]]);
+	table.insert(xml, [[			<!-- limit to how many seconds the file will play -->]]);
+	table.insert(xml, [[			<!--<param name="chime-max" value="500"/>-->]]);
+	table.insert(xml, [[		</directory>]]);
+
 --run the query
 	sql = "select * from v_music_on_hold ";
 	sql = sql .. "order by music_on_hold_name asc ";
@@ -48,7 +64,7 @@
 		end
 		
 		--build the xml ]]..row.music_on_hold_name..[["
-		table.insert(xml, [[	<directory name="]]..row.music_on_hold_name..[[" path="]]..music_on_hold_path..[[">]]);
+		table.insert(xml, [[	<directory name="]]..row.music_on_hold_uuid..[[" stream_name="]]..row.music_on_hold_name..[[" path="]]..music_on_hold_path..[[">]]);
 		table.insert(xml, [[			<param name="rate" value="]]..row.music_on_hold_rate..[["/>]]);
 		table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
 		table.insert(xml, [[			<param name="channels" value="1"/>]]);
