@@ -185,6 +185,9 @@
 				//new name
 					if ($moh_new_name) {
 						$music_on_hold_name = $moh_name_only;
+						if ($moh_scope != 'global' ) {
+							$music_on_hold_name = path_join($_SESSION['domain_name'], $music_on_hold_name);
+						}
 						if (!$moh_rate_auto) {
 							$music_on_hold_name = path_join($music_on_hold_name, $moh_rate);
 						}
@@ -368,7 +371,7 @@
 //set the default order by
 	if (strlen($order_by) == 0) { $order_by = 'music_on_hold_name'; }
 	if (strlen($order) == 0) { $order = 'asc'; }
-	
+
 //get the list
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where (";
