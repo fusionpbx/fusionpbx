@@ -365,6 +365,10 @@
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
+//set the default order by
+	if (strlen($order_by) == 0) { $order_by = 'music_on_hold_name'; }
+	if (strlen($order) == 0) { $order = 'asc'; }
+	
 //get the list
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where (";
@@ -374,8 +378,7 @@
 	}
 	$sql .= ") ";
 	$sql .= $sql_search;
-
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "order by $order_by $order ";
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
