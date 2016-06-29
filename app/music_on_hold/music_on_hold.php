@@ -78,7 +78,7 @@
 		}
 	}
 	unset($sql, $prep_statement, $result);
-	foreach ($mohs as $domain_uuid => &$moh) { ksort($moh); }
+	foreach ($mohs as &$moh) { ksort($moh); }
 	$moh_names['global'] = array_unique($moh_names['global']);
 	$moh_names['local'] = array_unique($moh_names['local']);
 	sort($moh_names['global'], SORT_NATURAL);
