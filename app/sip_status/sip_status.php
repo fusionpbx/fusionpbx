@@ -181,6 +181,8 @@ if ($_GET['a'] == "download") {
 			if ($_SESSION["domain_name"] == $gateway_domain_name) {
 				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a>";
 			}
+			elseif ($gateway_domain_name == '') {
+				echo $gateway_name."@(Global)";
 			else {
 				echo $gateway_name."@".$gateway_domain_name;
 			}
