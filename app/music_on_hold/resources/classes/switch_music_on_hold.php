@@ -69,7 +69,7 @@ include "root.php";
 						}
 						$name .= $row['music_on_hold_name'];
 						if (strlen($row['music_on_hold_rate']) > 0) {
-							$name = $name.'/'.row['music_on_hold_rate'];
+							$name = $name.'/'.$row['music_on_hold_rate'];
 						}
 						$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
 					}
@@ -106,8 +106,8 @@ include "root.php";
 
 			//get moh records, build array
 				$sql = "select ";
-				$sql .= "(select domain_name from v_domains as d where domain_uuid = s.domain_uuid) as domain_name, * ";
-				$sql .= "from v_music_on_hold as s ";
+				$sql .= "(select domain_name from v_domains as d where domain_uuid = m.domain_uuid) as domain_name, * ";
+				$sql .= "from v_music_on_hold as m ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				if (permission_exists('music_on_hold_global_view')) {
 					$sql .= "or domain_uuid is null ";
