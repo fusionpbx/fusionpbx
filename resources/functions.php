@@ -1957,27 +1957,24 @@ function number_pad($number,$n) {
 	}
 
 	function event_socket_mkdir($dir) {
-		//if the handle does not exist create it
+		//connect to fs
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if (!$fp) {
 				return false;
 			}
 		//send the mkdir command to freeswitch
 			if ($fp) {
-				//send the api command to check if the module exists
-				$switch_cmd = "system mkdir -p '$dir'";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				unset($switch_cmd);
-				if (trim($switch_result) == "-ERR no reply") {
-					return true;
-				}
-				else {
-					return false;
-				}
+				//build and send the mkdir command to freeswitch
+					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					fclose($fp);
+				//check result
+					if (trim($switch_result) == "-ERR no reply") {
+						return true;
+					}
 			}
-			else {
-				return false;
-			}
+		//can not create directory
+			return false;
 	}
 
 ?>
