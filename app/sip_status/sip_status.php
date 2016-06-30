@@ -182,7 +182,7 @@ if ($_GET['a'] == "download") {
 				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a>";
 			}
 			elseif ($gateway_domain_name == '') {
-				echo $gateway_name."@(Global)";
+				echo $gateway_name;
 			else {
 				echo $gateway_name."@".$gateway_domain_name;
 			}
