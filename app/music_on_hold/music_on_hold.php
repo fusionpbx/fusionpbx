@@ -160,11 +160,11 @@
 						$moh_rate_auto = false;
 					}
 				//define default path
-					//$moh_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
-					//	(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']),
-					//	$moh_name_only, $moh_rate
-					//);
-
+					$moh_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
+						(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']),
+						$moh_name_only, $moh_rate
+					);
+				//flag to mark if there already has such moh profile
 					$moh_path_found = false;
 				//begin query
 					$music_on_hold_uuid = uuid();
@@ -490,7 +490,7 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' width='70%'>\n";
 		echo "				<select id='rate' name='rate' class='formfld' style='width: auto;'>\n";
-		echo "					<option value=''>".$text['option-default']."</option>\n";
+		echo "					<option value='auto'>".$text['option-default']."</option>\n";
 		echo "					<option value='8000'>8 kHz</option>\n";
 		echo "					<option value='16000'>16 kHz</option>\n";
 		echo "					<option value='32000'>32 kHz</option>\n";
