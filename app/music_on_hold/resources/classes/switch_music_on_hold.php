@@ -65,7 +65,15 @@ include "root.php";
 				if (sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
 					foreach($options as $row) {
-						$select .= "		<option value='local_stream://".$row['music_on_hold_uuid']."' ".(($selected == "local_stream://".$row['music_on_hold_uuid']) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
+						$name = '';
+						if (strlen($row['domain_uuid']) > 0) {
+							$name = $row['domain_name'].'/';	
+						}
+						$name .= $row['music_on_hold_name'];
+						if (strlen($row['music_on_hold_rate']) > 0) {
+							$name = $name.'/'.row['music_on_hold_rate'];
+						}
+						$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
 					}
 					$select .= "	</optgroup>\n";
 				}
@@ -99,7 +107,9 @@ include "root.php";
 				$text = $language->get(null, 'app/music_on_hold');
 
 			//get moh records, build array
-				$sql = "select * from v_music_on_hold ";
+				$sql = "select ";
+				$sql .= "(select domain_name from v_domains as d where domain_uuid = m.domain_uuid) as domain_name, * ";
+				$sql .= "from v_music_on_hold ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				if (permission_exists('music_on_hold_global_view')) {
 					$sql .= "or domain_uuid is null ";
