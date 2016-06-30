@@ -7,6 +7,7 @@ local presence_in   = require "resources.functions.presence_in"
 local Database      = require "resources.functions.database"
 local ievents       = require "resources.functions.ievents"
 local IntervalTimer = require "resources.functions.interval_timer"
+local api           = require "resources.functions.api"
 
 local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
 from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
@@ -28,7 +29,7 @@ end
 local sleep    = 60000
 local pid_file = scripts_dir .. "/run/call_flow_subscribe.tmp"
 
-local pid = tostring(os.clock())
+local pid = api:execute("create_uuid") or tostring(api:getTime())
 
 file.write(pid_file, pid)
 

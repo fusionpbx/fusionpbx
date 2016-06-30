@@ -7,6 +7,7 @@ local Database      = require "resources.functions.database"
 local ievents       = require "resources.functions.ievents"
 local IntervalTimer = require "resources.functions.interval_timer"
 local cache         = require "resources.functions.cache"
+local api           = require "resources.functions.api"
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
@@ -92,7 +93,7 @@ end
 
 local sleep    = 60000
 local pid_file = scripts_dir .. "/run/mwi_subscribe.tmp"
-local pid = tostring(os.clock())
+local pid = api:execute("create_uuid") or tostring(api:getTime())
 file.write(pid_file, pid)
 
 log.notice("start");
