@@ -183,7 +183,7 @@ if ($_GET['a'] == "download") {
 			}
 			elseif ($gateway_domain_name == '') {
 				echo $gateway_name;
-			else {
+			} else {
 				echo $gateway_name."@".$gateway_domain_name;
 			}
 			echo "	</td>\n";
