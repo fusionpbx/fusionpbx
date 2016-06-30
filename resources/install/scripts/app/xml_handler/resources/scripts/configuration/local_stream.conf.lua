@@ -23,13 +23,14 @@
 	end
 	x = 0;
 	dbh:query(sql, function(row)
+
 		--combine the name, domain_name and the rate 
 		name = '';
-		if (row.domain_uuid ~= nil) then
+		if (row.domain_uuid ~= nil and string.len(row.domain_uuid) > 0) then
 			name = row.domain_name..'/';
 		end
 		name = name .. row.music_on_hold_name;
-		if (row.music_on_hold_rate ~= nil or row.music_on_hold_rate == '') then
+		if (row.music_on_hold_rate ~= nil and #row.music_on_hold_rate > 0) then
 			name = name .. '/' .. row.music_on_hold_rate;
 		end
 
