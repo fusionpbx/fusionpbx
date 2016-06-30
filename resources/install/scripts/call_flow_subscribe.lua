@@ -1,25 +1,13 @@
 require "resources.functions.config"
 require "resources.functions.split"
 
-local log         = require "resources.functions.log".call_flow_subscribe
-local file        = require "resources.functions.file"
-local presence_in = require "resources.functions.presence_in"
-local Database    = require "resources.functions.database"
-
-local ievents = function(events, ...)
-	if type(events) == 'string' then
-		events = freeswitch.EventConsumer(events)
-	end
-
-	local block, timeout = ...
-	if timeout and (timeout == 0) then block, timeout = 0, 0 end
-	timeout = timeout or 0
-
-	return function()
-		local event = events:pop(block, timeout)
-		return not event, event
-	end
-end
+local log           = require "resources.functions.log".call_flow_subscribe
+local file          = require "resources.functions.file"
+local presence_in   = require "resources.functions.presence_in"
+local Database      = require "resources.functions.database"
+local ievents       = require "resources.functions.ievents"
+local IntervalTimer = require "resources.functions.interval_timer"
+local api           = require "resources.functions.api"
 
 local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
 from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
@@ -38,52 +26,23 @@ local function find_call_flow(user)
 	return row.call_flow_uuid, row.call_flow_status
 end
 
-local IntervalTimer = {} do
-IntervalTimer.__index = IntervalTimer
-
-function IntervalTimer.new(interval)
-	local o = setmetatable({}, IntervalTimer)
-	o._interval = interval
-	return o
-end
-
-function IntervalTimer:rest()
-	local d = self._interval - os.difftime(os.time(), self._begin)
-	if d < 0 then d = 0 end
-	return d
-end
-
-function IntervalTimer:start()
-	self._begin = os.time()
-	return self
-end
-
-function IntervalTimer:stop()
-	self._begin = nil
-	return self
-end
-
-end
-
+local sleep    = 60000
 local pid_file = scripts_dir .. "/run/call_flow_subscribe.tmp"
 
-local pid = tostring(os.clock())
+local pid = api:execute("create_uuid") or tostring(api:getTime())
 
 file.write(pid_file, pid)
 
 log.notice("start call_flow_subscribe");
 
-local timer = IntervalTimer.new(60):start()
+local timer = IntervalTimer.new(sleep):start()
 
-for timeout, event in ievents("PRESENCE_PROBE", 1, timer:rest() * 1000) do
-	if timeout or timer:rest() == 0 then
+for event in ievents("PRESENCE_PROBE", 1, timer:rest()) do
+	if (not event) or (timer:rest() < 1000) then
+		if not file.exists(pid_file) then break end
 		local stored = file.read(pid_file)
-		if stored then
-			if stored ~= pid then break end
-		else
-			if not file.exists(pid_file) then break end
-		end
-		timer:start()
+		if stored and stored ~= pid then break end
+		timer:restart()
 	end
 
 	if event then
