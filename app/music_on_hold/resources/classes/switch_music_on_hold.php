@@ -50,8 +50,6 @@ include "root.php";
 			}
 		}
 
-		//it is NOT recommended to use this function if you want to include ringback you should be using the ringback class
-		//see app/ring_groups/ring_group_edit.php for example
 		public function select($name, $selected, $options) {
 			//add multi-lingual support
 				$language = new text;
@@ -108,8 +106,8 @@ include "root.php";
 
 			//get moh records, build array
 				$sql = "select ";
-				$sql .= "(select domain_name from v_domains as d where domain_uuid = m.domain_uuid) as domain_name, * ";
-				$sql .= "from v_music_on_hold ";
+				$sql .= "(select domain_name from v_domains as d where domain_uuid = s.domain_uuid) as domain_name, * ";
+				$sql .= "from v_music_on_hold as s ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				if (permission_exists('music_on_hold_global_view')) {
 					$sql .= "or domain_uuid is null ";
