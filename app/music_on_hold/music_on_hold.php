@@ -160,10 +160,11 @@
 						$moh_rate_auto = false;
 					}
 				//define default path
-					$moh_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
-						(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']),
-						$moh_name_only, $moh_rate
-					);
+					//$moh_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
+					//	(($moh_scope == 'global') ? 'global' : $_SESSION['domain_name']),
+					//	$moh_name_only, $moh_rate
+					//);
+
 					$moh_path_found = false;
 				//begin query
 					$music_on_hold_uuid = uuid();
@@ -206,19 +207,14 @@
 					else {
 						//get existing path
 							$moh_settings = $mohs[(($moh_scope == 'global') ? '_global_' : $domain_uuid)][$moh_name_only][$moh_rate];
-							if (
-								($moh_rate_auto && $moh_name_only == $moh_settings['name']) ||
-								(!$moh_rate_auto && path_join($moh_name_only, $moh_rate) == $moh_settings['name'])
-								) {
+							if (($moh_rate_auto && $moh_name_only == $moh_settings['name']) ||
+								(!$moh_rate_auto && path_join($moh_name_only, $moh_rate) == $moh_settings['name'])) {
 								$moh_path = $moh_settings['path'];
 								$moh_path_found = true;
 							}
 						//not found, finish query
 							else {
 								$music_on_hold_name = $moh_name_only;
-								if (!$moh_rate_auto) {
-									$music_on_hold_name = path_join($music_on_hold_name, $moh_rate);
-								}
 								$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $moh_path);
 
 								$sql .= "( ";
@@ -494,10 +490,11 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' width='70%'>\n";
 		echo "				<select id='rate' name='rate' class='formfld' style='width: auto;'>\n";
+		echo "					<option value=''>".$text['option-default']."</option>\n";
 		echo "					<option value='8000'>8 kHz</option>\n";
 		echo "					<option value='16000'>16 kHz</option>\n";
 		echo "					<option value='32000'>32 kHz</option>\n";
-		echo "					<option value='auto'>48 kHz / ".$text['option-default']."</option>\n";
+		echo "					<option value='48000'>48 kHz</option>\n";
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
