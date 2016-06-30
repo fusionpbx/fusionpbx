@@ -14,10 +14,10 @@
 	table.insert(xml, [[		<configuration name="local_stream.conf" description="stream files from local dir">]]);
 
 --run the query
-	sql = "select ";
-	sql = sql .. "(select domain_name from v_domains as d where domain_uuid = s.domain_uuid) as domain_name, * ";
-	sql = sql .. "from v_music_on_hold as s ";
-	sql = sql .. "order by music_on_hold_name asc ";
+	sql = "select d.domain_name, s.* "
+	sql = sql .. "from v_music_on_hold as s left outer join v_domains as d "
+	sql = sql .. "on d.domain_uuid = s.domain_uuid "
+	sql = sql .. "order by s.music_on_hold_name asc "
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 	end
