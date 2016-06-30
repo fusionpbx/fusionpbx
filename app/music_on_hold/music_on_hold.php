@@ -363,7 +363,7 @@
 	$offset = $rows_per_page * $page;
 
 //set the default order by
-	if (strlen($order_by) == 0) { $order_by = 'music_on_hold_name'; }
+	if (strlen($order_by) == 0) { $order_by = 'music_on_hold_name, music_on_hold_rate'; }
 	if (strlen($order) == 0) { $order = 'asc'; }
 
 //get the list
@@ -529,8 +529,6 @@
 		echo "</div>\n";
 
 		echo "</form>\n";
-
-		echo "<br><br><br>\n";
 	}
 
 //set the row styles
@@ -550,13 +548,8 @@
 		//loop through the array
 			foreach($streams as $row) {
 
-				//set the variables and work with them
+				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
-					//$name_array = explode("/", $music_on_hold_name);
-					//if (count($name_array) == 2) { $music_on_hold_name = $name_array[0]; }
-					//if (count($name_array) == 3) { $music_on_hold_name = $name_array[1]; }
-					//echo "<b><i>".$music_on_hold_name."</i></b>\n";
-
 					$moh_scope = $row['domain_uuid'];
 					if (!$moh_scope) $moh_scope = '_global_';
 					$tmp = explode('/', $row['music_on_hold_name']);
@@ -564,11 +557,12 @@
 					$moh_rate = $row['music_on_hold_rate'];
 					$moh_settings = $mohs[$moh_scope][$moh_name_only][$moh_rate]; 
 
-				//add a vertical space
-					echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 25px;'></div></td></tr>\n";
+				//add vertical space
+					echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 10px;'></div></td></tr>\n";
 
 				//add the name
-					if ($previous_name != $music_on_hold_name) {		
+					if ($previous_name != $music_on_hold_name) {
+						echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 20px;'></div></td></tr>\n";
 						echo "<tr class='tr_link_void'>\n";
 						echo "	<td colspan='5'><b><i>".$music_on_hold_name."</i></b>";
 						if ($row['domain_uuid'] == null) { 
