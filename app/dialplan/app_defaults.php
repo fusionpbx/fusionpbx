@@ -72,7 +72,6 @@
 			//dialplan class
 				$dialplan = new dialplan;
 				$dialplan->dialplan_order = $dialplan_order;
-				$dialplan->default_context = $domain_name;
 				if ($display_type == "text") {
 					$dialplan->display_type = 'text';
 				}
