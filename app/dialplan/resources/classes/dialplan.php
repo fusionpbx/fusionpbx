@@ -228,21 +228,32 @@ include "root.php";
 			}
 
 			private function app_uuid_exists() {
-				$sql = "select domain_uuid from v_dialplans ";
-				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
-				$sql .= "and app_uuid = '".$this->app_uuid."' ";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result)) {
-						return true;
+				if (!isset($_SESSION['app_uuid'][$this->domain_uuid]) {
+					$sql = "select domain_uuid from v_dialplans ";
+					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					//$sql .= "and app_uuid = '".$this->app_uuid."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($result as $row) {
+							if ($row['domain_uuid'] == null) {
+								$dialplan_domain = 'global'; 
+							}
+							else {
+								$dialplan_domain = $row['domain_uuid']
+							}
+							$_SESSION['app_uuid'][$dialplan_domain][$row['app_uuid']] = $row['dialplan_uuid'];
+						}
 					}
-					else {
-						return false;
-					}
+					unset($sql, $prep_statement, $result);
 				}
-				unset($sql, $prep_statement, $result);
+				if (isset($_SESSION['app_uuid']['global'][$this->app_uuid]) || isset($_SESSION['app_uuid'][$this->domain_uuid][$this->app_uuid])) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 
 			public function dialplan_exists() {
@@ -440,6 +451,7 @@ include "root.php";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$dialplans = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+							unset($prep_statement,$sql)
 							$x = 0; $y = 0;
 							if (isset($dialplans)) foreach ($dialplans as &$row) {
 								//if the previous dialplan uuid has not been set then set it
