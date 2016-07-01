@@ -45,6 +45,7 @@ include "root.php";
 			public $dialplan_continue;
 			public $dialplan_order;
 			public $dialplan_context;
+			public $dialplan_global;
 			public $dialplan_enabled;
 			public $dialplan_description;
 
@@ -66,6 +67,9 @@ include "root.php";
 					$database->connect();
 					$this->db = $database->db;
 				}
+
+				//set the default value
+				$this->dialplan_global = false;
 			}
 
 			public function dialplan_add() {
@@ -85,11 +89,11 @@ include "root.php";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				if (strlen($this->domain_uuid) > 0) {
-					$sql .= "'".check_str($this->domain_uuid)."', ";
+				if ($this->dialplan_global) {
+					$sql .= "null, ";
 				}
 				else {
-					$sql .= "null, ";
+					$sql .= "'".check_str($this->domain_uuid)."', ";
 				}
 				$sql .= "'".check_str($this->app_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
@@ -142,7 +146,7 @@ include "root.php";
 				$sql .= "values ";
 				$sql .= "( ";
 				$sql .= "'".$dialplan_detail_uuid."', ";
-				if (strlen($this->domain_uuid) == 0) {
+				if ($this->dialplan_global) {
 					$sql .= "null, ";
 				}
 				else {
@@ -266,7 +270,7 @@ include "root.php";
 			public function import() {
 				if (strlen($this->xml) > 0) {
 					//replace the variables
-						$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
+						//$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
 						$this->xml = str_replace("{v_pin_number}", generate_password(8, 1), $this->xml);
 						$this->xml = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $this->xml);
 					//convert the xml string to an xml object
@@ -303,9 +307,9 @@ include "root.php";
 					}
 
 				//check if the dialplan app uuid exists
-					foreach ($_SESSION['domains'] as $row) {
+					foreach ($_SESSION['domains'] as $domain) {
 						//get the domain_uuid
-						$this->domain_uuid = $row['domain_uuid'];
+						$this->domain_uuid = $domain['domain_uuid'];
 
 						//check if the dialplan exists
 						if (!$this->app_uuid_exists()) {
@@ -316,9 +320,10 @@ include "root.php";
 								$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 								$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 								$this->dialplan_context = $row['domain_name'];
+								$this->dialplan_global = false;
 								if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
 									if ($dialplan['extension']['@attributes']['global'] == "true") {
-										$this->domain_uuid = null;
+										$this->dialplan_global = true;
 										$this->dialplan_context = '${domain_name}';
 									}
 								}
@@ -340,69 +345,75 @@ include "root.php";
 								$x = 0;
 								$group = 0;
 								$order = 5;
-								if (isset($dialplan['extension']['condition'])) foreach ($dialplan['extension']['condition'] as &$row) {
-									unset($this->dialplan_detail_break);
-									unset($this->dialplan_detail_inline);
-									$this->dialplan_detail_tag = 'condition';
-									$this->dialplan_detail_type = $row['@attributes']['field'];
-									$this->dialplan_detail_data = $row['@attributes']['expression'];
-									$this->dialplan_detail_group = $group;
-									$this->dialplan_detail_order = $order;
-									if (strlen($row['@attributes']['break']) > 0) {
-										$this->dialplan_detail_break = $row['@attributes']['break'];
-									}
-									$this->dialplan_detail_add();
-									if (is_array($row['action']) || is_array($row['anti-action'])) {
-										$condition_self_closing_tag = false;
-										if (!is_array($row['action'][0])) {
-											if ($row['action']['@attributes']['application']) {
-												$tmp = $row['action'];
-												unset($row['action']);
-												$row['action'][0] = $tmp;
-											}
-										}
-										if (!is_array($row['anti-action'][0])) {
-											if ($row['anti-action']['@attributes']['application']) {
-												$tmp = $row['anti-action'];
-												unset($row['anti-action']);
-												$row['anti-action'][0] = $tmp;
-											}
-										}
-										$order = $order + 5;
+								if (isset($dialplan['extension']['condition'])) {
+									foreach ($dialplan['extension']['condition'] as &$row) {
 										unset($this->dialplan_detail_break);
 										unset($this->dialplan_detail_inline);
-										if (isset($row['action'])) foreach ($row['action'] as &$row2) {
-											$this->dialplan_detail_tag = 'action';
-											$this->dialplan_detail_type = $row2['@attributes']['application'];
-											$this->dialplan_detail_data = $row2['@attributes']['data'];
-											if (strlen($row2['@attributes']['inline']) > 0) {
-												$this->dialplan_detail_inline = $row2['@attributes']['inline'];
+										$this->dialplan_detail_tag = 'condition';
+										$this->dialplan_detail_type = $row['@attributes']['field'];
+										$this->dialplan_detail_data = $row['@attributes']['expression'];
+										$this->dialplan_detail_group = $group;
+										$this->dialplan_detail_order = $order;
+										if (strlen($row['@attributes']['break']) > 0) {
+											$this->dialplan_detail_break = $row['@attributes']['break'];
+										}
+										$this->dialplan_detail_add();
+										if (is_array($row['action']) || is_array($row['anti-action'])) {
+											$condition_self_closing_tag = false;
+											if (!is_array($row['action'][0])) {
+												if ($row['action']['@attributes']['application']) {
+													$tmp = $row['action'];
+													unset($row['action']);
+													$row['action'][0] = $tmp;
+												}
 											}
-											$this->dialplan_detail_group = $group;
-											$this->dialplan_detail_order = $order;
-											$this->dialplan_detail_add();
+											if (!is_array($row['anti-action'][0])) {
+												if ($row['anti-action']['@attributes']['application']) {
+													$tmp = $row['anti-action'];
+													unset($row['anti-action']);
+													$row['anti-action'][0] = $tmp;
+												}
+											}
 											$order = $order + 5;
+											unset($this->dialplan_detail_break);
+											unset($this->dialplan_detail_inline);
+											if (isset($row['action'])) {
+												foreach ($row['action'] as &$row2) {
+													$this->dialplan_detail_tag = 'action';
+													$this->dialplan_detail_type = $row2['@attributes']['application'];
+													$this->dialplan_detail_data = $row2['@attributes']['data'];
+													if (strlen($row2['@attributes']['inline']) > 0) {
+														$this->dialplan_detail_inline = $row2['@attributes']['inline'];
+													}
+													$this->dialplan_detail_group = $group;
+													$this->dialplan_detail_order = $order;
+													$this->dialplan_detail_add();
+													$order = $order + 5;
+												}
+											}
+											if (isset($row['anti-action'])) {
+												foreach ($row['anti-action'] as &$row2) {
+													$this->dialplan_detail_tag = 'anti-action';
+													$this->dialplan_detail_type = $row2['@attributes']['application'];
+													$this->dialplan_detail_data = $row2['@attributes']['data'];
+													$this->dialplan_detail_group = $group;
+													$this->dialplan_detail_order = $order;
+													$this->dialplan_detail_add();
+													$order = $order + 5;
+												}
+											}
 										}
-										if (isset($row['anti-action'])) foreach ($row['anti-action'] as &$row2) {
-											$this->dialplan_detail_tag = 'anti-action';
-											$this->dialplan_detail_type = $row2['@attributes']['application'];
-											$this->dialplan_detail_data = $row2['@attributes']['data'];
-											$this->dialplan_detail_group = $group;
-											$this->dialplan_detail_order = $order;
-											$this->dialplan_detail_add();
-											$order = $order + 5;
+										else {
+											$condition_self_closing_tag = true;
 										}
+										//if not a self closing tag then increment the group
+										if (!$condition_self_closing_tag) {
+											$group++;
+										}
+										$row['group'] = $group;
+										$order = $order + 5;
+										$x++;
 									}
-									else {
-										$condition_self_closing_tag = true;
-									}
-									//if not a self closing tag then increment the group
-									if (!$condition_self_closing_tag) {
-										$group++;
-									}
-									$row['group'] = $group;
-									$order = $order + 5;
-									$x++;
 								}
 							//end the transaction
 								$this->db->commit();
