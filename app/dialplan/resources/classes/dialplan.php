@@ -305,7 +305,7 @@ include "root.php";
 				//check if the dialplan app uuid exists
 					foreach ($_SESSION['domains'] as $row) {
 						//get the domain_uuid
-						$this->domain_uuid $row['domain_uuid'];
+						$this->domain_uuid = $row['domain_uuid'];
 
 						//check if the dialplan exists
 						if (!$this->app_uuid_exists()) {
