@@ -39,6 +39,9 @@ require_once "resources/check_auth.php";
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//set the back button url
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = ($_GET['back'] != '') ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']];
+
 //define order by default
 	if ($order_by == '') {
 		$order_by = "greeting_name";
@@ -326,14 +329,14 @@ require_once "resources/check_auth.php";
 	echo "			<br><br>\n";
 	echo "			".$text['description']." <strong>".$voicemail_id."</strong>\n";
 	echo "		</td>";
+	echo "		<td align='right' nowrap valign='top'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".$_SESSION['back'][$_SERVER['PHP_SELF']]."';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 	if (permission_exists('voicemail_greeting_upload')) {
-		echo "		<td align='right' nowrap valign='top'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemails.php';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
-		echo "			<input name='file' type='file' class='formfld fileinput' id='file'>\n";
-		echo "			<input name='type' type='hidden' value='rec'>\n";
-		echo "			<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
-		echo "		</td>\n";
+		echo "		<input name='file' type='file' class='formfld fileinput' id='file'>\n";
+		echo "		<input name='type' type='hidden' value='rec'>\n";
+		echo "		<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
 	}
+	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>\n";
 	echo "<br />\n";
