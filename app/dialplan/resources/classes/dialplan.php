@@ -228,7 +228,7 @@ include "root.php";
 			}
 
 			private function app_uuid_exists() {
-				if (!isset($_SESSION['app_uuid'][$this->domain_uuid]) {
+				if (!isset($_SESSION['app_uuid'][$this->domain_uuid])) {
 					$sql = "select domain_uuid from v_dialplans ";
 					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
 					//$sql .= "and app_uuid = '".$this->app_uuid."' ";
