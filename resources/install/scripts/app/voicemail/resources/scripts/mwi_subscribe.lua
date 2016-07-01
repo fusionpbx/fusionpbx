@@ -8,6 +8,7 @@ local ievents       = require "resources.functions.ievents"
 local IntervalTimer = require "resources.functions.interval_timer"
 local cache         = require "resources.functions.cache"
 local api           = require "resources.functions.api"
+local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
@@ -77,18 +78,6 @@ local function vm_message_count(account, use_cache)
 	if not row then return end
 
 	return row.new_messages, row.saved_messages
-end
-
-local function mwi_notify(account, new_messages, saved_messages)
-	local event = freeswitch.Event("message_waiting")
-	if (new_messages == "0") then
-		event:addHeader("MWI-Messages-Waiting", "no")
-	else
-		event:addHeader("MWI-Messages-Waiting", "yes")
-	end
-	event:addHeader("MWI-Message-Account", "sip:" .. account)
-	event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)")
-	return event:fire()
 end
 
 local sleep    = 60000
