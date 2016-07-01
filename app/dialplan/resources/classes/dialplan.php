@@ -451,7 +451,7 @@ include "root.php";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$dialplans = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-							unset($prep_statement,$sql)
+							unset($prep_statement, $sql);
 							$x = 0; $y = 0;
 							if (isset($dialplans)) foreach ($dialplans as &$row) {
 								//if the previous dialplan uuid has not been set then set it
