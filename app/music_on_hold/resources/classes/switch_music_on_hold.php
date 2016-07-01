@@ -59,19 +59,20 @@ include "root.php";
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
 			//music on hold
-				$options = $this->get();
-				if (count($options) > 0) {
-					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
-					foreach($options as $row) {
-						$name = '';
-						if (strlen($row['domain_uuid']) > 0) {
-							$name = $row['domain_name'].'/';	
+				$music_list = $this->get();
+				if (count($music_list) > 0) {
+					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
+					$previous_name = '';
+					foreach($music_list as $row) {
+						if ($previous_name != $row['music_on_hold_name']) {
+							$name = '';
+							if (strlen($row['domain_uuid']) > 0) {
+								$name = $row['domain_name'].'/';	
+							}
+							$name .= $row['music_on_hold_name'];
+							$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
 						}
-						$name .= $row['music_on_hold_name'];
-						if (strlen($row['music_on_hold_rate']) > 0) {
-							$name = $name.'/'.$row['music_on_hold_rate'];
-						}
-						$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
+						$previous_name = $row['music_on_hold_name'];
 					}
 					$select .= "	</optgroup>\n";
 				}
