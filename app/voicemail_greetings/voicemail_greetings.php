@@ -314,32 +314,41 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<script>\n";
-	echo "function EvalSound(soundobj) {\n";
-	echo "	var thissound= eval(\"document.\"+soundobj);\n";
-	echo "	thissound.Play();\n";
-	echo "}\n";
-	echo "</script>";
+	echo "<script language='JavaScript' type='text/javascript'>\n";
 
-	echo "<form name='frm' method='POST' enctype='multipart/form-data' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' nowrap valign='top'>\n";
-	echo "			<span class='title'>".$text['title']."</span>\n";
-	echo "			<br><br>\n";
-	echo "			".$text['description']." <strong>".$voicemail_id."</strong>\n";
-	echo "		</td>";
-	echo "		<td align='right' nowrap valign='top'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".$_SESSION['back'][$_SERVER['PHP_SELF']]."';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+	echo "	function check_filetype(file_input) {\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
+	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+	echo "		}\n";
+	echo "		var selected_file_path = file_input.value;\n";
+	echo "		selected_file_path = selected_file_path.replace(\"C:\\\\fakepath\\\\\",'');\n";
+	echo "		document.getElementById('file_label').innerHTML = selected_file_path;\n";
+	echo "		document.getElementById('button_reset').style.display='inline';\n";
+	echo "	}\n";
+
+	echo "</script>";
+	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
+
+	echo "<div style='float: right; white-space: nowrap;'>\n";
 	if (permission_exists('voicemail_greeting_upload')) {
-		echo "		<input name='file' type='file' class='formfld fileinput' id='file'>\n";
-		echo "		<input name='type' type='hidden' value='rec'>\n";
-		echo "		<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
+		echo "		<form name='frm' method='POST' enctype='multipart/form-data' action=''>\n";
+		echo "		<input type='hidden' name='id' value='".$voicemail_id."'>\n";
+		echo "		<input type='hidden' name='type' value='rec'>\n";
 	}
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>\n";
-	echo "<br />\n";
+	echo "			<input type='button' class='btn' alt='back' onclick=\"window.location='".$_SESSION['back'][$_SERVER['PHP_SELF']]."';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+	if (permission_exists('voicemail_greeting_upload')) {
+		echo "		<input name='file' id='file' type='file' style='display: none;' onchange='check_filetype(this);'>";
+		echo "		<label id='file_label' for='file' class='txt' style='width: 200px; overflow: hidden; white-space: nowrap;'>".$text['label-select_a_file']."</label>\n";
+		echo "		<input id='button_reset' type='reset' class='btn' style='display: none;' value='".$text['button-reset']."' onclick=\"reset_file_input('file'); document.getElementById('file_label').innerHTML = '".$text['label-select_a_file']."'; this.style.display='none'; return true;\">\n";
+		echo "		<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
+		echo "		</form>";
+	}
+	echo "</div>";
+	echo "<span class='title'>".$text['title']."</span>\n";
+	echo "<br><br>\n";
+	echo $text['description']." <strong>".$voicemail_id."</strong>\n";
+	echo "<br /><br />\n";
 
 	//get the greetings list
 		$sql = "select * from v_voicemail_greetings ";
@@ -433,12 +442,7 @@ require_once "resources/check_auth.php";
 		unset($sql, $result, $row_count);
 	} //end if results
 	echo "</table>\n";
-	echo "<br />\n";
-
-	echo "<input type='hidden' name='id' value='$voicemail_id'>\n";
-	echo "</form>";
-
-	echo "<br><br>";
+	echo "<br /><br /><br />\n";
 
 //include the footer
 	require_once "resources/footer.php";
