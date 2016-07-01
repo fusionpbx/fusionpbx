@@ -241,7 +241,7 @@ include "root.php";
 								$dialplan_domain = 'global'; 
 							}
 							else {
-								$dialplan_domain = $row['domain_uuid']
+								$dialplan_domain = $row['domain_uuid'];
 							}
 							$_SESSION['app_uuid'][$dialplan_domain][$row['app_uuid']] = $row['dialplan_uuid'];
 						}
