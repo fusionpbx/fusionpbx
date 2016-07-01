@@ -31,7 +31,7 @@ if (!class_exists('ringbacks')) {
 		//define variables
 		public $db;
 		private $ringbacks;
-		private $moh_list;
+		private $music_list;
 		private $recordings_list;
 		private $default_ringback_label;
 		
@@ -90,8 +90,8 @@ if (!class_exists('ringbacks')) {
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
 					require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-					$moh = new switch_music_on_hold;
-					$this->moh_list = $moh->list_moh();
+					$music = new switch_music_on_hold;
+					$this->music_list = $music->get();
 				}
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/recordings')) {
 					require_once "app/recordings/resources/classes/switch_recordings.php";
@@ -108,11 +108,19 @@ if (!class_exists('ringbacks')) {
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
-			//moh
-				if (sizeof($this->moh_list) > 0) {
+			//music list
+				if (count($this->music_list) > 0) {
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
-					foreach($this->moh_list as $moh_value => $moh_name) {
-						$select .= "		<option value='".$moh_value."' ".(($selected == $moh_value) ? 'selected="selected"' : '').">".$moh_name."</option>\n";
+					foreach($this->music_list as $row) {
+						$name = '';
+						if (strlen($row['domain_uuid']) > 0) {
+							$name = $row['domain_name'].'/';	
+						}
+						$name .= $row['music_on_hold_name'];
+						if (strlen($row['music_on_hold_rate']) > 0) {
+							$name = $name.'/'.$row['music_on_hold_rate'];
+						}
+						$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
 					}
 					$select .= "	</optgroup>\n";
 				}
