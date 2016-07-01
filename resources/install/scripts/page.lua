@@ -35,16 +35,32 @@
 --define the explode function
 	require "resources.functions.explode";
 
---define the leading_zeros function
-	function leading_zeros(str)
-		zeros = '';
-		for i = 1, string.len(str) do
-			c = string.sub(str, i, i);
-			if (c == '0') then
-				zeros = zeros .. '0';
-			else 
-				return zeros;
+--define the split function
+	require "resources.functions.split";
+
+--iterator over numbers.
+	local function each_number(value)
+		local begin_value, end_value = split_first(value, "-", true)
+		if (not end_value) or (begin_value == end_value) then
+			return function()
+				local result = value
+				value = nil
+				return result
 			end
+		end
+
+		if string.find(begin_value, "^0") then
+			assert(#begin_value == #end_value, "number in range with leading `0` should have same length")
+		end
+
+		local number_length = ("." .. tostring(#begin_value))
+		begin_value, end_value = tonumber(begin_value), tonumber(end_value)
+		assert(begin_value and end_value and (begin_value <= end_value), "Invalid range: " .. value)
+
+		return function()
+			value, begin_value = begin_value, begin_value + 1
+			if value > end_value then return end
+			return string.format("%" .. number_length .. "d", value)
 		end
 	end
 
@@ -66,7 +82,7 @@
 			caller_id_number = session:getVariable("caller_id_number");
 			sip_from_user = session:getVariable("sip_from_user");
 			mute = session:getVariable("mute");
-	
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -74,30 +90,30 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-	
+
 		local conference_name = "page-"..destination_number.."-"..domain_name.."@page"
-	
+
 		if (caller_id_name) then
 			--caller id name provided do nothing
 		else
 			effective_caller_id_name = session:getVariable("effective_caller_id_name");
 			caller_id_name = effective_caller_id_name;
 		end
-	
+
 		if (caller_id_number) then
 			--caller id number provided do nothing
 		else
 			effective_caller_id_number = session:getVariable("effective_caller_id_number");
 			caller_id_number = effective_caller_id_number;
 		end
-	
+
 		--set conference flags
 		if (mute == "true") then
 			flags = "flags{mute}";
 		else
 			flags = "flags{}";
 		end
-	
+
 		--if the pin number is provided then require it
 		if (pin_number) then
 			--sleep
@@ -129,19 +145,11 @@
 		destination_count = 0;
 		api = freeswitch.API();
 		for index,value in pairs(destination_table) do
-			if (string.find(value, "-") == nil) then
-				value = value..'-'..value;
-			end
-			sub_table = explode("-",value);
-			zeros = leading_zeros(sub_table[1]);
-			for destination=sub_table[1],sub_table[2] do
-
-				--add the leading zeros back again
-				destination = zeros .. destination;
+			for destination in each_number(value) do
 
 				--get the destination required for number-alias
 				destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
-	
+
 				--prevent calling the user that initiated the page
 				if (sip_from_user ~= destination) then
 					--cmd = "username_exists id "..destination.."@"..domain_name;
@@ -151,7 +159,7 @@
 						reply = trim(api:executeString(destination_status));
 						if (reply == "0 total.") then
 							freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-							if (destination == tonumber(sip_from_user)) then
+							if destination == sip_from_user then
 								--this destination is the caller that initated the page
 							else
 								--originate the call
@@ -180,7 +188,7 @@
 				end
 			end
 		end
-	
+
 		--send main call to the conference room
 		if (destination_count > 0) then
 			if (session:getVariable("moderator") == "true") then
