@@ -319,7 +319,7 @@ include "root.php";
 								$this->dialplan_uuid = uuid();
 								$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
 								$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
-								$this->dialplan_context = $row['domain_name'];
+								$this->dialplan_context = $domain['domain_name'];
 								$this->dialplan_global = false;
 								if (strlen($dialplan['extension']['@attributes']['global']) > 0) {
 									if ($dialplan['extension']['@attributes']['global'] == "true") {
