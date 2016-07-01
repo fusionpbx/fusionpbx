@@ -59,8 +59,8 @@ include "root.php";
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
 			//music on hold
-				$options = $this->streams();
-				if (sizeof($options) > 0) {
+				$options = $this->get();
+				if (count($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
 					foreach($options as $row) {
 						$name = '';
@@ -99,7 +99,7 @@ include "root.php";
 				return $select;
 		}
 
-		public function streams() {
+		public function get() {
 			//add multi-lingual support
 				$language = new text;
 				$text = $language->get(null, 'app/music_on_hold');
