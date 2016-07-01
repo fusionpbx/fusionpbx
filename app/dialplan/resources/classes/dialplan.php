@@ -228,32 +228,21 @@ include "root.php";
 			}
 
 			private function app_uuid_exists() {
-				if (!isset($_SESSION['app_uuid'][$this->domain_uuid])) {
-					$sql = "select domain_uuid from v_dialplans ";
-					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
-					//$sql .= "and app_uuid = '".$this->app_uuid."' ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						foreach ($result as $row) {
-							if ($row['domain_uuid'] == null) {
-								$dialplan_domain = 'global'; 
-							}
-							else {
-								$dialplan_domain = $row['domain_uuid'];
-							}
-							$_SESSION['app_uuid'][$dialplan_domain][$row['app_uuid']] = $row['dialplan_uuid'];
-						}
+				$sql = "select domain_uuid from v_dialplans ";
+				$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+				$sql .= "and app_uuid = '".$this->app_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					if (count($result)) {
+						return true;
 					}
-					unset($sql, $prep_statement, $result);
+					else {
+						return false;
+					}
 				}
-				if (isset($_SESSION['app_uuid']['global'][$this->app_uuid]) || isset($_SESSION['app_uuid'][$this->domain_uuid][$this->app_uuid])) {
-					return true;
-				}
-				else {
-					return false;
-				}
+				unset($sql, $prep_statement, $result);
 			}
 
 			public function dialplan_exists() {
