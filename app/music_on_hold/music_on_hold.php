@@ -606,9 +606,17 @@
 						}
 					}
 
+				//set the rate label
+					if ($auto_rate) {
+						$stream_details = $text['option-default'].' '.$icons;
+					}
+					else {
+						$stream_details = ($music_on_hold_rate/1000).' kHz / '.$icons;
+					}
+			
 				//show the table header
 					echo "	<tr>\n";
-					echo "		<th class='listhdr'>".(($auto_rate) ? ($music_on_hold_rate/1000).' kHz / '.$text['option-default'] : ($music_on_hold_rate/1000)." kHz").$icons."</th>\n";
+					echo "		<th class='listhdr'>".$stream_details."</th>\n";
 					echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
 					echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
 					echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
