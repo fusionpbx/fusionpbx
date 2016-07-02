@@ -38,7 +38,7 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//get current moh record, build array
+//get current music on hold record, build array
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where music_on_hold_uuid = '".$_GET['id']."' ";
 	if (!permission_exists('music_on_hold_global_edit')) {
@@ -109,7 +109,7 @@ if (is_array($_POST) && sizeof($_POST) > 0) {
 
 //show the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-moh_settings'];
+	$document['title'] = $text['title-music_on_hold_settings'];
 
 //show the content
 	if (if_group("superadmin")) {
@@ -151,7 +151,7 @@ if (is_array($_POST) && sizeof($_POST) > 0) {
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='music_on_hold.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
-	echo "<b>".$text['header-moh_settings'].": ".$moh['name_only']." (".($moh['rate']/1000).' kHz'.(($moh['rate'] == '48000') ? ' / '.$text['option-default'] : null).")</b>";
+	echo "<b>".$text['header-music_on_hold_settings'].": ".$moh['name_only']." (".($moh['rate']/1000).' kHz'.(($moh['rate'] == '48000') ? ' / '.$text['option-default'] : null).")</b>";
 	echo "<br /><br />\n\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
