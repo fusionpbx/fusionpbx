@@ -46,7 +46,7 @@
 //increase the exucution time
 	ini_set('max_execution_time', 7200);
 
-//get moh records, build array
+//get music_on_hold records, build array
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	if (permission_exists('music_on_hold_global_view')) {
@@ -85,7 +85,7 @@
 	sort($stream_names['local'], SORT_NATURAL);
 	//echo "<pre>".print_r($mohs, true)."</pre>\n\n\n\n\n"; exit;
 
-//download moh file
+//download music on hold file
 	if ($_GET['action'] == "download") {
 		$stream_uuid = $_GET['id'];
 		$stream_file = base64_decode($_GET['file']);
@@ -117,7 +117,7 @@
 		exit;
 	}
 
-//upload moh file
+//upload music on hold file
 	if ($_POST['action'] == 'upload' && is_array($_FILES) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 		//determine name & scope
 			if ($_POST['name_new'] != '') {
@@ -166,7 +166,7 @@
 						(($stream_scope == 'global') ? 'global' : $_SESSION['domain_name']),
 						$stream_name_only, $path_rate
 					);
-				//flag to mark if there already has such moh profile
+				//flag to mark if there already has such music on hold profile
 					$stream_path_found = false;
 				//begin query
 					$music_on_hold_uuid = uuid();
@@ -259,7 +259,7 @@
 			exit;
 	}
 
-//delete moh/file
+//delete the music on hold file
 	if ($_GET['action'] == "delete") {
 		//get submitted values
 			$stream_uuid = check_str($_GET['id']);
@@ -382,7 +382,7 @@
 
 //include the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-moh'];
+	$document['title'] = $text['title-music_on_hold'];
 
 	echo "<script language='JavaScript' type='text/javascript'>\n";
 
@@ -425,14 +425,14 @@
 	echo "</script>\n";
 	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
 
-	echo "<b>".$text['label-moh']."</b>";
+	echo "<b>".$text['label-music_on_hold']."</b>";
 	echo "<br /><br />\n";
-	echo $text['desc-moh']."\n";
+	echo $text['desc-music_on_hold']."\n";
 	echo "<br /><br />\n";
 
 //show the upload form
 	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_global_add')) {
-		echo "<b>".$text['label-upload-moh']."</b>\n";
+		echo "<b>".$text['label-upload-music_on_hold']."</b>\n";
 		echo "<br><br>\n";
 
 		echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
