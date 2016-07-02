@@ -211,16 +211,16 @@ $text['label-select_a_file']['uk'] = "Виберіть файл ...";
 $text['label-select_a_file']['de-at'] = "Wählen Sie eine Datei ...";
 $text['label-select_a_file']['he'] = "בחר קובץ ...";
 
-$text['label-sampling']['en-us'] = "Sampling";
-$text['label-sampling']['es-cl'] = "Muestreo";
-$text['label-sampling']['pt-pt'] = "Amostragem";
-$text['label-sampling']['fr-fr'] = "Échantillonnage";
-$text['label-sampling']['pt-br'] = "Amostragem";
-$text['label-sampling']['pl'] = "Sampling";
-$text['label-sampling']['sv-se'] = "Sampling";
-$text['label-sampling']['uk'] = "Якість";
-$text['label-sampling']['de-at'] = "Abtastrate";
-$text['label-sampling']['he'] = "דגימת קול";
+$text['label-rate']['en-us'] = "Sampling";
+$text['label-rate']['es-cl'] = "Muestreo";
+$text['label-rate']['pt-pt'] = "Amostragem";
+$text['label-rate']['fr-fr'] = "Échantillonnage";
+$text['label-rate']['pt-br'] = "Amostragem";
+$text['label-rate']['pl'] = "Sampling";
+$text['label-rate']['sv-se'] = "Sampling";
+$text['label-rate']['uk'] = "Якість";
+$text['label-rate']['de-at'] = "Abtastrate";
+$text['label-rate']['he'] = "דגימת קול";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
