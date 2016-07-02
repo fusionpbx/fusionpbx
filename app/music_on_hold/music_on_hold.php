@@ -488,7 +488,7 @@
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "		<tr>\n";
 		echo "			<td class='vncell' width='30%' valign='top' nowrap='nowrap'>\n";
-		echo "				".$text['label-sampling']."\n";
+		echo "				".$text['label-rate']."\n";
 		echo "			</td>\n";
 		echo "			<td class='vtable' width='70%'>\n";
 		echo "				<select id='rate' name='rate' class='formfld' style='width: auto;'>\n";
