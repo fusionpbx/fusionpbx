@@ -46,100 +46,121 @@
 //increase the exucution time
 	ini_set('max_execution_time', 7200);
 
-//get music_on_hold records, build array
+//get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where ( ";
+	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	if (permission_exists('music_on_hold_global_view')) {
 		$sql .= "or domain_uuid is null ";
 	}
+	$sql .= ") ";
 	$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	if (count($result) > 0) {
-		foreach($result as $row) {
-			$stream_name_only = (substr_count($row['music_on_hold_name'], '/') > 0) ? substr($row['music_on_hold_name'], 0, strpos($row['music_on_hold_name'], '/')) : $row['music_on_hold_name'];
-			$stream_domain_uuid = ($row['domain_uuid'] != '') ? $row['domain_uuid'] : '_global_';
-			$stream_rate = $row['music_on_hold_rate'];
-
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['uuid'] = $row['music_on_hold_uuid'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['name'] = $row['music_on_hold_name']; //value may include '/[rate]'
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['path'] = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['shuffle'] = $row['music_on_hold_shuffle'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['channels'] = $row['music_on_hold_channels'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['interval'] = $row['music_on_hold_interval'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['chime_list'] = $row['music_on_hold_chime_list'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['chime_freq'] = $row['music_on_hold_chime_freq'];
-			$mohs[$stream_domain_uuid][$stream_name_only][$stream_rate]['chime_max'] = $row['music_on_hold_chime_max'];
-
-			$stream_names[(($stream_domain_uuid == '_global_') ? 'global' : 'local')][] = $stream_name_only;
-			$stream_paths[$row['music_on_hold_uuid']] = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
-			$stream_domains[$row['music_on_hold_uuid']][] = $row['domain_uuid'];
-		}
-	}
-	unset($sql, $prep_statement, $result);
-	foreach ($mohs as &$moh) { ksort($moh); }
-	$stream_names['global'] = array_unique($stream_names['global']);
-	$stream_names['local'] = array_unique($stream_names['local']);
-	sort($stream_names['global'], SORT_NATURAL);
-	sort($stream_names['local'], SORT_NATURAL);
-	//echo "<pre>".print_r($mohs, true)."</pre>\n\n\n\n\n"; exit;
+	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //download music on hold file
 	if ($_GET['action'] == "download") {
-		$stream_uuid = $_GET['id'];
-		$stream_file = base64_decode($_GET['file']);
-		$stream_full_path = path_join($stream_paths[$stream_uuid], $stream_file);
+		//get the uuid
+			$stream_uuid = $_GET['id'];
 
-		session_cache_limiter('public');
-		if (file_exists($stream_full_path)) {
-			$fd = fopen($stream_full_path, "rb");
-			if ($_GET['t'] == "bin") {
-				header("Content-Type: application/force-download");
-				header("Content-Type: application/octet-stream");
-				header("Content-Type: application/download");
-				header("Content-Description: File Transfer");
-			}
-			else {
-				$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
-				switch ($stream_file_ext) {
-					case "wav" : header("Content-Type: audio/x-wav"); break;
-					case "mp3" : header("Content-Type: audio/mpeg"); break;
-					case "ogg" : header("Content-Type: audio/ogg"); break;
+		//get the record
+			foreach($streams as $row) {
+				if ($stream_uuid == $row['music_on_hold_uuid']) {
+					$stream_domain_uuid = $row['domain_uuid'];
+					$stream_name = $row['music_on_hold_name'];
+					$stream_path = $row['music_on_hold_path'];
+					break;
 				}
 			}
-			header('Content-Disposition: attachment; filename="'.$stream_file.'"');
-			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-			header("Content-Length: ".filesize($stream_full_path));
-			fpassthru($fd);
-		}
-		exit;
+		
+		//replace the sounds_dir variable in the path
+			// str_replace ( mixed $search , mixed $replace , mixed $subject [, int &$count ] )
+			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+
+		//get the file
+			$stream_file = base64_decode($_GET['file']);
+			$stream_full_path = path_join($stream_path, $stream_file);
+
+		//dowload the file
+			session_cache_limiter('public');
+			if (file_exists($stream_full_path)) {
+				$fd = fopen($stream_full_path, "rb");
+				if ($_GET['t'] == "bin") {
+					header("Content-Type: application/force-download");
+					header("Content-Type: application/octet-stream");
+					header("Content-Type: application/download");
+					header("Content-Description: File Transfer");
+				}
+				else {
+					$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
+					switch ($stream_file_ext) {
+						case "wav" : header("Content-Type: audio/x-wav"); break;
+						case "mp3" : header("Content-Type: audio/mpeg"); break;
+						case "ogg" : header("Content-Type: audio/ogg"); break;
+					}
+				}
+				header('Content-Disposition: attachment; filename="'.$stream_file.'"');
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+				header("Content-Length: ".filesize($stream_full_path));
+				fpassthru($fd);
+			}
+			exit;
 	}
 
 //upload music on hold file
 	if ($_POST['action'] == 'upload' && is_array($_FILES) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+
 		//determine name & scope
 			if ($_POST['name_new'] != '') {
-				$stream_scope = (permission_exists('music_on_hold_global_add')) ? $_POST['scope'] : 'local';
+				if (permission_exists('music_on_hold_global_add')) { $stream_scope = $_POST['scope']; } else { $stream_scope = 'local'; }
 				$stream_name_only = strtolower($_POST['name_new']);
-				$stream_new_name = true;
+				if (is_numeric($_POST['rate'])) {	$stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
 			}
 			else {
-				$tmp = explode('|', $_POST['name']);
-				$stream_scope = $tmp[0];
-				$stream_name_only = $tmp[1];
-				$stream_new_name = false;
+				$stream_uuid = $_POST['name'];
+				foreach ($streams as $row) {
+					if ($stream_uuid == $row['music_on_hold_uuid']) {
+						//set the variables
+							$stream_domain_uuid = $row['domain_uuid'];
+							$stream_name = $row['music_on_hold_name'];
+							$stream_path = $row['music_on_hold_path'];
+							$stream_rate = $row['music_on_hold_rate'];
+							$stream_shuffle = $row['music_on_hold_shuffle'];
+							$stream_channels = $row['music_on_hold_channels'];
+							$stream_internal = $row['music_on_hold_interval'];
+							$stream_timer_name = $row['music_on_hold_timer_name'];
+							$stream_chime_list = $row['music_on_hold_chime_list'];
+							$stream_chime_freq = $row['music_on_hold_chime_freq'];
+							$stream_chime_max = $row['music_on_hold_chime_max'];
+							$stream_rate = $row['music_on_hold_rate'];
+
+						//set the scope
+							if (strlen($stream_domain_uuid) == 0) {
+								$stream_scope = "public";
+							}
+							else {
+								$stream_scope = "local";
+							}
+
+						//end the loop
+							break;
+					}
+				}
+				$stream_name_only = $stream_name;
 			}
+
 		//get remaining values
-			$stream_rate = $_POST['rate'];
 			$stream_file_name_temp = $_FILES['file']['tmp_name'];
 			$stream_file_name = $_FILES['file']['name'];
 			$stream_file_ext = strtolower(pathinfo($stream_file_name, PATHINFO_EXTENSION));
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
 		//check permissions
-			$has_permission = ( ($stream_scope == 'global' && permission_exists('music_on_hold_global_add')) || ($stream_scope == 'local' && permission_exists('music_on_hold_add')) ) ? true : false;
+			$has_permission = (($stream_scope == 'global' && permission_exists('music_on_hold_global_add')) 
+								|| ($stream_scope == 'local' && permission_exists('music_on_hold_add')) ) ? true : false;
+
 		//process, if possible
 			if (!$valid_file_type) {
 				$_SESSION['message'] = $text['message-unsupported_file_type'];
@@ -166,35 +187,50 @@
 						(($stream_scope == 'global') ? 'global' : $_SESSION['domain_name']),
 						$stream_name_only, $path_rate
 					);
-				//flag to mark if there already has such music on hold profile
-					$stream_path_found = false;
-				//begin query
-					$music_on_hold_uuid = uuid();
-					$sql = "insert into v_music_on_hold ";
-					$sql .= "( ";
-					$sql .= "music_on_hold_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "music_on_hold_name, ";
-					$sql .= "music_on_hold_path, ";
-					$sql .= "music_on_hold_rate, ";
-					$sql .= "music_on_hold_shuffle, ";
-					$sql .= "music_on_hold_channels, ";
-					$sql .= "music_on_hold_interval, ";
-					$sql .= "music_on_hold_timer_name, ";
-					$sql .= "music_on_hold_chime_list, ";
-					$sql .= "music_on_hold_chime_freq, ";
-					$sql .= "music_on_hold_chime_max ";
-					$sql .= ") values ";
-				//new name
-					if ($stream_new_name) {
+				//find whether the path already exists
+					$stream_new_name = true;
+					foreach ($streams as $row) {
+						$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+						if ($stream_path == $row['music_on_hold_path']
+							|| $stream_path == $alternate_path) {
+							$stream_new_name = false;
+							break;
+						}
+					}
+
+				//set the variables
 						$music_on_hold_name = $stream_name_only;
-						$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $stream_path);
+						$music_on_hold_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+
+				//begin query
+					if ($stream_new_name) {
+						$music_on_hold_uuid = uuid();
+						$sql = "insert into v_music_on_hold ";
 						$sql .= "( ";
+						$sql .= "music_on_hold_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "music_on_hold_name, ";
+						$sql .= "music_on_hold_path, ";
+						$sql .= "music_on_hold_rate, ";
+						$sql .= "music_on_hold_shuffle, ";
+						$sql .= "music_on_hold_channels, ";
+						$sql .= "music_on_hold_interval, ";
+						$sql .= "music_on_hold_timer_name, ";
+						$sql .= "music_on_hold_chime_list, ";
+						$sql .= "music_on_hold_chime_freq, ";
+						$sql .= "music_on_hold_chime_max ";
+						$sql .= ") ";
+						$sql .= "values ( ";
 						$sql .= "'".$music_on_hold_uuid."',";
 						$sql .= (($stream_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
 						$sql .= "'".check_str($music_on_hold_name)."', ";
 						$sql .= "'".check_str($music_on_hold_path)."', ";
-						$sql .= "'".check_str($stream_rate)."', ";
+						if (strlen($stream_rate) == 0) {
+							$sql .= "null, ";
+						}
+						else {
+							$sql .= "'".$stream_rate."', ";
+						}
 						$sql .= "'false', ";
 						$sql .= "1, ";
 						$sql .= "20, ";
@@ -205,41 +241,11 @@
 						$sql .= ") ";
 						unset($music_on_hold_name, $music_on_hold_path);
 					}
-				//existing name
-					else {
-						//get existing path
-							$stream_settings = $mohs[(($stream_scope == 'global') ? '_global_' : $domain_uuid)][$stream_name_only][$stream_rate];
-							if (($stream_rate_auto && $stream_name_only == $stream_settings['name']) ||
-								(!$stream_rate_auto && path_join($stream_name_only, $stream_rate) == $stream_settings['name'])) {
-								$stream_path = $stream_settings['path'];
-								$stream_path_found = true;
-							}
-						//not found, finish query
-							else {
-								$music_on_hold_name = $stream_name_only;
-								$music_on_hold_path = str_replace($_SESSION['switch']['sounds']['dir'], '$${sounds_dir}', $stream_path);
 
-								$sql .= "( ";
-								$sql .= "'".$music_on_hold_uuid."',";
-								$sql .= (($stream_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
-								$sql .= "'".check_str($music_on_hold_name)."', ";
-								$sql .= "'".check_str($music_on_hold_path)."', ";
-								$sql .= "'".check_str($stream_rate)."', ";
-								$sql .= "'false', ";
-								$sql .= "1, ";
-								$sql .= "20, ";
-								$sql .= "'soft', ";
-								$sql .= "null, ";
-								$sql .= "null, ";
-								$sql .= "null ";
-								$sql .= ") ";
-								unset($music_on_hold_name, $music_on_hold_path);
-							}
-					}
 				//execute query
 					if (!$stream_path_found) {
-							$db->exec(check_sql($sql));
-							unset($sql);
+						$db->exec(check_sql($sql));
+						unset($sql);
 					}
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
@@ -261,15 +267,26 @@
 
 //delete the music on hold file
 	if ($_GET['action'] == "delete") {
+
 		//get submitted values
 			$stream_uuid = check_str($_GET['id']);
 			$stream_file = check_str(base64_decode($_GET['file']));
+
+		//get the record
+			foreach($streams as $row) {
+				if ($stream_uuid == $row['music_on_hold_uuid']) {
+					$stream_domain_uuid = $row['domain_uuid'];
+					$stream_name = $row['music_on_hold_name'];
+					$stream_path = $row['music_on_hold_path'];
+					$stream_rate = $row['music_on_hold_rate'];
+					break;
+				}
+			}
+
 		//check permissions
-			if (
-				($stream_domains[$stream_uuid] == '' && permission_exists('music_on_hold_global_delete')) ||
-				($stream_domains[$stream_uuid] != '' && permission_exists('music_on_hold_delete'))
-				) {
-					$stream_path = $stream_paths[$stream_uuid];
+			if (($stream_domain_uuid == '' && permission_exists('music_on_hold_global_delete')) ||
+				($stream_domain_uuid != '' && permission_exists('music_on_hold_delete'))) {
+
 				//remove specified file
 					if ($stream_file != '') {
 						@unlink(path_join($stream_path, $stream_file));
@@ -292,7 +309,7 @@
 							$sql = "delete from v_music_on_hold ";
 							$sql .= "where music_on_hold_uuid = '".$stream_uuid."' ";
 							if (!permission_exists('music_on_hold_global_delete')) {
-								$sql .= "and domain_uuid = '".$domain_uuid."' ";
+								$sql .= "and domain_uuid = '".$stream_domain_uuid."' ";
 							}
 							//echo $sql; exit;
 							$prep_statement = $db->prepare(check_sql($sql));
@@ -310,75 +327,6 @@
 			header("Location: music_on_hold.php");
 			exit;
 	}
-
-//get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-
-//add the search term
-	$search = check_str($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "music_on_hold_name like '%".$search."%'";
-		$sql_search .= "or music_on_hold_path like '%".$search."%'";
-		$sql_search .= "or music_on_hold_rate like '%".$search."%'";
-		$sql_search .= "or music_on_hold_shuffle like '%".$search."%'";
-		$sql_search .= "or music_on_hold_channels like '%".$search."%'";
-		$sql_search .= "or music_on_hold_interval like '%".$search."%'";
-		$sql_search .= "or music_on_hold_timer_name like '%".$search."%'";
-		$sql_search .= "or music_on_hold_chime_list like '%".$search."%'";
-		$sql_search .= "or music_on_hold_chime_freq like '%".$search."%'";
-		$sql_search .= "or music_on_hold_chime_max like '%".$search."%'";
-		$sql_search .= ")";
-	}
-
-//additional includes
-	require_once "resources/paging.php";
-
-//prepare to page the results
-	$sql = "select count(*) as num_rows from v_music_on_hold ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-		}
-		else {
-				$num_rows = '0';
-		}
-	}
-
-//prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
-//set the default order by
-	if (strlen($order_by) == 0) { $order_by = 'music_on_hold_name, music_on_hold_rate'; }
-	if (strlen($order) == 0) { $order = 'asc'; }
-
-//get the list
-	$sql = "select * from v_music_on_hold ";
-	$sql .= "where (";
-	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('music_on_hold_global_view')) {
-		$sql .= "or domain_uuid is null ";
-	}
-	$sql .= ") ";
-	$sql .= $sql_search;
-	$sql .= "order by $order_by $order ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
 
 //include the header
 	require_once "resources/header.php";
@@ -450,31 +398,36 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' width='70%' style='white-space: nowrap;'>\n";
 		echo "				<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
-		if (is_array($stream_names['local']) && sizeof($stream_names['local']) > 0) {
-			if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
-				echo "			<optgroup label='".$text['option-local']."'>\n";
-			}
-			foreach ($stream_names['local'] as $local_stream_name) {
-				echo "				<option value='local|".$local_stream_name."'>".str_replace('_',' ',$local_stream_name)."</option>\n";
-			}
-			if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
-				echo "			</optgroup>\n";
+
+		echo "			<optgroup label='".$text['option-local']."'>\n";
+		foreach ($streams as $row) {
+			if (strlen($row['domain_uuid']) > 0) {
+			if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+			if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+				echo "				<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
 			}
 		}
-		if (permission_exists('music_on_hold_global_add') && is_array($stream_names['global']) && sizeof($stream_names['global']) > 0) {
+		echo "			</optgroup>\n";
+
+		if (permission_exists('music_on_hold_global_add')) {
 			echo "				<optgroup label='".$text['option-global']."'>\n";
-			foreach ($stream_names['global'] as $global_stream_name) {
-				echo "				<option value='global|".$global_stream_name."' style='font-style: italic;'>".str_replace('_',' ',$global_stream_name)."</option>\n";
+			foreach ($streams as $row) {
+				if (strlen($row['domain_uuid']) == 0) {
+					if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+					if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+					echo "				<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
+				}
 			}
 			echo "				</optgroup>\n";
 		}
 		echo "				</select>";
+
 		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='glyphicon glyphicon-plus'></span></button>";
 		if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
 			echo "			<select name='scope' id='scope' class='formfld' style='display: none;' onchange=\"document.getElementById('name_new').focus();\">\n";
 			echo "				<option value='local' selected>".$text['option-local']."</option>\n";
 			echo "				<option value='global'>".$text['option-global']."</option>\n";
-			echo "	    	</select>\n";
+			echo "			</select>\n";
 		}
 		echo "				<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' value=''>";
 		echo "				<button type='button' id='btn_select' class='btn btn-default list_control_icon' style='display: none; margin-left: 3px;' onclick=\"name_mode('select');\"><span class='glyphicon glyphicon-list-alt'></span></button>";
@@ -550,13 +503,12 @@
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
 					$music_on_hold_rate = $row['music_on_hold_rate'];
-			
+
 					$stream_scope = $row['domain_uuid'];
 					if (!$stream_scope) $stream_scope = '_global_';
 					$tmp = explode('/', $row['music_on_hold_name']);
 					$stream_name_only = $tmp[0];
 					$stream_rate = $row['music_on_hold_rate'];
-					$stream_settings = $mohs[$stream_scope][$stream_name_only][$stream_rate]; 
 
 				//add vertical space
 					echo "<tr class='tr_link_void'><td colspan='5'><div style='width: 1px; height: 10px;'></div></td></tr>\n";
@@ -581,20 +533,20 @@
 					$i = 0;
 					if (permission_exists('music_on_hold_path')) {
 						$stream_icons[$i]['glyphicon'] = 'glyphicon-folder-open';
-						$stream_icons[$i]['title'] = $stream_paths[$row['music_on_hold_uuid']];
+						$stream_icons[$i]['title'] = $row['music_on_hold_name'];
 						$i++;
 					}
-					if ($stream_settings['shuffle'] == 'true') {
+					if ($row['music_on_hold_shuffle'] == 'true') {
 						$stream_icons[$i]['glyphicon'] = 'glyphicon-random';
 						$stream_icons[$i]['title'] = $text['label-shuffle'];
 						$i++;
 					}
-					if ($stream_settings['chime_list'] != '') {
+					if ($row['music_on_hold_chime_list'] != '') {
 						$stream_icons[$i]['glyphicon'] = 'glyphicon-bell';
-						$stream_icons[$i]['title'] = $text['label-chime_list'].': '.$stream_settings['chime_list'];
+						$stream_icons[$i]['title'] = $text['label-chime_list'].': '.$row['music_on_hold_chime_list'];
 						$i++;
 					}
-					if ($stream_settings['channels'] == '2') {
+					if ($row['music_on_hold_channels'] == '2') {
 						$stream_icons[$i]['glyphicon'] = 'glyphicon-headphones';
 						$stream_icons[$i]['title'] = $text['label-stereo'];
 						$stream_icons[$i]['margin'] = 6;
