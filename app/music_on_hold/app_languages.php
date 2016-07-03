@@ -298,6 +298,16 @@ $text['label-interval']['sv-se'] = "Intervall";
 $text['label-interval']['uk'] = "Інтервал";
 $text['label-interval']['de-at'] = "Intervall";
 
+$text['label-timer_name']['en-us'] = "Timer Name";
+$text['label-timer_name']['es-cl'] = "";
+$text['label-timer_name']['pt-pt'] = "";
+$text['label-timer_name']['fr-fr'] = "";
+$text['label-timer_name']['pt-br'] = "";
+$text['label-timer_name']['pl'] = "";
+$text['label-timer_name']['sv-se'] = "";
+$text['label-timer_name']['uk'] = "";
+$text['label-timer_name']['de-at'] = "";
+
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['es-cl'] = "Global";
 $text['label-global']['pt-pt'] = "Global";
