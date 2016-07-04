@@ -143,6 +143,7 @@
 				} //if ($action == "add")
 
 				if ($action == "update" && permission_exists('music_on_hold_edit')) {
+					//update the stream settings
 					$sql = "update v_music_on_hold set ";
 					if (permission_exists('music_on_hold_domain')) {
 						if (strlen($domain_uuid) == 0) { $sql .= "domain_uuid = null, "; } else { $sql .= "domain_uuid = '$domain_uuid', "; }
@@ -335,7 +336,7 @@
 	echo "	".$text['label-chime_list']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='chime_list' class='formfld' style='width: 350px;' ".((permission_exists('music_on_hold_path')) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<select name='music_on_hold_chime_list' class='formfld' style='width: 350px;' ".((permission_exists('music_on_hold_path')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option value=''></option>\n";
 	//misc optgroup
 		/*
