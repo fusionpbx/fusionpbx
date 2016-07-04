@@ -115,7 +115,7 @@
 		//determine name & scope
 			if ($_POST['name_new'] != '') {
 				if (permission_exists('music_on_hold_global_add')) { $stream_scope = $_POST['scope']; } else { $stream_scope = 'local'; }
-				$stream_name_only = strtolower($_POST['name_new']);
+				$stream_name = strtolower($_POST['name_new']);
 				if (is_numeric($_POST['rate'])) {	$stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
 			}
 			else {
@@ -138,7 +138,7 @@
 
 						//set the scope
 							if (strlen($stream_domain_uuid) == 0) {
-								$stream_scope = "public";
+								$stream_scope = "global";
 							}
 							else {
 								$stream_scope = "local";
@@ -148,7 +148,6 @@
 							break;
 					}
 				}
-				$stream_name_only = $stream_name;
 			}
 
 		//get remaining values
@@ -166,12 +165,14 @@
 				$_SESSION['message'] = $text['message-unsupported_file_type'];
 			}
 			else if ($has_permission) {
+
 				//strip slashes, replace spaces
 					$slashes = array("/", "\\");
-					$stream_name_only = str_replace($slashes, '', $stream_name_only);
-					$stream_name_only = str_replace(' ', '_', $stream_name_only);
+					$stream_name = str_replace($slashes, '', $stream_name);
+					$stream_name = str_replace(' ', '_', $stream_name);
 					$stream_file_name = str_replace($slashes, '', $stream_file_name);
 					$stream_file_name = str_replace(' ', '-', $stream_file_name);
+					$stream_file_name = strtolower($stream_file_name);
 				//detect auto rate
 					if ($stream_rate == 'auto') {
 						$stream_rate = '';
@@ -185,7 +186,7 @@
 				//define default path
 					$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
 						(($stream_scope == 'global') ? 'global' : $_SESSION['domain_name']),
-						$stream_name_only, $path_rate
+						$stream_name, $path_rate
 					);
 				//find whether the path already exists
 					$stream_new_name = true;
@@ -199,12 +200,11 @@
 					}
 
 				//set the variables
-						$music_on_hold_name = $stream_name_only;
-						$music_on_hold_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+						$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
 
 				//begin query
 					if ($stream_new_name) {
-						$music_on_hold_uuid = uuid();
+						$stream_uuid = uuid();
 						$sql = "insert into v_music_on_hold ";
 						$sql .= "( ";
 						$sql .= "music_on_hold_uuid, ";
@@ -221,10 +221,10 @@
 						$sql .= "music_on_hold_chime_max ";
 						$sql .= ") ";
 						$sql .= "values ( ";
-						$sql .= "'".$music_on_hold_uuid."',";
+						$sql .= "'".$stream_uuid."',";
 						$sql .= (($stream_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
-						$sql .= "'".check_str($music_on_hold_name)."', ";
-						$sql .= "'".check_str($music_on_hold_path)."', ";
+						$sql .= "'".check_str($stream_name)."', ";
+						$sql .= "'".check_str($stream_path)."', ";
 						if (strlen($stream_rate) == 0) {
 							$sql .= "null, ";
 						}
@@ -506,8 +506,8 @@
 
 					$stream_scope = $row['domain_uuid'];
 					if (!$stream_scope) $stream_scope = '_global_';
-					$tmp = explode('/', $row['music_on_hold_name']);
-					$stream_name_only = $tmp[0];
+//					$tmp = explode('/', $row['music_on_hold_name']);
+//					$stream_name = $tmp[0];
 					$stream_rate = $row['music_on_hold_rate'];
 
 				//add vertical space
