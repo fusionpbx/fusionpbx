@@ -385,27 +385,31 @@
 		echo "			<td class='vtable' width='70%' style='white-space: nowrap;'>\n";
 		echo "				<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
 
-		echo "			<optgroup label='".$text['option-local']."'>\n";
-		foreach ($streams as $row) {
-			if (strlen($row['domain_uuid']) > 0) {
-			if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-			if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-				echo "				<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
-			}
-		}
-		echo "			</optgroup>\n";
-
 		if (permission_exists('music_on_hold_domain')) {
-			echo "				<optgroup label='".$text['option-global']."'>\n";
+			echo "					<optgroup label='".$text['option-global']."'>\n";
 			foreach ($streams as $row) {
 				if (strlen($row['domain_uuid']) == 0) {
 					if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
 					if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-					echo "				<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
+					echo "						<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
 				}
 			}
-			echo "				</optgroup>\n";
+			echo "					</optgroup>\n";
 		}
+		if (permission_exists('music_on_hold_domain')) {
+			echo "					<optgroup label='".$text['option-local']."'>\n";
+		}
+		foreach ($streams as $row) {
+			if (strlen($row['domain_uuid']) > 0) {
+			if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+			if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+				echo "						<option value='".$row['music_on_hold_uuid']."'>".$option_name."</option>\n";
+			}
+		}
+		if (permission_exists('music_on_hold_domain')) {
+			echo "					</optgroup>\n";
+		}
+
 		echo "				</select>";
 
 		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='glyphicon glyphicon-plus'></span></button>";
