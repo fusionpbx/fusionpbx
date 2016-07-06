@@ -377,11 +377,11 @@
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($moh['chime_list'] == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($moh['chime_list']) > 0) {
+				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($music_on_hold_chime_list) > 0) {
 					$tmp_selected = true;
 					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
 				}
-				else if ($moh['chime_list'] == $recording_filename && strlen($moh['chime_list']) > 0) {
+				else if ($music_on_hold_chime_list == $recording_filename && strlen($music_on_hold_chime_list) > 0) {
 					$tmp_selected = true;
 					echo "	<option value='".$recording_filename."' selected='selected'>".$recording_name."</option>\n";
 				}
@@ -399,7 +399,7 @@
 		if (count($result) > 0) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($result as &$row) {
-				if ($moh['chime_list'] == "phrase:".$row["phrase_uuid"]) {
+				if ($music_on_hold_chime_list == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
 				}
@@ -417,10 +417,10 @@
 			echo "<optgroup label='Sounds'>\n";
 			foreach ($dir_array as $key => $value) {
 				if (strlen($value) > 0) {
-					if (substr($moh['chime_list'], 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-						$moh['chime_list'] = substr($moh['chime_list'], 71);
+					if (substr($music_on_hold_chime_list, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+						$music_on_hold_chime_list = substr($music_on_hold_chime_list, 71);
 					}
-					if ($moh['chime_list'] == $key) {
+					if ($music_on_hold_chime_list == $key) {
 						$tmp_selected = true;
 						echo "	<option value='$key' selected='selected'>$key</option>\n";
 					}
@@ -433,13 +433,13 @@
 		}
 	//select
 		if (if_group("superadmin")) {
-			if (!$tmp_selected && strlen($moh['chime_list']) > 0) {
+			if (!$tmp_selected && strlen($music_on_hold_chime_list) > 0) {
 				echo "<optgroup label='Selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$moh['chime_list'])) {
-					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$moh['chime_list']."' selected='selected'>".$moh['chime_list']."</option>\n";
+				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list."' selected='selected'>".$music_on_hold_chime_list."</option>\n";
 				}
-				else if (substr($moh['chime_list'], -3) == "wav" || substr($moh['chime_list'], -3) == "mp3") {
-					echo "	<option value='".$moh['chime_list']."' selected='selected'>".$moh['chime_list']."</option>\n";
+				else if (substr($music_on_hold_chime_list, -3) == "wav" || substr($music_on_hold_chime_list, -3) == "mp3") {
+					echo "	<option value='".$music_on_hold_chime_list."' selected='selected'>".$music_on_hold_chime_list."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
