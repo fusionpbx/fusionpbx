@@ -121,7 +121,17 @@
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					if (permission_exists('music_on_hold_domain')) {
+						if (strlen($domain_uuid) == null) {
+							$sql .= "null, ";
+						}
+						else {
+							$sql .= "'".$domain_uuid."', ";
+						}
+					}
+					else {
+						$sql .= "'".$_SESSION['domain_uuid']."', ";
+					}
 					$sql .= "'".uuid()."', ";
 					$sql .= "'$music_on_hold_name', ";
 					$sql .= "'$music_on_hold_path', ";
@@ -146,7 +156,15 @@
 					//update the stream settings
 					$sql = "update v_music_on_hold set ";
 					if (permission_exists('music_on_hold_domain')) {
-						if (strlen($domain_uuid) == 0) { $sql .= "domain_uuid = null, "; } else { $sql .= "domain_uuid = '$domain_uuid', "; }
+						if (strlen($domain_uuid) == null) {
+							$sql .= "domain_uuid = null, ";
+						}
+						else {
+							$sql .= "domain_uuid = '$domain_uuid', ";
+						}
+					}
+					else {
+						$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."', ";
 					}
 					$sql .= "music_on_hold_name = '$music_on_hold_name', ";
 					$sql .= "music_on_hold_path = '$music_on_hold_path', ";
@@ -460,7 +478,12 @@
 		echo "</td>\n";
 		echo "<td class='vtable'>\n";
 		echo "	<select name='domain_uuid' class='formfld'>\n";
-		echo "		<option value=''></option>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
+		}
+		else {
+			echo "		<option value=''>".$text['label-global']."</option>\n";
+		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
 				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
@@ -470,8 +493,6 @@
 			}
 		}
 		echo "	</select>\n";
-
-		echo "    </select>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
