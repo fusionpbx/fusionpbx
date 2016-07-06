@@ -260,6 +260,10 @@
 					$_SESSION['message'] = $text['message-upload_completed'];
 			}
 
+		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+			$music = new switch_music_on_hold;
+			$music->reload();
+
 		//redirect
 			header("Location: music_on_hold.php");
 			exit;
@@ -323,6 +327,11 @@
 				//set message
 					$_SESSION['message'] = $text['message-delete'];
 			}
+
+		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+			$music = new switch_music_on_hold;
+			$music->reload();
+
 		//redirect
 			header("Location: music_on_hold.php");
 			exit;
