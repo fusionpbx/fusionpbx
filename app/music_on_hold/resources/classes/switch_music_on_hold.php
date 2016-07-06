@@ -110,7 +110,7 @@ include "root.php";
 				$sql .= "(select domain_name from v_domains as d where domain_uuid = m.domain_uuid) as domain_name, * ";
 				$sql .= "from v_music_on_hold as m ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				if (permission_exists('music_on_hold_global_view')) {
+				if (permission_exists('music_on_hold_domain')) {
 					$sql .= "or domain_uuid is null ";
 				}
 				$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
