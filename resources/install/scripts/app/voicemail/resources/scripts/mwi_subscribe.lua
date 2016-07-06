@@ -89,7 +89,7 @@ log.notice("start");
 
 local timer = IntervalTimer.new(sleep):start()
 
-for event in ievents("MESSAGE_QUERY", 1, timer:rest()) do
+for event in ievents({"MESSAGE_QUERY", "SHUTDOWN"}, 1, timer:rest()) do
 	if (not event) or (timer:rest() < 1000) then
 		if not file.exists(pid_file) then break end
 		local stored = file.read(pid_file)
@@ -99,23 +99,33 @@ for event in ievents("MESSAGE_QUERY", 1, timer:rest()) do
 
 	if event then
 		-- log.notice("event:" .. event:serialize("xml"));
-		local account_header = event:getHeader('Message-Account')
-		if account_header then
-			local proto, account = split_first(account_header, ':', true)
+		local event_name = event:getHeader('Event-Name')
+		if event_name == 'MESSAGE_QUERY' then
+			local account_header = event:getHeader('Message-Account')
+			if account_header then
+				local proto, account = split_first(account_header, ':', true)
 
-			if (not account) or (proto ~= 'sip' and proto ~= 'sips') then
-				log.warningf("invalid format for voicemail id: %s", account_header)
-			else
-				local new_messages, saved_messages = vm_message_count(account)
-				if not new_messages then
-					log.warningf('can not find voicemail: %s', account)
+				if (not account) or (proto ~= 'sip' and proto ~= 'sips') then
+					log.warningf("invalid format for voicemail id: %s", account_header)
 				else
-					log.noticef('voicemail %s has %s/%s messages', account, new_messages, saved_messages)
-					mwi_notify(account, new_messages, saved_messages)
+					local new_messages, saved_messages = vm_message_count(account)
+					if not new_messages then
+						log.warningf('can not find voicemail: %s', account)
+					else
+						log.noticef('voicemail %s has %s/%s messages', account, new_messages, saved_messages)
+						mwi_notify(account, new_messages, saved_messages)
+					end
 				end
 			end
+		elseif event_name == 'SHUTDOWN' then
+			log.notice("shutdown")
+			break
 		end
 	end
+end
+
+if file.read(pid_file) == pid then
+	file.remove(pid_file)
 end
 
 log.notice("stop")
