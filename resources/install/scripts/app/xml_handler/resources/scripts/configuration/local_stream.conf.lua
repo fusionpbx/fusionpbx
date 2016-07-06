@@ -36,9 +36,12 @@
 
 		--replace the variable with the path to the sounds directory
 		music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sounds_dir);
-		
+
 		--set the rate
 		rate = row.music_on_hold_rate;
+		if (rate ~= nil or rate == '') then
+			rate = '48000';
+		end
 
 		--add the full path to the chime list
 		chime_list = row.music_on_hold_chime_list;
