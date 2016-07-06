@@ -107,13 +107,14 @@ include "root.php";
 
 			//get moh records, build array
 				$sql = "select ";
-				$sql .= "(select domain_name from v_domains as d where domain_uuid = m.domain_uuid) as domain_name, * ";
+				$sql .= "d.domain_name, m.* ";
 				$sql .= "from v_music_on_hold as m ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
+				$sql .= "where m.domain_uuid = '".$this->domain_uuid."' ";
 				if (permission_exists('music_on_hold_domain')) {
-					$sql .= "or domain_uuid is null ";
+					$sql .= "or m.domain_uuid is null ";
 				}
-				$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				return $prep_statement->fetchAll(PDO::FETCH_NAMED);
