@@ -112,9 +112,8 @@
 //upload music on hold file
 	if ($_POST['action'] == 'upload' && is_array($_FILES) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
-		//determine name & scope
+		//determine name
 			if ($_POST['name_new'] != '') {
-				if (permission_exists('music_on_hold_domain')) { $stream_scope = $_POST['scope']; } else { $stream_scope = 'local'; }
 				$stream_name = strtolower($_POST['name_new']);
 				if (is_numeric($_POST['rate'])) {	$stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
 			}
@@ -136,14 +135,6 @@
 							$stream_chime_max = $row['music_on_hold_chime_max'];
 							$stream_rate = $row['music_on_hold_rate'];
 
-						//set the scope
-							if (strlen($stream_domain_uuid) == 0) {
-								$stream_scope = "global";
-							}
-							else {
-								$stream_scope = "local";
-							}
-
 						//end the loop
 							break;
 					}
@@ -156,15 +147,12 @@
 			$stream_file_ext = strtolower(pathinfo($stream_file_name, PATHINFO_EXTENSION));
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
-		//check permissions
-			$has_permission = (($stream_scope == 'global' && permission_exists('music_on_hold_domain')) 
-								|| ($stream_scope == 'local' && permission_exists('music_on_hold_add')) ) ? true : false;
 
 		//process, if possible
 			if (!$valid_file_type) {
 				$_SESSION['message'] = $text['message-unsupported_file_type'];
 			}
-			else if ($has_permission) {
+			else {
 
 				//strip slashes, replace spaces
 					$slashes = array("/", "\\");
@@ -184,10 +172,7 @@
 						$stream_rate_auto = false;
 					}
 				//define default path
-					$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music',
-						(($stream_scope == 'global') ? 'global' : $_SESSION['domain_name']),
-						$stream_name, $path_rate
-					);
+					$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'],$stream_name, $path_rate);
 				//find whether the path already exists
 					$stream_new_name = true;
 					foreach ($streams as $row) {
@@ -222,7 +207,7 @@
 						$sql .= ") ";
 						$sql .= "values ( ";
 						$sql .= "'".$stream_uuid."',";
-						$sql .= (($stream_scope == 'global') ? 'null' : "'".$domain_uuid."'").", ";
+						$sql .= "'".$domain_uuid."', ";
 						$sql .= "'".check_str($stream_name)."', ";
 						$sql .= "'".check_str($stream_path)."', ";
 						if (strlen($stream_rate) == 0) {
@@ -357,19 +342,11 @@
 	echo "		if (mode == 'new') {\n";
 	echo "			document.getElementById('name_select').style.display='none';\n";
 	echo "			document.getElementById('btn_new').style.display='none';\n";
-	if (permission_exists('music_on_hold_domain')) {
-		echo "		document.getElementById('scope').selectedIndex = 0;\n";
-		echo "		document.getElementById('scope').style.display='';\n";
-	}
 	echo "			document.getElementById('name_new').style.display='';\n";
 	echo "			document.getElementById('btn_select').style.display='';\n";
 	echo "			document.getElementById('name_new').focus();\n";
 	echo "		}\n";
 	echo "		else if (mode == 'select') {\n";
-	if (permission_exists('music_on_hold_domain')) {
-		echo "		document.getElementById('scope').style.display='none';\n";
-		echo "		document.getElementById('scope').selectedIndex = 0;\n";
-	}
 	echo "			document.getElementById('name_new').style.display='none';\n";
 	echo "			document.getElementById('name_new').value = '';\n";
 	echo "			document.getElementById('btn_select').style.display='none';\n";
@@ -432,12 +409,6 @@
 		echo "				</select>";
 
 		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='glyphicon glyphicon-plus'></span></button>";
-		if (permission_exists('music_on_hold_domain')) {
-			echo "			<select name='scope' id='scope' class='formfld' style='display: none;' onchange=\"document.getElementById('name_new').focus();\">\n";
-			echo "				<option value='local' selected>".$text['option-local']."</option>\n";
-			echo "				<option value='global'>".$text['option-global']."</option>\n";
-			echo "			</select>\n";
-		}
 		echo "				<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' value=''>";
 		echo "				<button type='button' id='btn_select' class='btn btn-default list_control_icon' style='display: none; margin-left: 3px;' onclick=\"name_mode('select');\"><span class='glyphicon glyphicon-list-alt'></span></button>";
 		echo "			</td>\n";
@@ -513,10 +484,6 @@
 					$music_on_hold_name = $row['music_on_hold_name'];
 					$music_on_hold_rate = $row['music_on_hold_rate'];
 
-					$stream_scope = $row['domain_uuid'];
-					if (!$stream_scope) $stream_scope = '_global_';
-//					$tmp = explode('/', $row['music_on_hold_name']);
-//					$stream_name = $tmp[0];
 					$stream_rate = $row['music_on_hold_rate'];
 
 				//add vertical space
@@ -628,7 +595,7 @@
 							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$stream_file_date."</td>\n";
 							echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
 							echo 		"<a href='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
-							if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_domain')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
+							if ( ($domain_uuid == '' && permission_exists('music_on_hold_domain')) || ($domain_uuid != '' && permission_exists('music_on_hold_delete')) ) {
 								echo 	"<a href='?action=delete&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 							}
 							echo "	</td>\n";
