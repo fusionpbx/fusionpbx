@@ -104,85 +104,96 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('music_on_hold_add')) {
-					$sql = "insert into v_music_on_hold ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "music_on_hold_uuid, ";
-					$sql .= "music_on_hold_name, ";
-					$sql .= "music_on_hold_path, ";
-					$sql .= "music_on_hold_rate, ";
-					$sql .= "music_on_hold_shuffle, ";
-					$sql .= "music_on_hold_channels, ";
-					$sql .= "music_on_hold_interval, ";
-					$sql .= "music_on_hold_timer_name, ";
-					$sql .= "music_on_hold_chime_list, ";
-					$sql .= "music_on_hold_chime_freq, ";
-					$sql .= "music_on_hold_chime_max ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					if (permission_exists('music_on_hold_domain')) {
-						if (strlen($domain_uuid) == null) {
-							$sql .= "null, ";
+					//insert the new music on hold
+						$sql = "insert into v_music_on_hold ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "music_on_hold_uuid, ";
+						$sql .= "music_on_hold_name, ";
+						$sql .= "music_on_hold_path, ";
+						$sql .= "music_on_hold_rate, ";
+						$sql .= "music_on_hold_shuffle, ";
+						$sql .= "music_on_hold_channels, ";
+						$sql .= "music_on_hold_interval, ";
+						$sql .= "music_on_hold_timer_name, ";
+						$sql .= "music_on_hold_chime_list, ";
+						$sql .= "music_on_hold_chime_freq, ";
+						$sql .= "music_on_hold_chime_max ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						if (permission_exists('music_on_hold_domain')) {
+							if (strlen($domain_uuid) == null) {
+								$sql .= "null, ";
+							}
+							else {
+								$sql .= "'".$domain_uuid."', ";
+							}
 						}
 						else {
-							$sql .= "'".$domain_uuid."', ";
+							$sql .= "'".$_SESSION['domain_uuid']."', ";
 						}
-					}
-					else {
-						$sql .= "'".$_SESSION['domain_uuid']."', ";
-					}
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$music_on_hold_name', ";
-					$sql .= "'$music_on_hold_path', ";
-					if (strlen($music_on_hold_rate) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_rate', "; }
-					$sql .= "'$music_on_hold_shuffle', ";
-					if (strlen($music_on_hold_channels) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_channels', "; }
-					if (strlen($music_on_hold_interval) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_interval', "; }
-					$sql .= "'$music_on_hold_timer_name', ";
-					$sql .= "'$music_on_hold_chime_list', ";
-					if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_chime_freq', "; }
-					if (strlen($music_on_hold_chime_max) == 0) { $sql .= "null "; } else { $sql .= "'$music_on_hold_chime_max' "; }
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$music_on_hold_name', ";
+						$sql .= "'$music_on_hold_path', ";
+						if (strlen($music_on_hold_rate) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_rate', "; }
+						$sql .= "'$music_on_hold_shuffle', ";
+						if (strlen($music_on_hold_channels) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_channels', "; }
+						if (strlen($music_on_hold_interval) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_interval', "; }
+						$sql .= "'$music_on_hold_timer_name', ";
+						$sql .= "'$music_on_hold_chime_list', ";
+						if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_chime_freq', "; }
+						if (strlen($music_on_hold_chime_max) == 0) { $sql .= "null "; } else { $sql .= "'$music_on_hold_chime_max' "; }
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-					$_SESSION["message"] = $text['message-add'];
-					header("Location: music_on_holds.php");
-					return;
+					//reload mod local stream
+						$music = new switch_music_on_hold;
+						$music->reload();
+
+					//set the message and redirect the user
+						$_SESSION["message"] = $text['message-add'];
+						header("Location: music_on_hold.php");
+						return;
 				} //if ($action == "add")
 
 				if ($action == "update" && permission_exists('music_on_hold_edit')) {
 					//update the stream settings
-					$sql = "update v_music_on_hold set ";
-					if (permission_exists('music_on_hold_domain')) {
-						if (strlen($domain_uuid) == null) {
-							$sql .= "domain_uuid = null, ";
+						$sql = "update v_music_on_hold set ";
+						if (permission_exists('music_on_hold_domain')) {
+							if (strlen($domain_uuid) == null) {
+								$sql .= "domain_uuid = null, ";
+							}
+							else {
+								$sql .= "domain_uuid = '$domain_uuid', ";
+							}
 						}
 						else {
-							$sql .= "domain_uuid = '$domain_uuid', ";
+							$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."', ";
 						}
-					}
-					else {
-						$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."', ";
-					}
-					$sql .= "music_on_hold_name = '$music_on_hold_name', ";
-					$sql .= "music_on_hold_path = '$music_on_hold_path', ";
-					if (strlen($music_on_hold_rate) == 0) { $sql .= "music_on_hold_rate = null, "; } else { $sql .= "music_on_hold_rate = '$music_on_hold_rate', "; }
-					$sql .= "music_on_hold_shuffle = '$music_on_hold_shuffle', ";
-					if (strlen($music_on_hold_channels) == 0) { $sql .= "music_on_hold_channels = null, "; } else { $sql .= "music_on_hold_channels = '$music_on_hold_channels', "; }
-					if (strlen($music_on_hold_interval) == 0) { $sql .= "music_on_hold_interval = null, "; } else { $sql .= "music_on_hold_interval = '$music_on_hold_interval', "; }
-					$sql .= "music_on_hold_timer_name = '$music_on_hold_timer_name', ";
-					$sql .= "music_on_hold_chime_list = '$music_on_hold_chime_list', ";
-					if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "music_on_hold_chime_freq = null, "; } else { $sql .= "music_on_hold_chime_freq = '$music_on_hold_chime_freq', "; }
-					if (strlen($music_on_hold_chime_max) == 0) { $sql .= "music_on_hold_chime_max = null "; } else { $sql .= "music_on_hold_chime_max = '$music_on_hold_chime_max' "; }
-					$sql .= "where music_on_hold_uuid = '$music_on_hold_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+						$sql .= "music_on_hold_name = '$music_on_hold_name', ";
+						$sql .= "music_on_hold_path = '$music_on_hold_path', ";
+						if (strlen($music_on_hold_rate) == 0) { $sql .= "music_on_hold_rate = null, "; } else { $sql .= "music_on_hold_rate = '$music_on_hold_rate', "; }
+						$sql .= "music_on_hold_shuffle = '$music_on_hold_shuffle', ";
+						if (strlen($music_on_hold_channels) == 0) { $sql .= "music_on_hold_channels = null, "; } else { $sql .= "music_on_hold_channels = '$music_on_hold_channels', "; }
+						if (strlen($music_on_hold_interval) == 0) { $sql .= "music_on_hold_interval = null, "; } else { $sql .= "music_on_hold_interval = '$music_on_hold_interval', "; }
+						$sql .= "music_on_hold_timer_name = '$music_on_hold_timer_name', ";
+						$sql .= "music_on_hold_chime_list = '$music_on_hold_chime_list', ";
+						if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "music_on_hold_chime_freq = null, "; } else { $sql .= "music_on_hold_chime_freq = '$music_on_hold_chime_freq', "; }
+						if (strlen($music_on_hold_chime_max) == 0) { $sql .= "music_on_hold_chime_max = null "; } else { $sql .= "music_on_hold_chime_max = '$music_on_hold_chime_max' "; }
+						$sql .= "where music_on_hold_uuid = '$music_on_hold_uuid' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-					$_SESSION["message"] = $text['message-update'];
-					header("Location: music_on_hold.php");
-					return;
+					//reload mod local stream
+						$music = new switch_music_on_hold;
+						$music->reload();
+
+					//set the message and redirect the user
+						$_SESSION["message"] = $text['message-update'];
+						header("Location: music_on_hold.php");
+						return;
 				} //if ($action == "update")
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
