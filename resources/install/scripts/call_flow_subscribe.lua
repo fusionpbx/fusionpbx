@@ -33,11 +33,11 @@ local pid = api:execute("create_uuid") or tostring(api:getTime())
 
 file.write(pid_file, pid)
 
-log.notice("start call_flow_subscribe");
+log.notice("start");
 
 local timer = IntervalTimer.new(sleep):start()
 
-for event in ievents("PRESENCE_PROBE", 1, timer:rest()) do
+for event in ievents({"PRESENCE_PROBE", "SHUTDOWN"}, 1, timer:rest()) do
 	if (not event) or (timer:rest() < 1000) then
 		if not file.exists(pid_file) then break end
 		local stored = file.read(pid_file)
@@ -47,24 +47,34 @@ for event in ievents("PRESENCE_PROBE", 1, timer:rest()) do
 
 	if event then
 		-- log.notice("event:" .. event:serialize("xml"));
-		if event:getHeader('proto') == 'flow' and
-			event:getHeader('Event-Calling-Function') == 'sofia_presence_handle_sip_i_subscribe'
-		then
-			local from, to = event:getHeader('from'), event:getHeader('to')
-			local expires = tonumber(event:getHeader('expires'))
-			if expires and expires > 0 then
-				local call_flow_uuid, call_flow_status = find_call_flow(to)
-				if call_flow_uuid then
-					log.debugf("Find call flow: %s", to)
-					presence_in.turn_lamp(call_flow_status == "false", to, call_flow_uuid);
+		local event_name = event:getHeader('Event-Name')
+		if event_name == 'PRESENCE_PROBE' then
+			if event:getHeader('proto') == 'flow' and
+				event:getHeader('Event-Calling-Function') == 'sofia_presence_handle_sip_i_subscribe'
+			then
+				local from, to = event:getHeader('from'), event:getHeader('to')
+				local expires = tonumber(event:getHeader('expires'))
+				if expires and expires > 0 then
+					local call_flow_uuid, call_flow_status = find_call_flow(to)
+					if call_flow_uuid then
+						log.debugf("Find call flow: %s", to)
+						presence_in.turn_lamp(call_flow_status == "false", to, call_flow_uuid);
+					else
+						log.warningf("Can not find call flow: %s", to)
+					end
 				else
-					log.warningf("Can not find call flow: %s", to)
+					log.noticef("%s UNSUBSCRIBE from %s", from, to)
 				end
-			else
-				log.noticef("%s UNSUBSCRIBE from %s", from, to)
 			end
+		elseif event_name == 'SHUTDOWN' then
+			log.notice("shutdown")
+			break
 		end
 	end
 end
 
-log.notice("stop call_flow_subscribe")
+if file.read(pid_file) == pid then
+	file.remove(pid_file)
+end
+
+log.notice("stop")
