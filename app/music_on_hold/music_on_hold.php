@@ -31,7 +31,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('music_on_hold_view') || permission_exists('music_on_hold_global_view')) {
+	if (permission_exists('music_on_hold_view')) {
 		//access granted
 	}
 	else {
@@ -50,7 +50,7 @@
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where ( ";
 	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('music_on_hold_global_view')) {
+	if (permission_exists('music_on_hold_domain')) {
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= ") ";
@@ -114,7 +114,7 @@
 
 		//determine name & scope
 			if ($_POST['name_new'] != '') {
-				if (permission_exists('music_on_hold_global_add')) { $stream_scope = $_POST['scope']; } else { $stream_scope = 'local'; }
+				if (permission_exists('music_on_hold_domain')) { $stream_scope = $_POST['scope']; } else { $stream_scope = 'local'; }
 				$stream_name = strtolower($_POST['name_new']);
 				if (is_numeric($_POST['rate'])) {	$stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
 			}
@@ -157,7 +157,7 @@
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
 		//check permissions
-			$has_permission = (($stream_scope == 'global' && permission_exists('music_on_hold_global_add')) 
+			$has_permission = (($stream_scope == 'global' && permission_exists('music_on_hold_domain')) 
 								|| ($stream_scope == 'local' && permission_exists('music_on_hold_add')) ) ? true : false;
 
 		//process, if possible
@@ -288,7 +288,7 @@
 			}
 
 		//check permissions
-			if (($stream_domain_uuid == '' && permission_exists('music_on_hold_global_delete')) ||
+			if (($stream_domain_uuid == '' && permission_exists('music_on_hold_domain')) ||
 				($stream_domain_uuid != '' && permission_exists('music_on_hold_delete'))) {
 
 				//remove specified file
@@ -312,7 +312,7 @@
 						//remove record
 							$sql = "delete from v_music_on_hold ";
 							$sql .= "where music_on_hold_uuid = '".$stream_uuid."' ";
-							if (!permission_exists('music_on_hold_global_delete')) {
+							if (!permission_exists('music_on_hold_domain')) {
 								$sql .= "and domain_uuid = '".$stream_domain_uuid."' ";
 							}
 							//echo $sql; exit;
@@ -357,7 +357,7 @@
 	echo "		if (mode == 'new') {\n";
 	echo "			document.getElementById('name_select').style.display='none';\n";
 	echo "			document.getElementById('btn_new').style.display='none';\n";
-	if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
+	if (permission_exists('music_on_hold_domain')) {
 		echo "		document.getElementById('scope').selectedIndex = 0;\n";
 		echo "		document.getElementById('scope').style.display='';\n";
 	}
@@ -366,7 +366,7 @@
 	echo "			document.getElementById('name_new').focus();\n";
 	echo "		}\n";
 	echo "		else if (mode == 'select') {\n";
-	if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
+	if (permission_exists('music_on_hold_domain')) {
 		echo "		document.getElementById('scope').style.display='none';\n";
 		echo "		document.getElementById('scope').selectedIndex = 0;\n";
 	}
@@ -388,7 +388,7 @@
 	echo "<br /><br />\n";
 
 //show the upload form
-	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_global_add')) {
+	if (permission_exists('music_on_hold_add')) {
 		echo "<b>".$text['label-upload-music_on_hold']."</b>\n";
 		echo "<br><br>\n";
 
@@ -418,7 +418,7 @@
 		}
 		echo "			</optgroup>\n";
 
-		if (permission_exists('music_on_hold_global_add')) {
+		if (permission_exists('music_on_hold_domain')) {
 			echo "				<optgroup label='".$text['option-global']."'>\n";
 			foreach ($streams as $row) {
 				if (strlen($row['domain_uuid']) == 0) {
@@ -432,7 +432,7 @@
 		echo "				</select>";
 
 		echo "				<button type='button' id='btn_new' class='btn btn-default list_control_icon' style='margin-left: 3px;' onclick=\"name_mode('new');\"><span class='glyphicon glyphicon-plus'></span></button>";
-		if (permission_exists('music_on_hold_global_view') && permission_exists('music_on_hold_global_add')) {
+		if (permission_exists('music_on_hold_domain')) {
 			echo "			<select name='scope' id='scope' class='formfld' style='display: none;' onchange=\"document.getElementById('name_new').focus();\">\n";
 			echo "				<option value='local' selected>".$text['option-local']."</option>\n";
 			echo "				<option value='global'>".$text['option-global']."</option>\n";
@@ -581,7 +581,7 @@
 					echo "		<th class='listhdr' style='width: 55px;'>".$text['label-tools']."</th>\n";
 					echo "		<th class='listhdr' style='width: 65px; text-align: right; white-space: nowrap;'>".$text['label-file-size']."</th>\n";
 					echo "		<th class='listhdr' style='width: 150px; text-align: right;'>".$text['label-uploaded']."</th>\n";
-					echo "		<td class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
+					echo "		<td class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')." tr_link_void'>";
 					if (permission_exists('music_on_hold_edit')) {
 						echo "<a href='music_on_hold_edit.php?id=".$row['music_on_hold_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 					}
@@ -626,9 +626,9 @@
 							echo "	</td>\n";
 							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right; white-space: nowrap;'>".$stream_file_size."</td>\n";
 							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$stream_file_date."</td>\n";
-							echo "	<td valign='top' class='".((!permission_exists('music_on_hold_global_delete')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
+							echo "	<td valign='top' class='".((!permission_exists('music_on_hold_domain')) ? 'list_control_icon' : 'list_control_icons')."'>\n";
 							echo 		"<a href='?action=download&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' title='".$text['label-download']."'>".$v_link_label_download."</a>";
-							if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_global_delete')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
+							if ( ($domain_uuid == '_global_' && permission_exists('music_on_hold_domain')) || ($domain_uuid != '_global_' && permission_exists('music_on_hold_delete')) ) {
 								echo 	"<a href='?action=delete&id=".$row['music_on_hold_uuid']."&file=".base64_encode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 							}
 							echo "	</td>\n";
