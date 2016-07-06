@@ -110,10 +110,7 @@ include "root.php";
 				$sql .= "d.domain_name, m.* ";
 				$sql .= "from v_music_on_hold as m ";
 				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
-				$sql .= "where m.domain_uuid = '".$this->domain_uuid."' ";
-				if (permission_exists('music_on_hold_domain')) {
-					$sql .= "or m.domain_uuid is null ";
-				}
+				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
