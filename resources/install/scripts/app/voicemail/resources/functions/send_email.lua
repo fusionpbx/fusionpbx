@@ -105,6 +105,9 @@
 						file_body = scripts_dir.."/app/voicemail/resources/templates/en/us/email_body.tpl";
 					end
 
+				--get the link_address
+					link_address = http_protocol.."://"..domain_name..project_path;
+
 				--prepare the headers
 					local headers = {
 						["X-FusionPBX-Domain-UUID"] = domain_uuid;
@@ -141,9 +144,9 @@
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'].."</a>");
+						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'].."</a>");
 					else
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
 					end
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
