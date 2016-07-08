@@ -66,6 +66,11 @@
 								$$name = $p['@attributes']['value'];
 								$attributes[] = $name;
 							}
+						
+						//strip the domain name and rate from the name
+							$array = explode('/', $stream_name);
+							if (count($array) == 3) { $stream_name = $array[1]; }
+							if (count($array) == 2) { $stream_name = $array[0]; }
 
 						//insert the data into the database
 							$music_on_hold_uuid = uuid();
