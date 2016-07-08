@@ -214,7 +214,7 @@ if (!class_exists('scripts')) {
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
-					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL'])."]];\n");
+					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL']."]];\n");
 					$tmp .= "\n";
 
 					$tmp .= "--store settings in memcache\n";
