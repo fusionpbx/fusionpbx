@@ -2,19 +2,18 @@ require "resources.functions.config"
 require "resources.functions.split"
 
 local log           = require "resources.functions.log".call_flow_subscribe
-local file          = require "resources.functions.file"
+local EventConsumer = require "resources.functions.event_consumer"
 local presence_in   = require "resources.functions.presence_in"
 local Database      = require "resources.functions.database"
-local ievents       = require "resources.functions.ievents"
-local IntervalTimer = require "resources.functions.interval_timer"
-local api           = require "resources.functions.api"
+
+local find_call_flow do
 
 local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
 from v_call_flows t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
 where t2.domain_name = '%s' and t1.call_flow_feature_code = '%s'
 ]]
 
-local function find_call_flow(user)
+function find_call_flow(user)
 	local ext, domain_name = split_first(user, '@', true)
 	if not domain_name then return end
 	local dbh = Database.new('system')
@@ -26,55 +25,50 @@ local function find_call_flow(user)
 	return row.call_flow_uuid, row.call_flow_status
 end
 
+end
+
 local sleep    = 60000
 local pid_file = scripts_dir .. "/run/call_flow_subscribe.tmp"
+local shutdown_event = "CUSTOM::fusion::flow::shutdown"
 
-local pid = api:execute("create_uuid") or tostring(api:getTime())
+local events = EventConsumer.new(sleep, pid_file)
 
-file.write(pid_file, pid)
+-- FS shutdown
+events:bind("SHUTDOWN", function(self, name, event)
+	log.notice("shutdown")
+	return self:stop()
+end)
 
-log.notice("start");
+-- shutdown command
+if shutdown_event then
+	events:bind(shutdown_event, function(self, name, event)
+		log.notice("shutdown")
+		return self:stop()
+	end)
+end
 
-local timer = IntervalTimer.new(sleep):start()
+-- FS receive SUBSCRIBE to BLF from device
+events:bind("PRESENCE_PROBE", function(self, name, event)
+	--handle only blf with `flow+` prefix
+	if event:getHeader('proto') ~= 'flow' then return end
 
-for event in ievents({"PRESENCE_PROBE", "SHUTDOWN"}, 1, timer:rest()) do
-	if (not event) or (timer:rest() < 1000) then
-		if not file.exists(pid_file) then break end
-		local stored = file.read(pid_file)
-		if stored and stored ~= pid then break end
-		timer:restart()
-	end
-
-	if event then
-		-- log.notice("event:" .. event:serialize("xml"));
-		local event_name = event:getHeader('Event-Name')
-		if event_name == 'PRESENCE_PROBE' then
-			if event:getHeader('proto') == 'flow' and
-				event:getHeader('Event-Calling-Function') == 'sofia_presence_handle_sip_i_subscribe'
-			then
-				local from, to = event:getHeader('from'), event:getHeader('to')
-				local expires = tonumber(event:getHeader('expires'))
-				if expires and expires > 0 then
-					local call_flow_uuid, call_flow_status = find_call_flow(to)
-					if call_flow_uuid then
-						log.debugf("Find call flow: %s", to)
-						presence_in.turn_lamp(call_flow_status == "false", to, call_flow_uuid);
-					else
-						log.warningf("Can not find call flow: %s", to)
-					end
-				else
-					log.noticef("%s UNSUBSCRIBE from %s", from, to)
-				end
-			end
-		elseif event_name == 'SHUTDOWN' then
-			log.notice("shutdown")
-			break
+	local from, to = event:getHeader('from'), event:getHeader('to')
+	local expires = tonumber(event:getHeader('expires'))
+	if expires and expires > 0 then
+		local call_flow_uuid, call_flow_status = find_call_flow(to)
+		if call_flow_uuid then
+			log.noticef("Find call flow: %s staus: %s", to, tostring(call_flow_status))
+			presence_in.turn_lamp(call_flow_status == "false", to, call_flow_uuid)
+		else
+			log.warningf("Can not find call flow: %s", to)
 		end
+	else
+		log.noticef("%s UNSUBSCRIBE from %s", from, to)
 	end
-end
+end)
 
-if file.read(pid_file) == pid then
-	file.remove(pid_file)
-end
+log.notice("start")
+
+events:run()
 
 log.notice("stop")
