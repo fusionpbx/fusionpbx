@@ -114,7 +114,7 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 				echo "	<td colspan='".(($_SESSION['voicemail']['storage_type']['text'] != 'base64') ? 3 : 2)."' valign='bottom' align='right'>\n";
 				echo "		<input type='button' class='btn' alt='".$text['button-toggle']."' onclick=\"$('#frm').attr('action', 'voicemail_message_toggle.php').submit();\" value='".$text['button-toggle']."'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
-					echo "	<input type='button' class='btn' alt='".$text['button-greetings']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
+					echo "	<input type='button' class='btn' alt='".$text['button-greetings']."' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'\" value='".$text['button-greetings']."'>\n";
 				}
 				if (permission_exists('voicemail_edit')) {
 					echo "	<input type='button' class='btn' alt='".$text['button-settings']."' onclick=\"document.location.href='voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";

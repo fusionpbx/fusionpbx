@@ -638,6 +638,19 @@ $text['label-disabled']['sv-se'] = "Inaktiverad";
 $text['label-disabled']['uk'] = "Відключено";
 $text['label-disabled']['de-at'] = "Ausgeschaltet";
 
+$text['label-global']['en-us'] = "Global";
+$text['label-global']['es-cl'] = "Global";
+$text['label-global']['pt-pt'] = "Global";
+$text['label-global']['fr-fr'] = "Global";
+$text['label-global']['pt-br'] = "Global";
+$text['label-global']['pl'] = "Globalny";
+$text['label-global']['uk'] = "Global";
+$text['label-global']['sv-se'] = "Global";
+$text['label-global']['ro'] = "Global";
+$text['label-global']['de-at'] = "Global";
+$text['label-global']['ar-eg'] = "";
+$text['label-global']['he'] = "כללי";
+
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguno";
 $text['label-none']['pt-pt'] = "Nenhum";

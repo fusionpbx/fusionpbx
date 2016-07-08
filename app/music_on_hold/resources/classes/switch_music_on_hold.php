@@ -50,8 +50,6 @@ include "root.php";
 			}
 		}
 
-		//it is NOT recommended to use this function if you want to include ringback you should be using the ringback class
-		//see app/ring_groups/ring_group_edit.php for example
 		public function select($name, $selected, $options) {
 			//add multi-lingual support
 				$language = new text;
@@ -60,12 +58,21 @@ include "root.php";
 			//start the select
 				$select = "<select class='formfld' name='".$name."' id='".$name."' style='width: auto;'>\n";
 
-			//moh
-				$options = $this->list_moh();
-				if (sizeof($options) > 0) {
-					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>";
-					foreach($options as $moh_value => $moh_name) {
-						$select .= "		<option value='".$moh_value."' ".(($selected == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
+			//music on hold
+				$music_list = $this->get();
+				if (count($music_list) > 0) {
+					$select .= "	<optgroup label='".$text['label-music_on_hold']."'>\n";
+					$previous_name = '';
+					foreach($music_list as $row) {
+						if ($previous_name != $row['music_on_hold_name']) {
+							$name = '';
+							if (strlen($row['domain_uuid']) > 0) {
+								$name = $row['domain_name'].'/';	
+							}
+							$name .= $row['music_on_hold_name'];
+							$select .= "		<option value='local_stream://".$name."' ".(($selected == "local_stream://".$name) ? 'selected="selected"' : null).">".$row['music_on_hold_name']."</option>\n";
+						}
+						$previous_name = $row['music_on_hold_name'];
 					}
 					$select .= "	</optgroup>\n";
 				}
@@ -93,54 +100,21 @@ include "root.php";
 				return $select;
 		}
 
-		public function list_moh() {
+		public function get() {
 			//add multi-lingual support
 				$language = new text;
 				$text = $language->get(null, 'app/music_on_hold');
 
 			//get moh records, build array
-				$sql = "select * from v_music_on_hold ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				if (permission_exists('music_on_hold_global_view')) {
-					$sql .= "or domain_uuid is null ";
-				}
-				$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+				$sql = "select ";
+				$sql .= "d.domain_name, m.* ";
+				$sql .= "from v_music_on_hold as m ";
+				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
+				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
+				$sql .= "order by m.domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-			//build the names array without the rates
-				$names = array();
-				foreach($result as $row) {
-					//convert the strings into arrays
-					$name_array = explode("/", $row['music_on_hold_name']);
-
-					//name with the domain
-					if (count($name_array) == "3") {
-						$stream_name = $name_array[0].'/'.$name_array[1];
-					}
-					//name without the domain
-					if (count($name_array) == "2") {
-						$stream_name = $name_array[0];
-					}
-
-					//prevent duplicate names in the array
-					if (!in_array($stream_name, $names)) {
-						$names[] = $stream_name;
-					}
-				}
-
-			//add the value and name to the array before it is returned
-				foreach($names as $name) {
-					$value = "local_stream://".$name;
-					if($stream == 'default') {
-						$name = $text['option-default'];
-					}
-					$array[$value] = str_replace('_', ' ', $name);
-				}
-
-			//return the array
-				return $array;
+				return $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		}
 
 		public function reload() {

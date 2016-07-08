@@ -206,25 +206,25 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir'],02770,true);
+				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
-				mkdir($_SESSION['switch']['storage']['dir'].'/fax',02770,true);
+				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax');
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
-				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'],02770,true);
+				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				mkdir($fax_dir.'/'.$fax_extension,02770,true);
+				event_socket_mkdir($fax_dir.'/'.$fax_extension);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				mkdir($dir_fax_inbox,02770,true);
+				event_socket_mkdir($dir_fax_inbox);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,02770,true);
+				event_socket_mkdir($dir_fax_sent);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				mkdir($dir_fax_temp,02770,true);
+				event_socket_mkdir($dir_fax_temp);
 			}
 	}
 

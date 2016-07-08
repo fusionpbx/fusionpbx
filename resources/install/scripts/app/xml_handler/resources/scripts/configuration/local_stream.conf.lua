@@ -14,16 +14,34 @@
 	table.insert(xml, [[		<configuration name="local_stream.conf" description="stream files from local dir">]]);
 
 --run the query
-	sql = "select * from v_music_on_hold ";
-	sql = sql .. "order by music_on_hold_name asc ";
+	sql = "select d.domain_name, s.* "
+	sql = sql .. "from v_music_on_hold as s left outer join v_domains as d "
+	sql = sql .. "on d.domain_uuid = s.domain_uuid "
+	sql = sql .. "order by s.music_on_hold_name asc "
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 	end
 	x = 0;
 	dbh:query(sql, function(row)
 
+		--combine the name, domain_name and the rate 
+		name = '';
+		if (row.domain_uuid ~= nil and string.len(row.domain_uuid) > 0) then
+			name = row.domain_name..'/';
+		end
+		name = name .. row.music_on_hold_name;
+		if (row.music_on_hold_rate ~= nil and #row.music_on_hold_rate > 0) then
+			name = name .. '/' .. row.music_on_hold_rate;
+		end
+
 		--replace the variable with the path to the sounds directory
 		music_on_hold_path = row.music_on_hold_path:gsub("$${sounds_dir}", sounds_dir);
+
+		--set the rate
+		rate = row.music_on_hold_rate;
+		if (rate ~= nil or rate == '') then
+			rate = '48000';
+		end
 
 		--add the full path to the chime list
 		chime_list = row.music_on_hold_chime_list;
@@ -32,7 +50,7 @@
 			chime_list = "";
 			for k,v in pairs(chime_array) do
 				f = explode("/", v);
-				if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir.."/en/us/callie/"..f[1].."/8000/"..f[2])) then
+				if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir.."/en/us/callie/"..f[1].."/"..rate.."/"..f[2])) then
 					chime_list = chime_list .. sounds_dir.."/en/us/callie/"..v;
 				else
 					chime_list = chime_list .. v;
@@ -41,15 +59,15 @@
 		end
 
 		--set the default timer name to soft
-		if (row.music_on_hold_timer_name == nil) then
+		if (row.music_on_hold_timer_name == nil or row.music_on_hold_timer_name == '') then
 			timer_name = "soft";
 		else
 			timer_name = row.music_on_hold_timer_name;
 		end
 		
 		--build the xml ]]..row.music_on_hold_name..[["
-		table.insert(xml, [[	<directory name="]]..row.music_on_hold_name..[[" path="]]..music_on_hold_path..[[">]]);
-		table.insert(xml, [[			<param name="rate" value="]]..row.music_on_hold_rate..[["/>]]);
+		table.insert(xml, [[	<directory name="]]..name..[[" uuid="]]..row.music_on_hold_uuid..[[" path="]]..music_on_hold_path..[[">]]);
+		table.insert(xml, [[			<param name="rate" value="]]..rate..[["/>]]);
 		table.insert(xml, [[			<param name="shuffle" value="]]..row.music_on_hold_shuffle..[["/>]]);
 		table.insert(xml, [[			<param name="channels" value="1"/>]]);
 		table.insert(xml, [[			<param name="interval" value="20"/>]]);

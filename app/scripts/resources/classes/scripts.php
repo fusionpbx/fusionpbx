@@ -159,6 +159,14 @@ if (!class_exists('scripts')) {
 				//get the recordings directory
 					$recordings_dir = $_SESSION['switch']['recordings']['dir'];
 
+				//get the http_protocol
+					if (!isset($_SERVER['HTTP_PROTOCOL'])) {
+						$_SERVER['HTTP_PROTOCOL'] = 'http';
+						if (isset($_SERVER['REQUEST_SCHEME'])) { $_SERVER['HTTP_PROTOCOL'] = $_SERVER['REQUEST_SCHEME']; }
+						if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+						if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+					}
+
 				//find the location to write the config.lua
 					if (is_dir("/etc/fusionpbx")){
 						$config = "/etc/fusionpbx/config.lua";
@@ -205,6 +213,8 @@ if (!class_exists('scripts')) {
 						$tmp .= "	php_bin = \"php5\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL'])."]];\n");
 					$tmp .= "\n";
 
 					$tmp .= "--store settings in memcache\n";
