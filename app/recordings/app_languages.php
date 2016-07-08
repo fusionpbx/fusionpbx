@@ -40,6 +40,17 @@ $text['message-uploaded']['sv-se'] = "File Uppladdade";
 $text['message-uploaded']['uk'] = "файл Завантажено";
 $text['message-uploaded']['de-at'] = "Datei hochgeladen";
 
+$text['label-uploaded']['en-us'] = "Uploaded";
+$text['label-uploaded']['es-cl'] = "Subir";
+$text['label-uploaded']['pt-pt'] = "Carregado";
+$text['label-uploaded']['fr-fr'] = "Envoyé";
+$text['label-uploaded']['pt-br'] = "Carregado";
+$text['label-uploaded']['pl'] = "Przesłano";
+$text['label-uploaded']['sv-se'] = "Uppladdad";
+$text['label-uploaded']['uk'] = "Завантажено";
+$text['label-uploaded']['de-at'] = "Hochgeladen";
+$text['label-uploaded']['he'] = "הוטען";
+
 $text['label-upload']['en-us'] = "File Path";
 $text['label-upload']['es-cl'] = "Archivo a subir";
 $text['label-upload']['pt-pt'] = "Ficheiro a carregar";

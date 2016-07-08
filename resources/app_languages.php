@@ -161,6 +161,34 @@ $text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
 
 //buttons
 
+$text['button-apply']['en-us'] = "Apply";
+$text['button-apply']['es-cl'] = "";
+$text['button-apply']['pt-pt'] = "";
+$text['button-apply']['fr-fr'] = "";
+$text['button-apply']['pt-br'] = "";
+$text['button-apply']['pl'] = "";
+$text['button-apply']['he'] = "";
+$text['button-apply']['uk'] = "";
+$text['button-apply']['sv-se'] = "";
+$text['button-apply']['de-at'] = "";
+$text['button-apply']['ro'] = "";
+$text['button-apply']['fa'] = "";
+$text['button-apply']['ar-eg'] = "";
+
+$text['button-applied']['en-us'] = "Applied";
+$text['button-applied']['es-cl'] = "";
+$text['button-applied']['pt-pt'] = "";
+$text['button-applied']['fr-fr'] = "";
+$text['button-applied']['pt-br'] = "";
+$text['button-applied']['pl'] = "";
+$text['button-applied']['he'] = "";
+$text['button-applied']['uk'] = "";
+$text['button-applied']['sv-se'] = "";
+$text['button-applied']['de-at'] = "";
+$text['button-applied']['ro'] = "";
+$text['button-applied']['fa'] = "";
+$text['button-applied']['ar-eg'] = "";
+
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
 $text['button-clear']['pt-pt'] = "Apagar";

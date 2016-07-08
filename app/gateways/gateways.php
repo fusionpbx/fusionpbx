@@ -103,7 +103,7 @@ else {
 //get total gateway count from the database
 	$sql = "select count(*) as num_rows from v_gateways ";
 	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('gateway_domain') {
+	if (permission_exists('gateway_domain')) {
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= ");";
@@ -126,10 +126,10 @@ else {
 //get the list
 	$sql = "select * from v_gateways ";
 	$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (permission_exists('gateway_domain') {
+	if (permission_exists('gateway_domain')) {
 		$sql .= "or domain_uuid is null ";
 	}
-	$sql .= ");";
+	$sql .= ") ";
 	if (strlen($order_by) == 0) {
 		$sql .= "order by gateway asc ";
 	}

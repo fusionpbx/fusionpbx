@@ -336,6 +336,18 @@ require_once "resources/require.php";
 	echo "	});\n";
 	echo "</script>\n";
 
+//prevent enter key submit on search field
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	$(document).ready(function() {\n";
+	echo "		$('#group_permission_search').keydown(function(event){\n";
+	echo "			if (event.keyCode == 13) {\n";
+	echo "				event.preventDefault();\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	});\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>\n";

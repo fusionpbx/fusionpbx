@@ -82,11 +82,12 @@
 			ivr_menu_greet_short_is_base64 = false;
 			ivr_menu_invalid_sound_is_base64 = false;
 			ivr_menu_exit_sound_is_base64 = false;
-			if (storage_type == "base64") then
+			if (settings.recordings.storage_type == "base64") then
+
 				--greet long
 					if (string.len(ivr_menu_greet_long) > 1) then
 						if (not file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
-							sql = [[SELECT * FROM v_recordings
+							sql = [[SELECT recording_base64 FROM v_recordings
 								WHERE domain_uuid = ']]..domain_uuid..[['
 								AND recording_filename = ']]..ivr_menu_greet_long..[[' ]];
 							if (debug["sql"]) then
@@ -102,6 +103,7 @@
 									if (string.len(row["recording_base64"]) > 32) then
 										local file = io.open(ivr_menu_greet_long, "w");
 										file:write(base64.decode(row["recording_base64"]));
+										file:write(row["recording_base64"]);
 										file:close();
 									end
 							end);
@@ -179,7 +181,8 @@
 							end);
 						end
 					end
-			elseif (storage_type == "http_cache") then
+
+			elseif (settings.recordings.storage_type == "http_cache") then
 				--add the path to file name
 				ivr_menu_greet_long = storage_path.."/"..ivr_menu_greet_long;
 				ivr_menu_greet_short = storage_path.."/"..ivr_menu_greet_short;
@@ -188,7 +191,7 @@
 			end
 
 		--greet long
-			if (not file_exists(ivr_menu_greet_long)) then
+			if (not ivr_menu_greet_long_is_base64 and not file_exists(ivr_menu_greet_long)) then
 				if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
 					ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
 				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
@@ -198,7 +201,7 @@
 
 		--greet short
 			if (string.len(ivr_menu_greet_short) > 1) then
-				if (not file_exists(ivr_menu_greet_short)) then
+				if (not ivr_menu_greet_short_is_base64 and not file_exists(ivr_menu_greet_short)) then
 					if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
 						ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
 					elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
@@ -210,7 +213,7 @@
 			end
 
 		--invalid sound
-			if (not file_exists(ivr_menu_invalid_sound)) then
+			if (not ivr_menu_invalid_sound_is_base64 and not file_exists(ivr_menu_invalid_sound)) then
 				if (file_exists(recordings_dir.."/"..domain_name.. "/"..ivr_menu_invalid_sound)) then
 					ivr_menu_invalid_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound;
 				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_invalid_sound)) then
@@ -219,7 +222,7 @@
 			end
 
 		--exit sound
-			if (not file_exists(ivr_menu_exit_sound)) then
+			if (not ivr_menu_exit_sound_is_base64 and not file_exists(ivr_menu_exit_sound)) then
 				if (file_exists(recordings_dir.."/"..ivr_menu_exit_sound)) then
 					if (ivr_menu_exit_sound ~= nil and ivr_menu_exit_sound ~= "") then
 						ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;

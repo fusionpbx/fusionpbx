@@ -98,38 +98,49 @@ include "root.php";
 				$language = new text;
 				$text = $language->get(null, 'app/music_on_hold');
 
-				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
-				$array = array_merge(glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR), glob($music_on_hold_dir."/".$_SESSION['domain_name']."/*/*", GLOB_ONLYDIR));
-				foreach($array as $moh_dir) {
-					//set the directory
-						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
-						if (stristr($moh_dir, $_SESSION['domain_name'])) {
-							$domain_moh = 1;
-							$moh_dir = substr($moh_dir, strlen($_SESSION['domain_name']."/"));
-						}
-					//get and set the rate
-						$sub_array = explode("/", $moh_dir);
-						$moh_rate = end($sub_array);
-					//set the name
-						$moh_name = $moh_dir;
-						$moh_name = substr($moh_dir, 0, strlen($moh_name)-(strlen($moh_rate)));
-						$moh_name = rtrim($moh_name, "/");
-						if ($domain_moh) {
-							$moh_value = "local_stream://".$_SESSION['domain_name']."/".$moh_name;
-						}
-						else {
-							$moh_value = "local_stream://".$moh_name;
-						}
-						if($moh_name == 'default') {
-							$moh_name = $text['opt-default'];
-						}
-						$moh_list[$moh_value] = str_replace('_', ' ', $moh_name);
+			//get moh records, build array
+				$sql = "select * from v_music_on_hold ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				if (permission_exists('music_on_hold_global_view')) {
+					$sql .= "or domain_uuid is null ";
 				}
-				//detect source installed moh
-					if(is_dir($music_on_hold_dir."/8000")) {
-						$moh_list["local_stream://default"] = $text['opt-default'];
+				$sql .= "order by domain_uuid desc, music_on_hold_rate asc, music_on_hold_name asc";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+			//build the names array without the rates
+				$names = array();
+				foreach($result as $row) {
+					//convert the strings into arrays
+					$name_array = explode("/", $row['music_on_hold_name']);
+
+					//name with the domain
+					if (count($name_array) == "3") {
+						$stream_name = $name_array[0].'/'.$name_array[1];
 					}
-			return $moh_list;
+					//name without the domain
+					if (count($name_array) == "2") {
+						$stream_name = $name_array[0];
+					}
+
+					//prevent duplicate names in the array
+					if (!in_array($stream_name, $names)) {
+						$names[] = $stream_name;
+					}
+				}
+
+			//add the value and name to the array before it is returned
+				foreach($names as $name) {
+					$value = "local_stream://".$name;
+					if($stream == 'default') {
+						$name = $text['option-default'];
+					}
+					$array[$value] = str_replace('_', ' ', $name);
+				}
+
+			//return the array
+				return $array;
 		}
 
 		public function reload() {

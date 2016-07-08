@@ -23,8 +23,16 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--load libraries
+	local Database = require "resources.functions.database"
+	local Settings = require "resources.functions.lazy_settings"
+
 --save the recording
 	function record_message()
+		local db = dbh or Database.new('system')
+		local settings = Settings.new(db, domain_name, domain_uuid)
+
+		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
@@ -142,7 +150,6 @@
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-			max_len_seconds = 300;
 			silence_seconds = 5;
 			if (storage_path == "http_cache") then
 				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);

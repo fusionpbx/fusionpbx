@@ -50,6 +50,7 @@
 
 				//add or update the device keys
 					foreach ($_POST['device_keys'] as &$row) {
+
 						//validate the data
 							$valid_data = true;
 							//if (!is_uuid($row["device_key_uuid"])) { $valid_data = false; }
@@ -59,6 +60,7 @@
 							if (strlen($row["device_key_type"]) > 25) { $valid_data = false; echo "type "; }
 							if (strlen($row["device_key_value"]) > 25) { $valid_data = false; echo "value "; }
 							if (strlen($row["device_key_label"]) > 25) { $valid_data = false; echo "label "; }
+
 						//escape characters in the string
 							$device_uuid = check_str($row["device_uuid"]);
 							$device_key_uuid = check_str($row["device_key_uuid"]);
@@ -160,15 +162,34 @@
 //set the sub array index
 	$x = "999";
 
-//get device keys
+//get device
 	$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
-	$sql .= "WHERE user_uuid = '".$_SESSION['user_uuid']."' ";
+	$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$row = $prep_statement->fetch(PDO::FETCH_NAMED);
 	$device_uuid = $row['device_uuid'];
 	$device_profile_uuid = $row['device_profile_uuid'];
 	unset($row);
+
+//get device lines
+	$sql = "SELECT * from v_device_lines ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get the user
+	foreach ($device_lines as $row) {
+		if ($_SESSION['domain_name'] == $row['server_address']) {
+			$user_id = $row['user_id'];
+			$server_address = $row['server_address'];
+			break;
+		}
+	}
+
+//set the sip profile name
+	$sip_profile_name = 'internal';
 
 //get device keys
 	$sql = "SELECT * from v_device_keys ";
@@ -232,7 +253,11 @@
 	echo "	<br />";
 	echo "	</div>\n";
 
+	echo "	<div style='float: right;'>";
+	echo "	</div>\n";
+
 	echo "<div style='float: right;'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_key_vendor."';\">&nbsp;\n";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</div>\n";
 

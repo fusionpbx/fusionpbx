@@ -569,6 +569,19 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		opacity: 1.0;
 		}
 
+/* ICONS *********************************************************************/
+
+	span.icon_glyphicon_body {
+		width: 16px;
+		height: 16px;
+		color: <?php echo ($_SESSION['theme']['body_icon_color']['text'] != '') ? $_SESSION['theme']['body_icon_color']['text'] : 'rgba(0,0,0,0.25)'; ?>;
+		border: 0;
+		}
+
+	span.icon_glyphicon_body:hover {
+		color: <?php echo ($_SESSION['theme']['body_icon_color_hover']['text'] != '') ? $_SESSION['theme']['body_icon_color_hover']['text'] : 'rgba(0,0,0,0.5)'; ?>;
+		}
+
 /* DOMAIN SELECTOR ***********************************************************/
 
 	#domains_container {
@@ -725,6 +738,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		echo $body_top_style;
 		?>
 		text-align: left;
+		color: <?php echo ($_SESSION['theme']['body_text_color']['text'] != '') ? $_SESSION['theme']['body_text_color']['text'] : '#5f5f5f'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_text_size']['text'] != '') ? $_SESSION['theme']['body_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['body_text_font']['text'] != '') ? $_SESSION['theme']['body_text_font']['text'] : 'arial'; ?>;
 		}
 
 	/* default body padding */
@@ -783,11 +799,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
+	label.txt,
 	select.formfld,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
-	input[type=password].formfld {
+	input[type=password].formfld,
+	label.formfld {
 		font-family: <?php echo ($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['input_text_size']['text'] != '') ? $_SESSION['theme']['input_text_size']['text'] : '12px'; ?>;
 		color: <?php echo ($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000'; ?>;
@@ -847,10 +865,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
+	label.txt:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
-	input[type=password].formfld:hover {
+	input[type=password].formfld:hover,
+	label.formfld:hover {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_hover']['text'] != '') ? $_SESSION['theme']['input_border_color_hover']['text'] : '#c0c0c0'; ?>;
 		}
 
@@ -858,10 +878,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
+	label.txt:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
-	input[type=password].formfld:focus {
+	input[type=password].formfld:focus,
+	label.formfld:focus {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_focus']['text'] != '') ? $_SESSION['theme']['input_border_color_focus']['text'] : '#c0c0c0'; ?>;
 		/* first clear */
 		-webkit-box-shadow: none;
@@ -1030,9 +1052,30 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	span.playback_progress_bar {
-		background-color: #c43e42;
-		height: 1px;
+		background-color: #b90004;
+		width: 17px;
+		height: 4px;
+		margin-bottom: 3px;
 		display: block;
+		-moz-border-radius: 0 0 6px 6px;
+		-webkit-border-radius: 0 0 6px 6px;
+		-khtml-border-radius: 0 0 6px 6px;
+		border-radius: 0 0 6px 6px;
+		-webkit-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		-moz-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		}
+
+	td.playback_progress_bar_background {
+		padding: 0;
+		border-bottom: none;
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -o-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.15)), color-stop(1, transparent));
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 100%);
+		overflow: hidden;
 		}
 
 	div.pwstrength_progress {
@@ -1148,6 +1191,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		color: <?php echo ($_SESSION['theme']['form_table_label_text_color']['text'] != '') ? $_SESSION['theme']['form_table_label_text_color']['text'] : '#000000'; ?>;
 		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
+		vertical-align: top;
 		}
 
 	.vncellreq { /* form_label_required */
@@ -1166,6 +1210,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
 		font-weight: <?php echo ($_SESSION['theme']['form_table_label_required_text_weight']['text'] != '') ? $_SESSION['theme']['form_table_label_required_text_weight']['text'] : 'bold'; ?>;
+		vertical-align: top;
 		}
 
 	.vtable { /* form_field */
