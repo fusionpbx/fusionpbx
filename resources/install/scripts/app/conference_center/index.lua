@@ -87,6 +87,9 @@
 					moderator_pin = string.lower(row["moderator_pin"]);
 					end);
 
+				--get the link_address
+					link_address = http_protocol.."://"..domain_name..project_path;
+
 				--prepare the headers
 					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
 					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
@@ -101,6 +104,7 @@
 					subject = subject:gsub("${conference_date_end}", conference_date_end);
 					--subject = subject:gsub("${conference_duration}", message_length_formatted);
 					subject = subject:gsub("${domain_name}", domain_name);
+					subject = subject:gsub("${link_address}", link_address);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.enc(subject)..'?=';
 
@@ -113,6 +117,7 @@
 					body = body:gsub("${conference_uuid}", conference_session_uuid);
 					--body = body:gsub("${conference_duration}", message_length_formatted);
 					body = body:gsub("${domain_name}", domain_name);
+					body = body:gsub("${link_address}", link_address);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
