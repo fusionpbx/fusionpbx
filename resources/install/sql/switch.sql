@@ -81,6 +81,7 @@ CREATE TABLE channels (
     hostname character varying(256),
     presence_id character varying(4096),
     presence_data character varying(4096),
+    accountcode character varying(256),
     callstate character varying(64),
     callee_name character varying(1024),
     callee_num character varying(256),
