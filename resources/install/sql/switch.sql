@@ -307,9 +307,11 @@ CREATE TABLE sip_registrations (
     status character varying(255),
     ping_status character varying(255),
     ping_count integer,
+    ping_time bigint,
+    force_ping integer,
     rpid character varying(255),
     expires bigint,
-    ping_expires integer DEFAULT 0 NOT NULL,
+    ping_expires integer,
     user_agent character varying(255),
     server_user character varying(255),
     server_host character varying(255),
@@ -324,8 +326,6 @@ CREATE TABLE sip_registrations (
     orig_server_host character varying(255),
     orig_hostname character varying(255),
     sub_host character varying(255),
-	ping_time bigint DEFAULT 0 NOT NULL,
-	force_ping integer DEFAULT 0 NOT NULL,
     sip_registration_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE sip_registrations OWNER TO fusionpbx;
