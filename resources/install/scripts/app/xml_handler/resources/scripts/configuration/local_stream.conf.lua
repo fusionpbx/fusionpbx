@@ -39,7 +39,7 @@
 
 		--set the rate
 		rate = row.music_on_hold_rate;
-		if (rate ~= nil or rate == '') then
+		if rate == '' then
 			rate = '48000';
 		end
 
