@@ -330,6 +330,7 @@ function TimeEvents:sleepInterval(max_interval)
 end
 
 function TimeEvents:fire(this, ...)
+	self._lock = true
 	local i, timers = 0, self._timers
 	for i = 1, #timers do
 		local timer = timers[i]
@@ -342,6 +343,7 @@ function TimeEvents:fire(this, ...)
 			end
 		end
 	end
+	self._lock = false
 
 	for i = #timers, 1, -1 do
 		local timer = timers[i]
@@ -369,9 +371,15 @@ function TimeEvents:setIntervalOnce(interval, callback)
 end
 
 function TimeEvents:removeInterval(timer)
+	local timers = self._timers
 	for i = #timers, 1, -1 do
 		if timers[i] == timer then
-			remove(timers, i)
+			if self._lock then
+				timers[i].once = true
+				timers[i].timer:stop()
+			else
+				remove(timers, i)
+			end
 			return true
 		end
 	end
