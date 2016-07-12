@@ -40,6 +40,15 @@ local function split_event(event_name)
 	return name
 end
 
+local function append(t, v)
+	t[#t+1]=v return t
+end
+
+local function remove(t, i)
+	table.remove(t, i)
+	return t
+end
+
 -------------------------------------------------------------------------------
 local BasicEventEmitter = class() do
 
@@ -301,12 +310,86 @@ end
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+local TimeEvents = class() do
+
+function TimeEvents:__init()
+	self._timers = {}
+	return self
+end
+
+function TimeEvents:sleepInterval(max_interval)
+	local timers = self._timers
+	for i = 1, #timers do
+		local timer = timers[i] and timers[i].timer
+		if timer and timer:started() then
+			local int = timer:rest()
+			if max_interval > int then max_interval = int end
+		end
+	end
+	return max_interval
+end
+
+function TimeEvents:fire(this, ...)
+	local i, timers = 0, self._timers
+	for i = 1, #timers do
+		local timer = timers[i]
+		if timer.timer:rest() == 0 then
+			timer.callback(this, timer, ...)
+			if timer.once then
+				timer.timer:stop()
+			else
+				timer.timer:restart()
+			end
+		end
+	end
+
+	for i = #timers, 1, -1 do
+		local timer = timers[i]
+		if not timer.timer:started() then
+			remove(timers, i)
+		end
+	end
+end
+
+function TimeEvents:setInterval(interval, callback)
+	local timer = {
+		timer    = IntervalTimer.new(interval):start(),
+		callback = callback,
+		once     = false,
+	}
+	append(self._timers, timer)
+
+	return timer
+end
+
+function TimeEvents:setIntervalOnce(interval, callback)
+	local timer = self:setInterval(interval, callback)
+	timer.once = true
+	return timer
+end
+
+function TimeEvents:removeInterval(timer)
+	for i = #timers, 1, -1 do
+		if timers[i] == timer then
+			remove(timers, i)
+			return true
+		end
+	end
+end
+
+end
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 local EventConsumer = class(EventEmitter) do
+
+local default_timeout       = 60000
+local default_poll_interval = 60000 * 30
 
 function EventConsumer:__init(timeout, pid_file)
 	self.__base.__init(self)
 
-	if pid_file then timeout = timeout or 60000 end
+	if pid_file then timeout = timeout or default_timeout end
 
 	if timeout then assert(timeout > 0) end
 
@@ -314,7 +397,7 @@ function EventConsumer:__init(timeout, pid_file)
 	self._running  = false
 	self._consumer = freeswitch.EventConsumer()
 	self._timeout  = timeout
-	self._timer    = timeout and IntervalTimer.new(timeout)
+	self._timers   = TimeEvents.new()
 	self._pid      = api:execute("create_uuid") or tostring(api:getTime())
 	self._pid_file = pid_file
 
@@ -322,6 +405,13 @@ function EventConsumer:__init(timeout, pid_file)
 		local pid_path = basename(self._pid_file)
 		mkdir(pid_path)
 		assert(file.write(self._pid_file, self._pid))
+	end
+
+	if self._timeout then
+		self:onInterval(self._timeout, function(self)
+			if not self:_check_pid_file() then return self:stop() end
+			self:emit('TIMEOUT')
+		end)
 	end
 
 	return self
@@ -366,41 +456,37 @@ function EventConsumer:bind(event_name, cb)
 end
 
 function EventConsumer:run()
-	self._timer:restart()
 	self._running = true
 
+	-- set some huge default interval
+	-- if there no time events then we wait this amount of time
+	local max_interval = self._timeout or default_poll_interval
+
 	while self._running do
-		local timeout
-		if self._timer then
-			timeout = self._timer:rest()
-			if timeout == 0 then
-				if not self:_check_pid_file() then
-					return
-				end
-				timeout = self._timeout
-				self._timer:restart()
-				self:emit('TIMEOUT')
-			end
+		self._timers:fire(self)
+		if not self._running then break end
+		local timeout = self._timers:sleepInterval(max_interval)
+
+		local event
+		if timeout == 0 then
+			-- we have some time based events.
+			-- so we just try get fs event without wait
+			event = self._consumer:pop(0)
 		else
-			-- wait infinity
-			timeout = 0
+			event = self._consumer:pop(1, timeout)
 		end
 
-		local event = self._consumer:pop(1, timeout)
-
-		if not event then
-			if not self:_check_pid_file() then
-				return
-			end
-		else
-			local event_name  = event:getHeader('Event-Name')
+		if event then
+			local event_name = event:getHeader('Event-Name')
 			if self._bound[event_name] then
 				self:emit(event_name, event)
+				if not self._running then break end
 			end
 			local event_class = event:getHeader('Event-Subclass')
 			if event_class and #event_class > 0 then
 				event_name = event_name .. '::' .. event_class
 				self:emit(event_name, event)
+				if not self._running then break end
 			end
 		end
 	end
@@ -413,6 +499,18 @@ function EventConsumer:stop()
 	if self._pid_file and self:_check_pid_file() then
 		file.remove(self._pid_file)
 	end
+end
+
+function EventConsumer:onInterval(interval, callback)
+	return self._timers:setInterval(interval, callback)
+end
+
+function EventConsumer:onIntervalOnce(interval, callback)
+	return self._timers:setIntervalOnce(interval, callback)
+end
+
+function EventConsumer:offInterval(timer)
+	return self._timers:removeInterval(timer)
 end
 
 end
