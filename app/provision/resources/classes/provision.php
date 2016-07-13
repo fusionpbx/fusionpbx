@@ -489,7 +489,7 @@ include "root.php";
 					unset ($prep_statement);
 				}
 
-			//initialize a template object
+				//initialize a template object
 				$view = new template();
 				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
 					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
@@ -687,7 +687,7 @@ include "root.php";
 						exit;
 					}
 
-				//assign the keys array
+					//assign the keys array
 					$view->assign("keys", $device_keys);
 
 				//set the variables
@@ -779,42 +779,13 @@ include "root.php";
 							$device_key_extension = str_replace("\${domain_name}", $domain_name, $device_key_extension);
 							$device_key_label = str_replace("\${domain_name}", $domain_name, $device_key_label);
 
-						//grandstream modes are different based on the category
-							if ($device_vendor == "grandstream") {
-								if ($device_key_category == "line") {
-									switch ($device_key_type) {
-										case "line": $device_key_type  = "0"; break;
-										case "shared line": $device_key_type  = "1"; break;
-										case "speed dial": $device_key_type  = "10"; break;
-										case "blf": $device_key_type  = "11"; break;
-										case "presence watcher": $device_key_type  = "12"; break;
-										case "eventlist blf": $device_key_type  = "13"; break;
-										case "speed dial active": $device_key_type  = "14"; break;
-										case "dial dtmf": $device_key_type  = "15"; break;
-										case "voicemail": $device_key_type  = "16"; break;
-										case "call return": $device_key_type  = "17"; break;
-										case "transfer": $device_key_type  = "18"; break;
-										case "call park": $device_key_type  = "19"; break;
-										case "intercom": $device_key_type  = "20"; break;
-										case "ldap search": $device_key_type  = "21"; break;
-									}
-								}
-								if ($device_key_category == "memory" || $device_key_category == "expansion") {
-									switch ($device_key_type) {
-										case "speed dial": $device_key_type  = "0"; break;
-										case "blf": $device_key_type  = "1"; break;
-										case "presence watcher": $device_key_type  = "2"; break;
-										case "eventlist blf": $device_key_type  = "3"; break;
-										case "speed dial active": $device_key_type  = "4"; break;
-										case "dial dtmf": $device_key_type  = "5"; break;
-										case "voicemail": $device_key_type  = "6"; break;
-										case "call return": $device_key_type  = "7"; break;
-										case "transfer": $device_key_type  = "8"; break;
-										case "call park": $device_key_type  = "9"; break;
-										case "intercom": $device_key_type  = "10"; break;
-										case "ldap search": $device_key_type  = "11"; break;
-									}
-								}
+						//e.g. grandstream modes are different based on the category
+							if (class_exists($device_vendor) && method_exists($device_vendor, 'provision_key_type')){
+								$user_agent_name = $_SERVER['HTTP_USER_AGENT'];
+								$device_key_type = $device_vendor::provision_key_type(
+									$user_agent_name, $device_key_category, $device_key_type
+								);
+								unset($user_agent_name);
 							}
 
 						//assign the variables
