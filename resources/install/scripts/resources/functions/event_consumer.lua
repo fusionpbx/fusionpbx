@@ -310,20 +310,64 @@ end
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+local TimeEvent = class() do
+
+function TimeEvent:__init(interval, callback, once)
+	self._timer = IntervalTimer.new(interval):start()
+	self._callback = callback
+	self._once     = once
+
+	return self
+end
+
+function TimeEvent:started()
+	return self._timer:started()
+end
+
+function TimeEvent:restart()
+	return self._timer:restart()
+end
+
+function TimeEvent:rest()
+	return self._timer:rest()
+end
+
+function TimeEvent:reset(interval)
+	self._timer:reset(interval)
+	return self
+end
+
+function TimeEvent:stop()
+	return self._timer:stop()
+end
+
+function TimeEvent:once()
+	return self._once
+end
+
+function TimeEvent:fire(...)
+	-- !!! do not pass self
+	return self._callback(...)
+end
+
+end
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 local TimeEvents = class() do
 
 function TimeEvents:__init()
-	self._timers = {}
+	self._events = {}
 	return self
 end
 
 function TimeEvents:sleepInterval(max_interval)
-	local timers = self._timers
-	for i = 1, #timers do
-		local timer = timers[i] and timers[i].timer
-		if timer and timer:started() then
-			local int = timer:rest()
-			if max_interval > int then max_interval = int end
+	local events = self._events
+	for i = 1, #events do
+		local event = events[i]
+		if event:started() then
+			local rest = event:rest()
+			if max_interval > rest then max_interval = rest end
 		end
 	end
 	return max_interval
@@ -331,54 +375,48 @@ end
 
 function TimeEvents:fire(this, ...)
 	self._lock = true
-	local i, timers = 0, self._timers
-	for i = 1, #timers do
-		local timer = timers[i]
-		if timer.timer:rest() == 0 then
-			if timer.once then
-				timer.timer:stop()
+	local i, events = 0, self._events
+	for i = 1, #events do
+		local event = events[i]
+		if event:rest() == 0 then
+			if event:once() then
+				event:stop()
 			else
-				timer.timer:restart()
+				event:restart()
 			end
-			timer.callback(this, timer, ...)
+			event:fire(this, event, ...)
 		end
 	end
 	self._lock = false
 
-	for i = #timers, 1, -1 do
-		local timer = timers[i]
-		if not timer.timer:started() then
-			remove(timers, i)
+	for i = #events, 1, -1 do
+		local event = events[i]
+		if not event:started() then
+			remove(events, i)
 		end
 	end
 end
 
 function TimeEvents:setInterval(interval, callback)
-	local timer = {
-		timer    = IntervalTimer.new(interval):start(),
-		callback = callback,
-		once     = false,
-	}
-	append(self._timers, timer)
-
-	return timer
+	local event = TimeEvent.new(interval, callback, false)
+	append(self._events, event)
+	return event
 end
 
 function TimeEvents:setIntervalOnce(interval, callback)
-	local timer = self:setInterval(interval, callback)
-	timer.once = true
-	return timer
+	local event = TimeEvent.new(interval, callback, true)
+	append(self._events, event)
+	return event
 end
 
 function TimeEvents:removeInterval(timer)
-	local timers = self._timers
-	for i = #timers, 1, -1 do
-		if timers[i] == timer then
+	local events = self._events
+	for i = #events, 1, -1 do
+		if events[i] == timer then
 			if self._lock then
-				timers[i].once = true
-				timers[i].timer:stop()
+				events[i]:stop()
 			else
-				remove(timers, i)
+				remove(events, i)
 			end
 			return true
 		end
