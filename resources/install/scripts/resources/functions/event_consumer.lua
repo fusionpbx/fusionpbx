@@ -335,12 +335,12 @@ function TimeEvents:fire(this, ...)
 	for i = 1, #timers do
 		local timer = timers[i]
 		if timer.timer:rest() == 0 then
-			timer.callback(this, timer, ...)
 			if timer.once then
 				timer.timer:stop()
 			else
 				timer.timer:restart()
 			end
+			timer.callback(this, timer, ...)
 		end
 	end
 	self._lock = false
