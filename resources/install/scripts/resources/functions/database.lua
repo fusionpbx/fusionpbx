@@ -77,6 +77,14 @@ local function new_database(backend, backend_name)
     return result
   end
 
+  function Database:escape(str)
+    return (string.gsub(str, "'", "''"))
+  end
+
+  function Database:quote(str)
+    return "'" .. self:escape(str) .. "'"
+  end
+
   function Database.__self_test__(...)
     log.info('self_test Database - ' ..  Database._backend_name)
     local db = Database.new(...)
@@ -151,6 +159,16 @@ local function new_database(backend, backend_name)
     local a = assert(db:first_value("select NULL as a"))
     assert(a == "")
 
+    -- escape
+    local values = {"hello';select 'world", "hello'"}
+    for _, value in ipairs(values) do
+      local a = assert(db:first_value(
+        string.format("select '%s' as a", db:escape(value))
+      ))
+      assert(a == value)
+    end
+
+    -- close
     db:release()
     assert(not db:connected())
 

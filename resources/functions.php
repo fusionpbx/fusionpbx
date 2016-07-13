@@ -1956,4 +1956,25 @@ function number_pad($number,$n) {
 		}
 	}
 
+	function event_socket_mkdir($dir) {
+		//connect to fs
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				return false;
+			}
+		//send the mkdir command to freeswitch
+			if ($fp) {
+				//build and send the mkdir command to freeswitch
+					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					fclose($fp);
+				//check result
+					if (trim($switch_result) == "-ERR no reply") {
+						return true;
+					}
+			}
+		//can not create directory
+			return false;
+	}
+
 ?>

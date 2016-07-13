@@ -53,18 +53,39 @@
 
 --define the check pin number function
 	function check_pin_number()
+
 		--sleep
 			session:sleep(500);
+
 		--increment the number of tries
 			tries = tries + 1;
+
+		--get the domain_uuid
+			domain_uuid = session:getVariable("domain_uuid");
+			if (domain_uuid == nil) then
+				--get the domain_name
+				domain_name = session:getVariable("domain_name");
+				--get the domain_uuid using the domain_name
+				sql = [[SELECT domain_name FROM v_domains
+					WHERE domain_name = ']] .. domain_name ..[[' ]];
+				if (debug["sql"]) then
+					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
+				end
+				dbh:query(sql, function(row)
+					domain_uuid = row["domain_uuid"];
+				end);
+			end
+
 		--get the user pin number
 			min_digits = 2;
 			max_digits = 20;
 			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
 		--validate the user pin number
 			if (pin_number == "database") then
 				sql = [[SELECT * FROM v_pin_numbers
 					WHERE pin_number = ']] .. digits ..[['
+					AND domain_uuid = ']] .. domain_uuid .. [['
 					AND enabled = 'true' ]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
@@ -72,13 +93,12 @@
 				auth = false;
 				dbh:query(sql, function(row)
 					--get the values from the database
-						domain_uuid = row["domain_uuid"];
 						accountcode = row["accountcode"];
 					--set the variable to true
 						auth = true;
 					--set the accountcode
 						if (accountcode ~= nil) then
-							session:setVariable("accountcode", accountcode);
+							session:setVariable("sip_h_X-accountcode", accountcode);
 						end
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);

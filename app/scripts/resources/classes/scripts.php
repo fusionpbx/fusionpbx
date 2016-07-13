@@ -159,6 +159,14 @@ if (!class_exists('scripts')) {
 				//get the recordings directory
 					$recordings_dir = $_SESSION['switch']['recordings']['dir'];
 
+				//get the http_protocol
+					if (!isset($_SERVER['HTTP_PROTOCOL'])) {
+						$_SERVER['HTTP_PROTOCOL'] = 'http';
+						if (isset($_SERVER['REQUEST_SCHEME'])) { $_SERVER['HTTP_PROTOCOL'] = $_SERVER['REQUEST_SCHEME']; }
+						if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+						if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+					}
+
 				//find the location to write the config.lua
 					if (is_dir("/etc/fusionpbx")){
 						$config = "/etc/fusionpbx/config.lua";
@@ -205,6 +213,12 @@ if (!class_exists('scripts')) {
 						$tmp .= "	php_bin = \"php5\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL']."]];\n");
+					$tmp .= "\n";
+
+					$tmp .= "--store settings in memcache\n";
+					$tmp .= "	settings_in_cache = false;\n";
 					$tmp .= "\n";
 
 					if ((strlen($this->db_type) > 0) || (strlen($this->dsn_name) > 0)) {
@@ -245,6 +259,30 @@ if (!class_exists('scripts')) {
 					$tmp .= "	xml_handler = {}\n";
 					$tmp .= "	xml_handler.fs_path = false;\n";
 					$tmp .= "\n";
+					$tmp .= "--set settings\n";
+					$tmp .= "	settings = {}\n";
+					$tmp .= "	settings.recordings = {}\n";
+					$tmp .= "	settings.voicemail = {}\n";
+					$tmp .= "	settings.fax = {}\n";
+					if (isset($_SESSION['recordings']['storage_type']['text'])) {
+						$tmp .= "	settings.recordings.storage_type = \"".$_SESSION['recordings']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.recordings.storage_type = \"\";\n";
+					}
+					if (isset($_SESSION['voicemail']['storage_type']['text'])) {
+						$tmp .= "	settings.voicemail.storage_type = \"".$_SESSION['voicemail']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.voicemail.storage_type = \"\";\n";
+					}
+					if (isset($_SESSION['fax']['storage_type']['text'])) {
+						$tmp .= "	settings.fax.storage_type = \"".$_SESSION['fax']['storage_type']['text']."\";\n";
+					}
+					else {
+						$tmp .= "	settings.fax.storage_type = \"\";\n";
+					}
+					$tmp .= "\n";	
 					$tmp .= "--set the debug options\n";
 					$tmp .= "	debug.params = false;\n";
 					$tmp .= "	debug.sql = false;\n";

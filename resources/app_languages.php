@@ -175,6 +175,20 @@ $text['button-apply']['ro'] = "";
 $text['button-apply']['fa'] = "";
 $text['button-apply']['ar-eg'] = "";
 
+$text['button-applied']['en-us'] = "Applied";
+$text['button-applied']['es-cl'] = "";
+$text['button-applied']['pt-pt'] = "";
+$text['button-applied']['fr-fr'] = "";
+$text['button-applied']['pt-br'] = "";
+$text['button-applied']['pl'] = "";
+$text['button-applied']['he'] = "";
+$text['button-applied']['uk'] = "";
+$text['button-applied']['sv-se'] = "";
+$text['button-applied']['de-at'] = "";
+$text['button-applied']['ro'] = "";
+$text['button-applied']['fa'] = "";
+$text['button-applied']['ar-eg'] = "";
+
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
 $text['button-clear']['pt-pt'] = "Apagar";
@@ -623,6 +637,19 @@ $text['label-disabled']['pl'] = "Wyłączony";
 $text['label-disabled']['sv-se'] = "Inaktiverad";
 $text['label-disabled']['uk'] = "Відключено";
 $text['label-disabled']['de-at'] = "Ausgeschaltet";
+
+$text['label-global']['en-us'] = "Global";
+$text['label-global']['es-cl'] = "Global";
+$text['label-global']['pt-pt'] = "Global";
+$text['label-global']['fr-fr'] = "Global";
+$text['label-global']['pt-br'] = "Global";
+$text['label-global']['pl'] = "Globalny";
+$text['label-global']['uk'] = "Global";
+$text['label-global']['sv-se'] = "Global";
+$text['label-global']['ro'] = "Global";
+$text['label-global']['de-at'] = "Global";
+$text['label-global']['ar-eg'] = "";
+$text['label-global']['he'] = "כללי";
 
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguno";

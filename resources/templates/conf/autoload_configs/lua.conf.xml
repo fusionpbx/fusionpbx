@@ -28,5 +28,21 @@
     <!-- FusionPBX: Run FAX server queue poller  -->
     <!--<param name="startup-script" value="app/fax/resources/scripts/fax_queue_monitor.lua"/>-->
 
+    <!-- FusionPBX: Support BLF for call flow -->
+    <!-- There 2 way to handle this
+      1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
+      2 - Event handler - handle each SUBSCRIBE request
+    -->
+    <!--<param name="startup-script" value="call_flow_subscribe.lua"/>-->
+    <!--<param name="startup-script" value="call_flow_monitor.lua"/>-->
+
+    <!-- FusionPBX: Support MWI indicator-->
+    <!-- There 2 way to handle this
+      1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
+      2 - Event handler - handle each SUBSCRIBE request
+    -->
+    <!--<param name="startup-script" value="app/voicemail/resources/scripts/mwi.lua"/>-->
+    <!--<param name="startup-script" value="app/voicemail/resources/scripts/mwi_subscribe.lua"/>-->
+
   </settings>
 </configuration>
