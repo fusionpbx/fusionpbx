@@ -60,6 +60,16 @@ $text['label-port']['sv-se'] = "Port";
 $text['label-port']['uk'] = "Порт";
 $text['label-port']['de-at'] = "Port";
 
+$text['label-ping']['en-us'] = "Ping";
+$text['label-ping']['es-cl'] = "Silbido";
+$text['label-ping']['pt-pt'] = "Sibilo";
+$text['label-ping']['fr-fr'] = "Ping";
+$text['label-ping']['pt-br'] = "Sibilo";
+$text['label-ping']['pl'] = "Świst";
+$text['label-ping']['sv-se'] = "Ping";
+$text['label-ping']['uk'] = "пінг";
+$text['label-ping']['de-at'] = "Klingeln";
+
 $text['label-message']['en-us'] = "Invalid Profile!";
 $text['label-message']['es-cl'] = "&iexcl;Perfil Inválido!";
 $text['label-message']['pt-pt'] = "Perfil Inválido!";
