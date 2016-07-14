@@ -639,7 +639,7 @@
 
 			//add the primary key uuid
 			if (strlen($field['ivr_menu_option_uuid']) > 0) {
-				echo "	<input name='ivr_menu_options[".$x."][ivr_menu_option_uuid]' type='hidden' value=\"".$field['ivr_menu_option_uuid']."\">\n";
+				echo "	<input name='ivr_menu_options[".$c."][ivr_menu_option_uuid]' type='hidden' value=\"".$field['ivr_menu_option_uuid']."\">\n";
 			}
 
 			echo "<td class='formfld' align='left'>\n";
