@@ -314,14 +314,6 @@
 					else {
 						$action = "add";
 					}
-/*
-if ($table_name == "v_dialplans") {
-	echo "<pre>\n";
-	print_r($array);
-	echo "</pre>\n";
-	exit;
-}
-*/
 
 				//add a record
 				//set the message index
