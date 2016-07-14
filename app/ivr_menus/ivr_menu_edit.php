@@ -288,11 +288,22 @@
 	$ivr_menu_options = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //add an empty row to the options array
-	$ivr_menu_options[$x]['ivr_menu_option_digits'] = '';
-	$ivr_menu_options[$x]['ivr_menu_option_action'] = '';
-	$ivr_menu_options[$x]['ivr_menu_option_param'] = '';
-	$ivr_menu_options[$x]['ivr_menu_option_order'] = '';
-	$ivr_menu_options[$x]['ivr_menu_option_description'] = '';
+	if (count($ivr_menu_options) == 0) {
+		$count = 5;
+		$x = 0;
+	}
+	if (count($ivr_menu_options) > 0) {
+		$count = 1;
+		$x = '';
+	}
+	while ($x < $count) {
+		$ivr_menu_options[$x]['ivr_menu_option_digits'] = '';
+		$ivr_menu_options[$x]['ivr_menu_option_action'] = '';
+		$ivr_menu_options[$x]['ivr_menu_option_param'] = '';
+		$ivr_menu_options[$x]['ivr_menu_option_order'] = '';
+		$ivr_menu_options[$x]['ivr_menu_option_description'] = '';
+		$x++;
+	}
 
 //set the defaults
 	if (strlen($ivr_menu_timeout) == 0) { $ivr_menu_timeout = '3000'; }
