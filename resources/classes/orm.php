@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2014
+	Copyright (C) 2014-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -264,7 +264,12 @@
 					$table_name = "v_".$this->name;
 					$parent_key_name = $this->singular($this->name)."_uuid";
 
-				//get the number of rows
+				//set the uuid
+					if (isset($array[$parent_key_name])) {
+						$this->uuid = $array[$parent_key_name];
+					}
+
+				//determine action update or delete
 					if (isset($this->uuid)) {
 						$sql = "SELECT count(*) AS num_rows FROM ".$table_name." ";
 						$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
@@ -276,7 +281,32 @@
 								$action = "update";
 							}
 							else {
+								//set the action
 								$action = "add";
+
+								//unset the primary key if it doesn't exist
+								unset($array[$parent_key_name]);
+								unset($this->uuid);
+
+								//remove parent and child keys from the data if the parent key doesn't exist
+								foreach ($array as $key => $value) {
+									if (is_array($value)) {
+										$child_key_name = $this->singular($key)."_uuid";
+										$i = 0;
+										foreach ($value as $row) {
+											foreach ($row as $k => $v) {
+												if ($k == $parent_key_name) {
+													unset($array[$key][$i][$parent_key_name]);
+												}
+												if ($k == $child_key_name) {
+													unset($array[$key][$i][$child_key_name]);
+												}
+											}
+											$i++;
+										}
+									}
+								}
+
 							}
 						}
 						unset($prep_statement);
@@ -284,15 +314,28 @@
 					else {
 						$action = "add";
 					}
+/*
+if ($table_name == "v_dialplans") {
+	echo "<pre>\n";
+	print_r($array);
+	echo "</pre>\n";
+	exit;
+}
+*/
 
 				//add a record
-        				//set the message index
+				//set the message index
 					$m = 0;
 					if ($action == "add") {
 						if (permission_exists($this->singular($this->name).'_add')) {
 							//start the atomic transaction
 								$this->db->beginTransaction();
 
+							//determine if child or parent key exists
+								$parent_key_exists = false;
+								foreach ($array as $k => $v) {
+									if ($k == $parent_key_name) { $parent_key_exists = true; }
+								}
 
 							//parent data
 								if (isset($this->uuid)) {
@@ -303,7 +346,9 @@
 								}
 								$sql = "INSERT INTO v_".$this->name." ";
 								$sql .= "(";
-								$sql .= $parent_key_name.", ";
+								if (!$parent_key_exists) {
+									$sql .= $parent_key_name.", ";
+								}
 								foreach ($array as $key => $value) {
 									if (!is_array($value)) {
 										$sql .= check_str($key).", ";
@@ -312,7 +357,9 @@
 								$sql .= ") ";
 								$sql .= "VALUES ";
 								$sql .= "(";
-								$sql .= "'".$parent_key_value."', ";
+								if (!$parent_key_exists) {
+									$sql .= "'".$parent_key_value."', ";
+								}
 								foreach ($array as $key => $value) {
 									if (!is_array($value)) {
 										if (strlen($value) == 0) {
@@ -379,33 +426,48 @@
 															$uuid_exists = false;
 														}
 													}
+												//determine if child or parent key exists
+													$parent_key_exists = false;
+													$child_key_exists = false;
+													foreach ($row as $k => $v) {
+														if ($k == $parent_key_name) { $parent_key_exists = true; }
+														if ($k == $child_key_name) { $child_key_exists = true; }
+													}
 												//add the data
 													$sql = "INSERT INTO ".$table_name." ";
 													$sql .= "(";
-													$sql .= $parent_key_name.", ";
-													$sql .= $child_key_name.", ";
+													if (!$parent_key_exists) {
+														$sql .= $parent_key_name.", ";
+													}
+													if (!$child_key_exists) {
+														$sql .= $child_key_name.", ";
+													}
 													foreach ($row as $k => $v) {
 														if (!is_array($v)) {
-															if ($k != $child_key_name) {
+															//if ($k != $child_key_name) {
 																$sql .= check_str($k).", ";
-															}
+															//}
 														}
 													}
 													$sql .= ") ";
 													$sql .= "VALUES ";
 													$sql .= "(";
-													$sql .= "'".$parent_key_value."', ";
-													$sql .= "'".$child_key_value."', ";
+													if (!$parent_key_exists) {
+														$sql .= "'".$parent_key_value."', ";
+													}
+													if (!$child_key_exists) {
+														$sql .= "'".$child_key_value."', ";
+													}
 													foreach ($row as $k => $v) {
 														if (!is_array($v)) {
-															if ($k != $child_key_name) {
+															//if ($k != $child_key_name) {
 																if (strlen($v) == 0) {
 																	$sql .= "null, ";
 																}
 																else {
 																	$sql .= "'".check_str($v)."', ";
 																}
-															}
+															//}
 														}
 													}
 													$sql .= ");";
@@ -483,9 +545,11 @@
 									$this->db->query(check_sql($sql));
 									$message["message"] = "OK";
 									$message["code"] = "200";
+									$message["uuid"] = $parent_key_value;
 									$message["details"][$m]["name"] = $this->name;
 									$message["details"][$m]["message"] = "OK";
 									$message["details"][$m]["code"] = "200";
+									$message["details"][$m]["uuid"] = $parent_key_value;
 									if ($this->debug["sql"]) {
 										$message["details"][$m]["sql"] = $sql;
 									}
@@ -515,7 +579,13 @@
 												$child_name = $this->singular($key);
 												$child_key_name = $child_name."_uuid";
 
-											//uuid_exists true / false
+											//determine if the parent key exists
+												$parent_key_exists = false;
+												if (!isset($array[$parent_key_name])) {
+													$parent_key_exists = true;
+												}
+
+											//determine if the uuid exists
 												$uuid_exists = false;
 												$child_key_value = uuid();
 												foreach ($row as $k => $v) {
@@ -533,59 +603,82 @@
 
 											//update the data
 												if ($uuid_exists) {
-													//if (permission_exists($child_name.'_edit')) {
-														$sql = "UPDATE ".$table_name." SET ";
-														foreach ($row as $k => $v) {
-															if (!is_array($v) && $k != $child_key_name) {
-																if (strlen($v) == 0) {
-																	$sql .= check_str($k)." = null, ";
-																}
-																else {
-																	$sql .= check_str($k)." = '".check_str($v)."', ";
-																}
+
+													$sql = "UPDATE ".$table_name." SET ";
+													foreach ($row as $k => $v) {
+														//if (!is_array($v) && $k != $child_key_name) { //original
+														if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
+															if (strlen($v) == 0) {
+																$sql .= check_str($k)." = null, ";
+															}
+															else {
+																$sql .= check_str($k)." = '".check_str($v)."', ";
 															}
 														}
-														$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
-														$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
-														$sql = str_replace(", WHERE", " WHERE", $sql);
-														$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	//													if (strlen($child_key_value) > 0) {
-															try {
-																$this->db->query(check_sql($sql));
-																$message["details"][$m]["name"] = $key;
-																$message["details"][$m]["message"] = "OK";
-																$message["details"][$m]["code"] = "200";
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																}
-																$this->message = $message;
-																$m++;
-															}
-															catch(PDOException $e) {
-																if ($message["code"] = "200") {
-																	$message["message"] = "Bad Request";
-																	$message["code"] = "400";
-																}
-																$message["details"][$m]["name"] = $key;
-																$message["details"][$m]["message"] = $e->getMessage();
-																$message["details"][$m]["code"] = "400";
-																if ($this->debug["sql"]) {
-																	$message["details"][$m]["sql"] = $sql;
-																}
-																$this->message = $message;
-																$m++;
-															}
-	//													}
-													//}
+													}
+													$sql .= "WHERE ".$parent_key_name." = '".$this->uuid."' ";
+													$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
+													$sql = str_replace(", WHERE", " WHERE", $sql);
+													$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+													try {
+														$this->db->query(check_sql($sql));
+														$message["details"][$m]["name"] = $key;
+														$message["details"][$m]["message"] = "OK";
+														$message["details"][$m]["code"] = "200";
+														$message["details"][$m]["uuid"] = $child_key_value;
+														if ($this->debug["sql"]) {
+															$message["details"][$m]["sql"] = $sql;
+														}
+														$this->message = $message;
+														$m++;
+													}
+													catch(PDOException $e) {
+														if ($message["code"] = "200") {
+															$message["message"] = "Bad Request";
+															$message["code"] = "400";
+														}
+														$message["details"][$m]["name"] = $key;
+														$message["details"][$m]["message"] = $e->getMessage();
+														$message["details"][$m]["code"] = "400";
+														if ($this->debug["sql"]) {
+															$message["details"][$m]["sql"] = $sql;
+														}
+														$this->message = $message;
+														$m++;
+													}
 												}
 
 											//add the data
 												if (!$uuid_exists) {
 													if (permission_exists($child_name.'_add')) {
+														//determine if child or parent key exists
+														$child_key_name = $this->singular($child_name).'_uuid';
+														$child_key_exists = false;
+														foreach ($row as $k => $v) {
+															if ($k == $parent_key_name) {
+																$parent_key_exists = true; 
+																$parent_key_value = $v;
+															}
+															if ($k == $child_key_name) {
+																$child_key_exists = true;
+																$child_key_value = $v;
+															}
+														}
+														if (!$parent_key_name) {
+															$parent_key_value = uuid();
+														}
+														if (!$child_key_name) {
+															$child_key_value = uuid();
+														}
+														//build the insert
 														$sql = "INSERT INTO ".$table_name." ";
 														$sql .= "(";
-														$sql .= $this->singular($parent_key_name).", ";
-														$sql .= $this->singular($child_key_name).", ";
+														if (!$parent_key_exists) {
+															$sql .= $this->singular($parent_key_name).", ";
+														}
+														if (!$child_key_exists) {
+															$sql .= $this->singular($child_key_name).", ";
+														}
 														foreach ($row as $k => $v) {
 															if (!is_array($v)) {
 																$sql .= check_str($k).", ";
@@ -594,8 +687,12 @@
 														$sql .= ") ";
 														$sql .= "VALUES ";
 														$sql .= "(";
-														$sql .= "'".$parent_key_value."', ";
-														$sql .= "'".$child_key_value."', ";
+														if (!$parent_key_exists) {
+															$sql .= "'".$parent_key_value."', ";
+														}
+														if (!$child_key_exists) {
+															$sql .= "'".$child_key_value."', ";
+														}
 														foreach ($row as $k => $v) {
 															if (!is_array($v)) {
 																if (strlen($v) == 0) {
