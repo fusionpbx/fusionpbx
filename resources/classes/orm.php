@@ -645,6 +645,7 @@
 													if (permission_exists($child_name.'_add')) {
 														//determine if child or parent key exists
 														$child_key_name = $this->singular($child_name).'_uuid';
+														$parent_key_exists = false;
 														$child_key_exists = false;
 														foreach ($row as $k => $v) {
 															if ($k == $parent_key_name) {
