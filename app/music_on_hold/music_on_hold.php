@@ -114,37 +114,45 @@
 
 		//determine name
 			if ($_POST['name_new'] != '') {
-				$stream_name = strtolower($_POST['name_new']);
-				if (is_numeric($_POST['rate'])) {	$stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
+				//set the action
+					$action = 'add';
+				//get the stream_name
+					$stream_name = $_POST['name_new'];
+				//get the rate
+					if (is_numeric($_POST['rate'])) { $stream_rate = $_POST['rate']; } else { $stream_rate = ''; }
 			}
 			else {
-				$stream_uuid = $_POST['name'];
-				foreach ($streams as $row) {
-					if ($stream_uuid == $row['music_on_hold_uuid']) {
-						//set the variables
-							$stream_domain_uuid = $row['domain_uuid'];
-							$stream_name = $row['music_on_hold_name'];
-							$stream_path = $row['music_on_hold_path'];
-							$stream_rate = $row['music_on_hold_rate'];
-							$stream_shuffle = $row['music_on_hold_shuffle'];
-							$stream_channels = $row['music_on_hold_channels'];
-							$stream_internal = $row['music_on_hold_interval'];
-							$stream_timer_name = $row['music_on_hold_timer_name'];
-							$stream_chime_list = $row['music_on_hold_chime_list'];
-							$stream_chime_freq = $row['music_on_hold_chime_freq'];
-							$stream_chime_max = $row['music_on_hold_chime_max'];
-							$stream_rate = $row['music_on_hold_rate'];
-
-						//end the loop
-							break;
+				//get the stream uuid
+					$stream_uuid = $_POST['name'];
+				//find the matching stream
+					foreach ($streams as $row) {
+						if ($stream_uuid == $row['music_on_hold_uuid']) {
+							//set the action
+								$action = 'update';
+							//set the variables
+								$stream_domain_uuid = $row['domain_uuid'];
+								$stream_name = $row['music_on_hold_name'];
+								$stream_path = $row['music_on_hold_path'];
+								$stream_rate = $row['music_on_hold_rate'];
+								$stream_shuffle = $row['music_on_hold_shuffle'];
+								$stream_channels = $row['music_on_hold_channels'];
+								$stream_internal = $row['music_on_hold_interval'];
+								$stream_timer_name = $row['music_on_hold_timer_name'];
+								$stream_chime_list = $row['music_on_hold_chime_list'];
+								$stream_chime_freq = $row['music_on_hold_chime_freq'];
+								$stream_chime_max = $row['music_on_hold_chime_max'];
+								$stream_rate = $row['music_on_hold_rate'];
+							//end the loop
+								break;
+						}
 					}
-				}
 			}
 
 		//get remaining values
 			$stream_file_name_temp = $_FILES['file']['tmp_name'];
 			$stream_file_name = $_FILES['file']['name'];
 			$stream_file_ext = strtolower(pathinfo($stream_file_name, PATHINFO_EXTENSION));
+
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
 
@@ -154,84 +162,90 @@
 			}
 			else {
 
-				//strip slashes, replace spaces
-					$slashes = array("/", "\\");
-					$stream_name = str_replace($slashes, '', $stream_name);
-					$stream_name = str_replace(' ', '_', $stream_name);
-					$stream_file_name = str_replace($slashes, '', $stream_file_name);
-					$stream_file_name = str_replace(' ', '-', $stream_file_name);
-					$stream_file_name = strtolower($stream_file_name);
-				//detect auto rate
-					if ($stream_rate == 'auto') {
-						$stream_rate = '';
-						$path_rate = '48000';
-						$stream_rate_auto = true;
-					}
-					else {
-						$path_rate = $stream_rate;
-						$stream_rate_auto = false;
-					}
-				//define default path
-					$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'],$stream_name, $path_rate);
-				//find whether the path already exists
-					$stream_new_name = true;
-					foreach ($streams as $row) {
-						$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
-						if ($stream_path == $row['music_on_hold_path']
-							|| $stream_path == $alternate_path) {
-							$stream_new_name = false;
-							break;
-						}
+				//add the new stream
+					if ($action == "add") {
+
+						//strip slashes, replace spaces
+							$slashes = array("/", "\\");
+							$stream_name = str_replace($slashes, '', $stream_name);
+							$stream_name = str_replace(' ', '_', $stream_name);
+							$stream_file_name = str_replace($slashes, '', $stream_file_name);
+							$stream_file_name = str_replace(' ', '-', $stream_file_name);
+
+						//detect auto rate
+							if ($stream_rate == '') {
+								$path_rate = '48000';
+								$stream_rate_auto = true;
+							}
+							else {
+								$path_rate = $stream_rate;
+								$stream_rate_auto = false;
+							}
+
+						//define default path
+							$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'],$stream_name, $path_rate);
+
+						//find whether the path already exists
+							$stream_new_name = true;
+							foreach ($streams as $row) {
+								$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+								if ($stream_path == $row['music_on_hold_path']
+									|| $stream_path == $alternate_path) {
+									$stream_new_name = false;
+									break;
+								}
+							}
+
+						//set the variables
+							$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+
+						//begin query
+							if ($stream_new_name) {
+								$stream_uuid = uuid();
+								$sql = "insert into v_music_on_hold ";
+								$sql .= "( ";
+								$sql .= "music_on_hold_uuid, ";
+								$sql .= "domain_uuid, ";
+								$sql .= "music_on_hold_name, ";
+								$sql .= "music_on_hold_path, ";
+								$sql .= "music_on_hold_rate, ";
+								$sql .= "music_on_hold_shuffle, ";
+								$sql .= "music_on_hold_channels, ";
+								$sql .= "music_on_hold_interval, ";
+								$sql .= "music_on_hold_timer_name, ";
+								$sql .= "music_on_hold_chime_list, ";
+								$sql .= "music_on_hold_chime_freq, ";
+								$sql .= "music_on_hold_chime_max ";
+								$sql .= ") ";
+								$sql .= "values ( ";
+								$sql .= "'".$stream_uuid."',";
+								$sql .= "'".$domain_uuid."', ";
+								$sql .= "'".check_str($stream_name)."', ";
+								$sql .= "'".check_str($stream_path)."', ";
+								if (strlen($stream_rate) == 0) {
+									$sql .= "null, ";
+								}
+								else {
+									$sql .= "'".$stream_rate."', ";
+								}
+								$sql .= "'false', ";
+								$sql .= "1, ";
+								$sql .= "20, ";
+								$sql .= "'soft', ";
+								$sql .= "null, ";
+								$sql .= "null, ";
+								$sql .= "null ";
+								$sql .= ") ";
+								unset($music_on_hold_name, $music_on_hold_path);
+							}
+
+						//execute query
+							if (!$stream_path_found) {
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
 					}
 
-				//set the variables
-						$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
-
-				//begin query
-					if ($stream_new_name) {
-						$stream_uuid = uuid();
-						$sql = "insert into v_music_on_hold ";
-						$sql .= "( ";
-						$sql .= "music_on_hold_uuid, ";
-						$sql .= "domain_uuid, ";
-						$sql .= "music_on_hold_name, ";
-						$sql .= "music_on_hold_path, ";
-						$sql .= "music_on_hold_rate, ";
-						$sql .= "music_on_hold_shuffle, ";
-						$sql .= "music_on_hold_channels, ";
-						$sql .= "music_on_hold_interval, ";
-						$sql .= "music_on_hold_timer_name, ";
-						$sql .= "music_on_hold_chime_list, ";
-						$sql .= "music_on_hold_chime_freq, ";
-						$sql .= "music_on_hold_chime_max ";
-						$sql .= ") ";
-						$sql .= "values ( ";
-						$sql .= "'".$stream_uuid."',";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".check_str($stream_name)."', ";
-						$sql .= "'".check_str($stream_path)."', ";
-						if (strlen($stream_rate) == 0) {
-							$sql .= "null, ";
-						}
-						else {
-							$sql .= "'".$stream_rate."', ";
-						}
-						$sql .= "'false', ";
-						$sql .= "1, ";
-						$sql .= "20, ";
-						$sql .= "'soft', ";
-						$sql .= "null, ";
-						$sql .= "null, ";
-						$sql .= "null ";
-						$sql .= ") ";
-						unset($music_on_hold_name, $music_on_hold_path);
-					}
-
-				//execute query
-					if (!$stream_path_found) {
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
 						event_socket_mkdir($stream_path);
@@ -241,6 +255,7 @@
 							@unlink($stream_file_name_temp);
 						}
 					}
+
 				//set message
 					$_SESSION['message'] = $text['message-upload_completed'];
 			}
@@ -429,7 +444,7 @@
 		echo "			</td>\n";
 		echo "			<td class='vtable' width='70%'>\n";
 		echo "				<select id='rate' name='rate' class='formfld' style='width: auto;'>\n";
-		echo "					<option value='auto'>".$text['option-default']."</option>\n";
+		echo "					<option value=''>".$text['option-default']."</option>\n";
 		echo "					<option value='8000'>8 kHz</option>\n";
 		echo "					<option value='16000'>16 kHz</option>\n";
 		echo "					<option value='32000'>32 kHz</option>\n";
@@ -576,7 +591,7 @@
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 						foreach ($stream_files as $stream_file_path) {
-							$stream_file = strtolower(pathinfo($stream_file_path, PATHINFO_BASENAME));
+							$stream_file = pathinfo($stream_file_path, PATHINFO_BASENAME);
 							$stream_file_size = byte_convert(filesize($stream_file_path));
 							$stream_file_date = date("M d, Y H:i:s", filemtime($stream_file_path));
 							$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
