@@ -361,7 +361,7 @@ CREATE TABLE sip_dialogs (
     user_agent character varying(255),
     profile_name character varying(255),
     hostname character varying(255),
-    contact character varying(255),
+    contact text,
     presence_id character varying(255),
     presence_data character varying(255),
     call_info character varying(255),
