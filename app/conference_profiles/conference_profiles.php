@@ -25,7 +25,7 @@
 //add the search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = "and (";
+		$sql_search = "where (";
 		$sql_search .= "profile_name like '%".$search."%'";
 		$sql_search .= "or profile_enabled like '%".$search."%'";
 		$sql_search .= "or profile_description like '%".$search."%'";
