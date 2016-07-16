@@ -48,18 +48,36 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
+				//get the $device_profile_uuid
+					foreach ($_POST['device_keys'] as &$row) {
+						if (strlen($row["device_profile_uuid"]) > 0 && is_uuid($row['device_profile_uuid'])) {
+							$device_profile_uuid = $row["device_profile_uuid"];
+							break;
+						}
+					}
+
+				//get device profile keys
+					if (isset($device_profile_uuid)) {
+						$sql = "SELECT * FROM v_device_keys ";
+						$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$device_profile_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset($sql,$prep_statement);
+					}
+
 				//add or update the device keys
 					foreach ($_POST['device_keys'] as &$row) {
 
 						//validate the data
-							$valid_data = true;
-							//if (!is_uuid($row["device_key_uuid"])) { $valid_data = false; }
+							$save = true;
+							//if (!is_uuid($row["device_key_uuid"])) { $save = false; }
 							if (isset($row["device_key_id"])) {
-								if (!is_numeric($row["device_key_id"])) { $valid_data = false; echo $row["device_key_id"]." id "; }
+								if (!is_numeric($row["device_key_id"])) { $save = false; echo $row["device_key_id"]." id "; }
 							}
-							if (strlen($row["device_key_type"]) > 25) { $valid_data = false; echo "type "; }
-							if (strlen($row["device_key_value"]) > 25) { $valid_data = false; echo "value "; }
-							if (strlen($row["device_key_label"]) > 25) { $valid_data = false; echo "label "; }
+							if (strlen($row["device_key_type"]) > 25) { $save = false; echo "type "; }
+							if (strlen($row["device_key_value"]) > 25) { $save = false; echo "value "; }
+							if (strlen($row["device_key_label"]) > 25) { $save = false; echo "label "; }
 
 						//escape characters in the string
 							$device_uuid = check_str($row["device_uuid"]);
@@ -71,6 +89,28 @@
 							$device_key_label = check_str($row["device_key_label"]);
 							$device_key_category = check_str($row["device_key_category"]);
 							$device_key_vendor = check_str($row["device_key_vendor"]);
+
+						//process the profile keys
+							if (strlen($row["device_profile_uuid"]) > 0) {
+								//get the profile key settings from the array
+									foreach ($device_profile_keys as &$field) {
+										if ($device_key_uuid == $field["device_key_uuid"]) {
+											$database = $field;
+											break;
+										}
+									}
+								//determine what to do with the profile key
+									if ($device_key_id == $database["device_key_id"]
+										&& $device_key_value == $database["device_key_value"]
+										&& $device_key_label == $database["device_key_label"]) {
+											//profile key unchanged don't save
+											$save = false;
+									}
+									else {
+										//profile key has changed remove save the settings to the device
+										$device_key_uuid = '';
+									}
+							}
 
 						//sql update
 							if (strlen($device_key_uuid) == 0) {
@@ -126,7 +166,7 @@
 									$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 									$sql .= "and device_key_uuid = '".$device_key_uuid."'; ";
 							}
-							if ($valid_data) {
+							if ($save) {
 								$db->exec(check_sql($sql));
 								//echo "valid: ".$sql."\n";
 							}
@@ -626,6 +666,7 @@
 
 				echo "<td class='row_style".$c." row_style_slim'>\n";
 				echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+				echo "	<input type='hidden' name='device_keys[".$x."][device_profile_uuid]' value=\"".$row['device_profile_uuid']."\">\n";
 				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
