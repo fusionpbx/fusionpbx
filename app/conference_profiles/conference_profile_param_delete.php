@@ -29,7 +29,7 @@
 		//delete conference_profile_param
 			$sql = "delete from v_conference_profile_params ";
 			$sql .= "where conference_profile_param_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
+			//$sql .= "and domain_uuid = '$domain_uuid' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($sql);
