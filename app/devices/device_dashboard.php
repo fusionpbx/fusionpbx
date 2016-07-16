@@ -191,11 +191,16 @@
 //set the sip profile name
 	$sip_profile_name = 'internal';
 
-//get device keys
-	$sql = "SELECT * from v_device_keys ";
-	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+//get device keys in the right order where device keys are listed after the profile keys
+	$sql = "SELECT * FROM v_device_keys ";
+	$sql .= "WHERE (";
+	$sql .= "device_uuid = '".$device_uuid."' ";
+	if (strlen($device_profile_uuid) > 0) {
+		$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
+	}
+	$sql .= ") ";
 	$sql .= "ORDER BY ";
-	$sql .= "device_key_vendor asc, ";
+	$sql .= "device_key_vendor ASC, ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
 	$sql .= "WHEN 'memory' THEN 2 ";
@@ -203,14 +208,29 @@
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
 	if ($db_type == "mysql") {
-		$sql .= "device_key_id asc ";
+		$sql .= "device_key_id ASC ";
 	}
 	else {
-		$sql .= "cast(device_key_id as numeric) asc ";
+		$sql .= "CAST(device_key_id as numeric) ASC, ";
 	}
+	$sql .= "CASE WHEN device_uuid IS NULL THEN 0 ELSE 1 END ASC ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql,$prep_statement);
+
+//override profile keys with device keys
+	foreach($keys as $row) {
+		$id = $row['device_key_id'];
+		$device_keys[$id] = $row;
+		if (is_uuid($row['device_profile_uuid'])) {
+			$device_keys[$id]['device_key_owner'] = "profile";
+		}
+		else {
+			$device_keys[$id]['device_key_owner'] = "device";
+		}
+	}
+	unset($keys);
 
 //get the vendor count and last and device information
 	$vendor_count = 0;
