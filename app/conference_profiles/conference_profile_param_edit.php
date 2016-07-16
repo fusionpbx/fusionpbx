@@ -70,7 +70,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "add" && permission_exists('conference_profile_param_add')) {
 				$sql = "insert into v_conference_profile_params ";
 				$sql .= "(";
-				$sql .= "domain_uuid, ";
+				//$sql .= "domain_uuid, ";
 				$sql .= "conference_profile_param_uuid, ";
 				$sql .= "conference_profile_uuid, ";
 				$sql .= "profile_param_name, ";
@@ -80,7 +80,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
+				//$sql .= "'$domain_uuid', ";
 				$sql .= "'".uuid()."', ";
 				$sql .= "'$conference_profile_uuid', ";
 				$sql .= "'$profile_param_name', ";
@@ -105,7 +105,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "profile_param_enabled = '$profile_param_enabled', ";
 				$sql .= "profile_param_description = '$profile_param_description' ";
 				$sql .= "where conference_profile_param_uuid = '$conference_profile_param_uuid'";
-				$sql .= "and domain_uuid = '$domain_uuid' ";
+				//$sql .= "and domain_uuid = '$domain_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -121,8 +121,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$conference_profile_param_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_conference_profile_params ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_profile_param_uuid = '$conference_profile_param_uuid' ";
+		$sql .= "where conference_profile_param_uuid = '$conference_profile_param_uuid' ";
+		//$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
