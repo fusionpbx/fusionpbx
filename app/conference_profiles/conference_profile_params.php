@@ -25,20 +25,21 @@
 //add the search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = "and (";
+		$sql_search = "where (";
 		$sql_search .= "profile_param_name like '%".$search."%'";
 		$sql_search .= "or profile_param_value like '%".$search."%'";
 		$sql_search .= "or profile_param_enabled like '%".$search."%'";
 		$sql_search .= "or profile_param_description like '%".$search."%'";
 		$sql_search .= ")";
 	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_conference_profile_params ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	//$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_search;
 	$sql .= "and conference_profile_uuid = '$conference_profile_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -47,10 +48,10 @@
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
+			$num_rows = $row['num_rows'];
 		}
 		else {
-				$num_rows = '0';
+			$num_rows = '0';
 		}
 	}
 
@@ -64,7 +65,7 @@
 
 //get the list
 	$sql = "select * from v_conference_profile_params ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	//$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_search;
 	$sql .= "and conference_profile_uuid = '$conference_profile_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
