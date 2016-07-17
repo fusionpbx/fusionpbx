@@ -19,13 +19,13 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
 		$conference_profile_uuid = check_str($_GET["conference_profile_uuid"]);
 	}
 
 //delete the data
-	if (strlen($id)>0) {
+	if (strlen($id) > 0) {
 		//delete conference_profile_param
 			$sql = "delete from v_conference_profile_params ";
 			$sql .= "where conference_profile_param_uuid = '$id' ";
