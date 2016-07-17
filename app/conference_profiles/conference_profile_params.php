@@ -25,7 +25,7 @@
 //add the search term
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = "where (";
+		$sql_search = "and (";
 		$sql_search .= "profile_param_name like '%".$search."%'";
 		$sql_search .= "or profile_param_value like '%".$search."%'";
 		$sql_search .= "or profile_param_enabled like '%".$search."%'";
@@ -39,9 +39,10 @@
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_conference_profile_params ";
-	//$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_search;
-	$sql .= "and conference_profile_uuid = '$conference_profile_uuid' ";
+	$sql .= "where conference_profile_uuid = '$conference_profile_uuid' ";
+	//$sql .= "and domain_uuid = '$domain_uuid' ";
+	//$sql .= $sql_search;
+	
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
@@ -65,9 +66,9 @@
 
 //get the list
 	$sql = "select * from v_conference_profile_params ";
+	$sql .= "where conference_profile_uuid = '$conference_profile_uuid' ";
 	//$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_search;
-	$sql .= "and conference_profile_uuid = '$conference_profile_uuid' ";
+	//$sql .= $sql_search;
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -82,15 +83,15 @@
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_profile_params']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
+	//echo "	<tr>\n";
+	//echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_profile_params']."</b></td>\n";
+	//echo "		<form method='get' action=''>\n";
+	//echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	//echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	//echo "			</td>\n";
+	//echo "		</form>\n";
+	//echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			".$text['title_description-conference_profile_param']."<br /><br />\n";
