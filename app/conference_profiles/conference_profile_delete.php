@@ -19,16 +19,24 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
 	}
 
 //delete the data
-	if (strlen($id)>0) {
+	if (strlen($id) > 0) {
+		//delete the conference_profile_params
+			$sql = "delete from v_conference_profile_params ";
+			$sql .= "where conference_profile_uuid = '$id' ";
+			//$sql .= "and domain_uuid = '$domain_uuid' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+
 		//delete conference_profile
 			$sql = "delete from v_conference_profiles ";
 			$sql .= "where conference_profile_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
+			//$sql .= "and domain_uuid = '$domain_uuid' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($sql);
