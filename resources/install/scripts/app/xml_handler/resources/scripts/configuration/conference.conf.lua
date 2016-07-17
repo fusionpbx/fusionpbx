@@ -24,6 +24,13 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--connect to the database
+	require "resources.functions.database_handle";
+	dbh = database_handle('system');
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
+
 --set the xml array
 	local xml = {}
 	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -76,180 +83,35 @@
 	table.insert(xml, [[					<control action="hangup" digits=""/>]]);
 	table.insert(xml, [[				</group>]]);
 	table.insert(xml, [[			</caller-controls>]]);
-	table.insert(xml, [[			<profiles>]]);
 
-	table.insert(xml, [[				<profile name="default">]]);
-	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
-	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="8000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
-	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
-	table.insert(xml, [[				</profile>]]);
+	--start the conference profiles
+		table.insert(xml, [[			<profiles>]]);
+		sql = [[SELECT * FROM v_conference_profiles
+			WHERE profile_enabled = 'true' ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
+		end
 
-	table.insert(xml, [[				<profile name="wideband">]]);
-	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
-	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="16000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
-	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
-	table.insert(xml, [[				</profile>]]);
+		status = dbh:query(sql, function(field)
+			conference_profile_uuid = field["conference_profile_uuid"];
+			table.insert(xml, [[				<profile name="]]..field["profile_name"]..[[">]]);
 
-	table.insert(xml, [[				<profile name="ultrawideband">]]);
-	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
-	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="32000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
-	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
-	table.insert(xml, [[				</profile>]]);
+			--get the conference profile parameters from the database
+			sql = [[SELECT * FROM v_conference_profile_params
+				WHERE conference_profile_uuid = ']] .. conference_profile_uuid ..[['
+				AND profile_param_enabled = 'true' ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
+			end
 
-	table.insert(xml, [[				<profile name="cdquality">]]);
-	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="livearray-sync" />]]);
-	table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="48000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
-	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[					<param name="auto-record" value="]] .. temp_dir:gsub("\\","/") .. [[/test.wav"/>]]);
-	table.insert(xml, [[				</profile>]]);
-
-	table.insert(xml, [[				<profile name="sla">]]);
-	--table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="16000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="300"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="none"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="none"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="silence"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[				</profile>]]);
-
-	table.insert(xml, [[				<profile name="page">]]);
-	--table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="rate" value="8000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="300"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="page"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="moderator"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[				</profile>]]);
-
-	table.insert(xml, [[				<profile name="wait-mod">]]);
-	--table.insert(xml, [[					<param name="domain" value="$${domain}"/>]]);
-	table.insert(xml, [[					<param name="cdr-log-dir" value="auto"/>]]);
-	table.insert(xml, [[					<param name="conference-flags" value="wait-mod,livearray-sync" />]]);
-	table.insert(xml, [[					<param name="rate" value="8000"/>]]);
-	table.insert(xml, [[					<param name="interval" value="20"/>]]);
-	table.insert(xml, [[					<param name="energy-level" value="15"/>]]);
-	table.insert(xml, [[					<param name="auto-gain-level" value="0"/>]]);
-	table.insert(xml, [[					<param name="caller-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="moderator-controls" value="default"/>]]);
-	table.insert(xml, [[					<param name="muted-sound" value="conference/conf-muted.wav"/>]]);
-	table.insert(xml, [[					<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>]]);
-	table.insert(xml, [[					<param name="alone-sound" value="conference/conf-alone.wav"/>]]);
-	table.insert(xml, [[					<param name="moh-sound" value="local_stream://default"/>]]);
-	table.insert(xml, [[					<param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>]]);
-	table.insert(xml, [[					<param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>]]);
-	table.insert(xml, [[					<param name="kicked-sound" value="conference/conf-kicked.wav"/>]]);
-	table.insert(xml, [[					<param name="locked-sound" value="conference/conf-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-locked-sound" value="conference/conf-is-locked.wav"/>]]);
-	table.insert(xml, [[					<param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>]]);
-	table.insert(xml, [[					<param name="pin-sound" value="conference/conf-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>]]);
-	table.insert(xml, [[					<param name="caller-id-name" value="$${outbound_caller_name}"/>]]);
-	table.insert(xml, [[					<param name="caller-id-number" value="$${outbound_caller_id}"/>]]);
-	table.insert(xml, [[					<param name="comfort-noise" value="true"/>]]);
-	table.insert(xml, [[				</profile>]]);
+			status = dbh:query(sql, function(row)
+				--conference_profile_uuid = row["conference_profile_uuid"];
+				--conference_profile_param_uuid = row["conference_profile_param_uuid"];
+				--profile_param_description = row["profile_param_description"];
+				table.insert(xml, [[					<param name="]]..row["profile_param_name"]..[[" value="]]..row["profile_param_value"]..[["/>]]);
+			end);
+			table.insert(xml, [[				</profile>]]);
+		end);
 
 	table.insert(xml, [[			</profiles>]]);
 
@@ -258,6 +120,9 @@
 	table.insert(xml, [[	</section>]]);
 	table.insert(xml, [[</document>]]);
 	XML_STRING = table.concat(xml, "\n");
+	if (debug["xml_string"]) then
+		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
+	end
 
 --send the xml to the console
 	if (debug["xml_string"]) then
