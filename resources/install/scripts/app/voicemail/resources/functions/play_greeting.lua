@@ -83,6 +83,7 @@
 							session:execute("playback","silence_stream://200");
 					else
 						--default greeting
+						session:execute("playback","silence_stream://200");
 						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
 					end
 			end
