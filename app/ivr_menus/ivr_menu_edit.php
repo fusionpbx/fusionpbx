@@ -330,7 +330,8 @@
 	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 
 //get the phrases
-	$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+	$sql = "select * from v_phrases ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -463,7 +464,7 @@
 	//phrases
 		if (is_array($phrases)) {
 			echo "<optgroup label='Phrases'>\n";
-			foreach ($result as &$row) {
+			foreach ($phrases as &$row) {
 				if ($ivr_menu_greet_long == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
@@ -557,13 +558,9 @@
 			echo "</optgroup>\n";
 		}
 	//phrases
-		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		if (count($result) > 0) {
+		if (count($phrases) > 0) {
 			echo "<optgroup label='Phrases'>\n";
-			foreach ($result as &$row) {
+			foreach ($phrases as &$row) {
 				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
 					$tmp_selected = true;
 					echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
