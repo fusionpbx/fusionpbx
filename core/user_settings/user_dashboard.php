@@ -487,9 +487,9 @@
 								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
 								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
 								"&dest=".urlencode($row['caller_id_number']).
-								"&rec=false".
-								"&ringback=us-ring".
-								"&auto_answer=true".
+								"&rec=".(isset($_SESSION['dashboard']['record']['boolean'])?$_SESSION['dashboard']['record']['boolean']:"false").
+								"&ringback=".(isset($_SESSION['dashboard']['ringback']['text'])?$_SESSION['dashboard']['ringback']['text']:"us-ring").
+								"&auto_answer=".(isset($_SESSION['dashboard']['auto_answer']['boolean'])?$_SESSION['dashboard']['auto_answer']['boolean']:"true").
 								"');\" ".
 								"style='cursor: pointer;'";
 						}
@@ -620,9 +620,9 @@
 								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
 								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
 								"&dest=".urlencode($dest).
-								"&rec=false".
-								"&ringback=us-ring".
-								"&auto_answer=true".
+								"&rec=".(isset($_SESSION['dashboard']['record']['boolean'])?$_SESSION['dashboard']['record']['boolean']:"false").
+								"&ringback=".(isset($_SESSION['dashboard']['ringback']['text'])?$_SESSION['dashboard']['ringback']['text']:"us-ring").
+								"&auto_answer=".(isset($_SESSION['dashboard']['auto_answer']['boolean'])?$_SESSION['dashboard']['auto_answer']['boolean']:"true").
 								"');\" ".
 								"style='cursor: pointer;'";
 						}
