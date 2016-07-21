@@ -501,7 +501,7 @@ function EventConsumer:bind(event_name, cb)
 	end
 end
 
-function EventConsumer:run()
+function EventConsumer:_run()
 	self._running = true
 
 	-- set some huge default interval
@@ -538,6 +538,18 @@ function EventConsumer:run()
 	end
 
 	self._running = false
+end
+
+function EventConsumer:run()
+	local ok, err = xpcall(function()
+		self:_run()
+	end, debug.traceback)
+
+	if not ok then
+		-- ensure we stop loop and remove pid file
+		self:stop()
+		error(err)
+	end
 end
 
 function EventConsumer:stop()
