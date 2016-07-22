@@ -27,7 +27,6 @@
 --set the defaults
 	digit_max_length = 3;
 	timeout_pin = 5000;
-	timeout_transfer = 5000;
 	max_tries = 3;
 	digit_timeout = 5000;
 	search_limit = 3;
@@ -92,6 +91,9 @@
 		--get the domain info
 			domain_name = session:getVariable("domain_name");
 			domain_uuid = session:getVariable("domain_uuid");
+		
+		--get the timeout destination
+			timeout_destination = session:getVariable("timeout_destination");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -375,7 +377,12 @@
 		directory_search();
 	end
 
-	session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+--timeout action
+	if (timeout_destination == nil) then
+		session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+	else
+		session:execute("transfer", timeout_destination.." XML "..row.context);
+	end
 
 --notes
 	--session:execute("say", "en name_spelled pronounced mark");
