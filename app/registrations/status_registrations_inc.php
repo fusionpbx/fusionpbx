@@ -27,6 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/status_registrations.php";
 
 //check permissions
 	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
@@ -74,19 +75,6 @@ require_once "resources/check_auth.php";
 		echo "</div>\n";
 	}
 	else {
-		//get sofia status profile information including registrations
-			$cmd = "api sofia xmlstatus profile ".$sip_profile_name." reg";
-			$xml_response = trim(event_socket_request($fp, $cmd));
-			if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
-			$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
-			$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
-			try {
-				$xml = new SimpleXMLElement($xml_response);
-			}
-			catch(Exception $e) {
-				echo $e->getMessage();
-				exit;
-			}
 
 		//build the registration array
 			if (count($xml->registrations->registration) > 0) {
@@ -135,7 +123,7 @@ require_once "resources/check_auth.php";
 						$x++;
 				}
 			}
-
+			
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
