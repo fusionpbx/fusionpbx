@@ -167,7 +167,7 @@ include "root.php";
 					$action = "update";
 				}
 
-			//update the dialplan
+			//add or update the dialplan
 				$this->dialplan($array);
 				$array['dialplan_uuid'] = $this->dialplan_uuid;
 
@@ -178,6 +178,13 @@ include "root.php";
 					$orm->uuid($this->ivr_menu_uuid);
 				}
 				$orm->save($array);
+				$this->ivr_menu_uuid = $orm->message['uuid'];
+
+			//update dialplan with the ivr_menu_uuid
+				if ($action == "add") {
+					$array['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+					$this->dialplan($array);
+				}
 
 			//set the add message
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
