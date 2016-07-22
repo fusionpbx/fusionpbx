@@ -130,6 +130,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_absolute_codec_string";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_show_registered";
+		$y++;
+
 
 	//schema details
 		$y = 0; //table array index
