@@ -59,6 +59,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_sms_edit";
+//		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+//		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_message_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -98,6 +102,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_mail_to";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email address to send voicemail to.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_sms_to";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the sms did to send voicemail to.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_attach_file";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
