@@ -364,6 +364,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '90';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail greeting (in seconds).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'display_domain_name';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enable display of @domain_name after voicemail_id when rendering emails.';
 
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
