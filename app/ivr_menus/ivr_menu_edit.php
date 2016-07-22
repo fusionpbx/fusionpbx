@@ -433,6 +433,7 @@
 		echo "\n";
 	}
 	echo "<select name='ivr_menu_greet_long' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<option></option>\n";
 	//misc optgroup
 		if (if_group("superadmin")) {
 			echo "<optgroup label='Misc'>\n";
