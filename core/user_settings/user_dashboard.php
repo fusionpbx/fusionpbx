@@ -380,7 +380,7 @@
 
 					foreach ($messages as $voicemail_uuid => $row) {
 						if (is_uuid($voicemail_uuid)) {
-							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'";
+							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'";
 							$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'>".$row['ext']."</a></td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
