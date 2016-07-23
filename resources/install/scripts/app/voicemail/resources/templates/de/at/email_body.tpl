@@ -17,16 +17,16 @@
 							<strong>Nebenstelle</strong>
 						</td>
 						<td style="color: #666; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
-							${account}
+							${voicemail_name_formatted}
 						</td>
 					</tr>
 					<tr>
 						<td style="color: #333; font-family: Arial; font-size: 12px; padding-bottom: 11px;" width="20%">
-						<strong>Anrufer</strong>
-					</td>
+							<strong>Anrufer</strong>
+						</td>
 						<td style="color: #666; font-family: Arial; font-size: 12px; padding-bottom: 11px;" width="80%">
-						${caller_id_number}
-					</td>
+							${caller_id_number}
+						</td>
 					</tr>
 					<!--
 					<tr>

@@ -68,6 +68,12 @@ function IntervalTimer:rest()
 	return d
 end
 
+function IntervalTimer:reset(interval)
+	self._interval = interval
+	if self._begin then self:restart() end
+	return self
+end
+
 function IntervalTimer:stop()
 	if self:started() then
 		local d = self:elapsed()

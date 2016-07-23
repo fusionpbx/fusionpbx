@@ -643,6 +643,7 @@ include "root.php";
 
 				//get the provisioning information from device keys
 					if (strlen($device_uuid) > 0) {
+
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";
 							$sql .= "WHERE (";
@@ -651,47 +652,43 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
-							if(strtolower($device_vendor) == 'escene'){
+							if (strtolower($device_vendor) == 'escene'){
 								$sql .= "AND (lower(device_key_vendor) = 'escene' or lower(device_key_vendor) = 'escene programmable' or device_key_vendor is null) ";
 							}
 							else {
 								$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
 							}
-							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
+							$sql .= "ORDER BY ";
+							$sql .= "device_key_vendor ASC, ";
+							$sql .= "CASE device_key_category ";
+							$sql .= "WHEN 'line' THEN 1 ";
+							$sql .= "WHEN 'memory' THEN 2 ";
+							$sql .= "WHEN 'programmable' THEN 3 ";
+							$sql .= "WHEN 'expansion' THEN 4 ";
+							$sql .= "ELSE 100 END, ";
+							if ($db_type == "mysql") {
+								$sql .= "device_key_id ASC, ";
+							}
+							else {
+								$sql .= "CAST(device_key_id as numeric) ASC, ";
+							}
+							$sql .= "CASE WHEN device_uuid IS NULL THEN 0 ELSE 1 END ASC ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
-							$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-						//rebuild the array to allow profile keys to be overridden by keys assigned to this device
-							$x = 0;
-							$previous_category = '';
-							$previous_id = '';
-							foreach($device_keys as $row) {
-								//set the variables
-									if ($row['device_key_category'] == $previous_category && $row['device_key_id'] == $previous_id) {
-										$device_keys[$x]['device_key_override'] = "true";
-										$device_keys[$x]['device_key_message'] = "value=".$device_keys[$x-1]['device_key_value']."&label=".$device_keys[$x-1]['device_key_label'];
-										unset($device_keys[$x-1]);
-									}
-									$device_keys[$x]['device_key_category'] = $row['device_key_category'];
-									$device_keys[$x]['device_key_id'] = $row['device_key_id']; //1
-									$device_keys[$x]['device_key_type'] = $row['device_key_type']; //line, memory, expansion
-									$device_keys[$x]['device_key_line'] = $row['device_key_line'];
-									$device_keys[$x]['device_key_value'] = $row['device_key_value']; //1
-									$device_keys[$x]['device_key_extension'] = $row['device_key_extension'];
-									$device_keys[$x]['device_key_label'] = $row['device_key_label']; //label
-									if (is_uuid($row['device_profile_uuid'])) {
-										$device_keys[$x]['device_key_owner'] = "profile";
-									}
-									else {
-										$device_keys[$x]['device_key_owner'] = "device";
-									}
-								//set previous values
-									$previous_category = $row['device_key_category'];
-									$previous_id = $row['device_key_id'];
-								//increment the key
-									$x++;
+						//override profile keys with device keys
+							foreach($keys as $row) {
+								$id = $row['device_key_id'];
+								$device_keys[$id] = $row;
+								if (is_uuid($row['device_profile_uuid'])) {
+									$device_keys[$id]['device_key_owner'] = "profile";
+								}
+								else {
+									$device_keys[$id]['device_key_owner'] = "device";
+								}
 							}
+							unset($keys);
 					}
 
 				//debug information

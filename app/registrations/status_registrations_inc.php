@@ -94,25 +94,32 @@ require_once "resources/check_auth.php";
 				$x = 0;
 				foreach ($xml->registrations->registration as $row) {
 					//get the values from xml and set them to the channel array
-						$registrations[$x]['user'] = $row->{'user'};
+						$registrations[$x]['user'] = $row->{'user'} ?: "&nbsp;";
 						$user_array = explode('@', $row->{'user'});
-						$registrations[$x]['call-id'] = $row->{'call-id'};
-						$registrations[$x]['contact'] = $row->{'contact'};
-						$registrations[$x]['sip-auth-user'] = $row->{'sip-auth-user'};
-						$registrations[$x]['agent'] = $row->{'agent'};
-						$registrations[$x]['host'] = $row->{'host'};
-						$registrations[$x]['network-ip'] = $row->{'network-ip'};
-						$registrations[$x]['network-port'] = $row->{'network-port'};
-						$registrations[$x]['sip-auth-realm'] = $row->{'sip-auth-realm'};
-						$registrations[$x]['mwi-account'] = $row->{'mwi-account'};
-						$registrations[$x]['status'] = $row->{'status'};
+						$registrations[$x]['call-id'] = $row->{'call-id'} ?: "&nbsp;";
+						$registrations[$x]['contact'] = $row->{'contact'} ?: "&nbsp;";
+						$registrations[$x]['sip-auth-user'] = $row->{'sip-auth-user'} ?: "&nbsp;";
+						$registrations[$x]['agent'] = $row->{'agent'} ?: "&nbsp;";
+						$registrations[$x]['host'] = $row->{'host'} ?: "&nbsp;";
+						$registrations[$x]['network-port'] = $row->{'network-port'} ?: "&nbsp;";
+						$registrations[$x]['sip-auth-realm'] = $row->{'sip-auth-realm'} ?: "&nbsp;";
+						$registrations[$x]['mwi-account'] = $row->{'mwi-account'} ?: "&nbsp;";
+						$registrations[$x]['status'] = $row->{'status'} ?: "&nbsp;";
+						$registrations[$x]['ping-time'] = $row->{'ping-time'} ?: "&nbsp;";
 
+					//get network-ip to url or blank
+					    if(isset($row->{'network-ip'})) {
+							$registrations[$x]['network-ip'] = "<a href='http://".$row->{'network-ip'}."' target='_blank'>".$row->{'network-ip'}."</a>";
+						}else{
+							$registrations[$x]['network-ip'] = "&nbsp;";
+						}
 					//get the LAN IP address if it exists replace the external ip
 						$call_id_array = explode('@', $row->{'call-id'});
 						if (isset($call_id_array[1])) {
-							$registrations[$x]['lan-ip'] = $call_id_array[1];
+							$registrations[$x]['lan-ip'] = "<a href='http://".$call_id_array[1]."' target='_blank'>".$call_id_array[1]."</a>";
+						}else{
+							$registrations[$x]['lan-ip'] = "&nbsp;";
 						}
-
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
 							if (!(permission_exists('registration_all') && $show == "all")) {
@@ -161,6 +168,7 @@ require_once "resources/check_auth.php";
 			echo "	<th>".$text['label-port']."</th>\n";
 			echo "	<th>".$text['label-hostname']."</th>\n";
 			echo "	<th>".$text['label-status']."</th>\n";
+			echo "	<th>".$text['label-ping']."</th>\n";
 			echo "	<th>".$text['label-tools']."&nbsp;</th>\n";
 			echo "</tr>\n";
 
@@ -179,11 +187,12 @@ require_once "resources/check_auth.php";
 						echo "<tr>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['lan-ip']."' target='_blank'>".$row['lan-ip']."</a>&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['host']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['lan-ip']."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['network-ip']."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['host']."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['status']."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$row['ping-time']."</td>\n";
 						echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
 						echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
 						echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";

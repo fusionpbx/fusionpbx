@@ -79,9 +79,8 @@
 //includes
 	require('resources/pop3/mime_parser.php');
 	require('resources/pop3/rfc822_addresses.php');
-	
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php")) {
-		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php");
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
+		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
 	}
 
 //parse the email message
@@ -287,8 +286,8 @@
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
 					if (function_exists(get_transcription)) {
-						$attachments_array=$mail->GetAttachments();
-						$transcription=get_transcription($attachments_array[0]);
+						$attachments_array = $mail->GetAttachments();
+						$transcription = get_transcription($attachments_array[0]);
 						echo "Transcription: " . $transcription;
 					} else {
 						$transcription = '';
