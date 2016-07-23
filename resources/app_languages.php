@@ -638,6 +638,19 @@ $text['label-disabled']['sv-se'] = "Inaktiverad";
 $text['label-disabled']['uk'] = "Відключено";
 $text['label-disabled']['de-at'] = "Ausgeschaltet";
 
+$text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['es-cl'] = "Dominio";
+$text['label-domain']['pt-pt'] = "Domínio";
+$text['label-domain']['fr-fr'] = "Domaine";
+$text['label-domain']['pt-br'] = "Dominio";
+$text['label-domain']['pl'] = "Domena";
+$text['label-domain']['uk'] = "Домен";
+$text['label-domain']['sv-se'] = "Domän";
+$text['label-domain']['de-at'] = "Domain";
+$text['label-domain']['ro'] = "Domeniu";
+$text['label-domain']['ar-eg'] = "النطاق";
+$text['label-domain']['he'] = "דומיין";
+
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['es-cl'] = "Global";
 $text['label-global']['pt-pt'] = "Global";
