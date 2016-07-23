@@ -103,6 +103,9 @@
 						$sql .= "phrase_uuid, ";
 						$sql .= "phrase_name, ";
 						$sql .= "phrase_language, ";
+						if (permission_exists('phrase_xml')) {
+							$sql .= "phrase_xml, ";
+						}
 						$sql .= "phrase_enabled, ";
 						$sql .= "phrase_description ";
 						$sql .= ") ";
@@ -112,6 +115,9 @@
 						$sql .= "'".$phrase_uuid."', ";
 						$sql .= "'".$phrase_name."', ";
 						$sql .= "'".$phrase_language."', ";
+						if (permission_exists('phrase_xml')) {
+							$sql .= "'".$phrase_xml."', ";
+						}
 						$sql .= "'".$phrase_enabled."', ";
 						$sql .= "'".$phrase_description."' ";
 						$sql .= ") ";
@@ -160,7 +166,7 @@
 						}
 
 					//save the xml to the file system if the phrase directory is set
-						save_phrases_xml();
+						//save_phrases_xml();
 
 					//delete the phrase from memcache
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -253,7 +259,10 @@
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$phrase_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_phrases ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where ( ";
+		$sql .= " domain_uuid = '".$domain_uuid."' or ";
+		$sql .= " domain_uuid is null ";
+		$sql .= ") ";
 		$sql .= "and phrase_uuid = '".$phrase_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
