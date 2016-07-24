@@ -120,9 +120,9 @@
 								sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
 								sql = sql .. "AND p.phrase_enabled = 'true' ";
 								sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
-		--						if (debug["sql"]) then
+								if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-		--						end
+								end
 								previous_phrase_uuid = "";
 								match_tag = "open";
 								x = 0;
@@ -160,16 +160,6 @@
 								table.insert(xml, [[	</section>]]);
 								table.insert(xml, [[</document>]]);
 								XML_STRING = table.concat(xml, "\n");
-						end
-
-					--send not found
-						if (XML_STRING == nil) then
-							XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-								<document type="freeswitch/xml">
-									<section name="result">
-										<result status="not found" />
-									</section>
-								</document>]];
 						end
 
 					--log to the console
@@ -212,15 +202,14 @@
 				end
 		end
 
---if the extension does not exist send "not found"
-	if (trim(XML_STRING) == "-ERR NOT FOUND" or XML_STRING == nil) then
-		--send not found but do not cache it
-			XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-			<document type="freeswitch/xml">
-				<section name="result">
-					<result status="not found" />
-				</section>
-			</document>]];
+--if the macro does not exist send "not found", don't cache the not found
+	if (XML_STRING == nil or trim(XML_STRING) == "-ERR NOT FOUND") then
+		XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+		<document type="freeswitch/xml">
+			<section name="result">
+				<result status="not found" />
+			</section>
+		</document>]];
 	end
 
 --send the xml to the console
