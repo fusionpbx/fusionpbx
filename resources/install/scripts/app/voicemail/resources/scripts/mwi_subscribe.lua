@@ -7,7 +7,6 @@ local Database      = require "resources.functions.database"
 local cache         = require "resources.functions.cache"
 local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
 
-local sleep    = 60000
 local pid_file = scripts_dir .. "/run/mwi_subscribe.tmp"
 local shutdown_event = "CUSTOM::fusion::mwi::shutdown"
 
@@ -85,7 +84,7 @@ end
 
 end
 
-local events = EventConsumer.new(sleep, pid_file)
+local events = EventConsumer.new(pid_file)
 
 -- FS shutdown
 events:bind("SHUTDOWN", function(self, name, event)

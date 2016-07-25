@@ -27,11 +27,10 @@ end
 
 end
 
-local sleep    = 60000
 local pid_file = scripts_dir .. "/run/call_flow_subscribe.tmp"
 local shutdown_event = "CUSTOM::fusion::flow::shutdown"
 
-local events = EventConsumer.new(sleep, pid_file)
+local events = EventConsumer.new(pid_file)
 
 -- FS shutdown
 events:bind("SHUTDOWN", function(self, name, event)
