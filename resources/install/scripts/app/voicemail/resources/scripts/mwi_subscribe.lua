@@ -95,8 +95,8 @@ end)
 -- Control commands from FusionPBX
 events:bind("CUSTOM::fusion::service::" .. service_name, function(self, name, event)
 	local command = event:getHeader('service-command')
-	if command == "shutdown" then
-		log.notice("shutdown")
+	if command == "stop" then
+		log.notice("get stop command")
 		return self:stop()
 	end
 
