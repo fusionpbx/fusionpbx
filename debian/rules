@@ -51,6 +51,7 @@ install: build
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-core/etc/fusionpbx/switch
 	mkdir -p debian/fusionpbx-core/etc/fusionpbx/resources/templates/provision/custom
+	mkdir -p debian/fusionpbx-core/usr/share/examples/fusionpbx/
 	mkdir -p debian/fusionpbx-core/var/fusionpbx/app
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/db
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/grammar
@@ -63,6 +64,10 @@ install: build
 	mkdir -p debian/fusionpbx-core/var/lib/fusionpbx/storage/voicemail
 	mkdir -p debian/fusionpbx-core/var/www/fusionpbx
 	mkdir -p debian/fusionpbx-core/var/www/fusionpbx/themes
+	cp -rp resources/install/fail2ban debian/fusionpbx-core/usr/share/examples/fusionpbx
+	cp -rp resources/install/freeswitch debian/fusionpbx-core/usr/share/examples/fusionpbx
+	cp -rp resources/install/nginx debian/fusionpbx-core/usr/share/examples/fusionpbx
+	cp -rp resources/install/php5 debian/fusionpbx-core/usr/share/examples/fusionpbx
 	cp -pr core resources secure *.php .htaccess debian/fusionpbx-core/var/www/fusionpbx
 	
 build-indep: build install
