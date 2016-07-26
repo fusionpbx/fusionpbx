@@ -1,0 +1,14 @@
+-- File to conrol FusionPBX Lua services/monitors
+-- @usage: 
+--  # stop `call_flow_subscribe` monitor
+--  fs_cli -x "lua service flow stop"
+--  # stop `mwi_subscribe` monitor
+--  fs_cli -x "lua service mwi stop"
+
+local destination = assert(argv[1], "No service name")
+local command     = assert(argv[2], "No command")
+
+local event = freeswitch.Event("CUSTOM", "fusion::service::"  .. destination);
+event:addHeader('service-command', command)
+
+event:fire()
