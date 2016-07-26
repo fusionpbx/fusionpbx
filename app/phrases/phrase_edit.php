@@ -103,9 +103,6 @@
 						$sql .= "phrase_uuid, ";
 						$sql .= "phrase_name, ";
 						$sql .= "phrase_language, ";
-						if (permission_exists('phrase_xml')) {
-							$sql .= "phrase_xml, ";
-						}
 						$sql .= "phrase_enabled, ";
 						$sql .= "phrase_description ";
 						$sql .= ") ";
@@ -115,9 +112,6 @@
 						$sql .= "'".$phrase_uuid."', ";
 						$sql .= "'".$phrase_name."', ";
 						$sql .= "'".$phrase_language."', ";
-						if (permission_exists('phrase_xml')) {
-							$sql .= "'".$phrase_xml."', ";
-						}
 						$sql .= "'".$phrase_enabled."', ";
 						$sql .= "'".$phrase_description."' ";
 						$sql .= ") ";
