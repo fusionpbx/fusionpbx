@@ -52,7 +52,7 @@
 			<match>
 				<!-- To accept press 1 to cancel press 2 -->
 				<action function="execute" data="sleep(750)"/>
-				<action function="play-file" data="ivr/ivr-to_accept_press"/>
+				<action function="play-file" data="ivr/ivr-to_accept_press.wav"/>
 				<action function="play-file" data="digits/1.wav"/>
 				<action function="play-file" data="ivr/ivr-to_reject.wav"/>
 				<action function="play-file" data="voicemail/vm-press.wav"/>
