@@ -20,8 +20,10 @@
 	Copyright (C) 2008-2016 All Rights Reserved.
 
 */
-require_once "root.php";
-require_once "resources/require.php";
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -172,7 +174,8 @@ require_once "resources/require.php";
 		//lines
 			$line_number = check_str($_POST["line_number"]);
 			$server_address = check_str($_POST["server_address"]);
-			$outbound_proxy = check_str($_POST["outbound_proxy"]);
+			$outbound_proxy_primary = check_str($_POST["outbound_proxy_primary"]);
+			$outbound_proxy_secondary = check_str($_POST["outbound_proxy_secondary"]);
 			$display_name = check_str($_POST["display_name"]);
 			$user_id = check_str($_POST["user_id"]);
 			$auth_id = check_str($_POST["auth_id"]);
@@ -401,7 +404,8 @@ require_once "resources/require.php";
 	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$device_lines[$x]['line_number'] = '';
 	$device_lines[$x]['server_address'] = '';
-	$device_lines[$x]['outbound_proxy'] = '';
+	$device_lines[$x]['outbound_proxy_primary'] = $_SESSION['provision']['outbound_proxy_primary']['text'];
+	$device_lines[$x]['outbound_proxy_secondary'] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 	$device_lines[$x]['display_name'] = '';
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
@@ -468,7 +472,8 @@ require_once "resources/require.php";
 	require_once "resources/header.php";
 
 //javascript to change select to input and back again
-	?><script language="javascript">
+	?>
+	<script language="javascript">
 		var objs;
 
 		function change_to_input(obj){
@@ -610,17 +615,14 @@ require_once "resources/require.php";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<input type='hidden' name='file_action' id='file_action' value=''>\n";
+	echo "<input type='hidden' name='file_action' id='file_action' value='' />\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' nowrap='nowrap' valign='top'>";
 	echo "	<b>".$text['header-device']."</b>";
-	echo "	<br><br>";
-	echo "	".$text['description-device'];
-	echo "	<br><br>";
 	echo "</td>\n";
 	echo "<td align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'/>\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
@@ -628,8 +630,8 @@ require_once "resources/require.php";
 			$template_dir = $prov->template_dir;
 			$files = glob($template_dir.'/'.$device_template.'/*');
 		//add file buttons and the file list
-			echo "		<input type='button' class='btn' id='button_files' name='' alt='".$text['button-files']."' onclick='show_files();' value='".$text['button-files']."'>";
-			echo "		<input type='button' class='btn' style='display: none;' id='button_back' name='' alt='".$text['button-back']."' onclick='hide_files();' value='".$text['button-back']."'> ";
+			echo "		<input type='button' class='btn' id='button_files' name='' alt='".$text['button-files']."' onclick='show_files();' value='".$text['button-files']."'/>";
+			echo "		<input type='button' class='btn' style='display: none;' id='button_back' name='' alt='".$text['button-back']."' onclick='hide_files();' value='".$text['button-back']."'/> ";
 			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 			echo "			<option value=''>".$text['label-download']."</option>\n";
 			foreach ($files as $file) {
@@ -647,9 +649,15 @@ require_once "resources/require.php";
 //	echo "		<input type='button' class='btn' alt='".$text['button-provision']."' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
 
 	if (permission_exists('device_add') && $action != "add") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'/>\n";
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td colspan='2'>\n";
+	echo "	".$text['description-device'];
+	echo "	<br><br>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -661,7 +669,7 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_mac_address']."\n";
 	}
@@ -679,7 +687,7 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('device_label')) {
-		echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\">\n";
+		echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_label']."\n";
 	}
@@ -740,26 +748,48 @@ require_once "resources/require.php";
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-lines']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='3'>\n";
+		echo "			<table width='80%' border='0'>\n";
 		echo "			<tr>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-line']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-server_address']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-outbound_proxy']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-display_name']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-user_id']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-auth_id']."</td>\n";
-		if (permission_exists('device_line_password')) {
-			echo "				<td class='vtable' nowrap='nowrap'>".$text['label-password']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-line']."</td>\n";
+		if (permission_exists('device_line_server_address')) {
+			echo "				<td class='vtable'>".$text['label-server_address']."</td>\n";
 		}
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-sip_port']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-sip_transport']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-register_expires']."</td>\n";
-		echo "				<td class='vtable' nowrap='nowrap'>".$text['label-enabled']."</td>\n";
+		if (permission_exists('device_outbound_proxy_primary')) {
+			echo "				<td class='vtable'>".$text['label-outbound_proxy_primary']."</td>\n";
+		}
+		if (permission_exists('device_outbound_proxy_secondary')) {
+			echo "				<td class='vtable'>".$text['label-outbound_proxy_secondary']."</td>\n";
+		}
+		echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-user_id']."</td>\n";
+		if (permission_exists('device_line_auth_id')) {
+			echo "				<td class='vtable'>".$text['label-auth_id']."</td>\n";
+		}
+		if (permission_exists('device_line_password')) {
+			echo "				<td class='vtable'>".$text['label-password']."</td>\n";
+		}
+		echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		if (permission_exists('device_line_transport')) {
+			echo "				<td class='vtable'>".$text['label-sip_transport']."</td>\n";
+		}
+		if (permission_exists('device_line_register_expires')) {
+			echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
+		}
+		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
 
 		$x = 0;
 		foreach($device_lines as $row) {
+
+			//set the defaults
+				if (!permission_exists('device_line_server_address')) {
+					if (strlen($row['server_address']) == 0) { $row['server_address'] = $_SESSION['domain_name']; }
+				}
+				if (strlen($row['sip_transport']) == 0) { $row['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text']; }
+				if (strlen($row['sip_port']) == 0) { $row['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric']; }
+				if (strlen($row['register_expires']) == 0) { $row['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric']; }
+
 			//determine whether to hide the element
 				if (strlen($device_line_uuid) == 0) {
 					$element['hidden'] = false;
@@ -771,7 +801,7 @@ require_once "resources/require.php";
 				}
 			//add the primary key uuid
 				if (strlen($row['device_line_uuid']) > 0) {
-					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".$row['device_line_uuid']."\">\n";
+					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".$row['device_line_uuid']."\"/>\n";
 				}
 			//show each row in the array
 				echo "			<tr>\n";
@@ -793,49 +823,77 @@ require_once "resources/require.php";
 				echo "				<option value='12' ".($row['line_number'] == "12" ? $selected:"").">12</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
-
+				if (permission_exists('device_line_server_address')) {
 				echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-				echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".$row['server_address']."\">\n";
+					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".$row['server_address']."\"/>\n";
 				echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".$row['server_address']."\"/>\n";
+				}
 
+				if (permission_exists('device_outbound_proxy_primary')) {
+					if (permission_exists('device_outbound_proxy_secondary')) {
+						$placeholder_label = $text['label-primary'];
+					}
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][outbound_proxy]' maxlength='255' value=\"".$row['outbound_proxy']."\">\n";
+					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".$placeholder_label."\" maxlength='255' value=\"".$row['outbound_proxy_primary']."\"/>\n";
 				echo "			</td>\n";
-
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 95px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".$row['display_name']."\">\n";
-				echo "			</td>\n";
-
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"".$row['user_id']."\">\n";
-				echo "			</td>\n";
-
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\">\n";
-				echo "			</td>\n";
-
-				if (permission_exists('device_line_password')) {
+					unset($placeholder_label);
+				}
+				
+				if (permission_exists('device_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".$row['password']."\">\n";
+					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".$row['outbound_proxy_secondary']."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\">\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".$row['display_name']."\"/>\n";
 				echo "			</td>\n";
 
 				echo "			<td align='left'>\n";
-				echo "				<select class='formfld' style='width: 60px;' name='device_lines[".$x."][sip_transport]'>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"".$row['user_id']."\"/>\n";
+				echo "			</td>\n";
+
+				if (permission_exists('device_line_auth_id')) {
+				echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\"/>\n";
+				echo "			</td>\n";
+				}
+
+				if (permission_exists('device_line_password')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width:75px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".$row['password']."\"/>\n";
+					echo "			</td>\n";
+				}
+
+				echo "			<td align='left'>\n";
+				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\"/>\n";
+				echo "			</td>\n";
+
+				if (permission_exists('device_line_transport')) {
+				echo "			<td align='left'>\n";
+					echo "				<select class='formfld' style='width: 50px;' name='device_lines[".$x."][sip_transport]'>\n";
 				echo "					<option value='tcp' ".(($row['sip_transport'] == 'tcp') ? "selected" : null).">TCP</option>\n";
 				echo "					<option value='udp' ".(($row['sip_transport'] == 'udp') ? "selected" : null).">UDP</option>\n";
 				echo "					<option value='tls' ".(($row['sip_transport'] == 'tls') ? "selected" : null).">TLS</option>\n";
 				echo "					<option value='dns srv' ".(($row['sip_transport'] == 'dns srv') ? "selected" : null).">DNS SRV</option>\n";
 				echo "				</select>\n";
 				echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][sip_transport]' value=\"".$row['sip_transport']."\" />\n";
+				}
 
+				if (permission_exists('device_line_register_expires')) {
 				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\">\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\"/>\n";
 				echo "			</td>\n";
+				}
+				else {
+					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
+				}
 
 				echo "			<td align='left'>\n";
 				echo "				<select class='formfld' name='device_lines[".$x."][enabled]'>\n";
@@ -928,7 +986,9 @@ require_once "resources/require.php";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+					if (permission_exists('device_key_extension')) {
 					echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 					echo "				<td>&nbsp;</td>\n";
 					echo "			</tr>\n";
@@ -944,7 +1004,7 @@ require_once "resources/require.php";
 				}
 			//add the primary key uuid
 				if (strlen($row['device_key_uuid']) > 0) {
-					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
+					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\"/>\n";
 				}
 			//show all the rows in the array
 				echo "			<tr>\n";
@@ -1026,9 +1086,9 @@ require_once "resources/require.php";
 					$device_key_vendor = $device_vendor;
 				}
 				?>
-				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
+				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>"/>
 				<?php $selected = "selected='selected'"; ?>
-				<select class='formfld' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();" >
+				<select class='formfld' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();">
 				<option value=''></option>
 				<?php
 				foreach($vendor_devices as &$vendor){
@@ -1067,19 +1127,21 @@ require_once "resources/require.php";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\"/>\n";
 				echo "</td>\n";
 
+				if (permission_exists('device_key_extension')) {
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".$row['device_key_extension']."\"/>\n";
 				echo "</td>\n";
+				}
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".$row['device_key_label']."\"/>\n";
 				echo "</td>\n";
 
 				//echo "			<td align='left'>\n";
-				//echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+				//echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 				//echo "			</td>\n";
 				echo "				<td nowrap='nowrap'>\n";
 				if (strlen($row['device_key_uuid']) > 0) {
@@ -1129,17 +1191,17 @@ require_once "resources/require.php";
 				}
 			//add the primary key uuid
 				if (strlen($row['device_setting_uuid']) > 0) {
-					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".$row['device_setting_uuid']."\">\n";
+					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".$row['device_setting_uuid']."\"/>\n";
 				}
 
 			//show alls rows in the array
 				echo "<tr>\n";
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_subcategory']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_subcategory']."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_value']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_value']."\"/>\n";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
@@ -1161,7 +1223,7 @@ require_once "resources/require.php";
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".$row['device_setting_description']."\">\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".$row['device_setting_description']."\"/>\n";
 				echo "</td>\n";
 
 				if (strlen($text['description-settings']) > 0) {
@@ -1215,8 +1277,8 @@ require_once "resources/require.php";
 		echo "	".$text['label-device']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_username' id='device_username' autocomplete=\"off\" maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\">\n";
-		echo "	<input class='formfld' type='password' name='device_password' id='device_password' autocomplete=\"off\" onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\">\n";
+		echo "	<input class='formfld' type='text' name='device_username' id='device_username' autocomplete=\"off\" maxlength='255' placeholder=\"".$text['label-device_username']."\" value=\"$device_username\"/>\n";
+		echo "	<input class='formfld' type='password' name='device_password' id='device_password' autocomplete=\"off\" onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' placeholder=\"".$text['label-device_password']."\" value=\"$device_password\"/>\n";
 		echo "	<div style='display: none;' id='duplicate_username_response'></div>\n";
 		echo "<br />\n";
 		echo $text['description-device']."\n";
@@ -1231,7 +1293,7 @@ require_once "resources/require.php";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
 		if (strlen($device_uuid_alternate) == 0) {
-			echo "	<input class='formfld' type='text' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\">";
+			echo "	<input class='formfld' type='text' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\"/>";
 		}
 		else {
 			$label = $device_alternate[0]['device_label'];
@@ -1239,7 +1301,7 @@ require_once "resources/require.php";
 			if (strlen($label) == 0) { $label = $device_alternate[0]['device_mac_address']; }
 			echo "	<table>\n";
 			echo "	<tr>\n";
-			echo "		<td><a href='?id=$device_uuid_alternate' id='device_uuid_alternate_link'>$label</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\">&nbsp;</td>";
+			echo "		<td><a href='?id=$device_uuid_alternate' id='device_uuid_alternate_link'>$label</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"$device_uuid_alternate\" />&nbsp;</td>";
 			echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = '';  document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
 			echo "	</tr>\n";
 			echo "	</table>\n";
@@ -1256,7 +1318,7 @@ require_once "resources/require.php";
 		echo "	".$text['label-device_vendor']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
+		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_vendor']."\n";
 		echo "</td>\n";
@@ -1269,7 +1331,7 @@ require_once "resources/require.php";
 		echo "	".$text['label-device_model']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\">\n";
+		echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_model']."\n";
 		echo "</td>\n";
@@ -1282,7 +1344,7 @@ require_once "resources/require.php";
 		echo "	".$text['label-device_firmware_version']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\">\n";
+		echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_firmware_version']."\n";
 		echo "</td>\n";
@@ -1316,7 +1378,7 @@ require_once "resources/require.php";
 		echo "</td>\n";
 		echo "</tr>\n";
 	} else {
-		echo "	<input type='hidden' name='domain_uuid' id='domain_uuid' value=\"".$_SESSION['domain_uuid']."\">\n";
+		echo "	<input type='hidden' name='domain_uuid' id='domain_uuid' value=\"".$_SESSION['domain_uuid']."\"/>\n";
 	}
 
 	if (permission_exists('device_enable')) {
@@ -1351,7 +1413,7 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('device_description')) {
-		echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\">\n";
+		echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_description']."\n";
 	}
@@ -1364,10 +1426,10 @@ require_once "resources/require.php";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
+		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'/>\n";
 	}
 	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -1375,11 +1437,11 @@ require_once "resources/require.php";
 	echo "</form>";
 
 	echo "<script>\n";
-//capture enter key to submit form
+	//capture enter key to submit form
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
-// convert password fields to
+	// convert password fields to
 	echo "	function submit_form() {\n";
 	echo "		check_duplicates();\n";
 	echo "	}\n";
@@ -1392,4 +1454,5 @@ require_once "resources/require.php";
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

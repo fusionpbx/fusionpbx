@@ -34,12 +34,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '/usr/local/freeswitch/conf/lang';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
-		$x++;
-
-	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
-
-			//add default settings
 			$sql = "select count(*) as num_rows from v_default_settings ";
 			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
 			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
@@ -58,11 +53,10 @@ if ($domains_processed == 1) {
 				}
 				unset($row);
 			}
-
 		}
 
-
 	//create phrases folder and add include line in xml for each language found
+		/*
 		if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
 			if (is_readable($_SESSION['switch']['phrases']['dir'])) {
 				$conf_lang_folders = glob($_SESSION['switch']['phrases']['dir']."/*");
@@ -97,6 +91,7 @@ if ($domains_processed == 1) {
 				} //foreach
 			} //if
 		} //if
+		*/
 
 	//if base64, convert existing incompatible phrases
 		if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
@@ -124,6 +119,7 @@ if ($domains_processed == 1) {
 			}
 			unset($sql, $prep_statement, $result, $row);
 		}
+
 	//if not base64, revert base64 phrases to standard method
 		else if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
@@ -155,8 +151,8 @@ if ($domains_processed == 1) {
 		}
 
 	//save the xml to the file system if the phrase directory is set
-		require_once "resources/functions/save_phrases_xml.php";
-		save_phrases_xml();
+		//require_once "resources/functions/save_phrases_xml.php";
+		//save_phrases_xml();
 
 	//delete the phrase from memcache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

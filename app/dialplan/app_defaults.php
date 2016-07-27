@@ -82,6 +82,15 @@
 					$dialplan->xml = $xml_string;
 					$dialplan->import();
 			}
+
+		//update the dialplan order
+			$sql = "update v_dialplans set dialplan_order = '870' where dialplan_order = '980' and dialplan_name = 'cidlookup';\n";
+			$db->query($sql);
+			$sql = "update v_dialplans set dialplan_order = '880' where dialplan_order = '990' and dialplan_name = 'call_screen';\n";
+			$db->query($sql);
+			$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
+			$db->query($sql);
+			unset($sql);
 	}
 
 //add not found dialplan to inbound routes

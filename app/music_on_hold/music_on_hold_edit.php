@@ -268,7 +268,12 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='music_on_hold_rate'>\n";
-	echo "	<option value=''></option>\n";
+	if ($music_on_hold_rate == "") {
+		echo "	<option value='' selected='selected'>".$text['option-default']."</option>\n";
+	}
+	else {
+		echo "	<option value=''>".$text['option-default']."</option>\n";
+	}
 	if ($music_on_hold_rate == "8000") {
 		echo "	<option value='8000' selected='selected'>8000</option>\n";
 	}

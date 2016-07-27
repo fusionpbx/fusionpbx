@@ -23,10 +23,16 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--load libraries
 	local send_mail = require 'resources.functions.send_mail'
+	local Database = require "resources.functions.database"
+	local Settings = require "resources.functions.lazy_settings"
 
 --define a function to send email
 	function send_email(id, uuid)
+		local db = dbh or Database.new('system')
+		local settings = Settings.new(db, domain_name, domain_uuid)
+
 		--get voicemail message details
 			sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -41,6 +47,7 @@
 				voicemail_mail_to = row["voicemail_mail_to"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
+				voicemail_description = row["voicemail_description"];
 			end);
 
 		--set default values
@@ -116,6 +123,16 @@
 						["X-FusionPBX-Email-Type"]  = 'voicemail';
 					}
 
+				--prepare the voicemail_name_formatted
+					voicemail_name_formatted = id;
+					local display_domain_name = settings:get('voicemail', 'display_domain_name', 'boolean');
+
+					if (display_domain_name == 'true') then
+						voicemail_name_formatted = id.."@"..domain_name;
+					end
+					if (voicemail_description ~= nil and voicemail_description ~= "" and voicemail_description ~= id) then
+						voicemail_name_formatted = voicemail_name_formatted.." ("..voicemail_description..")";
+					end
 				--prepare the subject
 					local f = io.open(file_subject, "r");
 					local subject = f:read("*all");
@@ -124,7 +141,10 @@
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
 					subject = subject:gsub("${message_date}", message_date);
 					subject = subject:gsub("${message_duration}", message_length_formatted);
-					subject = subject:gsub("${account}", id);
+					subject = subject:gsub("${account}", voicemail_name_formatted);
+					subject = subject:gsub("${voicemail_id}", id);
+					subject = subject:gsub("${voicemail_description}", voicemail_description);
+					subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					subject = subject:gsub("${domain_name}", domain_name);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
@@ -137,7 +157,10 @@
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${message_date}", message_date);
 					body = body:gsub("${message_duration}", message_length_formatted);
-					body = body:gsub("${account}", id);
+					body = body:gsub("${account}", voicemail_name_formatted);
+					body = body:gsub("${voicemail_id}", id);
+					body = body:gsub("${voicemail_description}", voicemail_description);
+					body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);

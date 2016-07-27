@@ -17,7 +17,7 @@
 							<strong>Nebenstelle</strong>
 						</td>
 						<td style="color: #666; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
-							${account}
+							${voicemail_name_formatted}
 						</td>
 					</tr>
 					<tr>

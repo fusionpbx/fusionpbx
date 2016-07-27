@@ -22,16 +22,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/header.php";
@@ -49,7 +53,8 @@ else {
 	}
 
 //get total devices count from the database
-	$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select count(*) as num_rows from v_devices ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -162,8 +167,6 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='100%' align='left' valign='top'>";
 	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>";
-	echo "			<br /><br />";
-	echo "			".$text['description-devices'];
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
@@ -181,6 +184,11 @@ else {
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2'>\n";
+	echo "			".$text['description-devices'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

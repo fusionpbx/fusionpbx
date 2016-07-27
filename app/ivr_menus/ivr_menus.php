@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('ivr_menu_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('ivr_menu_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -60,8 +64,6 @@ else {
 	echo "<br /><br />\n";
 
 //get the count
-	require_once "resources/classes/database.php";
-	require_once "resources/classes/ivr_menu.php";
 	$ivr = new ivr_menu;
 	$ivr->domain_uuid = $_SESSION["domain_uuid"];
 	$ivr->table = "v_ivr_menus";
@@ -88,9 +90,7 @@ else {
 			$ivr->order_by = $order_by;
 		}
 	}
-	$result = $ivr->find();
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$ivr_menus = $ivr->find();
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -112,8 +112,8 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($ivr_menus)) {
+		foreach($ivr_menus as $row) {
 			$ivr_menu_name = str_replace("-", " ", $row['ivr_menu_name']);
 			$tr_link = (permission_exists('ivr_menu_edit')) ? "href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
