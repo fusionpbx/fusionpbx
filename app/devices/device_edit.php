@@ -824,9 +824,9 @@
 				echo "				</select>\n";
 				echo "			</td>\n";
 				if (permission_exists('device_line_server_address')) {
-				echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
 					echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".$row['server_address']."\"/>\n";
-				echo "			</td>\n";
+					echo "			</td>\n";
 				}
 				else {
 					echo "				<input type='hidden' name='device_lines[".$x."][server_address]' value=\"".$row['server_address']."\"/>\n";
@@ -836,9 +836,9 @@
 					if (permission_exists('device_outbound_proxy_secondary')) {
 						$placeholder_label = $text['label-primary'];
 					}
-				echo "			<td align='left'>\n";
+					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".$placeholder_label."\" maxlength='255' value=\"".$row['outbound_proxy_primary']."\"/>\n";
-				echo "			</td>\n";
+					echo "			</td>\n";
 					unset($placeholder_label);
 				}
 				
@@ -857,9 +857,9 @@
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_auth_id')) {
-				echo "			<td align='left'>\n";
+					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\"/>\n";
-				echo "			</td>\n";
+					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_password')) {
@@ -873,23 +873,23 @@
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_transport')) {
-				echo "			<td align='left'>\n";
+					echo "			<td align='left'>\n";
 					echo "				<select class='formfld' style='width: 50px;' name='device_lines[".$x."][sip_transport]'>\n";
-				echo "					<option value='tcp' ".(($row['sip_transport'] == 'tcp') ? "selected" : null).">TCP</option>\n";
-				echo "					<option value='udp' ".(($row['sip_transport'] == 'udp') ? "selected" : null).">UDP</option>\n";
-				echo "					<option value='tls' ".(($row['sip_transport'] == 'tls') ? "selected" : null).">TLS</option>\n";
-				echo "					<option value='dns srv' ".(($row['sip_transport'] == 'dns srv') ? "selected" : null).">DNS SRV</option>\n";
-				echo "				</select>\n";
-				echo "			</td>\n";
+					echo "					<option value='tcp' ".(($row['sip_transport'] == 'tcp') ? "selected" : null).">TCP</option>\n";
+					echo "					<option value='udp' ".(($row['sip_transport'] == 'udp') ? "selected" : null).">UDP</option>\n";
+					echo "					<option value='tls' ".(($row['sip_transport'] == 'tls') ? "selected" : null).">TLS</option>\n";
+					echo "					<option value='dns srv' ".(($row['sip_transport'] == 'dns srv') ? "selected" : null).">DNS SRV</option>\n";
+					echo "				</select>\n";
+					echo "			</td>\n";
 				}
 				else {
 					echo "				<input type='hidden' name='device_lines[".$x."][sip_transport]' value=\"".$row['sip_transport']."\" />\n";
 				}
 
 				if (permission_exists('device_line_register_expires')) {
-				echo "			<td align='left'>\n";
+					echo "			<td align='left'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\"/>\n";
-				echo "			</td>\n";
+					echo "			</td>\n";
 				}
 				else {
 					echo "				<input type='hidden' name='device_lines[".$x."][register_expires]' value=\"".$row['register_expires']."\"/>\n";
@@ -987,7 +987,7 @@
 					echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 					if (permission_exists('device_key_extension')) {
-					echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 					echo "				<td>&nbsp;</td>\n";
@@ -1131,9 +1131,9 @@
 				echo "</td>\n";
 
 				if (permission_exists('device_key_extension')) {
-				echo "<td align='left'>\n";
+					echo "<td align='left'>\n";
 					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".$row['device_key_extension']."\"/>\n";
-				echo "</td>\n";
+					echo "</td>\n";
 				}
 
 				echo "<td align='left'>\n";

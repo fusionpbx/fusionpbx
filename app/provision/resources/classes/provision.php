@@ -504,7 +504,7 @@ include "root.php";
 					unset ($prep_statement);
 				}
 
-				//initialize a template object
+			//initialize a template object
 				$view = new template();
 				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
 					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
@@ -699,7 +699,7 @@ include "root.php";
 						exit;
 					}
 
-					//assign the keys array
+				//assign the keys array
 					$view->assign("keys", $device_keys);
 
 				//set the variables
