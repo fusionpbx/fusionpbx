@@ -660,7 +660,7 @@
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
 			echo "</td>\n";
 
-			if (permission_exists('device_key_extension') {
+			if (permission_exists('device_key_extension')) {
 				echo "<td class='' align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
 				echo "</td>\n";
