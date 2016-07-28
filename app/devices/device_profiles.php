@@ -22,16 +22,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_profile_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_profile_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -43,6 +47,56 @@ else {
 		$order_by = check_str($_GET["order_by"]);
 		$order = check_str($_GET["order"]);
 	}
+
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_device_profiles ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= " 	device_profile_name like '%".$search."%' ";
+		$sql .= " 	or device_profile_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$num_rows = ($row['num_rows'] > 0) ? $row['num_rows'] : 0;
+	}
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the device profiles
+	$sql = "select * from v_device_profiles ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= " 	device_profile_name like '%".$search."%' ";
+		$sql .= " 	or device_profile_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (strlen($order_by) == 0) {
+		$sql .= "order by device_profile_name asc ";
+	}
+	else {
+		$sql .= "order by ".$order_by." ".$order." ";
+	}
+	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//set row styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //additional includes
 	require_once "resources/header.php";
@@ -68,56 +122,6 @@ else {
 	echo "</table>\n";
 	echo "<br />";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_device_profiles ";
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (strlen($search) > 0) {
-			$sql .= "and (";
-			$sql .= " 	device_profile_name like '%".$search."%' ";
-			$sql .= " 	or device_profile_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$num_rows = ($row['num_rows'] > 0) ? $row['num_rows'] : 0;
-		}
-
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select * from v_device_profiles ";
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (strlen($search) > 0) {
-			$sql .= "and (";
-			$sql .= " 	device_profile_name like '%".$search."%' ";
-			$sql .= " 	or device_profile_description like '%".$search."%' ";
-			$sql .= ") ";
-		}
-		if (strlen($order_by) == 0) {
-			$sql .= "order by device_profile_name asc ";
-		}
-		else {
-			$sql .= "order by ".$order_by." ".$order." ";
-		}
-		$sql .= "limit ".$rows_per_page." offset ".$offset." ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('name', $text['label-profile_name'], $order_by, $order);
@@ -130,8 +134,8 @@ else {
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($device_profiles)) {
+		foreach($device_profiles as $row) {
 			$tr_link = (permission_exists('device_profile_edit')) ? "href='device_profile_edit.php?id=".$row['device_profile_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -151,7 +155,7 @@ else {
 			echo "</tr>\n";
 			$c = ($c == 0) ? 1 : 0;
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($sql, $device_profiles, $row_count);
 	} //end if results
 
 	echo "<tr>\n";
@@ -174,4 +178,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
