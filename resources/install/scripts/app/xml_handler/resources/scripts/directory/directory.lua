@@ -225,6 +225,7 @@
 								mwi_account = row.mwi_account;
 								auth_acl = row.auth_acl;
 							--variables
+								access_acl = row.access_acl or '';
 								sip_from_user = row.extension;
 								sip_from_number = (#number_alias > 0) and number_alias or row.extension;
 								call_group = row.call_group;
@@ -496,6 +497,9 @@
 							if (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end
+							if (string.len(access_acl) > 0) then
+								table.insert(xml, [[							<variable name="access_acl" value="]] .. access_acl .. [["/>]]);
+							end
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
 							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
@@ -531,10 +535,40 @@
 					end
 			end
 
+		--get auth method
+			local sip_auth_method = params:getHeader("sip_auth_method")
+
 		--disable registration for number-alias
-			if (params:getHeader("sip_auth_method") == "REGISTER") then
+			if (sip_auth_method == "REGISTER") then
 				if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
 					XML_STRING = nil;
+				end
+			end
+
+		--apply access_acl
+			if XML_STRING and sip_auth_method then
+				if not access_acl then
+					access_acl = api:execute("user_data", user .. "@" .. domain_name .." var access_acl")
+				end
+
+				if access_acl and #access_acl > 0 then
+					local allow = false
+					local source_ip = params:getHeader('ip') or ''
+
+					if (xml_handler["fs_path"]) and (sip_auth_method == "INVITE") then
+						-- if we use load_balance (fs_path = true) then
+						-- call also shold be accepted form others FS
+						allow = ('true' == api:execute('acl', source_ip .. ' fs_path'))
+					end
+
+					if not allow then
+						allow = ('true' == api:execute('acl', source_ip .. ' ' .. access_acl))
+					end
+
+					if not allow then
+						freeswitch.consoleLog("warning", "[xml_handler] disabled by acl " .. source_ip .. " " .. access_acl .."\n");
+						XML_STRING = nil;
+					end
 				end
 			end
 

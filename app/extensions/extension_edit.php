@@ -129,6 +129,7 @@ else {
 			$user_record = check_str($_POST["user_record"]);
 			$hold_music = check_str($_POST["hold_music"]);
 			$auth_acl = check_str($_POST["auth_acl"]);
+			$access_acl = check_str($_POST["access_acl"]);
 			$cidr = check_str($_POST["cidr"]);
 			$sip_force_contact = check_str($_POST["sip_force_contact"]);
 			$sip_force_expires = check_str($_POST["sip_force_expires"]);
@@ -451,6 +452,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "user_record, ";
 							$sql .= "hold_music, ";
 							$sql .= "auth_acl, ";
+							$sql .= "access_acl, ";
 							$sql .= "cidr, ";
 							$sql .= "sip_force_contact, ";
 							if (strlen($sip_force_expires) > 0) {
@@ -513,6 +515,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$user_record', ";
 							$sql .= "'$hold_music', ";
 							$sql .= "'$auth_acl', ";
+							$sql .= "'$access_acl', ";
 							$sql .= "'$cidr', ";
 							$sql .= "'$sip_force_contact', ";
 							if (strlen($sip_force_expires) > 0) {
@@ -667,6 +670,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "user_record = '$user_record', ";
 					$sql .= "hold_music = '$hold_music', ";
 					$sql .= "auth_acl = '$auth_acl', ";
+					$sql .= "access_acl = '$access_acl', ";
 					$sql .= "cidr = '$cidr', ";
 					$sql .= "sip_force_contact = '$sip_force_contact', ";
 					if (strlen($sip_force_expires) == 0) {
@@ -857,6 +861,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$user_record = $row["user_record"];
 			$hold_music = $row["hold_music"];
 			$auth_acl = $row["auth_acl"];
+			$access_acl = $row["access_acl"];
 			$cidr = $row["cidr"];
 			$sip_force_contact = $row["sip_force_contact"];
 			$sip_force_expires = $row["sip_force_expires"];
@@ -1837,6 +1842,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"$auth_acl\">\n";
 	echo "   <br />\n";
 	echo $text['description-auth_acl']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-access_acl']."\n";
+	echo "</td>\n";
+	echo "<td width=\"70%\" class='vtable' align='left'>\n";
+	echo "   <input class='formfld' type='text' name='access_acl' maxlength='255' value=\"$access_acl\">\n";
+	echo "   <br />\n";
+	echo $text['description-access_acl']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

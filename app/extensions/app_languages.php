@@ -897,6 +897,19 @@ $text['label-auth_acl']['ro'] = "ACL autentificare";
 $text['label-auth_acl']['ar-eg'] = "";
 $text['label-auth_acl']['he'] = "";
 
+$text['label-access_acl']['en-us'] = "Access ACL";
+$text['label-access_acl']['es-cl'] = "";
+$text['label-access_acl']['pt-pt'] = "";
+$text['label-access_acl']['fr-fr'] = "";
+$text['label-access_acl']['pt-br'] = "";
+$text['label-access_acl']['pl'] = "";
+$text['label-access_acl']['uk'] = "";
+$text['label-access_acl']['sv-se'] = "";
+$text['label-access_acl']['de-at'] = "";
+$text['label-access_acl']['ro'] = "";
+$text['label-access_acl']['ar-eg'] = "";
+$text['label-access_acl']['he'] = "";
+
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['es-cl'] = "Código de Cuenta";
 $text['label-accountcode']['pt-pt'] = "Código de Conta";
@@ -1533,6 +1546,19 @@ $text['description-auth_acl']['de-at'] = "Geben Sie die Auth ACL hier an.";
 $text['description-auth_acl']['ro'] = "Introduceți ACL-ul pentru autentificare aici.";
 $text['description-auth_acl']['ar-eg'] = "";
 $text['description-auth_acl']['he'] = "";
+
+$text['description-access_acl']['en-us'] = "Enter the Access ACL here.";
+$text['description-access_acl']['es-cl'] = "";
+$text['description-access_acl']['pt-pt'] = "";
+$text['description-access_acl']['fr-fr'] = "";
+$text['description-access_acl']['pt-br'] = "";
+$text['description-access_acl']['pl'] = "";
+$text['description-access_acl']['uk'] = "";
+$text['description-access_acl']['sv-se'] = "";
+$text['description-access_acl']['de-at'] = "";
+$text['description-access_acl']['ro'] = "";
+$text['description-access_acl']['ar-eg'] = "";
+$text['description-access_acl']['he'] = "";
 
 $text['description-accountcode']['en-us'] = "Enter the account code here.";
 $text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta aquí.";
