@@ -29,6 +29,7 @@
 			uuid = session:get_uuid();
 			agent_id = session:getVariable("agent_id");
 			agent_password = session:getVariable("agent_password");
+                        auto_authorized = session:getVariable("auto_authorized");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -51,12 +52,14 @@
 		agent_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
 	end
 
---get the pin number from the caller
-	if (agent_password == nil) then
-		min_digits = 3;
-		max_digits = 20;
-		max_tries = 3;
-		agent_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+--get the pin number from the caller if not auto_authorized
+        if (auto_authorized == nil) then
+		if (agent_password == nil) then
+			min_digits = 3;
+			max_digits = 20;
+			max_tries = 3;
+			agent_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+		end
 	end
 
 --set default as access denied
@@ -66,7 +69,12 @@
 	sql = "SELECT * FROM v_call_center_agents ";
 	sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
 	sql = sql .. "AND agent_id = '" .. agent_id .."' ";
-	sql = sql .. "AND agent_password = '" .. agent_password .."' ";
+
+	--only use password clause if not auto_authorized
+        if (auto_authorized == nil) then
+		sql = sql .. "AND agent_password = '" .. agent_password .."' ";
+	end
+
 	freeswitch.consoleLog("notice", "[user status] sql: " .. sql .. "\n");
 	dbh:query(sql, function(row)
 		--set the variables
