@@ -48,6 +48,11 @@
 		$order = check_str($_GET["order"]);
 	}
 
+//additional includes
+	require_once "resources/header.php";
+	$document['title'] = $text['title-profiles'];
+	require_once "resources/paging.php";
+
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_device_profiles ";
 	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
@@ -97,11 +102,6 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-
-//additional includes
-	require_once "resources/header.php";
-	$document['title'] = $text['title-profiles'];
-	require_once "resources/paging.php";
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
