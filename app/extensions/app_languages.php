@@ -910,7 +910,7 @@ $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['ar-eg'] = "";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
-$text['label-is_registered']['en-us'] = "Device Registered";
+$text['label-is_registered']['en-us'] = "Registered";
 $text['label-is_registered']['es-cl'] = "";
 $text['label-is_registered']['pt-pt'] = "";
 $text['label-is_registered']['fr-fr'] = "";
