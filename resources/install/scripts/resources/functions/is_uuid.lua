@@ -1,7 +1,7 @@
 local pattern = '^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$'
 
 function is_uuid(s)
-  return string.match(s, pattern) or false
+  return not not string.match(s, pattern)
 end
 
 --[[
@@ -12,7 +12,7 @@ local function is_uuid_self_test()
     '34DD925B-F320-425F-AD87-0573C5B853C8',
   }
   for _, value in ipairs(pass_tests) do
-    assert(value == is_uuid(value), value)
+    assert(true == is_uuid(value), value)
   end
 
   local fail_tests = {
