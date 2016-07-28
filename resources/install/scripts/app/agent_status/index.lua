@@ -27,9 +27,9 @@
 			domain_name = session:getVariable("domain_name");
 			context = session:getVariable("context");
 			uuid = session:get_uuid();
+			agent_authorized = session:getVariable("agent_authorized");
 			agent_id = session:getVariable("agent_id");
 			agent_password = session:getVariable("agent_password");
-                        auto_authorized = session:getVariable("auto_authorized");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -38,6 +38,11 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
+	end
+
+--set default as access denied
+	if (agent_authorized == nil or agent_authorized ~= 'true') then
+		agent_authorized = 'false';
 	end
 
 --define the sounds directory
@@ -52,48 +57,40 @@
 		agent_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
 	end
 
---get the pin number from the caller if not auto_authorized
-        if (auto_authorized == nil) then
-		if (agent_password == nil) then
-			min_digits = 3;
-			max_digits = 20;
-			max_tries = 3;
-			agent_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-		end
+--get the pin number from the caller
+	if (agent_password == nil and agent_authorized ~= 'true')) then
+		min_digits = 3;
+		max_digits = 20;
+		max_tries = 3;
+		agent_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 	end
-
---set default as access denied
-	authorized = 'false';
 
 --get the agent password
 	sql = "SELECT * FROM v_call_center_agents ";
 	sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
 	sql = sql .. "AND agent_id = '" .. agent_id .."' ";
-
-	--only use password clause if not auto_authorized
-        if (auto_authorized == nil) then
+	if (agent_authorized ~= 'true') then
 		sql = sql .. "AND agent_password = '" .. agent_password .."' ";
 	end
-
 	freeswitch.consoleLog("notice", "[user status] sql: " .. sql .. "\n");
 	dbh:query(sql, function(row)
 		--set the variables
 			agent_name = row.agent_name;
 			agent_id = row.agent_id;
 		--authorize the user
-			authorized = 'true';
+			agent_authorized = 'true';
 	end);
 
 --show the results
 	if (agent_id) then
-		freeswitch.consoleLog("notice", "[user status][login] agent_id: " .. agent_id .. " authorized " .. authorized .. "\n");
+		freeswitch.consoleLog("notice", "[user status][login] agent id: " .. agent_id .. " authorized: " .. agent_authorized .. "\n");
 	end
 	if (agent_password and debug["password"]) then
-		freeswitch.consoleLog("notice", "[user status][login] agent_password: " .. agent_password .. "\n");
+		freeswitch.consoleLog("notice", "[user status][login] agent password: " .. agent_password .. "\n");
 	end
 
 --get the user_uuid
-	if (authorized == 'true') then
+	if (agent_authorized == 'true') then
 		sql = "SELECT user_uuid, user_status FROM v_users ";
 		sql = sql .. "WHERE username = '".. agent_name .."' ";
 		sql = sql .. "AND domain_uuid = '" .. domain_uuid .."' ";
@@ -164,7 +161,7 @@
 	end
 
 --unauthorized
-	if (authorized == 'false') then
+	if (agent_authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/voicemail/vm-fail_auth.wav");
 		status = "Invalid ID or Password";
 	end
