@@ -910,6 +910,19 @@ $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['ar-eg'] = "";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
+$text['label-is_registered']['en-us'] = "Registered";
+$text['label-is_registered']['es-cl'] = "";
+$text['label-is_registered']['pt-pt'] = "";
+$text['label-is_registered']['fr-fr'] = "";
+$text['label-is_registered']['pt-br'] = "";
+$text['label-is_registered']['pl'] = "";
+$text['label-is_registered']['uk'] = "";
+$text['label-is_registered']['sv-se'] = "";
+$text['label-is_registered']['de-at'] = "";
+$text['label-is_registered']['ro'] = "";
+$text['label-is_registered']['ar-eg'] = "";
+$text['label-is_registered']['he'] = "";
+
 $text['header-extensions']['en-us'] = "Extensions";
 $text['header-extensions']['es-cl'] = "Extensiones";
 $text['header-extensions']['pt-pt'] = "Extensões";
