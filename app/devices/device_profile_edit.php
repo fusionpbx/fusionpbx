@@ -295,7 +295,7 @@
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-		if (permission_exists('device_key_extension') {
+		if (permission_exists('device_key_extension')) {
 			echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 		}
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
@@ -320,7 +320,9 @@
 				}
 				echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 				echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+				if (permission_exists('device_key_extension')) {
+					echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+				}
 				echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 				echo "				<td>&nbsp;</td>\n";
 				echo "			</tr>\n";
@@ -754,4 +756,5 @@
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
