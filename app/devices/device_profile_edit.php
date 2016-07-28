@@ -22,11 +22,13 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('device_profile_add') || permission_exists('device_profile_edit')) {
 		//access granted
 	}
@@ -244,6 +246,7 @@ require_once "resources/require.php";
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 	</script>
+
 <?php
 //show the content
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
@@ -292,14 +295,19 @@ require_once "resources/require.php";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+		if (permission_exists('device_key_extension') {
+			echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+		}
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
 	}
 	$x = 0;
 	foreach($device_keys as $row) {
+
+		//set the device vendor
 			$device_vendor = $row['device_key_vendor'];
+
 		//set the column names
 			if ($previous_device_key_vendor != $row['device_key_vendor']) {
 				echo "			<tr>\n";
@@ -652,9 +660,11 @@ require_once "resources/require.php";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
 			echo "</td>\n";
 
-			echo "<td class='' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
-			echo "</td>\n";
+			if (permission_exists('device_key_extension') {
+				echo "<td class='' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
+				echo "</td>\n";
+			}
 
 			echo "<td class='' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
