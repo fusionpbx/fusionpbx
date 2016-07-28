@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['zh-cn'] = "存储数据库连接信息";
 
 	//permission details
 		$y = 0;
