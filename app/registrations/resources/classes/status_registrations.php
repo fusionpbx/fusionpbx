@@ -1,6 +1,5 @@
 <?php
 
-
 function get_registrations($sip_profile_name) {
 	//get the global variables
 		global $_SESSION, $fp, $show;
