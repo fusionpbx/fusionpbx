@@ -2,7 +2,7 @@
 
 
 function get_registrations($sip_profile_name) {
-	global $_SESSION, $fp;
+	global $_SESSION, $fp, $show;
 //get sofia status profile information including registrations
 	$cmd = "api sofia xmlstatus profile ".$sip_profile_name." reg";
 	$xml_response = trim(event_socket_request($fp, $cmd));
