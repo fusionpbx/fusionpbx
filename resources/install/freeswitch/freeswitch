@@ -1,0 +1,38 @@
+CONFDIR="/etc/fusionpbx"
+#
+# Uncooment extra lines and make sure to add cut and paste them to the DAEMON_ARGS
+# Options to control locations of files:
+fs_conf="/etc/fusionpbx"
+fs_db="/var/lib/freeswitch/db"
+fs_log="/var/log/freeswitch"
+fs_recordings="/var/lib/fusionpbx/recordings"
+fs_run="/run/freeswitch"
+fs_scripts="/var/lib/fusionpbx/scripts"
+fs_storage="/var/lib/fusionpbx/storage"
+fs_usr=freeswitch
+fs_grp=www-data
+#
+#These are the optional arguments you can pass to freeswitch: (add options to fs_options line)
+# -nf                    -- no forking
+# -reincarnate           -- restart the switch on an uncontrolled exit
+# -reincarnate-reexec    -- run execv on a restart (helpful for upgrades)
+# -u [user]              -- specify user to switch to
+# -g [group]             -- specify group to switch to
+# -core                  -- dump cores
+# -rp                    -- enable high(realtime) priority settings
+# -lp                    -- enable low priority settings
+# -np                    -- enable normal priority settings
+# -vg                    -- run under valgrind
+# -nosql                 -- disable internal sql scoreboard
+# -heavy-timer           -- Heavy Timer, possibly more accurate but at a cost
+# -nonat                 -- disable auto nat detection
+# -nonatmap              -- disable auto nat port mapping
+# -nocal                 -- disable clock calibration
+# -nort                  -- disable clock clock_realtime
+# -stop                  -- stop freeswitch
+# -nc                    -- do not output to a console and background
+# -ncwait                -- do not output to a console and background but wait until the system is ready before exiting (implies -nc)
+# -c                     -- output to a console and stay in the foreground
+#
+# Reads in the arguments into 1 line command
+DAEMON_ARGS="-nc -rp -reincarnate"

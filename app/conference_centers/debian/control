@@ -1,0 +1,12 @@
+Source: fusionpbx-app-conference-centers
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-conference-centers
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-conference-centers:  Conference Centers allows one or more audio and video conference rooms
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

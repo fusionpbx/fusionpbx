@@ -1,0 +1,42 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  configure)
+    for w in \
+  	  /etc/fusionpbx \
+      /var/www/fusionpbx;
+    do
+      chown -R www-data:www-data $w
+    done
+    for x in \
+      /var/lib/fusionpbx \
+      /var/lib/fusionpbx/db \
+      /var/lib/fusionpbx/grammar \
+      /var/lib/fusionpbx/scripts \
+      /var/lib/fusionpbx/sounds \
+      /var/lib/fusionpbx/storage;
+    do
+      chown -R www-data:www-data $x
+    done
+    for y in \
+      /var/lib/fusionpbx/images \
+      /var/lib/fusionpbx/recordings \
+      /var/lib/fusionpbx/sounds/music \
+      /var/lib/fusionpbx/sounds/custom \
+      /var/lib/fusionpbx/storage/fax \
+      /var/lib/fusionpbx/storage/voicemail;
+    do
+      chown -R www-data:freeswitch $y
+    done
+    ;;
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

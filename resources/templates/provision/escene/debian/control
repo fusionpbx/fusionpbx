@@ -1,0 +1,12 @@
+Source: fusionpbx-provisioning-template-escene
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-provisioning-template-escene
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-provisioning-template-escene: Provisioning templates for escene sip phons  
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

@@ -1,0 +1,12 @@
+Source: fusionpbx-app-provision
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-provision
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-provision: used by devices to provision them for use with the pbx system.  
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

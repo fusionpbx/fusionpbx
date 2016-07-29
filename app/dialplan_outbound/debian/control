@@ -1,0 +1,12 @@
+Source: fusionpbx-app-dialplan-outbound
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-dialplan-outbound
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-dialplan-outbound: Outbound dialplans have one or more conditions that are matched to attributes of a call. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

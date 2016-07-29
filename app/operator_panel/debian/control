@@ -1,0 +1,12 @@
+Source: fusionpbx-app-operator-panel
+Section: user/www
+Priority: extra
+Maintainer: Richard Neese <r.neese@gmail.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-operator-panel
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-operator-panel: Fusionpbx Basic Operator Panel
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

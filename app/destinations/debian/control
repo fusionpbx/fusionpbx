@@ -1,0 +1,12 @@
+Source: fusionpbx-app-destinations
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-destinations
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-destinations: Used to define external destination numbers.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

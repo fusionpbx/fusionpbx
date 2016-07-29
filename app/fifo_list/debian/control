@@ -1,0 +1,12 @@
+Source: fusionpbx-app-fifo-list
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-fifo-list
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-fifo-list: List all the queues that are currently active with one or more callers.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
