@@ -112,12 +112,23 @@
 									}
 							}
 
-						//sql update
+						//sql add or update
 							if (strlen($device_key_uuid) == 0) {
 								if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
 
 									//create the primary keys
 										$device_key_uuid = uuid();
+
+									//if the device_uuid is not in the array then get the device_uuid from the database
+										if (strlen($device_uuid) == 0) {
+											$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+											$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
+											$prep_statement = $db->prepare(check_sql($sql));
+											$prep_statement->execute();
+											$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+											$device_uuid = $row['device_uuid'];
+											unset($row);
+										}
 
 									//insert the keys
 										$sql = "insert into v_device_keys ";
@@ -145,7 +156,6 @@
 										$sql .= "'".$device_key_category."', ";
 										$sql .= "'".$device_key_vendor."' ";
 										$sql .= ");";
-										//echo $sql;
 
 									//action add or update
 										$action = "add";
