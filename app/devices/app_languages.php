@@ -1,5 +1,18 @@
 <?php
 
+$text['title-devices']['en-us'] = "Devices";
+$text['title-devices']['es-cl'] = "Dispositivos";
+$text['title-devices']['pt-pt'] = "Dispositivos";
+$text['title-devices']['fr-fr'] = "Equipements";
+$text['title-devices']['pt-br'] = "Dispositivos";
+$text['title-devices']['pl'] = "Urządzenia";
+$text['title-devices']['uk'] = "Пристрої";
+$text['title-devices']['sv-se'] = "Enheter";
+$text['title-devices']['ro'] = "Dispozitive";
+$text['title-devices']['de-at'] = "Geräte";
+$text['title-devices']['ar-eg'] = "الأجهزة";
+$text['title-devices']['he'] = "התקנים";
+
 $text['title-profiles']['en-us'] = "Profiles";
 $text['title-profiles']['es-cl'] = "Perfiles";
 $text['title-profiles']['pt-pt'] = "Perfis";
@@ -25,19 +38,6 @@ $text['title-profile']['ro'] = "Profil";
 $text['title-profile']['de-at'] = "Profil";
 $text['title-profile']['ar-eg'] = "";
 $text['title-profile']['he'] = "פרופיל";
-
-$text['title-devices']['en-us'] = "Devices";
-$text['title-devices']['es-cl'] = "Dispositivos";
-$text['title-devices']['pt-pt'] = "Dispositivos";
-$text['title-devices']['fr-fr'] = "Equipements";
-$text['title-devices']['pt-br'] = "Dispositivos";
-$text['title-devices']['pl'] = "Urządzenia";
-$text['title-devices']['uk'] = "Пристрої";
-$text['title-devices']['sv-se'] = "Enheter";
-$text['title-devices']['ro'] = "Dispozitive";
-$text['title-devices']['de-at'] = "Geräte";
-$text['title-devices']['ar-eg'] = "الأجهزة";
-$text['title-devices']['he'] = "התקנים";
 
 $text['title-device_keys']['en-us'] = "Device Keys";
 $text['title-device_keys']['es-cl'] = "Teclas de Dispositivos";
@@ -2194,19 +2194,6 @@ $text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linie
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['he'] = "";
 
-$text['description-enabled']['en-us'] = "Set the status of this default setting.";
-$text['description-enabled']['es-cl'] = "Ajuste el estado de la configuración predeterminada.";
-$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
-$text['description-enabled']['fr-fr'] = "Choisir l'état de ce réglage";
-$text['description-enabled']['pt-br'] = "Escolha o estado desta definição ";
-$text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
-$text['description-enabled']['uk'] = "";
-$text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
-$text['description-enabled']['ro'] = "";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
-$text['description-enabled']['ar-eg'] = "";
-$text['description-enabled']['he'] = "";
-
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
 $text['description-domain']['pt-pt'] = "";
@@ -2505,5 +2492,42 @@ $text['button-files']['ro'] = "";
 $text['button-files']['de-at'] = "";
 $text['button-files']['ar-eg'] = "";
 $text['button-files']['he'] = "";
+
+//Device Vendors
+$text['title-device_vendors']['en-us'] = "Vendors";
+$text['title-device_vendors']['es-cl'] = "Proveedor";
+$text['title-device_vendors']['pt-pt'] = "Fabricante";
+$text['title-device_vendors']['fr-fr'] = "Fabriquant";
+$text['title-device_vendors']['pt-br'] = "Fabricante";
+$text['title-device_vendors']['pl'] = "Producent";
+$text['title-device_vendors']['uk'] = "";
+$text['title-device_vendors']['sv-se'] = "Tillverkare";
+$text['title-device_vendors']['de-at'] = "Hersteller";
+$text['title-device_vendors']['ar-eg'] = "";
+$text['title-device_vendors']['he'] = "";
+
+$text['title-device_vendor']['en-us'] = "Vendor";
+$text['title-device_vendor']['es-cl'] = "Proveedor";
+$text['title-device_vendor']['pt-pt'] = "Fabricante";
+$text['title-device_vendor']['fr-fr'] = "Fabriquant";
+$text['title-device_vendor']['pt-br'] = "Fabricante";
+$text['title-device_vendor']['pl'] = "Producent";
+$text['title-device_vendor']['uk'] = "";
+$text['title-device_vendor']['sv-se'] = "Tillverkare";
+$text['title-device_vendor']['de-at'] = "Hersteller";
+$text['title-device_vendor']['ar-eg'] = "";
+$text['title-device_vendor']['he'] = "";
+
+$text['title_description-device_vendor']['en-us'] = 'Defines the list of vendors used with provisioning devices.';
+$text['title_description-device_vendor']['es-cl'] = '';
+$text['title_description-device_vendor']['pt-pt'] = '';
+$text['title_description-device_vendor']['fr-fr'] = '';
+$text['title_description-device_vendor']['pt-br'] = '';
+$text['title_description-device_vendor']['pl'] = '';
+$text['title_description-device_vendor']['uk'] = '';
+$text['title_description-device_vendor']['sv-se'] = '';
+$text['title_description-device_vendor']['de-at'] = '';
+$text['title_description-device_vendor']['ar-eg'] = '';
+$text['title_description-device_vendor']['he'] = '';
 
 ?>
