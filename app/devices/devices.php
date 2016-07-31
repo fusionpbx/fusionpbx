@@ -178,6 +178,9 @@
 			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
 		}
 	}
+	if (permission_exists('device_vendor_view')) {
+		echo "		<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">";
+	}
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
