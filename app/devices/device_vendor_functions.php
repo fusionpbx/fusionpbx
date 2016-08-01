@@ -33,6 +33,7 @@
 		$sql_search .= "or description like '%".$search."%'";
 		$sql_search .= ")";
 	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";

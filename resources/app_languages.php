@@ -849,7 +849,16 @@ $text['option-false']['pl'] = "Nie";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['de-at'] = "Aus";
 
-
+$text['label-label']['en-us'] = "Label";
+$text['label-label']['es-cl'] = "Etiqueta";
+$text['label-label']['pt-pt'] = "Etiqueta";
+$text['label-label']['fr-fr'] = "Label";
+$text['label-label']['pt-br'] = "Etiqueta";
+$text['label-label']['he'] = "תג";
+$text['label-label']['pl'] = "Etykieta";
+$text['label-label']['uk'] = "Назва";
+$text['label-label']['sv-se'] = "Etikett";
+$text['label-label']['de-at'] = "Kennzeichnung";
 
 //description
 
