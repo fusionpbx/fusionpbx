@@ -83,18 +83,17 @@
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_vendor_functions']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
+	//echo "		<form method='get' action=''>\n";
+	//echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	//echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	//echo "			</td>\n";
+	//echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('label', $text['label-label'], $order_by, $order);
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('value', $text['label-value'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
@@ -115,7 +114,7 @@
 				$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['label']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['value']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";

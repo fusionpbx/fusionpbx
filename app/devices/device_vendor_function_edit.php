@@ -58,7 +58,7 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$label = check_str($_POST["label"]);
+		//$label = check_str($_POST["label"]);
 		$name = check_str($_POST["name"]);
 		$value = check_str($_POST["value"]);
 		$enabled = check_str($_POST["enabled"]);
@@ -73,7 +73,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
+		//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
 		if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
 		if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
 		if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
@@ -98,7 +98,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "device_vendor_function_uuid, ";
 				$sql .= "device_vendor_uuid, ";
-				$sql .= "label, ";
+				//$sql .= "label, ";
 				$sql .= "name, ";
 				$sql .= "value, ";
 				$sql .= "enabled, ";
@@ -108,7 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "'".uuid()."', ";
 				$sql .= "'$device_vendor_uuid', ";
-				$sql .= "'$label', ";
+				//$sql .= "'$label', ";
 				$sql .= "'$name', ";
 				$sql .= "'$value', ";
 				$sql .= "'$enabled', ";
@@ -126,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "update" && permission_exists('device_vendor_function_edit')) {
 				$sql = "update v_device_vendor_functions set ";
 				$sql .= "device_vendor_uuid = '$device_vendor_uuid', ";
-				$sql .= "label = '$label', ";
+				//$sql .= "label = '$label', ";
 				$sql .= "name = '$name', ";
 				$sql .= "value = '$value', ";
 				$sql .= "enabled = '$enabled', ";
@@ -152,7 +152,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$label = $row["label"];
+			//$label = $row["label"];
 			$name = $row["name"];
 			$value = $row["value"];
 			$enabled = $row["enabled"];
@@ -175,16 +175,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-label']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='label' maxlength='255' value=\"$label\">\n";
-	echo "<br />\n";
-	echo $text['description-label']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	//echo "<tr>\n";
+	//echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	//echo "	".$text['label-label']."\n";
+	//echo "</td>\n";
+	//echo "<td class='vtable' align='left'>\n";
+	//echo "	<input class='formfld' type='text' name='label' maxlength='255' value=\"$label\">\n";
+	//echo "<br />\n";
+	//echo $text['description-label']."\n";
+	//echo "</td>\n";
+	//echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

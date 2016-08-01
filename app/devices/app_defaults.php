@@ -88,7 +88,7 @@ if ($domains_processed == 1) {
 								$sql .= "(";
 								$sql .= "device_vendor_uuid, ";
 								$sql .= "device_vendor_function_uuid, ";
-								$sql .= "label, ";
+								//$sql .= "label, ";
 								$sql .= "name, ";
 								$sql .= "value, ";
 								$sql .= "enabled, ";
@@ -98,7 +98,7 @@ if ($domains_processed == 1) {
 								$sql .= "( ";
 								$sql .= "'".$device_vendor_uuid."', ";
 								$sql .= "'".$device_vendor_function_uuid."', ";
-								$sql .= "'".$function['label']."', ";
+								//$sql .= "'".$function['label']."', ";
 								$sql .= "'".$function['name']."', ";
 								$sql .= "'".$function['value']."', ";
 								$sql .= "'true', ";
