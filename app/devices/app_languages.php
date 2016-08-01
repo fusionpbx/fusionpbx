@@ -2481,17 +2481,17 @@ $text['button-profiles']['ar-eg'] = "";
 $text['button-profiles']['he'] = "פרופילים";
 
 $text['button-files']['en-us'] = "Files";
-$text['button-files']['es-cl'] = "";
-$text['button-files']['pt-pt'] = "";
-$text['button-files']['fr-fr'] = "";
-$text['button-files']['pt-br'] = "";
+$text['button-files']['es-cl'] = "archivos";
+$text['button-files']['pt-pt'] = "Arquivos";
+$text['button-files']['fr-fr'] = "Fichiers";
+$text['button-files']['pt-br'] = "Arquivos";
 $text['button-files']['pl'] = "";
 $text['button-files']['uk'] = "";
 $text['button-files']['sv-se'] = "";
 $text['button-files']['ro'] = "";
-$text['button-files']['de-at'] = "";
+$text['button-files']['de-at'] = "Dateien";
 $text['button-files']['ar-eg'] = "";
-$text['button-files']['he'] = "";
+$text['button-files']['he'] = "קבצים";
 
 //Device Vendors
 $text['title-device_vendors']['en-us'] = "Vendors";
