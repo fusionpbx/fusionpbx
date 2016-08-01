@@ -23,16 +23,35 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('extension_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/resources/classes/status_registrations.php";
+
+//check permissions
+	if (permission_exists('extension_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
+//get the registrations
+	if (permission_exists('extension_registered')) {
+		//create the event socket connection
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if (!$fp) {
+			$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
+		}
+		$registrations = get_registrations('internal');
+		//order the array
+		require_once "resources/classes/array_order.php";
+		$order = new array_order();
+		$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -55,10 +74,10 @@ else {
 		$sql_mod .= ") ";
 	}
 
-require_once "resources/header.php";
-$document['title'] = $text['title-extensions'];
-
-require_once "resources/paging.php";
+//additional includes
+	require_once "resources/header.php";
+	$document['title'] = $text['title-extensions'];
+	require_once "resources/paging.php";
 
 //get total extension count from the database
 	$sql = "select ";
@@ -148,8 +167,12 @@ require_once "resources/paging.php";
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	//echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
 	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+	if (permission_exists('extension_registered')) {
+ 		echo th_order_by('description', $text['label-is_registered'], $order_by, $order);
+ 	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
+
 	echo "<td class='list_control_icon'>\n";
 	if (permission_exists('extension_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
@@ -184,8 +207,28 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_group']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_context']."</td>\n";
+
+			if (permission_exists('extension_registered')) {
+ 				echo "	<td valign='top' class='".$row_style[$c]."'>";
+ 				$found = false;
+ 				$found_count = 0;
+ 				foreach ($registrations as $arr) {
+ 					if (in_array($row['extension'],$arr)) {
+ 						$found = true;
+ 						$found_count++;
+ 					}
+ 				}
+ 				if ($found) {
+ 					echo "Yes ($found_count)";
+ 				} else {
+ 					echo "No";
+ 				}
+ 				echo "&nbsp;</td>\n";
+ 			}
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
 				echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

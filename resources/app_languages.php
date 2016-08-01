@@ -849,11 +849,31 @@ $text['option-false']['pl'] = "Nie";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['de-at'] = "Aus";
 
-
+$text['label-label']['en-us'] = "Label";
+$text['label-label']['es-cl'] = "Etiqueta";
+$text['label-label']['pt-pt'] = "Etiqueta";
+$text['label-label']['fr-fr'] = "Label";
+$text['label-label']['pt-br'] = "Etiqueta";
+$text['label-label']['he'] = "תג";
+$text['label-label']['pl'] = "Etykieta";
+$text['label-label']['uk'] = "Назва";
+$text['label-label']['sv-se'] = "Etikett";
+$text['label-label']['de-at'] = "Kennzeichnung";
 
 //description
 
-$text['description-value']['en-us'] = "Enter the value of this setting.";
+$text['description-name']['en-us'] = "Enter the name.";
+$text['description-name']['es-cl'] = "";
+$text['description-name']['pt-pt'] = "";
+$text['description-name']['fr-fr'] = "";
+$text['description-name']['nl-nl'] = "";
+$text['description-name']['pt-br'] = "";
+$text['description-name']['pl'] = "";
+$text['description-name']['sv-se'] = "";
+$text['description-name']['uk'] = "";
+$text['description-name']['de-at'] = "";
+
+$text['description-value']['en-us'] = "Enter the value.";
 $text['description-value']['es-cl'] = "Ingrese el valor de esta configuración";
 $text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
 $text['description-value']['fr-fr'] = "Entrer la valeur de ce paramètre.";
@@ -907,5 +927,23 @@ $text['description-description']['pl'] = "Wpisz opis (opcjonalne).";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
 $text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
 $text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
+
+$text['description-enabled']['en-us'] = "";
+$text['description-enabled']['es-cl'] = "";
+$text['description-enabled']['pt-pt'] = "";
+$text['description-enabled']['fr-fr'] = "";
+$text['description-enabled']['pt-br'] = "";
+$text['description-enabled']['pl'] = "";
+$text['description-enabled']['uk'] = "";
+$text['description-enabled']['sv-se'] = "";
+$text['description-enabled']['ro'] = "";
+$text['description-enabled']['de-at'] = "";
+$text['description-enabled']['ar-eg'] = "";
+$text['description-enabled']['he'] = "";
+
+$text['description-description']['en-us'] = 'Enter the description.';
+$text['description-description']['es-cl'] = '';
+$text['description-description']['pt-pt'] = '';
+$text['description-description']['fr-fr'] = '';
 
 ?>

@@ -175,61 +175,17 @@ if(!function_exists('tiff2pdf')) {
 		$page_width  = sprintf('%.4f', $page_width);
 		$page_height = sprintf('%.4f', $page_height);
 
-		$cmd = join(array('tiff2pdf',
-			'-i -u i',
-			'-p', $page_size,
-			'-w', $page_width,
-			'-l', $page_height,
-			'-f',
-			'-o', correct_path(path_join($dir_fax_temp, $fax_file_name . '.pdf')),
-			correct_path($tiff_file_name),
-		), ' ');
-
-		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-
-		if(!file_exists(path_join($dir_fax_temp, $fax_file_name . '.pdf'))){
-			echo "can not create temporary pdf: $resp";
-			return false;
-		}
-
-		$cmd = join(array($GS,
-			'-q -sDEVICE=tiffg3',
-			'-r' . $ppi_w . 'x' . $ppi_h,
-			'-g' . $pix_w . 'x' . $pix_h,
-			'-dNOPAUSE',
-			'-sOutputFile=' . $fax_file_name . '_temp.tif',
-			'--',
-			$fax_file_name . '.pdf',
-			'-c quit',
-		), ' ');
-
-		$resp = exec_in_dir($dir_fax_temp, $cmd, $ok);
-
-		unlink(path_join($dir_fax_temp, $fax_file_name . '.pdf'));
-
-		if(!file_exists(path_join($dir_fax_temp, $fax_file_name . '_temp.tif'))){
-			echo "can not temporary tiff: $resp";
-			return false;
-		}
-
-		$cmd = join(array('tiff2pdf',
-			'-i -u i',
-			'-p', $page_size,
-			'-w', $page_width,
-			'-l', $page_height,
-			'-f',
+		$cmd = join(array('tiff2pdf', 
 			'-o', correct_path($pdf_file_name),
-			correct_path(path_join($dir_fax_temp, $fax_file_name . '_temp.tif')),
-		), ' ');
+			correct_path($tiff_file_name),
+                ), ' ');
 
-		$resp = exec_in_dir($dir_fax, $cmd, $ok);
+                $resp = exec_in_dir($dir_fax, $cmd, $ok);
 
-		unlink(path_join($dir_fax_temp, $fax_file_name . '_temp.tif'));
-
-		if(!file_exists($pdf_file_name)){
-			echo "can not create pdf: $resp";
-			return false;
-		}
+                if(!file_exists($pdf_file_name)){
+                        echo "can not create pdf: $resp";
+                        return false;
+                }
 
 		return $pdf_file_name;
 	}
@@ -437,6 +393,7 @@ if(!function_exists('fax_split_dtmf')) {
 	echo "full_path is $fax_file\n";
 
 	$pdf_file = tiff2pdf($fax_file);
+	echo "file is $pdf_file \n";
 	if(!$pdf_file){
 		$fax_file_warning = ' Fax image not available on server.';
 	}

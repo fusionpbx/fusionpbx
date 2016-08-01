@@ -229,9 +229,9 @@
 		<!-- Handle 302 Redirect in the dialplan -->
 		<param name="manual-redirect" value="true" enabled="false"/>
 		<!-- Disable Transfer -->
-		<param name="disable-transfer" value="true" enabled="false"/>
+		<!--<param name="disable-transfer" value="true" enabled="false"/>-->
 		<!-- Disable Register -->
-		<param name="disable-register" value="true" enabled="false"/>
+		<!--<param name="disable-register" value="true" enabled="false"/>-->
 		<!-- Used for when phones respond to a challenged ACK with method INVITE in the hash -->
 		<param name="NDLB-broken-auth-hash" value="true" enabled="false"/>
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,6 +49,68 @@ if ($domains_processed == 1) {
 			$db->exec(check_sql($sql));
 		}
 		unset($device_keys, $sql);
+
+	//add device vendor functions to the database
+		$sql = "select count(*) as num_rows from v_device_vendors; ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				//get the vendor array
+					require_once $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/devices/app_config.php';
+
+				//process the array
+					foreach ($vendors as $vendor) {
+
+						//insert the data into the database
+							$device_vendor_uuid = uuid();
+							$sql = "insert into v_device_vendors ";
+							$sql .= "(";
+							$sql .= "device_vendor_uuid, ";
+							$sql .= "name, ";
+							$sql .= "enabled ";
+							$sql .= ") ";
+							$sql .= "values ";
+							$sql .= "( ";
+							$sql .= "'".$device_vendor_uuid."', ";
+							$sql .= "'".$vendor['name']."', ";
+							$sql .= "'true' ";
+							$sql .= ");";
+							//echo $sql."\n";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+						//add the vendor functions
+							foreach ($vendor['functions'] as $function) {
+								$device_vendor_function_uuid = uuid();
+								$sql = "insert into v_device_vendor_functions ";
+								$sql .= "(";
+								$sql .= "device_vendor_uuid, ";
+								$sql .= "device_vendor_function_uuid, ";
+								//$sql .= "label, ";
+								$sql .= "name, ";
+								$sql .= "value, ";
+								$sql .= "enabled, ";
+								$sql .= "description ";
+								$sql .= ") ";
+								$sql .= "values ";
+								$sql .= "( ";
+								$sql .= "'".$device_vendor_uuid."', ";
+								$sql .= "'".$device_vendor_function_uuid."', ";
+								//$sql .= "'".$function['label']."', ";
+								$sql .= "'".$function['name']."', ";
+								$sql .= "'".$function['value']."', ";
+								$sql .= "'true', ";
+								$sql .= "'".$function['description']."' ";
+								$sql .= ");";
+								//echo $sql."\n";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
+					}
+			} //if num_rows
+		} //if prep_statement
 }
 
 ?>
