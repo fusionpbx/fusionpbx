@@ -2481,7 +2481,7 @@ $text['button-profiles']['ar-eg'] = "";
 $text['button-profiles']['he'] = "פרופילים";
 
 $text['button-files']['en-us'] = "Files";
-$text['button-files']['es-cl'] = "archivos";
+$text['button-files']['es-cl'] = "Archivos";
 $text['button-files']['pt-pt'] = "Arquivos";
 $text['button-files']['fr-fr'] = "Fichiers";
 $text['button-files']['pt-br'] = "Arquivos";
@@ -2529,5 +2529,17 @@ $text['title_description-device_vendor']['sv-se'] = '';
 $text['title_description-device_vendor']['de-at'] = '';
 $text['title_description-device_vendor']['ar-eg'] = '';
 $text['title_description-device_vendor']['he'] = '';
+
+$text['button-vendors']['en-us'] = "Vendors";
+$text['button-vendors']['es-cl'] = "Proveedor";
+$text['button-vendors']['pt-pt'] = "Fabricante";
+$text['button-vendors']['fr-fr'] = "Fabriquant";
+$text['button-vendors']['pt-br'] = "Fabricante";
+$text['button-vendors']['pl'] = "Producent";
+$text['button-vendors']['uk'] = "";
+$text['button-vendors']['sv-se'] = "Tillverkare";
+$text['button-vendors']['de-at'] = "Hersteller";
+$text['button-vendors']['ar-eg'] = "";
+$text['button-vendors']['he'] = "";
 
 ?>
