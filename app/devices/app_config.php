@@ -609,10 +609,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_device_vendor';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'device_vendor_uuid';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'label';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the label.';
-		$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'label';
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the label.';
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
@@ -829,7 +829,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "none";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-url";
-		$vendors[$y]['functions'][$z]['name'] = "action_url";
+		$vendors[$y]['functions'][$z]['name'] = "url";
 		$vendors[$y]['functions'][$z]['value'] = "action_url";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-auto_answer";
@@ -857,7 +857,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "dtmf";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-extension";
-		$vendors[$y]['functions'][$z]['name'] = "dest";
+		$vendors[$y]['functions'][$z]['name'] = "extension";
 		$vendors[$y]['functions'][$z]['value'] = "dest";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-redirect";
@@ -865,7 +865,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "redirect";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
-		$vendors[$y]['functions'][$z]['name'] = "icom";
+		$vendors[$y]['functions'][$z]['name'] = "intercom";
 		$vendors[$y]['functions'][$z]['value'] = "icom";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-ivr";
@@ -873,7 +873,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "ivr";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-key_event";
-		$vendors[$y]['functions'][$z]['name'] = "keyevent";
+		$vendors[$y]['functions'][$z]['name'] = "key_event";
 		$vendors[$y]['functions'][$z]['value'] = "keyevent";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
@@ -881,7 +881,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "line";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-multicast_page";
-		$vendors[$y]['functions'][$z]['name'] = "multicast";
+		$vendors[$y]['functions'][$z]['name'] = "multicast_page";
 		$vendors[$y]['functions'][$z]['value'] = "multicast";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-orbit";
@@ -897,11 +897,11 @@
 		$vendors[$y]['functions'][$z]['value'] = "p2t";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
-		$vendors[$y]['functions'][$z]['name'] = "mult";
+		$vendors[$y]['functions'][$z]['name'] = "shared_line";
 		$vendors[$y]['functions'][$z]['value'] = "mult";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
-		$vendors[$y]['functions'][$z]['name'] = "speed";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
 		$vendors[$y]['functions'][$z]['value'] = "speed";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-transfer";
@@ -909,7 +909,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "transfer";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-record";
-		$vendors[$y]['functions'][$z]['name'] = "recorder";
+		$vendors[$y]['functions'][$z]['name'] = "record";
 		$vendors[$y]['functions'][$z]['value'] = "recorder";
 		$z++;
 
@@ -929,27 +929,27 @@
 		$vendors[$y]['functions'][$z]['value'] = "normal";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-messages";
-		$vendors[$y]['functions'][$z]['name'] = "Messages";
+		$vendors[$y]['functions'][$z]['name'] = "messages";
 		$vendors[$y]['functions'][$z]['value'] = "Messages";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-micmute";
-		$vendors[$y]['functions'][$z]['name'] = "MicMute";
+		$vendors[$y]['functions'][$z]['name'] = "micmute";
 		$vendors[$y]['functions'][$z]['value'] = "MicMute";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-redial";
-		$vendors[$y]['functions'][$z]['name'] = "Redial";
+		$vendors[$y]['functions'][$z]['name'] = "redial";
 		$vendors[$y]['functions'][$z]['value'] = "Redial";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-null";
-		$vendors[$y]['functions'][$z]['name'] = "Null";
+		$vendors[$y]['functions'][$z]['name'] = "null";
 		$vendors[$y]['functions'][$z]['value'] = "Null";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speeddial";
-		$vendors[$y]['functions'][$z]['name'] = "SpeedDial";
+		$vendors[$y]['functions'][$z]['name'] = "speeddial";
 		$vendors[$y]['functions'][$z]['value'] = "SpeedDial";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speeddialmenu";
-		$vendors[$y]['functions'][$z]['name'] = "SpeedDialMenu";
+		$vendors[$y]['functions'][$z]['name'] = "speeddialmenu";
 		$vendors[$y]['functions'][$z]['value'] = "SpeedDialMenu";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-url";
@@ -964,7 +964,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "blf";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-blf_xfer";
-		$vendors[$y]['functions'][$z]['name'] = "blfxfer";
+		$vendors[$y]['functions'][$z]['name'] = "blf_xfer";
 		$vendors[$y]['functions'][$z]['value'] = "blfxfer";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-callers";
@@ -976,7 +976,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "dnd";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
-		$vendors[$y]['functions'][$z]['name'] = "speeddial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
 		$vendors[$y]['functions'][$z]['value'] = "speeddial";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-xfer";
@@ -1128,7 +1128,7 @@
 		$vendors[$y]['functions'][$z]['description'] = "Enable/Disable SIP Account";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-xml_browser";
-		$vendors[$y]['functions'][$z]['name'] = "xml browser";
+		$vendors[$y]['functions'][$z]['name'] = "xml_browser";
 		$vendors[$y]['functions'][$z]['value'] = "18";
 		$vendors[$y]['functions'][$z]['enabled'] = "false";
 		$vendors[$y]['functions'][$z]['description'] = "XML Browser";
@@ -1152,7 +1152,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "line";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
-		$vendors[$y]['functions'][$z]['name'] = "shared line";
+		$vendors[$y]['functions'][$z]['name'] = "shared_line";
 		$vendors[$y]['functions'][$z]['value'] = "shared line";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
@@ -1164,19 +1164,19 @@
 		$vendors[$y]['functions'][$z]['value'] = "blf";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-presence_watcher";
-		$vendors[$y]['functions'][$z]['name'] = "presence watcher";
+		$vendors[$y]['functions'][$z]['name'] = "presence_watcher";
 		$vendors[$y]['functions'][$z]['value'] = "presence watcher";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-eventlist_blf";
-		$vendors[$y]['functions'][$z]['name'] = "eventlist blf";
+		$vendors[$y]['functions'][$z]['name'] = "eventlist_blf";
 		$vendors[$y]['functions'][$z]['value'] = "eventlist blf";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial_active";
-		$vendors[$y]['functions'][$z]['name'] = "speed dial active";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial_active";
 		$vendors[$y]['functions'][$z]['value'] = "speed dial active";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-dial_dtmf";
-		$vendors[$y]['functions'][$z]['name'] = "dial dtmf";
+		$vendors[$y]['functions'][$z]['name'] = "dial_dtmf";
 		$vendors[$y]['functions'][$z]['value'] = "dial dtmf";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-voicemail";
@@ -1184,7 +1184,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "voicemail";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-call_return";
-		$vendors[$y]['functions'][$z]['name'] = "call return";
+		$vendors[$y]['functions'][$z]['name'] = "call_return";
 		$vendors[$y]['functions'][$z]['value'] = "call return";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-transfer";
@@ -1192,7 +1192,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "transfer";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-call_park";
-		$vendors[$y]['functions'][$z]['name'] = "call park";
+		$vendors[$y]['functions'][$z]['name'] = "call_park";
 		$vendors[$y]['functions'][$z]['value'] = "call park";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
@@ -1200,7 +1200,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "intercom";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-ldap_search";
-		$vendors[$y]['functions'][$z]['name'] = "ldap search";
+		$vendors[$y]['functions'][$z]['name'] = "ldap_search";
 		$vendors[$y]['functions'][$z]['value'] = "ldap search";
 
 		$y++; //vendors array index
