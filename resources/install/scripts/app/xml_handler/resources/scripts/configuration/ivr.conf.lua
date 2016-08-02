@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -256,6 +256,11 @@
 			table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
 			table.insert(xml, [[				>]]);
 
+		--direct dial
+			if (ivr_menu_direct_dial == "true") then
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
+			end
+
 		--get the ivr menu options
 			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
 			if (debug["sql"]) then
@@ -268,11 +273,6 @@
 				ivr_menu_option_description = r.ivr_menu_option_description
 				table.insert(xml, [[<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
 			end);
-
-		--direct dial
-			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
-			end
 
 		--close the extension tag if it was left open
 			table.insert(xml, [[				</menu>]]);
