@@ -27,7 +27,7 @@ end
 
 end
 
-local service_name = "flow"
+local service_name = "call_flow"
 local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
 
 local events = EventConsumer.new(pid_file)
