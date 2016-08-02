@@ -69,12 +69,14 @@ events:bind("SHUTDOWN", function(self, name, event)
 end)
 
 -- Control commands from FusionPBX
-events:bind("CUSTOM::fusion::service::" .. service_name, function(self, name, event)
+events:bind("CUSTOM::fusion::service::control", function(self, name, event)
+  if service_name ~= event:getHeader('service-name') then return end
+
   local command = event:getHeader('service-command')
   if command == "stop" then
     log.notice("get stop command")
     return self:stop()
-   end
+  end
 
   log.warningf('Unknown service command: %s', command or '<NONE>')
 end)
