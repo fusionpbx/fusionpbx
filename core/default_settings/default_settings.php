@@ -423,6 +423,15 @@ else {
 				) {
 				echo "		".$text['label-'.$row['default_setting_value']];
 			}
+			else if ($category == "provision" && $subcategory == "escene_time_zone" && $name == "text" ) {
+				echo escene::time_zone_name($row['default_setting_value']);
+			}
+			else if ($category == "provision" && $subcategory == "escene_time_format" && $name == "text" ) {
+				echo escene::time_format_name($row['default_setting_value']);
+			}
+			else if ($category == "provision" && $subcategory == "escene_date_format" && $name == "text" ) {
+				echo escene::date_format_name($row['default_setting_value']);
+			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
 			}
