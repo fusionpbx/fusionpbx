@@ -8,7 +8,7 @@ local cache         = require "resources.functions.cache"
 local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
 
 local service_name = "mwi"
-local pid_file = scripts_dir .. "/run/mwi_subscribe.tmp"
+local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
 
 local vm_message_count do
 
@@ -93,7 +93,9 @@ events:bind("SHUTDOWN", function(self, name, event)
 end)
 
 -- Control commands from FusionPBX
-events:bind("CUSTOM::fusion::service::" .. service_name, function(self, name, event)
+events:bind("CUSTOM::fusion::service::control", function(self, name, event)
+	if service_name ~= event:getHeader('service-name') then return end
+
 	local command = event:getHeader('service-command')
 	if command == "stop" then
 		log.notice("get stop command")
