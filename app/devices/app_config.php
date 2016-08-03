@@ -953,7 +953,7 @@
 		$vendors[$y]['functions'][$z]['value'] = "SpeedDialMenu";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-url";
-		$vendors[$y]['functions'][$z]['name'] = "URL";
+		$vendors[$y]['functions'][$z]['name'] = "url";
 		$vendors[$y]['functions'][$z]['value'] = "URL";
 
 		$y++; //vendors array index
