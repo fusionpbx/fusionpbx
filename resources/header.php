@@ -125,6 +125,53 @@ require_once "resources/require.php";
 //start the output buffer
 	ob_start();
 
+//check for posted data to big
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST) && empty($_FILES) && $_SERVER['CONTENT_LENGTH'] > 0) {
+		//posted data is empty but content_length says there should be data
+			$displayContentLength = $_SERVER['CONTENT_LENGTH'];
+			if ($displayContentLength >= 1073741824) {
+				$displayContentLength = round($displayContentLength / 1073741824, 1);
+				$displayContentLength .= "GiB";
+			}
+			elseif ($displayContentLength >= 1048576) {
+				$displayContentLength = round($displayContentLength / 1048576, 1);
+				$displayContentLength .= "MiB";
+			}	
+			elseif ($displayContentLength >= 1024) {
+				$displayContentLength = round($displayContentLength / 1024, 1);
+				$displayContentLength .= "KiB";
+			}
+			else {
+				$displayContentLength .= "B";
+			}
+			$bad_limit = "";
+			foreach ( array('post_max_size', 'upload_max_filesize', 'memory_limit') as $field) {
+				$Size = $displaySize = ini_get($field);
+				switch ( substr($displaySize,-1) ) {
+					//lack of case is intentional to make the values multiply correctly
+						case 'G':
+							$Size = $Size * 1024;
+						case 'M':
+							$Size = $Size * 1024;
+						case 'K':
+							$Size = $Size * 1024;
+							$displaySize .= 'iB';
+							break;
+						default:
+							$displaySize .= 'B';
+				}
+				if($_SERVER[CONTENT_LENGTH] > $Size) {
+					$bad_limit = $field;
+					$_SESSION['message'] = "Posted data is too large. $displayContentLength exceeds the $bad_limit of $displaySize";
+				}
+			}
+			if(!isset($bad_limit)) {
+				$_SESSION['message'] = "Posted data is too large. we expected $displayContentLength but could not work out what limit has been exceeded";
+			}
+			$_SESSION['message_mood'] = 'negative';
+			$_SESSION['message_delay'] = 30000;
+	}
+
 //for translate tool (if available)
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/translate")) {
 		require_once("app/translate/translate_header.php");
