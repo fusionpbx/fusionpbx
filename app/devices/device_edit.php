@@ -1087,37 +1087,34 @@
 				?>
 				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>"/>
 				<?php
-echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
-echo "	<option value=''></option>\n";
-$previous_vendor = '';
-$i=0;
-foreach ($vendor_functions as $function) {
-	if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
-		if ($i > 0) { echo "	</optgroup>\n"; }
-		echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
-	}
-	$selected = '';
-	if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
-		$selected = "selected='selected'";
-	}
-	if (strlen($row['device_key_vendor']) == 0) {
-		echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
-	}
-	if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
-		echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
-		
-	}
-	$previous_vendor = $function['vendor_name'];
-	$i++;
-	
-}
-if (strlen($row['device_key_vendor']) == 0) {
-	echo "	</optgroup>\n";
-}
-echo "</select>\n";
-
-//if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0 || strlen($device_username) > 0) {
-//if ($match_vendor && $row['device_key_type'] == "blf") { echo $selected;$found=true; }
+				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
+				echo "	<option value=''></option>\n";
+				$previous_vendor = '';
+				$i=0;
+				foreach ($vendor_functions as $function) {
+					if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+						if ($i > 0) { echo "	</optgroup>\n"; }
+						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
+					}
+					$selected = '';
+					if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
+						$selected = "selected='selected'";
+					}
+					if (strlen($row['device_key_vendor']) == 0) {
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+					}
+					if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+						
+					}
+					$previous_vendor = $function['vendor_name'];
+					$i++;
+					
+				}
+				if (strlen($row['device_key_vendor']) == 0) {
+					echo "	</optgroup>\n";
+				}
+				echo "</select>\n";
 				echo "</td>\n";
 				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
