@@ -497,41 +497,46 @@
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$destination_uuid = $_GET["id"];
-		$orm = new orm;
-		$orm->name('destinations');
-		$orm->uuid($destination_uuid);
-		$result = $orm->find()->get();
-		foreach ($result as &$row) {
-			$domain_uuid = $row["domain_uuid"];
-			$dialplan_uuid = $row["dialplan_uuid"];
-			$destination_type = $row["destination_type"];
-			$destination_number = $row["destination_number"];
-			$destination_caller_id_name = $row["destination_caller_id_name"];
-			$destination_caller_id_number = $row["destination_caller_id_number"];
-			$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
-			$destination_context = $row["destination_context"];
-			$fax_uuid = $row["fax_uuid"];
-			$destination_enabled = $row["destination_enabled"];
-			$destination_description = $row["destination_description"];
-			$currency = $row["currency"];
-			$destination_sell = $row["destination_sell"];
-			$destination_buy = $row["destination_buy"];
-			$currency_buy = $row["currency_buy"];
-			$destination_accountcode = $row["destination_accountcode"];
-			$destination_carrier = $row["destination_carrier"];
-			break; //limit to 1 row
+	 	if (is_uuid($_GET["id"])) {
+	 		$destination_uuid = $_GET["id"];
+			$sql = "select * from v_destinations ";
+			$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+			$sql .= "and destination_uuid = '".$destination_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		}
+		if (is_array($result)) {
+			foreach ($result as &$row) {
+				$domain_uuid = $row["domain_uuid"];
+				$dialplan_uuid = $row["dialplan_uuid"];
+				$destination_type = $row["destination_type"];
+				$destination_number = $row["destination_number"];
+				$destination_caller_id_name = $row["destination_caller_id_name"];
+				$destination_caller_id_number = $row["destination_caller_id_number"];
+				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
+				$destination_context = $row["destination_context"];
+				$fax_uuid = $row["fax_uuid"];
+				$destination_enabled = $row["destination_enabled"];
+				$destination_description = $row["destination_description"];
+				$currency = $row["currency"];
+				$destination_sell = $row["destination_sell"];
+				$destination_buy = $row["destination_buy"];
+				$currency_buy = $row["currency_buy"];
+				$destination_accountcode = $row["destination_accountcode"];
+				$destination_carrier = $row["destination_carrier"];
+			}
 		}
 	}
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);;
+	$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //add an empty row to the array
