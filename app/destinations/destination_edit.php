@@ -125,7 +125,7 @@
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 		//check for duplicates
-			if ($action == "add" || $destination_number != $db_destination_number) {
+			if ($destination_type == 'inbound' && $destination_number != $db_destination_number) {
 				$sql = "select count(*) as num_rows from v_destinations ";
 				$sql .= "where destination_number = '".$destination_number."' ";
 				$prep_statement = $db->prepare($sql);
