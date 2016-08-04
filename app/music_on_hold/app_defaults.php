@@ -31,10 +31,10 @@
 			$xml_file = $xml_dir."/local_stream.conf";
 
 		//rename the file
-			if (file_exist($xml_dir.'/local_stream.conf.xml')) {
+			if (file_exists($xml_dir.'/local_stream.conf.xml')) {
 				rename($xml_dir.'/local_stream.conf.xml', $xml_dir.'/'.$xml_file);
 			}
-			if (file_exist($xml_dir.'/local_stream.conf.xml.noload')) {
+			if (file_exists($xml_dir.'/local_stream.conf.xml.noload')) {
 				rename($xml_dir.'/local_stream.conf.xml.noload', $xml_dir.'/'.$xml_file);
 			}
 
