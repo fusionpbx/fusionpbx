@@ -21,7 +21,7 @@ if not api then
 end
 
 local function send_event(action, key)
-  local event = freeswitch.Event("MEMCACHE");
+  local event = freeswitch.Event("CUSTOM", "fusion::memcache");
   event:addHeader("API-Command", "memcache");
   event:addHeader("API-Command-Argument", action .. " " .. key);
   event:fire()
