@@ -444,7 +444,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 380px;');\n";
+		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
@@ -476,7 +476,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "<select name='$name' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "<select name='$name' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
