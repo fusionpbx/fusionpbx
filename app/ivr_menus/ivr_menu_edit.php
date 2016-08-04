@@ -402,37 +402,50 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 380px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
-		echo "</script>\n";
-		echo "\n";
+		$destination_id = "ivr_menu_greet_long";
+		$script = "<script>\n";
+		$script .= "var objs;\n";
+		$script .= "\n";
+		$script .= "function changeToInput".$destination_id."(obj){\n";
+		$script .= "	tb=document.createElement('INPUT');\n";
+		$script .= "	tb.type='text';\n";
+		$script .= "	tb.name=obj.name;\n";
+		$script .= "	tb.className='formfld';\n";
+		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
+		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
+		if ($onchange != '') {
+			$script .= "	tb.setAttribute('onchange', \"".$onchange."\");\n";
+			$script .= "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
+		}
+		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
+		$script .= "	tbb=document.createElement('INPUT');\n";
+		$script .= "	tbb.setAttribute('class', 'btn');\n";
+		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		$script .= "	tbb.type='button';\n";
+		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		$script .= "	tbb.objs=[obj,tb,tbb];\n";
+		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
+		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
+		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
+		$script .= "	obj.parentNode.removeChild(obj);\n";
+		$script .= "	Replace".$destination_id."(this.objs);\n";
+		$script .= "}\n";
+		$script .= "\n";
+		$script .= "function Replace".$destination_id."(obj){\n";
+		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+		if ($onchange != '') {
+			$script .= "	".$onchange.";\n";
+		}
+		$script .= "}\n";
+		$script .= "</script>\n";
+		$script .= "\n";
+		echo $script;
 	}
-	echo "<select name='ivr_menu_greet_long' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "<select name='ivr_menu_greet_long' id='ivr_menu_greet_long' class='formfld'>\n";
 	echo "	<option></option>\n";
 	//misc optgroup
 		if (if_group("superadmin")) {
@@ -517,6 +530,10 @@
 			unset($tmp_selected);
 		}
 	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
+		unset($destination_id);
+	}
 	echo "	<br />\n";
 	echo $text['description-greet_long']."\n";
 	echo "</td>\n";
@@ -527,7 +544,51 @@
 	echo "	".$text['label-greet_short']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	if (if_group("superadmin")) {
+		$destination_id = "ivr_menu_greet_short";
+		$script = "<script>\n";
+		$script .= "var objs;\n";
+		$script .= "\n";
+		$script .= "function changeToInput".$destination_id."(obj){\n";
+		$script .= "	tb=document.createElement('INPUT');\n";
+		$script .= "	tb.type='text';\n";
+		$script .= "	tb.name=obj.name;\n";
+		$script .= "	tb.className='formfld';\n";
+		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
+		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
+		if ($onchange != '') {
+			$script .= "	tb.setAttribute('onchange', \"".$onchange."\");\n";
+			$script .= "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
+		}
+		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
+		$script .= "	tbb=document.createElement('INPUT');\n";
+		$script .= "	tbb.setAttribute('class', 'btn');\n";
+		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		$script .= "	tbb.type='button';\n";
+		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		$script .= "	tbb.objs=[obj,tb,tbb];\n";
+		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
+		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
+		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
+		$script .= "	obj.parentNode.removeChild(obj);\n";
+		$script .= "	Replace".$destination_id."(this.objs);\n";
+		$script .= "}\n";
+		$script .= "\n";
+		$script .= "function Replace".$destination_id."(obj){\n";
+		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+		if ($onchange != '') {
+			$script .= "	".$onchange.";\n";
+		}
+		$script .= "}\n";
+		$script .= "</script>\n";
+		$script .= "\n";
+		echo $script;
+	}
+	echo "<select name='ivr_menu_greet_short' id='ivr_menu_greet_short' class='formfld'>\n";
 	echo "	<option></option>\n";
 	//misc
 		if (if_group("superadmin")) {
@@ -572,7 +633,6 @@
 			echo "</optgroup>\n";
 		}
 		unset ($prep_statement);
-
 	//sounds
 		/*
 		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
@@ -613,6 +673,10 @@
 			unset($tmp_selected);
 		}
 	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$destination_id."' class='btn' name='' alt='back' onclick='changeToInput".$destination_id."(document.getElementById(\"".$destination_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
+		unset($destination_id);
+	}
 	echo "<br />\n";
 	echo $text['description-greet_short']."\n";
 	echo "</td>\n";
