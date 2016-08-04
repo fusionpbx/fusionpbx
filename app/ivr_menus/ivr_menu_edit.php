@@ -685,7 +685,7 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-options']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "			<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-option']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination']."</td>\n";
