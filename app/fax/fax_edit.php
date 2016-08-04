@@ -747,11 +747,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</optgroup>\n";
 			}
 		//sounds
-			$dir_path = $_SESSION['switch']['sounds']['dir'];
-			recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-			if (count($dir_array) > 0) {
+			$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+			if (count($files) > 0) {
 				echo "<optgroup label='Sounds'>\n";
-				foreach ($dir_array as $key => $value) {
+				foreach ($files as $key => $value) {
 					if (strlen($value) > 0) {
 						if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$fax_send_greeting = substr($fax_send_greeting, 71);

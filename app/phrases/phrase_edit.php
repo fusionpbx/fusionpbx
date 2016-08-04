@@ -322,12 +322,11 @@
 		}
 		unset($sql, $prep_statement, $recordings);
 	//sounds
-		$dir_path = $_SESSION['switch']['sounds']['dir'];
-		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($dir_array) > 0) {
+		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+		if (count($files) > 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
-			foreach ($dir_array as $key => $value) {
+			foreach ($files as $key => $value) {
 				if (strlen($value) > 0) {
 					if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
 						echo "opt_group.appendChild(new Option(\"".$key."\", \"lua(streamfile.lua ".$key.")\"));\n";
