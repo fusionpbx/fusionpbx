@@ -67,12 +67,13 @@
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$device_vendor_function_uuid = check_str($_POST["device_vendor_function_uuid"]);
-	}
+	//get the uuid
+		if ($action == "update") {
+			$device_vendor_function_uuid = check_str($_POST["device_vendor_function_uuid"]);
+		}
 
 	//check for all required data
+		$msg = '';
 		//if (strlen($label) == 0) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
 		if (strlen($name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
 		if (strlen($value) == 0) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }

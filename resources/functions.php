@@ -1137,8 +1137,6 @@ function number_pad($number,$n) {
 //function to show the list of sound files
 	if (!function_exists('recur_sounds_dir')) {
 		function recur_sounds_dir($dir) {
-			global $dir_array;
-			global $dir_path;
 			$dir_list = opendir($dir);
 			while ($file = readdir ($dir_list)) {
 				if ($file != '.' && $file != '..') {
@@ -1150,12 +1148,12 @@ function number_pad($number,$n) {
 					}
 					else {
 						if (is_dir($newpath)) { //directories
-							recur_sounds_dir($newpath);
+							$files = recur_sounds_dir($newpath);
 						}
 						else { //files
 							if (strlen($newpath) > 0) {
 								//make the path relative
-									$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
+									$relative_path = substr($newpath, strlen($_SESSION['switch']['sounds']['dir']), strlen($newpath));
 								//remove the 8000-48000 khz from the path
 									$relative_path = str_replace("/8000/", "/", $relative_path);
 									$relative_path = str_replace("/16000/", "/", $relative_path);
@@ -1185,6 +1183,7 @@ function number_pad($number,$n) {
 			}
 			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
 			closedir($dir_list);
+			return $dir_array;
 		}
 	}
 

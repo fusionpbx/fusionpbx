@@ -372,11 +372,10 @@ else {
 			echo "</optgroup>\n";
 		}
 	//sounds
-		$dir_path = $_SESSION['switch']['sounds']['dir'];
-		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($dir_array) > 0) {
+		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+		if (count($files) > 0) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($dir_array as $key => $value) {
+			foreach ($files as $key => $value) {
 				if (strlen($value) > 0) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
