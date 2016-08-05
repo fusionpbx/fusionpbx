@@ -860,6 +860,16 @@ $text['label-label']['uk'] = "Назва";
 $text['label-label']['sv-se'] = "Etikett";
 $text['label-label']['de-at'] = "Kennzeichnung";
 
+$text['label-groups']['en-us'] = "Groups";
+$text['label-groups']['es-cl'] = "Grupos";
+$text['label-groups']['pt-pt'] = "Grupos";
+$text['label-groups']['fr-fr'] = "Groupes";
+$text['label-groups']['pt-br'] = "Grupos";
+$text['label-groups']['pl'] = "Grupy";
+$text['label-groups']['uk'] = "Групи";
+$text['label-groups']['sv-se'] = "Grupper";
+$text['label-groups']['de-at'] = "Gruppen";
+
 //description
 
 $text['description-name']['en-us'] = "Enter the name.";
