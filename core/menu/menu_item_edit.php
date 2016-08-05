@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -325,6 +325,52 @@ else {
 		}
 	}
 
+//get the the menu items
+	$sql = "SELECT * FROM v_menu_items ";
+	$sql .= "where menu_uuid = '$menu_uuid' ";
+	$sql .= "order by menu_item_title asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$menu_items = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get the assigned groups
+	$sql = "select ";
+	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "from ";
+	$sql .= "	v_menu_item_groups as mig, ";
+	$sql .= "	v_groups as g ";
+	$sql .= "where ";
+	$sql .= "	mig.group_uuid = g.group_uuid ";
+	$sql .= "	and mig.menu_uuid = :menu_uuid ";
+	$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
+	$sql .= "order by ";
+	$sql .= "	g.domain_uuid desc, ";
+	$sql .= "	g.group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->bindParam(':menu_uuid', $menu_uuid);
+	$prep_statement->bindParam(':menu_item_uuid', $menu_item_uuid);
+	$prep_statement->execute();
+	$menu_item_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql, $prep_statement);
+
+//set the assigned_groups array
+	foreach($menu_item_groups as $field) {
+		if (strlen($field['group_name']) > 0) {
+			$assigned_groups[] = $field['group_uuid'];
+		}
+	}
+
+//get the groups
+	$sql = "select * from v_groups ";
+	if (sizeof($assigned_groups) > 0) {
+		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
+	}
+	$sql .= "order by domain_uuid desc, group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql, $prep_statement);
+
 //include the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -334,17 +380,19 @@ else {
 		$document['title'] = $text['title-menu_item-add'];
 	}
 
-	echo "<form method='post' action=''>";
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>";
+	echo "<form method='post' action=''>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap><b>";
+	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'>\n";
+	echo "	<b>\n";
 	if ($action == "update") {
-		echo $text['header-menu_item-edit'];
+		echo "		".$text['header-menu_item-edit']."\n";
 	}
 	if ($action == "add") {
-		echo $text['header-menu_item-add'];
+		echo "		".$text['header-menu_item-add']."\n";
 	}
-	echo "</b></td>\n";
+	echo "	</b>\n";
+	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
@@ -419,15 +467,9 @@ else {
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-parent_menu']."</td>";
 	echo "		<td class='vtable'>";
-	$sql = "SELECT * FROM v_menu_items ";
-	$sql .= "where menu_uuid = '$menu_uuid' ";
-	$sql .= "order by menu_item_title asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
 	echo "<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
+	foreach($menu_items as $field) {
 			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
 				echo "<option value='".$field['menu_item_uuid']."' selected>".$field['menu_item_title']."</option>\n";
 			}
@@ -443,29 +485,9 @@ else {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
-
-	//group list
-	$sql = "select ";
-	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
-	$sql .= "from ";
-	$sql .= "	v_menu_item_groups as mig, ";
-	$sql .= "	v_groups as g ";
-	$sql .= "where ";
-	$sql .= "	mig.group_uuid = g.group_uuid ";
-	$sql .= "	and mig.menu_uuid = :menu_uuid ";
-	$sql .= "	and mig.menu_item_uuid = :menu_item_uuid ";
-	$sql .= "order by ";
-	$sql .= "	g.domain_uuid desc, ";
-	$sql .= "	g.group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->bindParam(':menu_uuid', $menu_uuid);
-	$prep_statement->bindParam(':menu_item_uuid', $menu_item_uuid);
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	if ($result_count > 0) {
+	if (is_array($menu_item_groups)) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
-		foreach($result as $field) {
+		foreach($menu_item_groups as $field) {
 			if (strlen($field['group_name']) > 0) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
@@ -477,28 +499,15 @@ else {
 					echo "	</td>";
 				}
 				echo "</tr>\n";
-				$assigned_groups[] = $field['group_uuid'];
 			}
 		}
 		echo "</table>\n";
 	}
-	unset($sql, $prep_statement, $result, $result_count);
-
-	//group select
-	$sql = "select * from v_groups ";
-	if (sizeof($assigned_groups) > 0) {
-		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
-	}
-	$sql .= "order by domain_uuid desc, group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	if ($result_count > 0) {
+	if (is_array($groups)) {
 		echo "<br />\n";
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($result as $field) {
+		foreach($groups as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
@@ -508,8 +517,6 @@ else {
 		echo "</select>";
 		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
 	}
-	unset($sql, $prep_statement, $result);
-
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -578,4 +585,5 @@ else {
 
 //include the footer
   require_once "resources/footer.php";
+
 ?>
