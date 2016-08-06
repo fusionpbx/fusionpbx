@@ -71,7 +71,7 @@
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
 //alternate the row style
@@ -96,6 +96,7 @@
 	echo "<tr>\n";
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('value', $text['label-value'], $order_by, $order);
+	echo "<th>".$text['label-groups']."</th>\n";
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
@@ -108,27 +109,59 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
-		foreach($result as $row) {
-			if (permission_exists('device_vendor_function_edit')) {
-				$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."'";
-			}
-			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['value']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('device_vendor_function_edit')) {
-				echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('device_vendor_function_delete')) {
-				echo "<a href='device_vendor_function_delete.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+	if (is_array($vendor_functions)) {
+		foreach($vendor_functions as $row) {
+
+			//get the groups that have been assigned to the vendor functions
+				$sql = "select ";
+				$sql .= "	fg.*, g.domain_uuid as group_domain_uuid ";
+				$sql .= "from ";
+				$sql .= "	v_device_vendor_function_groups as fg, ";
+				$sql .= "	v_groups as g ";
+				$sql .= "where ";
+				$sql .= "	fg.group_uuid = g.group_uuid ";
+				//$sql .= "	and fg.device_vendor_uuid = :device_vendor_uuid ";
+				$sql .= "	and fg.device_vendor_uuid = '$device_vendor_uuid' ";
+				//$sql .= "	and fg.device_vendor_function_uuid = :device_vendor_function_uuid ";
+				$sql .= "	and fg.device_vendor_function_uuid = '".$row['device_vendor_function_uuid']."' ";
+				$sql .= "order by ";
+				$sql .= "	g.domain_uuid desc, ";
+				$sql .= "	g.group_name asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->bindParam(':device_vendor_uuid', $device_vendor_uuid);
+				$prep_statement->bindParam(':device_vendor_function_uuid', $row['device_vendor_function_uuid']);
+				$prep_statement->execute();
+				$vendor_function_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($sql, $prep_statement);
+				unset($group_list);
+				foreach ($vendor_function_groups as &$sub_row) {
+					$group_list[] = $sub_row["group_name"].(($sub_row['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+				}
+				$group_list = isset($group_list) ? implode(', ', $group_list) : '';
+				unset ($vendor_function_groups);
+			//build the edit link
+				if (permission_exists('device_vendor_function_edit')) {
+					$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."'";
+				}
+			//show the row of data
+				echo "<tr ".$tr_link.">\n";
+				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['label']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['value']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
+				echo "	<td class='list_control_icons'>";
+				if (permission_exists('device_vendor_function_edit')) {
+					echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				}
+				if (permission_exists('device_vendor_function_delete')) {
+					echo "<a href='device_vendor_function_delete.php?device_vendor_uuid=".$row['device_vendor_uuid']."&id=".$row['device_vendor_function_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				}
+				echo "	</td>\n";
+				echo "</tr>\n";
+			//toggle the value of the c variable
+				if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
