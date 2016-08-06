@@ -815,6 +815,8 @@
 		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
 		$vendors[$y]['functions'][$z]['name'] = "shared_line";
 		$vendors[$y]['functions'][$z]['value'] = "21";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-xml_group";
 		$vendors[$y]['functions'][$z]['name'] = "xml_group";
