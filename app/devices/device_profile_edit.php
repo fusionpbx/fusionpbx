@@ -347,11 +347,8 @@
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 				echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
-				if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
-					echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
-				} else {
-					echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
-				}
+				echo "				<td class='vtable'>".$text['label-device_vendor']."</td>\n";
+				echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 				echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 				echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 				if (permission_exists('device_key_extension')) {
