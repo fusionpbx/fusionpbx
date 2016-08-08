@@ -213,6 +213,15 @@
 	$device_keys[$x]['device_key_protected'] = '';
 	$device_keys[$x]['device_key_label'] = '';
 
+//get the vendors
+	$sql = "SELECT * ";
+	$sql .= "FROM v_device_vendors as v ";
+	$sql .= "where enabled = 'true' ";
+	$sql .= "order by name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //get the vendor functions
 	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
 	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
@@ -223,6 +232,15 @@
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get the vendor count
+	$vendor_count = 0;
+	foreach($device_keys as $row) {
+		if ($previous_vendor != $row['device_key_vendor']) {
+			$previous_vendor = $row['device_key_vendor'];
+			$vendor_count++;
+		}
+	}
 
 //show the header
 	require_once "resources/header.php";
@@ -288,14 +306,6 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	$vendor_count = 0;
-	foreach($device_keys as $row) {
-		if ($previous_vendor != $row['device_key_vendor']) {
-			$previous_vendor = $row['device_key_vendor'];
-			$vendor_count++;
-		}
-	}
-
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-keys']."</td>";
 	echo "		<td class='vtable' align='left'>";
@@ -304,6 +314,7 @@
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_vendor']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
@@ -317,11 +328,19 @@
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
 	}
+
 	$x = 0;
 	foreach($device_keys as $row) {
 
 		//set the device vendor
 			$device_vendor = $row['device_key_vendor'];
+
+		//get the device key vendor from the key type
+			foreach ($vendor_functions as $function) {
+				if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
+					$device_key_vendor = $function['vendor_name'];
+				}
+			}
 
 		//set the column names
 			if ($previous_device_key_vendor != $row['device_key_vendor']) {
@@ -427,10 +446,21 @@
 			echo "</td>\n";
 
 			echo "<td align='left' nowrap='nowrap'>\n";
-			?>
-			<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
-			<?php 
+			echo "<select class='formfld' name='device_keys[".$x."][device_key_vendor]' id='key_vendor_".$x."'>\n";
+			echo "	<option value=''></option>\n";
+			foreach ($vendors as $vendor) {
+				$selected = '';
+				if ($row['device_key_vendor'] == $vendor['name']) {
+					$selected = "selected='selected'";
+				}
+				if (strlen($vendor['name']) > 0) {
+					echo "		<option value='".$vendor['name']."' $selected >".ucwords($vendor['name'])."</option>\n";
+				}
+			}
+			echo "</select>\n";
+			echo "</td>\n";
 
+			echo "<td align='left' nowrap='nowrap'>\n";
 			echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
 			echo "	<option value=''></option>\n";
 			$previous_vendor = '';
