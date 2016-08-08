@@ -314,7 +314,7 @@
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_vendor']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_vendor']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
