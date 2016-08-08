@@ -517,12 +517,10 @@
 								result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
 							end
 
-						--send the xml to the console
-							if (debug["xml_string"]) then
-								local file = assert(io.open(temp_dir .. "/" .. user .. "@" .. domain_name .. ".xml", "w"));
-								file:write(XML_STRING);
-								file:close();
-							end
+						--save to the conf directory
+							local file = assert(io.open(conf_dir .. "/directory/" .. user .. "@" .. domain_name .. ".xml.cache", "w"));
+							file:write(XML_STRING);
+							file:close();
 
 						--send to the console
 							if (debug["cache"]) then
