@@ -210,6 +210,7 @@
 	$device_keys[$x]['device_key_line'] = '';
 	$device_keys[$x]['device_key_value'] = '';
 	$device_keys[$x]['device_key_extension'] = '';
+	$device_keys[$x]['device_key_protected'] = '';
 	$device_keys[$x]['device_key_label'] = '';
 
 //get the vendor functions
@@ -309,6 +310,9 @@
 		if (permission_exists('device_key_extension')) {
 			echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 		}
+		if (permission_exists('device_key_protected')) {
+			echo "				<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
+		}
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
@@ -333,6 +337,9 @@
 				echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 				if (permission_exists('device_key_extension')) {
 					echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+				}
+				if (permission_exists('device_key_protected')) {
+					echo "				<td class='vtable'>".$text['label-device_key_protected']."</td>\n";
 				}
 				echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 				echo "				<td>&nbsp;</td>\n";
@@ -471,6 +478,16 @@
 				echo "<td class='' align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
 				echo "</td>\n";
+			}
+
+			if (permission_exists('device_key_protected')) {
+				echo "			<td align='left'>\n";
+				echo "				<select class='formfld' name='device_keys[".$x."][device_key_protected]'>\n";
+				echo "					<option value=''>\n";
+				echo "					<option value='true' ".(($row['device_key_protected'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+				echo "					<option value='false' ".(($row['device_key_protected'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+				echo "				</select>\n";
+				echo "			</td>\n";
 			}
 
 			echo "<td class='' align='left'>\n";
