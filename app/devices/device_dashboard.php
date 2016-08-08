@@ -121,6 +121,10 @@
 							if (!$device_key_authorized) {
 								$protected_keys[$row['device_key_id']] = 'true';
 							}
+						//add to protected
+							if ($row['device_key_protected'] == "true") {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
 					}
 				//create a list of protected keys - device proile keys
 					foreach($device_profile_keys as $row) {
@@ -407,6 +411,10 @@
 			}
 		//unset vendor functions the is not allowed to edit
 			if (!$device_key_authorized) {
+				unset($device_keys[$row['device_key_id']]);
+			}
+		//hide protected keys
+			if ($row['device_key_protected'] == "true") {
 				unset($device_keys[$row['device_key_id']]);
 			}
 	}
