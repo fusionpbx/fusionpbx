@@ -2363,6 +2363,17 @@ $text['description-device_key_line']['de-at'] = "Wählen Sie die Liniennummer.";
 $text['description-device_key_line']['ar-eg'] = "";
 $text['description-device_key_line']['he'] = "בחר את מספר הקו";
 
+$text['label-device_key_protected']['en-us'] = "Protected";
+$text['label-device_key_protected']['es-cl'] = "Protegido";
+$text['label-device_key_protected']['pt-pt'] = "Protegido";
+$text['label-device_key_protected']['fr-fr'] = "Protégé";
+$text['label-device_key_protected']['pl'] = "Zabezpieczony";
+$text['label-device_key_protected']['uk'] = "Захищено";
+$text['label-device_key_protected']['sv-se'] = "Skyddad";
+$text['label-device_key_protected']['ro'] = "";
+$text['label-device_key_protected']['de-at'] = "Geschützt";
+$text['label-device_key_protected']['he'] = "שמור";
+
 $text['description-device_key_label']['en-us'] = "Enter the label.";
 $text['description-device_key_label']['es-cl'] = "Introduzca la etiqueta.";
 $text['description-device_key_label']['pt-pt'] = "Introduza uma etiqueta.";
