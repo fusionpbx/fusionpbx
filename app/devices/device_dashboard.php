@@ -42,19 +42,51 @@
 //include the device class
 	//require_once "app/devices/resources/classes/device.php";
 
+//get the vendor functions
+	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
+	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
+	$sql .= "WHERE v.device_vendor_uuid = f.device_vendor_uuid ";
+	$sql .= "AND f.device_vendor_function_uuid in ";
+	$sql .= "(";
+	$sql .= "	SELECT device_vendor_function_uuid FROM v_device_vendor_function_groups ";
+	$sql .= "	WHERE device_vendor_function_uuid = f.device_vendor_function_uuid ";
+	$sql .= "	AND ( ";
+	if (is_array($_SESSION['groups'])) {
+		$x = 0;
+		foreach($_SESSION['groups'] as $row) {
+			if ($x == 0) {
+				$sql .= "		group_name = '".$row['group_name']."' ";
+			}
+			else {
+				$sql .= "		or group_name = '".$row['group_name']."' ";
+			}
+			$x++;
+		}
+	}
+	$sql .= "	) ";
+	$sql .= ") ";
+	$sql .= "AND v.enabled = 'true' ";
+	$sql .= "AND f.enabled = 'true' ";
+	$sql .= "ORDER BY v.name ASC, f.name ASC ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //add or update the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
-				//get the $device_profile_uuid
-					foreach ($_POST['device_keys'] as &$row) {
-						if (strlen($row["device_profile_uuid"]) > 0 && is_uuid($row['device_profile_uuid'])) {
-							$device_profile_uuid = $row["device_profile_uuid"];
-							break;
-						}
-					}
+				//get device
+					$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+					$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+					$device_uuid = $row['device_uuid'];
+					$device_profile_uuid = $row['device_profile_uuid'];
+					unset($row);
 
 				//get device profile keys
 					if (isset($device_profile_uuid)) {
@@ -64,6 +96,56 @@
 						$prep_statement->execute();
 						$device_profile_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						unset($sql,$prep_statement);
+					}
+
+				//get device keys
+					if (isset($device_uuid)) {
+						$sql = "SELECT * FROM v_device_keys ";
+						$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset($sql,$prep_statement);
+					}
+
+				//create a list of protected keys - device keys
+					foreach($device_keys as $row) {
+						//determine if the key is allowed
+							$device_key_authorized = false;
+							foreach($vendor_functions as $function) {
+								if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+									$device_key_authorized = true;
+								}
+							}
+						//add the protected keys
+							if (!$device_key_authorized) {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
+					}
+				//create a list of protected keys - device proile keys
+					foreach($device_profile_keys as $row) {
+						//determine if the key is allowed
+							$device_key_authorized = false;
+							foreach($vendor_functions as $function) {
+								if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+									$device_key_authorized = true;
+								}
+							}
+						//add the protected keys
+							if (!$device_key_authorized) {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
+					}
+
+				//remove the keys the user is not allowed to edit based on the authorized vendor keys
+					$x=0;
+					foreach($_POST['device_keys'] as $row) {
+						//loop through the authorized vendor functions
+							if ($protected_keys[$row['device_key_id']] == "true") {
+								unset($_POST['device_keys'][$x]);
+							}
+						//increment the row id
+							$x++;
 					}
 
 				//add or update the device keys
@@ -296,17 +378,6 @@
 		}
 	}
 
-//get the vendor functions
-	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
-	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
-	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
-	$sql .= "and v.enabled = 'true' ";
-	$sql .= "and f.enabled = 'true' ";
-	$sql .= "order by v.name asc, f.name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
 //add a new key
 	if (permission_exists('device_key_add')) {
 		$device_keys[$x]['device_key_category'] = $device_key_category;
@@ -318,6 +389,26 @@
 		$device_keys[$x]['device_key_value'] = '';
 		$device_keys[$x]['device_key_extension'] = '';
 		$device_keys[$x]['device_key_label'] = '';
+	}
+
+//remove the keys the user is not allowed to edit based on the authorized vendor keys
+	foreach($device_keys as $row) {
+		//loop through the authorized vendor functions
+			$device_key_authorized = false;
+			foreach($vendor_functions as $function) {
+				if (strlen($row['device_key_type'] == 0)) {
+					$device_key_authorized = true;
+				}
+				else {
+					if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+						$device_key_authorized = true;
+					}
+				}
+			}
+		//unset vendor functions the is not allowed to edit
+			if (!$device_key_authorized) {
+				unset($device_keys[$row['device_key_id']]);
+			}
 	}
 
 //show the header
@@ -349,6 +440,7 @@
 			//set the variables
 				$device_key_vendor = $row['device_key_vendor'];
 				$device_vendor = $row['device_key_vendor'];
+
 			//set the column names
 				if ($previous_device_key_vendor != $row['device_key_vendor']) {
 					echo "			<tr>\n";
