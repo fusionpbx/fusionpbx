@@ -149,6 +149,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_key_protected';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
@@ -550,6 +553,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_protected';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select whether to protect this key from the user group.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_label';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
