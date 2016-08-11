@@ -1274,7 +1274,7 @@ $text['description-absolute_codec_string']['ro'] = "";
 $text['description-absolute_codec_string']['ar-eg'] = "";
 $text['description-absolute_codec_string']['he'] = "";
 
-$text['description-force_ping']['en-us'] = "Use OPTIONS to detect either extension is reacheable";
+$text['description-force_ping']['en-us'] = "Use OPTIONS to detect if extension is reacheable";
 $text['description-force_ping']['es-cl'] = "";
 $text['description-force_ping']['pt-pt'] = "";
 $text['description-force_ping']['fr-fr'] = "";
