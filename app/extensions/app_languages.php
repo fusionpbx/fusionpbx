@@ -390,6 +390,19 @@ $text['label-absolute_codec_string']['ro'] = "";
 $text['label-absolute_codec_string']['ar-eg'] = "";
 $text['label-absolute_codec_string']['he'] = "";
 
+$text['label-force_ping']['en-us'] = "Force ping";
+$text['label-force_ping']['es-cl'] = "";
+$text['label-force_ping']['pt-pt'] = "";
+$text['label-force_ping']['fr-fr'] = "";
+$text['label-force_ping']['pt-br'] = "";
+$text['label-force_ping']['pl'] = "";
+$text['label-force_ping']['uk'] = "";
+$text['label-force_ping']['sv-se'] = "";
+$text['label-force_ping']['de-at'] = "";
+$text['label-force_ping']['ro'] = "";
+$text['label-force_ping']['ar-eg'] = "";
+$text['label-force_ping']['he'] = "";
+
 $text['label-rewrite_tls_contact_port']['en-us'] = "Rewrite TLS Contact Port";
 $text['label-rewrite_tls_contact_port']['es-cl'] = "Reescribir Contacto Puerto TLS";
 $text['label-rewrite_tls_contact_port']['pt-pt'] = "Reescreva Contacto Porto TLS";
@@ -1260,6 +1273,19 @@ $text['description-absolute_codec_string']['de-at'] = "";
 $text['description-absolute_codec_string']['ro'] = "";
 $text['description-absolute_codec_string']['ar-eg'] = "";
 $text['description-absolute_codec_string']['he'] = "";
+
+$text['description-force_ping']['en-us'] = "Use OPTIONS to detect either extension is reacheable";
+$text['description-force_ping']['es-cl'] = "";
+$text['description-force_ping']['pt-pt'] = "";
+$text['description-force_ping']['fr-fr'] = "";
+$text['description-force_ping']['pt-br'] = "";
+$text['description-force_ping']['pl'] = "";
+$text['description-force_ping']['uk'] = "";
+$text['description-force_ping']['sv-se'] = "";
+$text['description-force_ping']['de-at'] = "";
+$text['description-force_ping']['ro'] = "";
+$text['description-force_ping']['ar-eg'] = "";
+$text['description-force_ping']['he'] = "";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
 $text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";
