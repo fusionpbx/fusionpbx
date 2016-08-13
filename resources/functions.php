@@ -1923,4 +1923,10 @@ function number_pad($number,$n) {
 			return false;
 	}
 
+	if (!function_exists('add_message')) {
+		function add_message($message, $mood, $delay) {
+			$_SESSION["messages"][] = array(message=> $message, mood=>$mood, delay=>$delay);
+		}
+	}
+
 ?>
