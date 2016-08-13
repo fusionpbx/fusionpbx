@@ -436,7 +436,7 @@
 			echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
 			echo "	<option value=''></option>\n";
-			for ($i = 1; $i <= 99; $i++) {
+			for ($i = 1; $i <= 255; $i++) {
 				echo "	<option value='".$i."' ".(($row['device_key_id'] == $i) ? "selected='selected'" : null).">".$i."</option>\n";
 			}
 			echo "	</select>\n";
