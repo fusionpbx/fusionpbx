@@ -1069,7 +1069,7 @@
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
 				echo "	<option value=''></option>\n";
 				for ($i = 1; $i <= 255; $i++) {
-					echo "	<option value='".$i."' ".(($row['device_key_id'] == $i) ? "selected='selected'" : null).">".$i."</option>\n";
+					echo "	<option value='$i' ".($row['device_key_id'] == $i ? "selected":null).">$i</option>\n";
 				}
 				echo "	</select>\n";
 				echo "</td>\n";
