@@ -427,20 +427,21 @@
 			echo "</optgroup>\n";
 		}
 	//sounds
-		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($files) > 0) {
+		$file = new file;
+		$sound_files = $file->sounds();
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($files as $key => $value) {
+			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
 					if (substr($music_on_hold_chime_list, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$music_on_hold_chime_list = substr($music_on_hold_chime_list, 71);
 					}
-					if ($music_on_hold_chime_list == $key) {
+					if ($music_on_hold_chime_list == $value) {
 						$tmp_selected = true;
-						echo "	<option value='$key' selected='selected'>$key</option>\n";
+						echo "	<option value='$value' selected='selected'>$value</option>\n";
 					}
 					else {
-						echo "	<option value='$key'>$key</option>\n";
+						echo "	<option value='$value'>$value</option>\n";
 					}
 				}
 			}
