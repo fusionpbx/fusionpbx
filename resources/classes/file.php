@@ -81,9 +81,8 @@ class file {
 
 /*
 //add multi-lingual support
-	$obj = new file;
-	//$files = $obj->glob($_SESSION['switch']['sounds']['dir'].'/en/us/callie', true);
-	$files = $obj->sounds();
+	$file = new file;
+	$files = $file->sounds();
 	print_r($files);
 */
 
