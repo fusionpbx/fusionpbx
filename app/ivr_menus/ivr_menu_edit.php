@@ -336,6 +336,10 @@
 	$prep_statement->execute();
 	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get the sound files
+	$file = new file;
+	$sound_files = $file->sounds();
+
 //content
 	require_once "resources/header.php";
 	$document['title'] = $text['title-ivr_menu'];
@@ -496,20 +500,19 @@
 		}
 	//sounds
 		/*
-		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($files) > 0) {
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($files as $key => $value) {
+			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
 					if (substr($ivr_menu_greet_long, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$ivr_menu_greet_long = substr($ivr_menu_greet_long, 71);
 					}
-					if ($ivr_menu_greet_long == $key) {
+					if ($ivr_menu_greet_long == $value) {
 						$tmp_selected = true;
-						echo "	<option value='$key' selected='selected'>$key</option>\n";
+						echo "	<option value='$value' selected='selected'>$value</option>\n";
 					}
 					else {
-						echo "	<option value='$key'>$key</option>\n";
+						echo "	<option value='$value'>$value</option>\n";
 					}
 				}
 			}
@@ -639,20 +642,19 @@
 		unset ($prep_statement);
 	//sounds
 		/*
-		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($files) > 0) {
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($files as $key => $value) {
+			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
 					if (substr($ivr_menu_greet_short, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$ivr_menu_greet_short = substr($ivr_menu_greet_short, 71);
 					}
-					if ($ivr_menu_greet_short == $key) {
+					if ($ivr_menu_greet_short == $value) {
 						$tmp_selected = true;
-						echo "	<option value='$key' selected='selected'>$key</option>\n";
+						echo "	<option value='$value' selected='selected'>$value</option>\n";
 					}
 					else {
-						echo "	<option value='$key'>$key</option>\n";
+						echo "	<option value='$value'>$value</option>\n";
 					}
 				}
 			}
@@ -945,20 +947,19 @@
 				echo "</optgroup>\n";
 			}
 		//sounds
-			$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-			if (count($files) > 0) {
+			if (is_array($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
-				foreach ($files as $key => $value) {
+				foreach ($sound_files as $value) {
 					if (strlen($value) > 0) {
 						if (substr($ivr_menu_invalid_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$ivr_menu_invalid_sound = substr($ivr_menu_invalid_sound, 71);
 						}
-						if ($ivr_menu_invalid_sound == $key) {
+						if ($ivr_menu_invalid_sound == $value) {
 							$tmp_selected = true;
-							echo "	<option value='$key' selected='selected'>$key</option>\n";
+							echo "	<option value='$value' selected='selected'>$value</option>\n";
 						}
 						else {
-							echo "	<option value='$key'>$key</option>\n";
+							echo "	<option value='$value'>$value</option>\n";
 						}
 					}
 				}
@@ -1043,17 +1044,17 @@
 			$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 			if (count($files) > 0) {
 				echo "<optgroup label='Sounds'>\n";
-				foreach ($files as $key => $value) {
+				foreach ($sound_files as $value) {
 					if (strlen($value) > 0) {
 						if (substr($ivr_menu_exit_sound, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$ivr_menu_exit_sound = substr($ivr_menu_exit_sound, 71);
 						}
-						if ($ivr_menu_exit_sound == $key) {
+						if ($ivr_menu_exit_sound == $value) {
 							$tmp_selected = true;
-							echo "	<option value='$key' selected='selected'>$key</option>\n";
+							echo "	<option value='$value' selected='selected'>$value</option>\n";
 						}
 						else {
-							echo "	<option value='$key'>$key</option>\n";
+							echo "	<option value='$value'>$value</option>\n";
 						}
 					}
 				}
