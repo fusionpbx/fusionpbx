@@ -527,20 +527,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		//sounds
 			if ($load_sound) {
-				$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-				if (count($files) > 0) {
+				$file = new file;
+				$sound_files = $file->sounds();
+				if (is_array($sound_files)) {
 					echo "<optgroup label=".$text["sounds"].">\n";
-					foreach ($files as $key => $value) {
+					foreach ($sound_files as $value) {
 						if (strlen($value) > 0) {
 							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 								$var = substr($var, 71);
 							}
 							if ($var == $key) {
 								$tmp_selected = true;
-								echo "	<option value='$key' selected='selected'>$key</option>\n";
+								echo "	<option value='$value' selected='selected'>$value</option>\n";
 							}
 							else {
-								echo "	<option value='$key'>$key</option>\n";
+								echo "	<option value='$value'>$value</option>\n";
 							}
 						}
 					}
