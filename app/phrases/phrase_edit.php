@@ -337,7 +337,6 @@
 		}
 		unset($sql, $prep_statement, $recordings);
 	//sounds
-		//$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
 		$file = new file;
 		$sound_files = $file->sounds();
 		if (is_array($sound_files)) {
@@ -345,12 +344,7 @@
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
 			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
-					//if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-					//	echo "opt_group.appendChild(new Option(\"".$value."\", \"lua(streamfile.lua ".$value.")\"));\n";
-					//}
-					//else {
-						echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
-					//}
+					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
