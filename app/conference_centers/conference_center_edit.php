@@ -69,12 +69,13 @@
 //process user data
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-		$msg = '';
-		if ($action == "update") {
-			$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
-		}
+		//get the id
+			if ($action == "update") {
+				$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
+			}
 
 		//check for all required data
+					$msg = '';
 			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 			if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 			if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
@@ -388,16 +389,17 @@
 			echo "</optgroup>\n";
 		}
 	//sounds
-		$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($files) > 0) {
+		$file = new file;
+		$sound_files = $file->sounds();
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($files as $key => $value) {
+			foreach ($sound_files as $key => $value) {
 				if (strlen($value) > 0) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
-					$selected = ($conference_center_greeting == $key) ? true : false;
-					echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+					$selected = ($conference_center_greeting == $value) ? true : false;
+					echo "	<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$value."</option>\n";
 					if ($selected) { $tmp_selected = true; }
 				}
 			}
