@@ -1068,10 +1068,8 @@
 				$selected = "selected='selected'";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
 				echo "	<option value=''></option>\n";
-				$i = 1;
-				while ($i < 100) {
-					echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
-					$i++;
+				for ($i = 1; $i <= 255; $i++) {
+					echo "	<option value='$i' ".($row['device_key_id'] == $i ? "selected":null).">$i</option>\n";
 				}
 				echo "	</select>\n";
 				echo "</td>\n";
