@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Lewis Hallam <lewishallam80@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_flow_add') || permission_exists('call_flow_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_flow_add') || permission_exists('call_flow_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -536,7 +540,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 								$var = substr($var, 71);
 							}
-							if ($var == $key) {
+							if ($var == $value) {
 								$tmp_selected = true;
 								echo "	<option value='$value' selected='selected'>$value</option>\n";
 							}
