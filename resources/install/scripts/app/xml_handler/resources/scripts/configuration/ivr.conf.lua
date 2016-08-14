@@ -54,7 +54,7 @@
 			status = dbh:query(sql, function(row)
 				domain_uuid = row["domain_uuid"];
 				ivr_menu_name = row["ivr_menu_name"];
-				--ivr_menu_extension = row["ivr_menu_extension"];
+				ivr_menu_extension = row["ivr_menu_extension"];
 				ivr_menu_greet_long = row["ivr_menu_greet_long"];
 				ivr_menu_greet_short = row["ivr_menu_greet_short"];
 				ivr_menu_invalid_sound = row["ivr_menu_invalid_sound"];
@@ -258,7 +258,7 @@
 
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? $1 XML ]]..domain_name..[[ : ]]..ivr_menu_extension..[[ XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
 			end
 
 		--get the ivr menu options
