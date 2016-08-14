@@ -51,7 +51,7 @@
 	$start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
 	$start_stamp_end = check_str($_REQUEST['start_stamp_end']);
 	$include_internal = check_str($_REQUEST['include_internal']);
-	$quick_select = (sizeof($_REQUEST) == 0) ? 1 : $quick_select; //set default
+	$quick_select = (sizeof($_REQUEST) == 0) ? 3 : $quick_select; //set default
 
 //get the summary
 	$cdr = new xml_cdr;
