@@ -606,7 +606,7 @@
 		}
 	//recordings
 		$tmp_selected = false;
-		if (count($recordings) > 0) {
+		if (is_array($recordings)) {
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
@@ -626,7 +626,7 @@
 			echo "</optgroup>\n";
 		}
 	//phrases
-		if (count($phrases) > 0) {
+		if (is_array($phrases)) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($phrases as &$row) {
 				if ($ivr_menu_greet_short == "phrase:".$row["phrase_uuid"]) {
@@ -908,7 +908,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (count($recordings) > 0) {
+			if (is_array($recordings)) {
 				echo "<optgroup label='Recordings'>\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -928,11 +928,7 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
+			if (is_array($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
@@ -1002,7 +998,7 @@
 			}
 		//recordings
 			$tmp_selected = false;
-			if (count($recordings) > 0) {
+			if (is_array($recordings)) {
 				echo "<optgroup label='Recordings'>\n";
 				foreach ($recordings as &$row) {
 					$recording_name = $row["recording_name"];
@@ -1022,13 +1018,9 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
+			if (is_array($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
-				foreach ($result as &$row) {
+				foreach ($phrases as &$row) {
 					if ($ivr_menu_exit_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
 						echo "	<option value='phrase:".$row["phrase_uuid"]."' selected='selected'>".$row["phrase_name"]."</option>\n";
@@ -1041,8 +1033,7 @@
 				echo "</optgroup>\n";
 			}
 		//sounds
-			$files = recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-			if (count($files) > 0) {
+			if (is_array($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
 				foreach ($sound_files as $value) {
 					if (strlen($value) > 0) {
