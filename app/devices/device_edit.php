@@ -939,7 +939,7 @@
 				echo "			<option value='".$row['device_profile_uuid']."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".$row['device_profile_name']." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
 			}
 			echo "			</select>\n";
-			echo "			<button type='button' class='btn btn-default list_control_icon' onclick=\"if(document.getElementById('device_profile_uuid').value != '') window.location='device_profile_edit.php?id='+document.getElementById('device_profile_uuid').value;\"><span class='glyphicon glyphicon-pencil'></span></button>";
+			echo "			<button type='button' class='btn btn-default list_control_icon' id='device_profile_edit' onclick=\"if($('#device_profile_uuid').val() != '') window.location='device_profile_edit.php?id='+$('#device_profile_uuid').val();\"><span class='glyphicon glyphicon-pencil'></span></button>";
 			echo "			<button type='button' class='btn btn-default list_control_icon' onclick=\"window.location='device_profile_edit.php'\"><span class='glyphicon glyphicon-plus'></span></button>";
 			echo "			<br>".$text['description-profile2']."\n";
 			echo "		</td>";
@@ -1436,10 +1436,18 @@
 	echo "</form>";
 
 	echo "<script>\n";
+	echo "	$(window).load(function(event){\n";
+	// triger initial onchage to set button state
+	echo "      $('#device_profile_uuid').trigger('change')";
+	echo "	});\n";
 	//capture enter key to submit form
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
+	// capture device selection events
+	echo "  $('#device_profile_uuid').change(function(event){ \n";
+	echo "      if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
+	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
 	echo "		check_duplicates();\n";
