@@ -522,9 +522,9 @@
 							end
 
 						--save to the conf directory
-							local file = assert(io.open(conf_dir .. "/directory/" .. user .. "@" .. domain_name .. ".xml.cache", "w"));
-							file:write(XML_STRING);
-							file:close();
+							--local file = assert(io.open(conf_dir .. "/directory/" .. user .. "@" .. domain_name .. ".xml.cache", "w"));
+							--file:write(XML_STRING);
+							--file:close();
 
 						--send to the console
 							if (debug["cache"]) then
