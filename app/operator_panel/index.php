@@ -53,7 +53,7 @@ else {
 		}
 
 	//if call center app is installed then update the user_status
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_center')) {
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
 			//update the user_status
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
