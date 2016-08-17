@@ -1095,10 +1095,10 @@ if ($action == 'update') {
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid'>\n";
 		if (strlen($domain_uuid) == 0) {
-			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+			echo "    <option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
-			echo "    <option value=''>".$text['select-global']."</option>\n";
+			echo "    <option value=''>".$text['label-global']."</option>\n";
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
