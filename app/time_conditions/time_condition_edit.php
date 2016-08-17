@@ -63,6 +63,7 @@
 
 //get the post variables
 	if (count($_POST) > 0) {
+		$domain_uuid = check_str($_POST["domain_uuid"]);
 		$dialplan_name = check_str($_POST["dialplan_name"]);
 		$dialplan_number = check_str($_POST["dialplan_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
@@ -74,11 +75,15 @@
 
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
 		$dialplan_description = check_str($_POST["dialplan_description"]);
+
+		if (!permission_exists('time_condition_domain')) {
+			$domain_uuid = $_SESSION['domain_uuid'];
+		}
 	}
 
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
+		//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
  		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
  		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
  		//if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
@@ -122,14 +127,24 @@
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$domain_uuid."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'".$domain_uuid."', ";
+				}
 				$sql .= "'".$dialplan_uuid."', ";
 				$sql .= "'4b821450-926b-175a-af93-a03c441818b1', ";
 				$sql .= "'".$dialplan_name."', ";
 				$sql .= "'".$dialplan_number."', ";
 				$sql .= "'".$dialplan_order."', ";
 				$sql .= "'true', ";
-				$sql .= "'".$_SESSION['context']."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "'\${domain_name}', ";
+				}
+				else {
+					$sql .= "'".$_SESSION['context']."', ";
+				}
 				$sql .= "'".$dialplan_enabled."', ";
 				$sql .= "'".$dialplan_description."' ";
 				$sql .= ")";
@@ -141,15 +156,25 @@
 		else if ($action == "update") {
 			//update main dialplan entry
 				$sql = "update v_dialplans set ";
+				if ($domain_uuid == 0) {
+					$sql .= "domain_uuid = null, ";
+				}
+				else {
+					$sql .= "domain_uuid = '".$domain_uuid."', ";
+				}
 				$sql .= "dialplan_name = '".$dialplan_name."', ";
 				$sql .= "dialplan_number = '".$dialplan_number."', ";
 				$sql .= "dialplan_order = '".$dialplan_order."', ";
 				$sql .= "dialplan_continue = 'true', ";
-				$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "dialplan_context = '\${domain_name}', ";
+				}
+				else {
+					$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+				}
 				$sql .= "dialplan_enabled = '".$dialplan_enabled."', ";
 				$sql .= "dialplan_description = '".$dialplan_description."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+				$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -288,7 +313,12 @@
 						//add destination number condition
 						$dialplan_detail_order += 10;
 						$sql .= ($conditions_exist) ? ", ( " : "( ";
-						$sql .= "'".$domain_uuid."', ";
+						if ($domain_uuid == 0) {
+							$sql .= "null, ";
+						}
+						else {
+							$sql .= "'".$domain_uuid."', ";
+						}
 						$sql .= "'".$dialplan_uuid."', ";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'condition', ";
@@ -304,7 +334,12 @@
 					//add condition to query string
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
+					if ($domain_uuid == 0) {
+						$sql .= "null, ";
+					}
+					else {
+						$sql .= "'".$domain_uuid."', ";
+					}
 					$sql .= "'".$dialplan_uuid."', ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'condition', ";
@@ -346,7 +381,12 @@
 								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
-									$sql .= "'".$domain_uuid."', ";
+									if ($domain_uuid == 0) {
+										$sql .= "null, ";
+									}
+									else {
+										$sql .= "'".$domain_uuid."', ";
+									}
 									$sql .= "'".$dialplan_uuid."', ";
 									$sql .= "'".uuid()."', ";
 									$sql .= "'action', ";
@@ -376,7 +416,12 @@
 					//add group action to query
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
+					if ($domain_uuid == 0) {
+						$sql .= "null, ";
+					}
+					else {
+						$sql .= "'".$domain_uuid."', ";
+					}
 					$sql .= "'".$dialplan_uuid."', ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'action', ";
@@ -404,7 +449,12 @@
 			//add destination number condition
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			$sql .= "'".$domain_uuid."', ";
+			if ($domain_uuid == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'".$domain_uuid."', ";
+			}
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'condition', ";
@@ -419,7 +469,12 @@
 			//add anti-action
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			$sql .= "'".$domain_uuid."', ";
+			if ($domain_uuid == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'".$domain_uuid."', ";
+			}
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'action', ";
@@ -430,7 +485,6 @@
 			$sql .= "'".$dialplan_detail_group."', ";
 			$sql .= "'".$dialplan_detail_order."' ";
 			$sql .= ") ";
-
 		}
 
 	//execute query
