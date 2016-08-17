@@ -58,7 +58,7 @@
 	end
 
 --get the pin number from the caller
-	if (agent_password == nil and agent_authorized ~= 'true')) then
+	if (agent_password == nil and agent_authorized ~= 'true') then
 		min_digits = 3;
 		max_digits = 20;
 		max_tries = 3;
