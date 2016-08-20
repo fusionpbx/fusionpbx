@@ -381,8 +381,8 @@ The file name is fixed to `Account1_Extern.xml`.
 		//use the prepared statement
 			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
 			$prep_statement->bindValue(':device_mac', strtolower($mac));
-			$prep_statement->bindValue(':device_provisioned_on', date("Y-m-d H:i:s"));
-			$prep_statement->bindValue(':device_provisioned_by', "HTTP");
+			$prep_statement->bindValue(':device_provisioned_date', date("Y-m-d H:i:s"));
+			$prep_statement->bindValue(':device_provisioned_method', "HTTP");
 			$prep_statement->execute();
 			unset($prep_statement);
 	}
