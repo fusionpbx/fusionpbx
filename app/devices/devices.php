@@ -214,7 +214,6 @@
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
-	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
@@ -249,7 +248,6 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_on']." - ".$row['device_provisioned_by']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_edit')) {
