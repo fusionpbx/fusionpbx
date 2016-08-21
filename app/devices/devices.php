@@ -88,6 +88,8 @@
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -139,6 +141,8 @@
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
