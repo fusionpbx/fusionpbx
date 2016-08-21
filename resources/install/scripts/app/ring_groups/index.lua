@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -525,12 +525,8 @@ local log = require "resources.functions.log".ring_group
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
-					local bind_target = 'both'
-					-- if session:getVariable("sip_authorized") ~= "true" then
-					-- 	bind_target = 'peer'
-					-- end
-
 				--set bind digit action
+					local bind_target = 'peer'
 					local bindings = {
 						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
