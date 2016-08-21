@@ -365,27 +365,28 @@ The file name is fixed to `Account1_Extern.xml`.
 		}
 	}
 
+//register that we have seen the device
+	$sql = "UPDATE v_devices "; 
+	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		//use the prepared statement
+			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+			$prep_statement->bindValue(':mac', strtolower($mac));
+			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+			$prep_statement->execute();
+			unset($prep_statement);
+	}
+	
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;
 	$prov->mac = $mac;
 	$prov->file = $file;
 	$file_contents = $prov->render();
-
-//register that we have seen the device
-	$sql = "UPDATE v_devices "; 
-	$sql .= "SET device_provisioned_on=:device_provisioned_on, device_provisioned_by=:device_provisioned_by ";
-	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:device_mac ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		//use the prepared statement
-			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
-			$prep_statement->bindValue(':device_mac', strtolower($mac));
-			$prep_statement->bindValue(':device_provisioned_date', date("Y-m-d H:i:s"));
-			$prep_statement->bindValue(':device_provisioned_method', "HTTP");
-			$prep_statement->execute();
-			unset($prep_statement);
-	}
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
