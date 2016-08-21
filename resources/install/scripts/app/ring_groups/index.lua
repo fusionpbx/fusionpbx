@@ -527,6 +527,9 @@ local log = require "resources.functions.log".ring_group
 
 				--set bind digit action
 					local bind_target = 'peer'
+					if session:getVariable("sip_authorized") == "true" then
+						bind_target = 'both';
+					end
 					local bindings = {
 						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
@@ -536,7 +539,7 @@ local log = require "resources.functions.log".ring_group
 					for _, str in ipairs(bindings) do
 						session:execute("bind_digit_action", str .. "," .. bind_target)
 					end
-					session:execute("digit_action_set_realm", "local")
+					session:execute("digit_action_set_realm", "local");
 
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then
