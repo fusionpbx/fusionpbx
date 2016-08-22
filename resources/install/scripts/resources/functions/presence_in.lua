@@ -1,6 +1,17 @@
+require "resources.functions.split"
+
 local function turn_lamp(on, user, uuid)
+	local userid, domain, proto = split_first(user, "@", true)
+	proto, userid = split_first(userid, "+", true)
+	if userid then
+		user = userid  .. "@" .. domain
+	else
+		proto = "sip"
+	end
+
+
 	local event = freeswitch.Event("PRESENCE_IN");
-	event:addHeader("proto", "sip");
+	event:addHeader("proto", proto);
 	event:addHeader("event_type", "presence");
 	event:addHeader("alt_event_type", "dialog");
 	event:addHeader("Presence-Call-Direction", "outbound");

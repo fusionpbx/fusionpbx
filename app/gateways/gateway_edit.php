@@ -50,7 +50,12 @@ else {
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add') {
 		if ($_SESSION['limit']['gateways']['numeric'] != '') {
-			$sql = "select count(*) as num_rows from v_gateways where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql = "select count(*) as num_rows from v_gateways ";
+			$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			if (permission_exists('gateway_domain')) {
+				$sql .= "or domain_uuid is null ";
+			}
+			$sql .= ");";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
 				$prep_statement->execute();

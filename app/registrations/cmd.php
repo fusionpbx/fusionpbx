@@ -46,35 +46,7 @@ else {
 	$show = check_str($_GET['show']);
 	$user = check_str($_GET['user']);
 	$agent = check_str($_GET['agent']);
-
-//get the vendor
-	if (preg_replace('/^.*?(aastra).*$/i', '$1', strtolower($agent)) == "aastra") {
-		$vendor = "aastra";
-	}
-	if (preg_replace('/^.*?(cisco).*$/i', '$1', strtolower($agent)) == "cisco") {
-		$vendor = "cisco";
-	}
-	if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', strtolower($agent)) == "cisco/spa") {
-		$vendor = "cisco-spa";
-	}
-	if (preg_replace('/^.*?(grandstream).*$/i', '$1', strtolower($agent)) == "grandstream") {
-		$vendor = "grandstream";
-	}
-	if (preg_replace('/^.*?(linksys).*$/i', '$1', strtolower($agent)) == "linksys") {
-		$vendor = "linksys";
-	}
-	if (preg_replace('/^.*?(polycom).*$/i', '$1', strtolower($agent)) == "polycom") {
-		$vendor = "polycom";
-	}
-	if (preg_replace('/^.*?(yealink).*$/i', '$1', strtolower($agent)) == "yealink") {
-		$vendor = "yealink";
-	}
-	if (preg_replace('/^.*?(vp530p).*$/i', '$1', strtolower($agent)) == "vp530p") {
-		$vendor = "yealink";
-	}
-	if (preg_replace('/^.*?(snom).*$/i', '$1', strtolower($agent)) == "snom") {
-		$vendor = "snom";
-	}
+	$vendor = device::get_vendor_by_agent($agent);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

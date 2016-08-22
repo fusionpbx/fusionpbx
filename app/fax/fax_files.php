@@ -145,24 +145,19 @@ else {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir']);
-				chmod($dir_fax_sent,0774);
+				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				mkdir($fax_dir.'/'.$fax_extension,0774,true);
-				chmod($fax_dir.'/'.$fax_extension,0774);
+				event_socket_mkdir($fax_dir.'/'.$fax_extension);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				mkdir($dir_fax_inbox,0774,true);
-				chmod($dir_fax_inbox,0774);
+				event_socket_mkdir($dir_fax_inbox);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,0774,true);
-				chmod($dir_fax_sent,0774);
+				event_socket_mkdir($dir_fax_sent);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				mkdir($dir_fax_temp,0774,true);
-				chmod($dir_fax_temp,0774);
+				event_socket_mkdir($dir_fax_temp);
 			}
 	}
 

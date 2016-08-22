@@ -1,6 +1,7 @@
 --get the argv values
 	script_name = argv[0];
-	file_name = argv[1];
+	file_name = table.concat(argv, " ");
+	freeswitch.consoleLog("notice", "[streamfile] file_name: " .. file_name .. "\n");
 
 --include config.lua
 	require "resources.functions.config";

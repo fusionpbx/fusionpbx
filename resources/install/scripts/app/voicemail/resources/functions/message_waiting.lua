@@ -29,13 +29,13 @@
 		 	local accounts = {}
 			table.insert(accounts, voicemail_id);
 		--get the voicemail id and all related mwi accounts
-			sql = [[SELECT extension, number_alias from v_extensions
+			local sql = [[SELECT extension, number_alias from v_extensions
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND (mwi_account = ']]..voicemail_id..[[' or mwi_account = ']]..voicemail_id..[[@]]..domain_name..[[')]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, function(row)
 				if (string.len(row["number_alias"]) > 0) then
 					table.insert(accounts, row["number_alias"]);
 				else
@@ -43,35 +43,21 @@
 				end
 			end);
 
-		--get the message count
-			sql = [[SELECT count(*) as message_count FROM v_voicemail_messages as m, v_voicemails as v
-				WHERE v.domain_uuid = ']] .. domain_uuid ..[['
-				AND v.voicemail_uuid = m.voicemail_uuid
-				AND v.voicemail_id = ']] .. voicemail_id ..[['
-				AND (m.message_status is null or m.message_status = '') ]];
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-			end
-			status = dbh:query(sql, function(row)
-				message_count = row["message_count"];
-			end);
+		--get new and saved message counts
+			local new_messages, saved_messages = message_count_by_id(
+				voicemail_id, domain_uuid
+			)
 
 		--send the message waiting event
-			for key,value in pairs(accounts) do
-				local event = freeswitch.Event("message_waiting");
-				if (message_count == "0") then
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..value.."@"..domain_name.." messages: " .. message_count .. " no messages\n");
+			for _,value in ipairs(accounts) do
+				local account = value.."@"..domain_name
+				mwi_notify(account, new_messages, saved_messages)
+				if (debug["info"]) then
+					if new_messages == "0" then
+						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..account.." messages: no new messages\n");
+					else
+						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..account.." messages: " .. new_messages .. " new message(s)\n");
 					end
-					event:addHeader("MWI-Messages-Waiting", "no");
-				else
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. message_count .. " \n");
-					end
-					event:addHeader("MWI-Messages-Waiting", "yes");
 				end
-				event:addHeader("MWI-Message-Account", "sip:"..value.."@"..domain_name);
-				event:addHeader("MWI-Voice-Message", message_count.."/0 ("..message_count.."/0)");
-				event:fire();
 			end
 	end

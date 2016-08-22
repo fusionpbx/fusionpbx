@@ -28,6 +28,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/ringbacks.php";
 if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
 	//access granted
 }
@@ -99,7 +100,6 @@ else {
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
-			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
 			$ring_group_missed_call_app = check_str($_POST["ring_group_missed_call_app"]);
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
@@ -391,7 +391,6 @@ else {
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
-			$ring_group_skip_active = $row["ring_group_skip_active"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
@@ -404,6 +403,11 @@ else {
 		if (strlen($ring_group_timeout_app) > 0) {
 			$ring_group_timeout_action = $ring_group_timeout_app.":".$ring_group_timeout_data;
 		}
+	}
+
+//set the default
+	if (strlen($ring_group_ringback) == 0) {
+		$ring_group_ringback = '${us-ring}';
 	}
 
 //get the ring group destination array
@@ -444,7 +448,6 @@ else {
 	}
 
 //set defaults
-	if (strlen($ring_group_skip_active) == 0) { $ring_group_skip_active = 'false'; }
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //set the context for users that are not in the superadmin group
@@ -642,57 +645,8 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	$select_options = "";
-	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") {
-		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${pt-ring}" || $ring_group_ringback == "pt-ring") {
-		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
-		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") {
-		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") {
-		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
-	}
-	if ($ring_group_ringback == "\${it-ring}" || $ring_group_ringback == "it-ring") {
-		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
-	}
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
-		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-		$moh = new switch_music_on_hold;
-		$moh->select_name = "ring_group_ringback";
-		$moh->select_value = $ring_group_ringback;
-		$moh->select_options = $select_options;
-		echo $moh->select();
-	}
-	else {
-		echo "	<select class='formfld' name='ring_group_ringback'>\n";
-		//echo "	<option value=''></option>\n";
-		echo $select_options;
-		echo "	</select>\n";
-	}
+	$ringbacks = new ringbacks;
+	echo $ringbacks->select('ring_group_ringback', $ring_group_ringback);
 
 	echo "<br />\n";
 	echo $text['description-ringback']."\n";
@@ -733,30 +687,6 @@ else {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-skip_active']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_skip_active'>\n";
-	if ($ring_group_skip_active == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($ring_group_skip_active == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-skip_active']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('ring_group_missed_call')) {
 		echo "<tr>\n";

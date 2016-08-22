@@ -1,14 +1,18 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -75,8 +79,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				remove_config_from_cache('configuration:acl.conf');
-				$_SESSION['message'] = $text['message-add'];
-				header('Location: access_controls.php');
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: access_controls.php");
 				return;
 
 			} //if ($action == "add")
@@ -91,8 +95,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				remove_config_from_cache('configuration:acl.conf');
-				$_SESSION['message'] = $text['message-update'];
-				header('Location: access_controls.php');
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: access_controls.php");
 				return;
 
 			} //if ($action == "update")
@@ -120,8 +124,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
@@ -186,7 +190,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-	echo "<br><br>";
+	echo "<br /><br />";
 
 	if ($action == "update") {
 		require "access_control_nodes.php";

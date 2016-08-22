@@ -24,23 +24,27 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('ring_group_edit') || permission_exists('ring_group_forward')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('ring_group_edit') || permission_exists('ring_group_forward')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
 
-require_once "resources/header.php";
-require_once "resources/paging.php";
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -136,9 +140,9 @@ require_once "resources/paging.php";
 	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
-	if ($num_rows > 10) {
-		echo "	<div style='float: right;'><input id='btn_viewall_ringgroups' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\"></div>\n";
-	}
+	echo "<form method='post' name='frm' action='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php'>\n";
+	echo "<input type='hidden' name='return_url' value='".$_SERVER['REQUEST_URI']."'>\n";
+
 	echo "	<div style='float: left;'>";
 	echo "		<b>".$text['header-ring-group-forward']."</b><br />";
 	if (!$is_included) {
@@ -147,8 +151,12 @@ require_once "resources/paging.php";
 	echo "	<br />";
 	echo "	</div>\n";
 
-	echo "<form method='post' name='frm' action='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php'>\n";
-	echo "<input type='hidden' name='return_url' value='".$_SERVER['REQUEST_URI']."'>\n";
+	echo "<div style='float: right;'>\n";
+	if ($num_rows > 10) {
+		echo "	<input id='btn_viewall_ringgroups' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\">\n";
+	}
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "</div>\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -172,7 +180,7 @@ require_once "resources/paging.php";
 			echo "			<option value='false'>".$text['option-disabled']."</option>";
 			echo "			<option value='true' ".(($row["ring_group_forward_enabled"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
 			echo "		</select>";
-			echo 		"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination[".$row['ring_group_uuid']."]' id='destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".$row["ring_group_forward_destination"]."\">";
+			echo "		<input class='formfld' style='width: 100px;' type='text' name='ring_group_forward_destination[".$row['ring_group_uuid']."]' id='destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".$row["ring_group_forward_destination"]."\">";
 			echo "	</td>\n";
 			if (!$is_included) {
 				echo "	<td valign='top' class='row_stylebg tr_link_void' ".$onclick.">".$row['ring_group_description']."&nbsp;</td>\n";
@@ -184,13 +192,6 @@ require_once "resources/paging.php";
 	}
 
 	echo "</table>";
-	echo "<br>";
-
-	if ($result_count > 0) {
-		echo "<div style='float: right;'><input type='submit' class='btn' value='".$text['button-save']."'></div>\n";
-		echo "<br><br>";
-	}
-
 	echo "</form>";
 
 	if (!$is_included) {
@@ -199,5 +200,7 @@ require_once "resources/paging.php";
 	}
 
 //include the footer
-	require_once "resources/footer.php";
+	if (!$is_included) {
+		require_once "resources/footer.php";
+	}
 ?>

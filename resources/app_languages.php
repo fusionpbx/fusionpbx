@@ -161,6 +161,34 @@ $text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?";
 
 //buttons
 
+$text['button-apply']['en-us'] = "Apply";
+$text['button-apply']['es-cl'] = "";
+$text['button-apply']['pt-pt'] = "";
+$text['button-apply']['fr-fr'] = "";
+$text['button-apply']['pt-br'] = "";
+$text['button-apply']['pl'] = "";
+$text['button-apply']['he'] = "";
+$text['button-apply']['uk'] = "";
+$text['button-apply']['sv-se'] = "";
+$text['button-apply']['de-at'] = "";
+$text['button-apply']['ro'] = "";
+$text['button-apply']['fa'] = "";
+$text['button-apply']['ar-eg'] = "";
+
+$text['button-applied']['en-us'] = "Applied";
+$text['button-applied']['es-cl'] = "";
+$text['button-applied']['pt-pt'] = "";
+$text['button-applied']['fr-fr'] = "";
+$text['button-applied']['pt-br'] = "";
+$text['button-applied']['pl'] = "";
+$text['button-applied']['he'] = "";
+$text['button-applied']['uk'] = "";
+$text['button-applied']['sv-se'] = "";
+$text['button-applied']['de-at'] = "";
+$text['button-applied']['ro'] = "";
+$text['button-applied']['fa'] = "";
+$text['button-applied']['ar-eg'] = "";
+
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
 $text['button-clear']['pt-pt'] = "Apagar";
@@ -610,6 +638,32 @@ $text['label-disabled']['sv-se'] = "Inaktiverad";
 $text['label-disabled']['uk'] = "Відключено";
 $text['label-disabled']['de-at'] = "Ausgeschaltet";
 
+$text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['es-cl'] = "Dominio";
+$text['label-domain']['pt-pt'] = "Domínio";
+$text['label-domain']['fr-fr'] = "Domaine";
+$text['label-domain']['pt-br'] = "Dominio";
+$text['label-domain']['pl'] = "Domena";
+$text['label-domain']['uk'] = "Домен";
+$text['label-domain']['sv-se'] = "Domän";
+$text['label-domain']['de-at'] = "Domain";
+$text['label-domain']['ro'] = "Domeniu";
+$text['label-domain']['ar-eg'] = "النطاق";
+$text['label-domain']['he'] = "דומיין";
+
+$text['label-global']['en-us'] = "Global";
+$text['label-global']['es-cl'] = "Global";
+$text['label-global']['pt-pt'] = "Global";
+$text['label-global']['fr-fr'] = "Global";
+$text['label-global']['pt-br'] = "Global";
+$text['label-global']['pl'] = "Globalny";
+$text['label-global']['uk'] = "Global";
+$text['label-global']['sv-se'] = "Global";
+$text['label-global']['ro'] = "Global";
+$text['label-global']['de-at'] = "Global";
+$text['label-global']['ar-eg'] = "";
+$text['label-global']['he'] = "כללי";
+
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguno";
 $text['label-none']['pt-pt'] = "Nenhum";
@@ -665,6 +719,115 @@ $text['label-delete']['sv-se'] = "Ta Bort";
 $text['label-delete']['uk'] = "Видалити";
 $text['label-delete']['de-at'] = "Löschen";
 
+$text['label-ringback']['en-us'] = "Ringback";
+$text['label-ringback']['es-cl'] = "Volver a llamar";
+$text['label-ringback']['pt-pt'] = "Ringback";
+$text['label-ringback']['pt-br'] = "Ringback";
+$text['label-ringback']['pl'] = "Oddzwonienie";
+$text['label-ringback']['fr-fr'] = "Rappeler";
+$text['label-ringback']['nl-nl'] = "Werombelje";
+$text['label-ringback']['sv-se'] = "Ring tillbaka";
+$text['label-ringback']['uk'] = "відповідний";
+$text['label-ringback']['de-at'] = "Zurückrufen";
+$text['label-ringback']['he'] = "לצלצל בחזרה";
+$text['label-ringback']['ru-ru'] = "Перезвонить";
+
+$text['label-music_on_hold']['en-us'] = "Music on Hold";
+$text['label-music_on_hold']['es-cl'] = "Musica en Espera";
+$text['label-music_on_hold']['pt-pt'] = "Música em Espera";
+$text['label-music_on_hold']['pt-br'] = "Música de espera ";
+$text['label-music_on_hold']['fr-fr'] = "Musique d'attente";
+$text['label-music_on_hold']['nl-nl'] = "Music op Hold";
+$text['label-music_on_hold']['pl'] = "Muzyka na czekanie";
+$text['label-music_on_hold']['sv-se'] = "Väntmusik";
+$text['label-music_on_hold']['uk'] = "Музика на утриманні";
+$text['label-music_on_hold']['de-at'] = "Haltemusik";
+$text['label-music_on_hold']['he'] = "מוסיקה בהמתנה";
+$text['label-music_on_hold']['ar-eg'] = "موسيقى المؤجلة";
+$text['label-music_on_hold']['ru-ru'] = "Музыка на удержании";
+
+$text['label-recordings']['en-us'] = "Recordings";
+$text['label-recordings']['es-cl'] = "Grabaciones";
+$text['label-recordings']['pt-pt'] = "Gravações";
+$text['label-recordings']['pt-br'] = "Gravações";
+$text['label-recordings']['fr-fr'] = "Recordings";
+$text['label-recordings']['nl-nl'] = "Recordings";
+$text['label-recordings']['pl'] = "Nagrania";
+$text['label-recordings']['sv-se'] = "Inspelningar";
+$text['label-recordings']['uk'] = "записи";
+$text['label-recordings']['de-at'] = "Aufzeichnung";
+$text['label-recordings']['he'] = "הקלטות";
+$text['label-recordings']['ar-eg'] = "التسجيلات";
+$text['label-recordings']['ru-ru'] = "Записи";
+
+$text['label-default']['en-us'] = "Default";
+$text['label-default']['es-cl'] = "Defecto";
+$text['label-default']['pt-pt'] = "Padrão";
+$text['label-default']['pt-br'] = "Padrão";
+$text['label-default']['pl'] = "Domyślne";
+$text['label-default']['fr-fr'] = "Défaut";
+$text['label-default']['nl-nl'] = "	ôfwêzichheid";
+$text['label-default']['sv-se'] = "uteblivande";
+$text['label-default']['uk'] = "дефолт";
+$text['label-default']['de-at'] = "Default";
+$text['label-default']['he'] = "Default";
+$text['label-default']['ar-eg'] = "בְּרִירַת מֶחדָל";
+$text['label-default']['ru-ru'] = "По умолчанию";
+
+$text['label-us-ring']['en-us'] = "us-ring";
+$text['label-us-ring']['es-cl'] = "us-ring";
+$text['label-us-ring']['fr-fr'] = "États-Unis-ring";
+$text['label-us-ring']['pt-pt'] = "us-ring";
+$text['label-us-ring']['pt-br'] = "us-ring";
+$text['label-us-ring']['pl'] = "us-ring";
+$text['label-us-ring']['sv-se'] = "us-ring";
+$text['label-us-ring']['uk'] = "us-ring";
+$text['label-us-ring']['de-at'] = "us-ring";
+$text['label-us-ring']['he'] = "צלצול אמריקאי";
+
+$text['label-uk-ring']['en-us'] = "uk-ring";
+$text['label-uk-ring']['es-cl'] = "uk-ring";
+$text['label-uk-ring']['fr-fr'] = "Grande Bretagne-ring";
+$text['label-uk-ring']['pt-pt'] = "uk-ring";
+$text['label-uk-ring']['pt-br'] = "uk-ring";
+$text['label-uk-ring']['pl'] = "uk-ring ";
+$text['label-uk-ring']['sv-se'] = "uk-ring";
+$text['label-uk-ring']['uk'] = "uk-ring";
+$text['label-uk-ring']['de-at'] = "uk-ring";
+$text['label-uk-ring']['he'] = "צלצול אנגלי";
+
+$text['label-pt-ring']['en-us'] = "pt-ring";
+$text['label-pt-ring']['es-cl'] = "pt-ring";
+$text['label-pt-ring']['fr-fr'] = "Portugal-ring";
+$text['label-pt-ring']['pt-pt'] = "pt-ring";
+$text['label-pt-ring']['pt-br'] = "pt-ring";
+$text['label-pt-ring']['pl'] = "pt-ring ";
+$text['label-pt-ring']['sv-se'] = "pt-ring";
+$text['label-pt-ring']['uk'] = "pt-ring";
+$text['label-pt-ring']['de-at'] = "pt-ring";
+$text['label-pt-ring']['he'] = "צלצול פולני";
+
+$text['label-it-ring']['en-us'] = "it-ring";
+$text['label-it-ring']['es-cl'] = "it-ring";
+$text['label-it-ring']['fr-fr'] = "Italie-ring";
+$text['label-it-ring']['pt-pt'] = "it-ring";
+$text['label-it-ring']['pt-br'] = "it-ring";
+$text['label-it-ring']['pl'] = "it-ring ";
+$text['label-it-ring']['sv-se'] = "it-ring";
+$text['label-it-ring']['uk'] = "it-ring";
+$text['label-it-ring']['de-at'] = "it-ring";
+$text['label-it-ring']['he'] = "צלצול איטלקי";
+
+$text['label-fr-ring']['en-us'] = "fr-ring";
+$text['label-fr-ring']['es-cl'] = "fr-ring";
+$text['label-fr-ring']['fr-fr'] = "France-ring";
+$text['label-fr-ring']['pt-pt'] = "fr-ring";
+$text['label-fr-ring']['pt-br'] = "fr-ring";
+$text['label-fr-ring']['pl'] = "fr-ring ";
+$text['label-fr-ring']['sv-se'] = "fr-ring";
+$text['label-fr-ring']['uk'] = "fr-ring";
+$text['label-fr-ring']['de-at'] = "fr-ring";
+$text['label-fr-ring']['he'] = "צלצול צרפתי";
 
 //option (present for compatibility, should use label-true/false instead)
 
@@ -686,11 +849,41 @@ $text['option-false']['pl'] = "Nie";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['de-at'] = "Aus";
 
+$text['label-label']['en-us'] = "Label";
+$text['label-label']['es-cl'] = "Etiqueta";
+$text['label-label']['pt-pt'] = "Etiqueta";
+$text['label-label']['fr-fr'] = "Label";
+$text['label-label']['pt-br'] = "Etiqueta";
+$text['label-label']['he'] = "תג";
+$text['label-label']['pl'] = "Etykieta";
+$text['label-label']['uk'] = "Назва";
+$text['label-label']['sv-se'] = "Etikett";
+$text['label-label']['de-at'] = "Kennzeichnung";
 
+$text['label-groups']['en-us'] = "Groups";
+$text['label-groups']['es-cl'] = "Grupos";
+$text['label-groups']['pt-pt'] = "Grupos";
+$text['label-groups']['fr-fr'] = "Groupes";
+$text['label-groups']['pt-br'] = "Grupos";
+$text['label-groups']['pl'] = "Grupy";
+$text['label-groups']['uk'] = "Групи";
+$text['label-groups']['sv-se'] = "Grupper";
+$text['label-groups']['de-at'] = "Gruppen";
 
 //description
 
-$text['description-value']['en-us'] = "Enter the value of this setting.";
+$text['description-name']['en-us'] = "Enter the name.";
+$text['description-name']['es-cl'] = "";
+$text['description-name']['pt-pt'] = "";
+$text['description-name']['fr-fr'] = "";
+$text['description-name']['nl-nl'] = "";
+$text['description-name']['pt-br'] = "";
+$text['description-name']['pl'] = "";
+$text['description-name']['sv-se'] = "";
+$text['description-name']['uk'] = "";
+$text['description-name']['de-at'] = "";
+
+$text['description-value']['en-us'] = "Enter the value.";
 $text['description-value']['es-cl'] = "Ingrese el valor de esta configuración";
 $text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
 $text['description-value']['fr-fr'] = "Entrer la valeur de ce paramètre.";
@@ -744,5 +937,23 @@ $text['description-description']['pl'] = "Wpisz opis (opcjonalne).";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
 $text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
 $text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
+
+$text['description-enabled']['en-us'] = "";
+$text['description-enabled']['es-cl'] = "";
+$text['description-enabled']['pt-pt'] = "";
+$text['description-enabled']['fr-fr'] = "";
+$text['description-enabled']['pt-br'] = "";
+$text['description-enabled']['pl'] = "";
+$text['description-enabled']['uk'] = "";
+$text['description-enabled']['sv-se'] = "";
+$text['description-enabled']['ro'] = "";
+$text['description-enabled']['de-at'] = "";
+$text['description-enabled']['ar-eg'] = "";
+$text['description-enabled']['he'] = "";
+
+$text['description-description']['en-us'] = 'Enter the description.';
+$text['description-description']['es-cl'] = '';
+$text['description-description']['pt-pt'] = '';
+$text['description-description']['fr-fr'] = '';
 
 ?>

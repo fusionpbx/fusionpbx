@@ -217,6 +217,18 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		<?php unset($br); ?>
 		}
 
+	div#footer_login {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		background: <?php echo ($_SESSION['theme']['footer_background_color']['text'] != '') ? $_SESSION['theme']['footer_background_color']['text'] : 'rgba(0,0,0,0.2)'; ?>;
+		text-align: center;
+		vertical-align: middle;
+		padding: 8px;
+		}
+
 	.footer {
 		font-size: 11px;
 		font-family: arial;
@@ -308,25 +320,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			}
 		}
 
-	/* xs menu toggle button */
-	.navbar-inverse .navbar-toggle {
-		border: none;
-		}
-
-	.navbar-inverse .navbar-toggle:hover,
-	.navbar-inverse .navbar-toggle:focus,
-	.navbar-inverse .navbar-toggle:active {
-		background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
-		}
-
-	.navbar-inverse .navbar-toggle .icon-bar {
-		background: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
-		}
-
-	.navbar-inverse .navbar-toggle:hover > .icon-bar {
-		background: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
-		}
-
 	/* sub menu container */
 	.navbar-nav > li > .dropdown-menu {
 		margin-top: 0;
@@ -363,77 +356,69 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.dropdown-menu > li > a:active {
 		color: <?php echo ($_SESSION['theme']['menu_sub_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_sub_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_sub_background_color_hover']['text'] : '#141414'; ?>;
+		outline: none;
 		}
 
 	.dropdown-menu > li > a > span.glyphicon {
 		display: inline-block;
 		font-size: 8pt;
-		margin: 0px 0 8px 8px;
+		margin: 0 0 8px 8px;
 		opacity: 0.30;
 		text-align: top;
 		}
 
-	/* menu toggle button */
-	.navbar-header > button.navbar-toggle {
-		margin-left: 20px;
+	/* domain name/selector */
+	a.domain_selector_domain {
+		display: inline-block;
+		white-space: nowrap;
+		font-size: 9.5pt;
+		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
+		padding: 16px 0 14px 0;
 		}
 
-	#logout_icon {
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	a.domain_selector_domain:hover,
+	a.domain_selector_domain:focus,
+	a.domain_selector_domain:active {
+		color: <?php echo ($_SESSION['theme']['domain_color_hover']['text'] != '') ? $_SESSION['theme']['domain_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
+		}
+
+	/* logout icon */
+	a.logout_icon {
+		display: inline-block;
+		color: <?php echo ($_SESSION['theme']['logout_icon_color']['text'] != '') ? $_SESSION['theme']['logout_icon_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
 		font-size: 11pt;
-		margin: 16px 19px 0 5px;
-		filter: alpha(opacity=80);
-		opacity: 0.80;
-		-moz-opacity: 0.80;
-		-khtml-opacity: 0.80;
+		padding: 16px 10px 13px 10px;
+		margin-left: 10px;
 		}
 
-	#logout_icon:hover {
-		filter: alpha(opacity=100);
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	a.logout_icon:hover,
+	a.logout_icon:focus,
+	a.logout_icon:active {
+		color: <?php echo ($_SESSION['theme']['logout_icon_color_hover']['text'] != '') ? $_SESSION['theme']['logout_icon_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
 		}
 
-	/* domain name: xs only */
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain {
-		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
-		white-space: nowrap;
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
-		font-size: 9.5pt;
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	/* xs menu toggle button */
+	.navbar-inverse .navbar-toggle {
+		background: transparent;
+		border: none;
+		padding: 16px 7px 17px 20px;
+		margin: 0 8px;
 		}
 
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:hover,
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:focus,
-	.navbar-inverse .navbar-header .navbar-nav .domain_selector_domain:active {
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	.navbar-inverse .navbar-toggle:hover,
+	.navbar-inverse .navbar-toggle:focus,
+	.navbar-inverse .navbar-toggle:active {
+		background: transparent;
 		}
 
-	/* domain name: sm and larger */
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain {
-		<?php if ($_SESSION['theme']['domain_visible']['text'] != 'true') { ?>display: none;<?php } ?>
-		white-space: nowrap;
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
-		font-size: 9.5pt;
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : '#fff'; ?>;
+	.navbar-inverse .navbar-toggle .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_toggle_color']['text'] != '') ? $_SESSION['theme']['menu_main_toggle_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
 		}
 
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:hover,
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:focus,
-	.navbar-inverse .navbar-collapse .navbar-nav > li > a.domain_selector_domain:active {
-		opacity: 1;
-		-moz-opacity: 1;
-		-khtml-opacity: 1;
-		cursor: pointer;
+	.navbar-inverse .navbar-toggle:hover > .icon-bar {
+		background: <?php echo ($_SESSION['theme']['menu_main_toggle_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_toggle_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
 		}
 
 /* BUTTONS ********************************************************************/
@@ -584,6 +569,19 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		opacity: 1.0;
 		}
 
+/* ICONS *********************************************************************/
+
+	span.icon_glyphicon_body {
+		width: 16px;
+		height: 16px;
+		color: <?php echo ($_SESSION['theme']['body_icon_color']['text'] != '') ? $_SESSION['theme']['body_icon_color']['text'] : 'rgba(0,0,0,0.25)'; ?>;
+		border: 0;
+		}
+
+	span.icon_glyphicon_body:hover {
+		color: <?php echo ($_SESSION['theme']['body_icon_color_hover']['text'] != '') ? $_SESSION['theme']['body_icon_color_hover']['text'] : 'rgba(0,0,0,0.5)'; ?>;
+		}
+
 /* DOMAIN SELECTOR ***********************************************************/
 
 	#domains_container {
@@ -653,7 +651,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 /* DOMAIN SELECTOR: END ********************************************************/
 
 	#default_login {
-		display: inline-block;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		-khtml-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
 		padding: <?php echo ($_SESSION['theme']['login_body_padding']['text'] != '') ? $_SESSION['theme']['login_body_padding']['text'] : '30px'; ?>;
 		<?php echo ($_SESSION['theme']['login_body_width']['text'] != '') ? 'width: '.$_SESSION['theme']['login_body_width']['text'].";\n" : null; ?>
 		background: <?php echo ($_SESSION['theme']['login_body_background_color']['text'] != '') ? $_SESSION['theme']['login_body_background_color']['text'] : "rgba(255,255,255,0.35)"; ?>;
@@ -669,6 +673,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
 		box-shadow: <?php echo ($_SESSION['theme']['login_body_shadow_color']['text'] != '') ? '0 1px 20px '.$_SESSION['theme']['login_body_shadow_color']['text'] : 'none'; ?>;
+		}
+
+	#login_logo {
+		width: 250px;
+		height: auto;
 		}
 
 	a.login_link {
@@ -729,6 +738,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		echo $body_top_style;
 		?>
 		text-align: left;
+		color: <?php echo ($_SESSION['theme']['body_text_color']['text'] != '') ? $_SESSION['theme']['body_text_color']['text'] : '#5f5f5f'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_text_size']['text'] != '') ? $_SESSION['theme']['body_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['body_text_font']['text'] != '') ? $_SESSION['theme']['body_text_font']['text'] : 'arial'; ?>;
 		}
 
 	/* default body padding */
@@ -761,7 +773,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	a {
-		width: 100%;
 		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		text-decoration: none;
 		}
@@ -788,11 +799,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt,
 	input[type=number].txt,
 	input[type=password].txt,
+	label.txt,
 	select.formfld,
 	textarea.formfld,
 	input[type=text].formfld,
 	input[type=number].formfld,
-	input[type=password].formfld {
+	input[type=password].formfld,
+	label.formfld {
 		font-family: <?php echo ($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['input_text_size']['text'] != '') ? $_SESSION['theme']['input_text_size']['text'] : '12px'; ?>;
 		color: <?php echo ($_SESSION['theme']['input_text_color']['text'] != '') ? $_SESSION['theme']['input_text_color']['text'] : '#000000'; ?>;
@@ -852,10 +865,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt:hover,
 	input[type=number].txt:hover,
 	input[type=password].txt:hover,
+	label.txt:hover,
 	textarea.formfld:hover,
 	input[type=text].formfld:hover,
 	input[type=number].formfld:hover,
-	input[type=password].formfld:hover {
+	input[type=password].formfld:hover,
+	label.formfld:hover {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_hover']['text'] != '') ? $_SESSION['theme']['input_border_color_hover']['text'] : '#c0c0c0'; ?>;
 		}
 
@@ -863,10 +878,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input[type=text].txt:focus,
 	input[type=number].txt:focus,
 	input[type=password].txt:focus,
+	label.txt:focus,
 	textarea.formfld:focus,
 	input[type=text].formfld:focus,
 	input[type=number].formfld:focus,
-	input[type=password].formfld:focus {
+	input[type=password].formfld:focus,
+	label.formfld:focus {
 		border-color: <?php echo ($_SESSION['theme']['input_border_color_focus']['text'] != '') ? $_SESSION['theme']['input_border_color_focus']['text'] : '#c0c0c0'; ?>;
 		/* first clear */
 		-webkit-box-shadow: none;
@@ -874,6 +891,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: none;
 		<?php
 		/* then set */
+		$shadow_inset = $shadow_outset = '';
 		if ($_SESSION['theme']['input_shadow_inner_color_focus']['text'] != '') {
 			$inner_color = $_SESSION['theme']['input_shadow_inner_color_focus']['text'];
 			$shadow_inset = "0 0 3px ".$inner_color." inset";
@@ -949,6 +967,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: none;
 		<?php
 		/* then set */
+		$shadow_inset = $shadow_outset = '';
 		if ($_SESSION['theme']['login_input_shadow_inner_color_focus']['text'] != '') {
 			$inner_color = $_SESSION['theme']['login_input_shadow_inner_color_focus']['text'];
 			$shadow_inset = "0 0 3px ".$inner_color." inset";
@@ -981,14 +1000,20 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input.login:-ms-input-placeholder { color: <?php echo $placeholder_color; ?> } /* ie 10+ */
 	input.login::placeholder { color: <?php echo $placeholder_color; ?> } /* official standard */
 
-	.formfld_highlight_bad {
+	input[type=password].formfld_highlight_bad,
+	input[type=password].formfld_highlight_bad:hover,
+	input[type=password].formfld_highlight_bad:active,
+	input[type=password].formfld_highlight_bad:focus {
 		border-color: #aa2525;
 		-webkit-box-shadow: 0 0 3px #aa2525 inset;
 		-moz-box-shadow: 0 0 3px #aa2525 inset;
 		box-shadow: 0 0 3px #aa2525 inset;
 		}
 
-	.formfld_highlight_good {
+	input[type=password].formfld_highlight_good,
+	input[type=password].formfld_highlight_good:hover,
+	input[type=password].formfld_highlight_good:active,
+	input[type=password].formfld_highlight_good:focus {
 		border-color: #2fb22f;
 		-webkit-box-shadow: 0 0 3px #2fb22f inset;
 		-moz-box-shadow: 0 0 3px #2fb22f inset;
@@ -1027,9 +1052,56 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	span.playback_progress_bar {
-		background-color: #c43e42;
-		height: 1px;
+		background-color: #b90004;
+		width: 17px;
+		height: 4px;
+		margin-bottom: 3px;
 		display: block;
+		-moz-border-radius: 0 0 6px 6px;
+		-webkit-border-radius: 0 0 6px 6px;
+		-khtml-border-radius: 0 0 6px 6px;
+		border-radius: 0 0 6px 6px;
+		-webkit-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		-moz-box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
+		}
+
+	td.playback_progress_bar_background {
+		padding: 0;
+		border-bottom: none;
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -o-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.15)), color-stop(1, transparent));
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 100%);
+		overflow: hidden;
+		}
+
+	div.pwstrength_progress {
+		display: none;
+		}
+
+	div.pwstrength_progress > div.progress {
+		max-width: 200px;
+		height: 6px;
+		margin: 1px 0 0 1px;
+		background: <?php echo ($_SESSION['theme']['input_background_color']['text'] != '') ? $_SESSION['theme']['input_background_color']['text'] : 'rgb(245, 245, 245)'; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['input_border_radius']['text'], '3px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		}
+
+	div.pwstrength_progress_password_reset > div.progress {
+		margin: 0 auto 4px auto;
+		width: 200px;
+		max-width: 200px;
+		background: <?php echo ($_SESSION['theme']['login_input_background_color']['text'] != '') ? $_SESSION['theme']['login_input_background_color']['text'] : (($_SESSION['theme']['input_background_color']['text'] != '') ? $_SESSION['theme']['input_background_color']['text'] : '#ffffff'); ?>;
+		border-width: <?php echo ($_SESSION['theme']['login_input_border_size']['text'] != '') ? $_SESSION['theme']['login_input_border_size']['text'] : (($_SESSION['theme']['input_border_size']['text'] != '') ? $_SESSION['theme']['input_border_size']['text'] : '1px'); ?>;
+		border-color: <?php echo ($_SESSION['theme']['login_input_border_color']['text'] != '') ? $_SESSION['theme']['login_input_border_color']['text'] : (($_SESSION['theme']['input_border_color']['text'] != '') ? $_SESSION['theme']['input_border_color']['text'] : '#c0c0c0'); ?>;
 		}
 
 /* TABLES *****************************************************************/
@@ -1119,6 +1191,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		color: <?php echo ($_SESSION['theme']['form_table_label_text_color']['text'] != '') ? $_SESSION['theme']['form_table_label_text_color']['text'] : '#000000'; ?>;
 		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
+		vertical-align: top;
 		}
 
 	.vncellreq { /* form_label_required */
@@ -1137,6 +1210,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
 		font-weight: <?php echo ($_SESSION['theme']['form_table_label_required_text_weight']['text'] != '') ? $_SESSION['theme']['form_table_label_required_text_weight']['text'] : 'bold'; ?>;
+		vertical-align: top;
 		}
 
 	.vtable { /* form_field */

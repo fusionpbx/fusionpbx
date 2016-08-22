@@ -23,8 +23,16 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--load libraries
+	local Database = require "resources.functions.database"
+	local Settings = require "resources.functions.lazy_settings"
+
 --define a function to record the greeting
 	function record_greeting(greeting_id)
+		local db = dbh or Database.new('system')
+		local settings = Settings.new(db, domain_name, domain_uuid)
+
+		local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
@@ -62,7 +70,6 @@
 					else
 						--prepare to record the greeting
 							if (session:ready()) then
-								max_len_seconds = 30;
 								silence_seconds = 5;
 								mkdir(voicemail_dir.."/"..voicemail_id);
 								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)

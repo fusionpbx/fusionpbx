@@ -175,7 +175,7 @@
 					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
 				}
 				if (!is_dir($dst)) {
-					if (!mkdir($dst)) {
+					if (!mkdir($dst,02770,true)) {
 						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 					}
 				}
@@ -988,8 +988,8 @@ function format_string ($format, $data) {
 		$password = '';
 		$charset = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["security"]["password_length"]["var"])) ? $_SESSION["security"]["password_length"]["var"] : 10;
-			$strength = (is_numeric($_SESSION["security"]["password_strength"]["var"])) ? $_SESSION["security"]["password_strength"]["var"] : 4;
+			$length = (is_numeric($_SESSION["security"]["password_length"]["numeric"])) ? $_SESSION["security"]["password_length"]["numeric"] : 10;
+			$strength = (is_numeric($_SESSION["security"]["password_strength"]["numeric"])) ? $_SESSION["security"]["password_strength"]["numeric"] : 4;
 		}
 		if ($strength >= 1) { $charset .= "0123456789"; }
 		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
@@ -1002,7 +1002,42 @@ function format_string ($format, $data) {
 		}
 		return $password;
 	}
-	//echo generate_password(4, 4);
+
+//check password strength against requirements (if any)
+	function check_password_strength($password, $text) {
+		if ($password != '') {
+			$req['length'] = $_SESSION['security']['password_length']['numeric'];
+			$req['number'] = ($_SESSION['security']['password_number']['boolean'] == 'true') ? true : false;
+			$req['lowercase'] = ($_SESSION['security']['password_lowercase']['boolean'] == 'true') ? true : false;
+			$req['uppercase'] = ($_SESSION['security']['password_uppercase']['boolean'] == 'true') ? true : false;
+			$req['special'] = ($_SESSION['security']['password_special']['boolean'] == 'true') ? true : false;
+			if (is_numeric($req['length']) && $req['length'] != 0 && !preg_match_all('$\S*(?=\S{'.$req['length'].',})\S*$', $password)) { // length
+				$msg_errors[] = $req['length'].'+ '.$text['label-characters'];
+			}
+			if ($req['number'] && !preg_match_all('$\S*(?=\S*[\d])\S*$', $password)) { //number
+				$msg_errors[] = '1+ '.$text['label-numbers'];
+			}
+			if ($req['lowercase'] && !preg_match_all('$\S*(?=\S*[a-z])\S*$', $password)) { //lowercase
+				$msg_errors[] = '1+ '.$text['label-lowercase_letters'];
+			}
+			if ($req['uppercase'] && !preg_match_all('$\S*(?=\S*[A-Z])\S*$', $password)) { //uppercase
+				$msg_errors[] = '1+ '.$text['label-uppercase_letters'];
+			}
+			if ($req['special'] && !preg_match_all('$\S*(?=\S*[\W])\S*$', $password)) { //special
+				$msg_errors[] = '1+ '.$text['label-special_characters'];
+			}
+			if (is_array($msg_errors) && sizeof($msg_errors) > 0) {
+				$_SESSION["message"] = $text['message-password_requirements'].': '.implode(', ', $msg_errors);
+				$_SESSION['message_mood'] = 'negative';
+				$_SESSION['message_delay'] = '6000';
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return true;
+	}
 
 //based on Wez Furlong do_post_request
 	if (!function_exists('send_http_request')) {
@@ -1096,60 +1131,6 @@ function number_pad($number,$n) {
 			else {
 				return substr($string,0,$max_characters)." ...";
 			}
-		}
-	}
-
-//function to show the list of sound files
-	if (!function_exists('recur_sounds_dir')) {
-		function recur_sounds_dir($dir) {
-			global $dir_array;
-			global $dir_path;
-			$dir_list = opendir($dir);
-			while ($file = readdir ($dir_list)) {
-				if ($file != '.' && $file != '..') {
-					$newpath = $dir.'/'.$file;
-					$level = explode('/',$newpath);
-					if (substr($newpath, -4) == ".svn" ||
-						substr($newpath, -4) == ".git") {
-						//ignore .svn and .git dir and subdir
-					}
-					else {
-						if (is_dir($newpath)) { //directories
-							recur_sounds_dir($newpath);
-						}
-						else { //files
-							if (strlen($newpath) > 0) {
-								//make the path relative
-									$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
-								//remove the 8000-48000 khz from the path
-									$relative_path = str_replace("/8000/", "/", $relative_path);
-									$relative_path = str_replace("/16000/", "/", $relative_path);
-									$relative_path = str_replace("/32000/", "/", $relative_path);
-									$relative_path = str_replace("/48000/", "/", $relative_path);
-								//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
-									$file_array = explode( "/", $relative_path );
-									$x = 1;
-									$relative_path = '';
-									foreach( $file_array as $tmp) {
-										if ($x == 5) { $relative_path .= $tmp; }
-										if ($x > 5) { $relative_path .= '/'.$tmp; }
-										$x++;
-									}
-								//add the file if it does not exist in the array
-									if (isset($dir_array[$relative_path])) {
-										//already exists
-									}
-									else {
-										//add the new path
-											if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
-									}
-							}
-						}
-					}
-				}
-			}
-			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
-			closedir($dir_list);
 		}
 	}
 
@@ -1906,6 +1887,40 @@ function number_pad($number,$n) {
 			}
 
 		}
+	}
+
+//retrieve array of countries
+	if (!function_exists('get_countries')) {
+		function get_countries($db) {
+			$sql = "select * from v_countries order by country asc";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			return ($result_count > 0) ? $result : false;
+			unset ($prep_statement, $sql);
+		}
+	}
+
+	function event_socket_mkdir($dir) {
+		//connect to fs
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				return false;
+			}
+		//send the mkdir command to freeswitch
+			if ($fp) {
+				//build and send the mkdir command to freeswitch
+					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					fclose($fp);
+				//check result
+					if (trim($switch_result) == "-ERR no reply") {
+						return true;
+					}
+			}
+		//can not create directory
+			return false;
 	}
 
 ?>

@@ -51,134 +51,55 @@
 	$start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
 	$start_stamp_end = check_str($_REQUEST['start_stamp_end']);
 	$include_internal = check_str($_REQUEST['include_internal']);
-	$quick_select = (sizeof($_REQUEST) == 0) ? 1 : $quick_select; //set default
+	$quick_select = (sizeof($_REQUEST) == 0) ? 3 : $quick_select; //set default
 
-//get current extension info
-	$sql = "select ";
-	$sql .= "domain_uuid, ";
-	$sql .= "extension_uuid, ";
-	$sql .= "extension, ";
-	$sql .= "number_alias, ";
-	$sql .= "description ";
-	$sql .= "from ";
-	$sql .= "v_extensions ";
-	$sql .= "where ";
-	$sql .= "enabled = 'true' ";
-	if (!($_GET['showall'] == 'true' && permission_exists('xml_cdr_all'))) {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	}
-	if (!(if_group("admin") || if_group("superadmin"))) {
-		if (count($_SESSION['user']['extension']) > 0) {
-			$sql .= "and (";
+//get the summary
+	$cdr = new xml_cdr;
+	$cdr->domain_uuid = $_SESSION['domain_uuid'];
+	$cdr->quick_select = $quick_select;
+	$cdr->start_stamp_begin = $start_stamp_begin;
+	$cdr->start_stamp_end = $start_stamp_end;
+	$cdr->include_internal = $include_internal;
+	$summary = $cdr->user_summary();
+
+//set the http header
+	if ($_REQUEST['type'] == "csv") {
+	
+		//set the headers
+			header('Content-type: application/octet-binary');
+			header('Content-Disposition: attachment; filename=cdr-statistics.csv');
+
+		//show the column names on the first line
+			$z = 0;
+			foreach($summary[1] as $key => $val) {
+				if ($z == 0) {
+					echo '"'.$key.'"';
+				}
+				else {
+					echo ',"'.$key.'"';
+				}
+				$z++;
+			}
+			echo "\n";
+		
+		//add the values to the csv
 			$x = 0;
-			foreach($_SESSION['user']['extension'] as $row) {
-				if ($x > 0) { $sql .= "or "; }
-				$sql .= "extension = '".$row['user']."' ";
+			foreach($summary as $users) {
+				$z = 0;
+				foreach($users as $key => $val) {
+					if ($z == 0) {
+						echo '"'.$summary[$x][$key].'"';
+					}
+					else {
+						echo ',"'.$summary[$x][$key].'"';
+					}
+					$z++;
+				}
+				echo "\n";
 				$x++;
 			}
-			$sql .= ")";
-		}
-		else {
-			//used to hide any results when a user has not been assigned an extension
-			$sql .= "and extension = 'disabled' ";
-		}
+			exit;
 	}
-
-	$sql .= "order by ";
-	$sql .= "extension asc";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			$ext = $row['extension'];
-			if(strlen($row['number_alias']) > 0) {
-				$ext = $row['number_alias'];
-			}
-			$extensions[$ext]['domain_uuid'] = $row['domain_uuid'];
-			$extensions[$ext]['extension'] = $row['extension'];
-			$extensions[$ext]['extension_uuid'] = $row['extension_uuid'];
-			$extensions[$ext]['number_alias'] = $row['number_alias'];
-			$extensions[$ext]['description'] = $row['description'];
-		}
-	}
-	unset ($sql, $prep_statement, $result, $row_count);
-	// create list of extensions for query below
-	if (isset($extensions)) foreach ($extensions as $extension => $blah) {
-		$ext_array[] = $extension;
-	}
-	$ext_list = (isset($ext_array)) ? implode("','", $ext_array) : "";
-
-//calculate the summary data
-	$sql = "select ";
-	$sql .= "caller_id_number, ";
-	$sql .= "destination_number, ";
-	$sql .= "billsec, ";
-	$sql .= "hangup_cause ";
-	$sql .= "from v_xml_cdr ";
-	$sql .= "where ";
-	if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
-		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."' and ";
-	}
-	$sql .= "( ";
-	$sql .= "	caller_id_number in ('".$ext_list."') or ";
-	$sql .= "	destination_number in ('".$ext_list."') ";
-	$sql .= ") ";
-	if (!$include_internal) {
-		$sql .= " and (direction = 'inbound' or direction = 'outbound') ";
-	}
-	if (strlen($start_stamp_begin) > 0 || strlen($start_stamp_end) > 0) {
-		unset($quick_select);
-		if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-			$sql .= " and start_stamp between '".$start_stamp_begin.":00.000' and '".$start_stamp_end.":59.999'";
-		}
-		else {
-			if (strlen($start_stamp_begin) > 0) { $sql .= "and start_stamp >= '".$start_stamp_begin.":00.000' "; }
-			if (strlen($start_stamp_end) > 0) { $sql .= "and start_stamp <= '".$start_stamp_end.":59.999' "; }
-		}
-	}
-	else {
-		switch ($quick_select) {
-			case 1: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; break; //last 7 days
-			case 2: $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; break; //last hour
-			case 3: $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' "; break; //today
-			case 4: $sql .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' "; break; //yesterday
-			case 5: $sql .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' "; break; //this week
-			case 6: $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' "; break; //this month
-			case 7: $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' "; break; //this year
-		}
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			if ($summary[$row['destination_number']]['missed'] == null) {
-				$summary[$row['destination_number']]['missed'] = 0;
-			}
-			if (in_array($row['caller_id_number'], $ext_array)) {
-				$summary[$row['caller_id_number']]['outbound']['count']++;
-				$summary[$row['caller_id_number']]['outbound']['seconds'] += $row['billsec'];
-			}
-			if (in_array($row['destination_number'], $ext_array)) {
-				$summary[$row['destination_number']]['inbound']['count']++;
-				$summary[$row['destination_number']]['inbound']['seconds'] += $row['billsec'];
-				if ($row['billsec'] == "0") {
-					$summary[$row['destination_number']]['missed']++;
-				}
-			}
-			if ($row['hangup_cause'] == "NO_ANSWER") {
-				$summary[$row['destination_number']]['no_answer']++;
-			}
-			if ($row['hangup_cause'] == "USER_BUSY") {
-				$summary[$row['destination_number']]['busy']++;
-			}
-		} //end foreach
-	} //end if results
-	unset ($sql, $prep_statement, $result, $row_count);
 
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -300,44 +221,24 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	if (isset($extensions)) foreach ($extensions as $extension => $ext) {
-		$seconds['inbound'] = $summary[$extension]['inbound']['seconds'];
-		$seconds['outbound'] = $summary[$extension]['outbound']['seconds'];
-		if ($summary[$extension]['missed'] == null) {
-			$summary[$extension]['missed'] = 0;
-		}
-		if ($summary[$extension]['no_answer'] == null) {
-			$summary[$extension]['no_answer'] = 0;
-		}
-		if ($summary[$extension]['busy'] == null) {
-			$summary[$extension]['busy'] = 0;
-		}
-
-		//missed
-		$missed = $summary[$extension]['missed'];
-
-		//volume
-		$volume = $summary[$extension]['inbound']['count'] + $summary[$extension]['outbound']['count'];
-
-		//average length of call
-		$summary[$extension]['aloc'] = $volume==0 ? 0 : ($seconds['inbound'] + $seconds['outbound']) / ($volume - $missed);
-
+	if (isset($summary)) foreach ($summary as $key => $row) {
 		$tr_link = "xhref='xml_cdr.php?'";
 		echo "<tr ".$tr_link.">\n";
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$ext['domain_uuid']]['domain_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$extension."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$ext['number_alias']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['missed']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['no_answer']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['busy']."&nbsp;</td>\n";
-		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$summary[$extension]['aloc'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['inbound']['count'] != '') ? $summary[$extension]['inbound']['count'] : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['inbound'] != '') ? gmdate("G:i:s", $seconds['inbound']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['outbound']['count'] != '') ? $summary[$extension]['outbound']['count'] : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['outbound'] != '') ? gmdate("G:i:s", $seconds['outbound']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='row_stylebg'>".$ext['description']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['number_alias']."&nbsp;</td>\n";
+		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['answered']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['missed']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['no_answer']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['busy']."&nbsp;</td>\n";
+		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$row['aloc'])."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". $row['inbound_calls'] ."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? gmdate("G:i:s", $row['inbound_duration']) : '0:00:00')."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? $row['outbound_calls'] : "0")."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? gmdate("G:i:s", $row['outbound_duration']) : '0:00:00')."</td>\n";
+		echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = ($c==0) ? 1 : 0;
 	}

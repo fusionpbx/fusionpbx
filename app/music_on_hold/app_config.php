@@ -20,28 +20,33 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "music_on_hold_default_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "music_on_hold_default_add";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "music_on_hold_default_delete";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "music_on_hold_view";
-		$apps[$x]['permissions'][3]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-
-		$apps[$x]['permissions'][4]['name'] = "music_on_hold_add";
-		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][4]['groups'][] = "admin";
-
-		$apps[$x]['permissions'][5]['name'] = "music_on_hold_delete";
-		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][5]['groups'][] = "admin";
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_path";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
@@ -54,11 +59,20 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_category";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_path";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
@@ -66,15 +80,19 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "8000,16000,32000,48000";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_path";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_shuffle";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "true/false";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_timer";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_channels";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "1-mono, 2-stereo";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_interval";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "milliseconds";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_timer_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "soft";
 		$z++;

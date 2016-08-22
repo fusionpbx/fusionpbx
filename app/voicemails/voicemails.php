@@ -200,7 +200,7 @@ else {
 				echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('voicemail_greeting_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."'>".$text['label-greetings']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['voicemail_enabled']]."&nbsp;</td>\n";

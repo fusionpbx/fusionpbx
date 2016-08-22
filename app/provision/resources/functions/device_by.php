@@ -3,6 +3,8 @@
 function device_by_mac($db, $mac) {
 	$sql = 'SELECT * FROM v_devices ';
 	$sql .= 'WHERE device_mac_address=:mac';
+	$sql .= 'AND device_enabled = \'true\' ';
+
 	$prep = $db->prepare(check_sql($sql));
 	if ($prep) {
 		$prep->bindParam(':mac', $mac);
@@ -21,6 +23,8 @@ function device_by_ext($db, $ext, $domain) {
 	$sql .= 'where t2.user_id=:ext ';
 	$sql .= 'and t3.domain_name=:domain ';
 	$sql .= 'and t3.domain_enabled = \'true\' ';
+	$sql .= 'and t1.device_enabled = \'true\' ';
+
 	$prep = $db->prepare(check_sql($sql));
 	if ($prep) {
 		$prep->bindParam(':ext', $ext);
