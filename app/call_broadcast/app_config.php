@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ca'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_broadcast_view";

@@ -69,14 +69,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'access_control_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Insira o nome';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'access_control_default';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the default type.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Selecione o tipo padrão.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'access_control_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Insira com uma descrição';
 
 		$y = 1; //table array index
 		$z = 0; //field array index
@@ -106,17 +109,21 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'node_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Selecione o tipo.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'node_cidr';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the IP CIDR range.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Insira o intervalo IP CIDR.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'node_domain';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the domain.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Insira com o domínio.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'node_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Insira a descrição.';
 		$z++;
 ?>
