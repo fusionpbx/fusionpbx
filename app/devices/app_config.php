@@ -966,8 +966,8 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
-		$vendors[$y]['functions'][$z]['label'] = "label-xml_phonebook";
-		$vendors[$y]['functions'][$z]['name'] = "xml_phonebook";
+		$vendors[$y]['functions'][$z]['label'] = "label-xml_directory";
+		$vendors[$y]['functions'][$z]['name'] = "xml_directory";
 		$vendors[$y]['functions'][$z]['value'] = "47";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";

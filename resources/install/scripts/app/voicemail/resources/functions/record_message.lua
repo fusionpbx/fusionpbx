@@ -38,7 +38,7 @@
 			if (skip_instructions == "true") then
 				--skip the instructions
 			else
-				if (string.len(dtmf_digits) == 0) then
+				if (dtmf_digits and string.len(dtmf_digits) == 0) then
 					dtmf_digits = macro(session, "record_message", 1, 100);
 				end
 			end

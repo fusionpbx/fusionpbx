@@ -143,6 +143,18 @@ $text['label-zero_sp_touch']['de-at'] = "Zero-SP-Touch";
 $text['label-zero_sp_touch']['ar-eg'] = "";
 $text['label-zero_sp_touch']['he'] = "";
 
+$text['label-xml_directory']['en-us'] = "XML Directory";
+$text['label-xml_directory']['es-cl'] = "Directorio XML";
+$text['label-xml_directory']['pt-pt'] = "Diretório XML";
+$text['label-xml_directory']['fr-fr'] = "Annuaire XML";
+$text['label-xml_directory']['pt-br'] = "Diretório XML";
+$text['label-xml_directory']['pl'] = "Ksiażka telefoniczna XML";
+$text['label-xml_directory']['uk'] = "";
+$text['label-xml_directory']['sv-se'] = "Katalog";
+$text['label-xml_directory']['de-at'] = "Verzeichnis";
+$text['label-xml_directory']['ar-eg'] = "";
+$text['label-xml_directory']['he'] = "מדריך";
+
 $text['label-xml_phonebook']['en-us'] = "XML Phonebook";
 $text['label-xml_phonebook']['es-cl'] = "Agenda telefónica XML";
 $text['label-xml_phonebook']['pt-pt'] = "Agenda telefónica XML";
