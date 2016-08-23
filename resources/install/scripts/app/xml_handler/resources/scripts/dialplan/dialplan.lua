@@ -223,7 +223,6 @@
 								condition_tag_status = "closed";
 								condition_type = "";
 								condition_attribute = "";
-								condition_expression = "";
 							end
 						end
 
@@ -236,7 +235,6 @@
 							else
 								condition_attribute = dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
 							end
-							condition_expression = "";
 							condition = ""; --prevents a duplicate time condition
 						else
 							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] ..  condition_break;
