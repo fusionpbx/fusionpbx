@@ -51,7 +51,7 @@ if (!class_exists('ringbacks')) {
 
 			//get the ringback types
 				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Defaults' ";
+				$sql .= "where var_cat = 'Ringtones' ";
 				$sql .= "and var_name LIKE '%-ring' ";
 				$sql .= "order by var_name asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
