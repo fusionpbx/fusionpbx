@@ -148,18 +148,20 @@
 					end
 
 				--close the tags
-					if (condition_tag_status ~= "closed") then
+					if (dialplan_tag_status ~= "closed") then
 						if ((previous_dialplan_uuid ~= dialplan_uuid) or (previous_dialplan_detail_group ~= dialplan_detail_group)) then
-							if (condition_attribute and (string.len(condition_attribute) > 0)) then
-								table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[/>]]);
-								condition_attribute = "";
-							elseif (condition and (string.len(condition) > 0)) then
-								table.insert(xml, condition .. [[/>]]);
-								condition = "";
-							elseif (condition_tag_status ~= "closed") then
-								table.insert(xml, [[				</condition>]]);
+							if (condition_tag_status ~= "closed") then
+								if (condition_attribute and (string.len(condition_attribute) > 0)) then
+									table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[/>]]);
+									condition_attribute = "";
+								elseif (condition and (string.len(condition) > 0)) then
+									table.insert(xml, condition .. [[/>]]);
+									condition = "";
+								elseif (condition_tag_status ~= "closed") then
+									table.insert(xml, [[				</condition>]]);
+								end
+								condition_tag_status = "closed";
 							end
-							condition_tag_status = "closed";
 						end
 						if (previous_dialplan_uuid ~= dialplan_uuid) then
 							table.insert(xml, [[			</extension>]]);
