@@ -197,55 +197,41 @@ include "root.php";
 			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement, $sql);
 
-			$temp_contacts = array();
 			foreach ($user_contacts as &$row) {
 				$uuid = $row['contact_uuid'];
 				$phone_label = strtolower($row['phone_label']);
 				$contact_category = strtolower($row['contact_category']);
 
-				if(isset($contacts[$uuid])){
-					continue;
-				}
+				$contact = array();
+				$contacts[] = &$contact;
+				$contact['category']             = $is_group ? 'groups' : 'users';
+				$contact['contact_uuid']         = $row['contact_uuid'];
+				$contact['contact_type']         = $row['contact_type'];
+				$contact['contact_category']     = $row['contact_category'];
+				$contact['contact_organization'] = $row['contact_organization'];
+				$contact['contact_name_given']   = $row['contact_name_given'];
+				$contact['contact_name_family']  = $row['contact_name_family'];
+				$contact['numbers']              = array();
 
-				if(!isset($temp_contacts[$uuid])){
-					$contact = array();
-					$temp_contacts[$uuid] = &$contact;
-					$contact['category']             = $is_group ? 'groups' : 'users';
-					$contact['contact_uuid']         = $row['contact_uuid'];
-					$contact['contact_type']         = $row['contact_type'];
-					$contact['contact_category']     = $row['contact_category'];
-					$contact['contact_organization'] = $row['contact_organization'];
-					$contact['contact_name_given']   = $row['contact_name_given'];
-					$contact['contact_name_family']  = $row['contact_name_family'];
-					$contact['numbers']              = array();
-				}
-
-				$contact = &$temp_contacts[$uuid];
 				$numbers = &$contact['numbers'];
 
 				if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-					$contact['phone_label']          = $phone_label;
-					$contact['phone_number']         = $row['phone_number'];
-					$contact['phone_extension']      = $row['phone_extension'];
+					$contact['phone_label']		= $phone_label;
+					$contact['phone_number']	= $row['phone_number'];
+					$contact['phone_extension']	= $row['phone_extension'];
 				}
 
 				$numbers[] = array(
-					line_number          => $line['line_number'],
-					phone_label          => $phone_label,
-					phone_number         => $row['phone_number'],
-					phone_extension      => $row['phone_extension'],
-					phone_primary        => $row['phone_primary'],
+					line_numbe			=> $line['line_number'],
+					phone_label			=> $phone_label,
+					phone_number		=> $row['phone_number'],
+					phone_extension		=> $row['phone_extension'],
+					phone_primar		=> $row['phone_primary'],
 				);
 
 				$contact['phone_number_' . $phone_label] = $row['phone_number'];
 				unset($contact, $numbers, $uuid, $phone_label);
 			}
-
-			foreach($temp_contacts as $contact_uuid=>&$contact){
-				$contacts[$contact_uuid] = $contact;
-			}
-
-			unset($temp_contacts);
 		}
 
 		public function render() {
@@ -324,7 +310,7 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "file not found";
+											echo "327 file not found";
 											exit;
 										}
 
@@ -920,14 +906,14 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found";
+							echo "923 file not found";
 							exit;
 						}
 					}
 					else {
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "file not found";
+							echo "930 file not found ".$template_dir."/".$device_template ."/".$file;
 							if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
