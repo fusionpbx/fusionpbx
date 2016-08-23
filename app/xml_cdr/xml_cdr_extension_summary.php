@@ -111,9 +111,9 @@
 	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' ";
 	echo "onclick=\"window.location='xml_cdr_extension_summary.php?";
 	if (strlen($_SERVER["QUERY_STRING"]) > 0) { 
-		echo $_SERVER["QUERY_STRING"]."&csv=true';\">\n";
+		echo $_SERVER["QUERY_STRING"]."&type=csv';\">\n";
 	} else { 
-		echo "csv=true';\">\n";
+		echo "type=csv';\">\n";
 	}
 
 	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
