@@ -543,7 +543,9 @@ include "root.php";
 									$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
 									$lines[$line_number]['sip_port'] = $sip_port;
 									$lines[$line_number]['server_address'] = $row["server_address"];
-									$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy"];
+									$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
+									$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+									$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
 									$lines[$line_number]['display_name'] = $row["display_name"];
 									$lines[$line_number]['auth_id'] = $row["auth_id"];
 									$lines[$line_number]['user_id'] = $row["user_id"];
@@ -551,7 +553,9 @@ include "root.php";
 
 								//assign the variables
 									$view->assign("server_address_".$line_number, $row["server_address"]);
-									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
+									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy_primary"]);
+									$view->assign("outbound_proxy_primary_".$line_number, $row["outbound_proxy_primary"]);
+									$view->assign("outbound_proxy_secondary_".$line_number, $row["outbound_proxy_secondary"]);
 									$view->assign("display_name_".$line_number, $row["display_name"]);
 									$view->assign("auth_id_".$line_number, $row["auth_id"]);
 									$view->assign("user_id_".$line_number, $row["user_id"]);
@@ -712,7 +716,9 @@ include "root.php";
 								$device_key_value = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_value);
 								$device_key_value = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_value);
 								$device_key_value = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_value);
-								$device_key_value = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_value);
 								$device_key_value = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_value);
 
 								$device_key_extension = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_extension);
@@ -723,7 +729,9 @@ include "root.php";
 								$device_key_extension = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_extension);
 								$device_key_extension = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_extension);
 								$device_key_extension = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_extension);
-								$device_key_extension = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_extension);
 								$device_key_extension = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_extension);
 
 								$device_key_label = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_label);
@@ -734,7 +742,9 @@ include "root.php";
 								$device_key_label = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_label);
 								$device_key_label = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_label);
 								$device_key_label = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_label);
-								$device_key_label = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 								$device_key_label = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_label);
 							}
 
@@ -747,7 +757,9 @@ include "root.php";
 							$device_key_value = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_value);
 							$device_key_value = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_value);
 							$device_key_value = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_value);
-							$device_key_value = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_value);
 							$device_key_value = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_value);
 
 							$device_key_extension = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
@@ -758,7 +770,9 @@ include "root.php";
 							$device_key_extension = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
 							$device_key_extension = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
 							$device_key_extension = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
-							$device_key_extension = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 							$device_key_extension = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
 
 							$device_key_label = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
@@ -769,7 +783,9 @@ include "root.php";
 							$device_key_label = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
 							$device_key_label = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
 							$device_key_label = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
-							$device_key_label = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 							$device_key_label = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
 
 						//add general variables
