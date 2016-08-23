@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('contact_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('contact_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -194,29 +198,27 @@ else {
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "	<td align='left' valign='top' width='50%'>\n";
-	echo "		<b>".$text['header-contacts']."</b>\n";
-	echo "		<br /><br />";
-	echo "		".$text['description-contacts']."<br /><br />\n";
-	echo "	</td>\n";
-	echo "	<td align='right' valign='top' width='50%'>\n";
-	echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "			<tr>\n";
-	echo "				<td valign='middle' nowrap>\n";
-	echo "					<form method='get' name='frm_search' action=''>\n";
-	echo "					<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
-	echo "					<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
+	echo "		<td align='left' valign='top' width='50%'>\n";
+	echo "			<b>".$text['header-contacts']."</b>\n";
+	echo "			<br /><br />";
+	echo "		</td>\n";
+	echo "		<td align='right' valign='top' width='50%' nowrap='nowrap'>\n";
+	echo "			<form method='get' name='frm_search' action=''>\n";
+	echo "				<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
+	echo "				<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
 		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 	}
-	echo "					</form>\n";
-	echo "				</td>\n";
+	echo "			</form>\n";
+	echo "		</td>\n";
 	if ($paging_controls_mini != '') {
-		echo "			<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+		echo "		<td valign='middle' nowrap style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
 	}
-	echo "			</tr>\n";
-	echo "		</table>\n";
-	echo "	</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='3'>\n";
+	echo "			".$text['description-contacts']."<br /><br />\n";
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br />\n";

@@ -23,18 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('time_condition_add') || permission_exists('time_condition_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
-require_once "resources/header.php";
 
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('time_condition_add') || permission_exists('time_condition_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -61,6 +63,7 @@ require_once "resources/header.php";
 
 //get the post variables
 	if (count($_POST) > 0) {
+		$domain_uuid = check_str($_POST["domain_uuid"]);
 		$dialplan_name = check_str($_POST["dialplan_name"]);
 		$dialplan_number = check_str($_POST["dialplan_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
@@ -72,11 +75,15 @@ require_once "resources/header.php";
 
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
 		$dialplan_description = check_str($_POST["dialplan_description"]);
+
+		if (!permission_exists('time_condition_domain')) {
+			$domain_uuid = $_SESSION['domain_uuid'];
+		}
 	}
 
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
+		//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
  		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
  		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
  		//if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
@@ -120,14 +127,24 @@ require_once "resources/header.php";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$domain_uuid."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'".$domain_uuid."', ";
+				}
 				$sql .= "'".$dialplan_uuid."', ";
 				$sql .= "'4b821450-926b-175a-af93-a03c441818b1', ";
 				$sql .= "'".$dialplan_name."', ";
 				$sql .= "'".$dialplan_number."', ";
 				$sql .= "'".$dialplan_order."', ";
 				$sql .= "'true', ";
-				$sql .= "'".$_SESSION['context']."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "'\${domain_name}', ";
+				}
+				else {
+					$sql .= "'".$_SESSION['context']."', ";
+				}
 				$sql .= "'".$dialplan_enabled."', ";
 				$sql .= "'".$dialplan_description."' ";
 				$sql .= ")";
@@ -139,15 +156,25 @@ require_once "resources/header.php";
 		else if ($action == "update") {
 			//update main dialplan entry
 				$sql = "update v_dialplans set ";
+				if ($domain_uuid == 0) {
+					$sql .= "domain_uuid = null, ";
+				}
+				else {
+					$sql .= "domain_uuid = '".$domain_uuid."', ";
+				}
 				$sql .= "dialplan_name = '".$dialplan_name."', ";
 				$sql .= "dialplan_number = '".$dialplan_number."', ";
 				$sql .= "dialplan_order = '".$dialplan_order."', ";
 				$sql .= "dialplan_continue = 'true', ";
-				$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+				if ($domain_uuid == 0) {
+					$sql .= "dialplan_context = '\${domain_name}', ";
+				}
+				else {
+					$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+				}
 				$sql .= "dialplan_enabled = '".$dialplan_enabled."', ";
 				$sql .= "dialplan_description = '".$dialplan_description."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+				$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -269,10 +296,10 @@ require_once "resources/header.php";
 					if ($cond_var == 'time-of-day') {
 						$cond_var = 'minute-of-day';
 						$array_cond_start = explode(':', $cond_start);
-						$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
+						$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
 						if ($cond_stop != '') {
 							$array_cond_stop = explode(':', $cond_stop);
-							$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
+							$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1] + 1;
 						}
 					}
 
@@ -286,7 +313,12 @@ require_once "resources/header.php";
 						//add destination number condition
 						$dialplan_detail_order += 10;
 						$sql .= ($conditions_exist) ? ", ( " : "( ";
-						$sql .= "'".$domain_uuid."', ";
+						if ($domain_uuid == 0) {
+							$sql .= "null, ";
+						}
+						else {
+							$sql .= "'".$domain_uuid."', ";
+						}
 						$sql .= "'".$dialplan_uuid."', ";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'condition', ";
@@ -302,7 +334,12 @@ require_once "resources/header.php";
 					//add condition to query string
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
+					if ($domain_uuid == 0) {
+						$sql .= "null, ";
+					}
+					else {
+						$sql .= "'".$domain_uuid."', ";
+					}
 					$sql .= "'".$dialplan_uuid."', ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'condition', ";
@@ -344,7 +381,12 @@ require_once "resources/header.php";
 								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
-									$sql .= "'".$domain_uuid."', ";
+									if ($domain_uuid == 0) {
+										$sql .= "null, ";
+									}
+									else {
+										$sql .= "'".$domain_uuid."', ";
+									}
 									$sql .= "'".$dialplan_uuid."', ";
 									$sql .= "'".uuid()."', ";
 									$sql .= "'action', ";
@@ -374,7 +416,12 @@ require_once "resources/header.php";
 					//add group action to query
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
+					if ($domain_uuid == 0) {
+						$sql .= "null, ";
+					}
+					else {
+						$sql .= "'".$domain_uuid."', ";
+					}
 					$sql .= "'".$dialplan_uuid."', ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'action', ";
@@ -402,7 +449,12 @@ require_once "resources/header.php";
 			//add destination number condition
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			$sql .= "'".$domain_uuid."', ";
+			if ($domain_uuid == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'".$domain_uuid."', ";
+			}
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'condition', ";
@@ -417,7 +469,12 @@ require_once "resources/header.php";
 			//add anti-action
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			$sql .= "'".$domain_uuid."', ";
+			if ($domain_uuid == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'".$domain_uuid."', ";
+			}
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'action', ";
@@ -428,7 +485,6 @@ require_once "resources/header.php";
 			$sql .= "'".$dialplan_detail_group."', ";
 			$sql .= "'".$dialplan_detail_order."' ";
 			$sql .= ") ";
-
 		}
 
 	//execute query
@@ -553,6 +609,9 @@ require_once "resources/header.php";
 			}
 
 	}
+
+//include the header
+	require_once "resources/header.php";
 
 ?>
 
@@ -704,6 +763,9 @@ require_once "resources/header.php";
 								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 							}
 						}
+						h = 23;
+						m = 59;
+						sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 						break;
 
 				}
@@ -803,7 +865,6 @@ echo "	<tr>\n";
 echo "		<td align='left' valign='top'>\n";
 echo "			<span class='title'>".$text['title-time_conditions']."</span>";
 echo "			<br /><br />\n";
-echo "			".$text['description-time_conditions']."\n";
 echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";
 echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
@@ -811,6 +872,11 @@ if (if_group("superadmin") && $action == 'update') {
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-dialplan']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-dialplan']."'>\n";
 }
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+echo "		</td>\n";
+echo "	</tr>\n";
+echo "	<tr>\n";
+echo "		<td colspan='2'>\n";
+echo "			".$text['description-time_conditions']."\n";
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "</table>";
@@ -894,6 +960,8 @@ if ($action == 'update') {
 				//convert minute-of-day to time-of-day values
 				if ($cond_var == 'minute-of-day') {
 					$cond_var = 'time-of-day';
+					--$cond_val_start;
+					--$cond_val_stop;
 					$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
 					if ($cond_val_stop != '') {
 						$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);
@@ -1048,66 +1116,94 @@ if ($action == 'update') {
 		echo "</tr>\n";
 	}
 
-echo "<tr>\n";
-echo "<td id='td_alt_dest' class='vncell' valign='top' align='left' nowrap>\n";
-echo "	".$text['label-alternate-destination']."\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo 				$destination->select('dialplan', 'dialplan_anti_action', $dialplan_anti_action);
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td id='td_alt_dest' class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-alternate-destination']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo 				$destination->select('dialplan', 'dialplan_anti_action', $dialplan_anti_action);
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-order']."\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "	<select name='dialplan_order' class='formfld'>\n";
-for ($i = 300; $i <= 999; $i += 10) {
-	$padded_i = str_pad($i, 3, '0', STR_PAD_LEFT);
-	$selected = ($dialplan_order == $i) ? "selected='selected'" : null;
-	echo "<option value='".$padded_i."' ".$selected.">".$padded_i."</option>\n";
-}
-echo "	</select>\n";
-echo "	<br />\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-order']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select name='dialplan_order' class='formfld'>\n";
+	for ($i = 300; $i <= 999; $i += 10) {
+		$padded_i = str_pad($i, 3, '0', STR_PAD_LEFT);
+		$selected = ($dialplan_order == $i) ? "selected='selected'" : null;
+		echo "<option value='".$padded_i."' ".$selected.">".$padded_i."</option>\n";
+	}
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-enabled']."\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "<select class='formfld' name='dialplan_enabled'>\n";
-echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-echo "</select>\n";
-echo "<br />\n";
-echo "</td>\n";
-echo "</tr>\n";
+	if (permission_exists('time_condition_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "    <option value='' selected='selected'>".$text['label-global']."</option>\n";
+		}
+		else {
+			echo "    <option value=''>".$text['label-global']."</option>\n";
+		}
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			}
+			else {
+				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			}
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-echo "<tr>\n";
-echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	".$text['label-description']."\n";
-echo "</td>\n";
-echo "<td colspan='4' class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".$dialplan_description."\">\n";
-echo "<br />\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select class='formfld' name='dialplan_enabled'>\n";
+	echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "</select>\n";
+	echo "<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "</table>\n";
-echo "<br />";
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td colspan='4' class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".$dialplan_description."\">\n";
+	echo "<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<div align='right'>\n";
-if ($action == "update") {
-	echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
-}
-echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-echo "</div>";
+	echo "</table>\n";
+	echo "<br />";
 
-echo "</form>";
-echo "<br />";
+	echo "<div align='right'>\n";
+	if ($action == "update") {
+		echo "	<input type='hidden' name='dialplan_uuid' value='".$dialplan_uuid."'>\n";
+	}
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</div>";
+
+	echo "</form>";
+	echo "<br />";
 
 //include the footer
 	require_once "resources/footer.php";

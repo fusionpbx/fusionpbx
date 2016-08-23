@@ -76,6 +76,7 @@ include "root.php";
 					$dial_string .= ",domain=".$_SESSION['domain_name'];
 					$dial_string .= ",extension_uuid=".$this->extension_uuid;
 					$dial_string .= ",toll_allow='".$this->toll_allow."'";
+					$dial_string .=",sip_h_Diversion=<".$this->extension."@".$_SESSION['domain_name'].">;reason=unconditional";
 					if (strlen($this->accountcode) > 0) {
 						$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 						$dial_string .= ",accountcode=".$this->accountcode;

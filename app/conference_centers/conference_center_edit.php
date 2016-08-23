@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -65,12 +69,13 @@ else {
 //process user data
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
-		$msg = '';
-		if ($action == "update") {
-			$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
-		}
+		//get the id
+			if ($action == "update") {
+				$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
+			}
 
 		//check for all required data
+					$msg = '';
 			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 			if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 			if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
@@ -256,6 +261,21 @@ else {
 	if (strlen($conference_center_enabled) == 0) { $conference_center_enabled = "true"; }
 	if (strlen($conference_center_pin_length) == 0) { $conference_center_pin_length = 9; }
 
+//get the recordings
+	$sql = "select recording_name, recording_filename from v_recordings ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "order by recording_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+
+//get the phrases
+	$sql = "select * from v_phrases ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$phrases = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -339,31 +359,28 @@ else {
 
 	echo "	<select name='conference_center_greeting' class='formfld' ".((permission_exists('conference_center_add') || permission_exists('conference_center_edit')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option></option>\n";
+
 	//recordings
-		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/")) {
-			$tmp_selected = false;
-			$files = Array();
+		$tmp_selected = false;
+		if (is_array($recordings)) {
 			echo "<optgroup label='Recordings'>\n";
-			while ($file = readdir($dh)) {
-				if ($file != "." && $file != ".." && $file[0] != '.') {
-					if (!is_dir($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file)) {
-						$selected = ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file && strlen($conference_center_greeting) > 0) ? true : false;
-						echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$file."' ".(($selected) ? "selected='selected'" : null).">".$file."</option>\n";
-						if ($selected) { $tmp_selected = true; }
-					}
+			foreach ($recordings as &$row) {
+				$recording_name = $row["recording_name"];
+				$recording_filename = $row["recording_filename"];
+				$recording_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
+				$selected = '';
+				if ($conference_center_greeting == $recording_path."/".$recording_filename) {
+					$selected = "selected='selected'";
 				}
+				echo "	<option value='".$recording_path."/".$recording_filename."' ".$selected.">".$recording_name."</option>\n";
+				unset($selected);
 			}
-			closedir($dh);
 			echo "</optgroup>\n";
 		}
 	//phrases
-		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		if (count($result) > 0) {
+		if (count($phrases) > 0) {
 			echo "<optgroup label='Phrases'>\n";
-			foreach ($result as &$row) {
+			foreach ($phrases as &$row) {
 				$selected = ($conference_center_greeting == "phrase:".$row["phrase_uuid"]) ? true : false;
 				echo "	<option value='phrase:".$row["phrase_uuid"]."' ".(($selected) ? "selected='selected'" : null).">".$row["phrase_name"]."</option>\n";
 				if ($selected) { $tmp_selected = true; }
@@ -372,17 +389,17 @@ else {
 			echo "</optgroup>\n";
 		}
 	//sounds
-		$dir_path = $_SESSION['switch']['sounds']['dir'];
-		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($dir_array) > 0) {
+		$file = new file;
+		$sound_files = $file->sounds();
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
-			foreach ($dir_array as $key => $value) {
+			foreach ($sound_files as $key => $value) {
 				if (strlen($value) > 0) {
 					if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$conference_center_greeting = substr($conference_center_greeting, 71);
 					}
-					$selected = ($conference_center_greeting == $key) ? true : false;
-					echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+					$selected = ($conference_center_greeting == $value) ? true : false;
+					echo "	<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$value."</option>\n";
 					if ($selected) { $tmp_selected = true; }
 				}
 			}

@@ -100,7 +100,6 @@ else {
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
-			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
 			$ring_group_missed_call_app = check_str($_POST["ring_group_missed_call_app"]);
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
@@ -392,7 +391,6 @@ else {
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
-			$ring_group_skip_active = $row["ring_group_skip_active"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
@@ -450,7 +448,6 @@ else {
 	}
 
 //set defaults
-	if (strlen($ring_group_skip_active) == 0) { $ring_group_skip_active = 'false'; }
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //set the context for users that are not in the superadmin group
@@ -690,30 +687,6 @@ else {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-skip_active']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_skip_active'>\n";
-	if ($ring_group_skip_active == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($ring_group_skip_active == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-skip_active']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('ring_group_missed_call')) {
 		echo "<tr>\n";

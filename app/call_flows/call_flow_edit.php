@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Lewis Hallam <lewishallam80@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_flow_add') || permission_exists('call_flow_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_flow_add') || permission_exists('call_flow_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -444,7 +448,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 380px;');\n";
+		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
@@ -476,7 +480,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "<select name='$name' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+		echo "<select name='$name' class='formfld' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 		echo "	<option value=''></option>\n";
 		//misc optgroup
 			if (if_group("superadmin")) {
@@ -527,22 +531,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		//sounds
 			if ($load_sound) {
-				global $dir_path, $dir_array;
-				$dir_path = $_SESSION['switch']['sounds']['dir'];
-				recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-				if (count($dir_array) > 0) {
+				$file = new file;
+				$sound_files = $file->sounds();
+				if (is_array($sound_files)) {
 					echo "<optgroup label=".$text["sounds"].">\n";
-					foreach ($dir_array as $key => $value) {
+					foreach ($sound_files as $value) {
 						if (strlen($value) > 0) {
 							if (substr($var, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 								$var = substr($var, 71);
 							}
-							if ($var == $key) {
+							if ($var == $value) {
 								$tmp_selected = true;
-								echo "	<option value='$key' selected='selected'>$key</option>\n";
+								echo "	<option value='$value' selected='selected'>$value</option>\n";
 							}
 							else {
-								echo "	<option value='$key'>$key</option>\n";
+								echo "	<option value='$value'>$value</option>\n";
 							}
 						}
 					}

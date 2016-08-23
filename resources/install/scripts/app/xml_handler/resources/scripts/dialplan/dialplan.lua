@@ -262,7 +262,7 @@
 					if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
-								table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
+								table.insert(xml, [[					<action application="set" data="call_direction=inbound" inline="true"/>]]);
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
 									domain_name = domains[domain_uuid];
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);

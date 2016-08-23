@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('dialplan_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('dialplan_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -67,95 +71,8 @@ else {
 //includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
-	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
-		$document['title'] = $text['title-inbound_routes'];
-	}
-	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
-		$document['title'] = $text['title-outbound_routes'];
-	}
-	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		$document['title'] = $text['title-queues'];
-	}
-	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
-		$document['title'] = $text['title-time_conditions'];
-	}
-	else {
-		$document['title'] = $text['title-dialplan_manager'];
-	}
 
-//show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td align='left' valign='top'>\n";
-	echo "		<span class='title'>\n";
-	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
-		echo "			".$text['header-inbound_routes']."\n";
-	}
-	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
-		echo "			".$text['header-outbound_routes']."\n";
-	}
-	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo "			".$text['header-queues']."\n";
-	}
-	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
-		echo "			".$text['header-time_conditions']."\n";
-	}
-	else {
-		echo "			".$text['header-dialplan_manager']."\n";
-	}
-	echo "		</span>\n";
-	echo "		<br><br>\n";
-	echo "		<span class='vexpl'>\n";
-	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
-		echo $text['description-inbound_routes'];
-	}
-	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
-		echo $text['description-outbound_routes'];
-	}
-	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo $text['description-queues'];
-	}
-	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
-		echo $text['description-time_conditions'];
-	}
-	else {
-		if (if_group("superadmin")) {
-			echo $text['description-dialplan_manager-superadmin'];
-		}
-		else {
-			echo $text['description-dialplan_manager'];
-		}
-	}
-	echo "		</span>\n";
-	echo "	</td>\n";
-
-	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
-	echo "		<form name='frm_search' method='get' action=''>\n";
-	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
-	if (strlen($app_uuid) > 0) {
-		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
-	}
-	if (strlen($order_by) > 0) {
-		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
-		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
-	}
-	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "		</form>\n";
-	echo "	</td>\n";
-
-	//echo "	<td align='right'>\n";
-	//if (permission_exists('dialplan_advanced_view') && strlen($app_uuid) == 0) {
-	//	echo "		<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"document.location.href='dialplan_advanced.php';\">\n";
-	//}
-	//else {
-	//	echo "&nbsp;\n";
-	//}
-	//echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br />";
-
-	//get the number of rows in the dialplan
+//get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	if (strlen($app_uuid) == 0) {
@@ -201,6 +118,7 @@ else {
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
+//get the list of dialplans
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	if (strlen($app_uuid) == 0) {
@@ -229,13 +147,109 @@ else {
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
+	$dialplans = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($dialplans);
 	unset ($prep_statement, $sql);
 
+//set the alternating row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//set the title
+	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
+		$document['title'] = $text['title-inbound_routes'];
+	}
+	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
+		$document['title'] = $text['title-outbound_routes'];
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		$document['title'] = $text['title-queues'];
+	}
+	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
+		$document['title'] = $text['title-time_conditions'];
+	}
+	else {
+		$document['title'] = $text['title-dialplan_manager'];
+	}
+
+//show the content
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td align='left' valign='top'>\n";
+	echo "		<span class='title'>\n";
+	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
+		echo "			".$text['header-inbound_routes']."\n";
+	}
+	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
+		echo "			".$text['header-outbound_routes']."\n";
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		echo "			".$text['header-queues']."\n";
+	}
+	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
+		echo "			".$text['header-time_conditions']."\n";
+	}
+	else {
+		echo "			".$text['header-dialplan_manager']."\n";
+	}
+	echo "		</span>\n";
+	echo "		<br><br>\n";
+	echo "	</td>\n";
+	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
+	echo "		<form name='frm_search' method='get' action=''>\n";
+	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	if (strlen($app_uuid) > 0) {
+		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
+	}
+	if (strlen($order_by) > 0) {
+		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
+		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
+	}
+	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "		</form>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td colspan='2'>\n";
+	echo "		<span class='vexpl'>\n";
+	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
+		echo $text['description-inbound_routes'];
+	}
+	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
+		echo $text['description-outbound_routes'];
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		echo $text['description-queues'];
+	}
+	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
+		echo $text['description-time_conditions'];
+	}
+	else {
+		if (if_group("superadmin")) {
+			echo $text['description-dialplan_manager-superadmin'];
+		}
+		else {
+			echo $text['description-dialplan_manager'];
+		}
+	}
+	echo "		</span>\n";
+	echo "	</td>\n";
+
+
+
+	//echo "	<td align='right'>\n";
+	//if (permission_exists('dialplan_advanced_view') && strlen($app_uuid) == 0) {
+	//	echo "		<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"document.location.href='dialplan_advanced.php';\">\n";
+	//}
+	//else {
+	//	echo "&nbsp;\n";
+	//}
+	//echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br />";
 
 	echo "<form name='frm_delete' method='post' action='dialplan_delete.php'>\n";
 	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
@@ -273,7 +287,9 @@ else {
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
-		foreach($result as $row) {
+		foreach($dialplans as $row) {
+
+			//get the application id
 			$app_uuid = $row['app_uuid'];
 
 			// blank app id if doesn't match others, so will return to dialplan manager
@@ -388,7 +404,6 @@ else {
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-
 
 	if (sizeof($dialplan_ids) > 0) {
 		echo "<script>\n";

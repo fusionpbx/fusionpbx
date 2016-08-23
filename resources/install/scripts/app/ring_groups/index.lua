@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -231,7 +231,7 @@ local log = require "resources.functions.log".ring_group
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
 					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt,
-					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
+					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback
 				FROM
 					v_ring_groups as r, v_ring_group_destinations as d
 				WHERE
@@ -319,7 +319,6 @@ local log = require "resources.functions.log".ring_group
 					ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
 					ring_group_distinctive_ring = row.ring_group_distinctive_ring;
 					ring_group_ringback = row.ring_group_ringback;
-					ring_group_skip_active = row.ring_group_skip_active;
 					destination_number = row.destination_number;
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
@@ -425,14 +424,7 @@ local log = require "resources.functions.log".ring_group
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-						if (ring_group_skip_active == "true") then
-							local channels = channels_by_number(destination_number, domain_name)
-							if (not channels) or #channels == 0 then
-								dial_string = dial_string_to_user
-							end
-						else
-							dial_string = dial_string_to_user;
-						end
+						dial_string = dial_string_to_user;
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
@@ -441,6 +433,7 @@ local log = require "resources.functions.log".ring_group
 						y = 0;
 						dial_string = '';
 						previous_dialplan_uuid = '';
+						regex_match = false;
 						for k, r in pairs(dialplans) do
 							if (y > 0) then
 								if (previous_dialplan_uuid ~= r.dialplan_uuid) then
@@ -532,12 +525,11 @@ local log = require "resources.functions.log".ring_group
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
-					local bind_target = 'both'
-					-- if session:getVariable("sip_authorized") ~= "true" then
-					-- 	bind_target = 'peer'
-					-- end
-
 				--set bind digit action
+					local bind_target = 'peer'
+					if session:getVariable("sip_authorized") == "true" then
+						bind_target = 'both';
+					end
 					local bindings = {
 						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
@@ -547,7 +539,7 @@ local log = require "resources.functions.log".ring_group
 					for _, str in ipairs(bindings) do
 						session:execute("bind_digit_action", str .. "," .. bind_target)
 					end
-					session:execute("digit_action_set_realm", "local")
+					session:execute("digit_action_set_realm", "local");
 
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then

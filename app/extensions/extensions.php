@@ -131,11 +131,16 @@
 	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
+//set the alternating styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left' width='100%'><b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
-	echo "		".$text['description-extensions']."\n";
+	echo "	<td align='left' width='100%'>\n";
+	echo "		<b>".$text['header-extensions']." (".$total_extensions.")</b><br>\n";
 	echo "	</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
@@ -150,12 +155,13 @@
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "  </tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2'>\n";
+	echo "			".$text['description-extensions']."\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br />";
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<form name='frm' method='post' action='extension_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

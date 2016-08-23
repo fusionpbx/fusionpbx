@@ -247,6 +247,7 @@
 		dial_string = dial_string .. ",domain_name="..domain_name;
 		dial_string = dial_string .. ",domain="..domain_name;
 		dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
+		dial_string = dial_string .. ",sip_h_Diversion=<"..extension.."@"..domain_name..">;reason=unconditional";
 		if (accountcode ~= nil) then
 			dial_string = dial_string .. ",accountcode="..accountcode;
 		end

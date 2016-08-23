@@ -62,18 +62,23 @@
 	$language = new text;
 	$text = $language->get();
 
-//load header
+//load header and set the title
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_dashboard'];
 
+//start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td valign='top'>";
 	echo "			<b>".$text['header-user_dashboard']."</b><br />";
-	echo "			".$text['description-user_dashboard'];
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' valign='top'>";
+	echo "			".$text['description-user_dashboard'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -398,7 +403,6 @@
 				$hud[$n]['html'] .= "</div>";
 				$n++;
 		}
-
 
 	//missed calls
 		if (in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {

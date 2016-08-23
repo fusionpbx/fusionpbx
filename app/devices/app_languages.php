@@ -143,6 +143,18 @@ $text['label-zero_sp_touch']['de-at'] = "Zero-SP-Touch";
 $text['label-zero_sp_touch']['ar-eg'] = "";
 $text['label-zero_sp_touch']['he'] = "";
 
+$text['label-xml_directory']['en-us'] = "XML Directory";
+$text['label-xml_directory']['es-cl'] = "Directorio XML";
+$text['label-xml_directory']['pt-pt'] = "Diretório XML";
+$text['label-xml_directory']['fr-fr'] = "Annuaire XML";
+$text['label-xml_directory']['pt-br'] = "Diretório XML";
+$text['label-xml_directory']['pl'] = "Ksiażka telefoniczna XML";
+$text['label-xml_directory']['uk'] = "";
+$text['label-xml_directory']['sv-se'] = "Katalog";
+$text['label-xml_directory']['de-at'] = "Verzeichnis";
+$text['label-xml_directory']['ar-eg'] = "";
+$text['label-xml_directory']['he'] = "מדריך";
+
 $text['label-xml_phonebook']['en-us'] = "XML Phonebook";
 $text['label-xml_phonebook']['es-cl'] = "Agenda telefónica XML";
 $text['label-xml_phonebook']['pt-pt'] = "Agenda telefónica XML";
@@ -2362,6 +2374,17 @@ $text['description-device_key_line']['ro'] = "";
 $text['description-device_key_line']['de-at'] = "Wählen Sie die Liniennummer.";
 $text['description-device_key_line']['ar-eg'] = "";
 $text['description-device_key_line']['he'] = "בחר את מספר הקו";
+
+$text['label-device_key_protected']['en-us'] = "Protected";
+$text['label-device_key_protected']['es-cl'] = "Protegido";
+$text['label-device_key_protected']['pt-pt'] = "Protegido";
+$text['label-device_key_protected']['fr-fr'] = "Protégé";
+$text['label-device_key_protected']['pl'] = "Zabezpieczony";
+$text['label-device_key_protected']['uk'] = "Захищено";
+$text['label-device_key_protected']['sv-se'] = "Skyddad";
+$text['label-device_key_protected']['ro'] = "";
+$text['label-device_key_protected']['de-at'] = "Geschützt";
+$text['label-device_key_protected']['he'] = "שמור";
 
 $text['description-device_key_label']['en-us'] = "Enter the label.";
 $text['description-device_key_label']['es-cl'] = "Introduzca la etiqueta.";
