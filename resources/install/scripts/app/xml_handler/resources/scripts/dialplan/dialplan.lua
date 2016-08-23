@@ -83,9 +83,6 @@
 		--set defaults
 			previous_dialplan_uuid = "";
 			previous_dialplan_detail_group = "";
-			previous_dialplan_detail_tag = "";
-			previous_dialplan_detail_type = "";
-			previous_dialplan_detail_data = "";
 			dialplan_tag_status = "closed";
 			condition_tag_status = "closed";
 
@@ -290,9 +287,6 @@
 				--save the previous values
 					previous_dialplan_uuid = dialplan_uuid;
 					previous_dialplan_detail_group = dialplan_detail_group;
-					previous_dialplan_detail_tag = dialplan_detail_tag;
-					previous_dialplan_detail_type = dialplan_detail_type;
-					previous_dialplan_detail_data = dialplan_detail_data;
 
 				--increment the x
 					x = x + 1;
