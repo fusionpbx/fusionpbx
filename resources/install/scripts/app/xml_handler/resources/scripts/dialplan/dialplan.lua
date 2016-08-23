@@ -235,19 +235,19 @@
 							end
 
 						--condition tag but leave off the ending
-						if (condition_type == "default") then
-							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] .. condition_break;
-						elseif (condition_type == "time") then
-							if (condition_attribute) then
-								condition_attribute = condition_attribute .. dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+							if (condition_type == "default") then
+								condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] .. condition_break;
+							elseif (condition_type == "time") then
+								if (condition_attribute) then
+									condition_attribute = condition_attribute .. dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+								else
+									condition_attribute = dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+								end
+								condition = ""; --prevents a duplicate time condition
 							else
-								condition_attribute = dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+								condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] ..  condition_break;
 							end
-							condition = ""; --prevents a duplicate time condition
-						else
-							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] ..  condition_break;
-						end
-						condition_tag_status = "open";
+							condition_tag_status = "open";
 					end
 					if (dialplan_detail_tag == "action" or dialplan_detail_tag == "anti-action") then
 						if (condition_tag_status == "open") then
