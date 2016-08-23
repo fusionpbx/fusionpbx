@@ -152,16 +152,21 @@
 
 				--close the tags
 					if (condition_tag_status ~= "closed") then
+						if ((previous_dialplan_uuid ~= dialplan_uuid) or (previous_dialplan_detail_group ~= dialplan_detail_group)) then
+							if (condition_attribute and (string.len(condition_attribute) > 0)) then
+								table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[/>]]);
+								condition_attribute = "";
+							elseif (condition and (string.len(condition) > 0)) then
+								table.insert(xml, condition .. [[/>]]);
+								condition = "";
+							elseif (condition_tag_status ~= "closed") then
+								table.insert(xml, [[				</condition>]]);
+							end
+							condition_tag_status = "closed";
+						end
 						if (previous_dialplan_uuid ~= dialplan_uuid) then
-							table.insert(xml, [[				</condition>]]);
 							table.insert(xml, [[			</extension>]]);
 							dialplan_tag_status = "closed";
-							condition_tag_status = "closed";
-						else
-							if (previous_dialplan_detail_group ~= dialplan_detail_group and previous_dialplan_detail_tag == "condition") then
-								table.insert(xml, [[			</condition>]]);
-								condition_tag_status = "closed";
-							end
 						end
 					end
 
@@ -170,6 +175,8 @@
 						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [[" uuid="]] .. dialplan_uuid .. [[">]]);
 						dialplan_tag_status = "open";
 						first_action = true;
+						condition = "";
+						condition_attribute = "";
 					end
 					if (dialplan_detail_tag == "condition") then
 						--determine the type of condition
@@ -201,6 +208,27 @@
 								condition_type = 'default';
 							end
 
+						-- finalize any previous pending condition statements
+							if (condition_tag_status == "open") then
+								if (condition and (string.len(condition) > 0)) then
+									table.insert(xml, condition .. [[/>]]);
+									condition = '';
+									condition_tag_status = "closed";
+								elseif (condition_attribute and (string.len(condition_attribute) > 0)) then
+									-- previous condition(s) must have been of type time
+									-- do not finalize if new condition is also of type time
+									if (condition_type ~= 'time') then
+										-- note: condition_break here is value from the previous loop
+										table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[/>]]);
+										condition_attribute = '';
+										condition_tag_status = "closed";
+									end
+								else
+									table.insert(xml, [[				</condition>]]);
+									condition_tag_status = "closed";
+								end
+							end
+
 						--get the condition break attribute
 							condition_break = "";
 							if (dialplan_detail_break) then
@@ -208,23 +236,6 @@
 									condition_break = [[ break="]] .. dialplan_detail_break .. [["]];
 								end
 							end
-
-						if (condition_tag_status == "open") then
-							if (previous_dialplan_detail_tag == "condition") then
-								--add the condition self closing tag
-								if (condition) then
-									if (string.len(condition) > 0) then
-										table.insert(xml, condition .. [[/>]]);
-									end
-								end
-							end
-							if (previous_dialplan_detail_tag == "action" or previous_dialplan_detail_tag == "anti-action") then
-								table.insert(xml, [[				</condition>]]);
-								condition_tag_status = "closed";
-								condition_type = "";
-								condition_attribute = "";
-							end
-						end
 
 						--condition tag but leave off the ending
 						if (condition_type == "default") then
@@ -242,18 +253,14 @@
 						condition_tag_status = "open";
 					end
 					if (dialplan_detail_tag == "action" or dialplan_detail_tag == "anti-action") then
-						if (previous_dialplan_detail_tag == "condition") then
-							--add the condition ending
-							if (condition_type == "time") then
-								condition = [[				<condition ]] .. condition_attribute .. condition_break;
-								condition_attribute = ""; --prevents the condition attribute from being used on every condition
-							else
-								if (previous_dialplan_detail_type) then
-									condition = [[				<condition field="]] .. previous_dialplan_detail_type .. [[" expression="]] .. previous_dialplan_detail_data .. [["]] .. condition_break;
-								end
+						if (condition_tag_status == "open") then
+							if (condition_attribute and (string.len(condition_attribute) > 0)) then
+								table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[>]]);
+								condition_attribute = "";
+							elseif (condition and (string.len(condition) > 0)) then
+								table.insert(xml, condition .. [[>]]);
+								condition = "";
 							end
-							table.insert(xml, condition .. [[>]]);
-							condition = ""; --prevents duplicate time conditions
 						end
 					end
 
@@ -313,7 +320,15 @@
 
 		--close the extension tag if it was left open
 			if (dialplan_tag_status == "open") then
-				table.insert(xml, [[				</condition>]]);
+				if (condition_tag_status == "open") then
+					if (condition_attribute and (string.len(condition_attribute) > 0)) then
+						table.insert(xml, [[				<condition ]] .. condition_attribute .. condition_break .. [[/>]]);
+					elseif (condition and (string.len(condition) > 0)) then
+						table.insert(xml, condition .. [[/>]]);
+					else
+						table.insert(xml, [[				</condition>]]);
+					end
+				end
 				table.insert(xml, [[			</extension>]]);
 			end
 
