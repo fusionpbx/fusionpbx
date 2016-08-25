@@ -1,8 +1,8 @@
-CONFDIR="/etc/fusionpbx"
+CONFDIR="/etc/fusionpbx/switch"
 #
 # Uncooment extra lines and make sure to add cut and paste them to the DAEMON_ARGS
 # Options to control locations of files:
-fs_conf="/etc/fusionpbx"
+fs_conf="/etc/fusionpbx/switch"
 fs_db="/var/lib/freeswitch/db"
 fs_log="/var/log/freeswitch"
 fs_recordings="/var/lib/fusionpbx/recordings"
@@ -35,4 +35,4 @@ fs_grp=www-data
 # -c                     -- output to a console and stay in the foreground
 #
 # Reads in the arguments into 1 line command
-DAEMON_ARGS="-nc -rp -reincarnate"
+DAEMON_OPTS="-nc -rp -reincarnate"
