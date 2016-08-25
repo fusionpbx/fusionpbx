@@ -1414,6 +1414,16 @@ $text['label-device_description']['de-at'] = "Beschreibung";
 $text['label-device_description']['ar-eg'] = "";
 $text['label-device_description']['he'] = "תאור";
 
+$text['label-device_status']['en-us'] = "Status";
+$text['label-device_status']['es-cl'] = "Estado";
+$text['label-device_status']['pt-pt'] = "Estado";
+$text['label-device_status']['fr-fr'] = "Statut";
+$text['label-device_status']['pt-br'] = "Estado";
+$text['label-device_status']['pl'] = "Status ";
+$text['label-device_status']['sv-se'] = "Status";
+$text['label-device_status']['uk'] = "Стан";
+$text['label-device_status']['de-at'] = "Status";
+
 $text['label-device']['en-us'] = "Device";
 $text['label-device']['es-cl'] = "Dispositivo";
 $text['label-device']['pt-pt'] = "Dispositivo";
