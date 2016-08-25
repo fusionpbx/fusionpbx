@@ -10,7 +10,7 @@ Type=forking
 PIDFile=/run/freeswitch/freeswitch.pid
 Environment="DAEMON_OPTS=-nonat"
 EnvironmentFile=-/etc/default/freeswitch
-ExecStart=/usr/bin/freeswitch -u $fs_usr -g $fs_grp -conf $fs_conf -db $fs_db -log $fs_log -scripts $fs_scripts -storage $fs_storage -recordings $fs_recordings -grammar $fs_gram -images $fs_img -ncwait $DAEMON_OPTS
+ExecStart=/usr/bin/freeswitch -u $fs_usr -g $fs_grp -conf $fs_conf -db $fs_db -log $fs_log -scripts $fs_scripts -storage $fs_storage -recordings $fs_recordings -grammar $fs_gram -ncwait $DAEMON_OPTS
 TimeoutSec=45s
 Restart=always
 ; exec
