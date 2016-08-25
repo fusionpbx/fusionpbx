@@ -269,11 +269,10 @@
 								table.insert(xml, [[					<action application="set" data="call_direction=inbound" inline="true"/>]]);
 								if (domain_uuid ~= nil and domain_uuid ~= '') then
 									domain_name = domains[domain_uuid];
-									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
+									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [[" inline="true"/>]]);
 								end
 								if (domain_name ~= nil and domain_name ~= '') then
-									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
-									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
+									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [[" inline="true"/>]]);
 								end
 								first_action = false;
 							end
