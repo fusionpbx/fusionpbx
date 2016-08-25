@@ -365,7 +365,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "datetime";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_method";
