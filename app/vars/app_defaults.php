@@ -47,7 +47,7 @@ $vars = <<<EOD
 {"var_name":"call_debug","var_value":"false","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"console_loglevel","var_value":"info","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"default_areacode","var_value":"208","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"ringtone","var_enabled":"true","var_description":"RGVmYXVsdCByaW5ndG9uZSAoVVMp"},
+{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Ringtones","var_enabled":"true","var_description":"RGVmYXVsdCByaW5ndG9uZSAoVVMp"},
 {"var_name":"sit","var_value":"%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"sip_tls_version","var_value":"tlsv1","var_cat":"SIP","var_enabled":"true","var_description":"U0lQIGFuZCBUTFMgc2V0dGluZ3Mu"},
 {"var_name":"internal_auth_calls","var_value":"true","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
@@ -234,7 +234,7 @@ EOD;
 					}
 					$row['var_description'] = $item->attributes()->description;
 					if(!isset($row['var_description'])){
-						$row['var_description'] = 'SW1wb3J0ZWQgZnJvbSB2YXJzLnhtbA==';
+						$row['var_description'] = base64_encode('Imported from vars.xml');
 					}
 					$result[] = $row;
 				}
