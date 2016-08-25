@@ -4,6 +4,8 @@ CONFDIR="/etc/fusionpbx/switch"
 # Options to control locations of files:
 fs_conf="/etc/fusionpbx/switch"
 fs_db="/var/lib/freeswitch/db"
+fs_gram="/var/lib/fusionpbx/grammar"
+fs_img="/var/lib/fusionpbs/images"
 fs_log="/var/log/freeswitch"
 fs_recordings="/var/lib/fusionpbx/recordings"
 fs_run="/run/freeswitch"
