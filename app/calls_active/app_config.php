@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Canais ativos no sistema.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Canais ativos no sistema.";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_active_view";
