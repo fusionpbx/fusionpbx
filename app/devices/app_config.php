@@ -364,18 +364,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_provisioned_date";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_provisioned_date";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "datetime";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_provisioned_method";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_provisioned_method";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_method";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_provisioned_ip";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_provisioned_ip";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_ip";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
