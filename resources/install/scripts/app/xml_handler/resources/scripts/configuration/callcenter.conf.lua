@@ -46,8 +46,8 @@
 			assert(dbh:connected());
 
 		--get the variables
-			dsn = trim(api:execute("global_getvar", "dsn"));
-			dsn_callcenter = trim(api:execute("global_getvar", "dsn_callcenter"));
+			dsn = freeswitch.getGlobalVariable("dsn") or ''
+			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
 
 		--start the xml array
 			local xml = {}
@@ -56,14 +56,12 @@
 			table.insert(xml, [[    <section name="configuration">]]);
 			table.insert(xml, [[            <configuration name="callcenter.conf" description="Call Center">]]);
 			table.insert(xml, [[                    <settings>]]);
-			if (dsn_callcenter) then
+			if #dsn_callcenter > 0 then
 				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..dsn_callcenter..[["/>]]);
-			else
-				if (string.len(dsn) > 0) then
-					table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
-				end
+			elseif #dsn > 0 then
+				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
 			end
-			--table.insert(xml, [[                          <param name="dbname" value="/usr/local/freeswitch/db/call_center.db"/>]]);
+			-- table.insert(xml, [[                          <param name="dbname" value="]]..database_dir..[[/call_center.db"/>]]);
 			table.insert(xml, [[                    </settings>]]);
 
 		--write the queues

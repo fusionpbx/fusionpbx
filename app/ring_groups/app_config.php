@@ -94,8 +94,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_missed_call";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
 		$y = 0; //table array index
@@ -164,10 +164,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_ringback";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the ringback.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_skip_active";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Skip destinations with active calls.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_missed_call_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

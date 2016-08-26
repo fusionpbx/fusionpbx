@@ -64,24 +64,19 @@ else {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir']);
-				chmod($dir_fax_sent,0774);
+				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				mkdir($fax_dir.'/'.$fax_extension,0774,true);
-				chmod($fax_dir.'/'.$fax_extension,0774);
+				event_socket_mkdir($fax_dir.'/'.$fax_extension);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				mkdir($dir_fax_inbox,0774,true);
-				chmod($dir_fax_inbox,0774);
+				event_socket_mkdir($dir_fax_inbox);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,0774,true);
-				chmod($dir_fax_sent,0774);
+				event_socket_mkdir($dir_fax_sent);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				mkdir($dir_fax_temp,0774,true);
-				chmod($dir_fax_temp,0774);
+				event_socket_mkdir($dir_fax_temp);
 			}
 	}
 
@@ -221,7 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$php_bin = 'php.exe';
 		}
 		else {
-			$php_bin = 'php';
+			$php_bin = 'php5';
 		}
 
 	//add or update the database
@@ -658,7 +653,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$sql = "SELECT * FROM v_users ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				foreach($assigned_user_uuids as $assigned_user_uuid) {
+				if (isset($assigned_user_id)) foreach($assigned_user_uuids as $assigned_user_uuid) {
 					$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
 				}
 				unset($assigned_user_uuids);
@@ -752,17 +747,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</optgroup>\n";
 			}
 		//sounds
-			$dir_path = $_SESSION['switch']['sounds']['dir'];
-			recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-			if (count($dir_array) > 0) {
+			$file = new file;
+			$sound_files = $file->sounds();
+			if (is_array($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
-				foreach ($dir_array as $key => $value) {
+				foreach ($sound_files as $value) {
 					if (strlen($value) > 0) {
 						if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$fax_send_greeting = substr($fax_send_greeting, 71);
 						}
-						$selected = ($fax_send_greeting == $key) ? true : false;
-						echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+						$selected = ($fax_send_greeting == $value) ? true : false;
+						echo "	<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$value."</option>\n";
 						if ($selected) { $tmp_selected = true; }
 					}
 				}

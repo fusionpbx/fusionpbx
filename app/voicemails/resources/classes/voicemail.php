@@ -34,15 +34,50 @@
 		public $voicemail_message_uuid;
 		public $order_by;
 		public $order;
+		public $app_uuid;
 
-		public function voicemails() {
-			//set the voicemail_uuid
-				if (strlen($_REQUEST["id"]) > 0) {
-					$voicemail_uuid = check_str($_REQUEST["id"]);
+		public function __construct() {
+			//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+			
+			//set the application specific uuid
+				$this->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+
+			//set the domain_uuid if not provided
+				if (strlen($this->domain_uuid) == 0) {
+					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
+			//get the voicemail_id
+				if (!isset($this->voicemail_id)) {
+					$sql = "select voicemail_id from v_voicemails ";
+					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (is_array($result)) foreach ($result as &$row) {
+						$this->voicemail_id = $row["voicemail_id"];
+					}
+					unset ($prep_statement);
+				}
+		}
+
+		public function __destruct() {
+			foreach ($this as $key => $value) {
+				unset($this->$key);
+			}
+		}
+
+		public function voicemails() {
+
 			//set the voicemail id and voicemail uuid arrays
-				foreach ($_SESSION['user']['extension'] as $index => $row) {
+				if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
 					if (strlen($row['number_alias']) > 0) {
 						$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
 					}
@@ -50,7 +85,7 @@
 						$voicemail_ids[$index]['voicemail_id'] = $row['user'];
 					}
 				}
-				foreach ($_SESSION['user']['voicemail'] as $row) {
+				if (isset($_SESSION['user']['voicemail'])) foreach ($_SESSION['user']['voicemail'] as $row) {
 					if (strlen($row['voicemail_uuid']) > 0) {
 						$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 					}
@@ -58,7 +93,7 @@
 
 			//get the uuid and voicemail_id
 				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				if (strlen($this->voicemail_uuid) > 0) {
 					if (permission_exists('voicemail_delete')) {
 						//view specific voicemail box usually reserved for an admin or superadmin
@@ -67,7 +102,7 @@
 					else {
 						//ensure that the requested voicemail box is assigned to this user
 						$found = false;
-						foreach($voicemail_uuids as $row) {
+						if (is_array($voicemail_uuids)) foreach($voicemail_uuids as $row) {
 							if ($voicemail_uuid == $row['voicemail_uuid']) {
 								$sql .= "and voicemail_uuid = '".$row['voicemail_uuid']."' ";
 								$found = true;
@@ -85,7 +120,7 @@
 					if (count($voicemail_ids) > 0) {
 						//show only the assigned voicemail ids
 						$sql .= "and (";
-						foreach($voicemail_ids as $row) {
+						if (is_array($voicemail_ids)) foreach($voicemail_ids as $row) {
 							if ($x == 0) {
 								$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
 							}
@@ -114,7 +149,7 @@
 				$voicemails = $this->voicemails();
 
 			//add the voicemail messages to the array
-				foreach ($voicemails as &$row) {
+				if (is_array($voicemails)) foreach ($voicemails as &$row) {
 					//get the voicemail messages
 					$this->voicemail_uuid = $row['voicemail_uuid'];
 					$this->voicemail_id = $row['voicemail_id'];
@@ -134,7 +169,7 @@
 			if (is_array($this->voicemail_id)) {
 				$sql .= "and (";
 				$x = 0;
-				foreach($this->voicemail_id as $row) {
+				if (is_array($this->voicemail_id)) foreach($this->voicemail_id as $row) {
 					if ($x > 0) {
 						$sql .= "or ";
 					}
@@ -159,7 +194,7 @@
 			$result_count = count($result);
 			unset ($prep_statement, $sql);
 			if ($result_count > 0) {
-				foreach($result as &$row) {
+				if (is_array($result)) foreach($result as &$row) {
 					//set the greeting directory
 					$path = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
 					if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
@@ -199,7 +234,7 @@
 
 			//delete voicemail destinations
 				$sql = "delete from v_voicemail_destinations ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -207,7 +242,7 @@
 
 			//delete voicemail greetings
 				$sql = "delete from v_voicemail_greetings ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -215,7 +250,7 @@
 
 			//delete voicemail options
 				$sql = "delete from v_voicemail_options ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -223,7 +258,7 @@
 
 			//delete voicemail
 				$sql = "delete from v_voicemails ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
@@ -231,9 +266,10 @@
 		}
 
 		public function message_count() {
+
 			$sql = "select count(*) as num_rows from v_voicemail_messages ";
-			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
+			$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+			$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
 			$prep_statement = $this->db->prepare($sql);
 			if ($prep_statement) {
 			$prep_statement->execute();
@@ -258,30 +294,17 @@
 		}
 
 		public function message_delete() {
-			//get the voicemail_id
-				if (!isset($this->voicemail_id)) {
-					$sql = "select voicemail_id from v_voicemails ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
-						$this->voicemail_id = $row["voicemail_id"];
-					}
-					unset ($prep_statement);
-				}
 
 			//delete the recording
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				if ($this->voicemail_message_uuid != '') {
-					foreach (
-						glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) { unlink($file_name);
+					foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
+						unlink($file_name);
 					}
 				}
 				else {
-					foreach (
-						glob($file_path."/msg_*.*") as $file_name) { unlink($file_name); //remove all recordings
+					foreach (glob($file_path."/msg_*.*") as $file_name) { 
+						unlink($file_name); //remove all recordings
 					}
 				}
 
@@ -301,19 +324,6 @@
 		}
 
 		public function message_toggle() {
-			//get the voicemail_id
-				if (!isset($this->voicemail_id)) {
-					$sql = "select voicemail_id from v_voicemails ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
-						$this->voicemail_id = $row["voicemail_id"];
-					}
-					unset ($prep_statement);
-				}
 
 			//get message status
 				$sql = "select message_status from v_voicemail_messages ";
@@ -342,6 +352,7 @@
 
 
 		public function message_saved() {
+
 			//set the voicemail status to saved
 				$sql = "update v_voicemail_messages set ";
 				$sql .= "message_status = 'saved' ";
@@ -382,7 +393,7 @@
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 					if (count($result) > 0) {
-						foreach($result as &$row) {
+						if (is_array($result)) foreach($result as &$row) {
 							if ($row['message_base64'] != '') {
 								$message_decoded = base64_decode($row['message_base64']);
 								file_put_contents($path.'/msg_'.$this->voicemail_message_uuid.'.ext', $message_decoded);
@@ -457,9 +468,7 @@
 	//require_once "app/voicemails/resources/classes/voicemail.php";
 	//$voicemail = new voicemail;
 	//$voicemail->db = $db;
-	//$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 	//$voicemail->voicemail_uuid = $voicemail_uuid;
-	//$voicemail->voicemail_id = $voicemail_id;
 	//$voicemail->order_by = $order_by;
 	//$voicemail->order = $order;
 	//$result = $voicemail->messages();
@@ -471,14 +480,14 @@ Array
     [user] => 1002
     [extension_uuid] => e163fc03-f180-459b-aa12-7ed87fcb6e2c
     [outbound_caller_id_name] => FusionPBX
-    [outbound_caller_id_number] => 12084024632
+    [outbound_caller_id_number] => 12089068227
 )
 Array
 (
     [user] => 1020
     [extension_uuid] => ecfb23df-7c59-4286-891e-2abdc48856ac
     [outbound_caller_id_name] => Mark J Crane
-    [outbound_caller_id_number] => 12084024632
+    [outbound_caller_id_number] => 12089068227
 )
 
 foreach ($_SESSION['user']['extension'] as $value) {

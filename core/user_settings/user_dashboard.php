@@ -62,18 +62,23 @@
 	$language = new text;
 	$text = $language->get();
 
-//load header
+//load header and set the title
 	require_once "resources/header.php";
 	$document['title'] = $text['title-user_dashboard'];
 
+//start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td valign='top'>";
 	echo "			<b>".$text['header-user_dashboard']."</b><br />";
-	echo "			".$text['description-user_dashboard'];
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' valign='top'>";
+	echo "			".$text['description-user_dashboard'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -323,8 +328,8 @@
 				}
 				unset ($sql, $prep_statement, $result);
 			}
-
 	}
+
 
 //build hud block html
 	$n = 0;
@@ -380,9 +385,9 @@
 
 					foreach ($messages as $voicemail_uuid => $row) {
 						if (is_uuid($voicemail_uuid)) {
-							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'";
+							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'";
 							$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>";
-							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".$voicemail_uuid."'>".$row['ext']."</a></td>";
+							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'>".$row['ext']."</a></td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
 							$hud[$n]['html'] .= "</tr>";
@@ -398,7 +403,6 @@
 				$hud[$n]['html'] .= "</div>";
 				$n++;
 		}
-
 
 	//missed calls
 		if (in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
@@ -487,9 +491,9 @@
 								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
 								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
 								"&dest=".urlencode($row['caller_id_number']).
-								"&rec=false".
-								"&ringback=us-ring".
-								"&auto_answer=true".
+								"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
+								"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
+								"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
 								"');\" ".
 								"style='cursor: pointer;'";
 						}
@@ -620,9 +624,9 @@
 								"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']).
 								"&src=".urlencode($_SESSION['user']['extension'][0]['user']).
 								"&dest=".urlencode($dest).
-								"&rec=false".
-								"&ringback=us-ring".
-								"&auto_answer=true".
+								"&rec=".(isset($_SESSION['click_to_call']['record']['boolean'])?$_SESSION['click_to_call']['record']['boolean']:"false").
+								"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text'])?$_SESSION['click_to_call']['ringback']['text']:"us-ring").
+								"&auto_answer=".(isset($_SESSION['click_to_call']['auto_answer']['boolean'])?$_SESSION['click_to_call']['auto_answer']['boolean']:"true").
 								"');\" ".
 								"style='cursor: pointer;'";
 						}
@@ -934,7 +938,8 @@
 
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$tmp = shell_exec("df /home");
+				$df = shell_exec("/usr/bin/which df");
+				$tmp = shell_exec($df." /home");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -999,7 +1004,8 @@
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
-					$uptime = shell_exec("cut -d. -f1 /proc/uptime");
+					$cut = shell_exec("/usr/bin/which cut");
+					$uptime = shell_exec($cut." -d. -f1 /proc/uptime");
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
 					$tmp['h'] = $uptime/60/60%24;
@@ -1021,7 +1027,9 @@
 
 			//memory usage (for available memory, use "free | awk 'FNR == 3 {print $4/($3+$4)*100}'" instead)
 				if (stristr(PHP_OS, 'Linux')) {
-					$percent_memory = round(shell_exec("free | awk 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
+					$free = shell_exec("/usr/bin/which free");
+					$awk = shell_exec("/usr/bin/which awk");
+					$percent_memory = round(shell_exec($free." | ".$awk." 'FNR == 3 {print $3/($3+$4)*100}'"), 1);
 					if ($percent_memory != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
@@ -1045,11 +1053,15 @@
 
 			//cpu usage
 				if (stristr(PHP_OS, 'Linux')) {
-					$tmp = shell_exec("ps -e -o pcpu,cpu,nice,state,cputime,args --sort pcpu | sed '/^ 0.0 /d'");
-					$tmp = explode("\n", $tmp);
-					$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
-					$tmp = explode(' ', trim($tmp));
-					$percent_cpu = $tmp[0];
+					$result = shell_exec('ps -A -o pcpu');
+					$percent_cpu = 0;
+					foreach (explode("\n", $result) as $value) {
+						if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
+					}
+					$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
+					$cores = count(explode("\n", $result));
+					if ($percent_cpu > 1) { $percent_cpu = $percent_cpu / $cores; }
+					$percent_cpu = round($percent_cpu, 2);
 					if ($percent_cpu != '') {
 						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";
@@ -1144,7 +1156,7 @@
 		}
 
 		//define grid columns widths and when to use a clear fix
-		//-- $col_str[box_total][which_box]
+		//-- $col_str[box_total][/usr/bin/which_box]
 		//-- $clear_fix[box_total][after_box]
 		$col_str[1][1] = "col-xs-12 col-sm-12 col-md-12 col-lg-12";
 		for ($n = 1; $n <= 2; $n++) { $col_str[2][$n] = "col-xs-12 col-sm-6 col-md-6 col-lg-6"; }
@@ -1179,41 +1191,49 @@
 
 	}
 
-if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
-	echo "<div class='row' style='margin-top: 30px;'>\n";
+//additional items for the dashbaord
+	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+		echo "<div class='row' style='margin-top: 30px;'>\n";
 
-	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
-		//call routing
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
-				if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-					$is_included = true;
-					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-7' style='margin: 0 0 50px 0;'>\n";
-					require_once "app/calls/calls.php";
-					echo "</div>\n";
+		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
+			//call routing
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+					if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/calls/calls.php";
+						echo "</div>\n";
+					}
 				}
-			}
-	}
+		}
 
-	if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
-		//reload language values
-			$language = new text;
-			$text = $language->get();
-
-		//ring group forward
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
-				if (permission_exists('ring_group_forward')) {
-					$is_included = true;
-					echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-5' style='margin: 0 0 50px 0;'>\n";
-					require_once "app/ring_groups/ring_group_forward.php";
-					echo "</div>";
+		if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+			//ring group forward
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+					if (permission_exists('ring_group_forward')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/ring_groups/ring_group_forward.php";
+						echo "</div>";
+					}
 				}
-			}
+		}
+
+		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
+			//device key management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
+					if (permission_exists('device_key_edit')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 15px 0 30px 0;'>\n";
+						require_once "app/devices/device_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+		echo "</div>\n";
 	}
-
-	echo "</div>\n";
-}
-
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>

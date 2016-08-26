@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@
 			status = dbh:query(sql, function(row)
 				domain_uuid = row["domain_uuid"];
 				ivr_menu_name = row["ivr_menu_name"];
-				--ivr_menu_extension = row["ivr_menu_extension"];
+				ivr_menu_extension = row["ivr_menu_extension"];
 				ivr_menu_greet_long = row["ivr_menu_greet_long"];
 				ivr_menu_greet_short = row["ivr_menu_greet_short"];
 				ivr_menu_invalid_sound = row["ivr_menu_invalid_sound"];
@@ -104,7 +104,7 @@
 						local path, is_base64 = base_path .. "/" .. name
 
 						if not file_exists(path) then
-							local sql = "SELECT * FROM v_recordings " .. 
+							local sql = "SELECT recording_base64 FROM v_recordings " .. 
 								"WHERE domain_uuid = '" .. domain_uuid .. "' " ..
 								"AND recording_filename = '" .. name .. "' "
 							if (debug["sql"]) then
@@ -156,7 +156,7 @@
 			end
 
 		--greet long
-			if (not file_exists(ivr_menu_greet_long)) then
+			if (not ivr_menu_greet_long_is_base64 and not file_exists(ivr_menu_greet_long)) then
 				if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
 					ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
 				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
@@ -166,7 +166,7 @@
 
 		--greet short
 			if (string.len(ivr_menu_greet_short) > 1) then
-				if (not file_exists(ivr_menu_greet_short)) then
+				if (not ivr_menu_greet_short_is_base64 and not file_exists(ivr_menu_greet_short)) then
 					if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
 						ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
 					elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
@@ -178,7 +178,7 @@
 			end
 
 		--invalid sound
-			if (not file_exists(ivr_menu_invalid_sound)) then
+			if (not ivr_menu_invalid_sound_is_base64 and not file_exists(ivr_menu_invalid_sound)) then
 				if (file_exists(recordings_dir.."/"..domain_name.. "/"..ivr_menu_invalid_sound)) then
 					ivr_menu_invalid_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_invalid_sound;
 				elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_invalid_sound)) then
@@ -187,7 +187,7 @@
 			end
 
 		--exit sound
-			if (not file_exists(ivr_menu_exit_sound)) then
+			if (not ivr_menu_exit_sound_is_base64 and not file_exists(ivr_menu_exit_sound)) then
 				if (file_exists(recordings_dir.."/"..ivr_menu_exit_sound)) then
 					if (ivr_menu_exit_sound ~= nil and ivr_menu_exit_sound ~= "") then
 						ivr_menu_exit_sound = recordings_dir.."/"..domain_name.."/"..ivr_menu_exit_sound;
@@ -221,6 +221,13 @@
 			table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
 			table.insert(xml, [[				>]]);
 
+		--direct dial
+			if (ivr_menu_direct_dial == "true") then
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[ : ]]..ivr_menu_extension..[[ XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
+			end
+
 		--get the ivr menu options
 			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
 			if (debug["sql"]) then
@@ -233,11 +240,6 @@
 				ivr_menu_option_description = r.ivr_menu_option_description
 				table.insert(xml, [[					<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
 			end);
-
-		--direct dial
-			if (ivr_menu_direct_dial == "true") then
-				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,5})$/" param="transfer $1 XML ]]..domain_name..[[" description="direct dial"/>]]);
-			end
 
 		--close the extension tag if it was left open
 			table.insert(xml, [[				</menu>]]);

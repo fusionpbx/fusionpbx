@@ -28,7 +28,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/functions/object_to_array.php";
-require_once "resources/functions/parse_attachments.php";
+require_once "resources/functions/parse_message.php";
 if (permission_exists('fax_inbox_view')) {
 	//access granted
 }
@@ -108,35 +108,47 @@ else {
 
 		//download attachment
 		if (isset($_GET['download'])) {
-			$attachment = parse_attachments($connection, $email_id, FT_UID);
-			$file_type = pathinfo($attachment[0]['filename'], PATHINFO_EXTENSION);
-			switch ($file_type) {
-				case "pdf" : header("Content-Type: application/pdf"); break;
-				case "tif" : header("Contet-Type: image/tiff"); break;
+			$message = parse_message($connection, $email_id, FT_UID);
+			$attachment = $message['attachments'][0];
+			if ($attachment) {
+				$file_type = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+				switch ($file_type) {
+					case "pdf" : header("Content-Type: application/pdf"); break;
+					case "tif" : header("Contet-Type: image/tiff"); break;
+				}
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
+				header("Content-Length: ".$attachment['size']);
+				$browser = $_SERVER["HTTP_USER_AGENT"];
+				if (preg_match("/MSIE 5.5/", $browser) || preg_match("/MSIE 6.0/", $browser)) {
+					header("Content-Disposition: filename=\"".$attachment['name']."\"");
+				}
+				else {
+					header("Content-Disposition: attachment; filename=\"".$attachment['name']."\"");
+				}
+				header("Content-Transfer-Encoding: binary");
+				echo $attachment['data'];
+				exit;
 			}
-			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-			header("Content-Length: ".strlen($attachment[0]['attachment']));
-			$browser = $_SERVER["HTTP_USER_AGENT"];
-			if (preg_match("/MSIE 5.5/", $browser) || preg_match("/MSIE 6.0/", $browser)) {
-				header("Content-Disposition: filename=\"".$attachment[0]['filename']."\"");
+			else{
+				//redirect user
+				$_SESSION["message_mood"] = "negative";
+				$_SESSION["message"] = $text['message-download_failed'];
+				header("Location: ?id=".$fax_uuid);
+				exit;
 			}
-			else {
-				header("Content-Disposition: attachment; filename=\"".$attachment[0]['filename']."\"");
-			}
-			header("Content-Transfer-Encoding: binary");
-			echo $attachment[0]['attachment'];
-			exit;
+
 		}
 
 		//delete email
 		if (isset($_GET['delete']) && permission_exists('fax_inbox_delete')) {
-			$attachment = parse_attachments($connection, $email_id, FT_UID);
+			$message = parse_message($connection, $email_id, FT_UID);
+			$attachment = $message['attachments'][0];
 			if (imap_delete($connection, $email_id, FT_UID)) {
 				if (imap_expunge($connection)) {
 					//clean up local inbox copy
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
-					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment[0]['filename']);
+					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
 					$_SESSION["message"] = $text['message-delete'];
 					header("Location: ?id=".$fax_uuid);
@@ -203,25 +215,23 @@ else {
 
 		foreach ($emails as $email_id) {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
-			$attachment = parse_attachments($connection, $email_id, FT_UID);
-			$file_name = $attachment[0]['filename'];
+			$message = parse_message($connection, $email_id, FT_UID);
+			$attachment = $message['attachments'][0];
+			$file_name = $attachment['name'];
 			$caller_id_name = substr($file_name, 0, strpos($file_name, '-'));
 			$caller_id_number = (is_numeric($caller_id_name)) ? format_phone((int) $caller_id_name) : null;
 			echo "	<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
 			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_name."</td>\n";
 			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_number."</td>\n";
 			echo "		<td valign='top' class='".$row_style[$c]."'><a href='?id=".$fax_uuid."&email_id=".$email_id."&download'>".$file_name."</a></td>\n";
-			echo "		<td valign='top' class='".$row_style[$c]."'>".byte_convert(strlen($attachment[0]['attachment']))."</td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'>".byte_convert($attachment['size'])."</td>\n";
 			echo "		<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
 			if (permission_exists('fax_inbox_delete')) {
 				echo "		<td style='width: 25px;' class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a></td>\n";
 			}
 			echo "	</tr>\n";
-// 			$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
-// 			if ($fax_message == '') {
-// 				$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
-// 			}
 			$c = ($c) ? 0 : 1;
+
 		}
 
 	}
@@ -235,7 +245,7 @@ else {
 	echo "<br><br>";
 
 /* close the connection */
-imap_close($inbox);
+imap_close($connection);
 
 
 //show the footer

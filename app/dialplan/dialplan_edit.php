@@ -24,27 +24,31 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-require_once "resources/classes/orm.php";
-if (permission_exists('dialplan_add')
-	|| permission_exists('dialplan_edit')
-	|| permission_exists('inbound_route_add')
-	|| permission_exists('inbound_route_edit')
-	|| permission_exists('outbound_route_add')
-	|| permission_exists('outbound_route_edit')
-	|| permission_exists('fifo_edit')
-	|| permission_exists('fifo_add')
-	|| permission_exists('time_condition_add')
-	|| permission_exists('time_condition_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+	require_once "resources/classes/orm.php";
+
+//check permissions
+	if (permission_exists('dialplan_add')
+		|| permission_exists('dialplan_edit')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('inbound_route_edit')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('outbound_route_edit')
+		|| permission_exists('fifo_edit')
+		|| permission_exists('fifo_add')
+		|| permission_exists('time_condition_add')
+		|| permission_exists('time_condition_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;

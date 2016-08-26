@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ca'] = "Il montre les appels actives et des agents en queue du centre d'appels.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Mostra as chamadas ativas e agentes na fila do centro de chamadas.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Mostra as chamadas ativas, e os agentes na fila do Call Center.";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_center_active_view";

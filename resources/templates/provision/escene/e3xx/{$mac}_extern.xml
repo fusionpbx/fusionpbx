@@ -1,0 +1,125 @@
+<all>
+{foreach $keys as $row}
+	{if $row.device_key_line==""}
+		{$row.device_key_line="127"}
+	{/if}
+{/foreach}
+	<hotlines>
+	{$is_first_line='true'}
+	{foreach $keys as $row}
+		{if $row.device_key_category=="memory"}
+			{if $row.device_key_id!=""}
+				<hotline {if $is_first_line=='true'}ExternID="0"{$is_first_line='false'}{/if} id="{$row.device_key_id-1}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-1}" Type="{$row.device_key_type}" HotlineNum="{$row.device_key_value}" Name="{$row.device_key_label}"/>
+			{/if}
+		{/if}
+	{/foreach}
+	</hotlines>
+
+	<ProgramKeys>
+	<!--
+	keys:
+		0-3 - SoftKey in Idle mode
+		4   - Un
+		5   - Down
+		6   - Left
+		7   - Right
+		8   - OK
+		9   - Conference
+		10  - Redial
+		11  - Transfer
+		12  - Hold
+		13  - Service
+		14  - Directories
+		15  - Menu
+		16  - Mute
+		17  - Message
+	functions:
+		0  - Default
+		1  - Redial
+		2  - DND
+		3  - Contacts
+		4  - Enterprise Phonebook
+		5  - LDAP
+		6  - Dir
+		7  - Speed Dial
+		8  - Call List
+		9  - Missed Calls
+		10 - Received Calls
+		11 - Dialed Calls
+		12 - Menu
+		13 - SMS
+		14 - New SMS
+		15 - Call Forward
+		16 - View Status
+		17 - Enable/Disable SIP Account
+		18 - XML Browser
+		19 - Auto Provison Now
+		20 - Hot Desking
+	-->
+	{foreach $keys as $row}
+		{if $row.device_key_category=="programmable"}
+			<ProgramKey id="{$row.device_key_id-1}" SipAccounts="{$row.device_key_line}" Type="{$row.device_key_type}" Num="{$row.device_key_value}" Name="{$row.device_key_label}"/>
+		{/if}
+	{/foreach}
+	</ProgramKeys>
+
+	<Extensions>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if $row.device_key_id le "32"}
+				<extension id="{$row.device_key_id-1}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-1}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extensions>
+
+	<Extension2s>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if ($row.device_key_id gt "32")&&($row.device_key_id le "64")}
+				<extension2 id="{$row.device_key_id-33}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-33}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extension2s>
+
+	<Extension3s>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if ($row.device_key_id gt "64")&&($row.device_key_id le "96")}
+				<extension3 id="{$row.device_key_id-65}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-65}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extension3s>
+
+	<Extension4s>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if ($row.device_key_id gt "96")&&($row.device_key_id le "128")}
+				<extension4 id="{$row.device_key_id-97}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-97}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extension4s>
+
+	<Extension5s>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if ($row.device_key_id gt "128")&&($row.device_key_id le "160")}
+				<extension5 id="{$row.device_key_id-129}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-129}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extension5s>
+
+	<Extension6s>
+	{foreach $keys as $row}
+		{if $row.device_key_category=="expansion"}
+			{if ($row.device_key_id gt "160")&&($row.device_key_id le "192")}
+				<extension6 id="{$row.device_key_id-161}"  HotlineNum="{$row.device_key_value}" SipAccounts="{$row.device_key_line}" ID="{$row.device_key_id-161}" Type="{$row.device_key_type}" Name="{$row.device_key_label}" />
+			{/if}
+		{/if}
+	{/foreach}
+	</Extension6s>
+</all>

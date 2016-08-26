@@ -27,7 +27,6 @@
 --set the defaults
 	digit_max_length = 3;
 	timeout_pin = 5000;
-	timeout_transfer = 5000;
 	max_tries = 3;
 	digit_timeout = 5000;
 	search_limit = 3;
@@ -52,6 +51,16 @@
 		if (settings['voicemail']['storage_type'] ~= nil) then
 			if (settings['voicemail']['storage_type']['text'] ~= nil) then
 				storage_type = settings['voicemail']['storage_type']['text'];
+			end
+		end
+		if (settings['voicemail']['speak_mod'] ~= nil) then
+			if (settings['voicemail']['speak_mod']['text'] ~= nil) then
+				speak_mod = settings['voicemail']['speak_mod']['text'];
+			end
+		end
+		if (settings['voicemail']['speak_voice'] ~= nil) then
+			if (settings['voicemail']['speak_voice']['text'] ~= nil) then
+				speak_voice = settings['voicemail']['speak_voice']['text'];
 			end
 		end
 		if (settings['voicemail']['storage_path'] ~= nil) then
@@ -82,6 +91,9 @@
 		--get the domain info
 			domain_name = session:getVariable("domain_name");
 			domain_uuid = session:getVariable("domain_uuid");
+		
+		--get the timeout destination
+			timeout_destination = session:getVariable("timeout_destination");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -241,10 +253,18 @@
 											session:streamFile(file_location);
 										else
 											--announce the first and last names
-											session:execute("say", "en name_spelled iterated "..row.first_name);
+											if (speak_mod ~= nil and speak_voice ~= nil) then
+												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
+											else
+												session:execute("say", "en name_spelled iterated "..row.first_name);
+											end
 											--session:execute("sleep", "500");
 											if (row.last_name ~= nil) then
-												session:execute("say", "en name_spelled iterated "..row.last_name);
+												if (speak_mod ~= nil and speak_voice ~= nil) then
+													session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
+												else
+													session:execute("say", "en name_spelled iterated "..row.last_name);
+												end
 											end
 										end
 								end);
@@ -262,10 +282,18 @@
 									session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
 								else
 									--announce the first and last names
-										session:execute("say", "en name_spelled iterated "..row.first_name);
+										if (speak_mod ~= nil and speak_voice ~= nil) then
+											session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
+										else
+											session:execute("say", "en name_spelled iterated "..row.first_name);
+										end
 										if (row.last_name ~= nil) then
 											--session:execute("sleep", "500");
-											session:execute("say", "en name_spelled iterated "..row.last_name);
+											if (speak_mod ~= nil and speak_voice ~= nil) then
+												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
+											else
+												session:execute("say", "en name_spelled iterated "..row.last_name);
+											end
 										end
 								end
 							end
@@ -352,7 +380,12 @@
 		directory_search();
 	end
 
-	session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+--timeout action
+	if (timeout_destination == nil) then
+		session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+	else
+		session:execute("transfer", timeout_destination.." XML "..row.context);
+	end
 
 --notes
 	--session:execute("say", "en name_spelled pronounced mark");

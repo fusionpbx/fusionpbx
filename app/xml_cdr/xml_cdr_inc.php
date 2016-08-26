@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('xml_cdr_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/paging.php";
@@ -80,9 +84,9 @@ else {
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-         } else {
-             $mos_comparison = '';
-        }
+		} else {
+			$mos_comparison = '';
+		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
@@ -268,29 +272,40 @@ else {
 
 //set a default CDR limit
 	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
-		$_SESSION['cdr']['limit']['numeric'] = 800;
+		$_SESSION['cdr']['limit']['numeric'] = 1000;
 	}
+
+//disable the paging
+	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
+	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-		//get the number of rows in the v_xml_cdr
-			$sql = "select count(*) as num_rows from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] > 0) {
-					$num_rows = $row['num_rows'];
-				}
-				else {
-					$num_rows = '0';
-				}
+			if ($_SESSION['cdr']['count']['boolean'] == "true") {
+				//get the number of rows in the v_xml_cdr
+					$sql = "select count(*) as num_rows from v_xml_cdr ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] > 0) {
+							$num_rows = $row['num_rows'];
+						}
+						else {
+							$num_rows = '0';
+						}
+					}
+					unset($prep_statement, $result);
 			}
-			unset($prep_statement, $result);
-
-		//limit the number of results
-			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
-				$num_rows = $_SESSION['cdr']['limit']['numeric'];
+			else {
+				//limit the number of results
+					if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
+						$num_rows = $_SESSION['cdr']['limit']['numeric'];
+					}
+					else {
+						$num_rows = '1000';
+					}
 			}
 			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
 				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
@@ -323,13 +338,16 @@ else {
 	$sql .= "billsec, ";
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
+	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$sql .= $field.", ";
+		}
+	}
 	$sql .= "accountcode, ";
 	$sql .= "answer_stamp, ";
 	$sql .= "sip_hangup_disposition, ";
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
-		$sql .= "call_sell, ";
-	}
 	if (permission_exists("xml_cdr_pdd")) {
 		$sql .= "pdd_ms, ";
 	}
@@ -348,11 +366,13 @@ else {
 	}
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
-	if ($rows_per_page == 0) {
-		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
-	}
-	else {
-		$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
+		if ($rows_per_page == 0) {
+			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
+		}
+		else {
+			$sql .= " limit ".$rows_per_page." offset ".$offset." ";
+		}
 	}
 	$sql= str_replace("  ", " ", $sql);
 	$sql= str_replace("where and", "where", $sql);

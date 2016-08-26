@@ -24,6 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+if ($domains_processed == 1) {
+
+//create a json string
 $vars = <<<EOD
 [
 {"var_name":"domain","var_value":"\$\${local_ip_v4}","var_cat":"Domain","var_enabled":"true","var_description":"U2V0cyB0aGUgZGVmYXVsdCBkb21haW4u"},
@@ -32,6 +35,7 @@ $vars = <<<EOD
 {"var_name":"hold_music","var_value":"local_stream://default","var_cat":"Music on Hold","var_enabled":"true","var_description":""},
 {"var_name":"global_codec_prefs","var_value":"G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM","var_cat":"Codecs","var_enabled":"true","var_description":"RzcyMjFAMzIwMDBoLEc3MjIxQDE2MDAwaCxHNzIyLFBDTVUsUENNQSxpTEJDLEdTTSxIMjYzLEgyNjQ="},
 {"var_name":"outbound_codec_prefs","var_value":"PCMU,PCMA,GSM","var_cat":"Codecs","var_enabled":"true","var_description":"ZGVmYXVsdDogUENNVSxQQ01BLEdTTQ=="},
+{"var_name":"media_mix_inbound_outbound_codecs","var_value":"true","var_cat":"Codecs","var_enabled":"true","var_description":""},
 {"var_name":"xmpp_client_profile","var_value":"xmppc","var_cat":"Dingaling","var_enabled":"true","var_description":"eG1wcF9jbGllbnRfcHJvZmlsZSBhbmQgeG1wcF9zZXJ2ZXJfcHJvZmlsZSB4bXBwX2NsaWVudF9wcm9maWxlIGNhbiBiZSBhbnkgc3RyaW5nLiB4bXBwX3NlcnZlcl9wcm9maWxlIGlzIGFwcGVuZGVkIHRvICJkaW5nYWxpbmdfIiB0byBmb3JtIHRoZSBkYXRhYmFzZSBuYW1lIGNvbnRhaW5pbmcgdGhlICJzdWJzY3JpcHRpb25zIiB0YWJsZS4gdXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1sIGVudW0uY29uZi54bWw="},
 {"var_name":"xmpp_server_profile","var_value":"xmpps","var_cat":"Dingaling","var_enabled":"true","var_description":""},
 {"var_name":"bind_server_ip","var_value":"auto","var_cat":"Dingaling","var_enabled":"true","var_description":"Q2FuIGJlIGFuIGlwIGFkZHJlc3MsIGEgZG5zIG5hbWUsIG9yICJhdXRvIi4gVGhpcyBkZXRlcm1pbmVzIGFuIGlwIGFkZHJlc3MgYXZhaWxhYmxlIG9uIHRoaXMgaG9zdCB0byBiaW5kLiBJZiB5b3UgYXJlIHNlcGFyYXRpbmcgUlRQIGFuZCBTSVAgdHJhZmZpYywgeW91IHdpbGwgd2FudCB0byBoYXZlIHVzZSBkaWZmZXJlbnQgYWRkcmVzc2VzIHdoZXJlIHRoaXMgdmFyaWFibGUgYXBwZWFycy4gVXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1s"},
@@ -43,35 +47,7 @@ $vars = <<<EOD
 {"var_name":"call_debug","var_value":"false","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"console_loglevel","var_value":"info","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"default_areacode","var_value":"208","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"be-ring","var_value":"%(1000,3000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ca-ring","var_value":"%(2000,4000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cn-ring","var_value":"%(1000,4000,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cy-ring","var_value":"%(1500,3000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cz-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"de-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"dk-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"dz-ring","var_value":"%(1500,3500,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"eg-ring","var_value":"%(2000,1000,475,375)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"fi-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"fr-ring","var_value":"%(1500,3500,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pt-ring","var_value":"%(1000,5000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"hk-ring","var_value":"%(400,200,440,480);%(400,3000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"hu-ring","var_value":"%(1250,3750,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"il-ring","var_value":"%(1000,3000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"in-ring","var_value":"%(400,200,425,375);%(400,2000,425,375)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"jp-ring","var_value":"%(1000,2000,420,380)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ko-ring","var_value":"%(1000,2000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pk-ring","var_value":"%(1000,2000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pl-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ro-ring","var_value":"%(1850,4150,475,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"rs-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"it-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ru-ring","var_value":"%(800,3200,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"sa-ring","var_value":"%(1200,4600,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"tr-ring","var_value":"%(2000,4000,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"uk-ring","var_value":"%(400,200,400,450);%(400,2000,400,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"bong-ring","var_value":"v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Ringtones","var_enabled":"true","var_description":"RGVmYXVsdCByaW5ndG9uZSAoVVMp"},
 {"var_name":"sit","var_value":"%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"sip_tls_version","var_value":"tlsv1","var_cat":"SIP","var_enabled":"true","var_description":"U0lQIGFuZCBUTFMgc2V0dGluZ3Mu"},
 {"var_name":"internal_auth_calls","var_value":"true","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
@@ -96,155 +72,199 @@ $vars = <<<EOD
 ]
 EOD;
 
-// Set country depend variables as country code and international direct dialing code (exit code)
-	if (!function_exists('set_country_vars')) {
-		function set_country_vars($db, $x) {
-			require "resources/countries.php";
-
-	//		$country_iso=$_SESSION['domain']['country']['iso_code'];
-
-			$sql = "select default_setting_value as value from v_default_settings ";
-			$sql .= "where default_setting_name = 'iso_code' ";
-			$sql .= "and default_setting_category = 'domain' ";
-			$sql .= "and default_setting_subcategory = 'country' ";
-			$sql .= "and default_setting_enabled = 'true';";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				if ( count($result)> 0) {
-					$country_iso = $result[0]["value"];
-				}
-			}
-			unset($prep_statement, $sql, $result);
-
-			if ( $country_iso===NULL ) {
-				return;
-			}
-
-			if(isset($countries[$country_iso])){
-				$country = $countries[$country_iso];
-
-		// Set default Country ISO code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_country' ";
-				$sql .= "and var_cat = 'Defaults' ";
+	// Set country depend variables as country code and international direct dialing code (exit code)
+		if (!function_exists('set_country_vars')) {
+			function set_country_vars($db, $x) {
+				require "resources/countries.php";
+	
+				//$country_iso=$_SESSION['domain']['country']['iso_code'];
+	
+				$sql = "select default_setting_value as value from v_default_settings ";
+				$sql .= "where default_setting_name = 'iso_code' ";
+				$sql .= "and default_setting_category = 'domain' ";
+				$sql .= "and default_setting_subcategory = 'country' ";
+				$sql .= "and default_setting_enabled = 'true';";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_country', ";
-						$sql .= "'".$country["isocode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					if ( count($result)> 0) {
+						$country_iso = $result[0]["value"];
 					}
 				}
-				unset($prep_statement, $sql);
+				unset($prep_statement, $sql, $result);
 
-		// Set default Country code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_countrycode' ";
-				$sql .= "and var_cat = 'Defaults' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_countrycode', ";
-						$sql .= "'".$country["countrycode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
-					}
+				if ( $country_iso===NULL ) {
+					return;
 				}
-				unset($prep_statement, $sql);
 
-		// Set default International Direct Dialing code
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = 'default_exitcode' ";
-				$sql .= "and var_cat = 'Defaults' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row['num_rows'] == 0) {
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'default_exitcode', ";
-						$sql .= "'".$country["exitcode"]."', ";
-						$sql .= "'Defaults', ";
-						$sql .= "'true', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'' ";
-						$sql .= ");";
-						$db->exec(check_sql($sql));
-						unset($sql, $row);
-						$x++;
+				if(isset($countries[$country_iso])){
+					$country = $countries[$country_iso];
+
+					// Set default Country ISO code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_country' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+	
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_country', ";
+							$sql .= "'".$country["isocode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
 					}
-				}
-				unset($prep_statement, $sql);
+					unset($prep_statement, $sql);
 
-				unset($countries);
+					//Set default Country code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_countrycode' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_countrycode', ";
+							$sql .= "'".$country["countrycode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
+					}
+					unset($prep_statement, $sql);
+
+					// Set default International Direct Dialing code
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'default_exitcode' ";
+					$sql .= "and var_cat = 'Defaults' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'default_exitcode', ";
+							$sql .= "'".$country["exitcode"]."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'".$x."', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql, $row);
+							$x++;
+						}
+					}
+					unset($prep_statement, $sql);
+	
+					unset($countries);
+				}
 			}
 		}
-	}
 
-	$x = 1;
-
-//if there are no variables in the vars table then add them
-	if ($domains_processed == 1) {
-
+	//import default variables
 		$result = json_decode($vars, true);
+
+	//import ringtones from vars.xml
+		$vars_xml = simplexml_load_file($_SERVER["PROJECT_ROOT"] . "/resources/templates/conf/vars.xml");
+		foreach($vars_xml->{'X-PRE-PROCESS'} as $item) {
+			if($item->attributes()->cmd == 'set') {
+				$value = explode('=', $item->attributes()->data, 2);
+				if(preg_match("/-ring/", $value[0])){
+					$row = Array();
+					$row['var_cat'] = 'Ringtones';
+					$row['var_name'] = $value[0];
+					$row['var_value'] = $value[1];
+					$row['var_enabled'] = $item->attributes()->enabled;
+					if(!isset($row['var_enabled'])){
+						$row['var_enabled'] = 'true';
+					}
+					$row['var_description'] = $item->attributes()->description;
+					if(!isset($row['var_description'])){
+						$row['var_description'] = base64_encode('Imported from vars.xml');
+					}
+					$result[] = $row;
+				}
+			}
+		}
+
+	//migrate old ringtones
+		$sql = "update v_vars ";
+		$sql .= "set var_cat = 'Ringtones' ";
+		$sql .= "set var_description = 'TWlncmF0ZWQgZnJvbSBEZWZhdWx0cw==' ";
+		$sql .= "where var_name like '%-ring' ";
+		$sql .= "and var_cat = 'Defaults' ";
+		$sql .= "and var_description = '' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+		}
+		
+		$sql = "update v_vars ";
+		$sql .= "set var_cat = 'Ringtones' ";
+		$sql .= "where var_name like '%-ring' ";
+		$sql .= "and var_cat = 'Defaults' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+		}
+		unset($prep_statement, $sql);
+
+	//add missing variables
+		$x = 1;
 		foreach($result as $row) {
 
 			$sql = "select count(*) as num_rows from v_vars ";
@@ -279,17 +299,13 @@ EOD;
 					$db->exec($sql);
 					unset($sql);
 					$x++;
-
 				}
 			}
 			unset($prep_statement, $row2);
-
 		}
 		unset($result, $row);
-	}
 
-//adjust the variables required variables
-	if ($domains_processed == 1) {
+	//adjust the variables required variables
 		//set variables that depend on the number of domains
 			if (count($_SESSION['domains']) > 1) {
 				//disable the domain and domain_uuid for systems with multiple domains
@@ -340,5 +356,5 @@ EOD;
 
 		//save the vars.xml file
 			save_var_xml();
-	}
+}
 ?>

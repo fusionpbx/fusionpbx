@@ -26,6 +26,7 @@
 
 include "root.php";
 require_once "resources/require.php";
+require_once "resources/functions/device_by.php";
 openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
@@ -38,6 +39,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 //define PHP variables from the HTTP values
 	$mac = check_str($_REQUEST['mac']);
 	$file = check_str($_REQUEST['file']);
+	$ext = check_str($_REQUEST['ext']);
 	//if (strlen(check_str($_REQUEST['template'])) > 0) {
 	//	$device_template = check_str($_REQUEST['template']);
 	//}
@@ -48,6 +50,20 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		if (substr($name, 0, 3) == "SEP") {
 			$mac = strtolower(substr($name, 3, 12));
 			unset($name);
+		}
+	}
+
+// Escence make request based on UserID for Memory keys
+/*
+The file name is fixed to `Account1_Extern.xml`.
+(Account1 is the first account you register)
+*/
+	if(empty($mac) && !empty($ext)){
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+		$domain_name = $domain_array[0];
+		$device = device_by_ext($db, $ext, $domain_name);
+		if(($device !== false)&&($device['device_vendor']=='escene')){
+			$mac = $device['device_mac_address'];
 		}
 	}
 
@@ -80,7 +96,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
 		//get the domain_uuid
 			$sql = "SELECT domain_uuid FROM v_devices ";
 			$sql .= "WHERE device_mac_address = '".$mac."' ";
@@ -207,7 +223,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	foreach($_SESSION['provision'] as $key=>$val) {
 		if (strlen($val['var']) > 0) { $value = $val['var']; }
 		if (strlen($val['text']) > 0) { $value = $val['text']; }
-		$provision[$key] = $value;
+		if (strlen($value) > 0) { $provision[$key] = $value; }
 		unset($value);
 	}
 
@@ -349,6 +365,22 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		}
 	}
 
+//register that we have seen the device
+	$sql = "UPDATE v_devices "; 
+	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		//use the prepared statement
+			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+			$prep_statement->bindValue(':mac', strtolower($mac));
+			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+			$prep_statement->execute();
+			unset($prep_statement);
+	}
+	
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;
@@ -373,7 +405,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: ' . filesize($file_contents));
+			header('Content-Length: ' . strlen($file_contents));
 	}
 	else {
 		$cfg_ext = ".cfg";

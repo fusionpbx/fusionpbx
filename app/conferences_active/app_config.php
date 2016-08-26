@@ -26,14 +26,17 @@
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "conference_interactive_view";
+		$apps[$x]['permissions'][1]['groups'][] = "user";
 		$apps[$x]['permissions'][1]['groups'][] = "admin";
 		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][2]['name'] = "conference_interactive_lock";
+		$apps[$x]['permissions'][2]['groups'][] = "user";
 		$apps[$x]['permissions'][2]['groups'][] = "admin";
 		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][3]['name'] = "conference_interactive_kick";
+		$apps[$x]['permissions'][3]['groups'][] = "user";
 		$apps[$x]['permissions'][3]['groups'][] = "admin";
 		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
 
@@ -53,14 +56,17 @@
 		//$apps[$x]['permissions'][6]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][7]['name'] = "conference_interactive_mute";
+		$apps[$x]['permissions'][7]['groups'][] = "user";
 		$apps[$x]['permissions'][7]['groups'][] = "admin";
 		$apps[$x]['permissions'][7]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][8]['name'] = "conference_interactive_deaf";
+		$apps[$x]['permissions'][8]['groups'][] = "user";
 		$apps[$x]['permissions'][8]['groups'][] = "admin";
 		$apps[$x]['permissions'][8]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][9]['name'] = "conference_interactive_video";
+		$apps[$x]['permissions'][9]['groups'][] = "user";
 		$apps[$x]['permissions'][9]['groups'][] = "admin";
 		$apps[$x]['permissions'][9]['groups'][] = "superadmin";
 

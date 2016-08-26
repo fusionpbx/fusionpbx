@@ -5,8 +5,11 @@
     Specify local directories that will be searched for LUA modules
     These entries will be pre-pended to the LUA_CPATH environment variable
     -->
-    <!-- <param name="module-directory" value="/usr/lib/lua/5.1/?.so"/> -->
-    <!-- <param name="module-directory" value="/usr/local/lib/lua/5.1/?.so"/> -->
+    <!--
+    <param name="module-directory" value="/usr/local/lib/lua/5.2/?.so"/>
+    <param name="module-directory" value="/usr/local/lib/lua/5.2/?"/>
+    <param name="module-directory" value="/usr/lib/x86_64-linux-gnu/lua/5.2/?.so"/>
+    -->
 
     <!--
     Specify local directories that will be searched for LUA scripts
@@ -15,8 +18,11 @@
     <!-- <param name="script-directory" value="/usr/local/lua/?.lua"/> -->
     <param name="script-directory" value="$${script_dir}/?.lua"/>
 
+    <!--
+    Deliver XML from lua with the XML Handler
+    -->
     <param name="xml-handler-script" value="app.lua xml_handler"/>
-    <param name="xml-handler-bindings" value="configuration,dialplan,directory"/>
+    <param name="xml-handler-bindings" value="configuration,dialplan,directory,languages"/>
 
     <!--
     The following options identifies a lua script that is launched
@@ -27,6 +33,22 @@
 
     <!-- FusionPBX: Run FAX server queue poller  -->
     <!--<param name="startup-script" value="app/fax/resources/scripts/fax_queue_monitor.lua"/>-->
+
+    <!-- FusionPBX: Support BLF for call flow -->
+    <!-- There 2 way to handle this
+      1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
+      2 - Event handler - handle each SUBSCRIBE request
+    -->
+    <!--<param name="startup-script" value="call_flow_subscribe.lua"/>-->
+    <!--<param name="startup-script" value="call_flow_monitor.lua"/>-->
+
+    <!-- FusionPBX: Support MWI indicator-->
+    <!-- There 2 way to handle this
+      1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds
+      2 - Event handler - handle each SUBSCRIBE request
+    -->
+    <!--<param name="startup-script" value="app/voicemail/resources/scripts/mwi.lua"/>-->
+    <!--<param name="startup-script" value="app/voicemail/resources/scripts/mwi_subscribe.lua"/>-->
 
   </settings>
 </configuration>

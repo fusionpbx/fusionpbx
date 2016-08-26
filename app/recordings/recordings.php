@@ -290,10 +290,15 @@ require_once "resources/check_auth.php";
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
 	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
 		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
-		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
 	}
 	echo "<th class='listhdr' nowrap>".$text['label-tools']."</th>\n";
-	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
+	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		echo "<th class='listhdr' style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
+		echo "<th class='listhdr' style='text-align: right;'>".$text['label-uploaded']."</th>\n";
+	}
+	else {
+		echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
+	}
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
@@ -306,19 +311,16 @@ require_once "resources/check_auth.php";
 		foreach($result as $row) {
 			//playback progress bar
 			if (permission_exists('recording_play')) {
-				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td class='".$row_style[$c]."' style='border: none; padding: 0;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
+				echo "<tr id='recording_progress_bar_".$row['recording_uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".$row['recording_uuid']."'></span></td></tr>\n";
 			}
 			$tr_link = (permission_exists('recording_edit')) ? "href='recording_edit.php?id=".$row['recording_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_name']."</td>\n";
 			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording_filename']."</td>\n";
-				$tmp_filesize = filesize($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename']);
-				$tmp_filesize = byte_convert($tmp_filesize);
-				echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".str_replace('_', '_&#8203;', $row['recording_filename'])."</td>\n";
 			}
 			if (permission_exists('recording_play') || permission_exists('recording_download')) {
-				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void'>";
+				echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' style='width: 55px;'>";
 				if (permission_exists('recording_play')) {
 					$recording_file_path = $row['recording_filename'];
 					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
@@ -336,7 +338,22 @@ require_once "resources/check_auth.php";
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
+			if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+				$file_name = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'];
+				if (file_exists($file_name)) {
+					$file_size = filesize($file_name);
+					$file_size = byte_convert($file_size);
+				}
+				else {
+					$file_size = '';
+				}
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; white-space: nowrap;'>".$file_size."</td>\n";
+				$file_date = date("M d, Y H:i:s", filemtime($file_name));
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$file_date."</td>\n";
+			}
+			else {
+				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
+			}
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
 				echo "<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>";

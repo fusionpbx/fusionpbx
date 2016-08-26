@@ -29,20 +29,20 @@
 
 //find and include the config.php file
 	if (file_exists("/etc/fusionpbx/config.php")) {
+		$config_exists = true;
 		include "/etc/fusionpbx/config.php";
 	}
 	elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+		$config_exists = true;
 		include "/usr/local/etc/fusionpbx/config.php";
 	}
-	elseif (file_exists("resources/config.php")) {
-		include "resources/config.php";
-	}
-	else {
+	elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php")) {
+		$config_exists = true;
 		include "resources/config.php";
 	}
 
 //class auto loader
-	if (!class_exists(auto_loader)) {
+	if (!class_exists('auto_loader')) {
 		class auto_loader {
 			public function __construct() {
 				spl_autoload_register(array($this, 'loader'));
@@ -71,12 +71,14 @@
 
 //additional includes
 	require_once "resources/php.php";
-	require "resources/pdo.php";
 	require_once "resources/functions.php";
-	require_once "resources/switch.php";
+	if ($config_exists) {
+		require "resources/pdo.php";
+		require_once "resources/switch.php";
+	}
 
 //change language on the fly - for translate tool (if available)
-	if ($_REQUEST['view_lang_code'] != '') {
+	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
 ?>

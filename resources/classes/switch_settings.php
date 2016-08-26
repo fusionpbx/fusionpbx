@@ -169,7 +169,7 @@ if (!class_exists('switch_settings')) {
 				$array[$x]['default_setting_subcategory'] = 'phrases';
 				$array[$x]['default_setting_name'] = 'dir';
 				$array[$x]['default_setting_value'] = $vars['conf_dir'].'/lang';
-				$array[$x]['default_setting_enabled'] = 'false';
+				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = '';
 				$x++;
 				$array[$x]['default_setting_category'] = 'switch';
@@ -239,7 +239,7 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//add the missing default settings
-				if (is_array($missing)) {
+				if (count($missing) > 0) {
 					$sql = "insert into v_default_settings (";
 					$sql .= "default_setting_uuid, ";
 					$sql .= "default_setting_category, ";

@@ -76,21 +76,22 @@
 
 								if saved then
 									--play the greeting
-										session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+										session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 
 									--delete the greeting (retain local for better responsiveness)
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 								end
 							elseif (storage_type == "http_cache") then
-								session:streamFile(storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+								session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+								session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
 						--sleep
-							session:streamFile("silence_stream://200");
+							session:execute("playback","silence_stream://200");
 					else
 						--default greeting
+						session:execute("playback","silence_stream://200");
 						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
 					end
 			end

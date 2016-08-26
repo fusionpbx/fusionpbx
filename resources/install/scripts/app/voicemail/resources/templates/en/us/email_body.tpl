@@ -6,7 +6,7 @@
 			<td valign="middle" align="center" bgcolor="#e5e9f0" style="background-color: #e5e9f0;
 			color: #000; font-family: Arial; font-size: 14px; padding: 7px;-moz-border-radius: 4px;
 			-webkit-border-radius: 4px; border-radius: 4px;">
-			<strong>New Voicemail</strong>
+				<strong>New Voicemail</strong>
 			</td>
 		</tr>
 		<tr>
@@ -17,7 +17,7 @@
 							<strong>To</strong>
 						</td>
 						<td style="color: #666; font-family: Arial; font-size: 12px; padding-bottom: 11px;">
-							${account}
+							${voicemail_name_formatted}
 						</td>
 					</tr>
 					<tr>

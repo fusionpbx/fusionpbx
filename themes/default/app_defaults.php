@@ -88,9 +88,44 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'domain_color';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '#69e5ff';
+		$array[$x]['default_setting_value'] = '#ffffff';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the text color (and opacity) for domain name.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'domain_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#69e5ff';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the text hover color (and opacity) for domain name.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'logout_icon_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ffffff';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the color (and opacity) for the logout icon (if visible).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'logout_icon_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#69e5ff';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the hover color (and opacity) for the logout icon (if visible).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_toggle_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ffffff';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the color (and opacity) for the menu toggle icon (in mobile view).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'menu_main_toggle_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#69e5ff';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the hover color (and opacity) for the menu toggle icon (in mobile view).';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'footer_background_color';
@@ -322,7 +357,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'menu_sub_background_color';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_value'] = '#000000';
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the background color (and opacity) of the sub menus.';
 		$x++;
@@ -591,7 +626,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_heading_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block heading text.';
 		$x++;
@@ -647,7 +682,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_number_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block number.';
 		$x++;
@@ -682,7 +717,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'dashboard_number_title_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of the Dashboard block number title.';
 		$x++;
@@ -1079,7 +1114,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'button_text_font';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif';
+		$array[$x]['default_setting_value'] = "Candara, Calibri, Segoe, 'Segoe UI', Optima, Arial, sans-serif";
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the font of button text.';
 		$x++;
@@ -1316,64 +1351,130 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the color (and opacity) of input placeholder text on the login box.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_loader';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Enables the dynamic loading of web fonts (requires an Internet connection).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_loader_version';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '1.6.16';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = "Set the web font loader version to use - specific (e.g. '1.6.16') or latest in branch (e.g. '1').";
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_retrieval';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'asynchronous';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the retrieval method for the web font loader (default: synchronous).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'font_source_key';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = "API key that allows access to the available fonts list.";
+		$x++;
+		/* icons */
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'body_icon_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'rgba(255,255,255,0.25)';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the color (and opacity) for the icons in the body.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'body_icon_color_hover';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'rgba(255,255,255,0.50)';
+		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_description'] = 'Set the hover color (and opacity) for the icons in the body.';
+		$x++;
 
-	//get an array of the default settings
-		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_category = 'theme' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
 
-	//find the missing default settings
-		$i = 0;
-		foreach ($array as $setting) {
-			$found = false;
-			$missing[$i] = $setting;
-			foreach ($default_settings as $row) {
-				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
-					$found = true;
-					//remove items from the array that were found
-					unset($missing[$i]);
+		if(!$set_session_theme) {
+			//get an array of the default settings
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_category = 'theme' ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement, $sql);
+
+			//find the missing default settings
+				$i = 0;
+				foreach ($array as $setting) {
+					$found = false;
+					$missing[$i] = $setting;
+					foreach ($default_settings as $row) {
+						if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+							$found = true;
+
+							//remove items from the array that were found
+								unset($missing[$i]);
+						}
+					}
+					$i++;
 				}
-			}
-			$i++;
+
+			//get the missing count
+				$i = 0;
+				foreach ($missing as $row) { $i++; }
+				$missing_count = $i;
+
+			//add the missing default settings
+				if (count($missing) > 0) {
+					$sql = "insert into v_default_settings (";
+					$sql .= "default_setting_uuid, ";
+					$sql .= "default_setting_category, ";
+					$sql .= "default_setting_subcategory, ";
+					$sql .= "default_setting_name, ";
+					$sql .= "default_setting_value, ";
+					$sql .= "default_setting_enabled, ";
+					$sql .= "default_setting_description ";
+					$sql .= ") values \n";
+					$i = 1;
+					foreach ($missing as $row) {
+						$sql .= "(";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".check_str($row['default_setting_category'])."', ";
+						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+						$sql .= "'".check_str($row['default_setting_name'])."', ";
+						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+						$sql .= "'".check_str($row['default_setting_description'])."' ";
+						$sql .= ")";
+						if ($missing_count != $i) {
+							$sql .= ",\n";
+						}
+						$i++;
+					}
+					$db->exec(check_sql($sql));
+					unset($missing);
+				}
 		}
-
-	//get the missing count
-		$i = 0;
-		foreach ($missing as $row) { $i++; }
-		$missing_count = $i;
-
-	//add the missing default settings
-		$sql = "insert into v_default_settings (";
-		$sql .= "default_setting_uuid, ";
-		$sql .= "default_setting_category, ";
-		$sql .= "default_setting_subcategory, ";
-		$sql .= "default_setting_name, ";
-		$sql .= "default_setting_value, ";
-		$sql .= "default_setting_enabled, ";
-		$sql .= "default_setting_description ";
-		$sql .= ") values \n";
-		$i = 1;
-		foreach ($missing as $row) {
-			$sql .= "(";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".check_str($row['default_setting_category'])."', ";
-			$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-			$sql .= "'".check_str($row['default_setting_name'])."', ";
-			$sql .= "'".check_str($row['default_setting_value'])."', ";
-			$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-			$sql .= "'".check_str($row['default_setting_description'])."' ";
-			$sql .= ")";
-			if ($missing_count != $i) { 
-				$sql .= ",\n";
-			}
-			$i++;
+		else {
+			//populate the default settings into the session theme
+				$_SESSION['theme'] = Array();
+				foreach ($array as $index => $default_settings) {
+					$sub_category = $array[$index]['default_setting_subcategory'];
+					$name = $array[$index]['default_setting_name'];
+					if($array[$index]['default_setting_enabled'] == 'true'){
+						if($name == 'array'){
+							$_SESSION['theme'][$sub_category][$array[$index]['default_setting_order']] = $array[$index]['default_setting_value'];
+						}
+						else {
+							$_SESSION['theme'][$sub_category][$name] = $array[$index]['default_setting_value'];
+						}
+					}else{
+						$_SESSION['theme'][$sub_category][$name] = '';
+					}
+				}
 		}
-		$db->exec(check_sql($sql));
-		unset($missing);
-
 	//unset the array variable
 		unset($array);
 }

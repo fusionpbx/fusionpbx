@@ -80,6 +80,7 @@
 		<!-- port to bind to for sip traffic -->
 		<param name="sip-port" value="$${internal_sip_port}"/>
 		<param name="dialplan" value="XML"/>
+		<param name="dtmf-type" value="rfc2833"/>
 		<param name="dtmf-duration" value="2000"/>
 		<param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
 		<param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
@@ -122,7 +123,6 @@
 		-->
 		<param name="local-network-acl" value="localnet.auto"/>
 		<param name="apply-register-acl" value="domains" enabled="false"/>
-		<param name="dtmf-type" value="info" enabled="false"/>
 
 		<!-- 'true' means every time 'first-only' means on the first register -->
 		<param name="send-message-query-on-register" value="true" enabled="false"/>
@@ -184,7 +184,7 @@
 		<param name="tls-verify-date" value="true"/>
 		<!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
 		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
-		<param name="tls-verify-policy" value="none"/>
+		<param name="tls-verify-policy" value="all|subjects_all" enabled="false"/>
 		<!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
 		<param name="tls-verify-depth" value="2"/>
 		<!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
@@ -229,9 +229,9 @@
 		<!-- Handle 302 Redirect in the dialplan -->
 		<param name="manual-redirect" value="true" enabled="false"/>
 		<!-- Disable Transfer -->
-		<param name="disable-transfer" value="true" enabled="false"/>
+		<!--<param name="disable-transfer" value="true" enabled="false"/>-->
 		<!-- Disable Register -->
-		<param name="disable-register" value="true" enabled="false"/>
+		<!--<param name="disable-register" value="true" enabled="false"/>-->
 		<!-- Used for when phones respond to a challenged ACK with method INVITE in the hash -->
 		<param name="NDLB-broken-auth-hash" value="true" enabled="false"/>
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->

@@ -10,14 +10,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '.pdf';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
-		$x = 0;
+		$x++;
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
 		$array[$x]['default_setting_name'] = 'array';
 		$array[$x]['default_setting_value'] = '.tif';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
-		$x = 0;
+		$x++;
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'allowed_extension';
 		$array[$x]['default_setting_name'] = 'array';
@@ -137,6 +137,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Delay before next call sequence';
 		$x++;
+
 	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
 		$prep_statement = $db->prepare($sql);
@@ -160,7 +161,7 @@ if ($domains_processed == 1) {
 		}
 
 	//add the missing default settings
-		foreach ($missing as $row) {
+		if (count($missing) > 0) foreach ($missing as $row) {
 			//add the default settings
 			$orm = new orm;
 			$orm->name('default_settings');

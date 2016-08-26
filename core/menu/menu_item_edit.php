@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -80,6 +80,7 @@ else {
 		$menu_item_title = check_str($_POST["menu_item_title"]);
 		$menu_item_link = check_str($_POST["menu_item_link"]);
 		$menu_item_category = check_str($_POST["menu_item_category"]);
+		$menu_item_icon = check_str($_POST["menu_item_icon"]);
 		$menu_item_description = check_str($_POST["menu_item_description"]);
 		$menu_item_protected = check_str($_POST["menu_item_protected"]);
 		//$menu_item_uuid = check_str($_POST["menu_item_uuid"]);
@@ -149,6 +150,7 @@ else {
 					$sql .= "menu_item_title, ";
 					$sql .= "menu_item_link, ";
 					$sql .= "menu_item_category, ";
+					$sql .= "menu_item_icon, ";
 					$sql .= "menu_item_description, ";
 					$sql .= "menu_item_protected, ";
 					$sql .= "menu_item_uuid, ";
@@ -165,6 +167,7 @@ else {
 					$sql .= "'$menu_item_title', ";
 					$sql .= "'$menu_item_link', ";
 					$sql .= "'$menu_item_category', ";
+					$sql .= "'$menu_item_icon', ";
 					$sql .= "'$menu_item_description', ";
 					$sql .= "'$menu_item_protected', ";
 					$sql .= "'".$menu_item_uuid."', ";
@@ -188,6 +191,7 @@ else {
 					$sql .= "menu_item_title = '$menu_item_title', ";
 					$sql .= "menu_item_link = '$menu_item_link', ";
 					$sql .= "menu_item_category = '$menu_item_category', ";
+					$sql .= "menu_item_icon = '$menu_item_icon', ";
 					$sql .= "menu_item_description = '$menu_item_description', ";
 					$sql .= "menu_item_protected = '$menu_item_protected', ";
 					if (strlen($menu_item_parent_uuid) == 0) {
@@ -307,6 +311,7 @@ else {
 			$menu_item_title = $row["menu_item_title"];
 			$menu_item_link = $row["menu_item_link"];
 			$menu_item_category = $row["menu_item_category"];
+			$menu_item_icon = $row["menu_item_icon"];
 			$menu_item_description = $row["menu_item_description"];
 			$menu_item_protected = $row["menu_item_protected"];
 			$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
@@ -320,81 +325,15 @@ else {
 		}
 	}
 
-//include the header
-	require_once "resources/header.php";
-	if ($action == "update") {
-		$document['title'] = $text['title-menu_item-edit'];
-	}
-	if ($action == "add") {
-		$document['title'] = $text['title-menu_item-add'];
-	}
-
-	echo "<form method='post' action=''>";
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>";
-	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap><b>";
-	if ($action == "update") {
-		echo $text['header-menu_item-edit'];
-	}
-	if ($action == "add") {
-		echo $text['header-menu_item-add'];
-	}
-	echo "</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-	echo "	<br><br>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
-	echo "	</tr>";
-	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
-	echo "	</tr>";
-	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-category']."</td>";
-	echo "		<td class='vtable'>";
-	echo "            <select name=\"menu_item_category\" class='formfld'>\n";
-	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>".$text['option-internal']."</option>\n"; } else { echo "<option value=\"internal\">".$text['option-internal']."</option>\n"; }
-	if ($menu_item_category == "external") { echo "<option value=\"external\" selected>".$text['option-external']."</option>\n"; } else { echo "<option value=\"external\">".$text['option-external']."</option>\n"; }
-	if ($menu_item_category == "email") { echo "<option value=\"email\" selected>".$text['option-email']."</option>\n"; } else { echo "<option value=\"email\">".$text['option-email']."</option>\n"; }
-	echo "            </select>";
-	echo "        </td>";
-	echo "	</tr>";
-
-	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-parent_menu']."</td>";
-	echo "		<td class='vtable'>";
+//get the the menu items
 	$sql = "SELECT * FROM v_menu_items ";
 	$sql .= "where menu_uuid = '$menu_uuid' ";
 	$sql .= "order by menu_item_title asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
-	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
-				echo "<option value='".$field['menu_item_uuid']."' selected>".$field['menu_item_title']."</option>\n";
-			}
-			else {
-				echo "<option value='".$field['menu_item_uuid']."'>".$field['menu_item_title']."</option>\n";
-			}
-	}
-	echo "</select>";
-	unset($sql, $result);
-	echo "		</td>";
-	echo "	</tr>";
+	$menu_items = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
-	echo "		<td class='vtable'>";
-
-	//group list
+//get the assigned groups
 	$sql = "select ";
 	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
@@ -411,11 +350,144 @@ else {
 	$prep_statement->bindParam(':menu_uuid', $menu_uuid);
 	$prep_statement->bindParam(':menu_item_uuid', $menu_item_uuid);
 	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	if ($result_count > 0) {
+	$menu_item_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql, $prep_statement);
+
+//set the assigned_groups array
+	foreach($menu_item_groups as $field) {
+		if (strlen($field['group_name']) > 0) {
+			$assigned_groups[] = $field['group_uuid'];
+		}
+	}
+
+//get the groups
+	$sql = "select * from v_groups ";
+	if (sizeof($assigned_groups) > 0) {
+		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
+	}
+	$sql .= "order by domain_uuid desc, group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql, $prep_statement);
+
+//include the header
+	require_once "resources/header.php";
+	if ($action == "update") {
+		$document['title'] = $text['title-menu_item-edit'];
+	}
+	if ($action == "add") {
+		$document['title'] = $text['title-menu_item-add'];
+	}
+
+	echo "<form method='post' action=''>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'>\n";
+	echo "	<b>\n";
+	if ($action == "update") {
+		echo "		".$text['header-menu_item-edit']."\n";
+	}
+	if ($action == "add") {
+		echo "		".$text['header-menu_item-add']."\n";
+	}
+	echo "	</b>\n";
+	echo "</td>\n";
+	echo "<td width='70%' align='right' valign='top'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
+	echo "	<br><br>";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "	<tr>";
+	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
+	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncellreq'>".$text['label-category']."</td>";
+	echo "		<td class='vtable'>";
+	echo "            <select name=\"menu_item_category\" class='formfld'>\n";
+	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>".$text['option-internal']."</option>\n"; } else { echo "<option value=\"internal\">".$text['option-internal']."</option>\n"; }
+	if ($menu_item_category == "external") { echo "<option value=\"external\" selected>".$text['option-external']."</option>\n"; } else { echo "<option value=\"external\">".$text['option-external']."</option>\n"; }
+	if ($menu_item_category == "email") { echo "<option value=\"email\" selected>".$text['option-email']."</option>\n"; } else { echo "<option value=\"email\">".$text['option-email']."</option>\n"; }
+	echo "            </select>";
+	echo "        </td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-icon']."</td>";
+	echo "		<td class='vtable' style='vertical-align: bottom;'>";
+	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json')) {
+		$tmp_array = json_decode(file_get_contents($_SERVER["PROJECT_ROOT"].'/resources/bootstrap/glyphicons.json'), true);
+		if (is_array($tmp_array['icons']) && sizeof($tmp_array['icons']) > 0) {
+			// rebuild and sort array
+			foreach ($tmp_array['icons'] as $i => $glyphicon) {
+				$tmp_string = str_replace('glyphicon-', '', $glyphicon['id']);
+				$tmp_string = str_replace('-', ' ', $tmp_string);
+				$tmp_string = ucwords($tmp_string);
+				$glyphicons[$glyphicon['id']] = $tmp_string;
+			}
+			asort($glyphicons, SORT_STRING);
+			echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td>\n";
+			echo "			<select class='formfld' name='menu_item_icon' id='menu_item_icon' onchange=\"$('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\">\n";
+			echo "				<option value=''></option>\n";
+			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
+				$selected = ($menu_item_icon == $glyphicon_class) ? "selected" : null;
+				echo "			<option value='".$glyphicon_class."' ".$selected.">".$glyphicon_name."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "		</td>\n";
+			echo "		<td style='padding: 0 0 0 5px;'>\n";
+			echo "			<button id='grid_icon' type='button' class='btn btn-default list_control_icon' style='font-size: 15px; padding-top: 1px; padding-left: 3px;' onclick=\"$('#glyphicons').slideToggle(); $(this).fadeOut();\"><span class='glyphicon glyphicon-th'></span></button>";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
+			echo "<div id='glyphicons' style='clear: both; display: none; padding-top: 10px; color: #000;'>";
+			foreach ($glyphicons as $glyphicon_class => $glyphicon_name) {
+				echo "<span class='glyphicon ".$glyphicon_class."' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".$glyphicon_name."' onclick=\"$('#menu_item_icon').val('".$glyphicon_class."'); $('#glyphicons').slideUp(); $('#grid_icon').fadeIn();\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+			}
+			echo "</div>";
+		}
+	}
+	else {
+		echo "		<input type='text' class='formfld' name='menu_item_icon' value='".$menu_item_icon."'>";
+	}
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-parent_menu']."</td>";
+	echo "		<td class='vtable'>";
+	echo "<select name=\"menu_item_parent_uuid\" class='formfld'>\n";
+	echo "<option value=\"\"></option>\n";
+	foreach($menu_items as $field) {
+			if ($menu_item_parent_uuid == $field['menu_item_uuid']) {
+				echo "<option value='".$field['menu_item_uuid']."' selected>".$field['menu_item_title']."</option>\n";
+			}
+			else {
+				echo "<option value='".$field['menu_item_uuid']."'>".$field['menu_item_title']."</option>\n";
+			}
+	}
+	echo "</select>";
+	unset($sql, $result);
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
+	echo "		<td class='vtable'>";
+	if (is_array($menu_item_groups)) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
-		foreach($result as $field) {
+		foreach($menu_item_groups as $field) {
 			if (strlen($field['group_name']) > 0) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
@@ -427,28 +499,15 @@ else {
 					echo "	</td>";
 				}
 				echo "</tr>\n";
-				$assigned_groups[] = $field['group_uuid'];
 			}
 		}
 		echo "</table>\n";
 	}
-	unset($sql, $prep_statement, $result, $result_count);
-
-	//group select
-	$sql = "select * from v_groups ";
-	if (sizeof($assigned_groups) > 0) {
-		$sql .= "where group_uuid not in ('".implode("','",$assigned_groups)."') ";
-	}
-	$sql .= "order by domain_uuid desc, group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	if ($result_count > 0) {
+	if (is_array($groups)) {
 		echo "<br />\n";
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
-		foreach($result as $field) {
+		foreach($groups as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
 			if (!in_array($field["group_uuid"], $assigned_groups)) {
@@ -458,8 +517,6 @@ else {
 		echo "</select>";
 		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
 	}
-	unset($sql, $prep_statement, $result);
-
 	echo "		</td>";
 	echo "	</tr>";
 
@@ -528,4 +585,5 @@ else {
 
 //include the footer
   require_once "resources/footer.php";
+
 ?>

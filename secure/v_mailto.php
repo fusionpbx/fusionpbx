@@ -79,6 +79,9 @@
 //includes
 	require('resources/pop3/mime_parser.php');
 	require('resources/pop3/rfc822_addresses.php');
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
+		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
+	}
 
 //parse the email message
 	$mime=new mime_parser_class;
@@ -135,6 +138,11 @@
 //prepare smtp server settings
 	// load default smtp settings
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
+	if (isset($_SESSION['email']['smtp_port'])) {
+		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
+	} else {
+		$smtp['port'] = 0;
+	}
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
@@ -164,7 +172,7 @@
 	}
 
 	// value adjustments
-	$smtp['auth'] 		= ($smtp['auth'] == "true") ? $smtp['auth'] : "false";
+	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
 	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
 	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
 	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
@@ -173,13 +181,21 @@
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
-	$mail->IsSMTP();
+	if (isset($_SESSION['email']['method'])) {
+		switch($_SESSION['email']['method']['text']) {
+			case 'sendmail': $mail->IsSendmail(); break;
+			case 'qmail': $mail->IsQmail(); break;
+			case 'mail': $mail->IsMail(); break;
+			default: $mail->IsSMTP(); break;
+		}
+	} else $mail->IsSMTP();
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
+	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
 	if ($smtp['secure'] != '') {
 		$mail->SMTPSecure = $smtp['secure'];
 	}
-	if ($smtp['auth'] == 'true') {
+	if ($smtp['auth']) {
 		$mail->Username = $smtp['username'];
 		$mail->Password = $smtp['password'];
 	}
@@ -269,6 +285,13 @@
 
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
+					if (function_exists(get_transcription)) {
+						$attachments_array = $mail->GetAttachments();
+						$transcription = get_transcription($attachments_array[0]);
+						echo "Transcription: " . $transcription;
+					} else {
+						$transcription = '';
+					}
 			}
 		}
 	}
@@ -278,13 +301,13 @@
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
-		$mail->Body = $body;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body."<br><br>".nl2br($transcription);
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 	else {
 		// $mail->Body = ($body != '') ? $body : $body_plain;
-		$mail->Body = $body_plain;
-		$mail->AltBody = $body_plain;
+		$mail->Body = $body_plain."\n\n$transcription";
+		$mail->AltBody = $body_plain."\n\n$transcription";
 	}
 
 //send the email

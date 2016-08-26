@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -123,7 +123,7 @@ require_once "resources/require.php";
 
 //list all the permissions in the database
 	foreach($apps as $app) {
-		foreach ($app['permissions'] as $row) {
+		if (isset($app['permissions'])) foreach ($app['permissions'] as $row) {
 			if ($permissions_db[$row['name']] == "true") {
 				$permissions_db_checklist[$row['name']] = "true";
 			}
@@ -333,6 +333,18 @@ require_once "resources/require.php";
 	echo "\n";
 	echo "	$( document ).ready(function() {\n";
 	echo "		$('#group_permission_search').focus();\n";
+	echo "	});\n";
+	echo "</script>\n";
+
+//prevent enter key submit on search field
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	$(document).ready(function() {\n";
+	echo "		$('#group_permission_search').keydown(function(event){\n";
+	echo "			if (event.keyCode == 13) {\n";
+	echo "				event.preventDefault();\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "		});\n";
 	echo "	});\n";
 	echo "</script>\n";
 

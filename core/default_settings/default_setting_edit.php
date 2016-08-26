@@ -448,6 +448,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
 	}
+	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
+		$default_setting_value = str_replace('"', "'", $default_setting_value);
+		if ($fonts = get_available_fonts('alpha')) {
+			echo "	<select class='formfld' id='sel_default_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_default_setting_value option').length - 1) { $('#txt_default_setting_value').val('').fadeIn('fast'); $('#txt_default_setting_value').focus(); } else { $('#txt_default_setting_value').fadeOut('fast', function(){ $('#txt_default_setting_value').val($('#sel_default_setting_value').val()) }); } \">\n";
+			echo "		<option value=''></option>\n";
+			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
+			$option_found = false;
+			foreach ($fonts as $n => $font) {
+				if ($default_setting_value == $font) {
+					$selected = 'selected';
+					$option_found = true;
+				}
+				else {
+					unset($selected);
+				}
+				echo "		<option value='".$font."' ".$selected.">".$font."</option>\n";
+			}
+			echo "		</optgroup>\n";
+			echo "		<option value='' disabled='disabled'></option>\n";
+			echo "		<option value='' ".(($default_setting_value != '' && $option_found == false) ? 'selected' : null).">".$text['label-other']."...</option>\n";
+			echo "	</select>";
+			echo "	<input type='text' class='formfld' ".(($default_setting_value == '' || $option_found) ? "style='display: none;'" : null)." id='txt_default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
+		}
+		else {
+			echo "	<input type='text' class='formfld' id='default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
+		}
+	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
 		echo "		<option value='letter' ".(($default_setting_value == 'letter') ? 'selected' : null).">Letter</option>";
@@ -531,6 +558,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
+	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
+		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://www.google.com/fonts' target='_blank'>".$text['label-web_fonts']."</a>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -618,22 +648,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	echo "<script>\n";
-//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-//hide/convert password fields then submit form
-	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
-	echo "		$('form#frm').submit();\n";
-	echo "	}\n";
-//define lowercase class
-	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
-//show order if array
-	echo "	$('#default_setting_name').keyup(function(){ \n";
-	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
-	echo "	});\n";
+	//capture enter key to submit form
+		echo "	$(window).keypress(function(event){\n";
+		echo "		if (event.which == 13) { submit_form(); }\n";
+		echo "	});\n";
+	//hide/convert password fields then submit form
+		echo "	function submit_form() {\n";
+		echo "		$('input:password').css('visibility','hidden');\n";
+		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		$('form#frm').submit();\n";
+		echo "	}\n";
+	//define lowercase class
+		echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+	//show order if array
+		echo "	$('#default_setting_name').keyup(function(){ \n";
+		echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
+		echo "	});\n";
 	echo "</script>\n";
 
 //include the footer

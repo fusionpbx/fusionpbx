@@ -29,6 +29,9 @@
 	require_once "resources/functions.php";
 	require_once "resources/classes/text.php";
 
+//start a php session
+	session_start();
+
 //initialize variables we are going to use
 	$event_host = '';
 	$event_port = '';
@@ -49,6 +52,7 @@
 	$db_create = '';
 	$db_create_username = '';
 	$db_create_password = '';
+	$db = NULL;
 
 //detect the iso country code from the locale
 	//$locale = Locale::getDefault();
@@ -93,6 +97,7 @@
 //intialize variables
 	$install_step = '';
 	$return_install_step = '';
+	$re_detect_switch = false;
 
 //process the the HTTP POST
 	if (count($_POST) > 0) {
@@ -111,6 +116,9 @@
 			$install_default_country	= $_POST["install_default_country"];
 			$install_template_name		= $_POST["install_template_name"];
 			$domain_name				= $_POST["domain_name"];
+		}
+		if($install_step == 'config_detail' and strlen(check_str($_POST["re_detect_switch"])) > 0 ){
+			$re_detect_switch = true;
 		}
 	}
 
@@ -133,12 +141,15 @@
 	$onload = '';
 
 //buffer the content
-	ob_end_clean(); //clean the buffer
+	if (sizeof(ob_get_status())!=0) ob_end_clean(); //clean the buffer
 	ob_start();
 
 	$messages = array();
 	if (!extension_loaded('PDO')) {
 		$messages[] = "<b>PHP PDO was not detected</b>. Please install it before proceeding";
+	}
+	if (!(extension_loaded('pdo_pgsql') or extension_loaded('pdo_mysql') or extension_loaded('pdo_sqlite'))) {
+		$messages[] = "<b>no database PDO driver was detected</b>. Please install one of pgsql, mysql or sqlite before proceeding";
 	}
 
 	echo "<div align='center'>\n";
@@ -169,6 +180,9 @@
 		if (strlen($admin_password) == 0) {	$messages[] = "Please provide the Admin Password"; }
 		elseif (strlen($admin_password) < 5) { $messages[] = "Please provide an Admin Password that is 5 or more characters.<br>\n"; }
 		if ( count($messages) > $existing_errors) { $install_step = 'config_detail'; }
+	}
+	if($re_detect_switch === true ){
+		$install_step = 'detect_config';
 	}
 
 	if($install_step =='execute') {
@@ -207,17 +221,17 @@
 		echo "</form>\n";
 	} elseif($install_step == 'detect_config'){
 		if(!($event_host == '' || $event_host == 'localhost' || $event_host == '::1' || $event_host == '127.0.0.1' )){
-			echo "<p><b>Warning</b> you have choosen a value other than localhost for event_host, this is unsoported at present</p>\n";
+			echo "<p><b>Warning</b> you have chosen a value other than localhost for event_host, this is unsupported at present</p>\n";
 		}
 		//if($detect_ok){
 			echo "<form method='post' name='frm' action=''>\n";
 			include "resources/page_parts/install_event_socket.php";
-			echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
-			echo "	<input type='hidden' name='return_install_step' value='detect_config'/>\n";
-			echo "	<input type='hidden' name='install_step' value='config_detail'/>\n";
-			echo "	<input type='hidden' name='event_host' value='$event_host'/>\n";
-			echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
-			echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
+			//echo "	<input type='hidden' name='install_language' value='".$_SESSION['domain']['language']['code']."'/>\n";
+			//echo "	<input type='hidden' name='return_install_step' value='detect_config'/>\n";
+			//echo "	<input type='hidden' name='install_step' value='config_detail'/>\n";
+			//echo "	<input type='hidden' name='event_host' value='$event_host'/>\n";
+			//echo "	<input type='hidden' name='event_port' value='$event_port'/>\n";
+			//echo "	<input type='hidden' name='event_password' value='$event_password'/>\n";
 			//echo "	<div style='text-align:right'>\n";
 			//echo "    <button type='button' class='btn' onclick=\"history.go(-1);\">".$text['button-back']."</button>\n";
 			//echo "    <button type='submit' class='btn' id='next'>".$text['button-next']."</button>\n";
@@ -243,7 +257,7 @@
 		include "resources/page_parts/install_config_database.php";
 	}
 	elseif($install_step == 'execute'){
-		echo "<p><b>".$text['header-installing']."</b></p>\n";
+		echo "<p><b>".$text['header-installing'][$install_language]."</b></p>\n";
 		//$protocol = 'http';
 		//if($_SERVER['HTTPS']) { $protocol = 'https'; }
 		//echo "<iframe src='$protocol://$domain_name/core/install/install_first_time.php' style='border:solid 1px #000;width:100%;height:auto'></iframe>";
@@ -326,6 +340,7 @@
 	else {
 		echo "<p>Unkown install_step '$install_step'</p>\n";
 	}
+	echo "</div>\n";
 
 //initialize some defaults so we can be 'logged in'
 	$_SESSION['username'] = 'install_enabled';
@@ -339,6 +354,10 @@
 //set a default template
 	$default_template = 'default';
 	$_SESSION['domain']['template']['name'] = $default_template;
+	$set_session_theme = 1;
+	$domains_processed = 1;
+	include "themes/$default_template/app_defaults.php";
+	unset($set_session_theme, $domains_processed);
 	$_SESSION['theme']['menu_brand_type']['text'] = "text";
 
 //set the default template path

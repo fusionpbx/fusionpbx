@@ -98,16 +98,66 @@ include "root.php";
 				case "00907a":
 					$device_vendor = "polycom";
 					break;
+				case "64167f":
+					$device_vendor = "polycom";
+					break;
 				case "000413":
 					$device_vendor = "snom";
 					break;
 				case "001565":
 					$device_vendor = "yealink";
 					break;
+				case "00268B":
+					$device_vendor = "escene";
+					break;
 				default:
 					$device_vendor = "";
 				}
 				return $device_vendor;
+		}
+
+		public static function get_vendor_by_agent($agent){
+			if ($agent) {
+					$agent = strtolower($agent);
+				//get the vendor
+					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
+						return "aastra";
+					}
+					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
+						return "cisco";
+					}
+					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
+						return "cisco-spa";
+					}
+					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
+						return "grandstream";
+					}
+					if (preg_replace('/^.*?(linksys).*$/i', '$1', $agent) == "linksys") {
+						return "linksys";
+					}
+					if (preg_replace('/^.*?(polycom).*$/i', '$1', $agent) == "polycom") {
+						return "polycom";
+					}
+					if (preg_replace('/^.*?(yealink).*$/i', '$1', $agent) == "yealink") {
+						return "yealink";
+					}
+					if (preg_replace('/^.*?(vp530p).*$/i', '$1', $agent) == "vp530p") {
+						return "yealink";
+					}
+					if (preg_replace('/^.*?(snom).*$/i', '$1', $agent) == "snom") {
+						return "snom";
+					}
+					if (preg_match('/^.*?addpac.*$/i', $agent)) {
+						return "addpac";
+					}
+					/*Escene use User-Agent string like `ES320VN2 v4.0 ...  or `ES206 v1.0 ...` */
+					if (preg_match('/^es\d\d\d.*$/i', $agent)) {
+						return "escene";
+					}
+			}
+
+			// unknown vendor
+				return "";
 		}
 
 		public function get_template_dir() {

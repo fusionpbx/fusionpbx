@@ -43,7 +43,7 @@ else {
 	$order = check_str($_GET["order"]);
 
 //set the voicemail id and voicemail uuid arrays
-	foreach ($_SESSION['user']['extension'] as $index => $row) {
+	if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
 		if (strlen($row['number_alias']) > 0) {
 			$voicemail_ids[$index]['voicemail_id'] = $row['number_alias'];
 		}
@@ -51,7 +51,7 @@ else {
 			$voicemail_ids[$index]['voicemail_id'] = $row['user'];
 		}
 	}
-	foreach ($_SESSION['user']['voicemail'] as $row) {
+	if (isset($_SESSION['user']['voicemail'])) foreach ($_SESSION['user']['voicemail'] as $row) {
 		if (strlen($row['voicemail_uuid']) > 0) {
 			$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
 		}
@@ -200,7 +200,7 @@ else {
 				echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('voicemail_greeting_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."'>".$text['label-greetings']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['voicemail_enabled']]."&nbsp;</td>\n";
