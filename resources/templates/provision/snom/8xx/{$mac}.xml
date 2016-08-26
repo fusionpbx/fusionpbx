@@ -85,19 +85,19 @@
 <codec_priority_list idx="12" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
 </phone-settings>
 <functionKeys e="2">
-{foreach $keys as $row}
+{foreach $keys["line"] as $row}
 {if $row.device_key_line == ""}
-    {if $row.device_key_category == "line"}
-    <fkey idx="{$row.device_key_id-1}" context="active" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
-    {else}
-    <fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
-    {/if}
+	{if $row.device_key_type == "line"}
+		<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
+	{else}
+		<fkey idx="{$row.device_key_id-1}" context="active" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
+	{/if}
 {else}
-    {if $row.device_key_category == "line"}
-    <fkey idx="{$row.device_key_id-1}" context="{$row.device_key_line}" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
-    {else}
-    <fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
-    {/if}
+	{if $row.device_key_type == "line"}
+		<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
+	{else}
+		<fkey idx="{$row.device_key_id-1}" context="{$row.device_key_line}" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
+	{/if}
 {/if}
 {/foreach}
 </functionKeys>
