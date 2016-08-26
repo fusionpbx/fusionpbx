@@ -37,7 +37,7 @@ class tftpservice extends TFTPServer
 	private $_dbname;
 	private $_dbusername;
 	private $_dbpassword;
-	private $_filesbaselocation;
+	private $_fileslocation;
 
 	function __construct($server_url, $config)
 	{
@@ -49,10 +49,10 @@ class tftpservice extends TFTPServer
 		if (isset($config['db_name'])) $this->_dbname=$config['db_name'];
 		if (isset($config['db_username'])) $this->_dbusername=$config['db_username'];
 		if (isset($config['db_password'])) $this->_dbpassword=$config['db_password'];
-		if (isset($config['files_location'])) $this->_filesbaselocation=$config['files_location'];
+		if (isset($config['files_location'])) $this->_fileslocation=$config['files_location'];
 
-		if (!file_exists($_filesbaselocation)) {
-			$_filesbaselocation = (strpos($_SERVER["OS"],"Windows") !== false) ? $_SERVER["TMP"] : "/tmp";
+		if (!file_exists($_fileslocation)) {
+			$_fileslocation = (strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"] : "/tmp";
 		}
 	}
   
@@ -120,8 +120,8 @@ class tftpservice extends TFTPServer
 		// get domain uuid
 		$domain_uuid = database::get_value($db,'v_domains','domain_uuid','domain_name',$domain);
 		
-		// set temporary folder
-		$_SESSION['server']['temp']['dir'] = (strpos($_SERVER["OS"],"Windows") !== false) ? $_SERVER["TMP"] : "/tmp";
+		// set temporary folder for template engine
+		$_SESSION['server']['temp']['dir'] = (strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"] : "/tmp";
 		
 		// update device provisioned status
 		$data=array('device_provisioned_date'=>date("Y-m-d H:i:s"),'device_provisioned_method'=>'tftp','device_provisioned_ip'=>$client);
@@ -152,8 +152,8 @@ class tftpservice extends TFTPServer
 		// check for reletive path directive
 		if(strstr($path, "../") != false || strstr($path, "/..") != false) return false;
 		// combine base and path
-		$path = rtrim($this->_filesbaselocation,'/').'/'.ltrim($path,'/');
-		if(substr($path, 0, strlen($this->_filesbaselocation)) != $this->_filesbaselocation) return false;
+		$path = rtrim($this->_fileslocation,'/').'/'.ltrim($path,'/');
+		if(substr($path, 0, strlen($this->_fileslocation)) != $this->_fileslocation) return false;
 		// read contents
 		if($this->_debug) $this->log($client,"D", "Reading File ".$path);
 		$data = @file_get_contents($path);

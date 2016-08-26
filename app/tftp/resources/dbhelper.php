@@ -121,39 +121,6 @@ class database {
     }
 
     /**
-    * check if there is exist data
-    * @param  string $table table name
-    * @param  array $dat array list of data to find
-    * @return true or false
-    */
-    public static function check_exist($table,$dat) {
-        $data = array_values( $dat );
-       //grab keys
-        $cols=array_keys($dat);
-        $col=implode(', ', $cols);
-        foreach ($cols as $key) {
-          $keys=$key."=?";
-          $mark[]=$keys;
-        }
-        $jum=count($dat);
-        if ($jum>1) {
-            $im=implode(' and  ', $mark);
-                $db->prepare("SELECT $col from $table WHERE $im");
-        } else {
-          $im=implode('', $mark);
-                $db->prepare("SELECT $col from $table WHERE $im");
-        }
-        $db->execute( $data );
-        $db->setFetchMode( PDO::FETCH_OBJ );
-        $jum = $db->rowCount();
-        if ($jum>0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
     * get last insert id
     * @return int last insert id
     */
@@ -174,7 +141,6 @@ class database {
     {
         $db->prepare("SELECT * FROM $table WHERE $filterc=?");
         $db->execute($filterv);
-        $db->setFetchMode(PDO::FETCH_OBJ);
         $data =  $db->fetch();
         return $data;
     }
@@ -184,16 +150,14 @@ class database {
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
     * @param  string $column - column to return value from
-    * @param  string $filterc - filter column
-    * @param  string $filterv - filter value
+    * @param  array $filter - ["filter column",">","filter value"]
     * @return array table row
     */
-    public static function get_col($db,$table,$column,$filterc,$filterv)
+    public static function get_col($db,$table,$column,$filter)
     {
-        $db->prepare("SELECT $column FROM $table WHERE $filterc=?");
-        $db->execute($filterv);
-        $db->setFetchMode(PDO::FETCH_OBJ);
-        $data =  $db->fetch();
+        $db->prepare("SELECT $column FROM $table WHERE $filter[0] $filter[1] ?");
+        $db->execute($filter[2]);
+        $data =  $cmd->fetchAll();
         return $data;
     }
 
@@ -209,7 +173,7 @@ class database {
     public static function get_value($db,$table,$column,$filterc,$filterv)
     {
         $cmd = $db->prepare("SELECT $column FROM $table WHERE $filterc=?");
-        $cmd->bindParam(1, $filterv);
+        $cmd->bindValue(1, $filterv);
         $cmd->execute();
         $data = $cmd->fetchColumn(0);
         return $data;
@@ -219,14 +183,14 @@ class database {
     * get count of rows
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
-    * @param  array $filter - multidimensional array
+    * @param  array $filter - ["filter column",">","filter value"]
     * @return mixed data in field
     */
     public static function get_count($db,$table,$filter)
     {
 
-        $cmd = $db->prepare("SELECT COUNT(0) FROM $table WHERE $filterc $condition_operator ?");
-        $cmd->bindParam(1, $filterv);
+        $cmd = $db->prepare("SELECT COUNT(0) FROM $table WHERE $filter[0] $filter[1] ?");
+        $cmd->bindValue(1, $filter[2]);
         $cmd->execute();
         $data = $cmd->fetchColumn(0);
     }
@@ -235,17 +199,17 @@ class database {
     * get specific columns and rows
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
-    * @param  array $fields - specific columns to return
-    * @param  array $conditions - specific rows to select
+    * @param  array $columns - specific columns to return
+    * @param  array $filter - ["filter column",">","filter value"]
     * @return array selected tables and rows
     */
-    public static function get_table($db,$table,$columns,$conditions)
+    public static function get_table($db,$table,$columns,$filter)
     {
-        if($fields === null) $fields=array("*");
-        $cmd = $db->prepare("SELECT ".implode(',', $columns)." FROM $table WHERE $filterc $condition_operator ?");
+        if($columns === null) $columns=array("*");
+        $cmd = $db->prepare("SELECT ".implode(',', $columns)." FROM $table WHERE $filter[0] $filter[1] ?");
+        $cmd->bindValue(1, $filter[2]);
         $cmd->execute();
-        $cmd->setFetchMode(PDO::FETCH_OBJ);
-        $data =  $cmd->fetch();
+        $data =  $cmd->fetchAll();
         return  $data;
     }
 
@@ -260,8 +224,7 @@ class database {
         if($sql === null) return null;
         $cmd = $db->prepare($sql);
         $cmd->execute();
-        $cmd->setFetchMode(PDO::FETCH_OBJ);
-        $data =  $cmd->fetch();
+        $data =  $cmd->fetchAll();
         return  $data;
     }
     
