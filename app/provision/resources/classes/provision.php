@@ -191,7 +191,6 @@ include "root.php";
 				$sql .= "	and domain_uuid = '$domain_uuid' ";
 				$sql .= ") ";
 			}
-
 			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -669,7 +668,20 @@ include "root.php";
 
 						//override profile keys with device keys
 							foreach($keys as $row) {
+								//set the variables
 								$id = $row['device_key_id'];
+								$category = $row['device_key_category'];
+								
+								//build the device keys array
+								$device_keys[$category][$id] = $row;
+								if (is_uuid($row['device_profile_uuid'])) {
+									$device_keys[$category][$id]['device_key_owner'] = "profile";
+								}
+								else {
+									$device_keys[$category][$id]['device_key_owner'] = "device";
+								}
+								
+								//kept temporarily for backwards comptability to allow custom templates to be updated
 								$device_keys[$id] = $row;
 								if (is_uuid($row['device_profile_uuid'])) {
 									$device_keys[$id]['device_key_owner'] = "profile";
