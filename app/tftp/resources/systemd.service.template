@@ -1,0 +1,19 @@
+[Unit]
+Description={$name}
+After=syslog.target network.target {$database}
+Requires={$database}
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory={$scriptfolder}
+Type=simple
+StandardOutput=null
+StandardError=syslog
+ExecStart=/usr/bin/php {$scriptname}
+PrivateTmp=true
+InaccessibleDirectories=/home /root /boot /opt /mnt /media /etc /usr
+ReadOnlyDirectories=
+
+[Install]
+WantedBy=multi-user.target
