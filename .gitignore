@@ -1,4 +1,4 @@
-.gitignore
+.project
 .vscode
 /phpinfo.php
 resources/config.php
