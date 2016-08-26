@@ -238,6 +238,21 @@ EOD;
 					}
 					$result[] = $row;
 				}
+				elseif(preg_match("/-tone/", $value[0])){
+					$row = Array();
+					$row['var_cat'] = 'Tones';
+					$row['var_name'] = $value[0];
+					$row['var_value'] = $value[1];
+					$row['var_enabled'] = $item->attributes()->enabled;
+					if(!isset($row['var_enabled'])){
+						$row['var_enabled'] = 'true';
+					}
+					$row['var_description'] = $item->attributes()->description;
+					if(!isset($row['var_description'])){
+						$row['var_description'] = base64_encode('Imported from vars.xml');
+					}
+					$result[] = $row;
+				}
 			}
 		}
 

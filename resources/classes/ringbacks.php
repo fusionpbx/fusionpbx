@@ -31,6 +31,7 @@ if (!class_exists('ringbacks')) {
 		//define variables
 		public $db;
 		private $ringbacks;
+		private $tones_list;
 		private $music_list;
 		private $recordings_list;
 		private $default_ringback_label;
@@ -87,6 +88,11 @@ if (!class_exists('ringbacks')) {
 				unset($results, $default_ringback, $label);
 				*/
 
+			//get the tones
+					require_once "resources/classes/tones.php";
+					$tones = new tones;
+					$this->tones_list = $tones->tones_list();
+				
 			//get music on hold	and recordings
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/music_on_hold')) {
 					require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
@@ -147,6 +153,19 @@ if (!class_exists('ringbacks')) {
 					}
 					$select .= "	</optgroup>\n";
 					unset($selected_ringback);
+				}
+
+			//tones
+				if (sizeof($this->tones_list) > 0) {
+					$selected_tone = $selected;
+					$selected_tone = preg_replace('/\A\${/',"",$selected_tone);
+					$selected_tone = preg_replace('/}\z/',"",$selected_tone);
+					$select .= "	<optgroup label='".$text['label-tone']."'>";
+					foreach($this->tones_list as $tone_value => $tone_name) {
+						$select .= "		<option value='\${".$tone_value."}'".(($selected_tone == $tone_value) ? ' selected="selected"' : '').">".$tone_name."</option>\n";
+					}
+					$select .= "	</optgroup>\n";
+					unset($selected_tone);
 				}
 
 			//end the select and return it
