@@ -1,5 +1,30 @@
 <?php
 
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Sebastian Krupinski <sebastian@ksacorp.com>
+	Portions created by the Initial Developer are Copyright (C) 2016
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Sebastian Krupinski <sebastian@ksacorp.com>
+*/
+
 class database {
     
     /**
@@ -138,37 +163,55 @@ class database {
     }
 
     /**
-    * get only one row
+    * get only single row
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
-    * @param  string $condition - condition field
-    * @param  string $value - value of condition field
+    * @param  string $filterc - filter column
+    * @param  string $filterv - filter value
     * @return array table row
     */
-    public static function get_row($db,$table,$condition,$value)
+    public static function get_row($db,$table,$filterc,$filterv)
     {
-        $db->prepare("SELECT * FROM $table WHERE $condition=?");
-        $db->execute($value);
+        $db->prepare("SELECT * FROM $table WHERE $filterc=?");
+        $db->execute($filterv);
         $db->setFetchMode(PDO::FETCH_OBJ);
         $data =  $db->fetch();
         return $data;
     }
 
     /**
-    * get only single field value
+    * get only single column
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
-    * @param  string $field - field name to be returned
-    * @param  string $condition - condition field
-    * @param  string $value - value of condition field
+    * @param  string $column - column to return value from
+    * @param  string $filterc - filter column
+    * @param  string $filterv - filter value
+    * @return array table row
+    */
+    public static function get_col($db,$table,$column,$filterc,$filterv)
+    {
+        $db->prepare("SELECT $column FROM $table WHERE $filterc=?");
+        $db->execute($filterv);
+        $db->setFetchMode(PDO::FETCH_OBJ);
+        $data =  $db->fetch();
+        return $data;
+    }
+
+    /**
+    * get only single value
+    * @param  pdo $db - database object as pdo type
+    * @param  string $table - table name
+    * @param  string $column - column to return value from
+    * @param  string $filterc - filter column
+    * @param  string $filterv - filter value
     * @return mixed data in field
     */
-    public static function get_value($db,$table,$column,$condition_field,$condition_value)
+    public static function get_value($db,$table,$column,$filterc,$filterv)
     {
-        $statment = $db->prepare("SELECT $column FROM $table WHERE $condition_field=?");
-        $statment->bindParam(1, $condition_value);
-        $statment->execute();
-        $data = $statment->fetchColumn(0);
+        $cmd = $db->prepare("SELECT $column FROM $table WHERE $filterc=?");
+        $cmd->bindParam(1, $filterv);
+        $cmd->execute();
+        $data = $cmd->fetchColumn(0);
         return $data;
     }
 
@@ -176,17 +219,16 @@ class database {
     * get count of rows
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
-    * @param  string $field - field name to be returned
-    * @param  string $condition - condition field
-    * @param  string $value - value of condition field
+    * @param  array $filter - multidimensional array
     * @return mixed data in field
     */
-    public static function get_count($db,$table,$condition_field,$condition_operator,$condition_value)
+    public static function get_count($db,$table,$filter)
     {
-        $statment = $db->prepare("SELECT COUNT(0) FROM $table WHERE $condition_field $condition_operator ?");
-        $statment->bindParam(1, $condition_value);
-        $statment->execute();
-        $data = $statment->fetchColumn(0);
+
+        $cmd = $db->prepare("SELECT COUNT(0) FROM $table WHERE $filterc $condition_operator ?");
+        $cmd->bindParam(1, $filterv);
+        $cmd->execute();
+        $data = $cmd->fetchColumn(0);
     }
 
     /**
@@ -200,80 +242,89 @@ class database {
     public static function get_table($db,$table,$columns,$conditions)
     {
         if($fields === null) $fields=array("*");
-        $statment = $db->prepare("SELECT ".implode(',', $columns)." FROM $table WHERE $condition_field $condition_operator ?");
-        $statment->execute();
-        $statment->setFetchMode(PDO::FETCH_OBJ);
-        $data =  $db->fetch();
+        $cmd = $db->prepare("SELECT ".implode(',', $columns)." FROM $table WHERE $filterc $condition_operator ?");
+        $cmd->execute();
+        $cmd->setFetchMode(PDO::FETCH_OBJ);
+        $data =  $cmd->fetch();
         return  $data;
     }
 
     /**
-    * get custom sql statment
+    * get data with custom sql statment
     * @param  pdo $db - database object as pdo type
-    * @param  string $table - table name
-    * @param  array $fields - specific columns to return
-    * @return array selected tables and rows
+    * @param  string $sql - custom sql statment
+    * @return mixed - any returned data
     */
-    public static function get_sql($db,$sql)
+    public static function execute($db,$sql)
     {
         if($sql === null) return null;
-        $statment = $db->prepare($sql);
-        $statment->execute();
-        $statment->setFetchMode(PDO::FETCH_OBJ);
-        $data =  $db->fetch();
+        $cmd = $db->prepare($sql);
+        $cmd->execute();
+        $cmd->setFetchMode(PDO::FETCH_OBJ);
+        $data =  $cmd->fetch();
         return  $data;
     }
     
     /**
-    * get number of rows
+    * set single row
     * @param  pdo $db - database object as pdo type
     * @param  string $table - table name
     * @param  array $data - associative array 'col'=>'val'
-    * @param  string $condition_field - primary key column name or any other columns name
-    * @param  string $condition_value - value to match the condition field to 
+    * @param  string $filterc - primary key column name or any other columns name
+    * @param  string $filterv - value to match the condition field to 
     * @param  int $val   key value
     */
-    public function set_row($db,$table,$data,$condition_field,$condition_value) {
+    public static function set_row($db,$table,$data,$filterc,$filterv) {
         
-        if($data !== null)
+        if($data === null)
             exit;
-        elseif ($condition_field !== null&&$condition_value !== null) 
+        elseif ($filterc !== null&&$filterv !== null) 
         {
-            $data = array_values($data);
-            array_push($data,$value);
-            //grab keys
-            $cols=array();
-                foreach (array_keys($data) as $col) {
-                $cols[]=$col."=?";
+            // get values
+            $v = array_values($data);
+            // add condition value
+            array_push($v,$filterv);
+            // get keys
+            $c=array();
+            foreach (array_keys($data) as $k) {
+                $c[]=$k."=?";
             }
-            $ins=$db->prepare("UPDATE $table SET ".implode(', ', $cols)." where $condition_field=$condition_value");
-            $ins->execute($data);
+            // phrase command
+            $cmd=$db->prepare("UPDATE $table SET ".implode(', ', $c)." WHERE $filterc=?;");
+            $cmd->execute($v);
         }
         else 
         {
-            $data = array_values($data);
-            //grab keys
-            $cols=implode(', ', array_keys($data));
-            //grab values and change it value
-            $vals=array();
-            foreach ($data as $key) {
-                $keys='?';
-                $vals[]=$keys;
-            }
-            $ins=$db->prepare("INSERT INTO $table ($col) values (".implode(',', $vals).")");
-            $ins->execute($data);
+            // get values
+            $v = array_values($data);
+            // get keys
+            $c=implode(', ', array_keys($data));
+            // phrase command
+            $cmd=$db->prepare("INSERT INTO $table ($c) values (".str_repeat("?,",count($c)-1)."?)");
+            $cmd->execute($v);
         }
     }
 
     /**
-    * delete record
+    * delete row
     * @param  string $table table name
     * @param  string $where column name for condition (commonly primay key column name)
     * @param   int $id   key value
     */
-    public function delete($db,$table,$condition_field,$condition_value) {
-        $statment=$db->prepare("DELETE FROM $table WHERE $condition_field=?");
-        $statment->execute($condition_value);
+    public static function delete_row($db,$table,$filterc,$filterv) {
+        $cmd=$db->prepare("DELETE FROM $table WHERE $filterc=?");
+        $cmd->execute($filterv);
+    }
+
+    /**
+    * delete rows
+    * @param  string $table table name
+    * @param  string $where column name for condition (commonly primay key column name)
+    * @param   int $id   key value
+    */
+    public static function delete_rows($db,$table,$filterc,$filterv) {
+        $cmd=$db->prepare("DELETE FROM $table WHERE $filterc=?");
+        $cmd->execute($filterv);
     }
 }
 ?>

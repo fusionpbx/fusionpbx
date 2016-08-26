@@ -30,14 +30,14 @@
 $appname = "fusionpbx-tftp";
 $appdesc = "FusionPBX TFTP Service";
 $pid=null;
-$pidfile = (strpos($_SERVER["OS"],"Windows") !== false) ? $_SERVER["TMP"]."\\$appname.pid" : "/var/run/$appname.pid";
+$pidfile = (strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"]."\\$appname.pid" : "/var/run/$appname.pid";
 $tftpservice_address="0.0.0.0";
 $tftpservice_port=69;
 
 function Service_Install()
 {
 	// install for specific os
-	if (strpos($_SERVER["OS"],"Windows") !== false)
+	if (strpos(PHP_OS,"WIN") !== false)
 	{	
 		// check if we found the executable binary
 		if (file_exists(PHP_BINARY))
@@ -88,7 +88,7 @@ function Service_Install()
 function Service_Uninstall()
 {
 	// uninstall for specific os
-	if (strpos($_SERVER["OS"],"Windows") !== false)
+	if (strpos(PHP_OS,"WIN") !== false)
 	{
 		global $appname;
 		global $appdesc;
@@ -122,7 +122,7 @@ function Run()
 	if (file_exists($pidfile)) {
 		$pid = file_get_contents($pidfile);
 		if (is_numeric($pid)) {
-			if (strpos($_SERVER["OS"],"Windows") !== false)
+			if (strpos(PHP_OS,"WIN") !== false)
 			{
 				exec('tasklist -NH -FO TABLE -FI "PID eq '.$pid.'" 2>NUL', $data);
 				foreach($data as $line)
@@ -161,7 +161,9 @@ function Run()
 
 	// start service
 	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array('db_type'=>$db_type,'db_host'=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>"d:/temp/"));
+	echo $appdesc.' has started.';
 	if(!$server->loop($error, $user)) die("$error\n");
+	echo $appdesc.' has stopped.';
 }
 
 // Install System Service
