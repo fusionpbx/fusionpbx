@@ -1642,8 +1642,7 @@
 <Screen_Saver_Wait ua="rw">300</Screen_Saver_Wait>
 <Screen_Saver_Icon ua="rw">Background Picture</Screen_Saver_Icon> <!-- options: StationTime/Lock/Phone/DateTime/Background Picture -->
 
-{foreach $keys as $row}
-{if $row.device_key_category == "line"}
+{foreach $keys["line"] as $row}
 {if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
@@ -1655,7 +1654,6 @@
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
-{/if}
 {/if}
 
 {/foreach}
@@ -1939,18 +1937,15 @@
 <BLF_Busy_LED ua="na"></BLF_Busy_LED>
 <BLF_Held_LED ua="na"></BLF_Held_LED>
 
-
 <!-- Attendant_Console/Unit_x -->
-{foreach $keys as $row}
-{if $row.device_key_category == "expansion"}
+{foreach $keys["expansion"] as $row}
 <Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
-{/if}
-{if $row.device_key_category == "expansion-1"}
+{/foreach}
+{foreach $keys["expansion-1"] as $row}
 <Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
-{/if}
-{if $row.device_key_category == "expansion-2"}
+{/foreach}
+{foreach $keys["expansion-2"] as $row}
 <Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
-{/if}
 {/foreach}
 
 <Protect_IVR_FactoryReset ua="na">No</Protect_IVR_FactoryReset>
