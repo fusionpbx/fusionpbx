@@ -37,14 +37,15 @@ $tftpservice_fileslocation=(strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"] : 
 
 function Service_Install()
 {
+	global $appname;
+	global $appdesc;
+	
 	// install for specific os
 	if (strpos(PHP_OS,"WIN") !== false)
 	{	
 		// check if we found the executable binary
 		if (file_exists(PHP_BINARY))
 		{
-			global $appname;
-			global $appdesc;
 			exec('sc create '.$appname.' type=own binPath="'.PHP_BINARY.' '.$_SERVER["SCRIPT_FILENAME"].'" DisplayName="'.$appdesc.'" start=auto');
 			die($appdesc.' was successfully installed.\n');
 		}
@@ -88,11 +89,12 @@ function Service_Install()
 
 function Service_Uninstall()
 {
+	global $appname;
+	global $appdesc;
+	
 	// uninstall for specific os
 	if (strpos(PHP_OS,"WIN") !== false)
 	{
-		global $appname;
-		global $appdesc;
 		exec('sc delete "'.$appname.'"');
 		die($appdesc.' was successfully uninstalled.\n');
 	}
