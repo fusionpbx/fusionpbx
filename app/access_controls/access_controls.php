@@ -1,14 +1,18 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('access_control_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('access_control_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -22,6 +26,43 @@ else {
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_access_controls ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+		}
+		else {
+				$num_rows = '0';
+		}
+	}
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select * from v_access_controls ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
@@ -34,43 +75,6 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_access_controls ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select * from v_access_controls ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -87,7 +91,7 @@ else {
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result)) {
 		foreach($result as $row) {
 			if (permission_exists('access_control_edit')) {
 				$tr_link = "href='access_control_edit.php?id=".$row['access_control_uuid']."'";
@@ -125,8 +129,7 @@ else {
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
- 	echo "</table>\n";
-
+ 	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>";
@@ -134,4 +137,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

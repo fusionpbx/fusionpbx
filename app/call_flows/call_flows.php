@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -124,7 +124,7 @@ require_once "resources/paging.php";
 				echo $row['call_flow_label'];
 			}
 			else {
-				echo $row['call_flow_anti_label'];
+				echo $row['call_flow_alternate_label'];
 			}
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
@@ -132,7 +132,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_anti_app']." ".$row['call_flow_anti_data']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_alternate_app']." ".$row['call_flow_alternate_data']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['call_flow_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_flow_edit')) {

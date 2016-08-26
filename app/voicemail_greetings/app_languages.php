@@ -80,6 +80,17 @@ $text['message-uploaded']['pl'] = "Plik wysłano  poprawnie";
 $text['message-uploaded']['uk'] = "Завантажено";
 $text['message-uploaded']['he'] = "הטענה הושלמה";
 
+$text['message-unsupported_file_type']['en-us'] = "Unsupported File Type";
+$text['message-unsupported_file_type']['es-cl'] = "Tipo de archivo no compatible";
+$text['message-unsupported_file_type']['pt-pt'] = "Não suportado Tipo de Arquivo";
+$text['message-unsupported_file_type']['fr-fr'] = "Type de fichier non pris en charge";
+$text['message-unsupported_file_type']['pt-br'] = "Não suportado Tipo de Arquivo";
+$text['message-unsupported_file_type']['pl'] = "Nieobsługiwany typ pliku";
+$text['message-unsupported_file_type']['sv-se'] = "Inte stöds filtyp";
+$text['message-unsupported_file_type']['uk'] = "Тип файлу не підтримується";
+$text['message-unsupported_file_type']['de-at'] = "Dateityp nicht unterstützt";
+$text['message-unsupported_file_type']['he'] = "סוג הקובץ לא נתמך";
+
 $text['message-greeting_selected']['en-us'] = "Greeting Selected";
 $text['message-greeting_selected']['es-cl'] = "Saludo Seleccionado";
 $text['message-greeting_selected']['pt-pt'] = "Saudação Selecionada";
@@ -97,6 +108,17 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['he'] = "כלים";
+
+$text['label-select_a_file']['en-us'] = "Select a file...";
+$text['label-select_a_file']['es-cl'] = "Seleccione un archivo...";
+$text['label-select_a_file']['pt-pt'] = "Selecione um arquivo ...";
+$text['label-select_a_file']['fr-fr'] = "Sélectionner un fichier...";
+$text['label-select_a_file']['pt-br'] = "Selecione um arquivo ...";
+$text['label-select_a_file']['pl'] = "Wybierz plik ...";
+$text['label-select_a_file']['sv-se'] = "Välj en fil ...";
+$text['label-select_a_file']['uk'] = "Виберіть файл ...";
+$text['label-select_a_file']['de-at'] = "Wählen Sie eine Datei ...";
+$text['label-select_a_file']['he'] = "בחר קובץ ...";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";

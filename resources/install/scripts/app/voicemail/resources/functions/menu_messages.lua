@@ -76,27 +76,13 @@
 			end
 
 		--voicemail count if zero new messages set the mwi to no
-			if (session:ready()) then
-				if (voicemail_id ~= nil) then
-					sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-						AND (message_status is null or message_status = '') ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-					end
-					status = dbh:query(sql, function(row)
-						--send the message waiting event
-						local event = freeswitch.Event("message_waiting");
-						if (row["new_messages"] == "0") then
-							event:addHeader("MWI-Messages-Waiting", "no");
-						else
-							event:addHeader("MWI-Messages-Waiting", "yes");
-						end
-						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-						event:fire();
-					end);
-				end
+			if session:ready() and voicemail_id and voicemail_uuid and #voicemail_uuid > 0 then
+				--get new and saved message counts
+					local new_messages, saved_messages = message_count_by_uuid(
+						voicemail_uuid, domain_uuid
+					)
+				--send the message waiting event
+					mwi_notify(voicemail_id.."@"..domain_name, new_messages, saved_messages)
 			end
 
 		--set the display

@@ -234,29 +234,41 @@
 
 	//audio playback functions
 		var recording_audio;
+		var audio_clock;
 
 		function recording_play(recording_id) {
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
 				document.getElementById('recording_progress_bar_'+recording_id).style.display='';
 			}
-			recording_audio = document.getElementById('recording_audio_'+recording_id)
+			recording_audio = document.getElementById('recording_audio_'+recording_id);
 
 			if (recording_audio.paused) {
 				recording_audio.volume = 1;
 				recording_audio.play();
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
 			}
 			else {
 				recording_audio.pause();
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+				clearInterval(audio_clock);
 			}
 		}
 
+		function recording_stop(recording_id) {
+			recording_reset(recording_id);
+			clearInterval(audio_clock);
+		}
+
 		function recording_reset(recording_id) {
+			recording_audio = document.getElementById('recording_audio_'+recording_id);
+			recording_audio.pause();
+			recording_audio.currentTime = 0;
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
 				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
 			}
 			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			clearInterval(audio_clock);
 		}
 
 		function update_progress(recording_id) {
@@ -266,7 +278,10 @@
 			if (recording_audio.currentTime > 0) {
 				value = (100 / recording_audio.duration) * recording_audio.currentTime;
 			}
-			recording_progress.style.width = value + "%";
+			recording_progress.style.marginLeft = value + "%";
+			if (parseInt(recording_audio.duration) > 30) { //seconds
+				clearInterval(audio_clock);
+			}
 		}
 
 </script>
@@ -405,7 +420,7 @@
 							//define menu brand mark
 								$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? $_SESSION['theme']['menu_brand_text']['text'] : "FusionPBX";
 								if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_header.png";
+									$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? $_SESSION['theme']['menu_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
 									echo "<a href='".$menu_brand_link."'>";
 									echo "<img id='menu_brand_image' class='navbar-logo' ".(($menu_style == 'fixed') ? "style='margin-right: -2%;'" : null)." src='".$menu_brand_image."' title=\"".$menu_brand_text."\">";
 									if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
@@ -453,13 +468,17 @@
 									echo "<ul class='dropdown-menu'>\n";
 									foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
 										$mod_a_2 = $menu_sub['menu_item_link'];
-										if($mod_a_2 == ''){
+										if ($mod_a_2 == '') {
 											$mod_a_2 = '#';
 										}
-										else if (($menu_sub['menu_item_category'] == 'internal') ||
-											(($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2, 0,1) == "/"))
-										{
-											$mod_a_2 = PROJECT_PATH . $mod_a_2;
+										else if (($menu_sub['menu_item_category'] == 'internal') || (($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2,0,1) == '/')) {
+											// accomodate adminer auto-login, if enabled
+												if (substr($mod_a_2,0,22) == '/app/adminer/index.php') {
+													global $db_type;
+													$mod_a_2 .= '?'.(($db_type == 'mysql') ? 'server' : $db_type).'&db=fusionpbx&ns=public';
+													$mod_a_2 .= ($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? "&username=auto" : null;
+												}
+											$mod_a_2 = PROJECT_PATH.$mod_a_2;
 										}
 										$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 										if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {

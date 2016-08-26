@@ -137,11 +137,13 @@
 				dbh:query(sql);
 			end
 
-		--set the message waiting event
-			local event = freeswitch.Event("message_waiting");
-			event:addHeader("MWI-Messages-Waiting", "yes");
-			event:addHeader("MWI-Message-Account", "sip:"..forward_voicemail_id.."@"..domain_name);
-			event:fire();
+		--get new and saved message counts
+			local new_messages, saved_messages = message_count_by_id(
+				forward_voicemail_id, domain_uuid
+			)
+
+		--send the message waiting event
+			mwi_notify(forward_voicemail_id.."@"..domain_name, new_messages, saved_messages)
 
 		--if local after email is true then copy the recording file
 			if (storage_type ~= "base64") then

@@ -174,7 +174,7 @@ if (!class_exists('extension')) {
 				//write the xml files
 					$sql = "SELECT * FROM v_extensions AS e, v_voicemails AS v ";
 					$sql .= "WHERE e.domain_uuid = '$domain_uuid' ";
-					$sql .= "AND (e.extension = v.voicemail_id or e.number_alias = v.voicemail_id) ";
+					$sql .= "AND AND COALESCE(NULLIF(e.number_alias,''),e.extension) = CAST(v.voicemail_id as VARCHAR) ";
 					$sql .= "ORDER BY e.call_group ASC ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
@@ -397,7 +397,7 @@ if (!class_exists('extension')) {
 							$xml .= "  </user>\n";
 
 							if (!is_readable($_SESSION['switch']['extensions']['dir']."/".$row['user_context'])) {
-								mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'],02770,true);
+								event_socket_mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context']);
 							}
 							if (strlen($extension) > 0) {
 								$fout = fopen($_SESSION['switch']['extensions']['dir']."/".$row['user_context']."/v_".$extension.".xml","w");

@@ -1134,60 +1134,6 @@ function number_pad($number,$n) {
 		}
 	}
 
-//function to show the list of sound files
-	if (!function_exists('recur_sounds_dir')) {
-		function recur_sounds_dir($dir) {
-			global $dir_array;
-			global $dir_path;
-			$dir_list = opendir($dir);
-			while ($file = readdir ($dir_list)) {
-				if ($file != '.' && $file != '..') {
-					$newpath = $dir.'/'.$file;
-					$level = explode('/',$newpath);
-					if (substr($newpath, -4) == ".svn" ||
-						substr($newpath, -4) == ".git") {
-						//ignore .svn and .git dir and subdir
-					}
-					else {
-						if (is_dir($newpath)) { //directories
-							recur_sounds_dir($newpath);
-						}
-						else { //files
-							if (strlen($newpath) > 0) {
-								//make the path relative
-									$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
-								//remove the 8000-48000 khz from the path
-									$relative_path = str_replace("/8000/", "/", $relative_path);
-									$relative_path = str_replace("/16000/", "/", $relative_path);
-									$relative_path = str_replace("/32000/", "/", $relative_path);
-									$relative_path = str_replace("/48000/", "/", $relative_path);
-								//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
-									$file_array = explode( "/", $relative_path );
-									$x = 1;
-									$relative_path = '';
-									foreach( $file_array as $tmp) {
-										if ($x == 5) { $relative_path .= $tmp; }
-										if ($x > 5) { $relative_path .= '/'.$tmp; }
-										$x++;
-									}
-								//add the file if it does not exist in the array
-									if (isset($dir_array[$relative_path])) {
-										//already exists
-									}
-									else {
-										//add the new path
-											if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
-									}
-							}
-						}
-					}
-				}
-			}
-			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
-			closedir($dir_list);
-		}
-	}
-
 //function to convert hexidecimal color value to rgb string/array value
 	if (!function_exists('hex_to_rgb')) {
 		function hex_to_rgb($hex, $delim = '') {
@@ -1941,6 +1887,40 @@ function number_pad($number,$n) {
 			}
 
 		}
+	}
+
+//retrieve array of countries
+	if (!function_exists('get_countries')) {
+		function get_countries($db) {
+			$sql = "select * from v_countries order by country asc";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			return ($result_count > 0) ? $result : false;
+			unset ($prep_statement, $sql);
+		}
+	}
+
+	function event_socket_mkdir($dir) {
+		//connect to fs
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				return false;
+			}
+		//send the mkdir command to freeswitch
+			if ($fp) {
+				//build and send the mkdir command to freeswitch
+					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					fclose($fp);
+				//check result
+					if (trim($switch_result) == "-ERR no reply") {
+						return true;
+					}
+			}
+		//can not create directory
+			return false;
 	}
 
 ?>

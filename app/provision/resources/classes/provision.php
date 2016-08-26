@@ -147,6 +147,9 @@ include "root.php";
 			case "snom":
 				$mac = strtolower($mac);
 				break;
+			case "escene":
+				$mac = strtolower($mac);
+				break;
 			default:
 				$mac = strtolower($mac);
 				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
@@ -164,7 +167,7 @@ include "root.php";
 			}
 		}
 
-		private function contact_append(&$contacts, &$line, $domain_uuid, $user_uuid, $is_group){
+		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group){
 			$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 			$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 			$sql .= "p.phone_number, p.phone_extension, p.phone_primary ";
@@ -177,91 +180,57 @@ include "root.php";
 				$sql .= "	select contact_uuid from v_contact_groups ";
 				$sql .= "	where group_uuid in ( ";
 				$sql .= "		select group_uuid from v_group_users ";
-				$sql .= "		where user_uuid = '$user_uuid' ";
+				$sql .= "		where user_uuid = '$device_user_uuid' ";
 				$sql .= "		and domain_uuid = '$domain_uuid' ";
 				$sql .= "	)) ";
 			}
 			else {
 				$sql .= "and c.contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_users ";
-				$sql .= "	where user_uuid = '$user_uuid' ";
+				$sql .= "	where user_uuid = '$device_user_uuid' ";
 				$sql .= "	and domain_uuid = '$domain_uuid' ";
 				$sql .= ") ";
 			}
-
 			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$user_contacts = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement, $sql);
 
-			$temp_contacts = array();
 			foreach ($user_contacts as &$row) {
 				$uuid = $row['contact_uuid'];
 				$phone_label = strtolower($row['phone_label']);
 				$contact_category = strtolower($row['contact_category']);
 
-				if(isset($contacts[$uuid])){
-					continue;
-				}
+				$contact = array();
+				$contacts[] = &$contact;
+				$contact['category']             = $is_group ? 'groups' : 'users';
+				$contact['contact_uuid']         = $row['contact_uuid'];
+				$contact['contact_type']         = $row['contact_type'];
+				$contact['contact_category']     = $row['contact_category'];
+				$contact['contact_organization'] = $row['contact_organization'];
+				$contact['contact_name_given']   = $row['contact_name_given'];
+				$contact['contact_name_family']  = $row['contact_name_family'];
+				$contact['numbers']              = array();
 
-				if(!isset($temp_contacts[$uuid])){
-					$contact = array();
-					$temp_contacts[$uuid] = &$contact;
-					$contact['category']             = $is_group ? 'groups' : 'users';
-					$contact['contact_uuid']         = $row['contact_uuid'];
-					$contact['contact_type']         = $row['contact_type'];
-					$contact['contact_category']     = $row['contact_category'];
-					$contact['contact_organization'] = $row['contact_organization'];
-					$contact['contact_name_given']   = $row['contact_name_given'];
-					$contact['contact_name_family']  = $row['contact_name_family'];
-					$contact['numbers']              = array();
-				}
-
-				$contact = &$temp_contacts[$uuid];
 				$numbers = &$contact['numbers'];
 
 				if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-					$contact['phone_label']          = $phone_label;
-					$contact['phone_number']         = $row['phone_number'];
-					$contact['phone_extension']      = $row['phone_extension'];
+					$contact['phone_label']		= $phone_label;
+					$contact['phone_number']	= $row['phone_number'];
+					$contact['phone_extension']	= $row['phone_extension'];
 				}
 
 				$numbers[] = array(
-					line_number          => $line['line_number'],
-					phone_label          => $phone_label,
-					phone_number         => $row['phone_number'],
-					phone_extension      => $row['phone_extension'],
-					phone_primary        => $row['phone_primary'],
+					line_number			=> $line['line_number'],
+					phone_label			=> $phone_label,
+					phone_number		=> $row['phone_number'],
+					phone_extension		=> $row['phone_extension'],
+					phone_primary		=> $row['phone_primary'],
 				);
 
 				$contact['phone_number_' . $phone_label] = $row['phone_number'];
 				unset($contact, $numbers, $uuid, $phone_label);
 			}
-
-			foreach($temp_contacts as $contact_uuid=>&$contact){
-				$contacts[$contact_uuid] = $contact;
-			}
-
-			unset($temp_contacts);
-		}
-
-		private function user_uuid_for_line(&$line, $domain_uuid){
-			$sql = "select user_uuid from v_extension_users ";
-			$sql .= "where extension_uuid in ( ";
-			$sql .= "	select extension_uuid from v_extensions ";
-			$sql .= "	where (extension = '".$line["user_id"]."' or number_alias = '".$line["user_id"]."') ";
-			$sql .= "	and domain_uuid = '$domain_uuid' ";
-			$sql .= ") ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$extension_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset($prep_statement, $sql);
-			foreach ($extension_users as &$row) {
-				return $row["user_uuid"];
-			}
-			return false;
 		}
 
 		public function render() {
@@ -308,10 +277,12 @@ include "root.php";
 				}
 
 			//build the provision array
+				$provision = Array();
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
 					if (strlen($val['text']) > 0) { $value = $val['text']; }
-					$provision[$key] = $value;
+					if (strlen($value) > 0) { $provision[$key] = $value; }
+					unset($value);
 				}
 
 			//check to see if the mac_address exists in devices
@@ -324,7 +295,6 @@ include "root.php";
 								if($provision['http_domain_filter'] == "true") {
 									$sql  .= "AND domain_uuid=:domain_uuid ";
 								}
-								//$sql .= "WHERE device_mac_address= '$mac' ";
 								$prep_statement_2 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_2) {
 									//use the prepared statement
@@ -334,12 +304,22 @@ include "root.php";
 										}
 										$prep_statement_2->execute();
 										$row = $prep_statement_2->fetch();
+									//checks either device enabled
+										if($row['device_enabled'] != 'true'){
+											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
+												echo "<br/>device disabled<br/>";
+											}
+											echo "file not found";
+											exit;
+										}
+
 									//set the variables from values in the database
 										$device_uuid = $row["device_uuid"];
 										$device_label = $row["device_label"];
 										if (strlen($row["device_vendor"]) > 0) {
 											$device_vendor = strtolower($row["device_vendor"]);
 										}
+										$device_user_uuid = $row["device_user_uuid"];
 										$device_model = $row["device_model"];
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_enabled = $row["device_enabled"];
@@ -353,6 +333,7 @@ include "root.php";
 							if (strlen($device_template) == 0) {
 								$sql = "SELECT * FROM v_devices ";
 								$sql .= "WHERE domain_uuid=:domain_uuid ";
+								$sql .= "AND device_enabled='true' ";
 								$sql .= "limit 1 ";
 								$prep_statement_3 = $this->db->prepare(check_sql($sql));
 								if ($prep_statement_3) {
@@ -447,6 +428,7 @@ include "root.php";
 				if (strlen($device_uuid) > 0) {
 					$sql = "SELECT * FROM v_devices ";
 					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+					$sql .= "AND device_enabled = 'true' ";
 					if($provision['http_domain_filter'] == "true") {
 						$sql  .= "AND domain_uuid=:domain_uuid ";
 					}
@@ -474,12 +456,15 @@ include "root.php";
 									}
 									$prep_statement_4->execute();
 									$row = $prep_statement_4->fetch();
-									$device_label = $row["device_label"];
-									$device_firmware_version = $row["device_firmware_version"];
-									$device_enabled = $row["device_enabled"];
-									//keep the original template
-									$device_profile_uuid = $row["device_profile_uuid"];
-									$device_description = $row["device_description"];
+									if($row["device_enabled"] == "true") {
+										$device_label = $row["device_label"];
+										$device_firmware_version = $row["device_firmware_version"];
+										$device_user_uuid = $row["device_user_uuid"];
+										$device_enabled = $row["device_enabled"];
+										//keep the original template
+										$device_profile_uuid = $row["device_profile_uuid"];
+										$device_description = $row["device_description"];
+									}
 								}
 								unset($prep_statement_4);
 						}
@@ -557,7 +542,9 @@ include "root.php";
 									$lines[$line_number]['sip_transport'] = strtolower($sip_transport);
 									$lines[$line_number]['sip_port'] = $sip_port;
 									$lines[$line_number]['server_address'] = $row["server_address"];
-									$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy"];
+									$lines[$line_number]['outbound_proxy'] = $row["outbound_proxy_primary"];
+									$lines[$line_number]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+									$lines[$line_number]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
 									$lines[$line_number]['display_name'] = $row["display_name"];
 									$lines[$line_number]['auth_id'] = $row["auth_id"];
 									$lines[$line_number]['user_id'] = $row["user_id"];
@@ -565,7 +552,9 @@ include "root.php";
 
 								//assign the variables
 									$view->assign("server_address_".$line_number, $row["server_address"]);
-									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
+									$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy_primary"]);
+									$view->assign("outbound_proxy_primary_".$line_number, $row["outbound_proxy_primary"]);
+									$view->assign("outbound_proxy_secondary_".$line_number, $row["outbound_proxy_secondary"]);
 									$view->assign("display_name_".$line_number, $row["display_name"]);
 									$view->assign("auth_id_".$line_number, $row["auth_id"]);
 									$view->assign("user_id_".$line_number, $row["user_id"]);
@@ -578,24 +567,16 @@ include "root.php";
 					}
 
 				//get the list of contact directly assigned to the user
-					//get the user_uuid to find the contacts assigned to the user and the groups the user is a member of.
-					if (strlen($device_uuid) > 0 and strlen($domain_uuid) > 0) {
-						if ($_SESSION['provision']['contact_users']['boolean'] == "true" || $_SESSION['provision']['contact_groups']['boolean'] == "true") {
-							foreach ($device_lines as &$line) {
-								$user_uuid = $this->user_uuid_for_line($line, $domain_uuid);
-								if(!$user_uuid) continue;
+					if (strlen($device_user_uuid) > 0 and strlen($domain_uuid) > 0) {
+						//get the contacts assigned to the groups and add to the contacts array
+							if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
+								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, true);
+							}
 
-								//get the contacts assigned to the groups and add to the contacts array
-									if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
-										$this->contact_append($contacts, $line, $domain_uuid, $user_uuid, true);
-									}
-
-								//get the contacts assigned to the user and add to the contacts array
-									if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
-										$this->contact_append($contacts, $line, $domain_uuid, $user_uuid, false);
-									}
-								}
-						}
+						//get the contacts assigned to the user and add to the contacts array
+							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
+								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
+							}
 					}
 
 				//get the extensions and add them to the contacts array
@@ -651,6 +632,7 @@ include "root.php";
 
 				//get the provisioning information from device keys
 					if (strlen($device_uuid) > 0) {
+
 						//get the device keys array
 							$sql = "SELECT * FROM v_device_keys ";
 							$sql .= "WHERE (";
@@ -659,42 +641,56 @@ include "root.php";
 								$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 							}
 							$sql .= ") ";
-							$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
-							$sql .= "ORDER BY device_key_category asc, device_key_id asc, device_uuid desc";
+							if (strtolower($device_vendor) == 'escene'){
+								$sql .= "AND (lower(device_key_vendor) = 'escene' or lower(device_key_vendor) = 'escene programmable' or device_key_vendor is null) ";
+							}
+							else {
+								$sql .= "AND (lower(device_key_vendor) = '".$device_vendor."' or device_key_vendor is null) ";
+							}
+							$sql .= "ORDER BY ";
+							$sql .= "device_key_vendor ASC, ";
+							$sql .= "CASE device_key_category ";
+							$sql .= "WHEN 'line' THEN 1 ";
+							$sql .= "WHEN 'memory' THEN 2 ";
+							$sql .= "WHEN 'programmable' THEN 3 ";
+							$sql .= "WHEN 'expansion' THEN 4 ";
+							$sql .= "ELSE 100 END, ";
+							if ($db_type == "mysql") {
+								$sql .= "device_key_id ASC, ";
+							}
+							else {
+								$sql .= "CAST(device_key_id as numeric) ASC, ";
+							}
+							$sql .= "CASE WHEN device_uuid IS NULL THEN 0 ELSE 1 END ASC ";
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
-							$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-						//rebuild the array to allow profile keys to be overridden by keys assigned to this device
-							$x = 0;
-							$previous_category = '';
-							$previous_id = '';
-							foreach($device_keys as $row) {
+						//override profile keys with device keys
+							foreach($keys as $row) {
 								//set the variables
-									if ($row['device_key_category'] == $previous_category && $row['device_key_id'] == $previous_id) {
-										$device_keys[$x]['device_key_override'] = "true";
-										$device_keys[$x]['device_key_message'] = "value=".$device_keys[$x-1]['device_key_value']."&label=".$device_keys[$x-1]['device_key_label'];
-										unset($device_keys[$x-1]);
-									}
-									$device_keys[$x]['device_key_category'] = $row['device_key_category'];
-									$device_keys[$x]['device_key_id'] = $row['device_key_id']; //1
-									$device_keys[$x]['device_key_type'] = $row['device_key_type']; //line, memory, expansion
-									$device_keys[$x]['device_key_line'] = $row['device_key_line'];
-									$device_keys[$x]['device_key_value'] = $row['device_key_value']; //1
-									$device_keys[$x]['device_key_extension'] = $row['device_key_extension'];
-									$device_keys[$x]['device_key_label'] = $row['device_key_label']; //label
-									if (is_uuid($row['device_profile_uuid'])) {
-										$device_keys[$x]['device_key_owner'] = "profile";
-									}
-									else {
-										$device_keys[$x]['device_key_owner'] = "device";
-									}
-								//set previous values
-									$previous_category = $row['device_key_category'];
-									$previous_id = $row['device_key_id'];
-								//increment the key
-									$x++;
+								$id = $row['device_key_id'];
+								$category = $row['device_key_category'];
+								
+								//build the device keys array
+								$device_keys[$category][$id] = $row;
+								if (is_uuid($row['device_profile_uuid'])) {
+									$device_keys[$category][$id]['device_key_owner'] = "profile";
+								}
+								else {
+									$device_keys[$category][$id]['device_key_owner'] = "device";
+								}
+								
+								//kept temporarily for backwards comptability to allow custom templates to be updated
+								$device_keys[$id] = $row;
+								if (is_uuid($row['device_profile_uuid'])) {
+									$device_keys[$id]['device_key_owner'] = "profile";
+								}
+								else {
+									$device_keys[$id]['device_key_owner'] = "device";
+								}
 							}
+							unset($keys);
 					}
 
 				//debug information
@@ -732,7 +728,9 @@ include "root.php";
 								$device_key_value = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_value);
 								$device_key_value = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_value);
 								$device_key_value = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_value);
-								$device_key_value = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+								$device_key_value = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_value);
 								$device_key_value = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_value);
 
 								$device_key_extension = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_extension);
@@ -743,7 +741,9 @@ include "root.php";
 								$device_key_extension = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_extension);
 								$device_key_extension = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_extension);
 								$device_key_extension = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_extension);
-								$device_key_extension = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_extension);
+								$device_key_extension = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_extension);
 								$device_key_extension = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_extension);
 
 								$device_key_label = str_replace("\${user_id}", $lines[$x]['user_id'], $device_key_label);
@@ -754,7 +754,9 @@ include "root.php";
 								$device_key_label = str_replace("\${sip_transport}", $lines[$x]['sip_transport'], $device_key_label);
 								$device_key_label = str_replace("\${sip_port}", $lines[$x]['sip_port'], $device_key_label);
 								$device_key_label = str_replace("\${server_address}", $lines[$x]['server_address'], $device_key_label);
-								$device_key_label = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy_primary}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+								$device_key_label = str_replace("\${outbound_proxy_secondary}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 								$device_key_label = str_replace("\${display_name}", $lines[$x]['display_name'], $device_key_label);
 							}
 
@@ -767,7 +769,9 @@ include "root.php";
 							$device_key_value = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_value);
 							$device_key_value = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_value);
 							$device_key_value = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_value);
-							$device_key_value = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_value);
+							$device_key_value = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_value);
 							$device_key_value = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_value);
 
 							$device_key_extension = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
@@ -778,7 +782,9 @@ include "root.php";
 							$device_key_extension = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
 							$device_key_extension = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
 							$device_key_extension = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
-							$device_key_extension = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_extension = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 							$device_key_extension = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
 
 							$device_key_label = str_replace("\${user_id_$x}", $lines[$x]['user_id'], $device_key_label);
@@ -789,7 +795,9 @@ include "root.php";
 							$device_key_label = str_replace("\${sip_transport_$x}", $lines[$x]['sip_transport'], $device_key_label);
 							$device_key_label = str_replace("\${sip_port_$x}", $lines[$x]['sip_port'], $device_key_label);
 							$device_key_label = str_replace("\${server_address_$x}", $lines[$x]['server_address'], $device_key_label);
-							$device_key_label = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_primary_$x}", $lines[$x]['outbound_proxy_primary'], $device_key_label);
+							$device_key_label = str_replace("\${outbound_proxy_secondary_$x}", $lines[$x]['outbound_proxy_secondary'], $device_key_label);
 							$device_key_label = str_replace("\${display_name_$x}", $lines[$x]['display_name'], $device_key_label);
 
 						//add general variables
@@ -933,7 +941,7 @@ include "root.php";
 					else {
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "file not found";
+							echo "file not found ".$template_dir."/".$device_template ."/".$file;
 							if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
@@ -963,27 +971,29 @@ include "root.php";
 		} //end render function
 
 		function write() {
-
-			//set default variables
-				$dir_count = 0;
-				$file_count = 0;
-				$row_count = 0;
-				$tmp_array = '';
-				$i = 0;
-
 			//build the provision array
+				$provision = Array();
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
 					if (strlen($val['text']) > 0) { $value = $val['text']; }
-					$provision[$key] = $value;
+					if (strlen($value) > 0) { $provision[$key] = $value; }
+					unset($value);
 				}
 
-			//get the devices
+			//check either we have destination path to write files
+				if(strlen($provision["path"]) == 0){
+					return;
+				}
+
+			//get the devices from database
 				$sql = "select * from v_devices ";
 				//$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement);
+
+			//process each device
 				foreach ($result as &$row) {
 					//get the values from the database and set as variables
 						$domain_uuid = $row["domain_uuid"];
@@ -999,81 +1009,82 @@ include "root.php";
 						$device_password = $row["device_password"];
 						$device_description = $row["device_description"];
 
-					//loop through the provision template directory
 						clearstatcache();
-						$dir_list = '';
-						$file_list = '';
+
+					//loop through the provision template directory
+						$dir_array = array();
 						if (strlen($device_template) > 0) {
-							$dir_list = opendir($this->template_dir."/".$device_template);
-							$dir_array = array();
-							while (false !== ($file = readdir($dir_list))) {
-								if ($file != "." AND $file != ".."){
-									$new_path = $dir.'/'.$file;
-									$level = explode('/',$new_path);
-									if (substr($new_path, -4) == ".svn" ||
-										substr($new_path, -4) == ".git") {
-										//ignore .svn and .git dir and subdir
+							$template_path = path_join($this->template_dir, $device_template);
+							$dir_list = opendir($template_path);
+							if ($dir_list) {
+								$x = 0;
+								while (false !== ($file = readdir($dir_list))) {
+									$ignore = $file == "." || $file == ".." || substr($file, -3) == ".db" ||
+										substr($file, -4) == ".svn" || substr($file, -4) == ".git";
+									if (!$ignore) {
+										$dir_array[] = path_join($template_path, $file);
+										if ($x > 1000) { break; };
+										$x++;
 									}
-									elseif (substr($new_path, -3) == ".db") {
-										//ignore .db files
-									}
-									else {
-										$dir_array[] = $new_path;
-									}
-									if ($x > 1000) { break; };
-									$x++;
 								}
+								closedir($dir_list);
+								unset($x, $file);
 							}
+							unset($dir_list, $template_path);
 						}
 
-						//asort($dir_array);
-						foreach ($dir_array as $new_path){
-								$level = explode('/',$new_path);
-								if (is_dir($new_path)) {
-									$dir_name = end($level);
-									//$file_list .=  "$dir_name\n";
-									//$dir_list .= recur_dir($new_path);
-								}
-								else {
-									$file_name = end($level);
-									//debug information
-										//$file_size = round(filesize($new_path)/1024, 2);
-										//echo $this->template_dir."/".$device_template."/".$file_name." $file_size\n";
-									//write the configuration to the directory
-										if (strlen($provision["path"]) > 0) {
-											$dir_array = explode(";", $provision["path"]);
-											foreach($dir_array as $directory) {
+					//loop through the provision templates
+						foreach ($dir_array as &$template_path) {
+							if (is_dir($template_path)) continue;
+							if (!file_exists($template_path)) continue;
 
-												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {
-													//output template to string for header processing
-														//output template to string for header processing
-															$prov->domain_uuid = $domain_uuid;
-															$this->mac = $device_mac_address;
-															$this->file = $file_name;
-															$file_contents = $this->render();
+							//template file name
+								$file_name = basename($template_path);
 
-													//format the mac address
-														$mac = $this->format_mac($device_mac_address, $device_vendor);
+							//configure device object
+								$this->domain_uuid = $domain_uuid;
+								$this->mac = $device_mac_address;
+								$this->file = $file_name;
 
-													//replace {$mac} in the file name
-														$file_name = str_replace("{\$mac}", $mac, $file_name);
+							//format the mac address
+								$mac = $this->format_mac($device_mac_address, $device_vendor);
 
-													//write the file
-														//echo $directory.'/'.$file_name."\n";
-														$fh = fopen($directory.'/'.$file_name,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
-														fwrite($fh, $file_contents);
-														fclose($fh);
-												}
-											}
-											unset($file_name);
+							//replace {$mac} in the file name
+								$file_name = str_replace("{\$mac}", $mac, $file_name);
+
+							//render and write configuration to file
+								$provision_dir_array = explode(";", $provision["path"]);
+								foreach($provision_dir_array as $directory) {
+									//destinatino file path
+										$dest_path = path_join($directory, $file_name);
+
+										if ($device_enabled == 'true'){
+											//output template to string for header processing
+												$file_contents = $this->render();
+
+											//write the file
+												$fh = fopen($dest_path,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
+												fwrite($fh, $file_contents);
+												fclose($fh);
 										}
+										else{ // device disabled
+											//remove only files with `{$mac}` name
+												if(strpos($template_path, '{$mac}') !== false){
+													unlink($dest_path);
+												}
+										}
+
+										unset($dest_path);
 								}
+							//unset variables
+								unset($file_name, $provision_dir_array);
 						} //end for each
-						closedir($dir_list);
-						//echo "<hr size='1'>\n";
+
+					//unset variables
+						unset($dir_array);
 				}
-				unset ($prep_statement);
 		} //end write function
+
 	} //end provision class
 
 ?>

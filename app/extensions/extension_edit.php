@@ -136,6 +136,7 @@ else {
 			$mwi_account = check_str($_POST["mwi_account"]);
 			$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
 			$absolute_codec_string = check_str($_POST["absolute_codec_string"]);
+			$force_ping = check_str($_POST["force_ping"]);
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
@@ -468,6 +469,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (permission_exists('extension_absolute_codec_string')) {
 								$sql .= "absolute_codec_string, ";
 							}
+							if (permission_exists('extension_force_ping')) {
+								$sql .= "force_ping, ";
+							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "dial_string, ";
 							}
@@ -537,6 +541,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$sip_bypass_media', ";
 							if (permission_exists('extension_absolute_codec_string')) {
 								$sql .= "'$absolute_codec_string', ";
+							}
+							if (permission_exists('extension_force_ping')) {
+								$sql .= "'$force_ping', ";
 							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "'$dial_string', ";
@@ -698,6 +705,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (permission_exists('extension_absolute_codec_string')) {
 						$sql .= "absolute_codec_string = '$absolute_codec_string', ";
 					}
+					if (permission_exists('extension_force_ping')) {
+						$sql .= "force_ping = '$force_ping', ";
+					}
 					if (permission_exists('extension_dial_string')) {
 						$sql .= "dial_string = '$dial_string', ";
 					}
@@ -733,13 +743,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//update devices having extension assigned to line(s) with new password
-					$sql = "update v_device_lines set ";
-					$sql .= "password = '".$password."' ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ";
-					$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
-					$sql .= "and user_id = '".$extension."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					if (permission_exists('extension_password')) {
+						$sql = "update v_device_lines set ";
+						$sql .= "password = '".$password."' ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
+						$sql .= "and user_id = '".$extension."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 
 			} //if ($action == "update")
 
@@ -862,6 +874,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$mwi_account = $row["mwi_account"];
 			$sip_bypass_media = $row["sip_bypass_media"];
 			$absolute_codec_string = $row["absolute_codec_string"];
+			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -1784,10 +1797,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
 		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-		$moh= new switch_music_on_hold;
-		$moh->select_name = "hold_music";
-		$moh->select_value = $hold_music;
-		echo $moh->select();
+		$moh = new switch_music_on_hold;
+		echo $moh->select('hold_music', $hold_music);
 		echo "	<br />\n";
 		echo $text['description-hold_music']."\n";
 		echo "</td>\n";
@@ -1939,6 +1950,38 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"$absolute_codec_string\">\n";
 		echo "<br />\n";
 		echo $text['description-absolute_codec_string']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_force_ping')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-force_ping']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='force_ping'>\n";
+		if ($force_ping == "") {
+			echo "    <option value='' selected='selected'></option>\n";
+		}
+		else {
+			echo "    <option value=''></option>\n";
+		}
+		if ($force_ping == "true") {
+			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($force_ping == "false") {
+			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-force_ping']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

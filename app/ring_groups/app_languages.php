@@ -11,28 +11,6 @@ $text['title-ring_groups']['uk'] = "Групи";
 $text['title-ring_groups']['de-at'] = "Rufgruppen";
 $text['title-ring_groups']['he'] = "קבוצות חיוג";
 
-$text['option-usring']['en-us'] = "us-ring";
-$text['option-usring']['es-cl'] = "us-ring";
-$text['option-usring']['fr-fr'] = "États-Unis";
-$text['option-usring']['pt-pt'] = "us-ring";
-$text['option-usring']['pt-br'] = "USRing";
-$text['option-usring']['pl'] = "us-ring";
-$text['option-usring']['sv-se'] = "us-ring";
-$text['option-usring']['uk'] = "us-ring";
-$text['option-usring']['de-at'] = "us-ring";
-$text['option-usring']['he'] = "צלצול אמריקאי";
-
-$text['option-ukring']['en-us'] = "uk-ring";
-$text['option-ukring']['es-cl'] = "uk-ring";
-$text['option-ukring']['fr-fr'] = "Grande Bretagne";
-$text['option-ukring']['pt-pt'] = "uk-ring";
-$text['option-ukring']['pt-br'] = "UKRing";
-$text['option-ukring']['pl'] = "uk-ring ";
-$text['option-ukring']['sv-se'] = "uk-ring";
-$text['option-ukring']['uk'] = "uk-ring";
-$text['option-ukring']['de-at'] = "uk-ring";
-$text['option-ukring']['he'] = "צלצול אנגלי";
-
 $text['option-simultaneous']['en-us'] = "Simultaneous";
 $text['option-simultaneous']['es-cl'] = "Simultaneos";
 $text['option-simultaneous']['fr-fr'] = "Simultané";
@@ -54,17 +32,6 @@ $text['option-sequence']['sv-se'] = "I Ordning";
 $text['option-sequence']['uk'] = "";
 $text['option-sequence']['de-at'] = "sequenziell";
 $text['option-sequence']['he'] = "אחד אחרי השני";
-
-$text['option-rsring']['en-us'] = "rs-ring";
-$text['option-rsring']['es-cl'] = "rs-ring";
-$text['option-rsring']['fr-fr'] = "Serbie";
-$text['option-rsring']['pt-pt'] = "rs-ring";
-$text['option-rsring']['pt-br'] = "RSRing";
-$text['option-rsring']['pl'] = "rs-ring";
-$text['option-rsring']['sv-se'] = "rs-ring";
-$text['option-rsring']['uk'] = "rs-ring";
-$text['option-rsring']['de-at'] = "rs-ring";
-$text['option-rsring']['he'] = "צלצול רוסי";
 
 $text['option-rollover']['en-us'] = "Rollover";
 $text['option-rollover']['es-cl'] = "Rollover";
@@ -296,17 +263,6 @@ $text['label-strategy']['sv-se'] = "Strategi";
 $text['label-strategy']['uk'] = "";
 $text['label-strategy']['de-at'] = "Strategie";
 $text['label-strategy']['he'] = "";
-
-$text['label-skip_active']['en-us'] = "Skip Active";
-$text['label-skip_active']['es-cl'] = "Saltar activo";
-$text['label-skip_active']['fr-fr'] = "Faire sonner les postes occupés";
-$text['label-skip_active']['pt-pt'] = "Ir ativa";
-$text['label-skip_active']['pt-br'] = "Pular ativação";
-$text['label-skip_active']['pl'] = "Pomiń aktywne";
-$text['label-skip_active']['sv-se'] = "Hoppa Över Aktiva";
-$text['label-skip_active']['uk'] = "";
-$text['label-skip_active']['de-at'] = "Aktive überspringen";
-$text['label-skip_active']['he'] = "דלג על שיחה פעילה";
 
 $text['label-ringback']['en-us'] = "Ring Back";
 $text['label-ringback']['es-cl'] = "Tono de retorno";

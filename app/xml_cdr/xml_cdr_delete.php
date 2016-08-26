@@ -23,46 +23,49 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permisions
+	if (permission_exists('xml_cdr_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get posted values, if any
-if (sizeof($_REQUEST) > 0) {
+	if (sizeof($_REQUEST) > 0) {
+		$xml_cdr_uuids = $_REQUEST["id"];
+		$recording_file_path = $_REQUEST["rec"];
 
-	$xml_cdr_uuids = $_REQUEST["id"];
-	$recording_file_path = $_REQUEST["rec"];
-
-	if (sizeof($xml_cdr_uuids) > 0) {
-		foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
-			// delete record
-			$sql = "delete from v_xml_cdr ";
-			$sql .= "where uuid = '".$xml_cdr_uuid."' ";
-			$sql .= "and domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql, $prep_statement);
-			//delete recording, if any
-			if ($recording_file_path[$index] != '' && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]))) {
-				@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]));
+		if (sizeof($xml_cdr_uuids) > 0) {
+			foreach ($xml_cdr_uuids as $index => $xml_cdr_uuid) {
+				// delete record
+				$sql = "delete from v_xml_cdr ";
+				$sql .= "where uuid = '".$xml_cdr_uuid."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($sql, $prep_statement);
+				//delete recording, if any
+				if ($recording_file_path[$index] != '' && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]))) {
+					@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].base64_decode($recording_file_path[$index]));
+				}
 			}
 		}
 	}
 
-}
+//set message and redirect the user
+	$_SESSION["message"] = $text['message-delete'].": ".sizeof($xml_cdr_uuids);
+	header("Location: xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".$_SESSION['xml_cdr']['last_query'] : null));
 
-// set message
-$_SESSION["message"] = $text['message-delete'].": ".sizeof($xml_cdr_uuids);
-header("Location: xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".$_SESSION['xml_cdr']['last_query'] : null));
 ?>

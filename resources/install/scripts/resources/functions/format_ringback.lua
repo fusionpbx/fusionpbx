@@ -7,8 +7,13 @@
 			api = freeswitch.API();
 		--handle ringback
 			if (ringback == nil or ringback == "") then
-				--get the default ring back
+				--get the default hold_music
 					ringback = trim(api:execute("global_getvar", "hold_music"));
+			elseif (ringback == "default_ringback") then
+				--get the default ringback variable
+					ringback = trim(api:execute("global_getvar", "ringback"));
+				--convert to tone_stream
+					ringback = "tone_stream://" .. ringback .. ";loops=-1";
 			elseif (ringback:match("%${.*}")) then
 				--strip the ${ and }
 					ringback = ringback:gsub("%${", "");
