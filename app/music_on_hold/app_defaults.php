@@ -32,10 +32,10 @@
 
 		//rename the file
 			if (file_exists($xml_dir.'/local_stream.conf.xml')) {
-				rename($xml_dir.'/local_stream.conf.xml', $xml_dir.'/'.$xml_file);
+				rename($xml_dir.'/local_stream.conf', $xml_dir.'/'.$xml_file);
 			}
 			if (file_exists($xml_dir.'/local_stream.conf.xml.noload')) {
-				rename($xml_dir.'/local_stream.conf.xml.noload', $xml_dir.'/'.$xml_file);
+				rename($xml_dir.'/local_stream.conf', $xml_dir.'/'.$xml_file);
 			}
 
 		//add the music_on_hold list to the database

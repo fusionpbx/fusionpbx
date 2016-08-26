@@ -67,7 +67,7 @@
 	
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename=cdr-statistics.csv');
+			header('Content-Disposition: attachment; filename=user-summary.csv');
 
 		//show the column names on the first line
 			$z = 0;
@@ -108,6 +108,14 @@
 	echo "			<b>".$text['title-extension_summary']."</b><br><br>\n";
 	echo "		</td>\n";
 	echo "		<td align='right' width='100%' style='vertical-align: top;'>";
+	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' ";
+	echo "onclick=\"window.location='xml_cdr_extension_summary.php?";
+	if (strlen($_SERVER["QUERY_STRING"]) > 0) { 
+		echo $_SERVER["QUERY_STRING"]."&type=csv';\">\n";
+	} else { 
+		echo "type=csv';\">\n";
+	}
+
 	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
 		echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_extension_summary.php?showall=true';\">\n";
 	}
