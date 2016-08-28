@@ -570,7 +570,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 							//set the voicemail password
 								if (strlen($voicemail_password) == 0) {
-									$voicemail_password = generate_password(9, 1);
+									$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 								}
 							//voicemail class
 								$ext = new extension;
@@ -632,7 +632,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				//set the voicemail password
 					if (strlen($voicemail_password) == 0) {
-						$voicemail_password = generate_password(9, 1);
+						$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 					}
 				//update extensions
 					$sql = "update v_extensions set ";
