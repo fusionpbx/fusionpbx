@@ -247,6 +247,16 @@
 				recording_audio.play();
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
+
+				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
+				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
+				
+				$('audio').each(function(){
+					if ($(this).get(0) != recording_audio) {
+					    $(this).get(0).pause(); // Stop playing
+					    $(this).get(0).currentTime = 0; // Reset time
+					}
+				});
 			}
 			else {
 				recording_audio.pause();
