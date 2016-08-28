@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com um URL.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Gera chamadas a partir de um URL";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "click_to_call_view";

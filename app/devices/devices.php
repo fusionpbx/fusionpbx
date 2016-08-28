@@ -88,6 +88,8 @@
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -139,6 +141,8 @@
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
@@ -214,6 +218,7 @@
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
+	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
@@ -248,6 +253,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - ".$row['device_provisioned_ip']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_edit')) {

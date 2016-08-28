@@ -180,7 +180,7 @@
 <Screen_Saver_Wait group="Phone/General">300</Screen_Saver_Wait>
 <Screen_Saver_Icon group="Phone/General">Background Picture</Screen_Saver_Icon>
 
-{foreach $keys as $row}
+{foreach $keys["line"] as $row}
 {if $row.device_key_category == "line"}
 {if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
@@ -269,11 +269,9 @@
 <EM_Enable group="Phone/Extension_Mobility">No</EM_Enable>
 <EM_User_Domain group="Phone/Extension_Mobility" />
 <Line_Enable_1_ group="Ext_1/General">Yes</Line_Enable_1_>
-{foreach $keys as $row}
-{if $row.device_key_category == "line"}
+{foreach $keys["line"] as $row}
 {if $row.device_key_type == "line"}
 <Share_Ext_1_ group="Ext_1/Share_Line_Appearance">{if $row.device_key_extension == "shared"}shared{else}private{/if}</Share_Ext_1_>
-{/if}
 {/if}
 {/foreach}
 <Shared_User_ID_1_ group="Ext_1/Share_Line_Appearance" />
@@ -648,16 +646,14 @@
 <Test_Mode_Enable group="Attendant_Console/General">No</Test_Mode_Enable>
 <Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">**#</Attendant_Console_Call_Pickup_Code>
 
-{foreach $keys as $row}
-{if $row.device_key_category == "expansion"}
+{foreach $keys["expansion"] as $row}
 <Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
-{/if}
-{if $row.device_key_category == "expansion-1"}
+{/foreach}
+{foreach $keys["expansion-1"] as $row}
 <Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
-{/if}
-{if $row.device_key_category == "expansion-2"}
+{/foreach}
+{foreach $keys["expansion-2"] as $row}
 <Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
-{/if}
 {/foreach}
 
 </flat-profile>
