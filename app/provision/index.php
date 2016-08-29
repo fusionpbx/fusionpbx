@@ -229,7 +229,7 @@ The file name is fixed to `Account1_Extern.xml`.
 
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
-		echo "access denied";
+		echo "provisioning disabled";
 		exit;
 	}
 
@@ -237,7 +237,7 @@ The file name is fixed to `Account1_Extern.xml`.
 	if (strlen($_SERVER['auth_server']) > 0) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
-			echo "access denied";
+			echo "authentication required";
 			exit;
 		}
 	}
