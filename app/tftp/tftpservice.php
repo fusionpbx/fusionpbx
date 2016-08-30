@@ -331,12 +331,14 @@ function Run()
 	echo $appdesc." has stopped.\n";
 }
 
-if(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--InstallService") 
-	Service_Install(); // Install System Service
-elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--UninstallService")
-	Service_Uninstall(); // Uninstall System Service
-elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--Service")
-	Service_Run(); // Run as a Service
-else 
-	Run(); // Run
+if (php_sapi_name() === 'cli') {
+	if(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--InstallService") 
+		Service_Install(); // Install System Service
+	elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--UninstallService")
+		Service_Uninstall(); // Uninstall System Service
+	elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--Service")
+		Service_Run(); // Run as a Service
+	else 
+		Run(); // Run
+}
 ?>
