@@ -127,7 +127,7 @@
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "null, ";
 				}
 				else {
@@ -139,7 +139,7 @@
 				$sql .= "'".$dialplan_number."', ";
 				$sql .= "'".$dialplan_order."', ";
 				$sql .= "'true', ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "'\${domain_name}', ";
 				}
 				else {
@@ -156,7 +156,7 @@
 		else if ($action == "update") {
 			//update main dialplan entry
 				$sql = "update v_dialplans set ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "domain_uuid = null, ";
 				}
 				else {
@@ -166,7 +166,7 @@
 				$sql .= "dialplan_number = '".$dialplan_number."', ";
 				$sql .= "dialplan_order = '".$dialplan_order."', ";
 				$sql .= "dialplan_continue = 'true', ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "dialplan_context = '\${domain_name}', ";
 				}
 				else {
@@ -313,7 +313,7 @@
 						//add destination number condition
 						$dialplan_detail_order += 10;
 						$sql .= ($conditions_exist) ? ", ( " : "( ";
-						if ($domain_uuid == 0) {
+						if (strlen($domain_uuid) == 0) {
 							$sql .= "null, ";
 						}
 						else {
@@ -334,7 +334,7 @@
 					//add condition to query string
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					if ($domain_uuid == 0) {
+					if (strlen($domain_uuid) == 0) {
 						$sql .= "null, ";
 					}
 					else {
@@ -381,7 +381,7 @@
 								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
-									if ($domain_uuid == 0) {
+									if (strlen($domain_uuid) == 0) {
 										$sql .= "null, ";
 									}
 									else {
@@ -416,7 +416,7 @@
 					//add group action to query
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					if ($domain_uuid == 0) {
+					if (strlen($domain_uuid) == 0) {
 						$sql .= "null, ";
 					}
 					else {
@@ -449,7 +449,7 @@
 			//add destination number condition
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			if ($domain_uuid == 0) {
+			if (strlen($domain_uuid) == 0) {
 				$sql .= "null, ";
 			}
 			else {
@@ -469,7 +469,7 @@
 			//add anti-action
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			if ($domain_uuid == 0) {
+			if (strlen($domain_uuid) == 0) {
 				$sql .= "null, ";
 			}
 			else {
