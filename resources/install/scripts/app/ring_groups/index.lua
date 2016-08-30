@@ -424,7 +424,7 @@ local log = require "resources.functions.log".ring_group
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-						dial_string = dial_string_to_user;
+							dial_string = dial_string_to_user;
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
@@ -525,6 +525,11 @@ local log = require "resources.functions.log".ring_group
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
+				-- support conf-xfer feature
+				-- do
+				-- 	local uuid = api:executeString("create_uuid")
+				-- 	session:execute("export", "conf_xfer_number=xfer-" .. uuid .. "-" .. domain_name)
+				-- end
 				--set bind digit action
 					local bind_target = 'peer'
 					if session:getVariable("sip_authorized") == "true" then
@@ -535,6 +540,7 @@ local log = require "resources.functions.log".ring_group
 						"local,*2,exec:record_session," .. record_file,
 						"local,*3,exec:execute_extension,cf XML " .. context,
 						"local,*4,exec:execute_extension,att_xfer XML " .. context,
+						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do
 						session:execute("bind_digit_action", str .. "," .. bind_target)
