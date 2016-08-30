@@ -33,7 +33,7 @@ $pid=null;
 $pidfile = (strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"]."\\$appname.pid" : "/var/run/$appname.pid";
 $tftpservice_address="0.0.0.0";
 $tftpservice_port=69;
-$tftpservice_fileslocation=(strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"] : "/tmp";
+$tftpservice_file_path=(strpos(PHP_OS,"WIN") !== false) ? $_SERVER["TMP"] : "/tmp";
 
 function Service_Install()
 {
@@ -165,7 +165,7 @@ function Service_Linux_Run()
 	global $pidfile;
 	global $tftpservice_address;
 	global $tftpservice_port;
-	global $tftpservice_fileslocation;
+	global $tftpservice_file_path;
 
 	// write pid file
 	file_put_contents($pidfile, getmypid());
@@ -188,8 +188,8 @@ function Service_Linux_Run()
 			case 'tftp_service_port':
 				$tftpservice_port=$i[1];
 				break;
-			case 'tftp_service_fileslocation':
-				$tftpservice_fileslocation=$i[1];
+			case 'tftp_service_file_path':
+				$tftpservice_file_path=$i[1];
 				break;
 		}
 	}
@@ -202,7 +202,7 @@ function Service_Linux_Run()
 	require_once 'resources/tftpservice.class.php';
 
 	// start service
-	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array("headless"=>true, "db_type"=>$db_type, "db_host"=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_fileslocation));
+	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array("headless"=>true, "db_type"=>$db_type, "db_host"=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_file_path));
 	if(!$server->loop($error, $user)) die("$error\n");
 }
 
@@ -214,7 +214,7 @@ function Service_Windows_Run()
 	global $pidfile;
 	global $tftpservice_address;
 	global $tftpservice_port;
-	global $tftpservice_fileslocation;
+	global $tftpservice_file_path;
 
 	// write pid file
 	file_put_contents($pidfile, getmypid());
@@ -237,8 +237,8 @@ function Service_Windows_Run()
 			case 'tftp_service_port':
 				$tftpservice_port=$i[1];
 				break;
-			case 'tftp_service_fileslocation':
-				$tftpservice_fileslocation=$i[1];
+			case 'tftp_service_file_path':
+				$tftpservice_file_path=$i[1];
 				break;
 		}
 	}
@@ -251,7 +251,7 @@ function Service_Windows_Run()
 	require_once 'resources/tftpservice.class.php';
 
 	// start service
-	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array("headless"=>true, "db_type"=>$db_type, "db_host"=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_fileslocation));
+	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array("headless"=>true, "db_type"=>$db_type, "db_host"=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_file_path));
 	// signal running to service controller
 	win32_start_service_ctrl_dispatcher($appname); 
     win32_set_service_status(WIN32_SERVICE_RUNNING);
@@ -269,7 +269,7 @@ function Run()
 	global $pidfile;
 	global $tftpservice_address;
 	global $tftpservice_port;
-	global $tftpservice_fileslocation;
+	global $tftpservice_file_path;
 
 	// check for existing process
 	if (file_exists($pidfile)) {
@@ -311,8 +311,8 @@ function Run()
 			case 'tftp_service_port':
 				$tftpservice_port=$i[1];
 				break;
-			case 'tftp_service_fileslocation':
-				$tftpservice_fileslocation=$i[1];
+			case 'tftp_service_file_path':
+				$tftpservice_file_path=$i[1];
 				break;
 		}
 	}
@@ -325,18 +325,20 @@ function Run()
 	require_once 'resources/tftpservice.class.php';
 
 	// start service
-	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array('db_type'=>$db_type,'db_host'=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_fileslocation));
+	$server = new tftpservice("udp://$tftpservice_address:$tftpservice_port", array('db_type'=>$db_type,'db_host'=>$db_host, "db_port"=>$db_port, "db_name"=>$db_name, "db_username"=>$db_username, "db_password"=>$db_password, "files_location"=>$tftpservice_file_path));
 	echo $appdesc." has started.\n";
 	if(!$server->loop($error, $user)) die("$error\n");
 	echo $appdesc." has stopped.\n";
 }
 
-if(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--InstallService") 
-	Service_Install(); // Install System Service
-elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--UninstallService")
-	Service_Uninstall(); // Uninstall System Service
-elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--Service")
-	Service_Run(); // Run as a Service
-else 
-	Run(); // Run
+if (php_sapi_name() === 'cli') {
+	if(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--InstallService") 
+		Service_Install(); // Install System Service
+	elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--UninstallService")
+		Service_Uninstall(); // Uninstall System Service
+	elseif(isset($_SERVER["argv"][1])&&$_SERVER["argv"][1]=="--Service")
+		Service_Run(); // Run as a Service
+	else 
+		Run(); // Run
+}
 ?>
