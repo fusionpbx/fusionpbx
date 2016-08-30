@@ -668,7 +668,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
-		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\"/>\n";
+		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='12' value=\"$device_mac_address\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_mac_address']."\n";
 	}
@@ -1444,6 +1444,16 @@
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
+	// capture device mac paste event
+	echo "  $('#device_mac_address').bind('paste',function(event){ \n";
+    echo "		data = (event.originalEvent.clipboardData || event.clipboardData || window.clipboardData).getData('Text');\n";
+	echo "      $(this).val(data.replace(/:|-|\.|\s|\\|\//g ,'')) \n";
+	echo "	}); \n";
+	// capture device mac keypress event
+	echo "  $('#device_mac_address').keypress(function(event){ \n";
+	echo "      if ( !/[0-9A-F]/i.test(String.fromCharCode(event.which)) )\n";
+	echo " 		{ event.preventDefault(); } \n";
+	echo "	}); \n";
 	// capture device selection events
 	echo "  $('#device_profile_uuid').change(function(event){ \n";
 	echo "      if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
