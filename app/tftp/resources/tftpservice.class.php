@@ -30,7 +30,8 @@ require_once 'tftpserver.class.php';
 
 class tftpservice extends TFTPServer
 {
-	private $_debug=true;
+	private $_headless=true;
+	private $_debug=false;
 	private $_dbtype;
 	private $_dbhost;
 	private $_dbport;
@@ -42,6 +43,7 @@ class tftpservice extends TFTPServer
 	function __construct($server_url, $config)
 	{
 		parent::__construct($server_url);
+		if (isset($config['headless'])) $this->_headless=$config['headless'];
 		if (isset($config['debug'])) $this->_debug=$config['debug'];
 		if (isset($config['db_type'])) $this->_dbtype=$config['db_type'];
 		if (isset($config['db_host'])) $this->_dbhost=$config['db_host'];
@@ -57,12 +59,14 @@ class tftpservice extends TFTPServer
 	}
   
 	private function log($client, $level, $message) {   
-		if($level!='D'||$this->_debug) 
+		if(!$this->_headless && ($level!='D' || $this->_debug)) {
 		echo 
 			date("H:i:s") . " " .
 			$level . " " .
 			$client . " " .
 			$message . "\n";
+		}
+		
 	}
 	
 	public function get($client, $filepath, $mode)
