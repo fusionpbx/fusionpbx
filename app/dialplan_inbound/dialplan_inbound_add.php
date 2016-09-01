@@ -235,35 +235,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 		}
 
-	//export alert-info for distinctive ringtones
-		if (count($_SESSION["domains"]) > 1) {
-			$dialplan_detail_uuid = uuid();
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'$dialplan_detail_uuid', ";
-			$sql .= "'action', ";
-			$sql .= "'export', ";
-			$sql .= "'alert_info=http://www.notused.com;info=alert-external;x-line-id=0', ";
-			$sql .= "'0', ";
-			$sql .= "'45' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
-
 	//set call_direction
 		if (count($_SESSION["domains"]) > 1) {
 			$dialplan_detail_uuid = uuid();
@@ -827,12 +798,12 @@ $destination = new destinations;
 		}
 		</script>
 		<?php
-		echo "	<table width='70%' border='0'>\n";
+		echo "	<table border='0'>\n";
 		echo "	<tr>\n";
-		echo "	<td>".$text['label-field']."</td>\n";
-		echo "	<td width='50%' nowrap='nowrap'>\n";
+		//echo "	<td>".$text['label-field']."</td>\n";
+		echo "	<td nowrap='nowrap'>\n";
 
-		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";' style='width:85%'>\n";
+		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
 		if (strlen($condition_field_1) > 0) {
 			echo "    <option value='$condition_field_1' selected>$condition_field_1</option>\n";
@@ -854,9 +825,9 @@ $destination = new destinations;
 		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 		echo "    <br />\n";
 		echo "	</td>\n";
-		echo "	<td>&nbsp;&nbsp;&nbsp;".$text['label-expression']."</td>\n";
-		echo "	<td width='50%'>\n";
-		echo "		<input class='formfld' type='text' name='condition_expression_1' maxlength='255' style='width:100%' value=\"$condition_expression_1\">\n";
+
+		echo "	<td>\n";
+		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_1' maxlength='255' value=\"$condition_expression_1\">\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
@@ -870,10 +841,10 @@ $destination = new destinations;
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "	<table width='70%' border='0'>\n";
+		echo "	<table border='0'>\n";
 		echo "	<tr>\n";
-		echo "	<td align='left'>".$text['label-field']."</td>\n";
-		echo "	<td width='50%' align='left' nowrap='nowrap'>\n";
+		//echo "	<td align='left'>".$text['label-field']."</td>\n";
+		echo "	<td align='left' nowrap='nowrap'>\n";
 		?>
 		<script>
 		var Objs;
@@ -907,7 +878,7 @@ $destination = new destinations;
 		}
 		</script>
 		<?php
-		echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";' style='width:85%'>\n";
+		echo "    <select class='formfld' name='condition_field_2' id='condition_field_2' onchange='changeToInput_condition_field_2(this);this.style.visibility = \"hidden\";'>\n";
 		echo "    <option value=''></option>\n";
 		if (strlen($condition_field_2) > 0) {
 			echo "    <option value='$condition_field_2' selected>$condition_field_2</option>\n";
@@ -928,11 +899,11 @@ $destination = new destinations;
 		echo "	</select>\n";
 		echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 		echo "	<br />\n";
-		echo "	</td>\n";
-		echo "	<td align='left'>&nbsp;&nbsp;&nbsp;".$text['label-expression']."\n";
-		echo "	</td>\n";
-		echo "	<td width='50%'>\n";
-		echo "		<input class='formfld' type='text' name='condition_expression_2' maxlength='255' style='width:100%' value=\"$condition_expression_2\">\n";
+		//echo "	</td>\n";
+		//echo "	<td align='left'>&nbsp;&nbsp;&nbsp;".$text['label-expression']."\n";
+		//echo "	</td>\n";
+		echo "	<td>\n";
+		echo "		&nbsp;<input class='formfld' type='text' name='condition_expression_2' maxlength='255' value=\"$condition_expression_2\">\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
