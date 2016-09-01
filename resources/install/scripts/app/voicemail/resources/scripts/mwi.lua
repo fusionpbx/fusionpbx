@@ -30,14 +30,14 @@
 	sleep = 300;
 
 --define the run file
-	run_file = scripts_dir .. "/resources/run/voicemail-mwi.tmp";
+	run_file = scripts_dir .. "/run/voicemail-mwi.tmp";
 
 --debug
 	debug["sql"] = false;
 	debug["info"] = false;
 
 --only run the script a single time
-	runonce = true
+	runonce = false;
 
 --connect to the database
 	require "resources.functions.database_handle";
@@ -54,10 +54,10 @@
 	require "resources.functions.file_exists";
 
 --send MWI NOTIFY message
-	require "app.voicemail.resources.functions.mwi_notify"
+	require "app.voicemail.resources.functions.mwi_notify";
 
 --get message count for mailbox
-	require "app.voicemail.resources.functions.message_count"
+	require "app.voicemail.resources.functions.message_count";
 
 --create the api object
 	api = freeswitch.API();
