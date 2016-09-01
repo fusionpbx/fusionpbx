@@ -27,7 +27,11 @@
 	function forward_add_intro(voicemail_id, uuid)
 
 		--connect to the database
-			local db = dbh or Database.new('system')
+			local db = dbh or Database.new('system');
+
+		--load libraries
+			local Database = require "resources.functions.database";
+			local Settings = require "resources.functions.lazy_settings";
 
 		--get the settings.
 			local settings = Settings.new(db, domain_name, domain_uuid)
