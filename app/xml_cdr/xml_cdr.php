@@ -464,7 +464,7 @@
 					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 				}
 
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if (isset($row['json']) && (if_group("admin") || if_group("superadmin") || if_group("cdr"))) {
 					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
 				}
 				else {
