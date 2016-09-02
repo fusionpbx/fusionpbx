@@ -254,7 +254,9 @@ class destinations {
 			}
 			if (!$select_found) {
 				$destination_label = str_replace(":", " ", $destination_value);
-				$destination_label = str_replace("menu-exec-app:", " ", $destination_label);
+				$destination_label = str_replace("menu-exec-app", "", $destination_label);
+				$destination_label = str_replace("transfer", "", $destination_label);
+				$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
 				$response .= "			<option value='".$destination_value."' selected='selected'>".trim($destination_label)."</option>\n";
 			}
 			$response .= "	</select>\n";
