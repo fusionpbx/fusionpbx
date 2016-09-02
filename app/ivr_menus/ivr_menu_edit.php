@@ -183,10 +183,18 @@
 						unset($_POST["ivr_menu_options"][$x]);
 					}
 					else {
-						//seperate the action and the param
-						$options_array = explode(":", $row["ivr_menu_option_param"]);
-						$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = array_shift($options_array);
-						$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = join(':', $options_array);
+						//check if the option param is numeric
+						if (is_numeric($row["ivr_menu_option_param"])) {
+							//add the ivr menu syntax
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = "menu-exec-app";
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = "transfer ".$row["ivr_menu_option_param"]." XML ".$_SESSION['domain_name'];
+						}
+						else {
+							//seperate the action and the param
+							$options_array = explode(":", $row["ivr_menu_option_param"]);
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = array_shift($options_array);
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = join(':', $options_array);
+						}
 
 						//add the domain_uuid
 						if (strlen($row["domain_uuid"]) == 0) {
