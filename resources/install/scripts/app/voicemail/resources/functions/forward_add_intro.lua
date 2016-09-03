@@ -26,30 +26,34 @@
 --define a function to forward a message to an extension
 	function forward_add_intro(voicemail_id, uuid)
 
-		--connect to the database
-			local db = dbh or Database.new('system');
-
-		--load libraries
-			local Database = require "resources.functions.database";
-			local Settings = require "resources.functions.lazy_settings";
-
-		--get the settings.
-			local settings = Settings.new(db, domain_name, domain_uuid)
-			--local max_len_seconds = settings:get('voicemail', 'forward_add_intro', 'boolean') or 300;
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
 
 		--request whether to add the intro
 			--To add an introduction to this message press 1
-			add_intro_id = macro(session, "forward_add_intro", 20, 5000, '');
+			add_intro_id = session:playAndGetDigits(1, 1, 3, 5000, "#*", "phrase:voicemail_forward_prepend:1:2", "phrase:invalid_entry", "\\d+");
+			freeswitch.consoleLog("notice", "[voicemail][forward add intro] "..add_intro_id.."\n");
 			if (add_intro_id == '1') then
+
+				--connect to the database
+					local db = dbh or Database.new('system');
+
+				--load libraries
+					local Database = require "resources.functions.database";
+					local Settings = require "resources.functions.lazy_settings";
+		
+				--get the settings.
+					local settings = Settings.new(db, domain_name, domain_uuid);
+					local max_len_seconds = settings:get('voicemail', 'max_len_seconds', 'boolean') or 300;
 
 				--record your message at the tone press any key or stop talking to end the recording
 					if (session:ready()) then
-						result = macro(session, "record_message", 0, 5000, '');
+						session:sayPhrase("voicemail_record_greeting", "", "en")
 					end
 
 				--set the file full path
 					message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
-					message_intro_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+					message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
 
 				--record the message introduction
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
@@ -96,7 +100,7 @@
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_message_uuid = ']].. uuid.. [[' ]];
 								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 								end
 								status = dbh:query(sql, function(row)
 									--add functions
@@ -114,13 +118,6 @@
 								end);
 							end
 					end
-
-				--merge the intro and the voicemail recording
-					cmd = "sox "..message_intro_location.." "..message_location;
-					os.execute(cmd);
-
-				--remove the intro file after it has been merged
-					os.remove(message_intro_location);
 
 				--save the merged file into the database as base64
 					if (storage_type == "base64") then
