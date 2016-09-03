@@ -42,6 +42,7 @@
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 		--delete the file
+			os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 			os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 		--delete from the database
 			sql = [[DELETE FROM v_voicemail_messages
