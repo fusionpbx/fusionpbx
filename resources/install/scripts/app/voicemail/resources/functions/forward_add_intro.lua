@@ -93,43 +93,17 @@
 						end
 					end
 
-				--get the original voicemail message from the database and save it to the message location
-					if (storage_type == "base64") then
-							if (session:ready()) then
-								sql = [[SELECT * FROM v_voicemail_messages
-									WHERE domain_uuid = ']] .. domain_uuid ..[['
-									AND voicemail_message_uuid = ']].. uuid.. [[' ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-								status = dbh:query(sql, function(row)
-									--add functions
-										require "resources.functions.base64";
-
-									--set the voicemail message path
-										mkdir(voicemail_dir.."/"..voicemail_id);
-
-									--save the recording to the file system
-										if (string.len(row["message_base64"]) > 32) then
-											local file = io.open(message_location, "w");
-											file:write(base64.decode(row["message_base64"]));
-											file:close();
-										end
-								end);
-							end
-					end
-
 				--save the merged file into the database as base64
 					if (storage_type == "base64") then
 						--get the content of the file
-							local f = io.open(voicemail_name_location, "rb");
+							local f = io.open(message_intro_location, "rb");
 							local file_content = f:read("*all");
 							f:close();
 
 						--save the merged file as base64
 							local sql = {}
 							sql = [[UPDATE SET v_voicemail_messages
-									SET message_base64 = ']].. base64.encode(file_content) ..[[' 
+									SET message_intro_base64 = ']].. base64.encode(file_content) ..[[' 
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_message_uuid = ']].. uuid.. [[' ]];
 							sql = table.concat(sql, "\n");
