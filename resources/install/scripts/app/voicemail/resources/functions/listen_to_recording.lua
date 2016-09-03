@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -84,9 +84,15 @@
 
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
+						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
 						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 
 					--save the recording to the file system
+						if (string.len(row["message_intro_base64"]) > 32) then
+							local file = io.open(message_intro_location, "w");
+							file:write(base64.decode(row["message_intro_base64"]));
+							file:close();
+						end
 						if (string.len(row["message_base64"]) > 32) then
 							local file = io.open(message_location, "w");
 							file:write(base64.decode(row["message_base64"]));
@@ -96,31 +102,57 @@
 			elseif (storage_type == "http_cache") then
 				message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 			end
-
+		--play the message intro
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext)) then
+						stream_seek = true;
+						if (storage_type == "http_cache") then
+							message_intro_location = storage_path.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
+							session:streamFile(storage_path.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
+						else
+							if (vm_message_ext == "mp3") then
+								if (api:executeString("module_exists mod_vlc") == "true") then
+									session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
+								else
+									session:streamFile(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
+								end
+							else
+								session:streamFile(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
+							end
+						end
+						stream_seek = false;
+						--session:streamFile("silence_stream://1000");
+					end
+				end
+			end
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					stream_seek = true;
-					if (storage_type == "http_cache") then
-						message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
-						session:streamFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-					else
-						if (vm_message_ext == "mp3") then
-							if (api:executeString("module_exists mod_vlc") == "true") then
-								session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
+						stream_seek = true;
+						if (storage_type == "http_cache") then
+							message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+							session:streamFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+						else
+							if (vm_message_ext == "mp3") then
+								if (api:executeString("module_exists mod_vlc") == "true") then
+									session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+								else
+									session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+								end
 							else
 								session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 							end
-						else
-							session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 						end
+						stream_seek = false;
+						session:streamFile("silence_stream://1000");
 					end
-					stream_seek = false;
-					session:streamFile("silence_stream://1000");
 				end
 			end
 		--remove the voicemail message
 			if (storage_type == "base64") then
+				os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 			end
 		--to listen to the recording press 1
