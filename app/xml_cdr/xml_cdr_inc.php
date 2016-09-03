@@ -340,6 +340,7 @@
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$sql .= $field.", ";
