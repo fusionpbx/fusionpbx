@@ -175,6 +175,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail message priority.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "message_intro_base64";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail intro encoded in base64.";
+		$z++;
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "message_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail file encoded in base64.";
