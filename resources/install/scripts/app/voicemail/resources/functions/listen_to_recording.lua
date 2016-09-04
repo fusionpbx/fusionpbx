@@ -23,6 +23,8 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local Database = require "resources.functions.database"
+
 --define function to listen to the recording
 	function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number)
 
@@ -72,6 +74,8 @@
 			end
 		--get the recordings from the database
 			if (storage_type == "base64") then
+				local dbh = Database.new('system', 'base64/read')
+
 				sql = [[SELECT * FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_message_uuid = ']].. uuid.. [[' ]];
@@ -79,9 +83,6 @@
 					freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
 				end
 				status = dbh:query(sql, function(row)
-					--add functions
-						require "resources.functions.base64";
-
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
@@ -94,11 +95,14 @@
 							file:close();
 						end
 						if (string.len(row["message_base64"]) > 32) then
-							local file = io.open(message_location, "w");
-							file:write(base64.decode(row["message_base64"]));
-							file:close();
+							--include the file io
+								local file = require "resources.functions.file"
+
+							--write decoded string to file
+								assert(file.write_base64(message_location, row["message_base64"]));
 						end
 				end);
+				dbh:release()
 			elseif (storage_type == "http_cache") then
 				message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 			end
