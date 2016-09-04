@@ -35,13 +35,13 @@
 			freeswitch.consoleLog("notice", "[voicemail][forward add intro] "..add_intro_id.."\n");
 			if (add_intro_id == '1') then
 
-				--connect to the database
-					local db = dbh or Database.new('system');
-
 				--load libraries
 					local Database = require "resources.functions.database";
 					local Settings = require "resources.functions.lazy_settings";
-		
+
+				--connect to the database
+					local db = dbh or Database.new('system');
+
 				--get the settings.
 					local settings = Settings.new(db, domain_name, domain_uuid);
 					local max_len_seconds = settings:get('voicemail', 'max_len_seconds', 'boolean') or 300;
