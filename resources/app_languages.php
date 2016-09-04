@@ -732,6 +732,19 @@ $text['label-ringback']['de-at'] = "Zurückrufen";
 $text['label-ringback']['he'] = "לצלצל בחזרה";
 $text['label-ringback']['ru-ru'] = "Перезвонить";
 
+$text['label-tone']['en-us'] = "Tone";
+$text['label-tone']['es-cl'] = "Tono";
+$text['label-tone']['pt-pt'] = "Tom";
+$text['label-tone']['pt-br'] = "Tom";
+$text['label-tone']['pl'] = "Ton";
+$text['label-tone']['fr-fr'] = "Ton";
+$text['label-tone']['nl-nl'] = "Toon";
+$text['label-tone']['sv-se'] = "Tona";
+$text['label-tone']['uk'] = "Тон";
+$text['label-tone']['de-at'] = "Ton";
+$text['label-tone']['he'] = "טוֹן";
+$text['label-tone']['ru-ru'] = "Тон";
+
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Musica en Espera";
 $text['label-music_on_hold']['pt-pt'] = "Música em Espera";
