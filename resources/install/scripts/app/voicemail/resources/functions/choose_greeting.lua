@@ -23,6 +23,8 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local Database = require "resources.functions.database"
+
 --define a function to choose the greeting
 	function choose_greeting()
 
@@ -87,6 +89,8 @@
 
 				--get the greeting from the database
 					if (storage_type == "base64") then
+						local dbh = Database.new('system', 'base64/read')
+
 						sql = [[SELECT * FROM v_voicemail_greetings
 							WHERE domain_uuid = ']] .. domain_uuid ..[['
 							AND voicemail_id = ']].. voicemail_id.. [['
@@ -95,19 +99,20 @@
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 						end
 						status = dbh:query(sql, function(row)
-							--add functions
-								require "resources.functions.base64";
-
 							--set the voicemail message path
 								greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 
 							--save the greeting to the file system
 								if (string.len(row["greeting_base64"]) > 32) then
-									local file = io.open(greeting_location, "w");
-									file:write(base64.decode(row["greeting_base64"]));
-									file:close();
+									--include the file io
+										local file = require "resources.functions.file"
+
+									--write decoded string to file
+										assert(file.write_base64(greeting_location, row["greeting_base64"]));
 								end
 						end);
+
+						dbh:release()
 					elseif (storage_type == "http_cache") then
 						greeting_location = storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 					end

@@ -246,6 +246,9 @@ if (!class_exists('scripts')) {
 							$tmp .= "	database.switch = \"\";\n";
 						}
 						$tmp .= "\n";
+						$tmp .= "	database.backend = {}\n";
+						$tmp .= "	database.backend.base64 = 'luasql'\n";
+						$tmp .= "\n";
 					}
 					$tmp .= "--set defaults\n";
 					$tmp .= "	expire = {}\n";
