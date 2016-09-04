@@ -46,7 +46,7 @@ This method causes the script to get its manadatory arguments directly from the 
 
 -- Command line parameters
 	local params = {
-			cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
+			cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
 			cid_name = session:getVariable("caller_id_name"),
 			domain_name = session:getVariable("domain_name"),
 			userid = "", -- session:getVariable("id")
