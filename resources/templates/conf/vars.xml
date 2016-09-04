@@ -80,6 +80,13 @@ where fs.mydomain.com is a DNS A record-useful when fs is on a dynamic IP addres
 <X-PRE-PROCESS cmd="set" data="us-ring=%(2000,4000,440,480)" />
 <X-PRE-PROCESS cmd="set" data="bong-ring=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" />
 
+<!-- Tones -->
+<X-PRE-PROCESS cmd="set" data="vacant-us-tone=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" />
+<X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" />
+<X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" />
+<X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" />
+<X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" />
+
 <!-- SIP -->
 <!-- Used to turn on sip loopback unrolling. -->
 <X-PRE-PROCESS cmd="set" data="unroll_loops=true" />
