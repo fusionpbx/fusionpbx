@@ -246,8 +246,9 @@
 	if (!function_exists('permission_exists')) {
 		function permission_exists($permission) {
 			//set default false
-				$result = false;
+				//$result = false;
 			//search for the permission
+			/*
 				if (count($_SESSION["permissions"]) > 0) {
 					foreach($_SESSION["permissions"] as $row) {
 						if ($row['permission_name'] == $permission) {
@@ -256,8 +257,14 @@
 						}
 					}
 				}
-			//return the result
-				return $result;
+			*/
+			
+			if (isset($_SESSION["permissions"]) && array_search($permission,$_SESSION["permissions"])) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 
