@@ -2575,4 +2575,105 @@ $text['button-vendors']['de-at'] = "Hersteller";
 $text['button-vendors']['ar-eg'] = "";
 $text['button-vendors']['he'] = "";
 
+// Device Templates
+$text['title-device_templates']['en-us'] = "Templates";
+$text['title-device_templates']['es-cl'] = "";
+$text['title-device_templates']['pt-pt'] = "";
+$text['title-device_templates']['fr-fr'] = "";
+$text['title-device_templates']['pt-br'] = "";
+$text['title-device_templates']['pl'] = "";
+$text['title-device_templates']['uk'] = "";
+$text['title-device_templates']['sv-se'] = "";
+$text['title-device_templates']['de-at'] = "";
+$text['title-device_templates']['ar-eg'] = "";
+$text['title-device_templates']['he'] = "";
+
+$text['title-device_template']['en-us'] = "Template";
+$text['title-device_template']['es-cl'] = "";
+$text['title-device_template']['pt-pt'] = "";
+$text['title-device_template']['fr-fr'] = "";
+$text['title-device_template']['pt-br'] = "";
+$text['title-device_template']['pl'] = "";
+$text['title-device_template']['uk'] = "";
+$text['title-device_template']['sv-se'] = "";
+$text['title-device_template']['de-at'] = "";
+$text['title-device_template']['ar-eg'] = "";
+$text['title-device_template']['he'] = "";
+
+$text['label-collection']['en-us'] = "Collection";
+$text['label-collection']['es-cl'] = "";
+$text['label-collection']['pt-pt'] = "";
+$text['label-collection']['fr-fr'] = "";
+$text['label-collection']['pt-br'] = "";
+$text['label-collection']['pl'] = "";
+$text['label-collection']['uk'] = "";
+$text['label-collection']['sv-se'] = "";
+$text['label-collection']['de-at'] = "";
+$text['label-collection']['ar-eg'] = "";
+$text['label-collection']['he'] = "";
+
+$text['description-template-edit']['en-us'] = "Make all required changes and click save.";
+$text['description-template-edit']['es-cl'] = "";
+$text['description-template-edit']['pt-pt'] = "";
+$text['description-template-edit']['fr-fr'] = "";
+$text['description-template-edit']['pt-br'] = "";
+$text['description-template-edit']['pl'] = "";
+$text['description-template-edit']['uk'] = "";
+$text['description-template-edit']['sv-se'] = "";
+$text['description-template-edit']['de-at'] = "";
+$text['description-template-edit']['ar-eg'] = "";
+$text['description-template-edit']['he'] = "";
+
+$text['button-templates']['en-us'] = "Templates";
+$text['button-templates']['es-cl'] = "";
+$text['button-templates']['pt-pt'] = "";
+$text['button-templates']['fr-fr'] = "";
+$text['button-templates']['pt-br'] = "";
+$text['button-templates']['pl'] = "";
+$text['button-templates']['uk'] = "";
+$text['button-templates']['sv-se'] = "";
+$text['button-templates']['ro'] = "";
+$text['button-templates']['de-at'] = "";
+$text['button-templates']['ar-eg'] = "";
+$text['button-templates']['he'] = "";
+
+$text['button-savenew']['en-us'] = "Save and Add";
+$text['button-savenew']['es-cl'] = "";
+$text['button-savenew']['pt-pt'] = "";
+$text['button-savenew']['fr-fr'] = "";
+$text['button-savenew']['pt-br'] = "";
+$text['button-savenew']['pl'] = "";
+$text['button-savenew']['uk'] = "";
+$text['button-savenew']['sv-se'] = "";
+$text['button-savenew']['ro'] = "";
+$text['button-savenew']['de-at'] = "";
+$text['button-savenew']['ar-eg'] = "";
+$text['button-savenew']['he'] = "";
+
+$text['button-saveclose']['en-us'] = "Save And Close";
+$text['button-saveclose']['es-cl'] = "";
+$text['button-saveclose']['pt-pt'] = "";
+$text['button-saveclose']['fr-fr'] = "";
+$text['button-saveclose']['pt-br'] = "";
+$text['button-saveclose']['pl'] = "";
+$text['button-saveclose']['uk'] = "";
+$text['button-saveclose']['sv-se'] = "";
+$text['button-saveclose']['ro'] = "";
+$text['button-saveclose']['de-at'] = "";
+$text['button-saveclose']['ar-eg'] = "";
+$text['button-saveclose']['he'] = "";
+
+$text['button-clone']['en-us'] = "Clone";
+$text['button-clone']['es-cl'] = "";
+$text['button-clone']['pt-pt'] = "";
+$text['button-clone']['fr-fr'] = "";
+$text['button-clone']['pt-br'] = "";
+$text['button-clone']['pl'] = "";
+$text['button-clone']['uk'] = "";
+$text['button-clone']['sv-se'] = "";
+$text['button-clone']['ro'] = "";
+$text['button-clone']['de-at'] = "";
+$text['button-clone']['ar-eg'] = "";
+$text['button-clone']['he'] = "";
+
 ?>

@@ -52,6 +52,12 @@
 		$order = check_str($_GET["order"]);
 	}
 
+//include the device template class
+	require_once "resources/classes/device_templates.class.php";
+//get template name list
+	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']]; 
+	$device_templates = device_templates::find($db, $filter, ['uuid','name']);
+
 //get total devices count from the database
 	$sql = "select count(*) as num_rows from v_devices ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -185,6 +191,9 @@
 	if (permission_exists('device_vendor_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">";
 	}
+	if (permission_exists('device_template_view')) {
+		echo "		<input type='button' class='btn' value='".$text['button-templates']."' onclick=\"document.location.href='device_templates.php';\">";
+	}
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
@@ -251,7 +260,7 @@
 				echo "	</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$device_templates[$row['device_template']]->name."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - ".$row['device_provisioned_ip']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
