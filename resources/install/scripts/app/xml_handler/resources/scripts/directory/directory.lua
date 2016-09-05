@@ -257,7 +257,7 @@
 									--set a default dial string
 										if (dial_string == null) then
 											local username = (#number_alias > 0) and number_alias or extension
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. username .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. extension .. "@" .. domain_name .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
