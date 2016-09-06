@@ -8,7 +8,7 @@ if ($domains_processed == 1) {
 		$preset['usa'][] = json_encode(array("presidents_day" => array("wday" => "2", "mon" => "2", "mweek" => "3")));
 		$preset['usa'][] = json_encode(array("memorial_day" => array("mday" => "25-31", "wday" => "2", "mon" => "5")));
 		$preset['usa'][] = json_encode(array("independence_day" => array("mday" => "4", "mon" => "7")));
-		$preset['usa'][] = json_encode(array("labor_day" => array("wday" => "2", "mon" => "9", "mweek" => "1")));
+		$preset['usa'][] = json_encode(array("labor_day" => array("wday" => "2", "mon" => "9", "mweek" => "1-7")));
 		$preset['usa'][] = json_encode(array("columbus_day" => array("wday" => "2", "mon" => "10", "mweek" => "2")));
 		$preset['usa'][] = json_encode(array("veterans_day" => array("mday" => "11", "mon" => "11")));
 		$preset['usa'][] = json_encode(array("thanksgiving_day" => array("wday" => "5-6", "mon" => "11", "mweek" => "4")));
