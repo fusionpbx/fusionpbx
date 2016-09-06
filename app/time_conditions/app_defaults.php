@@ -4,20 +4,20 @@ if ($domains_processed == 1) {
 
 	//define holiday presets
 		$preset['usa'][] = json_encode(array("new_years_day" => array("mday" => "1", "mon" => "1")));
-		$preset['usa'][] = json_encode(array("martin_luther_king_jr_day" => array("wday" => "2", "mon" => "1", "mweek" => "3")));
-		$preset['usa'][] = json_encode(array("presidents_day" => array("wday" => "2", "mon" => "2", "mweek" => "3")));
+		$preset['usa'][] = json_encode(array("martin_luther_king_jr_day" => array("wday" => "2", "mon" => "1", "mday" => "15-21")));
+		$preset['usa'][] = json_encode(array("presidents_day" => array("wday" => "2", "mon" => "2", "mday" => "15-21")));
 		$preset['usa'][] = json_encode(array("memorial_day" => array("mday" => "25-31", "wday" => "2", "mon" => "5")));
 		$preset['usa'][] = json_encode(array("independence_day" => array("mday" => "4", "mon" => "7")));
-		$preset['usa'][] = json_encode(array("labor_day" => array("wday" => "2", "mon" => "9", "mweek" => "1-7")));
-		$preset['usa'][] = json_encode(array("columbus_day" => array("wday" => "2", "mon" => "10", "mweek" => "2")));
+		$preset['usa'][] = json_encode(array("labor_day" => array("wday" => "2", "mon" => "9", "mday" => "1-7")));
+		$preset['usa'][] = json_encode(array("columbus_day" => array("wday" => "2", "mon" => "10", "mday" => "8-14")));
 		$preset['usa'][] = json_encode(array("veterans_day" => array("mday" => "11", "mon" => "11")));
-		$preset['usa'][] = json_encode(array("thanksgiving_day" => array("wday" => "5-6", "mon" => "11", "mweek" => "4")));
+		$preset['usa'][] = json_encode(array("thanksgiving_day" => array("wday" => "5-6", "mon" => "11", "mday" => "22-28")));
 		$preset['usa'][] = json_encode(array("christmas_day" => array("mday" => "25", "mon" => "12")));
 
 		$preset['england'][] = json_encode(array("new_years_day" => array("mday" => "1", "mon" => "1")));
 		$preset['england'][] = json_encode(array("christmas_day" => array("mday" => "25", "mon" => "12")));
 		$preset['england'][] = json_encode(array("boxing_day" => array("mday" => "26", "mon" => "12")));
-		$preset['england'][] = json_encode(array("may_day" => array("mon" => "5", "mweek" => "1", "wday" => "2")));
+		$preset['england'][] = json_encode(array("may_day" => array("mon" => "5", "mday" => "1-7", "wday" => "2")));
 		$preset['england'][] = json_encode(array("spring_bank_holiday" => array("mon" => "5", "mday" => "25-31", "wday" => "2")));
 		$preset['england'][] = json_encode(array("august_bank_holiday" => array("mon" => "8", "mday" => "25-31", "wday" => "2")));
 
