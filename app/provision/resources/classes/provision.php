@@ -490,16 +490,27 @@ include "root.php";
 				}
 
 			//initialize a template object
-				$view = new template();
-				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
-					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
+				if (!is_uuid($device_template)) {
+					// use old file type method
+					$view = new template();
+					if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
+						$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
+					}
+					else {
+						$view->engine = "smarty";
+					}
+					$view->template_dir = $template_dir ."/".$device_template."/";
+					$view->cache_dir = $_SESSION['server']['temp']['dir'];
+					$view->init();
 				}
 				else {
-					$view->engine = "smarty";
+					// use new database method
+					require_once('resources/templates/engine/smarty/Smarty.class.php');
+					$view = new Smarty();
+					$view->setCompileDir($_SESSION['server']['temp']['dir']); 
+					//$view->setCompileDir('php://memory/' . md5(microtime()));
+					$view->caching = false;
 				}
-				$view->template_dir = $template_dir ."/".$device_template."/";
-				$view->cache_dir = $_SESSION['server']['temp']['dir'];
-				$view->init();
 
 			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
@@ -879,48 +890,57 @@ include "root.php";
 						$view->assign($key, $val);
 					}
 
-				//set the template directory
-					if (strlen($provision["template_dir"]) > 0) {
-						$template_dir = $provision["template_dir"];
-					}
-
-				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_dir.'/'.$domain_name)) {
-						$device_template = $domain_name.'/'.$device_template;
-					}
-
-				//if $file is not provided then look for a default file that exists
-					if (strlen($file) == 0) {
-						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
-							$file = "{\$mac}";
+				// use old file base method provisioning method	
+					if (!is_uuid($device_template)) {
+					//set the template directory
+						if (strlen($provision["template_dir"]) > 0) {
+							$template_dir = $provision["template_dir"];
 						}
-						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.xml")) {
-							$file = "{\$mac}.xml";
+
+					//if the domain name directory exists then only use templates from it
+						if (is_dir($template_dir.'/'.$domain_name)) {
+							$device_template = $domain_name.'/'.$device_template;
 						}
-						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.cfg")) {
-							$file = "{\$mac}.cfg";
+
+					//if $file is not provided then look for a default file that exists
+						if (strlen($file) == 0) {
+							if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
+								$file = "{\$mac}";
+							}
+							elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.xml")) {
+								$file = "{\$mac}.xml";
+							}
+							elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.cfg")) {
+								$file = "{\$mac}.cfg";
+							}
+							else {
+								echo "file not found";
+								exit;
+							}
 						}
 						else {
-							echo "file not found";
-							exit;
-						}
-					}
-					else {
-						//make sure the file exists
-						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "file not found ".$template_dir."/".$device_template ."/".$file;
-							if ($_SESSION['provision']['debug']['boolean'] == 'true'){
-								echo ":$template_dir/$device_template/$file<br/>";
-								echo "template_dir: $template_dir<br/>";
-								echo "device_template: $device_template<br/>";
-								echo "file: $file";
+							//make sure the file exists
+							if (!file_exists($template_dir."/".$device_template ."/".$file)) {
+								echo "file not found ".$template_dir."/".$device_template ."/".$file;
+								if ($_SESSION['provision']['debug']['boolean'] == 'true'){
+									echo ":$template_dir/$device_template/$file<br/>";
+									echo "template_dir: $template_dir<br/>";
+									echo "device_template: $device_template<br/>";
+									echo "file: $file";
+								}
+								exit;
 							}
-							exit;
 						}
-					}
 
-				//output template to string for header processing
+					//output template to string for header processing
 					$file_contents = $view->render($file);
+				}
+				// use new databse method provisioning method
+				else {
+					require_once('app/devices/resources/classes/device_templates.class.php');
+					// display the output
+					$view->display('string:'.device_templates::get($this->db, $device_template, ['data'])->data);
+				}
 
 				//log file for testing
 					if ($_SESSION['provision']['debug']['boolean'] == 'true'){

@@ -97,7 +97,8 @@
 	}
 
 //include the device class
-	require_once "app/devices/resources/classes/device.php";
+	require_once "resources/classes/device.php";
+	require_once "resources/classes/device_templates.class.php";
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -442,6 +443,11 @@
 	$prep_statement->execute();
 	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+//get device templates
+	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']];
+	//if (strlen($device_vendor)>0) { $filter[] = ['AND']; $filter[]=['vendor_name','=',$domain_uuid];} 
+	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
+
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
 	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
@@ -703,12 +709,13 @@
 		echo "	".$text['label-device_template']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
+		/*
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-
+		*/
 		echo "<select id='device_template' name='device_template' class='formfld'>\n";
 		echo "<option value=''></option>\n";
-
+		/*
 		if (is_dir($template_dir)) {
 				$templates = scandir($template_dir);
 				foreach($templates as $dir) {
@@ -736,6 +743,17 @@
 					}
 				}
 			}
+			*/
+			$g = -1;
+			foreach($device_templates as $k => $v) {
+				if ($g!=$v->collection) {
+					if ($g!=-1) echo "</optgroup>";
+					echo "<optgroup label='$v->collection'>";
+					$g=$v->collection;
+				}
+				echo "<option value='$k' ".(($k==$device_template) ?" Selected":'').">$v->name</option>\n";
+			}
+			echo "</optgroup>";
 		echo "</select>\n";
 		echo "<br />\n";
 		echo $text['description-device_template']."\n";
