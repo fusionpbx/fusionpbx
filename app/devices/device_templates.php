@@ -51,18 +51,45 @@
 			$_SESSION["message"] = $text['message-delete'];
 		}
 	}
+	elseif ($_POST["__action"]=="enable" && permission_exists('device_template_edit')) {
+		if (is_uuid($_POST["__data"])) {
+			if (device_templates::get($db, $_POST["__data"], ['enabled'])->enabled) {
+				device_templates::put($db, $_POST["__data"], ['enabled'=>"f"]);
+				//$_SESSION["message"] = $text['message-disabled'];
+			}
+			else {
+				device_templates::put($db, $_POST["__data"], ['enabled'=>"t"]);
+				//$_SESSION["message"] = $text['message-enabled'];
+			}
+		}
+	}
 
 
 // show table
 // set the filter
-	$filter = [['('], ['domain_uuid IS NULL OR'], ['domain_uuid','=',$domain_uuid], [')'], ['AND']];
+	if ($_POST['search_domain']=="all") {
+		$search_domain = "all";
+		$filter = [];
+	}
+	elseif ($_POST['search_domain']=="global") {
+		$search_domain = "global";
+		$filter = [['domain_uuid IS NULL'], ['AND']];
+	}
+	elseif (is_uuid($_POST['search_domain'])) {
+		$search_domain = $_POST['search_domain'];
+		$filter = [['domain_uuid','=',$search_domain, 'AND']];
+	}
+	else {
+		$search_domain = $_SESSION['domain_uuid'];
+		$filter = [['domain_uuid','=',$search_domain, 'AND']];
+	}
 // set the search filter
-	$search = strtolower(check_str($_POST["search"]));
-	if (strlen($search) > 0) {
+	$search_text = strtolower(check_str($_POST['search_text']));
+	if (strlen($search_text) > 0) {
 		$filter[] = ['(']; 
-		$filter[] = ['LOWER(name)','LIKE',"%$search%",'OR'];
-		$filter[] = ['LOWER(description)','LIKE',"%$search%",'OR'];
-		$filter[] = ['LOWER(collection)','LIKE',"%$search%"];
+		$filter[] = ['LOWER(name)','LIKE',"%$search_text%",'OR'];
+		$filter[] = ['LOWER(description)','LIKE',"%$search_text%",'OR'];
+		$filter[] = ['LOWER(collection)','LIKE',"%$search_text%"];
 		$filter[] = [')'];
 	}
 	else {
@@ -102,8 +129,20 @@
 	echo "<tr>\n";
 	echo "	<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_templates']."</b></td>\n";
 	echo "	<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	// back button
 	echo "		<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>";
-	echo "		<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	// domain selection
+	echo "    <select class='formfld' id='search_domain' name='search_domain'>\n";
+	if (permission_exists('device_template_domain')){
+	echo "    <option value='all'".(($search_domain == 'all') ?" Selected":'').">".$text['select-all']."</option>\n";
+	}
+	echo "    <option value='global'".(($search_domain == 'global') ?" Selected":'').">".$text['select-global']."</option>\n";
+	foreach ($_SESSION['domains'] as $row) {
+	echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$search_domain) ?" Selected":'').">".$row['domain_name']."</option>\n";
+	}
+	echo "    </select>\n";
+	// seach input
+	echo "		<input type='text' class='txt' style='width: 150px' name='search_text' value='".$search_text."'>\n";
 	echo "		<input type='submit' class='btn' value='".$text['button-search']."' onclick=''>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -133,7 +172,14 @@
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>$v->name&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>$v->collection&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($v->enabled)?'True':'False')."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('device_template_edit')) {
+				echo "	<a href='javascript:void(0);' onclick='action(\"enable\",\"$k\");'>".(($v->enabled)?'True':'False')."</a>&nbsp;";
+			}
+			else {
+				echo "	".(($v->enabled)?'True':'False')."&nbsp;";
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>$v->description&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align:left;'>";
 			if (permission_exists('device_template_edit')) {
@@ -172,10 +218,28 @@
 <script type="text/javascript">
 	function action(a,d) {
 		//alert('Action: '+a+' '+d);
-		$('<input>').attr({type: 'hidden', id: "__action", name: "__action", value: a}).appendTo('#fMain');
-		$('<input>').attr({type: 'hidden', id: "__data", name: "__data", value: d}).appendTo('#fMain');
+		StopPropagation();
+		
+		if (a) { 
+			$('<input>').attr({type: 'hidden', id: "__action", name: "__action", value: a}).appendTo('#fMain');
+			$('<input>').attr({type: 'hidden', id: "__data", name: "__data", value: d}).appendTo('#fMain');
+		}
 		$('#fMain').submit();
+
+		return false;
 	}
+
+	function StopPropagation(e)
+	{
+		e = e || window.event;
+        e.cancelBubble = true;
+        if (e.stopPropagation) e.stopPropagation();
+		if (e.preventDefault) e.preventDefault();
+	}
+
+	$('#search_domain').change(function(){
+    	action();
+	});
 </script>
 
 <?php
