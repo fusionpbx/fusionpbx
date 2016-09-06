@@ -507,6 +507,8 @@ include "root.php";
 					// use new database method
 					require_once('resources/templates/engine/smarty/Smarty.class.php');
 					$view = new Smarty();
+					$view->setCompileDir($_SESSION['server']['temp']['dir']); 
+					//$view->setCompileDir('php://memory/' . md5(microtime()));
 					$view->caching = false;
 				}
 

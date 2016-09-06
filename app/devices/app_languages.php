@@ -2624,6 +2624,18 @@ $text['description-template-edit']['de-at'] = "";
 $text['description-template-edit']['ar-eg'] = "";
 $text['description-template-edit']['he'] = "";
 
+$text['description-template-edit']['en-us'] = "Enable or disable this provisioning template.";
+$text['description-template-edit']['es-cl'] = "";
+$text['description-template-edit']['pt-pt'] = "";
+$text['description-template-edit']['fr-fr'] = "";
+$text['description-template-edit']['pt-br'] = "";
+$text['description-template-edit']['pl'] = "";
+$text['description-template-edit']['uk'] = "";
+$text['description-template-edit']['sv-se'] = "";
+$text['description-template-edit']['de-at'] = "";
+$text['description-template-edit']['ar-eg'] = "";
+$text['description-template-edit']['he'] = "";
+
 $text['button-templates']['en-us'] = "Templates";
 $text['button-templates']['es-cl'] = "";
 $text['button-templates']['pt-pt'] = "";
@@ -2662,18 +2674,5 @@ $text['button-saveclose']['ro'] = "";
 $text['button-saveclose']['de-at'] = "";
 $text['button-saveclose']['ar-eg'] = "";
 $text['button-saveclose']['he'] = "";
-
-$text['button-clone']['en-us'] = "Clone";
-$text['button-clone']['es-cl'] = "";
-$text['button-clone']['pt-pt'] = "";
-$text['button-clone']['fr-fr'] = "";
-$text['button-clone']['pt-br'] = "";
-$text['button-clone']['pl'] = "";
-$text['button-clone']['uk'] = "";
-$text['button-clone']['sv-se'] = "";
-$text['button-clone']['ro'] = "";
-$text['button-clone']['de-at'] = "";
-$text['button-clone']['ar-eg'] = "";
-$text['button-clone']['he'] = "";
 
 ?>

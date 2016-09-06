@@ -741,6 +741,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'vendor_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$z++;

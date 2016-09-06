@@ -29,6 +29,7 @@
 	require_once __DIR__.'/root.php';
 	require_once __DIR__.'/../../resources/require.php';
 	require_once __DIR__.'/../../resources/check_auth.php';
+	require_once __DIR__.'/resources/classes/device_vendors.class.php';
 	require_once __DIR__.'/resources/classes/device_templates.class.php';
 
 // check permissions
@@ -156,7 +157,7 @@
 	if (permission_exists('device_template_add')) {
 	echo "		<input type='button' class='btn' value='".$text['button-clone']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
 	}
-	if (permission_exists('device_template_delete')) {
+	if (permission_exists('device_template_delete') && $template->protected) {
 	echo "		<input type='button' class='btn' value='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")){ $(\"#__action\").val(\"delete\");$(\"#fMain\").submit(); }'>\n";
 	}
 	echo "	</td>\n";
@@ -191,6 +192,22 @@
 	echo "  <br />".$text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	// template vendor
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_vendor']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='vendor'>\n";
+	//$verndors = device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name', [numbered=>true]);
+	echo "	<option value=''".(($template->vendor_uuid=="") ?" Selected":'')."></option>\n";
+	foreach (device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name', [numbered=>true]) as $vendor) {
+	echo "	<option value='".$vendor['device_vendor_uuid']."'".(($vendor['device_vendor_uuid']==$template->vendor_uuid) ?" Selected":'').">".$vendor['name']."</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n".$text['description-device_vendor']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 // content input left section
 	echo "</table>";
 	echo "</td>";
@@ -207,7 +224,7 @@
 	echo "	<option value='false'".(($template->enabled==false) ?" Selected":'').">".$text['label-false']."</option>\n";
 	echo "	<option value='true'".(($template->enabled==true) ?" Selected":'').">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
-	echo "  <br />".$text['description-enabled']."\n";
+	echo "  <br />".$text['description-device_template_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	// template domain
@@ -261,7 +278,7 @@
 		</td>
 		<td valign='middle' style='padding-left: 4px;'>
 			<select id='editor_font_size' style='height: 23px;'>
-				</option><option value='8px'>8px</option><option value='10px'>10px</option><option value='12px'>12px</option><option value='14px'>14px</option><option value='16px'>16px</option><option value='18px'>18px</option><option value='20px'>20px</option>
+				</option><option value='8px'>8px</option><option value='10px'>10px</option><option value='12px' selected>12px</option><option value='14px'>14px</option><option value='16px'>16px</option><option value='18px'>18px</option><option value='20px'>20px</option>
 			</select>
 		</td>
 	</tr>
@@ -354,6 +371,7 @@
 			editor.getSession().on('change', function () {
        			template_data.val(editor.getSession().getValue());
    			});
+			editor.setFontSize('12px'); 
 
 		//remove certain keyboard shortcuts
 			editor.commands.bindKey("Ctrl-T", null); //disable transpose letters - prefer new browser tab

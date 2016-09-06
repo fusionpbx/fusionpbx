@@ -446,7 +446,7 @@
 //get device templates
 	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']];
 	//if (strlen($device_vendor)>0) { $filter[] = ['AND']; $filter[]=['vendor_name','=',$domain_uuid];} 
-	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection']);
+	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";

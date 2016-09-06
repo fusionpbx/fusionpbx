@@ -25,50 +25,41 @@
 	Sebastian Krupinski <sebastian@ksacorp.com>
 */
 
-class device_templates
+class device_vendors
 {
     /**
-    * enumerate templates from database
+    * enumerate vendors from database
     * @param  pdo $db - database object as pdo type
     * @param  string $domain_uuid - the uuid of the domain or null for global
-    * @return object - template data as array ofclass object
+    * @return object - vendor data as array ofclass object
     */
     public static function enumerate($db, $domain_uuid = null)
     {
         // prepare sql
-        $sql = "SELECT * FROM v_device_templates ";
-        $data = [];
+        $sql = "SELECT * FROM v_device_vendors ";
         
-        if ($domain_uuid && $domain_uuid!="Global") {
-            $sql .= " WHERE domain_uuid IS NULL";
-        }
-        elseif($domain_uuid)  {
-            $sql .= " WHERE domain_uuid = ?";
-            $data[] = $domain_uuid;
-        }
-
         // execute
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
         $cmd->execute($data);
-        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template_collection");
+        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor_collection");
         // return data
         return  $data;
     }
 
 
     /**
-    * enumerate spacific templates from database
+    * enumerate spacific vendors from database
     * @param  pdo $db - database object as pdo type
     * @param  array $filter - list of conditions
     * @param  array $columns - list of fields
-    * @return object - template data as array of class objects
+    * @return object - vendor data as array of class objects
     */
     public static function find($db, $filter = null, $columns = null, $sort = null, $options = null)
     {
         // prepare sql
         $data = [];
-        $sql = "SELECT ".(($columns === null)?"*":implode(',', $columns))." FROM v_device_templates ";
+        $sql = "SELECT ".(($columns === null)?"*":implode(',', $columns))." FROM v_device_vendors ";
 
         //filter
         if (isset($filter)&&!empty($filter)) {
@@ -131,14 +122,14 @@ class device_templates
             $data = $cmd->fetchAll(PDO::FETCH_KEY_PAIR);
         }
         else {
-            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template_collection");
+            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor_collection");
         }
         // return data
         return  $data;
     }
 
     /**
-    * count spacific templates from database
+    * count spacific vendors from database
     * @param  pdo $db - database object as pdo type
     * @param  array $filter - list of conditions
     * @return mixed - value of the count
@@ -146,7 +137,7 @@ class device_templates
     public static function count($db, $filter = null)
     {
         // prepare sql
-        $sql = "SELECT COUNT(0) FROM v_device_templates WHERE ";
+        $sql = "SELECT COUNT(0) FROM v_device_vendors WHERE ";
         $data = [];
         
         if (is_array($filter[0])) {
@@ -173,11 +164,11 @@ class device_templates
     }
 
     /**
-    * duplicate template in database
+    * duplicate vendor in database
     * @param  pdo $db - database object as pdo type
-    * @param  string $original - template uuid in database
-    * @param  string $clone - template uuid for clone
-    * @return object - template data as class object
+    * @param  string $original - vendor uuid in database
+    * @param  string $clone - vendor uuid for clone
+    * @return object - vendor data as class object
     */
     public static function duplicate($db, $original, $clone = null)
     {
@@ -189,21 +180,21 @@ class device_templates
     }
 
     /**
-    * get template from database
+    * get vendor from database
     * @param  pdo $db - database object as pdo type
-    * @param  string $uuid - template uuid
-    * @return object - template data as class object
+    * @param  string $uuid - vendor uuid
+    * @return object - vendor data as class object
     */
     public static function get($db, $uuid, $columns = null)
     {
         // prepare sql
-        $sql = "SELECT ".(($columns === null)?"*":implode(',', $columns))." FROM v_device_templates ";
+        $sql = "SELECT ".(($columns === null)?"*":implode(',', $columns))." FROM v_device_vendors ";
         
         if(is_array($uuid)){
-            $sql .= "WHERE uuid IN (".str_repeat("?,",count($uuid)-1)."?)";
+            $sql .= "WHERE device_vendor_uuid IN (".str_repeat("?,",count($uuid)-1)."?)";
         }
         else{
-            $sql .= "WHERE uuid = ?";
+            $sql .= "WHERE device_vendor_uuid = ?";
             $uuid = [$uuid];
         }
 
@@ -211,15 +202,15 @@ class device_templates
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
         $cmd->execute($uuid);
-        //$data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template");
-        $data = $cmd->fetchObject((!isset($columns))?"device_template":__CLASS__);
+        //$data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor");
+        $data = $cmd->fetchObject((!isset($columns))?"device_vendor":__CLASS__);
         return  $data;
     }
 
     /**
-    * put template data to database
+    * put vendor data to database
     * @param  pdo $db - database object as pdo type
-    * @param  string $uuid - template uuid
+    * @param  string $uuid - vendor uuid
     * @param  array $data - associative array of data to put in the database
     * @return nothing
     */
@@ -230,7 +221,7 @@ class device_templates
         elseif ($uuid) 
         {
             // remove uuid if present
-            if (isset($data['uuid'])) unset($data['uuid']);
+            if (isset($data['device_vendor_uuid'])) unset($data['device_vendor_uuid']);
             // get values
             $v = array_values($data);
             // add condition value
@@ -242,41 +233,41 @@ class device_templates
             }
             // phrase command
             //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $db->prepare("UPDATE v_device_templates SET ".implode(', ', $c)." WHERE uuid=?;")->execute($v);
-            return $data['uuid'];
+            $db->prepare("UPDATE v_device_vendors SET ".implode(', ', $c)." WHERE device_vendor_uuid=?;")->execute($v);
+            return $data['device_vendor_uuid'];
         }
         else 
         {
             // generate and add uuid if not present
-            $data['uuid'] = is_uuid($data['uuid']) ? $data['uuid'] : uuid();
+            $data['device_vendor_uuid'] = is_uuid($data['device_vendor_uuid']) ? $data['device_vendor_uuid'] : uuid();
             // get values
             $v = array_values($data);
             // get keys
             $c = implode(", ", array_keys($data));
             // phrase command
             //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $db->prepare("INSERT INTO v_device_templates ($c) values (".str_repeat("?,",count($v)-1)."?)")->execute($v);
-            return $data['uuid'];
+            $db->prepare("INSERT INTO v_device_vendors ($c) values (".str_repeat("?,",count($v)-1)."?)")->execute($v);
+            return $data['device_vendor_uuid'];
         }
     }
 
     /**
-    * drop template(s) from database
+    * drop vendor(s) from database
     * @param  pdo $db - database object as pdo type
-    * @param  mixed $uuid - array to single value of template uuid
+    * @param  mixed $uuid - array to single value of vendor uuid
     * @return nothing
     */
     public static function drop($db, $uuid)
     {
         // prepare sql
         if($columns === null) $columns[] = "*";
-        $sql = "DELETE FROM v_device_templates WHERE ";
+        $sql = "DELETE FROM v_device_vendors WHERE ";
         
         if(is_array($uuid)){
-            $sql .= "uuid IN (".str_repeat("?,",count($uuid)-1)."?)";
+            $sql .= "device_vendor_uuid IN (".str_repeat("?,",count($uuid)-1)."?)";
         }
         else{
-            $sql .= "uuid = ?";
+            $sql .= "device_vendor_uuid = ?";
             $uuid = [$uuid];
         }
 
@@ -286,16 +277,16 @@ class device_templates
     }
 }
 
-class device_template {
-    public $domain_uuid = null;
+class device_vendor {
+    public $device_vendor_uuid;
     public $name = null;
     public $enabled = false;
-    public $data = null;
+    public $description = null;
 
     function __construct() {}
 };
 
-class device_template_collection {
+class device_vendor_collection {
     function __construct() {}
 };
 

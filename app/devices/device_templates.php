@@ -39,7 +39,7 @@
 	$text = $language->get();
 
 // process action the action
-	if ($_POST["__action"]=="clone" && permission_exists('device_template_add')) {
+	if ($_POST["__action"]=="copy" && permission_exists('device_template_add')) {
 		if (is_uuid($_POST["__data"])) {
 			device_templates::duplicate($db, $_POST["__data"]);
 			$_SESSION["message"] = $text['message-add'];
@@ -55,15 +55,18 @@
 
 // show table
 // set the filter
-	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']];
+	$filter = [['('], ['domain_uuid IS NULL OR'], ['domain_uuid','=',$domain_uuid], [')'], ['AND']];
 // set the search filter
-	$search = check_str($_POST["search"]);
+	$search = strtolower(check_str($_POST["search"]));
 	if (strlen($search) > 0) {
-		$filter[] = ['AND (']; 
-		$filter[] = ['name','LIKE',"%$search%",'OR'];
-		$filter[] = ['description','LIKE',"%$search%",'OR'];
-		$filter[] = ['collection','LIKE',"%$search%"];
+		$filter[] = ['(']; 
+		$filter[] = ['LOWER(name)','LIKE',"%$search%",'OR'];
+		$filter[] = ['LOWER(description)','LIKE',"%$search%",'OR'];
+		$filter[] = ['LOWER(collection)','LIKE',"%$search%"];
 		$filter[] = [')'];
+	}
+	else {
+		$filter[] = ['enabled',"=", "t"];
 	}
 
 // set the order
@@ -137,7 +140,7 @@
 				echo "<a href='device_template_edit.php?id=$k' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('device_template_add')) {
-				echo "<a href='javascript:void(0);' alt='".$text['button-clone']."' onclick='if (confirm(\"".$text['confirm-copy']."\")) {action(\"clone\",\"$k\")}'>$v_link_label_add</a>";
+				echo "<a href='javascript:void(0);' alt='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")) {action(\"copy\",\"$k\")}'>$v_link_label_add</a>";
 			}
 			if (permission_exists('device_template_delete')&&!$v->protected) {
 				echo "<a href='javascript:void(0);' alt='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")) {action(\"drop\",\"$k\")};'>$v_link_label_delete</a>";

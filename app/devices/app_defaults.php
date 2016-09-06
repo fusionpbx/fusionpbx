@@ -137,6 +137,9 @@ if ($domains_processed == 1) {
 				}
 			}
 
+		// process template defaults
+			require_once'/app_defaults_templates.php';
+
 		} // if prep_statement
 }
 
