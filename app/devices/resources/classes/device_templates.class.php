@@ -146,30 +146,9 @@ class device_templates
     public static function count($db, $filter = null)
     {
         // prepare sql
-        $sql = "SELECT COUNT(0) FROM v_device_templates WHERE ";
-        $data = [];
-        
-        if (is_array($filter[0])) {
-            foreach ($filter as $k => $v) {
-                $sql .= "$v[0] $v[1] ? ".$v[3]." "; 
-                $data[] = $v[2];
-            }
-        }
-        elseif (is_array($filter)) {
-            $sql .= "$filter[0] $filter[1] ? ".$filter[3]." "; 
-            $data[] = $filter[2];
-        }
-        else {
-            $sql .= $filter." ";
-        }
-        
-        // execute
-        //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $cmd = $db->prepare($sql);
-        $cmd->execute($data);
-        $data = $cmd->fetch(PDO::FETCH_OBJ);
+        $data = self::find($db, $filter, ['COUNT(0)'], null, [namedvalue=>true]);
         // return data
-        return  $data;
+        return  $data[0];
     }
 
     /**

@@ -48,7 +48,7 @@ foreach ($default_templates_details as $k => $v) {
 		$t['uuid']=$v[0];
 		$t['name']=$v[1];
 		$t['collection']=$v[2];
-		$t['protected']="t";
+		$t['protected']="true";
 		$t['vendor_uuid']=$vendors[$v[3]];
 		// load data from file system
 		$template_file = $templates_folder."/".trim($v[4]); 
@@ -57,7 +57,7 @@ foreach ($default_templates_details as $k => $v) {
 		}
 		// create
 		if (!isset($data_database[$k])) {
-			$t['enabled']="t";
+			$t['enabled']="true";
 			device_templates::put($db, null, $t);
 		}
 		// update
@@ -136,7 +136,7 @@ if (isset($templates_folder)) {
 				$t['name']=ucfirst($p[0])." Template";
 			}
 			$t['description']=$v;
-			$t['protected']="f";
+			$t['protected']="false";
 			// load data from file system
 			$template_file = $templates_folder."/".trim($v); 
 			if (file_exists($template_file)) {
@@ -145,7 +145,7 @@ if (isset($templates_folder)) {
 
 			// save to database
 			if (!isset($data_database[$k])) {
-				$t['enabled']="t";
+				$t['enabled']="true";
 				device_templates::put($db, null, $t);
 			}
 			

@@ -54,11 +54,11 @@
 	elseif ($_POST["__action"]=="enable" && permission_exists('device_template_edit')) {
 		if (is_uuid($_POST["__data"])) {
 			if (device_templates::get($db, $_POST["__data"], ['enabled'])->enabled) {
-				device_templates::put($db, $_POST["__data"], ['enabled'=>"f"]);
+				device_templates::put($db, $_POST["__data"], ['enabled'=>"false"]);
 				//$_SESSION["message"] = $text['message-disabled'];
 			}
 			else {
-				device_templates::put($db, $_POST["__data"], ['enabled'=>"t"]);
+				device_templates::put($db, $_POST["__data"], ['enabled'=>"true"]);
 				//$_SESSION["message"] = $text['message-enabled'];
 			}
 		}
@@ -93,7 +93,7 @@
 		$filter[] = [')'];
 	}
 	else {
-		$filter[] = ['enabled',"=", "t"];
+		$filter[] = ['enabled',"=", "true"];
 	}
 
 // set the order

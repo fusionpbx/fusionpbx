@@ -71,7 +71,7 @@
 		$template->name = (empty($template->name))? null : $template->name;
 		$template->description = (empty($template->description))? null : $template->description;
 		$template->collection = (empty($template->collection))? null : $template->collection;
-		$template->enabled = (empty($template->enabled))? null : $template->enabled;
+		$template->enabled = (empty($template->enabled))? 'false' : $template->enabled;
 		$template->type = (empty($template->type))? null : $template->type;
 		$template->include = (empty($template->include)||$template->type=="s")? null : implode(",", array_filter($template->include));
 		$template->data = (empty($template->data))? null : $template->data;
