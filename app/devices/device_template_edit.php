@@ -71,7 +71,7 @@
 		$template->name = (empty($template->name))? null : $template->name;
 		$template->description = (empty($template->description))? null : $template->description;
 		$template->collection = (empty($template->collection))? null : $template->collection;
-		$template->enabled = (empty($template->enabled))? 'false' : $template->enabled;
+		$template->enabled = (empty($template->enabled))? "false" : $template->enabled;
 		$template->type = (empty($template->type))? null : $template->type;
 		$template->include = (empty($template->include)||$template->type=="s")? null : implode(",", array_filter($template->include));
 		$template->data = (empty($template->data))? null : $template->data;
@@ -170,7 +170,7 @@
 	if (permission_exists('device_template_add')) {
 	echo "		<input type='button' class='btn' value='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
 	}
-	if (permission_exists('device_template_delete') && !$template->protected) {
+	if (permission_exists('device_template_delete') && !$template->protected=="false") {
 	echo "		<input type='button' class='btn' value='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")){ $(\"#__action\").val(\"delete\");$(\"#fMain\").submit(); }'>\n";
 	}
 	echo "	</td>\n";
@@ -247,8 +247,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='template_enabled'>\n";
-	echo "	<option value='false'".(($template->enabled==false) ?" Selected":'').">".$text['label-false']."</option>\n";
-	echo "	<option value='true'".(($template->enabled==true) ?" Selected":'').">".$text['label-true']."</option>\n";
+	echo "	<option value='false'".(($template->enabled=="false") ?" Selected":'').">".$text['label-false']."</option>\n";
+	echo "	<option value='true'".(($template->enabled=="true") ?" Selected":'').">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "  <br />".$text['description-device_template_enabled']."\n";
 	echo "</td>\n";

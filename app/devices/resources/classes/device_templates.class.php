@@ -146,7 +146,7 @@ class device_templates
     public static function count($db, $filter = null)
     {
         // prepare sql
-        $data = self::find($db, $filter, ['COUNT(0)'], null, [namedvalue=>true]);
+        $data = self::find($db, $filter, ['COUNT(0)'], null, [numbered=>true]);
         // return data
         return  $data[0];
     }

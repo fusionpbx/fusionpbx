@@ -46,14 +46,14 @@
 		}
 	}
 	elseif ($_POST["__action"]=="drop" && permission_exists('device_template_delete')) {
-		if (is_uuid($_POST["__data"]) && !device_templates::get($db, $_POST["__data"], ['protected'])->protected) {
+		if (is_uuid($_POST["__data"]) && !device_templates::get($db, $_POST["__data"], ['protected'])->protected=="false") {
 			device_templates::drop($db, $_POST["__data"]);
 			$_SESSION["message"] = $text['message-delete'];
 		}
 	}
 	elseif ($_POST["__action"]=="enable" && permission_exists('device_template_edit')) {
 		if (is_uuid($_POST["__data"])) {
-			if (device_templates::get($db, $_POST["__data"], ['enabled'])->enabled) {
+			if (device_templates::get($db, $_POST["__data"], ['enabled'])->enabled=="true") {
 				device_templates::put($db, $_POST["__data"], ['enabled'=>"false"]);
 				//$_SESSION["message"] = $text['message-disabled'];
 			}
@@ -104,7 +104,7 @@
 // get data from database
 	$columns = ['uuid','name', 'collection', 'enabled', 'protected'];
 	$data = device_templates::find($db, $filter, $columns, $sort);
-	$num_rows = device_templates::count($db, $filter);
+	$num_rows = (int)device_templates::count($db, $filter);
 
 // additional includes
 	require_once "resources/header.php";
@@ -174,10 +174,10 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>$v->collection&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('device_template_edit')) {
-				echo "	<a href='javascript:void(0);' onclick='action(\"enable\",\"$k\");'>".(($v->enabled)?'True':'False')."</a>&nbsp;";
+				echo "	<a href='javascript:void(0);' onclick='action(\"enable\",\"$k\");'>".(($v->enabled=="true")?"true":"false")."</a>&nbsp;";
 			}
 			else {
-				echo "	".(($v->enabled)?'True':'False')."&nbsp;";
+				echo "	".(($v->enabled=="true")?"true":"false")."&nbsp;";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>$v->description&nbsp;</td>\n";
@@ -188,7 +188,7 @@
 			if (permission_exists('device_template_add')) {
 				echo "<a href='javascript:void(0);' alt='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")) {action(\"copy\",\"$k\")}'>$v_link_label_add</a>";
 			}
-			if (permission_exists('device_template_delete')&&!$v->protected) {
+			if (permission_exists('device_template_delete')&&$v->protected=="false") {
 				echo "<a href='javascript:void(0);' alt='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")) {action(\"drop\",\"$k\")};'>$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";

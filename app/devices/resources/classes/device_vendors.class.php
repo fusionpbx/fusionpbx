@@ -154,7 +154,7 @@ class device_vendors
         $data = self::get($db, $original);
         $data->name = $data->name." - duplicate ".date("Y-m-d H:i:s");
         $data->uuid = $clone;
-        $data->protected = "f";
+        $data->protected = "false";
         return  self::put($db, null, (array) $data);
     }
 
