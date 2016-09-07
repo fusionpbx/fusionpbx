@@ -170,7 +170,7 @@
 	if (permission_exists('device_template_add')) {
 	echo "		<input type='button' class='btn' value='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
 	}
-	if (permission_exists('device_template_delete') && !$template->protected=="false") {
+	if (permission_exists('device_template_delete') && $template->protected=="false") {
 	echo "		<input type='button' class='btn' value='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")){ $(\"#__action\").val(\"delete\");$(\"#fMain\").submit(); }'>\n";
 	}
 	echo "	</td>\n";

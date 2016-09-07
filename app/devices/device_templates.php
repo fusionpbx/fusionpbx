@@ -46,7 +46,7 @@
 		}
 	}
 	elseif ($_POST["__action"]=="drop" && permission_exists('device_template_delete')) {
-		if (is_uuid($_POST["__data"]) && !device_templates::get($db, $_POST["__data"], ['protected'])->protected=="false") {
+		if (is_uuid($_POST["__data"]) && device_templates::get($db, $_POST["__data"], ['protected'])->protected=="false") {
 			device_templates::drop($db, $_POST["__data"]);
 			$_SESSION["message"] = $text['message-delete'];
 		}
