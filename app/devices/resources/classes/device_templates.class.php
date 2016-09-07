@@ -179,12 +179,15 @@ class device_templates
     * @param  string $clone - template uuid for clone
     * @return object - template data as class object
     */
-    public static function duplicate($db, $original, $clone = null)
+    public static function duplicate($db, $original, $override=null)
     {
-        $data = self::get($db, $original);
-        $data->name = $data->name." - duplicate ".date("Y-m-d H:i:s");
-        $data->uuid = $clone;
-        $data->protected = "f";
+        $data = (array) self::get($db, $original);
+        $data['uuid'] = null;
+        $data['name'] .= " - duplicate ".date("Y-m-d H:i:s");
+        $data['protected'] = "f";
+        if (is_array($override)) {
+            $data = array_merge((array) $data, (array) $override);
+        }
         return  self::put($db, null, (array) $data);
     }
 
@@ -241,7 +244,7 @@ class device_templates
                 $c[]=$k."=?";
             }
             // phrase command
-            //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $db->prepare("UPDATE v_device_templates SET ".implode(', ', $c)." WHERE uuid=?;")->execute($v);
             return $data['uuid'];
         }
@@ -283,6 +286,28 @@ class device_templates
         // execute
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->prepare($sql)->execute($uuid);
+    }
+
+    /**
+    * compiles all master and slave templates in to one string
+    * @param  pdo $db - database object as pdo type
+    * @param  string $uuid - template uuid
+    * @return string - template data 
+    */
+    public static function compile($db, $uuid)
+    {
+        $t = self::get($db,$uuid,['data','include']);
+        
+        if (isset($t->include)) {
+            $d = $t->data."\n";
+            foreach (explode(",", $t->include) as $k => $v) {
+                if (is_uuid($v)) { 
+                    $d .= self::get($db,$v,['data'])->data."\n";
+                }
+            }
+        }
+
+        return  $d;
     }
 }
 

@@ -761,6 +761,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'protected';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'boolean';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'include';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'data';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		

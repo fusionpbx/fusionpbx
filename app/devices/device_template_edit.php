@@ -57,22 +57,27 @@
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
-		$template->domain_uuid = check_str($_POST["template_domain"]);
+		// pull post data
+		$template->domain_uuid = check_str($_POST["template_domain_uuid"]);
 		$template->name = check_str($_POST["template_name"]);
 		$template->description = check_str($_POST["template_description"]);
 		$template->collection = check_str($_POST["template_collection"]);
 		$template->enabled = check_str($_POST["template_enabled"]);
+		$template->type = check_str($_POST["template_type"]);
+		$template->include = $_POST["template_include"];
 		$template->data = check_str($_POST["template_data"]);
-
+		// process or format data
 		$template->domain_uuid = (empty($template->domain_uuid))? null : $template->domain_uuid;
 		$template->name = (empty($template->name))? null : $template->name;
 		$template->description = (empty($template->description))? null : $template->description;
 		$template->collection = (empty($template->collection))? null : $template->collection;
 		$template->enabled = (empty($template->enabled))? null : $template->enabled;
+		$template->type = (empty($template->type))? null : $template->type;
+		$template->include = (empty($template->include)||$template->type=="s")? null : implode(",", array_filter($template->include));
 		$template->data = (empty($template->data))? null : $template->data;
 	}
 
-//process and save the data
+//process actions
 	if (count($_POST) > 0 && strlen($_POST["_persistformvar"]) == 0) {
 		//check for all required data
 			$msg = '';
@@ -115,7 +120,7 @@
 					}
 				}
 				elseif ($_POST["__action"]=="clone" && permission_exists('device_template_add')) {
-					$n = device_templates::duplicate($db,$template->uuid);
+					$n = device_templates::duplicate($db,$template->uuid, ['domain_uuid'=>$_SESSION['domain_uuid']]);
 					$_SESSION["message"] = $text['message-add'];
 					header("Location: device_template_edit.php?id=".$n);
 					return;
@@ -134,6 +139,12 @@
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$template = device_templates::get($db, $template->uuid);
 	}
+
+//load includable device templates
+	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')'], ['AND'],['type','=','s']];
+	//if (strlen($device_vendor)>0) { $filter[] = ['AND']; $filter[]=['vendor_name','=',$domain_uuid];} 
+	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
+
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-device_template'];
@@ -148,16 +159,18 @@
 	echo "	<td align='left' width='30%'><span class=\"title\">".$text['title-device_template']."</span><br /></td>\n";
 	echo "	<td width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='device_templates.php".((strlen($app_uuid) > 0) ? "?app_uuid=".$app_uuid : null)."';\">\n";
-	echo "		&nbsp;&nbsp;&nbsp;";
+	echo "		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	if (permission_exists('device_template_edit')) {
+	echo "		<input type='button' class='btn' value='Preview' onclick='window.open(\"device_template_preview.php?id=$template->uuid\", \"_blank\");'>\n";
+	echo "		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	echo "		<input type='button' class='btn' value='".$text['button-save']."' onclick='$(\"#__action\").val(\"save\");$(\"#fMain\").submit();'>\n";
 	echo "		<input type='button' class='btn' value='".$text['button-savenew']."' onclick='$(\"#__action\").val(\"savenew\");$(\"#fMain\").submit();'>\n";
 	echo "		<input type='button' class='btn' value='".$text['button-saveclose']."' onclick='$(\"#__action\").val(\"saveclose\");$(\"#fMain\").submit();'>\n";
 	}
 	if (permission_exists('device_template_add')) {
-	echo "		<input type='button' class='btn' value='".$text['button-clone']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
+	echo "		<input type='button' class='btn' value='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
 	}
-	if (permission_exists('device_template_delete') && $template->protected) {
+	if (permission_exists('device_template_delete') && !$template->protected) {
 	echo "		<input type='button' class='btn' value='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")){ $(\"#__action\").val(\"delete\");$(\"#fMain\").submit(); }'>\n";
 	}
 	echo "	</td>\n";
@@ -188,7 +201,7 @@
 	echo "  ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left' width='70%'>\n";
-	echo "  <textarea class='formfld' style='width: 250px; height: 68px;' name='template_description'>".htmlspecialchars($template->description)."</textarea>\n";
+	echo "  <textarea class='formfld' style='width: 300px; height: 100px;' name='template_description'>".htmlspecialchars($template->description)."</textarea>\n";
 	echo "  <br />".$text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -206,6 +219,19 @@
 	}
 	echo "	</select>\n";
 	echo "<br />\n".$text['description-device_vendor']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	// template type
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-type']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='template_type'>\n";
+	echo "	<option value='m'".(($template->type=="m") ?" Selected":'').">Master</option>\n";
+	echo "	<option value='s'".(($template->type=="s") ?" Selected":'').">Slave</option>\n";
+	echo "	</select>\n";
+	echo "  <br />".$text['description-device_template_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 // content input left section
@@ -229,22 +255,21 @@
 	echo "</tr>\n";
 	// template domain
 	if (permission_exists('device_template_domain')) {
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-domain']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
-		echo "    <option value=''".((strlen($template->domain_uuid) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
-		foreach ($_SESSION['domains'] as $row) {
-		echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$template->domain_uuid) ?" Selected":'').">".$row['domain_name']."</option>\n";
-		}
-		echo "    </select>\n";
-		echo "<br />\n".$text['description-domain_name']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-domain']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='template_domain_uuid'>\n";
+	echo "    <option value=''".((strlen($template->domain_uuid) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
+	foreach ($_SESSION['domains'] as $row) {
+	echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$template->domain_uuid) ?" Selected":'').">".$row['domain_name']."</option>\n";
 	}
-
+	echo "    </select>\n";
+	echo "<br />\n".$text['description-domain_name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	}
 	// template collection
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
@@ -255,6 +280,34 @@
 	echo "  <br />".$text['description-collection']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	// template include
+	if ($template->type!="s") {
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_template']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	// create new select for each template
+	$template->include .= ", ";
+	foreach (explode(",",$template->include) as $k1 => $v1) {
+	echo "<select name='template_include[$k1]' class='formfld'>\n";
+	echo "<option value=''></option>\n";
+		$g = -1;
+		foreach($device_templates as $k2 => $v2) {
+		if ($g!=$v2->collection) {
+			if ($g!=-1) echo "</optgroup>";
+			echo "<optgroup label='$v2->collection'>";
+			$g=$v2->collection;
+		}
+		echo "<option value='$k2' ".(($k2==$v1) ?" Selected":'').">$v2->name</option>\n";
+		}
+	echo "</optgroup>";
+	echo "</select><br/>\n";
+	}
+	echo $text['description-device_template']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	}
 // content input right section
 	echo "</table>";
 	echo "</td>";
@@ -298,7 +351,7 @@
 // content footer
 	echo "<br>\n";
 	echo "<div align='right'>\n";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='$(\"#__action\").val(\"save\");$(\"#fMain\").submit();'>\n";
 	echo "</div>\n";
 	echo "<br><br>\n";
 	echo "</form>";
@@ -371,7 +424,8 @@
 			editor.getSession().on('change', function () {
        			template_data.val(editor.getSession().getValue());
    			});
-			editor.setFontSize('12px'); 
+			editor.setAutoScrollEditorIntoView();
+			editor.setFontSize('12px');
 
 		//remove certain keyboard shortcuts
 			editor.commands.bindKey("Ctrl-T", null); //disable transpose letters - prefer new browser tab

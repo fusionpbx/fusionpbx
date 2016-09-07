@@ -41,7 +41,7 @@
 // process action the action
 	if ($_POST["__action"]=="copy" && permission_exists('device_template_add')) {
 		if (is_uuid($_POST["__data"])) {
-			device_templates::duplicate($db, $_POST["__data"]);
+			device_templates::duplicate($db, $_POST["__data"],['domain_uuid'=>$_SESSION['domain_uuid']]);
 			$_SESSION["message"] = $text['message-add'];
 		}
 	}
