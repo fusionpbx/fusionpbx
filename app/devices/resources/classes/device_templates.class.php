@@ -163,7 +163,7 @@ class device_templates
         $data = (array) self::get($db, $original);
         $data['uuid'] = null;
         $data['name'] .= " - duplicate ".date("Y-m-d H:i:s");
-        $data['protected'] = "f";
+        $data['protected'] = "false";
         if (is_array($override)) {
             $data = array_merge((array) $data, (array) $override);
         }
@@ -277,13 +277,27 @@ class device_templates
     {
         $t = self::get($db,$uuid,['data','include']);
         
+        // includes - load them and add them
         if (isset($t->include)) {
-            $d = $t->data."\n";
+            // get the includes
             foreach (explode(",", $t->include) as $k => $v) {
-                if (is_uuid($v)) { 
-                    $d .= self::get($db,$v,['data'])->data."\n";
+                $tl[] = self::get($db,$v,['data'])->data;
+            }
+            // find magic tokens and replace them
+            if (preg_match("/\<\[include\:\d{1,2}\]\>/", $t->data)) {
+                $d = $t->data;
+                foreach($tl as $k => $v){
+                    $d = str_replace('<[include:'.($k+1).']>',$v, $d);
                 }
             }
+            // no magic tokens so just concact
+            else {
+                $d = $t->data."\n".implode("\n",$tl);
+            }
+        }
+        // no includes - just send data 
+        else {
+            $d = $t->data."\n";
         }
 
         return  $d;
