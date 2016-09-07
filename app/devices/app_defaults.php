@@ -123,12 +123,12 @@ if ($domains_processed == 1) {
 							if (!array_search($group_name, $db_vendor_function_groups)) {
 								$sql = "insert into v_device_vendor_function_groups ";
 								$sql .= "(device_vendor_function_group_uuid, device_vendor_function_uuid, device_vendor_uuid,  group_uuid) ";
-								$sql .= "values (?,?,?,?,?)";
+								$sql .= "values (?,?,?,?);";
 								$prep_statement = $db->prepare($sql);
 								$prep_statement->bindValue(1, uuid());
 								$prep_statement->bindValue(2, $device_vendor_function_uuid);
 								$prep_statement->bindValue(3, $device_vendor_uuid);
-								$prep_statement->bindValue(5, $group_uuids[$group_name]);
+								$prep_statement->bindValue(4, $group_uuids[$group_name]);
 								$prep_statement->execute();
 								unset($prep_statement);
 							}
