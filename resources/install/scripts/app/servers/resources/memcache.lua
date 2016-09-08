@@ -20,21 +20,26 @@
   	servers = {}
   	x = 0;
   	servers[x] = {}
+  	servers[x]['method'] = "curl";
   	servers[x]['username'] = "freeswitch";
   	servers[x]['password'] = "freeswitch";
   	servers[x]['hostname'] = "x.x.x.x";
-  	servers[x]['port'] = "8787";
+  	servers[x]['port'] = "8080";
   	x = x + 1;
   	servers[x] = {}
+  	servers[x]['method'] = "curl";
   	servers[x]['username'] = "freeswitch";
   	servers[x]['password'] = "freeswitch";
   	servers[x]['hostname'] = "x.x.x.x";
-  	servers[x]['port'] = "8787";
+  	servers[x]['port'] = "8080";
 	]]
+
+--includes config.lua which will include local.lua if it exists
+	require "resources.functions.config"
 
 --subscribe to the events
 	--events = freeswitch.EventConsumer("all");
-	events = freeswitch.EventConsumer("MEMCACHE");
+	events = freeswitch.EventConsumer("CUSTOM");
 
 --define trim
 	function trim (s)
@@ -72,13 +77,16 @@
 					end
 					if (memcache_updated) then
 						for key,row in pairs(servers) do
-							--cmd = [[ssh ]]..row.username..[[@]]..row.hostname..[[ "fs_cli -x 'memcache ]]..api_command_argument..[['"]];
-							--freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
-							--os.execute(cmd);
-							
-							url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/memcache?]]..api_command_argument;
-							response = api:execute("curl", url);
-							freeswitch.consoleLog("INFO", "[notice] ".. url .. " "..response.."\n");
+							if (row.method == "ssh") then
+								cmd = [[ssh ]]..row.username..[[@]]..row.hostname..[[ "fs_cli -x 'memcache ]]..api_command_argument..[['"]];
+								freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
+								os.execute(cmd);
+							end
+							if (row.method == "curl") then
+								url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/memcache?]]..api_command_argument;
+								os.execute("curl "..url);
+								freeswitch.consoleLog("INFO", "[notice] curl ".. url .. " \n");
+							end
 						end
 					end
 
