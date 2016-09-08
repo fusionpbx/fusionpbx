@@ -140,15 +140,15 @@ $text['description-xml-rpc-pw']['uk'] = "Enter the XML RPC Auth Password. ";
 $text['description-xml-rpc-pw']['sv-se'] = "Fyll i XML RPC Auth Password.";
 $text['description-xml-rpc-pw']['de-at'] = "Geben Sie das XML RPC Auth Passwort an.";
 
-$text['description-xml-rpc-port']['en-us'] = "Enter the XML RPC HTTP Port. default: 8787";
-$text['description-xml-rpc-port']['es-cl'] = "Ingrese el puerto XML RPC HTTP. Predeterminado: 8787";
-$text['description-xml-rpc-port']['pt-pt'] = "Introduza o porto HTTP para o XML RPC. omissão: 8787";
-$text['description-xml-rpc-port']['fr-fr'] = "Port pour joindre le service  XML RPC HTTP. défaut: 8787";
-$text['description-xml-rpc-port']['pt-br'] = "Introduza a oirta HTTP para o XML RPC. 8787 ";
+$text['description-xml-rpc-port']['en-us'] = "Enter the XML RPC HTTP Port. default: 8080";
+$text['description-xml-rpc-port']['es-cl'] = "Ingrese el puerto XML RPC HTTP. Predeterminado: 8080";
+$text['description-xml-rpc-port']['pt-pt'] = "Introduza o porto HTTP para o XML RPC. omissão: 8080";
+$text['description-xml-rpc-port']['fr-fr'] = "Port pour joindre le service  XML RPC HTTP. défaut: 8080";
+$text['description-xml-rpc-port']['pt-br'] = "Introduza a oirta HTTP para o XML RPC. 8080 ";
 $text['description-xml-rpc-port']['pl'] = "Wprowadź port HTTP XML RPC";
-$text['description-xml-rpc-port']['uk'] = "Enter the XML RPC HTTP Port. default: 8787 ";
-$text['description-xml-rpc-port']['sv-se'] = "Fyll i XML RPC HTTP Port. default: 8787";
-$text['description-xml-rpc-port']['de-at'] = "Geben Sie den XML RPC HTTP Port an. Standard: 8787";
+$text['description-xml-rpc-port']['uk'] = "Enter the XML RPC HTTP Port. default: 8080 ";
+$text['description-xml-rpc-port']['sv-se'] = "Fyll i XML RPC HTTP Port. default: 8080";
+$text['description-xml-rpc-port']['de-at'] = "Geben Sie den XML RPC HTTP Port an. Standard: 8080";
 
 $text['description-shout-volume']['en-us'] = "Enter Mod Shout Volume.";
 $text['description-shout-volume']['es-cl'] = "Ingrese el volumen del Mod Shout.";
