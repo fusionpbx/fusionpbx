@@ -3,17 +3,17 @@
 servers = {}
 servers[#servers + 1] = {
 	method   = 'curl';
-	username = "aaa";
-	password = "***";
+	username = "freeswitch";
+	password = "freeswitch";
 	hostname = "127.0.0.1";
-	port     = "8080";
+	port     = "8787";
 }
 servers[#servers + 1] = {
 	method   = 'ssh';
 	username = "aaa";
 	password = "***";
 	hostname = "127.0.0.2";
-	port     = "8080";
+	port     = "22";
 }
 ]]
 
