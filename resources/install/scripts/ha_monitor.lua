@@ -6,7 +6,7 @@ servers[#servers + 1] = {
 	username = "freeswitch";
 	password = "freeswitch";
 	hostname = "127.0.0.1";
-	port     = "8787";
+	port     = "8080";
 }
 servers[#servers + 1] = {
 	method   = 'ssh';
