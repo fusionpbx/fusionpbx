@@ -1,5 +1,5 @@
 --! @todo move `servers` table to `local.lua` file
-
+--[[
 servers = {}
 servers[#servers + 1] = {
 	method   = 'curl';
@@ -15,6 +15,7 @@ servers[#servers + 1] = {
 	hostname = "127.0.0.2";
 	port     = "8080";
 }
+]]
 
 require "resources.functions.config"
 
