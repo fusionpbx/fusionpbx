@@ -360,7 +360,8 @@ require_once "resources/require.php";
 				}
 				$prep_statement_sub = $db->prepare($sql);
 				$prep_statement_sub->execute();
-				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				//$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_COLUMN);
 				unset($sql, $prep_statement_sub);
 			}
 

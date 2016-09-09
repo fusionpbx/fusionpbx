@@ -75,6 +75,7 @@
 				 * @var string $permission
 				 */
 				function exists($permission) {
+					/*
 					//set default false
 						$result = false;
 					//search for the permission
@@ -88,6 +89,13 @@
 						}
 					//return the result
 						return $result;
+					*/
+					if (isset($_SESSION["permissions"]) && array_search($permission,$_SESSION["permissions"])) {
+						return true;
+					}
+					else {
+						return false;
+					}
 				}
 		}
 	}
