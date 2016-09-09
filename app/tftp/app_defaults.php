@@ -60,22 +60,21 @@
 			unset ($prep_statement, $sql);
 
 		//find the missing default settings
-			$x = 0;
+			$missing = [];
 			foreach ($array as $setting) {
 				$found = false;
-				$missing[$x] = $setting;
 				foreach ($default_settings as $row) {
-					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) { 
 						$found = true;
-						//remove items from the array that were found
-						unset($missing[$x]);
+						break;
 					}
 				}
-				$x++;
+
+				if (!$found) $missing[] = $setting;
 			}
 
 		//add the missing default settings
-			if (count($missing) > 0) foreach ($missing as $row) {
+			foreach ($missing as $row) {
 				//add the default settings
 				$orm = new orm;
 				$orm->name('default_settings');
