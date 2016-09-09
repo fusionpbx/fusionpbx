@@ -66,7 +66,6 @@
 				local api_command_argument = event:getHeader("API-Command-Argument");
 				if (api_command_argument ~= nil) then
 					api_command_argument = trim(api_command_argument);
-					api_command_argument = api_command_argument:gsub(" ", "%%20");
 				end
 				if (api_command_argument ~= nil) then
 					if (api_command_argument == "flush") then
@@ -78,11 +77,13 @@
 					if (memcache_updated) then
 						for key,row in pairs(servers) do
 							if (row.method == "ssh") then
+								api_command_argument = api_command_argument:gsub("%%20", " ");
 								cmd = [[ssh ]]..row.username..[[@]]..row.hostname..[[ "fs_cli -x 'memcache ]]..api_command_argument..[['"]];
 								freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
 								os.execute(cmd);
 							end
 							if (row.method == "curl") then
+								api_command_argument = api_command_argument:gsub(" ", "%%20");
 								url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/memcache?]]..api_command_argument;
 								os.execute("curl "..url);
 								freeswitch.consoleLog("INFO", "[notice] curl ".. url .. " \n");
