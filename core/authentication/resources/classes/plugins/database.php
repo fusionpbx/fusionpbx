@@ -3,8 +3,7 @@
 /**
  * plugin_database 
  *
- * @method validate uses authentication plugins to check if a user is authorized to login
- * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
+ * @method database checks the local database to authenticate the user or key
  */
 class plugin_database {
 
