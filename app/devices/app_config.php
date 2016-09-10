@@ -1592,7 +1592,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
-		$vendors[$y]['functions'][$z]['name'] = "speed dial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
 		$vendors[$y]['functions'][$z]['value'] = "speed dial";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
