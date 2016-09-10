@@ -6,7 +6,7 @@
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
-		$apps[$x]['license'] = "Mozilla Public License 1.1";
+		$apps[$x]['license'] = "Mozilla Public License 1.1"; 
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Devices for provisioning.";
 		$apps[$x]['description']['es-cl'] = "Provicionamiento de dispositivos.";
@@ -1225,8 +1225,8 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
-		$vendors[$y]['functions'][$z]['label'] = "label-callforward";
-		$vendors[$y]['functions'][$z]['name'] = "callforward";
+		$vendors[$y]['functions'][$z]['label'] = "label-call_forward";
+		$vendors[$y]['functions'][$z]['name'] = "call_forward";
 		$vendors[$y]['functions'][$z]['value'] = "callforward";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
@@ -1303,9 +1303,9 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
-		$vendors[$y]['functions'][$z]['label'] = "label-redail";
-		$vendors[$y]['functions'][$z]['name'] = "redail";
-		$vendors[$y]['functions'][$z]['value'] = "redail";
+		$vendors[$y]['functions'][$z]['label'] = "label-redial";
+		$vendors[$y]['functions'][$z]['name'] = "redial";
+		$vendors[$y]['functions'][$z]['value'] = "redial";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
