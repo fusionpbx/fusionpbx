@@ -152,17 +152,17 @@ class device_templates
     }
 
     /**
-    * duplicate template in database
+    * copy template in database
     * @param  pdo $db - database object as pdo type
     * @param  string $original - template uuid in database
     * @param  string $clone - template uuid for clone
     * @return object - template data as class object
     */
-    public static function duplicate($db, $original, $override=null)
+    public static function copy($db, $original, $override=null)
     {
         $data = (array) self::get($db, $original);
         $data['uuid'] = null;
-        $data['name'] .= " - duplicate ".date("Y-m-d H:i:s");
+        $data['name'] .= " - copy ".date("Y-m-d H:i:s");
         $data['protected'] = "false";
         if (is_array($override)) {
             $data = array_merge((array) $data, (array) $override);
@@ -223,7 +223,7 @@ class device_templates
                 $c[]=$k."=?";
             }
             // phrase command
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $db->prepare("UPDATE v_device_templates SET ".implode(', ', $c)." WHERE uuid=?;")->execute($v);
             return $data['uuid'];
         }
@@ -236,7 +236,7 @@ class device_templates
             // get keys
             $c = implode(", ", array_keys($data));
             // phrase command
-            //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $db->prepare("INSERT INTO v_device_templates ($c) values (".str_repeat("?,",count($v)-1)."?)")->execute($v);
             return $data['uuid'];
         }

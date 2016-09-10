@@ -118,11 +118,6 @@
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 //show the content
 	echo "<form method='post' id='fMain' action=''>\n";
 	echo "<table width='100%' border='0'>\n";
@@ -130,7 +125,16 @@
 	echo "	<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_templates']."</b></td>\n";
 	echo "	<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	// back button
-	echo "		<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>";
+	echo "		<input type='button' class='btn' alt='".$text['button-back']."' onclick='document.location=\"devices.php\"' value='".$text['button-back']."'>";
+	echo "		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	// assign button
+	if (permission_exists('device_edit')) {
+	echo "		<input type='button' class='btn' alt='".$text['button-assign']."' onclick='document.location=\"device_template_assign.php\"' value='".$text['button-assign']."'>";
+	}
+	// import button
+	if (permission_exists('device_template_add')) {
+	echo "		<input type='button' class='btn' alt='".$text['button-import']."' onclick='document.location=\"device_template_import.php\"' value='".$text['button-import']."'>";
+	}
 	// domain selection
 	echo "    <select class='formfld' id='search_domain' name='search_domain'>\n";
 	if (permission_exists('device_template_domain')){
@@ -143,7 +147,7 @@
 	echo "    </select>\n";
 	// seach input
 	echo "		<input type='text' class='txt' style='width: 150px' name='search_text' value='".$search_text."'>\n";
-	echo "		<input type='submit' class='btn' value='".$text['button-search']."' onclick=''>\n";
+	echo "		<input type='submit' class='btn' value='".$text['button-search']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -165,35 +169,38 @@
 	echo "<tr>\n";
 
 	if (is_array($data)) {
+		$c=-1;
 		foreach($data as $k => $v) {
+			// set row color
+			$c = (($c++)<1) ? $c : 0;
+			// add row
 			if (permission_exists('device_template_edit')) {
 				$tr_link = "href='device_template_edit.php?id=$k'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>$v->name&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>$v->collection&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "	<td valign='top' class='row_style$c'>$v->name&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_style$c'>$v->collection&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_style$c'>";
 			if (permission_exists('device_template_edit')) {
-				echo "	<a href='javascript:void(0);' onclick='action(\"enable\",\"$k\");'>".(($v->enabled=="true")?"true":"false")."</a>&nbsp;";
+				echo "	<a href='javascript:void(0);' onclick='action(\"enable\",\"$k\");'>".((filter_var($v->enabled))?"true":"false")."</a>&nbsp;";
 			}
 			else {
-				echo "	".(($v->enabled=="true")?"true":"false")."&nbsp;";
+				echo "	".((filter_var($v->enabled))?"true":"false")."&nbsp;";
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>$v->description&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_style$c'>$v->description&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align:left;'>";
 			if (permission_exists('device_template_edit')) {
 				echo "<a href='device_template_edit.php?id=$k' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
+			if (permission_exists('device_template_delete')&&filter_var($v->protected)==false) {
+				echo "<a href='javascript:void(0);' alt='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")) {action(\"drop\",\"$k\")};'>$v_link_label_delete</a>";
+			}
 			if (permission_exists('device_template_add')) {
 				echo "<a href='javascript:void(0);' alt='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")) {action(\"copy\",\"$k\")}'>$v_link_label_add</a>";
 			}
-			if (permission_exists('device_template_delete')&&$v->protected=="false") {
-				echo "<a href='javascript:void(0);' alt='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")) {action(\"drop\",\"$k\")};'>$v_link_label_delete</a>";
-			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
 		}
 	}
 

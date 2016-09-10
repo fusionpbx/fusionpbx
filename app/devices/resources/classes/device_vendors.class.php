@@ -143,18 +143,20 @@ class device_vendors
     }
 
     /**
-    * duplicate vendor in database
+    * copy vendor in database
     * @param  pdo $db - database object as pdo type
     * @param  string $original - vendor uuid in database
     * @param  string $clone - vendor uuid for clone
     * @return object - vendor data as class object
     */
-    public static function duplicate($db, $original, $clone = null)
+    public static function copy($db, $original, $override=null)
     {
-        $data = self::get($db, $original);
-        $data->name = $data->name." - duplicate ".date("Y-m-d H:i:s");
-        $data->uuid = $clone;
-        $data->protected = "false";
+        $data = (array) self::get($db, $original);
+        $data['uuid'] = null;
+        $data['name'] .= " - copy ".date("Y-m-d H:i:s");
+        if (is_array($override)) {
+            $data = array_merge((array) $data, (array) $override);
+        }
         return  self::put($db, null, (array) $data);
     }
 

@@ -769,6 +769,32 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'data';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+
+		$y = 9; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = 'v_device_log';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'log_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_id';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_name';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_datetime';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'datetime';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_data';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		
 
 	//vendor details

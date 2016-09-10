@@ -170,7 +170,7 @@
 	if (permission_exists('device_template_add')) {
 	echo "		<input type='button' class='btn' value='".$text['button-copy']."' onclick='if (confirm(\"".$text['confirm-copy']."\")){ $(\"#__action\").val(\"clone\");$(\"#fMain\").submit(); }'>\n";
 	}
-	if (permission_exists('device_template_delete') && $template->protected=="false") {
+	if (permission_exists('device_template_delete') && filter_var($template->protected)==false) {
 	echo "		<input type='button' class='btn' value='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")){ $(\"#__action\").val(\"delete\");$(\"#fMain\").submit(); }'>\n";
 	}
 	echo "	</td>\n";
@@ -247,8 +247,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='template_enabled'>\n";
-	echo "	<option value='false'".(($template->enabled=="false") ?" Selected":'').">".$text['label-false']."</option>\n";
-	echo "	<option value='true'".(($template->enabled=="true") ?" Selected":'').">".$text['label-true']."</option>\n";
+	echo "	<option value='false'".((filter_var($template->enabled)) ?" Selected":'').">".$text['label-false']."</option>\n";
+	echo "	<option value='true'".((filter_var($template->enabled)) ?" Selected":'').">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "  <br />".$text['description-device_template_enabled']."\n";
 	echo "</td>\n";
@@ -288,7 +288,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	// create new select for each template
-	$template->include .= ", ";
+	if (!empty($template->include)) $template->include .= ", ";
 	foreach (explode(",",$template->include) as $k1 => $v1) {
 	echo "<select name='template_include[$k1]' class='formfld'>\n";
 	echo "<option value=''></option>\n";
