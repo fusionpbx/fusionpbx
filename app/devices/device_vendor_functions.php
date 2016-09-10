@@ -42,7 +42,7 @@
 	$sql = "select count(*) as num_rows from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = '$device_vendor_uuid' ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) == 0) { $sql .= "order by name asc "; } else { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -67,7 +67,7 @@
 	$sql = "select * from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = '$device_vendor_uuid' ";
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) == 0) { $sql .= "order by name asc "; } else { $sql .= "order by $order_by $order "; }
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -94,6 +94,7 @@
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "<th>".$text['label-label']."</th>\n";
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('value', $text['label-value'], $order_by, $order);
 	echo "<th>".$text['label-groups']."</th>\n";
@@ -145,8 +146,8 @@
 				}
 			//show the row of data
 				echo "<tr ".$tr_link.">\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['label']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['name']]."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']." &nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['value']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
