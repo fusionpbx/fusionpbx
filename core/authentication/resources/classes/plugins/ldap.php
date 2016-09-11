@@ -94,6 +94,7 @@ class plugin_ldap {
 									$domain->set();
 							}
 							$this->user_uuid = $row["user_uuid"];
+							$this->contact_uuid = $row["contact_uuid"];
 					}
 				}
 				else {
