@@ -3,7 +3,8 @@
 /**
  * plugin_database 
  *
- * @method database checks the local database to authenticate the user or key
+ * @method validate uses authentication plugins to check if a user is authorized to login
+ * @method get_domain used to get the domain name from the URL or username and then sets both domain_name and domain_uuid
  */
 class plugin_database {
 
@@ -14,6 +15,7 @@ class plugin_database {
 	public $domain_name;
 	public $domain_uuid;
 	public $user_uuid;
+	public $contact_uuid;
 	public $username;
 	public $password;
 	public $key;
@@ -83,6 +85,7 @@ class plugin_database {
 
 					//set the user_uuid
 						$this->user_uuid = $row['user_uuid'];
+						$this->contact_uuid = $row['contact_uuid'];
 
 					//if salt is not defined then use the default salt for backwards compatibility
 						if (strlen($row["salt"]) == 0) {
