@@ -247,14 +247,9 @@
 		function permission_exists($permission) {
 			//set default false
 				$result = false;
-			//search for the permission
-				if (count($_SESSION["permissions"]) > 0) {
-					foreach($_SESSION["permissions"] as $row) {
-						if ($row['permission_name'] == $permission) {
-							$result = true;
-							break;
-						}
-					}
+			//find the permission
+				if (is_array($_SESSION["permissions"]) && $_SESSION["permissions"][$permission] == true) {
+					$result = true;
 				}
 			//return the result
 				return $result;
