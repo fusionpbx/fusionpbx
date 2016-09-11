@@ -1,5 +1,18 @@
 <?php
 
+$text['title-devices']['en-us'] = "Devices";
+$text['title-devices']['es-cl'] = "Dispositivos";
+$text['title-devices']['pt-pt'] = "Dispositivos";
+$text['title-devices']['fr-fr'] = "Equipements";
+$text['title-devices']['pt-br'] = "Dispositivos";
+$text['title-devices']['pl'] = "Urządzenia";
+$text['title-devices']['uk'] = "Пристрої";
+$text['title-devices']['sv-se'] = "Enheter";
+$text['title-devices']['ro'] = "Dispozitive";
+$text['title-devices']['de-at'] = "Geräte";
+$text['title-devices']['ar-eg'] = "الأجهزة";
+$text['title-devices']['he'] = "התקנים";
+
 $text['title-profiles']['en-us'] = "Profiles";
 $text['title-profiles']['es-cl'] = "Perfiles";
 $text['title-profiles']['pt-pt'] = "Perfis";
@@ -25,19 +38,6 @@ $text['title-profile']['ro'] = "Profil";
 $text['title-profile']['de-at'] = "Profil";
 $text['title-profile']['ar-eg'] = "";
 $text['title-profile']['he'] = "פרופיל";
-
-$text['title-devices']['en-us'] = "Devices";
-$text['title-devices']['es-cl'] = "Dispositivos";
-$text['title-devices']['pt-pt'] = "Dispositivos";
-$text['title-devices']['fr-fr'] = "Equipements";
-$text['title-devices']['pt-br'] = "Dispositivos";
-$text['title-devices']['pl'] = "Urządzenia";
-$text['title-devices']['uk'] = "Пристрої";
-$text['title-devices']['sv-se'] = "Enheter";
-$text['title-devices']['ro'] = "Dispozitive";
-$text['title-devices']['de-at'] = "Geräte";
-$text['title-devices']['ar-eg'] = "الأجهزة";
-$text['title-devices']['he'] = "התקנים";
 
 $text['title-device_keys']['en-us'] = "Device Keys";
 $text['title-device_keys']['es-cl'] = "Teclas de Dispositivos";
@@ -142,6 +142,18 @@ $text['label-zero_sp_touch']['ro'] = "";
 $text['label-zero_sp_touch']['de-at'] = "Zero-SP-Touch";
 $text['label-zero_sp_touch']['ar-eg'] = "";
 $text['label-zero_sp_touch']['he'] = "";
+
+$text['label-xml_directory']['en-us'] = "XML Directory";
+$text['label-xml_directory']['es-cl'] = "Directorio XML";
+$text['label-xml_directory']['pt-pt'] = "Diretório XML";
+$text['label-xml_directory']['fr-fr'] = "Annuaire XML";
+$text['label-xml_directory']['pt-br'] = "Diretório XML";
+$text['label-xml_directory']['pl'] = "Ksiażka telefoniczna XML";
+$text['label-xml_directory']['uk'] = "";
+$text['label-xml_directory']['sv-se'] = "Katalog";
+$text['label-xml_directory']['de-at'] = "Verzeichnis";
+$text['label-xml_directory']['ar-eg'] = "";
+$text['label-xml_directory']['he'] = "מדריך";
 
 $text['label-xml_phonebook']['en-us'] = "XML Phonebook";
 $text['label-xml_phonebook']['es-cl'] = "Agenda telefónica XML";
@@ -659,17 +671,53 @@ $text['label-p2t']['de-at'] = "Push to Talk";
 $text['label-p2t']['ar-eg'] = "";
 $text['label-p2t']['he'] = "";
 
-$text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
-$text['label-outbound_proxy']['es-cl'] = "Proxy de salida";
-$text['label-outbound_proxy']['pt-pt'] = "Outbound Proxy";
-$text['label-outbound_proxy']['fr-fr'] = "Proxy Sortant";
-$text['label-outbound_proxy']['pt-br'] = "Proxy Outbound";
-$text['label-outbound_proxy']['pl'] = "Wychodzący serwer proxy";
-$text['label-outbound_proxy']['uk'] = "";
-$text['label-outbound_proxy']['sv-se'] = "Utgående Proxy";
-$text['label-outbound_proxy']['de-at'] = "Outbound Proxy";
-$text['label-outbound_proxy']['ar-eg'] = "";
-$text['label-outbound_proxy']['he'] = "";
+$text['label-outbound_proxy_primary']['en-us'] = "Outbound Proxy";
+$text['label-outbound_proxy_primary']['es-cl'] = "Proxy de salida";
+$text['label-outbound_proxy_primary']['pt-pt'] = "Outbound Proxy";
+$text['label-outbound_proxy_primary']['fr-fr'] = "Proxy Sortant";
+$text['label-outbound_proxy_primary']['pt-br'] = "Proxy Outbound";
+$text['label-outbound_proxy_primary']['pl'] = "Wychodzący serwer proxy";
+$text['label-outbound_proxy_primary']['uk'] = "";
+$text['label-outbound_proxy_primary']['sv-se'] = "Utgående Proxy";
+$text['label-outbound_proxy_primary']['de-at'] = "Outbound Proxy";
+$text['label-outbound_proxy_primary']['ar-eg'] = "";
+$text['label-outbound_proxy_primary']['he'] = "";
+
+$text['label-outbound_proxy_secondary']['en-us'] = "Outbound Proxy";
+$text['label-outbound_proxy_secondary']['es-cl'] = "Proxy de salida";
+$text['label-outbound_proxy_secondary']['pt-pt'] = "Outbound Proxy";
+$text['label-outbound_proxy_secondary']['fr-fr'] = "Proxy Sortant";
+$text['label-outbound_proxy_secondary']['pt-br'] = "Proxy Outbound";
+$text['label-outbound_proxy_secondary']['pl'] = "Wychodzący serwer proxy";
+$text['label-outbound_proxy_secondary']['uk'] = "";
+$text['label-outbound_proxy_secondary']['sv-se'] = "Utgående Proxy";
+$text['label-outbound_proxy_secondary']['de-at'] = "Outbound Proxy";
+$text['label-outbound_proxy_secondary']['ar-eg'] = "";
+$text['label-outbound_proxy_secondary']['he'] = "";
+
+$text['label-primary']['en-us'] = "Primary";
+$text['label-primary']['es-cl'] = "1";
+$text['label-primary']['pt-pt'] = "1";
+$text['label-primary']['fr-fr'] = "1";
+$text['label-primary']['pt-br'] = "1";
+$text['label-primary']['pl'] = "1";
+$text['label-primary']['uk'] = "1";
+$text['label-primary']['sv-se'] = "1";
+$text['label-primary']['de-at'] = "1";
+$text['label-primary']['ar-eg'] = "1";
+$text['label-primary']['he'] = "1";
+
+$text['label-secondary']['en-us'] = "Secondary";
+$text['label-secondary']['es-cl'] = "2";
+$text['label-secondary']['pt-pt'] = "2";
+$text['label-secondary']['fr-fr'] = "2";
+$text['label-secondary']['pt-br'] = "2";
+$text['label-secondary']['pl'] = "2";
+$text['label-secondary']['uk'] = "2";
+$text['label-secondary']['sv-se'] = "2";
+$text['label-secondary']['de-at'] = "2";
+$text['label-secondary']['ar-eg'] = "2";
+$text['label-secondary']['he'] = "2";
 
 $text['label-orbit']['en-us'] = "Park + Orbit";
 $text['label-orbit']['es-cl'] = "Park + Órbita";
@@ -946,6 +994,186 @@ $text['label-group_pickup']['sv-se'] = "Plocka Grupp";
 $text['label-group_pickup']['de-at'] = "Gruppe Heranholen";
 $text['label-group_pickup']['ar-eg'] = "";
 $text['label-group_pickup']['he'] = "חטיפה מקבוצה";
+
+$text['label-call_forward']['en-us'] = "Call Forward";
+$text['label-call_forward']['es-cl'] = "Adelante";
+$text['label-call_forward']['pt-pt'] = "Encaminhar";
+$text['label-call_forward']['fr-fr'] = "Avant";
+$text['label-call_forward']['pt-br'] = "Encaminhar";
+$text['label-call_forward']['pl'] = "Przekierowanie";
+$text['label-call_forward']['uk'] = "";
+$text['label-call_forward']['sv-se'] = "Vidarekoppla";
+$text['label-call_forward']['de-at'] = "Weiterleiten";
+$text['label-call_forward']['ar-eg'] = "تحويل";
+$text['label-call_forward']['he'] = "העבר";
+
+$text['label-conf']['en-us'] = "Conf";
+$text['label-conf']['es-cl'] = "";
+$text['label-conf']['pt-pt'] = "";
+$text['label-conf']['fr-fr'] = "";
+$text['label-conf']['pt-br'] = "";
+$text['label-conf']['pl'] = "";
+$text['label-conf']['uk'] = "";
+$text['label-conf']['sv-se'] = "";
+$text['label-conf']['de-at'] = "";
+$text['label-conf']['ar-eg'] = "";
+$text['label-conf']['he'] = "";
+
+$text['label-empty']['en-us'] = "Empty";
+$text['label-empty']['es-cl'] = "";
+$text['label-empty']['pt-pt'] = "";
+$text['label-empty']['fr-fr'] = "";
+$text['label-empty']['pt-br'] = "";
+$text['label-empty']['pl'] = "";
+$text['label-empty']['uk'] = "";
+$text['label-empty']['sv-se'] = "";
+$text['label-empty']['de-at'] = "";
+$text['label-empty']['ar-eg'] = "";
+$text['label-empty']['he'] = "";
+
+$text['label-filter']['en-us'] = "Filter";
+$text['label-filter']['es-cl'] = "";
+$text['label-filter']['pt-pt'] = "";
+$text['label-filter']['fr-fr'] = "";
+$text['label-filter']['pt-br'] = "";
+$text['label-filter']['pl'] = "";
+$text['label-filter']['uk'] = "";
+$text['label-filter']['sv-se'] = "";
+$text['label-filter']['de-at'] = "";
+$text['label-filter']['ar-eg'] = "";
+$text['label-filter']['he'] = "";
+
+$text['label-flash']['en-us'] = "Flash";
+$text['label-flash']['es-cl'] = "";
+$text['label-flash']['pt-pt'] = "";
+$text['label-flash']['fr-fr'] = "";
+$text['label-flash']['pt-br'] = "";
+$text['label-flash']['pl'] = "";
+$text['label-flash']['uk'] = "";
+$text['label-flash']['sv-se'] = "";
+$text['label-flash']['de-at'] = "";
+$text['label-flash']['ar-eg'] = "";
+$text['label-flash']['he'] = "";
+
+$text['label-icom']['en-us'] = "Icom";
+$text['label-icom']['es-cl'] = "";
+$text['label-icom']['pt-pt'] = "";
+$text['label-icom']['fr-fr'] = "";
+$text['label-icom']['pt-br'] = "";
+$text['label-icom']['pl'] = "";
+$text['label-icom']['uk'] = "";
+$text['label-icom']['sv-se'] = "";
+$text['label-icom']['de-at'] = "";
+$text['label-icom']['ar-eg'] = "";
+$text['label-icom']['he'] = "";
+
+$text['label-lcr']['en-us'] = "LCR";
+$text['label-lcr']['es-cl'] = "";
+$text['label-lcr']['pt-pt'] = "";
+$text['label-lcr']['fr-fr'] = "";
+$text['label-lcr']['pt-br'] = "";
+$text['label-lcr']['pl'] = "";
+$text['label-lcr']['uk'] = "";
+$text['label-lcr']['sv-se'] = "";
+$text['label-lcr']['de-at'] = "";
+$text['label-lcr']['ar-eg'] = "";
+$text['label-lcr']['he'] = "";
+
+$text['label-page']['en-us'] = "Page";
+$text['label-page']['es-cl'] = "";
+$text['label-page']['pt-pt'] = "";
+$text['label-page']['fr-fr'] = "";
+$text['label-page']['pt-br'] = "";
+$text['label-page']['pl'] = "";
+$text['label-page']['uk'] = "";
+$text['label-page']['sv-se'] = "";
+$text['label-page']['de-at'] = "";
+$text['label-page']['ar-eg'] = "";
+$text['label-page']['he'] = "";
+
+$text['label-park']['en-us'] = "Park";
+$text['label-park']['es-cl'] = "";
+$text['label-park']['pt-pt'] = "";
+$text['label-park']['fr-fr'] = "";
+$text['label-park']['pt-br'] = "";
+$text['label-park']['pl'] = "";
+$text['label-park']['uk'] = "";
+$text['label-park']['sv-se'] = "";
+$text['label-park']['de-at'] = "";
+$text['label-park']['ar-eg'] = "";
+$text['label-park']['he'] = "";
+
+$text['label-phonelock']['en-us'] = "Phone Lock";
+$text['label-phonelock']['es-cl'] = "";
+$text['label-phonelock']['pt-pt'] = "";
+$text['label-phonelock']['fr-fr'] = "";
+$text['label-phonelock']['pt-br'] = "";
+$text['label-phonelock']['pl'] = "";
+$text['label-phonelock']['uk'] = "";
+$text['label-phonelock']['sv-se'] = "";
+$text['label-phonelock']['de-at'] = "";
+$text['label-phonelock']['ar-eg'] = "";
+$text['label-phonelock']['he'] = "";
+
+$text['label-speed_dial_conf']['en-us'] = "Speed Dial Conf";
+$text['label-speed_dial_conf']['es-cl'] = "";
+$text['label-speed_dial_conf']['pt-pt'] = "";
+$text['label-speed_dial_conf']['fr-fr'] = "";
+$text['label-speed_dial_conf']['pt-br'] = "";
+$text['label-speed_dial_conf']['pl'] = "";
+$text['label-speed_dial_conf']['uk'] = "";
+$text['label-speed_dial_conf']['sv-se'] = "";
+$text['label-speed_dial_conf']['de-at'] = "";
+$text['label-speed_dial_conf']['ar-eg'] = "";
+$text['label-speed_dial_conf']['he'] = "";
+
+$text['label-speed_dial_mwi']['en-us'] = "Speed Dial MWI";
+$text['label-speed_dial_mwi']['es-cl'] = "";
+$text['label-speed_dial_mwi']['pt-pt'] = "";
+$text['label-speed_dial_mwi']['fr-fr'] = "";
+$text['label-speed_dial_mwi']['pt-br'] = "";
+$text['label-speed_dial_mwi']['pl'] = "";
+$text['label-speed_dial_mwi']['uk'] = "";
+$text['label-speed_dial_mwi']['sv-se'] = "";
+$text['label-speed_dial_mwi']['de-at'] = "";
+$text['label-speed_dial_mwi']['ar-eg'] = "";
+$text['label-speed_dial_mwi']['he'] = "";
+
+$text['label-speed_dial_xfer']['en-us'] = "Speed Dial Xfer";
+$text['label-speed_dial_xfer']['es-cl'] = "";
+$text['label-speed_dial_xfer']['pt-pt'] = "";
+$text['label-speed_dial_xfer']['fr-fr'] = "";
+$text['label-speed_dial_xfer']['pt-br'] = "";
+$text['label-speed_dial_xfer']['pl'] = "";
+$text['label-speed_dial_xfer']['uk'] = "";
+$text['label-speed_dial_xfer']['sv-se'] = "";
+$text['label-speed_dial_xfer']['de-at'] = "";
+$text['label-speed_dial_xfer']['ar-eg'] = "";
+$text['label-speed_dial_xfer']['he'] = "";
+
+$text['label-sprecode']['en-us'] = "Sprecode";
+$text['label-sprecode']['es-cl'] = "";
+$text['label-sprecode']['pt-pt'] = "";
+$text['label-sprecode']['fr-fr'] = "";
+$text['label-sprecode']['pt-br'] = "";
+$text['label-sprecode']['pl'] = "";
+$text['label-sprecode']['uk'] = "";
+$text['label-sprecode']['sv-se'] = "";
+$text['label-sprecode']['de-at'] = "";
+$text['label-sprecode']['ar-eg'] = "";
+$text['label-sprecode']['he'] = "";
+
+$text['label-xml']['en-us'] = "XML";
+$text['label-xml']['es-cl'] = "";
+$text['label-xml']['pt-pt'] = "";
+$text['label-xml']['fr-fr'] = "";
+$text['label-xml']['pt-br'] = "";
+$text['label-xml']['pl'] = "";
+$text['label-xml']['uk'] = "";
+$text['label-xml']['sv-se'] = "";
+$text['label-xml']['de-at'] = "";
+$text['label-xml']['ar-eg'] = "";
+$text['label-xml']['he'] = "";
 
 $text['label-forward']['en-us'] = "Forward";
 $text['label-forward']['es-cl'] = "Adelante";
@@ -1365,6 +1593,16 @@ $text['label-device_description']['ro'] = "";
 $text['label-device_description']['de-at'] = "Beschreibung";
 $text['label-device_description']['ar-eg'] = "";
 $text['label-device_description']['he'] = "תאור";
+
+$text['label-device_status']['en-us'] = "Status";
+$text['label-device_status']['es-cl'] = "Estado";
+$text['label-device_status']['pt-pt'] = "Estado";
+$text['label-device_status']['fr-fr'] = "Statut";
+$text['label-device_status']['pt-br'] = "Estado";
+$text['label-device_status']['pl'] = "Status ";
+$text['label-device_status']['sv-se'] = "Status";
+$text['label-device_status']['uk'] = "Стан";
+$text['label-device_status']['de-at'] = "Status";
 
 $text['label-device']['en-us'] = "Device";
 $text['label-device']['es-cl'] = "Dispositivo";
@@ -2158,19 +2396,6 @@ $text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linie
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['he'] = "";
 
-$text['description-enabled']['en-us'] = "Set the status of this default setting.";
-$text['description-enabled']['es-cl'] = "Ajuste el estado de la configuración predeterminada.";
-$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
-$text['description-enabled']['fr-fr'] = "Choisir l'état de ce réglage";
-$text['description-enabled']['pt-br'] = "Escolha o estado desta definição ";
-$text['description-enabled']['pl'] = "Ustaw status numeru wewnętrznego.";
-$text['description-enabled']['uk'] = "";
-$text['description-enabled']['sv-se'] = "Välj status på denna standardinställning.";
-$text['description-enabled']['ro'] = "";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
-$text['description-enabled']['ar-eg'] = "";
-$text['description-enabled']['he'] = "";
-
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
 $text['description-domain']['pt-pt'] = "";
@@ -2340,6 +2565,17 @@ $text['description-device_key_line']['de-at'] = "Wählen Sie die Liniennummer.";
 $text['description-device_key_line']['ar-eg'] = "";
 $text['description-device_key_line']['he'] = "בחר את מספר הקו";
 
+$text['label-device_key_protected']['en-us'] = "Protected";
+$text['label-device_key_protected']['es-cl'] = "Protegido";
+$text['label-device_key_protected']['pt-pt'] = "Protegido";
+$text['label-device_key_protected']['fr-fr'] = "Protégé";
+$text['label-device_key_protected']['pl'] = "Zabezpieczony";
+$text['label-device_key_protected']['uk'] = "Захищено";
+$text['label-device_key_protected']['sv-se'] = "Skyddad";
+$text['label-device_key_protected']['ro'] = "";
+$text['label-device_key_protected']['de-at'] = "Geschützt";
+$text['label-device_key_protected']['he'] = "שמור";
+
 $text['description-device_key_label']['en-us'] = "Enter the label.";
 $text['description-device_key_label']['es-cl'] = "Introduzca la etiqueta.";
 $text['description-device_key_label']['pt-pt'] = "Introduza uma etiqueta.";
@@ -2458,16 +2694,65 @@ $text['button-profiles']['ar-eg'] = "";
 $text['button-profiles']['he'] = "פרופילים";
 
 $text['button-files']['en-us'] = "Files";
-$text['button-files']['es-cl'] = "";
-$text['button-files']['pt-pt'] = "";
-$text['button-files']['fr-fr'] = "";
-$text['button-files']['pt-br'] = "";
+$text['button-files']['es-cl'] = "Archivos";
+$text['button-files']['pt-pt'] = "Arquivos";
+$text['button-files']['fr-fr'] = "Fichiers";
+$text['button-files']['pt-br'] = "Arquivos";
 $text['button-files']['pl'] = "";
 $text['button-files']['uk'] = "";
 $text['button-files']['sv-se'] = "";
 $text['button-files']['ro'] = "";
-$text['button-files']['de-at'] = "";
+$text['button-files']['de-at'] = "Dateien";
 $text['button-files']['ar-eg'] = "";
-$text['button-files']['he'] = "";
+$text['button-files']['he'] = "קבצים";
+
+//Device Vendors
+$text['title-device_vendors']['en-us'] = "Vendors";
+$text['title-device_vendors']['es-cl'] = "Proveedor";
+$text['title-device_vendors']['pt-pt'] = "Fabricante";
+$text['title-device_vendors']['fr-fr'] = "Fabriquant";
+$text['title-device_vendors']['pt-br'] = "Fabricante";
+$text['title-device_vendors']['pl'] = "Producent";
+$text['title-device_vendors']['uk'] = "";
+$text['title-device_vendors']['sv-se'] = "Tillverkare";
+$text['title-device_vendors']['de-at'] = "Hersteller";
+$text['title-device_vendors']['ar-eg'] = "";
+$text['title-device_vendors']['he'] = "";
+
+$text['title-device_vendor']['en-us'] = "Vendor";
+$text['title-device_vendor']['es-cl'] = "Proveedor";
+$text['title-device_vendor']['pt-pt'] = "Fabricante";
+$text['title-device_vendor']['fr-fr'] = "Fabriquant";
+$text['title-device_vendor']['pt-br'] = "Fabricante";
+$text['title-device_vendor']['pl'] = "Producent";
+$text['title-device_vendor']['uk'] = "";
+$text['title-device_vendor']['sv-se'] = "Tillverkare";
+$text['title-device_vendor']['de-at'] = "Hersteller";
+$text['title-device_vendor']['ar-eg'] = "";
+$text['title-device_vendor']['he'] = "";
+
+$text['title_description-device_vendor']['en-us'] = 'Defines the list of vendors used with provisioning devices.';
+$text['title_description-device_vendor']['es-cl'] = '';
+$text['title_description-device_vendor']['pt-pt'] = '';
+$text['title_description-device_vendor']['fr-fr'] = '';
+$text['title_description-device_vendor']['pt-br'] = '';
+$text['title_description-device_vendor']['pl'] = '';
+$text['title_description-device_vendor']['uk'] = '';
+$text['title_description-device_vendor']['sv-se'] = '';
+$text['title_description-device_vendor']['de-at'] = '';
+$text['title_description-device_vendor']['ar-eg'] = '';
+$text['title_description-device_vendor']['he'] = '';
+
+$text['button-vendors']['en-us'] = "Vendors";
+$text['button-vendors']['es-cl'] = "Proveedor";
+$text['button-vendors']['pt-pt'] = "Fabricante";
+$text['button-vendors']['fr-fr'] = "Fabriquant";
+$text['button-vendors']['pt-br'] = "Fabricante";
+$text['button-vendors']['pl'] = "Producent";
+$text['button-vendors']['uk'] = "";
+$text['button-vendors']['sv-se'] = "Tillverkare";
+$text['button-vendors']['de-at'] = "Hersteller";
+$text['button-vendors']['ar-eg'] = "";
+$text['button-vendors']['he'] = "";
 
 ?>

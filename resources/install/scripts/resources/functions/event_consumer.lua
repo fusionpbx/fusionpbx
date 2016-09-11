@@ -432,10 +432,13 @@ local EventConsumer = class(EventEmitter) do
 local default_timeout       = 60000
 local default_poll_interval = 60000 * 30
 
-function EventConsumer:__init(timeout, pid_file)
+function EventConsumer:__init(pid_file, timeout)
 	self.__base.__init(self)
 
-	if pid_file then timeout = timeout or default_timeout end
+	if pid_file then
+		assert(type(pid_file) == 'string')
+		timeout = timeout or default_timeout
+	end
 
 	if timeout then assert(timeout > 0) end
 
@@ -444,19 +447,14 @@ function EventConsumer:__init(timeout, pid_file)
 	self._consumer = freeswitch.EventConsumer()
 	self._timeout  = timeout
 	self._timers   = TimeEvents.new()
-	self._pid      = api:execute("create_uuid") or tostring(api:getTime())
-	self._pid_file = pid_file
-
 	if pid_file then
-		local pid_path = basename(self._pid_file)
-		mkdir(pid_path)
-		assert(file.write(self._pid_file, self._pid))
+		self._pid      = api:execute("create_uuid") or tostring(api:getTime())
+		self._pid_file = pid_file
 	end
 
 	if self._timeout then
 		self:onInterval(self._timeout, function(self)
 			if not self:_check_pid_file() then return self:stop() end
-			self:emit('TIMEOUT')
 		end)
 	end
 
@@ -477,6 +475,14 @@ function EventConsumer:_check_pid_file()
 	end
 
 	return true
+end
+
+function EventConsumer:_reset_pid_file()
+	if self._pid_file then
+		local pid_path = basename(self._pid_file)
+		mkdir(pid_path)
+		assert(file.write(self._pid_file, self._pid))
+	end
 end
 
 function EventConsumer:bind(event_name, cb)
@@ -502,6 +508,8 @@ function EventConsumer:bind(event_name, cb)
 end
 
 function EventConsumer:_run()
+	self:_reset_pid_file()
+
 	self._running = true
 
 	-- set some huge default interval

@@ -126,8 +126,8 @@
 
 		--begin recording
 			if (storage_type == "base64") then
-				--include the base64 function
-					require "resources.functions.base64";
+				--include the file io
+					local file = require "resources.functions.file"
 
 				--make the directory
 					mkdir(recordings_dir);
@@ -139,11 +139,8 @@
 				--show the storage type
 					freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. "\n");
 
-				--base64 encode the file
-					local f = io.open(recordings_dir .."/".. recording_name, "rb");
-					local file_content = f:read("*all");
-					f:close();
-					recording_base64 = base64.encode(file_content);
+				--read file content as base64 string
+					recording_base64 = assert(file.read_base64(recordings_dir .. "/" .. recording_name));
 
 			elseif (storage_type == "http_cache") then
 				freeswitch.consoleLog("notice", "[recordings] ".. storage_type .. " ".. storage_path .."\n");
@@ -189,13 +186,10 @@
 				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
 			end
 			if (storage_type == "base64") then
-				array = explode("://", database["system"]);
-				local luasql = require "luasql.postgres";
-				local env = assert (luasql.postgres());
-				local dbh = env:connect(array[2]);
-				res, serr = dbh:execute(sql);
-				dbh:close();
-				env:close();
+				local Database = require "resources.functions.database"
+				local dbh = Database.new('system', 'base64');
+				dbh:query(sql);
+				dbh:release();
 			else
 				dbh:query(sql);
 			end

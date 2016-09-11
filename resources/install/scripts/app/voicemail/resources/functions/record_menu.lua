@@ -82,13 +82,11 @@
 
 								--if base64, encode file
 									if (storage_type == "base64") then
-										--include the base64 function
-											require "resources.functions.base64";
-										--base64 encode the file
-											local f = io.open(real_file, "rb");
-											local file_content = f:read("*all");
-											f:close();
-											greeting_base64 = base64.encode(file_content);
+										--include the file io
+											local file = require "resources.functions.file"
+
+										--read file content as base64 string
+											greeting_base64 = assert(file.read_base64(real_file));
 									end
 
 								--delete the previous recording
@@ -134,13 +132,10 @@
 										freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 									end
 									if (storage_type == "base64") then
-										array = explode("://", database["system"]);
-										local luasql = require "luasql.postgres";
-										local env = assert (luasql.postgres());
-										local db = env:connect(array[2]);
-										res, serr = db:execute(sql);
-										db:close();
-										env:close();
+										local Database = require "resources.functions.database"
+										local dbh = Database.new('system', 'base64');
+										dbh:query(sql);
+										dbh:release();
 									else
 										dbh:query(sql);
 									end

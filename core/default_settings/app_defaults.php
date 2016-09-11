@@ -359,6 +359,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail (in seconds).';
 		$x++;
 		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'password_length';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '8';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'The default length of characters in a voicemail password.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'greeting_max_length';
 		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '90';

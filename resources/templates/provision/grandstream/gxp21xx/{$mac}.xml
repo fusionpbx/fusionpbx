@@ -3592,8 +3592,7 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Extension Boards FOR GXP2110 and GXP2120 ONLY -->
     <!-- Extension Board 1 Settings. mode 23000, line 23001, label, 23002, value 23003 -->
 {$start_id = 23000}
-{foreach $keys as $row}
-{if $row.device_key_category == "expansion"}
+{foreach $keys["expansion"] as $row}
 {$key_id = $row.device_key_id - 1}
 {$type_id = $start_id + ($key_id * 5)}
 {$line_id = ($start_id + 1) + ($key_id * 5)}
@@ -3615,7 +3614,6 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P{$line_id}>{$row.device_key_line}</P{$line_id}>
     <P{$label_id}>{$row.device_key_label}</P{$label_id}>
     <P{$value_id}>{$row.device_key_value}</P{$value_id}>
-{/if}
 {/foreach}
 
   </config>

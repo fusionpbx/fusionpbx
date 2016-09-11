@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.1.0';
+			return '4.2.0';
 		}
 	}
 
@@ -247,14 +247,9 @@
 		function permission_exists($permission) {
 			//set default false
 				$result = false;
-			//search for the permission
-				if (count($_SESSION["permissions"]) > 0) {
-					foreach($_SESSION["permissions"] as $row) {
-						if ($row['permission_name'] == $permission) {
-							$result = true;
-							break;
-						}
-					}
+			//find the permission
+				if (is_array($_SESSION["permissions"]) && $_SESSION["permissions"][$permission] == true) {
+					$result = true;
 				}
 			//return the result
 				return $result;
@@ -1131,60 +1126,6 @@ function number_pad($number,$n) {
 			else {
 				return substr($string,0,$max_characters)." ...";
 			}
-		}
-	}
-
-//function to show the list of sound files
-	if (!function_exists('recur_sounds_dir')) {
-		function recur_sounds_dir($dir) {
-			global $dir_array;
-			global $dir_path;
-			$dir_list = opendir($dir);
-			while ($file = readdir ($dir_list)) {
-				if ($file != '.' && $file != '..') {
-					$newpath = $dir.'/'.$file;
-					$level = explode('/',$newpath);
-					if (substr($newpath, -4) == ".svn" ||
-						substr($newpath, -4) == ".git") {
-						//ignore .svn and .git dir and subdir
-					}
-					else {
-						if (is_dir($newpath)) { //directories
-							recur_sounds_dir($newpath);
-						}
-						else { //files
-							if (strlen($newpath) > 0) {
-								//make the path relative
-									$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
-								//remove the 8000-48000 khz from the path
-									$relative_path = str_replace("/8000/", "/", $relative_path);
-									$relative_path = str_replace("/16000/", "/", $relative_path);
-									$relative_path = str_replace("/32000/", "/", $relative_path);
-									$relative_path = str_replace("/48000/", "/", $relative_path);
-								//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
-									$file_array = explode( "/", $relative_path );
-									$x = 1;
-									$relative_path = '';
-									foreach( $file_array as $tmp) {
-										if ($x == 5) { $relative_path .= $tmp; }
-										if ($x > 5) { $relative_path .= '/'.$tmp; }
-										$x++;
-									}
-								//add the file if it does not exist in the array
-									if (isset($dir_array[$relative_path])) {
-										//already exists
-									}
-									else {
-										//add the new path
-											if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
-									}
-							}
-						}
-					}
-				}
-			}
-			if (isset($dir_array)) ksort($dir_array, SORT_STRING);
-			closedir($dir_list);
 		}
 	}
 

@@ -23,6 +23,8 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+	local Database = require"resources.functions.database"
+
 --play the greeting
 	function play_greeting()
 		--voicemail prompt
@@ -43,6 +45,8 @@
 
 						--get the greeting from the database
 							if (storage_type == "base64") then
+								local dbh = Database.new('system', 'base64/read')
+
 								sql = [[SELECT * FROM v_voicemail_greetings
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. voicemail_id.. [['
@@ -50,29 +54,33 @@
 								if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 								end
+								local saved
 								status = dbh:query(sql, function(row)
-									--add functions
-										require "resources.functions.base64";
-
 									--set the voicemail message path
 										mkdir(voicemail_dir.."/"..voicemail_id);
 										greeting_location = voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav"; --vm_message_ext;
 
 									--if not found, save greeting to local file system
-										--if (not file_exists(greeting_location)) then
+										--saved = file_exists(greeting_location)
+										--if not saved then
 											if (string.len(row["greeting_base64"]) > 32) then
-												local file = io.open(greeting_location, "w");
-												file:write(base64.decode(row["greeting_base64"]));
-												file:close();
+												--include the file io
+													local file = require "resources.functions.file"
+
+												--write decoded string to file
+													saved = file.write_base64(greeting_location, row["greeting_base64"]);
 											end
 										--end
+								end);
+								dbh:release();
 
+								if saved then
 									--play the greeting
 										session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 
 									--delete the greeting (retain local for better responsiveness)
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-								end);
+								end
 							elseif (storage_type == "http_cache") then
 								session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else

@@ -137,6 +137,9 @@
 				dbh:query(sql);
 			end
 
+		--offer to add an intro to the forwarded message
+			forward_add_intro(forward_voicemail_id, voicemail_message_uuid);
+
 		--get new and saved message counts
 			local new_messages, saved_messages = message_count_by_id(
 				forward_voicemail_id, domain_uuid

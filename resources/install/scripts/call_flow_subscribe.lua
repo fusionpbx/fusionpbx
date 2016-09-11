@@ -27,11 +27,10 @@ end
 
 end
 
-local sleep    = 60000
-local pid_file = scripts_dir .. "/run/call_flow_subscribe.tmp"
-local shutdown_event = "CUSTOM::fusion::flow::shutdown"
+local service_name = "call_flow"
+local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
 
-local events = EventConsumer.new(sleep, pid_file)
+local events = EventConsumer.new(pid_file)
 
 -- FS shutdown
 events:bind("SHUTDOWN", function(self, name, event)
@@ -39,13 +38,18 @@ events:bind("SHUTDOWN", function(self, name, event)
 	return self:stop()
 end)
 
--- shutdown command
-if shutdown_event then
-	events:bind(shutdown_event, function(self, name, event)
-		log.notice("shutdown")
+-- Control commands from FusionPBX
+events:bind("CUSTOM::fusion::service::control", function(self, name, event)
+	if service_name ~= event:getHeader('service-name') then return end
+
+	local command = event:getHeader('service-command')
+	if command == "stop" then
+		log.notice("get stop command")
 		return self:stop()
-	end)
-end
+	end
+
+	log.warningf('Unknown service command: %s', command or '<NONE>')
+end)
 
 -- FS receive SUBSCRIBE to BLF from device
 events:bind("PRESENCE_PROBE", function(self, name, event)

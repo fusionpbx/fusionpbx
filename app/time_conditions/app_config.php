@@ -26,7 +26,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "time_conditions";
 		$apps[$x]['destinations'][$y]['name'] = "time_conditions";
 		$apps[$x]['destinations'][$y]['sql'] = "select dialplan_name as name, dialplan_number as destination, dialplan_context as context, dialplan_description as description from v_dialplans ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' and dialplan_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "dialplan_number asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "dialplan_context";
 		$apps[$x]['destinations'][$y]['field']['name'] = "dialplan_name";
@@ -37,21 +37,25 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "time_condition_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "time_condition_add";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "time_condition_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "time_condition_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "time_condition_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

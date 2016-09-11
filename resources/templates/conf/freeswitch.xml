@@ -58,10 +58,10 @@
 
   <!-- languages section -->
   <section name="languages" description="Language Management">
-    <!--<X-PRE-PROCESS cmd="include" data="lang/de/*.xml"/>-->
-    <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
-    <!--<X-PRE-PROCESS cmd="include" data="lang/fr/*.xml"/>-->
-    <!--<X-PRE-PROCESS cmd="include" data="lang/ru/*.xml"/>-->
-    <!--<X-PRE-PROCESS cmd="include" data="lang/he/*.xml"/>-->
+    <X-PRE-PROCESS cmd="include" data="languages/de/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/en/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/fr/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/ru/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/he/*.xml"/>
   </section>
 </document>

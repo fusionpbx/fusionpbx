@@ -264,17 +264,6 @@ $text['label-strategy']['uk'] = "";
 $text['label-strategy']['de-at'] = "Strategie";
 $text['label-strategy']['he'] = "";
 
-$text['label-skip_active']['en-us'] = "Skip Active";
-$text['label-skip_active']['es-cl'] = "Saltar activo";
-$text['label-skip_active']['fr-fr'] = "Faire sonner les postes occupés";
-$text['label-skip_active']['pt-pt'] = "Ir ativa";
-$text['label-skip_active']['pt-br'] = "Pular ativação";
-$text['label-skip_active']['pl'] = "Pomiń aktywne";
-$text['label-skip_active']['sv-se'] = "Hoppa Över Aktiva";
-$text['label-skip_active']['uk'] = "";
-$text['label-skip_active']['de-at'] = "Aktive überspringen";
-$text['label-skip_active']['he'] = "דלג על שיחה פעילה";
-
 $text['label-ringback']['en-us'] = "Ring Back";
 $text['label-ringback']['es-cl'] = "Tono de retorno";
 $text['label-ringback']['fr-fr'] = "Type de tonalité de sonnerie";

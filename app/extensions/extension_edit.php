@@ -23,16 +23,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('extension_add') || permission_exists('extension_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('extension_add') || permission_exists('extension_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //detect billing app
 	$billing_app_exists = file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php");
@@ -136,6 +140,7 @@ else {
 			$mwi_account = check_str($_POST["mwi_account"]);
 			$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
 			$absolute_codec_string = check_str($_POST["absolute_codec_string"]);
+			$force_ping = check_str($_POST["force_ping"]);
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
@@ -468,6 +473,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (permission_exists('extension_absolute_codec_string')) {
 								$sql .= "absolute_codec_string, ";
 							}
+							if (permission_exists('extension_force_ping')) {
+								$sql .= "force_ping, ";
+							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "dial_string, ";
 							}
@@ -538,6 +546,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (permission_exists('extension_absolute_codec_string')) {
 								$sql .= "'$absolute_codec_string', ";
 							}
+							if (permission_exists('extension_force_ping')) {
+								$sql .= "'$force_ping', ";
+							}
 							if (permission_exists('extension_dial_string')) {
 								$sql .= "'$dial_string', ";
 							}
@@ -559,7 +570,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 							//set the voicemail password
 								if (strlen($voicemail_password) == 0) {
-									$voicemail_password = generate_password(9, 1);
+									$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 								}
 							//voicemail class
 								$ext = new extension;
@@ -621,7 +632,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				//set the voicemail password
 					if (strlen($voicemail_password) == 0) {
-						$voicemail_password = generate_password(9, 1);
+						$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 					}
 				//update extensions
 					$sql = "update v_extensions set ";
@@ -697,6 +708,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "sip_bypass_media = '$sip_bypass_media', ";
 					if (permission_exists('extension_absolute_codec_string')) {
 						$sql .= "absolute_codec_string = '$absolute_codec_string', ";
+					}
+					if (permission_exists('extension_force_ping')) {
+						$sql .= "force_ping = '$force_ping', ";
 					}
 					if (permission_exists('extension_dial_string')) {
 						$sql .= "dial_string = '$dial_string', ";
@@ -864,6 +878,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$mwi_account = $row["mwi_account"];
 			$sip_bypass_media = $row["sip_bypass_media"];
 			$absolute_codec_string = $row["absolute_codec_string"];
+			$force_ping = $row["force_ping"];
 			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
@@ -1158,7 +1173,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-voicemail_password']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='voicemail_password' id='voicemail_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='$voicemail_password'>\n";
+		echo "    <input class='formfld' type='text' name='voicemail_password' id='voicemail_password' autocomplete='off' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='$voicemail_password'>\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-voicemail_password']."\n";
 		echo "</td>\n";
@@ -1939,6 +1954,38 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"$absolute_codec_string\">\n";
 		echo "<br />\n";
 		echo $text['description-absolute_codec_string']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('extension_force_ping')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-force_ping']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='force_ping'>\n";
+		if ($force_ping == "") {
+			echo "    <option value='' selected='selected'></option>\n";
+		}
+		else {
+			echo "    <option value=''></option>\n";
+		}
+		if ($force_ping == "true") {
+			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($force_ping == "false") {
+			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-force_ping']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

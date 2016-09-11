@@ -23,17 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists("user_account_setting_view")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	return;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists("user_account_setting_view")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -74,195 +77,196 @@ else {
 		}
 	}
 
-if (count($_POST)>0 && $_POST["persistform"] != "1") {
-
-	//get the HTTP values and set as variables
-		$password = check_str($_POST["password"]);
-		$password_confirm = check_str($_POST["password_confirm"]);
-		$user_status = check_str($_POST["user_status"]);
-		$user_template_name = check_str($_POST["user_template_name"]);
-		$user_language = check_str($_POST["user_language"]);
-		$user_time_zone = check_str($_POST["user_time_zone"]);
-		$group_member = check_str($_POST["group_member"]);
-
-	//check required values
-		if ($password != $password_confirm) { $msg_error = $text['message-password_mismatch']; }
-
-		if ($msg_error != '') {
-			$_SESSION["message"] = $msg_error;
-			$_SESSION["message_mood"] = 'negative';
-			header("Location: user_edit.php");
-			exit;
-		}
-
-		if (!check_password_strength($password, $text)) {
-			header("Location: user_edit.php");
-			exit;
-		}
-
-	//check to see if user language is set
-		$sql = "select count(*) as num_rows from v_user_settings ";
-		$sql .= "where user_setting_category = 'domain' ";
-		$sql .= "and user_setting_subcategory = 'language' ";
-		$sql .= "and user_uuid = '".$user_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$user_setting_uuid = uuid();
-				$sql = "insert into v_user_settings ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "user_setting_uuid, ";
-				$sql .= "user_setting_category, ";
-				$sql .= "user_setting_subcategory, ";
-				$sql .= "user_setting_name, ";
-				$sql .= "user_setting_value, ";
-				$sql .= "user_setting_enabled, ";
-				$sql .= "user_uuid ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$_SESSION["domain_uuid"]."', ";
-				$sql .= "'".$user_setting_uuid."', ";
-				$sql .= "'domain', ";
-				$sql .= "'language', ";
-				$sql .= "'code', ";
-				$sql .= "'".$user_language."', ";
-				$sql .= "'true', ";
-				$sql .= "'".$user_uuid."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
+//process http post data
+	if (count($_POST) > 0 && $_POST["persistform"] != "1") {
+	
+		//get the HTTP values and set as variables
+			$password = check_str($_POST["password"]);
+			$password_confirm = check_str($_POST["password_confirm"]);
+			$user_status = check_str($_POST["user_status"]);
+			$user_template_name = check_str($_POST["user_template_name"]);
+			$user_language = check_str($_POST["user_language"]);
+			$user_time_zone = check_str($_POST["user_time_zone"]);
+			$group_member = check_str($_POST["group_member"]);
+	
+		//check required values
+			if ($password != $password_confirm) { $msg_error = $text['message-password_mismatch']; }
+	
+			if ($msg_error != '') {
+				$_SESSION["message"] = $msg_error;
+				$_SESSION["message_mood"] = 'negative';
+				header("Location: user_edit.php");
+				exit;
 			}
-			else {
-				if (strlen($user_language) == 0) {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'language' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
+	
+			if (!check_password_strength($password, $text)) {
+				header("Location: user_edit.php");
+				exit;
+			}
+	
+		//check to see if user language is set
+			$sql = "select count(*) as num_rows from v_user_settings ";
+			$sql .= "where user_setting_category = 'domain' ";
+			$sql .= "and user_setting_subcategory = 'language' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$user_setting_uuid = uuid();
+					$sql = "insert into v_user_settings ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "user_setting_uuid, ";
+					$sql .= "user_setting_category, ";
+					$sql .= "user_setting_subcategory, ";
+					$sql .= "user_setting_name, ";
+					$sql .= "user_setting_value, ";
+					$sql .= "user_setting_enabled, ";
+					$sql .= "user_uuid ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION["domain_uuid"]."', ";
+					$sql .= "'".$user_setting_uuid."', ";
+					$sql .= "'domain', ";
+					$sql .= "'language', ";
+					$sql .= "'code', ";
+					$sql .= "'".$user_language."', ";
+					$sql .= "'true', ";
+					$sql .= "'".$user_uuid."' ";
+					$sql .= ")";
 					$db->exec(check_sql($sql));
-					unset($sql);
 				}
 				else {
-					$sql  = "update v_user_settings set ";
-					$sql .= "user_setting_value = '".$user_language."', ";
-					$sql .= "user_setting_enabled = 'true' ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'language' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
+					if (strlen($user_language) == 0) {
+						$sql = "delete from v_user_settings ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'language' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+					else {
+						$sql  = "update v_user_settings set ";
+						$sql .= "user_setting_value = '".$user_language."', ";
+						$sql .= "user_setting_enabled = 'true' ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'language' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+					}
 				}
 			}
-		}
-
-	//check to see if user time_zone is set
-		$sql = "select count(*) as num_rows from v_user_settings ";
-		$sql .= "where user_setting_category = 'domain' ";
-		$sql .= "and user_setting_subcategory = 'time_zone' ";
-		$sql .= "and user_uuid = '".$user_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$user_setting_uuid = uuid();
-				$sql = "insert into v_user_settings ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "user_setting_uuid, ";
-				$sql .= "user_setting_category, ";
-				$sql .= "user_setting_subcategory, ";
-				$sql .= "user_setting_name, ";
-				$sql .= "user_setting_value, ";
-				$sql .= "user_setting_enabled, ";
-				$sql .= "user_uuid ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$_SESSION["domain_uuid"]."', ";
-				$sql .= "'".$user_setting_uuid."', ";
-				$sql .= "'domain', ";
-				$sql .= "'time_zone', ";
-				$sql .= "'name', ";
-				$sql .= "'".$user_time_zone."', ";
-				$sql .= "'true', ";
-				$sql .= "'".$user_uuid."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-			}
-			else {
-				if (strlen($user_time_zone) == 0) {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'time_zone' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
+	
+		//check to see if user time_zone is set
+			$sql = "select count(*) as num_rows from v_user_settings ";
+			$sql .= "where user_setting_category = 'domain' ";
+			$sql .= "and user_setting_subcategory = 'time_zone' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$user_setting_uuid = uuid();
+					$sql = "insert into v_user_settings ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "user_setting_uuid, ";
+					$sql .= "user_setting_category, ";
+					$sql .= "user_setting_subcategory, ";
+					$sql .= "user_setting_name, ";
+					$sql .= "user_setting_value, ";
+					$sql .= "user_setting_enabled, ";
+					$sql .= "user_uuid ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION["domain_uuid"]."', ";
+					$sql .= "'".$user_setting_uuid."', ";
+					$sql .= "'domain', ";
+					$sql .= "'time_zone', ";
+					$sql .= "'name', ";
+					$sql .= "'".$user_time_zone."', ";
+					$sql .= "'true', ";
+					$sql .= "'".$user_uuid."' ";
+					$sql .= ")";
 					$db->exec(check_sql($sql));
-					unset($sql);
 				}
 				else {
-					$sql  = "update v_user_settings set ";
-					$sql .= "user_setting_value = '".$user_time_zone."', ";
-					$sql .= "user_setting_enabled = 'true' ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'time_zone' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
+					if (strlen($user_time_zone) == 0) {
+						$sql = "delete from v_user_settings ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'time_zone' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+					else {
+						$sql  = "update v_user_settings set ";
+						$sql .= "user_setting_value = '".$user_time_zone."', ";
+						$sql .= "user_setting_enabled = 'true' ";
+						$sql .= "where user_setting_category = 'domain' ";
+						$sql .= "and user_setting_subcategory = 'time_zone' ";
+						$sql .= "and user_uuid = '".$user_uuid."' ";
+						$db->exec(check_sql($sql));
+					}
 				}
 			}
-		}
-
-	//sql update
-		$sql  = "update v_users set ";
-		if (strlen($password) > 0 && $password_confirm == $password) {
-			//salt used with the password to create a one way hash
-				$salt = generate_password('20', '4');
-			//set the password
-				$sql .= "password = '".md5($salt.$password)."', ";
-				$sql .= "salt = '".$salt."', ";
-		}
-		$sql .= "user_status = '$user_status' ";
+	
+		//sql update
+			$sql  = "update v_users set ";
+			if (strlen($password) > 0 && $password_confirm == $password) {
+				//salt used with the password to create a one way hash
+					$salt = generate_password('20', '4');
+				//set the password
+					$sql .= "password = '".md5($salt.$password)."', ";
+					$sql .= "salt = '".$salt."', ";
+			}
+			$sql .= "user_status = '$user_status' ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and user_uuid = '$user_uuid' ";
+			if (permission_exists("user_account_setting_edit")) {
+				$count = $db->exec(check_sql($sql));
+			}
+	
+		//if call center app is installed then update the user_status
+			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_center')) {
+				//update the user_status
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domain_name']." '".$user_status."'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+	
+				//update the user state
+					$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+					$response = event_socket_request($fp, $cmd);
+			}
+	
+		//redirect the browser
+			$_SESSION["message"] = $text['confirm-update'];
+			header("Location: ".PROJECT_PATH."/core/user_settings/user_edit.php");
+			return;
+	}
+	else {
+		$sql = "select * from v_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_uuid = '$user_uuid' ";
-		if (permission_exists("user_account_setting_edit")) {
-			$count = $db->exec(check_sql($sql));
+		$sql .= "and user_enabled = 'true' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as $row) {
+			//$password = $row["password"];
+			$user_status = $row["user_status"];
+			break; //limit to 1 row
 		}
-
-	//if call center app is installed then update the user_status
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_center')) {
-			//update the user_status
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domain_name']." '".$user_status."'";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-
-			//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-		}
-
-	//redirect the browser
-		$_SESSION["message"] = $text['confirm-update'];
-		header("Location: ".PROJECT_PATH."/core/user_settings/user_edit.php");
-		return;
-}
-else {
-	$sql = "select * from v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and user_uuid = '$user_uuid' ";
-	$sql .= "and user_enabled = 'true' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as $row) {
-		//$password = $row["password"];
-		$user_status = $row["user_status"];
-		break; //limit to 1 row
+	
+		//get the groups the user is a member of
+		//group_members function defined in config.php
+		$group_members = group_members($db, $user_uuid);
 	}
-
-	//get the groups the user is a member of
-	//group_members function defined in config.php
-	$group_members = group_members($db, $user_uuid);
-}
 
 //include the header
 	require_once "resources/header.php";
@@ -392,13 +396,66 @@ else {
 
 	echo "		</td>";
 	echo "	</tr>";
-	echo "</table>";
-	echo "<br>";
-	echo "<br>";
 
-	echo "<table $table_width cellpadding='0' cellspacing='0'>";
 	echo "	<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$text['table2-title']."</th>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-user_language']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
+	echo "		<option value=''></option>\n";
+	//get all language codes from database
+	$sql = "select * from v_languages order by language asc";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$language_codes[$row["code"]] = $row["language"];
+	}
+	unset($prep_statement, $result, $row);
+	foreach ($_SESSION['app']['languages'] as $code) {
+		$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
+		echo "	<option value='".$code."' ".$selected.">".$language_codes[$code]." [".$code."]</option>\n";
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-user_language']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-time']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
+	echo "		<option value=''></option>\n";
+	//$list = DateTimeZone::listAbbreviations();
+	$time_zone_identifiers = DateTimeZone::listIdentifiers();
+	$previous_category = '';
+	$x = 0;
+	foreach ($time_zone_identifiers as $key => $row) {
+		$time_zone = explode("/", $row);
+		$category = $time_zone[0];
+		if ($category != $previous_category) {
+			if ($x > 0) {
+				echo "		</optgroup>\n";
+			}
+			echo "		<optgroup label='".$category."'>\n";
+		}
+		if ($row == $user_settings['domain']['time_zone']['name']) {
+			echo "			<option value='".$row."' selected='selected'>".$row."</option>\n";
+		}
+		else {
+			echo "			<option value='".$row."'>".$row."</option>\n";
+		}
+		$previous_category = $category;
+		$x++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-timezone']."<br />\n";
+	echo "	</td>\n";
 	echo "	</tr>\n";
 
 	if ($_SESSION['user_status_display'] == "false") {
@@ -449,80 +506,19 @@ else {
 		echo "	</tr>\n";
 	}
 
-	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-user_language']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
-	echo "		<option value=''></option>\n";
-	//get all language codes from database
-	$sql = "select * from v_languages order by language asc";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$language_codes[$row["code"]] = $row["language"];
-	}
-	unset($prep_statement, $result, $row);
-	foreach ($_SESSION['app']['languages'] as $code) {
-		$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
-		echo "	<option value='".$code."' ".$selected.">".$language_codes[$code]." [".$code."]</option>\n";
-	}
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-user_language']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-
-	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-time']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
-	echo "		<option value=''></option>\n";
-	//$list = DateTimeZone::listAbbreviations();
-    $time_zone_identifiers = DateTimeZone::listIdentifiers();
-	$previous_category = '';
-	$x = 0;
-	foreach ($time_zone_identifiers as $key => $row) {
-		$time_zone = explode("/", $row);
-		$category = $time_zone[0];
-		if ($category != $previous_category) {
-			if ($x > 0) {
-				echo "		</optgroup>\n";
-			}
-			echo "		<optgroup label='".$category."'>\n";
-		}
-		if ($row == $user_settings['domain']['time_zone']['name']) {
-			echo "			<option value='".$row."' selected='selected'>".$row."</option>\n";
-		}
-		else {
-			echo "			<option value='".$row."'>".$row."</option>\n";
-		}
-		$previous_category = $category;
-		$x++;
-	}
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-timezone']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
 	echo "</table>";
 	echo "<br />";
-
 	echo "<div align='right'><input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\"></div>";
 	echo "<br />";
-
 	echo "</form>";
 
+	//capture enter key to submit form
 	echo "<script>\n";
-//capture enter key to submit form
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
-// convert password fields to text
+
+	// convert password fields to text
 	echo "	function submit_form() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
 	echo "		$('input:password').attr({type:'text'});\n";

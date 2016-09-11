@@ -271,6 +271,27 @@
 		unset ($prep_statement);
 	}
 
+//get the phrase details
+	if (strlen($phrase_uuid) > 0) {
+		$sql = "select * from v_phrase_details ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and phrase_uuid = '".$phrase_uuid."' ";
+		$sql .= "order by phrase_detail_order asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$phrase_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset($sql, $prep_statement);
+	}
+
+//get the recordings
+	$sql = "select * from v_recordings ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "order by recording_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	unset($sql, $prep_statement);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == 'add') { $document['title'] = $text['title-add_phrase']; }
@@ -300,12 +321,6 @@
 	echo "	if (selected_index == 0) {\n"; //play
 	echo "		obj_action.options[obj_action.options.length] = new Option('', '');\n"; //blank option
 	//recordings
-		$sql = "select * from v_recordings ";
-		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-		$sql .= "order by recording_name asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		$tmp_selected = false;
 		if (count($recordings) > 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
@@ -322,19 +337,14 @@
 		}
 		unset($sql, $prep_statement, $recordings);
 	//sounds
-		$dir_path = $_SESSION['switch']['sounds']['dir'];
-		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		if (count($dir_array) > 0) {
+		$file = new file;
+		$sound_files = $file->sounds();
+		if (is_array($sound_files)) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
-			foreach ($dir_array as $key => $value) {
+			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
-					if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-						echo "opt_group.appendChild(new Option(\"".$key."\", \"lua(streamfile.lua ".$key.")\"));\n";
-					}
-					else {
-						echo "opt_group.appendChild(new Option(\"".$key."\", \"".$key."\"));\n";
-					}
+					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -454,33 +464,27 @@
 	echo "			<td class='vtable' style='text-align: center;'>".$text['label-order']."</td>\n";
 	echo "			<td></td>\n";
 	echo "		</tr>\n";
-	if (strlen($phrase_uuid) > 0) {
-		$sql = "select * from v_phrase_details ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and phrase_uuid = '".$phrase_uuid."' ";
-		$sql .= "order by phrase_detail_order asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		foreach($result as $field) {
+	if (is_array($phrase_details)) {
+		foreach($phrase_details as $field) {
 			//clean up output for display
-			if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-				if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 19) == 'lua(streamfile.lua ') {
-					$phrase_detail_function = $text['label-play'];
-					$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $field['phrase_detail_data']);
-					$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
-				}
+			if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 19) == 'lua(streamfile.lua ') {
+				$phrase_detail_function = $text['label-play'];
+				$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
 			}
-			if ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
+			elseif ($field['phrase_detail_function'] == 'execute' && substr($field['phrase_detail_data'], 0, 6) == 'sleep(') {
 				$phrase_detail_function = $text['label-pause'];
 				$phrase_detail_data = str_replace('sleep(', '', $field['phrase_detail_data']);
 				$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
 				$phrase_detail_data = ($phrase_detail_data / 1000).'s'; // seconds
 			}
-			if ($field['phrase_detail_function'] == 'play-file') {
+			elseif ($field['phrase_detail_function'] == 'play-file') {
 				$phrase_detail_function = $text['label-play'];
 				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
+			}
+			else {
+				$phrase_detail_function = $field['phrase_detail_function'];
+				$phrase_detail_data = $field['phrase_detail_data'];
 			}
 			echo "<tr>\n";
 			echo "	<td class='vtable'>".$phrase_detail_function."&nbsp;</td>\n";
@@ -492,19 +496,13 @@
 			echo "</tr>\n";
 		}
 	}
-	unset($sql, $result);
 	echo "<tr>\n";
 	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
-	if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-		echo "		<option value='execute'>".$text['label-play']."</option>\n";
-	}
-	else {
-		echo "		<option value='play-file'>".$text['label-play']."</option>\n";
-	}
+	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
 	if (if_group("superadmin")) {
-		echo "		<option value='execute'>".$text['label-execute']."</option>\n";
+		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
@@ -600,4 +598,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

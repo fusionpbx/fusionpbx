@@ -42,19 +42,51 @@
 //include the device class
 	//require_once "app/devices/resources/classes/device.php";
 
+//get the vendor functions
+	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
+	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
+	$sql .= "WHERE v.device_vendor_uuid = f.device_vendor_uuid ";
+	$sql .= "AND f.device_vendor_function_uuid in ";
+	$sql .= "(";
+	$sql .= "	SELECT device_vendor_function_uuid FROM v_device_vendor_function_groups ";
+	$sql .= "	WHERE device_vendor_function_uuid = f.device_vendor_function_uuid ";
+	$sql .= "	AND ( ";
+	if (is_array($_SESSION['groups'])) {
+		$x = 0;
+		foreach($_SESSION['groups'] as $row) {
+			if ($x == 0) {
+				$sql .= "		group_name = '".$row['group_name']."' ";
+			}
+			else {
+				$sql .= "		or group_name = '".$row['group_name']."' ";
+			}
+			$x++;
+		}
+	}
+	$sql .= "	) ";
+	$sql .= ") ";
+	$sql .= "AND v.enabled = 'true' ";
+	$sql .= "AND f.enabled = 'true' ";
+	$sql .= "ORDER BY v.name ASC, f.name ASC ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //add or update the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 
-				//get the $device_profile_uuid
-					foreach ($_POST['device_keys'] as &$row) {
-						if (strlen($row["device_profile_uuid"]) > 0 && is_uuid($row['device_profile_uuid'])) {
-							$device_profile_uuid = $row["device_profile_uuid"];
-							break;
-						}
-					}
+				//get device
+					$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+					$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+					$device_uuid = $row['device_uuid'];
+					$device_profile_uuid = $row['device_profile_uuid'];
+					unset($row);
 
 				//get device profile keys
 					if (isset($device_profile_uuid)) {
@@ -64,6 +96,60 @@
 						$prep_statement->execute();
 						$device_profile_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						unset($sql,$prep_statement);
+					}
+
+				//get device keys
+					if (isset($device_uuid)) {
+						$sql = "SELECT * FROM v_device_keys ";
+						$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset($sql,$prep_statement);
+					}
+
+				//create a list of protected keys - device keys
+					foreach($device_keys as $row) {
+						//determine if the key is allowed
+							$device_key_authorized = false;
+							foreach($vendor_functions as $function) {
+								if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+									$device_key_authorized = true;
+								}
+							}
+						//add the protected keys
+							if (!$device_key_authorized) {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
+						//add to protected
+							if ($row['device_key_protected'] == "true") {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
+					}
+				//create a list of protected keys - device proile keys
+					foreach($device_profile_keys as $row) {
+						//determine if the key is allowed
+							$device_key_authorized = false;
+							foreach($vendor_functions as $function) {
+								if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+									$device_key_authorized = true;
+								}
+							}
+						//add the protected keys
+							if (!$device_key_authorized) {
+								$protected_keys[$row['device_key_id']] = 'true';
+							}
+					}
+
+				//remove the keys the user is not allowed to edit based on the authorized vendor keys
+					$x=0;
+					foreach($_POST['device_keys'] as $row) {
+						//loop through the authorized vendor functions
+							if ($protected_keys[$row['device_key_id']] == "true") {
+								unset($_POST['device_keys'][$x]);
+							}
+						//increment the row id
+							$x++;
 					}
 
 				//add or update the device keys
@@ -112,12 +198,23 @@
 									}
 							}
 
-						//sql update
+						//sql add or update
 							if (strlen($device_key_uuid) == 0) {
 								if (permission_exists('device_key_add') && strlen($device_key_type) > 0 && strlen($device_key_value) > 0) {
 
 									//create the primary keys
 										$device_key_uuid = uuid();
+
+									//if the device_uuid is not in the array then get the device_uuid from the database
+										if (strlen($device_uuid) == 0) {
+											$sql = "SELECT device_uuid, device_profile_uuid FROM v_devices ";
+											$sql .= "WHERE device_user_uuid = '".$_SESSION['user_uuid']."' ";
+											$prep_statement = $db->prepare(check_sql($sql));
+											$prep_statement->execute();
+											$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+											$device_uuid = $row['device_uuid'];
+											unset($row);
+										}
 
 									//insert the keys
 										$sql = "insert into v_device_keys ";
@@ -145,7 +242,6 @@
 										$sql .= "'".$device_key_category."', ";
 										$sql .= "'".$device_key_vendor."' ";
 										$sql .= ");";
-										//echo $sql;
 
 									//action add or update
 										$action = "add";
@@ -299,6 +395,30 @@
 		$device_keys[$x]['device_key_label'] = '';
 	}
 
+//remove the keys the user is not allowed to edit based on the authorized vendor keys
+	foreach($device_keys as $row) {
+		//loop through the authorized vendor functions
+			$device_key_authorized = false;
+			foreach($vendor_functions as $function) {
+				if (strlen($row['device_key_type'] == 0)) {
+					$device_key_authorized = true;
+				}
+				else {
+					if ($function['vendor_name'] == $row['device_key_vendor'] && $function['value'] == $row['device_key_type']) {
+						$device_key_authorized = true;
+					}
+				}
+			}
+		//unset vendor functions the is not allowed to edit
+			if (!$device_key_authorized) {
+				unset($device_keys[$row['device_key_id']]);
+			}
+		//hide protected keys
+			if ($row['device_key_protected'] == "true") {
+				unset($device_keys[$row['device_key_id']]);
+			}
+	}
+
 //show the header
 	//require_once "resources/header.php";
 
@@ -328,6 +448,7 @@
 			//set the variables
 				$device_key_vendor = $row['device_key_vendor'];
 				$device_vendor = $row['device_key_vendor'];
+
 			//set the column names
 				if ($previous_device_key_vendor != $row['device_key_vendor']) {
 					echo "			<tr>\n";
@@ -440,213 +561,41 @@
 
 				echo "<td class='row_style".$c." row_style_slim' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
-
 				?>
-
 				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
 				<input class='formfld' type='hidden' id='key_category_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_category]' value="<?php echo $device_key_category; ?>">
 				<input class='formfld' type='hidden' id='key_uuid_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_uuid]' value="<?php echo $device_uuid; ?>">
 				<input class='formfld' type='hidden' id='key_key_line_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_line]' value="<?php echo $device_key_line; ?>">
-
-				<?php $selected = "selected='selected'"; ?>
-				<?php $found = false; ?>
-				<select class='formfld' style='width: 95px;' name='device_keys[<?php echo $x; ?>][device_key_type]' id='key_type_<?php echo $x; ?>' onchange="document.getElementById('key_vendor_<?php echo $x; ?>').value=document.getElementById('key_type_<?php echo $x; ?>').options[document.getElementById('key_type_<?php echo $x; ?>').selectedIndex].parentNode.label.toLowerCase();" >
-				<option value=''></option>
 				<?php
-				if (strtolower($device_vendor) == "aastra" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Aastra'>"; }
-					?>
-					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
-					<option value='blfxfer' <?php if ($row['device_key_type'] == "blfxfer") { echo $selected;$found=true; } ?>><?php echo $text['label-blf_xfer'] ?></option>
-					<option value='callers' <?php if ($row['device_key_type'] == "callers") { echo $selected;$found=true; } ?>><?php echo $text['label-callers'] ?></option>
-
-					<option value='dnd' <?php if ($row['device_key_type'] == "dnd") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
-					<option value='speeddial' <?php if ($row['device_key_type'] == "speeddial") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
-					<option value='xfer' <?php if ($row['device_key_type'] == "xfer") { echo $selected;$found=true; } ?>><?php echo $text['label-xfer'] ?></option>
-
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
+				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
+				echo "	<option value=''></option>\n";
+				$previous_vendor = '';
+				$i=0;
+				foreach ($vendor_functions as $function) {
+					if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
+						if ($i > 0) { echo "	</optgroup>\n"; }
+						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
+					}
+					$selected = '';
+					if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
+						$selected = "selected='selected'";
+					}
+					if (strlen($row['device_key_vendor']) == 0) {
+						echo "		<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+					}
+					if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+						echo "		<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+						
+					}
+					$previous_vendor = $function['vendor_name'];
+					$i++;
+					
 				}
-				if (strtolower($device_vendor) == "cisco" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Cisco'>"; }
-					?>
-					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
-					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "disabled") { echo $selected;$found=true; } ?>><?php echo $text['label-disabled'] ?></option>
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
+				if (strlen($row['device_key_vendor']) == 0) {
+					echo "	</optgroup>\n";
 				}
-				if (strtolower($device_vendor) == "grandstream" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Grandstream'>"; }
-					?>
-					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='shared line' <?php if ($row['device_key_type'] == "shared line") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
-					<option value='speed dial' <?php if ($row['device_key_type'] == "speed dial") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
-					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
-					<option value='presence watcher' <?php if ($row['device_key_type'] == "presence watcher") { echo $selected;$found=true; } ?>><?php echo $text['label-presence_watcher'] ?></option>
-					<option value='eventlist blf' <?php if ($row['device_key_type'] == "eventlist blf") { echo $selected;$found=true; } ?>><?php echo $text['label-eventlist_blf'] ?></option>
-					<option value='speed dial active' <?php if ($row['device_key_type'] == "speed dial active") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial_active'] ?></option>
-					<option value='dial dtmf' <?php if ($row['device_key_type'] == "dial dtmf") { echo $selected;$found=true; } ?>><?php echo $text['label-dial_dtmf'] ?></option>
-					<option value='voicemail' <?php if ($row['device_key_type'] == "voicemail") { echo $selected;$found=true; } ?>><?php echo $text['label-voicemail'] ?></option>
-					<option value='call return' <?php if ($row['device_key_type'] == "call return") { echo $selected;$found=true; } ?>><?php echo $text['label-call_return'] ?></option>
-					<option value='transfer' <?php if ($row['device_key_type'] == "transfer") { echo $selected;$found=true; } ?>><?php echo $text['label-transfer'] ?></option>
-					<option value='call park' <?php if ($row['device_key_type'] == "call park") { echo $selected;$found=true; } ?>><?php echo $text['label-call_park'] ?></option>
-					<option value='intercom' <?php if ($row['device_key_type'] == "intercom") { echo $selected;$found=true; } ?>><?php echo $text['label-intercom'] ?></option>
-					<option value='ldap search' <?php if ($row['device_key_type'] == "ldap search") { echo $selected;$found=true; } ?>><?php echo $text['label-ldap_search'] ?></option>
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
-				}
-				if (strtolower($device_vendor) == "mitel" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Mitel'>"; }
-					?>
-					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-not_programmed'] ?></option>
-					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
-					<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
-					<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='2' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>><?php echo $text['label-call_log'] ?></option>
-					<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>><?php echo $text['label-phone_book'] ?></option>
-					<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>><?php echo $text['label-forward'] ?></option>
-					<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
-					<option value='3' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>><?php echo $text['label-advisory_message'] ?></option>
-					<option value='18' <?php if ($row['device_key_type'] == "18") { echo $selected;$found=true; } ?>><?php echo $text['label-pc_application'] ?></option>
-					<option value='4' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>><?php echo $text['label-headset_on_off'] ?></option>
-					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-rss_feed'] ?></option>
-					<option value='27' <?php if ($row['device_key_type'] == "27") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial_blf'] ?></option>
-					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
-					<!--
-					0 - not programmed
-					1 - speed dial
-					2 - callLog
-					3 - advisoryMsg (on/off)
-					4 - headset(on/off)
-					5 - shared line
-					6 - Line 1
-					7 - Line 2
-					8 - Line 3
-					9 - Line 4
-					10 - Line 5
-					11 - Line 6
-					12 - Line 7
-					13 - Line 8
-					15 - phonebook
-					16 - call forwarding
-					17 - do not disturb
-					18 - PC Application
-					19 - RSS Feed URL / Branding /Notes
-					21 - Superkey (5304 set only)
-					22 - Redial key (5304 set only)
-					23 - Hold key (5304 set only)
-					24 - Trans/Conf key (5304 set only)
-					25 - Message key (5304 set only)
-					26 - Cancel key (5304 set only)
-					27 - Speed Dial & BLF
-
-					Mitel web interface shows html_application
-					-->
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
-				}
-				if (strtolower($device_vendor) == "polycom" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Polycom'>"; }
-					?>
-					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
-					<option value='normal' <?php if ($row['device_key_type'] == "normal") { echo $selected;$found=true; } ?>><?php echo $text['label-normal'] ?></option>
-					<option value='Messages' <?php if ($row['device_key_type'] == "Messages") { echo $selected;$found=true; } ?>><?php echo $text['label-messages'] ?></option>
-					<option value='MicMute' <?php if ($row['device_key_type'] == "MicMute") { echo $selected;$found=true; } ?>><?php echo $text['label-micmute'] ?></option>
-					<option value='Redial' <?php if ($row['device_key_type'] == "Redial") { echo $selected;$found=true; } ?>><?php echo $text['label-redial'] ?></option>
-					<option value='Null' <?php if ($row['device_key_type'] == "Null") { echo $selected;$found=true; } ?>><?php echo $text['label-null'] ?></option>
-					<option value='SpeedDial' <?php if ($row['device_key_type'] == "SpeedDial") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddial'] ?></option>
-					<option value='SpeedDialMenu' <?php if ($row['device_key_type'] == "SpeedDialMenu") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddialmenu'] ?></option>
-					<option value='URL' <?php if ($row['device_key_type'] == "URL") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
-				}
-				if (strtolower($device_vendor) == "snom" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Snom'>"; }
-					?>
-					<option value='none' <?php if ($row['device_key_type'] == "none") { echo $selected;$found=true; } ?>><?php echo $text['label-none'] ?></option>
-					<option value='url' <?php if ($row['device_key_type'] == "url") { echo $selected;$found=true; } ?>><?php echo $text['label-action_url'] ?></option>
-					<option value='auto_answer' <?php if ($row['device_key_type'] == "auto_answer") { echo $selected;$found=true; } ?>><?php echo $text['label-auto_answer'] ?></option>
-					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
-					<option value='button' <?php if ($row['device_key_type'] == "button") { echo $selected;$found=true; } ?>><?php echo $text['label-button'] ?></option>
-					<option value='call_agent' <?php if ($row['device_key_type'] == "call_agent") { echo $selected;$found=true; } ?>><?php echo $text['label-call_agent'] ?></option>
-					<option value='conference' <?php if ($row['device_key_type'] == "conference") { echo $selected;$found=true; } ?>><?php echo $text['label-conference'] ?></option>
-					<option value='dtmf' <?php if ($row['device_key_type'] == "dtmf") { echo $selected;$found=true; } ?>><?php echo $text['label-dtmf'] ?></option>
-					<option value='dest' <?php if ($row['device_key_type'] == "dest") { echo $selected;$found=true; } ?>><?php echo $text['label-extension'] ?></option>
-					<option value='redirect' <?php if ($row['device_key_type'] == "redirect") { echo $selected;$found=true; } ?>><?php echo $text['label-redirect'] ?></option>
-					<option value='icom' <?php if ($row['device_key_type'] == "icom") { echo $selected;$found=true; } ?>><?php echo $text['label-intercom'] ?></option>
-					<option value='ivr' <?php if ($row['device_key_type'] == "ivr") { echo $selected;$found=true; } ?>><?php echo $text['label-ivr'] ?></option>
-					<option value='keyevent' <?php if ($row['device_key_type'] == "keyevent") { echo $selected;$found=true; } ?>><?php echo $text['label-key_event'] ?></option>
-					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='multicast' <?php if ($row['device_key_type'] == "multicast") { echo $selected;$found=true; } ?>><?php echo $text['label-multicast_page'] ?></option>
-					<option value='orbit' <?php if ($row['device_key_type'] == "orbit") { echo $selected;$found=true; } ?>><?php echo $text['label-orbit'] ?></option>
-					<option value='presence' <?php if ($row['device_key_type'] == "presence") { echo $selected;$found=true; } ?>><?php echo $text['label-presence'] ?></option>
-					<option value='p2t' <?php if ($row['device_key_type'] == "p2t") { echo $selected;$found=true; } ?>><?php echo $text['label-p2t'] ?></option>
-					<option value='mult' <?php if ($row['device_key_type'] == "mult") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
-					<option value='speed' <?php if ($row['device_key_type'] == "speed") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
-					<option value='transfer' <?php if ($row['device_key_type'] == "transfer") { echo $selected;$found=true; } ?>><?php echo $text['label-transfer'] ?></option>
-					<option value='recorder' <?php if ($row['device_key_type'] == "recorder") { echo $selected;$found=true; } ?>><?php echo $text['label-record'] ?></option>
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
-				}
-				if (strtolower($device_vendor) == "yealink" || strlen($vendor_count) > 1) {
-					if ($vendor_count > 1) { echo "<optgroup label='Yealink'>"; }
-					?>
-					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-na'] ?></option>
-					<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>><?php echo $text['label-conference'] ?></option>
-					<option value='2' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>><?php echo $text['label-forward'] ?></option>
-					<option value='3' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>><?php echo $text['label-transfer'] ?></option>
-					<option value='4' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>><?php echo $text['label-hold'] ?></option>
-					<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
-					<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>><?php echo $text['label-redial'] ?></option>
-					<option value='7' <?php if ($row['device_key_type'] == "7") { echo $selected;$found=true; } ?>><?php echo $text['label-call_return'] ?></option>
-					<option value='8' <?php if ($row['device_key_type'] == "8") { echo $selected;$found=true; } ?>><?php echo $text['label-sms'] ?></option>
-					<option value='9' <?php if ($row['device_key_type'] == "9") { echo $selected;$found=true; } ?>><?php echo $text['label-call_pickup'] ?></option>
-					<option value='10' <?php if ($row['device_key_type'] == "10") { echo $selected;$found=true; } ?>><?php echo $text['label-call_park'] ?></option>
-					<option value='11' <?php if ($row['device_key_type'] == "11") { echo $selected;$found=true; } ?>><?php echo $text['label-dtmf'] ?></option>
-					<option value='12' <?php if ($row['device_key_type'] == "12") { echo $selected;$found=true; } ?>><?php echo $text['label-voicemail'] ?></option>
-					<option value='13' <?php if ($row['device_key_type'] == "13") { echo $selected;$found=true; } ?>><?php echo $text['label-speed_dial'] ?></option>
-					<option value='14' <?php if ($row['device_key_type'] == "14") { echo $selected;$found=true; } ?>><?php echo $text['label-intercom'] ?></option>
-					<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
-					<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>><?php echo $text['label-url'] ?></option>
-					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>><?php echo $text['label-public_hold'] ?></option>
-					<option value='20' <?php if ($row['device_key_type'] == "20") { echo $selected;$found=true; } ?>><?php echo $text['label-private'] ?></option>
-					<option value='21' <?php if ($row['device_key_type'] == "21") { echo $selected;$found=true; } ?>><?php echo $text['label-shared_line'] ?></option>
-					<option value='22' <?php if ($row['device_key_type'] == "22") { echo $selected;$found=true; } ?>><?php echo $text['label-xml_group'] ?></option>
-					<option value='23' <?php if ($row['device_key_type'] == "23") { echo $selected;$found=true; } ?>><?php echo $text['label-group_pickup'] ?></option>
-					<option value='24' <?php if ($row['device_key_type'] == "24") { echo $selected;$found=true; } ?>><?php echo $text['label-paging'] ?></option>
-					<option value='25' <?php if ($row['device_key_type'] == "25") { echo $selected;$found=true; } ?>><?php echo $text['label-record'] ?></option>
-					<option value='27' <?php if ($row['device_key_type'] == "27") { echo $selected;$found=true; } ?>><?php echo $text['label-xml_browser'] ?></option>
-					<option value='28' <?php if ($row['device_key_type'] == "28") { echo $selected;$found=true; } ?>><?php echo $text['label-history'] ?></option>
-					<option value='29' <?php if ($row['device_key_type'] == "29") { echo $selected;$found=true; } ?>><?php echo $text['label-directory'] ?></option>
-					<option value='30' <?php if ($row['device_key_type'] == "30") { echo $selected;$found=true; } ?>><?php echo $text['label-menu'] ?></option>
-					<option value='32' <?php if ($row['device_key_type'] == "32") { echo $selected;$found=true; } ?>><?php echo $text['label-new_sms'] ?></option>
-					<option value='33' <?php if ($row['device_key_type'] == "33") { echo $selected;$found=true; } ?>><?php echo $text['label-status'] ?></option>
-					<option value='34' <?php if ($row['device_key_type'] == "34") { echo $selected;$found=true; } ?>><?php echo $text['label-hot_desking'] ?></option>
-					<option value='35' <?php if ($row['device_key_type'] == "35") { echo $selected;$found=true; } ?>><?php echo $text['label-url_record'] ?></option>
-					<option value='38' <?php if ($row['device_key_type'] == "38") { echo $selected;$found=true; } ?>><?php echo $text['label-ldap'] ?></option>
-					<option value='39' <?php if ($row['device_key_type'] == "39") { echo $selected;$found=true; } ?>><?php echo $text['label-blf_list'] ?></option>
-					<option value='40' <?php if ($row['device_key_type'] == "40") { echo $selected;$found=true; } ?>><?php echo $text['label-prefix'] ?></option>
-					<option value='41' <?php if ($row['device_key_type'] == "41") { echo $selected;$found=true; } ?>><?php echo $text['label-zero_sp_touch'] ?></option>
-					<option value='42' <?php if ($row['device_key_type'] == "42") { echo $selected;$found=true; } ?>><?php echo $text['label-acd'] ?></option>
-					<option value='43' <?php if ($row['device_key_type'] == "43") { echo $selected;$found=true; } ?>><?php echo $text['label-local_phonebook'] ?></option>
-					<option value='44' <?php if ($row['device_key_type'] == "44") { echo $selected;$found=true; } ?>><?php echo $text['label-broadsoft_phonebook'] ?></option>
-					<option value='45' <?php if ($row['device_key_type'] == "45") { echo $selected;$found=true; } ?>><?php echo $text['label-local_group'] ?></option>
-					<option value='46' <?php if ($row['device_key_type'] == "46") { echo $selected;$found=true; } ?>><?php echo $text['label-broadsoft_group'] ?></option>
-					<option value='47' <?php if ($row['device_key_type'] == "47") { echo $selected;$found=true; } ?>><?php echo $text['label-xml_phonebook'] ?></option>
-					<option value='48' <?php if ($row['device_key_type'] == "48") { echo $selected;$found=true; } ?>><?php echo $text['label-switch_account_up'] ?></option>
-					<option value='49' <?php if ($row['device_key_type'] == "49") { echo $selected;$found=true; } ?>><?php echo $text['label-switch_account_down'] ?></option>
-					<option value='50' <?php if ($row['device_key_type'] == "50") { echo $selected;$found=true; } ?>><?php echo $text['label-keypad_lock'] ?></option>
-					<?php
-					if (strlen($vendor_count) > 1) { echo "</optgroup>"; }
-				}
-				?>
-				</select>
-
-				<?php
-				//echo "</td>\n";
+				echo "</select>\n";
+				echo "</td>\n";
 				//echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
 				//echo "		<option value=''></option>\n";

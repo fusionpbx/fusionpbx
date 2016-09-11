@@ -7,9 +7,8 @@ local Database      = require "resources.functions.database"
 local cache         = require "resources.functions.cache"
 local mwi_notify    = require "app.voicemail.resources.functions.mwi_notify"
 
-local sleep    = 60000
-local pid_file = scripts_dir .. "/run/mwi_subscribe.tmp"
-local shutdown_event = "CUSTOM::fusion::mwi::shutdown"
+local service_name = "mwi"
+local pid_file = scripts_dir .. "/run/" .. service_name .. ".tmp"
 
 local vm_message_count do
 
@@ -85,7 +84,7 @@ end
 
 end
 
-local events = EventConsumer.new(sleep, pid_file)
+local events = EventConsumer.new(pid_file)
 
 -- FS shutdown
 events:bind("SHUTDOWN", function(self, name, event)
@@ -93,13 +92,18 @@ events:bind("SHUTDOWN", function(self, name, event)
 	return self:stop()
 end)
 
--- shutdown command
-if shutdown_event then
-	events:bind(shutdown_event, function(self, name, event)
-		log.notice("shutdown")
+-- Control commands from FusionPBX
+events:bind("CUSTOM::fusion::service::control", function(self, name, event)
+	if service_name ~= event:getHeader('service-name') then return end
+
+	local command = event:getHeader('service-command')
+	if command == "stop" then
+		log.notice("get stop command")
 		return self:stop()
-	end)
-end
+	end
+
+	log.warningf('Unknown service command: %s', command or '<NONE>')
+end)
 
 -- MWI SUBSCRIBE
 events:bind("MESSAGE_QUERY", function(self, name, event)

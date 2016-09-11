@@ -16,16 +16,18 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
-max_tries = "3";
-digit_timeout = "5000";
+--set defaults
+	max_tries = "3";
+	digit_timeout = "5000";
 
-extension = argv[1];
+--get the params
+	extension = argv[1];
 
 --include config.lua
 	require "resources.functions.config";
@@ -47,34 +49,49 @@ extension = argv[1];
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
 
-if ( session:ready() ) then
-	session:answer( );
-	pin_number = session:getVariable("pin_number");
-	sounds_dir = session:getVariable("sounds_dir");
-	domain_name = session:getVariable("domain_name");
+--answer the call
+	if (session:ready()) then
+		session:answer();
+	end
 
-	--set the sounds path for the language, dialect and voice
+--get session variables
+	if (session:ready()) then
+		pin_number = session:getVariable("pin_number");
+		sounds_dir = session:getVariable("sounds_dir");
+		domain_name = session:getVariable("domain_name");
+	end
+
+--get the domain from sip_from_host
+	if (session:ready() and domain_name == nil) then
+		domain_name = session:getVariable("sip_auth_realm");
+	end
+
+--set the sounds path for the language, dialect and voice
+	if (session:ready()) then
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");
 		default_voice = session:getVariable("default_voice");
 		if (not default_language) then default_language = 'en'; end
 		if (not default_dialect) then default_dialect = 'us'; end
 		if (not default_voice) then default_voice = 'callie'; end
+	end
 
-	--set defaults
-		if (digit_min_length) then
-			--do nothing
-		else
-			digit_min_length = "2";
-		end
+--set defaults
+	if (digit_min_length) then
+		--do nothing
+	else
+		digit_min_length = "2";
+	end
 
-		if (digit_max_length) then
-			--do nothing
-		else
-			digit_max_length = "11";
-		end
+	if (digit_max_length) then
+		--do nothing
+	else
+		digit_max_length = "11";
+	end
 
+--session:execute('info');
 	--if the pin number is provided then require it
+	if (session:ready()) then
 		if (pin_number) then
 			min_digits = string.len(pin_number);
 			max_digits = string.len(pin_number)+1;
@@ -89,22 +106,22 @@ if ( session:ready() ) then
 				return;
 			end
 		end
+	end
 
-	--check the database to get the uuid
-		--eavesdrop
-			sql = "select uuid from channels where presence_id = '"..extension.."@"..domain_name.."' ";
-			freeswitch.consoleLog("NOTICE", "[eavesdrop] sql "..sql.."\n");
+--check the database to get the uuid to eavesdrop on
+	if (session:ready()) then
+		sql = "select uuid from channels where presence_id = '"..extension.."@"..domain_name.."' ";
+		freeswitch.consoleLog("NOTICE", "[eavesdrop] sql "..sql.."\n");
 		dbh:query(sql, function(result)
 			for key, val in pairs(result) do
 				freeswitch.consoleLog("NOTICE", "[eavesdrop] result "..key.." "..val.."\n");
 			end
 			uuid = result.uuid;
 		end);
-
-end
+	end
 
 --eavesdrop
-	if (uuid) then
+	if (session:ready() and uuid) then
 		session:execute("eavesdrop", uuid); --call barge
 	end
 

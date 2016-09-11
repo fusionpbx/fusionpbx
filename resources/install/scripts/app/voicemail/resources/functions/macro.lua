@@ -214,6 +214,12 @@
 						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
 						table.insert(actions, {app="streamFile",data="digits/5.wav"});
 					end
+				--To add an introduction to this message press 1
+					if (name == "forward_add_intro") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-forward_add_intro.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end
 				--To forward this message press 8
 					if (name == "to_forward_message") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-to_forward.wav"});

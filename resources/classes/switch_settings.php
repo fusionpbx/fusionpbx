@@ -169,7 +169,7 @@ if (!class_exists('switch_settings')) {
 				$array[$x]['default_setting_subcategory'] = 'phrases';
 				$array[$x]['default_setting_name'] = 'dir';
 				$array[$x]['default_setting_value'] = $vars['conf_dir'].'/lang';
-				$array[$x]['default_setting_enabled'] = 'false';
+				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = '';
 				$x++;
 				$array[$x]['default_setting_category'] = 'switch';

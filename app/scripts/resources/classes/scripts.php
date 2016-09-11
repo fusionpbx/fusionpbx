@@ -184,11 +184,11 @@ if (!class_exists('scripts')) {
 				//make the config.lua
 					$tmp = "\n";
 					$tmp .= "--set the variables\n";
+					if (strlen($_SESSION['switch']['conf']['dir']) > 0) {
+						$tmp .= $this->correct_path("	conf_dir = [[".$_SESSION['switch']['conf']['dir']."]];\n");
+					}
 					if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
 						$tmp .= $this->correct_path("	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n");
-					}
-					if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
-						$tmp .= $this->correct_path("	phrases_dir = [[".$_SESSION['switch']['phrases']['dir']."]];\n");
 					}
 					if (strlen($_SESSION['switch']['db']['dir']) > 0) {
 						$tmp .= $this->correct_path("	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n");
@@ -245,6 +245,9 @@ if (!class_exists('scripts')) {
 							$tmp .= "	database.system = \"\";\n";
 							$tmp .= "	database.switch = \"\";\n";
 						}
+						$tmp .= "\n";
+						$tmp .= "	database.backend = {}\n";
+						$tmp .= "	database.backend.base64 = 'luasql'\n";
 						$tmp .= "\n";
 					}
 					$tmp .= "--set defaults\n";

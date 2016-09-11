@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('xml_cdr_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/paging.php";
@@ -80,9 +84,9 @@ else {
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-         } else {
-             $mos_comparison = '';
-        }
+		} else {
+			$mos_comparison = '';
+		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
@@ -268,8 +272,12 @@ else {
 
 //set a default CDR limit
 	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
-		$_SESSION['cdr']['limit']['numeric'] = 800;
+		$_SESSION['cdr']['limit']['numeric'] = 1000;
 	}
+
+//disable the paging
+	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
+	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
@@ -306,11 +314,6 @@ else {
 				$rows_per_page = 50;
 			}
 
-		//disable the paging
-			if ($_REQUEST['export_format'] == "csv") {
-				$rows_per_page = 0;
-			}
-
 		//prepare to page the results
 			//$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50; //set on the page that includes this page
 			$page = $_GET['page'];
@@ -337,6 +340,7 @@ else {
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$sql .= $field.", ";
@@ -363,7 +367,7 @@ else {
 	}
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
-	if ($_REQUEST['export_format'] != "csv") {
+	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
 		}

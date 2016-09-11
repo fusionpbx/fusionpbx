@@ -47,35 +47,7 @@ $vars = <<<EOD
 {"var_name":"call_debug","var_value":"false","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"console_loglevel","var_value":"info","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"default_areacode","var_value":"208","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"be-ring","var_value":"%(1000,3000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ca-ring","var_value":"%(2000,4000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cn-ring","var_value":"%(1000,4000,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cy-ring","var_value":"%(1500,3000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"cz-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"de-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"dk-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"dz-ring","var_value":"%(1500,3500,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"eg-ring","var_value":"%(2000,1000,475,375)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"fi-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"fr-ring","var_value":"%(1500,3500,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pt-ring","var_value":"%(1000,5000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"hk-ring","var_value":"%(400,200,440,480);%(400,3000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"hu-ring","var_value":"%(1250,3750,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"il-ring","var_value":"%(1000,3000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"in-ring","var_value":"%(400,200,425,375);%(400,2000,425,375)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"jp-ring","var_value":"%(1000,2000,420,380)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ko-ring","var_value":"%(1000,2000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pk-ring","var_value":"%(1000,2000,400)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"pl-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ro-ring","var_value":"%(1850,4150,475,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"rs-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"it-ring","var_value":"%(1000,4000,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ru-ring","var_value":"%(800,3200,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"sa-ring","var_value":"%(1200,4600,425)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"tr-ring","var_value":"%(2000,4000,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"uk-ring","var_value":"%(400,200,400,450);%(400,2000,400,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"bong-ring","var_value":"v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"us-ring","var_value":"%(2000,4000,440,480)","var_cat":"Ringtones","var_enabled":"true","var_description":"RGVmYXVsdCByaW5ndG9uZSAoVVMp"},
 {"var_name":"sit","var_value":"%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"sip_tls_version","var_value":"tlsv1","var_cat":"SIP","var_enabled":"true","var_description":"U0lQIGFuZCBUTFMgc2V0dGluZ3Mu"},
 {"var_name":"internal_auth_calls","var_value":"true","var_cat":"SIP Profile: Internal","var_enabled":"true","var_description":""},
@@ -243,52 +215,110 @@ EOD;
 			}
 		}
 
-		$x = 1;
+	//import default variables
+		$result = json_decode($vars, true);
 
-	//if there are no variables in the vars table then add them
-		if ($domains_processed == 1) {
-
-			$result = json_decode($vars, true);
-			foreach($result as $row) {
-
-				$sql = "select count(*) as num_rows from v_vars ";
-				$sql .= "where var_name = '".$row['var_name']."' ";
-				$sql .= "and var_cat = '".$row['var_cat']."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					if ($row2['num_rows'] == 0) {
-
-						$sql = "insert into v_vars ";
-						$sql .= "(";
-						$sql .= "var_uuid, ";
-						$sql .= "var_name, ";
-						$sql .= "var_value, ";
-						$sql .= "var_cat, ";
-						$sql .= "var_enabled, ";
-						$sql .= "var_order, ";
-						$sql .= "var_description ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".$row['var_name']."', ";
-						$sql .= "'".$row['var_value']."', ";
-						$sql .= "'".$row['var_cat']."', ";
-						$sql .= "'".$row['var_enabled']."', ";
-						$sql .= "'".$x."', ";
-						$sql .= "'".$row['var_description']."' ";
-						$sql .= ");";
-						$db->exec($sql);
-						unset($sql);
-						$x++;
+	//import ringtones from vars.xml
+		$vars_xml = simplexml_load_file($_SERVER["PROJECT_ROOT"] . "/resources/templates/conf/vars.xml");
+		foreach($vars_xml->{'X-PRE-PROCESS'} as $item) {
+			if($item->attributes()->cmd == 'set') {
+				$value = explode('=', $item->attributes()->data, 2);
+				if(preg_match("/-ring/", $value[0])){
+					$row = Array();
+					$row['var_cat'] = 'Ringtones';
+					$row['var_name'] = $value[0];
+					$row['var_value'] = $value[1];
+					$row['var_enabled'] = $item->attributes()->enabled;
+					if(!isset($row['var_enabled'])){
+						$row['var_enabled'] = 'true';
 					}
+					$row['var_description'] = $item->attributes()->description;
+					if(!isset($row['var_description'])){
+						$row['var_description'] = base64_encode('Imported from vars.xml');
+					}
+					$result[] = $row;
 				}
-				unset($prep_statement, $row2);
+				elseif(preg_match("/-tone/", $value[0])){
+					$row = Array();
+					$row['var_cat'] = 'Tones';
+					$row['var_name'] = $value[0];
+					$row['var_value'] = $value[1];
+					$row['var_enabled'] = $item->attributes()->enabled;
+					if(!isset($row['var_enabled'])){
+						$row['var_enabled'] = 'true';
+					}
+					$row['var_description'] = $item->attributes()->description;
+					if(!isset($row['var_description'])){
+						$row['var_description'] = base64_encode('Imported from vars.xml');
+					}
+					$result[] = $row;
+				}
 			}
-			unset($result, $row);
 		}
+
+	//migrate old ringtones
+		$sql = "update v_vars ";
+		$sql .= "set var_cat = 'Ringtones' ";
+		$sql .= "set var_description = 'TWlncmF0ZWQgZnJvbSBEZWZhdWx0cw==' ";
+		$sql .= "where var_name like '%-ring' ";
+		$sql .= "and var_cat = 'Defaults' ";
+		$sql .= "and var_description = '' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+		}
+		
+		$sql = "update v_vars ";
+		$sql .= "set var_cat = 'Ringtones' ";
+		$sql .= "where var_name like '%-ring' ";
+		$sql .= "and var_cat = 'Defaults' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+		}
+		unset($prep_statement, $sql);
+
+	//add missing variables
+		$x = 1;
+		foreach($result as $row) {
+
+			$sql = "select count(*) as num_rows from v_vars ";
+			$sql .= "where var_name = '".$row['var_name']."' ";
+			$sql .= "and var_cat = '".$row['var_cat']."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row2['num_rows'] == 0) {
+
+					$sql = "insert into v_vars ";
+					$sql .= "(";
+					$sql .= "var_uuid, ";
+					$sql .= "var_name, ";
+					$sql .= "var_value, ";
+					$sql .= "var_cat, ";
+					$sql .= "var_enabled, ";
+					$sql .= "var_order, ";
+					$sql .= "var_description ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'".$row['var_name']."', ";
+					$sql .= "'".$row['var_value']."', ";
+					$sql .= "'".$row['var_cat']."', ";
+					$sql .= "'".$row['var_enabled']."', ";
+					$sql .= "'".$x."', ";
+					$sql .= "'".$row['var_description']."' ";
+					$sql .= ");";
+					$db->exec($sql);
+					unset($sql);
+					$x++;
+				}
+			}
+			unset($prep_statement, $row2);
+		}
+		unset($result, $row);
 
 	//adjust the variables required variables
 		//set variables that depend on the number of domains

@@ -1644,7 +1644,7 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4061>{user_id_2}</P4061>
+<P4061>{$user_id_2}</P4061>
 
 <!-- String -->
 <P4091>{$user_id_2}</P4091>

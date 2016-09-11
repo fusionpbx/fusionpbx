@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //get the https values and set as variables
 	$order_by = check_str($_GET["order_by"]);
@@ -112,18 +116,13 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div style='float: left;'>";
-	echo "	<b>".$text['header-call_routing']."</b><br />";
-	if (!$is_included) {
-		echo $text['description-call_routing']."<br />";
-	}
-	echo "	<br />";
-	echo "</div>\n";
-
-	echo "<div style='float: right; margin-bottom: 10px;'>";
-	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "  	<tr>\n";
-	echo "			<td style='vertical-align: top; white-space: nowrap;'>\n";
+//start the content
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+	echo "	<tr>\n";
+	echo "		<td valign='top'>";
+	echo "			<b>".$text['header-call_routing']."</b><br />";
+	echo "		</td>\n";
+	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	if ($result_count > 10 && $is_included) {
 		echo "			<input id='btn_viewall_callrouting' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/calls/calls.php';\">";
 	}
@@ -135,11 +134,17 @@ else {
 		if ($paging_controls_mini != '') {
 			echo 			"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 		}
+	}	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' valign='top'>";
+	if (!$is_included) {
+		echo $text['description-call_routing']."<br />";
 	}
-	echo "			</td>\n";
-	echo "  	</tr>\n";
-	echo "	</table>\n";
-	echo "</div>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+	echo "<br />";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
