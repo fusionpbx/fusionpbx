@@ -64,14 +64,24 @@
 			$auth->debug = false;
 			$result = $auth->validate();
 			if ($result["authorized"] == "true") {
-				// add the user settings
+				// set the session variables
+					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
+
 				// user session array
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];
 			}
 			else {
+				//debug
+					if ($debug) {
+						echo "<pre>";
+						print_r($result);
+						echo "</pre>";
+						exit;
+					}
+
 				//log the failed auth attempt to the system, to be available for fail2ban.
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
@@ -91,7 +101,7 @@
 			$sql .= "where domain_uuid=:domain_uuid ";
 			$sql .= "and user_uuid=:user_uuid ";
 			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+			$prep_statement->bindParam(':domain_uuid', $_SESSION["domain_uuid"] );
 			$prep_statement->bindParam(':user_uuid', $_SESSION["user_uuid"]);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -105,10 +115,10 @@
 				foreach($_SESSION["groups"] as $field) {
 					if (strlen($field['group_name']) > 0) {
 						if ($x == 0) {
-							$sql .= "where (domain_uuid = '".$domain_uuid."' and domain_uuid = null) ";
+							$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' and domain_uuid = null) ";
 						}
 						else {
-							$sql .= "or (domain_uuid = '".$domain_uuid."' and domain_uuid = null) ";
+							$sql .= "or (domain_uuid = '".$_SESSION["domain_uuid"]."' and domain_uuid = null) ";
 						}
 						$sql .= "or group_name = '".$field['group_name']."' ";
 						$x++;
