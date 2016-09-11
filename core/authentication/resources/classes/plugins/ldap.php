@@ -3,7 +3,7 @@
 /**
  * plugin_ldap 
  *
- * @method ldap checks a local or remove ldap database to authenticate the user
+ * @method ldap checks a local or remote ldap database to authenticate the user
  */
 class plugin_ldap {
 
