@@ -116,7 +116,12 @@
 				}
 				$prep_statement_sub = $db->prepare($sql);
 				$prep_statement_sub->execute();
-				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				$result = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				if (is_array($result)) {
+					foreach ($result as $row) {
+						$_SESSION['permissions'][$row["permission_name"]] = true;
+					}
+				}
 				unset($sql, $prep_statement_sub);
 			}
 
