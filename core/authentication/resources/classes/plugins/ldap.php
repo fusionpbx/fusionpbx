@@ -3,7 +3,7 @@
 /**
  * plugin_ldap 
  *
- * @method dap checks a local or remove ldap database to authenticate the user
+ * @method ldap checks a local or remote ldap database to authenticate the user
  */
 class plugin_ldap {
 
@@ -18,7 +18,7 @@ class plugin_ldap {
 	public $contact_uuid;
 
 	/**
-	 * ldap checks a local or remove ldap database to authenticate the user
+	 * ldap checks a local or remote ldap database to authenticate the user
 	 * @return array [authorized] => true or false
 	 */
 	function ldap() {
