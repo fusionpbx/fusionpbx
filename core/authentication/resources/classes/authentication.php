@@ -53,6 +53,11 @@ class authentication {
 				$this->get_domain();
 			}
 
+		//set the database as the default plugin
+			if (!isset($_SESSION['authentication']['methods'])) {
+				$_SESSION['authentication']['methods'][] = 'database';
+			}
+
 		//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 				$class_name = "plugin_".$name;
