@@ -166,6 +166,16 @@
 		status = "Invalid ID or Password";
 	end
 
+--set the status and presence
+	if (session:ready()) then
+		if (action == "login") then
+			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_in.wav");
+		end
+		if (action == "logout") then
+			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_out.wav");
+		end
+	end
+
 --send the status to the display
 	if (status ~= nil) then
 		reply = api:executeString("uuid_display "..uuid.." '"..status.."'");
@@ -174,16 +184,4 @@
 --set the session sleep to give time to see the display
 	if (session:ready()) then
 		session:execute("sleep", "2000");
-	end
-
---set the status and presence
-	if (session:ready()) then
-		if (action == "login") then
-			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_in.wav");
-			--session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
-		end
-		if (action == "logout") then
-			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_out.wav");
-			--session:execute("playback", "tone_stream://%(200,0,500,600,700)");
-		end
 	end
