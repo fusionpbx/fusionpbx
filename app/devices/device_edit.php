@@ -99,6 +99,7 @@
 //include the device class
 	require_once "resources/classes/device.php";
 	require_once "resources/classes/device_templates.class.php";
+	require_once "resources/classes/device_vendors.class.php";
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -158,7 +159,8 @@
 			$device_model = check_str($_POST["device_model"]);
 			$device_firmware_version = check_str($_POST["device_firmware_version"]);
 			$device_enabled = check_str($_POST["device_enabled"]);
-			$device_template = check_str($_POST["device_template"]);
+			$device_template = check_str($_POST["device_template_old"]);
+			$device_template = (!empty($_POST["device_template_new"]) ? check_str($_POST["device_template_new"]) : $device_template);
 			$device_description = check_str($_POST["device_description"]);
 		//lines
 			$line_number = check_str($_POST["line_number"]);
@@ -186,11 +188,6 @@
 			$device_setting_value = check_str($_POST["device_setting_value"]);
 			$device_setting_enabled = check_str($_POST["device_setting_enabled"]);
 			$device_setting_description = check_str($_POST["device_setting_description"]);
-	}
-
-//use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
-		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
 //add or update the database
@@ -281,6 +278,12 @@
 							$x++;
 					}
 
+					// add device template to save array
+					$_POST['device_template'] = $device_template;
+					// remove device template new and old from array
+					unset($_POST['device_template_old']);
+					unset($_POST['device_template_new']);
+
 				//set the default
 					$save = true;
 
@@ -365,9 +368,21 @@
 	}
 
 //use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
-		$template_array = explode("/", $device_template);
-		$device_vendor = $template_array[0];
+	if (!is_uuid($device_vendor)) {
+		// use mac to get name
+		$device_vendor = device::get_vendor($device_mac_address);
+		// use old template setting to get name 
+		if (strlen($device_vendor) == 0) {
+			$template_array = explode("/", $device_template);
+			$device_vendor_name = $template_array[0];
+		}
+		// get uuid from name
+		$vendor = device_vendors::find($db, ['name','=',$device_vendor],['device_vendor_uuid', "name"],null,[numbered=>true]);
+		$device_vendor = $vendor[0]['device_vendor_uuid'];
+		$device_vendor_name = $vendor[0]['name'];
+	}
+	else {
+		$device_vendor_name = device_vendors::get($db, $device_vendor, ['name'])->name;
 	}
 
 //set the sub array index
@@ -432,7 +447,10 @@
 	$device_keys[$x]['device_key_extension'] = '';
 	$device_keys[$x]['device_key_label'] = '';
 
-//get the vendor functions
+//get device vendors 
+	$device_vendors = device_vendors::find($db, null, ['device_vendor_uuid','name'], ['name']);
+
+//get device vendor functions
 	$sql = "SELECT v.name as vendor_name, f.name, f.value ";
 	$sql .= "FROM v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
@@ -444,9 +462,8 @@
 	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //get device templates
-	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']];
-	//if (strlen($device_vendor)>0) { $filter[] = ['AND']; $filter[]=['vendor_name','=',$domain_uuid];} 
-	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
+	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')'],['AND'],['type=\'m\''],['AND'],['enabled=\'true\'']]; 
+	$device_templates = [null=>['name'=>'','collection'=>'']] + device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
@@ -467,11 +484,6 @@
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-//use the mac address to get the vendor
-	if (strlen($device_vendor) == 0) {
-		$device_vendor = device::get_vendor($device_mac_address);
-	}
 
 //show the header
 	require_once "resources/header.php";
@@ -709,41 +721,8 @@
 		echo "	".$text['label-device_template']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		/*
-		$device = new device;
-		$template_dir = $device->get_template_dir();
-		*/
-		echo "<select id='device_template' name='device_template' class='formfld'>\n";
-		echo "<option value=''></option>\n";
-		/*
-		if (is_dir($template_dir)) {
-				$templates = scandir($template_dir);
-				foreach($templates as $dir) {
-					if($file != "." && $dir != ".." && $dir[0] != '.') {
-						if(is_dir($template_dir . "/" . $dir)) {
-							echo "<optgroup label='$dir'>";
-							$dh_sub=$template_dir . "/" . $dir;
-							if(is_dir($dh_sub)) {
-								$templates_sub = scandir($dh_sub);
-								foreach($templates_sub as $dir_sub) {
-									if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-										if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
-											if ($device_template == $dir."/".$dir_sub) {
-												echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-											}
-											else {
-												echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
-											}
-										}
-									}
-								}
-							}
-							echo "</optgroup>";
-						}
-					}
-				}
-			}
-			*/
+		// Database Templates
+		echo "<select id='device_template' name='device_template_new' class='formfld'>\n";
 			$g = -1;
 			foreach($device_templates as $k => $v) {
 				if ($g!=$v->collection) {
@@ -755,7 +734,43 @@
 			}
 			echo "</optgroup>";
 		echo "</select>\n";
-		echo "<br />\n";
+		echo $text['description-device_template_new']."<br />\n";
+
+		// File Templates
+		$device = new device;
+		$template_dir = $device->get_template_dir();
+		echo "<select id='device_template' name='device_template_old' class='formfld'>\n";
+		echo "<option value=''></option>\n";
+		if (is_dir($template_dir)) {
+			$templates = scandir($template_dir);
+			foreach($templates as $dir) {
+				if($file != "." && $dir != ".." && $dir[0] != '.') {
+					if(is_dir($template_dir . "/" . $dir)) {
+						echo "<optgroup label='$dir'>";
+						$dh_sub=$template_dir . "/" . $dir;
+						if(is_dir($dh_sub)) {
+							$templates_sub = scandir($dh_sub);
+							foreach($templates_sub as $dir_sub) {
+								if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+									if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
+										if ($device_template == $dir."/".$dir_sub) {
+											echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+										}
+										else {
+											echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+										}
+									}
+								}
+							}
+						}
+						echo "</optgroup>";
+					}
+				}
+			}
+		}
+		echo "</select>\n";
+		echo $text['description-device_template_old']."<br />\n";
+
 		echo $text['description-device_template']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1048,7 +1063,7 @@
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if (strlen($device_vendor) == 0) {
+				if (strlen($device_vendor_name) == 0) {
 					if ($row['device_key_category'] == "expansion") {
 						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 					}
@@ -1057,7 +1072,7 @@
 					}
 				}
 				else {
-					if (strtolower($device_vendor) == "cisco") {
+					if (strtolower($device_vendor_name) == "cisco") {
 						if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
 							echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
 						}
@@ -1100,11 +1115,9 @@
 					$device_key_vendor = $row['device_key_vendor'];
 				}
 				else {
-					$device_key_vendor = $device_vendor;
+					$device_key_vendor = $device_vendor_name;
 				}
-				?>
-				<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>"/>
-				<?php
+				echo "<input class='formfld' type='hidden' id='key_vendor_".$x."' name='device_keys[".$x."][device_key_vendor]' value='".$device_key_vendor."'/>";
 				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
 				echo "	<option value=''></option>\n";
 				$previous_vendor = '';
@@ -1335,7 +1348,11 @@
 		echo "	".$text['label-device_vendor']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\"/>\n";
+		echo "	<select class='formfld' name='device_vendor'>\n";
+		foreach ($device_vendors as $k => $v) {
+		echo "	<option value='$k'".(($k==$device_vendor)?" Selected":'').">".(!empty($v->name)?$v->name:$k)."</option>\n";
+		}
+		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-device_vendor']."\n";
 		echo "</td>\n";

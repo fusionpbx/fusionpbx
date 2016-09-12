@@ -52,11 +52,11 @@
 		$order = check_str($_GET["order"]);
 	}
 
-//include the device template class
-	require_once "resources/classes/device_templates.class.php";
-//get template name list
-	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')']]; 
-	$device_templates = device_templates::find($db, $filter, ['uuid','name']);
+//include the device templates class
+	require_once "resources/classes/devices.class.php";
+	$device_templates = [null=>''] + devices::list_linked_templates($db);
+	$device_vendors = [null=>''] + devices::list_linked_vendors($db);
+
 
 //get total devices count from the database
 	$sql = "select count(*) as num_rows from v_devices ";
@@ -259,8 +259,8 @@
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$device_templates[$row['device_template']]->name."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(!empty($device_vendors[$row['device_vendor']])?$device_vendors[$row['device_vendor']]:$row['device_vendor'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(!empty($device_templates[$row['device_template']])?$device_templates[$row['device_template']]:$row['device_template'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - ".$row['device_provisioned_ip']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";

@@ -120,7 +120,7 @@
 					}
 				}
 				elseif ($_POST["__action"]=="clone" && permission_exists('device_template_add')) {
-					$n = device_templates::duplicate($db,$template->uuid, ['domain_uuid'=>$_SESSION['domain_uuid']]);
+					$n = device_templates::copy($db,$template->uuid, ['domain_uuid'=>$_SESSION['domain_uuid']]);
 					$_SESSION["message"] = $text['message-add'];
 					header("Location: device_template_edit.php?id=".$n);
 					return;

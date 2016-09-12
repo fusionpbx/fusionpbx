@@ -144,6 +144,9 @@ else {
 	$device["device_lines"] = $device_lines;
 	$device["device_keys"] = $device_keys;
 	$device["device_settings"] = $device_settings;
+	$device["device_provisioned_date"] = null;
+	$device["device_provisioned_method"] = null;
+	$device["device_provisioned_ip"] = null;
 
 //copy the device
 	if ($save) {

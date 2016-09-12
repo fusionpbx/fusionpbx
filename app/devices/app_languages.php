@@ -2714,19 +2714,6 @@ $text['button-import']['de-at'] = "";
 $text['button-import']['ar-eg'] = "";
 $text['button-import']['he'] = "";
 
-$text['button-retrieve']['en-us'] = "Retrieve";
-$text['button-retrieve']['es-cl'] = "";
-$text['button-retrieve']['pt-pt'] = "";
-$text['button-retrieve']['fr-fr'] = "";
-$text['button-retrieve']['pt-br'] = "";
-$text['button-retrieve']['pl'] = "";
-$text['button-retrieve']['uk'] = "";
-$text['button-retrieve']['sv-se'] = "";
-$text['button-retrieve']['ro'] = "";
-$text['button-retrieve']['de-at'] = "";
-$text['button-retrieve']['ar-eg'] = "";
-$text['button-retrieve']['he'] = "";
-
 $text['label-import-uri']['en-us'] = "Import Uri";
 $text['label-import-uri']['es-cl'] = "";
 $text['label-import-uri']['pt-pt'] = "";
@@ -2752,4 +2739,30 @@ $text['description-import-uri']['ro'] = "";
 $text['description-import-uri']['de-at'] = "";
 $text['description-import-uri']['ar-eg'] = "";
 $text['description-import-uri']['he'] = "";
+
+$text['label-device_identifier']['en-us'] = "Device Id";
+$text['label-device_identifier']['es-cl'] = "";
+$text['label-device_identifier']['pt-pt'] = "";
+$text['label-device_identifier']['fr-fr'] = "";
+$text['label-device_identifier']['pt-br'] = "";
+$text['label-device_identifier']['pl'] = "";
+$text['label-device_identifier']['uk'] = "";
+$text['label-device_identifier']['sv-se'] = "";
+$text['label-device_identifier']['ro'] = "";
+$text['label-device_identifier']['de-at'] = "";
+$text['label-device_identifier']['ar-eg'] = "";
+$text['label-device_identifier']['he'] = "";
+
+$text['description-device_identifier']['en-us'] = "Device Id";
+$text['description-device_identifier']['es-cl'] = "";
+$text['description-device_identifier']['pt-pt'] = "";
+$text['description-device_identifier']['fr-fr'] = "";
+$text['description-device_identifier']['pt-br'] = "";
+$text['description-device_identifier']['pl'] = "";
+$text['description-device_identifier']['uk'] = "";
+$text['description-device_identifier']['sv-se'] = "";
+$text['description-device_identifier']['ro'] = "";
+$text['description-device_identifier']['de-at'] = "";
+$text['description-device_identifier']['ar-eg'] = "";
+$text['description-device_identifier']['he'] = "";
 ?>
