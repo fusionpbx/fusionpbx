@@ -450,6 +450,13 @@ include "root.php";
 				//echo "</pre>\n";
 				//exit;
 
+			//add the dialplan permission
+				$p = new permissions;
+				$p->add("dialplan_add", 'temp');
+				$p->add("dialplan_detail_add", 'temp');
+				$p->add("dialplan_edit", 'temp');
+				$p->add("dialplan_detail_edit", 'temp');
+
 			//save the dialplan
 				$orm = new orm;
 				$orm->name('dialplans');
@@ -464,6 +471,12 @@ include "root.php";
 				//print_r($response);
 				//echo "</pre>\n";
 				//exit;
+
+			//remove the temporary permission
+				$p->delete("dialplan_add", 'temp');
+				$p->delete("dialplan_detail_add", 'temp');
+				$p->delete("dialplan_edit", 'temp');
+				$p->delete("dialplan_detail_edit", 'temp');
 
 			//synchronize the xml config
 				save_dialplan_xml();
