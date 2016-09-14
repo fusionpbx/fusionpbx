@@ -27,6 +27,10 @@
 
 --play the greeting
 	function play_greeting()
+		timeout = 100;
+		tries = 1;
+		max_timeout = 200;
+
 		--voicemail prompt
 		if (skip_greeting == "true") then
 			--skip the greeting
@@ -82,9 +86,12 @@
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 								end
 							elseif (storage_type == "http_cache") then
-								session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", "\\d+", max_timeout);								
+								--session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "","\\d+", max_timeout);								
+
+								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
 						--sleep
