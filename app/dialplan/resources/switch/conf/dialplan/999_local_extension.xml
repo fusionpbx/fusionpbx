@@ -20,6 +20,7 @@
 			<!--<action application="export" data="nolocal:sip_secure_media=${user_data(${dialed_extension}@${domain_name} var sip_secure_media)}"/>-->
 			<action application="hash" data="insert/${domain_name}-last_dial/${called_party_call_group}/${uuid}"/>
 			<action application="set" data="api_hangup_hook=lua app.lua hangup"/>
+			<action application="export" data="domain_name=${context}"/>
 			<!-- standard method -->
 			<action application="bridge" data="user/${destination_number}@${domain_name}"/>
 			<!-- sofia contact -->
