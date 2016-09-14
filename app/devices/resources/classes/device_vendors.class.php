@@ -42,7 +42,7 @@ class device_vendors
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
         $cmd->execute($data);
-        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor_collection");
+        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, __CLASS__);
         // return data
         return  $data;
     }
@@ -122,7 +122,7 @@ class device_vendors
             $data = $cmd->fetchAll(PDO::FETCH_KEY_PAIR);
         }
         else {
-            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor_collection");
+            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, __CLASS__);
         }
         // return data
         return  $data;
@@ -184,7 +184,7 @@ class device_vendors
         $cmd = $db->prepare($sql);
         $cmd->execute($uuid);
         //$data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_vendor");
-        $data = $cmd->fetchObject((!isset($columns))?"device_vendor":__CLASS__);
+        $data = $cmd->fetchObject(__CLASS__);
         return  $data;
     }
 
@@ -257,18 +257,4 @@ class device_vendors
         $db->prepare($sql)->execute($uuid);
     }
 }
-
-class device_vendor {
-    public $device_vendor_uuid;
-    public $name = null;
-    public $enabled = false;
-    public $description = null;
-
-    function __construct() {}
-};
-
-class device_vendor_collection {
-    function __construct() {}
-};
-
 ?>

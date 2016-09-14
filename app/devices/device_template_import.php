@@ -33,7 +33,7 @@
 	require_once __DIR__.'/resources/classes/device_vendors.class.php';
 
 // check permissions
-	if (!permission_exists('device_template_add')) die("access denied");
+	if (!permission_exists('device_template_import_local') && !permission_exists('device_template_import_remote')) die("access denied");
 
 // add multi-lingual support
 	$language = new text;
@@ -50,12 +50,21 @@
 // process action the action
 	// add to list
 	if ($_POST["__action"]=="add" && isset($_POST['import_uri'])) {
-		if (strpos($_POST['import_uri'],'http://')!==false || strpos($_POST['import_uri'],'https://')!==false) {
-			$data[] = ['location'=>$_POST['import_uri']];
+		$_POST['import_uri'] = strtolower($_POST['import_uri']); 
+		// check permissions and protocol requested
+		if (permission_exists('device_template_import_remote') && 
+			(strpos($_POST['import_uri'],"http://")!==false || 
+			strpos($_POST['import_uri'],"https://")!==false)) 
+		{
+			// add uri to list
+			$data[] = ['location'=>$_POST['import_uri'],'domain'=>$_SESSION['domain_uuid']];
 		}
-		else {
-			foreach(glob($_POST['import_uri']) as $k => $v) {
-				$data[] = ['location'=>$v];
+		elseif (permission_exists('device_template_import_local') && 
+				strpos($_POST['import_uri'],"file://")!==false) 
+		{
+			// add files to list
+			foreach(glob(str_replace("file://","",$_POST['import_uri'])) as $k => $v) {
+				$data[] = ['location'=>"file://".$v,'domain'=>$_SESSION['domain_uuid']];
 			}
 		}
 	}
@@ -73,18 +82,26 @@
 		foreach ($data as $k => $v) {
 			// only process if there is a location and name
 			if (!empty($v['location']) && !empty($v['name'])) {
-				// compile data
-				$t = []; 
-				$t['domain_uuid']=$v['domain'];
-				$t['vendor_uuid']=$v['vendor'];
-				$t['name']=$v['name'];
-				$t['collection']=$v['collection'];
-				$t['type']='m';
-				$t['enabled']='true';
-				$t['protected']='false'; 
-				$t['data']=file_get_contents($v['location']);
-				// save data
-				device_templates::put($db, null, $t);
+				// only process if the user has proper permissions
+				if ((permission_exists('device_template_import_remote') && 
+					(strpos($v['location'],"http://")!==false || 
+					strpos($v['location'],"https://")!==false)) ||
+					(permission_exists('device_template_import_local') && 
+					strpos($v['location'],"file://")!==false)) 
+				{
+					// compile data
+					$t = []; 
+					$t['domain_uuid']=$v['domain'];
+					$t['vendor_uuid']=$v['vendor'];
+					$t['name']=$v['name'];
+					$t['collection']=$v['collection'];
+					$t['type']='m';
+					$t['enabled']='true';
+					$t['protected']='false'; 
+					$t['data']=file_get_contents($v['location']);
+					// save data
+					device_templates::put($db, null, $t);
+				}
 			}
 		}
 		// clear list
@@ -123,7 +140,14 @@
 	echo "	".$text['label-import-uri']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='import_uri' value='".((isset($_POST['import_uri'])) ? htmlspecialchars($_POST['import_uri']) : $_SERVER['DOCUMENT_ROOT']."/resources/templates/provision/*/*/*")."' required='required'>\n";
+		echo "	<input class='formfld' type='text' name='import_uri' value='";
+	if (permission_exists('device_template_import_local')) {
+	echo isset($_POST['import_uri']) ? htmlspecialchars($_POST['import_uri']) : "file://".$_SERVER['DOCUMENT_ROOT']."/resources/templates/provision/*/*/*";
+	}
+	else {
+	echo isset($_POST['import_uri']) ? htmlspecialchars($_POST['import_uri']) : "http://domain/path/file.cfg";	
+	}
+	echo "' required='required'>\n";
 	echo "	<input type='button' class='btn' id='import_add' value='".$text['button-add']."'>\n";
 	echo "  <br />".$text['description-import-uri']."\n";
 	echo "</td>\n";
@@ -159,14 +183,16 @@
 			echo "	<td valign='top' class='row_style$c'><input type='text' class='formfld' name='templates[$k][name]' value='".$v['name']."' size='32'></td>\n";
 			// template domain
 			echo "	<td valign='top' class='row_style$c'>";
-			if (permission_exists('device_template_domain')) {
+			if (permission_exists('device_template_viewall')) {
 			echo "    <select class='formfld' name='templates[$k][domain]'>\n";
-			echo "    <option value=''".((strlen($k['domain']) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
-			foreach ($_SESSION['domains'] as $i) {
-			echo "    <option value='".$i['domain_uuid']."'".(($i['domain_uuid']==$v['domain']) ?" Selected":'').">".$i['domain_name']."</option>\n";
-			}
-			echo "    </select>\n";
-			}
+				if (permission_exists('device_template_viewall')) {
+				echo "    <option value=''".((strlen($k['domain']) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
+				}
+				foreach ($_SESSION['domains'] as $i) {
+				echo "    <option value='".$i['domain_uuid']."'".(($i['domain_uuid']==$v['domain']) ?" Selected":'').">".$i['domain_name']."</option>\n";
+				}
+				echo "    </select>\n";
+				}
 			else {
 			echo $_SESSION["domain_name"];
 			}

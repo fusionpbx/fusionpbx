@@ -40,26 +40,18 @@
 	$language = new text;
 	$text = $language->get();
 
-// collect post data 
-	if (is_array($_POST['templates'])) {
-		$data= $_POST['templates'];
-	}
-	else {
-		$data= [];
-	}
-
 // process action the action
-	if ($_POST["__action"]=="search") {
+	if ($_POST['__action']=="search") {
 		$data = [];
 		$filter = [];
 
 		// search by domain
-		if (isset($_POST['search_domain']) && $_POST['search_domain']!='any') {
+		if (isset($_POST['search_domain']) && $_POST['search_domain']!='all') {
 			$filter[] = ['domain_uuid','=',$_POST['search_domain']];
 		}
 
 		// search by device vendor
-		if (isset($_POST['search_vendor']) && $_POST['search_vendor']!='any') {
+		if (isset($_POST['search_vendor']) && $_POST['search_vendor']!='all') {
 			if (count($filter)) $filter[] = ['AND'];
 			$filter[] = ['device_vendor','=',$_POST['search_vendor']];
 		}
@@ -83,14 +75,14 @@
 		}
 
 		// search by device template
-		if (isset($_POST['search_template']) && $_POST['search_template']!='any') {
+		if (isset($_POST['search_template']) && $_POST['search_template']!='all') {
 			if (count($filter)) $filter[] = ['AND'];
 			$filter[] = ['device_template','=',$_POST['search_template']];
 		}
 
 	}
 	// import list
-	elseif ($_POST["__action"]=="assign" && permission_exists('device_template')) {
+	elseif ($_POST['__action']=="assign" && permission_exists('device_template')) {
 		// process list
 		$t = ['device_template'=>$_POST['assign_template']];
 		foreach ($_POST['devices_selected'] as $k) {
@@ -101,14 +93,27 @@
 	}
 
 // get lists and add blank element
-	$search_domains = ['any'=>'Any'] + devices::list_linked_domains($db);
-	$search_vendors = ['any'=>'Any'] + devices::list_linked_vendors($db);
-	$search_templates = ['any'=>'Any','blank'=>'Blank'] + devices::list_linked_templates($db);
+	if (permission_exists('device_template_viewall')){
+		$search_domains = ['all'=>$text['select-all']] + devices::list_linked_domains($db);
+		$search_vendors = ['all'=>$text['select-all']] + devices::list_linked_vendors($db);
+		$search_templates = ['all'=>$text['select-all']] + devices::list_linked_templates($db);
 
-	$filter_templates = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')'],['AND'],['type=\'m\''],['AND'],['enabled=\'true\'']];
-	$assign_templates = [null=>['name'=>'','collection'=>'']] + device_templates::find($db, $filter_templates, ['uuid','name','collection'], ['collection, name']);
-	
-	if (count($filter)) {
+		$filter_templates = [['type=\'m\''],['AND'],['enabled=\'true\'']];
+		$assign_templates = [null=>['name'=>'','collection'=>'']] + device_templates::find($db, $filter_templates, ['uuid','name','collection'], ['collection, name']);
+	}
+	else {
+		if (count($filter)) $filter[] = ['AND'];
+		$filter[] = ['domain_uuid','=',$_SESSION['domain_uuid']];
+
+		$search_domains = [$_SESSION['domain_uuid']=>$_SESSION['domain_name']];
+		$search_vendors = ['all'=>$text['select-all']] + devices::list_linked_vendors($db,$_SESSION['domain_uuid']);
+		$search_templates = ['all'=>$text['select-all']] + devices::list_linked_templates($db,$_SESSION['domain_uuid']);
+
+		$filter_templates = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$_SESSION['domain_uuid']],[')'],['AND'],['type=\'m\''],['AND'],['enabled=\'true\'']];
+		$assign_templates = [null=>['name'=>'','collection'=>'']] + device_templates::find($db, $filter_templates, ['uuid','name','collection'], ['collection, name']);
+	}
+
+	if ($_POST['__action'] == "search" && count($filter)) {
 		$data = devices::find($db,$filter,['device_uuid','device_mac_address','device_label','device_vendor','device_template', 'device_model','device_enabled','domain_uuid']);
 	}
 
@@ -138,7 +143,7 @@
 // start search panel
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	// search by device domain
-	if (permission_exists('device_template_domain')) {
+	if (permission_exists('device_template_viewall')) {
 	echo "<tr>\n";
 	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-domain']."\n";

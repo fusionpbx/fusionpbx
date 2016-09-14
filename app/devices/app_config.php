@@ -254,6 +254,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_template_viewall";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_template_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -266,9 +270,22 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'device_template_domain';
+		$apps[$x]['permissions'][$y]['name'] = "device_template_add_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_template_edit_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_template_delete_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_template_import_local';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_template_import_remote';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
@@ -769,33 +786,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'data';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-
-		$y = 9; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_device_log';
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'log_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_id';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_name';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_datetime';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'datetime';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'event_data';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		
 
 	//vendor details
 		$y=0; //vendor array index

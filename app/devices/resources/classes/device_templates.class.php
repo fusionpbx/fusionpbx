@@ -51,7 +51,7 @@ class device_templates
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
         $cmd->execute($data);
-        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template_collection");
+        $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, __CLASS__);
         // return data
         return  $data;
     }
@@ -131,7 +131,7 @@ class device_templates
             $data = $cmd->fetchAll(PDO::FETCH_KEY_PAIR);
         }
         else {
-            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template_collection");
+            $data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, __CLASS__);
         }
         // return data
         return  $data;
@@ -194,7 +194,7 @@ class device_templates
         $cmd = $db->prepare($sql);
         $cmd->execute($uuid);
         //$data = $cmd->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_UNIQUE, "device_template");
-        $data = $cmd->fetchObject((!isset($columns))?"device_template":__CLASS__);
+        $data = $cmd->fetchObject(__CLASS__);
         return  $data;
     }
 
@@ -303,18 +303,4 @@ class device_templates
         return  $d;
     }
 }
-
-class device_template {
-    public $domain_uuid = null;
-    public $name = null;
-    public $enabled = false;
-    public $data = null;
-
-    function __construct() {}
-};
-
-class device_template_collection {
-    function __construct() {}
-};
-
 ?>

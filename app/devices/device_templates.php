@@ -41,12 +41,18 @@
 // process action the action
 	if ($_POST["__action"]=="copy" && permission_exists('device_template_add')) {
 		if (is_uuid($_POST["__data"])) {
-			device_templates::duplicate($db, $_POST["__data"],['domain_uuid'=>$_SESSION['domain_uuid']]);
+			device_templates::copy($db, $_POST["__data"],['domain_uuid'=>$_SESSION['domain_uuid']]);
 			$_SESSION["message"] = $text['message-add'];
 		}
 	}
-	elseif ($_POST["__action"]=="drop" && permission_exists('device_template_delete')) {
-		if (is_uuid($_POST["__data"]) && device_templates::get($db, $_POST["__data"], ['protected'])->protected=="false") {
+	elseif ($_POST["__action"]=="drop") {
+		// get template domain uuid
+		$t = device_templates::get($db, $_POST["__data"], ['domain_uuid']);
+		if (is_uuid($_POST["__data"]) && 
+			((permission_exists('device_template_delete') && $t->domain_uuid!=null) ||
+			(permission_exists('device_template_delete_global') && $t->domain_uuid==null))
+		   )
+		{
 			device_templates::drop($db, $_POST["__data"]);
 			$_SESSION["message"] = $text['message-delete'];
 		}
@@ -67,7 +73,7 @@
 
 // show table
 // set the filter
-	if ($_POST['search_domain']=="all") {
+	if ($_POST['search_domain']=="all" && permission_exists('device_template_viewall')) {
 		$search_domain = "all";
 		$filter = [];
 	}
@@ -102,7 +108,7 @@
 	$sort = (!empty($orderby)) ? $orderby : 'collection, name';
 
 // get data from database
-	$columns = ['uuid','name', 'collection', 'enabled', 'protected'];
+	$columns = ['uuid','domain_uuid','name', 'collection', 'enabled', 'protected'];
 	$data = device_templates::find($db, $filter, $columns, $sort);
 	$num_rows = (int)device_templates::count($db, $filter);
 
@@ -128,21 +134,26 @@
 	echo "		<input type='button' class='btn' alt='".$text['button-back']."' onclick='document.location=\"devices.php\"' value='".$text['button-back']."'>";
 	echo "		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	// assign button
-	if (permission_exists('device_edit')) {
+	if (permission_exists('device_template')) {
 	echo "		<input type='button' class='btn' alt='".$text['button-assign']."' onclick='document.location=\"device_template_assign.php\"' value='".$text['button-assign']."'>";
 	}
 	// import button
-	if (permission_exists('device_template_add')) {
+	if (permission_exists('device_template_import_local') || permission_exists('device_template_import_remote')) {
 	echo "		<input type='button' class='btn' alt='".$text['button-import']."' onclick='document.location=\"device_template_import.php\"' value='".$text['button-import']."'>";
 	}
 	// domain selection
 	echo "    <select class='formfld' id='search_domain' name='search_domain'>\n";
-	if (permission_exists('device_template_domain')){
+	if (permission_exists('device_template_viewall')){
 	echo "    <option value='all'".(($search_domain == 'all') ?" Selected":'').">".$text['select-all']."</option>\n";
 	}
 	echo "    <option value='global'".(($search_domain == 'global') ?" Selected":'').">".$text['select-global']."</option>\n";
-	foreach ($_SESSION['domains'] as $row) {
-	echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$search_domain) ?" Selected":'').">".$row['domain_name']."</option>\n";
+	if (permission_exists('device_template_viewall')){
+		foreach ($_SESSION['domains'] as $row) {
+		echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$search_domain) ?" Selected":'').">".$row['domain_name']."</option>\n";
+		}
+	}
+	else {
+		echo "    <option value='".$_SESSION['domain_uuid']."'".(($search_domain == $_SESSION['domain_uuid'])?" Selected":'').">".$_SESSION['domain_name']."</option>\n";
 	}
 	echo "    </select>\n";
 	// seach input
@@ -157,6 +168,9 @@
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	if (permission_exists('device_template_viewall')){
+	echo th_order_by('domain', $text['label-domain'], $order_by, $order);	
+	}
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('collection', $text['label-collection'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
@@ -174,10 +188,14 @@
 			// set row color
 			$c = (($c++)<1) ? $c : 0;
 			// add row
-			if (permission_exists('device_template_edit')) {
+			if ((permission_exists('device_template_edit') && $v->domain_uuid!=null) || 
+				(permission_exists('device_template_edit_global') && $v->domain_uuid==null)) {
 				$tr_link = "href='device_template_edit.php?id=$k'";
 			}
 			echo "<tr ".$tr_link.">\n";
+			if (permission_exists('device_template_viewall')) {
+			echo "	<td valign='top' class='row_style$c'>".(($_SESSION['domains'][$v->domain_uuid])?$_SESSION['domains'][$v->domain_uuid]['domain_name']:$v->domain_uuid)."</td>\n";
+			}
 			echo "	<td valign='top' class='row_style$c'>$v->name&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_style$c'>$v->collection&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_style$c'>";
@@ -190,10 +208,12 @@
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_style$c'>$v->description&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align:left;'>";
-			if (permission_exists('device_template_edit')) {
+			if ((permission_exists('device_template_edit') && $v->domain_uuid!=null) || 
+				(permission_exists('device_template_edit_global') && $v->domain_uuid==null)) {
 				echo "<a href='device_template_edit.php?id=$k' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('device_template_delete')&&filter_var($v->protected)==false) {
+			if ((permission_exists('device_template_delete') && $v->domain_uuid!=null) || 
+				(permission_exists('device_template_delete_global') && $v->domain_uuid==null)) {
 				echo "<a href='javascript:void(0);' alt='".$text['button-delete']."' onclick='if (confirm(\"".$text['confirm-delete']."\")) {action(\"drop\",\"$k\")};'>$v_link_label_delete</a>";
 			}
 			if (permission_exists('device_template_add')) {
@@ -205,7 +225,7 @@
 	}
 
 	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
+	echo "<td colspan='".((permission_exists('device_template_viewall'))?6:5)."' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";

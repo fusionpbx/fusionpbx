@@ -118,7 +118,7 @@ class devices
         $data = [];
         $sql = "SELECT DISTINCT v_devices.domain_uuid AS domain_uuid, v_domains.domain_name AS domain_name FROM v_devices ";
         $sql .= "LEFT JOIN v_domains ON v_domains.domain_uuid = v_devices.domain_uuid ";
-        
+
         // execute
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
@@ -133,13 +133,17 @@ class devices
     * @param  pdo $db - database object as pdo type
     * @return object - data as key value pair array
     */
-    public static function list_linked_templates($db)
+    public static function list_linked_templates($db, $domain=null)
     {
         // prepare sql
         $data = [];
         $sql = "SELECT DISTINCT v_devices.device_template AS template_uuid, v_device_templates.name AS template_name FROM v_devices ";
         $sql .= "LEFT JOIN v_device_templates ON CAST(v_device_templates.uuid AS TEXT) = v_devices.device_template ";
-        
+        if (!empty($domain)) {
+            $sql .= "WHERE v_devices.domain_uuid = ?";
+            $data = [$domain];
+        }
+
         // execute
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);
@@ -154,13 +158,17 @@ class devices
     * @param  pdo $db - database object as pdo type
     * @return object - data as key value pair array
     */
-    public static function list_linked_vendors($db)
+    public static function list_linked_vendors($db, $domain)
     {
         // prepare sql
         $data = [];
         $sql = "SELECT DISTINCT v_devices.device_vendor AS vendor_uuid, v_device_vendors.name AS vendor_name FROM v_devices ";
         $sql .= "LEFT JOIN v_device_vendors ON CAST(v_device_vendors.device_vendor_uuid AS TEXT) = v_devices.device_vendor ";
-        
+        if (!empty($domain)) {
+            $sql .= "WHERE v_devices.domain_uuid = ?";
+            $data = [$domain]; 
+        }
+
         // execute
         //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $cmd = $db->prepare($sql);

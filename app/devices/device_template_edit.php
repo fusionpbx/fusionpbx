@@ -35,9 +35,6 @@
 // check permissions
 	if (!permission_exists('device_template_add') && !permission_exists('device_template_edit')) die("access denied");
 
-//declare variables
-	$template = new device_template();
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -141,7 +138,7 @@
 	}
 
 //load includable device templates
-	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')'], ['AND'],['type','=','s']];
+	$filter = [['('],['domain_uuid IS NULL OR'],['domain_uuid','=',$domain_uuid],[')'],['AND'],['type','=','s'],['AND'],['enabled','=','true']];
 	//if (strlen($device_vendor)>0) { $filter[] = ['AND']; $filter[]=['vendor_name','=',$domain_uuid];} 
 	$device_templates = device_templates::find($db, $filter, ['uuid','name','collection'], ['collection, name']);
 
@@ -212,7 +209,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='vendor'>\n";
-	//$verndors = device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name', [numbered=>true]);
 	echo "	<option value=''".(($template->vendor_uuid=="") ?" Selected":'')."></option>\n";
 	foreach (device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name', [numbered=>true]) as $vendor) {
 	echo "	<option value='".$vendor['device_vendor_uuid']."'".(($vendor['device_vendor_uuid']==$template->vendor_uuid) ?" Selected":'').">".$vendor['name']."</option>\n";
@@ -254,22 +250,27 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 	// template domain
-	if (permission_exists('device_template_domain')) {
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-domain']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	if (permission_exists('device_template_viewall')) {
 	echo "    <select class='formfld' name='template_domain_uuid'>\n";
-	echo "    <option value=''".((strlen($template->domain_uuid) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
-	foreach ($_SESSION['domains'] as $row) {
-	echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$template->domain_uuid) ?" Selected":'').">".$row['domain_name']."</option>\n";
+		if (permission_exists('device_template_add_global')) {
+		echo "    <option value=''".((strlen($template->domain_uuid) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
+		}
+		foreach ($_SESSION['domains'] as $row) {
+		echo "    <option value='".$row['domain_uuid']."'".(($row['domain_uuid']==$search_domain) ?" Selected":'').">".$row['domain_name']."</option>\n";
+		}
+	}
+	else {
+		echo $_SESSION['domain_name']."<br/>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n".$text['description-domain_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	}
 	// template collection
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";

@@ -2688,6 +2688,19 @@ $text['button-assign']['de-at'] = "";
 $text['button-assign']['ar-eg'] = "";
 $text['button-assign']['he'] = "";
 
+$text['select-all']['en-us'] = "All";
+$text['select-all']['es-cl'] = "";
+$text['select-all']['pt-pt'] = "";
+$text['select-all']['fr-fr'] = "";
+$text['select-all']['pt-br'] = "";
+$text['select-all']['pl'] = "";
+$text['select-all']['uk'] = "";
+$text['select-all']['sv-se'] = "";
+$text['select-all']['ro'] = "";
+$text['select-all']['de-at'] = "";
+$text['select-all']['ar-eg'] = "";
+$text['select-all']['he'] = "";
+
 $text['button-import']['en-us'] = "Import Templates";
 $text['button-import']['es-cl'] = "";
 $text['button-import']['pt-pt'] = "";
