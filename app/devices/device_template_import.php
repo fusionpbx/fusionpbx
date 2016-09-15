@@ -109,8 +109,27 @@
 		$_SESSION["message"] = $text['message-add'];
 	}
 
-// get vendors
-	$vendors = device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name', [numbered=>true]);
+// get data
+	$vendors = device_vendors::find($db,['enabled','=','true'], ['device_vendor_uuid','name'], 'name');
+
+//set permission flags
+	$permission_import_local = false;
+	$permission_import_remote = false;
+	$permission_change_domain = false;
+	$permission_change_global = false;
+
+	if (permission_exists('device_template_import_local')) {
+		$permission_import_local = true;
+	}
+	if (permission_exists('device_template_import_remote')) {
+		$permission_import_remote = true;
+	}
+	if (permission_exists('device_template_viewall')) {
+		$permission_change_domain = true;
+	}
+	if (permission_exists('device_template_add_global')) {
+		$permission_change_global = true;
+	}
 
 // additional includes
 	require_once "resources/header.php";
@@ -141,7 +160,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' width='70%' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='import_uri' value='";
-	if (permission_exists('device_template_import_local')) {
+	if ($permission_import_local) {
 	echo isset($_POST['import_uri']) ? htmlspecialchars($_POST['import_uri']) : "file://".$_SERVER['DOCUMENT_ROOT']."/resources/templates/provision/*/*/*";
 	}
 	else {
@@ -183,9 +202,9 @@
 			echo "	<td valign='top' class='row_style$c'><input type='text' class='formfld' name='templates[$k][name]' value='".$v['name']."' size='32'></td>\n";
 			// template domain
 			echo "	<td valign='top' class='row_style$c'>";
-			if (permission_exists('device_template_viewall')) {
+			if ($permission_change_domain) {
 			echo "    <select class='formfld' name='templates[$k][domain]'>\n";
-				if (permission_exists('device_template_viewall')) {
+				if ($permission_change_global) {
 				echo "    <option value=''".((strlen($k['domain']) == 0) ?" Selected":'').">".$text['select-global']."</option>\n";
 				}
 				foreach ($_SESSION['domains'] as $i) {
@@ -194,14 +213,14 @@
 				echo "    </select>\n";
 				}
 			else {
-			echo $_SESSION["domain_name"];
+			echo "<lable class='formfld'>".$_SESSION["domain_name"]."</lable>";
 			}
 			echo "	</td>\n";
 			// template vendor
 			echo "	<td valign='top' class='row_style$c'>";
 			echo "	<select class='formfld' name='templates[$k][vendor]'>\n";
-			foreach ($vendors as $i) {
-			echo "	<option value='".$i['device_vendor_uuid']."'".(($i['device_vendor_uuid']==$v['vendor']) ?" Selected":'').">".$i['name']."</option>\n";
+			foreach ($vendors as $vk => $vv) {
+			echo "	<option value='$vk'".(($vk==$v['vendor']) ?" Selected":'').">$vv->name</option>\n";
 			}
 			echo "	</select>\n";
 			echo "	</td>";

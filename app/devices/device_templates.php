@@ -189,7 +189,8 @@
 			$c = (($c++)<1) ? $c : 0;
 			// add row
 			if ((permission_exists('device_template_edit') && $v->domain_uuid!=null) || 
-				(permission_exists('device_template_edit_global') && $v->domain_uuid==null)) {
+				(permission_exists('device_template_edit_global') && $v->domain_uuid==null) ||
+				(permission_exists('device_template_view_global') && $v->domain_uuid==null)) {
 				$tr_link = "href='device_template_edit.php?id=$k'";
 			}
 			echo "<tr ".$tr_link.">\n";
@@ -209,7 +210,8 @@
 			echo "	<td valign='top' class='row_style$c'>$v->description&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' style='text-align:left;'>";
 			if ((permission_exists('device_template_edit') && $v->domain_uuid!=null) || 
-				(permission_exists('device_template_edit_global') && $v->domain_uuid==null)) {
+				(permission_exists('device_template_edit_global') && $v->domain_uuid==null) ||
+				(permission_exists('device_template_view_global') && $v->domain_uuid==null)) {
 				echo "<a href='device_template_edit.php?id=$k' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if ((permission_exists('device_template_delete') && $v->domain_uuid!=null) || 
