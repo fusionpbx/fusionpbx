@@ -939,7 +939,7 @@ include "root.php";
 				else {
 					require_once('app/devices/resources/classes/device_templates.class.php');
 					// display the output
-					$view->display('string:'.device_templates::get($this->db, $device_template, ['data'])->data);
+					$view->display('string:'.device_templates::compile($db, $device_template));
 				}
 
 				//log file for testing
