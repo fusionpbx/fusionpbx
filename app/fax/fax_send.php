@@ -354,7 +354,9 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				//convert uploaded file to pdf, if necessary
 				if ($fax_file_extension != "pdf" && $fax_file_extension != "tif") {
 					chdir($dir_fax_temp);
-					exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+					$attachment_file_name = $_files['name'][$index];
+					exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.escapeshellarg($attachment_file_name));
+					unset($attachment_file_name);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
 
