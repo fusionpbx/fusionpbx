@@ -2,6 +2,7 @@
 
 $apps[$x]['menu'][0]['title']['en-us'] = 'Conference Controls';
 $apps[$x]['menu'][0]['title']['es-cl'] = '';
+$apps[$x]['menu'][0]['title']['pt-br'] = 'Controles de conferência';
 $apps[$x]['menu'][0]['title']['fr-fr'] = '';
 $apps[$x]['menu'][0]['title']['fr-ca'] = '';
 $apps[$x]['menu'][0]['title']['pl'] = '';

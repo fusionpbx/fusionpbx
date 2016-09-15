@@ -222,11 +222,11 @@ include "root.php";
 				}
 
 				$numbers[] = array(
-					line_numbe			=> $line['line_number'],
+					line_number			=> $line['line_number'],
 					phone_label			=> $phone_label,
 					phone_number		=> $row['phone_number'],
 					phone_extension		=> $row['phone_extension'],
-					phone_primar		=> $row['phone_primary'],
+					phone_primary		=> $row['phone_primary'],
 				);
 
 				$contact['phone_number_' . $phone_label] = $row['phone_number'];
@@ -310,7 +310,7 @@ include "root.php";
 											if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 												echo "<br/>device disabled<br/>";
 											}
-											echo "327 file not found";
+											echo "file not found";
 											exit;
 										}
 
@@ -922,14 +922,14 @@ include "root.php";
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "923 file not found";
+							echo "file not found";
 							exit;
 						}
 					}
 					else {
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "930 file not found ".$template_dir."/".$device_template ."/".$file;
+							echo "file not found ".$template_dir."/".$device_template ."/".$file;
 							if ($_SESSION['provision']['debug']['boolean'] == 'true'){
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
