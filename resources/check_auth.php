@@ -49,7 +49,7 @@
 			}
 
 		//if the username is not provided then send to login.php
-			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
+			if (strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
 				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
 				$_SESSION["message_mood"] = "negative";
 				$_SESSION["message"] = "Invalid Username and/or Password";
@@ -59,8 +59,13 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			$auth->username = $_REQUEST["username"];
-			$auth->password = $_REQUEST["password"];
+			if (strlen($_REQUEST["username"]) > 0) {
+				$auth->username = $_REQUEST["username"];
+				$auth->password = $_REQUEST["password"];
+			}
+			if (strlen($_REQUEST["key"]) > 0) {
+				$auth->key = $_REQUEST["key"];
+			}
 			$auth->debug = false;
 			$result = $auth->validate();
 			if ($result["authorized"] == "true") {
