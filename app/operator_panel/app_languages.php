@@ -57,7 +57,7 @@ $text['label-status_logged_out']['he'] = "";
 
 $text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['label-status_do_not_disturb']['es-cl'] = "No Molestar";
-$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
+$text['label-status_do_not_disturb']['pt-pt'] = "Não perturbe (DND)";
 $text['label-status_do_not_disturb']['fr-fr'] = "Ne pas Déranger";
 $text['label-status_do_not_disturb']['pt-br'] = "NÃ£o perturbe";
 $text['label-status_do_not_disturb']['pl'] = "Nie przeszkadzaÄ‡ (DND)";
