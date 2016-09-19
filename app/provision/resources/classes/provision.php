@@ -234,7 +234,9 @@ include "root.php";
 		}
 
 		public function render() {
-
+			//get the database type;
+			global $db_type;
+			
 			//debug
 				$debug = $_REQUEST['debug']; // array
 
