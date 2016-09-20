@@ -54,10 +54,8 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 // Escence make request based on UserID for Memory keys
-/*
-The file name is fixed to `Account1_Extern.xml`.
-(Account1 is the first account you register)
-*/
+	// The file name is fixed to `Account1_Extern.xml`.
+	// (Account1 is the first account you register)
 	if(empty($mac) && !empty($ext)){
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
@@ -84,7 +82,7 @@ The file name is fixed to `Account1_Extern.xml`.
 	}
 
 //prepare the mac address
-	if (isset($_REQUEST['mac'])) {
+	if (isset($mac)) {
 		//normalize the mac address to lower case
 			$mac = strtolower($mac);
 		//replace all non hexadecimal values and validate the mac address
