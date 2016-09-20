@@ -135,6 +135,17 @@ $text['label-voicemail_password']['uk'] = "Пароль";
 $text['label-voicemail_password']['de-at'] = "Mailbox Passwort";
 $text['label-voicemail_password']['he'] = "סיסמא לתא קולי";
 
+$text['label-voicemail_alternate_greet_id']['en-us'] = "Alternate Greet ID";
+$text['label-voicemail_alternate_greet_id']['es-cl'] = "";
+$text['label-voicemail_alternate_greet_id']['pt-pt'] = "";
+$text['label-voicemail_alternate_greet_id']['fr-fr'] = "";
+$text['label-voicemail_alternate_greet_id']['pt-br'] = "";
+$text['label-voicemail_alternate_greet_id']['pl'] = "";
+$text['label-voicemail_alternate_greet_id']['sv-se'] = "";
+$text['label-voicemail_alternate_greet_id']['uk'] = "";
+$text['label-voicemail_alternate_greet_id']['de-at'] = "";
+$text['label-voicemail_alternate_greet_id']['he'] = "";
+
 $text['label-voicemail_mail_to']['en-us'] = "Mail To";
 $text['label-voicemail_mail_to']['es-cl'] = "Correo a";
 $text['label-voicemail_mail_to']['pt-pt'] = "Email Para";
@@ -488,6 +499,17 @@ $text['description-voicemail_message']['sv-se'] = "En lista med inspelade röstm
 $text['description-voicemail_message']['uk'] = "Список записаних голосових повідомлень, який відображає, коли повідомлення було створено, інформація про абонента, довжина, розмір файлу і завантаження або видалення повідомлення.";
 $text['description-voicemail_message']['de-at'] = "Eine Liste der Aufgenommenen Mailbox Nachrichten. Die Liste zeigt, wann die Nachricht aufgenommen wurde, wer angerufen hat, wie lange gesprochen wurde und wie groß die Datei ist. Die Dateien können heruntergeladen und/oder gelöscht werden.";
 $text['description-voicemail_message']['he'] = "";
+
+$text['description-voicemail_alternate_greet_id']['en-us'] = "An alternative greet id used in the default greeting.";
+$text['description-voicemail_alternate_greet_id']['es-cl'] = "";
+$text['description-voicemail_alternate_greet_id']['pt-pt'] = "";
+$text['description-voicemail_alternate_greet_id']['fr-fr'] = "";
+$text['description-voicemail_alternate_greet_id']['pt-br'] = "";
+$text['description-voicemail_alternate_greet_id']['pl'] = "";
+$text['description-voicemail_alternate_greet_id']['sv-se'] = "";
+$text['description-voicemail_alternate_greet_id']['uk'] = "";
+$text['description-voicemail_alternate_greet_id']['de-at'] = "";
+$text['description-voicemail_alternate_greet_id']['he'] = "";
 
 $text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to. ";
 $text['description-voicemail_mail_to']['es-cl'] = "Ingrese las direcciones de correo a quien desee enviar el correo de voz.";
