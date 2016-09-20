@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -172,6 +172,7 @@
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
 							greeting_id = row["greeting_id"];
+							voicemail_alternate_greet_id = row["voicemail_alternate_greet_id"];
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
