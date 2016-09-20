@@ -41,7 +41,7 @@
 				if (name == "person_not_available_record_message") then
 					table.insert(actions, {app="streamFile",data="voicemail/vm-person.wav"});
 					--pronounce the voicemail_id
-					if (session:getVariable("voicemail_alternate_greet_id")) then
+					if (voicemail_alternate_greet_id) then
 						table.insert(actions, {app="say.number.iterated",data=voicemail_alternate_greet_id});
 					else
 						table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
