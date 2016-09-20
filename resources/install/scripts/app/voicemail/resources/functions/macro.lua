@@ -39,15 +39,13 @@
 				end
 			--the person at extension 101 is not available record your message at the tone press any key or stop talking to end the recording
 				if (name == "person_not_available_record_message") then
-					local voicemail_greet_id
 					table.insert(actions, {app="streamFile",data="voicemail/vm-person.wav"});
 					--pronounce the voicemail_id
 					if (session:getVariable("voicemail_alternate_greet_id")) then
-						voicemail_greet_id = session:getVariable("voicemail_alternate_greet_id");
+						table.insert(actions, {app="say.number.iterated",data=voicemail_alternate_greet_id});
 					else
-						voicemail_greet_id = voicemail_id;
+						table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
 					end
-					table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
 					table.insert(actions, {app="streamFile",data="voicemail/vm-not_available.wav"});
 				end
 			--record your message at the tone press any key or stop talking to end the recording
