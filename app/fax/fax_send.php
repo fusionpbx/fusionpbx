@@ -346,6 +346,11 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				$fax_name = str_replace("+", "_", $fax_name);
 				$fax_name = str_replace("=", "_", $fax_name);
 
+
+				$attachment_file_name = $_files['name'][$index];
+				rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				unset($attachment_file_name);
+
 				if (!$included) {
 					//move uploaded file
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
