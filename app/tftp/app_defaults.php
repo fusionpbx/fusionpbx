@@ -60,7 +60,7 @@
 			unset ($prep_statement, $sql);
 
 		//find the missing default settings
-			$missing = [];
+			$missing = array();
 			foreach ($array as $setting) {
 				$found = false;
 				foreach ($default_settings as $row) {
