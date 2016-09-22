@@ -49,7 +49,7 @@
 							$sql = "delete from v_group_permissions where ";
 							$sql .= "group_name = '".$unprotected_group_name."' ";
 							$sql .= "and domain_uuid ".(($unprotected_domain_uuid != '') ? " = '".$unprotected_domain_uuid."' " : " is null ");
-							if (!$db->exec($sql)) {
+							if (false === $db->exec($sql)) {
 								//echo $db->errorCode() . "<br>";
 								$info = $db->errorInfo();
 								print_r($info);
