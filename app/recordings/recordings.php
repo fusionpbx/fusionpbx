@@ -17,16 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -49,7 +51,8 @@ require_once "resources/check_auth.php";
 	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
-			$path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
+			//set the path for the directory
+				$path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
 
 			//if from recordings, get recording details from db
 				$recording_uuid = check_str($_GET['id']); //recordings
@@ -125,11 +128,21 @@ require_once "resources/check_auth.php";
 //upload the recording
 	if (permission_exists('recording_upload')) {
 		if ($_POST['submit'] == $text['button-upload'] && $_POST['type'] == 'rec' && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
-			$recording_filename = str_replace(" ", "_", $_FILES['ulfile']['name']);
-			$recording_filename = str_replace("'", "", $recording_filename);
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 
-			$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($recording_filename);
+			//remove special characters
+				$recording_filename = str_replace(" ", "_", $_FILES['ulfile']['name']);
+				$recording_filename = str_replace("'", "", $recording_filename);
+
+			//make sure the destination directory exists
+				if (!is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'])) {
+					event_socket_mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']);
+				}
+			
+			//move the uploaded files
+				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
+
+			//set the message
+				$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($recording_filename);
 
 			//set the file name to be inserted as the recording description
 				$recording_description = base64_encode($_FILES['ulfile']['name']);
