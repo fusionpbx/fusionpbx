@@ -189,6 +189,20 @@ $text['button-applied']['ro'] = "";
 $text['button-applied']['fa'] = "";
 $text['button-applied']['ar-eg'] = "";
 
+$text['button-xml']['en-us'] = "XML";
+$text['button-xml']['es-cl'] = "";
+$text['button-xml']['pt-pt'] = "";
+$text['button-xml']['fr-fr'] = "";
+$text['button-xml']['pt-br'] = "";
+$text['button-xml']['pl'] = "";
+$text['button-xml']['he'] = "";
+$text['button-xml']['uk'] = "";
+$text['button-xml']['sv-se'] = "";
+$text['button-xml']['de-at'] = "";
+$text['button-xml']['ro'] = "";
+$text['button-xml']['fa'] = "";
+$text['button-xml']['ar-eg'] = "";
+
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
 $text['button-clear']['pt-pt'] = "Apagar";
