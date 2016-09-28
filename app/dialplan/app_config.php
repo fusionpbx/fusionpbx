@@ -36,6 +36,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_xml";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_advanced_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "52929fee-81d3-4d94-50b7-64842d9393c2";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -103,6 +106,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_continue";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_xml";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "xml";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_order";
