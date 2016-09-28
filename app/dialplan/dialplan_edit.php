@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -96,12 +96,13 @@
 //process and save the data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		$msg = '';
-		if ($action == "update") {
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		}
+		//get the dialplan uuid
+			if ($action == "update") {
+				$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+			}
 
 		//check for all required data
+			$msg = '';
 			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
@@ -136,35 +137,38 @@
 			else {
 				$array['domain_uuid'] = $_SESSION['domain_uuid'];
 			}
-			$array['dialplan_name'] = $dialplan_name;
-			$array['dialplan_number'] = $_POST["dialplan_number"];
-			$array['dialplan_context'] = $_POST["dialplan_context"];
-			$array['dialplan_continue'] = $_POST["dialplan_continue"];
-			$array['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
-			$array['dialplan_description'] = $_POST["dialplan_description"];
 			$x = 0;
+			$y = 0;
+			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
+			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
+			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
+			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			foreach ($_POST["dialplan_details"] as $row) {
 				if (strlen($row["dialplan_detail_tag"]) > 0) {
 					if (strlen($row["dialplan_detail_uuid"]) > 0) {
-						$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 					}
-					$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
-					$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-					$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-					$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-					$array['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
-					$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-					$array['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
-					$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 				}
-				$x++;
+				$y++;
 			}
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				$orm = new orm;
 				$orm->name('dialplans');
+				$orm->app_name = 'dialplans';
+				$orm->app_uuid = $app_uuid;
 				$orm->uuid($dialplan_uuid);
 				$orm->save($array);
 				//$message = $orm->message;
@@ -338,6 +342,9 @@
 	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
+	if (permission_exists('dialplan_xml')) {
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-xml']."'>\n";
+	}
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$dialplan_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -484,6 +491,7 @@
 		echo "    </select>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-description']."\n";
