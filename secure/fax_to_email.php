@@ -17,13 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
+
+$output_type = "file"; //file or console
 
 if (defined('STDIN')) {
 	//get the document root php file must be executed with the full path
@@ -266,8 +268,10 @@ if(!function_exists('fax_split_dtmf')) {
 	ini_set('memory_limit', '96M');
 
 //start the to cache the output
-	ob_end_clean();
-	ob_start();
+	if ($output_type == "file") {
+		ob_end_clean();
+		ob_start();
+	}
 
 //add a delimeter to the log
 	echo "\n---------------------------------\n";
@@ -514,12 +518,24 @@ if(!function_exists('fax_split_dtmf')) {
 
 		//prepare the mail object
 			$mail = new PHPMailer();
-			$mail->IsSMTP(); // set mailer to use SMTP
-
+			if (isset($_SESSION['email']['method'])) {
+				switch($_SESSION['email']['method']['text']) {
+					case 'sendmail': $mail->IsSendmail(); break;
+					case 'qmail': $mail->IsQmail(); break;
+					case 'mail': $mail->IsMail(); break;
+					default: $mail->IsSMTP(); break;
+				}
+			}
+			else {
+				$mail->IsSMTP(); // set mailer to use SMTP
+			}
 			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
 				$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
 			}
 			$mail->Host = $_SESSION['email']['smtp_host']['var'];
+			if (strlen($_SESSION['email']['smtp_port']['var']) > 0) {
+				$mail->Port = $_SESSION['email']['smtp_port']['var'];
+			}
 			if (strlen($_SESSION['email']['smtp_secure']['var']) > 0 && $_SESSION['email']['smtp_secure']['var'] != 'none') {
 				$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
 			}
@@ -545,6 +561,7 @@ if(!function_exists('fax_split_dtmf')) {
 			}
 
 		//output to the log
+			echo "smtp_host: ".$_SESSION['email']['smtp_host']['var']."\n";
 			echo "smtp_from: ".$_SESSION['email']['smtp_from']['var']."\n";
 			echo "smtp_from_name: ".$_SESSION['email']['smtp_from_name']['var']."\n";
 			echo "tmp_subject: $tmp_subject\n";
@@ -615,13 +632,15 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 
 //open the file for writing
-	$fp = fopen($_SESSION['server']['temp']['dir']."/fax_to_email.log", "w");
-//get the output from the buffer
-	$content = ob_get_contents();
-//clean the buffer
-	ob_end_clean();
-//write the contents of the buffer
-	fwrite($fp, $content);
-	fclose($fp);
-
+	if ($output_type == "file") {
+		//open the file
+			$fp = fopen($_SESSION['server']['temp']['dir']."/fax_to_email.log", "w");
+		//get the output from the buffer
+			$content = ob_get_contents();
+		//clean the buffer
+			ob_end_clean();
+		//write the contents of the buffer
+			fwrite($fp, $content);
+			fclose($fp);
+	}
 ?>
