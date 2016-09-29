@@ -170,14 +170,17 @@ include "root.php";
 			//add or update the dialplan
 				$this->dialplan($array);
 				$array['dialplan_uuid'] = $this->dialplan_uuid;
+				$data['ivr_menus'][] = $array;
 
 			//save the ivr_menus
 				$orm = new orm;
 				$orm->name('ivr_menus');
+				$orm->app_name = 'ivr_menus';
+				$orm->app_uuid = $this->app_uuid;
 				if (strlen($this->ivr_menu_uuid) > 0) {
 					$orm->uuid($this->ivr_menu_uuid);
 				}
-				$orm->save($array);
+				$result = $orm->save($data);
 				$this->ivr_menu_uuid = $orm->message['uuid'];
 
 			//update dialplan with the ivr_menu_uuid
@@ -460,6 +463,8 @@ include "root.php";
 			//save the dialplan
 				$orm = new orm;
 				$orm->name('dialplans');
+				$orm->app_name = 'ivr_menus';
+				$orm->app_uuid = $this->app_uuid;
 				$orm->save($array);
 				$response = $orm->message;
 				if (strlen($response['uuid']) > 0) {
