@@ -915,7 +915,6 @@ include "root.php";
 							//$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 							//print_r($result);
 							unset($prep_statement);
-							//echo $sql."<br />\n";
 							$this->db->query($sql);
 							unset($sql);
 						}
