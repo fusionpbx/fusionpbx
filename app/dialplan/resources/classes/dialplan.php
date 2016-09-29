@@ -57,6 +57,14 @@ include "root.php";
 			public $dialplan_detail_break;
 			public $dialplan_detail_inline;
 			public $dialplan_detail_group;
+			
+			//xml
+			public $uuid;
+			public $context;
+			public $source;
+			public $destination;
+			public $is_empty;
+			public $array;
 
 			//class constructor
 			public function __construct() {
@@ -487,7 +495,7 @@ include "root.php";
 							unset ($prep_statement);
 						//set the session array
 							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
-					}
+					} //end if !is_array
 				//find the matching outbound routes
 					if (isset($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
 						if (isset($row['dialplan_details'])) foreach ($row['dialplan_details'] as $field) {
@@ -525,9 +533,396 @@ include "root.php";
 									}
 							}
 						}
+					} // end if isset
+			} // outbound_routes
+
+			//reads dialplan details from the database to build the xml
+			public function xml () {
+
+				//set the xml array and then concatenate the array to a string
+					/* $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"; */
+					//$xml .= "<document type=\"freeswitch/xml\">\n";
+					//$xml .= "	<section name=\"dialplan\" description=\"\">\n";
+					//$xml .= "		<context name=\"" . $this->context . "\">\n"; 
+
+				//set defaults
+					$previous_dialplan_uuid = "";
+					$previous_dialplan_detail_group = "";
+					$dialplan_tag_status = "closed";
+					$condition_tag_status = "closed";
+
+				//get the dialplans from the dialplan_xml field in the dialplans table
+					if ($this->source == "dialplans") {
+						//get the data using a join between the dialplans and dialplan details tables
+							$sql = "select dialplan_uuid, dialplan_xml ";
+							$sql .= "from v_dialplans \n";
+							if (isset($this->uuid)) {
+								$sql .= "where dialplan_uuid = '".$this->uuid."' \n";
+							}
+							else {
+								if (isset($this->context)) {
+									if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
+										$sql .= "where dialplan_context = '" . $this->context . "' \n";
+									}
+									else {
+										$sql .= "where (dialplan_context = '" . $this->context . "' or dialplan_context = '\${domain_name}') \n";
+									}
+									$sql .= "and dialplan_enabled = 'true' \n";
+								}
+							}
+							if ($this->is_empty == "dialplan_xml") {
+								$sql .= "and (p.dialplan_xml = '' or p.dialplan_xml is null) \n";
+							}
+							$sql .= "order by \n";
+							$sql .= "dialplan_context asc, \n";
+							$sql .= "dialplan_order asc \n";
+							//echo $sql;
+							$prep_statement = $this->db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$results = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							//echo $sql;
+							foreach ($results as $row) {
+								$dialplans[$row["dialplan_uuid"]] = $row["dialplan_xml"];
+							}
 					}
+
+				//get the dialplans from the dialplan details
+					if ($this->source == "details") {
+
+						//get the data using a join between the dialplans and dialplan details tables
+							$sql = "select ";
+							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, \n";
+							$sql .= "p.dialplan_continue, p.dialplan_order, p.dialplan_enabled, p.dialplan_description,  \n";
+							$sql .= "s.dialplan_detail_uuid, s.dialplan_detail_tag, s.dialplan_detail_type, s.dialplan_detail_data, \n";
+							$sql .= "s.dialplan_detail_break, s.dialplan_detail_inline, s.dialplan_detail_group, s.dialplan_detail_order \n";
+							$sql .= "from v_dialplans as p, v_dialplan_details as s \n";
+							$sql .= "where p.dialplan_uuid = s.dialplan_uuid \n";
+							if ($this->is_empty == "dialplan_xml") {
+								$sql .= "and (p.dialplan_xml = '' or p.dialplan_xml is null) \n";
+							}
+							if (isset($this->context)) {
+								if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
+									$sql .= "and p.dialplan_context = '" . $this->context . "' \n";
+								}
+								else {
+									$sql .= "and (p.dialplan_context = '" . $this->context . "' or p.dialplan_context = '\${domain_name}') \n";
+								}
+								$sql .= "and p.dialplan_enabled = 'true' \n";
+							}
+							if (isset($this->uuid)) {
+								$sql .= "and p.dialplan_uuid = '".$this->uuid."' \n";
+								$sql .= "and s.dialplan_uuid = '".$this->uuid."' \n";
+							}
+							$sql .= "order by \n";
+							$sql .= "p.dialplan_order asc, \n";
+							$sql .= "p.dialplan_name asc, \n";
+							$sql .= "p.dialplan_uuid asc, \n";
+							$sql .= "s.dialplan_detail_group asc, \n";
+							$sql .= "CASE s.dialplan_detail_tag \n";
+							$sql .= "WHEN 'condition' THEN 1 \n";
+							$sql .= "WHEN 'action' THEN 2 \n";
+							$sql .= "WHEN 'anti-action' THEN 3 \n";
+							$sql .= "ELSE 100 END, \n";
+							$sql .= "s.dialplan_detail_order asc \n";
+							$prep_statement = $this->db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$results = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+						//debug info
+							//echo "sql: $sql\n";
+							//echo "<pre>\n";
+							//print_r($results);
+							//echo "</pre>\n";
+							//exit;
+
+						//loop through the results to get the xml from the dialplan_xml field or from dialplan details table
+							$x = 0;
+							foreach ($results as $row) {
+								//clear flag pass
+									$pass = false;
+
+								//get the dialplan
+									$domain_uuid = $row["domain_uuid"];
+									$dialplan_uuid = $row["dialplan_uuid"];
+									//$app_uuid = $row["app_uuid"];
+									$this->context = $row["dialplan_context"];
+									$dialplan_name = $row["dialplan_name"];
+									//$dialplan_number = $row["dialplan_number"];
+									$dialplan_continue = $row["dialplan_continue"];
+									//$dialplan_order = $row["dialplan_order"];
+									//$dialplan_enabled = $row["dialplan_enabled"];
+									//$dialplan_description = $row["dialplan_description"];
+
+								//$get the dialplan details
+									//$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
+									$dialplan_detail_tag = $row["dialplan_detail_tag"];
+									$dialplan_detail_type = $row["dialplan_detail_type"];
+									$dialplan_detail_data = $row["dialplan_detail_data"];
+									$dialplan_detail_break = $row["dialplan_detail_break"];
+									$dialplan_detail_inline = $row["dialplan_detail_inline"];
+									$dialplan_detail_group = $row["dialplan_detail_group"];
+									//$dialplan_detail_order = $row["dialplan_detail_order;
+
+								//remove $$ and replace with $
+									$dialplan_detail_data = str_replace("$$", "$", $dialplan_detail_data);
+
+								//get the dialplan detail inline
+									$detail_inline = "";
+									if ($dialplan_detail_inline) {
+										if (strlen($dialplan_detail_inline) > 0) {
+											$detail_inline = " inline=\"" . $dialplan_detail_inline . "\"";
+										}
+									}
+
+								//close the tags
+									if ($dialplan_tag_status != "closed") {
+										if (($previous_dialplan_uuid != $dialplan_uuid) || ($previous_dialplan_detail_group != $dialplan_detail_group)) {
+											if ($condition_tag_status != "closed") {
+												if ($condition_attribute && (strlen($condition_attribute) > 0)) {
+													$xml .= "	<condition " . $condition_attribute . $condition_break . "/>\n";
+													$condition_attribute = "";
+													$condition_tag_status = "closed";
+												}
+												elseif ($condition && (strlen($condition) > 0)) {
+													$xml .= " ".$condition . "/>";
+													$condition = "";
+													$condition_tag_status = "closed";
+												}
+												elseif ($condition_tag_status != "closed") {
+													$xml .= "	</condition>\n";
+													$condition_tag_status = "closed";
+												}
+												$condition_tag_status = "closed";
+											}
+										}
+										if ($previous_dialplan_uuid != $dialplan_uuid) {
+											$xml .= "</extension>\n";
+
+											//add to the dialplanss
+											$dialplans[$previous_dialplan_uuid] = $xml;
+											$xml = '';
+
+											$dialplan_tag_status = "closed";
+										}
+									}
+
+								//open the tags
+									if ($dialplan_tag_status == "closed") {
+										$xml = '';
+										$xml .= "<extension name=\"" . $dialplan_name . "\" continue=\"" . $dialplan_continue . "\" uuid=\"" . $dialplan_uuid . "\">\n";
+										$dialplan_tag_status = "open";
+										$first_action = true;
+										$condition = "";
+										$condition_attribute = "";
+									}
+									if ($dialplan_detail_tag == "condition") {
+										//determine the type of condition
+											if ($dialplan_detail_type == "hour") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "minute") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "minute-of-day") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "mday") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "mweek") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "mon") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "time-of-day") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "yday") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "year") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "wday") {
+												$condition_type = 'time';
+											}
+											elseif ($dialplan_detail_type == "week") {
+												$condition_type = 'time';
+											}
+											elseif ($ialplan_detail_type == "date-time") {
+												$condition_type = 'time';
+											}
+											else {
+												$condition_type = 'default';
+											}
+
+										// finalize any previous pending condition statements
+											if ($condition_tag_status == "open") {
+												if (strlen($condition) > 0) {
+													$xml .= $condition . "/>\n";
+													$condition = '';
+													$condition_tag_status = "closed";
+												}
+												elseif (strlen($condition_attribute) > 0 && $condition_tag_status == "open") {
+													// previous condition(s) must have been of type time
+													// do not finalize if new condition is also of type time
+													if ($condition_type != 'time') {
+														// note: condition_break here is value from the previous loop
+														$xml .= "	<condition " . $condition_attribute . $condition_break . "/>\n";
+														$condition_attribute = '';
+														$condition_tag_status = "closed";
+													}
+													//else {
+													//	$xml .= "	</condition>\n";
+													//	$condition_tag_status = "closed";
+													//}
+												}
+											}
+
+										//get the condition break attribute
+											$condition_break = "";
+											if ($dialplan_detail_break) {
+												if (strlen($dialplan_detail_break) > 0) {
+													$condition_break = " break=\"" . $dialplan_detail_break . "\"";
+												}
+											}
+
+										//condition tag but leave off the ending
+											if ($condition_type == "default") {
+												$condition = "	<condition field=\"" . $dialplan_detail_type . "\" expression=\"" . $dialplan_detail_data . "\"" . $condition_break;
+											}
+											elseif ($condition_type == "time") {
+												if ($condition_attribute) {
+													$condition_attribute = $condition_attribute . $dialplan_detail_type . "=\"" . $dialplan_detail_data . "\" ";
+												} else {
+													$condition_attribute = $dialplan_detail_type . "=\"" . $dialplan_detail_data . "\" ";
+												}
+												$condition = ""; //prevents a duplicate time condition
+											}
+											else {
+												$condition = "	<condition field=\"" . $dialplan_detail_type . "\" expression=\"" . $dialplan_detail_data . "\"" .  $condition_break;
+											}
+											$condition_tag_status = "open";
+									}
+
+									if ($dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
+										if ($condition_tag_status == "open") {
+											if ($condition_attribute && (strlen($condition_attribute) > 0)) {
+												$xml .= "	<condition " . $condition_attribute . $condition_break . ">\n";
+												$condition_attribute = "";
+											}
+											elseif ($condition && (strlen($condition) > 0)) {
+												$xml .= $condition . ">\n";
+												$condition = "";
+											}
+										}
+									}
+
+									if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
+										if ($dialplan_detail_tag == "action") {
+											if ($first_action) {
+												//get the domains
+													if (!isset($domains)) {
+														$sql = "select * from v_domains; \n";
+														$prep_statement = $this->db->prepare(check_sql($sql));
+														$prep_statement->execute();
+														$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+														foreach($result as $row) {
+															$domains[$row['domain_uuid']] = $row['domain_name'];
+														}
+													}
+												//add the call direction and domain name and uuid
+													$xml .= "		<action application=\"set\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
+													if ($domain_uuid != null and $domain_uuid != '') {
+														$domain_name = $domains[$domain_uuid];
+														$xml .= "		<action application=\"set\" data=\"domain_uuid=" . $domain_uuid . "\" inline=\"true\"/>\n";
+													}
+													if ($domain_name != null and $domain_name != '') {
+														$xml .= "		<action application=\"set\" data=\"domain_name=" . $domain_name . "\" inline=\"true\"/>\n";
+													}
+													$first_action = false;
+											}
+										}
+									}
+									if ($dialplan_detail_tag == "action") {
+										$xml .= "		<action application=\"" . $dialplan_detail_type . "\" data=\"" . $dialplan_detail_data . "\"" . $detail_inline . "/>\n";
+									}
+									if ($dialplan_detail_tag == "anti-action") {
+										$xml .= "		<anti-action application=\"" . $dialplan_detail_type . "\" data=\"" . $dialplan_detail_data . "\"" . $detail_inline . "/>\n";
+									}
+
+								//save the previous values
+									$previous_dialplan_uuid = $dialplan_uuid;
+									$previous_dialplan_detail_group = $dialplan_detail_group;
+
+								//increment the x
+									$x++;
+
+								//set flag pass
+									$pass = true;
+							}
+
+						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
+							if ($pass == false) {
+								//show an error
+									echo 'error while build context: ' . $this->context;
+							}
+
+						//close the extension tag if it was left open
+							if ($dialplan_tag_status == "open") {
+								if ($condition_tag_status == "open") {
+									if ($condition_attribute and (strlen($condition_attribute) > 0)) {
+										$xml .= "	<condition " . $condition_attribute . $condition_break . "/>\n";
+									}
+									elseif ($condition && (strlen($condition) > 0)) {
+										$xml .= $condition . "/>\n";
+									} else {
+										$xml .= "	</condition>\n";
+									}
+								}
+								$xml .= "</extension>\n";
+
+								//add to the dialplans array
+								$dialplans[$dialplan_uuid] = $xml;
+							}
+
+						//set the xml array and then concatenate the array to a string
+							//$xml .= "		</context>\n";
+							///$xml .= "	</section>\n";
+							//$xml .= "</document>\n";
+
+					} //end if source = details
+
+				//return the array
+					if ($this->destination == "array") {
+						return $dialplans;
+					}
+
+				//save the dialplan xml
+					if ($this->destination == "database") {
+						foreach ($dialplans as $key => $value) {
+							$sql = "update v_dialplans ";
+							//$sql .= "set dialplan_xml = ':xml' ";
+							$sql .= "set dialplan_xml = '".check_str($value)."' ";
+							//$sql .= "where dialplan_uuid=:dialplan_uuid ";
+							$sql .= "where dialplan_uuid = '$key';";
+							//$prep_statement = $this->db->prepare(check_sql($sql));
+							//$prep_statement->bindParam(':xml', $value );
+							//$prep_statement->bindParam(':dialplan_uuid', $key);
+							//$prep_statement->execute();
+							//$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							//print_r($result);
+							unset($prep_statement);
+							//echo $sql."<br />\n";
+							$this->db->query($sql);
+							unset($sql);
+						}
+						//return true;
+					}
+
 			}
-		}
-	}
+		} // end class
+	} // class_exists
 
 ?>
