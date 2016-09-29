@@ -128,17 +128,21 @@
 			$dialplan_name = str_replace("/", "", $dialplan_name);
 
 		//build the array
-			if (strlen($row["dialplan_uuid"]) > 0) {
-				$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
-			}
-			if (isset($_POST["domain_uuid"])) {
-				$array['domain_uuid'] = $_POST['domain_uuid'];
+			$x = 0;
+			if (isset($_POST["dialplan_uuid"])) {
+				$array['dialplans'][$x]['dialplan_uuid'] = $_POST["dialplan_uuid"];
 			}
 			else {
-				$array['domain_uuid'] = $_SESSION['domain_uuid'];
+				$dialplan_uuid = uuid();
+				$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 			}
-			$x = 0;
-			$y = 0;
+			if (isset($_POST["domain_uuid"])) {
+				$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+			}
+			else {
+				$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
+
 			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
 			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
 			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
@@ -146,21 +150,22 @@
 			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
 			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
+			$x = 0;
 			foreach ($_POST["dialplan_details"] as $row) {
 				if (strlen($row["dialplan_detail_tag"]) > 0) {
 					if (strlen($row["dialplan_detail_uuid"]) > 0) {
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+						$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 					}
-					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
+					$array['dialplans'][$x]['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 				}
-				$y++;
+				$x++;
 			}
 
 		//add or update the database
@@ -173,6 +178,13 @@
 				$orm->save($array);
 				//$message = $orm->message;
 			}
+
+		//update the dialplan xml
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->xml();
 
 		//clear the cache
 			$cache = new cache;
