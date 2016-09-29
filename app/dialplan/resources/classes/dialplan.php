@@ -865,8 +865,9 @@ include "root.php";
 
 						// prevent partial dialplan (pass=nil may be error in sql or empty resultset)
 							if ($pass == false) {
-								//show an error
+								if (count($results)) {
 									echo 'error while build context: ' . $this->context;
+								}
 							}
 
 						//close the extension tag if it was left open
