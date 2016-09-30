@@ -313,6 +313,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		// process uploaded or emailed files (if any)
 		$fax_page_count = 0;
 		$_files = (!$included) ? $_FILES['fax_files'] : $emailed_files;
+		unset($tif_files);
 		foreach ($_files['tmp_name'] as $index => $fax_tmp_name) {
 			$uploaded_file = (!$included) ? is_uploaded_file($fax_tmp_name) : true;
 			if ( $uploaded_file && $_files['error'][$index] == 0 && $_files['size'][$index] > 0 ) {
