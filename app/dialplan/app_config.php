@@ -109,7 +109,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_xml";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "xml";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
