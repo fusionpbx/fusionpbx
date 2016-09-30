@@ -26,7 +26,7 @@
 --load libraries
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
-	local JSON = require "app.voicemail.resources.functions.JSON"
+	local JSON = require "resources.functions.json"
 
 --define uuid function
 	local random = math.random;
@@ -52,34 +52,37 @@
 		if (transcribe_provider == "microsoft") then
 			local api_key1 = settings:get('voicemail', 'microsoft_key1', 'text') or '';
 			local api_key2 = settings:get('voicemail', 'microsoft_key2', 'text') or '';
-			access_token_cmd = "curl -X POST \"https://oxford-speech.cloudapp.net/token/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -d 'grant_type=client_credentials&client_id="..api_key1.."&client_secret="..api_key2.."&scope=https://speech.platform.bing.com'";
-			local handle = io.popen(access_token_cmd);
-			local access_token_result = handle:read("*a");
-			handle:close();
-			access_token_json = JSON:decode(access_token_result);
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
-				freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
-				freeswitch.consoleLog("notice", "[voicemail] JSON: " .. access_token_json["access_token"] .. "\n");
-			end
-		end
-		if (transcribe_provider == "microsoft") then
-			transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_json["access_token"] .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
-			local handle = io.popen(transcribe_cmd);
-			local transcribe_result = handle:read("*a");
-			handle:close();
-			local transcribe_json = JSON:decode(transcribe_result);
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-				freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-				freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
-				freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
-			end
+			if (api_key1 ~= '' and api_key2 ~= '') then
+				access_token_cmd = "curl -X POST \"https://oxford-speech.cloudapp.net/token/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -d 'grant_type=client_credentials&client_id="..api_key1.."&client_secret="..api_key2.."&scope=https://speech.platform.bing.com'";
+				local handle = io.popen(access_token_cmd);
+				local access_token_result = handle:read("*a");
+				handle:close();
+				access_token_json = JSON:decode(access_token_result);
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] JSON: " .. access_token_json["access_token"] .. "\n");
+				end
+
+				transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_json["access_token"] .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+				local handle = io.popen(transcribe_cmd);
+				local transcribe_result = handle:read("*a");
+				handle:close();
+				local transcribe_json = JSON:decode(transcribe_result);
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+				end
 							
-			transcription = transcribe_json["results"][1]["name"];
-			confidence = transcribe_json["results"][1]["confidence"];
+				transcription = transcribe_json["results"][1]["name"];
+				confidence = transcribe_json["results"][1]["confidence"];
+			end
 			return transcription;
 		end
+		
+		return '';
 	end
 
 --save the recording
@@ -88,10 +91,12 @@
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
 		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
-		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or false;
+		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 		
-		freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
-
+		if (debug["info"]) then
+			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
+		end
+		
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
 				--skip the instructions
