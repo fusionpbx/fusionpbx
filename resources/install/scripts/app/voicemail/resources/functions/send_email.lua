@@ -115,8 +115,13 @@
 					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch)
 
 				--prepare the files
-					file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
-					file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
+					if (transcription ~= nil) then
+						file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
+						file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body_transcription.tpl";					
+					else
+						file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
+						file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
+					end
 					if (not file_exists(file_subject)) then
 						file_subject = scripts_dir.."/app/voicemail/resources/templates/en/us/email_subject.tpl";
 						file_body = scripts_dir.."/app/voicemail/resources/templates/en/us/email_body.tpl";
@@ -166,6 +171,9 @@
 					body = body:gsub("${caller_id_name}", caller_id_name);
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${message_date}", message_date);
+					if (transcription ~= nil) then
+						body = body:gsub("${message_text}", transcription);
+					end
 					body = body:gsub("${message_duration}", message_length_formatted);
 					body = body:gsub("${account}", voicemail_name_formatted);
 					body = body:gsub("${voicemail_id}", id);

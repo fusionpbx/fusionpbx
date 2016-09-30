@@ -26,6 +26,64 @@
 --load libraries
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
+	local JSON = require "resources.functions.json"
+
+--define uuid function
+	local random = math.random;
+	local function gen_uuid()
+		local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+		return string.gsub(template, '[xy]', function (c)
+			local v = (c == 'x') and random(0, 0xf) or random(8, 0xb);
+			return string.format('%x', v);
+		end)
+	end
+
+	local function transcribe(file_path,settings)
+		--transcription variables
+		local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
+		transcribe_language = settings:get('voicemail', 'transcribe_language', 'text') or 'en-US';
+
+		if (debug["info"]) then
+			freeswitch.consoleLog("notice", "[voicemail] transcribe_provider: " .. transcribe_provider .. "\n");
+			freeswitch.consoleLog("notice", "[voicemail] transcribe_language: " .. transcribe_language .. "\n");
+
+		end	
+
+		if (transcribe_provider == "microsoft") then
+			local api_key1 = settings:get('voicemail', 'microsoft_key1', 'text') or '';
+			local api_key2 = settings:get('voicemail', 'microsoft_key2', 'text') or '';
+			if (api_key1 ~= '' and api_key2 ~= '') then
+				access_token_cmd = "curl -X POST \"https://oxford-speech.cloudapp.net/token/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -d 'grant_type=client_credentials&client_id="..api_key1.."&client_secret="..api_key2.."&scope=https://speech.platform.bing.com'";
+				local handle = io.popen(access_token_cmd);
+				local access_token_result = handle:read("*a");
+				handle:close();
+				access_token_json = JSON:decode(access_token_result);
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] JSON: " .. access_token_json["access_token"] .. "\n");
+				end
+
+				transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_json["access_token"] .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+				local handle = io.popen(transcribe_cmd);
+				local transcribe_result = handle:read("*a");
+				handle:close();
+				local transcribe_json = JSON:decode(transcribe_result);
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+				end
+							
+				transcription = transcribe_json["results"][1]["name"];
+				confidence = transcribe_json["results"][1]["confidence"];
+			end
+			return transcription;
+		end
+		
+		return '';
+	end
 
 --save the recording
 	function record_message()
@@ -33,7 +91,12 @@
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
 		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
-
+		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
+		
+		if (debug["info"]) then
+			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
+		end
+		
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
 				--skip the instructions
@@ -157,13 +220,16 @@
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
-					if (shout_exists == "true") then
+					if (shout_exists == "true" and transcribe_enabled == "false") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
 						--record in mp3 directly
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);
 					else
 						--create initial wav recording
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, record_silence_threshold, silence_seconds);
+							if (transcribe_enabled == "true") then
+								transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav",settings);
+							end
 						--use lame to encode, if available
 							if (file_exists("/usr/bin/lame")) then
 								freeswitch.consoleLog("notice", "using lame for mp3 encoding\n");
@@ -183,6 +249,9 @@
 					end
 				else
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+					if (transcribe_enabled == "true") then
+						transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext,settings);
+					end
 				end
 			end
 
