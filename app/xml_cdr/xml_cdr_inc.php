@@ -283,7 +283,7 @@
 	if ($rows_per_page > 0) {
 			if ($_SESSION['cdr']['count']['boolean'] == "true") {
 				//get the number of rows in the v_xml_cdr
-					$sql = "select count(*) as num_rows from v_xml_cdr ";
+					$sql = "select count(uuid) as num_rows from v_xml_cdr ";
 					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
