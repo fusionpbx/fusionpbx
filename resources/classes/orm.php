@@ -114,7 +114,7 @@
 							}
 						//order by
 							if (is_array($array['order_by'])) {
-								$sql .= "order by ".$array['order_by']." ";
+								$sql .= "ORDER BY ".$array['order_by']." ";
 							}
 						//limit
 							if (isset($array['limit'])) {
@@ -260,7 +260,9 @@
 					$depth = $this->array_depth($array);
 				//before normalizing the array
 					//echo "before: ".$depth."<br />\n";
+					//echo "<pre>\n";
 					//print_r($array);
+					//echo "</pre>\n";
 				//normalize the array
 					if ($depth == 1) {
 						$return_array[$name][] = $array;
@@ -273,9 +275,11 @@
 					}
 					unset($array);
 				//after normalizing the array
-					//$depth = $this->array_depth($main_array);
+					$depth = $this->array_depth($new_array);
 					//echo "after: ".$depth."<br />\n";
-					//print_r($main_array);
+					//echo "<pre>\n";
+					//print_r($new_array);
+					//echo "</pre>\n";
 				//return the array
 					return $return_array;
 			}
@@ -294,8 +298,9 @@
 					}
 
 				//normalize the array structure
-					$main_array = $this->normalize_array($array, $this->name);
-					unset($array);
+					//$new_array = $this->normalize_array($array, $this->name);
+					//unset($array);
+					$new_array = $array;
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -306,19 +311,19 @@
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-//					$this->db->beginTransaction();
+					$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
-					//print_r($main_array);
+					//print_r($new_array);
 					//echo "</pre>\n";
 					//exit;
 
 				//loop through the array
-					foreach ($main_array as $schema_name => $schema_array) {
-						$this->name = $schema_name;
+					foreach ($new_array as $schema_name => $schema_array) {
 
-						foreach ($schema_array as $schema_key => $array) {
+						$this->name = $schema_name;
+						foreach ($schema_array as $schema_id => $array) {
 
 							//set the variables
 								$table_name = "v_".$this->name;
@@ -359,7 +364,7 @@
 										//get the data
 											try {
 												$prep_statement->execute();
-												$parent_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
+												$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
 												echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
@@ -367,14 +372,15 @@
 												exit;
 											}
 										//set the action
-											if (is_array($parent_array)) {
+											if (is_array($result)) {
 												$action = "update";
+												$old_array[$schema_name][] = $result;
 											}
 											else {
 												$action = "add";
 											}
 									}
-									unset($prep_statement);
+									unset($prep_statement, $result);
 								}
 								else {
 									$action = "add";
@@ -394,9 +400,9 @@
 											//foreach ($parent_field_names as $field_name) {
 											//		$sql .= check_str($field_name).", ";
 											//}
-											foreach ($array as $key => $value) {
-												if (!is_array($value)) {
-													$sql .= check_str($key).", ";
+											foreach ($array as $array_key => $array_value) {
+												if (!is_array($array_value)) {
+													$sql .= check_str($array_key).", ";
 												}
 											}
 											$sql .= ") ";
@@ -405,13 +411,13 @@
 											if (!$parent_key_exists) {
 												$sql .= "'".$parent_key_value."', ";
 											}
-											foreach ($array as $key => $value) {
-												if (!is_array($value)) {
-													if (strlen($value) == 0) {
+											foreach ($array as $array_key => $array_value) {
+												if (!is_array($array_value)) {
+													if (strlen($array_value) == 0) {
 														$sql .= "null, ";
 													}
 													else {
-														$sql .= "'".check_str($value)."', ";
+														$sql .= "'".check_str($array_value)."', ";
 													}
 												}
 											}
@@ -463,13 +469,13 @@
 
 										//parent data
 											$sql = "UPDATE v_".$this->name." SET ";
-											foreach ($array as $key => $value) {
-												if (!is_array($value) && $key != $parent_key_name) {
-													if (strlen($value) == 0) {
-														$sql .= check_str($key)." = null, ";
+											foreach ($array as $array_key => $array_value) {
+												if (!is_array($array_value) && $array_key != $parent_key_name) {
+													if (strlen($array_value) == 0) {
+														$sql .= check_str($array_key)." = null, ";
 													}
 													else {
-														$sql .= check_str($key)." = '".check_str($value)."', ";
+														$sql .= check_str($array_key)." = '".check_str($array_value)."', ";
 													}
 												}
 											}
@@ -523,7 +529,8 @@
 
 									if (is_array($value)) {
 											$table_name = "v_".$key;
-											foreach ($value as $row) {
+
+											foreach ($value as $id => $row) {
 												//prepare the variables
 													$child_name = $this->singular($key);
 													$child_key_name = $child_name."_uuid";
@@ -575,7 +582,7 @@
 																}
 															//add to the parent array
 																if (is_array($child_array)) {
-																	$parent_array[$key][] = $child_array;
+																	$old_array[$schema_name][$schema_id][$key][] = $child_array;
 																}
 														}
 														unset($prep_statement);
@@ -744,63 +751,65 @@
 
 				//return the before and after data
 					//log this in the future
-					if (is_array($parent_array)) {
+					if (is_array($old_array)) {
 						//normalize the array structure
-						$parent_array = $this->normalize_array($parent_array, $this->name);
-						//$message["old"] = $parent_array;
-						//$message["old"]["array"] = $parent_array;
-						//$message["old"]["md5"] = md5(json_encode($parent_array));
+							//$old_array = $this->normalize_array($old_array, $this->name);
+
+						//debug info
+							//echo "<pre>\n";
+							//print_r($old_array);
+							//echo "</pre>\n";
+							//exit;
 					}
-					//$message["new"] = $main_array;
-					//$message["new"]["md5"] = md5(json_encode($main_array));
+					//$message["new"] = $new_array;
+					//$message["new"]["md5"] = md5(json_encode($new_array));
 					$this->message = $message;
 
 				//commit the atomic transaction
-//					$this->db->commit();
+					$this->db->commit();
 
 				//get the domain uuid
 					$domain_uuid = $_SESSION['domain_uuid'];
 
 				//log the transaction results
-/*
-					$sql = "insert into v_database_transactions ";
-					$sql .= "(";
-					$sql .= "database_transaction_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "user_uuid, ";
-					if (isset($this->app_uuid)) {
-						$sql .= "app_uuid, ";
+					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
+						$sql = "insert into v_database_transactions ";
+						$sql .= "(";
+						$sql .= "database_transaction_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "user_uuid, ";
+						if (isset($this->app_uuid)) {
+							$sql .= "app_uuid, ";
+						}
+						$sql .= "app_name, ";
+						$sql .= "transaction_code, ";
+						$sql .= "transaction_address, ";
+						//$sql .= "transaction_type, ";
+						$sql .= "transaction_date, ";
+						$sql .= "transaction_old, ";
+						$sql .= "transaction_new, ";
+						$sql .= "transaction_result ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$_SESSION['user_uuid']."', ";
+						if (isset($this->app_uuid)) {
+							$sql .= "'".$this->app_uuid."', ";
+						}
+						$sql .= "'".$this->app_name."', ";
+						$sql .= "'".$message["code"]."', ";
+						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
+						//$sql .= "'$transaction_type', ";
+						$sql .= "now(), ";
+						$sql .= "'".json_encode($old_array, JSON_PRETTY_PRINT)."', ";
+						$sql .= "'".json_encode($new_array, JSON_PRETTY_PRINT)."', ";
+						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
+						$sql .= ")";
+						$this->db->exec(check_sql($sql));
+						unset($sql);
 					}
-					$sql .= "app_name, ";
-					$sql .= "transaction_code, ";
-					$sql .= "transaction_address, ";
-					//$sql .= "transaction_type, ";
-					$sql .= "transaction_date, ";
-					$sql .= "transaction_before, ";
-					$sql .= "transaction_after, ";
-					$sql .= "transaction_result ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$_SESSION['user_uuid']."', ";
-					if (isset($this->app_uuid)) {
-						$sql .= "'".$this->app_uuid."', ";
-					}
-					
-					$sql .= "'".$this->app_name."', ";
-					$sql .= "'".$message["code"]."', ";
-					$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
-					//$sql .= "'$transaction_type', ";
-					$sql .= "now(), ";
-					$sql .= "'".json_encode($parent_array, JSON_PRETTY_PRINT)."', ";
-					$sql .= "'".json_encode($main_array, JSON_PRETTY_PRINT)."', ";
-					$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
-					$sql .= ")";
-					$this->db->exec(check_sql($sql));
-					unset($sql);
-*/
 			} //save method
 
 			//define singular function to convert a word in english to singular
