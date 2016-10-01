@@ -32,16 +32,13 @@ if (!class_exists('permissions')) {
 	class permissions {
 
 		/**
-		 * Add a permission
+		 * Add the permission
 		 * @var string $permission
 		 */
-		public function add($permission, $type = '') {
+		public function add($permission, $type) {
+			//add the permission if it is not in array
 			if (!$this->exists($permission)) {
-				//set the ordinal number
-					$i = count($_SESSION["permissions"])+1;
-
-				//set the permission
-					$_SESSION["permissions"][$permission] = "temp";
+				$_SESSION["permissions"][$permission] = $type;
 			}
 		}
 
@@ -49,13 +46,19 @@ if (!class_exists('permissions')) {
 		 * Remove the permission
 		 * @var string $permission
 		 */
-		public function delete($permission, $type = '') {
+		public function delete($permission, $type) {
 			if ($this->exists($permission)) {
-				if ($type = "temp" && $_SESSION["permissions"][$permission] == "temp") {
-					unset($_SESSION["permissions"][$permission]);
+				if ($type === "temp") {
+					if ($_SESSION["permissions"][$permission] === "temp") {
+						echo "delete ".__line__." $type\n";
+						unset($_SESSION["permissions"][$permission]);
+					}
 				}
 				else {
-					unset($_SESSION["permissions"][$permission]);
+					if ($_SESSION["permissions"][$permission] !== "temp") {
+						echo "delete ".__line__." $type\n";
+						unset($_SESSION["permissions"][$permission]);
+					}
 				}
 			}
 		}
@@ -68,7 +71,7 @@ if (!class_exists('permissions')) {
 			//set default false
 				$result = false;
 			//search for the permission
-				if (is_array($_SESSION["permissions"]) && $_SESSION["permissions"][$permission] == true) {
+				if (is_array($_SESSION["permissions"]) && isset($_SESSION["permissions"][$permission])) {
 					$result = true;
 				}
 			//return the result
