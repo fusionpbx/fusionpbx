@@ -23,11 +23,13 @@
 	Contributor(s):
 	Sérgio Reis <uc@wavecom.pt>
 */
-include "root.php";
-require_once "resources/require.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('extension_add')) {
 		//access granted
 	}
