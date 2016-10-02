@@ -52,10 +52,12 @@
 	if (strlen($_REQUEST["id"]) > 0) {
 		$action = "update";
 		$ivr_menu_uuid = check_str($_REQUEST["id"]);
+		if (strlen($_REQUEST["ivr_menu_uuid"]) > 0) {
+			$ivr_menu_uuid = $_REQUEST["ivr_menu_uuid"];
+		}
 	}
 	else {
 		$action = "add";
-		$ivr_menu_uuid = uuid();
 	}
 
 //get total ivr menu count from the database, check limit, if defined
@@ -122,11 +124,6 @@
 
 //process the http data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-
-		//get the id
-			if ($action == "update" && strlen($ivr_menu_uuid) == 0) {
-				$ivr_menu_uuid = check_str($_POST["ivr_menu_uuid"]);
-			}
 
 		//check for all required data
 			$msg = '';
@@ -218,6 +215,18 @@
 						print_r($_POST);
 						echo "</pre>\n";
 						exit;
+					}
+
+				//add a uuid to ivr_menu_uuid if it is empty
+					if (strlen($ivr_menu_uuid) == 0) {
+						$ivr_menu_uuid = uuid();
+						$_POST["ivr_menu_uuid"] = $ivr_menu_uuid;
+					}
+
+				//add a uuid to dialplan_uuid if it is empty
+					if (strlen($dialplan_uuid) == 0) {
+						$dialplan_uuid = uuid();
+						$_POST["dialplan_uuid"] = $dialplan_uuid;
 					}
 
 				//build the xml dialplan
