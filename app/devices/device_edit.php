@@ -296,14 +296,19 @@
 						$save = true;
 					}
 
+				//prepare the array
+					$array['devices'][] = $_POST;
+
 				//save the device
 					if ($save) {
 						$orm = new orm;
 						$orm->name('devices');
+						$orm->app_name = 'devices';
+						$orm->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_uuid) > 0) {
 							$orm->uuid($device_uuid);
 						}
-						$orm->save($_POST);
+						$orm->save($array);
 						$response = $orm->message;
 						if (strlen($response['uuid']) > 0) {
 							$device_uuid = $response['uuid'];
