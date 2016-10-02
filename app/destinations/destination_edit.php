@@ -180,38 +180,15 @@
 										unset($dialplan_details[$index]);
 									}
 							}
-
-						//check to see if the dialplan exists
-							if (strlen($dialplan_uuid) > 0) {
-								$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
-								$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-								if (!permission_exists('destination_domain')) {
-									$sql .= "and domain_uuid = '".$domain_uuid."' ";
-								}
-								$prep_statement = $db->prepare($sql);
-								if ($prep_statement) {
-									$prep_statement->execute();
-									$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-									if (strlen($row['dialplan_uuid']) > 0) {
-										$dialplan_uuid = $row['dialplan_uuid'];
-										$dialplan_name = $row['dialplan_name'];
-										$dialplan_description = $row['dialplan_description'];
-									}
-									else {
-										$dialplan_uuid = "";
-									}
-									unset($prep_statement);
-								}
-								else {
-									$dialplan_uuid = "";
-								}
+						
+						//if empty then get new uuid
+							if (strlen($dialplan_uuid) == 0) {
+								$dialplan_uuid = uuid();
 							}
 
 						//build the dialplan array
 							$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
-							if (strlen($dialplan_uuid) > 0) {
-								$dialplan["dialplan_uuid"] = $dialplan_uuid;
-							}
+							$dialplan["dialplan_uuid"] = $dialplan_uuid;
 							$dialplan["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
 							$dialplan["dialplan_number"] = $destination_number;
@@ -390,6 +367,10 @@
 								unset($sql);
 							}
 
+						//prepare the array
+							$array['dialplans'][] = $dialplan;
+							unset($dialplan);
+
 						//add the dialplan permission
 							$p = new permissions;
 							$p->add("dialplan_add", 'temp');
@@ -400,10 +381,12 @@
 						//save the dialplan
 							$orm = new orm;
 							$orm->name('dialplans');
+							$orm->app_name = 'dialplans';
+							$orm->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 							if (isset($dialplan["dialplan_uuid"])) {
 								$orm->uuid($dialplan["dialplan_uuid"]);
 							}
-							$orm->save($dialplan);
+							$orm->save($array);
 							$dialplan_response = $orm->message;
 
 						//remove the temporary permission
@@ -411,6 +394,13 @@
 							$p->delete("dialplan_detail_add", 'temp');
 							$p->delete("dialplan_edit", 'temp');
 							$p->delete("dialplan_detail_edit", 'temp');
+
+						//update the dialplan xml
+							$dialplans = new dialplan;
+							$dialplans->source = "details";
+							$dialplans->destination = "database";
+							$dialplans->uuid = $dialplan_uuid;
+							$dialplans->xml();
 
 						//synchronize the xml config
 							save_dialplan_xml();
