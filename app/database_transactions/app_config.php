@@ -81,13 +81,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'timestamp';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Transaction date.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_before';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_old';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Array before the transaction.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Before the transaction.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_after';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_new';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Array after the transaction.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'After the transaction.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'transaction_result';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
