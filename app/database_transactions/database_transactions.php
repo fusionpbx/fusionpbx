@@ -50,15 +50,13 @@
 	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "or lower(transaction_code) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_address) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_type) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_date) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_old) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_new) like '%".$search."%' ";
-		$sql_search .= "or lower(transaction_result) like '%".$search."%' ";
-		$sql_search .= ")";
+		$sql_search .= "	lower(transaction_code) like '%".$search."%' ";
+		$sql_search .= "	or lower(transaction_address) like '%".$search."%' ";
+		$sql_search .= "	or lower(transaction_type) like '%".$search."%' ";
+		$sql_search .= "	or lower(app_name) like '%".$search."%' ";
+		$sql_search .= ") ";
 	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
