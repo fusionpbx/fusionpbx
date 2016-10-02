@@ -47,16 +47,16 @@
 	$order = check_str($_GET["order"]);
 
 //add the search term
-	$search = check_str($_GET["search"]);
+	$search = strtolower(check_str($_GET["search"]));
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "or transaction_code like '%".$search."%'";
-		$sql_search .= "or transaction_address like '%".$search."%'";
-		$sql_search .= "or transaction_type like '%".$search."%'";
-		$sql_search .= "or transaction_date like '%".$search."%'";
-		$sql_search .= "or transaction_old like '%".$search."%'";
-		$sql_search .= "or transaction_new like '%".$search."%'";
-		$sql_search .= "or transaction_result like '%".$search."%'";
+		$sql_search .= "or lower(transaction_code) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_address) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_type) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_date) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_old) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_new) like '%".$search."%' ";
+		$sql_search .= "or lower(transaction_result) like '%".$search."%' ";
 		$sql_search .= ")";
 	}
 //additional includes
@@ -65,7 +65,7 @@
 
 //prepare to page the results
 	$sql = "select count(database_transaction_uuid) as num_rows from v_database_transactions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= $sql_search;
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
@@ -93,7 +93,7 @@
 	$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 	$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date ";
 	$sql .= "from v_database_transactions as t, v_domains as d, v_users as u ";
-	$sql .= "where t.domain_uuid = '$domain_uuid' ";
+	$sql .= "where t.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and t.user_uuid = u.user_uuid ";
 	$sql .= "and t.domain_uuid = d.domain_uuid ";
 	$sql .= $sql_search;
