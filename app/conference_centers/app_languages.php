@@ -92,6 +92,16 @@ $text['description-conference_center_pin_length']['sv-se'] = "Ange minimum PIN l
 $text['description-conference_center_pin_length']['uk'] = "Введіть мінімальну довжину PIN-коду.";
 $text['description-conference_center_pin_length']['de-at'] = "Geben sie die minimale PIN länge an.";
 
+$text['label-conference_center_greeting']['en-us'] = "Greeting";
+$text['label-conference_center_greeting']['es-cl'] = "Mensaje";
+$text['label-conference_center_greeting']['pt-pt'] = "Saudaçãoa";
+$text['label-conference_center_greeting']['fr-fr'] = "Message";
+$text['label-conference_center_greeting']['pt-br'] = "Saudação";
+$text['label-conference_center_greeting']['pl'] = "Powitanie";
+$text['label-conference_center_greeting']['sv-se'] = "Hälsning";
+$text['label-conference_center_greeting']['uk'] = "Привітання";
+$text['label-conference_center_greeting']['de-at'] = "Begrüßung";
+
 $text['description-conference_center_greeting']['en-us'] = "Select the greeting that is played before joining the conference room.";
 $text['description-conference_center_greeting']['es-cl'] = "Seleccione el saludo que se juega antes de unirse a la sala de conferencias.";
 $text['description-conference_center_greeting']['pt-pt'] = "Selecione a saudação que é jogado antes de entrar para a sala de conferência.";
@@ -495,16 +505,6 @@ $text['label-max-members']['pl'] = "Maksymalna liczba uszestników";
 $text['label-max-members']['sv-se'] = "Max Antal Medlemmar";
 $text['label-max-members']['uk'] = "Макс. учасників";
 $text['label-max-members']['de-at'] = "Maximale Anzahl an Mitglieder";
-
-$text['label-greeting']['en-us'] = "Greeting";
-$text['label-greeting']['es-cl'] = "Mensaje";
-$text['label-greeting']['pt-pt'] = "Saudaçãoa";
-$text['label-greeting']['fr-fr'] = "Message";
-$text['label-greeting']['pt-br'] = "Saudação";
-$text['label-greeting']['pl'] = "Powitanie";
-$text['label-greeting']['sv-se'] = "Hälsning";
-$text['label-greeting']['uk'] = "Привітання";
-$text['label-greeting']['de-at'] = "Begrüßung";
 
 $text['label-from']['en-us'] = "From";
 $text['label-from']['es-cl'] = "Desde";
