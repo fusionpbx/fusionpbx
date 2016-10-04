@@ -91,6 +91,7 @@ class authentication {
 						$result['results'][] = $array;
 					}
 					if ($result["authorized"] == "true") {
+						$_SESSION['username'] = $result["username"];
 						break;
 					}
 				}
