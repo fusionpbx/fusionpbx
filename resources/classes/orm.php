@@ -364,15 +364,16 @@
 										//get the data
 											try {
 												$prep_statement->execute();
-												$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
 												echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
 												echo $sql;
 												exit;
 											}
+
 										//set the action
-											if (is_array($result)) {
+											if (count($result) > 0) {
 												$action = "update";
 												$old_array[$schema_name][] = $result;
 											}
@@ -380,12 +381,12 @@
 												$action = "add";
 											}
 									}
-									unset($prep_statement, $result);
+									unset($prep_statement);
+									unset($result);
 								}
 								else {
 									$action = "add";
 								}
-								//echo "action: ".$action."\n";
 
 							//add a record
 								if ($action == "add") {
@@ -887,7 +888,7 @@
 					return false;
 			}
 		}
-	}ƒ
+	}
 
 	//examples
 		/*
