@@ -98,10 +98,8 @@ class plugin_database {
 					//compare the password provided by the user with the one in the database
 						if (md5($row["salt"].$this->password) == $row["password"]) {
 							$user_authorized = true;
-							 $_SESSION['username'] = $row["username"]; //return the username
 						} elseif (strlen($this->key) >  30 && $this->key == $row["api_key"]) {
 							$user_authorized = true;
-							$_SESSION['username'] = $row["username"]; //return the username
 						} else {
 							$user_authorized = false;
 						}
