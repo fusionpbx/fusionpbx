@@ -375,7 +375,7 @@
 										//set the action
 											if (count($result) > 0) {
 												$action = "update";
-												$old_array[$schema_name][] = $result;
+												$old_array[$schema_name] = $result;
 											}
 											else {
 												$action = "add";
