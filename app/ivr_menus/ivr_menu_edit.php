@@ -239,7 +239,7 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
 					$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
-					$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
+					$dialplan_xml .= "		<action application=\"".$ivr_menu_exit_app."\" data=\"".$ivr_menu_exit_data."\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
