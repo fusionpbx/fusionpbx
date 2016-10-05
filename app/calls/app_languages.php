@@ -42,16 +42,6 @@ $text['table-description']['sv-se'] = "Beskrivning ";
 $text['table-description']['uk'] = "Опис";
 $text['table-description']['de-at'] = "Beschreibung";
 
-$text['label-select-cid-number']['en-us'] = "Select Caller ID Number";
-$text['label-select-cid-number']['es-cl'] = "Seleccione Llamadas Número de Identificación";
-$text['label-select-cid-number']['pt-pt'] = "Selecione Caller ID Number";
-$text['label-select-cid-number']['fr-fr'] = "Sélectionnez Caller ID Number";
-$text['label-select-cid-number']['pt-br'] = "Selecionar ID da chamada";
-$text['label-select-cid-number']['pl'] = "Ustaw prezentację numeru dzwoniącego";
-$text['label-select-cid-number']['sv-se'] = "Välj Nummerpresentation ";
-$text['label-select-cid-number']['uk'] = "";
-$text['label-select-cid-number']['de-at'] = "Anruferkennung (Nummer) wählen";
-
 $text['label-ring-timeout']['en-us'] = "Timeout";
 $text['label-ring-timeout']['es-cl'] = "Timeout";
 $text['label-ring-timeout']['pt-pt'] = "Timeout";
@@ -135,16 +125,16 @@ $text['label-not_registered']['sv-se'] = "";
 $text['label-not_registered']['uk'] = "";
 $text['label-not_registered']['de-at'] = "";
 
-$text['label-ignore-busy']['en-us'] = "Ignore Busy";
-$text['label-ignore-busy']['es-cl'] = "";
-$text['label-ignore-busy']['pt-pt'] = "";
-$text['label-ignore-busy']['fr-fr'] = "";
-$text['label-ignore-busy']['it-it'] = "";
-$text['label-ignore-busy']['pt-br'] = "Ignorar ocupado";
-$text['label-ignore-busy']['pl'] = "";
-$text['label-ignore-busy']['sv-se'] = "";
-$text['label-ignore-busy']['uk'] = "";
-$text['label-ignore-busy']['de-at'] = "Ignorieren bei Besetzt";
+$text['label-ignore_busy']['en-us'] = "Ignore Busy";
+$text['label-ignore_busy']['es-cl'] = "";
+$text['label-ignore_busy']['pt-pt'] = "";
+$text['label-ignore_busy']['fr-fr'] = "";
+$text['label-ignore_busy']['it-it'] = "";
+$text['label-ignore_busy']['pt-br'] = "Ignorar ocupado";
+$text['label-ignore_busy']['pl'] = "";
+$text['label-ignore_busy']['sv-se'] = "";
+$text['label-ignore_busy']['uk'] = "";
+$text['label-ignore_busy']['de-at'] = "Ignorieren bei Besetzt";
 
 $text['label-follow-me']['en-us'] = "Follow Me";
 $text['label-follow-me']['es-cl'] = "Sígueme";
@@ -246,7 +236,7 @@ $text['label-destination']['sv-se'] = "Destination ";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 
-$text['label-cid-number-prefix']['en-us'] = "Caller ID Number";
+$text['label-cid-number-prefix']['en-us'] = "Number Prefix";
 $text['label-cid-number-prefix']['es-cl'] = "Número de Caller ID";
 $text['label-cid-number-prefix']['pt-pt'] = "Número do Chamador";
 $text['label-cid-number-prefix']['pt-br'] = "Número do discador";
@@ -256,7 +246,17 @@ $text['label-cid-number-prefix']['uk'] = "Caller ID Номер";
 $text['label-cid-number-prefix']['fr-fr'] = "CID Nombre Préfixe";
 $text['label-cid-number-prefix']['de-at'] = "Anruferkennung (Nummer)";
 
-$text['label-cid-name-prefix']['en-us'] = "Caller ID Name";
+$text['label-cid-number']['en-us'] = "Caller ID Number";
+$text['label-cid-number']['es-cl'] = "Número de Caller ID";
+$text['label-cid-number']['pt-pt'] = "Número do Chamador";
+$text['label-cid-number']['pt-br'] = "Número do discador";
+$text['label-cid-number']['pl'] = "Prefiks prezentacji numeru dzwoniącego";
+$text['label-cid-number']['sv-se'] = "Nummerpresentation ";
+$text['label-cid-number']['uk'] = "Caller ID Номер";
+$text['label-cid-number']['fr-fr'] = "CID Nombre Préfixe";
+$text['label-cid-number']['de-at'] = "Anruferkennung (Nummer)";
+
+$text['label-cid-name-prefix']['en-us'] = "Name Prefix";
 $text['label-cid-name-prefix']['es-cl'] = "Nombre de Caller ID";
 $text['label-cid-name-prefix']['pt-pt'] = "Nome do Chamador";
 $text['label-cid-name-prefix']['fr-fr'] = "Préfixe de l'appelant";
@@ -308,7 +308,7 @@ $text['description-on-busy']['it-it'] = "Se abilitato, esegue l'override del val
 $text['description-on-busy']['pt-br'] = "Se ativado, substitui o valor do correio de voz permitindo algum ramal atender quando estiver ocupado.";
 $text['description-on-busy']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
 $text['description-on-busy']['sv-se'] = "Om aktiverad, så tar den överhand framför röstbrevlåda hos anknytningen. ";
-$text['description-on-busy']['uk'] = "";
+$text['description-on-busy']['uk'] = "Якщо цей параметр включений, то вона перекриває значення голосової пошти, що дозволяє в розширенні.";
 $text['description-on-busy']['de-at'] = "Falls aktiv, wird der Wert 'Mailbox eingeschaltet' in der Nebenstelle überschrieben";
 
 $text['description-no_answer']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
@@ -319,19 +319,30 @@ $text['description-no_answer']['it-it'] = "Se abilitato, esegue l'override del v
 $text['description-no_answer']['pt-br'] = "Se ativado, substitui o valor do correio de voz permitindo uma extensão quando estiver chamando";
 $text['description-no_answer']['pl'] = "Jeżeli włączone, ustawienie włączenia poczty głosowej zostaje nadpisane.";
 $text['description-no_answer']['sv-se'] = "Om aktiverad, så tar den överhand framför röstbrevlåda hos anknytningen. ";
-$text['description-no_answer']['uk'] = "";
+$text['description-no_answer']['uk'] = "Якщо цей параметр включений, то вона перекриває значення голосової пошти, що дозволяє в розширенні.";
 $text['description-no_answer']['de-at'] = "Falls aktiv, wird der Wert 'Mailbox eingeschaltet' in der Nebenstelle überschrieben";
 
 $text['description-not_registered']['en-us'] = "If endpoint is not reachable, forward to this destination before going to voicemail.";
-$text['description-not_registered']['es-cl'] = "";
-$text['description-not_registered']['pt-pt'] = "";
-$text['description-not_registered']['fr-fr'] = "";
-$text['description-not_registered']['it-it'] = "";
+$text['description-not_registered']['es-cl'] = "Si el punto extremo no es alcanzable, remitir a este destino antes de ir al correo de voz.";
+$text['description-not_registered']['pt-pt'] = "Se endpoint não está acessível, encaminhar para este destino antes de ir para a caixa postal.";
+$text['description-not_registered']['fr-fr'] = "Si extrémité est pas accessible, transmettre à cette destination avant d'aller à la messagerie vocale.";
+$text['description-not_registered']['it-it'] = "Se endpoint non è raggiungibile, inoltrare a questa destinazione prima di andare in segreteria telefonica.";
 $text['description-not_registered']['pt-br'] = "Se o destino não for alcançável, desvia a chamata para este destino antes de enviar para o correio de voz. ";
-$text['description-not_registered']['pl'] = "";
-$text['description-not_registered']['sv-se'] = "";
-$text['description-not_registered']['uk'] = "";
-$text['description-not_registered']['de-at'] = "";
+$text['description-not_registered']['pl'] = "Jeśli punkt końcowy nie jest osiągalny, przekazania do tego celu przed udaniem się na pocztę głosową.";
+$text['description-not_registered']['sv-se'] = "Om endpoint är inte nås, vidarebefordra till denna destination innan du går till röstbrevlådan .";
+$text['description-not_registered']['uk'] = "Якщо кінцева точка не можна досягти, вперед до цієї мети, перш ніж йти на голосову пошту.";
+$text['description-not_registered']['de-at'] = "Wenn Endpunkt nicht erreichbar ist, zu diesem Ziel weiterzuleiten , bevor an die Voicemail gehen.";
+
+$text['description-ignore_busy']['en-us'] = "Interrupt the call if a destination is busy.";
+$text['description-ignore_busy']['es-cl'] = "Interrumpir la llamada si un destino está ocupado.";
+$text['description-ignore_busy']['pt-pt'] = "Interromper a chamada, se um destino está ocupado.";
+$text['description-ignore_busy']['fr-fr'] = "Interrompez l'appel si une destination est occupé.";
+$text['description-ignore_busy']['it-it'] = "Interrompere la chiamata se la destinazione è occupata.";
+$text['description-ignore_busy']['pt-br'] = "Interromper a chamada, se um destino está ocupado.";
+$text['description-ignore_busy']['pl'] = "Przerwanie połączenia, jeśli docelowy jest zajęty.";
+$text['description-ignore_busy']['sv-se'] = "Avbryta samtalet om en destination är upptagen.";
+$text['description-ignore_busy']['uk'] = "Переривання виклику, якщо абонент зайнятий.";
+$text['description-ignore_busy']['de-at'] = "Unterbrechen Sie den Anruf, wenn ein Ziel besetzt ist.";
 
 $text['description-cid-number-prefix']['en-us'] = "Set the caller ID number prefix.";
 $text['description-cid-number-prefix']['es-cl'] = "Configure el prefijo de número de caller ID.";
@@ -339,9 +350,19 @@ $text['description-cid-number-prefix']['pt-pt'] = "Defina o número do Chamador"
 $text['description-cid-number-prefix']['pt-br'] = "Defina o número do prefixo.";
 $text['description-cid-number-prefix']['pl'] = "Prefiks prezentacji numeru dzwoniącego.";
 $text['description-cid-number-prefix']['sv-se'] = "Ange nummerpresentation prefix. ";
-$text['description-cid-number-prefix']['uk'] = "";
+$text['description-cid-number-prefix']['uk'] = "Задайте номер префікса ідентифікації абонента.";
 $text['description-cid-number-prefix']['fr-fr'] = "Définir un préfixe sur le nombre d'ID d'appelant.";
 $text['description-cid-number-prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Nummer)";
+
+$text['description-cid-number']['en-us'] = "Select a number to override the original caller ID number.";
+$text['description-cid-number']['es-cl'] = "Seleccionar un número para anular el número de ID de llamada original.";
+$text['description-cid-number']['pt-pt'] = "Selecione um número para substituir o número de identificação de chamada inicial.";
+$text['description-cid-number']['fr-fr'] = "Sélectionnez un numéro pour remplacer le numéro d'origine identification de l'appelant.";
+$text['description-cid-number']['pt-br'] = "Selecione um número para substituir o número de identificação de chamada inicial.";
+$text['description-cid-number']['pl'] = "Wybierz numer, aby zastąpić oryginalny numer ID.";
+$text['description-cid-number']['sv-se'] = "Välj ett nummer för att åsidosätta den ursprungliga uppringaren ID-nummer.";
+$text['description-cid-number']['uk'] = "Виберіть номер, щоб перевизначити вихідний ідентифікаційний номер абонента.";
+$text['description-cid-number']['de-at'] = "Wählen Sie eine Nummer mit dem ursprünglichen Anrufer-ID-Nummer zu überschreiben.";
 
 $text['description-cid-name-prefix']['en-us'] = "Set the caller ID name prefix.";
 $text['description-cid-name-prefix']['es-cl'] = "Configure el prefijo de nombre de caller ID";
@@ -350,7 +371,7 @@ $text['description-cid-name-prefix']['fr-fr'] = "Choisr le péfixe du nom d'appe
 $text['description-cid-name-prefix']['pt-br'] = "Defina o nome (ID) do discador.";
 $text['description-cid-name-prefix']['pl'] = "Prefiks prezentacji nazwy dzwoniącego.";
 $text['description-cid-name-prefix']['sv-se'] = "Ange namnpresentation prefix. ";
-$text['description-cid-name-prefix']['uk'] = "";
+$text['description-cid-name-prefix']['uk'] = "Встановіть префікс ідентифікаційного імені абонента.";
 $text['description-cid-name-prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)";
 
 $text['description-call-prompt']['en-us'] = "Prompt to accept the call for external destinations.";
@@ -372,6 +393,16 @@ $text['description-call_routing']['pl'] = "Definiowanie alternatywnego połącze
 $text['description-call_routing']['sv-se'] = "Definiera alternativa inkommande samtalshantering för följande tillägg.";
 $text['description-call_routing']['uk'] = "Визначити обробку для наступних розширень альтернативного вхідного дзвінка.";
 $text['description-call_routing']['de-at'] = "Definieren Sie alternative eingehende Anruf für die folgenden Erweiterungen der Handhabung.";
+
+$text['description-call_forward']['en-us'] = "Forward all calls to the specified destination.";
+$text['description-call_forward']['es-cl'] = "Desviar todas las llamadas al destino especificado.";
+$text['description-call_forward']['pt-pt'] = "Encaminhar todas as chamadas para o destino especificado.";
+$text['description-call_forward']['fr-fr'] = "Transférer tous les appels vers la destination spécifiée.";
+$text['description-call_forward']['pt-br'] = "Encaminhar todas as chamadas para o destino especificado.";
+$text['description-call_forward']['pl'] = "Przekazywanie wszystkich połączeń do określonego przeznaczenia.";
+$text['description-call_forward']['sv-se'] = "Vidarekoppla alla samtal till den angivna destinationen.";
+$text['description-call_forward']['uk'] = "Усі дзвінки скеровуються на вказане місце призначення.";
+$text['description-call_forward']['de-at'] = "Leiten Sie alle Anrufe an das angegebene Ziel.";
 
 $text['description']['en-us'] = "Directs incoming calls for extension:";
 $text['description']['es-cl'] = "Dirige las llamadas entrantes hacia una extensión:";
