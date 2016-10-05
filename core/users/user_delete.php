@@ -103,6 +103,6 @@
 
 //redirect the user
 	$_SESSION["message"] = $text['message-delete'];
-	header("Location: index.php");
+	header("Location: users.php");
 
 ?>

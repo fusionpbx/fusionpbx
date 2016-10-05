@@ -64,7 +64,7 @@
 		$_SESSION["message_mood"] = "negative";
 	}
 
-	header("Location: usersupdate.php?id=".check_str($_REQUEST["user_uuid"]));
+	header("Location: user_edit.php?id=".check_str($_REQUEST["user_uuid"]));
 	exit;
 
 ?>
