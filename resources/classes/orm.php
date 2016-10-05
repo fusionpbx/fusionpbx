@@ -804,8 +804,8 @@
 						$sql .= "'".$_SERVER['REMOTE_ADDR']."', ";
 						//$sql .= "'$transaction_type', ";
 						$sql .= "now(), ";
-						$sql .= "'".json_encode($old_array, JSON_PRETTY_PRINT)."', ";
-						$sql .= "'".json_encode($new_array, JSON_PRETTY_PRINT)."', ";
+						$sql .= "'".check_str(json_encode($old_array, JSON_PRETTY_PRINT))."', ";
+						$sql .= "'".check_str(json_encode($new_array, JSON_PRETTY_PRINT))."', ";
 						$sql .= "'".check_str(json_encode($this->message, JSON_PRETTY_PRINT))."' ";
 						$sql .= ")";
 						$this->db->exec(check_sql($sql));
