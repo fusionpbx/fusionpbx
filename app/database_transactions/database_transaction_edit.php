@@ -434,23 +434,35 @@
 	unset($_SESSION['previous_name']);
 	unset($_SESSION['previous_row']);
 
-//create the table header
-	$array = array_difference($before, $after, 1);
-	$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
-	$table_header .= "<tr>\n";
-	//$table_header .= "	<th>Table</th>\n";
-	//$table_header .= "	<th>Row</th>\n";
-	$table_header .= "	<th>name</th>\n";
-	$table_header .= "	<th>old</th>\n";
-	$table_header .= "	<th>new</th>\n";
-	$table_header .= "</tr>\n";
-	$_SESSION['table_header'] = $table_header;
-
-//show the difference
-	echo "<table border='0' cellpadding='3'>\n";
-	show_difference($array);
-	echo "</table>\n";
+//show the add or update
+	if (count($before) > 0 && count($after) > 0) {
+		//create the table header
+			$array = array_difference($before, $after, 1);
+			$table_header = "<tr><td colspan='5'>&nbsp;</td></tr>\n";
+			$table_header .= "<tr>\n";
+			//$table_header .= "	<th>Table</th>\n";
+			//$table_header .= "	<th>Row</th>\n";
+			$table_header .= "	<th>name</th>\n";
+			$table_header .= "	<th>old</th>\n";
+			$table_header .= "	<th>new</th>\n";
+			$table_header .= "</tr>\n";
+			$_SESSION['table_header'] = $table_header;
+		
+		//show the difference
+			echo "<table border='0' cellpadding='3'>\n";
+			show_difference($array);
+			echo "</table>\n";
+	}
 	
+//show the delete
+	if (count($before) > 0 && count($after) == 0) {
+		echo "<h3>Record Deleted</h3><br />\n";
+		echo "		<pre>\n";
+		print_r($before);
+		echo "		</pre>\n";
+	}
+	
+//add a few lines at the end
 	echo "<br />\n";
 	echo "<br />\n";
 
