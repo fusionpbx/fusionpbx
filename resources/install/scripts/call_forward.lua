@@ -37,25 +37,13 @@
 --include config.lua
 	require "resources.functions.config";
 
---include config.lua
-	require "resources.functions.settings";
-
 	require "resources.functions.channel_utils";
 
 	local log = require "resources.functions.log".call_forward
 	local cache = require "resources.functions.cache"
 	local Database = require "resources.functions.database"
+	local Settings = require "resources.functions.lazy_settings"
 	local route_to_bridge = require "resources.functions.route_to_bridge"
-
-	local function opt(t, ...)
-		if select('#', ...) == 0 then
-			return t
-		end
-		if type(t) ~= 'table' then
-			return nil
-		end
-		return opt(t[...], select(2, ...))
-	end
 
 	local function empty(t)
 		return (not t) or (#t == 0)
@@ -86,7 +74,7 @@
 	session:sleep(1000);
 
 --connect to the database
-	dbh = Database.new('system');
+	local dbh = Database.new('system');
 
 --request id is true
 	if (request_id == "true") then
@@ -220,54 +208,45 @@
 			destination_number_alias = row.number_alias or '';
 		end);
 
-		local presence_id
-		if destination_extension then
-			if (#destination_number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
-				presence_id = destination_number_alias
-			else
-				presence_id = destination_extension
-			end
-		elseif extension then
-			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
-			-- $presence_id = extension_presence_id($this->extension, $this->number_alias);
-			if (#number_alias > 0) and (opt(settings(domain_uuid), 'provision', 'number_as_presence_id', 'boolean') == 'true') then
-				presence_id = number_alias
-			else
-				presence_id = extension
-			end
-		else
-			presence_id = forward_all_destination
-		end
-
-		--set the dial_string
-		dial_string = "{presence_id="..presence_id.."@"..domain_name;
-		dial_string = dial_string .. ",instant_ringback=true";
-		dial_string = dial_string .. ",domain_uuid="..domain_uuid;
-		dial_string = dial_string .. ",sip_invite_domain="..domain_name;
-		dial_string = dial_string .. ",domain_name="..domain_name;
-		dial_string = dial_string .. ",domain="..domain_name;
-		dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
-		dial_string = dial_string .. ",sip_h_Diversion=<sip:"..extension.."@"..domain_name..">;reason=unconditional";
-		if (accountcode ~= nil) then
-			dial_string = dial_string .. ",accountcode="..accountcode;
-		end
-		dial_string = dial_string .. forward_caller_id
-		dial_string = dial_string .. "}";
-
 		if (destination_user ~= nil) then
 			cmd = "user_exists id ".. destination_user .." "..domain_name;
 		else
 			cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 		end
-		user_exists = trim(api:executeString(cmd));
+		local user_exists = trim(api:executeString(cmd));
+
+		--set the dial_string
+		dial_string = "{instant_ringback=true";
+		dial_string = dial_string .. ",domain_uuid="..domain_uuid;
+		dial_string = dial_string .. ",sip_invite_domain="..domain_name;
+		dial_string = dial_string .. ",domain_name="..domain_name;
+		dial_string = dial_string .. ",domain="..domain_name;
+		dial_string = dial_string .. ",extension_uuid="..extension_uuid;
+		dial_string = dial_string .. ",toll_allow='"..toll_allow.."'";
+		dial_string = dial_string .. ",sip_h_Diversion=<sip:"..extension.."@"..domain_name..">;reason=unconditional";
+		if (accountcode ~= nil) then
+			dial_string = dial_string .. ",sip_h_X-accountcode="..accountcode;
+			dial_string = dial_string .. ",accountcode="..accountcode;
+		end
+		dial_string = dial_string .. forward_caller_id
+
 		if (user_exists == "true") then
-			if (destination_user ~= nil) then
-				dial_string = dial_string .. "user/"..destination_user.."@"..domain_name;
-			else
-				dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
-			end
+			-- we do not need here presence_id because user dial-string already has one
+			dial_string = dial_string .. ",dialed_extension=" .. forward_all_destination
+			dial_string = dial_string .. "}"
+			dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
 		else
-			local mode = opt(settings(domain_uuid), 'domain', 'bridge', 'text')
+			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
+			local settings, presence_id = Settings.new(dbh, domain_name, domain_uuid)
+			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'boolean') == 'true') then
+				presence_id = number_alias
+			else
+				presence_id = extension
+			end
+
+			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
+			dial_string = dial_string .. "}";
+			local mode = settings:get('domain', 'bridge', 'text')
 			if mode == "outbound" or mode == "bridge" then
 				local bridge = route_to_bridge(dbh, domain_uuid, {
 					destination_number = forward_all_destination;

@@ -68,8 +68,7 @@ include "root.php";
 
 			//set the dial string
 				if ($this->forward_all_enabled == "true") {
-					$dial_string = "{presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'];
-					$dial_string .= ",instant_ringback=true";
+					$dial_string = "{instant_ringback=true";
 					$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
@@ -118,11 +117,20 @@ include "root.php";
 						}
 					}
 
-					$dial_string .= "}";
 					if (extension_exists($this->forward_all_destination)) {
+						// For support load_balance we need set `dialed_extension`
+						$dial_string .= ",dialed_extension=".$this->forward_all_destination;
+						// we do not need here presence_id because user dial-string already has one
+						$dial_string .= "}";
 						$dial_string .= "user/".$this->forward_all_destination."@".$_SESSION['domain_name'];
 					}
 					else {
+						// setting here presence_id equal extension not dialed number allows work BLF and intercept.
+						$presence_id = extension_presence_id($this->extension, $this->number_alias);
+						// $presence_id = $this->forward_all_destination;
+						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
+						$dial_string .= "}";
+
 						if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
 							$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $this->forward_all_destination);
 							$dial_string .= $bridge[0];

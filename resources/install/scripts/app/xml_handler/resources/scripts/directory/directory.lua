@@ -70,26 +70,63 @@
 			--all other directory actions: sip_auth, user_call
 			--except for the action: group_call
 
+		-- Do we need use proxy to make call to ext. reged on different FS
+		--   true - send call to FS where ext reged
+		--   false - send call directly to ext
+			local USE_FS_PATH = xml_handler and xml_handler["fs_path"]
+
+		-- Make sance only for extensions with number_alias
+		--  false - you should register with AuthID=UserID=Extension (default)
+		--  true  - you should register with AuthID=Extension and UserID=Number Alias
+		-- 	also in this case you need 2 records in memcache for one extension
+			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler["reg_as_number_alias"]
+
+		-- Use number as presence_id
+		-- When you have e.g. extension like `user-100` with number-alias `100`
+		-- by default presence_id is `user-100`. This option allow use `100` as presence_id
+			local NUMBER_AS_PRESENCE_ID = xml_handler and xml_handler["number_as_presence_id"]
+
+			local sip_auth_method = params:getHeader("sip_auth_method")
+			if sip_auth_method then
+				sip_auth_method = sip_auth_method:upper();
+			end
+
+		-- Get UserID. If used UserID ~= AuthID then we have to disable `inbound-reg-force-matching-username`
+		-- on sofia profile and check UserID=Number-Alias and AuthID=Extension on register manually.
+		-- But in load balancing mode in proxy INVITE we have UserID equal to origin UserID but 
+		-- AuthID equal to callee AuthID. (e.g. 105 call to 100 and one FS forward call to other FS
+		-- then we have UserID=105 but AuthID=100).
+		-- Because we do not verify source of INVITE (FS or user device) we have to accept any UserID
+		-- for INVITE in such mode. So we just substitute correct UserID for check.
+		-- !!! NOTE !!! do not change USE_FS_PATH before this check.
+			local from_user = params:getHeader("sip_from_user")
+			if USE_FS_PATH and sip_auth_method == 'INVITE' then
+				from_user = user
+			end
+
+		-- Check eather we need build dial-string. Before request dial-string FusionPBX set `dialed_extension`
+		-- variable. So if we have no such variable we do not need build dial-string.
+			dialed_extension = params:getHeader("dialed_extension");
+			if (dialed_extension == nil) then
+				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
+				USE_FS_PATH = false;
+			else
+				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
+			end
+
+			-- verify from_user and number alias for this methods
+			local METHODS = {
+				-- _ANY_    = true,
+				REGISTER = true,
+				-- INVITE   = true,
+			}
+
 			if (user == nil) then
 				user = "";
 			end
 
-		--get the cache
-			if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-				if (domain_name) then
-					XML_STRING = trim(api:execute("memcache", "get directory:" .. user .. "@" .. domain_name));
-				end
-				if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
-					source = "database";
-					continue = true;
-				else
-					source = "cache";
-					continue = true;
-				end
-			else
-				XML_STRING = "";
-				source = "database";
-				continue = true;
+			if (from_user == "") or (from_user == nil) then
+				from_user = user
 			end
 
 		--prevent processing for invalid user
@@ -98,22 +135,50 @@
 				continue = false;
 			end
 
+		-- cleanup
+			XML_STRING = nil;
+
+		-- get the cache. We can use cache only if we do not use `fs_path`
+		-- or we do not need dial-string. In other way we have to use database.
+			if (continue) and (not USE_FS_PATH) then
+				if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
+					if (domain_name) then
+						local key = "directory:" .. (from_user or user) .. "@" .. domain_name
+						XML_STRING = trim(api:execute("memcache", "get " .. key));
+
+						if debug['cache'] then
+							if XML_STRING:sub(1, 4) == '-ERR' then
+								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " fail: " .. XML_STRING .. "\n")
+							else
+								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " pass!" .. "\n")
+							end
+						end
+					else
+						XML_STRING = "-ERR NOT FOUND"
+					end
+					if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
+						source = "database";
+						continue = true;
+					else
+						source = "cache";
+						continue = true;
+					end
+				else
+					XML_STRING = "";
+					source = "database";
+					continue = true;
+				end
+			end
+
 		--show the params in the console
 			--if (params:serialize() ~= nil) then
 			--	freeswitch.consoleLog("notice", "[xml_handler-directory.lua] Params:\n" .. params:serialize() .. "\n");
 			--end
 
-		--set the variable from the params
-			dialed_extension = params:getHeader("dialed_extension");
-			if (dialed_extension == nil) then
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				xml_handler["fs_path"] = false;
-			else
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
-			end
-
+			local loaded_from_db = false
 		--build the XML string from the database
-			if (source == "database") or (xml_handler["fs_path"]) then
+			if (source == "database") or (USE_FS_PATH) then
+				loaded_from_db = true
 				--database connection
 					if (continue) then
 						--connect to the database
@@ -146,7 +211,7 @@
 
 				--if load balancing is set to true then get the hostname
 					if (continue) then
-						if (xml_handler["fs_path"]) then
+						if (USE_FS_PATH) then
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
@@ -173,9 +238,15 @@
 									dbh_switch = database_handle('switch');
 								end
 
+							--get register name
+								local reg_user = dialed_extension
+								if not DIAL_STRING_BASED_ON_USERID then
+									reg_user = trim(api:execute("user_data", dialed_extension .. "@" .. domain_name .. " attr id"));
+								end
+
 							--get the destination hostname from the registration
 								sql = "SELECT hostname FROM registrations ";
-								sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
+								sql = sql .. "WHERE reg_user = '"..reg_user.."' ";
 								sql = sql .. "AND realm = '"..domain_name.."' ";
 								if (database["type"] == "mysql") then
 									now = os.time();
@@ -189,9 +260,9 @@
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
-							--hostname was not found set xml_handler["fs_path"] to false to prevent a database_hostname concatenation error
+							--hostname was not found set USE_FS_PATH to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
-									xml_handler["fs_path"] = false;
+									USE_FS_PATH = false;
 								end
 
 							--close the database connection
@@ -265,30 +336,48 @@
 
 								do_not_disturb = row.do_not_disturb;
 
+							-- check matching UserID and AuthName
+								if sip_auth_method then
+									local check_from_number = METHODS[sip_auth_method] or METHODS._ANY_
+									if DIAL_STRING_BASED_ON_USERID then
+										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == sip_from_number))
+									else
+										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == user))
+									end
+
+									if not continue then
+										XML_STRING = nil;
+										return 1;
+									end
+								end
+
+							--set the presence_id
+								presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
+
 							--set the dial_string
 								if (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
+										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then
-											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. extension .. "@" .. domain_name .. ")}";
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(" .. destination .. ")}";
 										end
 									--set the an alternative dial string if the hostnames don't match
-										if (xml_handler["fs_path"]) then
+										if (USE_FS_PATH) then
 											if (local_hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
 											else
-												--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
-												user_id = trim(api:execute("user_data", user .. "@" .. domain_name .. " attr id"));
-												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
+												local profile, proxy = "internal", database_hostname;
+												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(xml_handler["fs_path"]) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
 									--show debug informationa
-										if (xml_handler["fs_path"]) then
+										if (USE_FS_PATH) then
 											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
@@ -298,8 +387,8 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						if tonumber(user) == nil then
-   							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
+						if number_alias and #number_alias > 0 then
+							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
 						else
 							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
 						end
@@ -389,6 +478,7 @@
 							table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_number .. [["/>]]);
+							table.insert(xml, [[								<variable name="presence_id" value="]] .. presence_id .. [["/>]]);
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
 							end
@@ -517,8 +607,18 @@
 							dbh:release();
 
 						--set the cache
-							if (user and domain_name) then
-								result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+							local key = "directory:" .. (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name
+							if debug['cache'] then
+								freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+							end
+							result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+
+							if sip_from_number ~= sip_from_user then
+								key = "directory:" .. sip_from_user .. "@" .. domain_name
+								if debug['cache'] then
+									freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+								end
+								result = trim(api:execute("memcache", "set " .. key .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
 							end
 
 						--save to the conf directory
@@ -533,10 +633,22 @@
 					end
 			end
 
-		--disable registration for number-alias
-			if (params:getHeader("sip_auth_method") == "REGISTER") then
-				if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
+			if XML_STRING and (not loaded_from_db) and sip_auth_method then
+				local user_id = api:execute("user_data", from_user .. "@" .. domain_name .." attr id")
+				if user_id ~= user then
 					XML_STRING = nil;
+				elseif METHODS[sip_auth_method] or METHODS._ANY_ then
+					local alias
+					if DIAL_STRING_BASED_ON_USERID then
+						alias = api:execute("user_data", from_user .. "@" .. domain_name .." attr number-alias")
+					end
+					if alias and #alias > 0 then
+						if from_user ~= alias then
+							XML_STRING = nil
+						end
+					elseif from_user ~= user_id then
+						XML_STRING = nil;
+					end
 				end
 			end
 

@@ -43,6 +43,7 @@ include "root.php";
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
 		private $extension;
+		private $number_alias;
 		private $toll_allow;
 
 		public $destination_data_1;
@@ -345,12 +346,15 @@ include "root.php";
 						if ($x > 0) {
 							$dial_string .= ",";
 						}
-						if (extension_exists($row["follow_me_destination"])) {
+						if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
 							//set the dial string
+							// using here `sofia_contact` instead of `user/` allows add registered device
+							// so you can make follow me for extension `100` like `100` and avoid recusion
+							// but it ignores DND/CallForwad settings
 							if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 								$dial_string .= "[";
 								$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number,";
-								$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+								$dial_string .= "presence_id=".$presence_id."@".$_SESSION['domain_name'].',';
 								if ($row["follow_me_prompt"] == "1") {
 									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 								}
@@ -372,6 +376,7 @@ include "root.php";
 							}
 						}
 						else {
+							$presence_id = extension_presence_id($this->extension, $this->number_alias);
 							$dial_string .= "[";
 							if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true"){
 								$dial_string .= "outbound_caller_id_name=".$this->outbound_caller_id_name;
@@ -382,7 +387,7 @@ include "root.php";
 							else{
 								$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number";
 							}
-							$dial_string .= ",presence_id=".$this->extension."@".$_SESSION['domain_name'];
+							$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
 							if ($row["follow_me_prompt"] == "1") {
 								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 							}
