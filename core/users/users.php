@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,10 @@
 */
 
 //includes
-	require_once "root.php";
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists("user_view") || if_group("superadmin")) {
@@ -38,8 +39,13 @@
 		exit;
 	}
 
-//additional includes
-	require_once "resources/paging.php";
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//include the header
+	require_once "resources/header.php";
+	$document['title'] = $text['title-user_manager'];
 
 //set the variables
 	$order_by = check_str($_GET["order_by"]);
@@ -145,11 +151,11 @@
 	echo "<td align='right' nowrap='nowrap'>";
 	if (permission_exists('user_all')) {
 		if ($_GET['showall'] == 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='index.php';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='users.php';\">\n";
 			echo "<input type='hidden' name='showall' value='true'>";
 		}
 		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='index.php?showall=true';\">\n";
+			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?showall=true';\">\n";
 		}
 	}
 	echo 	"<input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='search_value' value=\"".$search_value."\">";
@@ -184,7 +190,7 @@
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
 		if ($_SESSION['limit']['users']['numeric'] == '' || ($_SESSION['limit']['users']['numeric'] != '' && $total_users < $_SESSION['limit']['users']['numeric'])) {
-			echo "<a href='signup.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
 	echo "</td>\n";
@@ -195,14 +201,14 @@
 			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
 				//hide
 			} else {
-				$tr_link = (permission_exists('user_edit')) ? "href='usersupdate.php?id=".$row['user_uuid']."'" : null;
+				$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".$row['user_uuid']."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				if (permission_exists('user_all') && $_GET['showall'] == 'true') {
 					echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
-					echo "<a href='usersupdate.php?id=".$row['user_uuid']."'>".$row['username']."</a>";
+					echo "<a href='user_edit.php?id=".$row['user_uuid']."'>".$row['username']."</a>";
 				}
 				else {
 					echo $row['username'];
@@ -223,11 +229,11 @@
 				echo "&nbsp;</td>\n";
 				echo "	<td valign='top' align='right' class='tr_link_void'>";
 				if (permission_exists('user_edit')) {
-					echo "<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+					echo "<a href='user_edit.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('user_delete')) {
 					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
-						echo "<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+						echo "<a href='user_delete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					else {
 						echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
@@ -247,5 +253,9 @@
 
 	echo $paging_controls."\n";
 	echo "<br /><br />\n";
+
+//include the footer
+	include "resources/footer.php";
+
 
 ?>

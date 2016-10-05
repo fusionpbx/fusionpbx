@@ -1,25 +1,5 @@
 <?php
 
-$apps[$x]['menu'][0]['title']['en-us'] = "Account Settings";
-$apps[$x]['menu'][0]['title']['es-cl'] = "Config de Cuenta";
-$apps[$x]['menu'][0]['title']['fr-fr'] = "Configuration du Compte";
-$apps[$x]['menu'][0]['title']['pt-pt'] = "Configurações da Conta";
-$apps[$x]['menu'][0]['title']['pt-br'] = "Configurações da conta";
-$apps[$x]['menu'][0]['title']['pl'] = "Ustawienia konta";
-$apps[$x]['menu'][0]['title']['he'] = "הגדרת חשבון";
-$apps[$x]['menu'][0]['title']['uk'] = "Обліковий запис";
-$apps[$x]['menu'][0]['title']['sv-se'] = "Kontoinställningar";
-$apps[$x]['menu'][0]['title']['de-at'] = "Kontoeinstellungen";
-$apps[$x]['menu'][0]['title']['ro'] = "Setări cont";
-$apps[$x]['menu'][0]['title']['ar-eg'] = "إعدادات الحساب";
-$apps[$x]['menu'][0]['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
-$apps[$x]['menu'][0]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
-$apps[$x]['menu'][0]['category'] = "internal";
-$apps[$x]['menu'][0]['path'] = "/core/user_settings/user_edit.php";
-$apps[$x]['menu'][0]['groups'][] = "user";
-$apps[$x]['menu'][0]['groups'][] = "admin";
-$apps[$x]['menu'][0]['groups'][] = "superadmin";
-
 $apps[$x]['menu'][1]['title']['en-us'] = "Dashboard";
 $apps[$x]['menu'][1]['title']['es-cl'] = "Dashboard Usuario";
 $apps[$x]['menu'][1]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";

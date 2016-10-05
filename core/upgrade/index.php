@@ -106,7 +106,7 @@
 		// restore default permissions
 		if ($do["permissions"] && permission_exists("group_edit")) {
 			$included = true;
-			require_once("core/users/permissions_default.php");
+			require_once("core/groups/permissions_default.php");
 			$response_message = "Permission Defaults Restored";
 		}
 
@@ -129,9 +129,9 @@
 	echo "<br><br>";
 	echo $text['description-upgrade'];
 	echo "<br><br>";
-	
+
 	echo "<form name='frm' method='post' action=''>\n";
-	
+
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -144,7 +144,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -156,7 +156,7 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
-	
+
 		echo "<div id='tr_data_types' style='display: none;'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -170,7 +170,7 @@
 		echo "</table>\n";
 		echo "</div>\n";
 	}
-	
+
 	if (permission_exists("upgrade_apps")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -183,7 +183,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("menu_restore")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -207,7 +207,7 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	if (permission_exists("group_edit")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -220,12 +220,12 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 	}
-	
+
 	echo "<br>";
 	echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
 	echo "<br><br>";
 	echo "</form>\n";
-	
+
 	// output result of source update
 	if (sizeof($_SESSION["response_source_update"]) > 0) {
 		echo "<br />";
@@ -237,7 +237,7 @@
 		echo "<br /><br />";
 		unset($_SESSION["response_source_update"]);
 	}
-	
+
 	// output result of upgrade schema
 	if ($_SESSION["schema"]["response"] != '') {
 		echo "<br />";

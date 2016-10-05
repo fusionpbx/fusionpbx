@@ -43,6 +43,61 @@ $text['title-user_add']['ro'] = "Utilizator";
 $text['title-user_add']['de-at'] = "Benutzer";
 $text['title-user_add']['he'] = "משתמש";
 
+$text['title-group_permissions']['en-us'] = "Group Permissions";
+$text['title-group_permissions']['es-cl'] = "Permisos de Grupo";
+$text['title-group_permissions']['pt-pt'] = "Permissões do Grupo";
+$text['title-group_permissions']['fr-fr'] = "Permissions du Groupe";
+$text['title-group_permissions']['pl'] = "Uprawnienia grupy:";
+$text['title-group_permissions']['uk'] = "Привілеї групи";
+$text['title-group_permissions']['sv-se'] = "Grupp Rättigheter";
+$text['title-group_permissions']['ro'] = "Permisiuni grup";
+$text['title-group_permissions']['de-at'] = "Gruppenberechtigung";
+$text['title-group_permissions']['he'] = "הרשאות קבוצה";
+
+$text['title-group_members']['en-us'] = "Group Members";
+$text['title-group_members']['es-cl'] = "Miembros del Grupo";
+$text['title-group_members']['pt-pt'] = "Membros do Grupo";
+$text['title-group_members']['fr-fr'] = "Membres du Groupe";
+$text['title-group_members']['pl'] = "Członkowie grupy:";
+$text['title-group_members']['uk'] = "Учасники групи";
+$text['title-group_members']['sv-se'] = "Grupp Medlemmar";
+$text['title-group_members']['ro'] = "Membri grup";
+$text['title-group_members']['de-at'] = "Gruppenmitglieder";
+$text['title-group_members']['he'] = "חברי קבוצה";
+
+$text['title-group_manager']['en-us'] = "Group Manager";
+$text['title-group_manager']['es-cl'] = "Administración de Grupo";
+$text['title-group_manager']['pt-pt'] = "Gestão de Grupos";
+$text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
+$text['title-group_manager']['pl'] = "Menedżer grup";
+$text['title-group_manager']['uk'] = "Групи";
+$text['title-group_manager']['sv-se'] = "Grupp Inställningar";
+$text['title-group_manager']['ro'] = "";
+$text['title-group_manager']['de-at'] = "Gruppenverwaltung";
+$text['title-group_manager']['he'] = "מנהל קבוצה";
+
+$text['title-group_edit']['en-us'] = "Edit Group";
+$text['title-group_edit']['es-cl'] = "Editar Grupo";
+$text['title-group_edit']['pt-pt'] = "Editar Grupo";
+$text['title-group_edit']['fr-fr'] = "Modifier le Groupe";
+$text['title-group_edit']['pl'] = "Edycja grupy";
+$text['title-group_edit']['uk'] = "Редагувати групу";
+$text['title-group_edit']['sv-se'] = "Editera Grupp";
+$text['title-group_edit']['ro'] = "Editare grup";
+$text['title-group_edit']['de-at'] = "Gruppe ändern";
+$text['title-group_edit']['he'] = "ערוך קבוצה";
+
+$text['title-group_add']['en-us'] = "Add Group";
+$text['title-group_add']['es-cl'] = "Agregar Grupo";
+$text['title-group_add']['pt-pt'] = "Adicionar Grupo";
+$text['title-group_add']['fr-fr'] = "Ajouter un Groupe";
+$text['title-group_add']['pl'] = "Dodaj grupę";
+$text['title-group_add']['uk'] = "Додати групу";
+$text['title-group_add']['sv-se'] = "Lägg Till Grupp";
+$text['title-group_add']['ro'] = "Adăugare grup";
+$text['title-group_add']['de-at'] = "Gruppe hinzufügen";
+$text['title-group_add']['he'] = "הוסף קבוצה";
+
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
 $text['option-true']['pt-pt'] = "Sim";
@@ -175,6 +230,28 @@ $text['message-password_requirements']['ro'] = "Cerințe privind parola";
 $text['message-password_requirements']['de-at'] = "Kennwortanforderungen ";
 $text['message-password_requirements']['he'] = "דרישות סיסמא";
 
+$text['message-new_group_name']['en-us'] = "Enter a Name for the new Group...";
+$text['message-new_group_name']['es-cl'] = "Introduzca un Nombre para el nuevo Grupo...";
+$text['message-new_group_name']['pt-pt'] = "Digite um Nome para o novo Grupo...";
+$text['message-new_group_name']['fr-fr'] = "Entrez un Nom pour le nouveau Groupe...";
+$text['message-new_group_name']['pl'] = "Wprowadź nazwę nowej grupy";
+$text['message-new_group_name']['uk'] = "Введіть назву нової групи";
+$text['message-new_group_name']['sv-se'] = "Ange ett Namn för den nya Gruppen...";
+$text['message-new_group_name']['ro'] = "";
+$text['message-new_group_name']['de-at'] = "Geben Sie den Namen der neuen Gruppe an...";
+$text['message-new_group_name']['he'] = "הכנס שם לקבוצה";
+
+$text['message-new_group_description']['en-us'] = "Enter a Description for the new Group...";
+$text['message-new_group_description']['es-cl'] = "Introduzca una Descripción para el nuevo Grupo...";
+$text['message-new_group_description']['pt-pt'] = "Digite uma Descrição para o novo grupo...";
+$text['message-new_group_description']['fr-fr'] = "Entrez une Description pour le nouveau groupe...";
+$text['message-new_group_description']['pl'] = "Wprowadź opis nowej grupy";
+$text['message-new_group_description']['uk'] = "Введіть опис нової групи";
+$text['message-new_group_description']['sv-se'] = "Ange en Beskrivning för den nya Gruppen...";
+$text['message-new_group_description']['ro'] = "";
+$text['message-new_group_description']['de-at'] = "Geben Sie eine Beschreiben für die neue Gruppe an...";
+$text['message-new_group_description']['he'] = "הכנס תאור לקבוצה";
+
 $text['message-maximum_users']['en-us'] = "Maximum Users:";
 $text['message-maximum_users']['es-cl'] = "Usuarios Máximo Permitido:";
 $text['message-maximum_users']['pt-pt'] = "Usuários Máximo Permitido:";
@@ -185,6 +262,28 @@ $text['message-maximum_users']['sv-se'] = "Max Antal Användare:";
 $text['message-maximum_users']['ro'] = "";
 $text['message-maximum_users']['de-at'] = "Maximale Anzahl an Benutzern:";
 $text['message-maximum_users']['he'] = "מקסימום משתמשים";
+
+$text['message-group_exists']['en-us'] = "Group Already Exists";
+$text['message-group_exists']['es-cl'] = "El Grupo ya Existe";
+$text['message-group_exists']['pt-pt'] = "O Grupo já Existe";
+$text['message-group_exists']['fr-fr'] = "Le groupe existe déjà";
+$text['message-group_exists']['pl'] = "Grupa już istnieje";
+$text['message-group_exists']['uk'] = "Група вже існує";
+$text['message-group_exists']['sv-se'] = "Gruppen Existerar Redan";
+$text['message-group_exists']['ro'] = "";
+$text['message-group_exists']['de-at'] = "Gruppe existiert bereits";
+$text['message-group_exists']['he'] = "הקבוצה כבר קיימת";
+
+$text['message-default_system_group']['en-us'] = "Default system groups cannot be edited or deleted.";
+$text['message-default_system_group']['es-cl'] = "Grupos predeterminados del sistema no pueden ser editados o eliminados.";
+$text['message-default_system_group']['pt-pt'] = "Grupos de sistema padrão não podem ser editados ou apagados.";
+$text['message-default_system_group']['fr-fr'] = "Les groupes par défaut du système ne peuvent pas être modifiés ou supprimés.";
+$text['message-default_system_group']['pl'] = "Domyślne grupy systemowe nie mogą być edytowane lub usuwane";
+$text['message-default_system_group']['uk'] = "Системні групи за замовчуванням не можна редагувати або видаляти";
+$text['message-default_system_group']['sv-se'] = "Standard system grupper kan inte redigeras eller tas bort.";
+$text['message-default_system_group']['ro'] = "";
+$text['message-default_system_group']['de-at'] = "Systemgruppen können nicht bearbeitet oder gelöscht werden.";
+$text['message-default_system_group']['he'] = "";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completada";
@@ -525,6 +624,72 @@ $text['label-groups']['ro'] = "";
 $text['label-groups']['de-at'] = "Gruppen";
 $text['label-groups']['he'] = "קבוצות";
 
+$text['label-group_tools']['en-us'] = "Tools";
+$text['label-group_tools']['es-cl'] = "Instrumentos";
+$text['label-group_tools']['pt-pt'] = "Ferramentas";
+$text['label-group_tools']['fr-fr'] = "Outils";
+$text['label-group_tools']['pl'] = "Narzędzia";
+$text['label-group_tools']['uk'] = "Інструменти";
+$text['label-group_tools']['sv-se'] = "Verktyg";
+$text['label-group_tools']['ro'] = "";
+$text['label-group_tools']['de-at'] = "Funktionen";
+$text['label-group_tools']['he'] = "כלים";
+
+$text['label-group_protected']['en-us'] = "Protected";
+$text['label-group_protected']['es-cl'] = "Protegido";
+$text['label-group_protected']['pt-pt'] = "Protegido";
+$text['label-group_protected']['fr-fr'] = "Protégé";
+$text['label-group_protected']['pl'] = "Zabezpieczony";
+$text['label-group_protected']['uk'] = "Захищено";
+$text['label-group_protected']['sv-se'] = "Skyddad";
+$text['label-group_protected']['ro'] = "";
+$text['label-group_protected']['de-at'] = "Geschützt";
+$text['label-group_protected']['he'] = "שמור";
+
+$text['label-group_permissions']['en-us'] = "Permissions";
+$text['label-group_permissions']['es-cl'] = "Permisos";
+$text['label-group_permissions']['pt-pt'] = "Permissões";
+$text['label-group_permissions']['fr-fr'] = "Permissions";
+$text['label-group_permissions']['pl'] = "Uprawnienia";
+$text['label-group_permissions']['uk'] = "Дозволи";
+$text['label-group_permissions']['sv-se'] = "Rättigheter";
+$text['label-group_permissions']['ro'] = "";
+$text['label-group_permissions']['de-at'] = "Berechtigungen";
+$text['label-group_permissions']['he'] = "הראשות";
+
+$text['label-group_name']['en-us'] = "Name";
+$text['label-group_name']['es-cl'] = "Nombre";
+$text['label-group_name']['pt-pt'] = "Nome";
+$text['label-group_name']['fr-fr'] = "Nom";
+$text['label-group_name']['pl'] = "Nazwa";
+$text['label-group_name']['uk'] = "Назва";
+$text['label-group_name']['sv-se'] = "Namn";
+$text['label-group_name']['ro'] = "";
+$text['label-group_name']['de-at'] = "Name";
+$text['label-group_name']['he'] = "שם";
+
+$text['label-group_members']['en-us'] = "Members";
+$text['label-group_members']['es-cl'] = "Miembros";
+$text['label-group_members']['pt-pt'] = "Membros";
+$text['label-group_members']['fr-fr'] = "Membres";
+$text['label-group_members']['pl'] = "Członkowie";
+$text['label-group_members']['uk'] = "Учасники";
+$text['label-group_members']['sv-se'] = "Medlemmar";
+$text['label-group_members']['ro'] = "";
+$text['label-group_members']['de-at'] = "Mitglieder";
+$text['label-group_members']['he'] = "משתמשים";
+
+$text['label-group_description']['en-us'] = "Description";
+$text['label-group_description']['es-cl'] = "Descripción";
+$text['label-group_description']['pt-pt'] = "Descrição";
+$text['label-group_description']['fr-fr'] = "Description";
+$text['label-group_description']['pl'] = "Opis";
+$text['label-group_description']['uk'] = "Опис";
+$text['label-group_description']['sv-se'] = "Beskrivning";
+$text['label-group_description']['ro'] = "";
+$text['label-group_description']['de-at'] = "Beschreibung";
+$text['label-group_description']['he'] = "תאור";
+
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['es-cl'] = "Grupo";
 $text['label-group']['pt-pt'] = "Grupo";
@@ -762,6 +927,61 @@ $text['header-user_add']['ro'] = "";
 $text['header-user_add']['de-at'] = "Benutzer";
 $text['header-user_add']['he'] = "משתמש";
 
+$text['header-group_permissions']['en-us'] = "Group Permissions: ";
+$text['header-group_permissions']['es-cl'] = "Permisos de Grupo: ";
+$text['header-group_permissions']['pt-pt'] = "Permissões do Grupo: ";
+$text['header-group_permissions']['fr-fr'] = "Permissions du Groupe: ";
+$text['header-group_permissions']['pl'] = "Uprawnienia grupy";
+$text['header-group_permissions']['uk'] = "Привілеї групи:";
+$text['header-group_permissions']['sv-se'] = "Grupp Rättigheter";
+$text['header-group_permissions']['ro'] = "";
+$text['header-group_permissions']['de-at'] = "Gruppenberechtigungen:";
+$text['header-group_permissions']['he'] = "הרשאות קבוצה";
+
+$text['header-group_members']['en-us'] = "Group Members: ";
+$text['header-group_members']['es-cl'] = "Miembros de Grupo: ";
+$text['header-group_members']['pt-pt'] = "Membros do Grupo: ";
+$text['header-group_members']['fr-fr'] = "Membres du Groupe: ";
+$text['header-group_members']['pl'] = "Członkowie grupy:";
+$text['header-group_members']['uk'] = "Учасники групи: ";
+$text['header-group_members']['sv-se'] = "Grupp Medlemmar:";
+$text['header-group_members']['ro'] = "";
+$text['header-group_members']['de-at'] = "Gruppenmitglieder:";
+$text['header-group_members']['he'] = "משתמשי קבוצה";
+
+$text['header-group_manager']['en-us'] = "Group Manager";
+$text['header-group_manager']['es-cl'] = "Administración de Grupo";
+$text['header-group_manager']['pt-pt'] = "Gestão de Grupos";
+$text['header-group_manager']['fr-fr'] = "Gestion de Groupe";
+$text['header-group_manager']['pl'] = "Menadżer  grup";
+$text['header-group_manager']['uk'] = "Групи";
+$text['header-group_manager']['sv-se'] = "Grupp Inställningar";
+$text['header-group_manager']['ro'] = "";
+$text['header-group_manager']['de-at'] = "Gruppenverwaltung";
+$text['header-group_manager']['he'] = "מנהל קבוצה";
+
+$text['header-group_edit']['en-us'] = "Edit Group";
+$text['header-group_edit']['es-cl'] = "Editar Grupo";
+$text['header-group_edit']['pt-pt'] = "Editar Grupo";
+$text['header-group_edit']['fr-fr'] = "Modifier le Groupe";
+$text['header-group_edit']['pl'] = "Edycja grupy";
+$text['header-group_edit']['uk'] = "Редагувати групу";
+$text['header-group_edit']['sv-se'] = "Editera Grupp";
+$text['header-group_edit']['ro'] = "";
+$text['header-group_edit']['de-at'] = "Gruppe bearbeiten";
+$text['header-group_edit']['he'] = "ערוך קבוצה";
+
+$text['header-group_add']['en-us'] = "Add Group";
+$text['header-group_add']['es-cl'] = "Agregar Grupo";
+$text['header-group_add']['pt-pt'] = "Adicionar Grupo";
+$text['header-group_add']['fr-fr'] = "Ajouter un Groupe";
+$text['header-group_add']['pl'] = "Dodaj grupę";
+$text['header-group_add']['uk'] = "Додати групу";
+$text['header-group_add']['sv-se'] = "Lägg Till Grupp";
+$text['header-group_add']['ro'] = "";
+$text['header-group_add']['de-at'] = "Gruppe hinzufügen";
+$text['header-group_add']['he'] = "הוסף קבוצה";
+
 $text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
 $text['description-user_setting-edit']['es-cl'] = "Editar un escenario de este usuario.";
 $text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
@@ -837,6 +1057,39 @@ $text['description-status']['sv-se'] = "Välj en användarstatus.";
 $text['description-status']['ro'] = "Selectați starea utilizatorului";
 $text['description-status']['de-at'] = "Benutzerstatus auswählen";
 $text['description-status']['he'] = "בחר את סטטוס המשתמש";
+
+$text['description-group_permissions']['en-us'] = "Assign permissions for this group.";
+$text['description-group_permissions']['es-cl'] = "Asigne permisos para este grupo.";
+$text['description-group_permissions']['pt-pt'] = "Atribua permissões para este grupo.";
+$text['description-group_permissions']['fr-fr'] = "Assignez des permissions à ce groupe.";
+$text['description-group_permissions']['pl'] = "Przypisywanie uprawnień tej grupie.";
+$text['description-group_permissions']['uk'] = "Призначення привілеїв для цієї групи.";
+$text['description-group_permissions']['sv-se'] = "Tilldela rättigheter till denna grupp.";
+$text['description-group_permissions']['ro'] = "";
+$text['description-group_permissions']['de-at'] = "Ordnen Sie Berechtigungen für diese Gruppe zu.";
+$text['description-group_permissions']['he'] = "צור הרשאות לקבוצה";
+
+$text['description-group_edit']['en-us'] = "Edit the properties of the group.";
+$text['description-group_edit']['es-cl'] = "Editar las propiedades del grupo.";
+$text['description-group_edit']['pt-pt'] = "Editar as propriedades do grupo.";
+$text['description-group_edit']['fr-fr'] = "Modifier les propriétés du groupe.";
+$text['description-group_edit']['pl'] = "Edytuj właściwości grupy.";
+$text['description-group_edit']['uk'] = "Зміна властивостей групи.";
+$text['description-group_edit']['sv-se'] = "Editera inställningar för gruppen.";
+$text['description-group_edit']['ro'] = "";
+$text['description-group_edit']['de-at'] = "Bearbeiten Sie die Eigenschaften dieser Gruppe";
+$text['description-group_edit']['he'] = "";
+
+$text['description-group_add']['en-us'] = "Create a new user group.";
+$text['description-group_add']['es-cl'] = "Crear un nuevo grupo de usuarios.";
+$text['description-group_add']['pt-pt'] = "Criar um novo grupo de usuários.";
+$text['description-group_add']['fr-fr'] = "Créez un nouveau groupe d'utilisateurs.";
+$text['description-group_add']['pl'] = "Utwórz nową grupę użytkowników.";
+$text['description-group_add']['uk'] = "Створити нову групу користувачів.";
+$text['description-group_add']['sv-se'] = "Skapa en ny användargrupp.";
+$text['description-group_add']['ro'] = "";
+$text['description-group_add']['de-at'] = "Legen Sie einen neue Gruppe an.";
+$text['description-group_add']['he'] = "";
 
 $text['description-enabled']['en-us'] = "Set the status of this account.";
 $text['description-enabled']['es-cl'] = "Indique el estaso de esta cuenta.";

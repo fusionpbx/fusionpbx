@@ -53,7 +53,7 @@
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: usersupdate.php?id=".$user_uuid);
+			header("Location: user_edit.php?id=".$user_uuid);
 			exit;
 		}
 	}
