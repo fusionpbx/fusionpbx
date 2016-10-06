@@ -188,6 +188,11 @@
 			$array['call_flows'][] = $_POST;
 			$array['dialplans'][] = $dialplan;
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("dialplan_add", "temp");
+			$p->add("dialplan_edit", "temp");
+
 		//save to the data
 			$orm = new orm;
 			//$orm->name('call_flows');
@@ -198,6 +203,10 @@
 			}
 			$orm->save($array);
 			$message = $orm->message;
+
+		//remove the temporary permission
+			$p->delete("dialplan_add", "temp");
+			$p->delete("dialplan_edit", "temp");
 
 		//debug info
 			//echo "<pre>";
