@@ -132,6 +132,11 @@
 			$array['conference_centers'][] = $_POST;
 			$array['dialplans'][] = $dialplan;
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("dialplan_add", "temp");
+			$p->add("dialplan_edit", "temp");
+
 		//save to the data
 			$orm = new orm;
 			//$orm->name('conference_centers');
@@ -142,6 +147,10 @@
 			}
 			$orm->save($array);
 			$message = $orm->message;
+
+		//remove the temporary permission
+			$p->delete("dialplan_add", "temp");
+			$p->delete("dialplan_edit", "temp");
 
 		//debug information
 			//echo "<pre>\n";
