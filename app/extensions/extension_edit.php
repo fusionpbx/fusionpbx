@@ -447,13 +447,24 @@
 						$device_uuid = uuid();
 						$device_line_uuid = uuid();
 						$device_mac_address = $_POST["devices"][0]["device_mac_address"];
-						$device_mac_address = $_POST["devices"][0]["device_mac_address"];
 						$device_template = $_POST["devices"][0]["device_template"];
 						$line_number = $_POST["devices"][0]["line_number"];
 
 					//normalize the mac address
 						$device_mac_address = strtolower($device_mac_address);
 						$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
+					//get the device_uuid
+						$sql = "SELECT device_uuid FROM v_devices ";
+						$sql .= "WHERE device_mac_address = '".$device_mac_address."' ";
+						$sql .= "AND domain_uuid = '".$domain_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach($result as $field) {
+							$device_uuid = $field['device_uuid'];
+						}
+						unset($sql, $prep_statement);
 
 					//set a default line number
 						if (strlen($line_number) == 0) { $line_number = '1'; }
@@ -462,7 +473,9 @@
 						$array["devices"][0]["device_uuid"] = $device_uuid;
 						$array["devices"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 						$array["devices"][0]["device_mac_address"] = $device_mac_address;
-						$array["devices"][0]["device_template"] = $device_template;
+						if (strlen($device_template) > 0) {
+							$array["devices"][0]["device_template"] = $device_template;
+						}
 						$array["devices"][0]["device_enabled"] = "true";
 						$array["devices"][0]["device_lines"][0]["device_uuid"] = $device_uuid;
 						$array["devices"][0]["device_lines"][0]["device_line_uuid"] = $device_line_uuid;
@@ -1774,12 +1787,12 @@
 	echo "<br><br>";
 	echo "</form>";
 
-	echo "<script>\n";
 //capture enter key to submit form
+	echo "<script>\n";
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
-// convert password fields to
+	// convert password fields to
 	echo "	function submit_form() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
 	echo "		$('input:password').attr({type:'text'});\n";
