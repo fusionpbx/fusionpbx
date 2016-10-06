@@ -302,7 +302,12 @@
 				//prepare the array
 					$array['ring_groups'][] = $_POST;
 					$array['dialplans'][] = $dialplan;
-	
+
+				//add the dialplan permission
+					$p = new permissions;
+					$p->add("dialplan_add", "temp");
+					$p->add("dialplan_edit", "temp");
+
 				//save to the data
 					$orm = new orm;
 					//$orm->name('ring_groups');
@@ -313,6 +318,10 @@
 					}
 					$orm->save($array);
 					$message = $orm->message;
+
+				//remove the temporary permission
+					$p->delete("dialplan_add", "temp");
+					$p->delete("dialplan_edit", "temp");
 			}
 
 		//save the xml
