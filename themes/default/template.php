@@ -543,10 +543,11 @@
 			switch ($menu_style) {
 				case 'inline':
 					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
+					$logo_style = ($_SESSION['theme']['logo_style']['text'] != '') ? $_SESSION['theme']['logo_style']['text'] : '';
 					echo str_replace("center", $logo_align, $open_container);
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php") {
 						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
-						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;'></a>";
+						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;$logo_style'></a>";
 					}
 
 					show_menu($menu_array, $menu_style, $menu_position);
