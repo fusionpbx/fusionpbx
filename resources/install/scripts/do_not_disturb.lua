@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -85,9 +85,19 @@
 				number_alias = row.number_alias or '';
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
+				do_not_disturb = row.do_not_disturb;
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..row.extension.."\n");
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..row.accountcode.."\n");
 			end);
+
+		--toggle do not disturb
+			if (enabled == "toggle") then
+				if (do_not_disturb == "true") then
+					enabled = "false";
+				else
+					enabled = "true";
+				end
+			end
 
 		--set the dial string
 			if (enabled == "true") then
