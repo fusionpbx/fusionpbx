@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -39,15 +39,15 @@
 				end
 			--the person at extension 101 is not available record your message at the tone press any key or stop talking to end the recording
 				if (name == "person_not_available_record_message") then
-					local voicemail_greet_id
 					table.insert(actions, {app="streamFile",data="voicemail/vm-person.wav"});
 					--pronounce the voicemail_id
-					if (session:getVariable("voicemail_alternate_greet_id")) then
-						voicemail_greet_id = session:getVariable("voicemail_alternate_greet_id");
+					if (voicemail_alternate_greet_id and string.len(voicemail_alternate_greet_id) > 0) then
+						table.insert(actions, {app="say.number.iterated",data=voicemail_alternate_greet_id});
+					elseif (voicemail_greet_id and string.len(voicemail_greet_id) > 0) then
+						table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
 					else
-						voicemail_greet_id = voicemail_id;
+						table.insert(actions, {app="say.number.iterated",data=voicemail_id});
 					end
-					table.insert(actions, {app="say.number.iterated",data=voicemail_greet_id});
 					table.insert(actions, {app="streamFile",data="voicemail/vm-not_available.wav"});
 				end
 			--record your message at the tone press any key or stop talking to end the recording
