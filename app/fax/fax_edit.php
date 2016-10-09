@@ -17,30 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-//detect billing app
-	$billing_app_exists = file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php");
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-	if ($billing_app_exists) {
-		require_once "app/billing/resources/functions/currency.php";
-		require_once "app/billing/resources/functions/rating.php";
+//check permissions
+	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -518,41 +513,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'='nowrap='nowrap''>\n";
-			echo "    ".$text['label-accountcode']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			if ($billing_app_exists) {
-				$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$domain_uuid."'";
-				echo "<select name='accountcode' id='accountcode' class='formfld'>\n";
-				$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
-				$prep_statement_accountcode->execute();
-				$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result_accountcode as &$row_accountcode) {
-					$selected = '';
-					if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
-						$selected='selected="selected"';
-					}
-					elseif ($row_accountcode['type_value'] == $fax_accountcode){
-						$selected='selected="selected"';
-					}
-					echo "<option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
-				}
-				unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
-				echo "</select>";
-			}
-			else {
-				if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
-				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$fax_accountcode."\">\n";
-			}
-
-			echo "<br />\n";
-			echo $text['description-accountcode']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'='nowrap='nowrap''>\n";
+		echo "    ".$text['label-accountcode']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
+		echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$fax_accountcode."\">\n";
+		echo "<br />\n";
+		echo $text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
