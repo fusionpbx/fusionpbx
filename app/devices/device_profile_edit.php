@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2015 All Rights Reserved.
+	Copyright (C) 2008-2016 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -122,17 +122,21 @@
 							$x++;
 					}
 
+				//prepare the array
+					$array['device_profiles'][] = $_POST;
+
 				//set the default
 					$save = true;
 
 				//save the profile
 					if ($save) {
 						$orm = new orm;
-						$orm->name('device_profiles');
+						$orm->app_name = 'devices';
+						$orm->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_profile_uuid) > 0) {
 							$orm->uuid($device_profile_uuid);
 						}
-						$orm->save($_POST);
+						$orm->save($array);
 						$response = $orm->message;
 						if (strlen($response['uuid']) > 0) {
 							$device_profile_uuid = $response['uuid'];
