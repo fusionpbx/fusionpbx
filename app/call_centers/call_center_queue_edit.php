@@ -265,7 +265,7 @@
 			$orm->app_name = 'call_centers';
 			$orm->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			$orm->save($array);
-			//$message = $orm->message;
+			$message = $orm->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
@@ -297,20 +297,6 @@
 		//synchronize the configuration
 			save_call_center_xml();
 			remove_config_from_cache('configuration:callcenter.conf');
-
-		//dialplan add or update
-			$c = new call_center;
-			$c->db = $db;
-			$c->domain_uuid = $_SESSION['domain_uuid'];
-			$c->call_center_queue_uuid = $call_center_queue_uuid;
-			$c->dialplan_uuid = $dialplan_uuid;
-			$c->queue_name = $queue_name;
-			$c->queue_name = $queue_name;
-			$c->queue_cid_prefix = $queue_cid_prefix;
-			$c->queue_timeout_action = $queue_timeout_action;
-			$c->queue_description = $queue_description;
-			$c->destination_number = $queue_extension;
-			$a = $c->dialplan();
 
 		//add agent/tier to queue
 			$agent_name = check_str($_POST["agent_name"]);
