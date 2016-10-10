@@ -542,8 +542,6 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				$pdf -> SetXY($x + 0.75, $y + 3.65);
 				$pdf -> MultiCell(7, 5.75, $fax_message, 0, 'L', false);
 			}
-			$pdf -> SetAutoPageBreak(false);
-			$pdf -> SetTopMargin(0);
 
 			$pages = $pdf -> getNumPages();
 
@@ -573,10 +571,14 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 			//footer
 			if ($fax_footer != '') {
+				$pdf -> SetAutoPageBreak(true, 0.6);
+				$pdf -> SetTopMargin(0.6);
 				$pdf -> SetFont("helvetica", "", 8);
-				$pdf -> SetXY($x + 0.5, $y + 9.9);
+				$pdf -> SetXY($x + 0.5, $y + 0.6);
 				$pdf -> MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
+			$pdf -> SetAutoPageBreak(false);
+			$pdf -> SetTopMargin(0);
 
 			// save cover pdf
 			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
