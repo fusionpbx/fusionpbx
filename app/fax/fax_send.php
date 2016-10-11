@@ -566,7 +566,8 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				unset($yn);
 			}
 			else {
-				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, $yn, 'D');
+				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
+				$y = $pdf -> GetY();
 			}
 
 			//footer
