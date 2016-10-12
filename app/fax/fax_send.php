@@ -535,19 +535,51 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 			}
 
 			//message
-			$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
 			if ($fax_message != '') {
+				$pdf -> SetAutoPageBreak(true, 0.6);
+				$pdf -> SetTopMargin(0.6);
 				$pdf -> SetFont($pdf_font, "", 12);
 				$pdf -> SetXY($x + 0.75, $y + 3.65);
 				$pdf -> MultiCell(7, 5.75, $fax_message, 0, 'L', false);
 			}
 
+			$pages = $pdf -> getNumPages();
+
+			if($pages > 1) {
+				# save ynew for last page
+				$yn = $pdf -> GetY();
+
+				# First page
+				$pdf -> setPage(1, 0);
+				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, $page_height - 3.9, 'D');
+
+				# 2nd to N-th page
+				for ($n = 2; $n < $pages; $n++) {
+					$pdf -> setPage($n, 0);
+					$pdf -> Rect($x + 0.5, $y + 0.5, 7.5, $page_height - 1, 'D');
+				}
+
+				#Last page
+				$pdf -> setPage($pages, 0);
+				$pdf -> Rect($x + 0.5, 0.5, 7.5, $yn, 'D');
+				$y = $yn;
+				unset($yn);
+			}
+			else {
+				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
+				$y = $pdf -> GetY();
+			}
+
 			//footer
 			if ($fax_footer != '') {
+				$pdf -> SetAutoPageBreak(true, 0.6);
+				$pdf -> SetTopMargin(0.6);
 				$pdf -> SetFont("helvetica", "", 8);
-				$pdf -> SetXY($x + 0.5, $y + 9.9);
+				$pdf -> SetXY($x + 0.5, $y + 0.6);
 				$pdf -> MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
+			$pdf -> SetAutoPageBreak(false);
+			$pdf -> SetTopMargin(0);
 
 			// save cover pdf
 			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
