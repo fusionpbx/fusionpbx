@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,16 +25,20 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('inbound_route_add')) {
-	//access granted
-}
-else {
-	echo $text['label-access-denied'];
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('inbound_route_add')) {
+		//access granted
+	}
+	else {
+		echo $text['label-access-denied'];
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -51,73 +55,74 @@ else {
 	$action = $_GET["action"];
 
 //get the http post values and set them as php variables
-	if (count($_POST)>0) {
-		$dialplan_name = check_str($_POST["dialplan_name"]);
-		$caller_id_outbound_prefix = check_str($_POST["caller_id_outbound_prefix"]);
-		$limit = check_str($_POST["limit"]);
-		$public_order = check_str($_POST["public_order"]);
-		$condition_field_1 = check_str($_POST["condition_field_1"]);
-		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
-		$condition_field_2 = check_str($_POST["condition_field_2"]);
-		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
-		$destination_uuid = check_str($_POST["destination_uuid"]);
+if (count($_POST) > 0) {
+	$dialplan_name = check_str($_POST["dialplan_name"]);
+	$caller_id_outbound_prefix = check_str($_POST["caller_id_outbound_prefix"]);
+	$limit = check_str($_POST["limit"]);
+	$public_order = check_str($_POST["public_order"]);
+	$condition_field_1 = check_str($_POST["condition_field_1"]);
+	$condition_expression_1 = check_str($_POST["condition_expression_1"]);
+	$condition_field_2 = check_str($_POST["condition_field_2"]);
+	$condition_expression_2 = check_str($_POST["condition_expression_2"]);
+	$destination_uuid = check_str($_POST["destination_uuid"]);
 
- 		$action_1 = check_str($_POST["action_1"]);
-		//$action_1 = "transfer:1001 XML default";
-		$action_1_array = explode(":", $action_1);
-		$action_application_1 = array_shift($action_1_array);
-		$action_data_1 = join(':', $action_1_array);
+ 	$action_1 = check_str($_POST["action_1"]);
+	//$action_1 = "transfer:1001 XML default";
+	$action_1_array = explode(":", $action_1);
+	$action_application_1 = array_shift($action_1_array);
+	$action_data_1 = join(':', $action_1_array);
 
- 		$action_2 = check_str($_POST["action_2"]);
-		//$action_2 = "transfer:1001 XML default";
-		$action_2_array = explode(":", $action_2);
-		$action_application_2 = array_shift($action_2_array);
-		$action_data_2 = join(':', $action_2_array);
+ 	$action_2 = check_str($_POST["action_2"]);
+	//$action_2 = "transfer:1001 XML default";
+	$action_2_array = explode(":", $action_2);
+	$action_application_2 = array_shift($action_2_array);
+	$action_data_2 = join(':', $action_2_array);
 
-		//$action_application_1 = check_str($_POST["action_application_1"]);
-		//$action_data_1 = check_str($_POST["action_data_1"]);
-		//$action_application_2 = check_str($_POST["action_application_2"]);
-		//$action_data_2 = check_str($_POST["action_data_2"]);
+	//$action_application_1 = check_str($_POST["action_application_1"]);
+	//$action_data_1 = check_str($_POST["action_data_1"]);
+	//$action_application_2 = check_str($_POST["action_application_2"]);
+	//$action_data_2 = check_str($_POST["action_data_2"]);
 
-		$destination_carrier = '';
-		$destination_accountcode = '';
+	$destination_carrier = '';
+	$destination_accountcode = '';
 
-		//use the destination_uuid to set the condition_expression_1
-		if (strlen($destination_uuid) > 0) {
-			$sql = "select * from v_destinations ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and destination_uuid = '$destination_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result) > 0) {
-				foreach ($result as &$row) {
-					$condition_expression_1 = $row["destination_number"];
-					$fax_uuid = $row["fax_uuid"];
-					$destination_carrier = $row["destination_carrier"];
-					$destination_accountcode = $row["destination_accountcode"];
-				}
-			}
-			unset ($prep_statement);
-		}
-
-		if (permission_exists("inbound_route_advanced") && $action == "advanced") {
-			//allow users with group advanced control, not always superadmin. You may change this in group permissions
-		}
-		else {
-			if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
-			if (is_numeric($condition_expression_1)) {
-				//the number is numeric
-				$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
-				$condition_expression_1 = '^('.$condition_expression_1.')$';
+	//use the destination_uuid to set the condition_expression_1
+	if (strlen($destination_uuid) > 0) {
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and destination_uuid = '$destination_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) > 0) {
+			foreach ($result as &$row) {
+				$condition_expression_1 = $row["destination_number"];
+				$fax_uuid = $row["fax_uuid"];
+				$destination_carrier = $row["destination_carrier"];
+				$destination_accountcode = $row["destination_accountcode"];
 			}
 		}
-		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
-		$dialplan_description = check_str($_POST["dialplan_description"]);
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		unset ($prep_statement);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (permission_exists("inbound_route_advanced") && $action == "advanced") {
+		//allow users with group advanced control, not always superadmin. You may change this in group permissions
+	}
+	else {
+		if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
+		if (is_numeric($condition_expression_1)) {
+			//the number is numeric
+			$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
+			$condition_expression_1 = '^('.$condition_expression_1.')$';
+		}
+	}
+	$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
+	$dialplan_description = check_str($_POST["dialplan_description"]);
+	if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+}
+
+//process the http post data
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($domain_uuid) == 0) { $msg .= "".$text['label-required-domain_uuid']."<br>\n"; }
 		if (strlen($dialplan_name) == 0) { $msg .= "".$text['label-required-dialplan_name']."<br>\n"; }
@@ -669,6 +674,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//commit the atomic transaction
 		$count = $db->exec("COMMIT;"); //returns affected rows
 
+	//update the dialplan xml
+		$dialplans = new dialplan;
+		$dialplans->source = "details";
+		$dialplans->destination = "database";
+		$dialplans->uuid = $dialplan_uuid;
+		$dialplans->xml();
+
 	//clear the cache
 		$cache = new cache;
 		$cache->delete("dialplan:public");
@@ -683,7 +695,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //initialize the destinations object
-$destination = new destinations;
+	$destination = new destinations;
 
 ?>
 
