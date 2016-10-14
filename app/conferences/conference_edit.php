@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -112,188 +112,196 @@
 		return;
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process http post variables
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$conference_uuid = check_str($_POST["conference_uuid"]);
-	}
-
-	//check for all required data
-		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-		if (strlen($conference_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
-		if (strlen($conference_extension) == 0) { $msg .= "".$text['confirm-extension']."<br>\n"; }
-		//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
-		if (strlen($conference_profile) == 0) { $msg .= "".$text['confirm-profile']."<br>\n"; }
-		//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-		//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-		//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-		if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
+		if ($action == "update") {
+			$conference_uuid = check_str($_POST["conference_uuid"]);
 		}
 
-	//add or update the database
-		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
-				//prepare the uuids
-					$conference_uuid = uuid();
-					$dialplan_uuid = uuid();
-				//add the conference
-					$sql = "insert into v_conferences ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "conference_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "conference_name, ";
-					$sql .= "conference_extension, ";
-					$sql .= "conference_pin_number, ";
-					$sql .= "conference_profile, ";
-					$sql .= "conference_flags, ";
-					$sql .= "conference_order, ";
-					$sql .= "conference_description, ";
-					$sql .= "conference_enabled ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$conference_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$conference_name', ";
-					$sql .= "'$conference_extension', ";
-					$sql .= "'$conference_pin_number', ";
-					$sql .= "'$conference_profile', ";
-					$sql .= "'$conference_flags', ";
-					$sql .= "'$conference_order', ";
-					$sql .= "'$conference_description', ";
-					$sql .= "'$conference_enabled' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-				//create the dialplan entry
-					$dialplan_name = $conference_name;
-					$dialplan_order ='333';
-					$dialplan_context = $_SESSION['context'];
-					$dialplan_enabled = 'true';
-					$dialplan_description = $conference_description;
-					$app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
-					dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
-
-					//<condition destination_number="500" />
-					$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-					$dialplan_detail_type = 'destination_number';
-					$dialplan_detail_data = '^'.$conference_extension.'$';
-					$dialplan_detail_order = '000';
-					$dialplan_detail_group = '2';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="answer" />
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'answer';
-					$dialplan_detail_data = '';
-					$dialplan_detail_order = '010';
-					$dialplan_detail_group = '2';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="answer" />
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'conference';
-					$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
-					$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-					$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
-					$dialplan_detail_order = '020';
-					$dialplan_detail_group = '2';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-				//add the message
-					$_SESSION["message"] = $text['confirm-add'];
-			} //if ($action == "add")
-
-			if ($action == "update") {
-				//update the conference extension
-					$sql = "update v_conferences set ";
-					$sql .= "conference_name = '$conference_name', ";
-					$sql .= "conference_extension = '$conference_extension', ";
-					$sql .= "conference_pin_number = '$conference_pin_number', ";
-					$sql .= "conference_profile = '$conference_profile', ";
-					$sql .= "conference_flags = '$conference_flags', ";
-					$sql .= "conference_order = '$conference_order', ";
-					$sql .= "conference_description = '$conference_description', ";
-					$sql .= "conference_enabled = '$conference_enabled' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and conference_uuid = '$conference_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-				//udpate the conference dialplan
-					$sql = "update v_dialplans set ";
-					$sql .= "dialplan_name = '$conference_name', ";
-					if (strlen($dialplan_order) > 0) {
-						$sql .= "dialplan_order = '333', ";
-					}
-					$sql .= "dialplan_context = '".$_SESSION['context']."', ";
-					$sql .= "dialplan_enabled = 'true', ";
-					$sql .= "dialplan_description = '$conference_description' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
-					unset($sql);
-
-				//update dialplan detail condition
-					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_data = '^".$conference_extension."$' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_detail_tag = 'condition' ";
-					$sql .= "and dialplan_detail_type = 'destination_number' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
-					unset($sql);
-
-				//update dialplan detail action
-					$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
-					$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-					$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
-					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_detail_tag = 'action' ";
-					$sql .= "and dialplan_detail_type = 'conference' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
-
-				//add the message
-					$_SESSION["message"] = $text['confirm-update'];
-			} //if ($action == "update")
-
-			//save the xml
-				save_dialplan_xml();
-
-			//apply settings reminder
-				$_SESSION["reload_xml"] = true;
-
-			//clear the cache
-				$cache = new cache;
-				$cache->delete("dialplan:".$_SESSION["context"]);
-
-			//redirect the browser
-				header("Location: conferences.php");
+		//check for all required data
+			$msg = '';
+			//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
+			if (strlen($conference_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
+			if (strlen($conference_extension) == 0) { $msg .= "".$text['confirm-extension']."<br>\n"; }
+			//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
+			if (strlen($conference_profile) == 0) { $msg .= "".$text['confirm-profile']."<br>\n"; }
+			//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
+			//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
+			//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+			if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
+			}
 
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				if ($action == "add") {
+					//prepare the uuids
+						$conference_uuid = uuid();
+						$dialplan_uuid = uuid();
+					//add the conference
+						$sql = "insert into v_conferences ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "conference_uuid, ";
+						$sql .= "dialplan_uuid, ";
+						$sql .= "conference_name, ";
+						$sql .= "conference_extension, ";
+						$sql .= "conference_pin_number, ";
+						$sql .= "conference_profile, ";
+						$sql .= "conference_flags, ";
+						$sql .= "conference_order, ";
+						$sql .= "conference_description, ";
+						$sql .= "conference_enabled ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$conference_uuid', ";
+						$sql .= "'$dialplan_uuid', ";
+						$sql .= "'$conference_name', ";
+						$sql .= "'$conference_extension', ";
+						$sql .= "'$conference_pin_number', ";
+						$sql .= "'$conference_profile', ";
+						$sql .= "'$conference_flags', ";
+						$sql .= "'$conference_order', ";
+						$sql .= "'$conference_description', ";
+						$sql .= "'$conference_enabled' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+
+					//create the dialplan entry
+						$dialplan_name = $conference_name;
+						$dialplan_order ='333';
+						$dialplan_context = $_SESSION['context'];
+						$dialplan_enabled = 'true';
+						$dialplan_description = $conference_description;
+						$app_uuid = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
+						dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
+
+						//<condition destination_number="500" />
+						$dialplan_detail_tag = 'condition'; //condition, action, antiaction
+						$dialplan_detail_type = 'destination_number';
+						$dialplan_detail_data = '^'.$conference_extension.'$';
+						$dialplan_detail_order = '000';
+						$dialplan_detail_group = '2';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="answer" />
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'answer';
+						$dialplan_detail_data = '';
+						$dialplan_detail_order = '010';
+						$dialplan_detail_group = '2';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="answer" />
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'conference';
+						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
+						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
+						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+						$dialplan_detail_order = '020';
+						$dialplan_detail_group = '2';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+					//add the message
+						$_SESSION["message"] = $text['confirm-add'];
+				} //if ($action == "add")
+
+				if ($action == "update") {
+					//update the conference extension
+						$sql = "update v_conferences set ";
+						$sql .= "conference_name = '$conference_name', ";
+						$sql .= "conference_extension = '$conference_extension', ";
+						$sql .= "conference_pin_number = '$conference_pin_number', ";
+						$sql .= "conference_profile = '$conference_profile', ";
+						$sql .= "conference_flags = '$conference_flags', ";
+						$sql .= "conference_order = '$conference_order', ";
+						$sql .= "conference_description = '$conference_description', ";
+						$sql .= "conference_enabled = '$conference_enabled' ";
+						$sql .= "where domain_uuid = '$domain_uuid' ";
+						$sql .= "and conference_uuid = '$conference_uuid'";
+						$db->exec(check_sql($sql));
+						unset($sql);
+
+					//udpate the conference dialplan
+						$sql = "update v_dialplans set ";
+						$sql .= "dialplan_name = '$conference_name', ";
+						if (strlen($dialplan_order) > 0) {
+							$sql .= "dialplan_order = '333', ";
+						}
+						$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+						$sql .= "dialplan_enabled = 'true', ";
+						$sql .= "dialplan_description = '$conference_description' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+						unset($sql);
+
+					//update dialplan detail condition
+						$sql = "update v_dialplan_details set ";
+						$sql .= "dialplan_detail_data = '^".$conference_extension."$' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_detail_tag = 'condition' ";
+						$sql .= "and dialplan_detail_type = 'destination_number' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+						unset($sql);
+
+					//update dialplan detail action
+						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
+						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
+						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+						$sql = "update v_dialplan_details set ";
+						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_detail_tag = 'action' ";
+						$sql .= "and dialplan_detail_type = 'conference' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+
+					//add the message
+						$_SESSION["message"] = $text['confirm-update'];
+				} //if ($action == "update")
+
+				//update the dialplan xml
+					$dialplans = new dialplan;
+					$dialplans->source = "details";
+					$dialplans->destination = "database";
+					$dialplans->uuid = $dialplan_uuid;
+					$dialplans->xml();
+
+				//save the xml
+					save_dialplan_xml();
+
+				//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+				//clear the cache
+					$cache = new cache;
+					$cache->delete("dialplan:".$_SESSION["context"]);
+
+				//redirect the browser
+					header("Location: conferences.php");
+					return;
+
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$conference_uuid = $_GET["id"];
 		$sql = "select * from v_conferences ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -534,4 +542,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
