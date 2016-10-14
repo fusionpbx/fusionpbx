@@ -298,6 +298,9 @@
 			//delete the recording
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				if ($this->voicemail_message_uuid != '') {
+					foreach (glob($file_path."/intro_".$this->voicemail_message_uuid.".*") as $file_name) {
+						unlink($file_name);
+					}
 					foreach (glob($file_path."/msg_".$this->voicemail_message_uuid.".*") as $file_name) {
 						unlink($file_name);
 					}

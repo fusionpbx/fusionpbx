@@ -14,7 +14,6 @@
 	License.
 
 	The Original Code is FusionPBX
-
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2008-2016
@@ -24,8 +23,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 if ($domains_processed == 1) {
+
 	//set all lines to enabled (true) where null or empty string
 		$sql = "update v_device_lines set ";
 		$sql .= "enabled = 'true' ";
@@ -75,7 +74,6 @@ if ($domains_processed == 1) {
 
 				//process the array
 					foreach ($vendors as $vendor) {
-
 						//insert the data into the database
 							$device_vendor_uuid = uuid();
 							$sql = "insert into v_device_vendors ";
@@ -98,7 +96,6 @@ if ($domains_processed == 1) {
 							foreach ($vendor['functions'] as $function) {
 								//get the id
 									$device_vendor_function_uuid = uuid();
-
 								//add the device vendor funtction
 									$sql = "insert into v_device_vendor_functions ";
 									$sql .= "(";
@@ -154,5 +151,4 @@ if ($domains_processed == 1) {
 			} //if num_rows
 		} // if prep_statement
 }
-
 ?>

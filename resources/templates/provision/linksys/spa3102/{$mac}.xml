@@ -33,7 +33,6 @@
   <Resync_On_Reset>yes</Resync_On_Reset>
   <Resync_Error_Retry_Delay>10</Resync_Error_Retry_Delay>
 
-
   <!-- network config -->
   <DHCP>yes</DHCP> <!-- for WAN port -->
   <!--
@@ -46,7 +45,6 @@
   <Debug_Server>{$domain_name}</Debug_Server>
   <Debug_Level>2</Debug_Level>
   -->
-
 
   <!-- WAN web interface -->
   <!-- WARNING: Passwords are set empty below.  Take appropriate security measures when enabling web interface on WAN.
@@ -67,7 +65,6 @@
   -->
   <Time_Zone>GMT-{$time_zone_offset}</Time_Zone>
 
-
   <!-- SIP settings -->
   <Proxy_1_>{$server_address_1}</Proxy_1_>
   <SIP_Port_1_>{$sip_port_1}</SIP_Port_1_>
@@ -79,7 +76,6 @@
   <!-- SIP debugging - probably need to set Debug_Server option above for this to work
   <SIP_Debug_Option_1_>full</SIP_Debug_Option_1_>
   -->
-
 
   <!-- FXS port aka "Line 1" in web interface -->
   <Register_1_>yes</Register_1_>

@@ -189,6 +189,20 @@ $text['button-applied']['ro'] = "";
 $text['button-applied']['fa'] = "";
 $text['button-applied']['ar-eg'] = "";
 
+$text['button-xml']['en-us'] = "XML";
+$text['button-xml']['es-cl'] = "";
+$text['button-xml']['pt-pt'] = "";
+$text['button-xml']['fr-fr'] = "";
+$text['button-xml']['pt-br'] = "";
+$text['button-xml']['pl'] = "";
+$text['button-xml']['he'] = "";
+$text['button-xml']['uk'] = "";
+$text['button-xml']['sv-se'] = "";
+$text['button-xml']['de-at'] = "";
+$text['button-xml']['ro'] = "";
+$text['button-xml']['fa'] = "";
+$text['button-xml']['ar-eg'] = "";
+
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
 $text['button-clear']['pt-pt'] = "Apagar";
@@ -731,6 +745,19 @@ $text['label-ringback']['uk'] = "відповідний";
 $text['label-ringback']['de-at'] = "Zurückrufen";
 $text['label-ringback']['he'] = "לצלצל בחזרה";
 $text['label-ringback']['ru-ru'] = "Перезвонить";
+
+$text['label-tone']['en-us'] = "Tone";
+$text['label-tone']['es-cl'] = "Tono";
+$text['label-tone']['pt-pt'] = "Tom";
+$text['label-tone']['pt-br'] = "Tom";
+$text['label-tone']['pl'] = "Ton";
+$text['label-tone']['fr-fr'] = "Ton";
+$text['label-tone']['nl-nl'] = "Toon";
+$text['label-tone']['sv-se'] = "Tona";
+$text['label-tone']['uk'] = "Тон";
+$text['label-tone']['de-at'] = "Ton";
+$text['label-tone']['he'] = "טוֹן";
+$text['label-tone']['ru-ru'] = "Тон";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Musica en Espera";

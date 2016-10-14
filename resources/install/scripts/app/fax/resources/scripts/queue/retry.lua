@@ -246,18 +246,14 @@
 	if fax_success == "1" then
 
 		if storage_type == "base64" then
-			--include the base64 function
-				require "resources.functions.base64";
+			--include the file io
+				local file = require "resources.functions.file"
 
-			--base64 encode the file
-				local f = io.open(fax_file, "rb");
-				if not f then
+			--read file content as base64 string
+				fax_base64 = file.read_base64(fax_file);
+				if not fax_base64 then
 					log.waitng("Can not find file %s", fax_file)
 					storage_type = nil
-				else
-					local file_content = f:read("*all");
-					f:close()
-					fax_base64 = base64.encode(file_content)
 				end
 		end
 
@@ -300,13 +296,10 @@
 		end
 
 		if storage_type == "base64" then
-			local db_type, db_cnn = split_first(database["system"], "://", true)
-			local luasql = require ("luasql." .. db_type);
-			local env = assert (luasql[db_type]());
-			local dbh = env:connect(db_cnn);
-			dbh:execute(sql)
-			dbh:close()
-			env:close()
+			local Database = require "resources.functions.database"
+			local dbh = Database.new('system', 'base64');
+			dbh:query(sql);
+			dbh:release();
 		else
 			result = dbh:query(sql)
 		end
@@ -397,7 +390,7 @@
 					os.remove(fax_file);
 				end
 
+				end
 			end
 		end
-	end
 

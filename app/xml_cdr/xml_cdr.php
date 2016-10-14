@@ -464,7 +464,7 @@
 					echo "<tr id='recording_progress_bar_".$row['uuid']."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".$row['uuid']."'></span></td></tr>\n";
 				}
 
-				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				if ($row['raw_data_exists'] && (if_group("admin") || if_group("superadmin") || if_group("cdr"))) {
 					$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_REQUEST['showall']) ? "&showall=true" : null)."'";
 				}
 				else {
@@ -630,7 +630,9 @@
 			//control icons
 				if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 					echo "	<td class='list_control_icons tr_link_void' nowrap='nowrap'>";
-					echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
+					if ($tr_link!=null) {
+						echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
+					}
 					if (permission_exists('xml_cdr_delete')) {
 						echo 	"<a href='xml_cdr_delete.php?id[]=".$row['uuid']."&rec[]=".(($recording_file_path != '') ? base64_encode($recording_file_path) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}

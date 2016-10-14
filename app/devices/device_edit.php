@@ -296,14 +296,19 @@
 						$save = true;
 					}
 
+				//prepare the array
+					$array['devices'][] = $_POST;
+
 				//save the device
 					if ($save) {
 						$orm = new orm;
 						$orm->name('devices');
+						$orm->app_name = 'devices';
+						$orm->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_uuid) > 0) {
 							$orm->uuid($device_uuid);
 						}
-						$orm->save($_POST);
+						$orm->save($array);
 						$response = $orm->message;
 						if (strlen($response['uuid']) > 0) {
 							$device_uuid = $response['uuid'];
@@ -967,7 +972,9 @@
 			echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
-			echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+			if (permission_exists('device_key_extension')) {
+				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
+			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";

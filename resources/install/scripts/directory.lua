@@ -133,7 +133,7 @@
 			end
 			status = dbh:query(sql, function(rows)
 				domain_uuid = string.lower(rows["domain_uuid"]);
-				end);
+			end);
 		end
 	end
 
@@ -226,6 +226,9 @@
 					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
+								local Database = require "resources.functions.database";
+								local dbh = Database.new('system', 'base64/read')
+
 								sql = [[SELECT * FROM v_voicemails
 									WHERE domain_uuid = ']] .. domain_uuid ..[['
 									AND voicemail_id = ']].. row.extension.. [[' ]];
@@ -233,17 +236,16 @@
 									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
 								end
 								status = dbh:query(sql, function(field)
-									--add functions
-										require "resources.functions.base64";
-
 									--set the voicemail message path
 										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";
 
 									--save the recording to the file system
 										if (string.len(field["voicemail_name_base64"]) > 32) then
-											local file = io.open(file_location, "w");
-											file:write(base64.decode(field["voicemail_name_base64"]));
-											file:close();
+											--include the file io
+												local file = require "resources.functions.file"
+
+											--write decoded string to file
+												file.write_base64(file_location, field["voicemail_name_base64"]);
 										end
 
 									--play the recorded name
@@ -266,6 +268,7 @@
 											end
 										end
 								end);
+								dbh:release()
 							elseif (storage_type == "http_cache") then
 								file_location = storage_path.."/"..row.extension.."/recorded_name.wav";
 								if (file_exists(file_location)) then

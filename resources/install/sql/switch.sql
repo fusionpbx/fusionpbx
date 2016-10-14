@@ -481,6 +481,17 @@ CREATE TABLE tiers (
 );
 ALTER TABLE tiers OWNER TO fusionpbx;
 
+
+--
+-- Name: json_store; Type: TABLE; Schema: public; Owner: fusionpbx; Tablespace:
+--
+CREATE TABLE json_store (
+	name varchar(255) not null,
+	data text,
+   json_store_uuid uuid PRIMARY KEY default gen_random_uuid()
+);
+ ALTER TABLE json_store OWNER TO fusionpbx;
+  
 --Create Views
 
 -- Name: basic_calls; Type: VIEW; Schema: public; Owner: fusionpbx
@@ -609,7 +620,6 @@ b.read_bit_rate AS b_read_bit_rate,
 
 
 ALTER TABLE detailed_calls OWNER TO fusionpbx;
-
 
 
 --Indexes and Constraints

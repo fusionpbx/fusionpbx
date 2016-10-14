@@ -303,14 +303,11 @@
 	if (fax_success ~= nil) then
 		if (fax_success =="1") then
 			if (storage_type == "base64") then
-				--include the base64 function
-					require "resources.functions.base64";
+				--include the file io
+					local file = require "resources.functions.file"
 
-				--base64 encode the file
-					local f = io.open(fax_file, "rb");
-					local file_content = f:read("*all");
-					f:close();
-					fax_base64 = base64.encode(file_content);
+				--read file content as base64 string
+					fax_base64 = assert(file.read_base64(fax_file));
 			end
 
 			local sql = {}
@@ -363,13 +360,10 @@
 				freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "\n");
 			end
 			if (storage_type == "base64") then
-				array = explode("://", database["system"]);
-				local luasql = require "luasql.postgres";
-				local env = assert (luasql.postgres());
-				local dbh = env:connect(array[2]);
-				res, serr = dbh:execute(sql);
-				dbh:close();
-				env:close();
+				local Database = require "resources.functions.database"
+				local dbh = Database.new('system', 'base64');
+				dbh:query(sql);
+				dbh:release();
 			else
 				result = dbh:query(sql);
 			end

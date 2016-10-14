@@ -283,7 +283,7 @@
 	if ($rows_per_page > 0) {
 			if ($_SESSION['cdr']['count']['boolean'] == "true") {
 				//get the number of rows in the v_xml_cdr
-					$sql = "select count(*) as num_rows from v_xml_cdr ";
+					$sql = "select count(uuid) as num_rows from v_xml_cdr ";
 					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
@@ -340,6 +340,7 @@
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$sql .= $field.", ";

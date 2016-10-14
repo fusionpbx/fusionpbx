@@ -111,6 +111,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_prompt";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dial_string";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

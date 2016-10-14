@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -172,6 +172,7 @@
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
 							greeting_id = row["greeting_id"];
+							voicemail_alternate_greet_id = row["voicemail_alternate_greet_id"];
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
@@ -222,6 +223,7 @@
 	require "app.voicemail.resources.functions.play_greeting";
 	require "app.voicemail.resources.functions.record_message";
 	require "app.voicemail.resources.functions.record_menu";
+	require "app.voicemail.resources.functions.forward_add_intro";
 	require "app.voicemail.resources.functions.forward_to_extension";
 	require "app.voicemail.resources.functions.main_menu";
 	require "app.voicemail.resources.functions.listen_to_recording";
@@ -324,20 +326,19 @@
 						--show the storage type
 							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
-						--include the base64 function
-							require "resources.functions.base64";
+						--include the file io
+							local file = require "resources.functions.file"
 
-						--base64 encode the file
-							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								--get the base
-									local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
-									local file_content = f:read("*all");
-									f:close();
-									message_base64 = base64.encode(file_content);
+						-- build full path to file
+							local full_path = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
+
+							if file_exists(full_path) then
+								--read file content as base64 string
+									message_base64 = assert(file.read_base64(full_path));
 									--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
 
 								--delete the file
-									os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+									os.remove(full_path);
 							end
 					end
 
@@ -406,13 +407,10 @@
 									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 								end
 								if (storage_type == "base64") then
-									array = explode("://", database["system"]);
-									local luasql = require "luasql.postgres";
-									local env = assert (luasql.postgres());
-									local db = env:connect(array[2]);
-									res, serr = db:execute(sql);
-									db:close();
-									env:close();
+									local Database = require "resources.functions.database"
+									local dbh = Database.new('system', 'base64');
+									dbh:query(sql);
+									dbh:release();
 								else
 									dbh:query(sql);
 								end

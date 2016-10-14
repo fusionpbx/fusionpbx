@@ -140,12 +140,12 @@ $text['label-required-action_application_1']['fr-fr'] = "Merci d'indiquer: Appli
 $text['label-required-action_application_1']['pl'] = "Wprowadź:aplikację operacji";
 $text['label-required-action_application_1']['uk'] = "Будь ласка, надайте додаток для дії";
 
-$text['label-redial-outbound-prefix']['en-us'] = "Redial outbound prefix";
-$text['label-redial-outbound-prefix']['es-cl'] = "Redial prefijo de salida";
-$text['label-redial-outbound-prefix']['pt-pt'] = "Remarcar prefixo de saída";
-$text['label-redial-outbound-prefix']['fr-fr'] = "Bis préfixe pour sortant";
-$text['label-redial-outbound-prefix']['pl'] = "Prefiks ponownego wybierania";
-$text['label-redial-outbound-prefix']['uk'] = "Префікс для повторного набору вихідного дзвінка";
+$text['label-caller-id-number-prefix']['en-us'] = "Caller ID Number Prefix";
+$text['label-caller-id-number-prefix']['es-cl'] = "Redial prefijo de salida";
+$text['label-caller-id-number-prefix']['pt-pt'] = "Remarcar prefixo de saída";
+$text['label-caller-id-number-prefix']['fr-fr'] = "Bis préfixe pour sortant";
+$text['label-caller-id-number-prefix']['pl'] = "Prefiks ponownego wybierania";
+$text['label-caller-id-number-prefix']['uk'] = "Префікс для повторного набору вихідного дзвінка";
 
 $text['label-limit']['en-us'] = "Limit";
 $text['label-limit']['es-cl'] = "Límite";
@@ -217,12 +217,12 @@ $text['label-access-denied']['fr-fr'] = "accès refusé";
 $text['label-access-denied']['pl'] = "brak dostępu";
 $text['label-access-denied']['uk'] = "в доступі відмовлено";
 
-$text['description-redial-outbound-prefix']['en-us'] = "Effective Caller ID Number prefix";
-$text['description-redial-outbound-prefix']['es-cl'] = "Prefijo par Número de Caller ID Efectivo";
-$text['description-redial-outbound-prefix']['pt-pt'] = "Prefixo par Número interno";
-$text['description-redial-outbound-prefix']['fr-fr'] = "Préfixe pour Numéro interne";
-$text['description-redial-outbound-prefix']['pl'] = "Prefiks prezentacji numeru dzwoniącego";
-$text['description-redial-outbound-prefix']['uk'] = "Effective Caller ID префікс номера";
+$text['description-caller-id-number-prefix']['en-us'] = "Set a prefix on the caller ID number.";
+$text['description-caller-id-number-prefix']['es-cl'] = "";
+$text['description-caller-id-number-prefix']['pt-pt'] = "";
+$text['description-caller-id-number-prefix']['fr-fr'] = "";
+$text['description-caller-id-number-prefix']['pl'] = "";
+$text['description-caller-id-number-prefix']['uk'] = "";
 
 $text['description-name']['en-us'] = "Please enter an inbound route name.";
 $text['description-name']['es-cl'] = "Por favor infrese un nombre de ruta entrante.";

@@ -127,7 +127,7 @@
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "null, ";
 				}
 				else {
@@ -139,7 +139,7 @@
 				$sql .= "'".$dialplan_number."', ";
 				$sql .= "'".$dialplan_order."', ";
 				$sql .= "'true', ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "'\${domain_name}', ";
 				}
 				else {
@@ -156,7 +156,7 @@
 		else if ($action == "update") {
 			//update main dialplan entry
 				$sql = "update v_dialplans set ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "domain_uuid = null, ";
 				}
 				else {
@@ -166,7 +166,7 @@
 				$sql .= "dialplan_number = '".$dialplan_number."', ";
 				$sql .= "dialplan_order = '".$dialplan_order."', ";
 				$sql .= "dialplan_continue = 'true', ";
-				if ($domain_uuid == 0) {
+				if (strlen($domain_uuid) == 0) {
 					$sql .= "dialplan_context = '\${domain_name}', ";
 				}
 				else {
@@ -296,10 +296,10 @@
 					if ($cond_var == 'time-of-day') {
 						$cond_var = 'minute-of-day';
 						$array_cond_start = explode(':', $cond_start);
-						$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
+						$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
 						if ($cond_stop != '') {
 							$array_cond_stop = explode(':', $cond_stop);
-							$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1] + 1;
+							$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
 						}
 					}
 
@@ -313,7 +313,7 @@
 						//add destination number condition
 						$dialplan_detail_order += 10;
 						$sql .= ($conditions_exist) ? ", ( " : "( ";
-						if ($domain_uuid == 0) {
+						if (strlen($domain_uuid) == 0) {
 							$sql .= "null, ";
 						}
 						else {
@@ -334,7 +334,7 @@
 					//add condition to query string
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					if ($domain_uuid == 0) {
+					if (strlen($domain_uuid) == 0) {
 						$sql .= "null, ";
 					}
 					else {
@@ -381,7 +381,7 @@
 								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
 									$dialplan_detail_order += 10;
 									$sql .= ", ( ";
-									if ($domain_uuid == 0) {
+									if (strlen($domain_uuid) == 0) {
 										$sql .= "null, ";
 									}
 									else {
@@ -416,7 +416,7 @@
 					//add group action to query
 					$dialplan_detail_order += 10;
 					$sql .= ", ( ";
-					if ($domain_uuid == 0) {
+					if (strlen($domain_uuid) == 0) {
 						$sql .= "null, ";
 					}
 					else {
@@ -449,7 +449,7 @@
 			//add destination number condition
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			if ($domain_uuid == 0) {
+			if (strlen($domain_uuid) == 0) {
 				$sql .= "null, ";
 			}
 			else {
@@ -469,7 +469,7 @@
 			//add anti-action
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
-			if ($domain_uuid == 0) {
+			if (strlen($domain_uuid) == 0) {
 				$sql .= "null, ";
 			}
 			else {
@@ -758,7 +758,7 @@
 
 					case 'time-of-day': //time of day
 						for (h = 0; h <= 23; h++) {
-							for (m = 0; m <= 55; m += 5) {
+							for (m = 0; m <= 59; m += 1) {
 								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
 								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 							}
@@ -960,8 +960,6 @@ if ($action == 'update') {
 				//convert minute-of-day to time-of-day values
 				if ($cond_var == 'minute-of-day') {
 					$cond_var = 'time-of-day';
-					--$cond_val_start;
-					--$cond_val_stop;
 					$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
 					if ($cond_val_stop != '') {
 						$cond_val_stop = number_pad(floor($cond_val_stop / 60),2).":".number_pad(fmod($cond_val_stop, 60),2);

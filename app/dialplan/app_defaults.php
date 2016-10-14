@@ -93,6 +93,16 @@
 			unset($sql);
 	}
 
+//add xml for each dialplan where the dialplan xml is empty
+	if ($domains_processed == 1) {
+		$dialplans = new dialplan;
+		$dialplans->source = "details";
+		$dialplans->destination = "database";
+		$dialplans->is_empty = "dialplan_xml";
+		$array = $dialplans->xml();
+		//print_r($array);
+	}
+
 //add not found dialplan to inbound routes
 	/*
 	if ($domains_processed == 1) {
@@ -125,4 +135,5 @@
 		}
 	}
 	*/
+
 ?>

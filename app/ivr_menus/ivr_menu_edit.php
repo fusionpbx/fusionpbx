@@ -52,6 +52,9 @@
 	if (strlen($_REQUEST["id"]) > 0) {
 		$action = "update";
 		$ivr_menu_uuid = check_str($_REQUEST["id"]);
+		if (strlen($_REQUEST["ivr_menu_uuid"]) > 0) {
+			$ivr_menu_uuid = $_REQUEST["ivr_menu_uuid"];
+		}
 	}
 	else {
 		$action = "add";
@@ -60,7 +63,7 @@
 //get total ivr menu count from the database, check limit, if defined
 	if ($action == 'add') {
 		if ($_SESSION['limit']['ivr_menus']['numeric'] != '') {
-			$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql = "select count(ivr_menu_uuid) as num_rows from v_ivr_menus where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
 				$prep_statement->execute();
@@ -79,6 +82,7 @@
 
 //get http post values and set them to php variables
 	if (count($_POST) > 0) {
+
 		//get ivr menu
 			$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
 			$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
@@ -102,6 +106,7 @@
 			$ivr_menu_cid_prefix = check_str($_POST["ivr_menu_cid_prefix"]);
 			$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
 			$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
+			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 
 		//process the values
 			$ivr_menu_exit_action = check_str($_POST["ivr_menu_exit_action"]);
@@ -114,15 +119,11 @@
 			if (strlen($ivr_menu_option_action) == 0) {
 				$ivr_menu_option_action = "menu-exec-app";
 			}
+
 	}
 
 //process the http data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-
-		//get the id
-			if ($action == "update") {
-				$ivr_menu_uuid = check_str($_POST["ivr_menu_uuid"]);
-			}
 
 		//check for all required data
 			$msg = '';
@@ -183,10 +184,18 @@
 						unset($_POST["ivr_menu_options"][$x]);
 					}
 					else {
-						//seperate the action and the param
-						$options_array = explode(":", $row["ivr_menu_option_param"]);
-						$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = array_shift($options_array);
-						$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = join(':', $options_array);
+						//check if the option param is numeric
+						if (is_numeric($row["ivr_menu_option_param"])) {
+							//add the ivr menu syntax
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = "menu-exec-app";
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = "transfer ".$row["ivr_menu_option_param"]." XML ".$_SESSION['domain_name'];
+						}
+						else {
+							//seperate the action and the param
+							$options_array = explode(":", $row["ivr_menu_option_param"]);
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_action"] = array_shift($options_array);
+							$_POST["ivr_menu_options"][$x]["ivr_menu_option_param"] = join(':', $options_array);
+						}
 
 						//add the domain_uuid
 						if (strlen($row["domain_uuid"]) == 0) {
@@ -208,24 +217,96 @@
 						exit;
 					}
 
+				//add a uuid to ivr_menu_uuid if it is empty
+					if (strlen($ivr_menu_uuid) == 0) {
+						$ivr_menu_uuid = uuid();
+						$_POST["ivr_menu_uuid"] = $ivr_menu_uuid;
+					}
+
+				//add a uuid to dialplan_uuid if it is empty
+					if (strlen($dialplan_uuid) == 0) {
+						$dialplan_uuid = uuid();
+						$_POST["dialplan_uuid"] = $dialplan_uuid;
+					}
+
+				//build the xml dialplan
+					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
+					$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
+					$dialplan_xml .= "		<action application=\"".$ivr_menu_exit_app."\" data=\"".$ivr_menu_exit_data."\"/>\n";
+					$dialplan_xml .= "	</condition>\n";
+					$dialplan_xml .= "</extension>\n";
+
+				//build the dialplan array
+					$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
+					$dialplan["dialplan_uuid"] = $dialplan_uuid;
+					$dialplan["dialplan_name"] = $ivr_menu_name;
+					$dialplan["dialplan_number"] = $ivr_menu_extension;
+					$dialplan["dialplan_context"] = $_SESSION["context"];
+					$dialplan["dialplan_continue"] = "false";
+					$dialplan["dialplan_xml"] = $dialplan_xml;
+					$dialplan["dialplan_order"] = "101";
+					$dialplan["dialplan_enabled"] = "true";
+					$dialplan["dialplan_description"] = $ivr_menu_description;
+					$dialplan["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
+
+				//prepare the array
+					$array['ivr_menus'][] = $_POST;
+					$array['dialplans'][] = $dialplan;
+
+				//add the dialplan permission
+					$p = new permissions;
+					$p->add("dialplan_add", "temp");
+					$p->add("dialplan_edit", "temp");
+
+				//save to the data
+					$orm = new orm;
+					//$orm->name('ivr_menus');
+					$orm->app_name = 'ivr_menus';
+					$orm->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+					if (strlen($ivr_menu_uuid) > 0) {
+						$orm->uuid($ivr_menu_uuid);
+					}
+					$orm->save($array);
+					$message = $orm->message;
+
+				//remove the temporary permission
+					$p->delete("dialplan_add", "temp");
+					$p->delete("dialplan_edit", "temp");
+
 				//save the ivr menu
-					$ivr = new ivr_menu;
-					$ivr->domain_uuid = $_SESSION["domain_uuid"];
-					if (strlen($ivr_menu_uuid ) > 0) {
-						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-					}
-					$response = $ivr->save($_POST);
-					if (strlen($response['uuid']) > 0) {
-						$ivr_menu_uuid = $response['uuid'];
-					}
+					//$ivr = new ivr_menu;
+					//$ivr->domain_uuid = $_SESSION["domain_uuid"];
+					//if (strlen($ivr_menu_uuid ) > 0) {
+					//	$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+					//}
+					//$response = $ivr->save($_POST);
+					//if (strlen($response['uuid']) > 0) {
+					//	$ivr_menu_uuid = $response['uuid'];
+					//}
 
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
 
+				//set the add message
+					if ($action == "add" && permission_exists('ivr_menu_add')) {
+						$_SESSION['message'] = $text['message-add'];
+					}
+
+				//set the update message
+					if ($action == "update" && permission_exists('ivr_menu_edit')) {
+						$_SESSION['message'] = $text['message-update'];
+					}
+
 				//redirect the user
-					$_SESSION["message"] = $text['message-update'];
 					header("Location: ivr_menu_edit.php?id=".$ivr_menu_uuid);
 					return;
 
