@@ -381,6 +381,13 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
+					$dialplan_detail_tag = 'condition'; //condition, action, antiaction	
+					$dialplan_detail_type = '${user_exists}';
+					$dialplan_detail_data = 'false';
+					$dialplan_detail_order = '004';
+					$dialplan_detail_group = '0';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
 					$dialplan_detail_tag = 'condition'; //condition, action, antiaction
 					$dialplan_detail_type = 'destination_number';
 					$dialplan_detail_data = $dialplan_expression;
