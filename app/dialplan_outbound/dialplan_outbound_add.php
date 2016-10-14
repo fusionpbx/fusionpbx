@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,16 +26,20 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 	Gill Abada <ga@steadfasttelecom.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('outbound_route_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('outbound_route_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -154,7 +158,7 @@ else {
 	}
 
 //process the http form values
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//check for all required data
 			if (strlen($gateway) == 0) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
 			//if (strlen($gateway_2) == 0) { $msg .= "Please provide: Alternat 1<br>\n"; }
@@ -179,7 +183,7 @@ else {
 				return;
 			}
 
-		if (strlen(trim($_POST['dialplan_expression']))> 0) {
+		if (strlen(trim($_POST['dialplan_expression'])) > 0) {
 
 			$tmp_array = explode("\n", $_POST['dialplan_expression']);
 
@@ -550,6 +554,13 @@ else {
 				} //if strlen
 			} //end for each
 		}
+
+		//update the dialplan xml
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->xml();
 
 		//clear the cache
 			$cache = new cache;
