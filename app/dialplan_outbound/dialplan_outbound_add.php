@@ -381,7 +381,8 @@
 						$db->exec(check_sql($sql));
 						unset($sql);
 
-					$dialplan_detail_tag = 'condition'; //condition, action, antiaction					$dialplan_detail_type = '${user_exists}';
+					$dialplan_detail_tag = 'condition'; //condition, action, antiaction	
+					$dialplan_detail_type = '${user_exists}';
 					$dialplan_detail_data = 'false';
 					$dialplan_detail_order = '004';
 					$dialplan_detail_group = '0';
