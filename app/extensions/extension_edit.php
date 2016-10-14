@@ -79,9 +79,7 @@
 			$password = check_str($_POST["password"]);
 
 			// server verification on account code
-			if (if_group("superadmin")) {
-				$accountcode = $_POST["accountcode"];
-			}
+			$accountcode = $_POST["accountcode"];
 
 			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
@@ -912,6 +910,19 @@
 		echo "    ".$text['description-voicemail_password']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+	}
+
+	if (if_group("superadmin") || if_group("admin")) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-accountcode']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='accountcode' id='accountcode' maxlength='255' value='$accountcode'>\n";
+			echo "    <br />\n";
+			echo "    ".$text['description-accountcode']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";	
 	}
 
 	if (permission_exists('device_edit') && $action == "update") {
