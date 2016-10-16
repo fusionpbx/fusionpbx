@@ -309,15 +309,15 @@
 					$p->add("dialplan_edit", "temp");
 
 				//save to the data
-					$orm = new orm;
-					//$orm->name('ring_groups');
-					$orm->app_name = 'ring_groups';
-					$orm->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+					$database = new database;
+					//$d->name('ring_groups');
+					$database->app_name = 'ring_groups';
+					$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 					if (strlen($ring_group_uuid) > 0) {
-						$orm->uuid($ring_group_uuid);
+						$database->uuid($ring_group_uuid);
 					}
-					$orm->save($array);
-					$message = $orm->message;
+					$database->save($array);
+					$message = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", "temp");
