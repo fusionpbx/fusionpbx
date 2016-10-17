@@ -447,42 +447,41 @@
 						digit_timeout = 5000;
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", prompt_audio_file, "", "\\d+");
 					end
-				if (pin_number ~= "") then
-					sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
-						WHERE r.domain_uuid = ']] .. domain_uuid ..[['
-						AND r.meeting_uuid = m.meeting_uuid
-						AND m.domain_uuid = ']] .. domain_uuid ..[['
-						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
-						AND r.enabled = 'true'
-						AND m.enabled = 'true'
-						AND (
-								( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
-								( r.start_datetime = '' OR r.start_datetime is null )
-							)
-						AND (
-								( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
-								( r.stop_datetime = '' OR r.stop_datetime is null )
-							) ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+				--use the pin_number to find the conference room
+					if (pin_number ~= "") then
+						sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
+							WHERE r.domain_uuid = ']] .. domain_uuid ..[['
+							AND r.meeting_uuid = m.meeting_uuid
+							AND m.domain_uuid = ']] .. domain_uuid ..[['
+							AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
+							AND r.enabled = 'true'
+							AND m.enabled = 'true'
+							AND (
+									( r.start_datetime <> '' AND r.start_datetime is not null AND r.start_datetime <= ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+									( r.start_datetime = '' OR r.start_datetime is null )
+								)
+							AND (
+									( r.stop_datetime <> '' AND r.stop_datetime is not null AND r.stop_datetime > ']] .. os.date("%Y-%m-%d %X") .. [[' ) OR
+									( r.stop_datetime = '' OR r.stop_datetime is null )
+								) ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(row)
+							conference_room_uuid = string.lower(row["conference_room_uuid"]);
+						end);
 					end
-					status = dbh:query(sql, function(row)
-						conference_room_uuid = string.lower(row["conference_room_uuid"]);
-					end);
-				end
-				if (conference_room_uuid == nil) then
-					return nil;
-				else
-					return pin_number;
-				end
+				--if the conference room was not found then return nil
+					if (conference_room_uuid == nil) then
+						return nil;
+					else
+						return pin_number;
+					end
 			end
 
 		--get the pin
 			pin_number = session:getVariable("pin_number");
-			if (not pin_number) then
-				pin_number = nil;
-				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
-			end
+			pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			if (pin_number == nil) then
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
