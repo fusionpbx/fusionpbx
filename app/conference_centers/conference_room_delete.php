@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,7 @@
 //delete the data
 	if (strlen($id) > 0) {
 		//get the meeting_uuid
-			if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+			if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 				$conference_room_uuid = check_str($_GET["id"]);
 				$sql = "select * from v_conference_rooms ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -63,29 +63,30 @@
 				}
 				unset ($prep_statement);
 			}
-	
+			//echo "meeting_uuid: ".$meeting_uuid."<br />\n";
+
 		//delete the conference session
 			$sql = "delete from v_conference_rooms ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_room_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$sql .= "and conference_room_uuid = '$id'; ";
+			//echo $sql."<br />\n";
+			$db->exec(check_sql($sql));
 			unset($sql);
 	
 		//delete the meeting users
 			$sql = "delete from v_meeting_users ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and meeting_uuid = '$meeting_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$sql .= "and meeting_uuid = '$meeting_uuid'; ";
+			//echo $sql."<br />\n";
+			$db->exec(check_sql($sql));
 			unset($sql);
 	
 		//delete the meetings
 			$sql = "delete from v_meetings ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and meeting_uuid = '$meeting_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$sql .= "and meeting_uuid = '$meeting_uuid'; ";
+			//echo $sql."<br />\n";
+			$db->exec(check_sql($sql));
 			unset($sql);
 	}
 
