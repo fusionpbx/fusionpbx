@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -72,7 +72,7 @@
 			//echo $sql."<br />\n";
 			$db->exec(check_sql($sql));
 			unset($sql);
-	
+
 		//delete the meeting users
 			$sql = "delete from v_meeting_users ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -80,7 +80,7 @@
 			//echo $sql."<br />\n";
 			$db->exec(check_sql($sql));
 			unset($sql);
-	
+
 		//delete the meetings
 			$sql = "delete from v_meetings ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
