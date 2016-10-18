@@ -260,12 +260,12 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$orm = new orm;
-			$orm->name('call_center_queues');
-			$orm->app_name = 'call_centers';
-			$orm->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			$orm->save($array);
-			$message = $orm->message;
+			$database = new database;
+			$database->name('call_center_queues');
+			$database->app_name = 'call_centers';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+			$database->save($array);
+			$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
