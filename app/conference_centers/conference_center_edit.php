@@ -145,15 +145,15 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$orm = new orm;
-			//$orm->name('conference_centers');
-			$orm->app_name = "conference_centers";
-			$orm->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
+			$database = new database;
+			//$database->name('conference_centers');
+			$database->app_name = "conference_centers";
+			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			if (strlen($conference_center_uuid) > 0) {
-				$orm->uuid($conference_center_uuid);
+				$database->uuid($conference_center_uuid);
 			}
-			$orm->save($array);
-			$message = $orm->message;
+			$database->save($array);
+			$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
