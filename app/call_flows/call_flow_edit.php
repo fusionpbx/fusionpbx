@@ -194,15 +194,15 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$orm = new orm;
-			//$orm->name('call_flows');
-			$orm->app_name = 'call_flows';
-			$orm->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database = new database;
+			//$database->name('call_flows');
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 			if (strlen($call_flow_uuid) > 0) {
-				$orm->uuid($call_flow_uuid);
+				$database->uuid($call_flow_uuid);
 			}
-			$orm->save($array);
-			$message = $orm->message;
+			$database->save($array);
+			$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
