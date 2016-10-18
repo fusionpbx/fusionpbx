@@ -229,15 +229,15 @@
 			$array['users'][0]['user_status'] = $agent_status;
 
 		//save to the data
-			$orm = new orm;
+			$database = new database;
 			//$orm->name('call_center_agents');
-			$orm->app_name = 'call_center_agents';
-			$orm->app_uuid = null;
+			$database->app_name = 'call_center_agents';
+			$database->app_uuid = null;
 			if (strlen($call_center_agent_uuid) > 0) {
-				$orm->uuid($call_center_agent_uuid);
+				$database->uuid($call_center_agent_uuid);
 			}
-			$orm->save($array);
-			$message = $orm->message;
+			$database->save($array);
+			$message = $database->message;
 
 		//syncrhonize configuration
 			save_call_center_xml();
