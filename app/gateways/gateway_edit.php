@@ -230,15 +230,15 @@
 					}
 
 				//save to the data
-					$orm = new orm;
-					//$orm->name('gateways');
-					$orm->app_name = 'gateways';
-					$orm->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
+					$database = new database;
+					//$database->name('gateways');
+					$database->app_name = 'gateways';
+					$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
 					if (strlen($gateway_uuid) > 0) {
-						$orm->uuid($gateway_uuid);
+						$database->uuid($gateway_uuid);
 					}
-					$orm->save($array);
-					$message = $orm->message;
+					$database->save($array);
+					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
 					if ($enabled != 'true' && $_SESSION['switch']['sip_profiles']['dir'] != '') {
