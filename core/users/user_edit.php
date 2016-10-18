@@ -420,11 +420,11 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		$p->add("user_edit", "temp");
 
 	//save the data
-		$orm = new orm;
-		$orm->app_name = 'users';
-		$orm->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
-		$orm->save($array);
-		//$message = $orm->message;
+		$database = new database;
+		$database->app_name = 'users';
+		$database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
+		$database->save($array);
+		//$message = $database->message;
 
 	//remove the temporary permission
 		$p->delete("user_setting_add", "temp");
