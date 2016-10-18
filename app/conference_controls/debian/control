@@ -1,0 +1,12 @@
+Source: fusionpbx-app-conference-controls
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-conference-control
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-conference-controls:  Conference Controls conference rooms
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
