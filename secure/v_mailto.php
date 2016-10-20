@@ -189,6 +189,22 @@
 			default: $mail->IsSMTP(); break;
 		}
 	} else $mail->IsSMTP();
+
+// optional bypass TLS certificate check e.g. for self-signed certificates
+        if (isset($_SESSION['email']['smtp_ignore_bad_certificate'])) {
+                if ($_SESSION['email']['smtp_ignore_bad_certificate']['boolean'] == "true") {
+
+                        // this is needed to work around TLS certificate problems
+                        $mail->SMTPOptions = array(
+                                'ssl' => array(
+                                'verify_peer' => false,
+                                'verify_peer_name' => false,
+                                'allow_self_signed' => true
+                                )
+                        );
+                }
+        }
+
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
 	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
