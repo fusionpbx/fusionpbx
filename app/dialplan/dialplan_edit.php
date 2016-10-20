@@ -171,7 +171,6 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				$database = new database;
-				$database->name('dialplans');
 				$database->app_name = 'dialplans';
 				$database->app_uuid = $app_uuid;
 				$database->uuid($dialplan_uuid);
