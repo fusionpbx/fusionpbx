@@ -302,7 +302,6 @@
 				//save the device
 					if ($save) {
 						$database = new database;
-						$database->name('devices');
 						$database->app_name = 'devices';
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_uuid) > 0) {
