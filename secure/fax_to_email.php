@@ -515,6 +515,29 @@ if(!function_exists('fax_split_dtmf')) {
 		//prepare the mail object
 			$mail = new PHPMailer();
 			$mail->IsSMTP(); // set mailer to use SMTP
+		
+		//use settings for smtp port override if present
+			if (isset($_SESSION['email']['smtp_port'])) {
+				$mail->Port = (int)$_SESSION['email']['smtp_port']['numeric'];
+			} else {
+				$mail->Port = 0;
+			}
+
+		//optional ignore bad certificates
+			if (isset($_SESSION['email']['smtp_ignore_bad_certificate'])) {
+				if ($_SESSION['email']['smtp_ignore_bad_certificate']['boolean'] == "true") {
+
+					// this works around TLS certificate problems e.g. self-signed certificates
+					$mail->SMTPOptions = array(
+						'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+						)
+					);
+				}
+			}
+		
 
 			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
 				$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
