@@ -102,7 +102,18 @@ include "root.php";
 					}
 					$this->path = realpath($this->path);
 					if (file_exists($this->path.'/'.$this->db_name)) {
-						$this->db = new PDO('sqlite:'.$this->path.'/'.$this->db_name); //sqlite 3
+						//connect to the database
+							$this->db = new PDO('sqlite:'.$this->path.'/'.$this->db_name); //sqlite 3
+						//enable foreign key constraints
+							$this->db->query('PRAGMA foreign_keys = ON;');
+						//add additional functions to SQLite so that they are accessible inside SQL
+							//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
+							$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
+							$this->db->sqliteCreateFunction('unix_timestamp', 'php_unix_timestamp', 1);
+							$this->db->sqliteCreateFunction('now', 'php_now', 0);
+							$this->db->sqliteCreateFunction('sqlitedatatype', 'php_sqlite_data_type', 2);
+							$this->db->sqliteCreateFunction('strleft', 'php_left', 2);
+							$this->db->sqliteCreateFunction('strright', 'php_right', 2);
 					}
 					else {
 						echo "not found";
@@ -1340,64 +1351,66 @@ include "root.php";
 		} //class database
 	} //!class_exists
 
-if (!function_exists('php_md5')) {
-	function php_md5($string) {
-		return md5($string);
+//addtitional functions for sqlite
+	if (!function_exists('php_md5')) {
+		function php_md5($string) {
+			return md5($string);
+		}
 	}
-}
 
-if (!function_exists('php_unix_time_stamp')) {
-	function php_unix_time_stamp($string) {
-		return strtotime($string);
+	if (!function_exists('php_unix_time_stamp')) {
+		function php_unix_time_stamp($string) {
+			return strtotime($string);
+		}
 	}
-}
 
-if (!function_exists('php_now')) {
-	function php_now() {
-		return date("Y-m-d H:i:s");
+	if (!function_exists('php_now')) {
+		function php_now() {
+			return date("Y-m-d H:i:s");
+		}
 	}
-}
 
-if (!function_exists('php_left')) {
-	function php_left($string, $num) {
-		return substr($string, 0, $num);
+	if (!function_exists('php_left')) {
+		function php_left($string, $num) {
+			return substr($string, 0, $num);
+		}
 	}
-}
 
-if (!function_exists('php_right')) {
-	function php_right($string, $num) {
-		return substr($string, (strlen($string)-$num), strlen($string));
+	if (!function_exists('php_right')) {
+		function php_right($string, $num) {
+			return substr($string, (strlen($string)-$num), strlen($string));
+		}
 	}
-}
 
-//example usage
+
 /*
-//find
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->domain_uuid = $_SESSION["domain_uuid"];
-	$database->type = $db_type;
-	$database->table = "v_extensions";
-	$where[0]['name'] = 'domain_uuid';
-	$where[0]['value'] = $_SESSION["domain_uuid"];
-	$where[0]['operator'] = '=';
-	$database->where = $where;
-	$order_by[0]['name'] = 'extension';
-	$database->order_by = $order_by;
-	$database->order_type = 'desc';
-	$database->limit = '2';
-	$database->offset = '0';
-	$database->find();
-	print_r($database->result);
-//insert
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->domain_uuid = $_SESSION["domain_uuid"];
-	$database->type = $db_type;
-	$database->table = "v_ivr_menus";
-	$fields[0]['name'] = 'domain_uuid';
-	$fields[0]['value'] = $_SESSION["domain_uuid"];
-	$database->add();
-	print_r($database->result);
+//example usage
+	//find
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->domain_uuid = $_SESSION["domain_uuid"];
+		$database->type = $db_type;
+		$database->table = "v_extensions";
+		$where[0]['name'] = 'domain_uuid';
+		$where[0]['value'] = $_SESSION["domain_uuid"];
+		$where[0]['operator'] = '=';
+		$database->where = $where;
+		$order_by[0]['name'] = 'extension';
+		$database->order_by = $order_by;
+		$database->order_type = 'desc';
+		$database->limit = '2';
+		$database->offset = '0';
+		$database->find();
+		print_r($database->result);
+	//insert
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->domain_uuid = $_SESSION["domain_uuid"];
+		$database->type = $db_type;
+		$database->table = "v_ivr_menus";
+		$fields[0]['name'] = 'domain_uuid';
+		$fields[0]['value'] = $_SESSION["domain_uuid"];
+		$database->add();
+		print_r($database->result);
 */
 ?>
