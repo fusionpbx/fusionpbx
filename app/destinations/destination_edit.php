@@ -379,15 +379,15 @@
 			$p->add("dialplan_detail_edit", 'temp');
 
 		//save the dialplan
-			$orm = new orm;
-			$orm->name('dialplans');
-			$orm->app_name = 'dialplans';
-			$orm->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+			$database = new database;
+			$database->name('dialplans');
+			$database->app_name = 'dialplans';
+			$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 			if (isset($dialplan["dialplan_uuid"])) {
-				$orm->uuid($dialplan["dialplan_uuid"]);
+				$database->uuid($dialplan["dialplan_uuid"]);
 			}
-			$orm->save($array);
-			$dialplan_response = $orm->message;
+			$database->save($array);
+			$dialplan_response = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", 'temp');

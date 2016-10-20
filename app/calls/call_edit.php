@@ -234,11 +234,11 @@
 			}
 
 		//save the data
-			$orm = new orm;
-			$orm->app_name = 'call_routing';
-			$orm->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-			$orm->save($array);
-			//$message = $orm->message;
+			$database = new database;
+			$database->app_name = 'call_routing';
+			$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+			$database->save($array);
+			//$message = $database->message;
 
 		//delete empty destination records
 			if (is_array($follow_me_delete_uuids) && sizeof($follow_me_delete_uuids) > 0) {

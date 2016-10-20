@@ -492,12 +492,12 @@
 				}
 
 			//save to the data
-				$orm = new orm;
-				//$orm->name('extensions');
-				$orm->app_name = 'extensions';
-				$orm->app_uuid = null;
-				$orm->save($array);
-				$message = $orm->message;
+				$database = new database;
+				//$database->name('extensions');
+				$database->app_name = 'extensions';
+				$database->app_uuid = null;
+				$database->save($array);
+				$message = $database->message;
 				//echo "<pre>".print_r($message, true)."<pre>\n";
 				//exit;
 
