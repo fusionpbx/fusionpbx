@@ -380,7 +380,6 @@
 
 		//save the dialplan
 			$database = new database;
-			$database->name('dialplans');
 			$database->app_name = 'dialplans';
 			$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 			if (isset($dialplan["dialplan_uuid"])) {
