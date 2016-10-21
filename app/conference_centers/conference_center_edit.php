@@ -146,7 +146,6 @@
 
 		//save to the data
 			$database = new database;
-			//$database->name('conference_centers');
 			$database->app_name = "conference_centers";
 			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			if (strlen($conference_center_uuid) > 0) {
