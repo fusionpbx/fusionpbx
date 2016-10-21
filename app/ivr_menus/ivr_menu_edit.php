@@ -267,7 +267,6 @@
 
 				//save to the data
 					$database = new database;
-					//$database->name('ivr_menus');
 					$database->app_name = 'ivr_menus';
 					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					if (strlen($ivr_menu_uuid) > 0) {
