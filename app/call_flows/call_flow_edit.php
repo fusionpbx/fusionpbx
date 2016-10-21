@@ -195,7 +195,6 @@
 
 		//save to the data
 			$database = new database;
-			//$database->name('call_flows');
 			$database->app_name = 'call_flows';
 			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 			if (strlen($call_flow_uuid) > 0) {
