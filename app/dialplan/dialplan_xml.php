@@ -84,15 +84,14 @@
 			$array['dialplans'][$x]["dialplan_xml"] =  $_REQUEST['dialplan_xml'];;
 
 		//save to the data
-			$orm = new orm;
-			//$orm->name('ring_groups');
-			$orm->app_name = 'dialplans';
-			$orm->app_uuid = $app_uuid;
+			$database = new database;
+			$database->app_name = 'dialplans';
+			$database->app_uuid = $app_uuid;
 			//if (strlen($dialplan_uuid) > 0) {
-			//	$orm->uuid($dialplan_uuid);
+			//	$database->uuid($dialplan_uuid);
 			//}
-			$orm->save($array);
-			$message = $orm->message;
+			$database->save($array);
+			$message = $database->message;
 			
 		//debug info
 			//echo "<pre>\n";

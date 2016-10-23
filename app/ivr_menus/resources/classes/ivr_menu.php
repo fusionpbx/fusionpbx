@@ -173,15 +173,14 @@ include "root.php";
 				$data['ivr_menus'][] = $array;
 
 			//save the ivr_menus
-				$orm = new orm;
-				$orm->name('ivr_menus');
-				$orm->app_name = 'ivr_menus';
-				$orm->app_uuid = $this->app_uuid;
+				$database = new database;
+				$database->app_name = 'ivr_menus';
+				$database->app_uuid = $this->app_uuid;
 				if (strlen($this->ivr_menu_uuid) > 0) {
-					$orm->uuid($this->ivr_menu_uuid);
+					$database->uuid($this->ivr_menu_uuid);
 				}
-				$result = $orm->save($data);
-				$this->ivr_menu_uuid = $orm->message['uuid'];
+				$result = $database->save($data);
+				$this->ivr_menu_uuid = $database->message['uuid'];
 
 			//update dialplan with the ivr_menu_uuid
 				if ($action == "add") {
@@ -200,7 +199,7 @@ include "root.php";
 				}
 				
 			//return the result
-				return $orm->message;
+				return $database->message;
 		}
 
 		function delete() {
@@ -461,12 +460,12 @@ include "root.php";
 				$p->add("dialplan_detail_edit", 'temp');
 
 			//save the dialplan
-				$orm = new orm;
-				$orm->name('dialplans');
-				$orm->app_name = 'ivr_menus';
-				$orm->app_uuid = $this->app_uuid;
-				$orm->save($array);
-				$response = $orm->message;
+				$database = new database;
+				$database->name('dialplans');
+				$database->app_name = 'dialplans';
+				$database->app_uuid = $this->app_uuid;
+				$database->save($array);
+				$response = $database->message;
 				if (strlen($response['uuid']) > 0) {
 					$this->dialplan_uuid = $response['uuid'];
 				}

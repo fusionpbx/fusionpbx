@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,7 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_uuid'] = 'c55b28df-0eba-4e8f-a13b-022d5dfd8d22';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'time_zone';
 		$array[$x]['default_setting_name'] = 'name';
@@ -36,6 +37,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '500f7a88-e288-4a80-9f0a-b696f9f33cd6';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'language';
 		$array[$x]['default_setting_name'] = 'code';
@@ -43,6 +45,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'c338e26c-0dd5-4ad5-a055-82e2c5ed3f6f';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'bridge';
 		$array[$x]['default_setting_name'] = 'text';
@@ -50,6 +53,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'outbound,loopback,lcr';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '48874632-421d-4829-a6b7-0695c589d85f';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'paging';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -57,6 +61,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set the maximum number of records displayed per page. (Default: 50)';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '57d81b35-bc24-4e92-8436-4335ab5e9d0b';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_length';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -64,6 +69,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the required/default length for user/system generated passwords.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '0fa21a56-7515-4c65-b5f8-270cc24ea375';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_number';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -71,6 +77,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set whether to require at least one number in user passwords.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'd5f9acbd-857c-42eb-9e9a-92a850fcb734';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_lowercase';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -78,6 +85,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set whether to require at least one lowecase letter in user passwords.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '256b0d87-a43e-4618-b96b-541e191879c7';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_uppercase';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -85,6 +93,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set whether to require at least one uppercase letter in user passwords.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '4209ff1f-6ea8-4b77-81be-bd75e8670785';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_special';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -92,6 +101,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Set whether to require at least one special character in user passwords.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '718b1641-fa3c-4861-b1f3-40635c951888';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'password_strength';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -99,6 +109,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '33914c55-9081-4b95-b62e-f1a500088d78';
 		$array[$x]['default_setting_category'] = 'security';
 		$array[$x]['default_setting_subcategory'] = 'session_rotate';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -106,6 +117,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Whether to regenerate the session ID.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '97a2410b-cfc8-4194-9172-dd5b0acfa9f3';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_auth';
 		$array[$x]['default_setting_name'] = 'var';
@@ -113,6 +125,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '9f4a1209-72ba-435b-90e1-4cba48d74509';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'method';
 		$array[$x]['default_setting_name'] = 'text';
@@ -120,6 +133,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'smtp|sendmail|mail|qmail';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '8efff742-eea4-493d-abeb-064457586e26';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_port';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -127,6 +141,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'use non-default port if enabled and non-zero';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '16f40b7b-293d-4308-81f4-772e0ea4c536';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_from';
 		$array[$x]['default_setting_name'] = 'var';
@@ -134,6 +149,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '2976da3a-d8e5-4e25-9f16-463dfa256f4d';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_from_name';
 		$array[$x]['default_setting_name'] = 'var';
@@ -141,6 +157,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '0bd788c1-3262-4336-92f4-ef7869062380';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_host';
 		$array[$x]['default_setting_name'] = 'var';
@@ -148,6 +165,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '49e778a6-22a7-418f-84b9-bfa27e38f2e5';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_username';
 		$array[$x]['default_setting_name'] = 'var';
@@ -155,6 +173,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '8a5ae059-9bf3-4d6d-ae92-b6cb39766d0a';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_password';
 		$array[$x]['default_setting_name'] = 'var';
@@ -162,6 +181,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'fd7441d5-d348-4660-8c0b-6413220c680d';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
 		$array[$x]['default_setting_name'] = 'var';
@@ -169,6 +189,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '8a07ab78-f386-482c-85dd-7ce8127597d6';
 		$array[$x]['default_setting_category'] = 'login';
 		$array[$x]['default_setting_subcategory'] = 'password_reset_key';
 		$array[$x]['default_setting_name'] = 'text';
@@ -176,6 +197,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Display a Reset Password link on the login box (requires smtp_host be defined).';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '962ac32c-74ce-4cce-b1d9-89f4d921493d';
 		$array[$x]['default_setting_category'] = 'login';
 		$array[$x]['default_setting_subcategory'] = 'domain_name_visible';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -183,6 +205,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Displays a domain input or select box (if domain_name array defined) on the login box.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '796508ee-894d-4566-bb7f-e1269a6e0e26';
 		$array[$x]['default_setting_category'] = 'login';
 		$array[$x]['default_setting_subcategory'] = 'domain_name';
 		$array[$x]['default_setting_name'] = 'array';
@@ -190,6 +213,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Domain select option displayed on the login box.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'e20ff5fb-cc63-474b-90f8-f472d2247317';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -197,6 +221,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '39bdd07e-dca5-4aea-949b-72286bd66fe4';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -204,6 +229,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '49dbc472-7c68-46b7-84da-986b3e925850';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -211,6 +237,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '08095792-7fa7-4d6d-9fc4-d1ba8b4f80b7';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -218,6 +245,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Limits block for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'd8ee1c50-0c3f-41b8-879a-d0b9c58e4479';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -225,6 +253,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Counts block for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '5d96872d-7828-489e-b87a-0e7b75cf1a84';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -232,6 +261,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'f7ca9dc1-b06e-4477-94c6-c660792ebe6c';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'admin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -239,6 +269,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the admin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '610cfc85-7a17-4c96-a7c7-a83054710bc1';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -246,6 +277,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'e5064608-707a-456d-8b1d-d658e7f1b8f8';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -253,6 +285,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'da9dc1a2-5d10-4fa4-82f9-0baebc1f8222';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -260,6 +293,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'b15264cf-9200-458f-a71a-5967ee7118a7';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -267,6 +301,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Domain Limits block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '3aa6b8d3-bd6d-4f4f-9a62-104f3452f31b';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -274,6 +309,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard System Counts block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '13387e37-bf0a-43ca-a24f-94339bd61208';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -281,6 +317,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard System Status block for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '8ca6fc59-9243-4a4f-9358-006469cf828a';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -288,6 +325,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '78bb45d5-8108-4bed-aced-d764575531dc';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'superadmin';
 		$array[$x]['default_setting_name'] = 'array';
@@ -295,6 +333,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the superadmin group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'd2bf2781-18c2-44a4-bdf4-68516e68d69c';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'user';
 		$array[$x]['default_setting_name'] = 'array';
@@ -302,6 +341,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Voicemail block for users in the users group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '22f90e1b-112c-4842-af77-376226e5aa46';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'user';
 		$array[$x]['default_setting_name'] = 'array';
@@ -309,6 +349,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Missed Calls block for users in the users group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'f1bf3d93-29ce-4c3e-8e91-e8ec36d1220b';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'user';
 		$array[$x]['default_setting_name'] = 'array';
@@ -316,6 +357,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Recent Calls block for users in the users group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '8f74f69b-58f1-4040-9d4e-e949d384a915';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'user';
 		$array[$x]['default_setting_name'] = 'array';
@@ -323,6 +365,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the users group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'f4e9247b-bfd1-40ed-9a1e-920e7d9ed2bb';
 		$array[$x]['default_setting_category'] = 'dashboard';
 		$array[$x]['default_setting_subcategory'] = 'user';
 		$array[$x]['default_setting_name'] = 'array';
@@ -330,6 +373,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the users group.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '1cf61dea-42b5-4799-b9fa-f2c3bd29e933';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'voicemail_file';
 		$array[$x]['default_setting_name'] = 'text';
@@ -337,6 +381,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Define whether to attach voicemail files to email notifications, or only include a link.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '4723fe3b-e7ec-409e-a4a8-15ae274253fb';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'keep_local';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -344,6 +389,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Define whether to keep voicemail files on the local system after sending attached via email.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '9a4879c0-87ac-42e5-99f2-2ca2c77dbd98';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'storage_type';
 		$array[$x]['default_setting_name'] = 'text';
@@ -351,6 +397,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Define which storage type (base_64 stores in the database).';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '690a36a8-b6d3-47ea-8780-1af609c1966c';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'message_max_length';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -358,6 +405,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail (in seconds).';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'bfe802b1-fcad-41a3-9da2-6b0efdb0c05f';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'password_length';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -365,6 +413,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'The default length of characters in a voicemail password.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'b127ca03-c682-4d71-b412-4e50f1aca339';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'greeting_max_length';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -372,6 +421,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Maximum length of a voicemail greeting (in seconds).';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'dd09f9d8-6662-4270-9dac-b87191b77012';
 		$array[$x]['default_setting_category'] = 'voicemail';
 		$array[$x]['default_setting_subcategory'] = 'display_domain_name';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -392,7 +442,7 @@ if ($domains_processed == 1) {
 			$found = false;
 			$missing[$x] = $setting;
 			foreach ($default_settings as $row) {
-				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
 					$found = true;
 					//remove items from the array that were found
 					unset($missing[$x]);
@@ -400,45 +450,33 @@ if ($domains_processed == 1) {
 			}
 			$x++;
 		}
+		unset($array);
 
-	//get the missing count
-		$i = 0;
-		foreach ($missing as $row) { $i++; }
-		$missing_count = $i;
-
-	//add the missing default settings
-		if (count($missing) > 0) {
-			$sql = "insert into v_default_settings (";
-			$sql .= "default_setting_uuid, ";
-			$sql .= "default_setting_category, ";
-			$sql .= "default_setting_subcategory, ";
-			$sql .= "default_setting_name, ";
-			$sql .= "default_setting_value, ";
-			$sql .= "default_setting_enabled, ";
-			$sql .= "default_setting_description ";
-			$sql .= ") values \n";
-			$i = 1;
-			foreach ($missing as $row) {
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'".check_str($row['default_setting_category'])."', ";
-				$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-				$sql .= "'".check_str($row['default_setting_name'])."', ";
-				$sql .= "'".check_str($row['default_setting_value'])."', ";
-				$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-				$sql .= "'".check_str($row['default_setting_description'])."' ";
-				$sql .= ")";
-				if ($missing_count != $i) {
-					$sql .= ",\n";
-				}
-				$i++;
-			}
-			$db->exec(check_sql($sql));
+	//update the array structure
+		if (is_array($missing)) {
+			$array['default_settings'] = $missing;
 			unset($missing);
 		}
 
+	//add the default settings
+		if (is_array($array)) {
+			$database = new database;
+			$database->app_name = 'default_settings';
+			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+			$database->save($array);
+			$message = $database->message;
+			unset($database);
+		}
+
+	//set domains with enabled status of empty or null to true
+		$sql = "delete from v_default_settings ";
+		$sql .= "where (default_setting_category is null and default_setting_subcategory is null) ";
+		$sql .= "or (default_setting_category = '' and default_setting_subcategory = '') ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
 	//move the dynamic provision variables that from v_vars table to v_default_settings
-		if (count($_SESSION['provision']) == 0) {
+		/* if (count($_SESSION['provision']) == 0) {
 			$sql = "select * from v_vars ";
 			$sql .= "where var_cat = 'Provision' ";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -483,6 +521,7 @@ if ($domains_processed == 1) {
 			//$db->exec(check_sql($sql));
 			//echo "$var_name $var_value \n";
 		}
+		*/
 
 	//populate the languages table, if necessary
 		$sql = "select count(*) as num_rows from v_languages";

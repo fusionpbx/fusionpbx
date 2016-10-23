@@ -130,14 +130,14 @@
 
 				//save the profile
 					if ($save) {
-						$orm = new orm;
-						$orm->app_name = 'devices';
-						$orm->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+						$database = new database;
+						$database->app_name = 'devices';
+						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_profile_uuid) > 0) {
-							$orm->uuid($device_profile_uuid);
+							$database->uuid($device_profile_uuid);
 						}
-						$orm->save($array);
-						$response = $orm->message;
+						$database->save($array);
+						$response = $database->message;
 						if (strlen($response['uuid']) > 0) {
 							$device_profile_uuid = $response['uuid'];
 						}
@@ -171,11 +171,11 @@
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$orm = new orm;
-		$orm->name('device_profiles');
-		$orm->uuid($device_profile_uuid);
-		$result = $orm->find()->get();
-		//$message = $orm->message;
+		$sql = "select * from v_device_profiles ";
+		$sql .= "where device_profile_uuid = '$device_profile_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$device_profile_name = $row["device_profile_name"];
 			$device_profile_domain_uuid = $row["domain_uuid"];

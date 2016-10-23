@@ -137,11 +137,11 @@
 				$_POST["device_mac_address"] = $device_mac_address;
 			}
 			else {
-				$orm = new orm;
-				$orm->name('devices');
-				$orm->uuid($device_uuid);
-				$result = $orm->find()->get();
-				//$message = $orm->message;
+				$sql = "select * from v_devices ";
+				$sql .= "where device_uuid = '$device_uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as &$row) {
 					$device_mac_address = $row["device_mac_address"];
 					$_POST["device_mac_address"] = $device_mac_address;
@@ -302,7 +302,6 @@
 				//save the device
 					if ($save) {
 						$database = new database;
-						$database->name('devices');
 						$database->app_name = 'devices';
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						if (strlen($device_uuid) > 0) {
@@ -342,11 +341,11 @@
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$orm = new orm;
-		$orm->name('devices');
-		$orm->uuid($device_uuid);
-		$result = $orm->find()->get();
-		//$message = $orm->message;
+		$sql = "select * from v_devices ";
+		$sql .= "where device_uuid = '$device_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
 			$domain_uuid = $row["domain_uuid"];

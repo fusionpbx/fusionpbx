@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -84,7 +84,7 @@
 	unset($device_profiles[0]["device_profile_uuid"]);
 
 //add copy to the device description
-	$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
+	//$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
 	$device_profiles[0]["device_profile_description"] = $text['button-copy']." ".$device_profiles[0]["device_profile_description"];
 
 //prepare the device_keys array
@@ -104,16 +104,17 @@
 	//}
 
 //create the device array
-	$device_profile = $device_profiles[0];
-	$device_profile["device_keys"] = $device_keys;
-	//$device["device_settings"] = $device_settings;
+	$array["device_profiles"] = $device_profiles;
+	$array["device_profiles"][0]["device_keys"] = $device_keys;
+	//$array["device_settings"][0] = $device_settings;
 
 //copy the device
 	if ($save) {
-		$orm = new orm;
-		$orm->name('device_profiles');
-		$orm->save($device_profile);
-		$response = $orm->message;
+		$database = new database;
+		$database->app_name = 'devices';
+		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+		$database->save($array);
+		$response = $database->message;
 		$_SESSION["message"] = $text['message-copy'];
 	}
 

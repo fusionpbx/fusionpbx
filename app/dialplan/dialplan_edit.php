@@ -30,7 +30,6 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	require_once "resources/classes/orm.php";
 
 //check permissions
 	if (permission_exists('dialplan_add')
@@ -171,7 +170,6 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				$database = new database;
-				$database->name('dialplans');
 				$database->app_name = 'dialplans';
 				$database->app_uuid = $app_uuid;
 				$database->uuid($dialplan_uuid);

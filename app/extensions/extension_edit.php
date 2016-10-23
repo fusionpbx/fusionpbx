@@ -493,7 +493,6 @@
 
 			//save to the data
 				$database = new database;
-				//$database->name('extensions');
 				$database->app_name = 'extensions';
 				$database->app_uuid = null;
 				$database->save($array);

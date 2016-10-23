@@ -231,7 +231,6 @@
 
 				//save to the data
 					$database = new database;
-					//$database->name('gateways');
 					$database->app_name = 'gateways';
 					$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
 					if (strlen($gateway_uuid) > 0) {

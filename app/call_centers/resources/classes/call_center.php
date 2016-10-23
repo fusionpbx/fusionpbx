@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015
+	Copyright (C) 2015 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -173,12 +173,16 @@
 					$p->add("dialplan_detail_add", 'temp');
 					$p->add("dialplan_edit", 'temp');
 					$p->add("dialplan_detail_edit", 'temp');
+				
+				//prepare the array
+					$array["dialplans"][0] = $dialplan;
 
 				//save the dialplan
-					$orm = new orm;
-					$orm->name('dialplans');
-					$orm->save($dialplan);
-					$dialplan_response = $orm->message;
+					$database = new database;
+					$database->app_name = 'dialplans';
+					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->save($array);
+					$dialplan_response = $database->message;
 					$this->dialplan_uuid = $dialplan_response['uuid'];
 
 				//if new dialplan uuid then update the call center queue

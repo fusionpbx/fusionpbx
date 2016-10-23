@@ -261,7 +261,6 @@
 
 		//save to the data
 			$database = new database;
-			$database->name('call_center_queues');
 			$database->app_name = 'call_centers';
 			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			$database->save($array);
