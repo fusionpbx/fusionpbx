@@ -144,15 +144,14 @@
 	$p->add("dialplan_edit", "temp");
 
 //save the array to the database
-	$orm = new orm;
-	//$orm->name('ivr_menus');
-	$orm->app_name = 'ivr_menus';
-	$orm->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+	$database = new database;
+	$database->app_name = 'ivr_menus';
+	$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 	if (strlen($ivr_menu_uuid) > 0) {
-		$orm->uuid($ivr_menu_uuid);
+		$database->uuid($ivr_menu_uuid);
 	}
 	$orm->save($array);
-	$message = $orm->message;
+	$message = $database->message;
 
 //remove the temporary permission
 	$p->delete("dialplan_add", "temp");
