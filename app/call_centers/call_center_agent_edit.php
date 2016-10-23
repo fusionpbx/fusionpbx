@@ -230,9 +230,8 @@
 
 		//save to the data
 			$database = new database;
-			//$orm->name('call_center_agents');
-			$database->app_name = 'call_center_agents';
-			$database->app_uuid = null;
+			$database->app_name = 'call_center';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			if (strlen($call_center_agent_uuid) > 0) {
 				$database->uuid($call_center_agent_uuid);
 			}
