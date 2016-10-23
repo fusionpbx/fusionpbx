@@ -261,6 +261,8 @@ if (!class_exists('scripts')) {
 					$tmp .= "--set xml_handler\n";
 					$tmp .= "	xml_handler = {}\n";
 					$tmp .= "	xml_handler.fs_path = false;\n";
+					$tmp .= "	xml_handler.reg_as_number_alias = false;\n";
+					$tmp .= "	xml_handler.number_as_presence_id = true;\n";
 					$tmp .= "\n";
 					$tmp .= "--set settings\n";
 					$tmp .= "	settings = {}\n";
