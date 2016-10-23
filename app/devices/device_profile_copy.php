@@ -84,7 +84,7 @@
 	unset($device_profiles[0]["device_profile_uuid"]);
 
 //add copy to the device description
-	$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
+	//$device_profiles[0]["device_profile_name"] = $device_profiles[0]["device_profile_name"]."-".strtolower($text['button-copy']);
 	$device_profiles[0]["device_profile_description"] = $text['button-copy']." ".$device_profiles[0]["device_profile_description"];
 
 //prepare the device_keys array
@@ -104,8 +104,8 @@
 	//}
 
 //create the device array
-	$array["device_profile"][0] = $device_profiles;
-	$array["device_profile"][0]["device_keys"] = $device_keys;
+	$array["device_profiles"] = $device_profiles;
+	$array["device_profiles"][0]["device_keys"] = $device_keys;
 	//$array["device_settings"][0] = $device_settings;
 
 //copy the device
