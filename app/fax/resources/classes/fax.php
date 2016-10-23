@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015
+	Copyright (C) 2015-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -157,12 +157,11 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$orm = new orm;
-					$orm->name('dialplans');
-					$orm->app_name = 'fax';
-					$orm->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-					$orm->save($array);
-					//$message = $orm->message;
+					$database = new database;
+					$database->app_name = 'fax';
+					$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+					$database->save($array);
+					//$message = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
