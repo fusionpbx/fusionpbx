@@ -96,8 +96,9 @@
 	$y = 0;
 	foreach ($ivr_menu_options as &$row) {
 
-		//update the ivr_menu_uuid
+		//update the uuids
 			$row['ivr_menu_uuid'] = $ivr_menu_uuid;
+			$row['ivr_menu_option_uuid'] = uuid();
 		
 		//add the row to the array
 			$ivr_menus[$x]["ivr_menu_options"][$y] = $row; 
@@ -150,7 +151,7 @@
 	if (strlen($ivr_menu_uuid) > 0) {
 		$database->uuid($ivr_menu_uuid);
 	}
-	$orm->save($array);
+	$database->save($array);
 	$message = $database->message;
 
 //remove the temporary permission
