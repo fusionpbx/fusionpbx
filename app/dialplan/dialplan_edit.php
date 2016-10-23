@@ -30,7 +30,6 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	require_once "resources/classes/orm.php";
 
 //check permissions
 	if (permission_exists('dialplan_add')
