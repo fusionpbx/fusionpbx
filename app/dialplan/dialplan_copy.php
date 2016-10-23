@@ -128,13 +128,12 @@
 	//exit;
 
 //add or update the database
-	$orm = new orm;
-	$orm->name('dialplans');
-	$orm->app_name = 'dialplans';
-	$orm->app_uuid = $app_uuid;
-	$orm->uuid($dialplan_uuid);
-	$orm->save($array);
-	//$message = $orm->message;
+	$database = new database;
+	$database->app_name = 'dialplans';
+	$database->app_uuid = $app_uuid;
+	$database->uuid($dialplan_uuid);
+	$database->save($array);
+	//$message = $database->message;
 
 //update the dialplan xml
 	$dialplans = new dialplan;
