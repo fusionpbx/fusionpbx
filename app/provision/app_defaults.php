@@ -277,6 +277,14 @@
 			$array[$x]['default_setting_enabled'] = 'false';
 			$array[$x]['default_setting_description'] = 'allow extensions to be provisioned as contacts as $extensions in provision templates';
 			$x++;
+			$array[$x]['default_setting_uuid'] = 'd157078e-b363-4f34-a6d4-8a86990a40b7';
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'number_as_presence_id';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = 'true';
+			$array[$x]['default_setting_enabled'] = 'true';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
 			$array[$x]['default_setting_uuid'] = '48dd60fe-d7de-417c-85c4-2d2d897a709c';
 			$array[$x]['default_setting_category'] = 'provision';
 			$array[$x]['default_setting_subcategory'] = 'ntp_server_primary';
@@ -292,6 +300,7 @@
 			$array[$x]['default_setting_value'] = '2.us.pool.ntp.org';
 			$array[$x]['default_setting_enabled'] = 'true';
 			$array[$x]['default_setting_description'] = '';
+
 
 		//get an array of the default settings
 			$sql = "select * from v_default_settings ";
