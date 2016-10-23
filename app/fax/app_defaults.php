@@ -181,16 +181,20 @@ if ($domains_processed == 1) {
 		unset($array);
 
 	//update the array structure
-		$array['default_settings'] = $missing;
-		unset($missing);
+		if (is_array($missing)) {
+			$array['default_settings'] = $missing;
+			unset($missing);
+		}
 
 	//add the default settings
-		$database = new database;
-		$database->app_name = 'default_settings';
-		$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-		$database->save($array);
-		$message = $database->message;
-		unset($database);
+		if (is_array($array)) {
+			$database = new database;
+			$database->app_name = 'default_settings';
+			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+			$database->save($array);
+			$message = $database->message;
+			unset($database);
+		}
 
 }
 
