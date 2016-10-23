@@ -310,7 +310,7 @@
 					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
 						$found = true;
 						//remove items from the array that were found
-						unset($array[$x]);
+						unset($missing[$x]);
 					}
 				}
 				$x++;
