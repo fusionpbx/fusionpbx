@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,7 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_uuid'] = 'e34b276a-1b64-4d11-9470-ae3ea977c47e';
 		$array[$x]['default_setting_category'] = 'adminer';
 		$array[$x]['default_setting_subcategory'] = 'auto_login';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -37,27 +38,44 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set whether to auto-login to Adminer, or require a username and password.';
 		$x++;
 
-	//iterate and add each, if necessary
-		foreach ($array as $index => $default_settings) {
-			//add the default setting
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
-			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
-			$sql .= "and default_setting_name = '".$default_settings['default_setting_name']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$orm = new orm;
-					$orm->name('default_settings');
-					$orm->save($array[$index]);
-					$message = $orm->message;
-					//print_r($message);
+	//get an array of the default settings
+		$sql = "select * from v_default_settings ";
+		$sql .= "where default_setting_category = 'adminer' ";
+		$prep_statement = $db->prepare($sql);
+		$prep_statement->execute();
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset ($prep_statement, $sql);
+
+	//find the missing default settings
+		$x = 0;
+		foreach ($array as $setting) {
+			$found = false;
+			$missing[$x] = $setting;
+			foreach ($default_settings as $row) {
+				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+					$found = true;
+					//remove items from the array that were found
+					unset($missing[$x]);
 				}
-				unset($row);
 			}
+			$x++;
+		}
+		unset($array);
+
+	//update the array structure
+		if (is_array($missing)) {
+			$array['default_settings'] = $missing;
+			unset($missing);
+		}
+
+	//add the default settings
+		if (is_array($array)) {
+			$database = new database;
+			$database->app_name = 'default_settings';
+			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+			$database->save($array);
+			$message = $database->message;
+			unset($database);
 		}
 
 }
