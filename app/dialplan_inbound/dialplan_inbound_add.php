@@ -96,6 +96,7 @@
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			if (count($result) > 0) {
 				foreach ($result as &$row) {
+					$destination_number = $row["destination_number"];
 					$condition_expression_1 = $row["destination_number"];
 					$fax_uuid = $row["fax_uuid"];
 					$destination_carrier = $row["destination_carrier"];
@@ -141,7 +142,6 @@
 				echo $msg."<br />";
 				echo "</td></tr></table>\n";
 				persistformvar($_POST);
-				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
 			}
@@ -153,241 +153,103 @@
 		//set the context
 			$context = '$${domain_name}';
 
-		//start the atomic transaction
-			$count = $db->exec("BEGIN;"); //returns affected rows
-
-		//add the main dialplan entry
+		//set the uuids
 			$dialplan_uuid = uuid();
-			$sql = "insert into v_dialplans ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "app_uuid, ";
-			$sql .= "dialplan_name, ";
-			$sql .= "dialplan_continue, ";
-			$sql .= "dialplan_order, ";
-			$sql .= "dialplan_context, ";
-			$sql .= "dialplan_enabled, ";
-			$sql .= "dialplan_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', ";
-			$sql .= "'$dialplan_name', ";
-			$sql .= "'false', ";
-			$sql .= "'$public_order', ";
-			$sql .= "'public', ";
-			$sql .= "'$dialplan_enabled', ";
-			$sql .= "'$dialplan_description' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$app_uuid = 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4';
+			$domain_uuid = $_SESSION['domain_uuid'];
+
+		//build the array
+			$x = 0;
+			$array['dialplans'][$x]['domain_uuid'] = $domain_uuid;
+			$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][$x]['app_uuid'] = $app_uuid;
+			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
+			$array['dialplans'][$x]['dialplan_number'] = $destination_number;
+			$array['dialplans'][$x]['dialplan_order'] = $public_order;
+			$array['dialplans'][$x]['dialplan_continue'] = 'false';
+			$array['dialplans'][$x]['dialplan_context'] = 'public';
+			$array['dialplans'][$x]['dialplan_enabled'] = $dialplan_enabled;
+			$array['dialplans'][$x]['dialplan_description'] = $dialplan_description;
 
 		//add condition 1
-			$dialplan_detail_uuid = uuid();
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'$dialplan_detail_uuid', ";
-			$sql .= "'condition', ";
-			$sql .= "'$condition_field_1', ";
-			$sql .= "'$condition_expression_1', ";
-			$sql .= "'0', ";
-			$sql .= "'20' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$y = 0;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+			$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $condition_field_1;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $condition_expression_1;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 		//add condition 2
 			if (strlen($condition_field_2) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'condition', ";
-				$sql .= "'$condition_field_2', ";
-				$sql .= "'$condition_expression_2', ";
-				$sql .= "'0', ";
-				$sql .= "'30' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-
-		//set call_direction
-			if (count($_SESSION["domains"]) > 1) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'call_direction=inbound', ";
-				$sql .= "'0', ";
-				$sql .= "'50' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $condition_field_2;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $condition_expression_2;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set accountcode
 			if (strlen($destination_accountcode) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'accountcode=$destination_accountcode', ";
-				$sql .= "'0', ";
-				$sql .= "'55' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'accountcode='.$destination_accountcode;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set carrier
 			if (strlen($destination_carrier) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'carrier=$destination_carrier', ";
-				$sql .= "'0', ";
-				$sql .= "'60' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'carrier='.$destination_carrier;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set limit
 			if (strlen($limit) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'limit', ";
-				$sql .= "'hash \${domain_name} inbound ".$limit." !USER_BUSY', ";
-				$sql .= "'0', ";
-				$sql .= "'65' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'limit';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "hash \${domain_name} inbound ".$limit." !USER_BUSY";
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set redial outbound prefix
 			if (strlen($caller_id_outbound_prefix) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'effective_caller_id_number=".$caller_id_outbound_prefix."\${caller_id_number}', ";
-				$sql .= "'0', ";
-				$sql .= "'70' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "effective_caller_id_number=".$caller_id_outbound_prefix."\${caller_id_number}";
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set fax_uuid
 			if (strlen($fax_uuid) > 0) {
+
 				//get the fax information
 					$sql = "select * from v_fax ";
 					$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -409,166 +271,70 @@
 					unset ($prep_statement);
 
 				//add set codec_string=PCMU,PCMA
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'set', ";
-					$sql .= "'codec_string=PCMU,PCMA', ";
-					$sql .= "'0', ";
-					$sql .= "'73' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'codec_string=PCMU,PCMA';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 				//add set tone_detect_hits=1
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'set', ";
-					$sql .= "'tone_detect_hits=1', ";
-					$sql .= "'0', ";
-					$sql .= "'75' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'tone_detect_hits=1';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 				//add execute_on_tone_detect
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'set', ";
-					$sql .= "'execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"]."', ";
-					$sql .= "'0', ";
-					$sql .= "'80' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 				//add tone_detect fax 1100 r +5000
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'tone_detect', ";
-					$sql .= "'fax 1100 r +5000', ";
-					$sql .= "'0', ";
-					$sql .= "'85' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'tone_detect';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'fax 1100 r +5000';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 				//add sleep to provide time for fax detection
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'sleep', ";
-					$sql .= "'3000', ";
-					$sql .= "'0', ";
-					$sql .= "'90' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'sleep';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '3000';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 				//set codec_string=${ep_codec_string}
-					$dialplan_detail_uuid = uuid();
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'$dialplan_detail_uuid', ";
-					$sql .= "'action', ";
-					$sql .= "'export', ";
-					$sql .= "'codec_string=\${ep_codec_string}', ";
-					$sql .= "'0', ";
-					$sql .= "'93' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$y++;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'export';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'codec_string=\${ep_codec_string}';
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//set answer
@@ -578,102 +344,58 @@
 			if ($action_application_1 == "conference") { $tmp_app = true; }
 			if ($action_application_2 == "conference") { $tmp_app = true; }
 			if ($tmp_app) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'answer', ";
-				$sql .= "'', ";
-				$sql .= "'0', ";
-				$sql .= "'95' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'answer';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 			unset($tmp_app);
 
 		//add action 1
-			$dialplan_detail_uuid = uuid();
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'$dialplan_detail_uuid', ";
-			$sql .= "'action', ";
-			$sql .= "'$action_application_1', ";
-			$sql .= "'$action_data_1', ";
-			$sql .= "'0', ";
-			$sql .= "'100' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$y++;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+			$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_1;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_1;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 		//add action 2
 			if (strlen($action_application_2) > 0) {
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_group, ";
-				$sql .= "dialplan_detail_order ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$dialplan_uuid', ";
-				$sql .= "'$dialplan_detail_uuid', ";
-				$sql .= "'action', ";
-				$sql .= "'$action_application_2', ";
-				$sql .= "'$action_data_2', ";
-				$sql .= "'0', ";
-				$sql .= "'105' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$y++;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_2;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_2;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
 
 		//update the destination dialplan_uuid
 			if (strlen($destination_uuid) > 0) {
 				$sql = "update v_destinations set ";
 				$sql .= "dialplan_uuid = '".$dialplan_uuid."' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
 				$sql .= "and destination_uuid = '".$destination_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
 
-		//commit the atomic transaction
-			$count = $db->exec("COMMIT;"); //returns affected rows
+		//save the data
+			$database = new database;
+			$database->app_name = 'inbound_routes';
+			$database->app_uuid = $app_uuid;
+			$database->save($array);
+			$message = $database->message;
 
 		//update the dialplan xml
 			$dialplans = new dialplan;
@@ -1086,4 +808,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
