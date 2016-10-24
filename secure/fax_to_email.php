@@ -523,9 +523,9 @@ if(!function_exists('fax_split_dtmf')) {
 				$mail->Port = 0;
 			}
 
-		//optional ignore bad certificates
-			if (isset($_SESSION['email']['smtp_ignore_bad_certificate'])) {
-				if ($_SESSION['email']['smtp_ignore_bad_certificate']['boolean'] == "true") {
+		//optionally skip certificate validation
+			if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+				if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
 
 					// this works around TLS certificate problems e.g. self-signed certificates
 					$mail->SMTPOptions = array(
