@@ -190,11 +190,11 @@
 		}
 	} else $mail->IsSMTP();
 
-// optional bypass TLS certificate check e.g. for self-signed certificates
-        if (isset($_SESSION['email']['smtp_ignore_bad_certificate'])) {
-                if ($_SESSION['email']['smtp_ignore_bad_certificate']['boolean'] == "true") {
+// optional bypass TLS certificate validation
+        if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+                if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
 
-                        // this is needed to work around TLS certificate problems
+                        // this is needed to work around TLS certificate problems e.g. self-signed certificates
                         $mail->SMTPOptions = array(
                                 'ssl' => array(
                                 'verify_peer' => false,
