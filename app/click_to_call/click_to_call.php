@@ -33,6 +33,8 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/ringbacks.php";
+
 if (permission_exists('click_to_call_view')) {
 	//access granted
 }
@@ -44,6 +46,9 @@ else {
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//get ringbacks class
+	$ringbacks = new ringbacks;
 
 //include the header
 	require_once "resources/header.php";
@@ -74,18 +79,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$dest = ($dest == "%NUM%") ? $src_cid_number : $dest;
 
 	//translate ringback
-		switch ($ringback) {
-			case "music": $ringback_value = "\'local_stream://moh\'"; break;
-			case "uk-ring": $ringback_value = "\'%(400,200,400,450);%(400,2200,400,450)\'"; break;
-			case "fr-ring": $ringback_value = "\'%(1500,3500,440.0,0.0)\'"; break;
-			case "pt-ring": $ringback_value = "\'%(1000,5000,400.0,0.0)\'"; break;
-			case "rs-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
-			case "it-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
-			case "us-ring":
-			default:
-				$ringback = 'us-ring';
-				$ringback_value = "\'%(2000,4000,440.0,480.0)\'";
-		}
+		$ringback_value = $ringbacks->get_value($ringback);
 
 	//determine call direction
 		$dir = (strlen($dest) < 7) ? 'local' : 'outbound';
@@ -308,57 +302,13 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-ringback']."\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	 ".$text['label-ringback']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='ringback'>\n";
-	echo "    <option value=''></option>\n";
-	if ($ringback == "us-ring") {
-		echo "    <option value='us-ring' selected='selected'>".$text['opt-usring']."</option>\n";
-	}
-	else {
-		echo "    <option value='us-ring'>".$text['opt-usring']."</option>\n";
-	}
-	if ($ringback == "fr-ring") {
-		echo "    <option value='fr-ring' selected='selected'>".$text['opt-frring']."</option>\n";
-	}
-	else {
-		echo "    <option value='fr-ring'>".$text['opt-frring']."</option>\n";
-	}
-	if ($ringback == "pt-ring") {
-		echo "    <option value='pt-ring' selected='selected'>".$text['opt-ptring']."</option>\n";
-	}
-	else {
-		echo "    <option value='pt-ring'>".$text['opt-ptring']."</option>\n";
-	}
-	if ($ringback == "uk-ring") {
-		echo "    <option value='uk-ring' selected='selected'>".$text['opt-ukring']."</option>\n";
-	}
-	else {
-		echo "    <option value='uk-ring'>".$text['opt-ukring']."</option>\n";
-	}
-	if ($ringback == "rs-ring") {
-		echo "    <option value='rs-ring' selected='selected'>".$text['opt-rsring']."</option>\n";
-	}
-	else {
-		echo "    <option value='rs-ring'>".$text['opt-rsring']."</option>\n";
-	}
-	if ($ringback == "it-ring") {
-		echo "    <option value='it-ring' selected='selected'>".$text['opt-itring']."</option>\n";
-	}
-	else {
-		echo "    <option value='it-ring'>".$text['opt-itring']."</option>\n";
-	}
-	if ($ringback == "music") {
-		echo "    <option value='music' selected='selected'>".$text['opt-moh']."</option>\n";
-	}
-	else {
-		echo "    <option value='music'>".$text['opt-moh']."</option>\n";
-	}
-	echo "    </select>\n";
+	echo "	".$ringbacks->select('ringback', $ringback);
 	echo "<br />\n";
-	echo $text['desc-ringback']."\n";
+	echo $text['description-ringback']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
