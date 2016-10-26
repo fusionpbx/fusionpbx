@@ -330,9 +330,16 @@ if (!class_exists('xml_cdr')) {
 				$domain_name = check_str(urldecode($xml->variables->domain_name));
 				$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
-			//get the domain name from sip_req_host
+			//get the domain name
 				if (strlen($domain_name) == 0) {
 					$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+				}
+				if (strlen($domain_name) == 0) {
+					$presence_id = check_str(urldecode($xml->variables->presence_id));
+					if (strlen($presence_id) > 0) {
+						$presence_array = explode($presence_id);
+						$domain_name = $presence_array[1];
+					}
 				}
 
 			//send the domain name to the cdr log
