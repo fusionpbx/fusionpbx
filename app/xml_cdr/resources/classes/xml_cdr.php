@@ -330,7 +330,7 @@ if (!class_exists('xml_cdr')) {
 				$domain_name = check_str(urldecode($xml->variables->domain_name));
 				$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
-			//get the domain name from sip_req_host
+			//get the domain name
 				if (strlen($domain_name) == 0) {
 					$domain_name = check_str(urldecode($xml->variables->sip_req_host));
 				}
