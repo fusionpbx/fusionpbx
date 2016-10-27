@@ -242,7 +242,7 @@
 			$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 
 		//set the queue name
-			$_POST["call_center_tiers"][0]["queue_name"] = $queue_name."@".$_SESSION['domain_name'];
+			$_POST["call_center_tiers"][0]["queue_name"] = $queue_name;
 		
 		//check for to make sure the agent_name was provided if not then remove from the array
 			if (strlen($_POST["call_center_tiers"][0]["agent_name"]) == 0) {
