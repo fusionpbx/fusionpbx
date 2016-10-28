@@ -158,14 +158,18 @@
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
+		//set the destination_number
+			$destination_extension = str_replace("*", "\*", $call_flow_extension);
+			$destination_feature = str_replace("*", "\*", $call_flow_feature_code);
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$call_flow_feature_code."$\" break=\"on-true\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_feature."$\" break=\"on-true\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"feature_code=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$call_flow_extension."$\">\n";
+			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$destination_extension."$\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"call_flow_uuid=".$call_flow_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"call_flow.lua\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
