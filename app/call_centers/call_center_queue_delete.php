@@ -106,4 +106,5 @@
 	$_SESSION["message"] = $text['message-delete'];
 	header("Location: call_center_queues.php");
 	return;
+
 ?>
