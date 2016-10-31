@@ -189,7 +189,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
-		$array[$x]['default_setting_uuid'] = '8a07ab78-f386-482c-85dd-7ce8127597d6';
+		$array[$x]['default_setting_uuid'] = 'e1c17089-1e75-4e46-9e59-4748bb6a6cec';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_validate_certificate';
 		$array[$x]['default_setting_name'] = 'bolean';
