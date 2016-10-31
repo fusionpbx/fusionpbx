@@ -169,6 +169,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_category'] = 'email';
+		$array[$x]['default_setting_subcategory'] = 'smtp_validate_certificate';
+		$array[$x]['default_setting_name'] = 'bolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'set to false to ignore SSL certificate warnings e.g. for self-signed certificates';
+		$x++;
 		$array[$x]['default_setting_category'] = 'login';
 		$array[$x]['default_setting_subcategory'] = 'password_reset_key';
 		$array[$x]['default_setting_name'] = 'text';
