@@ -359,12 +359,14 @@ if(!function_exists('fax_split_dtmf')) {
 
 //prepare smtp server settings
 	// load default smtp settings
+	$smtp['method'] 	= $_SESSION['email']['smtp_method']['text'];
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
 		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
 	} else {
 		$smtp['port'] = 0;
 	}
+	
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
@@ -394,6 +396,7 @@ if(!function_exists('fax_split_dtmf')) {
 	}
 
 	// value adjustments
+	$smtp['method'] 	= ($smtp['method'] == '') ? 'smtp' : $smtp['method'];
 	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
 	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
 	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
