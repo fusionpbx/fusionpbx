@@ -181,7 +181,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
-		$array[$x]['default_setting_uuid'] = 'e1c17089-1e75-4e46-9e59-4748bb6a6cec';
+		$array[$x]['default_setting_uuid'] = 'fd7441d5-d348-4660-8c0b-6413220c680d';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_secure';
 		$array[$x]['default_setting_name'] = 'var';
