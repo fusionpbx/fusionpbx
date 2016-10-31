@@ -46,17 +46,30 @@ class plugin_ldap {
 			//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
 			ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
 			//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
-			$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$this->username.",".$_SESSION["ldap"]["user_dn"]["text"];
-			$bind_pw = $this->password;
-			//Note: As of 4/16, the call below will fail randomly.  PHP debug reports ldap_bind
-			//called below with all arguments '*uninitialized*'.  However, the debugger
-			//single-stepping just before the failing call correctly displays all the values.
-			$bind = ldap_bind($connect, $bind_dn, $bind_pw);
-			if ($bind) {
-				$user_authorized = true;
+
+		//set the default for $user_authorized to false
+			$user_authorized = false;
+
+		//provide backwards compatability
+			if (strlen($_SESSION["ldap"]["user_dn"]["text"]) > 0) {
+				$_SESSION["ldap"]["user_dn"][] = $_SESSION["ldap"]["user_dn"]["text"];
 			}
-			else {
-				$user_authorized = false;
+
+		//check all user_dn in the array
+			foreach ($_SESSION["ldap"]["user_dn"] as $user_dn) {
+				$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$this->username.",".$user_dn;
+				$bind_pw = $this->password;
+				//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
+				//called below with all arguments '*uninitialized*'. However, the debugger
+				//single-stepping just before the failing call correctly displays all the values.
+				$bind = ldap_bind($connect, $bind_dn, $bind_pw);
+				if ($bind) {
+					$user_authorized = true;
+					break;
+				}
+				else {
+					$user_authorized = false;
+				}
 			}
 
 		//check to see if the user exists
