@@ -571,6 +571,23 @@ if(!function_exists('fax_split_dtmf')) {
 			else {
 				$mail->IsSMTP(); // set mailer to use SMTP
 			}
+
+		//optionally skip certificate validation
+			if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+				if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+
+					// this works around TLS certificate problems e.g. self-signed certificates
+					$mail->SMTPOptions = array(
+						'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+						)
+					);
+				}
+			}
+			
+
 			if ($smtp['auth'] == "true") {
 				$mail->SMTPAuth = $smtp['auth']; // turn on/off SMTP authentication
 			}
