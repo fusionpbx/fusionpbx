@@ -194,6 +194,12 @@
 	$text['opt-itring']['pt-br'] = "it-ring";
 	$text['opt-itring']['fr-fr'] = "it-ring";
 
+	$text['opt-dering']['en-us'] = "de-ring";
+	$text['opt-dering']['es-cl'] = "de-ring";
+	$text['opt-dering']['pt-pt'] = "de-ring";
+	$text['opt-dering']['pt-br'] = "de-ring";
+	$text['opt-dering']['fr-fr'] = "de-ring";
+
 	$text['opt-moh']['en-us'] = "music";
 	$text['opt-moh']['es-cl'] = "musica";
 	$text['opt-moh']['pt-pt'] = "música";
