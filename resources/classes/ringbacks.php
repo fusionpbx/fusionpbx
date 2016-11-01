@@ -171,6 +171,14 @@ if (!class_exists('ringbacks')) {
 				$select .= "</select>\n";
 				return $select;
 		}
+		
+		public function get_value ($name) {	
+			if (isset($this->music_list[$name])) 		{ return $this->music_list[$name] };
+			if (isset($this->recordings_list[$name]))	{ return $this->recordings_list[$name] };
+			if (isset($this->ringbacks[$name]))			{ return $this->ringbacks[$name] };
+			if (isset($this->tones_list[$name]))		{ return $this->tones_list[$name] };
+			return $this->ringbacks['us-ring'];
+		}
 	}
 }
 
