@@ -329,13 +329,18 @@ include "root.php";
 					$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
 				}
 
-				if (strlen($this->accountcode) > 0) {
+				if (strlen($this->accountcode) == 0) {
+					$dial_string .= ",sip_h_X-accountcode=\${accountcode}";
+				}
+				else {
 					$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 					$dial_string .= ",accountcode=".$this->accountcode;
 				}
+
 				if ($this->toll_allow != '') {
 					$dial_string .= ",toll_allow='".$this->toll_allow."'";
 				}
+
 				$dial_string .= "}";
 				$x = 0;
 				if (is_array($result)) foreach ($result as &$row) {
