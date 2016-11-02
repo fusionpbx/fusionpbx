@@ -533,6 +533,45 @@ include "root.php";
 					unset($prep_statement);
 			} //count
 
+			public function select($sql) {
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+				//execute the query, and return the results
+					try {
+						$prep_statement = $this->db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$message["message"] = "OK";
+						$message["code"] = "200";
+						$message["details"][$m]["name"] = $this->name;
+						$message["details"][$m]["message"] = "OK";
+						$message["details"][$m]["code"] = "200";
+						if ($this->debug["sql"]) {
+							$message["details"][$m]["sql"] = $sql;
+						}
+						$this->message = $message;
+						$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset($prep_statement);
+						$m++;
+						return $this;
+					}
+					catch(PDOException $e) {
+						$message["message"] = "Bad Request";
+						$message["code"] = "400";
+						$message["details"][$m]["name"] = $this->name;
+						$message["details"][$m]["message"] = $e->getMessage();
+						$message["details"][$m]["code"] = "400";
+						if ($this->debug["sql"]) {
+							$message["details"][$m]["sql"] = $sql;
+						}
+						$this->message = $message;
+						$this->result = '';
+						$m++;
+						return $this;
+					}
+			} //select
+
 			public function find_new() {
 
 				//connect to the database if needed
