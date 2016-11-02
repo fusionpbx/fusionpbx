@@ -37,7 +37,8 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_conference_control_details ";
+	$sql = "select count(*) as num_rows ";
+	$sql .= "from v_conference_control_details ";
 	$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
 	//$sql .= "and domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_search;

@@ -88,6 +88,17 @@ $text['option-frring']['uk'] = "fr-ring";
 $text['option-frring']['de-at'] = "fr-ring";
 $text['option-frring']['he'] = "צלצול צרפתי";
 
+$text['option-dering']['en-us'] = "de-ring";
+$text['option-dering']['es-cl'] = "de-ring";
+$text['option-dering']['fr-fr'] = "Allemagne";
+$text['option-dering']['pt-pt'] = "de-ring";
+$text['option-dering']['pt-br'] = "DERing";
+$text['option-dering']['pl'] = "de-ring ";
+$text['option-dering']['sv-se'] = "de-ring";
+$text['option-dering']['uk'] = "de-ring";
+$text['option-dering']['de-at'] = "de-ring";
+$text['option-dering']['he'] = "טבעת גרמנית";
+
 $text['option-enterprise']['en-us'] = "Enterprise";
 $text['option-enterprise']['es-cl'] = "Compañia";
 $text['option-enterprise']['fr-fr'] = "Entreprise";

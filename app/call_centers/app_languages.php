@@ -312,6 +312,16 @@ $text['option-frring']['sv-se'] = "fr-ring";
 $text['option-frring']['uk'] = "fr-ring ";
 $text['option-frring']['de-at'] = "fr-ring";
 
+$text['option-dering']['en-us'] = "de-ring";
+$text['option-dering']['es-cl'] = "de-ring";
+$text['option-dering']['pt-pt'] = "de-ring";
+$text['option-dering']['fr-fr'] = "de-ring";
+$text['option-dering']['pt-br'] = "de-ring";
+$text['option-dering']['pl'] = "de-ring";
+$text['option-dering']['sv-se'] = "de-ring";
+$text['option-dering']['uk'] = "de-ring ";
+$text['option-dering']['de-at'] = "de-ring";
+
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "No";
 $text['option-false']['pt-pt'] = "Não";
