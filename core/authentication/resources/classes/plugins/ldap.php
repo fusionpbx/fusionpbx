@@ -51,11 +51,20 @@ class plugin_ldap {
 			//Note: As of 4/16, the call below will fail randomly.  PHP debug reports ldap_bind
 			//called below with all arguments '*uninitialized*'.  However, the debugger
 			//single-stepping just before the failing call correctly displays all the values.
-			$bind = ldap_bind($connect, $bind_dn, $bind_pw);
-			if ($bind) {
-				$user_authorized = true;
+			if (strlen($bind_pw) > 0) {
+				$bind = ldap_bind($connect, $bind_dn, $bind_pw);
+				if ($bind) {
+					//connected and authorized
+					$user_authorized = true;
+					break;
+				}
+				else {
+					//connection failed
+					$user_authorized = false;
+				}
 			}
 			else {
+				//password not provided
 				$user_authorized = false;
 			}
 
