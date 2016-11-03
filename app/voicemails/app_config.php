@@ -188,6 +188,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail file encoded in base64.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "message_transcription";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail transcription.";
+		$z++;
 
 		$y = 2; //table array index
 		$z = 0; //field array index

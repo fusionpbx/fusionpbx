@@ -137,6 +137,9 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 						echo "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
 					}
+					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+						echo "<th>".$text['label-transcription']."</th>\n";
+					}
 					if (permission_exists('voicemail_message_delete')) {
 						echo "<td class='list_control_icons' style='width: 25px;'>";
 						echo 	"<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { $('#frm').attr('action', 'voicemail_message_delete.php').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -177,10 +180,14 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 						echo "<a id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."');\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</a>";
 						echo "<a href=\"voicemail_messages.php?action=download&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\" nowrap='nowrap'>".$row['message_length_label']."&nbsp;</td>\n";
 					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 						echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\" nowrap='nowrap'>".$row['file_size_label']."</td>\n";
 					}
+					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+						echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['message_transcription']."</td>\n";
+					}
+
 					if (permission_exists('voicemail_message_delete')) {
 						echo "	<td class='list_control_icon' style='width: 25px;'>";
 						echo 		"<a href='voicemail_message_delete.php?voicemail_messages[".$row['voicemail_uuid']."][]=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";

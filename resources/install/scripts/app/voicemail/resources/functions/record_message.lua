@@ -26,7 +26,7 @@
 --load libraries
 	local Database = require "resources.functions.database"
 	local Settings = require "resources.functions.lazy_settings"
-	local JSON = require "resources.functions.json"
+	local JSON = require "resources.functions.lunajson"
 
 --define uuid function
 	local random = math.random;
@@ -57,7 +57,7 @@
 				local handle = io.popen(access_token_cmd);
 				local access_token_result = handle:read("*a");
 				handle:close();
-				access_token_json = JSON:decode(access_token_result);
+				access_token_json = JSON.decode(access_token_result);
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
 					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
@@ -68,7 +68,7 @@
 				local handle = io.popen(transcribe_cmd);
 				local transcribe_result = handle:read("*a");
 				handle:close();
-				local transcribe_json = JSON:decode(transcribe_result);
+				local transcribe_json = JSON.decode(transcribe_result);
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
 					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
