@@ -139,7 +139,7 @@ if ($domains_processed == 1) {
 		$x++;
 
 	//get an array of the default settings
-		$sql = "select * from v_default_settings ";
+		$sql = "select * from v_default_settings where default_setting_category = 'fax'";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
