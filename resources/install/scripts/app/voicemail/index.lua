@@ -37,8 +37,8 @@
 	direct_dial["max_digits"] = 4;
 
 --debug
-	debug["info"] = false;
-	debug["sql"] = false;
+	debug["info"] = true;
+	debug["sql"] = true;
 
 --get the argv values
 	script_name = argv[1];
@@ -383,6 +383,9 @@
 								if (storage_type == "base64") then
 									table.insert(sql, "message_base64, ");
 								end
+								if (transcribe_enabled == "true") then
+									table.insert(sql, "message_transcription, ");
+								end
 								table.insert(sql, "message_length ");
 								--table.insert(sql, "message_status, ");
 								--table.insert(sql, "message_priority, ");
@@ -397,6 +400,9 @@
 								table.insert(sql, "'"..caller_id_number.."', ");
 								if (storage_type == "base64") then
 									table.insert(sql, "'"..message_base64.."', ");
+								end
+								if (transcribe_enabled == "true") then
+									table.insert(sql,  "'"..transcription.."', ");
 								end
 								table.insert(sql, "'"..message_length.."' ");
 								--table.insert(sql, "'"..message_status.."', ");
