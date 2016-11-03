@@ -324,6 +324,17 @@ $text['label-message_size']['uk'] = "Розмір";
 $text['label-message_size']['de-at'] = "Größe";
 $text['label-message_size']['he'] = "גודל";
 
+$text['label-transcription']['en-us'] = "Transcription";
+$text['label-transcription']['es-cl'] = "";
+$text['label-transcription']['pt-pt'] = "";
+$text['label-transcription']['fr-fr'] = "";
+$text['label-transcription']['pt-br'] = "";
+$text['label-transcription']['pl'] = "";
+$text['label-transcription']['sv-se'] = "";
+$text['label-transcription']['uk'] = "";
+$text['label-transcription']['de-at'] = "";
+$text['label-transcription']['he'] = "";
+
 $text['label-message_priority']['en-us'] = "Priority";
 $text['label-message_priority']['es-cl'] = "Prioridad";
 $text['label-message_priority']['pt-pt'] = "Prioridade";
