@@ -174,7 +174,7 @@ if (!class_exists('extension')) {
 				//write the xml files
 					$sql = "SELECT * FROM v_extensions AS e, v_voicemails AS v ";
 					$sql .= "WHERE e.domain_uuid = '$domain_uuid' ";
-					$sql .= "AND COALESCE(NULLIF(e.number_alias,''),e.extension) = CAST(v.voicemail_id as VARCHAR) ";
+					$sql .= "AND AND COALESCE(NULLIF(e.number_alias,''),e.extension) = CAST(v.voicemail_id as VARCHAR) ";
 					$sql .= "ORDER BY e.call_group ASC ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
@@ -503,6 +503,18 @@ if (!class_exists('extension')) {
 				//apply settings
 					$_SESSION["reload_xml"] = true;
 			}
+		}
+
+		// returns true if domain:extension already exists
+		public function ExtensionExists($domain_uuid, $extension) {
+			$sql = "select * from v_extensions where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and extension='".$extension."'";
+			
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			
+			return count($result != 0);
 		}
 	}
 }
