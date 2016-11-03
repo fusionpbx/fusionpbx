@@ -514,7 +514,7 @@ if (!class_exists('extension')) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			
-			return count($result != 0);
+			return count($result) != 0;
 		}
 	}
 }
