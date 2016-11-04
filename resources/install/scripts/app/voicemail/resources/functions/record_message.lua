@@ -53,18 +53,15 @@
 			local api_key1 = settings:get('voicemail', 'microsoft_key1', 'text') or '';
 			local api_key2 = settings:get('voicemail', 'microsoft_key2', 'text') or '';
 			if (api_key1 ~= '' and api_key2 ~= '') then
-				access_token_cmd = "curl -X POST \"https://oxford-speech.cloudapp.net/token/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -d 'grant_type=client_credentials&client_id="..api_key1.."&client_secret="..api_key2.."&scope=https://speech.platform.bing.com'";
+				access_token_cmd = "curl -X POST \"https://api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: "..api_key1.."\""
 				local handle = io.popen(access_token_cmd);
 				local access_token_result = handle:read("*a");
 				handle:close();
-				access_token_json = JSON.decode(access_token_result);
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
 					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] JSON: " .. access_token_json["access_token"] .. "\n");
 				end
-
-				transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_json["access_token"] .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+				transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
 				local handle = io.popen(transcribe_cmd);
 				local transcribe_result = handle:read("*a");
 				handle:close();
