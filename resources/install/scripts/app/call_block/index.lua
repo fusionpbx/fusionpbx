@@ -46,12 +46,17 @@ This method causes the script to get its manadatory arguments directly from the 
 
 -- Command line parameters
 	local params = {
-			cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
-			cid_name = session:getVariable("caller_id_name"),
-			domain_name = session:getVariable("domain_name"),
-			userid = "", -- session:getVariable("id")
-			loglevel = "W" -- Warning, Debug, Info
-			}
+		cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
+		cid_name = session:getVariable("caller_id_name"),
+		domain_name = session:getVariable("domain_name"),
+		userid = "", -- session:getVariable("id")
+		loglevel = "W" -- Warning, Debug, Info
+		}
+
+--check if cid_num is numeric
+	if (tonumber(params["cid_num"]) == nil) then
+		return
+	end
 
 -- local storage
 	local sql = nil
