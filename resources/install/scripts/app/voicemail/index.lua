@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -270,7 +270,11 @@
 				if (voicemail_id) then
 					if (voicemail_authorized) then
 						if (voicemail_authorized == "true") then
-							--skip the password check
+							if (voicemail_id == sip_from_user or voicemail_id == sip_number_alias) then
+								--skip the password check
+							else
+								check_password(voicemail_id, password_tries);
+							end
 						else
 							check_password(voicemail_id, password_tries);
 						end
