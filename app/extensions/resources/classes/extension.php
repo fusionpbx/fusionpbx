@@ -82,6 +82,20 @@ if (!class_exists('extension')) {
 			}
 		}
 
+		public function exists($extension) {
+			$sql = "select extension_uuid from v_extensions ";
+			$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+			$sql .= "and (extension = '$extension' or number_alias = '$extension') ";
+			$sql .= "and enabled = 'true' ";
+			$result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+			if (count($result) > 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}
