@@ -201,6 +201,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		background-size:cover;
 		}
 
+        pre {
+		white-space: pre-wrap;
+		}
+
 	div#footer {
 		display: inline-block;
 		width: 100%;
