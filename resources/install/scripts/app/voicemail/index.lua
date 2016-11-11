@@ -69,6 +69,9 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
+			if (string.sub(caller_id_number, 1, 1) == "/") then
+				caller_id_number = string.sub(caller_id_number, 2, -1);
+			end
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
