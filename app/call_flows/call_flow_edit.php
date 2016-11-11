@@ -158,9 +158,14 @@
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
-		//set the destination_number
-			$destination_extension = str_replace("*", "\*", $call_flow_extension);
-			$destination_feature = str_replace("*", "\*", $call_flow_feature_code);
+		//escape special characters
+			$destination_extension = $call_flow_extension;
+			$destination_extension = str_replace("*", "\*", $destination_extension);
+			$destination_extension = str_replace("+", "\+", $destination_extension);
+
+			$destination_feature = $call_flow_feature_code;
+			$destination_feature = str_replace("*", "\*", $destination_feature);
+			$destination_feature = str_replace("+", "\+", $destination_feature);
 
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$conference_center_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
