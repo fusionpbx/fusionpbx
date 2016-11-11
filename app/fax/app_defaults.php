@@ -92,6 +92,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Send a T38 reinvite when a fax tone is detected.';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '7681e5d8-1462-420b-9276-acf4b2156982';
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'variable';
+		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = 'ignore_early_media=true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Ignore ringing to improve fax success rate.';
+		$x++;
 		$array[$x]['default_setting_uuid'] = '80eee263-a22c-4ec9-9df1-397908a274f6';
 		$array[$x]['default_setting_category'] = 'fax';
 		$array[$x]['default_setting_subcategory'] = 'keep_local';
