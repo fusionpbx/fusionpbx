@@ -102,7 +102,7 @@
 				
 				    $newRow = array();
 				    for($i = 0; $i<count($row); $i++){
-				        $newRow[Line] = $x + 1;
+				        $newRow[line] = $x + 1;
 				        $newRow[$header[$i]] = $row[$i];
 				    }
 				
@@ -120,25 +120,25 @@
 			$error_flag = 0;
 			$error_table = array();
 			foreach ($csv as $key => $csv_row) {
-				$username = $csv_row['Username'];
-				$first_name = $csv_row['FirstName'];
-				$last_name = $csv_row['LastName'];
-				$email = $csv_row['Email'];
-				$wizard_template_name = $csv_row['WizardTemplate'];
-				$extension = $csv_row['Extension'];
-				$mac_address = $csv_row['MAC'];
-				$device_template = $csv_row['DeviceTemplate'];
-				$device_profile = $csv_row['DeviceProfile'];
-				$user_password = $csv_row['Password'];
-				$voicemail_pin = $csv_row['PIN'];
-				$line_number = $csv_row['Line'];
+				$username = $csv_row['username'];
+				$first_name = $csv_row['first_name'];
+				$last_name = $csv_row['last_name'];
+				$email = $csv_row['email'];
+				$wizard_template_name = $csv_row['wizard_template'];
+				$extension = $csv_row['extension'];
+				$mac_address = $csv_row['mac_address'];
+				$device_template = $csv_row['device_template'];
+				$device_profile = $csv_row['device_profile'];
+				$user_password = $csv_row['user_password'];
+				$voicemail_pin = $csv_row['vm_password'];
+				$line_number = $csv_row['line'];
 				$valid_mac =  wizard::normalize_mac($mac_address);
 				
 				
 				//check for duplicate extension in csv
 				$u = 0;
 				foreach ($csv as $key => $csv_item)
-        			if (isset($csv_item['Extension']) && $csv_item['Extension'] == $extension) {
+        			if (isset($csv_item['extension']) && $csv_item['extension'] == $extension) {
             			$u++;
         			}
         		if($u > 1) {
@@ -415,7 +415,18 @@
 		echo "		<b>".$text['header-extension_import']."</b><br />\n";
 		echo "		".$text['description-extension_import']."<br />\n";
 		echo "		<br />\n";
-		echo "		".$text['description-csv_headers']."\n";
+		//echo "		".$text['description-csv_headers']."<br />\n";
+		echo "		".$text['description-csv_header_username']."<br />\n";
+		echo "		".$text['description-csv_header_extension']."<br />\n";
+		echo "		".$text['description-csv_header_first_name']."<br />\n";
+		echo "		".$text['description-csv_header_last_name']."<br />\n";
+		echo "		".$text['description-csv_header_email']."<br />\n";
+		echo "		".$text['description-csv_header_mac_address']."<br />\n";
+		echo "		".$text['description-csv_header_wizard_template']."<br />\n";
+		echo "		".$text['description-csv_header_device_template']."<br />\n";
+		echo "		".$text['description-csv_header_device_profile']."<br />\n";
+		echo "		".$text['description-csv_header_user_password']."<br />\n";
+		echo "		".$text['description-csv_header_vm_password']."<br />\n";
 		echo "	</td>\n";
 		echo "	<td valign='top' width='70%' align='right'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>\n";
