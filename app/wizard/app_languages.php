@@ -4,7 +4,7 @@ $text['button-import']['en-us'] = "CSV Import";
 $text['button-templates']['en-us'] = "Wizard Templates";
 $text['description-call_group']['en-us'] = "Enter the Extension Call Group";
 $text['description-call_timeout']['en-us'] = "Enter the Call Timeout";
-$text['description-csv_headers']['en-us'] =  "Use the following headers in the CSV: Username, Extension, FirstName, LastName, Email, MAC, WizardTemplate, DeviceTemplate, DeviceProfile, Password, PIN";
+$text['description-csv_headers']['en-us'] =  "Use the following headers in the CSV:";
 $text['description-emergency_caller_id_number']['en-us'] = "Enter the Emergency Caller ID.";
 $text['description-hold_music']['en-us'] = "Enter the Hold Music";
 $text['description-not_registered']['en-us'] = "Enter the Call Forward Not Registered Number";
@@ -37,6 +37,18 @@ $text['label-wizard_template']['en-us'] = "Wizard Template";
 $text['label-wizard_template_name']['en-us'] = "Wizard Template Name";
 $text['title-wizard']['en-us'] = "Wizard";
 $text['title-wizard_templates']['en-us'] = "Wizard Templates";
+
+$text['description-csv_header_username']['en-us'] = "username (Username),";
+$text['description-csv_header_extension']['en-us'] = "extension (Extension),";
+$text['description-csv_header_first_name']['en-us'] = "first_name (First Name),";
+$text['description-csv_header_last_name']['en-us'] = "last_name (Last Name),";
+$text['description-csv_header_email']['en-us'] = "email (Email Address),";
+$text['description-csv_header_mac_address']['en-us'] = "mac_address (MAC Address),";
+$text['description-csv_header_wizard_template']['en-us'] = "wizard_template (Wizard Template),";
+$text['description-csv_header_device_template']['en-us'] = "device_template (Device Template),";
+$text['description-csv_header_device_profile']['en-us'] = "device_profile (Device Profile),";
+$text['description-csv_header_user_password']['en-us'] = "user_password (User Password),";
+$text['description-csv_header_vm_password']['en-us'] = "vm_password (Voicemail Password)";
 
 $text['button-add']['en-us'] = "Add";
 $text['button-add']['es-cl'] = "Agregar";
@@ -138,7 +150,7 @@ $text['button-upload']['sv-se'] = "Ladda Upp";
 $text['button-upload']['de-at'] = "Hochladen";
 $text['button-upload']['he'] = "";
 
-$text['description-extension_import']['en-us'] = "Import extensions from a CSV file.";
+$text['description-extension_import']['en-us'] = "Import extensions from a CSV file. Use the following headers:";
 $text['description-extension_import']['es-cl'] = "";
 $text['description-extension_import']['pt-pt'] = "";
 $text['description-extension_import']['fr-fr'] = "";
