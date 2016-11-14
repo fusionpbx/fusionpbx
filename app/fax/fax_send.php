@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -714,16 +714,19 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
-				$t38 = "";
+				$fax_variables = "";
 			}
 			else {
 				//send the external call
 				$fax_uri = $route_array[0];
-				$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
+				$fax_variables = "";
+				foreach($_SESSION['fax']['variable'] as $variable) {
+					$fax_variables .= $variable.",";
+				}
 			}
 
 			if ($fax_send_mode != 'queue') {
-				$dial_string .= $t38;
+				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
 				$dial_string .= "fax_uri=" . $fax_uri  . ",";

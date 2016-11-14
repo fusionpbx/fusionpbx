@@ -185,7 +185,7 @@
 			}
 			$echo .= "</td>\n";
 			$echo .= "<td class='".$row_style[$c]." tr_link_void' style='padding: 0px; text-align: center;' align='center' nowrap>\n";
-			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['showall'] == 'true') ? "&showall=true" : null)."';\">\n";
+			$echo .= "	<input type='checkbox' name='group_protected' ".(($group_protected == "true") ? "checked='checked'" : null)." value='".(($group_protected == "true") ? 'false' : 'true')."' onchange=\"window.location='".PROJECT_PATH."/core/groups/groups.php?change=".(($group_protected == "true") ? 'false' : 'true')."&group_uuid=".$group_uuid."&group_name=".$group_name.(($_GET['showall'] == 'true') ? "&showall=true" : null)."';\">\n";
 			$echo .= "</td>\n";
 			$echo .= "<td class='row_stylebg' nowrap>".$group_description."</td>\n";
 			$echo .= "<td class='list_control_icons' style='width: 25px;'>";

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -71,42 +71,46 @@
 --include config.lua
 	require "resources.functions.config";
 
---check if the session is ready
+--connect to the database
+	require "resources.functions.database_handle";
+	dbh = database_handle('system');
+	if (database["type"] == "mysql") then
+		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
+	elseif (database["type"] == "pgsql") then
+		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_label || ')' END AS name FROM v_contacts ";
+	else
+		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
+	end
+	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
+	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
+	sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."'
 
-		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[cidlookup] "..sql.."\n");
+	end
+	status = dbh:query(sql, function(row)
+		name = row.name;
+	end);
 
-			if (database["type"] == "mysql") then
-				sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
-			else
-				sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
-			end
+	if (name == nil) then
+		freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db is nil\n");
+	else
+		freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db: "..name.."\n");
+	end
 
-			sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
-			sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
-			sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."' AND v_destinations.destination_number='"..callee.."'";
+--check if there is a record, if it not then use cidlookup
+	if ((name == nil) or (string.len(name) == 0)) then
+		cidlookup_exists = api:executeString("module_exists cidlookup");
+		if (cidlookup_exists == "true") then
+		    name = api:executeString("cidlookup " .. caller);
+		end
+	end
 
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[cidlookup] "..sql.."\n");
-			end
-			status = dbh:query(sql, function(row)
-				name = row.name;
-			end);
+--set the caller id name
+	if ((name ~= nil) and (string.len(name) > 0)) then
+		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
+		api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 
-			if (name == nil) then
-				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db is nil\n");
-			else
-				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db: "..name.."\n");
-			end
-
-		--check if there is a record, if it doesnt, then use common cidlookup
-			if ((name == nil) or  (string.len(name) == 0)) then
-				name = api:executeString("cidlookup " .. caller);
-			end
-
-			freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
-			api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
-
-			freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
-			api:executeString("uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+		api:executeString("uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+	end
