@@ -42,16 +42,8 @@
 			local Database = require "resources.functions.database"
 			local Settings = require "resources.functions.lazy_settings"
 
-		--get the language, dialect and voice
-			default_language = params:getHeader("variable_default_language");
-			default_dialect = params:getHeader("variable_default_dialect");
-			default_voice = params:getHeader("variable_default_voice");
-			if (default_language == nil) then default_language = 'en'; end
-			if (default_dialect == nil) then default_dialect = 'us'; end
-			if (default_voice == nil) then default_voice = 'callie'; end
-
 		--set the sound prefix
-			sound_prefix = sounds_dir..[[/]]..default_language..[[/]]..default_dialect..[[/]]..default_voice..[[/]];
+			sound_prefix = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/";
 
 		--connect to the database
 			local dbh = Database.new('system');
