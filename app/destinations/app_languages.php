@@ -1,4 +1,222 @@
 <?php
+$text['label-import_file_upload']['en-us'] = "File to Upload";
+$text['label-import_file_upload']['es-cl'] = "Archivo a subir";
+$text['label-import_file_upload']['pt-pt'] = "Ficheiro para submeter";
+$text['label-import_file_upload']['fr-fr'] = "Fichier à télécharger";
+$text['label-import_file_upload']['pt-br'] = "Importar arquivo";
+$text['label-import_file_upload']['pl'] = "Plik do wysłania";
+$text['label-import_file_upload']['uk'] = "Файл для завантаження";
+$text['label-import_file_upload']['sv-se'] = "Fil att ladda upp";
+$text['label-import_file_upload']['de-at'] = "Datei zum hochladen";
+$text['label-import_file_upload']['he'] = "";
+
+$text['description-csv_header_destination_type']['en-us'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['es-cl'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['pt-pt'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['fr-fr'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['pt-br'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['pl'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['uk'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['sv-se'] = "destination_type (Type: inbound/outbound),";
+$text['description-csv_header_destination_type']['he'] = "destination_type (Type: inbound/outbound),";
+
+$text['description-csv_header_destination_number']['en-us'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['es-cl'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['pt-pt'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['fr-fr'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['pt-br'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['pl'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['uk'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['sv-se'] = "destination_number (Destination Number),";
+$text['description-csv_header_destination_number']['he'] = "destination_number (Destination Number),";
+
+$text['description-csv_header_destination_caller_id_name']['en-us'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['es-cl'] = "destination_caller_id_name (Set the caller ID name. default = blank),,";
+$text['description-csv_header_destination_caller_id_name']['pt-pt'] = "destination_caller_id_name (Set the caller ID name. default = blank),,";
+$text['description-csv_header_destination_caller_id_name']['fr-fr'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['pt-br'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['pl'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['uk'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['sv-se'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['de-at'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+$text['description-csv_header_destination_caller_id_name']['he'] = "destination_caller_id_name (Set the caller ID name. default = blank),";
+
+$text['description-csv_header_destination_caller_id_number']['en-us'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['es-cl'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['pt-pt'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['fr-fr'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['pt-br'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['pl'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['uk'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['sv-se'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['de-at'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+$text['description-csv_header_destination_caller_id_number']['he'] = "destination_caller_id_number (Set the caller ID number. default = blank),";
+
+$text['description-csv_header_destination_cid_name_prefix']['en-us'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['es-cl'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['pt-pt'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['fr-fr'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['pt-br'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['pl'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['uk'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['sv-se'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['de-at'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+$text['description-csv_header_destination_cid_name_prefix']['he'] = "destination_cid_name_prefix (Set a prefix on the caller ID name. default = blank),";
+
+$text['description-csv_header_destination_context']['en-us'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['es-cl'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['pt-pt'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['fr-fr'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['pt-br'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['pl'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['uk'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['sv-se'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['de-at'] = "destination_context (Context: default = public),";
+$text['description-csv_header_destination_context']['he'] = "destination_context (Context: default = public),";
+
+$text['description-csv_header_destination_app']['en-us'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['es-cl'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['pt-pt'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['fr-fr'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['pt-br'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['pl'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['uk'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['sv-se'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['de-at'] = "destination_app (Destination app: default = blank),";
+$text['description-csv_header_destination_app']['he'] = "destination_app (Destination app: default = blank),";
+
+$text['description-csv_header_destination_data']['en-us'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['es-cl'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['pt-pt'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['fr-fr'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['pt-br'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['pl'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['uk'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['sv-se'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['de-at'] = "destination_data (Destination data: default = blank),";
+$text['description-csv_header_destination_data']['he'] = "destination_data (Destination data: default = blank),";
+
+$text['description-csv_header_destination_enabled']['en-us'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['es-cl'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['pt-pt'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['fr-fr'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['pt-br'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['pl'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['uk'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['sv-se'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['de-at'] = "destination_enabled (true/false),";
+$text['description-csv_header_destination_enabled']['he'] = "destination_enabled (true/false),";
+
+$text['description-csv_header_destination_description']['en-us'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['es-cl'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['pt-pt'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['fr-fr'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['pt-br'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['pl'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['uk'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['sv-se'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['de-at'] = "destination_description (Description),";
+$text['description-csv_header_destination_description']['he'] = "destination_description (Description),";
+
+$text['description-csv_header_destination_accountcode']['en-us'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['es-cl'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['pt-pt'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['fr-fr'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['pt-br'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['pl'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['uk'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['sv-se'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['de-at'] = "destination_accountcode (Acountcode),";
+$text['description-csv_header_destination_accountcode']['he'] = "destination_accountcode (Acountcode),";
+
+$text['description-csv_header_destination_action']['en-us'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['es-cl'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['pt-pt'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['fr-fr'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['pt-br'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['pl'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['uk'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['sv-se'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['de-at'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+$text['description-csv_header_destination_action']['he'] = "destination_action (Transfer Action: example: '1000' will transfer to extension 1000)";
+
+$text['header-destinations_import']['en-us'] = "Import Destinations";
+$text['header-destinations_import']['es-cl'] = "Import Destinations";
+$text['header-destinations_import']['pt-pt'] = "Import Destinations";
+$text['header-destinations_import']['fr-fr'] = "Import Destinations";
+$text['header-destinations_import']['pt-br'] = "Import Destinations";
+$text['header-destinations_import']['pl'] = "Import Destinations";
+$text['header-destinations_import']['uk'] = "Import Destinations";
+$text['header-destinations_import']['sv-se'] = "Import Destinations";
+$text['header-destinations_import']['de-at'] = "Import Destinations";
+$text['header-destinations_import']['he'] = "Import Destinations";
+
+$text['description-destinations_import']['en-us'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['es-cl'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['pt-pt'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['fr-fr'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['pt-br'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['pl'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['uk'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['sv-se'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['de-at'] = "Import extensions from a CSV file. Use the following headers:";
+$text['description-destinations_import']['he'] = "Import extensions from a CSV file. Use the following headers:";
+
+$text['button-submit']['en-us'] = "Submit";
+$text['button-submit']['es-cl'] = "Submit";
+$text['button-submit']['pt-pt'] = "Submit";
+$text['button-submit']['fr-fr'] = "Submit";
+$text['button-submit']['pt-br'] = "Submit";
+$text['button-submit']['pl'] = "Submit";
+$text['button-submit']['uk'] = "Submit";
+$text['button-submit']['sv-se'] = "Submit";
+$text['button-submit']['de-at'] = "Submit";
+$text['button-submit']['he'] = "Submit";
+
+
+$text['header-destination_import_success']['en-us'] = "Import Complete";
+$text['header-destination_import_success']['es-cl'] = "Import Complete";
+$text['header-destination_import_success']['pt-pt'] = "Import Complete";
+$text['header-destination_import_success']['fr-fr'] = "Import Complete";
+$text['header-destination_import_success']['pt-br'] = "Import Complete";
+$text['header-destination_import_success']['pl'] = "Import Complete";
+$text['header-destination_import_success']['uk'] = "Import Complete";
+$text['header-destination_import_success']['sv-se'] = "Import Complete";
+$text['header-destination_import_success']['de-at'] = "Import Complete";
+$text['header-destination_import_success']['he'] = "Import Complete";
+
+$text['message-errors']['en-us'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['es-cl'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['pt-pt'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['fr-fr'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['pt-br'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['pl'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['uk'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['sv-se'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['de-at'] = "The following errors occured. Please correct the CSV and upload again.";
+$text['message-errors']['he'] = "The following errors occured. Please correct the CSV and upload again.";
+
+$text['message-input']['en-us'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['es-cl'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['pt-pt'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['fr-fr'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['pt-br'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['pl'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['uk'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['sv-se'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['de-at'] = "The following was received from the CSV. Please review and click Submit to continue.";
+$text['message-input']['he'] = "The following was received from the CSV. Please review and click Submit to continue.";
+
+$text['message-input_sucess']['en-us'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['es-cl'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['pt-pt'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['fr-fr'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['pt-br'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['pl'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['uk'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['sv-se'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['de-at'] = "The following was successfully imported into the system.";
+$text['message-input_sucess']['he'] = "The following was successfully imported into the system.";
 
 $text['title-destinations']['en-us'] = "Destinations";
 $text['title-destinations']['es-cl'] = "Destinos";
@@ -601,5 +819,17 @@ $text['billing-warning']['de-at'] = "Wenn Sie die Fusionpbx Abrechnung verwenden
 $text['billing-warning']['fa'] = "";
 $text['billing-warning']['ar-eg'] = "";
 $text['billing-warning']['he'] = "";
+
+$text['button-import']['en-us'] = "Import";
+$text['button-import']['en-us'] = "Import";
+$text['button-import']['es-cl'] = "Importar";
+$text['button-import']['pt-pt'] = "Importat";
+$text['button-import']['fr-fr'] = "Importer";
+$text['button-import']['pt-br'] = "Importar";
+$text['button-import']['pl'] = "Importuj";
+$text['button-import']['uk'] = "";
+$text['button-import']['sv-se'] = "Importera";
+$text['button-import']['de-at'] = "Importieren";
+$text['button-import']['he'] = "";
 
 ?>
