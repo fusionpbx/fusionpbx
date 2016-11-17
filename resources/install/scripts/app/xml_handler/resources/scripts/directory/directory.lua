@@ -179,11 +179,14 @@
 		--build the XML string from the database
 			if (source == "database") or (USE_FS_PATH) then
 				loaded_from_db = true
+
+				--include Database class
+					local Database = require "resources.functions.database";
+
 				--database connection
 					if (continue) then
 						--connect to the database
-							require "resources.functions.database_handle";
-							dbh = database_handle('system');
+							dbh = Database.new('system');
 
 						--exits the script if we didn't connect properly
 							assert(dbh:connected());
@@ -192,12 +195,12 @@
 							if (domain_uuid == nil) then
 								--get the domain_uuid
 									if (domain_name ~= nil) then
-										sql = "SELECT domain_uuid FROM v_domains ";
-										sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+										local sql = "SELECT domain_uuid FROM v_domains "
+											.. "WHERE domain_name = :domain_name";
 										if (debug["sql"]) then
 											freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 										end
-										status = dbh:query(sql, function(rows)
+										dbh:query(sql, {domain_name = domain_name}, function(rows)
 											domain_uuid = rows["domain_uuid"];
 										end);
 									end
@@ -215,9 +218,9 @@
 
 							--get the domain_name from domains
 								if (domain_name == nil) then
-									sql = "SELECT domain_name FROM v_domains ";
-									sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
-									status = dbh:query(sql, function(row)
+									local sql = "SELECT domain_name FROM v_domains "
+										.. "WHERE domain_uuid = :domain_uuid";
+									dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
 										domain_name = row["domain_name"];
 									end);
 								end
@@ -230,13 +233,7 @@
 								require "resources.functions.file_exists";
 
 							--connect to the switch database
-								if (file_exists(database_dir.."/core.db")) then
-									--dbh_switch = freeswitch.Dbh("core:core"); -- when using sqlite
-									dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-								else
-									require "resources.functions.database_handle";
-									dbh_switch = database_handle('switch');
-								end
+								dbh_switch = Database.new('switch');
 
 							--get register name
 								local reg_user = dialed_extension
@@ -245,16 +242,17 @@
 								end
 
 							--get the destination hostname from the registration
-								sql = "SELECT hostname FROM registrations ";
-								sql = sql .. "WHERE reg_user = '"..reg_user.."' ";
-								sql = sql .. "AND realm = '"..domain_name.."' ";
+								local params = {reg_user=reg_user, domain_name=domain_name}
+								local sql = "SELECT hostname FROM registrations "
+									.. "WHERE reg_user = :reg_user "
+									.. "AND realm = :domain_name";
 								if (database["type"] == "mysql") then
-									now = os.time();
-									sql = sql .. "AND expires > "..now;
+									params.now = os.time();
+									sql = sql .. "AND expires > :now";
 								else
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
-								status = dbh_switch:query(sql, function(row)
+								status = dbh_switch:query(sql, params, function(row)
 									database_hostname = row["hostname"];
 								end);
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
@@ -272,12 +270,14 @@
 
 				--get the extension from the database
 					if (continue) then
-						sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
+						local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid "
+							.. "and (extension = :user or number_alias = :user) "
+							.. "and enabled = 'true' ";
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
 						continue = false;
-						dbh:query(sql, function(row)
+						dbh:query(sql, {domain_uuid=domain_uuid, user=user}, function(row)
 							--general
 								continue = true;
 								domain_uuid = row.domain_uuid;
@@ -387,15 +387,17 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
+						local sql = "SELECT * FROM v_voicemails WHERE domain_uuid = :domain_uuid and voicemail_id = :voicemail_id";
+						local params = {domain_uuid = domain_uuid};
 						if number_alias and #number_alias > 0 then
-							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
+							params.voicemail_id = number_alias;
 						else
-							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
+							params.voicemail_id = user;
 						end
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
-						dbh:query(sql, function(row)
+						dbh:query(sql, params, function(row)
 							if (string.len(row.voicemail_enabled) > 0) then
 								vm_enabled = row.voicemail_enabled;
 							end
