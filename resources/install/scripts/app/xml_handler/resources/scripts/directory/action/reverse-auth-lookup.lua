@@ -83,7 +83,7 @@
 		table.insert(xml, [[<document type="freeswitch/xml">]]);
 		table.insert(xml, [[	<section name="directory">]]);
 		table.insert(xml, [[		<domain name="]] .. domain_name .. [[" alias="true">]]);
-		table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+		table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
 		table.insert(xml, [[				<params>]]);
 		table.insert(xml, [[					<param name="reverse-auth-user" value="]] .. extension .. [["/>]]);
 		table.insert(xml, [[					<param name="reverse-auth-pass" value="]] .. password .. [["/>]]);
