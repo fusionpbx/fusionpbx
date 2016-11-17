@@ -241,7 +241,7 @@
 							break;
 					}
 
-				//add the extension to the database
+				//add the user to the database
 					$user_email = '';
 					if ($_SESSION["user"]["unique"]["text"] != "global") {
 					if ($autogen_users == "true") {
@@ -415,6 +415,17 @@
 						//increment the extension number
 							if ($action != "update") {
 								$extension++;
+
+								if (strlen($number_alias) > 0) {
+									$number_alias++;
+								}
+
+								if (strlen($mwi_account) > 0) {
+									$mwi_account_array = explode('@', $mwi_account);
+									$mwi_account_array[0]++;
+									$mwi_account = implode('@', $mwi_account_array);
+									unset($mwi_account_array);
+								}
 							}
 				}
 
