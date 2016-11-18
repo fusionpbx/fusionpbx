@@ -51,7 +51,7 @@
 				--get the domain_uuid
 					if (domain_name ~= nil) then
 						local sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = :domain_name";
+						sql = sql .. "WHERE domain_name = :domain_name ";
 						local params = {domain_name = domain_name};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
