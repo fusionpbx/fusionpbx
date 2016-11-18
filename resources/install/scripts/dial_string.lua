@@ -37,8 +37,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 if ( session:ready() ) then
 	session:answer();
@@ -86,16 +92,18 @@ if ( session:ready() ) then
 		if (string.len(unique_id) > 0) then
 			sql = "SELECT * FROM v_extensions as e, v_domains as d ";
 			sql = sql .. "WHERE e.domain_uuid = d.domain_uuid ";
+			local params = {unique_id = unique_id}
 			if (extension == "true") then
-				sql = sql .. "AND e.extension = '" .. unique_id .."' ";
-				sql = sql .. "AND e.domain_uuid = '" .. domain_uuid .."' ";
+				sql = sql .. "AND e.extension = :unique_id ";
+				sql = sql .. "AND e.domain_uuid = :domain_uuid ";
+				params.domain_uuid = domain_uuid
 			else
-				sql = sql .. "AND e.unique_id = '" .. unique_id .."' ";
+				sql = sql .. "AND e.unique_id = :unique_id ";
 			end
 			if (debug["sql"]) then
-				freeswitch.consoleLog("NOTICE", "sql: ".. sql .. "\n");
+				freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				db_domain_uuid = row.domain_uuid;
 				db_extension_uuid = row.extension_uuid;
 				db_extension = row.extension;
@@ -115,13 +123,18 @@ if ( session:ready() ) then
 		else
 			if (db_domain_uuid ~= nil) then
 				sql = "SELECT * FROM v_voicemails ";
-				sql = sql .. "WHERE domain_uuid = '" .. db_domain_uuid .."' ";
+				sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+				sql = sql .. "AND voicemail_id = :voicemail_id ";
+				local params = {domain_uuid = db_domain_uuid};
 				if (tonumber(db_extension) == nil) then
-					sql = sql .. "AND voicemail_id = '" .. db_number_alias .."' ";
+					params.voicemail_id = db_number_alias;
 				else
-					sql = sql .. "AND voicemail_id = '" .. db_extension .."' ";
+					params.voicemail_id = db_extension;
 				end
-				dbh:query(sql, function(row)
+				if (debug["sql"]) then
+					freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
+				end
+				dbh:query(sql, params, function(row)
 					voicemail_password = row.voicemail_password;
 				end);
 				if (voicemail_password ~= caller_pin_number) then
@@ -139,14 +152,20 @@ if ( session:ready() ) then
 						dial_string = [[{sip_invite_domain=]] .. sip_from_host .. [[,presence_id=]] .. sip_from_user .. [[@]] .. sip_from_host .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. sip_from_host .. [[)}]];
 					end
 					sql = "UPDATE v_extensions SET ";
-					sql = sql .. "dial_string = '" .. dial_string .."', ";
-					sql = sql .. "dial_user = '" .. sip_from_user .."', ";
-					sql = sql .. "dial_domain = '" .. sip_from_host .."' ";
-					sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+					sql = sql .. "dial_string = :dial_string, ";
+					sql = sql .. "dial_user = :dial_user, ";
+					sql = sql .. "dial_domain = :dial_domain ";
+					sql = sql .. "WHERE extension_uuid = :extension_uuid ";
+					local params = {
+						dial_string = dial_string;
+						dial_user = sip_from_user;
+						dial_domain = sip_from_host;
+						extension_uuid = db_extension_uuid;
+					};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+						freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 					end
-					dbh:query(sql);
+					dbh:query(sql, params);
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 				end
 			--remove the dialstring
@@ -156,11 +175,12 @@ if ( session:ready() ) then
 					sql = sql .. "dial_string = null, ";
 					sql = sql .. "dial_user = null, ";
 					sql = sql .. "dial_domain = null ";
-					sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+					sql = sql .. "WHERE extension_uuid = :extension_uuid ";
+					local params = {extension_uuid = db_extension_uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+						freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 					end
-					dbh:query(sql);
+					dbh:query(sql, params);
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-deleted.wav");
 				end
 			--toggle the dial string
@@ -171,11 +191,12 @@ if ( session:ready() ) then
 						sql = sql .. "dial_string = null, ";
 						sql = sql .. "dial_user = null, ";
 						sql = sql .. "dial_domain = null ";
-						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+						sql = sql .. "WHERE extension_uuid = :extension_uuid ";
+						local params = {extension_uuid = db_extension_uuid};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+							freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 						end
-						dbh:query(sql);
+						dbh:query(sql, params);
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-deleted.wav");
 					else
 						--if the dial string is empty then set the dial string
@@ -183,14 +204,20 @@ if ( session:ready() ) then
 							dial_string = [[{sip_invite_domain=]] .. sip_from_host .. [[,presence_id=]] .. sip_from_user .. [[@]] .. sip_from_host .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. sip_from_host .. [[)}]];
 						end
 						sql = "UPDATE v_extensions SET ";
-						sql = sql .. "dial_string = '" .. dial_string .."', ";
-						sql = sql .. "dial_user = '" .. sip_from_user .."', ";
-						sql = sql .. "dial_domain = '" .. sip_from_host .."' ";
-						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+						sql = sql .. "dial_string = :dial_string, ";
+						sql = sql .. "dial_user = :dial_user, ";
+						sql = sql .. "dial_domain = :dial_domain ";
+						sql = sql .. "WHERE extension_uuid = :extension_uuid ";
+						local params = {
+							dial_string = dial_string;
+							dial_user = sip_from_user;
+							dial_domain = sip_from_host;
+							extension_uuid = db_extension_uuid;
+						};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+							freeswitch.consoleLog("NOTICE", "[dial_string] SQL: ".. sql .. "; params: " .. json.encode(params) .. "\n");
 						end
-						dbh:query(sql);
+						dbh:query(sql, params);
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 					end
 				end
