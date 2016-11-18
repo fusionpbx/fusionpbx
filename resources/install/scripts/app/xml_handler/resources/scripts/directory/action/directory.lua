@@ -18,12 +18,12 @@
 
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
 	local sql = "SELECT * FROM v_domains as d, v_extensions as e "
-	sql = sql .. "where d.domain_uuid = e.domain_uuid and "
-	sql = sql .. "(e.directory_visible = 'true' or e.directory_exten_visible='true') "
+	sql = sql .. "where d.domain_uuid = e.domain_uuid "
+	sql = sql .. "and (e.directory_visible = 'true' or e.directory_exten_visible='true') "
 	if domain_name then
-		sql = sql .. "and d.domain_name = :domain_name"
+		sql = sql .. "and d.domain_name = :domain_name "
 	else
-		sql = sql .. "order by d.domain_name"
+		sql = sql .. "order by d.domain_name "
 	end
 	local sql_params = {domain_name = domain_name}
 
