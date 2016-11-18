@@ -45,6 +45,12 @@
 	local Settings = require "resources.functions.lazy_settings"
 	local route_to_bridge = require "resources.functions.route_to_bridge"
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 	local function empty(t)
 		return (not t) or (#t == 0)
 	end
@@ -98,12 +104,13 @@
 		--check to see if the pin number is correct
 			if not session:ready() then return end
 			local sql = "SELECT voicemail_password FROM v_voicemails ";
-			sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
-			sql = sql .. "AND voicemail_id = '" .. extension .."' ";
+			sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+			sql = sql .. "AND voicemail_id = :extension ";
+			local params = {domain_uuid = domain_uuid, extension = extension};
 			if (debug["sql"]) then
-				log.notice(sql);
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
-			local voicemail_password = dbh:first_value(sql)
+			local voicemail_password = dbh:first_value(sql, params)
 			if (voicemail_password ~= caller_pin_number) then
 				--access denied
 				session:streamFile("phrase:voicemail_fail_auth:#");
@@ -115,16 +122,19 @@
 	if not session:ready() then return end
 
 	local sql = "select * from v_extensions ";
-	sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+	sql = sql .. "where domain_uuid = :domain_uuid ";
+	local params = {domain_uuid = domain_uuid};
 	if (extension_uuid ~= nil) then
-		sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+		sql = sql .. "and extension_uuid = :extension_uuid ";
+		params.extension_uuid = extension_uuid;
 	else
-		sql = sql .. "and (extension = '"..extension.."' or number_alias = '"..extension.."') ";
+		sql = sql .. "and (extension = :extension or number_alias = :extension) ";
+		params.extension = extension;
 	end
 	if (debug["sql"]) then
-		log.notice(sql);
+		log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 	end
-	local row = dbh:first_row(sql)
+	local row = dbh:first_row(sql, params)
 	if not row then return end
 
 	extension_uuid = row.extension_uuid;
@@ -166,9 +176,13 @@
 	if enabled == "true" and not empty(forward_caller_id_uuid) then
 		local sql = "select destination_number, destination_description,"..
 			"destination_caller_id_number, destination_caller_id_name " ..
-			"from v_destinations where domain_uuid = '" .. domain_uuid .. "' and " ..
-			"destination_type = 'inbound' and destination_uuid = '" .. forward_caller_id_uuid .. "'";
-		local row = dbh:first_row(sql)
+			"from v_destinations where domain_uuid = :domain_uuid and " ..
+			"destination_type = 'inbound' and destination_uuid = :destination_uuid";
+		local params = {domain_uuid = domain_uuid; destination_uuid = forward_caller_id_uuid}
+		if (debug["sql"]) then
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
+		end
+		local row = dbh:first_row(sql, params)
 		if row then
 			local caller_id_number = row.destination_caller_id_number
 			if empty(caller_id_number) then
@@ -200,9 +214,13 @@
 
 		--used for number_alias to get the correct user
 		local sql = "select extension, number_alias from v_extensions ";
-		sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-		sql = sql .. "and number_alias = '"..forward_all_destination.."' ";
-		dbh:query(sql, function(row)
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and number_alias = :number_alias ";
+		local params = {domain_uuid = domain_uuid; number_alias = forward_all_destination}
+		if (debug["sql"]) then
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
+		end
+		dbh:query(sql, params, function(row)
 			destination_user = row.extension;
 			destination_extension = row.extension;
 			destination_number_alias = row.number_alias or '';
@@ -278,12 +296,13 @@
 	if enabled == "true" and not empty(follow_me_uuid) then
 		local sql = "update v_follow_me set ";
 		sql = sql .. "follow_me_enabled = 'false' ";
-		sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-		sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
 		if (debug["sql"]) then
-			log.notice(sql);
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 		end
-		dbh:query(sql);
+		dbh:query(sql, params);
 	end
 
 --check the destination
@@ -296,20 +315,27 @@
 	do
 		local sql = "update v_extensions set ";
 		if (enabled == "true") then
-			sql = sql .. "forward_all_destination = '"..forward_all_destination.."', ";
-			sql = sql .. "dial_string = '"..dial_string:gsub("'", "''").."', ";
+			sql = sql .. "forward_all_destination = :forward_all_destination, ";
+			sql = sql .. "dial_string = :dial_string, ";
 			sql = sql .. "do_not_disturb = 'false', ";
 		else
 			sql = sql .. "forward_all_destination = null, ";
 			sql = sql .. "dial_string = null, ";
 		end
-		sql = sql .. "forward_all_enabled = '"..forward_all_enabled.."' ";
-		sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-		sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+		sql = sql .. "forward_all_enabled = :forward_all_enabled ";
+		sql = sql .. "where domain_uuid = :domain_uuid ";
+		sql = sql .. "and extension_uuid = :extension_uuid ";
+		local params = {
+			forward_all_destination = forward_all_destination;
+			dial_string = dial_string;
+			forward_all_enabled = forward_all_enabled;
+			domain_uuid = domain_uuid;
+			extension_uuid = extension_uuid;
+		}
 		if (debug["sql"]) then
-			log.notice(sql);
+			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 		end
-		dbh:query(sql);
+		dbh:query(sql, params);
 	end
 
 --disconnect from database
