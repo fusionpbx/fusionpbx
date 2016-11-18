@@ -104,7 +104,7 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name"
+			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
 			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
