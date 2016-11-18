@@ -46,6 +46,12 @@
 	number_alias_string = "";
 	vm_mailto = "";
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 -- event source
 	local event_calling_function = params:getHeader("Event-Calling-Function")
 	local event_calling_file = params:getHeader("Event-Calling-File")
@@ -197,10 +203,11 @@
 									if (domain_name ~= nil) then
 										local sql = "SELECT domain_uuid FROM v_domains "
 											.. "WHERE domain_name = :domain_name ";
+										local params = {domain_name = domain_name};
 										if (debug["sql"]) then
-											freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+											freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 										end
-										dbh:query(sql, {domain_name = domain_name}, function(rows)
+										dbh:query(sql, params, function(rows)
 											domain_uuid = rows["domain_uuid"];
 										end);
 									end
@@ -220,7 +227,11 @@
 								if (domain_name == nil) then
 									local sql = "SELECT domain_name FROM v_domains "
 										.. "WHERE domain_uuid = :domain_uuid ";
-									dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
+									local params = {domain_uuid = domain_uuid};
+									if (debug["sql"]) then
+										freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+									end
+									dbh:query(sql, params, function(row)
 										domain_name = row["domain_name"];
 									end);
 								end
@@ -250,9 +261,12 @@
 									params.now = os.time();
 									sql = sql .. "AND expires > :now ";
 								else
-									sql = sql .. "AND to_timestamp(expires) > NOW()";
+									sql = sql .. "AND to_timestamp(expires) > NOW() ";
 								end
-								status = dbh_switch:query(sql, params, function(row)
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+								end
+								dbh_switch:query(sql, params, function(row)
 									database_hostname = row["hostname"];
 								end);
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
@@ -273,11 +287,12 @@
 						local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid "
 							.. "and (extension = :user or number_alias = :user) "
 							.. "and enabled = 'true' ";
+						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						continue = false;
-						dbh:query(sql, {domain_uuid=domain_uuid, user=user}, function(row)
+						dbh:query(sql, params, function(row)
 							--general
 								continue = true;
 								domain_uuid = row.domain_uuid;
@@ -395,7 +410,7 @@
 							params.voicemail_id = user;
 						end
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						dbh:query(sql, params, function(row)
 							if (string.len(row.voicemail_enabled) > 0) then
@@ -686,4 +701,4 @@
 --send the xml to the console
 	if (debug["xml_string"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: \n" .. XML_STRING .. "\n");
-	end
+end
