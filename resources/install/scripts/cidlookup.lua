@@ -86,7 +86,7 @@
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
 	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
-	sql = sql .. "WHERE  v_contact_phones.phone_number = :caller"
+	sql = sql .. "WHERE  v_contact_phones.phone_number = :caller "
 	local params = {caller = caller}
 
 	if (debug["sql"]) then
