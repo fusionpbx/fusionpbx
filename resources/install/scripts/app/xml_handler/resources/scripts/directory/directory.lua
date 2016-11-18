@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -196,7 +196,7 @@
 								--get the domain_uuid
 									if (domain_name ~= nil) then
 										local sql = "SELECT domain_uuid FROM v_domains "
-											.. "WHERE domain_name = :domain_name";
+											.. "WHERE domain_name = :domain_name ";
 										if (debug["sql"]) then
 											freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 										end
@@ -219,7 +219,7 @@
 							--get the domain_name from domains
 								if (domain_name == nil) then
 									local sql = "SELECT domain_name FROM v_domains "
-										.. "WHERE domain_uuid = :domain_uuid";
+										.. "WHERE domain_uuid = :domain_uuid ";
 									dbh:query(sql, {domain_uuid = domain_uuid}, function(row)
 										domain_name = row["domain_name"];
 									end);
@@ -245,10 +245,10 @@
 								local params = {reg_user=reg_user, domain_name=domain_name}
 								local sql = "SELECT hostname FROM registrations "
 									.. "WHERE reg_user = :reg_user "
-									.. "AND realm = :domain_name";
+									.. "AND realm = :domain_name ";
 								if (database["type"] == "mysql") then
 									params.now = os.time();
-									sql = sql .. "AND expires > :now";
+									sql = sql .. "AND expires > :now ";
 								else
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
@@ -387,7 +387,7 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						local sql = "SELECT * FROM v_voicemails WHERE domain_uuid = :domain_uuid and voicemail_id = :voicemail_id";
+						local sql = "SELECT * FROM v_voicemails WHERE domain_uuid = :domain_uuid and voicemail_id = :voicemail_id ";
 						local params = {domain_uuid = domain_uuid};
 						if number_alias and #number_alias > 0 then
 							params.voicemail_id = number_alias;
