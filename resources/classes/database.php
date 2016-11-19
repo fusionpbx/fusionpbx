@@ -351,14 +351,14 @@ include "root.php";
 
 			// Use this function to execute complex queries
 			public function execute(){
-					$sql = $this->sql;
-					//echo $sql;
+
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
+
 				//get data from the database
-					$prep_statement = $this->db->prepare($sql);
+					$prep_statement = $this->db->prepare($this->sql);
 					if ($prep_statement) {
 						$prep_statement->execute();
 						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
