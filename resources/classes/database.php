@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2015
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -473,30 +473,34 @@ include "root.php";
 					unset($sql);
 			}
 
-			public function delete(){
+			public function delete() {
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
+
 				//delete from the database
-					$sql = "delete from ".$this->table." ";
-					if ($this->where) {
-						$i = 0;
-						foreach($this->where as $row) {
-							if ($i == 0) {
-								$sql .= "where ".$row['name']." ".$row['operator']." '".$row['value']."' ";
+					if (isset($this->table) && isset($this->where)) {
+						$sql = "delete from ".$this->table." ";
+						if ($this->where) {
+							$i = 0;
+							foreach($this->where as $row) {
+								if ($i == 0) {
+									$sql .= "where ".$row['name']." ".$row['operator']." '".$row['value']."' ";
+								}
+								else {
+									$sql .= "and ".$row['name']." ".$row['operator']." '".$row['value']."' ";
+								}
+								$i++;
 							}
-							else {
-								$sql .= "and ".$row['name']." ".$row['operator']." '".$row['value']."' ";
-							}
-							$i++;
 						}
+						//echo $sql."<br>\n";
+						$prep_statement = $this->db->prepare($sql);
+						$prep_statement->execute();
+						unset($sql);
+						unset($this->where);
+						return;
 					}
-					//echo $sql."<br>\n";
-					$prep_statement = $this->db->prepare($sql);
-					$prep_statement->execute();
-					unset($sql);
-					unset($this->where);
 			}
 
 			public function count() {
