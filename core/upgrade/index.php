@@ -56,13 +56,18 @@
 		// run source update
 		if ($do["source"] && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 			chdir($_SERVER["PROJECT_ROOT"]);
-			exec("git pull", $response_source_update);
+			exec("git pull 2>&1", $response_source_update);
 			$update_failed = true;
 			if (sizeof($response_source_update) > 0) {
 				$_SESSION["response_source_update"] = $response_source_update;
 				foreach ($response_source_update as $response_line) {
 					if (substr_count($response_line, "Updating ") > 0 || substr_count($response_line, "Already up-to-date.") > 0) {
 						$update_failed = false;
+					}
+
+					if (substr_count($response_line, "error") > 0) {
+						$update_failed = true;
+						break;
 					}
 				}
 			}
