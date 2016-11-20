@@ -65,7 +65,7 @@
 						$update_failed = false;
 					}
 					
-                    if (substr_count($response_line, "error") > 0) {
+                    			if (substr_count($response_line, "error") > 0) {
 						$update_failed = true;
 						break;
 					}					
