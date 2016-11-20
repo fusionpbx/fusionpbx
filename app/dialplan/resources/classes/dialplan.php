@@ -571,7 +571,7 @@ include "root.php";
 								}
 							}
 							if ($this->is_empty == "dialplan_xml") {
-								$sql .= "and (p.dialplan_xml = '' or p.dialplan_xml is null) \n";
+								$sql .= "and p.dialplan_xml is null \n";
 							}
 							$sql .= "order by \n";
 							$sql .= "dialplan_context asc, \n";
@@ -598,7 +598,7 @@ include "root.php";
 							$sql .= "from v_dialplans as p, v_dialplan_details as s \n";
 							$sql .= "where p.dialplan_uuid = s.dialplan_uuid \n";
 							if ($this->is_empty == "dialplan_xml") {
-								$sql .= "and (p.dialplan_xml = '' or p.dialplan_xml is null) \n";
+								$sql .= "and p.dialplan_xml is null \n";
 							}
 							if (isset($this->context)) {
 								if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
