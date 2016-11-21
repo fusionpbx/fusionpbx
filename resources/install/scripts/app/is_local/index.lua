@@ -29,8 +29,13 @@
 	outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --prepare the api object
 	api = freeswitch.API();
@@ -43,13 +48,18 @@
 
 --get the destination number
 	if (cache == "-ERR NOT FOUND") then
-		sql = "SELECT destination_number, destination_context "
+		local dbh = Database.new('system');
+
+		local sql = "SELECT destination_number, destination_context "
 		sql = sql .. "FROM v_destinations "
-		sql = sql .. "WHERE destination_number = '"..destination_number.."' "
+		sql = sql .. "WHERE destination_number = :destination_number "
 		sql = sql .. "AND destination_type = 'inbound' "
 		sql = sql .. "AND destination_enabled = 'true' "
-		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
-		assert(dbh:query(sql, function(row)
+		local params = {destination_number = destination_number};
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
+		end
+		dbh:query(sql, params, function(row)
 
 			--set the outbound caller id
 				if (outbound_caller_id_name ~= nil) then
@@ -77,7 +87,8 @@
 
 			--transfer the call
 				session:transfer(row.destination_number, "XML", row.destination_context);
-		end));
+		end);
+
 	else
 		--add the function
 			require "resources.functions.explode";
