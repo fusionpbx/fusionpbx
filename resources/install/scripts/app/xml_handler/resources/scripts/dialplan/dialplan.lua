@@ -82,7 +82,7 @@
 			end
 			local x = 0;
 			local pass
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				table.insert(xml, row.dialplan_xml);
 			end);
 
