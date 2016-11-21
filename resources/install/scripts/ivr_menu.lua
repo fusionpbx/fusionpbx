@@ -40,6 +40,12 @@
 --get logger
 	local log = require "resources.functions.log".ivr_menu
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 --include functions
 	require "resources.functions.format_ringback"
 	require "resources.functions.split"
@@ -98,12 +104,13 @@
 
 --get the ivr menu from the database
 	sql = [[SELECT * FROM v_ivr_menus
-		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
+		WHERE ivr_menu_uuid = :ivr_menu_uuid
 		AND ivr_menu_enabled = 'true' ]];
+	local params = {ivr_menu_uuid = ivr_menu_uuid};
 	if (debug["sql"]) then
-		log.notice("SQL: " .. sql);
+		log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 	end
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
 		ivr_menu_name = row["ivr_menu_name"];
 		--ivr_menu_extension = row["ivr_menu_extension"];
@@ -185,15 +192,17 @@
 					return full_path
 				end
 
-				local sql = [[SELECT * FROM v_recordings WHERE domain_uuid = ']]..domain_uuid..
-							[['AND recording_filename = ']]..file_name..[[' ]];
+				local sql = "SELECT * FROM v_recordings WHERE domain_uuid = :domain_uuid "
+							.. "AND recording_filename = :file_name";
+
+				local params = {domain_uuid = domain_uuid, file_name = file_name};
 
 				if (debug["sql"]) then
-					log.notice("SQL: "..sql);
+					log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 				end
 
 				local is_base64
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					if #row.recording_base64 > 32 then
 						--include the file io
 							local file = require "resources.functions.file"
@@ -323,9 +332,12 @@
 			end
 
 		--get the ivr menu options
-			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			local sql = "SELECT * FROM v_ivr_menu_options "
+				.. "WHERE ivr_menu_uuid = :ivr_menu_uuid "
+				.. "ORDER BY ivr_menu_option_order asc ";
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				log.notice("SQL: " .. sql);
+				log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 			end
 
 		--connect to the database
@@ -333,7 +345,7 @@
 
 		--select actions to execute
 			local actions = {}
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				-- declare vars
 					local action, script, data
 
