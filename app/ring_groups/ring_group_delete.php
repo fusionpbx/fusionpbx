@@ -72,6 +72,13 @@ else {
 			$sql .= "and ring_group_uuid = '".$id."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
+			
+		//delete the ring group users
+			$sql = "delete from v_ring_group_users ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and ring_group_uuid = '".$id."' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
 		//delete the dialplan details
 			$sql = "delete from v_dialplan_details ";
@@ -79,7 +86,7 @@ else {
 			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
-
+			
 		//delete the dialplan
 			$sql = "delete from v_dialplans ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
