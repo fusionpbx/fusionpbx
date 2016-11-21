@@ -55,7 +55,7 @@
 		sql = sql .. "WHERE destination_number = :destination_number "
 		sql = sql .. "AND destination_type = 'inbound' "
 		sql = sql .. "AND destination_enabled = 'true' "
-		local params = {destination_number = :destination_number};
+		local params = {destination_number = destination_number};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
 		end
