@@ -86,7 +86,7 @@ else {
 			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
-			
+
 		//delete the dialplan
 			$sql = "delete from v_dialplans ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
