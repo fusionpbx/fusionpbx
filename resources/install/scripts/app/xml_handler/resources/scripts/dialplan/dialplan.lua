@@ -47,7 +47,7 @@
 	if not XML_STRING then
 
 		--connect to the database
-			local Database = require "resources.functions.database_handle";
+			local Database = require "resources.functions.database";
 			dbh = Database.new('system');
 
 		--include json library
