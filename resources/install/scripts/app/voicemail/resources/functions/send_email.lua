@@ -34,13 +34,14 @@
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
 		--get voicemail message details
-			sql = [[SELECT * FROM v_voicemails
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_id = ']] .. id ..[[']]
+			local sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = :domain_uuid
+				AND voicemail_id = :voicemail_id]]
+			local params = {domain_uuid = domain_uuid, voicemail_id = id};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				db_voicemail_uuid = string.lower(row["voicemail_uuid"]);
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
@@ -71,13 +72,14 @@
 					end
 
 				--get voicemail message details
-					sql = [[SELECT * FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_message_uuid = ']] .. uuid ..[[']]
+					local sql = [[SELECT * FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_message_uuid = :uuid]]
+					local params = {domain_uuid = domain_uuid, uuid = uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
-					status = dbh:query(sql, function(row)
+					dbh:query(sql, params, function(row)
 						--get the values from the database
 							--uuid = row["voicemail_message_uuid"];
 							created_epoch = row["created_epoch"];
@@ -211,14 +213,16 @@
 			if (string.len(voicemail_mail_to) > 2) then
 				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
-						sql = [[DELETE FROM v_voicemail_messages
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
-							AND voicemail_message_uuid = ']] .. uuid ..[[']]
+						local sql = [[DELETE FROM v_voicemail_messages
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_uuid = :voicemail_uuid
+							AND voicemail_message_uuid = :uuid]]
+						local params = {domain_uuid = domain_uuid,
+							voicemail_uuid = db_voicemail_uuid, uuid = uuid};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql);
+						dbh:query(sql, params);
 					--delete voicemail recording file
 						if (file_exists(file)) then
 							os.remove(file);
