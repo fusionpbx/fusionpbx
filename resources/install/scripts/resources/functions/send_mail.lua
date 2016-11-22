@@ -52,15 +52,23 @@ if not freeswitch then
 			sql = sql .. "status, "
 			sql = sql .. "email "
 			sql = sql .. ") values ( "
-			sql = sql .. "'" .. email_uuid .. "', "
-			if call_uuid then sql = sql .. "'" .. call_uuid	 .. "', " end
-			sql = sql .. "'" .. domain_uuid .. "', "
+			sql = sql .. ":email_uuid, "
+			if call_uuid then sql = sql .. ":call_uuid, " end
+			sql = sql .. ":domain_uuid, "
 			sql = sql .. "now(),"
-			sql = sql .. "'" .. email_type .. "', "
+			sql = sql .. ":email_type, "
 			sql = sql .. "'failed', "
 			sql = sql .. "'' "
 			sql = sql .. ") "
-			db:query(sql)
+
+			local params = {
+				email_uuid  = email_uuid;
+				call_uuid   = call_uuid;
+				domain_uuid = domain_uuid;
+				email_type  = email_type;
+			}
+
+			db:query(sql, params)
 
 			log.infof("Retained in v_emails as email_uuid = %s", email_uuid)
 		else
