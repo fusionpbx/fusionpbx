@@ -37,6 +37,8 @@ local param_pattern = "[:]([^%d%s][%a%d_]+)"
 local function apply_params(db, sql, params)
   params = params or {}
 
+  local err
+
   local str = string.gsub(sql, param_pattern, function(param)
     local v, t = params[param], type(params[param])
     if "string"  == t then return db:quote(v)      end
@@ -127,7 +129,10 @@ local function new_database(backend, backend_name)
       -- use emulation of parametes
       local err
       sql, err = self:_apply_params(sql, params)
-      if not sql then return nil, err end
+      if not sql then
+        log.errf('can not bind parameter: %s', tostring(err))
+        return nil, err
+      end
     end
 
     return self.__base.query(self, sql, callback)
