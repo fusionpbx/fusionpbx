@@ -62,20 +62,21 @@
 							voicemail_name_base64 = assert(file.read_base64(voicemail_name_location));
 
 					--update the voicemail name
-						sql = "UPDATE v_voicemails ";
-						sql = sql .. "set voicemail_name_base64 = '".. voicemail_name_base64 .. "' ";
-						sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-						sql = sql .. "and voicemail_id = '".. voicemail_id .."'";
+						local sql = "UPDATE v_voicemails ";
+						sql = sql .. "set voicemail_name_base64 = :voicemail_name_base64 ";
+						sql = sql .. "where domain_uuid = :domain_uuid ";
+						sql = sql .. "and voicemail_id = :voicemail_id";
+						local params = {voicemail_name_base64 = voicemail_name_base64,
+							domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						if (storage_type == "base64") then
-							local Database = require "resources.functions.database"
 							local dbh = Database.new('system', 'base64');
-							dbh:query(sql);
+							dbh:query(sql, params);
 							dbh:release();
 						else
-							dbh:query(sql);
+							dbh:query(sql, params);
 						end
 				elseif (storage_type == "http_cache") then
 					freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. " ".. storage_path .."\n");
