@@ -94,12 +94,22 @@ require_once "resources/classes/status_registrations.php";
 			}
 
 			$registrations = get_registrations($sip_profile_name);
-			
+		//count the registrations
+			$reg_count = 0;
+			if (count($registrations) > 0) {
+				foreach ($registrations as $row) {
+					//search 
+					$matches = preg_grep ("/$search_value/i",$row);
+					if ($matches != FALSE) {
+						$reg_count++;
+					}
+				}
+			}
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
-			echo "	<b>".$text['header-registrations']." (".count($registrations).")</b>\n";
+			echo "	<b>".$text['header-registrations']." (".$reg_count.")</b>\n";
 			echo "</td>\n";
 			echo "<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
 			echo "	<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
