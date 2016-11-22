@@ -90,12 +90,14 @@
 									end
 
 								--delete the previous recording
-									sql = "delete from v_voicemail_greetings ";
-									sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-									sql = sql .. "and voicemail_id = '".. voicemail_id .."' ";
-									sql = sql .. "and greeting_id = '".. greeting_id .."' ";
+									local sql = "delete from v_voicemail_greetings ";
+									sql = sql .. "where domain_uuid = :domain_uuid ";
+									sql = sql .. "and voicemail_id = :voicemail_id ";
+									sql = sql .. "and greeting_id = :greeting_id ";
+									local params = {domain_uuid = domain_uuid, 
+										voicemail_id = voicemail_id, greeting_id = greeting_id};
 									--freeswitch.consoleLog("notice", "[SQL] DELETING: " .. greeting_id .. "\n");
-									dbh:query(sql);
+									dbh:query(sql, params);
 
 								--get a new uuid
 									voicemail_greeting_uuid = api:execute("create_uuid");
@@ -116,38 +118,48 @@
 									table.insert(array, ") ");
 									table.insert(array, "VALUES ");
 									table.insert(array, "( ");
-									table.insert(array, "'"..voicemail_greeting_uuid.."', ");
-									table.insert(array, "'"..domain_uuid.."', ");
-									table.insert(array, "'"..voicemail_id.."', ");
-									table.insert(array, "'"..greeting_id.."', ");
+									table.insert(array, ":greeting_uuid, ");
+									table.insert(array, ":domain_uuid, ");
+									table.insert(array, ":voicemail_id, ");
+									table.insert(array, ":greeting_id, ");
 									if (storage_type == "base64") then
-										table.insert(array, "'"..greeting_base64.."', ");
+										table.insert(array, ":greeting_base64, ");
 									end
-									table.insert(array, "'Greeting "..greeting_id.."', ");
-									table.insert(array, "'greeting_"..greeting_id..".wav' ");
+									table.insert(array, ":greeting_name, ");
+									table.insert(array, ":greeting_filename ");
 									table.insert(array, ") ");
 									sql = table.concat(array, "\n");
+									params = {
+										greeting_uuid = voicemail_greeting_uuid;
+										domain_uuid = domain_uuid;
+										voicemail_id = voicemail_id;
+										greeting_id = greeting_id;
+										greeting_base64 = greeting_base64;
+										greeting_name = "Greeting "..greeting_id;
+										greeting_filename = "greeting_"..greeting_id..".wav"
+									};
 									--freeswitch.consoleLog("notice", "[SQL] INSERTING: " .. greeting_id .. "\n");
 									if (debug["sql"]) then
-										freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+										freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 									end
 									if (storage_type == "base64") then
-										local Database = require "resources.functions.database"
 										local dbh = Database.new('system', 'base64');
-										dbh:query(sql);
+										dbh:query(sql, params);
 										dbh:release();
 									else
-										dbh:query(sql);
+										dbh:query(sql, params);
 									end
 
 								--use the new greeting
-									local array = {}
-									table.insert(array, "update v_voicemails ");
-									table.insert(array, "set greeting_id = '".. greeting_id .."' ");
-									table.insert(array, "where domain_uuid = '".. domain_uuid .."' ");
-									table.insert(array, "and voicemail_id = '".. voicemail_id .."' ");
-									sql = table.concat(array, "\n");
-									dbh:query(sql);
+									sql = {}
+									table.insert(sql, "update v_voicemails ");
+									table.insert(sql, "set greeting_id = :greeting_id ");
+									table.insert(sql, "where domain_uuid = :domain_uuid ");
+									table.insert(sql, "and voicemail_id = :voicemail_id ");
+									sql = table.concat(sql, "\n");
+									params = {domain_uuid = domain_uuid, greeting_id = greeting_id,
+										voicemail_id = voicemail_id};
+									dbh:query(sql, params);
 
 								advanced();
 							end
