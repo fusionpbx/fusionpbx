@@ -23,8 +23,6 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
-	local Database = require "resources.functions.database"
-
 --define function to listen to the recording
 	function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number)
 
@@ -76,13 +74,14 @@
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64/read')
 
-				sql = [[SELECT * FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_message_uuid = ']].. uuid.. [[' ]];
+				local sql = [[SELECT * FROM v_voicemail_messages
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_message_uuid = :uuid]];
+				local params = {domain_uuid = domain_uuid, uuid = uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				status = dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
