@@ -14,7 +14,7 @@ local vm_message_count do
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
-WHERE v.voicemail_id = '%s' and d.domain_name = '%s']]
+WHERE v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
 
 local vm_messages_sql = [[SELECT
 ( SELECT count(*)
@@ -50,7 +50,9 @@ function vm_message_count(account, use_cache)
 			local sql = string.format(vm_to_uuid_sql,
 				dbh:escape(id), dbh:escape(domain_name)
 			)
-			uuid = dbh:first_value(sql)
+			uuid = dbh:first_value(vm_to_uuid_sql, {
+				voicemail_id = id, domain_name = domain_name
+			})
 
 			if uuid and #uuid > 0 then
 				cache.set('voicemail_uuid:' .. account, uuid, 3600)
@@ -58,22 +60,21 @@ function vm_message_count(account, use_cache)
 		end
 	end
 
-	local sql 
+	local row
 	if uuid and #uuid > 0 then
-		sql = string.format(vm_messages_sql,
-			dbh:quoted(uuid), dbh:quoted(uuid)
-		)
+		local sql = string.format(vm_messages_sql, ":voicemail_uuid", ":voicemail_uuid")
+		row = dbh:first_row(sql, {voicemail_uuid = uuid})
 	else
-		local uuid_sql = '(' .. string.format(vm_to_uuid_sql,
-			dbh:escape(id), dbh:escape(domain_name)
-		) .. ')'
+		local uuid_sql = '(' .. vm_to_uuid_sql .. ')'
 
-		sql = string.format(vm_messages_sql,
+		local sql = string.format(vm_messages_sql,
 			uuid_sql, uuid_sql
 		)
-	end
 
-	local row = sql and dbh:first_row(sql)
+		row = dbh:first_row(sql, {
+			voicemail_id = id, domain_name = domain_name
+		})
+	end
 
 	dbh:release()
 
