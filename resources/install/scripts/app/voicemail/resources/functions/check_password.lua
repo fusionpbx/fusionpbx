@@ -44,14 +44,15 @@
 			--get the voicemail settings from the database
 				if (voicemail_id) then
 					if (session:ready()) then
-						sql = [[SELECT * FROM v_voicemails
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_id = ']] .. voicemail_id ..[['
+						local sql = [[SELECT * FROM v_voicemails
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_id = :voicemail_id
 							AND voicemail_enabled = 'true' ]];
+						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(row)
+						dbh:query(sql, params, function(row)
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
 							greeting_id = row["greeting_id"];
