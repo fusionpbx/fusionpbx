@@ -22,7 +22,7 @@ function message_count_by_uuid(voicemail_uuid)
 	local params = {voicemail_uuid = voicemail_uuid};
 
 	if debug["sql"] then
-		log.noticef("SQL: %s; prams: %s", message_count_by_uuid_sql, json.encode(params))
+		log.noticef("SQL: %s; params: %s", message_count_by_uuid_sql, json.encode(params))
 	end
 
 	dbh:query(message_count_by_uuid_sql, params, function(row)
@@ -58,7 +58,7 @@ function message_count_by_id(voicemail_id, domain_uuid)
 	local params = {voicemail_id = voicemail_id, domain_uuid = domain_uuid};
 
 	if debug["sql"] then
-		log.noticef("SQL: %s; prams: %s", message_count_by_id_sql, json.encode(params))
+		log.noticef("SQL: %s; params: %s", message_count_by_id_sql, json.encode(params))
 	end
 
 	dbh:query(message_count_by_id_sql, params, function(row)
