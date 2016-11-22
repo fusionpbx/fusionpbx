@@ -26,9 +26,6 @@
 --	add this in Inbound Routes before transfer to use it:
 --	action set caller_id_name=${luarun cidlookup.lua ${uuid}}
 
---debug
-	debug["sql"] = true;
-
 --define the trim function
 	require "resources.functions.trim"
 
@@ -71,9 +68,15 @@
 --include config.lua
 	require "resources.functions.config";
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
 	if (database["type"] == "mysql") then
 		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
 	elseif (database["type"] == "pgsql") then
@@ -83,12 +86,14 @@
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
 	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
-	sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."'
+	sql = sql .. "WHERE  v_contact_phones.phone_number = :caller "
+	local params = {caller = caller}
 
 	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[cidlookup] "..sql.."\n");
+		freeswitch.consoleLog("notice", "[cidlookup] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
 	end
-	status = dbh:query(sql, function(row)
+
+	dbh:query(sql, params, function(row)
 		name = row.name;
 	end);
 

@@ -159,7 +159,8 @@
 
 		//get the ring group uuid
 			if (!isset($ring_group_uuid)) {
-				$ring_group_uuid = is_uuid($_REQUEST["ring_group_uuid"]);
+				$ring_group_uuid = uuid();
+				$_POST["ring_group_uuid"] = $ring_group_uuid;
 			}
 
 		//check for all required data
@@ -292,12 +293,6 @@
 					$dialplan["dialplan_enabled"] = "true";
 					$dialplan["dialplan_description"] = $ring_group_description;
 					$dialplan["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
-
-				//add the ring_group_uuid
-					if (strlen($_POST["ring_group_uuid"]) == 0) {
-						$ring_group_uuid = uuid();
-						$_POST["ring_group_uuid"] = $ring_group_uuid;
-					}
 
 				//prepare the array
 					$array['ring_groups'][] = $_POST;

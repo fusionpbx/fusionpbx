@@ -41,8 +41,14 @@
 			end
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -52,11 +58,12 @@
 				--get the domain_uuid
 					if (domain_name ~= nil) then
 						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						sql = sql .. "WHERE domain_name = :domain_name";
+						local params = {domain_name = domain_name};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(rows)
+						dbh:query(sql, params, function(rows)
 							domain_uuid = rows["domain_uuid"];
 						end);
 					end
@@ -88,14 +95,15 @@
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
 			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
 			sql = sql .. "and p.sip_profile_enabled = 'true' ";
-			sql = sql .. "and (p.sip_profile_hostname = '" .. hostname.. "' or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
+			sql = sql .. "and (p.sip_profile_hostname = :hostname or p.sip_profile_hostname is null or p.sip_profile_hostname = '') ";
 			sql = sql .. "and p.sip_profile_uuid = s.sip_profile_uuid ";
 			sql = sql .. "order by p.sip_profile_name asc ";
+			local params = {hostname = hostname};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			x = 0;
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				--set as variables
 					sip_profile_name = row.sip_profile_name;
 					--sip_profile_description = row.sip_profile_description;
@@ -117,19 +125,20 @@
 						--get the gateways
 							if (domain_count > 1) then
 								sql = "select * from v_gateways as g, v_domains as d ";
-								sql = sql .. "where g.profile = '"..sip_profile_name.."' ";
+								sql = sql .. "where g.profile = :profile ";
 								sql = sql .. "and g.enabled = 'true' ";
 								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							else
 								sql = "select * from v_gateways as g ";
-								sql = sql .. "where g.enabled = 'true' and g.profile = '"..sip_profile_name.."' ";
+								sql = sql .. "where g.enabled = 'true' and g.profile = :profile ";
 							end
-							sql = sql .. "and (g.hostname = '" .. hostname.. "' or g.hostname is null or g.hostname = '') ";
+							sql = sql .. "and (g.hostname = :hostname or g.hostname is null or g.hostname = '') ";
+							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 							end
 							x = 0;
-							dbh:query(sql, function(field)
+							dbh:query(sql, params, function(field)
 								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
 
 								if (string.len(field.username) > 0) then

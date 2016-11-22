@@ -5,13 +5,13 @@ local log = require "resources.functions.log"["voicemail-count"]
 local message_count_by_uuid_sql = [[SELECT
 ( SELECT count(*)
   FROM v_voicemail_messages
-  WHERE voicemail_uuid = '%s' 
+  WHERE voicemail_uuid = :voicemail_uuid
   AND (message_status is null or message_status = '')
 ) as new_messages,
 
 ( SELECT count(*)
   FROM v_voicemail_messages
-  WHERE voicemail_uuid = '%s'
+  WHERE voicemail_uuid = :voicemail_uuid
   AND message_status = 'saved'
 ) as saved_messages
 ]]
@@ -19,15 +19,13 @@ local message_count_by_uuid_sql = [[SELECT
 function message_count_by_uuid(voicemail_uuid)
 	local new_messages, saved_messages = "0", "0"
 
-	local sql = string.format(message_count_by_uuid_sql,
-		voicemail_uuid, voicemail_uuid
-	)
+	local params = {voicemail_uuid = voicemail_uuid};
 
 	if debug["sql"] then
-		log.noticef("SQL: %s", sql)
+		log.noticef("SQL: %s; params: %s", message_count_by_uuid_sql, json.encode(params))
 	end
 
-	dbh:query(sql, function(row)
+	dbh:query(message_count_by_uuid_sql, params, function(row)
 		new_messages, saved_messages = row.new_messages, row.saved_messages
 	end)
 
@@ -42,14 +40,14 @@ local message_count_by_id_sql = [[SELECT
 ( SELECT count(*)
   FROM v_voicemail_messages as m inner join v_voicemails as v
   on v.voicemail_uuid = m.voicemail_uuid
-  WHERE v.voicemail_id = '%s' AND v.domain_uuid = '%s'
+  WHERE v.voicemail_id = :voicemail_id AND v.domain_uuid = :domain_uuid
   AND (m.message_status is null or m.message_status = '')
 ) as new_messages,
 
 ( SELECT count(*)
   FROM v_voicemail_messages as m inner join v_voicemails as v
   on v.voicemail_uuid = m.voicemail_uuid
-  WHERE v.voicemail_id = '%s' AND v.domain_uuid = '%s'
+  WHERE v.voicemail_id = :voicemail_id AND v.domain_uuid = :domain_uuid
   AND m.message_status = 'saved'
 ) as saved_messages
 ]]
@@ -57,15 +55,13 @@ local message_count_by_id_sql = [[SELECT
 function message_count_by_id(voicemail_id, domain_uuid)
 	local new_messages, saved_messages = "0", "0"
 
-	local sql = string.format(message_count_by_id_sql,
-		voicemail_id, domain_uuid, voicemail_id, domain_uuid
-	)
+	local params = {voicemail_id = voicemail_id, domain_uuid = domain_uuid};
 
 	if debug["sql"] then
-		log.noticef("SQL: %s", sql)
+		log.noticef("SQL: %s; params: %s", message_count_by_id_sql, json.encode(params))
 	end
 
-	dbh:query(sql, function(row)
+	dbh:query(message_count_by_id_sql, params, function(row)
 		new_messages, saved_messages = row.new_messages, row.saved_messages
 	end)
 

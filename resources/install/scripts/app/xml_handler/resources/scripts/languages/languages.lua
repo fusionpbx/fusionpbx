@@ -67,29 +67,35 @@
 	--build the XML string from the database
 		if (source == "database") then
 
-			--database connection
+			--connect to the database
+				local Database = require "resources.functions.database";
+				dbh = Database.new('system');
+
+			--include json library
+				local json
+				if (debug["sql"]) then
+					json = require "resources.functions.lunajson"
+				end
+
+			--exits the script if we didn't connect properly
+				assert(dbh:connected());
+
+			--get the domain_uuid
 				if (continue) then
-					--connect to the database
-						require "resources.functions.database_handle";
-						dbh = database_handle('system');
-
-					--exits the script if we didn't connect properly
-						assert(dbh:connected());
-
-					--get the domain_uuid
-						if (domain_uuid == nil) then
-							--get the domain_uuid
-								if (domain_name ~= nil) then
-									sql = "SELECT domain_uuid FROM v_domains ";
-									sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-									if (debug["sql"]) then
-										freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-									end
-									status = dbh:query(sql, function(rows)
-										domain_uuid = rows["domain_uuid"];
-									end);
+					if (domain_uuid == nil) then
+						--get the domain_uuid
+							if (domain_name ~= nil) then
+								local sql = "SELECT domain_uuid FROM v_domains ";
+								sql = sql .. "WHERE domain_name = :domain_name ";
+								local params = {domain_name = domain_name};
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 								end
-						end
+								dbh:query(sql, params, function(rows)
+									domain_uuid = rows["domain_uuid"];
+								end);
+							end
+					end
 				end
 
 			--prevent processing for invalid domains
@@ -113,20 +119,21 @@
 								table.insert(xml, [[			<phrases>]]);
 								table.insert(xml, [[				<macros>]]);
 
-								sql = "SELECT * FROM v_phrases as p, v_phrase_details as d ";
-								sql = sql .. "WHERE d.domain_uuid = '" .. domain_uuid .. "' ";
-								sql = sql .. "AND p.phrase_uuid = '".. macro_name .."' ";
-								sql = sql .. "AND p.phrase_language = '".. language .."' ";
+								local sql = "SELECT * FROM v_phrases as p, v_phrase_details as d ";
+								sql = sql .. "WHERE d.domain_uuid = :domain_uuid ";
+								sql = sql .. "AND p.phrase_uuid = :macro_name ";
+								sql = sql .. "AND p.phrase_language = :language ";
 								sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
 								sql = sql .. "AND p.phrase_enabled = 'true' ";
 								sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
+								local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = language};
 								if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 								end
 								previous_phrase_uuid = "";
 								match_tag = "open";
 								x = 0;
-								dbh:query(sql, function(row)
+								dbh:query(sql, params, function(row)
 									--phrase_uuid,domain_uuid,phrase_name,phrase_language
 									--phrase_description,phrase_enabled,phrase_detail_uuid
 									--phrase_detail_group,phrase_detail_tag,phrase_detail_pattern

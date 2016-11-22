@@ -93,8 +93,8 @@ This method causes the script to get its manadatory arguments directly from the 
 	--if not cached then get the information from the database
 	if (cache == "-ERR NOT FOUND") then
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			Database = require "resources.functions.database";
+			dbh = Database.new('system');
 
 		--log if not connect
 			if dbh:connected() == false then
@@ -104,8 +104,8 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
-			status = dbh:query(sql, function(rows)
+			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
 				found_enabled = rows["call_block_enabled"];
