@@ -111,7 +111,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				found_enabled = rows["call_block_enabled"];
 				found_action = rows["call_block_action"];
 				found_count = rows["call_block_count"];
-				end)
+			end)
 			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
 
 		--set the cache
@@ -176,7 +176,9 @@ This method causes the script to get its manadatory arguments directly from the 
 				k = k + 1
 			end
 			if (source == "database") then
-				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+				dbh:query("UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid",{
+					call_block_count = found_count + 1, call_block_uuid = found_uuid
+				})
 			end
 			session:execute("set", "call_blocked=true");
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
