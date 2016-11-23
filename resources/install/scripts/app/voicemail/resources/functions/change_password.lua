@@ -32,15 +32,17 @@
 				dtmf_digits = '';
 				password = macro(session, "password_new", 20, 5000, '');
 			--update the voicemail password
-				sql = [[UPDATE v_voicemails
-					set voicemail_password = ']] .. password ..[['
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_id = ']] .. voicemail_id ..[['
+				local sql = [[UPDATE v_voicemails
+					set voicemail_password = :password
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_id = :voicemail_id 
 					AND voicemail_enabled = 'true' ]];
+				local params = {password = password, domain_uuid = domain_uuid,
+					voicemail_id = voicemail_id};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql);
+				dbh:query(sql, params);
 			--has been changed to
 				dtmf_digits = '';
 				macro(session, "password_changed", 20, 3000, password);
