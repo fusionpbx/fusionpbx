@@ -107,6 +107,7 @@
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[settings] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 				end
+				local last_category, last_subcategory
 				dbh:query(sql, params, function(row)
 					--variables
 						local setting_uuid = row.domain_setting_uuid
@@ -128,12 +129,20 @@
 					--set the name and value
 						if (name == "array") then
 							local t = array[category][subcategory]
+							-- overwrite entire array from default settings if needed
+							if last_category ~= category and last_subcategory ~= subcategory and t[1] then
+								t = {}
+								array[category][subcategory] = t
+							end
 							t[#t + 1] = value
 						else
 							if (value ~= nil) then
 								array[category][subcategory][name] = value;
 							end
 						end
+
+					-- set last category
+						last_category, last_subcategory = category, subcategory
 				end);
 			end
 
