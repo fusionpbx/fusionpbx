@@ -54,7 +54,7 @@
 						sql = sql .. "WHERE domain_name = :domain_name ";
 						local params = {domain_name = domain_name};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 						end
 						dbh:query(sql, params, function(rows)
 							domain_uuid = rows["domain_uuid"];
@@ -70,11 +70,12 @@
 		--build the call group array
 			sql = [[
 			select * from v_extensions
-			where domain_uuid = ']]..domain_uuid..[['
+			where domain_uuid = :domain_uuid
 			order by call_group asc
 			]];
+			params = {domain_uuid = domain_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			call_group_array = {};
 			dbh:query(sql, function(row)
