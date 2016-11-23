@@ -36,13 +36,13 @@
 
 //get user uuid
 	if (
-		(is_uuid($_REQUEST["id"]) && permission_exists('user_edit')) ||
-		(is_uuid($_REQUEST["id"]) && $_REQUEST["id"] == $_SESSION['user_uuid'])
+		(is_uuid(request_str("id")) && permission_exists('user_edit')) ||
+		(is_uuid(request_str("id")) && request_str("id") == $_SESSION['user_uuid'])
 		)  {
-		$user_uuid = check_str($_REQUEST["id"]);
+		$user_uuid = check_str(request_str("id"));
 		$action = 'edit';
 	}
-	else if (permission_exists('user_add') && $_REQUEST["id"] == '') {
+	else if (permission_exists('user_add') && request_str("id") == '') {
 		$user_uuid = uuid();
 		$action = 'add';
 	}
@@ -53,7 +53,11 @@
 	}
 
 //get total user count from the database, check limit, if defined
-	if (permission_exists('user_add') && $action == 'add' && $_SESSION['limit']['users']['numeric'] != '') {
+	$limit_users_numeric = '';
+	if (isset($_SESSION['limit']['users']['numeric'])) {
+		$limit_users_numeric = $_SESSION['limit']['users']['numeric'];
+	}
+	if (permission_exists('user_add') && $action == 'add' && $limit_users_numeric != '') {
 		$sql = "select count(user_uuid) as num_rows from v_users where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -62,9 +66,9 @@
 			$total_users = $row['num_rows'];
 		}
 		unset($prep_statement, $row);
-		if ($total_users >= $_SESSION['limit']['users']['numeric']) {
+		if ($total_users >= $limit_users_numeric) {
 			$_SESSION['message_mood'] = 'negative';
-			$_SESSION['message'] = $text['message-maximum_users'].' '.$_SESSION['limit']['users']['numeric'];
+			$_SESSION['message'] = $text['message-maximum_users'].' '.$limit_users_numeric;
 			header('Location: users.php');
 			exit;
 		}
@@ -82,7 +86,7 @@
 	}
 
 //delete the group from the user
-	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
+	if (get_str("a") == "delete" && permission_exists("user_delete")) {
 		//set the variables
 			$group_uuid = check_str($_GET["group_uuid"]);
 		//delete the group from the users
@@ -102,7 +106,12 @@
 $user_language=check_str(post_str("user_language"));
 $user_time_zone=check_str(post_str("user_time_zone"));
 $group_uuid_name = check_str(post_str("group_uuid_name"));
-
+$username = check_str(post_str("username"));
+$user_status = check_str(post_str("user_status"));
+$user_email = check_str(post_str("user_email"));
+$contact_organization = check_str(post_str("contact_organization"));
+$contact_name_given = check_str(post_str("contact_name_given"));
+$contact_name_family = check_str(post_str("contact_name_family"));
 
 $msg_error='';
 if (count($_POST) > 0 ) {
@@ -112,19 +121,11 @@ if (count($_POST) > 0 ) {
 			$user_uuid = $_REQUEST["id"];
 			$username_old = check_str($_POST["username_old"]);
 		}
-		$domain_uuid = check_str($_POST["domain_uuid"]);
-		$username = check_str($_POST["username"]);
+		$domain_uuid = check_str(post_str("domain_uuid"));
 		$password = check_str($_POST["password"]);
-		$password_confirm = check_str($_POST["password_confirm"]);
-		$user_status = check_str($_POST["user_status"]);
+		$password_confirm = check_str(post_str("password_confirm"));
 		if (permission_exists('user_edit') && $action == 'edit') {
-			$contact_uuid = check_str($_POST["contact_uuid"]);
-		}
-		else if (permission_exists('user_add') && $action == 'add') {
-			$user_email = check_str($_POST["user_email"]);
-			$contact_organization = check_str($_POST["contact_organization"]);
-			$contact_name_given = check_str($_POST["contact_name_given"]);
-			$contact_name_family = check_str($_POST["contact_name_family"]);
+			$contact_uuid = check_str(post_str("contact_uuid"));
 		}
 		$user_enabled = check_str($_POST["user_enabled"]);
 		$api_key = check_str($_POST["api_key"]);
@@ -487,28 +488,28 @@ if ($msg_error == '' && count($_POST) > 0) {
 				exit;
 			}
 			unset($sql, $prep_statement, $row);
+	}
 
-		//get user settings
-			$sql = "select * from v_user_settings ";
-			$sql .= "where user_uuid = '".$user_uuid."' ";
-			$sql .= "and user_setting_enabled = 'true' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					$name = $row['user_setting_name'];
-					$category = $row['user_setting_category'];
-					$subcategory = $row['user_setting_subcategory'];
-					if (strlen($subcategory) == 0) {
-						//$$category[$name] = $row['domain_setting_value'];
-						$user_settings[$category][$name] = $row['user_setting_value'];
-					}
-					else {
-						$user_settings[$category][$subcategory][$name] = $row['user_setting_value'];
-					}
-				}
+	//get user settings
+	$sql = "select * from v_user_settings ";
+	$sql .= "where user_uuid = '".$user_uuid."' ";
+	$sql .= "and user_setting_enabled = 'true' ";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($result as $row) {
+			$name = $row['user_setting_name'];
+			$category = $row['user_setting_category'];
+			$subcategory = $row['user_setting_subcategory'];
+			if (strlen($subcategory) == 0) {
+				//$$category[$name] = $row['domain_setting_value'];
+				$user_settings[$category][$name] = $row['user_setting_value'];
 			}
+			else {
+				$user_settings[$category][$subcategory][$name] = $row['user_setting_value'];
+			}
+		}
 	}
 
 //include the header
@@ -657,11 +658,12 @@ if ($msg_error == '' && count($_POST) > 0) {
 		$language_codes[$row["code"]] = $row["language"];
 	}
 	unset($prep_statement, $result, $row);
+	$domain_language_code = isset($user_settings['domain']['language']['code']) ? $user_settings['domain']['language']['code'] : '';
 	foreach ($_SESSION['app']['languages'] as $code) {
 		if ($user_language != '') {
 			$selected = ($code == $user_language) ? "selected='selected'" : null;
 		} else {
-			$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
+			$selected = ($code == $domain_language_code) ? "selected='selected'" : null;
 		}
 		echo "	<option value='".$code."' ".$selected.">".$language_codes[$code]." [".$code."]</option>\n";
 	}
@@ -682,6 +684,8 @@ if ($msg_error == '' && count($_POST) > 0) {
     $time_zone_identifiers = DateTimeZone::listIdentifiers();
 	$previous_category = '';
 	$x = 0;
+
+	$domain_time_zone_name = isset($user_settings['domain']['time_zone']['name']) ? $user_settings['domain']['time_zone']['name'] : '';
 	foreach ($time_zone_identifiers as $key => $row) {
 		$time_zone = explode("/", $row);
 		$category = $time_zone[0];
@@ -691,10 +695,11 @@ if ($msg_error == '' && count($_POST) > 0) {
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
+		
 		if ($user_time_zone != '') {
 			$selected = ($row == $user_time_zone) ? "selected='selected'" : null;
 		} else {
-			$selected = ($row == $user_settings['domain']['time_zone']['name']) ? "selected='selected'" : null;
+			$selected = ($row == $domain_time_zone_name) ? "selected='selected'" : null;
 		}
 
 		echo "			<option value='".$row."' " . $selected . ">" . $row . "</option>\n";
@@ -708,7 +713,7 @@ if ($msg_error == '' && count($_POST) > 0) {
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	if ($_SESSION['user_status_display'] != "false") {
+	if (!isset($_SESSION['user_status_display']) || $_SESSION['user_status_display'] != "false") {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 		echo "		".$text['label-status']."\n";
