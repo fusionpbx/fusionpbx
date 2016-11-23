@@ -67,11 +67,12 @@
 			return (isset($_GET[$field])) ? $_GET[$field] : '';
 		}
 	}
+
 	
 	if (!function_exists('request_str')) {
 		// substitute for $_REQUEST but only uses get/post to avoid cookie xss issues
 		function request_str($field) {
-			return (isset($_POST[$field])) ? $_POST[$field] : (is_set($_GET[$field])) ? $_GET[$field] : '';
+			return (isset($_POST[$field])) ? $_POST[$field] : (isset($_GET[$field])) ? $_GET[$field] : '';
 		}
 	}
 	
