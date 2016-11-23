@@ -58,7 +58,7 @@
 	end
 
 	x = 0;
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		destination_number = row.destination_number;
 		--destination_caller_id_name = row.destination_caller_id_name;
 		--destination_caller_id_number = row.destination_caller_id_number;
