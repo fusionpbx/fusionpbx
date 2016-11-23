@@ -191,7 +191,7 @@
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
-					dbh:query(sql);
+					dbh:query(sql, params);
 			end);
 
 		--clear the cache
