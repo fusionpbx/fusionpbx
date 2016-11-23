@@ -83,6 +83,8 @@
 				record_silence_threshold = 300;
 			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
+			sip_from_user = session:getVariable("sip_from_user");
+			sip_number_alias = session:getVariable("sip_number_alias");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
 
 		--set the sounds path for the language, dialect and voice
