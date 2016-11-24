@@ -23,24 +23,34 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('voicemail_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	
+//check permissions
+	if (permission_exists('voicemail_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//retrieve order by
+//set the variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
+	$search = check_str($_GET["search"]);
+
+//sterilize the user data
+	$order_by = preg_replace('/\s+/', '', $order_by);
+	if (!(strtolower($order) == "asc" or strtolower($order) == "desc")) { $order = ''; }
+	if (strlen($search) > 15) {	$search = substr($search, 0, 15); }
 
 //set the voicemail id and voicemail uuid arrays
 	if (isset($_SESSION['user']['extension'])) foreach ($_SESSION['user']['extension'] as $index => $row) {
@@ -62,15 +72,15 @@ else {
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_voicemails ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql = "SELECT count(*) AS num_rows FROM v_voicemails ";
+	$sql .= "WHERE domain_uuid = '$domain_uuid' ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	voicemail_id like '%".$search."%' ";
-		$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
-		$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
-		$sql .= " 	or voicemail_enabled like '%".$search."%' ";
-		$sql .= " 	or voicemail_description like '%".$search."%' ";
+		$sql .= "	CAST(voicemail_id AS TEXT) LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_mail_to LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_local_after_email LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_enabled LIKE '%".$search."%' ";
+		$sql .= " 	OR voicemail_description LIKE '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (!permission_exists('voicemail_delete')) {
@@ -82,14 +92,14 @@ else {
 					$sql .= "voicemail_uuid = '".$row['voicemail_uuid']."' ";
 				}
 				else {
-					$sql .= " or voicemail_uuid = '".$row['voicemail_uuid']."'";
+					$sql .= " OR voicemail_uuid = '".$row['voicemail_uuid']."'";
 				}
 				$x++;
 			}
 			$sql .= ")";
 		}
 		else {
-			$sql .= "and voicemail_uuid is null ";
+			$sql .= "AND voicemail_uuid IS NULL ";
 		}
 	}
 	$prep_statement = $db->prepare($sql);
@@ -114,14 +124,14 @@ else {
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*) as num_rows', '*', $sql);
+	$sql = str_replace('count(*) AS num_rows', '*', $sql);
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'voicemail_id') ? "order by voicemail_id ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'voicemail_id') ? "ORDER BY voicemail_id ".$order." " : "ORDER BY ".$order_by." ".$order." ";
 	}
 	else {
-		$sql .= "order by voicemail_id asc ";
+		$sql .= "ORDER BY voicemail_id ASC ";
 	}
-	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
+	$sql .= "LIMIT ".$rows_per_page." OFFSET ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
