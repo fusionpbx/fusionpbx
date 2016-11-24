@@ -23,17 +23,21 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('extension_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('extension_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,7 +52,7 @@ else {
 		}
 	}
 	
-// skip clone if domain:extension already exists
+// skip the copy if the domain extension already exists
 	$ext = new extension;
 	$ext->db = $db;
 	if ($ext->ExtensionExists($domain_uuid, $extension_new)) {
