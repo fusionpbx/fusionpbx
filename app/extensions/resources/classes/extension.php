@@ -505,7 +505,7 @@ if (!class_exists('extension')) {
 			}
 		}
 
-		// returns true if domain:extension already exists
+		// returns true if the domain extension already exists
 		public function ExtensionExists($domain_uuid, $extension) {
 			$sql = "select * from v_extensions where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and extension='".$extension."'";
