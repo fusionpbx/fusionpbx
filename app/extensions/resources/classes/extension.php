@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2014
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -79,6 +79,20 @@ if (!class_exists('extension')) {
 		public function __destruct() {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
+			}
+		}
+
+		public function exists($extension) {
+			$sql = "select extension_uuid from v_extensions ";
+			$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+			$sql .= "and (extension = '$extension' or number_alias = '$extension') ";
+			$sql .= "and enabled = 'true' ";
+			$result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+			if (count($result) > 0) {
+				return true;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -503,18 +517,6 @@ if (!class_exists('extension')) {
 				//apply settings
 					$_SESSION["reload_xml"] = true;
 			}
-		}
-
-		// returns true if domain:extension already exists
-		public function exists($domain_uuid, $extension) {
-			$sql = "select * from v_extensions where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and extension='".$extension."'";
-			
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			
-			return count($result) != 0;
 		}
 	}
 }
