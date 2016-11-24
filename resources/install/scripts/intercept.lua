@@ -188,9 +188,13 @@
 			sql = sql .. "AND (";
 			for key,call_group in ipairs(call_groups) do
 				if key > 1 then sql = sql .. " OR " end
-				local param_name = "call_group_" .. tostring(key)
-				sql = sql .. "call_group = :" .. param_name;
-				params[param_name] = (#call_group == 0) and '' or ('%' .. call_group .. '%');
+				if #call_group == 0 then
+					sql = sql .. "call_group = '' or call_group is NULL";
+				else
+					local param_name = "call_group_" .. tostring(key)
+					sql = sql .. "call_group = :" .. param_name;
+					params[param_name] = '%' .. call_group .. '%';
+				end
 			end
 			sql = sql .. ") ";
 			if (debug["sql"]) then
