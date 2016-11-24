@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -60,8 +60,9 @@
 //set the max php execution time
 	ini_set(max_execution_time,7200);
 
+//get the file
 	$file = check_str($_GET["import_file"]);
-	
+
 //get the contents of the csv file	
 	$handle = @fopen($_SESSION['server']['temp']['dir']."/". $file, "r");
 	if ($handle) {
@@ -75,18 +76,18 @@
 		        $header = $row;
 		        continue;
 		    }
-		
+
 		    $newRow = array();
 		    for($i = 0; $i<count($row); $i++){
 		        $newRow[$header[$i]] = $row[$i];
 		        //$newRow[Line] = $x + 1;
 		    }
-		
+
 		    $csv[] = $newRow;
 		    $x++;
 		}
 	}
-					
+
 	if (!feof($handle)) {
 		echo "Error: Unable to open the file.\n";
 	}
@@ -98,7 +99,7 @@
 	$p->add("dialplan_detail_add", 'temp');
 	$p->add("dialplan_edit", 'temp');
 	$p->add("dialplan_detail_edit", 'temp');
-	
+
 	//cycle through the rows
 	foreach ($csv as $key => $csv_row) {
 		//set the variables
@@ -120,14 +121,12 @@
 			$domain_name = $_SESSION['domain_name'];
 			$domain_uuid = $_SESSION['domain_uuid'];
 			$line_number = $csv_row['line'];
-	
 
-
-
-		
 		//build the array
-			$i=0;
-			//v_destinations
+			//set the array id
+				$i = 0;
+
+			//build the destinations array
 				$array["destinations"][$i]["destination_uuid"] = $destination_uuid;
 				$array["destinations"][$i]["domain_uuid"] = $domain_uuid;
 				$array["destinations"][$i]["destination_type"] = $destination_type;
@@ -143,8 +142,6 @@
 				$array["destinations"][$i]["destination_accountcode"] = $destination_accountcode;
 				$array["destinations"][$i]["dialplan_uuid"] = $dialplan_uuid;
 				$array["destinations"][$y]["destination_number_regex"] = $destination_number_regex;
-				
-				
 
 			//build the dialplan array
 				$array["dialplans"][$y]["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
@@ -158,11 +155,9 @@
 				$array["dialplans"][$y]["dialplan_enabled"] = $destination_enabled;
 				$array["dialplans"][$y]["dialplan_description"] = $destination_description;
 
-				$dialplan_detail_order = 10;
-	
 			//increment the dialplan detail order
-				$dialplan_detail_order = $dialplan_detail_order + 10;
-	
+				$dialplan_detail_order = $dialplan_detail_order = 10;
+
 			//build the condition	
 				$dialplan_detail_uuid = uuid();
 				$array["dialplan_details"][$y]["dialplan_detail_uuid"] = $dialplan_detail_uuid;
@@ -171,10 +166,12 @@
 				$array["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
-				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-				$dialplan_detail_order = $dialplan_detail_order + 10;				
+				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;				
 				$y++;
-			
+
+			//increment the dialplan detail order
+				$dialplan_detail_order = $dialplan_detail_order = 10;
+
 			//set the caller id name prefix
 				if (strlen($destination_cid_name_prefix) > 0) {
 					$dialplan_detail_uuid = uuid();
@@ -186,11 +183,11 @@
 					$array["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
 					$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 					$y++;
-	
+
 					//increment the dialplan detail order
-					$dialplan_detail_order = $dialplan_detail_order + 10;
+					$dialplan_detail_order = $dialplan_detail_order = 10;
 				}
-		
+
 			//set the call accountcode
 				if (strlen($destination_accountcode) > 0) {
 					$dialplan_detail_uuid = uuid();
@@ -202,11 +199,11 @@
 					$array["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 					$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 					$y++;
-	
+
 					//increment the dialplan detail order
 					$dialplan_detail_order = $dialplan_detail_order + 10;
 				}
-			
+
 			//build the transfer action
 				$dialplan_detail_uuid = uuid();
 				$array["dialplan_details"][$y]["dialplan_detail_uuid"] = $dialplan_detail_uuid;
@@ -216,7 +213,6 @@
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "transfer";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = $destination_action. " XML " . $domain_name;
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-			
 
 			//save to the datbase
 				$database = new database;
@@ -225,11 +221,9 @@
 				$database->save($array);
 				$message = $database->message;
 				//echo "<pre>".print_r($message, true)."<pre>\n";
-				//exit;
-			unset($database,$array,$i);
-	
-		//end of loop for one line of csv
-	}
+				unset($database,$array,$i);
+
+	} //end of loop for one line of csv
 
 //remove the temporary permission
 	$p->delete("dialplan_add", 'temp');
@@ -243,7 +237,6 @@
 //clear the cache
 	$cache = new cache;
 	$cache->delete("dialplan:".$destination_context);
-
 
 //show the header
 	require_once "resources/header.php";
@@ -270,10 +263,9 @@
 		echo "	<th>".$key."</th>\n";
 	}
 	echo "</tr>\n";
-	
+
 	foreach ($csv as $key => $csv_row) {
 		echo "<tr>\n";
-		
 		foreach ($csv_row as $csv_item){
 			echo "	<td style='text-align:left' class='vncell' valign='top' align='right'>\n";
 			echo 		$csv_item ."&nbsp;\n";
