@@ -92,7 +92,7 @@ require_once "resources/classes/status_registrations.php";
 				echo $e->getMessage();
 				exit;
 			}
-
+		//get the registrations
 			$registrations = get_registrations($sip_profile_name);
 		//count the registrations
 			$reg_count = 0;
