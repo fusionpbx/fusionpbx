@@ -74,6 +74,7 @@
 				end
 							
 				transcription = transcribe_json["results"][1]["name"];
+				transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
 				confidence = transcribe_json["results"][1]["confidence"];
 			end
 			return transcription;
