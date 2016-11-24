@@ -35,7 +35,7 @@
 
 --connect to the database
 	local Database = require "resources.functions.database";
-	dbh = database_handle('system');
+	dbh = Database.new('system');
 
 --include json library
 	local json
@@ -388,7 +388,6 @@
 				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			--end
 			if (storage_type == "base64") then
-				local Database = require "resources.functions.database"
 				local dbh = Database.new('system', 'base64');
 				dbh:query(sql, params);
 				dbh:release();
