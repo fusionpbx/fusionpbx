@@ -165,8 +165,7 @@
 			end_epoch = os.time();
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			dbh = Database.new('system');
 
 		--get the conference sessions
 			if (conference_session_uuid) then

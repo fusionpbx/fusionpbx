@@ -28,7 +28,7 @@
 
 --connect to the database
 	local Database = require "resources.functions.database";
-	dbh = database_handle('system');
+	dbh = Database.new('system');
 
 --include json library
 	local json
