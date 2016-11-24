@@ -688,19 +688,21 @@
 	unset($sql, $prep_statement);
 
 //get assigned users
-	$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
-	$sql .= "where e.user_uuid = u.user_uuid  ";
-	$sql .= "and u.user_enabled = 'true' ";
-	$sql .= "and e.domain_uuid = '".check_str($domain_uuid)."' ";
-	$sql .= "and e.extension_uuid = '".check_str($extension_uuid)."' ";
-	$sql .= "order by u.username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$assigned_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($assigned_users as $field) {
-		$assigned_user_uuids[] = $field['user_uuid'];
+	if (is_uuid($extension_uuid)) {
+		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
+		$sql .= "where e.user_uuid = u.user_uuid  ";
+		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and e.domain_uuid = '".check_str($domain_uuid)."' ";
+		$sql .= "and e.extension_uuid = '".check_str($extension_uuid)."' ";
+		$sql .= "order by u.username asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$assigned_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($assigned_users as $field) {
+			$assigned_user_uuids[] = $field['user_uuid'];
+		}
+		unset($sql, $prep_statement);
 	}
-	unset($sql, $prep_statement);
 
 //get the users
 	$sql = "SELECT * FROM v_users ";
