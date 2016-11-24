@@ -47,7 +47,21 @@ else {
 			$number_alias_new = check_str($_REQUEST["alias"]);
 		}
 	}
-
+	
+// skip clone if domain:extension already exists
+	$ext = new extension;
+	$ext->db = $db;
+	if ($ext->exists($domain_uuid, $extension_new)) {
+		//begin the page content
+		require_once "resources/header.php";
+		
+		echo "<div align='center'>".$text['error-extension-copy-already-exists']."<br />";
+		echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='./extension_edit.php?id=".$extension_uuid."';\" value='".$text['button-back']."'>\n";
+		echo "</div>";
+		require_once "resources/footer.php";
+		return;
+	}
+	
 //get the v_extensions data
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";

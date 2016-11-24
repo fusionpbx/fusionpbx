@@ -504,6 +504,18 @@ if (!class_exists('extension')) {
 					$_SESSION["reload_xml"] = true;
 			}
 		}
+
+		// returns true if domain:extension already exists
+		public function exists($domain_uuid, $extension) {
+			$sql = "select * from v_extensions where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and extension='".$extension."'";
+			
+			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			
+			return count($result) != 0;
+		}
 	}
 }
 
