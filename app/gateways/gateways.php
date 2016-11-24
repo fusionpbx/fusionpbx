@@ -169,11 +169,29 @@ else {
 
 	if ($total_gateways > 0) {
 		foreach($gateways as $row) {
-			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
+			$edit_link = null;
+			$delete_link = null;
+			if (strlen($row['domain_uuid']) == 0) {
+				if (permission_exists('gateway_domain') {
+					if (permission_exists('gateway_edit')) {
+						$edit_link = "href='gateway_edit.php?id=".$row['gateway_uuid'];
+					}
+					if (permission_exists('gateway_delete')) {
+						$delete_link = "href='gateway_delete.php?id=".$row['gateway_uuid'];
+					}
+				}
+			else {
+				if (permission_exists('gateway_edit')) {
+					$edit_link = "href='gateway_edit.php?id=".$row['gateway_uuid'];
+				}
+				if (permission_exists('gateway_delete')) {
+					$delete_link = "href='gateway_delete.php?id=".$row['gateway_uuid'];
+				}
+			}
+			echo "<tr ".$edit_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('gateway_edit')) {
-				echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."'>".$row["gateway"]."</a>";
+			if (strlen($edit_link) > 0) {
+				echo "<a href='$edit_link'>".$row["gateway"]."</a>";
 			}
 			else {
 				echo $row["gateway"];
@@ -217,18 +235,18 @@ else {
 				}
 				echo "	<td valign='top' class='row_stylebg'>".$row["description"]."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
-				if (permission_exists('gateway_edit')) {
-					echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				if (strlen($edit_link) > 0) {
+					echo "<a href='$edit_link' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
-				if (permission_exists('gateway_delete')) {
-					echo "<a href='gateway_delete.php?id=".$row['gateway_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				if (strlen($delete_link) > 0) {
+					echo "<a href='$delete_link' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $gateways, $row_count);
+		unset($sql, $gateways, $row_count, $edit_link, $delete_link);
 	} //end if results
 
 	echo "<tr>\n";
