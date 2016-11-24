@@ -119,7 +119,7 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_flow_edit')) ? "href='call_flow_edit.php?id=".$row['call_flow_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($row['call_flow_status'] != "false") {
 				echo $row['call_flow_label'];
 			}
@@ -129,6 +129,7 @@ require_once "resources/paging.php";
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
+			echo "  <td valign='top' class='".$row_style[$c]."'>".$row['call_flow_status']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
