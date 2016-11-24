@@ -51,7 +51,7 @@ else {
 // skip clone if domain:extension already exists
 	$ext = new extension;
 	$ext->db = $db;
-	if ($ext->ExtensionExists($domain_uuid, $extension_new)) {
+	if ($ext->exists($domain_uuid, $extension_new)) {
 		//begin the page content
 		require_once "resources/header.php";
 		
