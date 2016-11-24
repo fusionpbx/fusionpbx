@@ -102,6 +102,19 @@ $text['message-failed']['uk'] = "";
 $text['message-failed']['sv-se'] = "Uppdatering Misslyckades - Kontakta Support";
 $text['message-failed']['de-at'] = "Aktualisierung fehlgeschlagen - Kontaktieren Sie den Support";
 
+$text['message-duplicate']['en-us'] = "Duplicate Detected";
+$text['message-duplicate']['es-cl'] = "duplicar detectado";
+$text['message-duplicate']['pt-pt'] = "Detectado um duplicado";
+$text['message-duplicate']['fr-fr'] = "Donblons détectés";
+$text['message-duplicate']['pt-br'] = "Detectado uma dubplicidade";
+$text['message-duplicate']['pl'] = "Wykryto duplikat";
+$text['message-duplicate']['uk'] = "Знайдено дублікат";
+$text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
+$text['message-duplicate']['ro'] = "";
+$text['message-duplicate']['de-at'] = "bereits vorhanden";
+$text['message-duplicate']['ar-eg'] = "";
+$text['message-duplicate']['he'] = "זוהותה כפילות";
+
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completado";
 $text['message-copy']['pt-pt'] = "Cópia Preenchida";
