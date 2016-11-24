@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,7 +59,7 @@
 		//begin the page content
 		require_once "resources/header.php";
 		
-		echo "<div align='center'>".$text['error-extension-copy-already-exists']."<br />";
+		echo "<div align='center'>".$text['message-duplicate']."<br />";
 		echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='./extension_edit.php?id=".$extension_uuid."';\" value='".$text['button-back']."'>\n";
 		echo "</div>";
 		require_once "resources/footer.php";
