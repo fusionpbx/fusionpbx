@@ -1598,17 +1598,4 @@ $text['button-call_routing']['ro'] = "rutare de apel";
 $text['button-call_routing']['ar-eg'] = "توجيه الدعوة";
 $text['button-call_routing']['he'] = "ניתוב שיחות";
 
-$text['error-extension-copy-already-exists']['en-us'] = "Can't copy extension.  This extension already exists.";
-$text['error-extension-copy-already-exists']['es-cl'] = "";
-$text['error-extension-copy-already-exists']['pt-pt'] = "";
-$text['error-extension-copy-already-exists']['fr-fr'] = "";
-$text['error-extension-copy-already-exists']['pt-br'] = "";
-$text['error-extension-copy-already-exists']['pl'] = "";
-$text['error-extension-copy-already-exists']['uk'] = "";
-$text['error-extension-copy-already-exists']['sv-se'] = "";
-$text['error-extension-copy-already-exists']['de-at'] = "";
-$text['error-extension-copy-already-exists']['ro'] = "";
-$text['error-extension-copy-already-exists']['ar-eg'] = "";
-$text['error-extension-copy-already-exists']['he'] = "";
-
 ?>
