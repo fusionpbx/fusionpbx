@@ -271,6 +271,7 @@
 				local bridge = route_to_bridge(dbh, domain_uuid, {
 					destination_number = forward_all_destination;
 					['${toll_allow}'] = toll_allow;
+					['${user_exists}'] = 'false';
 				})
 				if bridge and bridge.bridge then
 					dial_string = dial_string .. bridge.bridge
