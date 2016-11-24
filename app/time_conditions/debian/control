@@ -1,0 +1,12 @@
+Source: fusionpbx-app-time-conditions
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-time-conditions
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-time-conditions:  Direct calls based on the time of day. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

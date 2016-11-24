@@ -1,0 +1,12 @@
+Source: fusionpbx-app-meetings
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-meetings
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-meeting:  Used by fusionpbx-app-confrence-centers
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

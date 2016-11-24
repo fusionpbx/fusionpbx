@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  install|upgrade)
+    if [ -d /var/www/fusionpbx/app/follow_me ]; then
+      echo "It looks like you have FusionPBX follow me app installed !." >&2
+    fi
+    ;;
+  abort-upgrade)
+    ;;
+  *)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

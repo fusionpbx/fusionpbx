@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    if [ -d /var/www/fusionpbx/app/operator_panel ]; then
+      echo "We're about to remove a configured fusionpbx operator panel app..." >&2
+    fi
+    ;;
+  failed-upgrade)
+    ;;
+  *)
+    echo "prerm called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

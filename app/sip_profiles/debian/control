@@ -1,0 +1,12 @@
+Source: fusionpbx-app-sip-profiles
+Section: user/www
+Priority: extra
+Maintainer: Richard Neese <r.neese@gmail.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-sip-profiles
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-sip-profiles:  Display the Avaible Sip Profiles on THe system/ Add/Remove new profiles
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

@@ -1,0 +1,6 @@
+fussionpbx-app-gateways
+--------------------
+Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration. 
+
+ -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
+

@@ -1,0 +1,12 @@
+Source: fusionpbx-app-traffic-graph
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-traffic-graph
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-traffic-graph: Uses SVG to show the network traffic. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

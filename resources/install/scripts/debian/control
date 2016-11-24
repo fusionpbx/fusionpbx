@@ -1,0 +1,12 @@
+Source: fusionpbx-scripts
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-scripts
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-scripts: fusionpbx lua/php/perl/els script files 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
