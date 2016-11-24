@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2014
+	Copyright (C) 2010 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -506,7 +506,7 @@ if (!class_exists('extension')) {
 		}
 
 		// returns true if the domain extension already exists
-		public function ExtensionExists($domain_uuid, $extension) {
+		public function exists($domain_uuid, $extension) {
 			$sql = "select * from v_extensions where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and extension='".$extension."'";
 			
