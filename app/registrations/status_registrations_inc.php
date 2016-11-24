@@ -38,11 +38,15 @@ require_once "resources/classes/status_registrations.php";
 		exit;
 	}
 
+//Search
+	//$search_value = "1003";
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the HTTP values and set as variables
+	$search_value = trim($_REQUEST["search_value"]);
 	$sip_profile_name = trim($_REQUEST["profile"]);
 	$show = trim($_REQUEST["show"]);
 	if ($show != "all") { $show = ''; }
@@ -88,14 +92,24 @@ require_once "resources/classes/status_registrations.php";
 				echo $e->getMessage();
 				exit;
 			}
-
+		//get the registrations
 			$registrations = get_registrations($sip_profile_name);
-
+		//count the registrations
+			$registration_count = 0;
+			if (count($registrations) > 0) {
+				foreach ($registrations as $row) {
+					//search 
+					$matches = preg_grep ("/$search_value/i",$row);
+					if ($matches != FALSE) {
+						$registration_count++;
+					}
+				}
+			}
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
-			echo "	<b>".$text['header-registrations']." (".count($registrations).")</b>\n";
+			echo "	<b>".$text['header-registrations']." (".$registration_count.")</b>\n";
 			echo "</td>\n";
 			echo "<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
 			echo "	<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
@@ -114,6 +128,7 @@ require_once "resources/classes/status_registrations.php";
 			echo "</table>\n";
 			echo "<br />\n";
 
+			
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
@@ -135,26 +150,30 @@ require_once "resources/classes/status_registrations.php";
 		//display the array
 			if (count($registrations) > 0) {
 				foreach ($registrations as $row) {
-					//set the user agent
-						$agent = $row['agent'];
+					//search 
+						$matches = preg_grep ("/$search_value/i",$row);
+						if ($matches != FALSE) {
+						//set the user agent
+							$agent = $row['agent'];
 
-					//show the registrations
-						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['lan-ip']."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['network-ip']."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['host']."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['status']."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['ping-time']."</td>\n";
-						echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
-						echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "	</td>\n";
-						echo "</tr>\n";
-						if ($c==0) { $c=1; } else { $c=0; }
+						//show the registrations
+							echo "<tr>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['lan-ip']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['network-ip']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['network-port']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['host']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['status']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['ping-time']."</td>\n";
+							echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
+							echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "	</td>\n";
+							echo "</tr>\n";
+							if ($c==0) { $c=1; } else { $c=0; }
+						}
 				}
 			}
 			echo "</table>\n";
