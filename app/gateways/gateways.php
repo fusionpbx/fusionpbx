@@ -172,7 +172,7 @@ else {
 			$edit_link = null;
 			$delete_link = null;
 			if (strlen($row['domain_uuid']) == 0) {
-				if (permission_exists('gateway_domain') {
+				if (permission_exists('gateway_domain')) {
 					if (permission_exists('gateway_edit')) {
 						$edit_link = "href='gateway_edit.php?id=".$row['gateway_uuid'];
 					}
