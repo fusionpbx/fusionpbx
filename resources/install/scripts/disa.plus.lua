@@ -34,8 +34,14 @@ digit_timeout = "5000";
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 	api = freeswitch.API();
 
@@ -134,15 +140,14 @@ if ( session:ready() ) then
 	--if pinless then look the caller number in contacts
 		if (pinless) then
 			-- look the caller number
-			sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid)   where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='pinless' and s1.contact_setting_name='phonenumber' and s1.contact_setting_value='"..caller_id_number.."'";
-
-			status = dbh:query(sql, function(row)
-                               	domain_uuid = row.domain_uuid;
+			local sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid)   where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='pinless' and s1.contact_setting_name='phonenumber' and s1.contact_setting_value=:caller_id_number";
+			local params = {caller_id_number = caller_id_number};
+			dbh:query(sql, params, function(row)
+				domain_uuid = row.domain_uuid;
 				contact_uuid = row.contact_uuid;
 				freeswitch.consoleLog("NOTICE", "[disa] domain_uuid "..row.domain_uuid.."\n");
 				freeswitch.consoleLog("NOTICE", "[disa] contact_uuid "..row.contact_uuid.."\n");
 			end);
-
 		else
 			--else if the pin number is provided then require it
 
@@ -156,6 +161,7 @@ if ( session:ready() ) then
 			pin_digits = session:playAndGetDigits(pin_min_length, pin_max_length, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..sound_pin, "", "\\d+");
 			freeswitch.consoleLog("notice", "[disa] pig_digits "..pin_digits.."\n");
 
+			local sql, params;
 			if (pin_number) then
 				--pin number is fixed
 				freeswitch.consoleLog("notice", "[disa] pin_number "..pin_number.."\n");
@@ -168,18 +174,20 @@ if ( session:ready() ) then
 					session:hangup("NORMAL_CLEARING");
 					return;
 				end
-				sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid) where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='authentication' and s1.contact_setting_name='username' and s1.contact_setting_value='"..reference_number.."'";
+				sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid) where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='authentication' and s1.contact_setting_name='username' and s1.contact_setting_value=:reference_number";
+				params = {reference_number = reference_number};
 			else
-				sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid) inner join v_contact_settings s2 using (contact_uuid)   where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='authentication' and s1.contact_setting_name='username' and s1.contact_setting_value='"..reference_number.."' and s2.contact_setting_category='calling card' and s2.contact_setting_subcategory='authentication' and s2.contact_setting_name='password' and s2.contact_setting_value='"..pin_digits.."'";
+				sql = "select v_contacts.* from v_contacts inner join v_contact_settings s1 using (contact_uuid) inner join v_contact_settings s2 using (contact_uuid)   where s1.contact_setting_category = 'calling card' and s1.contact_setting_subcategory='authentication' and s1.contact_setting_name='username' and s1.contact_setting_value=:reference_number and s2.contact_setting_category='calling card' and s2.contact_setting_subcategory='authentication' and s2.contact_setting_name='password' and s2.contact_setting_value=:pin_digits";
+				params = {reference_number = reference_number, pin_digits = pin_digits};
 			end
 
 			-- look in db for correct pin number
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[disa] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[disa] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 			end
 
-			status = dbh:query(sql, function(row)
-       	                       	domain_uuid = row.domain_uuid;
+			dbh:query(sql, params, function(row)
+				domain_uuid = row.domain_uuid;
 				contact_uuid = row.contact_uuid;
 				freeswitch.consoleLog("NOTICE", "[disa] domain_uuid "..row.domain_uuid.."\n");
 				freeswitch.consoleLog("NOTICE", "[disa] contact_uuid "..row.contact_uuid.."\n");
