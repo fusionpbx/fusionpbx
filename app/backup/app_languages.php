@@ -50,6 +50,16 @@ $text['message-restore_failed_format']['sv-se'] = "Återställning Misslyckades 
 $text['message-restore_failed_format']['uk'] = "Помилка відновлення: хибний формат файлу";
 $text['message-restore_failed_format']['de-at'] = "Wiederherstellung fehlgeschlagen - Ungültiges Dateiformat";
 
+$text['message-restore_failed_extract']['en-us'] = "Restore Failed - Extraction Error";
+$text['message-restore_failed_extract']['es-cl'] = "Restaurar Error - Error de extracción";
+$text['message-restore_failed_extract']['pt-pt'] = "Falha na restauração - Falha na extração";
+$text['message-restore_failed_extract']['fr-fr'] = "Échec de la restauration - Échec de l'extraction";
+$text['message-restore_failed_extract']['pt-br'] = "Falha na restauração - Falha na extração";
+$text['message-restore_failed_extract']['pl'] = "Przywracanie  nie powiodło się - Ekstrakcja zawiodły";
+$text['message-restore_failed_extract']['sv-se'] = "Återställning Misslyckades - extraktion misslyckades";
+$text['message-restore_failed_extract']['uk'] = "Помилка відновлення: Помилка при вилученні";
+$text['message-restore_failed_extract']['de-at'] = "Wiederherstellung fehlgeschlagen - Die Extraktion ist fehlgeschlagen";
+
 $text['message-restore_completed']['en-us'] = "Restore Completed";
 $text['message-restore_completed']['es-cl'] = "Restaurar Completado";
 $text['message-restore_completed']['pt-pt'] = "Concluída a Restauração";
