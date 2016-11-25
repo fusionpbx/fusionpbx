@@ -29,6 +29,14 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_uuid'] = '3bcb4912-e34c-45b0-8612-662783ee8d1b';
+		$array[$x]['default_setting_category'] = 'server';
+		$array[$x]['default_setting_subcategory'] = 'temp';
+		$array[$x]['default_setting_name'] = 'dir';
+		$array[$x]['default_setting_value'] = sys_get_temp_dir();
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
 		$array[$x]['default_setting_uuid'] = 'c55b28df-0eba-4e8f-a13b-022d5dfd8d22';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'time_zone';
