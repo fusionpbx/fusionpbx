@@ -35,7 +35,7 @@ end
 local select_routes_sql = [[
 select *
 from v_dialplans
-where (domain_uuid = '%s' or domain_uuid is null)
+where (domain_uuid = :domain_uuid or domain_uuid is null)
   and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
   and dialplan_enabled = 'true'
 order by dialplan_order asc
@@ -43,7 +43,7 @@ order by dialplan_order asc
 
 local select_extensions_sql = [[
 select * from v_dialplan_details 
-where dialplan_uuid = '%s'
+where dialplan_uuid = :dialplan_uuid
 order by dialplan_detail_group asc, dialplan_detail_order asc
 ]]
 
@@ -239,9 +239,11 @@ end
 local function outbound_route_to_bridge(dbh, domain_uuid, fields)
 	local actions, dial_string = {}
 
-	dbh:query(select_routes_sql:format(domain_uuid), function(route)
+	local params = {}
+	dbh:query(select_routes_sql, {domain_uuid=domain_uuid}, function(route)
 		local extension = {}
-		dbh:query(select_extensions_sql:format(route.dialplan_uuid), function(ext)
+		params.dialplan_uuid = route.dialplan_uuid
+		dbh:query(select_extensions_sql, params, function(ext)
 			local group_no = tonumber(ext.dialplan_detail_group)
 			local tag      = ext.dialplan_detail_tag
 			local element = {

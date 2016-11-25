@@ -38,8 +38,16 @@
 
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND" or XML_STRING == "-ERR CONNECTION FAILURE") then
+		--required includes
 			local Database = require "resources.functions.database"
 			local Settings = require "resources.functions.lazy_settings"
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
+
+		--set the sound prefix
+			sound_prefix = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/";
 
 		--connect to the database
 			local dbh = Database.new('system');
@@ -48,14 +56,15 @@
 			assert(dbh:connected());
 
 		--get the ivr menu from the database
-			sql = [[SELECT * FROM v_ivr_menus
-				WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
+			local sql = [[SELECT * FROM v_ivr_menus
+				WHERE ivr_menu_uuid = :ivr_menu_uuid
 				AND ivr_menu_enabled = 'true' ]];
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				domain_uuid = row["domain_uuid"];
 				ivr_menu_name = row["ivr_menu_name"];
 				ivr_menu_extension = row["ivr_menu_extension"];
@@ -105,13 +114,14 @@
 
 						if not file_exists(path) then
 							local sql = "SELECT recording_base64 FROM v_recordings " .. 
-								"WHERE domain_uuid = '" .. domain_uuid .. "' " ..
-								"AND recording_filename = '" .. name .. "' "
+								"WHERE domain_uuid = :domain_uuid " ..
+								"AND recording_filename = :name "
+							local params = {domain_uuid = domain_uuid, name = name};
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."\n");
+								freeswitch.consoleLog("notice", "[ivr_menu] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
 							end
 
-							dbh:query(sql, function(row)
+							dbh:query(sql, params, function(row)
 							--get full path to recording
 								is_base64, name = true, path
 
@@ -222,11 +232,12 @@
 			table.insert(xml, [[				>]]);
 
 		--get the ivr menu options
-			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			local sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid ORDER BY ivr_menu_option_order asc ]];
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(r)
+			dbh:query(sql, params, function(r)
 				ivr_menu_option_digits = r.ivr_menu_option_digits
 				ivr_menu_option_action = r.ivr_menu_option_action
 				ivr_menu_option_param = r.ivr_menu_option_param
@@ -237,7 +248,7 @@
 		--direct dial
 			if (ivr_menu_direct_dial == "true") then
 				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
-				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
 				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[ : ]]..ivr_menu_extension..[[ XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
 			end
 

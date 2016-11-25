@@ -45,9 +45,12 @@
 			sounds_dir = session:getVariable("sounds_dir");
 
 		--connect to the database
-			if (pin_number == "database") then
-				require "resources.functions.database_handle";
-				dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
 			end
 	end
 
@@ -66,12 +69,12 @@
 				--get the domain_name
 				domain_name = session:getVariable("domain_name");
 				--get the domain_uuid using the domain_name
-				sql = [[SELECT domain_name FROM v_domains
-					WHERE domain_name = ']] .. domain_name ..[[' ]];
+				local sql = "SELECT domain_name FROM v_domains WHERE domain_name = :domain_name";
+				local params = {domain_name = domain_name};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
+					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					domain_uuid = row["domain_uuid"];
 				end);
 			end
@@ -83,15 +86,16 @@
 
 		--validate the user pin number
 			if (pin_number == "database") then
-				sql = [[SELECT * FROM v_pin_numbers
-					WHERE pin_number = ']] .. digits ..[['
-					AND domain_uuid = ']] .. domain_uuid .. [['
+				local sql = [[SELECT * FROM v_pin_numbers
+					WHERE pin_number = :digits
+					AND domain_uuid = :domain_uuid
 					AND enabled = 'true' ]];
+				local params = {digits = digits, domain_uuid = domain_uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "SQL: "..sql.."\n");
+					freeswitch.consoleLog("NOTICE", "[pin_number] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 				end
 				auth = false;
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					--get the values from the database
 						accountcode = row["accountcode"];
 					--set the variable to true

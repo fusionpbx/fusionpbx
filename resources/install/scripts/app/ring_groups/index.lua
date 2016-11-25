@@ -30,8 +30,14 @@
 local log = require "resources.functions.log".ring_group
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --include functions
 	require "resources.functions.trim";
@@ -104,8 +110,9 @@ local log = require "resources.functions.log".ring_group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
 	sql = "SELECT * FROM v_ring_groups ";
-	sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-	status = dbh:query(sql, function(row)
+	sql = sql .. "where ring_group_uuid = :ring_group_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
+	status = dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
@@ -202,19 +209,20 @@ local log = require "resources.functions.log".ring_group
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
-			sql = [[
-					SELECT
-						r.ring_group_strategy
-					FROM
-						v_ring_groups as r
-					WHERE
-						ring_group_uuid = ']]..ring_group_uuid..[['
-						AND r.domain_uuid = ']]..domain_uuid..[['
-						AND r.ring_group_enabled = 'true'
-					]];
+			local sql = [[
+				SELECT
+					r.ring_group_strategy
+				FROM
+					v_ring_groups as r
+				WHERE
+					ring_group_uuid = :ring_group_uuid
+					AND r.domain_uuid = :domain_uuid
+					AND r.ring_group_enabled = 'true'
+			]];
 
+			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 
-			assert(dbh:query(sql, function(row)
+			assert(dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
@@ -236,16 +244,18 @@ local log = require "resources.functions.log".ring_group
 					v_ring_groups as r, v_ring_group_destinations as d
 				WHERE
 					d.ring_group_uuid = r.ring_group_uuid
-					AND d.ring_group_uuid = ']]..ring_group_uuid..[['
-					AND r.domain_uuid = ']]..domain_uuid..[['
+					AND d.ring_group_uuid = :ring_group_uuid
+					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = 'true'
 				ORDER BY
 					]]..sql_order..[[
-				]];
-			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			]];
+			if debug["sql"] then
+				freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+			end
 			destinations = {};
 			x = 1;
-			assert(dbh:query(sql, function(row)
+			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
 				end
@@ -283,25 +293,29 @@ local log = require "resources.functions.log".ring_group
 		--get the dialplan data and save it to a table
 			if (external) then
 				sql = [[select * from v_dialplans as d, v_dialplan_details as s
-				where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
-				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-				and d.dialplan_enabled = 'true'
-				and d.dialplan_uuid = s.dialplan_uuid
-				order by
-				d.dialplan_order asc,
-				d.dialplan_name asc,
-				d.dialplan_uuid asc,
-				s.dialplan_detail_group asc,
-				CASE s.dialplan_detail_tag
-				WHEN 'condition' THEN 1
-				WHEN 'action' THEN 2
-				WHEN 'anti-action' THEN 3
-				ELSE 100 END,
-				s.dialplan_detail_order asc ]]
-				--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+					where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
+					and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+					and d.dialplan_enabled = 'true'
+					and d.dialplan_uuid = s.dialplan_uuid
+					order by
+					d.dialplan_order asc,
+					d.dialplan_name asc,
+					d.dialplan_uuid asc,
+					s.dialplan_detail_group asc,
+					CASE s.dialplan_detail_tag
+					WHEN 'condition' THEN 1
+					WHEN 'action' THEN 2
+					WHEN 'anti-action' THEN 3
+					ELSE 100 END,
+					s.dialplan_detail_order asc
+				]];
+				params = {domain_uuid = domain_uuid};
+				if debug["sql"] then
+					freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
 				dialplans = {};
 				x = 1;
-				assert(dbh:query(sql, function(row)
+				assert(dbh:query(sql, params, function(row)
 					dialplans[x] = row;
 					x = x + 1;
 				end));
@@ -628,10 +642,13 @@ local log = require "resources.functions.log".ring_group
 								--execute the time out action
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							else
-								sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
-								sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-								--freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
-								dbh:query(sql, function(row)
+								local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
+								sql = sql .. "where ring_group_uuid = :ring_group_uuid";
+								local params = {ring_group_uuid = ring_group_uuid};
+								if debug["sql"] then
+									freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+								end
+								dbh:query(sql, params, function(row)
 									--send missed call notification
 										missed();
 									--execute the time out action

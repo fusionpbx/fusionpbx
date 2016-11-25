@@ -25,8 +25,8 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
@@ -36,7 +36,7 @@
 	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 	table.insert(xml, [[<document type="freeswitch/xml">]]);
 	table.insert(xml, [[	<section name="directory">]]);
-	sql = "SELECT domain_name FROM v_domains ";
+	local sql = "SELECT domain_name FROM v_domains ";
 	dbh:query(sql, function(row)
 		table.insert(xml, [[		<domain name="]]..row.domain_name..[[" />]]);
 	end);

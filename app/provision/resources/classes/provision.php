@@ -281,6 +281,8 @@ include "root.php";
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
 					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+					if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
 					if (strlen($value) > 0) { $provision[$key] = $value; }
 					unset($value);
 				}
@@ -470,6 +472,23 @@ include "root.php";
 						}
 					}
 					unset($prep_statement_3);
+				}
+
+			//get the device settings table in the provision category from the profile and update the provision array
+				if ((strlen($device_uuid) > 0) and (strlen($device_profile_uuid) > 0)) {
+					$sql = "SELECT * FROM v_device_settings ";
+					$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+					$sql .= "AND device_setting_enabled = 'true' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$result_count = count($result);
+					foreach($result as $row) {
+						$key = $row['device_setting_subcategory'];
+						$value = $row['device_setting_value'];
+						$provision[$key] = $value;
+					}
+					unset ($prep_statement);
 				}
 
 			//get the device settings table in the provision category and update the provision array

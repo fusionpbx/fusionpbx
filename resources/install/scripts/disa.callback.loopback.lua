@@ -23,15 +23,18 @@
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
---debug
-	debug["sql"] = true;
-
 --include config.lua
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 	api = freeswitch.API();
 
@@ -41,14 +44,14 @@ context = argv[3];
 accountcode = argv[4];
 t_started = os.time();
 
-sql = "SELECT domain_uuid FROM v_domains WHERE domain_name='"..context.."'";
+local sql = "SELECT domain_uuid FROM v_domains WHERE domain_name=:context";
+local params = {context = context};
 if (debug["sql"]) then
-	freeswitch.consoleLog("debug", "[disa.callback] "..sql.."\n");
+	freeswitch.consoleLog("debug", "[disa.callback] SQL: "..sql.."; params: " .. json.encode(params) .. "\n");
 end
-
-status = dbh:query(sql, function(row)
+dbh:query(sql, params, function(row)
 	domain_uuid = row.domain_uuid;
-	end);
+end);
 
 a_dialstring = "{direction=outbound,origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."}loopback/"..aleg_number.."/"..context;
 freeswitch.consoleLog("info", "[disa.callback] a_dialstring " .. a_dialstring .. "\n");

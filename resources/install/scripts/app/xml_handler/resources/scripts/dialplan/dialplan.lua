@@ -47,8 +47,14 @@
 	if not XML_STRING then
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -63,19 +69,20 @@
 		--get the dialplan xml
 			sql = "select dialplan_xml from v_dialplans as p ";
 			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
-				sql = sql .. "where p.dialplan_context = '" .. call_context .. "' ";
+				sql = sql .. "where p.dialplan_context = :call_context ";
 			else
-				sql = sql .. "where (p.dialplan_context = '" .. call_context .. "' or p.dialplan_context = '${domain_name}') ";
+				sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
 			end
 			sql = sql .. "and p.dialplan_enabled = 'true' ";
 			sql = sql .. "order by ";
 			sql = sql .. "p.dialplan_order asc ";
+			local params = {call_context = call_context};
 			if (debug["sql"]) then
-				log.notice("SQL: " .. sql);
+				freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			local x = 0;
 			local pass
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				table.insert(xml, row.dialplan_xml);
 			end);
 

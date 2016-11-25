@@ -34,16 +34,18 @@
 
 		--get the voicemail id and all related mwi accounts
 			local sql = [[SELECT extension, number_alias from v_extensions
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				WHERE domain_uuid = :domain_uuid
 				AND (
-					mwi_account = ']]..voicemail_id..[[' 
-					or mwi_account = ']]..voicemail_id..[[@]]..domain_name..[['
-					or number_alias = ']]..voicemail_id..[['
-					)]];
+					mwi_account = :voicemail_id
+					or mwi_account = :mwi_account
+					or number_alias = :voicemail_id
+				)]];
+			local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id, 
+				mwi_account = voicemail_id .. "@" .. domain_name};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				table.insert(accounts, row["extension"]);
 			end);
 

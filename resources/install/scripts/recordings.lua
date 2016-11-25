@@ -37,8 +37,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --get the domain_uuid
 	domain_uuid = session:getVariable("domain_uuid");
@@ -152,9 +158,9 @@
 
 		--delete the previous recording
 			sql = "delete from v_recordings ";
-			sql = sql .. "where domain_uuid = '".. domain_uuid .. "' ";
-			sql = sql .. "and recording_filename = '".. recording_name .."'";
-			dbh:query(sql);
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and recording_filename = :recording_name";
+			dbh:query(sql, {domain_uuid = domain_uuid, recording_name = recording_name});
 
 		--get a new uuid
 			recording_uuid = api:execute("create_uuid");
@@ -173,25 +179,34 @@
 			table.insert(array, ") ");
 			table.insert(array, "VALUES ");
 			table.insert(array, "( ");
-			table.insert(array, "'"..recording_uuid.."', ");
-			table.insert(array, "'"..domain_uuid.."', ");
-			table.insert(array, "'"..recording_name.."', ");
+			table.insert(array, ":recording_uuid, ");
+			table.insert(array, ":domain_uuid, ");
+			table.insert(array, ":recording_name, ");
 			if (storage_type == "base64") then
-				table.insert(array, "'"..recording_base64.."', ");
+				table.insert(array, ":recording_base64, ");
 			end
-			table.insert(array, "'"..recording_name.."' ");
+			table.insert(array, ":recording_name ");
 			table.insert(array, ") ");
 			sql = table.concat(array, "\n");
+
+			local params = {
+				recording_uuid = recording_uuid;
+				domain_uuid = domain_uuid;
+				recording_name = recording_name;
+				recording_base64 = recording_base64;
+			};
+
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[recording] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
+
 			if (storage_type == "base64") then
 				local Database = require "resources.functions.database"
 				local dbh = Database.new('system', 'base64');
-				dbh:query(sql);
+				dbh:query(sql, params);
 				dbh:release();
 			else
-				dbh:query(sql);
+				dbh:query(sql, params);
 			end
 
 		--preview the recording

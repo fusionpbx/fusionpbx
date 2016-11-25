@@ -74,6 +74,7 @@
 				end
 							
 				transcription = transcribe_json["results"][1]["name"];
+				transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
 				confidence = transcribe_json["results"][1]["confidence"];
 			end
 			return transcription;
@@ -133,12 +134,13 @@
 							session:hangup();
 						else
 							--get the voicemail options
-								sql = [[SELECT * FROM v_voicemail_options WHERE voicemail_uuid = ']] .. voicemail_uuid ..[[' ORDER BY voicemail_option_order asc ]];
+								local sql = [[SELECT * FROM v_voicemail_options WHERE voicemail_uuid = :voicemail_uuid ORDER BY voicemail_option_order asc ]];
+								local params = {voicemail_uuid = voicemail_uuid};
 								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 								end
 								count = 0;
-								status = dbh:query(sql, function(row)
+								dbh:query(sql, params, function(row)
 									--check for matching options
 										if (tonumber(row.voicemail_option_digits) ~= nil) then
 											row.voicemail_option_digits = "^"..row.voicemail_option_digits.."$";

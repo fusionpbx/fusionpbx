@@ -676,7 +676,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " or \n";
 				$sql .= " (e.number_alias is not null and (caller_id_number = e.number_alias or destination_number = e.number_alias))\n";
 				$sql .= ")\n";
-				$sql .= "and (answer_stamp is not null and bridge_uuid is null) \n";
+				$sql .= "and (answer_stamp is null and bridge_uuid is null) \n";
 				$sql .= "and direction = 'inbound' \n";
 				if (!$this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";

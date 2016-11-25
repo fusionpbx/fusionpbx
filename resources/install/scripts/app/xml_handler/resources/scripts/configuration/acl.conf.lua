@@ -48,8 +48,14 @@
 			end
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -76,12 +82,13 @@
 
 				--get the nodes
 					sql = "select * from v_access_control_nodes ";
-					sql = sql .. "where access_control_uuid = '"..row.access_control_uuid.."' ";
+					sql = sql .. "where access_control_uuid = :access_control_uuid";
+					local params = {access_control_uuid = row.access_control_uuid}
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
 					x = 0;
-					dbh:query(sql, function(field)
+					dbh:query(sql, params, function(field)
 						if (string.len(field.node_domain) > 0) then
 							table.insert(xml, [[					<node type="]] .. field.node_type .. [[" domain="]] .. field.node_domain .. [[" description="]] .. field.node_description .. [["/>]]);
 						else
