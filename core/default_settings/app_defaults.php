@@ -29,6 +29,13 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_category'] = 'server';
+		$array[$x]['default_setting_subcategory'] = 'temp';
+		$array[$x]['default_setting_name'] = 'dir';
+		$array[$x]['default_setting_value'] = sys_get_temp_dir();
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'time_zone';
 		$array[$x]['default_setting_name'] = 'name';
