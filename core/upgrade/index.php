@@ -65,10 +65,10 @@
 						$update_failed = false;
 					}
 					
-                    			if (substr_count($response_line, "error") > 0) {
+					if (substr_count($response_line, "error") > 0) {
 						$update_failed = true;
 						break;
-					}					
+					}
 				}
 			}
 			if ($update_failed) {
@@ -251,6 +251,24 @@
 		echo $_SESSION["schema"]["response"];
 		unset($_SESSION["schema"]["response"]);
 	}
+	
+// show current git version info
+	chdir($_SERVER["PROJECT_ROOT"]);
+	exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_retval);
+	$git_current_branch = $git_current_branch[0];
+	exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_retval);
+	$git_current_commit = $git_current_commit[0];
+	if (($branch_retval == 0) && ($commit_retval == 0)) {
+		echo "It looks like you are currently running:<br>";
+		echo "branch: $git_current_branch<br>";
+		echo "commit: $git_current_commit<br>";
+		echo "Preview code changes in github since this commit (opens in new tab): ";
+		echo "<a href='https://github.com/fusionpbx/fusionpbx/compare/";
+		echo $git_current_commit . "..." . "$git_current_branch' target='_blank'>view changes</a>";
+	} else {
+		echo "Unable to determine current branch and commit";
+	}
+	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";
