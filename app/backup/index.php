@@ -58,7 +58,9 @@ else {
 				if (isset($_SESSION['backup']['path'])) foreach ($_SESSION['backup']['path'] as $value) {
 					$cmd .= $value.' ';
 				}
-				exec($cmd);
+				$cmd .= " 2>&1";
+				exec($cmd, $response, $restore_errlevel);
+				$response_txt = "<br>" . implode("<br>", $response);
 
 			//download the file
 				session_cache_limiter('public');
@@ -79,7 +81,8 @@ else {
 				}
 				else {
 					//set response message
-					$_SESSION["message"] = $text['message-backup_failed_format'];
+					$_SESSION["message"] = $text['message-backup_failed_format'] . $response_txt;
+					$_SESSION['message_mood'] = 'negative';
 					header("Location: ".$_SERVER['PHP_SELF']);
 					exit;
 				}
@@ -87,6 +90,7 @@ else {
 			else {
 				//set response message
 				$_SESSION["message"] = $text['message-backup_failed_paths'];
+				$_SESSION['message_mood'] = 'negative';
 				header("Location: ".$_SERVER['PHP_SELF']);
 				exit;
 			}
@@ -123,20 +127,31 @@ else {
 			if (!$valid_format) {
 				@unlink($backup_path.'/'.$backup_file);
 				$_SESSION["message"] = $text['message-restore_failed_format'];
+				$_SESSION['message_mood'] = 'negative';
 				header("Location: ".$_SERVER['PHP_SELF']);
 				exit;
 			}
 			else {
-				exec($cmd);
-				//set response message
-				$_SESSION["message"] = $text['message-restore_completed'];
-				header("Location: ".$_SERVER['PHP_SELF']);
-				exit;
+				$cmd .= ' 2>&1';
+				exec($cmd, $response, $restore_errlevel);
+				$response_txt = "<br>" . implode("<br>", $response);
+				if ($restore_errlevel == 0) {
+					//set response message
+					$_SESSION["message"] = $text['message-restore_completed'];
+					header("Location: ".$_SERVER['PHP_SELF']);
+					exit;
+				} else {
+					$_SESSION["message"] = $text['message-restore_failed_extract'] . $response_txt;
+					$_SESSION['message_mood'] = 'negative';
+					header("Location: ".$_SERVER['PHP_SELF']);
+					exit;
+				}
 			}
 		}
 		else {
 			//set response message
 			$_SESSION["message"] = $text['message-restore_failed_upload'];
+			$_SESSION['message_mood'] = 'negative';
 			header("Location: ".$_SERVER['PHP_SELF']);
 			exit;
 		}
