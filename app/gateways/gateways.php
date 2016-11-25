@@ -180,6 +180,7 @@ else {
 						$delete_link = "href='gateway_delete.php?id=".$row['gateway_uuid'];
 					}
 				}
+			}
 			else {
 				if (permission_exists('gateway_edit')) {
 					$edit_link = "href='gateway_edit.php?id=".$row['gateway_uuid'];
