@@ -200,7 +200,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_uuid'] = 'e1c17089-1e75-4e46-9e59-4748bb6a6cec';
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_validate_certificate';
-		$array[$x]['default_setting_name'] = 'bolean';
+		$array[$x]['default_setting_name'] = 'boolean';
 		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'set to false to ignore SSL certificate warnings e.g. for self-signed certificates';
