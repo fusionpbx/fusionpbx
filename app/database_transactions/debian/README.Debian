@@ -1,6 +1,5 @@
-fusionpbx-app-conference-centers
+fusionpbx-app-database_transactions
 --------------------
-Conference Centers allows one or more audio and video conference rooms
-
+Database transaction module
  -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
 
