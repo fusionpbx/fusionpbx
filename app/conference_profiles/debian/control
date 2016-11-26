@@ -1,12 +1,12 @@
-Source: fusionpbx-app-conference-profiles
+Source: fusionpbx-app-conference_profiles
 Section: user/www
 Priority: extra
 Maintainer: FusionPBX <debian@fusionpbx.com>
 Standards-Version: 3.7.2
 #XSBC-Bugtracker: mailto:r.neese@gmail.com
 
-Package: fusionpbx-app-conference-profiles
+Package: fusionpbx-app-conference_profiles
 Architecture: all
 Depends: ${misc:Depends}
-Description: Fusionpbx-app-conference-profiles:  Conference Centers Profiles
+Description: Fusionpbx-app-conference_profiles:  Conference Centers Profiles
 #XSBC-Bugtracker: mailto:r.neese@gmail.com
