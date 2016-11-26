@@ -142,7 +142,7 @@
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64')
 				dbh:query(sql, params);
-				env:release();
+				dbh:release();
 			else
 				dbh:query(sql, params);
 			end
