@@ -144,7 +144,23 @@
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<input type='checkbox' name='do[source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."\n";
+		echo "		<input type='checkbox' name='do[source]' id='do_source' value='1'> &nbsp;".$text['description-upgrade_source']."<br />\n";
+
+		// show current git version info
+		chdir($_SERVER["PROJECT_ROOT"]);
+		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_return_value);
+		$git_current_branch = $git_current_branch[0];
+		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_return_value);
+		$git_current_commit = $git_current_commit[0];
+		if (($branch_return_value == 0) && ($commit_return_value == 0)) {
+			echo $text['label-git_branch'].' '.$git_current_branch." \n";
+			//echo $text['label-git_commit'].' '." ";
+			echo "<a href='https://github.com/fusionpbx/fusionpbx/compare/";
+			echo $git_current_commit . "..." . "$git_current_branch' target='_blank'> \n";
+			echo $git_current_commit . "</a><br />\n";
+			echo "</a>";
+		}
+
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -250,23 +266,6 @@
 		echo "<br /><br />";
 		echo $_SESSION["schema"]["response"];
 		unset($_SESSION["schema"]["response"]);
-	}
-	
-// show current git version info
-	chdir($_SERVER["PROJECT_ROOT"]);
-	exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_retval);
-	$git_current_branch = $git_current_branch[0];
-	exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_retval);
-	$git_current_commit = $git_current_commit[0];
-	if (($branch_retval == 0) && ($commit_retval == 0)) {
-		echo "It looks like you are currently running:<br>";
-		echo "branch: $git_current_branch<br>";
-		echo "commit: $git_current_commit<br>";
-		echo "Preview code changes in github since this commit (opens in new tab): ";
-		echo "<a href='https://github.com/fusionpbx/fusionpbx/compare/";
-		echo $git_current_commit . "..." . "$git_current_branch' target='_blank'>view changes</a>";
-	} else {
-		echo "Unable to determine current branch and commit";
 	}
 	echo "<br><br>";
 
