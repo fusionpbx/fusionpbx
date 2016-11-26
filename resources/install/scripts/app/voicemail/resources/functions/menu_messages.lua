@@ -44,7 +44,7 @@
 					local sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number 
 						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
-						AND voicemail_uuid = :voicemail_uuid]]
+						AND voicemail_uuid = :voicemail_uuid ]]
 					if (message_status == "new") then
 						sql = sql .. [[AND (message_status is null or message_status = '') ]];
 					elseif (message_status == "saved") then
