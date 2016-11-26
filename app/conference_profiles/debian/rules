@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-APPNAME := fusionpbx-app-conference_profiles
+APPNAME := fusionpbx-app-conference-profiles
 
 CFLAGS = -Wall -g
 
@@ -49,8 +49,8 @@ install: build
 	# Add here commands to install the package into debian/lookup.
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
-	mkdir -p debian/fusionpbx-app-conference_profiles/var/www/fusionpbx/app/conference_profiles
-	cp -pr *.php resources debian/fusionpbx-app-conference_profiles/var/www/fusionpbx/app/conference_profiles
+	mkdir -p debian/fusionpbx-app-conference-profiles/var/www/fusionpbx/app/conference_profiles
+	cp -pr *.php resources debian/fusionpbx-app-conference-profiles/var/www/fusionpbx/app/conference_profiles
 
 build-indep: build install
 
