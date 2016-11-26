@@ -5,7 +5,7 @@ Maintainer: FusionPBX <debian@fusionpbx.com>
 Standards-Version: 3.7.2
 #XSBC-Bugtracker: mailto:r.neese@gmail.com
 
-Package: fusionpbx-app-conference-control
+Package: fusionpbx-app-conference-controls
 Architecture: all
 Depends: ${misc:Depends}
 Description: Fusionpbx-app-conference-controls:  Conference Controls conference rooms
