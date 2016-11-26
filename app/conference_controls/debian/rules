@@ -50,7 +50,7 @@ install: build
 	# cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 	#rm -rf $(CURDIR)/debian/lookup-dbg
 	mkdir -p debian/fusionpbx-app-conference-controls/var/www/fusionpbx/app/conference_controls
-	cp -pr *.php resources debian/fusionpbx-app-conference-controlss/var/www/fusionpbx/app/conference_controls
+	cp -pr *.php resources debian/fusionpbx-app-conference-controls/var/www/fusionpbx/app/conference_controls
 
 build-indep: build install
 
