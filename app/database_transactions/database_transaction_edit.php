@@ -359,20 +359,24 @@
 	//this adds old and new values to the array
 	function array_difference($array1, $array2) {
 		$difference = array();
-		foreach($array1 as $key => $value) {
-			if(is_array($array2[$key])) {
-				$difference[$key] = array_difference($array1[$key], $array2[$key]);
-			}
-			else {
-			  	$difference[$key]['old'] = $value;
+		if (is_array($array1)) {
+			foreach($array1 as $key => $value) {
+				if(is_array($array2[$key])) {
+					$difference[$key] = array_difference($array1[$key], $array2[$key]);
+				}
+				else {
+				  	$difference[$key]['old'] = $value;
+				}
 			}
 		}
-		foreach($array2 as $key => $value) {
-			if(is_array($value)) {
-				$difference[$key] = array_difference($array1[$key], $array2[$key]);
-			}
-			else {
-				$difference[$key]['new'] = $value;
+		if (is_array($array2)) {
+			foreach($array2 as $key => $value) {
+				if(is_array($value)) {
+					$difference[$key] = array_difference($array1[$key], $array2[$key]);
+				}
+				else {
+					$difference[$key]['new'] = $value;
+				}
 			}
 		}
 		return $difference;
