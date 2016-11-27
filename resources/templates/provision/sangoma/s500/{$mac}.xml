@@ -54,7 +54,7 @@
         <P104 para="Account1.AccountRingTone">0</P104>
         <P185 para="Account1.RingTimeout">60</P185>
         <P72 para="Account1.Use#AsDialKey">1</P72>
-        <P4200 para="Account1.DialPlan">{[x*]+}</P4200>
+        <P4200 para="Account1.DialPlan">{literal}{[x*]+}{/literal}</P4200>
         <P99 para="Account1.SubscribeForMWI">0</P99>
         <P65 para="Account1.SendAnonymous">0</P65>
         <P129 para="Account1.AnonymousCallRejection">0</P129>
@@ -183,7 +183,7 @@
         <P423 para="Account2.AccountRingTone">0</P423>
         <P816 para="Account2.RingTimeout">60</P816>
         <P772 para="Account2.Use#AsDialKey">1</P772>
-        <P4201 para="Account2.DialPlan">{[x*]+}</P4201>
+        <P4201 para="Account2.DialPlan">{literal}{[x*]+}{/literal}</P4201>
         <P709 para="Account2.SubscribeForMWI">0</P709>
         <P421 para="Account2.SendAnonymous">0</P421>
         <P446 para="Account2.AnonymousCallRejection">0</P446>
@@ -312,7 +312,7 @@
         <P523 para="Account3.AccountRingTone">0</P523>
         <P1885 para="Account3.RingTimeout">60</P1885>
         <P1672 para="Account3.Use#AsDialKey">1</P1672>
-        <P4202 para="Account3.DialPlan">{[x*]+}</P4202>
+        <P4202 para="Account3.DialPlan">{literal}{[x*]+}{/literal}</P4202>
         <P515 para="Account3.SubscribeForMWI">0</P515>
         <P521 para="Account3.SendAnonymous">0</P521>
         <P1846 para="Account3.AnonymousCallRejection">0</P1846>
@@ -441,7 +441,7 @@
         <P623 para="Account4.AccountRingTone">0</P623>
         <P1886 para="Account4.RingTimeout">60</P1886>
         <P1772 para="Account4.Use#AsDialKey">1</P1772>
-        <P4203 para="Account4.DialPlan">{[x*]+}</P4203>
+        <P4203 para="Account4.DialPlan">{literal}{[x*]+}{/literal}</P4203>
         <P615 para="Account4.SubscribeForMWI">0</P615>
         <P621 para="Account4.SendAnonymous">0</P621>
         <P1946 para="Account4.AnonymousCallRejection">0</P1946>
@@ -570,7 +570,7 @@
         <P1723 para="Account5.AccountRingTone">0</P1723>
         <P20442 para="Account5.RingTimeout">60</P20442>
         <P20444 para="Account5.Use#AsDialKey">1</P20444>
-        <P4204 para="Account5.DialPlan">{[x*]+}</P4204>
+        <P4204 para="Account5.DialPlan">{literal}{[x*]+}{/literal}</P4204>
         <P1715 para="Account5.SubscribeForMWI">0</P1715>
         <P1721 para="Account5.SendAnonymous">0</P1721>
         <P20446 para="Account5.AnonymousCallRejection">0</P20446>
@@ -699,7 +699,7 @@
         <P1823 para="Account6.AccountRingTone">0</P1823>
         <P20443 para="Account6.RingTimeout">60</P20443>
         <P20445 para="Account6.Use#AsDialKey">1</P20445>
-        <P4205 para="Account6.DialPlan">{[x*]+}</P4205>
+        <P4205 para="Account6.DialPlan">{literal}{[x*]+}{/literal}</P4205>
         <P1815 para="Account6.SubscribeForMWI">0</P1815>
         <P1821 para="Account6.SendAnonymous">0</P1821>
         <P20447 para="Account6.AnonymousCallRejection">0</P20447>
