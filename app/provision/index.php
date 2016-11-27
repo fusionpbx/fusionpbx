@@ -24,10 +24,13 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/functions/device_by.php";
-openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/functions/device_by.php";
+
+//logging
+	openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
