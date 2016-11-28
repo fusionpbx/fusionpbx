@@ -98,7 +98,7 @@
 							local file = require "resources.functions.file"
 
 						--get the content of the file
-							local file_content = assert(file.read_base64(message_intro_location);
+							local file_content = assert(file.read_base64(message_intro_location));
 
 						--save the merged file as base64
 							local sql = [[UPDATE SET v_voicemail_messages
