@@ -40,14 +40,14 @@ local message_count_by_id_sql = [[SELECT
 ( SELECT count(*)
   FROM v_voicemail_messages as m inner join v_voicemails as v
   on v.voicemail_uuid = m.voicemail_uuid
-  WHERE v.voicemail_id = :voicemail_id AND v.domain_uuid = :domain_uuid
+  WHERE v.voicemail_id = :voicemail_id_one AND v.domain_uuid = :domain_uuid_one
   AND (m.message_status is null or m.message_status = '')
 ) as new_messages,
 
 ( SELECT count(*)
   FROM v_voicemail_messages as m inner join v_voicemails as v
-  on v.voicemail_uuid = m.voicemail_uuid
-  WHERE v.voicemail_id = :voicemail_id AND v.domain_uuid = :domain_uuid
+  on v.voicemail_uuid = m.voicemail_uuid_two
+  WHERE v.voicemail_id = :voicemail_id AND v.domain_uuid = :domain_uuid_two
   AND m.message_status = 'saved'
 ) as saved_messages
 ]]
@@ -55,7 +55,7 @@ local message_count_by_id_sql = [[SELECT
 function message_count_by_id(voicemail_id, domain_uuid)
 	local new_messages, saved_messages = "0", "0"
 
-	local params = {voicemail_id = voicemail_id, domain_uuid = domain_uuid};
+	local params = {voicemail_id_one = voicemail_id, domain_uuid_one = domain_uuid, voicemail_id_two = voicemail_id, domain_uuid_two = domain_uuid};
 
 	if debug["sql"] then
 		log.noticef("SQL: %s; params: %s", message_count_by_id_sql, json.encode(params))

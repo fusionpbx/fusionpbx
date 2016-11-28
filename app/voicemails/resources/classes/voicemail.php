@@ -53,24 +53,27 @@
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
-			//get the voicemail_id
-				if (!isset($this->voicemail_id)) {
-					$sql = "select voicemail_id from v_voicemails ";
-					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-					$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (is_array($result)) foreach ($result as &$row) {
-						$this->voicemail_id = $row["voicemail_id"];
-					}
-					unset ($prep_statement);
-				}
+			// note: no point calling get_voicemail_id here since $this->voicemail_uuid isn't set yet
 		}
-
+		
 		public function __destruct() {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
+			}
+		}
+		
+		public function get_voicemail_id() {
+			if (!isset($this->voicemail_id)) {
+				$sql = "select voicemail_id from v_voicemails ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_uuid = '".$this->voicemail_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (is_array($result)) foreach ($result as &$row) {
+					$this->voicemail_id = $row["voicemail_id"];
+				}
+				unset ($prep_statement);
 			}
 		}
 
@@ -296,6 +299,7 @@
 		public function message_delete() {
 
 			//delete the recording
+				$this->get_voicemail_id();
 				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
 				if ($this->voicemail_message_uuid != '') {
 					foreach (glob($file_path."/intro_".$this->voicemail_message_uuid.".*") as $file_name) {
