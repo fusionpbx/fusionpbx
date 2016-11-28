@@ -5,13 +5,13 @@ local log = require "resources.functions.log"["voicemail-count"]
 local message_count_by_uuid_sql = [[SELECT
 ( SELECT count(*)
   FROM v_voicemail_messages
-  WHERE voicemail_uuid = :voicemail_uuid
+  WHERE voicemail_uuid = :voicemail_uuid_one
   AND (message_status is null or message_status = '')
 ) as new_messages,
 
 ( SELECT count(*)
   FROM v_voicemail_messages
-  WHERE voicemail_uuid = :voicemail_uuid
+  WHERE voicemail_uuid = :voicemail_uuid_two
   AND message_status = 'saved'
 ) as saved_messages
 ]]
@@ -19,7 +19,7 @@ local message_count_by_uuid_sql = [[SELECT
 function message_count_by_uuid(voicemail_uuid)
 	local new_messages, saved_messages = "0", "0"
 
-	local params = {voicemail_uuid = voicemail_uuid};
+	local params = {voicemail_uuid_one = voicemail_uuid, voicemail_uuid_two = voicemail_uuid};
 
 	if debug["sql"] then
 		log.noticef("SQL: %s; params: %s", message_count_by_uuid_sql, json.encode(params))

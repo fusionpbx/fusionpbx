@@ -66,16 +66,27 @@
 				local transcribe_result = handle:read("*a");
 				handle:close();
 				local transcribe_json = JSON.decode(transcribe_result);
+				
+				if not transcribe_json["results"][1]["name"] then
+					transcription = "[Transcription Error]";
+				else 
+					transcription = transcribe_json["results"][1]["name"];
+				end
+				
+				if not transcribe_json["results"][1]["confidence"] then
+					confidence = "0";
+				else 
+					confidence = transcribe_json["results"][1]["confidence"];
+				end
+				
 				if (debug["info"]) then
 					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
 					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["results"][1]["name"] .. "\n");
-					freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["confidence"] .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. confidence .. "\n");
 				end
 							
-				transcription = transcribe_json["results"][1]["name"];
 				transcription = transcription:gsub("<profanity>.*<%/profanity>","...");
-				confidence = transcribe_json["results"][1]["confidence"];
 			end
 			return transcription;
 		end

@@ -32,11 +32,13 @@
 	function send_email(id, uuid)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
+		local json
+		json = require "resources.functions.lunajson"
 
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid
-				AND voicemail_id = :voicemail_id]]
+				AND voicemail_id = :voicemail_id ]]
 			local params = {domain_uuid = domain_uuid, voicemail_id = id};
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -74,7 +76,7 @@
 				--get voicemail message details
 					local sql = [[SELECT * FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
-						AND voicemail_message_uuid = :uuid]]
+						AND voicemail_message_uuid = :uuid ]]
 					local params = {domain_uuid = domain_uuid, uuid = uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -184,13 +186,16 @@
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
+					wav_url = link_address.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email";
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'].."</a>");
+						body = body:gsub("${message}", "<a href='"..wav_url.."'>"..text['label-download'].."</a>");
 					else
-						body = body:gsub("${message}", "<a href='"..link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'].."</a>");
+						wav_url= link_address.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid
+						body = body:gsub("${message}", "<a href='"..wav_url.."'>"..text['label-listen'].."</a>");
 					end
+					body = body:gsub("${wav_url}", wav_url);
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
@@ -216,7 +221,7 @@
 						local sql = [[DELETE FROM v_voicemail_messages
 							WHERE domain_uuid = :domain_uuid
 							AND voicemail_uuid = :voicemail_uuid
-							AND voicemail_message_uuid = :uuid]]
+							AND voicemail_message_uuid = :uuid ]]
 						local params = {domain_uuid = domain_uuid,
 							voicemail_uuid = db_voicemail_uuid, uuid = uuid};
 						if (debug["sql"]) then
