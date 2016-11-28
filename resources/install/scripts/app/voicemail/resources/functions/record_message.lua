@@ -67,16 +67,16 @@
 				handle:close();
 				local transcribe_json = JSON.decode(transcribe_result);
 				
-				if not transcribe_json["results"][1]["name"] then
-					transcription = "[Transcription Error]";
-				else 
+				if transcribe_json["results"] and transcribe_json[1] and transcribe_json[1]["name"] then
 					transcription = transcribe_json["results"][1]["name"];
+				else 
+					transcription = "[Transcription Error]";
 				end
 				
-				if not transcribe_json["results"][1]["confidence"] then
-					confidence = "0";
-				else 
+				if transcribe_json["results"] and transcribe_json["results"][1] and transcribe_json["results"][1]["confidence"] then
 					confidence = transcribe_json["results"][1]["confidence"];
+				else 
+					confidence = "0";
 				end
 				
 				if (debug["info"]) then
