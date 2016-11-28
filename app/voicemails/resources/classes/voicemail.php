@@ -55,7 +55,7 @@
 
 			// note: no point calling get_voicemail_id here since $this->voicemail_uuid isn't set yet
 		}
-		
+
 		public function __destruct() {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
