@@ -72,8 +72,16 @@ if (!class_exists('extension')) {
 		public $description;
 
 		public function __construct() {
-			require_once "resources/classes/database.php";
-			$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+			//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+
+			//set the application id
+				$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 		}
 
 		public function __destruct() {
@@ -87,12 +95,12 @@ if (!class_exists('extension')) {
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and (extension = :extension or number_alias = :extension) ";
 			$sql .= "and enabled = 'true' ";
-			$prep_statement = $this->db->prepare(check_sql($sql));
+			$prep_statement = $this->db->prepare($sql);
 			$prep_statement->bindParam(':domain_uuid', $this->domain_uuid);
 			$prep_statement->bindParam(':extension', $extension);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0 && count($result) > 0) {
+			if ($result && count($result) > 0) {
 				return true;
 			}
 			else {
