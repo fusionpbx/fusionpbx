@@ -2788,7 +2788,7 @@
         <P20045 para="ProgrammableKey3.Label" />
         <P20046 para="ProgrammableKey4.Label" />
         <P20051 para="ScreenSaverUpgradeUrl" />
-        <P20052 para="WallPaperUpgradeUrl">{$sangoma_s500_wallpaper}</P20052>
+        <P20052 para="WallPaperUpgradeUrl">{$sangoma_wallpaper}</P20052>
         <P20058 para="ToneSelectCountry">28</P20058>
         <P20059 para="AlertRingText4">ring4</P20059>
         <P20060 para="AlertRingText5">ring5</P20060>
@@ -2871,7 +2871,7 @@
         <P20179 para="FirmwareUpGrade.TCAUrl">http://rs.sangoma.net/phonechain.pem</P20179>
         <P20180 para="FirmwareUpGrade.SCAUrl">http://rs.sangoma.net/phonechain.pem</P20180>
         <P20051 para="FirmwareUpGrade.ScreensaverServerURL" />
-        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{$sangoma_s500_wallpaper}</P20052>
+        <P20052 para="FirmwareUpGrade.WallpaperServerURL">{$sangoma_wallpaper}</P20052>
         <P8622 para="DateTime.BackUpNTPServer">{$ntp_server_secondary}</P8622>
         <P40002 para="FirmwareUpGrade.ExpServer" />
         <P8620 para="Preference.HistoryRecord">0</P8620>
