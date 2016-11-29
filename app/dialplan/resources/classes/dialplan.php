@@ -902,21 +902,23 @@ include "root.php";
 
 				//save the dialplan xml
 					if ($this->destination == "database") {
-						foreach ($dialplans as $key => $value) {
-							$sql = "update v_dialplans ";
-							//$sql .= "set dialplan_xml = ':xml' ";
-							$sql .= "set dialplan_xml = '".check_str($value)."' ";
-							//$sql .= "where dialplan_uuid=:dialplan_uuid ";
-							$sql .= "where dialplan_uuid = '$key';";
-							//$prep_statement = $this->db->prepare(check_sql($sql));
-							//$prep_statement->bindParam(':xml', $value );
-							//$prep_statement->bindParam(':dialplan_uuid', $key);
-							//$prep_statement->execute();
-							//$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							//print_r($result);
-							unset($prep_statement);
-							$this->db->query($sql);
-							unset($sql);
+						if (is_array($dialplans)) {
+							foreach ($dialplans as $key => $value) {
+								$sql = "update v_dialplans ";
+								//$sql .= "set dialplan_xml = ':xml' ";
+								$sql .= "set dialplan_xml = '".check_str($value)."' ";
+								//$sql .= "where dialplan_uuid=:dialplan_uuid ";
+								$sql .= "where dialplan_uuid = '$key';";
+								//$prep_statement = $this->db->prepare(check_sql($sql));
+								//$prep_statement->bindParam(':xml', $value );
+								//$prep_statement->bindParam(':dialplan_uuid', $key);
+								//$prep_statement->execute();
+								//$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+								//print_r($result);
+								unset($prep_statement);
+								$this->db->query($sql);
+								unset($sql);
+							}
 						}
 						//return true;
 					}
