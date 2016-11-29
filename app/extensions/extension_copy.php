@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (permission_exists('extension_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('extension_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,17 +52,11 @@ else {
 		}
 	}
 	
-// skip clone if domain:extension already exists
-	$ext = new extension;
-	$ext->db = $db;
-	if ($ext->exists($domain_uuid, $extension_new)) {
-		//begin the page content
-		require_once "resources/header.php";
-		
-		echo "<div align='center'>".$text['error-extension-copy-already-exists']."<br />";
-		echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='./extension_edit.php?id=".$extension_uuid."';\" value='".$text['button-back']."'>\n";
-		echo "</div>";
-		require_once "resources/footer.php";
+// skip the copy if the domain extension already exists
+	$extension = new extension;
+	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
+		$_SESSION["message"] = $text['message-duplicate'];
+		header("Location: extensions.php");
 		return;
 	}
 	
