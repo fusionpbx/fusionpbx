@@ -53,16 +53,11 @@
 	}
 	
 // skip the copy if the domain extension already exists
-	$ext = new extension;
-	$ext->db = $db;
-	if ($ext->exists($domain_uuid, $extension_new)) {
-		//begin the page content
-		require_once "resources/header.php";
-		
-		echo "<div align='center'>".$text['message-duplicate']."<br />";
-		echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='./extension_edit.php?id=".$extension_uuid."';\" value='".$text['button-back']."'>\n";
-		echo "</div>";
-		require_once "resources/footer.php";
+	$extension = new extension;
+	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
+		$_SESSION['message_mood'] = 'negative';
+		$_SESSION["message"] = $text['message-duplicate'];
+		header("Location: extensions.php");
 		return;
 	}
 	
