@@ -779,7 +779,7 @@ include "root.php";
 				//set the variables
 					$types = array("line", "memory", "expansion", "programmable");
 					foreach ($types as $type) {
-						if (is_array($device_keys)) {
+						if (is_array($device_keys[$type])) {
 							foreach($device_keys[$type] as $row) {
 								//set the variables
 									$device_key_category = $row['device_key_category'];
