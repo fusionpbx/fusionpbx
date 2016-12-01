@@ -23,7 +23,7 @@ local unpack = unpack or table.unpack
 
 local NULL, DEFAULT = {}, {}
 
-local param_pattern = "[:]([^%d%s][%a%d_]+)"
+local param_pattern = "%f[%a%d:][:]([%a][%a%d_]*)"
 
 --
 -- Substitude named parameters to query
