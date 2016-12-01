@@ -392,7 +392,7 @@ include "root.php";
 
 				$x++;
 				$details[$x]['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-				if ($_SESSION['ivr menu']['application']['text'] == "lua") {
+				if ($_SESSION['ivr_menu']['application']['text'] == "lua") {
 					$details[$x]['dialplan_detail_type'] = 'lua';
 					$details[$x]['dialplan_detail_data'] = 'ivr_menu.lua';
 				}
