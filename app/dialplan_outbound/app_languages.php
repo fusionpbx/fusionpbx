@@ -258,6 +258,13 @@ $text['label-800']['fr-fr'] = "Sans Charge";
 $text['label-800']['pl'] = "Połaczenia specjalne (toll-free)";
 $text['label-800']['uk'] = "Безкоштовний";
 
+$text['label-inum']['en-us'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['es-cl'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['pt-pt'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['fr-fr'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['pl'] = "iNum 0118335100xxxxxxxx";
+$text['label-inum']['uk'] = "iNum 0118335100xxxxxxxx";
+
 $text['label-711']['en-us'] = "711 TTY";
 $text['label-711']['es-cl'] = "711";
 $text['label-711']['pt-pt'] = "711";
