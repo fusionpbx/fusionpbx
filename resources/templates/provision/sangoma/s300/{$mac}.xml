@@ -22,7 +22,7 @@
         <P81 para="Account1.UnregisterOnReboot">0</P81>
         <P32 para="Account1.RegisterExpiration">2</P32>
         <P109 para="Account1.OutCallWithoutReg">1</P109>
-        <P40 para="Account1.LocalSipPort">{$sip_port_1}</P40>
+        <P40 para="Account1.LocalSipPort" />
         <P78 para="Account1.UseRandomPort">1</P78>
         <P33 para="Account1.VoiceMailId">*97</P33>
         <P136 para="Account1.RPort">1</P136>
@@ -151,7 +151,7 @@
         <P752 para="Account2.UnregisterOnReboot">0</P752>
         <P732 para="Account2.RegisterExpiration">2</P732>
         <P813 para="Account2.OutCallWithoutReg">1</P813>
-        <P740 para="Account2.LocalSipPort">{$sip_port_2}</P740>
+        <P740 para="Account2.LocalSipPort" />
         <P778 para="Account2.UseRandomPort">1</P778>
         <P426 para="Account2.VoiceMailId">*97</P426>
         <P137 para="Account2.RPort">1</P137>
@@ -280,7 +280,7 @@
         <P511 para="Account3.UnregisterOnReboot">0</P511>
         <P512 para="Account3.RegisterExpiration">2</P512>
         <P913 para="Account3.OutCallWithoutReg">1</P913>
-        <P513 para="Account3.LocalSipPort">{$sip_port_3}</P513>
+        <P513 para="Account3.LocalSipPort" />
         <P578 para="Account3.UseRandomPort">1</P578>
         <P526 para="Account3.VoiceMailId">*97</P526>
         <P138 para="Account3.RPort">1</P138>
@@ -409,7 +409,7 @@
         <P611 para="Account4.UnregisterOnReboot">0</P611>
         <P612 para="Account4.RegisterExpiration">2</P612>
         <P1013 para="Account4.OutCallWithoutReg">1</P1013>
-        <P613 para="Account4.LocalSipPort">{$sip_port_4}</P613>
+        <P613 para="Account4.LocalSipPort" />
         <P678 para="Account4.UseRandomPort">1</P678>
         <P626 para="Account4.VoiceMailId">*97</P626>
         <P139 para="Account4.RPort">1</P139>
@@ -538,7 +538,7 @@
         <P20386 para="Account5.UnregisterOnReboot">0</P20386>
         <P20388 para="Account5.RegisterExpiration">2</P20388>
         <P1113 para="Account5.OutCallWithoutReg">1</P1113>
-        <P1713 para="Account5.LocalSipPort">{$sip_port_5}</P1713>
+        <P1713 para="Account5.LocalSipPort" />
         <P20390 para="Account5.UseRandomPort">1</P20390>
         <P1726 para="Account5.VoiceMailId">*97</P1726>
         <P140 para="Account5.RPort">1</P140>
@@ -667,7 +667,7 @@
         <P20387 para="Account6.UnregisterOnReboot">0</P20387>
         <P20389 para="Account6.RegisterExpiration">2</P20389>
         <P1213 para="Account6.OutCallWithoutReg">1</P1213>
-        <P1813 para="Account6.LocalSipPort">{$sip_port_6}</P1813>
+        <P1813 para="Account6.LocalSipPort" />
         <P20391 para="Account6.UseRandomPort">1</P20391>
         <P1826 para="Account6.VoiceMailId">*97</P1826>
         <P141 para="Account6.RPort">1</P141>
