@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('exec_sql')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('exec_sql')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -121,7 +125,7 @@ if (count($_POST)>0) {
 		$show_query = (sizeof($sql_array) > 1) ? true : false;
 
 		reset($sql_array);
-		foreach($sql_array as $sql_index => $sql) {
+		if (is_array($sql_array)) foreach($sql_array as $sql_index => $sql) {
 			$sql = trim($sql);
 
 			if (sizeof($sql_array) > 1 || $show_query) {
@@ -147,20 +151,25 @@ if (count($_POST)>0) {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			$x = 0;
-			foreach ($result[0] as $key => $value) {
-				echo "<th>".$key."</th>";
-				$column_array[$x++] = $key;
-			}
-
-			$x = 1;
-			foreach ($result as &$row) {
-				if ($x++ > 1000) { break; }
-				echo "<tr>\n";
-				foreach ($column_array as $column_index => $column) {
-					echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".$row[$column]."&nbsp;</td>";
+			if (is_array($result[0])) {
+				foreach ($result[0] as $key => $value) {
+					echo "<th>".$key."</th>";
+					$column_array[$x++] = $key;
 				}
-				echo "</tr>\n";
-				$c = ($c == 0) ? 1 : 0;
+			}
+			$x = 1;
+			if (is_array($result)) {
+				foreach ($result as &$row) {
+					if ($x++ > 1000) { break; }
+					echo "<tr>\n";
+					if (is_array($column_array)) {
+						foreach ($column_array as $column_index => $column) {
+							echo "<td class='".$row_style[$c]."' ".(($column_index == 0) ? "style='border-left: none;'" : null).">".$row[$column]."&nbsp;</td>";
+						}
+					}
+					echo "</tr>\n";
+					$c = ($c == 0) ? 1 : 0;
+				}
 			}
 			echo "</table>\n";
 			echo "<br>\n";
@@ -193,31 +202,36 @@ if (count($_POST)>0) {
 				}
 
 				$x = 0;
-				foreach ($result[0] as $key => $value) {
-					$column_array[$x++] = $key;
+				if (is_array($result[0])) {
+					foreach ($result[0] as $key => $value) {
+						$column_array[$x++] = $key;
+					}
 				}
 
 				$column_array_count = count($column_array);
-
-				foreach ($result as &$row) {
+				if (is_array($result)) foreach ($result as &$row) {
 					echo "insert into ".$table_name." (";
 					$x = 1;
-					foreach ($column_array as $column) {
-						if ($column != "menuid" && $column != "menuparentid") {
-							$columns[] = $column;
+					if (is_array($column_array)) {
+						foreach ($column_array as $column) {
+							if ($column != "menuid" && $column != "menuparentid") {
+								$columns[] = $column;
+							}
+							$x++;
 						}
-						$x++;
 					}
 					if (is_array($columns) && sizeof($columns) > 0) {
 						echo implode(', ', $columns);
 					}
 					echo ") values (";
 					$x = 1;
-					foreach ($column_array as $column) {
-						if ($column != "menuid" && $column != "menuparentid") {
-							$values[] = ($row[$column] != '') ? "'".check_str($row[$column])."'" : 'null';
+					if (is_array($column_array)) {
+						foreach ($column_array as $column) {
+							if ($column != "menuid" && $column != "menuparentid") {
+								$values[] = ($row[$column] != '') ? "'".check_str($row[$column])."'" : 'null';
+							}
+							$x++;
 						}
-						$x++;
 					}
 					if (is_array($values) && sizeof($values) > 0) {
 						echo implode(', ', $values);
@@ -253,18 +267,22 @@ if (count($_POST)>0) {
 				}
 
 				$x = 0;
-				foreach ($result[0] as $key => $value) {
-					$column_array[$x++] = $key;
+				if (is_array($result[0])) {
+					foreach ($result[0] as $key => $value) {
+						$column_array[$x++] = $key;
+					}
 				}
 				//column names
 				echo '"'.implode('","', $column_array).'"'."\r\n";
 				//column values
-				foreach ($result as &$row) {
-					$x = 1;
-					foreach ($column_array as $column) {
-						echo '"'.check_str($row[$column]).'"'.(($x++ < count($column_array)) ? ',' : null);
+				if (is_array($result)) {
+					foreach ($result as &$row) {
+						$x = 1;
+						foreach ($column_array as $column) {
+							echo '"'.check_str($row[$column]).'"'.(($x++ < count($column_array)) ? ',' : null);
+						}
+						echo "\n";
 					}
-					echo "\n";
 				}
 			}
 	}
