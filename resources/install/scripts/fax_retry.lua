@@ -285,9 +285,9 @@
 		fax_time                       = os.time();
 	};
 
-	--if (debug["sql"]) then
+	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[FAX] retry: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-	--end
+	end
 	dbh:query(sql, params);
 
 --for email
