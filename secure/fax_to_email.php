@@ -448,6 +448,7 @@ if(!function_exists('fax_split_dtmf')) {
 			$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
 
 			if ($fax_send_mode != 'queue') {
+				$dial_string .= $common_dial_string;
 				$dial_string .= $t38;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
