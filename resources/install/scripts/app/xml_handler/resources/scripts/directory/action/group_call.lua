@@ -68,17 +68,17 @@
 			end
 
 		--build the call group array
-			sql = [[
+			local sql = [[
 			select * from v_extensions
 			where domain_uuid = :domain_uuid
 			order by call_group asc
 			]];
-			params = {domain_uuid = domain_uuid};
+			local params = {domain_uuid = domain_uuid};
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			call_group_array = {};
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				call_group = row['call_group'];
 				--call_group = str_replace(";", ",", call_group);
 				tmp_array = explode(",", call_group);
