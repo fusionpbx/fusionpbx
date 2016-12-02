@@ -384,9 +384,9 @@
 				domain_uuid                  = domain_uuid;
 			}
 
-			--if (debug["sql"]) then
+			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			--end
+			end
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64');
 				dbh:query(sql, params);
