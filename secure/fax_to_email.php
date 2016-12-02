@@ -481,19 +481,18 @@ if(!function_exists('fax_split_dtmf')) {
 					$fax_variables = "fax_enable_t38=true,fax_enable_t38_request=true";
 			}
 
-			$common_dial_string  = "absolute_codec_string='PCMU,PCMA',";
-			$common_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-			$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-			$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-			$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
+			$dial_string  = "absolute_codec_string='PCMU,PCMA',";
+			$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+			$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+			$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+			$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+			$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+			$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+			$dial_string .= "fax_file='"                     . $fax_file                . "',";
 
 			if ($fax_send_mode != 'queue') {
-				$dial_string .= $common_dial_string;
 				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
