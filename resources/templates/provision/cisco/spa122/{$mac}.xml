@@ -393,7 +393,7 @@
 <FAX_Tone_Detect_Mode_2_>caller or callee</FAX_Tone_Detect_Mode_2_>
 <Symmetric_RTP_2_>No</Symmetric_RTP_2_>
 <FAX_T38_Return_to_Voice_2_>No</FAX_T38_Return_to_Voice_2_>
-<Dial_Plan_2_></Dial_Plan_2_>
+<Dial_Plan_2_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
 <Idle_Polarity_2_>Forward</Idle_Polarity_2_>
 <Caller_Conn_Polarity_2_>Forward</Caller_Conn_Polarity_2_>
 <Callee_Conn_Polarity_2_>Forward</Callee_Conn_Polarity_2_>
