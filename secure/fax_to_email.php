@@ -478,7 +478,10 @@ if(!function_exists('fax_split_dtmf')) {
 			else {
 				//send the external call
 					$fax_uri = $route_array[0];
-					$fax_variables = "fax_enable_t38=true,fax_enable_t38_request=true";
+					$fax_variables = "";
+					foreach($_SESSION['fax']['variable'] as $variable) {
+						$fax_variables .= $variable.",";
+					}
 			}
 
 			$dial_string  = "absolute_codec_string='PCMU,PCMA',";
