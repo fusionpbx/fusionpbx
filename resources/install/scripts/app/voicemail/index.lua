@@ -278,7 +278,7 @@
 			debug["info"] = "true";
 
 		--get voicemail message details
-			local sql = [[SELECT * FROM v_domains WHERE domain_name = :domain_name]];
+			local sql = [[SELECT * FROM v_domains WHERE domain_name = :domain_name ]];
 			local params = {domain_name = domain_name};
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -327,7 +327,7 @@
 				--get voicemail message seconds
 					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
-						AND voicemail_uuid = :voicemail_uuid]]
+						AND voicemail_uuid = :voicemail_uuid ]]
 					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -376,7 +376,7 @@
 
 				--get the voicemail destinations
 					sql = [[select * from v_voicemail_destinations
-					where voicemail_uuid = :voicemail_uuid]]
+					where voicemail_uuid = :voicemail_uuid ]]
 					params = {voicemail_uuid=voicemail_uuid};
 					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 					destinations = {};
@@ -405,6 +405,17 @@
 							if (tonumber(message_length) > 2) then
 								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
+								local params = {
+									voicemail_message_uuid = voicemail_message_uuid;
+									domain_uuid = domain_uuid;
+									voicemail_uuid = row.voicemail_uuid_copy;
+									start_epoch = start_epoch;
+									caller_id_name = caller_id_name;
+									caller_id_number = caller_id_number;
+									message_length = message_length;
+									--message_status = message_status;
+									--message_priority = message_priority;
+								};
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
 								table.insert(sql, "(");
 								table.insert(sql, "voicemail_message_uuid, ");
@@ -433,31 +444,20 @@
 								table.insert(sql, ":caller_id_number, ");
 								if (storage_type == "base64") then
 									table.insert(sql, ":message_base64, ");
+									params["message_base64"] = message_base64;
 								end
 								if (transcribe_enabled == "true") then
 									table.insert(sql,  ":transcription, ");
+									params["transcription"] = transcription;
 								end
 								table.insert(sql, ":message_length ");
 								--table.insert(sql, ":message_status, ");
 								--table.insert(sql, ":message_priority ");
 								table.insert(sql, ") ");
 								sql = table.concat(sql, "\n");
-								local params = {
-									voicemail_message_uuid = voicemail_message_uuid;
-									domain_uuid = domain_uuid;
-									voicemail_uuid = row.voicemail_uuid_copy;
-									start_epoch = start_epoch;
-									caller_id_name = caller_id_name;
-									caller_id_number = caller_id_number;
-									message_base64 = message_base64;
-									transcription = transcription;
-									message_length = message_length;
-									--message_status = message_status;
-									--message_priority = message_priority;
-								};
-								if (debug["sql"]) then
+								--if (debug["sql"]) then
 									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-								end
+								--end
 								if (storage_type == "base64") then
 									local Database = require "resources.functions.database"
 									local dbh = Database.new('system', 'base64');
@@ -468,9 +468,8 @@
 								end
 							end
 
-							local params = {domain_uuid = domain_uuid, voicemail_uuid = row.voicemail_uuid_copy};
-
 						--get new message count
+							params = {domain_uuid = domain_uuid, voicemail_uuid = row.voicemail_uuid_copy};
 							sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
 								WHERE domain_uuid = :domain_uuid
 								AND voicemail_uuid = :voicemail_uuid
@@ -495,10 +494,11 @@
 							end);
 
 						--get the voicemail_id
-							sql = [[SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid]];
-							if (debug["sql"]) then
+							params = {voicemail_uuid = row.voicemail_uuid_copy};
+							sql = "SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid ";
+							--if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-							end
+							--end
 							dbh:query(sql, params, function(result)
 								voicemail_id_copy = result["voicemail_id"];
 							end);
