@@ -399,21 +399,21 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 			// initialize pdf
 			$pdf = new FPDI('P', 'in');
-			$pdf -> SetAutoPageBreak(false);
-			$pdf -> setPrintHeader(false);
-			$pdf -> setPrintFooter(false);
-			$pdf -> SetMargins(0, 0, 0, true);
+			$pdf->SetAutoPageBreak(false);
+			$pdf->setPrintHeader(false);
+			$pdf->setPrintFooter(false);
+			$pdf->SetMargins(0, 0, 0, true);
 
-			if(strlen($fax_cover_font) > 0){
-				if(substr($fax_cover_font, -4) == '.ttf'){
+			if (strlen($fax_cover_font) > 0) {
+				if (substr($fax_cover_font, -4) == '.ttf') {
 					$pdf_font = TCPDF_FONTS::addTTFfont($fax_cover_font);
 				}
-				else{
+				else {
 					$pdf_font = $fax_cover_font;
 				}
 			}
 
-			if(!$pdf_font){
+			if (!$pdf_font) {
 				$pdf_font = 'times';
 			}
 
@@ -692,19 +692,18 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 		//send the fax
 		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-		$common_dial_string  = "for_fax=1,";
-		$common_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-		$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-		$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$common_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
+		$dial_string  = "for_fax=1,";
+		$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+		$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$dial_string .= "fax_file='"                     . $fax_file                . "',";
 
 		foreach ($fax_numbers as $fax_number) {
-			$dial_string  = $common_dial_string;
 
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
@@ -1086,18 +1085,18 @@ function showgrid($pdf) {
 	// generate a grid for placement
 	for ($x=0; $x<=8.5; $x+=0.1) {
 		for ($y=0; $y<=11; $y+=0.1) {
-			$pdf -> SetTextColor(0,0,0);
-			$pdf -> SetFont("courier", "", 3);
-			$pdf -> Text($x-0.01,$y-0.01,".");
+			$pdf->SetTextColor(0,0,0);
+			$pdf->SetFont("courier", "", 3);
+			$pdf->Text($x-0.01,$y-0.01,".");
 		}
 	}
 	for ($x=0; $x<=9; $x+=1) {
 		for ($y=0; $y<=11; $y+=1) {
-			$pdf -> SetTextColor(255,0,0);
-			$pdf -> SetFont("times", "", 10);
-			$pdf -> Text($x-.02,$y-.01,".");
-			$pdf -> SetFont("courier", "", 4);
-			$pdf -> Text($x+0.01,$y+0.035,$x.",".$y);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->SetFont("times", "", 10);
+			$pdf->Text($x-.02,$y-.01,".");
+			$pdf->SetFont("courier", "", 4);
+			$pdf->Text($x+0.01,$y+0.035,$x.",".$y);
 		}
 	}
 }
