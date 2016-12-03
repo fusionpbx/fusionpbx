@@ -23,18 +23,22 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
+
+//includes
 require_once "root.php";
 require_once "resources/require.php";
-if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]) == "email")) {
-	require_once "resources/check_auth.php";
-	if (permission_exists('voicemail_message_view')) {
-		//access granted
+
+//check permissions
+	if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]) == "email")) {
+		require_once "resources/check_auth.php";
+		if (permission_exists('voicemail_message_view')) {
+			//access granted
+		}
+		else {
+			echo "access denied";
+			exit;
+		}
 	}
-	else {
-		echo "access denied";
-		exit;
-	}
-}
 
 //add multi-lingual support
 	$language = new text;
@@ -253,4 +257,5 @@ if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
