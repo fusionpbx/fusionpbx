@@ -146,6 +146,17 @@ $text['label-voicemail_alternate_greet_id']['uk'] = "";
 $text['label-voicemail_alternate_greet_id']['de-at'] = "";
 $text['label-voicemail_alternate_greet_id']['he'] = "";
 
+$text['label-voicemail_sms_to']['en-us'] = "SMS To";
+$text['label-voicemail_sms_to']['es-cl'] = "SMS a";
+$text['label-voicemail_sms_to']['pt-pt'] = "";
+$text['label-voicemail_sms_to']['fr-fr'] = "SMS à";
+$text['label-voicemail_sms_to']['pt-br'] = "SMS para";
+$text['label-voicemail_sms_to']['pl'] = "SMS do";
+$text['label-voicemail_sms_to']['sv-se'] = "";
+$text['label-voicemail_sms_to']['uk'] = "SMS-повідомлення на";
+$text['label-voicemail_sms_to']['de-at'] = "SMS an";
+$text['label-voicemail_sms_to']['he'] = "";
+
 $text['label-voicemail_mail_to']['en-us'] = "Mail To";
 $text['label-voicemail_mail_to']['es-cl'] = "Correo a";
 $text['label-voicemail_mail_to']['pt-pt'] = "Email Para";
@@ -499,6 +510,17 @@ $text['description-voicemail_password']['sv-se'] = "Ange lösenordet.";
 $text['description-voicemail_password']['uk'] = "Введіть пароль";
 $text['description-voicemail_password']['de-at'] = "Geben Sie das numerische Mailbox Passwort an.";
 $text['description-voicemail_password']['he'] = "";
+
+$text['description-voicemail_sms_to']['en-us'] = "Enter the SMS Number to send voicemail notification to. ";
+$text['description-voicemail_sms_to']['es-cl'] = "Introduzca el número de SMS para enviar notificación de correo de voz.";
+$text['description-voicemail_sms_to']['pt-pt'] = "Digite o número de SMS para enviar notificação de correio de voz para.";
+$text['description-voicemail_sms_to']['fr-fr'] = "Entrez le numéro de SMS pour envoyer une notification de messagerie vocale à.";
+$text['description-voicemail_sms_to']['pt-br'] = "";
+$text['description-voicemail_sms_to']['pl'] = "Wprowadź numer SMS do wysyłania powiadomienia poczty głosowej.";
+$text['description-voicemail_sms_to']['sv-se'] = "Ange numret SMS för att skicka röstmeddelanden anmälan till.";
+$text['description-voicemail_sms_to']['uk'] = "Введіть номер SMS відправити повідомлення голосової пошти.";
+$text['description-voicemail_sms_to']['de-at'] = "Geben Sie die SMS-Nummer um Voicemail Benachrichtigung zu senden.";
+$text['description-voicemail_sms_to']['he'] = "הזן את מספר ה-SMS לשלוח הודעת תא קולי.";
 
 $text['description-voicemail_message']['en-us'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 $text['description-voicemail_message']['es-cl'] = "Un listado de grabaciones de mensajes de voz que muestran la fecha de creación, información del Caller ID, duración, tamaño del archivo y permite descargar o eliminar el archivo";

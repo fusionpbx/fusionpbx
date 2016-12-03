@@ -285,17 +285,17 @@
 		fax_time                       = os.time();
 	};
 
-	--if (debug["sql"]) then
+	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[FAX] retry: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-	--end
+	end
 	dbh:query(sql, params);
 
 --for email
 	email_address = env:getHeader("mailto_address");
 	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
-	--if (not email_address) then
-	--	email_address = '';
-	--end
+	if (not email_address) then
+		email_address = '';
+	end
 	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
 	if (from_address == nil) then
@@ -384,9 +384,9 @@
 				domain_uuid                  = domain_uuid;
 			}
 
-			--if (debug["sql"]) then
+			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			--end
+			end
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64');
 				dbh:query(sql, params);

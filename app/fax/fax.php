@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_extension_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('fax_extension_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/header.php";
@@ -135,7 +139,8 @@ else {
 	if ($num_rows > 0) {
 		foreach($result as $row) {
 			//remove the backslash
-				$row['fax_email'] = str_replace("\\", "", $row['fax_email']);
+				$fax_email = str_replace("\\", "", $row['fax_email']);
+				$fax_email = substr($fax_email, 0, 50);
 			//show the fax extensions
 				$tr_link = (permission_exists('fax_extension_edit')) ? "href='fax_edit.php?id=".$row['fax_uuid']."'" : null;
 				echo "<tr ".$tr_link.">\n";
@@ -148,7 +153,7 @@ else {
 				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$fax_email."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
 				if (permission_exists('fax_send')) {
 					echo "		<a href='fax_send.php?id=".$row['fax_uuid']."'>".$text['label-new']."</a>&nbsp;&nbsp;";

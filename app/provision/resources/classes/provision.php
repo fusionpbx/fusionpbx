@@ -779,7 +779,7 @@ include "root.php";
 				//set the variables
 					$types = array("line", "memory", "expansion", "programmable");
 					foreach ($types as $type) {
-						if (is_array($device_keys)) {
+						if (is_array($device_keys[$type])) {
 							foreach($device_keys[$type] as $row) {
 								//set the variables
 									$device_key_category = $row['device_key_category'];
@@ -968,6 +968,8 @@ include "root.php";
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
 					if (strlen($val['text']) > 0) { $value = $val['text']; }
+					if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+					if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
 					if (strlen($value) > 0) { $provision[$key] = $value; }
 					unset($value);
 				}

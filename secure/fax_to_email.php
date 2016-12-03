@@ -473,27 +473,27 @@ if(!function_exists('fax_split_dtmf')) {
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 					$fax_uri = "user/".$fax_forward_number."@".$domain_name;
-					$t38 = "";
+					$fax_variables = "";
 			}
 			else {
 				//send the external call
 					$fax_uri = $route_array[0];
-					$t38 = "fax_enable_t38=true,fax_enable_t38_request=true";
+					$fax_variables = "fax_enable_t38=true,fax_enable_t38_request=true";
 			}
 
-			$common_dial_string  = "absolute_codec_string='PCMU,PCMA',";
-			$common_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-			$common_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-			$common_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-			$common_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-			$common_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-			$common_dial_string .= "fax_file='"                     . $fax_file                . "',";
+			$dial_string  = "absolute_codec_string='PCMU,PCMA',";
+			$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+			$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+			$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+			$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+			$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+			$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+			$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+			$dial_string .= "fax_file='"                     . $fax_file                . "',";
 
 			if ($fax_send_mode != 'queue') {
-				$dial_string .= $t38;
+				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
 				$dial_string .= "fax_uri=" . $fax_uri  . ",";
