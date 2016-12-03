@@ -255,9 +255,11 @@
 
 		public function voicemail_delete() {
 
+			//get the voicemail id
+				$this->get_voicemail_id();
+
 			//check if for valid input
-				if (is_numeric($this->voicemail_id) 
-					&& is_uuid($this->voicemail_uuid) 
+				if (is_uuid($this->voicemail_uuid) 
 					&& is_uuid($this->domain_uuid)) {
 						//input is valid
 				}
@@ -269,11 +271,13 @@
 				$this->message_delete();
 
 			//delete voicemail recordings folder (includes greetings)
-				$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
-				foreach (glob($file_path."/*.*") as $file_name) {
-					unlink($file_name);
+				if (is_numeric($this->voicemail_id)) {
+					$file_path = $_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$this->voicemail_id;
+					foreach (glob($file_path."/*.*") as $file_name) {
+						unlink($file_name);
+					}
+					@rmdir($file_path);
 				}
-				@rmdir($file_path);
 
 			//delete voicemail destinations
 				$sql = "delete from v_voicemail_destinations ";
@@ -284,12 +288,14 @@
 				unset($sql, $prep_statement);
 
 			//delete voicemail greetings
-				$sql = "delete from v_voicemail_greetings ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				unset($sql, $prep_statement);
+				if (is_numeric($this->voicemail_id)) {
+					$sql = "delete from v_voicemail_greetings ";
+					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+					$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($sql, $prep_statement);
+				}
 
 			//delete voicemail options
 				$sql = "delete from v_voicemail_options ";
