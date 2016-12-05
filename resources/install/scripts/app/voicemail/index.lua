@@ -159,18 +159,16 @@
 				end
 			end
 
-			if (settings['voicemail']['voicemail_to_sms'] ~= nil) then
-				if (settings['voicemail']['voicemail_to_sms']['boolean'] ~= nil) then
-					voicemail_to_sms = settings['voicemail']['voicemail_to_sms']['boolean'];
-				else
-					voicemail_to_sms = false;
+			if settings['voicemail'] then
+				if settings['voicemail']['voicemail_to_sms'] then
+					voicemail_to_sms = (settings['voicemail']['voicemail_to_sms']['boolean'] == 'true');
 				end
-			end
-			if (settings['voicemail']['voicemail_to_sms'] ~= nil) then
-				if (settings['voicemail']['voicemail_to_sms_did']['text'] ~= nil) then
+				if settings['voicemail']['voicemail_to_sms_did'] then
 					voicemail_to_sms_did = settings['voicemail']['voicemail_to_sms_did']['text'];
 				end
+				voicemail_to_sms_did = voicemail_to_sms_did or '';
 			end
+
 			if (not temp_dir) or (#temp_dir == 0) then
 				if (settings['server'] ~= nil) then
 					if (settings['server']['temp'] ~= nil) then
