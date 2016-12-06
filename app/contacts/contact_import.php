@@ -198,75 +198,75 @@ else {
 						//add the contact phone numbers
 							$x = 0;
 							if (strlen($data['BusinessFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessFax']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['BusinessFax']);
 								$phone_array[$x]['phone_type_fax'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-fax'];
 								$phone_array[$x]['phone_description'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['BusinessPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['BusinessPhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['BusinessPhone2']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone2']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['BusinessPhone2']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['CompanyMainPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['CompanyMainPhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['CompanyMainPhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-main'];
 								$x++;
 							}
 							if (strlen($data['HomeFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomeFax']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['HomeFax']);
 								$phone_array[$x]['phone_type_fax'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-fax'];
 								$phone_array[$x]['phone_description'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['HomePhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['HomePhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['HomePhone2']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone2']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['HomePhone2']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['MobilePhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['MobilePhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['MobilePhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-mobile'];
 								$x++;
 							}
 							if (strlen($data['OtherFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherFax']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['OtherFax']);
 								$phone_array[$x]['phone_type_fax'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-fax'];
 								$x++;
 							}
 							if (strlen($data['OtherPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherPhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['OtherPhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-other'];
 								$x++;
 							}
 							if (strlen($data['Pager']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['Pager']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['Pager']);
 								$phone_array[$x]['phone_type_text'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-pager'];
 								$x++;
 							}
 							if (strlen($data['PrimaryPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['PrimaryPhone']);
+								$phone_array[$x]['phone_number'] = preg_replace('/(?<!^)\D|^[^+\d]/', '', $data['PrimaryPhone']);
 								$phone_array[$x]['phone_type_voice'] = 1;
 								$phone_array[$x]['phone_label'] = $text['option-main'];
 								$x++;
