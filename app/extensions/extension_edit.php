@@ -358,15 +358,6 @@
 									if (permission_exists('extension_dial_string')) {
 										$array["extensions"][$i]["dial_string"] = $dial_string;
 									}
-									if (permission_exists('extension_absolute_codec_string')) {
-										$sql .= "absolute_codec_string, ";
-									}
-									if (permission_exists('extension_force_ping')) {
-										$sql .= "force_ping, ";
-									}
-									if (permission_exists('extension_dial_string')) {
-										$sql .= "dial_string, ";
-									}
 									$array["extensions"][$i]["enabled"] = $enabled;
 									$array["extensions"][$i]["description"] = $description;
 
