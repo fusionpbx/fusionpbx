@@ -316,7 +316,9 @@
 
 				//write the provision files
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {
-						require_once "app/provision/provision_write.php";
+						$prov = new provision;
+						$prov->domain_uuid = $domain_uuid;
+						$response = $prov->write();
 					}
 
 				//set the message
