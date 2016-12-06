@@ -26,10 +26,6 @@
 --include config.lua
 	require "resources.functions.config";
 
---connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
-
 if (session:ready()) then
 	fifo_simo = session:getVariable("fifo_simo");
 		if (not fifo_simo) then fifo_simo = '1'; end
