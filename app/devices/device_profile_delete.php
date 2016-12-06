@@ -66,7 +66,13 @@ else {
 	}
 
 //write the provision files
-	require_once "app/provision/provision_write.php";
+	if (strlen($_SESSION['provision']['path']['text']) > 0) {
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
+			$prov = new provision;
+			$prov->domain_uuid = $domain_uuid;
+			$response = $prov->write();
+		}
+	}
 
 //set the message and redirect the user
 	$_SESSION["message"] = $text['message-delete'];
