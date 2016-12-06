@@ -192,7 +192,7 @@
 					sql = sql .. "call_group = '' or call_group is NULL";
 				else
 					local param_name = "call_group_" .. tostring(key)
-					sql = sql .. "call_group = :" .. param_name;
+					sql = sql .. "call_group like :" .. param_name;
 					params[param_name] = '%' .. call_group .. '%';
 				end
 			end
