@@ -303,7 +303,9 @@
 				$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
 		}
 	//sort the details array by group number
-		ksort($details);
+		if (is_array($details)) {
+			ksort($details);
+		}
 
 //show the header
 	require_once "resources/header.php";
