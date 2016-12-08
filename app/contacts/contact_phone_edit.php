@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -65,6 +65,7 @@
 		$phone_type_text = check_str($_POST["phone_type_text"]);
 		$phone_label = check_str($_POST["phone_label"]);
 		$phone_label_custom = check_str($_POST["phone_label_custom"]);
+		$phone_speed_dial = check_str($_POST["phone_speed_dial"]);
 		$phone_number = check_str($_POST["phone_number"]);
 		$phone_extension = check_str($_POST["phone_extension"]);
 		$phone_primary = check_str($_POST["phone_primary"]);
@@ -133,6 +134,7 @@
 					$sql .= "phone_type_video, ";
 					$sql .= "phone_type_text, ";
 					$sql .= "phone_label, ";
+					$sql .= "phone_speed_dial, ";
 					$sql .= "phone_number, ";
 					$sql .= "phone_extension, ";
 					$sql .= "phone_primary, ";
@@ -148,6 +150,7 @@
 					$sql .= (($phone_type_video) ? 1 : 'null').", ";
 					$sql .= (($phone_type_text) ? 1 : 'null').", ";
 					$sql .= "'".$phone_label."', ";
+					$sql .= "'".$phone_speed_dial."', ";
 					$sql .= "'".$phone_number."', ";
 					$sql .= "'".$phone_extension."', ";
 					$sql .= (($phone_primary) ? 1 : 0).", ";
@@ -169,6 +172,7 @@
 					$sql .= "phone_type_video = ".(($phone_type_video) ? 1 : 'null').", ";
 					$sql .= "phone_type_text = ".(($phone_type_text) ? 1 : 'null').", ";
 					$sql .= "phone_label = '".$phone_label."', ";
+					$sql .= "phone_speed_dial = '".$phone_speed_dial."', ";
 					$sql .= "phone_number = '".$phone_number."', ";
 					$sql .= "phone_extension = '".$phone_extension."', ";
 					$sql .= "phone_primary = ".(($phone_primary) ? 1 : 0).", ";
@@ -200,6 +204,7 @@
 			$phone_type_video = $row["phone_type_video"];
 			$phone_type_text = $row["phone_type_text"];
 			$phone_label = $row["phone_label"];
+			$phone_speed_dial = $row["phone_speed_dial"];
 			$phone_number = $row["phone_number"];
 			$phone_extension = $row["phone_extension"];
 			$phone_primary = $row["phone_primary"];
@@ -299,6 +304,17 @@
 	echo "	<label><input type='checkbox' name='phone_type_text' id='phone_type_text' value='1' ".(($phone_type_text) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
 	echo "<br />\n";
 	echo $text['description-phone_type']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-phone_speed_dial']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='phone_speed_dial' maxlength='255' min='0' step='1' value=\"$phone_speed_dial\">\n";
+	echo "<br />\n";
+	echo $text['description-phone_speed_dial']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
