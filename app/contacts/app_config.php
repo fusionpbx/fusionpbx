@@ -437,6 +437,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_speed_dial";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the speed dial.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
