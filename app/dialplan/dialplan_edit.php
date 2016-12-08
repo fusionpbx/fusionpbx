@@ -150,21 +150,23 @@
 			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
 			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
 			$y = 0;
-			foreach ($_POST["dialplan_details"] as $row) {
-				if (strlen($row["dialplan_detail_tag"]) > 0) {
-					if (strlen($row["dialplan_detail_uuid"]) > 0) {
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+			if (is_array($_POST["dialplan_details"])) {
+				foreach ($_POST["dialplan_details"] as $row) {
+					if (strlen($row["dialplan_detail_tag"]) > 0) {
+						if (strlen($row["dialplan_detail_uuid"]) > 0) {
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+						}
+						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 					}
-					$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+					$y++;
 				}
-				$y++;
 			}
 
 		//add or update the database
@@ -210,7 +212,7 @@
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		if (is_array($result)) foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			//$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
@@ -238,7 +240,7 @@
 	$x = 0;
 	$details = '';
 	//conditions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "condition") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -248,7 +250,7 @@
 			$x++;
 		}
 	//regex
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "regex") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -258,7 +260,7 @@
 			$x++;
 		}
 	//actions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "action") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -268,7 +270,7 @@
 			$x++;
 		}
 	//anti-actions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "anti-action") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -279,11 +281,11 @@
 		}
 		unset($result);
 	//blank row
-		foreach($details as $group => $row) {
+		if (is_array($details)) foreach($details as $group => $row) {
 			//set the array key for the empty row
 				$x = "999";
 			//get the highest dialplan_detail_order
-				foreach ($row as $key => $field) {
+				if (is_array($row)) foreach ($row as $key => $field) {
 					$dialplan_detail_order = 0;
 					if ($dialplan_detail_order < $field['dialplan_detail_order']) {
 						$dialplan_detail_order = $field['dialplan_detail_order'];
@@ -467,7 +469,7 @@
 			else {
 				echo "    <option value=''>".$text['select-global']."</option>\n";
 			}
-			foreach ($_SESSION['domains'] as $row) {
+			if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
 				if ($row['domain_uuid'] == $domain_uuid) {
 					echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
 				}
@@ -542,7 +544,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0' style='margin: -2px; border-spacing: 2px;'>\n";
 
 				$x = 0;
-				foreach($details as $group) {
+				if (is_array($details)) foreach($details as $group) {
 
 					if ($x != 0) {
 						echo "<tr><td colspan='7'><br><br></td></tr>";
@@ -559,7 +561,7 @@
 					echo "<td>&nbsp;</td>\n";
 					echo "</tr>\n";
 
-					foreach($group as $index => $row) {
+					if (is_array($group)) foreach($group as $index => $row) {
 
 						//get the values from the database and set as variables
 							$dialplan_detail_uuid = $row['dialplan_detail_uuid'];
@@ -646,7 +648,7 @@
 							//}
 							//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 								echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
-								foreach ($_SESSION['switch']['applications'] as $row) {
+								if (is_array($_SESSION['switch']['applications'])) foreach ($_SESSION['switch']['applications'] as $row) {
 									if (strlen($row) > 0) {
 										$application = explode(",", $row);
 										if ($application[0] != "name" && stristr($application[0], "[") != true) {
