@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	
+//check permissions
+	if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,9 +52,10 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["contact_uuid"]) > 0) {
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get the uuid
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -360,4 +365,5 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
