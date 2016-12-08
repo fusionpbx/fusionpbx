@@ -22,13 +22,7 @@
 	require "resources.functions.config";
 
 --set debug
-	--debug["sql"] = false;
-
---get the variables
-	domain_name = session:getVariable("domain_name");
-	domain_uuid = session:getVariable("domain_uuid");
-	destination_number = session:getVariable("destination_number");
-	context = session:getVariable("context");
+	debug["sql"] = true;
 
 --load libraries
 	local log = require "resources.functions.log"["app:dialplan:outbound:speed_dial"]
@@ -36,8 +30,16 @@
 	local cache = require "resources.functions.cache";
 	local json = require "resources.functions.lunajson";
 
+--get the variables
+	domain_name = session:getVariable("domain_name");
+	domain_uuid = session:getVariable("domain_uuid");
+	context = session:getVariable("context");
+
+--get the argv values
+	destination = argv[2];
+
 -- search in memcache first
-	local key = "app:dialplan:outbound:speed_dial:" .. destination_number .. "@" .. context
+	local key = "app:dialplan:outbound:speed_dial:" .. destination .. "@" .. domain_name
 	local source = "memcache"
 	local value = cache.get(key)
 
@@ -60,13 +62,13 @@
 		-- connect to database
 			local dbh = Database.new('system');
 
-		-- search real phone number in database
+		-- search for the phone number in database using the speed dial
 			local sql = "SELECT phone_number "
 			sql = sql .. "FROM v_contact_phones "
 			sql = sql .. "WHERE phone_speed_dial = :phone_speed_dial "
 			sql = sql .. "AND domain_uuid = :domain_uuid "
 
-			local params = {phone_speed_dial = destination_number, domain_uuid = domain_uuid};
+			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid};
 
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
@@ -87,10 +89,10 @@
 -- transfer
 	if value then
 		--log the result
-			log.noticef("%s XML %s source: %s", destination_number, value.context, source)
+			log.noticef("%s XML %s source: %s", destination, context, source)
 
 		--transfer the call
-			session:transfer(value.phone_number, "XML", value.context);
+			session:transfer(value.phone_number, "XML", context);
 	else
-		log.warningf('can not find number: %s in domain: %s', destination_number, domain_name)
+		log.warningf('can not find number: %s in domain: %s', destination, domain_name)
 	end
