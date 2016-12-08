@@ -18,9 +18,8 @@
 --	Portions created by the Initial Developer are Copyright (C) 2016
 --	the Initial Developer. All Rights Reserved.
 
---set defaults
-	expire = {}
-	expire["speed_dial"] = "3600";
+-- load config
+	require "resources.functions.config";
 
 --set debug
 	--debug["sql"] = false;
@@ -31,73 +30,67 @@
 	destination_number = session:getVariable("destination_number");
 	context = session:getVariable("context");
 
---connect to the database
+--load libraries
+	local log = require "resources.functions.log"["app:dialplan:outbound:speed_dial"]
 	local Database = require "resources.functions.database";
+	local cache = require "resources.functions.cache";
+	local json = require "resources.functions.lunajson";
 
---include json library
-	local json
-	if (debug["sql"]) then
-		json = require "resources.functions.lunajson"
+-- search in memcache first
+	local key = "app:dialplan:outbound:speed_dial:" .. destination_number .. "@" .. context
+	local source = "memcache"
+	local value = cache.get(key)
+
+-- decode value from memcache
+	if value then
+		local t = json.decode(value)
+		if not (t and t.phone_number and t.context) then
+			log.warning("can not decode value from memcache: %s", value)
+			value = nil
+		else
+			value = t
+		end
 	end
 
---prepare the api object
-	api = freeswitch.API();
+-- search in database
+	if not value then
+		-- set source flag
+			source = "database"
 
---define the trim function
-	require "resources.functions.trim";
+		-- connect to database
+			local dbh = Database.new('system');
 
---get the cache
-	cache = trim(api:execute("memcache", "get app:dialplan:outbound:speed_dial:" .. destination_number .. "@" .. context));
+		-- search real phone number in database
+			local sql = "SELECT phone_number "
+			sql = sql .. "FROM v_contact_phones "
+			sql = sql .. "WHERE phone_speed_dial = :phone_speed_dial "
+			sql = sql .. "AND domain_uuid = :domain_uuid "
 
---get the destination number
-	if (cache == "-ERR NOT FOUND") then
-		local dbh = Database.new('system');
+			local params = {phone_speed_dial = destination_number, domain_uuid = domain_uuid};
 
-		local sql = "SELECT phone_number "
-		sql = sql .. "FROM v_contact_phones "
-		sql = sql .. "WHERE phone_speed_dial = :phone_speed_dial "
-		--sql = sql .. "AND domain_uuid = :domain_uuid "
-		local params = {phone_speed_dial = destination_number};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params, function(row)
-
-			--set the local variables
-				phone_number = row.phone_number;
-
-			--set the cache
-				result = trim(api:execute("memcache", "set app:dialplan:outbound:speed_dial:" .. destination_number .. "@" .. context .. " 'destination_number=" .. destination_number .. "&phone_number=" .. phone_number.. "&context=" .. context .. "' "..expire["speed_dial"]));
-
-			--log the result
-				freeswitch.consoleLog("notice", "[app:dialplan:outbound:speed_dial] " .. destination_number .. " XML " .. context .. " source: database\n");
-
-			--transfer the call
-				session:transfer(row.phone_number, "XML", context);
-		end);
-
-	else
-		--add the function
-			require "resources.functions.explode";
-
-		--define the array/table and variables
-			local var = {}
-			local key = "";
-			local value = "";
-
-		--parse the cache
-			key_pairs = explode("&", cache);
-			for k,v in pairs(key_pairs) do
-				f = explode("=", v);
-				key = f[1];
-				value = f[2];
-				var[key] = value;
+			if (debug["sql"]) then
+				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
 			end
 
-		--send to the console
-			freeswitch.consoleLog("notice", "[app:dialplan:outbound:speed_dial] " .. cache .. " source: memcache\n");
+			local phone_number = dbh:first_value(sql, params)
+
+		-- release database connection
+			dbh:release()
+
+		-- set the cache
+			if phone_number then
+				value = {context = context, phone_number = phone_number}
+				cache.set(key, json.encode(value), expire["speed_dial"])
+			end
+	end
+
+-- transfer
+	if value then
+		--log the result
+			log.noticef("%s XML %s source: %s", destination_number, value.context, source)
 
 		--transfer the call
-			session:transfer(var["phone_number"], "XML", var["context"]);
+			session:transfer(value.phone_number, "XML", value.context);
+	else
+		log.warningf('can not find number: %s in domain: %s', destination_number, domain_name)
 	end
- 
