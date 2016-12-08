@@ -1,6 +1,6 @@
 <context name="{v_context}">
 	<extension name="speed_dial" number="" continue="true" app_uuid="1a4a2611-01e3-4582-982b-4ada4d314ea3" enabled="false">
-		<condition field="${call_direction}" expression="^(local)$"
+		<condition field="${call_direction}" expression="^(local)$">
 			<action application="lua" data="app.lua speed_dial"/>
 		</condition>
 	</extension>
