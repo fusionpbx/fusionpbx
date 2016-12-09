@@ -26,6 +26,9 @@
 --include config.lua
 	require "resources.functions.config";
 
+--set debug
+	-- debug["sql"] = true;
+
 --connect to the database
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
@@ -121,7 +124,9 @@
 			]];
 			local params = {domain_uuid = domain_uuid, ring_group_uuid = ring_group_uuid,
 				destination = destination};
-			--freeswitch.consoleLog("NOTICE", "[ring_group] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			if debug["sql"] then
+				freeswitch.consoleLog("NOTICE", "[ring_group] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			end
 
 			assert(dbh:query(sql, params, function(row)
 				if (row.in_group == "0") then
@@ -154,7 +159,9 @@
 						
 					};
 
-					freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+					if debug["sql"] then
+						freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+					end
 					dbh:query(sql, params);
 
 					freeswitch.consoleLog("NOTICE", "[ring_group][destination] LOG IN\n");
@@ -176,7 +183,9 @@
 				]];
 			local params = {domain_uuid = domain_uuid, ring_group_uuid = ring_group_uuid,
 				destination = destination};
-			freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			if debug["sql"] then
+				freeswitch.consoleLog("NOTICE", "[ring_group][destination] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+			end
 			dbh:query(sql, params);
 
 			freeswitch.consoleLog("NOTICE", "[ring_group][destination] LOG OUT\n");
