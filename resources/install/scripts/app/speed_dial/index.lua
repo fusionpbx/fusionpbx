@@ -22,7 +22,7 @@
 	require "resources.functions.config";
 
 --set debug
-	debug["sql"] = true;
+	-- debug["sql"] = true;
 
 --load libraries
 	local log = require "resources.functions.log"["app:dialplan:outbound:speed_dial"]
@@ -46,8 +46,8 @@
 -- decode value from memcache
 	if value then
 		local t = json.decode(value)
-		if not (t and t.phone_number and t.context) then
-			log.warning("can not decode value from memcache: %s", value)
+		if not (t and t.phone_number) then
+			log.warningf("can not decode value from memcache: %s", value)
 			value = nil
 		else
 			value = t
@@ -67,6 +67,7 @@
 			sql = sql .. "FROM v_contact_phones "
 			sql = sql .. "WHERE phone_speed_dial = :phone_speed_dial "
 			sql = sql .. "AND domain_uuid = :domain_uuid "
+			sql = sql .. "AND (phone_number <> '' AND phone_number IS NOT NULL) "
 
 			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid};
 
@@ -81,7 +82,7 @@
 
 		-- set the cache
 			if phone_number then
-				value = {context = context, phone_number = phone_number}
+				value = {phone_number = phone_number}
 				cache.set(key, json.encode(value), expire["speed_dial"])
 			end
 	end
