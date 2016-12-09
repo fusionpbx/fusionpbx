@@ -24,6 +24,7 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--includes
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
@@ -95,9 +96,9 @@
 		--get the dialplan and related details
 			sql = "select * from v_dialplans as p, v_dialplan_details as s ";
 			if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
-				sql = sql .. "where p.dialplan_context = '" .. call_context .. "' ";
+				sql = sql .. "where p.dialplan_context = :call_context ";
 			else
-				sql = sql .. "where (p.dialplan_context = '" .. call_context .. "' or p.dialplan_context = '${domain_name}') ";
+				sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
 			end
 			sql = sql .. "and p.dialplan_enabled = 'true' ";
 			sql = sql .. "and p.dialplan_uuid = s.dialplan_uuid ";
@@ -112,14 +113,15 @@
 			sql = sql .. "WHEN 'anti-action' THEN 3 ";
 			sql = sql .. "ELSE 100 END, ";
 			sql = sql .. "s.dialplan_detail_order asc ";
-			if (debug["sql"]) then
-				log.notice("SQL: " .. sql);
-			end
 			local x = 0;
-			local pass
-			dbh:query(sql, function(row)
+			local pass;
+			local params = {call_context = call_context};
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+			end
+			dbh:query(sql, params, function(row)
 				--clear flag pass
-					pass = false
+					pass = false;
 
 				--get the dialplan
 					domain_uuid = row.domain_uuid;
