@@ -879,6 +879,17 @@ $text['label-phone_tools']['sv-se'] = "Verktyg";
 $text['label-phone_tools']['de-at'] = "Funktionen";
 $text['label-phone_tools']['he'] = "כלים";
 
+$text['label-phone_speed_dial']['en-us'] = "Speed Dial";
+$text['label-phone_speed_dial']['es-cl'] = "";
+$text['label-phone_speed_dial']['pt-pt'] = "";
+$text['label-phone_speed_dial']['fr-fr'] = "";
+$text['label-phone_speed_dial']['pt-br'] = "";
+$text['label-phone_speed_dial']['pl'] = "";
+$text['label-phone_speed_dial']['uk'] = "";
+$text['label-phone_speed_dial']['sv-se'] = "";
+$text['label-phone_speed_dial']['de-at'] = "";
+$text['label-phone_speed_dial']['he'] = "";
+
 $text['label-phone_numbers']['en-us'] = "Numbers";
 $text['label-phone_numbers']['es-cl'] = "Números";
 $text['label-phone_numbers']['pt-pt'] = "Números";
@@ -2018,6 +2029,17 @@ $text['description-phone_primary']['uk'] = "";
 $text['description-phone_primary']['sv-se'] = "Sätt som primärt Nummer för denna kontakt.";
 $text['description-phone_primary']['de-at'] = "Als primäre Nummer für diesen Kontakt setzen.";
 $text['description-phone_primary']['he'] = "";
+
+$text['description-phone_speed_dial']['en-us'] = "Enter the speed dial number.";
+$text['description-phone_speed_dial']['es-cl'] = "";
+$text['description-phone_speed_dial']['pt-pt'] = "";
+$text['description-phone_speed_dial']['fr-fr'] = "";
+$text['description-phone_speed_dial']['pt-br'] = "";
+$text['description-phone_speed_dial']['pl'] = "";
+$text['description-phone_speed_dial']['uk'] = "";
+$text['description-phone_speed_dial']['sv-se'] = "";
+$text['description-phone_speed_dial']['de-at'] = "";
+$text['description-phone_speed_dial']['he'] = "";
 
 $text['description-phone_number']['en-us'] = "Enter the phone number.";
 $text['description-phone_number']['es-cl'] = "Ingrese el número de teléfono.";

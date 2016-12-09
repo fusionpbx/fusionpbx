@@ -28,8 +28,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --define the trim function
 	require "resources.functions.trim"
@@ -45,11 +51,14 @@
 	--caller_id_number = session:getVariable("caller_id_number");
 
 --get the destination_number
-	sql = [[ SELECT * FROM v_destinations
-	where destination_number like '1]].. outbound_area_code ..[[%']]
-	freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+	sql = "SELECT destination_number FROM v_destinations where destination_number like :destination_number";
+	local params = {destination_number = '1'.. outbound_area_code .. '%'};
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+
 	x = 0;
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		destination_number = row.destination_number;
 		--destination_caller_id_name = row.destination_caller_id_name;
 		--destination_caller_id_number = row.destination_caller_id_number;

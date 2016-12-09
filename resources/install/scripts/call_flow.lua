@@ -37,6 +37,12 @@
 	local file        = require "resources.functions.file"
 	local log         = require "resources.functions.log".call_flow
 
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
+
 --connect to the database
 	local dbh = Database.new('system');
 
@@ -72,14 +78,15 @@ local function find_file(dbh, domain_name, domain_uuid, file_name)
 			local storage_type = settings:get('recordings', 'storage_type', 'text') or ''
 			if storage_type == 'base64' then
 				local sql = "SELECT recording_base64 FROM v_recordings "
-					.. "WHERE domain_uuid = '" .. domain_uuid .."'"
-					.. "AND recording_filename = '".. file_name.. "' "
+					.. "WHERE domain_uuid = :domain_uuid"
+					.. "AND recording_filename = :file_name "
+				local params = {domain_uuid = domain_uuid, file_name = file_name};
 				if (debug["sql"]) then
-					log.notice("SQL: " .. sql)
+					log.notice("SQL: " .. sql .. "; params: " .. json.encode(params))
 				end
 
 				local dbh = Database.new('system', 'base64/read')
-				local recording_base64 = dbh:first_value(sql);
+				local recording_base64 = dbh:first_value(sql, params);
 				dbh:release();
 
 				if recording_base64 and #recording_base64 > 32 then
@@ -149,11 +156,12 @@ if (session:ready()) then
 		local default_voice = session:getVariable("default_voice") or 'callie';
 
 	--get the extension list
-		local sql = "SELECT * FROM v_call_flows where call_flow_uuid = '"..call_flow_uuid.."'"
+		local sql = "SELECT * FROM v_call_flows where call_flow_uuid = :call_flow_uuid"
 			-- .. "and call_flow_enabled = 'true'"
+		local params = {call_flow_uuid = call_flow_uuid};
 		--log.notice("SQL: %s", sql);
 
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			call_flow_name = row.call_flow_name;
 			call_flow_extension = row.call_flow_extension;
 			call_flow_feature_code = row.call_flow_feature_code;
@@ -210,7 +218,9 @@ if (session:ready()) then
 			log.noticef("label=%s,status=%s,uuid=%s,audio=%s", active_flow_label, toggle, call_flow_uuid, audio_file)
 
 		--store in database
-			dbh:query("UPDATE v_call_flows SET call_flow_status = '"..toggle.."' WHERE call_flow_uuid = '"..call_flow_uuid.."'");
+			dbh:query("UPDATE v_call_flows SET call_flow_status = :toggle WHERE call_flow_uuid = :call_flow_uuid", {
+				toggle = toggle, call_flow_uuid = call_flow_uuid
+			});
 
 		--answer
 			session:answer();

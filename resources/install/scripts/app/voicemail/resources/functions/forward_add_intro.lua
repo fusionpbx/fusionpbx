@@ -95,21 +95,25 @@
 
 				--save the merged file into the database as base64
 					if (storage_type == "base64") then
+							local file = require "resources.functions.file"
+
 						--get the content of the file
-							local f = io.open(message_intro_location, "rb");
-							local file_content = f:read("*all");
-							f:close();
+							local file_content = assert(file.read_base64(message_intro_location));
 
 						--save the merged file as base64
-							local sql = {}
-							sql = [[UPDATE SET v_voicemail_messages
-									SET message_intro_base64 = ']].. base64.encode(file_content) ..[[' 
-									WHERE domain_uuid = ']] .. domain_uuid ..[['
-									AND voicemail_message_uuid = ']].. uuid.. [[' ]];
-							sql = table.concat(sql, "\n");
+							local sql = [[UPDATE SET v_voicemail_messages
+									SET message_intro_base64 = :file_content 
+									WHERE domain_uuid = :domain_uuid
+									AND voicemail_message_uuid = :uuid]];
+							local params = {file_content = file_content, domain_uuid = domain_uuid, uuid = uuid};
+
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 							end
+
+							local dbh = Database.new('system', 'base64')
+							dbh:query(sql, params)
+							dbh:release()
 					end
 		end
 

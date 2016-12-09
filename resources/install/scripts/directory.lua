@@ -36,8 +36,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --include functions
 	require "resources.functions.format_ringback"
@@ -91,7 +97,7 @@
 		--get the domain info
 			domain_name = session:getVariable("domain_name");
 			domain_uuid = session:getVariable("domain_uuid");
-		
+
 		--get the timeout destination
 			timeout_destination = session:getVariable("timeout_destination");
 
@@ -126,12 +132,13 @@
 --get the domain_uuid
 	if (domain_uuid == nil) then
 		if (domain_name ~= nil) then
-			sql = "SELECT domain_uuid FROM v_domains ";
-			sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+			local sql = "SELECT domain_uuid FROM v_domains ";
+			sql = sql .. "WHERE domain_name = :domain_name";
+			local params = {domain_name = domain_name};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(rows)
+			dbh:query(sql, params, function(rows)
 				domain_uuid = string.lower(rows["domain_uuid"]);
 			end);
 		end
@@ -226,16 +233,16 @@
 					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
-								local Database = require "resources.functions.database";
 								local dbh = Database.new('system', 'base64/read')
 
-								sql = [[SELECT * FROM v_voicemails
-									WHERE domain_uuid = ']] .. domain_uuid ..[['
-									AND voicemail_id = ']].. row.extension.. [[' ]];
+								local sql = [[SELECT * FROM v_voicemails
+									WHERE domain_uuid = :domain_uuid
+									AND voicemail_id = :voicemail_id]];
+								local params = {domain_uuid = domain_uuid, voicemail_id = row.extension};
 								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 								end
-								status = dbh:query(sql, function(field)
+								dbh:query(sql, params, function(field)
 									--set the voicemail message path
 										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";
 
@@ -327,13 +334,14 @@
 	end
 
 --get the extensions from the database
-	sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
+		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 	end
 	x = 1;
 	directory = {}
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		--show all key value pairs
 			--for key, val in pairs(row) do
 			--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. val .. "\n");

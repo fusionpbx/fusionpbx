@@ -1,7 +1,7 @@
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());

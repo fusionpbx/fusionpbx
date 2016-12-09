@@ -34,8 +34,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --define the explode function
 	require "resources.functions.explode";
@@ -117,9 +123,9 @@
 
 --get the domain_uuid using the domain name required for multi-tenant
 	if (domain_uuid == nil and domain_name ~= nil) then
-		sql = "SELECT domain_uuid FROM v_domains ";
-		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
-		status = dbh:query(sql, function(rows)
+		local sql = "SELECT domain_uuid FROM v_domains ";
+		sql = sql .. "WHERE domain_name = :domain_name ";
+		dbh:query(sql, {domain_name = domain_name}, function(rows)
 			domain_uuid = rows["domain_uuid"];
 		end);
 	end
@@ -152,10 +158,11 @@
 
 --get the domain_uuid using the domain name required for multi-tenant
 	if (domain_uuid ~= nil and fax_extension ~= nil) then
-		sql = "SELECT fax_uuid FROM v_fax ";
-		sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
-		sql = sql .. "AND fax_extension = '" .. fax_extension .. "' ";
-		status = dbh:query(sql, function(rows)
+		local sql = "SELECT fax_uuid FROM v_fax ";
+		sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+		sql = sql .. "AND fax_extension = :fax_extension ";
+		local params = {domain_uuid = domain_uuid, fax_extension = fax_extension}
+		dbh:query(sql, params, function(rows)
 			fax_uuid = rows["fax_uuid"];
 		end);
 	end
@@ -207,71 +214,88 @@
 	sql = sql .. ") ";
 	sql = sql .. "values ";
 	sql = sql .. "(";
-	sql = sql .. "'"..uuid.."', ";
-	sql = sql .. "'"..domain_uuid.."', ";
+	sql = sql .. ":uuid, ";
+	sql = sql .. ":domain_uuid, ";
 	if (fax_uuid ~= nil) then
-		sql = sql .. "'"..fax_uuid.."', ";
+		sql = sql .. ":fax_uuid, ";
 	end
-	sql = sql .. "'"..fax_success.."', ";
-	sql = sql .. "'"..fax_result_code .."', ";
-	sql = sql .. "'"..fax_result_text.."', ";
-	sql = sql .. "'"..fax_file.."', ";
+	sql = sql .. ":fax_success, ";
+	sql = sql .. ":fax_result_code, ";
+	sql = sql .. ":fax_result_text, ";
+	sql = sql .. ":fax_file, ";
 	if (fax_ecm_used ~= nil) then
-		sql = sql .. "'"..fax_ecm_used.."', ";
+		sql = sql .. ":fax_ecm_used, ";
 	end
 	if (fax_local_station_id ~= nil) then
-		sql = sql .. "'"..fax_local_station_id.."', ";
+		sql = sql .. ":fax_local_station_id, ";
 	end
-	if (fax_document_transferred_pages == nil) then
-		sql = sql .. "'0', ";
-	else
-		sql = sql .. "'"..fax_document_transferred_pages.."', ";
-	end
-	if (fax_document_total_pages == nil) then
-		sql = sql .. "'0', ";
-	else
-		sql = sql .. "'"..fax_document_total_pages.."', ";
-	end
+	sql = sql .. ":fax_document_transferred_pages, ";
+	sql = sql .. ":fax_document_total_pages, ";
 	if (fax_image_resolution ~= nil) then
-		sql = sql .. "'"..fax_image_resolution.."', ";
+		sql = sql .. ":fax_image_resolution, ";
 	end
 	if (fax_image_size ~= nil) then
-		sql = sql .. "'"..fax_image_size.."', ";
+		sql = sql .. ":fax_image_size, ";
 	end
 	if (fax_bad_rows ~= nil) then
-		sql = sql .. "'"..fax_bad_rows.."', ";
+		sql = sql .. ":fax_bad_rows, ";
 	end
 	if (fax_transfer_rate ~= nil) then
-		sql = sql .. "'"..fax_transfer_rate.."', ";
+		sql = sql .. ":fax_transfer_rate, ";
 	end
 	if (fax_retry_attempts ~= nil) then
-		sql = sql .. "'"..fax_retry_attempts.."', ";
+		sql = sql .. ":fax_retry_attempts, ";
 	end
 	if (fax_retry_limit ~= nil) then
-		sql = sql .. "'"..fax_retry_limit.."', ";
+		sql = sql .. ":fax_retry_limit, ";
 	end
 	if (fax_retry_sleep ~= nil) then
-		sql = sql .. "'"..fax_retry_sleep.."', ";
+		sql = sql .. ":fax_retry_sleep, ";
 	end
-	sql = sql .. "'"..fax_uri.."', ";
+	sql = sql .. ":fax_uri, ";
 	if (database["type"] == "sqlite") then
-		sql = sql .. "'"..os.date("%Y-%m-%d %X").."', ";
+		sql = sql .. ":fax_date, ";
 	else
 		sql = sql .. "now(), ";
 	end
-	sql = sql .. "'"..os.time().."' ";
+	sql = sql .. ":fax_time ";
 	sql = sql .. ")";
-	--if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[FAX] retry: "..sql.."\n");
-	--end
-	dbh:query(sql);
+
+	local params = {
+		uuid                           = uuid;
+		domain_uuid                    = domain_uuid;
+		fax_uuid                       = fax_uuid;
+		fax_success                    = fax_success;
+		fax_result_code                = fax_result_code;
+		fax_result_text                = fax_result_text;
+		fax_file                       = fax_file;
+		fax_ecm_used                   = fax_ecm_used;
+		fax_local_station_id           = fax_local_station_id;
+		fax_document_transferred_pages = fax_document_transferred_pages or '0';
+		fax_document_total_pages       = fax_document_total_pages or '0';
+		fax_image_resolution           = fax_image_resolution;
+		fax_image_size                 = fax_image_size;
+		fax_bad_rows                   = fax_bad_rows;
+		fax_transfer_rate              = fax_transfer_rate;
+		fax_retry_attempts             = fax_retry_attempts;
+		fax_retry_limit                = fax_retry_limit;
+		fax_retry_sleep                = fax_retry_sleep;
+		fax_uri                        = fax_uri;
+		fax_date                       = os.date("%Y-%m-%d %X");
+		fax_time                       = os.time();
+	};
+
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[FAX] retry: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+	dbh:query(sql, params);
 
 --for email
 	email_address = env:getHeader("mailto_address");
 	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
-	--if (not email_address) then
-	--	email_address = '';
-	--end
+	if (not email_address) then
+		email_address = '';
+	end
 	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
 	if (from_address == nil) then
@@ -292,6 +316,7 @@
 				end
 			end
 
+			local fax_base64
 			if (storage_type == "base64") then
 				--include the file io
 					local file = require "resources.functions.file"
@@ -322,39 +347,52 @@
 			table.insert(sql, ") ");
 			table.insert(sql, "values ");
 			table.insert(sql, "(");
-			table.insert(sql, "'" .. uuid .. "', ");
-			table.insert(sql, "'" .. fax_uuid .. "', ");
+			table.insert(sql, ":uuid, ");
+			table.insert(sql, ":fax_uuid, ");
 			table.insert(sql, "'tx', ");
 			if (sip_to_user ~= nil) then
-				table.insert(sql, "'" .. sip_to_user .. "', ");
+				table.insert(sql, ":sip_to_user, ");
 			end
 			table.insert(sql, "'tif', ");
-			fax_file = string.gsub(fax_file, '/temp/', '/sent/');
-			table.insert(sql, "'" .. fax_file .. "', ");
-			table.insert(sql, "'" .. origination_caller_id_name .. "', ");
-			table.insert(sql, "'" .. origination_caller_id_number .. "', ");
+			table.insert(sql, ":fax_file, ");
+			table.insert(sql, ":origination_caller_id_name, ");
+			table.insert(sql, ":origination_caller_id_number, ");
 			if (database["type"] == "sqlite") then
-				table.insert(sql, "'"..os.date("%Y-%m-%d %X").."', ");
+				table.insert(sql, ":fax_date, ");
 			else
 				table.insert(sql, "now(), ");
 			end
-			table.insert(sql, "'" .. os.time() .. "', ");
+			table.insert(sql, ":fax_time, ");
 			if (storage_type == "base64") then
-				table.insert(sql, "'" .. fax_base64 .. "', ");
+				table.insert(sql, ":fax_base64, ");
 			end
-			table.insert(sql, "'" .. domain_uuid .. "'");
+			table.insert(sql, ":domain_uuid ");
 			table.insert(sql, ")");
+
 			sql = table.concat(sql, "\n");
-			--if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "\n");
-			--end
+
+			local params = {
+				uuid                         = uuid;
+				fax_uuid                     = fax_uuid;
+				sip_to_user                  = sip_to_user;
+				fax_file                     = string.gsub(fax_file, '/temp/', '/sent/');
+				origination_caller_id_name   = origination_caller_id_name;
+				origination_caller_id_number = origination_caller_id_number;
+				fax_date                     = os.date("%Y-%m-%d %X");
+				fax_time                     = os.time();
+				fax_base64                   = fax_base64;
+				domain_uuid                  = domain_uuid;
+			}
+
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[FAX] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+			end
 			if (storage_type == "base64") then
-				local Database = require "resources.functions.database"
 				local dbh = Database.new('system', 'base64');
-				dbh:query(sql);
+				dbh:query(sql, params);
 				dbh:release();
 			else
-				result = dbh:query(sql);
+				dbh:query(sql, params);
 			end
 		end
 	end

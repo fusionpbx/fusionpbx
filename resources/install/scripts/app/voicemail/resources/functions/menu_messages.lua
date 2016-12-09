@@ -41,19 +41,21 @@
 		--message_status new,saved
 			if (session:ready()) then
 				if (voicemail_id ~= nil) then
-					sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
+					local sql = [[SELECT voicemail_message_uuid, created_epoch, caller_id_name, caller_id_number 
+						FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_uuid = :voicemail_uuid ]]
 					if (message_status == "new") then
 						sql = sql .. [[AND (message_status is null or message_status = '') ]];
 					elseif (message_status == "saved") then
 						sql = sql .. [[AND message_status = 'saved' ]];
 					end
 					sql = sql .. [[ORDER BY created_epoch desc;]];
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
-					status = dbh:query(sql, function(row)
+					dbh:query(sql, params, function(row)
 						--get the values from the database
 							--row["voicemail_message_uuid"];
 							--row["created_epoch"];

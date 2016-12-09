@@ -1,7 +1,14 @@
+
 --connect to the database
 	local Database = require "resources.functions.database"
 	local log      = require "resources.functions.log"["directory_dir"]
 	local dbh = Database.new('system')
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --build the xml
 	local xml = {}
@@ -11,16 +18,17 @@
 
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
 	local sql = "SELECT * FROM v_domains as d, v_extensions as e "
-	sql = sql .. "where d.domain_uuid = e.domain_uuid and "
-	sql = sql .. "(e.directory_visible = 'true' or e.directory_exten_visible='true') "
+	sql = sql .. "where d.domain_uuid = e.domain_uuid "
+	sql = sql .. "and (e.directory_visible = 'true' or e.directory_exten_visible='true') "
 	if domain_name then
-		sql = sql .. "and d.domain_name = '"..domain_name.."' "
+		sql = sql .. "and d.domain_name = :domain_name "
 	else
-		sql = sql .. "order by d.domain_name"
+		sql = sql .. "order by d.domain_name "
 	end
+	local sql_params = {domain_name = domain_name}
 
 	if debug['sql'] then
-		log.noticef("SQL - %s", sql)
+		log.noticef("SQL: %s; params: %s", sql, json.encode(sql_params))
 	end
 
 -- export this params
@@ -37,7 +45,7 @@
 
 	local prev_domain_name
 
-	dbh:query(sql, function(row)
+	dbh:query(sql, sql_params, function(row)
 		if prev_domain_name ~= row.domain_name then
 			if prev_domain_name then
 				table.insert(xml, [[					</users>]])
