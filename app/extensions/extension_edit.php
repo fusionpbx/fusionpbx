@@ -675,7 +675,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$sql .= "call_group = '$call_group', ";
 					$sql .= "call_screen_enabled = '$call_screen_enabled', ";
+					if (permission_exists('extension_user_record')) {
 					$sql .= "user_record = '$user_record', ";
+					}
 					$sql .= "hold_music = '$hold_music', ";
 					$sql .= "auth_acl = '$auth_acl', ";
 					$sql .= "cidr = '$cidr', ";
