@@ -28,7 +28,7 @@
 
 //start session
 	ini_set("session.cookie_httponly", True);
-	session_start();
+	if (!isset($_SESSION)) { session_start(); }
 
 //retain message
 	if (isset($_SESSION["message"])) {
