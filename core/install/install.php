@@ -30,7 +30,7 @@
 	require_once "resources/classes/text.php";
 
 //start a php session
-	session_start();
+	if (!isset($_SESSION)) { session_start(); }
 
 //initialize variables we are going to use
 	$event_host = '';
