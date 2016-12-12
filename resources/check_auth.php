@@ -240,6 +240,7 @@
 	}
 
 //set the time zone
+	if (!isset($_SESSION["time_zone"]["user"])) { $_SESSION["time_zone"]["user"] = null; }
 	if (strlen($_SESSION["time_zone"]["user"]) == 0) {
 		//set the domain time zone as the default time zone
 		date_default_timezone_set($_SESSION['domain']['time_zone']['name']);
