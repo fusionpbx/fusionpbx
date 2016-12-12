@@ -393,6 +393,7 @@
 						$menu_type = 'default';
 						$menu_width = 'calc(100% - 20px)';
 						$menu_brand = false;
+						$menu_corners = null;
 						break;
 					case 'static':
 						$menu_type = 'static-top';
@@ -406,6 +407,7 @@
 						$menu_type = 'fixed-'.$menu_position;
 						$menu_width = 'calc(90% - 20px)';
 						$menu_brand = true;
+						$menu_corners = null;
 				}
 			?>
 
