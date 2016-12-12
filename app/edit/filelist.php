@@ -198,7 +198,7 @@ echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 //start the session
 ini_set("session.cookie_httponly", True);
-session_start();
+if (!isset($_SESSION)) { session_start(); }
 switch ($_SESSION["app"]["edit"]["dir"]) {
 	case 'scripts':
 		echo recur_dir($_SESSION['switch']['scripts']['dir']);
