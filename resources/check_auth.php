@@ -37,6 +37,10 @@
 	if ($_SERVER["HTTPS"] == "on") { ini_set("session.cookie_secure", True); }
 	if (!isset($_SESSION)) { session_start(); }
 
+//define variables
+	if (!isset($_SESSION['login']['destination']['url'])) { $_SESSION['login']['destination']['url'] = null; }
+	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
+
 //if the username session is not set the check username and password
 	 if (strlen($_SESSION['username']) == 0) {
 
@@ -179,7 +183,7 @@
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
 				if (isset($_SESSION["user"]) && isset($_SESSION["user_uuid"]) && $db && strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 					//get the user extension list
-						unset($_SESSION['user']['extension']);
+						$_SESSION['user']['extension'] = null;
 						$sql = "select ";
 						$sql .= "	e.extension, ";
 						$sql .= "	e.number_alias, ";
