@@ -23,8 +23,17 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+
+//set variables if not set
+	if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
+	if (!isset($document)) { $document = null; }
+	if (!isset($v_menu)) { $v_menu = null; }
+	if (!isset($_SESSION["menu"])) { $_SESSION["menu"] = null; }
+	if (!isset($_SESSION["username"])) { $_SESSION["username"] = null; }
 
 //get the output from the buffer
 	$body = $content_from_db.ob_get_contents();
