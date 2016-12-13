@@ -37,37 +37,33 @@
 
    <!-- Codecs -->
    <!-- G7221@32000h,G7221@16000h,G722,PCMU,PCMA,iLBC,GSM,H263,H264 -->
-   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" />
-   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU,PCMA" />
-   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" />
+   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU,PCMA" category="Codecs" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true" category="Codecs" enabled="true"/>
 
    <!-- Defaults -->
-   <X-PRE-PROCESS cmd="set" data="call_debug=false" />
-   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" />
-   <X-PRE-PROCESS cmd="set" data="default_areacode=208" />
-   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" />
-   <X-PRE-PROCESS cmd="set" data="use_profile=internal" />
-   <X-PRE-PROCESS cmd="set" data="default_language=en" />
-   <X-PRE-PROCESS cmd="set" data="default_dialect=us" />
-   <X-PRE-PROCESS cmd="set" data="default_voice=callie" />
-   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" />
-   <X-PRE-PROCESS cmd="set" data="xml_cdr_archive=dir" />
-   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" />
-   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" />
-   <X-PRE-PROCESS cmd="set" data="record_ext=wav" />
-   <X-PRE-PROCESS cmd="set" data="default_country=US" />
-   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" />
-   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" />
+   <X-PRE-PROCESS cmd="set" data="call_debug=false" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="console_loglevel=info" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_areacode=208" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="sit=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="use_profile=internal" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_language=en" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_dialect=us" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_voice=callie" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ajax_refresh_rate=3000" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="xml_cdr_archive=dir" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ringback=$${us-ring}" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="transfer_ringback=$${us-ring}" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="record_ext=wav" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_country=US" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_countrycode=1" category="default" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="default_exitcode=011" category="default" enabled="true"/>
 
    <!-- Dingaling -->
    <!-- xmpp_client_profile and xmpp_server_profile xmpp_client_profile can be any string. xmpp_server_profile is appended to "dingaling_" to form the database name containing the "subscriptions" table. used by: dingaling.conf.xml enum.conf.xml -->
-   <X-PRE-PROCESS cmd="set" data="xmpp_client_profile=xmppc" />
-   <X-PRE-PROCESS cmd="set" data="xmpp_server_profile=xmpps" />
-   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto" />
-
-   <!-- Domain -->
-   <!-- Sets the default domain. -->
-   <X-PRE-PROCESS cmd="set" data="domain_name=$${local_ip_v4}" />
+   <X-PRE-PROCESS cmd="set" data="xmpp_client_profile=xmppc" category="XMPP" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="xmpp_server_profile=xmpps" category="XMPP" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto" category="XMPP" enabled="true"/>
 
    <!-- IP Address -->
    <!-- (If you''re going to load test then please input real IP addresses for external_rtp_ip and external_sip_ip)
@@ -78,72 +74,74 @@
       a DNS name: "host:host.server.com"
 
    where fs.mydomain.com is a DNS A record-useful when fs is on a dynamic IP address, and uses a dynamic DNS updater. If unspecified, the bind_server_ip value is used. Used by: sofia.conf.xml dingaling.conf.xml -->
-   <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}" />
-   <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}" />
+   <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}" category="IP Address" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}" category="IP Address" enabled="true"/>
 
    <!-- Music on Hold -->
-   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default" />
+   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default" category="Music on Hold" enabled="true"/>
 
    <!-- Ringtones -->
-   <X-PRE-PROCESS cmd="set" data="au-ring=%(400,200,383,417);%(400,2000,383,417)" />
-   <X-PRE-PROCESS cmd="set" data="be-ring=%(1000,3000,425)" />
-   <X-PRE-PROCESS cmd="set" data="ca-ring=%(2000,4000,440,480)" />
-   <X-PRE-PROCESS cmd="set" data="cn-ring=%(1000,4000,450)" />
-   <X-PRE-PROCESS cmd="set" data="cy-ring=%(1500,3000,425)" />
-   <X-PRE-PROCESS cmd="set" data="cz-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="de-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="dk-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="dz-ring=%(1500,3500,425)" />
-   <X-PRE-PROCESS cmd="set" data="eg-ring=%(2000,1000,475,375)" />
-   <X-PRE-PROCESS cmd="set" data="fi-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="fr-ring=%(1500,3500,440)" />
-   <X-PRE-PROCESS cmd="set" data="pt-ring=%(1000,5000,400)" />
-   <X-PRE-PROCESS cmd="set" data="hk-ring=%(400,200,440,480);%(400,3000,440,480)" />
-   <X-PRE-PROCESS cmd="set" data="hu-ring=%(1250,3750,425)" />
-   <X-PRE-PROCESS cmd="set" data="il-ring=%(1000,3000,400)" />
-   <X-PRE-PROCESS cmd="set" data="in-ring=%(400,200,425,375);%(400,2000,425,375)" />
-   <X-PRE-PROCESS cmd="set" data="jp-ring=%(1000,2000,420,380)" />
-   <X-PRE-PROCESS cmd="set" data="ko-ring=%(1000,2000,440,480)" />
-   <X-PRE-PROCESS cmd="set" data="pk-ring=%(1000,2000,400)" />
-   <X-PRE-PROCESS cmd="set" data="pl-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="ro-ring=%(1850,4150,475,425)" />
-   <X-PRE-PROCESS cmd="set" data="rs-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="it-ring=%(1000,4000,425)" />
-   <X-PRE-PROCESS cmd="set" data="ru-ring=%(800,3200,425)" />
-   <X-PRE-PROCESS cmd="set" data="sa-ring=%(1200,4600,425)" />
-   <X-PRE-PROCESS cmd="set" data="tr-ring=%(2000,4000,450)" />
-   <X-PRE-PROCESS cmd="set" data="uk-ring=%(400,200,400,450);%(400,2000,400,450)" />
-   <X-PRE-PROCESS cmd="set" data="us-ring=%(2000,4000,440,480)" />
-   <X-PRE-PROCESS cmd="set" data="bong-ring=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" />
+   <X-PRE-PROCESS cmd="set" data="au-ring=%(400,200,383,417);%(400,2000,383,417)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="be-ring=%(1000,3000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ca-ring=%(2000,4000,440,480)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="cn-ring=%(1000,4000,450)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="cy-ring=%(1500,3000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="cz-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="de-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="dk-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="dz-ring=%(1500,3500,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="eg-ring=%(2000,1000,475,375)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="fi-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="fr-ring=%(1500,3500,440)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="pt-ring=%(1000,5000,400)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="hk-ring=%(400,200,440,480);%(400,3000,440,480)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="hu-ring=%(1250,3750,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="il-ring=%(1000,3000,400)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="in-ring=%(400,200,425,375);%(400,2000,425,375)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="jp-ring=%(1000,2000,420,380)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ko-ring=%(1000,2000,440,480)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="pk-ring=%(1000,2000,400)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="pl-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ro-ring=%(1850,4150,475,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="rs-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="it-ring=%(1000,4000,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="ru-ring=%(800,3200,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="sa-ring=%(1200,4600,425)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="tr-ring=%(2000,4000,450)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="uk-ring=%(400,200,400,450);%(400,2000,400,450)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="us-ring=%(2000,4000,440,480)" category="Ringtones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="bong-ring=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" category="Ringtones" enabled="true"/>
 
    <!-- Tones -->
-   <X-PRE-PROCESS cmd="set" data="vacant-us-tone=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" />
-   <X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" />
-   <X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" />
-   <X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" />
-   <X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" />
+   <X-PRE-PROCESS cmd="set" data="vacant-us-tone=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="Tones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" category="Tones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" category="Tones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" category="Tones" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" category="Tones" enabled="true"/>
 
    <!-- SIP -->
    <!-- Used to turn on sip loopback unrolling. -->
-   <X-PRE-PROCESS cmd="set" data="unroll_loops=true" />
-   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" />
+   <X-PRE-PROCESS cmd="set" data="hangup_on_subscriber_absent=true" category="SIP" enabled="false"/>
+   <X-PRE-PROCESS cmd="set" data="hangup_on_call_reject=true" category="SIP" enabled="false"/>
+   <X-PRE-PROCESS cmd="set" data="unroll_loops=true" category="SIP" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" category="SIP" enabled="true"/>
 
    <!-- SIP Profile: External -->
-   <X-PRE-PROCESS cmd="set" data="external_auth_calls=false" />
-   <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" />
-   <X-PRE-PROCESS cmd="set" data="external_tls_port=5081" />
-   <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false" />
-   <X-PRE-PROCESS cmd="set" data="external_ssl_dir=$${conf_dir}/tls" />
+   <X-PRE-PROCESS cmd="set" data="external_auth_calls=false" category="SIP Profile: External" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" category="SIP Profile: External" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="external_tls_port=5081" category="SIP Profile: External" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="external_ssl_enable=false" category="SIP Profile: External" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="external_ssl_dir=$${conf_dir}/tls" category="SIP Profile: External" enabled="true"/>
 
    <!-- SIP Profile: Internal -->
-   <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true" />
-   <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060" />
-   <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061" />
-   <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false" />
-   <X-PRE-PROCESS cmd="set" data="internal_ssl_dir=$${conf_dir}/tls" />
+   <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true" category="SIP Profile: Internal" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060" category="SIP Profile: Internal" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061" category="SIP Profile: Internal" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false" category="SIP Profile: Internal" enabled="true"/>
+   <X-PRE-PROCESS cmd="set" data="internal_ssl_dir=$${conf_dir}/tls" category="SIP Profile: Internal" enabled="true"/>
 
    <!-- Sound -->
    <!-- Sets the sound directory. -->
-   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" />
+   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" category="Sound" enabled="true"/>
 
 </include>
