@@ -74,7 +74,10 @@
 				left outer join v_extension_users t4 on t3.user_uuid = t4.user_uuid
 				left outer join v_extensions t5 on t4.extension_uuid = t5.extension_uuid
 				where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
-					and (t5.extension = :user or t5.number_alias = :user or t2.contact_user_uuid is null)
+					and (
+						(t5.domain_uuid = :domain_uuid and (t5.extension = :user or t5.number_alias = :user))
+						or t2.contact_user_uuid is null
+					)
 			]];
 			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid, user = user};
 
