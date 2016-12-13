@@ -53,7 +53,7 @@
 		unset($sql);
 		$_SESSION["message"] = $text['message-update'];
 	}
-	
+
 //delete the dialplan context from memcache
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
@@ -62,11 +62,11 @@
 	}
 
 //set the http values as php variables
-	$search = check_str($_REQUEST["search"]);
-	$order_by = check_str($_REQUEST["order_by"]);
-	$order = check_str($_REQUEST["order"]);
-	$dialplan_context = check_str($_REQUEST["dialplan_context"]);
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
+	if (isset($_REQUEST["search"])) { $search = check_str($_REQUEST["search"]); } else { $search = null; }
+	if (isset($_REQUEST["order_by"])) { $order_by = check_str($_REQUEST["order_by"]); } else { $order_by = null; }
+	if (isset($_REQUEST["order"])) { $order = check_str($_REQUEST["order"]); } else { $order = null; }
+	if (isset($_REQUEST["dialplan_context"])) { $dialplan_context = check_str($_REQUEST["dialplan_context"]); } else { $dialplan_context = null; }
+	if (isset($_REQUEST["app_uuid"])) { $app_uuid = check_str($_REQUEST["app_uuid"]); } else { $app_uuid = null; }
 
 //includes
 	require_once "resources/header.php";
