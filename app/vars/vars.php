@@ -110,9 +110,9 @@ else {
 	if ($result_count > 0) {
 		$prev_var_cat = '';
 		foreach($result as $row) {
-			$var_value = $row[var_value];
+			$var_value = $row['var_value'];
 			$var_value = substr($var_value, 0, 50);
-			if ($prev_var_cat != $row[var_cat]) {
+			if ($prev_var_cat != $row['var_cat']) {
 				$c=0;
 				if (strlen($prev_var_cat) > 0) {
 					echo "<tr>\n";
@@ -166,7 +166,7 @@ else {
 			echo "	</td>\n";
 			echo "</tr>\n";
 
-			$prev_var_cat = $row[var_cat];
+			$prev_var_cat = $row['var_cat'];
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
