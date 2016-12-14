@@ -268,7 +268,7 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' ".."expire['ivr.conf']"));
+			result = trim(api:execute("memcache", "set configuration:ivr.conf:".. ivr_menu_uuid .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire['ivr']));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
