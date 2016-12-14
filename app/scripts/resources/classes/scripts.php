@@ -252,11 +252,13 @@ if (!class_exists('scripts')) {
 					}
 					$tmp .= "--set defaults\n";
 					$tmp .= "	expire = {}\n";
+					$tmp .= "	expire.default = \"3600\";\n";
 					$tmp .= "	expire.directory = \"3600\";\n";
 					$tmp .= "	expire.dialplan = \"3600\";\n";
 					$tmp .= "	expire.languages = \"3600\";\n";
 					$tmp .= "	expire.sofia = \"3600\";\n";
 					$tmp .= "	expire.acl = \"3600\";\n";
+					$tmp .= "	expire.ivr = \"3600\";\n";
 					$tmp .= "\n";
 					$tmp .= "--set xml_handler\n";
 					$tmp .= "	xml_handler = {}\n";
