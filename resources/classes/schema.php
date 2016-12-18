@@ -463,6 +463,7 @@ if (!class_exists('schema')) {
 					if ($format=='') $format = $output_format;
 
 				//get the db variables
+					require_once "resources/classes/config.php";
 					$config = new config;
 					$config_exists = $config->exists();
 					$config_path = $config->find();
