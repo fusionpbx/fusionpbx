@@ -126,9 +126,9 @@
 <G729a_Codec_Name>G729a</G729a_Codec_Name>
 <EncapRTP_Codec_Name>encaprtp</EncapRTP_Codec_Name>
 <Handle_VIA_received>No</Handle_VIA_received>
-<Handle_VIA_rport>No</Handle_VIA_rport>
+<Handle_VIA_rport>{$cisco_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received>No</Insert_VIA_received>
-<Insert_VIA_rport>No</Insert_VIA_rport>
+<Insert_VIA_rport>{$cisco_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr>No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port>No</Send_Resp_To_Src_Port>
 <STUN_Enable>No</STUN_Enable>
