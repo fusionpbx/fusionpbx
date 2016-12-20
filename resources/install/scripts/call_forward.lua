@@ -82,6 +82,8 @@
 --connect to the database
 	local dbh = Database.new('system');
 
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
+
 --request id is true
 	if (request_id == "true") then
 		--unset extension uuid
@@ -208,6 +210,22 @@
 		end
 	end
 
+--get default caller_id for outbound call
+	if enabled == "true" and empty(forward_caller_id_uuid) then
+		if settings:get('cdr', 'call_forward_fix', 'boolean') == 'true' then
+			if not empty(row.outbound_caller_id_number) then
+				forward_caller_id = forward_caller_id ..
+					 ",outbound_caller_id_number=" .. row.outbound_caller_id_number ..
+					 ",origination_caller_id_number=" .. row.outbound_caller_id_number
+			end
+			if not empty(row.outbound_caller_id_name) then
+				forward_caller_id = forward_caller_id ..
+					 ",outbound_caller_id_name=" .. row.outbound_caller_id_name ..
+					 ",origination_caller_id_name=" .. row.outbound_caller_id_name
+			end
+		end
+	end
+
 --set the dial string
 	if enabled == "true" then
 		local destination_extension, destination_number_alias
@@ -257,11 +275,9 @@
 			dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
 		else
 			-- setting here presence_id equal extension not dialed number allows work BLF and intercept.
-			local settings, presence_id = Settings.new(dbh, domain_name, domain_uuid)
+			local presence_id = extension
 			if (#number_alias > 0) and (settings:get('provision', 'number_as_presence_id', 'text') == 'true') then
 				presence_id = number_alias
-			else
-				presence_id = extension
 			end
 
 			dial_string = dial_string .. ",presence_id="..presence_id.."@"..domain_name;
