@@ -45,17 +45,20 @@ else {
 	$row_style["1"] = "row_style1";
 
 //set a default line number value (off)
-	if ($_POST['ln'] == '') { $_POST['ln'] = 0; }
+	if (!isset($_POST['ln']) || $_POST['ln'] == '') { $_POST['ln'] = 0; }
 
 //set a default ordinal (descending)
-	if ($_POST['ord'] == '') { $_POST['ord'] = "asc"; }
+	if (!isset($_POST['ord']) || $_POST['ord'] == '') { $_POST['ord'] = "asc"; }
 
 //set a default file size
-	if (strlen($_POST['fs']) == 0) { $_POST['fs'] = "32"; }
+	if (!isset($_POST['fs']) || strlen($_POST['fs']) == 0) { $_POST['fs'] = "32"; }
+	
+//set a default filter
+	if (!isset($_POST['filter'])) { $_POST['filter'] = ""; }	
 
 if (permission_exists('log_download')) {
-	if ($_GET['a'] == "download") {
-		if ($_GET['t'] == "logs") {
+	if (isset($_GET['a']) && $_GET['a'] == "download") {
+		if (isset($_GET['t']) && $_GET['t'] == "logs") {
 			$tmp = $_SESSION['switch']['log']['dir'].'/';
 			$filename = 'freeswitch.log';
 		}
@@ -215,6 +218,7 @@ if (permission_exists('log_view')) {
 	}
 
 	//start processing
+	$byte_count = 0;
 	while(!feof($file))
 	{
 		$log_line = fgets($file);
@@ -243,7 +247,7 @@ if (permission_exists('log_view')) {
 							$log_line = str_replace($v1["pattern".$i], "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
 						}
 					}
-					$ary_output[] = "<span style='color: ".$v1[color]."; font-family: ".$v1[font].";'>".$log_line."</span><br>";
+					$ary_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
 					$noprint = true;
 				}
 			}
@@ -263,6 +267,7 @@ if (permission_exists('log_view')) {
 		$adj_index = 1;
 	}
 	foreach ($ary_output as $index => $line) {
+		$line_num = "";
 		if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
 			if ($_POST['ln']) {
 				$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
