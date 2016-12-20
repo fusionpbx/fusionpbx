@@ -748,7 +748,7 @@
 </Software_DMZ>
 <Bonjour_Enable>1</Bonjour_Enable>
 <Reset_Button_Enable>1</Reset_Button_Enable>
-<Router_Mode>0</Router_Mode>
+<Router_Mode>{$cisco_router_mode}</Router_Mode>
 <VPN_Passthrough>
 <IPSec_Passthrough>1</IPSec_Passthrough>
 <PPTP_Passthrough>1</PPTP_Passthrough>
