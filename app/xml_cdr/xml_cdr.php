@@ -109,6 +109,11 @@
 	echo "	<input type='hidden' name='remote_media_ip' value='".$remote_media_ip."'>\n";
 	echo "	<input type='hidden' name='network_addr' value='".$network_addr."'>\n";
 	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
+	foreach ($_SESSION['cdr']['field'] as $field) {
+		if (isset($_REQUEST[$field])) {
+			echo "	<input type='hidden' name='$field' value='".$$field."'>\n";
+		}
+	}
 	if (isset($order_by)) {
 		echo "	<input type='hidden' name='order_by' value='".$order_by."'>\n";
 		echo "	<input type='hidden' name='order' value='".$order."'>\n";
@@ -361,6 +366,13 @@
 			echo "<th>".$text['label-recording']."</th>\n";
 			$col_count++;
 		}
+		if (is_array($_SESSION['cdr']['field'])) {
+			foreach ($_SESSION['cdr']['field'] as $field) {
+				$field_name = ucwords(str_replace("_", " ", $field));
+				$field_name = str_replace("Sip", "SIP", $field_name);
+				echo th_order_by($field, $field_name, $order_by, $order, null, "style='text-align: right;'", $param);
+			}
+		}
 		echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
 		echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'", $param);
 		echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'", $param);
@@ -543,6 +555,12 @@
 					}
 					else {
 						echo "	<td valign='top' align='center' class='".$row_style[$c]."'>&nbsp;</td>\n";
+					}
+				}
+			//dynamic cdr fields
+				if (is_array($_SESSION['cdr']['field'])) {
+					foreach ($_SESSION['cdr']['field'] as $field) {
+						echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$row[$field] ."</td>\n";
 					}
 				}
 			//start
