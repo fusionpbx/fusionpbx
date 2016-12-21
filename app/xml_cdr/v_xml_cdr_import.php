@@ -239,6 +239,13 @@
 				$database->fields['recording_file'] = $recording_file;
 			}
 
+		//dynamic cdr fields
+			if (is_array($_SESSION['cdr']['field'])) {
+				foreach ($_SESSION['cdr']['field'] as $field) {
+					$database->fields[$field] = check_str(urldecode($xml->variables->$field));;
+				}
+			}
+
 		//save to the database in xml format
 			if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
 				$database->fields['xml'] = check_str($xml_string);
