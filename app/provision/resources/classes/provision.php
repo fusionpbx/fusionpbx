@@ -689,7 +689,7 @@ include "root.php";
 							$sql .= "WHEN 'programmable' THEN 3 ";
 							$sql .= "WHEN 'expansion' THEN 4 ";
 							$sql .= "ELSE 100 END, ";
-							if ($db_type == "mysql") {
+							if ($GLOBALS['db_type'] == "mysql") {
 								$sql .= "device_key_id ASC, ";
 							}
 							else {
