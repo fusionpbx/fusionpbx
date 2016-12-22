@@ -75,6 +75,11 @@
 		$bridge_uuid = check_str($_REQUEST["network_addr"]);
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			if (isset($_REQUEST[$field])) {
+				$$field = check_str($_REQUEST[$field]);
+			}
+		}
 		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
 			switch(check_str($_REQUEST["mos_comparison"])) {
 				case 'less': $mos_comparison = "<"; break;
@@ -115,6 +120,14 @@
 		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
 	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
+
+	foreach ($_SESSION['cdr']['field'] as $field) {
+		if (isset($$field)) {
+			$$field = check_str($_REQUEST[$field]);
+			$sql_where_ands[] = "$field like '%".$$field."%'";
+		}
+	}
+		
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
 	else {
 		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
@@ -256,6 +269,11 @@
 	$param .= "&bridge_uuid=".$bridge_uuid;
 	$param .= "&mos_comparison=".$mos_comparison;
 	$param .= "&mos_score=".$mos_score;
+	foreach ($_SESSION['cdr']['field'] as $field) {
+		if (isset($$field)) {
+			$param .= "&mos_score=".$$field;
+		}
+	}
 	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
 		$param .= "&showall=true";
 	}
