@@ -69,9 +69,13 @@
 				end
 
 			--please enter your password followed by pound
-				dtmf_digits = '';
-				password = macro(session, "voicemail_password", 20, 5000, '');
+				min_digits = 2;
+				max_digits = 20;
+				digit_timeout = 5000;
+				max_tries = 3;
+				password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 				--freeswitch.consoleLog("notice", "[voicemail] password: " .. password .. "\n");
+
 			--compare the password from the database with the password provided by the user
 				if (voicemail_password ~= password) then
 					--incorrect password
