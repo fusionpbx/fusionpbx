@@ -47,6 +47,9 @@
 					dtmf_digits = '';
 					if (string.len(greeting_id) > 0) then
 
+						--sleep
+							session:execute("playback","silence_stream://200");
+
 						--get the greeting from the database
 							if (storage_type == "base64") then
 								local dbh = Database.new('system', 'base64/read')
@@ -82,23 +85,20 @@
 
 								if saved then
 									--play the greeting
-										dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", "\\d+", max_timeout);								
+										dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
 										--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 
 									--delete the greeting (retain local for better responsiveness)
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 								end
 							elseif (storage_type == "http_cache") then
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", "\\d+", max_timeout);								
+								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
 								--session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "","\\d+", max_timeout);								
-
+								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);								
 								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
-						--sleep
-							session:execute("playback","silence_stream://200");
 					else
 						--default greeting
 						session:execute("playback","silence_stream://200");
