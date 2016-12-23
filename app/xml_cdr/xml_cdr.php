@@ -368,9 +368,13 @@
 		}
 		if (is_array($_SESSION['cdr']['field'])) {
 			foreach ($_SESSION['cdr']['field'] as $field) {
-				$field_name = ucwords(str_replace("_", " ", $field));
-				$field_name = str_replace("Sip", "SIP", $field_name);
-				echo th_order_by($field, $field_name, $order_by, $order, null, "style='text-align: right;'", $param);
+				$array = explode(",", $field);
+				$field_name = $array[count($array) - 1];
+				$field_label = ucwords(str_replace("_", " ", $field_name));
+				$field_label = str_replace("Sip", "SIP", $field_label);
+				if ($field_name != "destination_number") {
+					echo th_order_by($field_name, $field_label, $order_by, $order, null, "style='text-align: right;'", $param);
+				}
 			}
 		}
 		echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: center;'", $param);
@@ -560,7 +564,11 @@
 			//dynamic cdr fields
 				if (is_array($_SESSION['cdr']['field'])) {
 					foreach ($_SESSION['cdr']['field'] as $field) {
-						echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$row[$field] ."</td>\n";
+						$array = explode(",", $field);
+						$field_name = $array[count($array) - 1];
+						if ($field_name != "destination_number") {
+							echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;' nowrap='nowrap'>".$row[$field_name] ."</td>\n";
+						}
 					}
 				}
 			//start
