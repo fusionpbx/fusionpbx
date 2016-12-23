@@ -66,7 +66,25 @@
 
 		-- search for the phone number in database using the speed dial
 			local sql = [[
-				select t0.phone_number --, t5.extension, t0.domain_uuid, t0.phone_speed_dial
+				-- find all contacts with correct user or withot users and groups at all
+				select t0.phone_number --, t6.extension, 'GROUP:' || t3.group_name as user_name
+				from v_contact_phones t0
+				inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
+				left outer join v_contact_groups t2 on t1.contact_uuid = t2.contact_uuid
+				left outer join v_group_users t3 on t2.group_uuid = t3.group_uuid
+				left outer join v_users t4 on t3.user_uuid = t4.user_uuid
+				left outer join v_extension_users t5 on t4.user_uuid = t5.user_uuid
+				left outer join v_extensions t6 on t5.extension_uuid = t6.extension_uuid
+				where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
+					and ( (1 = 0)
+						or (t6.domain_uuid = :domain_uuid and (t6.extension = :user or t6.number_alias = :user))
+						or (t2.contact_uuid is null and not exists(select 1 from v_contact_users t where t.contact_uuid = t0.contact_uuid) )
+					)
+
+				union
+
+				-- find all contacts with correct group or withot users and groups at all
+				select t0.phone_number -- , t5.extension, 'USER:' || t3.username as user_name
 				from v_contact_phones t0
 				inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
 				left outer join v_contact_users t2 on t1.contact_uuid = t2.contact_uuid
@@ -74,9 +92,9 @@
 				left outer join v_extension_users t4 on t3.user_uuid = t4.user_uuid
 				left outer join v_extensions t5 on t4.extension_uuid = t5.extension_uuid
 				where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
-					and (
-						(t5.domain_uuid = :domain_uuid and (t5.extension = :user or t5.number_alias = :user))
-						or t2.contact_user_uuid is null
+					and ( (1 = 0)
+						or (t5.domain_uuid = :domain_uuid and (t5.extension = :user or t5.number_alias = :user))
+						or (t2.contact_user_uuid is null and not exists(select 1 from v_contact_groups t where t.contact_uuid = t0.contact_uuid))
 					)
 			]];
 			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid, user = user};
