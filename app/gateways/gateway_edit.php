@@ -739,14 +739,27 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('gateway_channels')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-channels']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='number' name='channels' maxlength='255' value=\"$channels\" min='0' max='65535' step='1'>\n";
+		echo "<br />\n";
+		echo $text['description-channels']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-channels']."\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='channels' maxlength='255' value=\"$channels\" min='0' max='65535' step='1'>\n";
+	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
 	echo "<br />\n";
-	echo $text['description-channels']."\n";
+	echo $text['description-hostname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -819,17 +832,6 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-hostname']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
-	echo "<br />\n";
-	echo $text['description-hostname']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
@@ -877,11 +879,12 @@
 	echo "<br><br>";
 	echo "</form>";
 
-	echo "<script>\n";
 //capture enter key to submit form
+	echo "<script>\n";
 	echo "	$(window).keypress(function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
+
 // convert password fields to
 	echo "	function submit_form() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
