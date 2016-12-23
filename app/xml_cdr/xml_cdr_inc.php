@@ -75,11 +75,13 @@
 		$bridge_uuid = check_str($_REQUEST["network_addr"]);
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
-		foreach ($_SESSION['cdr']['field'] as $field) {
-			$array = explode(",", $field);
-			$field_name = end($array);
-			if (isset($_REQUEST[$field_name])) {
-				$$field_name = check_str($_REQUEST[$field_name]);
+		if (is_array($_SESSION['cdr']['field'])) {
+			foreach ($_SESSION['cdr']['field'] as $field) {
+				$array = explode(",", $field);
+				$field_name = end($array);
+				if (isset($_REQUEST[$field_name])) {
+					$$field_name = check_str($_REQUEST[$field_name]);
+				}
 			}
 		}
 		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
@@ -123,15 +125,17 @@
 	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
 
-	foreach ($_SESSION['cdr']['field'] as $field) {
-		$array = explode(",", $field);
-		$field_name = end($array);
-		if (isset($$field_name)) {
-			$$field_name = check_str($_REQUEST[$field_name]);
-			$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($$field_name)) {
+				$$field_name = check_str($_REQUEST[$field_name]);
+				$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+			}
 		}
 	}
-		
+
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
 	else {
 		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
@@ -273,11 +277,13 @@
 	$param .= "&bridge_uuid=".$bridge_uuid;
 	$param .= "&mos_comparison=".$mos_comparison;
 	$param .= "&mos_score=".$mos_score;
-	foreach ($_SESSION['cdr']['field'] as $field) {
-		$array = explode(",", $field);
-		$field_name = end($array);
-		if (isset($$field_name)) {
-			$param .= "&mos_score=".$$field_name;
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($$field_name)) {
+				$param .= "&mos_score=".$$field_name;
+			}
 		}
 	}
 	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
