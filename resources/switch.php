@@ -452,10 +452,7 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	}
 
 	//get the hostname
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$hostname = trim(event_socket_request($fp, 'api switchname'));
-	}
+	$hostname = trim(event_socket_request_cmd('api switchname'));
 
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
