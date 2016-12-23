@@ -36,6 +36,7 @@ local select_routes_sql = [[
 select *
 from v_dialplans
 where (domain_uuid = :domain_uuid or domain_uuid is null)
+  and (hostname = :hostname or hostname is null) 
   and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
   and dialplan_enabled = 'true'
 order by dialplan_order asc
@@ -238,9 +239,11 @@ end
 
 local function outbound_route_to_bridge(dbh, domain_uuid, fields)
 	local actions, dial_string = {}
+	require "resources.functions.trim";
+	hostname = trim(api:execute("switchname", ""));
 
 	local params = {}
-	dbh:query(select_routes_sql, {domain_uuid=domain_uuid}, function(route)
+	dbh:query(select_routes_sql, {domain_uuid=domain_uuid,hostname=hostname}, function(route)
 		local extension = {}
 		params.dialplan_uuid = route.dialplan_uuid
 		dbh:query(select_extensions_sql, params, function(ext)
