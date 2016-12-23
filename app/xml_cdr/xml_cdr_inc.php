@@ -77,7 +77,9 @@
 		$order = check_str($_REQUEST["order"]);
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			if (isset($_REQUEST[$field])) {
-				$$field = check_str($_REQUEST[$field]);
+				$array = explode(",", $field);
+				$field_name = end($array);
+				$$field = check_str($_REQUEST[$field_name]);
 			}
 		}
 		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
@@ -123,8 +125,10 @@
 
 	foreach ($_SESSION['cdr']['field'] as $field) {
 		if (isset($$field)) {
-			$$field = check_str($_REQUEST[$field]);
-			$sql_where_ands[] = "$field like '%".$$field."%'";
+			$array = explode(",", $field);
+			$field_name = end($array);
+			$$field_name = check_str($_REQUEST[$field_name]);
+			$sql_where_ands[] = "$field like '%".$$field_name."%'";
 		}
 	}
 		
@@ -270,8 +274,10 @@
 	$param .= "&mos_comparison=".$mos_comparison;
 	$param .= "&mos_score=".$mos_score;
 	foreach ($_SESSION['cdr']['field'] as $field) {
-		if (isset($$field)) {
-			$param .= "&mos_score=".$$field;
+		$array = explode(",", $field);
+		$field_name = end($array);
+		if (isset($$field_name)) {
+			$param .= "&mos_score=".$$field_name;
 		}
 	}
 	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
@@ -361,7 +367,9 @@
 	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
-			$sql .= $field.", ";
+			$array = explode(",", $field);
+			$field_name = end($array);
+			$sql .= $field_name.", ";
 		}
 	}
 	$sql .= "accountcode, ";
