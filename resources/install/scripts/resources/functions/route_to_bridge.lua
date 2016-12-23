@@ -240,7 +240,7 @@ end
 local function outbound_route_to_bridge(dbh, domain_uuid, fields)
 	local actions, dial_string = {}
 	require "resources.functions.trim";
-	hostname = trim(api:execute("switchname", ""));
+	local hostname = trim(api:execute("switchname", ""));
 
 	local params = {}
 	dbh:query(select_routes_sql, {domain_uuid=domain_uuid,hostname=hostname}, function(route)
