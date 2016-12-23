@@ -242,7 +242,18 @@
 		//dynamic cdr fields
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
-					$database->fields[$field] = check_str(urldecode($xml->variables->$field));;
+					$array = explode(",", $field);
+					$field_name = end($array);
+					$fields = explode(",", $field);
+					if (count($array) == 1) {
+						$database->fields[$field_name] = urldecode($xml->variables->$fields[0]);
+					}
+					if (count($fields) == 2) {
+						$database->fields[$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+					}
+					if (count($fields) == 3) {
+						$database->fields[$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+					}
 				}
 			}
 
