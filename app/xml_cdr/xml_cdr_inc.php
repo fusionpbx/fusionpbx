@@ -76,10 +76,10 @@
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
 		foreach ($_SESSION['cdr']['field'] as $field) {
-			if (isset($_REQUEST[$field])) {
-				$array = explode(",", $field);
-				$field_name = end($array);
-				$$field = check_str($_REQUEST[$field_name]);
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($_REQUEST[$field_name])) {
+				$$field_name = check_str($_REQUEST[$field_name]);
 			}
 		}
 		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
@@ -124,11 +124,11 @@
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
 
 	foreach ($_SESSION['cdr']['field'] as $field) {
-		if (isset($$field)) {
-			$array = explode(",", $field);
-			$field_name = end($array);
+		$array = explode(",", $field);
+		$field_name = end($array);
+		if (isset($$field_name)) {
 			$$field_name = check_str($_REQUEST[$field_name]);
-			$sql_where_ands[] = "$field like '%".$$field_name."%'";
+			$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
 		}
 	}
 		
