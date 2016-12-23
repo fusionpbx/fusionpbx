@@ -357,7 +357,7 @@ $text['label-hostname']['fr-fr'] = "Nom d'hôte";
 $text['label-hostname']['pt-br'] = "Hostname";
 $text['label-hostname']['pl'] = "Nazwa hosta";
 $text['label-hostname']['sv-se'] = "Hostname";
-$text['label-expire_seconds']['ro'] = "Nume de gazdă";
+$text['label-hostname']['ro'] = "Hostname";
 $text['label-hostname']['uk'] = "Назва хоста";
 $text['label-hostname']['de-at'] = "Hostname";
 
