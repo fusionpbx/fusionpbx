@@ -426,7 +426,7 @@ function save_var_xml() {
 	fclose($fout);
 
 	//apply settings
-		$_SESSION["reload_xml"] = true;
+	$_SESSION["reload_xml"] = true;
 
 	//$cmd = "api reloadxml";
 	//event_socket_request_cmd($cmd);
@@ -451,8 +451,15 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 		return $bridge_array;
 	}
 
+	//get the hostname
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$hostname = trim(event_socket_request($fp, 'api switchname'));
+	}
+
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "and (hostname = '".$hostname."' or hostname is null) ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
