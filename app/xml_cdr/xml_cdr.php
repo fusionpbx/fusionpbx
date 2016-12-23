@@ -109,11 +109,13 @@
 	echo "	<input type='hidden' name='remote_media_ip' value='".$remote_media_ip."'>\n";
 	echo "	<input type='hidden' name='network_addr' value='".$network_addr."'>\n";
 	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
-	foreach ($_SESSION['cdr']['field'] as $field) {
-		if (isset($_REQUEST[$field])) {
-			$array = explode(",", $field);
-			$field_name = $array[count($array) - 1];
-			echo "	<input type='hidden' name='$field_name' value='".$$field_name."'>\n";
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			if (isset($_REQUEST[$field])) {
+				$array = explode(",", $field);
+				$field_name = $array[count($array) - 1];
+				echo "	<input type='hidden' name='$field_name' value='".$$field_name."'>\n";
+			}
 		}
 	}
 	if (isset($order_by)) {
