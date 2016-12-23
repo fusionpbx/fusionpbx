@@ -643,6 +643,16 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['de-at'] = "Daten";
 $text['label-data']['he'] = "מידע";
 
+$text['label-hostname']['en-us'] = "Hostname";
+$text['label-hostname']['pt-pt'] = "Hostname";
+$text['label-hostname']['fr-fr'] = "Nom d'hôte";
+$text['label-hostname']['pt-br'] = "Hostname";
+$text['label-hostname']['pl'] = "Nazwa hosta";
+$text['label-hostname']['sv-se'] = "Hostname";
+$text['label-hostname']['ro'] = "Hostname";
+$text['label-hostname']['uk'] = "Назва хоста";
+$text['label-hostname']['de-at'] = "Hostname";
+
 $text['label-continue']['en-us'] = "Continue";
 $text['label-continue']['es-cl'] = "Continuar";
 $text['label-continue']['pt-pt'] = "Continuar";
