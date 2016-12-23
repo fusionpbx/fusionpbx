@@ -238,12 +238,16 @@
 	echo "	</tr>";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
-			$field_name = ucwords(str_replace("_", " ", $field));
-			$field_name = str_replace("Sip", "SIP", $field_name);
-			echo "	<tr>";
-			echo "		<td class='vncell'>".$field_name."</td>";
-			echo "		<td class='vtable'><input type='text' class='formfld' name='".$field."' value='".$$field."'></td>";
-			echo "	</tr>";
+			$array = explode(",", $field);
+			$field_name = end($array);
+			$field_label = ucwords(str_replace("_", " ", $field_name));
+			$field_label = str_replace("Sip", "SIP", $field_label);
+			if ($field_name != "destination_number") {
+				echo "	<tr>";
+				echo "		<td class='vncell'>".$field_label."</td>";
+				echo "		<td class='vtable'><input type='text' class='formfld' name='".$field_name."' value='".$$field_name."'></td>";
+				echo "	</tr>";
+			}
 		}
 	}
 	echo "	<tr>";
