@@ -59,6 +59,9 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
+		--get the hostname
+			hostname = trim(api:execute("switchname", ""));
+
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -73,10 +76,11 @@
 			else
 				sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
 			end
+			sql = sql .. "and (hostname = :hostname or hostname is null) ";
 			sql = sql .. "and p.dialplan_enabled = 'true' ";
 			sql = sql .. "order by ";
 			sql = sql .. "p.dialplan_order asc ";
-			local params = {call_context = call_context};
+			local params = {call_context = call_context, hostname = hostname};
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
