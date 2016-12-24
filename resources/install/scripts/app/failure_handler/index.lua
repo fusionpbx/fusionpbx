@@ -22,6 +22,7 @@
 --	Contributor(s):
 --	Salvatore Caruso <salvatore.caruso@nems.it>
 --	Riccardo Granchi <riccardo.granchi@nems.it>
+--	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --debug
 	debug["info"] = false;
@@ -114,17 +115,19 @@
 		dialed_user = session:getVariable("dialed_user");
 		missed_call_app = session:getVariable("missed_call_app");
 		missed_call_data = session:getVariable("missed_call_data");
+		sip_code = session:getVariable("last_bridge_proto_specific_hangup_cause");
 
 		if (debug["info"] == true) then
 			freeswitch.consoleLog("INFO", "[failure_handler] originate_causes: " .. tostring(originate_causes) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] originate_disposition: " .. tostring(originate_disposition) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] hangup_on_subscriber_absent: " .. tostring(hangup_on_subscriber_absent) .. "\n");
 			freeswitch.consoleLog("INFO", "[failure_handler] hangup_on_call_reject: " .. tostring(hangup_on_call_reject) .. "\n");
+			freeswitch.consoleLog("INFO", "[failure_handler] sip_code: " .. tostring(sip_code) .. "\n");
 		end
 
 		if (originate_causes ~= nil) then
 			array = explode("|",originate_causes);
-			if (string.find(array[1], "USER_BUSY")) then
+			if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
 				originate_disposition = "USER_BUSY";
 				session:setVariable("originate_disposition", originate_disposition);
 			end
@@ -166,7 +169,7 @@
 						end
 					end
 
-			elseif (originate_disposition == "NO_ANSWER") then
+			elseif (originate_disposition == "NO_ANSWER") or (sip_code == "sip:480") then
 
 				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");
