@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('var_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('var_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -110,9 +114,9 @@ else {
 	if ($result_count > 0) {
 		$prev_var_cat = '';
 		foreach($result as $row) {
-			$var_value = $row[var_value];
+			$var_value = $row['var_value'];
 			$var_value = substr($var_value, 0, 50);
-			if ($prev_var_cat != $row[var_cat]) {
+			if ($prev_var_cat != $row['var_cat']) {
 				$c=0;
 				if (strlen($prev_var_cat) > 0) {
 					echo "<tr>\n";
@@ -166,7 +170,7 @@ else {
 			echo "	</td>\n";
 			echo "</tr>\n";
 
-			$prev_var_cat = $row[var_cat];
+			$prev_var_cat = $row['var_cat'];
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
