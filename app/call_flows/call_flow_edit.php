@@ -310,6 +310,7 @@
 	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 
 	if (if_group("superadmin")) {
+		require_once "resources/header.php";
 		echo "<script>\n";
 		echo "var Objs;\n";
 		echo "\n";
