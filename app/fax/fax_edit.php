@@ -514,7 +514,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'='nowrap='nowrap''>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-accountcode']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -841,7 +841,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_server']."\n";
 			echo "</td>\n";
-			echo "<td class='vtable' style='white-space: nowrap='nowrap';' align='left'>\n";
+			echo "<td class='vtable' style='white-space: nowrap;' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"$fax_email_connection_host\">&nbsp;:&nbsp;";
 			echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
 			echo "<br />\n";
@@ -914,7 +914,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</table>\n";
 
 		echo "		</td>";
-		echo "		<td style='white-space: nowrap='nowrap';'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+		echo "		<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "		<td width='50%' valign='top'>";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

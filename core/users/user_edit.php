@@ -597,6 +597,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
 
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+	echo "<tr>\n";
 	echo "<td align='left' width='90%' valign='top' nowrap><b>".$text['header-user_edit']."</b></td>\n";
 	echo "<td align='right' nowrap>\n";
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
