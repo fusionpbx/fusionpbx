@@ -416,6 +416,11 @@
 	freeswitch.consoleLog("INFO","[FAX] mailfrom_address: ".. from_address .."\n");
 	freeswitch.consoleLog("INFO","[FAX] mailto_address: ".. email_address .."\n");
 	freeswitch.consoleLog("INFO","[FAX] hangup_cause_q850: '" .. hangup_cause_q850 .. "'\n");
+	
+-- build headers
+	email_type = "email2fax";
+	x_headers = 'X-Headers: {"X-FusionPBX-Email-Type":"'..email_type..'",';
+	x_headers = x_headers..'"X-FusionPBX-Domain-UUID":"'..domain_uuid..'"}';	
 
 -- if the fax failed then try again
 	if (fax_success == "0") then
@@ -491,7 +496,7 @@
 				email_address = email_address:gsub("\\,", ",");
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was INVALID",
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was INVALID\n"..x_headers,
 									email_message_fail ,
 									fax_file
 								);
@@ -504,7 +509,7 @@
 				email_address = email_address:gsub("\\,", ",");
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was BUSY",
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was BUSY\n"..x_headers,
 									email_message_fail ,
 									fax_file
 								);
@@ -519,7 +524,7 @@
 
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." FAILED",
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." FAILED\n"..x_headers,
 									email_message_fail ,
 									fax_file
 								);
@@ -555,7 +560,7 @@
 
 		freeswitch.email(email_address,
 				email_address,
-				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
+				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT\n"..x_headers,
 				email_message_success ,
 				fax_file
 			);
