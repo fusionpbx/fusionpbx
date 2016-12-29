@@ -249,7 +249,7 @@
 			if (ivr_menu_direct_dial == "true") then
 				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
 				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
-				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[ : ]]..ivr_menu_extension..[[ XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
+				table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
 			end
 
 		--close the extension tag if it was left open
