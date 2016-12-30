@@ -1,7 +1,7 @@
 What is [FusionPBX](http://fusionpbx.com/)?
 --------------------------------------
 [FusionPBX](http://fusionpbx.com/) is a flexible, customizable administration web GUI that takes [FreeSwitch](http://freeswitch.org) and converts it into a single- or multi-tenant gateway or PBX system out of the box.
-It can be run on any operating system and x86-based hardware of your choice.
+It will run on any operating system and x86-based hardware of your choice.
 It provides the functionality your business needs and brings corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/channel/UCN5j2ITmjua1MfjGR8jX9TA)
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
