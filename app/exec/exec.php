@@ -128,6 +128,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_php')) { ?>
@@ -142,6 +143,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_command')) { ?>
@@ -156,6 +158,7 @@
 							$('#iframe').prop('src','');
 							$('#sql_response').hide();
 						<?php } ?>
+						$('#response').show();
 						break;
 				<?php } ?>
 				<?php if (permission_exists('exec_sql')) { ?>
@@ -164,6 +167,7 @@
 						editor.getSession().setMode('ace/mode/sql');
 						$('#mode option[value=sql]').prop('selected',true);
 						$('.sql_controls').show();
+						$('#response').hide();
 						break;
 				<?php } ?>
 				default:
@@ -443,7 +447,7 @@
 			switch ($handler) {
 				case 'shell':
 					if (permission_exists('exec_command')) {
-						$result = htmlentities(shell_exec($cmd));
+						$result = htmlentities(shell_exec($cmd . " 2>&1"));
 					}
 					break;
 				case 'php':
