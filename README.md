@@ -25,7 +25,6 @@ We provide several avenues for you to get your system up and running on your own
 1. [Youtube Channel](https://www.youtube.com/channel/UCN5j2ITmjua1MfjGR8jX9TA)
 2. [Documentation](http://docs.fusionpbx.com)
 3. [How to Contribute](https://github.com/Fusionpbx/opensource)
-4. [IRC](http://webchat.freenode.net/) in the #fusionpbx channel
 
 Commercial Support
 --------------------------------------
