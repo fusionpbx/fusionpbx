@@ -48,7 +48,6 @@ Community
 --------------------------------------
 We have a pretty thriving community. You can find us here:
 
-- [IRC](http://webchat.freenode.net/) in the #fusionpbx channel
 - [Twitter](http://twitter.com/fusionpbx)
 - [Website](http://fusionpbx.com)
 
