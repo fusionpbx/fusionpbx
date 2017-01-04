@@ -1758,35 +1758,224 @@
 		$vendors[$y]['functions'][$z]['value'] = "19";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-		/*
-		0 - not programmed
-		1 - speed dial
-		2 - callLog
-		3 - advisoryMsg (on/off)
-		4 - headset(on/off)
-		5 - shared line
-		6 - Line 1
-		7 - Line 2
-		8 - Line 3
-		9 - Line 4
-		10 - Line 5
-		11 - Line 6
-		12 - Line 7
-		13 - Line 8
-		15 - phonebook
-		16 - call forwarding
-		17 - do not disturb
-		18 - PC Application
-		19 - RSS Feed URL / Branding /Notes
-		21 - Superkey (5304 set only)
-		22 - Redial key (5304 set only)
-		23 - Hold key (5304 set only)
-		24 - Trans/Conf key (5304 set only)
-		25 - Message key (5304 set only)
-		26 - Cancel key (5304 set only)
-		27 - Speed Dial & BLF
 
-		Mitel web interface shows html_application
-		*/
+		$y++; //vendors array index
+		$z=0; //functions array index
+		$vendors[$y]['name'] = "sangoma";
+		$vendors[$y]['functions'][$z]['label'] = "label-line";
+		$vendors[$y]['functions'][$z]['name'] = "line";
+		$vendors[$y]['functions'][$z]['value'] = "1";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
+		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
+		$vendors[$y]['functions'][$z]['value'] = "2";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-blf";
+		$vendors[$y]['functions'][$z]['name'] = "blf";
+		$vendors[$y]['functions'][$z]['value'] = "3";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-blf_list";
+		$vendors[$y]['functions'][$z]['name'] = "blf_list";
+		$vendors[$y]['functions'][$z]['value'] = "4";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-voicemail";
+		$vendors[$y]['functions'][$z]['name'] = "voicemail";
+		$vendors[$y]['functions'][$z]['value'] = "5";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-direct_pickup";
+		$vendors[$y]['functions'][$z]['name'] = "direct_pickup";
+		$vendors[$y]['functions'][$z]['value'] = "6";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-group_pickup";
+		$vendors[$y]['functions'][$z]['name'] = "group_pickup";
+		$vendors[$y]['functions'][$z]['value'] = "7";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-park";
+		$vendors[$y]['functions'][$z]['name'] = "park";
+		$vendors[$y]['functions'][$z]['value'] = "8";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
+		$vendors[$y]['functions'][$z]['name'] = "intercom";
+		$vendors[$y]['functions'][$z]['value'] = "9";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-dtmf";
+		$vendors[$y]['functions'][$z]['name'] = "dtmf";
+		$vendors[$y]['functions'][$z]['value'] = "10";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-prefix";
+		$vendors[$y]['functions'][$z]['name'] = "prefix";
+		$vendors[$y]['functions'][$z]['value'] = "11";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-local_group";
+		$vendors[$y]['functions'][$z]['name'] = "local_group";
+		$vendors[$y]['functions'][$z]['value'] = "12";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-xml_group";
+		$vendors[$y]['functions'][$z]['name'] = "xml_group";
+		$vendors[$y]['functions'][$z]['value'] = "13";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-xml_browser";
+		$vendors[$y]['functions'][$z]['name'] = "xml_browser";
+		$vendors[$y]['functions'][$z]['value'] = "14";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-ldap";
+		$vendors[$y]['functions'][$z]['name'] = "ldap";
+		$vendors[$y]['functions'][$z]['value'] = "15";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-broadsoft_group";
+		$vendors[$y]['functions'][$z]['name'] = "broadsoft_group";
+		$vendors[$y]['functions'][$z]['value'] = "16";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-conference";
+		$vendors[$y]['functions'][$z]['name'] = "Conference";
+		$vendors[$y]['functions'][$z]['value'] = "17";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-forward";
+		$vendors[$y]['functions'][$z]['name'] = "forward";
+		$vendors[$y]['functions'][$z]['value'] = "18";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-transfer";
+		$vendors[$y]['functions'][$z]['name'] = "transfer";
+		$vendors[$y]['functions'][$z]['value'] = "19";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-hold";
+		$vendors[$y]['functions'][$z]['name'] = "hold";
+		$vendors[$y]['functions'][$z]['value'] = "20";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-dnd";
+		$vendors[$y]['functions'][$z]['name'] = "dnd";
+		$vendors[$y]['functions'][$z]['value'] = "21";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-redial";
+		$vendors[$y]['functions'][$z]['name'] = "redial";
+		$vendors[$y]['functions'][$z]['value'] = "22";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-park_return";
+		$vendors[$y]['functions'][$z]['name'] = "park_return";
+		$vendors[$y]['functions'][$z]['value'] = "23";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-sms";
+		$vendors[$y]['functions'][$z]['name'] = "sms";
+		$vendors[$y]['functions'][$z]['value'] = "24";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-record";
+		$vendors[$y]['functions'][$z]['name'] = "record";
+		$vendors[$y]['functions'][$z]['value'] = "25";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-url_record";
+		$vendors[$y]['functions'][$z]['name'] = "url_record";
+		$vendors[$y]['functions'][$z]['value'] = "26";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-paging";
+		$vendors[$y]['functions'][$z]['name'] = "paging";
+		$vendors[$y]['functions'][$z]['value'] = "27";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-group_listening";
+		$vendors[$y]['functions'][$z]['name'] = "group_listening";
+		$vendors[$y]['functions'][$z]['value'] = "28";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-public_hold";
+		$vendors[$y]['functions'][$z]['name'] = "public_hold";
+		$vendors[$y]['functions'][$z]['value'] = "29";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-private_hold";
+		$vendors[$y]['functions'][$z]['name'] = "private_hold";
+		$vendors[$y]['functions'][$z]['value'] = "30";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-shared_line";
+		$vendors[$y]['functions'][$z]['name'] = "shared_line";
+		$vendors[$y]['functions'][$z]['value'] = "31";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-hot_desking";
+		$vendors[$y]['functions'][$z]['name'] = "hot_desking";
+		$vendors[$y]['functions'][$z]['value'] = "32";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-acd";
+		$vendors[$y]['functions'][$z]['name'] = "acd";
+		$vendors[$y]['functions'][$z]['value'] = "33";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-zero_touch";
+		$vendors[$y]['functions'][$z]['name'] = "zero_touch";
+		$vendors[$y]['functions'][$z]['value'] = "34";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-url";
+		$vendors[$y]['functions'][$z]['name'] = "url";
+		$vendors[$y]['functions'][$z]['value'] = "35";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-multicast_paging";
+		$vendors[$y]['functions'][$z]['name'] = "multicast_paging";
+		$vendors[$y]['functions'][$z]['value'] = "47";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
 ?>
