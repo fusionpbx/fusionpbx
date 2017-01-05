@@ -348,12 +348,12 @@ if (!class_exists('schema')) {
 
 		//database create table
 			public function db_create_table ($apps, $db_type, $table) {
-				foreach ($apps as $x => &$app) {
-					foreach ($app['db'] as $y => $row) {
+				if (is_array($apps)) foreach ($apps as $x => &$app) {
+					if (is_array($app['db']) foreach ($app['db'] as $y => $row) {
 						if ($row['table'] == $table) {
 							$sql = "CREATE TABLE " . $row['table'] . " (\n";
 							$field_count = 0;
-							foreach ($row['fields'] as $field) {
+							if (is_array($row['fields']) foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
 									//skip this row
 								}
@@ -887,3 +887,5 @@ if (!class_exists('schema')) {
 	//$obj->schema();
 	//$result_array = $schema->obj['sql'];
 	//print_r($result_array);
+
+?>
