@@ -259,7 +259,6 @@ EOD;
 	//migrate old ringtones
 		$sql = "update v_vars ";
 		$sql .= "set var_cat = 'Ringtones' ";
-		$sql .= "set var_description = 'TWlncmF0ZWQgZnJvbSBEZWZhdWx0cw==' ";
 		$sql .= "where var_name like '%-ring' ";
 		$sql .= "and var_cat = 'Defaults' ";
 		$sql .= "and var_description = '' ";
