@@ -189,9 +189,7 @@
 			}
 			else {
 				//if the user_context was not set then set the default value
-				if (strlen($user_context) == 0) {
-					$user_context = $_SESSION['domain_name'];
-				}
+				$user_context = $_SESSION['domain_name'];
 			}
 
 		//prevent users from bypassing extension limit by using range
