@@ -282,7 +282,7 @@
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&mos_score=".$$field_name;
+				$param .= "&".$field_name."=".$$field_name;
 			}
 		}
 	}
