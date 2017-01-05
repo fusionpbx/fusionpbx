@@ -334,15 +334,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//set the default user context
-		if (permission_exists("extension_user_context")) {
-			//allow a user assigned to super admin to change the user_context
-		}
-		else {
-			//if the user_context was not set then set the default value
-			if (strlen($user_context) == 0) {
-				$user_context = $_SESSION['domain_name'];
-			}
-		}
+	if (permission_exists("extension_user_context")) {
+		//allow a user assigned to super admin to change the user_context
+	}
+	else {
+		//if the user_context was not set then set the default value
+		$user_context = $_SESSION['domain_name'];
+	}
 
 	//prevent users from bypassing extension limit by using range
 	if ($_SESSION['limit']['extensions']['numeric'] != '') {
