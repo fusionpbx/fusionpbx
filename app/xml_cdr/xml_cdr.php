@@ -111,9 +111,9 @@
 	echo "	<input type='hidden' name='bridge_uuid' value='".$bridge_uuid."'>\n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
-			if (isset($_REQUEST[$field])) {
-				$array = explode(",", $field);
-				$field_name = $array[count($array) - 1];
+			$array = explode(",", $field);
+			$field_name = $array[count($array) - 1];
+			if (isset($_REQUEST[$field_name])) {
 				echo "	<input type='hidden' name='$field_name' value='".$$field_name."'>\n";
 			}
 		}
