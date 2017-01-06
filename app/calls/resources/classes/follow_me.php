@@ -366,16 +366,30 @@ include "root.php";
 							$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
 						}
 						else {
-							$replace_value = $row["follow_me_destination"];
+							//get the session dial string
+							$dial_string_template = $_SESSION['domain']['dial_string']['text'];
+
+							//replace the variables with the values
+							$dial_string_template = str_replace("sip_invite_domain=\${domain_name},", "", $dial_string_template);
+							$dial_string_template = str_replace("presence_id=\${dialed_user}@\${dialed_domain}", "", $dial_string_template);
+							$dial_string_template = str_replace("\${dialed_user}", $row["follow_me_destination"], $dial_string_template);
+							$dial_string_template = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $dial_string_template);
+							$dial_string_template = str_replace("\${call_timeout}", $row["follow_me_timeout"], $dial_string_template);
+							$dial_string_template = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $dial_string_template);
+
+							//seperate the variables from the bridge statement
+							preg_match_all('/{((?:[^{}]|(?R))*)}/', $dial_string_template, $matches, PREG_PATTERN_ORDER);
+							$dial_string_variables = $matches[1][0];
+							$dial_string_bridge = $matches[1][1];
+
+							//add to the dial string
+							$dial_string .= "[";
+							$dial_string .= $dial_string_variables;
 							if ($row["follow_me_prompt"] == "1") {
-								$replace_value .= "[group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
+								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true";
 							}
-							$local_dial_string = $_SESSION['domain']['dial_string']['text'];
-							$local_dial_string = str_replace("\${dialed_user}", $replace_value, $local_dial_string);
-							$local_dial_string = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $local_dial_string);
-							$local_dial_string = str_replace("\${call_timeout}", $row["follow_me_timeout"], $local_dial_string);
-							$local_dial_string = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $local_dial_string);
-							$dial_string .= $local_dial_string;
+							$dial_string .= "]";
+							$dial_string .= $dial_string_bridge;
 						}
 					}
 					else {
@@ -417,6 +431,7 @@ include "root.php";
 					}
 					$x++;
 				}
+				$dial_string = str_replace(",]", "]", $dial_string);
 				$this->dial_string = $dial_string;
 
 				$sql  = "update v_follow_me set ";
