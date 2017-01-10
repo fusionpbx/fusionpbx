@@ -143,13 +143,15 @@ if (!class_exists('scripts')) {
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result as &$row) {
-								$this->dsn_name = $row["database_name"];
-								$this->dsn_username = $row["database_username"];
-								$this->dsn_password = $row["database_password"];
-								break; //limit to 1 row
+							if (is_array($result)) {
+								foreach ($result as &$row) {
+									$this->dsn_name = $row["database_name"];
+									$this->dsn_username = $row["database_username"];
+									$this->dsn_password = $row["database_password"];
+									break; //limit to 1 row
+								}
+								unset ($prep_statement);
 							}
-							unset ($prep_statement);
 						}
 						else {
 							$odbc_num_rows = '0';
