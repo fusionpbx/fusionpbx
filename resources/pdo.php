@@ -332,7 +332,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the domain cidr range
-	if (array_key_exists('cidr',$_SESSION['domain']) and is_array($_SESSION['domain']["cidr"])) {
+	if (is_array($_SESSION['domain']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['domain']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
@@ -347,7 +347,7 @@ if ($db_type == "pgsql") {
 	}
 
 //check the api cidr range
-	if (array_key_exists('api',$_SESSION) and is_array($_SESSION['api']["cidr"])) {
+	if (is_array($_SESSION['api']["cidr"])) {
 		$found = false;
 		foreach($_SESSION['api']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
