@@ -53,9 +53,9 @@
 //get the device
 	$sql = "SELECT * FROM v_device_profiles ";
 	$sql .= "where device_profile_uuid = '".$device_profile_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$database->select($sql);
+	$device_profiles = $database->result;
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
@@ -68,17 +68,17 @@
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$database = new database;
+	$database->select($sql);
+	$device_keys = $database->result;
 
 //get device settings
-	//$sql = "SELECT * FROM v_device_settings ";
-	//$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	//$sql .= "ORDER by device_setting_subcategory asc ";
-	//$prep_statement = $db->prepare(check_sql($sql));
-	//$prep_statement->execute();
-	//$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "SELECT * FROM v_device_settings ";
+	$sql .= "WHERE device_profile_uuid = '".$device_profile_uuid."' ";
+	$sql .= "ORDER by device_setting_subcategory asc ";
+	$database = new database;
+	$database->select($sql);
+	$device_settings = $database->result;
 
 //prepare the devices array
 	unset($device_profiles[0]["device_profile_uuid"]);
@@ -96,17 +96,17 @@
 	}
 
 //prepare the device_settings array
-	//$x = 0;
-	//foreach ($device_settings as $row) {
-	//	unset($device_settings[$x]["device_uuid"]);
-	//	unset($device_settings[$x]["device_setting_uuid"]);
-	//	$x++;
-	//}
+	$x = 0;
+	foreach ($device_settings as $row) {
+		unset($device_settings[$x]["device_profile_uuid"]);
+		unset($device_settings[$x]["device_setting_uuid"]);
+		$x++;
+	}
 
 //create the device array
 	$array["device_profiles"] = $device_profiles;
 	$array["device_profiles"][0]["device_keys"] = $device_keys;
-	//$array["device_settings"][0] = $device_settings;
+	$array["device_profiles"][0]["device_settings"] = $device_settings;
 
 //copy the device
 	if ($save) {
