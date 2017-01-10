@@ -93,7 +93,7 @@ if (!class_exists('scripts')) {
 		 * Copy the switch scripts from the web directory to the switch directory
 		 */
 		public function copy_files() {
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
 				if(strlen($dst_dir) == 0) {
 					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
@@ -122,7 +122,7 @@ if (!class_exists('scripts')) {
 		 * Writes the config.lua
 		 */
 		public function write_config() {
-			if (is_dir($_SESSION['switch']['scripts']['dir'])) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 
 				//replace the backslash with a forward slash
 					$this->db_path = str_replace("\\", "/", $this->db_path);
@@ -157,7 +157,9 @@ if (!class_exists('scripts')) {
 					}
 
 				//get the recordings directory
-					$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					if (is_array($_SESSION['switch']['recordings'])) {
+						$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					}
 
 				//get the http_protocol
 					if (!isset($_SERVER['HTTP_PROTOCOL'])) {
