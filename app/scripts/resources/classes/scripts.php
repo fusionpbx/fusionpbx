@@ -93,7 +93,7 @@ if (!class_exists('scripts')) {
 		 * Copy the switch scripts from the web directory to the switch directory
 		 */
 		public function copy_files() {
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
 				if(strlen($dst_dir) == 0) {
 					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
@@ -122,7 +122,7 @@ if (!class_exists('scripts')) {
 		 * Writes the config.lua
 		 */
 		public function write_config() {
-			if (is_dir($_SESSION['switch']['scripts']['dir'])) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 
 				//replace the backslash with a forward slash
 					$this->db_path = str_replace("\\", "/", $this->db_path);
@@ -143,13 +143,15 @@ if (!class_exists('scripts')) {
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result as &$row) {
-								$this->dsn_name = $row["database_name"];
-								$this->dsn_username = $row["database_username"];
-								$this->dsn_password = $row["database_password"];
-								break; //limit to 1 row
+							if (is_array($result)) {
+								foreach ($result as &$row) {
+									$this->dsn_name = $row["database_name"];
+									$this->dsn_username = $row["database_username"];
+									$this->dsn_password = $row["database_password"];
+									break; //limit to 1 row
+								}
+								unset ($prep_statement);
 							}
-							unset ($prep_statement);
 						}
 						else {
 							$odbc_num_rows = '0';
