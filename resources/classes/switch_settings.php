@@ -74,9 +74,6 @@ if (!class_exists('switch_settings')) {
 			//run the api command
 				$result = $esl->request('api global_getvar');
 
-			//close event socket
-				fclose($fp);
-
 			//set the result as a named array
 				$vars = array();
 				foreach (explode("\n", $result) as $row) {
