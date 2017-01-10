@@ -37,6 +37,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = '';
 		$x++;
 		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'menu';
+		$array[$x]['default_setting_name'] = 'uuid';
+		$array[$x]['default_setting_value'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'time_zone';
 		$array[$x]['default_setting_name'] = 'name';
 		$array[$x]['default_setting_value'] = '';
