@@ -33,19 +33,21 @@
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($result as $row) {
-			$device_uuid = $row["device_uuid"];
-			$device_mac_address = $row["device_mac_address"];
-			$device_mac_address = strtolower($device_mac_address);
-			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+		if (is_array($result)) {
+			foreach($result as $row) {
+				$device_uuid = $row["device_uuid"];
+				$device_mac_address = $row["device_mac_address"];
+				$device_mac_address = strtolower($device_mac_address);
+				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
-			$sql = "update v_devices set ";
-			$sql .= "device_mac_address = '".$device_mac_address."' ";
-			$sql .= "where device_uuid = '".$device_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				$sql = "update v_devices set ";
+				$sql .= "device_mac_address = '".$device_mac_address."' ";
+				$sql .= "where device_uuid = '".$device_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+			unset($prep_statement, $result);
 		}
-		unset($prep_statement, $result);
 	}
 
 //process this code online once
@@ -276,18 +278,20 @@
 			foreach ($array as $setting) {
 				$found = false;
 				$missing[$x] = $setting;
-				foreach ($default_settings as $row) {
-					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
-						$found = true;
-						//remove items from the array that were found
-						unset($missing[$x]);
+				if (is_array($default_settings)) {
+					foreach ($default_settings as $row) {
+						if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+							$found = true;
+							//remove items from the array that were found
+							unset($missing[$x]);
+						}
 					}
+					$x++;
 				}
-				$x++;
 			}
 
 		//add the missing default settings
-			if (count($missing) > 0) foreach ($missing as $row) {
+			if (is_array($missing)) foreach ($missing as $row) {
 				//add the default settings
 				$orm = new orm;
 				$orm->name('default_settings');
@@ -305,7 +309,7 @@
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
+				if (is_array($result)) foreach ($result as &$row) {
 					//set the variable
 						$var_name = check_str($row['var_name']);
 					//remove the 'v_' prefix from the variable name
