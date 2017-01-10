@@ -24,9 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-// set included, if not
-	if (!isset($included)) { $included = false; }
-
 //check the permission
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
