@@ -45,6 +45,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'da9aa071-5dd8-4955-b5a6-d3c60ce7d78a';
+		$array[$x]['default_setting_category'] = 'domain';
+		$array[$x]['default_setting_subcategory'] = 'menu';
+		$array[$x]['default_setting_name'] = 'uuid';
+		$array[$x]['default_setting_value'] = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
 		$array[$x]['default_setting_uuid'] = '500f7a88-e288-4a80-9f0a-b696f9f33cd6';
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'language';
