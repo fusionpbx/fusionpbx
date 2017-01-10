@@ -49,7 +49,7 @@
 						$xml_string = file_get_contents($xml_file);
 					}
 					elseif (file_exists($xml_file_alt)) {
-						$xml_string = file_get_contents(xml_file_alt);
+						$xml_string = file_get_contents($xml_file_alt);
 					}
 					$xml_object = simplexml_load_string($xml_string);
 					$json = json_encode($xml_object);
