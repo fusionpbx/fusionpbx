@@ -379,58 +379,60 @@ function save_gateway_xml() {
 }
 
 function save_var_xml() {
-	global $config, $domain_uuid;
+	if (is_array($_SESSION['switch']['conf'])) {
+		global $config, $domain_uuid;
 
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
+		//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
-	//open the vars.xml file
-	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
+		//open the vars.xml file
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 
-	//get the hostname
-	$hostname = trim(event_socket_request_cmd('api switchname'));
+		//get the hostname
+		$hostname = trim(event_socket_request_cmd('api switchname'));
 
-	//build the xml
-	$sql = "select * from v_vars ";
-	$sql .= "where var_enabled = 'true' ";
-	$sql .= "order by var_cat, var_order asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$prev_var_cat = '';
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$xml = '';
-	foreach ($result as &$row) {
-		if ($row['var_cat'] != 'Provision') {
-			if ($prev_var_cat != $row['var_cat']) {
-				$xml .= "\n<!-- ".$row['var_cat']." -->\n";
-				if (strlen($row["var_description"]) > 0) {
-					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+		//build the xml
+		$sql = "select * from v_vars ";
+		$sql .= "where var_enabled = 'true' ";
+		$sql .= "order by var_cat, var_order asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$prev_var_cat = '';
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$xml = '';
+		foreach ($result as &$row) {
+			if ($row['var_cat'] != 'Provision') {
+				if ($prev_var_cat != $row['var_cat']) {
+					$xml .= "\n<!-- ".$row['var_cat']." -->\n";
+					if (strlen($row["var_description"]) > 0) {
+						$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+					}
+				}
+
+				if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; } else { $var_cmd = 'set'; }
+				if (strlen($row['var_hostname']) == 0) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+				} elseif ($row['var_hostname'] == $hostname) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 				}
 			}
-
-			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; } else { $var_cmd = 'set'; }
-			if (strlen($row['var_hostname']) == 0) {
-				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-			} elseif ($row['var_hostname'] == $hostname) {
-				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-			}
+			$prev_var_cat = $row['var_cat'];
 		}
-		$prev_var_cat = $row['var_cat'];
+		$xml .= "\n";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
+
+		//apply settings
+		$_SESSION["reload_xml"] = true;
+
+		//$cmd = "api reloadxml";
+		//event_socket_request_cmd($cmd);
+		//unset($cmd);
 	}
-	$xml .= "\n";
-	fwrite($fout, $xml);
-	unset($xml);
-	fclose($fout);
-
-	//apply settings
-	$_SESSION["reload_xml"] = true;
-
-	//$cmd = "api reloadxml";
-	//event_socket_request_cmd($cmd);
-	//unset($cmd);
 }
 
 function outbound_route_to_bridge ($domain_uuid, $destination_number) {
