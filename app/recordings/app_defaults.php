@@ -17,29 +17,29 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//if the recordings directory doesn't exist then create it
-	if (strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
-		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) { event_socket_mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name,02770,true); }
-	}
-
 if ($domains_processed == 1) {
 
+	//if the recordings directory doesn't exist then create it
+		if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
+			if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) { event_socket_mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name,02770,true); }
+		}
+
 	//if base64, populate from existing recording files, then remove
-		if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+		if (is_array($_SESSION['recordings']['storage_type']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 			//get recordings without base64 in db
 				$sql = "select recording_uuid, domain_uuid, recording_filename ";
 				$sql .= "from v_recordings where recording_base64 is null or recording_base64 = '' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) > 0) {
+				if (is_array($result)) {
 					foreach ($result as &$row) {
 						$recording_uuid = $row['recording_uuid'];
 						$recording_domain_uuid = $row['domain_uuid'];
@@ -64,7 +64,7 @@ if ($domains_processed == 1) {
 				unset($sql, $prep_statement, $result, $row);
 		}
 	//if not base64, decode to local files, remove base64 data from db
-		else if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+		else if (is_array($_SESSION['recordings']['storage_type']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
 			//get recordings with base64 in db
 				$sql = "select recording_uuid, domain_uuid, recording_filename, recording_base64 ";
 				$sql .= "from v_recordings where recording_base64 is not null ";
