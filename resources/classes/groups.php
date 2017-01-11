@@ -161,8 +161,8 @@ if (!class_exists('groups')) {
 					//no permissions found add the defaults
 						$this->db->beginTransaction();
 						foreach($apps as $app) {
-							foreach ($app['permissions'] as $row) {
-								foreach ($row['groups'] as $group) {
+							if (is_array($app['permissions'])) foreach ($app['permissions'] as $row) {
+								if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
 									//add the record
 									$sql = "insert into v_group_permissions ";
 									$sql .= "(";
