@@ -32,7 +32,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		//if ($_SESSION['ivr menu']['application']['text'] != "lua") {
+		//if ($_SESSION['ivr_menu']['application']['text'] != "lua") {
 		//	$y++;
 		//	$apps[$x]['destinations'][$y]['type'] = "sql";
 		//	$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
