@@ -481,32 +481,54 @@ if ($domains_processed == 1) {
 		foreach ($array as $setting) {
 			$found = false;
 			$missing[$x] = $setting;
-			foreach ($default_settings as $row) {
-				if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
-					$found = true;
-					//remove items from the array that were found
-					unset($missing[$x]);
+			if (is_array($default_settings)) {
+				foreach ($default_settings as $row) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
+						$found = true;
+						//remove items from the array that were found
+						unset($missing[$x]);
+					}
 				}
 			}
 			$x++;
 		}
-		unset($array);
 
-	//update the array structure
+	//get the missing count
+		$i = 0;
+		if (is_array($missing)) foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
+	//add the missing default settings
 		if (is_array($missing)) {
-			$array['default_settings'] = $missing;
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".$row['default_setting_uuid']."', ";
+				$sql .= "'".$row['default_setting_category']."', ";
+				$sql .= "'".$row['default_setting_subcategory']."', ";
+				$sql .= "'".$row['default_setting_name']."', ";
+				$sql .= "'".$row['default_setting_value']."', ";
+				$sql .= "'".$row['default_setting_enabled']."', ";
+				$sql .= "'".$row['default_setting_description']."' ";
+				$sql .= ")";
+				if ($missing_count != $i) {
+					$sql .= ",\n";
+				}
+				$i++;
+			}
+			$db->exec(check_sql($sql));
 			unset($missing);
 		}
-
-	//add the default settings
-		if (is_array($array)) {
-			$database = new database;
-			$database->app_name = 'default_settings';
-			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-			$database->save($array);
-			$message = $database->message;
-			unset($database);
-		}
+		unset($sql);
 
 	//set domains with enabled status of empty or null to true
 		$sql = "delete from v_default_settings ";
