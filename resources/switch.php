@@ -427,7 +427,7 @@ function save_var_xml() {
 		fclose($fout);
 
 		//apply settings
-			$_SESSION["reload_xml"] = true;
+		$_SESSION["reload_xml"] = true;
 
 		//$cmd = "api reloadxml";
 		//event_socket_request_cmd($cmd);
@@ -533,7 +533,7 @@ function extension_exists($extension) {
 	$database->connect();
 	$db = $database->db;
 
-	$sql = "select * from v_extensions ";
+	$sql = "select 1 from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and (extension = '$extension' ";
 	$sql .= "or number_alias = '$extension') ";
@@ -545,6 +545,42 @@ function extension_exists($extension) {
 	else {
 		return false;
 	}
+}
+
+function extension_presence_id($extension, $number_alias = false) {
+	global $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
+	if ($number_alias === false) {
+		$sql = "select extension, number_alias from v_extensions ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and (extension = '$extension' ";
+		$sql .= "or number_alias = '$extension') ";
+		$sql .= "and enabled = 'true' ";
+
+		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) == 0) {
+			return false;
+		}
+
+		foreach ($result as &$row) {
+			$extension = $row['extension'];
+			$number_alias = $row['number_alias'];
+			break;
+		}
+	}
+
+	if(strlen($number_alias) > 0) {
+		if($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
+			return $number_alias;
+		}
+	}
+	return $extension;
 }
 
 function get_recording_filename($id) {
