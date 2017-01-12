@@ -327,7 +327,6 @@
 			$array[$x]['default_setting_enabled'] = 'true';
 			$array[$x]['default_setting_description'] = '';
 
-
 		//get an array of the default settings
 			$sql = "select * from v_default_settings ";
 			$sql .= "where default_setting_category = 'provision' ";
@@ -336,87 +335,59 @@
 			$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset ($prep_statement, $sql);
 
-		//find the missing default settings
-			$x = 0;
-			foreach ($array as $setting) {
-				$found = false;
-				$missing[$x] = $setting;
+//find the missing default settings
+		$x = 0;
+		foreach ($array as $setting) {
+			$found = false;
+			$missing[$x] = $setting;
+			if (is_array($default_settings)) {
 				foreach ($default_settings as $row) {
-					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory'])) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
 						$found = true;
 						//remove items from the array that were found
 						unset($missing[$x]);
 					}
 				}
-				$x++;
 			}
-			unset($array);
+			$x++;
+		}
 
-		//update the array structure
-			if (is_array($missing)) {
-				$array['default_settings'] = $missing;
-				unset($missing);
-			}
+	//get the missing count
+		$i = 0;
+		if (is_array($missing)) foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
 
-		//add the default settings
-			if (is_array($array)) {
-				$database = new database;
-				$database->app_name = 'default_settings';
-				$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-				$database->save($array);
-				$message = $database->message;
-				unset($database);
-			}
-
-		//move the dynamic provision variables that from v_vars table to v_default_settings
-			if (count($_SESSION['provision']) == 0) {
-				$sql = "select * from v_vars ";
-				$sql .= "where var_cat = 'Provision' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					//set the variable
-						$var_name = check_str($row['var_name']);
-					//remove the 'v_' prefix from the variable name
-						if (substr($var_name, 0, 2) == "v_") {
-							$var_name = substr($var_name, 2);
-						}
-					//add the provision variable to the default settings table
-						$sql = "insert into v_default_settings ";
-						$sql .= "(";
-						$sql .= "default_setting_uuid, ";
-						$sql .= "default_setting_category, ";
-						$sql .= "default_setting_subcategory, ";
-						$sql .= "default_setting_name, ";
-						$sql .= "default_setting_value, ";
-						$sql .= "default_setting_enabled, ";
-						$sql .= "default_setting_description ";
-						$sql .= ") ";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'provision', ";
-						$sql .= "'".$var_name."', ";
-						$sql .= "'var', ";
-						$sql .= "'".check_str($row['var_value'])."', ";
-						$sql .= "'".check_str($row['var_enabled'])."', ";
-						$sql .= "'".check_str($row['var_description'])."' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+	//add the missing default settings
+		if (is_array($missing)) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".$row['default_setting_uuid']."', ";
+				$sql .= "'".$row['default_setting_category']."', ";
+				$sql .= "'".$row['default_setting_subcategory']."', ";
+				$sql .= "'".$row['default_setting_name']."', ";
+				$sql .= "'".$row['default_setting_value']."', ";
+				$sql .= "'".$row['default_setting_enabled']."', ";
+				$sql .= "'".$row['default_setting_description']."' ";
+				$sql .= ")";
+				if ($missing_count != $i) {
+					$sql .= ",\n";
 				}
-				unset($prep_statement);
-				//delete the provision variables from system -> variables
-				//$sql = "delete from v_vars ";
-				//$sql .= "where var_cat = 'Provision' ";
-				//echo $sql ."\n";
-				//$db->exec(check_sql($sql));
-				//echo "$var_name $var_value \n";
+				$i++;
 			}
-
-		//unset the array variable
-			unset($array);
-	}
+			$db->exec(check_sql($sql));
+			unset($missing);
+		}
+		unset($sql);
+}
 
 ?>
