@@ -29,7 +29,7 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
-		$array[$x]['default_setting_uuid'] = 'b127ca03-c682-4d71-b412-4e50f1aca339';
+		$array[$x]['default_setting_uuid'] = 'ce17d7af-650a-49c0-b3e4-3bb8c1dad566';
 		$array[$x]['default_setting_category'] = 'ivr_menu';
 		$array[$x]['default_setting_subcategory'] = 'option_add_rows';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -37,7 +37,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
-		$array[$x]['default_setting_uuid'] = 'dd09f9d8-6662-4270-9dac-b87191b77012';
+		$array[$x]['default_setting_uuid'] = '74376817-89de-49e1-bddd-868a8ebb49ec';
 		$array[$x]['default_setting_category'] = 'ivr_menu';
 		$array[$x]['default_setting_subcategory'] = 'option_edit_rows';
 		$array[$x]['default_setting_name'] = 'numeric';
