@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -220,7 +220,11 @@
 
 						table.insert(xml, [[					</gateways>]]);
 						table.insert(xml, [[					<domains>]]);
-						table.insert(xml, [[						<domain name="all" alias="false" parse="true"/>]]);
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways-->]]);
+						table.insert(xml, [[						<!--<domain name="$${domain}" parse="true"/>-->]]);
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->]]);
+						table.insert(xml, [[						<!--<domain name="all" alias="true" parse="true"/>-->]]);
+						table.insert(xml, [[						<domain name="all" alias="true" parse="false"/>]]);
 						table.insert(xml, [[					</domains>]]);
 						table.insert(xml, [[					<settings>]]);
 						profile_tag_status = "open";
