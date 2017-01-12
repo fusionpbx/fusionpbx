@@ -40,8 +40,9 @@
 		}
 		*/
 
-		//add CDR settings to default settings
+	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_uuid'] = 'dbbadd02-f95d-480b-85d5-2a4113d4cccc';
 		$array[$x]['default_setting_category'] = 'cdr';
 		$array[$x]['default_setting_subcategory'] = 'format';
 		$array[$x]['default_setting_name'] = 'text';
@@ -49,6 +50,7 @@
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = '23335ac0-9466-4d16-af3f-81aa347159b1';
 		$array[$x]['default_setting_category'] = 'cdr';
 		$array[$x]['default_setting_subcategory'] = 'storage';
 		$array[$x]['default_setting_name'] = 'text';
@@ -56,6 +58,7 @@
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'cdb19dda-234b-407a-9eda-e8af74597d4b';
 		$array[$x]['default_setting_category'] = 'cdr';
 		$array[$x]['default_setting_subcategory'] = 'limit';
 		$array[$x]['default_setting_name'] = 'numeric';
@@ -63,6 +66,7 @@
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 		$x++;
+		$array[$x]['default_setting_uuid'] = 'cea53099-96c0-405f-ada6-219d0b398944';
 		$array[$x]['default_setting_category'] = 'cdr';
 		$array[$x]['default_setting_subcategory'] = 'http_enabled';
 		$array[$x]['default_setting_name'] = 'boolean';
@@ -76,24 +80,59 @@
 		$prep_statement->execute();
 		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
+	//find the missing default settings
 		$x = 0;
-		if (isset($array)) foreach ($array as $row) {
+		foreach ($array as $setting) {
 			$found = false;
-			foreach ($default_settings as $field) {
-				if ($row['default_setting_subcategory'] == $field['default_setting_subcategory']) {
-					$found = true;
-					$break;
+			$missing[$x] = $setting;
+			if (is_array($default_settings)) {
+				foreach ($default_settings as $row) {
+					if (trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) && trim($row['default_setting_name']) == trim($setting['default_setting_name'])) {
+						$found = true;
+						//remove items from the array that were found
+						unset($missing[$x]);
+					}
 				}
-			}
-			if (!$found) {
-				$orm = new orm;
-				$orm->name('default_settings');
-				$orm->save($array[$x]);
-				$message = $orm->message;
 			}
 			$x++;
 		}
 
+	//get the missing count
+		$i = 0;
+		if (is_array($missing)) foreach ($missing as $row) { $i++; }
+		$missing_count = $i;
+
+	//add the missing default settings
+		if (is_array($missing)) {
+			$sql = "insert into v_default_settings (";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") values \n";
+			$i = 1;
+			foreach ($missing as $row) {
+				$sql .= "(";
+				$sql .= "'".$row['default_setting_uuid']."', ";
+				$sql .= "'".$row['default_setting_category']."', ";
+				$sql .= "'".$row['default_setting_subcategory']."', ";
+				$sql .= "'".$row['default_setting_name']."', ";
+				$sql .= "'".$row['default_setting_value']."', ";
+				$sql .= "'".$row['default_setting_enabled']."', ";
+				$sql .= "'".$row['default_setting_description']."' ";
+				$sql .= ")";
+				if ($missing_count != $i) {
+					$sql .= ",\n";
+				}
+				$i++;
+			}
+			$db->exec(check_sql($sql));
+			unset($missing);
+		}
+		unset($sql);
 	}
 
 ?>
