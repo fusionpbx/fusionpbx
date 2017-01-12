@@ -74,6 +74,7 @@
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = '';
 
+	//get an array of the default settings
 		$sql = "select * from v_default_settings ";
 		$sql .= "where default_setting_category = 'cdr' ";
 		$prep_statement = $db->prepare(check_sql($sql));
