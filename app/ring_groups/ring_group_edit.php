@@ -25,17 +25,21 @@
 	James Rose <james.o.rose@gmail.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/classes/ringbacks.php";
-if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/classes/ringbacks.php";
+
+//check permissions
+	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -420,18 +424,24 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$ring_group_destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$x = count($ring_group_destinations);
-		$limit = $x + 1;
 	}
 
-	while($x < $limit) {
-		$ring_group_destinations[$x]['destination_number'] = '';
-		$ring_group_destinations[$x]['destination_delay'] = '';
-		$ring_group_destinations[$x]['destination_timeout'] = '';
-		$ring_group_destinations[$x]['destination_prompt'] = '';
-		$x++;
+//add an empty row to the options array
+	if (count($ring_group_destinations) == 0) {
+		$rows = $_SESSION['ring_group']['destination_add_rows']['numeric'];
+		$id = 0;
 	}
-	unset($limit);
+	if (count($ring_group_destinations) > 0) {
+		$rows = $_SESSION['ring_group']['destination_edit_rows']['numeric'];
+		$id = count($ring_group_destinations)+1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$ring_group_destinations[$id]['destination_number'] = '';
+		$ring_group_destinations[$id]['destination_delay'] = '';
+		$ring_group_destinations[$id]['destination_timeout'] = '';
+		$ring_group_destinations[$id]['destination_prompt'] = '';
+		$id++;
+	}
 
 //get the ring group users
 	if (strlen($ring_group_uuid) > 0) {
