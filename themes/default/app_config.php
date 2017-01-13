@@ -729,7 +729,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'theme';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'dashboard_number_text_font';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the font of the Dashboard block number.';
 		$y++;
@@ -769,7 +769,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'theme';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'dashboard_number_title_text_font';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the font of the Dashboard block number title.';
 		$y++;
@@ -1217,7 +1217,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'theme';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'button_text_font';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Candara, Calibri, Segoe, 'Segoe UI', Optima, Arial, sans-serif';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the font of button text.';
 		$y++;
