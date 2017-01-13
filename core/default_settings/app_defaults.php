@@ -500,33 +500,43 @@ if ($domains_processed == 1) {
 
 	//add the missing default settings
 		if (is_array($missing)) {
-			$sql = "insert into v_default_settings (";
-			$sql .= "default_setting_uuid, ";
-			$sql .= "default_setting_category, ";
-			$sql .= "default_setting_subcategory, ";
-			$sql .= "default_setting_name, ";
-			$sql .= "default_setting_value, ";
-			$sql .= "default_setting_enabled, ";
-			$sql .= "default_setting_description ";
-			$sql .= ") values \n";
-			$i = 1;
-			foreach ($missing as $row) {
-				$sql .= "(";
-				$sql .= "'".$row['default_setting_uuid']."', ";
-				$sql .= "'".$row['default_setting_category']."', ";
-				$sql .= "'".$row['default_setting_subcategory']."', ";
-				$sql .= "'".$row['default_setting_name']."', ";
-				$sql .= "'".$row['default_setting_value']."', ";
-				$sql .= "'".$row['default_setting_enabled']."', ";
-				$sql .= "'".$row['default_setting_description']."' ";
-				$sql .= ")";
-				if ($missing_count != $i) {
-					$sql .= ",\n";
+			//add the permission
+				$p = new permissions;
+				$p->add("default_setting_add", "temp");
+				$p->add("default_setting_edit", "temp");
+
+			//add the default settings
+				$sql = "insert into v_default_settings (";
+				$sql .= "default_setting_uuid, ";
+				$sql .= "default_setting_category, ";
+				$sql .= "default_setting_subcategory, ";
+				$sql .= "default_setting_name, ";
+				$sql .= "default_setting_value, ";
+				$sql .= "default_setting_enabled, ";
+				$sql .= "default_setting_description ";
+				$sql .= ") values \n";
+				$i = 1;
+				foreach ($missing as $row) {
+					$sql .= "(";
+					$sql .= "'".$row['default_setting_uuid']."', ";
+					$sql .= "'".$row['default_setting_category']."', ";
+					$sql .= "'".$row['default_setting_subcategory']."', ";
+					$sql .= "'".$row['default_setting_name']."', ";
+					$sql .= "'".$row['default_setting_value']."', ";
+					$sql .= "'".$row['default_setting_enabled']."', ";
+					$sql .= "'".$row['default_setting_description']."' ";
+					$sql .= ")";
+					if ($missing_count != $i) {
+						$sql .= ",\n";
+					}
+					$i++;
 				}
-				$i++;
-			}
-			$db->exec(check_sql($sql));
-			unset($missing);
+				$db->exec(check_sql($sql));
+				unset($missing);
+			
+			//remove the permission
+				$p->delete("default_setting_add", "temp");
+				$p->delete("default_setting_edit", "temp");
 		}
 		unset($sql);
 
