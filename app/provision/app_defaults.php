@@ -24,16 +24,17 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//normalize the mac address
+//process this code online once
+if ($domains_processed == 1) {
+	//normalize the mac address
 	$sql = "select device_uuid, device_mac_address ";
 	$sql .= "from v_devices ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and (device_mac_address like '%-%' or device_mac_address like '%:%') ";
+	$sql .= "where (device_mac_address like '%-%' or device_mac_address like '%:%') ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		if (is_array($result)) { 
+		if (is_array($result)) {
 			foreach($result as $row) {
 				$device_uuid = $row["device_uuid"];
 				$device_mac_address = $row["device_mac_address"];
@@ -49,5 +50,6 @@
 		}
 		unset($prep_statement, $result);
 	}
+}
 
 ?>
