@@ -37,17 +37,26 @@ function get_registrations($sip_profile_name) {
 					$registrations[$x]['mwi-account'] = $row->{'mwi-account'} ?: "&nbsp;";
 					$registrations[$x]['status'] = $row->{'status'} ?: "&nbsp;";
 					$registrations[$x]['ping-time'] = $row->{'ping-time'} ?: "&nbsp;";
-	
+
 				//get network-ip to url or blank
 					if(isset($row->{'network-ip'})) {
-							$registrations[$x]['network-ip'] = "<a href='http://".$row->{'network-ip'}."' target='_blank'>".$row->{'network-ip'}."</a>";
+						$registrations[$x]['network-ip'] = "<a href='http://".$row->{'network-ip'}."' target='_blank'>".$row->{'network-ip'}."</a>";
 					}else{
 						$registrations[$x]['network-ip'] = "&nbsp;";
 					}
 				//get the LAN IP address if it exists replace the external ip
 					$call_id_array = explode('@', $row->{'call-id'});
 					if (isset($call_id_array[1])) {
-						$registrations[$x]['lan-ip'] = "<a href='http://".$call_id_array[1]."' target='_blank'>".$call_id_array[1]."</a>";
+						$agent = $row->{'agent'};
+						$lan_ip = $call_id_array[1];
+						if (false !== stripos($agent, 'grandstream')) {
+							$lan_ip = str_ireplace(
+								array('A','B','C','D','E','F','G','H','I','J'),
+								array('0','1','2','3','4','5','6','7','8','9'),
+								$lan_ip
+							);
+						}
+						$registrations[$x]['lan-ip'] = "<a href='http://".$lan_ip."' target='_blank'>".$lan_ip."</a>";
 					}else{
 						$registrations[$x]['lan-ip'] = "&nbsp;";
 					}
@@ -61,7 +70,7 @@ function get_registrations($sip_profile_name) {
 							}
 						}
 					}
-	
+
 				//increment the array id
 					$x++;
 			}
@@ -70,5 +79,5 @@ function get_registrations($sip_profile_name) {
 	//return the registrations array
 		return $registrations;
 }
-			
+
 ?>
