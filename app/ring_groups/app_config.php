@@ -34,6 +34,25 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '745d8fdc-57bc-4f43-97d7-508fda8f70a8';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_add_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '5';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ddf306c9-6f58-40f7-910e-2f27dc33fa57';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_edit_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_view";
