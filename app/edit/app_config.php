@@ -3,7 +3,7 @@
 //application details
 	$apps[$x]['name'] = "Edit";
 	$apps[$x]['uuid'] = "17e628ee-ccfa-49c0-29ca-9894a0384b9b";
-	$apps[$x]['category'] = "Switch";;
+	$apps[$x]['category'] = "Switch";
 	$apps[$x]['subcategory'] = "";
 	$apps[$x]['version'] = "";
 	$apps[$x]['license'] = "Mozilla Public License 1.1";
