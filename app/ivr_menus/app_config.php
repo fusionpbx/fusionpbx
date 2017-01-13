@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "IVR Menu";
 		$apps[$x]['uuid'] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -32,7 +32,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		//if ($_SESSION['ivr menu']['application']['text'] != "lua") {
+		//if ($_SESSION['ivr_menu']['application']['text'] != "lua") {
 		//	$y++;
 		//	$apps[$x]['destinations'][$y]['type'] = "sql";
 		//	$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
@@ -84,6 +84,25 @@
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_option_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ce17d7af-650a-49c0-b3e4-3bb8c1dad566';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ivr_menu';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'option_add_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '5';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '74376817-89de-49e1-bddd-868a8ebb49ec';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ivr_menu';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'option_edit_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
