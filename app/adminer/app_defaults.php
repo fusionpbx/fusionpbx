@@ -70,12 +70,23 @@ if ($domains_processed == 1) {
 
 	//add the default settings
 		if (is_array($array)) {
-			$database = new database;
-			$database->app_name = 'default_settings';
-			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-			$database->save($array);
-			$message = $database->message;
-			unset($database);
+
+			//add the permission
+				$p = new permissions;
+				$p->add("default_setting_add", "temp");
+				$p->add("default_setting_edit", "temp");
+
+			//save to the database
+				$database = new database;
+				$database->app_name = 'default_settings';
+				$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+				$database->save($array);
+				$message = $database->message;
+				unset($database);
+			
+			//remove the permission
+				$p->delete("default_setting_add", "temp");
+				$p->delete("default_setting_edit", "temp");
 		}
 
 }
