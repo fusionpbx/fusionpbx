@@ -1499,7 +1499,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1.6.16';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the web font loader version to use - specific (e.g. 1.6.16) or latest in branch (e.g. '1').';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the web font loader version to use - specific (e.g. 1.6.16) or latest in branch (e.g. 1).';
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'bcc40447-b7b2-4b47-9b9b-484b86267853';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'theme';
