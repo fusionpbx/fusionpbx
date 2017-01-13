@@ -61,6 +61,40 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'dbbadd02-f95d-480b-85d5-2a4113d4cccc';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'format';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'json';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '23335ac0-9466-4d16-af3f-81aa347159b1';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'db';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'cdb19dda-234b-407a-9eda-e8af74597d4b';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'limit';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '800';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'cea53099-96c0-405f-ada6-219d0b398944';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'http_enabled';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
