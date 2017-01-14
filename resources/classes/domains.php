@@ -228,6 +228,9 @@ if (!class_exists('domains')) {
 			//get the PROJECT PATH
 				include "root.php";
 
+			//check for default settings
+				$this->settings();
+
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
