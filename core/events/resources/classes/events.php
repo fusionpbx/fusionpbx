@@ -121,7 +121,7 @@ class events {
 	/**
 	 * check for required headers
 	 * @param string $category
-	 * @return bolean $value
+	 * @return boolean $value
 	 */
 	public function check_required($category) {
 		foreach ($this->required['headers'] as &$header) {
