@@ -67,6 +67,64 @@
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_sms_edit";
 		$y++;
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '1cf61dea-42b5-4799-b9fa-f2c3bd29e933';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'voicemail_file';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'attach';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Define whether to attach voicemail files to email notifications, or only include a link.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4723fe3b-e7ec-409e-a4a8-15ae274253fb';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'keep_local';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Define whether to keep voicemail files on the local system after sending attached via email.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '9a4879c0-87ac-42e5-99f2-2ca2c77dbd98';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage_type';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'base64';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Define which storage type (base_64 stores in the database).';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '690a36a8-b6d3-47ea-8780-1af609c1966c';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'message_max_length';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '300';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Maximum length of a voicemail (in seconds).';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'bfe802b1-fcad-41a3-9da2-6b0efdb0c05f';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'password_length';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '8';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'The default length of characters in a voicemail password.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'b127ca03-c682-4d71-b412-4e50f1aca339';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'greeting_max_length';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '90';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Maximum length of a voicemail greeting (in seconds).';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'dd09f9d8-6662-4270-9dac-b87191b77012';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'display_domain_name';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable display of @domain_name after voicemail_id when rendering emails.';
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
