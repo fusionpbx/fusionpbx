@@ -417,10 +417,10 @@ if (!class_exists('domains')) {
 								if ($row['default_setting_uuid'] != $setting['default_setting_uuid']) {
 									$sql = "update v_default_settings ";
 									$sql .= "set default_setting_uuid = '".$setting['default_setting_uuid']."', ";
-									$sql .= "app_uuid = '".$setting['app_uuid']."', ";
+									$sql .= "app_uuid = '".$setting['app_uuid']."' ";
 									$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
-									echo $sql."\n";
-						//			$this->db->exec(check_sql($sql));
+									//echo $sql."\n";
+									$this->db->exec(check_sql($sql));
 								}
 
 							//remove settings from the array that were found
@@ -463,8 +463,8 @@ if (!class_exists('domains')) {
 						}
 						$i++;
 					}
-					echo $sql;
-		//			$this->db->exec(check_sql($sql));
+					//echo $sql;
+					$this->db->exec(check_sql($sql));
 					unset($array);
 				}		
 		} //end settings method
