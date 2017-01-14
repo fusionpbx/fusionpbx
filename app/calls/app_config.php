@@ -37,6 +37,7 @@
 
 //default settings
 	$y = 0;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4fedc226-caca-4ebf-b4eb-31de93e5bed3';
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = 'follow_me';
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'max_destinations';
 	$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
@@ -45,6 +46,7 @@
 	$apps[$x]['default_settings'][$y]['default_setting_order'] = '0';
 	$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the maximum number of Follow Me Destinations.';
 	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ce105d64-2d1b-4d19-ae34-ccb818cc9c6e';
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = 'follow_me';
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'timeout';
 	$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
