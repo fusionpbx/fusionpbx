@@ -263,6 +263,7 @@ if (!class_exists('domains')) {
 				$database_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset($prep_statement);
 
+
 			//get the domain_uuid
 				foreach($domains as $row) {
 					if (count($domains) == 1) {
@@ -363,7 +364,107 @@ if (!class_exists('domains')) {
 				unset($_SESSION['domain']);
 				unset($_SESSION['switch']);
 
-		}
+		} //end upgrade method
+
+		public function settings() {
+
+			//connect to the database if not connected
+				if (!$this->db) {
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->connect();
+					$this->db = $database->db;
+				}
+
+			//get the list of installed apps from the core and mod directories
+				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+				$x=0;
+				foreach ($config_list as $config_path) {
+					include($config_path);
+					$x++;
+				}
+				$x = 0;
+				foreach ($apps as $app) {
+					if (is_array($app['default_settings'])) {
+						foreach ($app['default_settings'] as $setting) {
+								$array[$x] = ($setting);
+								$array[$x]['app_uuid'] = $app['uuid'];
+								$x++;
+						}
+					}
+				}
+
+			//get an array of the default settings
+				$sql = "select * from v_default_settings ";
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement, $sql);
+
+			//find the missing default settings
+				$x = 0;
+				foreach ($array as $setting) {
+					foreach ($default_settings as $row) {
+						if (trim($row['default_setting_category']) == trim($setting['default_setting_category']) 
+							&& trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) 
+							&& trim($row['default_setting_name']) == trim($setting['default_setting_name'])
+							&& trim($row['default_setting_value']) == trim($setting['default_setting_value'])) {
+
+							//update matching settings
+								if ($row['default_setting_uuid'] != $setting['default_setting_uuid']) {
+									$sql = "update v_default_settings ";
+									$sql .= "set default_setting_uuid = '".$setting['default_setting_uuid']."', ";
+									$sql .= "app_uuid = '".$setting['app_uuid']."', ";
+									$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
+									echo $sql."\n";
+						//			$this->db->exec(check_sql($sql));
+								}
+
+							//remove settings from the array that were found
+								unset($array[$x]);
+						}
+					}
+					$x++;
+				}
+				unset($default_settings);
+
+			//get the missing count
+				$i = 0;
+				foreach ($array as $row) { $i++; }
+				$array_count = $i;
+
+			//add the missing default settings
+				if (is_array($array)) {
+					$sql = "insert into v_default_settings (";
+					$sql .= "default_setting_uuid, ";
+					$sql .= "default_setting_category, ";
+					$sql .= "default_setting_subcategory, ";
+					$sql .= "default_setting_name, ";
+					$sql .= "default_setting_value, ";
+					$sql .= "default_setting_enabled, ";
+					$sql .= "default_setting_description ";
+					$sql .= ") values \n";
+					$i = 1;
+					foreach ($array as $row) {
+						$sql .= "(";
+						$sql .= "'".check_str($row['default_setting_uuid'])."', ";
+						$sql .= "'".check_str($row['default_setting_category'])."', ";
+						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
+						$sql .= "'".check_str($row['default_setting_name'])."', ";
+						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
+						$sql .= "'".check_str($row['default_setting_description'])."' ";
+						$sql .= ")";
+						if ($array_count != $i) {
+							$sql .= ",\n";
+						}
+						$i++;
+					}
+					echo $sql;
+		//			$this->db->exec(check_sql($sql));
+					unset($array);
+				}		
+		} //end settings method
 	}
 }
 
