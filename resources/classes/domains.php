@@ -228,6 +228,9 @@ if (!class_exists('domains')) {
 			//get the PROJECT PATH
 				include "root.php";
 
+			//check for default settings
+				$this->settings();
+
 			//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
 				$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 				$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
@@ -396,45 +399,57 @@ if (!class_exists('domains')) {
 
 			//get an array of the default settings
 				$sql = "select * from v_default_settings ";
+				$sql .= "order by default_setting_category asc, default_setting_subcategory asc";
 				$prep_statement = $this->db->prepare($sql);
 				$prep_statement->execute();
 				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				unset ($prep_statement, $sql);
 
-			//find the missing default settings
+			//named array
+				foreach ($default_settings as $row) {
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['uuid'] = $row['default_setting_uuid'];
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['value'] = $row['default_setting_value'];
+					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['app_uuid'] = $row['app_uuid'];
+					//echo "[".$row['default_setting_category']."][".$row['default_setting_subcategory']."][".$row['default_setting_name']."]  = ".$row['default_setting_value']."\n";
+				}
+
+			//update matching settings with the correct default_setting_uuid and app_uuid and if they exist remove them from the array
 				$x = 0;
-				foreach ($array as $setting) {
-					foreach ($default_settings as $row) {
-						if (trim($row['default_setting_category']) == trim($setting['default_setting_category']) 
-							&& trim($row['default_setting_subcategory']) == trim($setting['default_setting_subcategory']) 
-							&& trim($row['default_setting_name']) == trim($setting['default_setting_name'])
-							&& trim($row['default_setting_value']) == trim($setting['default_setting_value'])) {
+				foreach ($array as $row) {
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
+					$name = $row['default_setting_name'];
 
-							//update matching settings
-								if ($row['default_setting_uuid'] != $setting['default_setting_uuid']) {
-									$sql = "update v_default_settings ";
-									$sql .= "set default_setting_uuid = '".$setting['default_setting_uuid']."', ";
-									$sql .= "app_uuid = '".$setting['app_uuid']."', ";
-									$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
-									echo $sql."\n";
-						//			$this->db->exec(check_sql($sql));
+					if (isset($default_settings[$category][$subcategory][$name]['value'])) {
+						//set the variables
+							$default_setting_uuid = $default_settings[$category][$subcategory][$name]['uuid'];
+							$app_uuid = $default_settings[$category][$subcategory][$name]['app_uuid'];
+						//update matching settings
+							if ($app_uuid == null) {
+								$sql = "update v_default_settings set ";
+								if ($default_setting_uuid != $row['default_setting_uuid']) {
+									$sql .= "default_setting_uuid = '".$row['default_setting_uuid']."', ";
 								}
+								$sql .= "app_uuid = '".$row['app_uuid']."' ";
+								$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
+								//echo $category." ".$subcategory." ".$name." ".$app_uuid."\n";
+								//echo $sql."\n";
+								$this->db->exec(check_sql($sql));
+								//echo "\n";
+							}
 
-							//remove settings from the array that were found
-								unset($array[$x]);
-						}
+						//remove settings from the array that were found
+							unset($array[$x]);
 					}
 					$x++;
 				}
 				unset($default_settings);
 
 			//get the missing count
-				$i = 0;
-				foreach ($array as $row) { $i++; }
-				$array_count = $i;
+				$array_count = count($array);
 
 			//add the missing default settings
-				if (is_array($array)) {
+				if (is_array($array) && count($array) > 0) {
 					$sql = "insert into v_default_settings (";
 					$sql .= "default_setting_uuid, ";
 					$sql .= "default_setting_category, ";
@@ -460,8 +475,8 @@ if (!class_exists('domains')) {
 						}
 						$i++;
 					}
-					echo $sql;
-		//			$this->db->exec(check_sql($sql));
+					//echo $sql."\n";
+					$this->db->exec(check_sql($sql));
 					unset($array);
 				}		
 		} //end settings method
