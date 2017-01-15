@@ -574,8 +574,10 @@
 			//get agents
 			$sql = "select agent_name from v_call_center_agents ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			foreach($assigned_agents as $assigned_agent) {
-				$sql .= "and agent_name <> '".$assigned_agent."' ";
+			if ($assigned_agents){
+				foreach($assigned_agents as $assigned_agent) {
+					$sql .= "and agent_name <> '".$assigned_agent."' ";
+				}
 			}
 			$sql .= "order by agent_name asc";
 			$prep_statement = $db->prepare(check_sql($sql));
