@@ -77,7 +77,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'f1a7c2d4-ba3c-49c8-9146-e40eb8873030';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'cb55e6ac-9bb0-4714-b68f-82b39a3b9ec2';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'domain';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'country';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'code';
