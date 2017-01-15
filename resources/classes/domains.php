@@ -432,8 +432,8 @@ if (!class_exists('domains')) {
 								}
 								$sql .= "app_uuid = '".$row['app_uuid']."' ";
 								$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
-								echo $category." ".$subcategory." ".$name." ".$app_uuid."\n";
-								echo $sql."\n";
+								//echo $category." ".$subcategory." ".$name." ".$app_uuid."\n";
+								//echo $sql."\n";
 								$this->db->exec(check_sql($sql));
 								//echo "\n";
 							}
@@ -475,7 +475,7 @@ if (!class_exists('domains')) {
 						}
 						$i++;
 					}
-					echo $sql."\n";
+					//echo $sql."\n";
 					$this->db->exec(check_sql($sql));
 					unset($array);
 				}		
