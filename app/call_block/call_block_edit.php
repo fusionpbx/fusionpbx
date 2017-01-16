@@ -284,21 +284,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_action'>\n";
 	$pieces = explode(" ", $call_block_action);
-	$action = $pieces[0];
+	$action_block = $pieces[0];
 	$extension = $pieces[2];
-	if ($action == "Reject") {
+	if ($action_block == "Reject") {
 		echo "	<option value='Reject' selected='selected'>".$text['label-reject']."</option>\n";
 	}
 	else {
 		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
 	}
-	if ($action == "Busy") {
+	if ($action_block == "Busy") {
 		echo "	<option value='Busy' selected='selected'>".$text['label-busy']."</option>\n";
 	}
 	else {
 		echo "	<option value='Busy'>".$text['label-busy']."</option>\n";
 	}
-	if ($action == "Hold") {
+	if ($action_block == "Hold") {
 		echo "	<option value='Hold' selected='selected'>".$text['label-hold']."</option>\n";
 	}
 	else {
