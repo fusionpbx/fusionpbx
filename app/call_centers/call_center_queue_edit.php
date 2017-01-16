@@ -631,8 +631,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('call_center_tier_add')) {
 			//get agents
 			$sql = "select agent_name from v_call_center_agents where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			foreach($assigned_agents as $assigned_agent) {
-				$sql .= "and agent_name <> '".$assigned_agent."' ";
+			if ($assigned_agents){
+				foreach($assigned_agents as $assigned_agent) {
+					$sql .= "and agent_name <> '".$assigned_agent."' ";
+				}
 			}
 			$sql .= "order by agent_name asc";
 			$prep_statement = $db->prepare(check_sql($sql));
