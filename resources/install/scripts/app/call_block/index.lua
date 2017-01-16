@@ -72,125 +72,148 @@ This method causes the script to get its manadatory arguments directly from the 
 		end
 	end
 
---set the api object
-	api = freeswitch.API();
-
--- ensure that we have a fresh status on exit
-	session:setVariable("call_block", "")
-
---send to the log
-	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
-			params["cid_name"], params["userid"], params["domain_name"]));
-
---get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
-	else
-		cache = "-ERR NOT FOUND";
+	local function isempty(s)
+	  return s == nil or s == ''
 	end
+		
+	if ( session:ready() ) then
 
---check if number is in call_block list then increment the counter and block the call
-	--if not cached then get the information from the database
-	if (cache == "-ERR NOT FOUND") then
-		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+	--check call_block_skip
+		call_block_skip = session:getVariable("call_block_skip");
+		if (isempty(call_block_skip)) then
+		--don't skip
+			call_block_skip = "false";
+		elseif (call_block_skip ~= "true") then
+		--don't skip
+			call_block_skip = "false";
+		end
 
-		--log if not connect
-			if dbh:connected() == false then
-				logger("W", "NOTICE", "db was not connected")
+	--skip if call_block_skip is not false
+		if (call_block_skip == "false") then
+		--set call_block_skip
+			session:setVariable("call_block_skip", "true");
+
+
+		--set the api object
+			api = freeswitch.API();
+
+		-- ensure that we have a fresh status on exit
+			session:setVariable("call_block", "")
+
+		--send to the log
+			logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
+					params["cid_name"], params["userid"], params["domain_name"]));
+
+		--get the cache
+			if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
+				cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
+			else
+				cache = "-ERR NOT FOUND";
 			end
 
-		--check if the the call block is blocked
-			sql = "SELECT * FROM v_call_block as c "
-			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
-			status = dbh:query(sql, function(rows)
-				found_cid_num = rows["call_block_number"];
-				found_uuid = rows["call_block_uuid"];
-				found_enabled = rows["call_block_enabled"];
-				found_action = rows["call_block_action"];
-				found_count = rows["call_block_count"];
-				end)
-			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
+		--check if number is in call_block list then increment the counter and block the call
+			--if not cached then get the information from the database
+			if (cache == "-ERR NOT FOUND") then
+				--connect to the database
+					require "resources.functions.database_handle";
+					dbh = database_handle('system');
 
-		--set the cache
-			if (found_cid_num) then	-- caller id exists
-				if (found_enabled == "true") then
-					--set the cache
-					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+				--log if not connect
+					if dbh:connected() == false then
+						logger("W", "NOTICE", "db was not connected")
+					end
+
+				--check if the the call block is blocked
+					sql = "SELECT * FROM v_call_block as c "
+					sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
+					sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
+					status = dbh:query(sql, function(rows)
+						found_cid_num = rows["call_block_number"];
+						found_uuid = rows["call_block_uuid"];
+						found_enabled = rows["call_block_enabled"];
+						found_action = rows["call_block_action"];
+						found_count = rows["call_block_count"];
+						end)
+					-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
+
+				--set the cache
+					if (found_cid_num) then	-- caller id exists
+						if (found_enabled == "true") then
+							--set the cache
+							cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
+							result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+
+							--set the source
+							source = "database";
+						end
+					end
+
+			else
+				--get from memcache
+					--add the function
+						require "resources.functions.explode";
+
+					--parse the cache
+						array = explode("&", cache);
+
+					--define the array/table and variables
+						local var = {}
+						local key = "";
+						local value = "";
+
+					--parse the cache
+						key_pairs = explode("&", cache);
+						for k,v in pairs(key_pairs) do
+							f = explode("=", v);
+							key = f[1];
+							value = f[2];
+							var[key] = value;
+						end
+
+					--set the variables
+						found_cid_num = var["found_cid_num"];
+						found_uuid = var["found_uuid"];
+						found_enabled = var["found_enabled"];
+						found_action = var["found_action"];
+						found_count = var["found_count"];
 
 					--set the source
-					source = "database";
+						source = "memcache";
+			end
+
+		--debug information
+			--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
+			--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
+			--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
+			--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
+
+		--block the call
+			if found_cid_num then	-- caller id exists
+				if (found_enabled == "true") then
+					details = {}
+					k = 0
+					for v in string.gmatch(found_action, "[%w%.]+") do
+						details[k] = v
+						--logger("W", "INFO", "Details: " .. details[k])
+						k = k + 1
+					end
+					if (source == "database") then
+						dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+					end
+					session:execute("set", "call_blocked=true");
+					logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
+					if (found_action == "Reject") then
+						session:hangup("CALL_REJECTED")
+					elseif (found_action == "Busy") then
+						session:hangup("USER_BUSY")
+					elseif (found_action =="Hold") then
+						session:setAutoHangup(false)
+						session:execute("transfer", "*9664")
+					elseif (details[0] =="Voicemail") then
+						session:setAutoHangup(false)
+						session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
+					end
 				end
-			end
-
-	else
-		--get from memcache
-			--add the function
-				require "resources.functions.explode";
-
-			--parse the cache
-				array = explode("&", cache);
-
-			--define the array/table and variables
-				local var = {}
-				local key = "";
-				local value = "";
-
-			--parse the cache
-				key_pairs = explode("&", cache);
-				for k,v in pairs(key_pairs) do
-					f = explode("=", v);
-					key = f[1];
-					value = f[2];
-					var[key] = value;
-				end
-
-			--set the variables
-				found_cid_num = var["found_cid_num"];
-				found_uuid = var["found_uuid"];
-				found_enabled = var["found_enabled"];
-				found_action = var["found_action"];
-				found_count = var["found_count"];
-
-			--set the source
-				source = "memcache";
-	end
-
---debug information
-	--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
-
---block the call
-	if found_cid_num then	-- caller id exists
-		if (found_enabled == "true") then
-			details = {}
-			k = 0
-			for v in string.gmatch(found_action, "[%w%.]+") do
-				details[k] = v
-				--logger("W", "INFO", "Details: " .. details[k])
-				k = k + 1
-			end
-			if (source == "database") then
-				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
-			end
-			session:execute("set", "call_blocked=true");
-			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
-			if (found_action == "Reject") then
-				session:hangup("CALL_REJECTED")
-			elseif (found_action == "Busy") then
-				session:hangup("USER_BUSY")
-			elseif (found_action =="Hold") then
-				session:setAutoHangup(false)
-				session:execute("transfer", "*9664")
-			elseif (details[0] =="Voicemail") then
-				session:setAutoHangup(false)
-				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
 			end
 		end
 	end
-
