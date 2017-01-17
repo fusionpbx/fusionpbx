@@ -61,10 +61,10 @@
 			};
 			RU = {
 				{"international", "810%d+|8[89]40%d+|87%d%d%d%d%d%d%d%d%d"};
-				{"mobile",        "89%d%d%d%d%d%d%d%d%d"                  };
-				{"tollfree",      "8800%d%d%d%d%d%d%d|10[1-9]"            };
-				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d%d"           };
-				{"unknown",       ""                                      };
+				{"mobile",        "89%d%d%d%d%d%d%d%d%d"                          };
+				{"tollfree",      "8800%d%d%d%d%d%d%d|10[1-9]"                    };
+				{"landline",      "8[3-68]%d%d%d%d%d%d%d%d%d"                     };
+				{"unknown",       ""                                              };
 			};
 		}
 
