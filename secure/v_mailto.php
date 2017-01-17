@@ -41,11 +41,10 @@
 
 //define a function to remove html tags
 	function remove_tags($string) {
-		// ----- remove HTML TAGs -----
+		//remove HTML tags
 		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		// remove control characters
-
+		//remove control characters
 		$string = str_replace("\r", '', $string);    // --- replace with empty space
 		$string = str_replace("\n", ' ', $string);   // --- replace with space
 		$string = str_replace("\t", ' ', $string);   // --- replace with space
