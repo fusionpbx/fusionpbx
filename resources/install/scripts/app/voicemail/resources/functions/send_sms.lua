@@ -76,8 +76,9 @@
 				--format the message length and date
 					message_length_formatted = format_seconds(message_length);
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
-						freeswitch.consoleLog("notice", "[voicemail] domain_name: " .. domain_name .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail-sms] message length: " .. message_length .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail-sms] transcription: " .. transcription .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail-sms] domain_name: " .. domain_name .. "\n");
 					end
 					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch)
 
@@ -89,6 +90,13 @@
 					sms_body = sms_body:gsub("${domain_name}", domain_name);
 					sms_body = sms_body:gsub("${sip_to_user}", id);
 					sms_body = sms_body:gsub("${dialed_user}", id);
+					if (transcription ~= nil) then
+						sms_body = sms_body:gsub("${message_text}", transcription);
+					end
+
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail-sms] sms_body: " .. sms_body .. "\n");
+					end
 
 --					sms_body = "hello";
 					cmd = "luarun app.lua sms outbound " .. voicemail_sms_to .. "@" .. domain_name .. " " .. voicemail_to_sms_did .. " '" .. sms_body .. "'";
