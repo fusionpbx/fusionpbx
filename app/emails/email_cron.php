@@ -40,7 +40,6 @@
 				//delete the email
 				$sql = "delete from v_emails ";
 				$sql .= "where email_uuid = '".$email_uuid."' ";
-				echo $sql;
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				unset($sql, $prep_statement);
