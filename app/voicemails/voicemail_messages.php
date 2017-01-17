@@ -113,7 +113,7 @@ require_once "resources/require.php";
 					echo "<tr><td colspan='20'><br /><br /><br /></td></tr>\n";
 				}
 				echo "	<td colspan='4' align='left' valign='top'>\n";
-				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
+				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." ".$field['voicemail_description']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
 				echo "	<td colspan='".(($_SESSION['voicemail']['storage_type']['text'] != 'base64') ? 3 : 2)."' valign='bottom' align='right'>\n";
 				echo "		<input type='button' class='btn' alt='".$text['button-toggle']."' onclick=\"$('#frm').attr('action', 'voicemail_message_toggle.php').submit();\" value='".$text['button-toggle']."'>\n";
