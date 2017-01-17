@@ -5,3 +5,5 @@ resources/config.php
 secure/mailto.bat
 secure/*.db
 secure/*.sqlite
+/.settings/
+/.buildpath
