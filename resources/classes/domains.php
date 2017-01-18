@@ -450,17 +450,16 @@ if (!class_exists('domains')) {
 
 			//add the missing default settings
 				if (is_array($array) && count($array) > 0) {
-					$sql = "insert into v_default_settings (";
-					$sql .= "default_setting_uuid, ";
-					$sql .= "default_setting_category, ";
-					$sql .= "default_setting_subcategory, ";
-					$sql .= "default_setting_name, ";
-					$sql .= "default_setting_value, ";
-					$sql .= "default_setting_enabled, ";
-					$sql .= "default_setting_description ";
-					$sql .= ") values \n";
-					$i = 1;
 					foreach ($array as $row) {
+						$sql = "insert into v_default_settings (";
+						$sql .= "default_setting_uuid, ";
+						$sql .= "default_setting_category, ";
+						$sql .= "default_setting_subcategory, ";
+						$sql .= "default_setting_name, ";
+						$sql .= "default_setting_value, ";
+						$sql .= "default_setting_enabled, ";
+						$sql .= "default_setting_description ";
+						$sql .= ") values \n";
 						$sql .= "(";
 						$sql .= "'".check_str($row['default_setting_uuid'])."', ";
 						$sql .= "'".check_str($row['default_setting_category'])."', ";
@@ -469,15 +468,11 @@ if (!class_exists('domains')) {
 						$sql .= "'".check_str($row['default_setting_value'])."', ";
 						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
 						$sql .= "'".check_str($row['default_setting_description'])."' ";
-						$sql .= ")";
-						if ($array_count != $i) {
-							$sql .= ",\n";
-						}
-						$i++;
+						$sql .= ");";
+						//echo $sql."\n";
+						$this->db->exec(check_sql($sql));
+						unset($array);
 					}
-					//echo $sql."\n";
-					$this->db->exec(check_sql($sql));
-					unset($array);
 				}		
 		} //end settings method
 	}
