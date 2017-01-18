@@ -56,7 +56,19 @@ require_once "resources/check_auth.php";
 		var source_url = 'status_registrations_inc.php?profile=<?php echo $profile; ?>&show=<?php echo $show; ?>';
 		var interval_timer_id;
 
+		var pageLoadedTime = new Date().getTime();
+		var continuePopupShown = false;
+
 		function loadXmlHttp(url, id) {
+			if (continuePopupShown == true) {
+			    return;
+			}
+			if ( new Date().getTime() > pageLoadedTime + 1800000 ) {
+				continuePopupShown = true;
+			  alert("Are you still there? Please click OK to continue...");
+			  location.reload();
+			  return;
+			}
 			var f = this;
 			f.xmlHttp = null;
 			/*@cc_on @*/ // used here and below, limits try/catch to those IE browsers that both benefit from and support it

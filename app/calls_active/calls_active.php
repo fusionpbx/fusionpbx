@@ -64,6 +64,8 @@ else {
 		var refresh = 1500;
 		var source_url = 'calls_active_inc.php?';
 		var timer_id;
+		var pageLoadedTime = new Date().getTime();
+		var continuePopupShown = false;
 		<?php
 		if ($show == 'all') {
 			echo "source_url = source_url + '&show=all';";
@@ -73,6 +75,15 @@ else {
 		}
 		?>
 		var ajax_get = function () {
+			if (continuePopupShown == true) {
+			    return;
+			}
+			if ( new Date().getTime() > pageLoadedTime + 1800000 ) {
+				continuePopupShown = true;
+			  alert("Are you still there? Please click OK to continue...");
+			  location.reload();
+			  return;
+			}
 			$.ajax({
 				url: source_url, success: function(response){
 					$("#ajax_reponse").html(response);
