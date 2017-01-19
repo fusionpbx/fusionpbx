@@ -68,6 +68,16 @@
 	if (isset($_REQUEST["dialplan_context"])) { $dialplan_context = check_str($_REQUEST["dialplan_context"]); } else { $dialplan_context = null; }
 	if (isset($_REQUEST["app_uuid"])) { $app_uuid = check_str($_REQUEST["app_uuid"]); } else { $app_uuid = null; }
 
+//make sure all dialplans with context of public have the inbound route app_uuid
+	if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+		$sql = "update v_dialplans set ";
+		$sql .= "app_uuid = 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
+		$sql .= "where dialplan_context = 'public' ";
+		$sql .= "and app_uuid is null; ";
+		$db->exec($sql);
+		unset($sql);
+	}
+
 //includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
