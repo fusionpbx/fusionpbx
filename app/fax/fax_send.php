@@ -542,7 +542,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				$pdf -> SetTopMargin(0.6);
 				$pdf -> SetFont($pdf_font, "", 12);
 				$pdf -> SetXY($x + 0.75, $y + 3.65);
-				$pdf -> MultiCell(7, 5.75, $fax_message, 0, 'L', false);
+				$pdf -> MultiCell(7, 5.40, $fax_message, 0, 'L', false);
 			}
 
 			$pages = $pdf -> getNumPages();
