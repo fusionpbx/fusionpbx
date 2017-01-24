@@ -157,13 +157,8 @@
 								require "resources.functions.file_exists";
 
 							--connect to the switch database
-								if (file_exists(database_dir.."/core.db")) then
-									--dbh_switch = freeswitch.Dbh("core:core"); -- when using sqlite
-									dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
-								else
-									require "resources.functions.database_handle";
-									dbh_switch = database_handle('switch');
-								end
+								require "resources.functions.database_handle";
+								dbh_switch = database_handle('switch');
 
 							--get the destination hostname from the registration
 								sql = "SELECT hostname FROM registrations ";
