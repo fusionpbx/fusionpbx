@@ -125,7 +125,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enable or disable the alias.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sofia_profile_domain_parse';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_domain_parse';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enable or disable the parsing.';
 		$z++;
