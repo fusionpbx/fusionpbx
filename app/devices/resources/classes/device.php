@@ -154,8 +154,9 @@ include "root.php";
 					if (preg_match('/^es\d\d\d.*$/i', $agent)) {
 						return "escene";
 					}
-			}
-
+					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
+						return "panasonic";
+					}
 			// unknown vendor
 				return "";
 		}
