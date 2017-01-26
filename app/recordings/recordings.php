@@ -361,12 +361,14 @@
 				if (file_exists($file_name)) {
 					$file_size = filesize($file_name);
 					$file_size = byte_convert($file_size);
+					$file_date = date("M d, Y H:i:s", filemtime($file_name));
 				}
 				else {
 					$file_size = '';
+					$file_date = '';
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; white-space: nowrap;'>".$file_size."</td>\n";
-				$file_date = date("M d, Y H:i:s", filemtime($file_name));
+				
 				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$file_date."</td>\n";
 			}
 			else {
