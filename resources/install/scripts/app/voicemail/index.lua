@@ -534,6 +534,7 @@
 						referred_by = referred_by:match('[%d]+');
 						session:transfer(referred_by, "XML", context);
 					else
+						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
 						session:hangup("NO_ANSWER");
 					end
 			end
