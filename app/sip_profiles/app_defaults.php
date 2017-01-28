@@ -100,6 +100,32 @@
 									$db->exec(check_sql($sql));
 									unset($sql);
 
+								//get the domain, alias and parse values and set as variables
+									$sip_profile_domain_name = $sip_profile['domains']['domain']['@attributes']['name'];
+									$sip_profile_domain_alias = $sip_profile['domains']['domain']['@attributes']['alias'];
+									$sip_profile_domain_parse = $sip_profile['domains']['domain']['@attributes']['parse'];
+
+								//add the sip profile domains name, alias and parse
+									$sip_profile_domain_uuid = uuid();
+									$sql = "insert into v_sip_profile_domains";
+									$sql .= "(";
+									$sql .= "sip_profile_domain_uuid, ";
+									$sql .= "sip_profile_uuid, ";
+									$sql .= "sip_profile_domain_name, ";
+									$sql .= "sip_profile_domain_alias, ";
+									$sql .= "sip_profile_domain_parse ";
+									$sql .= ") ";
+									$sql .= "values ";
+									$sql .= "( ";
+									$sql .= "'".$sip_profile_domain_uuid."', ";
+									$sql .= "'".$sip_profile_uuid."', ";
+									$sql .= "'".check_str($sip_profile_domain_name)."', ";
+									$sql .= "'".check_str($sip_profile_domain_alias)."', ";
+									$sql .= "'".check_str($sip_profile_domain_parse)."' ";
+									$sql .= ")";
+									$db->exec(check_sql($sql));
+									unset($sql);
+
 								//add the sip profile settings
 									foreach ($sip_profile['settings']['param'] as $row) {
 										//get the name and value pair
