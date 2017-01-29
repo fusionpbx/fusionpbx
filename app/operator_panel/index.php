@@ -17,24 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('operator_panel_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('operator_panel_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -42,33 +45,38 @@ else {
 
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
-		$user_status = check_str($_REQUEST['status']);
-	//sql update
-		$sql  = "update v_users set ";
-		$sql .= "user_status = '".$user_status."' ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
-		if (permission_exists("user_account_setting_edit")) {
-			$count = $db->exec(check_sql($sql));
-		}
+		//update the status
+			$user_status = check_str($_REQUEST['status']);
+			$sql  = "update v_users set ";
+			$sql .= "user_status = '".$user_status."' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+			if (permission_exists("user_account_setting_edit")) {
+				$count = $db->exec(check_sql($sql));
+			}
 
-	//if call center app is installed then update the user_status
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
-			//update the user_status
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		//if call center app is installed then update the user_status
+			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
+				//update the user_status
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 
-			//update the user state
-				$cmd = "api callcenter_config agent set state ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-		}
+				//update the user state
+					$cmd = "api callcenter_config agent set state ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." Waiting";
+					$response = event_socket_request($fp, $cmd);
+			}
 
-		exit;
+		//stop execution
+			exit;
 	}
 
-$document['title'] = $text['title-operator_panel'];
-require_once "resources/header.php";
+//set the title
+	$document['title'] = $text['title-operator_panel'];
+
+//include the header
+	require_once "resources/header.php";
+
 ?>
 
 <!-- virtual_drag function holding elements -->
@@ -427,11 +435,15 @@ require_once "resources/header.php";
 </style>
 
 <?php
+
 //create simple array of users own extensions
 unset($_SESSION['user']['extensions']);
-foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
-	$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
+if (is_array($_SESSION['user']['extension'])) {
+	foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
+		$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
+	}
 }
+
 ?>
 
 <div id='ajax_reponse'></div>
@@ -439,5 +451,6 @@ foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
 <br><br>
 
 <?php
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
 ?>
