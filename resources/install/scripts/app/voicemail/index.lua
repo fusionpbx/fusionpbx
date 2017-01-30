@@ -320,29 +320,29 @@
 --leave a message
 	if (voicemail_action == "save") then
 
-		--check the voicemail quota
-			if (vm_disk_quota) then
-				--get voicemail message seconds
-					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
-						WHERE domain_uuid = :domain_uuid
-						AND voicemail_uuid = :voicemail_uuid]]
-					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-					end
-					dbh:query(sql, params, function(row)
-						message_sum = row["message_sum"];
-					end);
-					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-						--play message mailbox full
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-						--set the voicemail_uuid to nil to prevent saving the voicemail
-							voicemail_uuid = nil;
-					end
-			end
-
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
+
+				--check the voicemail quota
+					if (vm_disk_quota) then
+						--get voicemail message seconds
+							local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_uuid = :voicemail_uuid]]
+							local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(row)
+								message_sum = row["message_sum"];
+							end);
+							if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+								--play message mailbox full
+									session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+								--set the voicemail_uuid to nil to prevent saving the voicemail
+									voicemail_uuid = nil;
+							end
+					end
 
 				--play the greeting
 					timeouts = 0;
@@ -534,6 +534,7 @@
 						referred_by = referred_by:match('[%d]+');
 						session:transfer(referred_by, "XML", context);
 					else
+						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
 						session:hangup("NO_ANSWER");
 					end
 			end

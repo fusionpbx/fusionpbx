@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -100,6 +100,32 @@
 									$db->exec(check_sql($sql));
 									unset($sql);
 
+								//get the domain, alias and parse values and set as variables
+									$sip_profile_domain_name = $sip_profile['domains']['domain']['@attributes']['name'];
+									$sip_profile_domain_alias = $sip_profile['domains']['domain']['@attributes']['alias'];
+									$sip_profile_domain_parse = $sip_profile['domains']['domain']['@attributes']['parse'];
+
+								//add the sip profile domains name, alias and parse
+									$sip_profile_domain_uuid = uuid();
+									$sql = "insert into v_sip_profile_domains";
+									$sql .= "(";
+									$sql .= "sip_profile_domain_uuid, ";
+									$sql .= "sip_profile_uuid, ";
+									$sql .= "sip_profile_domain_name, ";
+									$sql .= "sip_profile_domain_alias, ";
+									$sql .= "sip_profile_domain_parse ";
+									$sql .= ") ";
+									$sql .= "values ";
+									$sql .= "( ";
+									$sql .= "'".$sip_profile_domain_uuid."', ";
+									$sql .= "'".$sip_profile_uuid."', ";
+									$sql .= "'".check_str($sip_profile_domain_name)."', ";
+									$sql .= "'".check_str($sip_profile_domain_alias)."', ";
+									$sql .= "'".check_str($sip_profile_domain_parse)."' ";
+									$sql .= ")";
+									$db->exec(check_sql($sql));
+									unset($sql);
+
 								//add the sip profile settings
 									foreach ($sip_profile['settings']['param'] as $row) {
 										//get the name and value pair
@@ -131,6 +157,85 @@
 									}
 							}
 						}
+					}
+					$db->commit();
+
+					//save the sip profile xml
+					save_sip_profile_xml();
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+				}
+				unset($prep_statement);
+			}
+
+		//upgrade - add missing sip profiles domain settings
+			$sql = "select count(*) as num_rows from v_sip_profile_domains ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
+						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
+					}
+					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
+						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml.noload';
+					}
+					else {
+						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml.noload';
+					}
+					$db->beginTransaction();
+					$xml_files = glob($sip_profile_dir);
+					foreach ($xml_files as &$xml_file) {
+						//load the sip profile xml and save it into an array
+							$sip_profile_xml = file_get_contents($xml_file);
+							$xml = simplexml_load_string($sip_profile_xml);
+							$json = json_encode($xml);
+							$sip_profile = json_decode($json, true);
+							$sip_profile_name = $sip_profile['@attributes']['name'];
+							$sip_profile_enabled = $sip_profile['@attributes']['enabled'];
+							//echo "sip profile name: ".$sip_profile_name."\n";
+
+						//get the domain, alias and parse values and set as variables
+							$sip_profile_domain_name = $sip_profile['domains']['domain']['@attributes']['name'];
+							$sip_profile_domain_alias = $sip_profile['domains']['domain']['@attributes']['alias'];
+							$sip_profile_domain_parse = $sip_profile['domains']['domain']['@attributes']['parse'];
+
+						//get the sip_profile_uuid using the sip profile name
+							$sql = "select sip_profile_uuid from v_sip_profiles ";
+							$sql .= "where sip_profile_name = '$sip_profile_name' ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$sip_profile_uuid = $result[0]["sip_profile_uuid"];
+							unset ($prep_statement);
+
+						//add the sip profile domains name, alias and parse
+							if ($sip_profile_uuid) {
+								$sip_profile_domain_uuid = uuid();
+								$sql = "insert into v_sip_profile_domains";
+								$sql .= "(";
+								$sql .= "sip_profile_domain_uuid, ";
+								$sql .= "sip_profile_uuid, ";
+								$sql .= "sip_profile_domain_name, ";
+								$sql .= "sip_profile_domain_alias, ";
+								$sql .= "sip_profile_domain_parse ";
+								$sql .= ") ";
+								$sql .= "values ";
+								$sql .= "( ";
+								$sql .= "'".$sip_profile_domain_uuid."', ";
+								$sql .= "'".$sip_profile_uuid."', ";
+								$sql .= "'".check_str($sip_profile_domain_name)."', ";
+								$sql .= "'".check_str($sip_profile_domain_alias)."', ";
+								$sql .= "'".check_str($sip_profile_domain_parse)."' ";
+								$sql .= ")";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
+							
+						//unset the sip_profile_uuid
+							unset($sip_profile_uuid);
 					}
 					$db->commit();
 
