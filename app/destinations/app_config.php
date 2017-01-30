@@ -61,8 +61,10 @@
 		$apps[$x]['permissions'][$y]['name'] = 'destination_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
-
-
+		$apps[$x]['permissions'][$y]['name'] = 'destination_import';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index

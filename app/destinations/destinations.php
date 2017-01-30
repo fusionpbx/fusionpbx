@@ -134,6 +134,9 @@ else {
 	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'><b>".$text['header-destinations']." (".$num_rows.")</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
+	if (permission_exists('destination_import')){
+		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='destination_import.php'\" value='".$text['button-import']."'>\n";
+	}
 	if (permission_exists('destination_all')) {
 		if ($_GET['showall'] == 'true') {
 			echo "		<input type='hidden' name='showall' value='true'>";
