@@ -24,10 +24,10 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/functions/device_by.php";
-openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/functions/device_by.php";
 
 //set default variables
 	$dir_count = 0;
@@ -221,6 +221,8 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	foreach($_SESSION['provision'] as $key=>$val) {
 		if (strlen($val['var']) > 0) { $value = $val['var']; }
 		if (strlen($val['text']) > 0) { $value = $val['text']; }
+		if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+		if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
 		if (strlen($value) > 0) { $provision[$key] = $value; }
 		unset($value);
 	}
