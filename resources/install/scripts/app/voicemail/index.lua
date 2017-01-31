@@ -321,7 +321,7 @@
 	if (voicemail_action == "save") then
 
 		--check the voicemail quota
-			if (vm_disk_quota) then
+			if (voicemail_id ~= nil and vm_disk_quota ~= nil) then
 				--get voicemail message seconds
 					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
