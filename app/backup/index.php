@@ -109,6 +109,7 @@ else {
 
 		if (is_uploaded_file($_FILES['backup_file']['tmp_name'])) {
 			//move temp file to backup path
+			mkdir ($_FILES['backup_file']['tmp_name'], $backup_path,02770,true);
 			move_uploaded_file($_FILES['backup_file']['tmp_name'], $backup_path.'/'.$backup_file);
 			//determine file format and restore backup
 			$file_format = pathinfo($_FILES['backup_file']['name'], PATHINFO_EXTENSION);
