@@ -1897,6 +1897,16 @@ function number_pad($number,$n) {
 	}
 
 	function event_socket_mkdir($dir) {
+		
+		switch($_SESSION['event_socket_ip_address'])){
+			case 'localhost':
+			case '127.0.0.1':
+			case '::1':
+			case '':
+				mkdir ($dir, 02770, true);
+				return true;
+				break;
+			default:
 		//connect to fs
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if (!$fp) {
@@ -1913,6 +1923,7 @@ function number_pad($number,$n) {
 						return true;
 					}
 			}
+		}
 		//can not create directory
 			return false;
 	}
