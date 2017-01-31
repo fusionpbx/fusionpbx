@@ -124,8 +124,19 @@
 			event:addHeader('event-string', 'check-sync;reboot=false');
 		end
 	end
+
 --snom
 	if (vendor == "snom") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+	end
+
+--panasonic
+	if (vendor == "panasonic") then
 		if (command == "reboot") then
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
