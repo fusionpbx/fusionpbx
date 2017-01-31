@@ -321,7 +321,7 @@
 	if (voicemail_action == "save") then
 
 		--check the voicemail quota
-			if (vm_disk_quota) then
+			if (voicemail_uuid and vm_disk_quota) then
 				--get voicemail message seconds
 					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
@@ -344,7 +344,7 @@
 			end
 
 		--valid voicemail
-			if (voicemail_uuid ~= nil) then
+			if (voicemail_uuid) then
 
 				--play the greeting
 					timeouts = 0;
