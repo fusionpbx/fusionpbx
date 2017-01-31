@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -37,8 +37,8 @@
 	direct_dial["max_digits"] = 4;
 
 --debug
-	debug["info"] = false;
-	debug["sql"] = false;
+	debug["info"] = true;
+	debug["sql"] = true;
 
 --get the argv values
 	script_name = argv[1];
@@ -320,29 +320,31 @@
 --leave a message
 	if (voicemail_action == "save") then
 
+		--check the voicemail quota
+			if (vm_disk_quota) then
+				--get voicemail message seconds
+					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_uuid = :voicemail_uuid]]
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params, function(row)
+						message_sum = row["message_sum"];
+					end);
+					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+						--play message mailbox full
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+						--hangup
+							session:hangup("NORMAL_CLEARING");
+						--set the voicemail_uuid to nil to prevent saving the voicemail
+							voicemail_uuid = nil;
+					end
+			end
+
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
-
-				--check the voicemail quota
-					if (vm_disk_quota) then
-						--get voicemail message seconds
-							local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
-								WHERE domain_uuid = :domain_uuid
-								AND voicemail_uuid = :voicemail_uuid]]
-							local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
-							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-							end
-							dbh:query(sql, params, function(row)
-								message_sum = row["message_sum"];
-							end);
-							if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-								--play message mailbox full
-									session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-								--set the voicemail_uuid to nil to prevent saving the voicemail
-									voicemail_uuid = nil;
-							end
-					end
 
 				--play the greeting
 					timeouts = 0;
@@ -529,13 +531,15 @@
 
 			else
 				--voicemail not enabled or does not exist
-					referred_by = session:getVariable("sip_h_Referred-By");
-					if (referred_by) then
-						referred_by = referred_by:match('[%d]+');
-						session:transfer(referred_by, "XML", context);
-					else
-						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
-						session:hangup("NO_ANSWER");
+					if (session:ready()) then
+						referred_by = session:getVariable("sip_h_Referred-By");
+						if (referred_by) then
+							referred_by = referred_by:match('[%d]+');
+							session:transfer(referred_by, "XML", context);
+						else
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							session:hangup("NO_ANSWER");
+						end
 					end
 			end
 	end
