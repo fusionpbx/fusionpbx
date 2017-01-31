@@ -353,6 +353,7 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 
 				if (!$included) {
 					//move uploaded file
+					mkdir($dir_fax_temp,02770,true);
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
 
