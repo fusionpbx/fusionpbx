@@ -316,6 +316,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Delay before next call sequence';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '325e3b06-1199-40e0-8703-8adf7efd9f4f';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage_type';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'base64';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Store FAX in base64.';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
