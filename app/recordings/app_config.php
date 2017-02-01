@@ -68,6 +68,17 @@
 		$apps[$x]['permissions'][6]['groups'][] = "admin";
 		$apps[$x]['permissions'][6]['groups'][] = "superadmin";
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'a780b88f-188b-4d73-a1df-f93a114ca16d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'recordings';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage_type';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'base64';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
