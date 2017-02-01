@@ -129,6 +129,9 @@ include "root.php";
 		//set the mac address in the correct format for the specific vendor
 		public function format_mac($mac, $vendor) {
 			switch (strtolower($vendor)) {
+			case "algo":
+				$mac = strtoupper($mac);
+				break;
 			case "aastra":
 				$mac = strtoupper($mac);
 				break;
