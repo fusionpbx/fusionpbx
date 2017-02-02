@@ -210,8 +210,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 			$php_bin = 'php.exe';
 		}
+		elseif (file_exists(PHP_BINDIR."/php5")) { 
+			$php_bin = 'php5'; 
+		}
 		else {
-			$php_bin = 'php5';
+			$php_bin = 'php';
 		}
 
 	//add or update the database
