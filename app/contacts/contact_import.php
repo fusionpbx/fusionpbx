@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -54,39 +58,199 @@ else {
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-	$delimiter = check_str($_GET["data_delimiter"]);
-	$enclosure = check_str($_GET["data_enclosure"]);
+	$action = check_str($_POST["action"]);
+	$order_by = check_str($_POST["order_by"]);
+	$order = check_str($_POST["order"]);
+	$delimiter = check_str($_POST["data_delimiter"]);
+	$enclosure = check_str($_POST["data_enclosure"]);
+
+//save the data to the csv file
+	if (isset($_POST['data'])) {
+		$file = $_SESSION['server']['temp']['dir']."/contacts-".$_SESSION['domain_name'].".csv";
+		file_put_contents($file, $_POST['data']);
+		$_SESSION['file'] = $file;
+	}
+
+//copy the csv file
+	if ($_POST['submit'] == "Upload" && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
+		if (check_str($_POST['type']) == 'csv') {
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
+			unset($_POST['txtCommand']);
+			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$_SESSION['file'] = $file;
+		}
+	}
+
+//match the column names to the field names
+	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+		//get the first line
+			$line = fgets(fopen($_SESSION['file'], 'r'));
+			$line_fields = explode($delimiter, $line);
+
+		//column array
+			$fields[] = 'contact_title';
+			$fields[] = 'contact_name_given';
+			$fields[] = 'contact_name_family';
+			$fields[] = 'contact_organization';
+			$fields[] = 'phone_number'; 
+			$fields[] = 'email_address';
+			$fields[] = 'url_address';
+			$fields[] = 'contact_note'; 
+
+		//form to match the fields to the column names
+			require_once "resources/header.php";
+
+			echo "<form action='contact_import.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+			echo "	<tr>\n";
+			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
+			echo "		<b>".$text['header-contacts_import']."</b><br />\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' align='right'>\n";
+			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-back']."'>\n";
+			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
+			echo "	</td>\n";
+			echo "	</tr>\n";
+			echo "	<tr>\n";
+			echo "	<td colspan='2' align='left'>\n";
+			echo "		".$text['description-contacts_import']."\n";
+			echo "	</td>\n";
+			echo "	</tr>\n";
+
+			//echo "<tr>\n";
+			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-contacts_import']."</b></td>\n";
+			//echo "<td width='70%' align='right'>\n";
+			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-back']."'>\n";
+			//echo "</td>\n";
+			//echo "</tr>\n";
+			$x = 0;
+			foreach ($line_fields as $line_field) {
+				echo "<tr>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				//echo "    ".$text['label-import_delimiter']."\n";
+				echo $line_field;
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
+				foreach($fields as $field) {
+					echo "    			<option value='$field'>$field</option>\n";
+				}
+				echo "    			</select>\n";
+				//echo "<br />\n";
+				//echo $text['description-import_delimiter']."\n";
+				echo "			</td>\n";
+				echo "		</tr>\n";
+				$x++;
+			}
+			
+			echo "		<tr>\n";
+			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
+			echo "				<input name='action' type='hidden' value='import'>\n";
+			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "				<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
+
+			echo "	</table>\n";
+			echo "</form>\n";
+			require_once "resources/footer.php";
+
+		//normalize the column names
+			//$line = strtolower($line);
+			//$line = str_replace("-", "_", $line);
+			//$line = str_replace($delimiter."title".$delimiter, $delimiter."contact_title".$delimiter, $line);
+			//$line = str_replace("firstname", "name_given", $line);
+			//$line = str_replace("lastname", "name_family", $line);
+			//$line = str_replace("company", "organization", $line);
+			//$line = str_replace("company", "contact_email", $line);
+
+		exit;
+	}
 
 //upload the contact csv
-	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recording_upload')) {
-		//copy the csv file
-			if (check_str($_POST['type']) == 'csv') {
-				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-				$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-				//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-				unset($_POST['txtCommand']);
-			}
+	if (file_exists($_SESSION['file']) && $action == 'import') {
+
+
+echo "<pre>\n";
+print_r($_POST);
+$fields = implode($delimiter, $_POST['fields']);
+echo $fields;
+echo "</pre>\n";
+exit;
+
 		//get the contents of the csv file
-			$handle = @fopen($_SESSION['server']['temp']['dir']."/". $_FILES['ulfile']['name'], "r");
+			$handle = @fopen($file, "r");
 			if ($handle) {
 				$x = 0;
-				while (($buffer = fgets($handle, 4096)) !== false) {
+				while (($line = fgets($handle, 4096)) !== false) {
 					if ($x == 0) {
+
+						//set the variables
+							/*
+							$contact_title = $data['Title'];
+							$contact_name_given = $data['FirstName'];
+							$contact_name_family = $data['LastName'];
+							$contact_organization = $data['Company'];
+							//$contact_email = $data['EmailAddress'];
+							$contact_note = $data['Notes'];
+							$contact_url = $data['Web Page'];
+
+							$address_array[$x]['address_street'] = $data['BusinessStreet'];
+							$address_array[$x]['address_locality'] = $data['BusinessCity'];
+							$address_array[$x]['address_region'] = $data['BusinessState'];
+							$address_array[$x]['address_postal_code'] = $data['BusinessPostalCode'];
+							$address_array[$x]['address_country'] = $data['BusinessCountry'];
+							$address_array[$x]['address_type'] = 'work';
+
+							$address_array[$x]['address_street'] = $data['HomeStreet'];
+							$address_array[$x]['address_locality'] = $data['HomeCity'];
+							$address_array[$x]['address_region'] = $data['HomeState'];
+							$address_array[$x]['address_postal_code'] = $data['HomePostalCode'];
+							$address_array[$x]['address_country'] = $data['HomeCountry'];
+							$address_array[$x]['address_type'] = 'home';
+
+							$address_array[$x]['address_street'] = $data['OtherStreet'];
+							$address_array[$x]['address_locality'] = $data['OtherCity'];
+							$address_array[$x]['address_region'] = $data['OtherState'];
+							$address_array[$x]['address_postal_code'] = $data['OtherPostalCode'];
+							$address_array[$x]['address_country'] = $data['OtherCountry'];
+
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessFax']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone2']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['CompanyMainPhone']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomeFax']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone2']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['MobilePhone']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherFax']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherPhone']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['Pager']);
+							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['PrimaryPhone']);
+							*/
+
 						//set the column array
-						$column_array = str_getcsv($buffer, $delimiter, $enclosure);
+							$column_array = str_getcsv($line, $delimiter, $enclosure);
+
+echo $line;
+print_r($column_array);
+exit;
 					}
 					else {
 						//format the data
 							$y = 0;
 							foreach ($column_array as $column) {
-								$result = str_getcsv($buffer, $delimiter, $enclosure);
+								$result = str_getcsv($line, $delimiter, $enclosure);
 								$data[$column] = $result[$y];
 								$y++;
 							}
 
 						//set the variables
+							//$contact_type = '';
 							$contact_title = $data['Title'];
 							$contact_name_given = $data['FirstName'];
 							$contact_name_family = $data['LastName'];
@@ -341,21 +505,23 @@ else {
 			//echo "	<th>".$text['label-contact_email']."</th>\n";
 			echo "	<th>".$text['label-contact_url']."</th>\n";
 			echo "</tr>\n";
-			foreach($results as $row) {
-				echo "<tr>\n";
-				echo "	<td class='vncell' valign='top' align='left'>\n";
-				echo 		$row['FirstName'] ." ".$row['LastName'];
-				echo "	</td>\n";
-				echo "	<td class='vncell' valign='top' align='left'>\n";
-				echo 	$row['Company']."&nbsp;\n";
-				echo "	</td>\n";
-				echo "	<td class='vncell' valign='top' align='left'>\n";
-				echo 		$row['EmailAddress']."&nbsp;\n";
-				echo "	</td>\n";
-				echo "	<td class='vncell' valign='top' align='left'>\n";
-				echo 		$row['Web Page']."&nbsp;\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
+			if ($results) {
+				foreach($results as $row) {
+					echo "<tr>\n";
+					echo "	<td class='vncell' valign='top' align='left'>\n";
+					echo 		$row['FirstName'] ." ".$row['LastName'];
+					echo "	</td>\n";
+					echo "	<td class='vncell' valign='top' align='left'>\n";
+					echo 	$row['Company']."&nbsp;\n";
+					echo "	</td>\n";
+					echo "	<td class='vncell' valign='top' align='left'>\n";
+					echo 		$row['EmailAddress']."&nbsp;\n";
+					echo "	</td>\n";
+					echo "	<td class='vncell' valign='top' align='left'>\n";
+					echo 		$row['Web Page']."&nbsp;\n";
+					echo "	</td>\n";
+					echo "</tr>\n";
+				}
 			}
 			echo "</table>\n";
 
@@ -363,7 +529,7 @@ else {
 			require_once "resources/footer.php";
 
 		//end the script
-			break;
+			exit;
 	}
 
 //include the header
@@ -378,7 +544,7 @@ else {
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
-	echo "		<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
+	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
@@ -387,6 +553,17 @@ else {
 
 	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
 	echo "	<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-import_data']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "<br />\n";
+	echo $text['description-import_data']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -435,7 +612,7 @@ else {
 	echo "		<td valign='bottom' align='right' nowrap>\n";
 	echo "			<input name='type' type='hidden' value='csv'>\n";
 	echo "			<br />\n";
-	echo "			<input name='submit' type='submit' class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
+	echo "			<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
