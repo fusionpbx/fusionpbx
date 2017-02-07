@@ -100,8 +100,8 @@ if (!class_exists('scripts')) {
 				}
 				if (file_exists($dst_dir)) {
 					//get the source directory
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-						$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
+					if (file_exists('/usr/share/examples/fusionpbx/scripts')){
+						$src_dir = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
 						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';

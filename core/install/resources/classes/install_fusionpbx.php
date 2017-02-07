@@ -292,8 +292,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/sqlite.sql";
 				}
 				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
@@ -387,8 +387,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/pgsql.sql";
 				}
 				else {
 				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
@@ -558,8 +558,8 @@ include "root.php";
 
 			//add the defaults data into the database
 				//get the contents of the sql file
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
-						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
+					if (file_exists('/usr/share/examples/fusionpbx/sql/mysql.sql')){
+						$filename = "/usr/share/examples/fusionpbx/sql/mysql.sql";
 					}
 					else {
 						$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
