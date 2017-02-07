@@ -115,6 +115,7 @@ require_once "resources/check_auth.php";
 		if ($_POST['submit'] == $text['button-upload'] && $_POST['type'] == 'rec' && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
 			$recording_filename = str_replace(" ", "_", $_FILES['ulfile']['name']);
 			$recording_filename = str_replace("'", "", $recording_filename);
+			mkdir($_SESSION['switch']['recordings']['dir'],02770,true);
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$recording_filename);
 
 			$_SESSION['message'] = $text['message-uploaded'].": ".htmlentities($recording_filename);
