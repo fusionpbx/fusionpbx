@@ -352,6 +352,11 @@ function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 				unset($attachment_file_name);
 
 				if (!$included) {
+					//make sure the destination directory exists
+					if (!is_dir($dir_fax_temp)) {
+						event_socket_mkdir($dir_fax_temp);
+					}
+					
 					//move uploaded file
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
