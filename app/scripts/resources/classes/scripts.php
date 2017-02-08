@@ -213,8 +213,11 @@ if (!class_exists('scripts')) {
 					if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 						$tmp .= "	php_bin = \"php.exe\";\n";
 					}
+					elseif (file_exists(PHP_BINDIR."/php5")) { 
+	 					$tmp .= "	php_bin = \"php5\";\n";
+ 					}
 					else {
-						$tmp .= "	php_bin = \"php5\";\n";
+						$tmp .= "	php_bin = \"php\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
 					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
