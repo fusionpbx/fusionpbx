@@ -289,8 +289,8 @@
 
 <!-- Proxy and Registration -->
 <Proxy_1_ ua="na">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na">{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_>{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
@@ -401,8 +401,8 @@
 
 <!-- Proxy and Registration -->
 <Proxy_2_ ua="na">{$server_address_2}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na"></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_ ua="na">No</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_>{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
