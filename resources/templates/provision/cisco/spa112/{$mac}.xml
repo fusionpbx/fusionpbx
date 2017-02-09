@@ -21,6 +21,8 @@
 <Line_Enable_1_>Yes</Line_Enable_1_>
 <Mailbox_ID_1_>*97</Mailbox_ID_1_>
 <Proxy_1_>{$server_address_1}</Proxy_1_>
+<Outbound_Proxy_1_>{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
@@ -35,6 +37,8 @@
 <Line_Enable_2_>Yes</Line_Enable_2_>
 <Mailbox_ID_2_>*97</Mailbox_ID_2_>
 <Proxy_2_>{$server_address_2}</Proxy_2_>
+<Outbound_Proxy_2_>{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Register_2_>Yes</Register_2_>
 <SIP_Transport_2_ group="Ext_1/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
 <SIP_Port_2_ group="Ext_1/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
