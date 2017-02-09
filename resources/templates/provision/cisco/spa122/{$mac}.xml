@@ -807,8 +807,8 @@
 </Log_Configuration>
 {if isset ($admin_name)}<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>{/if}
 {if isset ($admin_password)}<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>{/if}
-{if isset ($user_name)}<Web_Login_Guest_Name>{$user_name}</Web_Login_Guest_Name>{/if}
-{if isset ($user_password)}<Web_Login_Guest_Password>{$user_password}</Web_Login_Guest_Password>{/if}
+{if isset ($admin_name)}<Web_Login_Guest_Name>{$admin_name}</Web_Login_Guest_Name>{/if}
+{if isset ($admin_password)}<Web_Login_Guest_Password>{$admin_password}</Web_Login_Guest_Password>{/if}
 <Firmware_Version>1.2.1</Firmware_Version>
 <Firmware_Build_Version>004</Firmware_Build_Version>
 <System_Model_Number>SPA122</System_Model_Number>
