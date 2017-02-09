@@ -95,9 +95,6 @@ if (!class_exists('scripts')) {
 		public function copy_files() {
 			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if(strlen($dst_dir) == 0) {
-					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-				}
 				if (file_exists($dst_dir)) {
 					//get the source directory
 					if (file_exists('/usr/share/examples/fusionpbx/scripts')){
