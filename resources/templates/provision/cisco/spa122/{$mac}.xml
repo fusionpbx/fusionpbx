@@ -187,8 +187,8 @@
 <Emergency_Number_1_></Emergency_Number_1_>
 <Mailbox_ID_1_></Mailbox_ID_1_>
 <Proxy_1_>{$domain_name}</Proxy_1_>
-<Outbound_Proxy_1_></Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_>No</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_>{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_>Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_>Yes</Register_1_>
 <Make_Call_Without_Reg_1_>No</Make_Call_Without_Reg_1_>
@@ -313,8 +313,8 @@
 <Emergency_Number_2_></Emergency_Number_2_>
 <Mailbox_ID_2_></Mailbox_ID_2_>
 <Proxy_2_>{$domain_name}</Proxy_2_>
-<Outbound_Proxy_2_></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_>No</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_>{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_>Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_>Yes</Register_2_>
 <Make_Call_Without_Reg_2_>No</Make_Call_Without_Reg_2_>
