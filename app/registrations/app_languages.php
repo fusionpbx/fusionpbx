@@ -150,6 +150,16 @@ $text['label-agent']['sv-se'] = "Agent";
 $text['label-agent']['uk'] = "Оператор";
 $text['label-agent']['de-at'] = "Agent";
 
+$text['label-contact']['en-us'] = "Contact";
+$text['label-contact']['es-cl'] = "Contacto";
+$text['label-contact']['pt-pt'] = "Contato";
+$text['label-contact']['fr-fr'] = "Contact";
+$text['label-contact']['pt-br'] = "Contato";
+$text['label-contact']['pl'] = "Kontakt";
+$text['label-contact']['sv-se'] = "Kontakta";
+$text['label-contact']['uk'] = "Контакт";
+$text['label-contact']['de-at'] = "Kontakt";
+
 $text['header-registrations']['en-us'] = "Registrations";
 $text['header-registrations']['es-cl'] = "Inscripciones";
 $text['header-registrations']['pt-pt'] = "Inscrições";
