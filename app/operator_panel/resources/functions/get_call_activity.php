@@ -154,7 +154,7 @@ function get_call_activity() {
 							$dump_result = event_socket_request($fp, 'api '.$switch_cmd);
 							$dump_array = json_decode($dump_result, true);
 							if (isset($dump_array)) foreach ($dump_array as $dump_var_name => $dump_var_value) {
-								$array[$x][$dump_var_name] = trim($dump_var_value);
+								$array[$x][$dump_var_name] = $dump_var_value;
 							}
 						}
 					}
