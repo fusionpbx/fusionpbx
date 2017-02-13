@@ -199,6 +199,7 @@
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
+							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 						end);
 					--set default values
 						if (voicemail_local_after_email == nil) then
