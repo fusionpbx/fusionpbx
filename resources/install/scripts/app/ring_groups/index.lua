@@ -633,6 +633,7 @@ local log = require "resources.functions.log".ring_group
 								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
 								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
 								or session:getVariable("originate_disposition") == "USER_BUSY"
+								or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 								or session:getVariable("originate_disposition") == "failure"
 							) then
 								--send missed call notification
