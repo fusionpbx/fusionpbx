@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Group Manager";
 		$apps[$x]['uuid'] = "2caf27b0-540a-43d5-bb9b-c9871a1e4f84";
@@ -19,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "Gerenciar grupos de usuários e permissões.";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "group_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "3b4acc6d-827b-f537-bf21-0093d94ffec7";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -88,9 +89,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_groups";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_groups";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "group_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -133,9 +135,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_group_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_group_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_groups";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
@@ -190,9 +193,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_group_permissions";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_group_permissions";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_groups";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "group_permission_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
