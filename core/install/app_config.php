@@ -19,7 +19,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		//$y = 0;
+		//$y=0;
 		//$apps[$x]['permissions'][$y]['name'] = "install";
 		//$apps[$x]['permissions'][$y]['menu']['uuid'] = "75507e6e-891e-11e5-af63-feff819cdc9f";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
