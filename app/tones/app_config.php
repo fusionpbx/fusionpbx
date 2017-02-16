@@ -11,7 +11,7 @@
 		$apps[$x]['description']['en-us'] = "Manage Tones";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "tones";
 		$apps[$x]['destinations'][$y]['name'] = "tones";
