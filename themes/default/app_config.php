@@ -21,6 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//default settings
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4c8df6ee-5858-40ee-b90f-b3b1d066a91c';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'theme';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'background_color';
