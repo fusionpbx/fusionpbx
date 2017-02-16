@@ -20,6 +20,7 @@
 	$apps[$x]['description']['pt-br'] = "Desvio de chamadas, Siga-me e Não perturbe (DND).";
 
 //permission details
+	$y=0;
 	$apps[$x]['permissions'][$y]['name'] = "follow_me";
 	$apps[$x]['permissions'][$y]['groups'][] = "user";
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -36,7 +37,7 @@
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 //default settings
-	$y = 0;
+	$y=0;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4fedc226-caca-4ebf-b4eb-31de93e5bed3';
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = 'follow_me';
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'max_destinations';
