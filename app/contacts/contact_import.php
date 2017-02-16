@@ -83,21 +83,54 @@
 		}
 	}
 
-//match the column names to the field names
-	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+//get the schema
+	if (strlen($delimiter) > 0) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
 
-		//column array
-			$fields[] = 'contact_title';
-			$fields[] = 'contact_name_given';
-			$fields[] = 'contact_name_family';
-			$fields[] = 'contact_organization';
-			$fields[] = 'phone_number'; 
-			$fields[] = 'email_address';
-			$fields[] = 'url_address';
-			$fields[] = 'contact_note'; 
+		//get the schema
+			$x = 0;
+			include ("app/contacts/app_config.php");
+			$i = 0;
+			foreach($apps[0]['db'] as $table) {
+				//get the table name and parent name
+				$table_name = $table["table"]['name'];
+				$parent_name = $table["table"]['parent'];
+
+				//remove the v_ table prefix
+				if (substr($table_name, 0, 2) == 'v_') {
+						$table_name = substr($table_name, 2);
+				}
+				if (substr($parent_name, 0, 2) == 'v_') {
+						$parent_name = substr($parent_name, 2);
+				}
+
+				//filter for specific tables and build the schema array
+				if ($table_name == "contacts" || $table_name == "contact_addresses" || 
+					$table_name == "contact_phones" || $table_name == "contact_emails" || 
+					$table_name == "contact_urls") {
+
+					$schema[$i]['table'] = $table_name;
+					$schema[$i]['parent'] = $parent_name;
+					foreach($table['fields'] as $row) {
+						if ($row['deprecated'] !== 'true') {
+							if (is_array($row['name'])) {
+								$field_name = $row['name']['text'];
+							}
+							else {
+								$field_name = $row['name'];
+							}
+							$schema[$i]['fields'][] = $field_name;
+						}
+					}
+					$i++;
+				}
+			}
+	}
+
+//match the column names to the field names
+	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//form to match the fields to the column names
 			require_once "resources/header.php";
@@ -126,26 +159,35 @@
 			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-back']."'>\n";
 			//echo "</td>\n";
 			//echo "</tr>\n";
+
+			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
 				echo "<tr>\n";
 				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-				//echo "    ".$text['label-import_delimiter']."\n";
+				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
 				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
-				foreach($fields as $field) {
-					echo "    			<option value='$field'>$field</option>\n";
+				echo "    			<option value=''></option>\n";
+				foreach($schema as $row) {
+					echo "			<optgroup label='".$row['table']."'>\n";
+					foreach($row['fields'] as $field) {
+						if (substr($field, -5) != '_uuid') {
+							echo "    			<option value='".$row['table'].".$field'>$field</option>\n";
+						}
+					}
+					echo "			</optgroup>\n";
 				}
 				echo "    			</select>\n";
 				//echo "<br />\n";
-				//echo $text['description-import_delimiter']."\n";
+				//echo $text['description-zzz']."\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				$x++;
 			}
-			
+
 			echo "		<tr>\n";
 			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
 			echo "				<input name='action' type='hidden' value='import'>\n";
@@ -171,314 +213,90 @@
 		exit;
 	}
 
+//get the parent table
+	function get_parent($schema,$table_name) {
+		foreach ($schema as $row) {
+			if ($row['table'] == $table_name) {
+				return $row['parent'];
+			}
+		}
+	}
+
 //upload the contact csv
 	if (file_exists($_SESSION['file']) && $action == 'import') {
 
+//form to match the fields to the column names
+require_once "resources/header.php";
 
-echo "<pre>\n";
-print_r($_POST);
-$fields = implode($delimiter, $_POST['fields']);
-echo $fields;
-echo "</pre>\n";
-exit;
+		//user selected fields
+			$fields = $_POST['fields'];
+			
+		//set the domain_uuid
+			$domain_uuid = $_SESSION['domain_uuid'];
 
-		//get the contents of the csv file
-			$handle = @fopen($file, "r");
+		//get the contents of the csv file and convert them into an array
+			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
-				$x = 0;
-				while (($line = fgets($handle, 4096)) !== false) {
-					if ($x == 0) {
+				//set the row id
+					$row_id = 0;
+				
+				//loop through the array
+					while (($line = fgets($handle, 4096)) !== false) {
 
-						//set the variables
-							/*
-							$contact_title = $data['Title'];
-							$contact_name_given = $data['FirstName'];
-							$contact_name_family = $data['LastName'];
-							$contact_organization = $data['Company'];
-							//$contact_email = $data['EmailAddress'];
-							$contact_note = $data['Notes'];
-							$contact_url = $data['Web Page'];
-
-							$address_array[$x]['address_street'] = $data['BusinessStreet'];
-							$address_array[$x]['address_locality'] = $data['BusinessCity'];
-							$address_array[$x]['address_region'] = $data['BusinessState'];
-							$address_array[$x]['address_postal_code'] = $data['BusinessPostalCode'];
-							$address_array[$x]['address_country'] = $data['BusinessCountry'];
-							$address_array[$x]['address_type'] = 'work';
-
-							$address_array[$x]['address_street'] = $data['HomeStreet'];
-							$address_array[$x]['address_locality'] = $data['HomeCity'];
-							$address_array[$x]['address_region'] = $data['HomeState'];
-							$address_array[$x]['address_postal_code'] = $data['HomePostalCode'];
-							$address_array[$x]['address_country'] = $data['HomeCountry'];
-							$address_array[$x]['address_type'] = 'home';
-
-							$address_array[$x]['address_street'] = $data['OtherStreet'];
-							$address_array[$x]['address_locality'] = $data['OtherCity'];
-							$address_array[$x]['address_region'] = $data['OtherState'];
-							$address_array[$x]['address_postal_code'] = $data['OtherPostalCode'];
-							$address_array[$x]['address_country'] = $data['OtherCountry'];
-
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessFax']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone2']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['CompanyMainPhone']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomeFax']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone2']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['MobilePhone']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherFax']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherPhone']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['Pager']);
-							$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['PrimaryPhone']);
-							*/
-
-						//set the column array
-							$column_array = str_getcsv($line, $delimiter, $enclosure);
-
-echo $line;
-print_r($column_array);
-exit;
-					}
-					else {
 						//format the data
 							$y = 0;
-							foreach ($column_array as $column) {
+							foreach ($fields as $key => $value) {
+								//get the line
 								$result = str_getcsv($line, $delimiter, $enclosure);
-								$data[$column] = $result[$y];
+								
+								//get the table and field name
+								$field_array = explode(".",$value);
+								$table_name = $field_array[0];
+								$field_name = $field_array[1];
+								//echo "value: $value<br />\n";
+								//echo "table_name: $table_name<br />\n";
+								//echo "field_name: $field_name<br />\n";
+								
+								//get the parent table name
+								$parent = get_parent($schema, $table_name);
+								
+								//remove formatting from the phone number
+								if ($field_name == "phone_number") {
+									$result[$key] = preg_replace('{\D}', '', $result[$key]);
+								}
+
+								//build the data array
+								if (strlen($parent) == 0) {
+									$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
+									$array[$table_name][$row_id][$field_name] = $result[$key];
+								}
+								else {
+									$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+									$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+								}
+
+								//increment
 								$y++;
 							}
 
-						//set the variables
-							//$contact_type = '';
-							$contact_title = $data['Title'];
-							$contact_name_given = $data['FirstName'];
-							$contact_name_family = $data['LastName'];
-							$contact_organization = $data['Company'];
-							//$contact_email = $data['EmailAddress'];
-							$contact_note = $data['Notes'];
-							$contact_url = $data['Web Page'];
-
-						//add the contact
-							$contact_uuid = uuid();
-							$sql = "insert into v_contacts ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "contact_uuid, ";
-							$sql .= "contact_type, ";
-							$sql .= "contact_organization, ";
-							$sql .= "contact_name_given, ";
-							$sql .= "contact_name_family, ";
-							//$sql .= "contact_nickname, ";
-							$sql .= "contact_title, ";
-							//$sql .= "contact_role, ";
-							$sql .= "contact_url, ";
-							//$sql .= "contact_time_zone, ";
-							$sql .= "contact_note ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'".$_SESSION['domain_uuid']."', ";
-							$sql .= "'$contact_uuid', ";
-							$sql .= "'$contact_type', ";
-							$sql .= "'$contact_organization', ";
-							$sql .= "'$contact_name_given', ";
-							$sql .= "'$contact_name_family', ";
-							//$sql .= "'$contact_nickname', ";
-							$sql .= "'$contact_title', ";
-							//$sql .= "'$contact_role', ";
-							$sql .= "'$contact_url', ";
-							//$sql .= "'$contact_time_zone', ";
-							$sql .= "'$contact_note' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
-
-						//add the contact addresses
-							$x=0;
-							if (strlen($data['BusinessStreet']) > 0 && strlen($data['BusinessCity']) > 0 && strlen($data['BusinessState']) > 0) {
-								$address_array[$x]['address_street'] = $data['BusinessStreet'];
-								$address_array[$x]['address_locality'] = $data['BusinessCity'];
-								$address_array[$x]['address_region'] = $data['BusinessState'];
-								$address_array[$x]['address_postal_code'] = $data['BusinessPostalCode'];
-								$address_array[$x]['address_country'] = $data['BusinessCountry'];
-								$address_array[$x]['address_type'] = 'work';
-								$x++;
-							}
-							if (strlen($data['HomeStreet']) > 0 && strlen($data['HomeCity']) > 0 && strlen($data['HomeState']) > 0) {
-								$address_array[$x]['address_street'] = $data['HomeStreet'];
-								$address_array[$x]['address_locality'] = $data['HomeCity'];
-								$address_array[$x]['address_region'] = $data['HomeState'];
-								$address_array[$x]['address_postal_code'] = $data['HomePostalCode'];
-								$address_array[$x]['address_country'] = $data['HomeCountry'];
-								$address_array[$x]['address_type'] = 'home';
-								$x++;
-							}
-							if (strlen($data['OtherStreet']) > 0 && strlen($data['OtherCity']) > 0 && strlen($data['OtherState']) > 0) {
-								$address_array[$x]['address_street'] = $data['OtherStreet'];
-								$address_array[$x]['address_locality'] = $data['OtherCity'];
-								$address_array[$x]['address_region'] = $data['OtherState'];
-								$address_array[$x]['address_postal_code'] = $data['OtherPostalCode'];
-								$address_array[$x]['address_country'] = $data['OtherCountry'];
-								$address_array[$x]['address_type'] = 'work';
-							}
-							foreach ($address_array as $row) {
-								$contact_address_uuid = uuid();
-								$sql = "insert into v_contact_addresses ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "contact_uuid, ";
-								$sql .= "contact_address_uuid, ";
-								$sql .= "address_type, ";
-								$sql .= "address_street, ";
-								//$sql .= "address_extended, ";
-								$sql .= "address_locality, ";
-								$sql .= "address_region, ";
-								$sql .= "address_postal_code, ";
-								$sql .= "address_country ";
-								//$sql .= "address_latitude, ";
-								//$sql .= "address_longitude ";
-								$sql .= ")";
-								$sql .= "values ";
-								$sql .= "(";
-								$sql .= "'".$_SESSION['domain_uuid']."', ";
-								$sql .= "'$contact_uuid', ";
-								$sql .= "'$contact_address_uuid', ";
-								$sql .= "'".$row['address_type']."', ";
-								$sql .= "'".$row['address_street']."', ";
-								//$sql .= "'$address_extended', ";
-								$sql .= "'".$row['address_locality']."', ";
-								$sql .= "'".$row['address_region']."', ";
-								$sql .= "'".$row['address_postal_code']."', ";
-								$sql .= "'".$row['address_country']."' ";
-								//$sql .= "'$address_latitude', ";
-								//$sql .= "'$address_longitude' ";
-								$sql .= ")";
-								$db->exec(check_sql($sql));
-								unset($sql);
-							}
-							unset($address_array);
-
-						//add the contact phone numbers
-							$x = 0;
-							if (strlen($data['BusinessFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessFax']);
-								$phone_array[$x]['phone_type_fax'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-fax'];
-								$phone_array[$x]['phone_description'] = $text['option-work'];
-								$x++;
-							}
-							if (strlen($data['BusinessPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-work'];
-								$x++;
-							}
-							if (strlen($data['BusinessPhone2']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone2']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-work'];
-								$x++;
-							}
-							if (strlen($data['CompanyMainPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['CompanyMainPhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-main'];
-								$x++;
-							}
-							if (strlen($data['HomeFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomeFax']);
-								$phone_array[$x]['phone_type_fax'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-fax'];
-								$phone_array[$x]['phone_description'] = $text['option-home'];
-								$x++;
-							}
-							if (strlen($data['HomePhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-home'];
-								$x++;
-							}
-							if (strlen($data['HomePhone2']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone2']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-home'];
-								$x++;
-							}
-							if (strlen($data['MobilePhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['MobilePhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-mobile'];
-								$x++;
-							}
-							if (strlen($data['OtherFax']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherFax']);
-								$phone_array[$x]['phone_type_fax'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-fax'];
-								$x++;
-							}
-							if (strlen($data['OtherPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherPhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-other'];
-								$x++;
-							}
-							if (strlen($data['Pager']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['Pager']);
-								$phone_array[$x]['phone_type_text'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-pager'];
-								$x++;
-							}
-							if (strlen($data['PrimaryPhone']) > 0) {
-								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['PrimaryPhone']);
-								$phone_array[$x]['phone_type_voice'] = 1;
-								$phone_array[$x]['phone_label'] = $text['option-main'];
-								$x++;
-							}
-							foreach ($phone_array as $row) {
-								$contact_phone_uuid = uuid();
-								$sql = "insert into v_contact_phones ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "contact_uuid, ";
-								$sql .= "contact_phone_uuid, ";
-								$sql .= "phone_type_voice, ";
-								$sql .= "phone_type_fax, ";
-								$sql .= "phone_type_video, ";
-								$sql .= "phone_type_text, ";
-								$sql .= "phone_label, ";
-								$sql .= "phone_number, ";
-								$sql .= "phone_description ";
-								$sql .= ")";
-								$sql .= "values ";
-								$sql .= "(";
-								$sql .= "'$domain_uuid', ";
-								$sql .= "'$contact_uuid', ";
-								$sql .= "'$contact_phone_uuid', ";
-								$sql .= (($row['phone_type_voice']) ? 1 : 0).", ";
-								$sql .= (($row['phone_type_fax']) ? 1 : 0).", ";
-								$sql .= (($row['phone_type_video']) ? 1 : 0).", ";
-								$sql .= (($row['phone_type_text']) ? 1 : 0).", ";
-								$sql .= "'".$row['phone_label']."', ";
-								$sql .= "'".$row['phone_number']."', ";
-								$sql .= "'".$row['phone_description']."' ";
-								$sql .= ")";
-								$db->exec(check_sql($sql));
-								unset($sql);
-							}
-							unset($phone_array);
-						//save the results into an array
-							$results[] = $data;
-						//clear the array
-							unset($data);
+						//increment row id
+							$row_id++;
 					}
-					//increment $x
-						$x++;
-				}
-				if (!feof($handle)) {
-					echo "Error: Unable to open the file.\n";
-				}
-				fclose($handle);
+					fclose($handle);
+
+				//save to the data
+					$database = new database;
+					$database->app_name = 'contacts';
+					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+					//if (strlen($contact_uuid) > 0) {
+					//	$database->uuid($contact_uuid);
+					//}
+					$database->save($array);
+					$message = $database->message;
+
+				//send the redirect header
+					header("Location: contacts.php");
+					return;
 			}
 
 		//show the header
@@ -621,4 +439,5 @@ exit;
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
