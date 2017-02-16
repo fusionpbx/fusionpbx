@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "conferences";
 		$apps[$x]['destinations'][$y]['name'] = "conferences";
@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "conference_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9f2a8c08-3e65-c41c-a716-3b53d42bc4d4";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -75,9 +75,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conferences";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conferences";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -133,9 +134,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to enable or disable the conference.";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conference_users";
+		$y=1;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_conferences";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
