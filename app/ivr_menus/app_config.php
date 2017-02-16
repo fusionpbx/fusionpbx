@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
@@ -51,7 +51,7 @@
 		//menu-play-sound
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "72259497-a67b-e5aa-cac2-0f2dcef16308";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -86,7 +86,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ce17d7af-650a-49c0-b3e4-3bb8c1dad566';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ivr_menu';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'option_add_rows';
@@ -105,9 +105,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_ivr_menus";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_ivr_menus";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "ivr_menu_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -240,10 +241,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-	//schema details
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_ivr_menu_options";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_ivr_menu_options";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_ivr_menus";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "ivr_menu_option_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
