@@ -21,23 +21,25 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "service_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "service_add";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "service_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "service_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "service_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "service_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_services";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_services";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "service_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
