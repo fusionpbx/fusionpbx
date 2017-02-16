@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "time_conditions";
 		$apps[$x]['destinations'][$y]['name'] = "time_conditions";
@@ -37,7 +37,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "time_condition_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -59,7 +59,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		//define region presets
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'c8cbb0eb-850b-4afd-a918-cceaf8af3957';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'time_conditions';
