@@ -23,16 +23,20 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('voicemail_add') || permission_exists('voicemail_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('voicemail_add') || permission_exists('voicemail_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -206,11 +210,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= ") ";
 					$sql .= "values ";
 					foreach ($voicemail_options as $index => $voicemail_option) {
+
+						//set the uuid
 						$voicemail_option_uuid = uuid();
-						//seperate the action and the param
-						$option_array = explode(":", $voicemail_option["voicemail_option_param"]);
-						$voicemail_option['voicemail_option_action'] = array_shift($option_array);
-						$voicemail_option['voicemail_option_param'] = join(':', $option_array);
+						
+						if (is_numeric($voicemail_option["voicemail_option_param"])) {
+							//if numeric then add tranfer $1 XML domain_name
+							$voicemail_option['voicemail_option_action'] = "menu-exec-app";
+							$voicemail_option['voicemail_option_param'] = "transfer ".$voicemail_option["voicemail_option_param"]." XML ".$_SESSION['domain_name'];
+						}
+						else {
+							//seperate the action and the param
+							$option_array = explode(":", $voicemail_option["voicemail_option_param"]);
+							$voicemail_option['voicemail_option_action'] = array_shift($option_array);
+							$voicemail_option['voicemail_option_param'] = join(':', $option_array);
+						}
+
 						//continue building insert query
 						$sql_record[$index] = "( ";
 						$sql_record[$index] .= "'".$voicemail_option_uuid."', ";
