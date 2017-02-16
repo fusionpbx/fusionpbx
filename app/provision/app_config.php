@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Provision";
 		$apps[$x]['uuid'] = "abf28ead-92ef-3de6-ebbb-023fbc2b6dd3";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -17,7 +17,7 @@
 		//$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '931f9369-9aac-4620-8d4b-7d2bf642b1d2';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'enabled';
