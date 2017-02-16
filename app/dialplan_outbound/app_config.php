@@ -21,26 +21,27 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "outbound_route_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "17e14094-1d57-1106-db2a-a787d34015e9";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "outbound_route_add";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "outbound_route_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "outbound_route_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][4]['name'] = "outbound_route_copy";
-		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][5]['name'] = "outbound_route_any_gateway";
-		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][5]['description'] = "Add outbound routes for any gateways on any domain.";
-
-		$apps[$x]['permissions'][6]['name'] = "outbound_route_toll_allow_lua";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "17e14094-1d57-1106-db2a-a787d34015e9";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_copy";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_any_gateway";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['description'] = "Add outbound routes for any gateways on any domain.";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_toll_allow_lua";
 
 ?>
