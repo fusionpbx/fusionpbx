@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "domain_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "4fa7e90b-6d6c-12d4-712f-62857402b801";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -58,9 +58,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_domains";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_domains";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;	
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
@@ -93,9 +94,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_domain_settings";
+		$y=1;
+		$apps[$x]['db'][$y]['table']['name'] = "v_domain_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_domains";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
