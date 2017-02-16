@@ -11,7 +11,7 @@
 		$apps[$x]['description']['en-us'] = '';
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_profile_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
@@ -50,9 +50,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_conference_profiles';
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_profiles";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_profile_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -71,9 +72,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_conference_profile_params';
+		$y=1;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_profile_params";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_conference_profiles";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_profile_param_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -104,4 +106,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
+
 ?>
