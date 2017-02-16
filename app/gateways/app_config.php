@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "gateways";
 		$apps[$x]['destinations'][$y]['name'] = "gateways";
@@ -39,7 +39,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}@\${domain_name} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -57,9 +57,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_gateways";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_gateways";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "gateway_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
