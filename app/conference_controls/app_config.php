@@ -11,7 +11,7 @@
 		$apps[$x]['description']['en-us'] = '';
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_control_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
@@ -50,9 +50,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_conference_controls';
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_controls";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_control_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -74,9 +75,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Entre com a descrição.';
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_conference_control_details';
+		$y=1;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_control_details";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_conference_controls";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_control_detail_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -111,4 +113,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Set the status of the control.';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = 'Estababelece o estado do controle.';
 		$z++;
+
 ?>
