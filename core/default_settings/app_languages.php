@@ -505,6 +505,6 @@ $text['button-toggle']['de-at'] = "Umschalten";
 $text['button-toggle']['ro'] = "Comutare";
 $text['button-toggle']['fa'] = "";
 $text['button-toggle']['ar-eg'] = "تبديل";
-$text['button-toggle']['it-it'] = "Botton";
+$text['button-toggle']['it-it'] = "Bottone";
 
 ?>
