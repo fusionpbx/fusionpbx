@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Account Settings";
 		$apps[$x]['uuid'] = "3a3337f7-78d1-23e3-0cfd-f14499b8ed97";
@@ -19,15 +20,16 @@
 		$apps[$x]['description']['pt-br'] = "Configurações das contas podem ser alteradas pelo usuário.";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "user_account_setting_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
-		$apps[$x]['permissions'][0]['groups'][] = "user";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "user_account_setting_edit";
-		$apps[$x]['permissions'][1]['groups'][] = "user";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "user_account_setting_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "user_account_setting_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>
