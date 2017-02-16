@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "setting_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "148ea42a-3711-3d64-181b-07a6a3c3ed60";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -36,9 +36,10 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_settings";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "setting_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
