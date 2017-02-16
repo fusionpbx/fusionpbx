@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "8f80e71a-31a5-6432-47a0-7f5a7b271f05";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
@@ -62,7 +62,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'dbbadd02-f95d-480b-85d5-2a4113d4cccc';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'cdr';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'format';
@@ -96,9 +96,10 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_xml_cdr";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_xml_cdr";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
