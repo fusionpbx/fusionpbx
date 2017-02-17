@@ -4,11 +4,13 @@ $text['title-user_setting-edit']['en-us'] = "User Setting";
 $text['title-user_setting-edit']['es-cl'] = "Configuración de Usuario";
 $text['title-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
 $text['title-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+$text['title-user_setting-edit']['it-it'] = "Impostazioni utente";
 
 $text['title-user_setting-add']['en-us'] = "User Setting Add";
 $text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
 $text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+$text['title-user_setting-add']['it-it'] = "Aggiungi Impostazione Utente";
 
 $text['title-user_manager']['en-us'] = "User Manager";
 $text['title-user_manager']['es-cl'] = "Administración de Usuarios";
@@ -20,6 +22,7 @@ $text['title-user_manager']['sv-se'] = "Användar Inställningar";
 $text['title-user_manager']['ro'] = "";
 $text['title-user_manager']['de-at'] = "Benutzerverwaltung";
 $text['title-user_manager']['he'] = "מנהל משתמש";
+$text['title-user_manager']['it-it'] = "Gestione Utenti";
 
 $text['title-user_edit']['en-us'] = "User";
 $text['title-user_edit']['es-cl'] = "Editar Usuario";
@@ -31,6 +34,7 @@ $text['title-user_edit']['sv-se'] = "Användare";
 $text['title-user_edit']['ro'] = "Utilizator";
 $text['title-user_edit']['de-at'] = "Benutzer";
 $text['title-user_edit']['he'] = "משתמש";
+$text['title-user_edit']['it-it'] = "Utente";
 
 $text['title-user_add']['en-us'] = "User";
 $text['title-user_add']['es-cl'] = "Agregar Usuario";
@@ -42,6 +46,7 @@ $text['title-user_add']['sv-se'] = "Användare";
 $text['title-user_add']['ro'] = "Utilizator";
 $text['title-user_add']['de-at'] = "Benutzer";
 $text['title-user_add']['he'] = "משתמש";
+$text['title-user_add']['it-it'] = "Utente";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
@@ -53,6 +58,7 @@ $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['ro'] = "";
 $text['option-true']['de-at'] = "Ein";
 $text['option-true']['he'] = "חוקי";
+$text['option-true']['it-it'] = "Vero";
 
 $text['option-on_break']['en-us'] = "On Break";
 $text['option-on_break']['es-cl'] = "En Pausa";
@@ -64,6 +70,7 @@ $text['option-on_break']['sv-se'] = "På Rast";
 $text['option-on_break']['ro'] = "În pauză";
 $text['option-on_break']['de-at'] = "In Pause";
 $text['option-on_break']['he'] = "בהפסקה";
+$text['option-on_break']['it-it'] = "In Pausa";
 
 $text['option-logged_out']['en-us'] = "Logged Out";
 $text['option-logged_out']['es-cl'] = "Desconectado";
@@ -75,6 +82,7 @@ $text['option-logged_out']['sv-se'] = "Utloggad";
 $text['option-logged_out']['ro'] = "";
 $text['option-logged_out']['de-at'] = "Abgemeldet";
 $text['option-logged_out']['he'] = "התנתק";
+$text['option-logged_out']['it-it'] = "Scollegato";
 
 $text['option-global']['en-us'] = "Global";
 $text['option-global']['es-cl'] = "Global";
@@ -86,6 +94,7 @@ $text['option-global']['sv-se'] = "Global";
 $text['option-global']['ro'] = "Global";
 $text['option-global']['de-at'] = "Global";
 $text['option-global']['he'] = "כללי";
+$text['option-global']['it-it'] = "Globale";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "Falso";
@@ -97,6 +106,7 @@ $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['ro'] = "";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['he'] = "לא חוקי";
+$text['option-false']['it-it'] = "Falso";
 
 $text['option-do_not_disturb']['en-us'] = "Do Not Disturb";
 $text['option-do_not_disturb']['es-cl'] = "No Molestar";
@@ -108,6 +118,7 @@ $text['option-do_not_disturb']['sv-se'] = "Stör Ej";
 $text['option-do_not_disturb']['ro'] = "";
 $text['option-do_not_disturb']['de-at'] = "Bitte nicht stören";
 $text['option-do_not_disturb']['he'] = "נא לא להפריע";
+$text['option-do_not_disturb']['it-it'] = "Non Disturbare";
 
 $text['option-available_on_demand']['en-us'] = "Available (On Demand)";
 $text['option-available_on_demand']['es-cl'] = "Disponible (A Pedido)";
@@ -119,6 +130,7 @@ $text['option-available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['option-available_on_demand']['ro'] = "";
 $text['option-available_on_demand']['de-at'] = "Verfügbar (auf Anfrage)";
 $text['option-available_on_demand']['he'] = "זמין (לפי דרישה(";
+$text['option-available_on_demand']['it-it'] = "Disponibile (Su Richiesta)";
 
 $text['option-available']['en-us'] = "Available";
 $text['option-available']['es-cl'] = "Disponible";
@@ -130,6 +142,7 @@ $text['option-available']['sv-se'] = "Tillgänglig";
 $text['option-available']['ro'] = "";
 $text['option-available']['de-at'] = "Verfügbar";
 $text['option-available']['he'] = "זמין";
+$text['option-available']['it-it'] = "Disponbile";
 
 $text['message-username_exists']['en-us'] = "Username Already Exists";
 $text['message-username_exists']['es-cl'] = "Ya existe Nombre de usuario";
@@ -141,6 +154,7 @@ $text['message-username_exists']['sv-se'] = "Användarnamnet Existerar Redan";
 $text['message-username_exists']['ro'] = "";
 $text['message-username_exists']['de-at'] = "Benutzername existiert bereits";
 $text['message-username_exists']['he'] = "שם משתמש כבר קיים";
+$text['message-username_exists']['it-it'] = "L'username esiste già";
 
 $text['message-password_mismatch']['en-us'] = "Password Mismatch";
 $text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
@@ -152,6 +166,7 @@ $text['message-password_mismatch']['sv-se'] = "Lösenordet Stämmer Inte";
 $text['message-password_mismatch']['ro'] = "";
 $text['message-password_mismatch']['de-at'] = "Passwörter stimmen nicht überein.";
 $text['message-password_mismatch']['he'] = "הסיסמא לא נכונה";
+$text['message-password_mismatch']['it-it'] = "Le Password non coincidono";
 
 $text['message-password_blank']['en-us'] = "Invalid Password";
 $text['message-password_blank']['es-cl'] = "Contraseña No Válida";
@@ -163,6 +178,7 @@ $text['message-password_blank']['sv-se'] = "Ogiltigt Lösenord";
 $text['message-password_blank']['ro'] = "";
 $text['message-password_blank']['de-at'] = "Falsches Passwort";
 $text['message-password_blank']['he'] = "סיסמא לא קיימת";
+$text['message-password_blank']['it-it'] = "Password non valida";
 
 $text['message-password_requirements']['en-us'] = "Password Requirements";
 $text['message-password_requirements']['es-cl'] = "Requisitos de Contraseña";
@@ -174,6 +190,7 @@ $text['message-password_requirements']['sv-se'] = "lösenordskrav ";
 $text['message-password_requirements']['ro'] = "Cerințe privind parola";
 $text['message-password_requirements']['de-at'] = "Kennwortanforderungen ";
 $text['message-password_requirements']['he'] = "דרישות סיסמא";
+$text['message-password_requirements']['it-it'] = "Requisiti Password";
 
 $text['message-maximum_users']['en-us'] = "Maximum Users:";
 $text['message-maximum_users']['es-cl'] = "Usuarios Máximo Permitido:";
@@ -185,6 +202,7 @@ $text['message-maximum_users']['sv-se'] = "Max Antal Användare:";
 $text['message-maximum_users']['ro'] = "";
 $text['message-maximum_users']['de-at'] = "Maximale Anzahl an Benutzern:";
 $text['message-maximum_users']['he'] = "מקסימום משתמשים";
+$text['message-maximum_users']['it-it'] = "Utenti massimi:";
 
 $text['message-copy']['en-us'] = "Copy Completed";
 $text['message-copy']['es-cl'] = "Copia Completada";
@@ -196,6 +214,7 @@ $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['ro'] = "Copiere completă";
 $text['message-copy']['de-at'] = "Kopieren erfolgreich";
 $text['message-copy']['he'] = "העתקה הושלמה";
+$text['message-copy']['it-it'] = "Copia Completata";
 
 $text['message-cannot_delete_own_account']['en-us'] = "You cannot delete your own user account. Please login as a different user, then try again.";
 $text['message-cannot_delete_own_account']['es-cl'] = "No se puede eliminar su propia cuenta de usuario. Por favor, iniciar sesión como un usuario diferente, vuelva a intentarlo.";
@@ -207,6 +226,7 @@ $text['message-cannot_delete_own_account']['sv-se'] = "Du kan inte ta bort ditt 
 $text['message-cannot_delete_own_account']['ro'] = "";
 $text['message-cannot_delete_own_account']['de-at'] = "Sie können nicht ihren eigenen Benutzer löschen. Bitte melden Sie sich mit einem anderen Benutzer an und versuchen Sie es erneut.";
 $text['message-cannot_delete_own_account']['he'] = "";
+$text['message-cannot_delete_own_account']['it-it'] = "Non puoi cancellare il tuo account. Per favore loggati con un utente differente e riprova.";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['es-cl'] = "Fuentes web";
@@ -221,6 +241,7 @@ $text['label-web_fonts']['de-at'] = "Web Fonts";
 $text['label-web_fonts']['ro'] = "Fonturi web";
 $text['label-web_fonts']['fa'] = "";
 $text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
+$text['label-web_fonts']['it-it'] = "Caratteri Web";
 
 $text['label-username']['en-us'] = "Username";
 $text['label-username']['es-cl'] = "Nombre de usuario";
@@ -232,6 +253,7 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['ro'] = "Utilizator";
 $text['label-username']['de-at'] = "Benutzername";
 $text['label-username']['he'] = "שם משתמש";
+$text['label-username']['it-it'] = "Nome Utente";
 
 $text['label-user_language']['en-us'] = "Language";
 $text['label-user_language']['es-cl'] = "Lengua";
@@ -243,6 +265,7 @@ $text['label-user_language']['sv-se'] = "Språk";
 $text['label-user_language']['ro'] = "Limbă";
 $text['label-user_language']['de-at'] = "Sprache";
 $text['label-user_language']['he'] = "שפה";
+$text['label-user_language']['it-it'] = "Lingua";
 
 $text['label-user_info']['en-us'] = "User Info";
 $text['label-user_info']['es-cl'] = "Información de Usuario";
@@ -254,6 +277,7 @@ $text['label-user_info']['sv-se'] = "Användar Info";
 $text['label-user_info']['ro'] = "";
 $text['label-user_info']['de-at'] = "Benutzer Information";
 $text['label-user_info']['he'] = "פרטי משתמש";
+$text['label-user_info']['it-it'] = "Informazioni Utente";
 
 $text['label-uppercase_letters']['en-us'] = "Uppercase Letters";
 $text['label-uppercase_letters']['es-cl'] = "Letras mayúsculas";
@@ -268,6 +292,7 @@ $text['label-uppercase_letters']['de-at'] = "Großbuchstaben";
 $text['label-uppercase_letters']['ro'] = "Litere mari";
 $text['label-uppercase_letters']['fa'] = "";
 $text['label-uppercase_letters']['ar-eg'] = "الأحرف الكبيرة";
+$text['label-uppercase_letters']['it-it'] = "Lettere Maiuscole";
 
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['es-cl'] = "encima";
@@ -282,6 +307,7 @@ $text['label-top']['de-at'] = "Oben";
 $text['label-top']['ro'] = "Top";
 $text['label-top']['fa'] = "";
 $text['label-top']['ar-eg'] = "أعلى";
+$text['label-top']['it-it'] = "Inizio";
 
 $text['label-time_zone']['en-us'] = "Time Zone";
 $text['label-time_zone']['es-cl'] = "Zona Horaria";
@@ -293,6 +319,7 @@ $text['label-time_zone']['sv-se'] = "Tidszon";
 $text['label-time_zone']['ro'] = "";
 $text['label-time_zone']['de-at'] = "Zeitzone";
 $text['label-time_zone']['he'] = "אזור זמן";
+$text['label-time_zone']['it-it'] = "Fuso Orario";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['es-cl'] = "Texto";
@@ -307,6 +334,7 @@ $text['label-text']['de-at'] = "Text";
 $text['label-text']['ro'] = "Text";
 $text['label-text']['fa'] = "";
 $text['label-text']['ar-eg'] = "نص";
+$text['label-text']['it-it'] = "Testo";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -318,6 +346,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['ro'] = "Stare";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['he'] = "סטטוס";
+$text['label-status']['it-it'] = "Stato";
 
 $text['label-static']['en-us'] = "Static";
 $text['label-static']['es-cl'] = "Estático";
@@ -332,6 +361,7 @@ $text['label-static']['de-at'] = "Statisch";
 $text['label-static']['ro'] = "Static";
 $text['label-static']['fa'] = "";
 $text['label-static']['ar-eg'] = "ساكن";
+$text['label-static']['it-it'] = "Statico";
 
 $text['label-special_characters']['en-us'] = "Special Characters";
 $text['label-special_characters']['es-cl'] = "Caracteres especiales";
@@ -346,6 +376,7 @@ $text['label-special_characters']['de-at'] = "Spezielle Charaktere";
 $text['label-special_characters']['ro'] = "caractere speciale";
 $text['label-special_characters']['fa'] = "";
 $text['label-special_characters']['ar-eg'] = "أحرف خاصة";
+$text['label-special_characters']['it-it'] = "Caratteri Speciali";
 
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['es-cl'] = "Derecha";
@@ -360,6 +391,7 @@ $text['label-right']['de-at'] = "Recht";
 $text['label-right']['ro'] = "Dreapta";
 $text['label-right']['fa'] = "";
 $text['label-right']['ar-eg'] = "حق";
+$text['label-right']['it-it'] = "Destra";
 
 $text['label-reference']['en-us'] = "See";
 $text['label-reference']['es-cl'] = "Referencia";
@@ -374,6 +406,7 @@ $text['label-reference']['de-at'] = "Referenz";
 $text['label-reference']['ro'] = "Referinţă";
 $text['label-reference']['fa'] = "";
 $text['label-reference']['ar-eg'] = "مرجع";
+$text['label-reference']['it-it'] = "Visualizza";
 
 $text['label-permission_permissions']['en-us'] = "Permissions";
 $text['label-permission_permissions']['es-cl'] = "Permisos";
@@ -385,6 +418,7 @@ $text['label-permission_permissions']['sv-se'] = "Rättigheter";
 $text['label-permission_permissions']['ro'] = "";
 $text['label-permission_permissions']['de-at'] = "Berechtigungen";
 $text['label-permission_permissions']['he'] = "הרשאות";
+$text['label-permission_permissions']['it-it'] = "Permessi";
 
 $text['label-permission_description']['en-us'] = "Description";
 $text['label-permission_description']['es-cl'] = "Descripción";
@@ -396,6 +430,7 @@ $text['label-permission_description']['sv-se'] = "Beskrivning";
 $text['label-permission_description']['ro'] = "";
 $text['label-permission_description']['de-at'] = "Beschreibung";
 $text['label-permission_description']['he'] = "תאור";
+$text['label-permission_description']['it-it'] = "Descrizione";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['es-cl'] = "Contraseña";
@@ -407,6 +442,7 @@ $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['ro'] = "Parolă";
 $text['label-password']['de-at'] = "Passwort";
 $text['label-password']['he'] = "סיסמה";
+$text['label-password']['it-it'] = "Password";
 
 $text['label-other']['en-us'] = "Other";
 $text['label-other']['es-cl'] = "Otro";
@@ -418,6 +454,7 @@ $text['label-other']['uk'] = "";
 $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['de-at'] = "Andere";
 $text['label-other']['he'] = "אחר";
+$text['label-other']['it-it'] = "Altro";
 
 $text['label-numbers']['en-us'] = "Numbers";
 $text['label-numbers']['es-cl'] = "Números";
@@ -432,6 +469,7 @@ $text['label-numbers']['de-at'] = "Nummern";
 $text['label-numbers']['ro'] = "numere";
 $text['label-numbers']['fa'] = "";
 $text['label-numbers']['ar-eg'] = "أرقام";
+$text['label-numbers']['it-it'] = "Numeri";
 
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguna";
@@ -446,6 +484,7 @@ $text['label-none']['de-at'] = "Keiner";
 $text['label-none']['ro'] = "Nici unul";
 $text['label-none']['fa'] = "";
 $text['label-none']['ar-eg'] = "لا شيء";
+$text['label-none']['it-it'] = "Nessuno";
 
 $text['label-lowercase_letters']['en-us'] = "Lowercase Letters";
 $text['label-lowercase_letters']['es-cl'] = "Letras minusculas";
@@ -460,6 +499,7 @@ $text['label-lowercase_letters']['de-at'] = "Kleinbuchstaben";
 $text['label-lowercase_letters']['ro'] = "Litere mici";
 $text['label-lowercase_letters']['fa'] = "";
 $text['label-lowercase_letters']['ar-eg'] = "أحرف صغيرة";
+$text['label-lowercase_letters']['it-it'] = "Lettere minuscole";
 
 $text['label-left']['en-us'] = "Left";
 $text['label-left']['es-cl'] = "Izquierda";
@@ -474,6 +514,7 @@ $text['label-left']['de-at'] = "Links";
 $text['label-left']['ro'] = "Stânga";
 $text['label-left']['fa'] = "";
 $text['label-left']['ar-eg'] = "اليسار";
+$text['label-left']['it-it'] = "Sinistra";
 
 $text['label-last_name']['en-us'] = "Last Name";
 $text['label-last_name']['es-cl'] = "Apellido";
@@ -485,6 +526,7 @@ $text['label-last_name']['sv-se'] = "Efternamn";
 $text['label-last_name']['ro'] = "";
 $text['label-last_name']['de-at'] = "Nachname";
 $text['label-last_name']['he'] = "שם משפחה";
+$text['label-last_name']['it-it'] = "Cognome";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['es-cl'] = "En línea";
@@ -499,6 +541,7 @@ $text['label-inline']['de-at'] = "In der Reihe";
 $text['label-inline']['ro'] = "In linie";
 $text['label-inline']['fa'] = "";
 $text['label-inline']['ar-eg'] = "في النسق";
+$text['label-inline']['it-it'] = "In linea";
 
 $text['label-image']['en-us'] = "Image";
 $text['label-image']['es-cl'] = "Imagen";
@@ -513,6 +556,7 @@ $text['label-image']['de-at'] = "Image";
 $text['label-image']['ro'] = "Imagine";
 $text['label-image']['fa'] = "";
 $text['label-image']['ar-eg'] = "صورة";
+$text['label-image']['it-it'] = "Immagine";
 
 $text['label-groups']['en-us'] = "Groups";
 $text['label-groups']['es-cl'] = "Grupos";
@@ -524,6 +568,7 @@ $text['label-groups']['sv-se'] = "Grupper";
 $text['label-groups']['ro'] = "";
 $text['label-groups']['de-at'] = "Gruppen";
 $text['label-groups']['he'] = "קבוצות";
+$text['label-groups']['it-it'] = "Gruppi";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['es-cl'] = "Grupo";
@@ -535,6 +580,7 @@ $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['ro'] = "";
 $text['label-group']['de-at'] = "Gruppe";
 $text['label-group']['he'] = "קבוצה";
+$text['label-group']['it-it'] = "Gruppo";
 
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['es-cl'] = "Global";
@@ -546,6 +592,7 @@ $text['label-global']['sv-se'] = "Global";
 $text['label-global']['ro'] = "";
 $text['label-global']['de-at'] = "Global";
 $text['label-global']['he'] = "כללי";
+$text['label-global']['it-it'] = "Globale";
 
 $text['label-fixed']['en-us'] = "Fixed";
 $text['label-fixed']['es-cl'] = "Fijo";
@@ -560,6 +607,7 @@ $text['label-fixed']['de-at'] = "fest";
 $text['label-fixed']['ro'] = "Fix";
 $text['label-fixed']['fa'] = "";
 $text['label-fixed']['ar-eg'] = "ثابت";
+$text['label-fixed']['it-it'] = "Fisso";
 
 $text['label-first_name']['en-us'] = "First Name";
 $text['label-first_name']['es-cl'] = "Nombre";
@@ -571,6 +619,7 @@ $text['label-first_name']['sv-se'] = "Förnamn";
 $text['label-first_name']['ro'] = "";
 $text['label-first_name']['de-at'] = "Vorname";
 $text['label-first_name']['he'] = "שם";
+$text['label-first_name']['it-it'] = "Nome";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "Email";
@@ -582,6 +631,7 @@ $text['label-email']['sv-se'] = "E-post";
 $text['label-email']['ro'] = "";
 $text['label-email']['de-at'] = "Email";
 $text['label-email']['he'] = "אימייל";
+$text['label-email']['it-it'] = "Email";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -593,6 +643,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['ro'] = "Domeniu";
 $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['he'] = "תחום";
+$text['label-domain']['it-it'] = "Dominio";
 
 $text['label-contact']['en-us'] = "Contact";
 $text['label-contact']['es-cl'] = "Contacto";
@@ -604,6 +655,7 @@ $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['ro'] = "";
 $text['label-contact']['de-at'] = "Kontakt";
 $text['label-contact']['he'] = "איש קשר";
+$text['label-contact']['it-it'] = "Contatto";
 
 $text['label-confirm_password']['en-us'] = "Confirm Password";
 $text['label-confirm_password']['es-cl'] = "Confirme Contraseña";
@@ -615,6 +667,7 @@ $text['label-confirm_password']['sv-se'] = "Bekräfta Lösenord";
 $text['label-confirm_password']['ro'] = "";
 $text['label-confirm_password']['de-at'] = "Passwort bestätigen";
 $text['label-confirm_password']['he'] = "אשר סיסמא";
+$text['label-confirm_password']['it-it'] = "Conferma Password";
 
 $text['label-company_name']['en-us'] = "Company Name";
 $text['label-company_name']['es-cl'] = "Nombre de la Compañia";
@@ -626,6 +679,7 @@ $text['label-company_name']['sv-se'] = "Företags Namn";
 $text['label-company_name']['ro'] = "";
 $text['label-company_name']['de-at'] = "Firmenname";
 $text['label-company_name']['he'] = "שם חברה";
+$text['label-company_name']['it-it'] = "Nome Azienda";
 
 $text['label-characters']['en-us'] = "Characters";
 $text['label-characters']['es-cl'] = "Caracteres";
@@ -640,6 +694,7 @@ $text['label-characters']['de-at'] = "Figuren";
 $text['label-characters']['ro'] = "caractere";
 $text['label-characters']['fa'] = "";
 $text['label-characters']['ar-eg'] = "الشخصيات";
+$text['label-characters']['it-it'] = "Caratteri";
 
 $text['label-center']['en-us'] = "Center";
 $text['label-center']['es-cl'] = "Centrar";
@@ -654,6 +709,7 @@ $text['label-center']['de-at'] = "Center";
 $text['label-center']['ro'] = "Centru";
 $text['label-center']['fa'] = "";
 $text['label-center']['ar-eg'] = "مركز";
+$text['label-center']['it-it'] = "Centro";
 
 $text['label-bottom']['en-us'] = "Bottom";
 $text['label-bottom']['es-cl'] = "Fondo";
@@ -668,6 +724,7 @@ $text['label-bottom']['de-at'] = "Boden";
 $text['label-bottom']['ro'] = "Fund";
 $text['label-bottom']['fa'] = "";
 $text['label-bottom']['ar-eg'] = "أسفل";
+$text['label-bottom']['it-it'] = "Fondo";
 
 $text['label-api_key']['en-us'] = "API Key";
 $text['label-api_key']['es-cl'] = "API Key";
@@ -679,6 +736,7 @@ $text['label-api_key']['sv-se'] = "API Nyckel";
 $text['label-api_key']['ro'] = "";
 $text['label-api_key']['de-at'] = "API Key";
 $text['label-api_key']['he'] = "";
+$text['label-api_key']['it-it'] = "API Key";
 
 $text['label-additional_info']['en-us'] = "Additional Info";
 $text['label-additional_info']['es-cl'] = "Información Adicional";
@@ -690,6 +748,7 @@ $text['label-additional_info']['sv-se'] = "Ytterligare Info";
 $text['label-additional_info']['ro'] = "";
 $text['label-additional_info']['de-at'] = "Zusätzliche Information";
 $text['label-additional_info']['he'] = "מידע נוסף";
+$text['label-additional_info']['it-it'] = "Informazioni Aggiuntive";
 
 $text['label-24-hour']['en-us'] = "24-Hour";
 $text['label-24-hour']['es-cl'] = "24 horas";
@@ -704,6 +763,7 @@ $text['label-24-hour']['de-at'] = "24 Stunden";
 $text['label-24-hour']['ro'] = "24 de ore";
 $text['label-24-hour']['fa'] = "";
 $text['label-24-hour']['ar-eg'] = "24 ساعة";
+$text['label-24-hour']['it-it'] = "24-Ore";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
 $text['label-12-hour']['es-cl'] = "12 horas";
@@ -718,16 +778,19 @@ $text['label-12-hour']['de-at'] = "12 Stunden";
 $text['label-12-hour']['ro'] = "12 de ore";
 $text['label-12-hour']['fa'] = "";
 $text['label-12-hour']['ar-eg'] = "12 ساعة";
+$text['label-12-hour']['it-it'] = "12-Ore";
 
 $text['header-user_setting-edit']['en-us'] = "User Setting";
 $text['header-user_setting-edit']['es-cl'] = "Configuración de Usuario";
 $text['header-user_setting-edit']['pt-pt'] = "Definição do Utilizador";
 $text['header-user_setting-edit']['fr-fr'] = "Cadre de l'utilisateur";
+$text['header-user_setting-edit']['it-it'] = "Impostazione Utente";
 
 $text['header-user_setting-add']['en-us'] = "User Setting Add";
 $text['header-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
 $text['header-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['header-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
+$text['header-user_setting-add']['it-it'] = "Aggiungi Impostazione Utente";
 
 $text['header-user_manager']['en-us'] = "Users";
 $text['header-user_manager']['es-cl'] = "Administración de Usuario";
@@ -739,6 +802,7 @@ $text['header-user_manager']['sv-se'] = "Användar Inställningar";
 $text['header-user_manager']['ro'] = "";
 $text['header-user_manager']['de-at'] = "Benutzerverwaltung";
 $text['header-user_manager']['he'] = "מנהל משתמש";
+$text['header-user_manager']['it-it'] = "Utenti";
 
 $text['header-user_edit']['en-us'] = "User";
 $text['header-user_edit']['es-cl'] = "Editar Usuario";
@@ -750,6 +814,7 @@ $text['header-user_edit']['sv-se'] = "Användare";
 $text['header-user_edit']['ro'] = "";
 $text['header-user_edit']['de-at'] = "Benutzer";
 $text['header-user_edit']['he'] = "משתמש";
+$text['header-user_edit']['it-it'] = "Utente";
 
 $text['header-user_add']['en-us'] = "User";
 $text['header-user_add']['es-cl'] = "Agregar Usuario";
@@ -761,16 +826,19 @@ $text['header-user_add']['sv-se'] = "Användare";
 $text['header-user_add']['ro'] = "";
 $text['header-user_add']['de-at'] = "Benutzer";
 $text['header-user_add']['he'] = "משתמש";
+$text['header-user_add']['it-it'] = "Utente";
 
 $text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
 $text['description-user_setting-edit']['es-cl'] = "Editar un escenario de este usuario.";
 $text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
 $text['description-user_setting-edit']['fr-fr'] = "Modifier un réglage pour cet utilisateur.";
+$text['description-user_setting-edit']['it-it'] = "Modifica le impostazioni di questo utente.";
 
 $text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
 $text['description-user_setting-add']['es-cl'] = "Añadir un entorno para este usuario.";
 $text['description-user_setting-add']['pt-pt'] = "Adicionar uma definição para esse usuário.";
 $text['description-user_setting-add']['fr-fr'] = "Ajouter un cadre pour cet utilisateur.";
+$text['description-user_setting-add']['it-it'] = "Aggiungi una impostazione per questo utente.";
 
 $text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-user_manager']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";
@@ -782,6 +850,7 @@ $text['description-user_manager']['sv-se'] = "Lägg Till, editera, ta bort och s
 $text['description-user_manager']['ro'] = "";
 $text['description-user_manager']['de-at'] = "Benutzer anlegen, editieren, löschen und suchen.";
 $text['description-user_manager']['he'] = "הוסף, ערוך, מחק וחפש משתמשים";
+$text['description-user_manager']['it-it'] = "Aggiungi, modifica, cancella e cerca utenti. ";
 
 $text['description-user_language']['en-us'] = "Select the language.";
 $text['description-user_language']['es-cl'] = "Seleccione el idioma.";
@@ -793,6 +862,7 @@ $text['description-user_language']['sv-se'] = "Välj Språk";
 $text['description-user_language']['ro'] = "Selecție limbă";
 $text['description-user_language']['de-at'] = "Sprache auswählen";
 $text['description-user_language']['he'] = "בחר שפה";
+$text['description-user_language']['it-it'] = "Seleziona la lingua.";
 
 $text['description-user_edit']['en-us'] = "Edit user information and group membership. ";
 $text['description-user_edit']['es-cl'] = "Editar información del usuario y pertenencia al grupo. ";
@@ -804,6 +874,7 @@ $text['description-user_edit']['sv-se'] = "Meditera användarinformation och gru
 $text['description-user_edit']['ro'] = "";
 $text['description-user_edit']['de-at'] = "Benutzerinformationen und Gruppen verwalten.";
 $text['description-user_edit']['he'] = "ערוך פרטי משתמש ושיוך לקבוצה";
+$text['description-user_edit']['it-it'] = "Modifica le informazioni dell'utente e l'appartenenza al gruppo. ";
 
 $text['description-user_add']['en-us'] = "To add a user, please fill out this form completely. All fields are required. ";
 $text['description-user_add']['es-cl'] = "Para agregar un usuario, por favor llene completamente el siguiente formulario. Todos los campos son obligatorios. ";
@@ -815,6 +886,7 @@ $text['description-user_add']['sv-se'] = "För att lägga till en användare, fy
 $text['description-user_add']['ro'] = "";
 $text['description-user_add']['de-at'] = "Um einen Benutzer anzulegen, füllen Sie bitte dieses Formular komplett aus. Alle Felder sind erforderlich.";
 $text['description-user_add']['he'] = "בכדי להוסיף משתמש, אנא הכנס את הפרטים בכל השדות.";
+$text['description-user_add']['it-it'] = "Per aggiungere un utente, compila il modulo in ogni parte. Tutti i campi sono obbligatori. ";
 
 $text['description-time_zone']['en-us'] = "Select the default time zone.";
 $text['description-time_zone']['es-cl'] = "Seleccione la zona horaria por defecto.";
@@ -826,6 +898,7 @@ $text['description-time_zone']['sv-se'] = "Välj standard tidszon";
 $text['description-time_zone']['ro'] = "";
 $text['description-time_zone']['de-at'] = "Wählen Sie die Standard Zeitzone";
 $text['description-time_zone']['he'] = "הגדר אזור זמן";
+$text['description-time_zone']['it-it'] = "Seleziona il fuso orario predefinito.";
 
 $text['description-status']['en-us'] = "Set the user's presence.";
 $text['description-status']['es-cl'] = "Configure la presencia del usuario.";
@@ -837,6 +910,7 @@ $text['description-status']['sv-se'] = "Välj en användarstatus.";
 $text['description-status']['ro'] = "Selectați starea utilizatorului";
 $text['description-status']['de-at'] = "Benutzerstatus auswählen";
 $text['description-status']['he'] = "בחר את סטטוס המשתמש";
+$text['description-status']['it-it'] = "Imposta la presenza dell'utente.";
 
 $text['description-enabled']['en-us'] = "Set the status of this account.";
 $text['description-enabled']['es-cl'] = "Indique el estaso de esta cuenta.";
@@ -848,6 +922,7 @@ $text['description-enabled']['sv-se'] = "Välj status på denna standardinställ
 $text['description-enabled']['ro'] = "";
 $text['description-enabled']['de-at'] = "Setzen Sie den Status dieses Kontos.";
 $text['description-enabled']['he'] = "בחר את הסטטוס לחשבון זה";
+$text['description-enabled']['it-it'] = "Imposta lo stato di questo account.";
 
 $text['description-contact_view']['en-us'] = "View";
 $text['description-contact_view']['es-cl'] = "Ver";
@@ -859,6 +934,7 @@ $text['description-contact_view']['sv-se'] = "Granska";
 $text['description-contact_view']['ro'] = "";
 $text['description-contact_view']['de-at'] = "Ansicht";
 $text['description-contact_view']['he'] = "הצג";
+$text['description-contact_view']['it-it'] = "Visualizza";
 
 $text['description-contact']['en-us'] = "Assign a contact to this user account.";
 $text['description-contact']['es-cl'] = "Asignar un contacto a este usuario.";
@@ -870,6 +946,7 @@ $text['description-contact']['sv-se'] = "Tilldela en kontakt till detta konto.";
 $text['description-contact']['ro'] = "";
 $text['description-contact']['de-at'] = "Weisen Sie diesem Benutzer einen Kontakt zu.";
 $text['description-contact']['he'] = "שייך איש קשר לחשבון";
+$text['description-contact']['it-it'] = "Assegna un contatto a questo account utente";
 
 $text['description-api_key']['en-us'] = "Enter the API key is often a UUID. The API key should be 128 bit or greater.";
 $text['description-api_key']['es-cl'] = "Indique la API key.";
@@ -881,6 +958,7 @@ $text['description-api_key']['sv-se'] = "Ange API nyckel (ofta UUID). API nyckel
 $text['description-api_key']['ro'] = "";
 $text['description-api_key']['de-at'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein.";
 $text['description-api_key']['he'] = "";
+$text['description-api_key']['it-it'] = "Inserisci l'API key. L'API key dovrebbe essere maggiore di 128 bit.";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 $text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
@@ -892,6 +970,7 @@ $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['ro'] = "";
 $text['confirm-delete']['de-at'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete']['he'] = "?בטוח שאתה רוצה למחוק";
+$text['confirm-delete']['it-it'] = "Vuoi davvero cancellare questo elemento?";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
@@ -903,6 +982,7 @@ $text['button-show_all']['sv-se'] = "Visa Allt";
 $text['button-show_all']['ro'] = "";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "הצג הכל";
+$text['button-show_all']['it-it'] = "Mostra Tutto";
 
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['es-cl'] = "Generar";
@@ -914,6 +994,7 @@ $text['button-generate']['sv-se'] = "Generera";
 $text['button-generate']['ro'] = "";
 $text['button-generate']['de-at'] = "Generieren";
 $text['button-generate']['he'] = "יצר";
+$text['button-generate']['it-it'] = "Genera";
 
 $text['button-create_account']['en-us'] = "Create Account";
 $text['button-create_account']['es-cl'] = "Crear Cuenta";
@@ -925,6 +1006,7 @@ $text['button-create_account']['sv-se'] = "Skapa Konto";
 $text['button-create_account']['ro'] = "";
 $text['button-create_account']['de-at'] = "Konto hinzufügen";
 $text['button-create_account']['he'] = "צור חשבון";
+$text['button-create_account']['it-it'] = "Crea Account";
 
 $text['button-add_member']['en-us'] = "Add Member";
 $text['button-add_member']['es-cl'] = "Agregar Miembro";
@@ -936,5 +1018,6 @@ $text['button-add_member']['sv-se'] = "Lägg Till Medlem";
 $text['button-add_member']['ro'] = "";
 $text['button-add_member']['de-at'] = "Mitglied hinzufügen";
 $text['button-add_member']['he'] = "הוסף משתמש";
+$text['button-add_member']['it-it'] = "Aggiungi Membro";
 
 ?>
