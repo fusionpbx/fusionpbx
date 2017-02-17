@@ -66,6 +66,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_sms_edit";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_transcription_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y=0;
@@ -167,6 +171,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_sms_to";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the sms did to send voicemail to.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_transcription_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "If voicemail transcription is enabled for this user";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_attach_file";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
