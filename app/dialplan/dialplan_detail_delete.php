@@ -71,6 +71,13 @@
 				$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
+
+		//update the dialplan xml
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->xml();
 	}
 
 //save the message to a session variable
