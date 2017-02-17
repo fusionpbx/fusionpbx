@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -37,11 +37,15 @@
 				if (stream_seek == true) then
 					if (dtmf_digits == "4") then
 						dtmf_digits = "";
-						return("seek:-12000");
+						return("seek:-10000");
+					end
+					if (dtmf_digits == "5") then
+						dtmf_digits = "";
+						return("pause");
 					end
 					if (dtmf_digits == "6") then
 						dtmf_digits = "";
-						return("seek:12000");
+						return("seek:+10000");
 					end
 				end
 				if (string.len(dtmf_digits) >= max_digits) then
