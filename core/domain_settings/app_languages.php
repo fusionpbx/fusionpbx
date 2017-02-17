@@ -9,6 +9,7 @@ $text['title-domains']['pl'] = "Domeny";
 $text['title-domains']['sv-se'] = "Domäner";
 $text['title-domains']['uk'] = "Домени";
 $text['title-domains']['de-at'] = "Domains";
+$text['title-domains']['it-it'] = "Domini";
 
 $text['title-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['title-domain_setting-edit']['es-cl'] = "Configuraciones de dominio.";
@@ -19,6 +20,7 @@ $text['title-domain_setting-edit']['pl'] = "Ustawienia domen";
 $text['title-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['title-domain_setting-edit']['uk'] = "Налаштування доменів";
 $text['title-domain_setting-edit']['de-at'] = "Domain Einstellungen";
+$text['title-domain_setting-edit']['it-it'] = "Impostazione Dominio";
 
 $text['title-domain_setting-add']['en-us'] = "Domain Setting Add";
 $text['title-domain_setting-add']['es-cl'] = "Agregar Configuración de Dominio";
@@ -29,6 +31,7 @@ $text['title-domain_setting-add']['pl'] = "Dodaj ustawienie domeny";
 $text['title-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['title-domain_setting-add']['uk'] = "Додавання домену";
 $text['title-domain_setting-add']['de-at'] = "Domain Einstellungen hinzufügen";
+$text['title-domain_setting-add']['it-it'] = "Aggiungi Impostazione Dominio";
 
 $text['title-domain-edit']['en-us'] = "Domain";
 $text['title-domain-edit']['es-cl'] = "Dominio";
@@ -39,6 +42,7 @@ $text['title-domain-edit']['pl'] = "Domena";
 $text['title-domain-edit']['sv-se'] = "Domän";
 $text['title-domain-edit']['uk'] = "Домен";
 $text['title-domain-edit']['de-at'] = "Domain";
+$text['title-domain-edit']['it-it'] = "Dominio";
 
 $text['title-domain-add']['en-us'] = "Domain Add";
 $text['title-domain-add']['es-cl'] = "Agregar Dominio";
@@ -49,6 +53,7 @@ $text['title-domain-add']['pl'] = "Dodaj domenę";
 $text['title-domain-add']['sv-se'] = "Lägg Till Domän";
 $text['title-domain-add']['uk'] = "Новий домен";
 $text['title-domain-add']['de-at'] = "Domain hinzufügen";
+$text['title-domain-add']['it-it'] = "Aggiungi Dominio";
 
 $text['message-delete_failed']['en-us'] = "No Settings Checked";
 $text['message-delete_failed']['es-cl'] = "No hay ajustes facturado";
@@ -59,6 +64,7 @@ $text['message-delete_failed']['pl'] = "Próba usunięcia zakończyła się niep
 $text['message-delete_failed']['sv-se'] = "Ingen Inställning Markerad";
 $text['message-delete_failed']['uk'] = "Налаштування не вказано";
 $text['message-delete_failed']['de-at'] = "Keine Einstellungen ausgewählt";
+$text['message-delete_failed']['it-it'] = "Nessuna Impostazione Flaggate";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['es-cl'] = "Fuentes web";
@@ -73,6 +79,7 @@ $text['label-web_fonts']['de-at'] = "Web Fonts";
 $text['label-web_fonts']['ro'] = "Fonturi web";
 $text['label-web_fonts']['fa'] = "";
 $text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
+$text['label-web_fonts']['it-it'] = "Caratteri Web";
 
 $text['label-top']['en-us'] = "Top";
 $text['label-top']['es-cl'] = "encima";
@@ -87,6 +94,7 @@ $text['label-top']['de-at'] = "Oben";
 $text['label-top']['ro'] = "Top";
 $text['label-top']['fa'] = "";
 $text['label-top']['ar-eg'] = "أعلى";
+$text['label-top']['it-it'] = "Inizio";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -97,6 +105,7 @@ $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['de-at'] = "Werkzeug";
+$text['label-tools']['it-it'] = "Strumenti";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['es-cl'] = "Texto";
@@ -111,6 +120,7 @@ $text['label-text']['de-at'] = "Text";
 $text['label-text']['ro'] = "Text";
 $text['label-text']['fa'] = "";
 $text['label-text']['ar-eg'] = "نص";
+$text['label-text']['it-it'] = "Testo";
 
 $text['label-static']['en-us'] = "Static";
 $text['label-static']['es-cl'] = "Estático";
@@ -125,6 +135,7 @@ $text['label-static']['de-at'] = "Statisch";
 $text['label-static']['ro'] = "Static";
 $text['label-static']['fa'] = "";
 $text['label-static']['ar-eg'] = "ساكن";
+$text['label-static']['it-it'] = "Statico";
 
 $text['label-right']['en-us'] = "Right";
 $text['label-right']['es-cl'] = "Derecha";
@@ -139,6 +150,7 @@ $text['label-right']['de-at'] = "Recht";
 $text['label-right']['ro'] = "Dreapta";
 $text['label-right']['fa'] = "";
 $text['label-right']['ar-eg'] = "حق";
+$text['label-right']['it-it'] = "Destra";
 
 $text['label-reference']['en-us'] = "See";
 $text['label-reference']['es-cl'] = "Referencia";
@@ -153,6 +165,7 @@ $text['label-reference']['de-at'] = "Referenz";
 $text['label-reference']['ro'] = "Referinţă";
 $text['label-reference']['fa'] = "";
 $text['label-reference']['ar-eg'] = "مرجع";
+$text['label-reference']['it-it'] = "Visualizza";
 
 $text['label-parent_domain']['en-us'] = "Parent Domain";
 $text['label-parent_domain']['es-cl'] = "Dominio de los Padres";
@@ -163,6 +176,7 @@ $text['label-parent_domain']['pl'] = "Domena nadrzędna";
 $text['label-parent_domain']['sv-se'] = "Överordnad Domän";
 $text['label-parent_domain']['uk'] = "Батьківський домен";
 $text['label-parent_domain']['de-at'] = "Übergeordnete Domain";
+$text['label-parent_domain']['it-it'] = "Dominio Padre";
 
 $text['label-other']['en-us'] = "Other";
 $text['label-other']['es-cl'] = "Otro";
@@ -174,6 +188,7 @@ $text['label-other']['uk'] = "";
 $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['de-at'] = "Andere";
 $text['label-other']['he'] = "אחר";
+$text['label-other']['it-it'] = "Altro";
 
 $text['label-none']['en-us'] = "None";
 $text['label-none']['es-cl'] = "Ninguna";
@@ -188,6 +203,7 @@ $text['label-none']['de-at'] = "Keiner";
 $text['label-none']['ro'] = "Nici unul";
 $text['label-none']['fa'] = "";
 $text['label-none']['ar-eg'] = "لا شيء";
+$text['label-none']['it-it'] = "Nessuno";
 
 $text['label-manage']['en-us'] = "Manage";
 $text['label-manage']['es-cl'] = "Gestionar";
@@ -198,6 +214,7 @@ $text['label-manage']['pl'] = "Zarządzaj";
 $text['label-manage']['sv-se'] = "Hantera";
 $text['label-manage']['uk'] = "Керувати";
 $text['label-manage']['de-at'] = "Verwalten";
+$text['label-manage']['it-it'] = "Gestisci";
 
 $text['label-left']['en-us'] = "Left";
 $text['label-left']['es-cl'] = "Izquierda";
@@ -212,6 +229,7 @@ $text['label-left']['de-at'] = "Links";
 $text['label-left']['ro'] = "Stânga";
 $text['label-left']['fa'] = "";
 $text['label-left']['ar-eg'] = "اليسار";
+$text['label-left']['it-it'] = "Sinistra";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['es-cl'] = "En línea";
@@ -226,6 +244,7 @@ $text['label-inline']['de-at'] = "In der Reihe";
 $text['label-inline']['ro'] = "In linie";
 $text['label-inline']['fa'] = "";
 $text['label-inline']['ar-eg'] = "في النسق";
+$text['label-inline']['it-it'] = "In linea";
 
 $text['label-image']['en-us'] = "Image";
 $text['label-image']['es-cl'] = "Imagen";
@@ -240,6 +259,7 @@ $text['label-image']['de-at'] = "Image";
 $text['label-image']['ro'] = "Imagine";
 $text['label-image']['fa'] = "";
 $text['label-image']['ar-eg'] = "صورة";
+$text['label-image']['it-it'] = "Immagine";
 
 $text['label-fixed']['en-us'] = "Fixed";
 $text['label-fixed']['es-cl'] = "Fijo";
@@ -254,6 +274,7 @@ $text['label-fixed']['de-at'] = "fest";
 $text['label-fixed']['ro'] = "Fix";
 $text['label-fixed']['fa'] = "";
 $text['label-fixed']['ar-eg'] = "ثابت";
+$text['label-fixed']['it-it'] = "Fissa";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -264,6 +285,7 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['de-at'] = "Domain";
+$text['label-domain']['it-it'] = "Dominio";
 
 $text['label-center']['en-us'] = "Center";
 $text['label-center']['es-cl'] = "Centrar";
@@ -278,6 +300,7 @@ $text['label-center']['de-at'] = "Center";
 $text['label-center']['ro'] = "Centru";
 $text['label-center']['fa'] = "";
 $text['label-center']['ar-eg'] = "مركز";
+$text['label-center']['it-it'] = "Centro";
 
 $text['label-bottom']['en-us'] = "Bottom";
 $text['label-bottom']['es-cl'] = "Fondo";
@@ -292,6 +315,7 @@ $text['label-bottom']['de-at'] = "Boden";
 $text['label-bottom']['ro'] = "Fund";
 $text['label-bottom']['fa'] = "";
 $text['label-bottom']['ar-eg'] = "أسفل";
+$text['label-bottom']['it-it'] = "Basso";
 
 $text['label-24-hour']['en-us'] = "24-Hour";
 $text['label-24-hour']['es-cl'] = "24 horas";
@@ -306,6 +330,7 @@ $text['label-24-hour']['de-at'] = "24 Stunden";
 $text['label-24-hour']['ro'] = "24 de ore";
 $text['label-24-hour']['fa'] = "";
 $text['label-24-hour']['ar-eg'] = "24 ساعة";
+$text['label-24-hour']['it-it'] = "24-Ore";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
 $text['label-12-hour']['es-cl'] = "12 horas";
@@ -320,6 +345,7 @@ $text['label-12-hour']['de-at'] = "12 Stunden";
 $text['label-12-hour']['ro'] = "12 de ore";
 $text['label-12-hour']['fa'] = "";
 $text['label-12-hour']['ar-eg'] = "12 ساعة";
+$text['label-12-hour']['it-it'] = "12-Ore";
 
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['es-cl'] = "Configuraciones";
@@ -330,6 +356,7 @@ $text['header-settings']['pl'] = "Ustawienia";
 $text['header-settings']['sv-se'] = "Inställning";
 $text['header-settings']['uk'] = "Налаштування";
 $text['header-settings']['de-at'] = "Einstellungen";
+$text['header-settings']['it-it'] = "Impostazioni";
 
 $text['header-domains']['en-us'] = "Domains";
 $text['header-domains']['es-cl'] = "Dominios";
@@ -340,6 +367,7 @@ $text['header-domains']['pl'] = "Domeny";
 $text['header-domains']['sv-se'] = "Domäner";
 $text['header-domains']['uk'] = "Домени";
 $text['header-domains']['de-at'] = "Domains";
+$text['header-domains']['it-it'] = "Domini";
 
 $text['header-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['header-domain_setting-edit']['es-cl'] = "Configuraciones de dominio";
@@ -350,6 +378,7 @@ $text['header-domain_setting-edit']['pl'] = "Ustawienia domeny";
 $text['header-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['header-domain_setting-edit']['uk'] = "Налаштування домену";
 $text['header-domain_setting-edit']['de-at'] = "Domain Einstellungen";
+$text['header-domain_setting-edit']['it-it'] = "Impostazione Dominio";
 
 $text['header-domain_setting-add']['en-us'] = "Domain Setting Add";
 $text['header-domain_setting-add']['es-cl'] = "Agregar Configuración de Dominio";
@@ -360,6 +389,7 @@ $text['header-domain_setting-add']['pl'] = "Dodaj ustawienie domeny";
 $text['header-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['header-domain_setting-add']['uk'] = "Параметри домену";
 $text['header-domain_setting-add']['de-at'] = "Domain Einstellungen hinzufügen";
+$text['header-domain_setting-add']['it-it'] = "Aggiungi Impostazione Dominio";
 
 $text['header-domain-edit']['en-us'] = "Domain";
 $text['header-domain-edit']['es-cl'] = "Dominio";
@@ -370,6 +400,7 @@ $text['header-domain-edit']['pl'] = "Domena";
 $text['header-domain-edit']['sv-se'] = "Domän";
 $text['header-domain-edit']['uk'] = "Домен";
 $text['header-domain-edit']['de-at'] = "Domain";
+$text['header-domain-edit']['it-it'] = "Dominio";
 
 $text['header-domain-add']['en-us'] = "Domain Add";
 $text['header-domain-add']['es-cl'] = "Agregar Dominio";
@@ -380,6 +411,7 @@ $text['header-domain-add']['pl'] = "Dodaj domenę";
 $text['header-domain-add']['sv-se'] = "Lägg Till Domän";
 $text['header-domain-add']['uk'] = "Новий домен";
 $text['header-domain-add']['de-at'] = "Domain hinzufügen";
+$text['header-domain-add']['it-it'] = "Aggiungi Dominio";
 
 $text['description-setting_enabled']['en-us'] = "Set the status of this default setting.";
 $text['description-setting_enabled']['es-cl'] = "Configure el estado de esta configuración predeterminada.";
@@ -390,6 +422,7 @@ $text['description-setting_enabled']['pl'] = "Wybierz, aby włączyć lub wyłą
 $text['description-setting_enabled']['sv-se'] = "Ange status på denna standard inställning.";
 $text['description-setting_enabled']['uk'] = "Встановіть стан цього параметра за замовчуванням.";
 $text['description-setting_enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung.";
+$text['description-setting_enabled']['it-it'] = "Imposta lo stato di questa impostazione predefinita.";
 
 $text['description-parent_domain']['en-us'] = "Set the parent domain.";
 $text['description-parent_domain']['es-cl'] = "Establecer el dominio principal.";
@@ -400,6 +433,7 @@ $text['description-parent_domain']['pl'] = "Ustaw domenę nadrzędną";
 $text['description-parent_domain']['sv-se'] = "Ange Överordan Domän.";
 $text['description-parent_domain']['uk'] = "Вкажіть батьківський домен";
 $text['description-parent_domain']['de-at'] = "Setzen Sie die übergeordnete Domain.";
+$text['description-parent_domain']['it-it'] = "Imposta il dominio padre.";
 
 $text['description-order']['en-us'] = "Set the order for this array element.";
 $text['description-order']['es-cl'] = "Establecer el orden para este elemento de la matriz.";
@@ -410,6 +444,7 @@ $text['description-order']['pl'] = "Wybierz kolejność.";
 $text['description-order']['sv-se'] = "Ställ in ordningen för detta element.";
 $text['description-order']['uk'] = "Вкажіть порядок для масиву елементів";
 $text['description-order']['de-at'] = "Wählen Sie die Reihenfolge des Array Elements.";
+$text['description-order']['it-it'] = "Imposta l'ordine di questo elemento matrice.";
 
 $text['description-name']['en-us'] = "Enter the name of the domain.";
 $text['description-name']['es-cl'] = "Ingrese el nombre del dominio";
@@ -420,6 +455,7 @@ $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['sv-se'] = "Ange namn på Domänen.";
 $text['description-name']['uk'] = "Вкажіть назву домену";
 $text['description-name']['de-at'] = "Geben Sie den Namen dieser Domain an";
+$text['description-name']['it-it'] = "Inserisci il nome del dominio.";
 
 $text['description-domains']['en-us'] = "Control the list of domains to manage.";
 $text['description-domains']['es-cl'] = "Controlar la lista de dominios a gestionar.";
@@ -430,6 +466,7 @@ $text['description-domains']['pl'] = "Zarządzanie listą domen.";
 $text['description-domains']['sv-se'] = "Kontrollera lista med Domäner att hantera.";
 $text['description-domains']['uk'] = "Список доменів для керування";
 $text['description-domains']['de-at'] = "Eine Liste aller Domains.";
+$text['description-domains']['it-it'] = "Controlla la lista dei domini da gestire.";
 
 $text['description-domain_setting-edit']['en-us'] = "Edit a setting for this domain.";
 $text['description-domain_setting-edit']['es-cl'] = "Edita una configuración para este dominio.";
@@ -440,6 +477,7 @@ $text['description-domain_setting-edit']['pl'] = "Edytuj ustawienia w tej domeni
 $text['description-domain_setting-edit']['sv-se'] = "Ändra en inställning för denna Domän.";
 $text['description-domain_setting-edit']['uk'] = "Редагування параметрів для домену";
 $text['description-domain_setting-edit']['de-at'] = "Eine Einstellung für diese Domain ändern.";
+$text['description-domain_setting-edit']['it-it'] = "Modifica una impostazione per questo dominio.";
 
 $text['description-domain_setting-add']['en-us'] = "Add a setting for this domain.";
 $text['description-domain_setting-add']['es-cl'] = "Agregar una configuración para este dominio.";
@@ -450,6 +488,7 @@ $text['description-domain_setting-add']['pl'] = "Dodaj ustawienie w tej domenie"
 $text['description-domain_setting-add']['sv-se'] = "Lägg Till en inställning för denna Domän.";
 $text['description-domain_setting-add']['uk'] = "Додавання параметра для домену";
 $text['description-domain_setting-add']['de-at'] = "Eine Einstellung für diese Domain hinzufügen.";
+$text['description-domain_setting-add']['it-it'] = "Aggiungi una impostazione per questo dominio.";
 
 $text['description-domain_enabled']['en-us'] = "Set the status of the domain.";
 $text['description-domain_enabled']['es-cl'] = "Ajuste el estado del dominio.";
@@ -460,6 +499,7 @@ $text['description-domain_enabled']['pl'] = "Ustaw status tej domeny.";
 $text['description-domain_enabled']['sv-se'] = "Ange status för Domänen.";
 $text['description-domain_enabled']['uk'] = "Вкажіть стан домену";
 $text['description-domain_enabled']['de-at'] = "Den Status der Domain setzen.";
+$text['description-domain_enabled']['it-it'] = "Imposta lo stato del dominio.";
 
 $text['description-domain-edit']['en-us'] = "Edit the details of this domain.";
 $text['description-domain-edit']['es-cl'] = "Editar detalles de este dominio.";
@@ -470,6 +510,7 @@ $text['description-domain-edit']['pl'] = "Edytuj szczegóły tej domeny.";
 $text['description-domain-edit']['sv-se'] = "Ändra detaljer för denna Domän.";
 $text['description-domain-edit']['uk'] = "Редагування деталей домену";
 $text['description-domain-edit']['de-at'] = "Die Details dieser Domain ändern.";
+$text['description-domain-edit']['it-it'] = "Modifica i dettagli di questo dominio.";
 
 $text['description-domain-add']['en-us'] = "Enter the domain details below.";
 $text['description-domain-add']['es-cl'] = "Ingrese los detalles del dominio a continuación.";
@@ -480,5 +521,6 @@ $text['description-domain-add']['pl'] = "Poniżej wprowadź szczegóły domeny";
 $text['description-domain-add']['sv-se'] = "Ange domändetaljer nedan.";
 $text['description-domain-add']['uk'] = "Введіть дані домену нижче.";
 $text['description-domain-add']['de-at'] = "Geben Sie die Domain Details unten an.";
+$text['description-domain-add']['it-it'] = "Inserisci i dettagli del dominio di seguito.";
 
 ?>
