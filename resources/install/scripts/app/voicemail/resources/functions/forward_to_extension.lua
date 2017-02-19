@@ -89,7 +89,8 @@
 			end);
 
 		--get a new uuid
-			voicemail_message_uuid = session:get_uuid();
+			api = freeswitch.API();
+			voicemail_message_uuid = trim(api:execute("create_uuid", ""));
 
 		--save the message to the voicemail messages
 			local sql = {}
