@@ -12,6 +12,7 @@ $text['title-access_controls']['ro'] = "Controale de acces";
 $text['title-access_controls']['uk'] = "контроль доступу";
 $text['title-access_controls']['sv-se'] = "Åtkomstkontroll";
 $text['title-access_controls']['ar-eg'] = "عناصر التحكم في الوصول";
+$text['title-access_controls']['it-it'] = "Controllo Accessi";
 
 $text['title-access_control_nodes']['en-us'] = "Nodes";
 $text['title-access_control_nodes']['es-cl'] = "Nodos";
@@ -25,6 +26,7 @@ $text['title-access_control_nodes']['ro'] = "Noduri";
 $text['title-access_control_nodes']['uk'] = "вузли";
 $text['title-access_control_nodes']['sv-se'] = "Noder";
 $text['title-access_control_nodes']['ar-eg'] = "العقد";
+$text['title-access_control_nodes']['it-it'] = "Nodi";
 
 $text['title-access_control_node']['en-us'] = "Node";
 $text['title-access_control_node']['es-cl'] = "Nodo";
@@ -38,6 +40,7 @@ $text['title-access_control_node']['ro'] = "Nod";
 $text['title-access_control_node']['uk'] = "вузол";
 $text['title-access_control_node']['sv-se'] = "Nod";
 $text['title-access_control_node']['ar-eg'] = "العقدة";
+$text['title-access_control_node']['it-it'] = "Nodo";
 
 $text['title-access_control']['en-us'] = "Access Control";
 $text['title-access_control']['es-cl'] = "Control de acceso";
@@ -51,6 +54,7 @@ $text['title-access_control']['ro'] = "Controlul accesului";
 $text['title-access_control']['uk'] = "Управління доступом";
 $text['title-access_control']['sv-se'] = "Åtkomstkontroll";
 $text['title-access_control']['ar-eg'] = "التحكم في الوصول";
+$text['title-access_control']['it-it'] = "Controllo Accesso";
 
 $text['label-node_type']['en-us'] = "Type";
 $text['label-node_type']['es-cl'] = "Escribe";
@@ -64,6 +68,7 @@ $text['label-node_type']['ro'] = "Tip";
 $text['label-node_type']['uk'] = "Тип";
 $text['label-node_type']['sv-se'] = "Typ";
 $text['label-node_type']['ar-eg'] = "اكتب";
+$text['label-node_type']['it-it'] = "Tipo";
 
 $text['label-node_domain']['en-us'] = "Domain";
 $text['label-node_domain']['es-cl'] = "Dominio";
@@ -77,6 +82,7 @@ $text['label-node_domain']['ro'] = "Domeniu";
 $text['label-node_domain']['uk'] = "домен";
 $text['label-node_domain']['sv-se'] = "Domän";
 $text['label-node_domain']['ar-eg'] = "مجال";
+$text['label-node_domain']['it-it'] = "Dominio";
 
 $text['label-node_description']['en-us'] = "Description";
 $text['label-node_description']['es-cl'] = "Descripción";
@@ -90,6 +96,7 @@ $text['label-node_description']['ro'] = "Descriere";
 $text['label-node_description']['uk'] = "опис";
 $text['label-node_description']['sv-se'] = "Beskrivning";
 $text['label-node_description']['ar-eg'] = "وصف";
+$text['label-node_description']['it-it'] = "Descrizione";
 
 $text['label-node_cidr']['en-us'] = "CIDR";
 $text['label-node_cidr']['es-cl'] = "CIDR";
@@ -103,6 +110,7 @@ $text['label-node_cidr']['ro'] = "CIDR";
 $text['label-node_cidr']['uk'] = "CIDR";
 $text['label-node_cidr']['sv-se'] = "CIDR";
 $text['label-node_cidr']['ar-eg'] = "CIDR";
+$text['label-node_cidr']['it-it'] = "CIDR";
 
 $text['label-deny']['en-us'] = "deny";
 $text['label-deny']['es-cl'] = "Negar";
@@ -116,6 +124,7 @@ $text['label-deny']['ro'] = "Nega";
 $text['label-deny']['uk'] = "правда";
 $text['label-deny']['sv-se'] = "förneka";
 $text['label-deny']['ar-eg'] = "تنكر";
+$text['label-deny']['it-it'] = "nega";
 
 $text['label-allow']['en-us'] = "allow";
 $text['label-allow']['es-cl'] = "Permitir";
@@ -129,6 +138,7 @@ $text['label-allow']['ro'] = "Permite";
 $text['label-allow']['uk'] = "дозволяти";
 $text['label-allow']['sv-se'] = "tillåta";
 $text['label-allow']['ar-eg'] = "السماح";
+$text['label-allow']['it-it'] = "permetti";
 
 $text['label-access_control_name']['en-us'] = "Name";
 $text['label-access_control_name']['es-cl'] = "Nombre";
@@ -142,6 +152,7 @@ $text['label-access_control_name']['ro'] = "Nume";
 $text['label-access_control_name']['uk'] = "ім'я";
 $text['label-access_control_name']['sv-se'] = "namn";
 $text['label-access_control_name']['ar-eg'] = "اسم";
+$text['label-access_control_name']['it-it'] = "Nome";
 
 $text['label-access_control_description']['en-us'] = "Description";
 $text['label-access_control_description']['es-cl'] = "Descripción";
@@ -155,6 +166,7 @@ $text['label-access_control_description']['ro'] = "Descriere";
 $text['label-access_control_description']['uk'] = "опис";
 $text['label-access_control_description']['sv-se'] = "Beskrivning";
 $text['label-access_control_description']['ar-eg'] = "وصف";
+$text['label-access_control_description']['it-it'] = "Descrizione";
 
 $text['label-access_control_default']['en-us'] = "Default";
 $text['label-access_control_default']['es-cl'] = "Defecto";
@@ -168,6 +180,7 @@ $text['label-access_control_default']['ro'] = "Implicit";
 $text['label-access_control_default']['uk'] = "дефолт";
 $text['label-access_control_default']['sv-se'] = "Standard";
 $text['label-access_control_default']['ar-eg'] = "افتراضي";
+$text['label-access_control_default']['it-it'] = "Predefinito";
 
 $text['description-node_type']['en-us'] = "Select the type.";
 $text['description-node_type']['es-cl'] = "Seleccione el tipo.";
@@ -181,6 +194,7 @@ $text['description-node_type']['ro'] = "Selectați tipul.";
 $text['description-node_type']['uk'] = "Виберіть тип.";
 $text['description-node_type']['sv-se'] = "Välj typ.";
 $text['description-node_type']['ar-eg'] = "حدد نوع.";
+$text['description-node_type']['it-it'] = "Seleziona il tipo.";
 
 $text['description-node_domain']['en-us'] = "Enter the domain name.";
 $text['description-node_domain']['es-cl'] = "Introduzca el nombre de dominio.";
@@ -194,6 +208,7 @@ $text['description-node_domain']['ro'] = "Introduceți numele de domeniu.";
 $text['description-node_domain']['uk'] = "Введіть ім'я домену.";
 $text['description-node_domain']['sv-se'] = "Ange domännamnet.";
 $text['description-node_domain']['ar-eg'] = "أدخل اسم المجال.";
+$text['description-node_domain']['it-it'] = "Inserisci il nome del dominio.";
 
 $text['description-node_description']['en-us'] = "Enter the description.";
 $text['description-node_description']['es-cl'] = " Introduzca la descripción.";
@@ -207,6 +222,7 @@ $text['description-node_description']['ro'] = "Introduceți descrierea.";
 $text['description-node_description']['uk'] = "Введіть опис.";
 $text['description-node_description']['sv-se'] = "Ange beskrivningen.";
 $text['description-node_description']['ar-eg'] = "أدخل الوصف.";
+$text['description-node_description']['it-it'] = "Inserisci la descrizione.";
 
 $text['description-node_cidr']['en-us'] = "Enter the IP CIDR range.";
 $text['description-node_cidr']['es-cl'] = " Introduzca el rango de direcciones IP CIDR.";
@@ -220,6 +236,7 @@ $text['description-node_cidr']['ro'] = "Introduceți intervalul de IP CIDR.";
 $text['description-node_cidr']['uk'] = "Введіть діапазон IP-CIDR.";
 $text['description-node_cidr']['sv-se'] = "Ange IP CIDR sortimentet.";
 $text['description-node_cidr']['ar-eg'] = "أدخل نطاق IP CIDR.";
+$text['description-node_cidr']['it-it'] = "Inserire l'intervallo IP CIDR.";
 
 $text['description-access_control_node']['en-us'] = "";
 $text['description-access_control_node']['es-cl'] = "";
@@ -233,6 +250,7 @@ $text['description-access_control_node']['ro'] = "";
 $text['description-access_control_node']['uk'] = "";
 $text['description-access_control_node']['sv-se'] = "";
 $text['description-access_control_node']['ar-eg'] = "";
+$text['description-access_control_node']['it-it'] = "";
 
 $text['description-access_control_name']['en-us'] = "Enter the name.";
 $text['description-access_control_name']['es-cl'] = " Introduzca el nombre.";
@@ -246,6 +264,7 @@ $text['description-access_control_name']['ro'] = "Introduceți numele.";
 $text['description-access_control_name']['uk'] = "Введіть ім'я.";
 $text['description-access_control_name']['sv-se'] = "Ange namnet.";
 $text['description-access_control_name']['ar-eg'] = "أدخل اسم.";
+$text['description-access_control_name']['it-it'] = "Inserisci il nome.";
 
 $text['description-access_control_description']['en-us'] = "Enter the description";
 $text['description-access_control_description']['es-cl'] = "Introduzca la descripción";
@@ -259,6 +278,7 @@ $text['description-access_control_description']['ro'] = "Introduceți descrierea
 $text['description-access_control_description']['uk'] = "Введіть опис";
 $text['description-access_control_description']['sv-se'] = "Skriv en beskrivning";
 $text['description-access_control_description']['ar-eg'] = "دخل وصف";
+$text['description-access_control_description']['it-it'] = "Inserisci la descrizione";
 
 $text['description-access_control_default']['en-us'] = "Select the default type.";
 $text['description-access_control_default']['es-cl'] = "Seleccione el tipo de defecto.";
@@ -272,6 +292,7 @@ $text['description-access_control_default']['ro'] = "Selectați tipul implicit."
 $text['description-access_control_default']['uk'] = "Вибір типу за замовчуванням.";
 $text['description-access_control_default']['sv-se'] = "Välj standardtypen.";
 $text['description-access_control_default']['ar-eg'] = "حدد نوع الافتراضي.";
+$text['description-access_control_default']['it-it'] = "Seleziona il tipo predefinito.";
 
 $text['description-access_control']['en-us'] = "Access control list can allow or deny ranges of IP addresses.";
 $text['description-access_control']['es-cl'] = " Lista de control de acceso puede permitir o denegar los rangos de direcciones IP.";
@@ -285,5 +306,6 @@ $text['description-access_control']['ro'] = "Lista de control al accesului poate
 $text['description-access_control']['uk'] = "Список контролю доступу може дозволити або заборонити діапазони IP-адрес.";
 $text['description-access_control']['sv-se'] = "Åtkomstkontrollista kan tillåta eller neka intervall av IP-adresser.";
 $text['description-access_control']['ar-eg'] = "قائمة التحكم بالوصول يمكن السماح أو الرفض نطاقات العناوين.";
+$text['description-access_control']['it-it'] = "La lista del controllo degli accessi consente o nega l'accesso ad un intervallo di indirizzi IP.";
 
 ?>

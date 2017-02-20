@@ -7,6 +7,7 @@ $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Ustawienia konta";
 $text['title']['uk'] = "Привітання";
 $text['title']['he'] = "הגדרת חשבון";
+$text['title']['it-it'] = "Messaggi bevenuto Casella Vocale";
 
 $text['table-size']['en-us'] = "Size";
 $text['table-size']['es-cl'] = "Tamaño";
@@ -16,6 +17,7 @@ $text['table-size']['pt-br'] = "Tamanho";
 $text['table-size']['pl'] = "Rozmiar";
 $text['table-size']['uk'] = "Розмір";
 $text['table-size']['he'] = "גודל";
+$text['table-size']['it-it'] = "Dimensione";
 
 $text['table-number']['en-us'] = "#";
 $text['table-number']['es-cl'] = "Número";
@@ -25,6 +27,7 @@ $text['table-number']['pt-br'] = "Número";
 $text['table-number']['pl'] = "liczba";
 $text['table-number']['uk'] = "кількість";
 $text['table-number']['he'] = "#";
+$text['table-number']['it-it'] = "#";
 
 $text['table-name']['en-us'] = "Name";
 $text['table-name']['es-cl'] = "Nombre";
@@ -34,6 +37,7 @@ $text['table-name']['pt-br'] = "Nome";
 $text['table-name']['pl'] = "Nazwa";
 $text['table-name']['uk'] = "Назва";
 $text['table-name']['he'] = "שם";
+$text['table-name']['it-it'] = "Nome";
 
 $text['table-filename']['en-us'] = "File Name";
 $text['table-filename']['es-cl'] = "Nombre Del Archivo";
@@ -43,6 +47,7 @@ $text['table-filename']['pt-br'] = "Nome Do Arquivo";
 $text['table-filename']['pl'] = "Nazwa Pliku";
 $text['table-filename']['uk'] = "ім'я Файлу";
 $text['table-filename']['he'] = "שם קובץ";
+$text['table-filename']['it-it'] = "Nome File";
 
 $text['table-download']['en-us'] = "Download";
 $text['table-download']['es-cl'] = "Descargar";
@@ -52,6 +57,7 @@ $text['table-download']['pt-br'] = "Número";
 $text['table-download']['pl'] = "Numer";
 $text['table-download']['uk'] = "Скачати";
 $text['table-download']['he'] = "הורדה";
+$text['table-download']['it-it'] = "Scarica";
 
 $text['table-description']['en-us'] = "Description";
 $text['table-description']['es-cl'] = "Descripción";
@@ -61,6 +67,7 @@ $text['table-description']['pt-br'] = "Descrição";
 $text['table-description']['pl'] = "Opis";
 $text['table-description']['uk'] = "Опис";
 $text['table-description']['he'] = "תיאור";
+$text['table-description']['it-it'] = "Descrizione";
 
 $text['table-choose']['en-us'] = "Choose";
 $text['table-choose']['es-cl'] = "Escoger";
@@ -70,6 +77,7 @@ $text['table-choose']['pt-br'] = "Escolher";
 $text['table-choose']['pl'] = "Wybierz";
 $text['table-choose']['uk'] = "Вибрати";
 $text['table-choose']['he'] = "בחר";
+$text['table-choose']['it-it'] = "Scegli";
 
 $text['message-uploaded']['en-us'] = "Upload Complete";
 $text['message-uploaded']['es-cl'] = "Subida Finalizada";
@@ -79,6 +87,7 @@ $text['message-uploaded']['pt-br'] = "Arquivo carregado para";
 $text['message-uploaded']['pl'] = "Plik wysłano  poprawnie";
 $text['message-uploaded']['uk'] = "Завантажено";
 $text['message-uploaded']['he'] = "הטענה הושלמה";
+$text['message-uploaded']['it-it'] = "Caricamento completato";
 
 $text['message-unsupported_file_type']['en-us'] = "Unsupported File Type";
 $text['message-unsupported_file_type']['es-cl'] = "Tipo de archivo no compatible";
@@ -90,6 +99,7 @@ $text['message-unsupported_file_type']['sv-se'] = "Inte stöds filtyp";
 $text['message-unsupported_file_type']['uk'] = "Тип файлу не підтримується";
 $text['message-unsupported_file_type']['de-at'] = "Dateityp nicht unterstützt";
 $text['message-unsupported_file_type']['he'] = "סוג הקובץ לא נתמך";
+$text['message-unsupported_file_type']['it-it'] = "Tipo di File non supportato";
 
 $text['message-greeting_selected']['en-us'] = "Greeting Selected";
 $text['message-greeting_selected']['es-cl'] = "Saludo Seleccionado";
@@ -99,6 +109,7 @@ $text['message-greeting_selected']['pt-br'] = "Saudação Selecionada";
 $text['message-greeting_selected']['pl'] = "POWITANIE Wybrane";
 $text['message-greeting_selected']['uk'] = "привітання Вибрані";
 $text['message-greeting_selected']['he'] = "הברכה נבחרה";
+$text['message-greeting_selected']['it-it'] = "Messaggio Selezionato";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Instrumentos";
@@ -108,6 +119,7 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['uk'] = "Параметри";
 $text['label-tools']['he'] = "כלים";
+$text['label-tools']['it-it'] = "Strumenti";
 
 $text['label-select_a_file']['en-us'] = "Select a file...";
 $text['label-select_a_file']['es-cl'] = "Seleccione un archivo...";
@@ -119,6 +131,7 @@ $text['label-select_a_file']['sv-se'] = "Välj en fil ...";
 $text['label-select_a_file']['uk'] = "Виберіть файл ...";
 $text['label-select_a_file']['de-at'] = "Wählen Sie eine Datei ...";
 $text['label-select_a_file']['he'] = "בחר קובץ ...";
+$text['label-select_a_file']['it-it'] = "Seleziona un file...";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -128,6 +141,7 @@ $text['label-play']['pt-br'] = "Tocar";
 $text['label-play']['pl'] = "Odtwórz";
 $text['label-play']['uk'] = "Відтворити";
 $text['label-play']['he'] = "נגן";
+$text['label-play']['it-it'] = "Riproduci";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['es-cl'] = "Pausa";
@@ -137,6 +151,7 @@ $text['label-pause']['pt-br'] = "Pausado";
 $text['label-pause']['pl'] = "Pauza";
 $text['label-pause']['uk'] = "Призупинити";
 $text['label-pause']['he'] = "השהייה";
+$text['label-pause']['it-it'] = "Pausa";
 
 $text['label-greeting']['en-us'] = "Greeting";
 $text['label-greeting']['es-cl'] = "Saludo";
@@ -146,6 +161,7 @@ $text['label-greeting']['pt-br'] = "Saudação";
 $text['label-greeting']['pl'] = "powitanie";
 $text['label-greeting']['uk'] = "привітання";
 $text['label-greeting']['he'] = "ברכה";
+$text['label-greeting']['it-it'] = "Messaggio benvenuto";
 
 $text['label-filename']['en-us'] = "File Name";
 $text['label-filename']['es-cl'] = "Nombre Del Archivo";
@@ -155,6 +171,7 @@ $text['label-filename']['pt-br'] = "Nome Do Arquivo";
 $text['label-filename']['pl'] = "Nazwa Pliku";
 $text['label-filename']['uk'] = "ім'я Файлу";
 $text['label-filename']['he'] = "שם קובץ";
+$text['label-filename']['it-it'] = "Nome File";
 
 $text['label-edit']['en-us'] = "Edit Greeting";
 $text['label-edit']['es-cl'] = "Edición de Saludo";
@@ -164,6 +181,7 @@ $text['label-edit']['pt-br'] = "Editar";
 $text['label-edit']['pl'] = "Edytuj";
 $text['label-edit']['uk'] = "Редагувати";
 $text['label-edit']['he'] = "עריכה";
+$text['label-edit']['it-it'] = "Modifica Messaggio benvenuto";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['es-cl'] = "Descargar";
@@ -173,6 +191,7 @@ $text['label-download']['pt-br'] = "Download";
 $text['label-download']['pl'] = "Pobierz";
 $text['label-download']['uk'] = "Завантажини";
 $text['label-download']['he'] = "הורדה";
+$text['label-download']['it-it'] = "Scarica";
 
 $text['label-add']['en-us'] = "Add Greeting";
 $text['label-add']['es-cl'] = "Agregar Saludo";
@@ -182,6 +201,7 @@ $text['label-add']['pt-br'] = "Adicionar Greeting";
 $text['label-add']['pl'] = "Dodaj powitanie";
 $text['label-add']['uk'] = "Додати привітання";
 $text['label-add']['he'] = "הוסף ברכה";
+$text['label-add']['it-it'] = "Aggiungi Messaggio Benvenuto";
 
 $text['description-name']['en-us'] = "A name for the greeting (not parsed).";
 $text['description-name']['es-cl'] = "Nombre de Bienvenida.";
@@ -191,6 +211,7 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['uk'] = "Введіть назву привітання";
 $text['description-name']['he'] = "הכנס את השם";
+$text['description-name']['it-it'] = "Un nome per il messaggio.";
 
 $text['description-info']['en-us'] = "You may enter a description here for your reference (not parsed).";
 $text['description-info']['es-cl'] = "Ingrese una descripción (Opcional).";
@@ -200,6 +221,7 @@ $text['description-info']['pt-br'] = "Inisra uma descrição";
 $text['description-info']['pl'] = "Wprowadź opis";
 $text['description-info']['uk'] = "Введіть опис";
 $text['description-info']['he'] = "הכנס תאור";
+$text['description-info']['it-it'] = "Puoi inserire una descrizione per tua comodità.";
 
 $text['description']['en-us'] = "Select the active greeting message to play for extension:";
 $text['description']['es-cl'] = "Seleccione el mensaje activo para reproducir:";
@@ -209,6 +231,7 @@ $text['description']['pt-br'] = "Editar informações da conta.";
 $text['description']['pl'] = "Edytuj informacje o koncie";
 $text['description']['uk'] = "Виберіть активне привітання для розширення";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+$text['description']['it-it'] = "Seleziona il messaggio di benvenuto attivo da riprodurre per l'interno:";
 
 $text['confirm-name']['en-us'] = "Please provide: Greeting Name";
 $text['confirm-name']['es-cl'] = "Por favor indique: Nombre de Bienvenida";
@@ -218,6 +241,7 @@ $text['confirm-name']['pt-br'] = "Por favor indique: Nome";
 $text['confirm-name']['pl'] = "Wprowadź: Nazwę";
 $text['confirm-name']['uk'] = "Введіть назву привітання";
 $text['confirm-name']['he'] = "אנא הוסף: שם ברכה";
+$text['confirm-name']['it-it'] = "Per favore inserisci: Nome per il messaggio";
 
 $text['confirm-filename']['en-us'] = "Please provide: Greeting Filename";
 $text['confirm-filename']['es-cl'] = "Por favor indique: Nombre Del Archivo";
@@ -227,5 +251,6 @@ $text['confirm-filename']['pt-br'] = "Por favor indique: Nome Do Arquivo";
 $text['confirm-filename']['pl'] = "Proszę podać: Greeting Infomacje";
 $text['confirm-filename']['uk'] = "Будь ласка, надайте: Привітання файлу";
 $text['confirm-filename']['he'] = "אנא הוסף: שם קובץ לברכה";
+$text['confirm-filename']['it-it'] = "Per favore inserisci: Nome del file del messaggio";
 
 ?>
