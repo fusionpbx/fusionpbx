@@ -261,7 +261,7 @@
 		<!-- Send Hook Flash Event. 0 - No, 1 - Yes -->
 		<P74>0</P74>
 		<!-- Enable Call Features. 0 - No, 1 - Yes -->
-		<P191>1</P191>
+		<P191>0</P191>
 		<!-- Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
 		<!-- String: 0-9, *, #. Max Length: 64 characters -->
 		<P71></P71>
