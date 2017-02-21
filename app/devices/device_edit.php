@@ -1412,7 +1412,7 @@
 	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		//run this when the form is submitted\n";
+	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "	function submit_form_2() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
