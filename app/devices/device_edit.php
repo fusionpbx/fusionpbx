@@ -506,50 +506,6 @@
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-		function check_duplicates() {
-			//check mac
-			var mac_addr = document.getElementById('device_mac_address').value;
-			$("#duplicate_mac_response").load("device_edit.php?check=duplicate&mac="+mac_addr+"&device_uuid=<?php echo $device_uuid;?>", function() {
-				var duplicate_mac = false;
-
-				if ($("#duplicate_mac_response").html() != '') {
-					$('#device_mac_address').addClass('formfld_highlight_bad');
-					display_message($("#duplicate_mac_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-					duplicate_mac = true;
-				}
-				else {
-					$("#duplicate_mac_response").html('');
-					$('#device_mac_address').removeClass('formfld_highlight_bad');
-					duplicate_mac = false;
-				}
-
-				//check username
-				if (duplicate_mac == false) {
-					var username = document.getElementById('device_username').value;
-					var domain_uuid = document.getElementById('domain_uuid').value;
-					if (username != '') {
-						$("#duplicate_username_response").load("device_edit.php?check=duplicate&username="+username+"&domain_uuid="+domain_uuid+"&device_uuid=<?php echo $device_uuid;?>", function() {
-							var duplicate_username = false;
-
-							if ($("#duplicate_username_response").html() != '') {
-								$('#device_username').addClass('formfld_highlight_bad');
-								display_message($("#duplicate_username_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-								duplicate_username = true;
-							}
-							else {
-								$("#duplicate_username_response").html('');
-								$('#device_username').removeClass('formfld_highlight_bad');
-								duplicate_username = false;
-								submit_form_2();
-							}
-						});
-					}
-					else {
-						submit_form_2();
-					}
-				}
-			});
-		}
 	</script>
 
 <?php
@@ -1456,7 +1412,7 @@
 	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		check_duplicates();\n";
+	echo "		//run this when the form is submitted\n";
 	echo "	}\n";
 	echo "	function submit_form_2() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";
