@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --         notice, this list of conditions and the following disclaimer in the
 --         documentation and/or other materials provided with the distribution.
 --
---      THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--      THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --      INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --      AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --      AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -94,6 +94,10 @@
 					queue_announce_frequency = row.queue_announce_frequency;
 					queue_description = row.queue_description;
 
+				--replace the space with a dash
+					queue_name = queue_name:gsub(" ", "-");
+
+				--start the xml
 					table.insert(xml, [[                            <queue name="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
 				--set ringback
