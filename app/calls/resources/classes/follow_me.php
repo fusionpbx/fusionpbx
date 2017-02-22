@@ -389,7 +389,7 @@ include "root.php";
 								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true";
 							}
 							$dial_string .= "]";
-							$dial_string .= $dial_string_bridge;
+							$dial_string .= "\${".$dial_string_bridge."}";
 						}
 					}
 					else {
