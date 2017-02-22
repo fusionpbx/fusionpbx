@@ -323,7 +323,6 @@ $text['button-copy']['sv-se'] = "Kopiera";
 $text['button-copy']['ro'] = "";
 $text['button-copy']['de-at'] = "Kopieren";
 $text['button-copy']['he'] = "העתק";
-$text['button-copy']['en-us'] = "Copia";
 
 $text['button-login']['en-us'] = "Login";
 $text['button-login']['es-cl'] = "Ingresar";
