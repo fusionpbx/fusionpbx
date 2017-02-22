@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "sip_profile_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "47014b1d-13ad-921c-313d-ca42c0424b37";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -73,9 +73,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_sip_profiles";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_sip_profiles";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -100,9 +101,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_sip_profile_domains';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_sip_profile_domains";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_sip_profiles";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -130,9 +132,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enable or disable the parsing.';
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_sip_profile_settings";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_sip_profile_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_sip_profiles";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_setting_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

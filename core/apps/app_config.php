@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "app_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "ef00f229-7890-00c2-bf23-fed5b8fa9fe7";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -36,9 +36,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_apps";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_apps";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "app_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

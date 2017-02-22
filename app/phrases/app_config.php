@@ -22,7 +22,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "phrases";
 		$apps[$x]['destinations'][$y]['name'] = "phrases";
@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "phrase_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a5caa6dc-a6d7-41c3-a484-e556ffd0d2ff";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -63,9 +63,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_phrases";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_phrases";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phrase_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -99,10 +100,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		//schema details
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_phrase_details";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_phrase_details";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_phrases";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phrase_detail_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -160,6 +161,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-
 
 ?>

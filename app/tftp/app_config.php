@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e13895b7-ef2f-43ed-8d2a-e739ccffccc2';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'tftp_service_address';

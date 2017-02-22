@@ -20,14 +20,15 @@
 		$apps[$x]['description']['pt-br'] = "Mostra as chamadas ativas, e os agentes na fila do Call Center.";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "call_center_active_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "call_center_active_options";
-		$apps[$x]['permissions'][1]['menu']['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_active_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_active_options";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

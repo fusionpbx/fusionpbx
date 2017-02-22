@@ -21,8 +21,9 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "traffic_graph_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "05ac3828-dc2b-c0e2-282c-79920f5349e0";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "traffic_graph_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "05ac3828-dc2b-c0e2-282c-79920f5349e0";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

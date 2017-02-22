@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Notifications";
 		$apps[$x]['uuid'] = "e746fbcb-f67f-4e0e-ab64-c414c01fac11";
@@ -18,10 +19,10 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_notifications";
-
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_notifications";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "notification_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

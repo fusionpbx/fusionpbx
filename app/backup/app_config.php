@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Backup";
 		$apps[$x]['uuid'] = "1df70270-8274-44e9-a43e-5074684649ad";
@@ -20,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "backup_download";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7e174c3c-e494-4bb0-a52a-4ea55209ffeb";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

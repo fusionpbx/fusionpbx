@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "fax";
 		$apps[$x]['destinations'][$y]['name'] = "fax";
@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -155,7 +155,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '6840bdb0-eb9d-45bd-a79a-ccb64d08fd97';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'allowed_extension';
@@ -326,9 +326,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "fax_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -477,9 +478,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
@@ -522,9 +524,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_fax_files';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_files";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -586,9 +589,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 
-		$y = 3; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax_logs";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_logs";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_log_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -687,9 +691,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 4; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_fax_tasks';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_tasks";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_task_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -762,4 +767,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+
 ?>

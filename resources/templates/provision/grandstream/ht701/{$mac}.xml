@@ -470,7 +470,7 @@
 <!-- Enable Call Features. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P191>1</P191>
+<P191>0</P191>
 
 <!-- Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
 <!-- String: 0-9, #, * -->

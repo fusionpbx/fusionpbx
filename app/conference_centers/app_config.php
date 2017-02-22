@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "O centro de conferências permite gerir uma ou mais salas de conferência de audio e vídeo.";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "conference_centers";
 		$apps[$x]['destinations'][$y]['name'] = "conference_centers";
@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "conference_center_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "95f88726-4706-43f0-b52b-9504a0b8046f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -167,9 +167,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conference_centers";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_centers";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -223,9 +224,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enable or disable the conference center.";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Habilite ou desabilite o centro de conferência.";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conference_rooms";
+		$y=1;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_rooms";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -291,7 +293,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Close the conference room at the stop time.";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Fecha a sala de conferência na hora do término.";
 		$z++;
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "wait_mod";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Wait for the moderator to join before starting the conference.";
@@ -333,9 +334,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Descrição para a sessão de conferência.";
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conference_sessions";
+		$y=2;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_sessions";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -381,9 +383,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Fim do período.";
 		$z++;
 
-		$y = 3; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_conference_session_details";
+		$y=3;
+		$apps[$x]['db'][$y]['table']['name'] = "v_conference_session_details";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_conference_sessions";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

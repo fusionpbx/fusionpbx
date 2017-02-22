@@ -12,7 +12,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "voicemails";
 		$apps[$x]['destinations'][$y]['name'] = "voicemails";
@@ -25,7 +25,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "0347f82a-62a0-49d0-bacd-511d080c46d5";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -72,7 +72,7 @@
 		$y++;
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '1cf61dea-42b5-4799-b9fa-f2c3bd29e933';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'voicemail';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'voicemail_file';
@@ -130,9 +130,10 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable display of @domain_name after voicemail_id when rendering emails.';
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_voicemails";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_voicemails";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -200,9 +201,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_voicemail_messages";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_messages";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_voicemails";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -255,7 +257,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail intro encoded in base64.";
 		$z++;
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "message_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail file encoded in base64.";
@@ -265,9 +266,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail transcription.";
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_voicemail_destinations";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_destinations";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_voicemails";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -299,9 +301,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "voicemail_uuid";
 		$z++;
 
-		$y = 3; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_voicemail_options";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_options";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_voicemails";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_option_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -344,4 +347,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+
 ?>

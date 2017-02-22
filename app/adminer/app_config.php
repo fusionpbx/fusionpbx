@@ -25,7 +25,7 @@
 	$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 //default settings
-	$y = 0;
+	$y=0;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e34b276a-1b64-4d11-9470-ae3ea977c47e';
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = 'adminer';
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'auto_login';
