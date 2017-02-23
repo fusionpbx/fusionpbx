@@ -130,6 +130,9 @@ class destinations {
 			$destination_id = str_replace("]", "", $destination_name);
 			$destination_id = str_replace("[", "_", $destination_id);
 
+		//set the css style
+			$select_style = 'width: 200px;';
+
 		//add additional
 			if (if_group("superadmin")) {
 				$response = "<script>\n";
