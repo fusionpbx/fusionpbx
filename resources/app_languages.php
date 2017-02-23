@@ -230,7 +230,7 @@ $text['button-xml']['de-at'] = "";
 $text['button-xml']['ro'] = "";
 $text['button-xml']['fa'] = "";
 $text['button-xml']['ar-eg'] = "";
-$text['button-xml']['en-us'] = "XML";
+$text['button-xml']['it-it'] = "XML";
 
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
@@ -323,6 +323,7 @@ $text['button-copy']['sv-se'] = "Kopiera";
 $text['button-copy']['ro'] = "";
 $text['button-copy']['de-at'] = "Kopieren";
 $text['button-copy']['he'] = "העתק";
+$text['button-copy']['it-it'] = "Copia";
 
 $text['button-login']['en-us'] = "Login";
 $text['button-login']['es-cl'] = "Ingresar";

@@ -13,6 +13,7 @@ $text['title-call-block']['ro'] = "Blocare apel";
 $text['title-call-block']['de-at'] = "Sperrlisten";
 $text['title-call-block']['ar-eg'] = "حظر المكالمات";
 $text['title-call-block']['he'] = "חסימת מספר";
+$text['title-call-block']['it-it'] = "Blocco chiamate";
 
 $text['prompt-block_recent_name']['en-us'] = "Block Recent Call - Edit the Name, if desired...";
 $text['prompt-block_recent_name']['es-cl'] = "Bloqueo de llamadas recientes - Edite el nombre, si lo desea...";
@@ -27,6 +28,7 @@ $text['prompt-block_recent_name']['ro'] = "Blocare apel recent - Editați  numel
 $text['prompt-block_recent_name']['de-at'] = "Kürzliche Anrufe Blockieren - Bearbeiten Sie den Namen, falls gewünscht...";
 $text['prompt-block_recent_name']['ar-eg'] = "";
 $text['prompt-block_recent_name']['he'] = "";
+$text['prompt-block_recent_name']['it-it'] = "Blocca chiamata recente - Modifica il nome, se lo desideri...";
 
 $text['label-update-complete']['en-us'] = "Update Complete";
 $text['label-update-complete']['es-cl'] = "Actualización Completa";
@@ -41,6 +43,7 @@ $text['label-update-complete']['ro'] = "Actualizare completă";
 $text['label-update-complete']['de-at'] = "Aktualisierung abgeschlossen";
 $text['label-update-complete']['ar-eg'] = "اكتمال التحديث";
 $text['label-update-complete']['he'] = "העדכון הושלם";
+$text['label-update-complete']['it-it'] = "Aggiornamento Completato";
 
 $text['label-reject']['en-us'] = "Reject";
 $text['label-reject']['es-cl'] = "Rechazar";
@@ -55,6 +58,7 @@ $text['label-reject']['ro'] = "";
 $text['label-reject']['de-at'] = "Zurückweisen";
 $text['label-reject']['ar-eg'] = "رفض";
 $text['label-reject']['he'] = "לדחות";
+$text['label-reject']['it-it'] = "Rifiuta";
 
 $text['label-provide-number']['en-us'] = "Please provide: Number";
 $text['label-provide-number']['es-cl'] = "Por favor agregue: Número";
@@ -69,6 +73,7 @@ $text['label-provide-number']['ro'] = "";
 $text['label-provide-number']['de-at'] = "Bitte geben Sie die Nummer an";
 $text['label-provide-number']['ar-eg'] = "من فضلك أدخل: الرقم";
 $text['label-provide-number']['he'] = "אנא הכנס מספר";
+$text['label-provide-number']['it-it'] = "Per favore indica: Numero";
 
 $text['label-provide-name']['en-us'] = "Please provide: Name";
 $text['label-provide-name']['es-cl'] = "Por favor agregue: Nombre";
@@ -83,6 +88,7 @@ $text['label-provide-name']['ro'] = "";
 $text['label-provide-name']['de-at'] = "Bitte geben Sie den Namen an";
 $text['label-provide-name']['ar-eg'] = "من فضلك أدخل: الأسم";
 $text['label-provide-name']['he'] = "אנא הכנס שם";
+$text['label-provide-name']['it-it'] = "Per favore indica: Nome";
 
 $text['label-provide-enabled']['en-us'] = "Please provide: Enabled";
 $text['label-provide-enabled']['es-cl'] = "Por favor agregue: Activo";
@@ -97,6 +103,7 @@ $text['label-provide-enabled']['ro'] = "";
 $text['label-provide-enabled']['de-at'] = "Bitte geben Sie folgendes an: Aktiv";
 $text['label-provide-enabled']['ar-eg'] = "";
 $text['label-provide-enabled']['he'] = "";
+$text['label-provide-enabled']['it-it'] = "Per favore indica: Abilitato";
 
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
@@ -111,6 +118,7 @@ $text['label-number']['ro'] = "Număr";
 $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['ar-eg'] = "رقم";
 $text['label-number']['he'] = "מספר";
+$text['label-number']['it-it'] = "Numero";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
@@ -125,6 +133,7 @@ $text['label-message']['ro'] = "Mesaj";
 $text['label-message']['de-at'] = "Nachricht";
 $text['label-message']['ar-eg'] = "رسالة";
 $text['label-message']['he'] = "הודעה";
+$text['label-message']['it-it'] = "Messaggio";
 
 $text['label-local']['en-us'] = "Local";
 $text['label-local']['es-cl'] = "Local";
@@ -139,6 +148,7 @@ $text['label-local']['ro'] = "Local";
 $text['label-local']['de-at'] = "Lokal";
 $text['label-local']['ar-eg'] = "محلي";
 $text['label-local']['he'] = "מקומי";
+$text['label-local']['it-it'] = "Locale";
 
 $text['label-inbound']['en-us'] = "Inbound";
 $text['label-inbound']['es-cl'] = "Entrada";
@@ -153,6 +163,7 @@ $text['label-inbound']['ro'] = "";
 $text['label-inbound']['de-at'] = "Eingehend";
 $text['label-inbound']['ar-eg'] = "";
 $text['label-inbound']['he'] = "";
+$text['label-inbound']['it-it'] = "In Ingresso";
 
 $text['label-edit-note']['en-us'] = "Block calls from a number. Edit the name and enable/disable below.";
 $text['label-edit-note']['es-cl'] = "Bloquea llamadas desde un número. Edite el nombre y active/desactive abajo.";
@@ -167,6 +178,7 @@ $text['label-edit-note']['ro'] = "Blocați apelurile de la un număr. Editați n
 $text['label-edit-note']['de-at'] = "Anrufe von Nummer Blockieren. Bearbeiten Sie den Namen und aktivieren/deaktivieren Sie unten.";
 $text['label-edit-note']['ar-eg'] = "";
 $text['label-edit-note']['he'] = "";
+$text['label-edit-note']['it-it'] = "Blocca la chiamata da un numero. Modifica il nome e abilita o disabilita.";
 
 $text['label-edit-edit']['en-us'] = "Call Block";
 $text['label-edit-edit']['es-cl'] = "Bloqueo de llamada";
@@ -181,6 +193,7 @@ $text['label-edit-edit']['ro'] = "Blocare apel";
 $text['label-edit-edit']['de-at'] = "Sperrlisten";
 $text['label-edit-edit']['ar-eg'] = "";
 $text['label-edit-edit']['he'] = "חסימת שיחה";
+$text['label-edit-edit']['it-it'] = "Blocco Chiamate";
 
 $text['label-edit-add-recent']['en-us'] = "Recent Calls";
 $text['label-edit-add-recent']['es-cl'] = "Llamadas Recientes";
@@ -195,6 +208,7 @@ $text['label-edit-add-recent']['ro'] = "Apeluri recente";
 $text['label-edit-add-recent']['de-at'] = "Kürzliche Anrufe";
 $text['label-edit-add-recent']['ar-eg'] = "";
 $text['label-edit-add-recent']['he'] = "שיחות אחרונות";
+$text['label-edit-add-recent']['it-it'] = "Chiamate Recenti";
 
 $text['label-edit-add']['en-us'] = "Call Block";
 $text['label-edit-add']['es-cl'] = "Agregar bloqueo de llamada";
@@ -209,6 +223,7 @@ $text['label-edit-add']['ro'] = "Blocare apel";
 $text['label-edit-add']['de-at'] = "Sperrlisten";
 $text['label-edit-add']['ar-eg'] = "حظر المكالمات";
 $text['label-edit-add']['he'] = "חסימת שיחה";
+$text['label-edit-add']['it-it'] = "Blocco Chiamate";
 
 $text['label-duration']['en-us'] = "Duration";
 $text['label-duration']['es-cl'] = "Duración";
@@ -223,6 +238,7 @@ $text['label-duration']['ro'] = "Durată";
 $text['label-duration']['de-at'] = "Dauer";
 $text['label-duration']['ar-eg'] = "المدة";
 $text['label-duration']['he'] = "משך השיחה";
+$text['label-duration']['it-it'] = "Durata";
 
 $text['label-delete-complete']['en-us'] = "Delete Complete";
 $text['label-delete-complete']['es-cl'] = "Eliminar Completo";
@@ -237,6 +253,7 @@ $text['label-delete-complete']['ro'] = "Ștergere completă";
 $text['label-delete-complete']['de-at'] = "Erfolgreich gelöscht";
 $text['label-delete-complete']['ar-eg'] = "اكتمال المسح";
 $text['label-delete-complete']['he'] = "המחיקה הושלמה";
+$text['label-delete-complete']['it-it'] = "Eliminazione Completata";
 
 $text['label-date-added']['en-us'] = "Date Added";
 $text['label-date-added']['es-cl'] = "Fecha de ingreso";
@@ -251,6 +268,7 @@ $text['label-date-added']['ro'] = "Data adăugării";
 $text['label-date-added']['de-at'] = "Datum hinzugefügt";
 $text['label-date-added']['ar-eg'] = "تم اضافة التاريخ";
 $text['label-date-added']['he'] = "התאריך נוסף";
+$text['label-date-added']['it-it'] = "Data Aggiunta";
 
 $text['label-count']['en-us'] = "Count";
 $text['label-count']['es-cl'] = "Conteo";
@@ -265,6 +283,7 @@ $text['label-count']['ro'] = "";
 $text['label-count']['de-at'] = "Zähler";
 $text['label-count']['ar-eg'] = "";
 $text['label-count']['he'] = "";
+$text['label-count']['it-it'] = "Conteggio";
 
 $text['label-called-on']['en-us'] = "Called on";
 $text['label-called-on']['es-cl'] = "Llamó en";
@@ -279,6 +298,7 @@ $text['label-called-on']['ro'] = "Sunat pe";
 $text['label-called-on']['de-at'] = "Anruf am";
 $text['label-called-on']['ar-eg'] = "تم الأتصال علي";
 $text['label-called-on']['he'] = "";
+$text['label-called-on']['it-it'] = "Chiamato su";
 
 $text['label-busy']['en-us'] = "Busy";
 $text['label-busy']['es-cl'] = "Ocupado";
@@ -293,6 +313,7 @@ $text['label-busy']['ro'] = "Ocupat";
 $text['label-busy']['de-at'] = "Besetzt";
 $text['label-busy']['ar-eg'] = "مشغول";
 $text['label-busy']['he'] = "תפוס";
+$text['label-busy']['it-it'] = "Occupato";
 
 $text['label-hold']['en-us'] = "Hold";
 $text['label-hold']['es-cl'] = "";
@@ -307,6 +328,7 @@ $text['label-hold']['ro'] = "";
 $text['label-hold']['de-at'] = "";
 $text['label-hold']['ar-eg'] = "";
 $text['label-hold']['he'] = "";
+$text['label-hold']['it-it'] = "Attesa";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
 $text['label-voicemail']['es-cl'] = "Correo de Voz";
@@ -318,6 +340,7 @@ $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-voicemail']['uk'] = "Голосова пошта";
 $text['label-voicemail']['de-at'] = "Mailbox";
 $text['label-voicemail']['he'] = "תא קולי";
+$text['label-voicemail']['it-it'] = "Casella Vocale";
 
 $text['label-add-note']['en-us'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
 $text['label-add-note']['es-cl'] = "Bloquea llamadas desde un número. Puede elegir un número de la lista de arriba o ingresar el n&uacute, nombre y activarlo abajo.";
@@ -332,6 +355,7 @@ $text['label-add-note']['ro'] = "";
 $text['label-add-note']['de-at'] = "Blockiert Anrufe von einer Nummer. Wählen Sie eine Nummer von der Liste oder geben Sie eine Nummer und einen Name ein. Aktivieren Sie die Sperrliste unten.";
 $text['label-add-note']['ar-eg'] = "";
 $text['label-add-note']['he'] = "";
+$text['label-add-note']['it-it'] = "Blocca le chiamate da un numero. Seleziona un numero dalla lista sopra o inserisci un numero, nome e abilita o disabilita il blocco.";
 
 $text['label-add-complete']['en-us'] = "Add Complete";
 $text['label-add-complete']['es-cl'] = "Agregar Completo";
@@ -346,6 +370,7 @@ $text['label-add-complete']['ro'] = "Adăugare completă";
 $text['label-add-complete']['de-at'] = "Erfolgreich hinzugefügt";
 $text['label-add-complete']['ar-eg'] = "تمت الأضافة";
 $text['label-add-complete']['he'] = "הוספה הושלמה";
+$text['label-add-complete']['it-it'] = "Inserimento Completato";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -360,6 +385,7 @@ $text['label-action']['ro'] = "Acțiune";
 $text['label-action']['de-at'] = "Aktion";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['he'] = "פעולה";
+$text['label-action']['it-it'] = "Azione";
 
 $text['description-number']['en-us'] = "Enter the exact number.";
 $text['description-number']['es-cl'] = "Ingrese el nú exacto.";
@@ -374,6 +400,7 @@ $text['description-number']['ro'] = "Introduceți numărul exact";
 $text['description-number']['de-at'] = "Geben Sie die genaue Nummer an.";
 $text['description-number']['ar-eg'] = "";
 $text['description-number']['he'] = "הכנס את המספר המבוקש";
+$text['description-number']['it-it'] = "Inserisci il numero esatto.";
 
 $text['description-name']['en-us'] = "Enter the name.";
 $text['description-name']['es-cl'] = "Introduzca el nombre.";
@@ -388,6 +415,7 @@ $text['description-name']['ro'] = "Introduceți numele";
 $text['description-name']['de-at'] = "Geben Sie den Namen an";
 $text['description-name']['ar-eg'] = "أدخل الأسم";
 $text['description-name']['he'] = "הכנס את השם";
+$text['description-name']['it-it'] = "Inserisci il Nome.";
 
 $text['description-enable']['en-us'] = "Set to true to enable call blocking for this number.";
 $text['description-enable']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
@@ -402,6 +430,7 @@ $text['description-enable']['ro'] = "";
 $text['description-enable']['de-at'] = "Setzen Sie auf An um den Blocker für diese Nummer zu aktivieren.";
 $text['description-enable']['ar-eg'] = "";
 $text['description-enable']['he'] = "";
+$text['description-enable']['it-it'] = "Seleziona vero per abilitare il blocco delle chiamate da questo numero.";
 
 $text['description-call-block']['en-us'] = "A list of numbers from which to block calls.";
 $text['description-call-block']['es-cl'] = "Un listado de números desde los cuales se bloquean las llamadas";
@@ -416,6 +445,7 @@ $text['description-call-block']['ro'] = "";
 $text['description-call-block']['de-at'] = "Eine Liste von Nummern die blockiert werden sollen.";
 $text['description-call-block']['ar-eg'] = "";
 $text['description-call-block']['he'] = "";
+$text['description-call-block']['it-it'] = "Una lista di numeri le cui chiamate sono bloccate.";
 
 $text['description-action']['en-us'] = "Set an action for calls from this number.";
 $text['description-action']['es-cl'] = "Configurar una acción para llamadas desde este número.";
@@ -430,5 +460,6 @@ $text['description-action']['ro'] = "";
 $text['description-action']['de-at'] = "Setzen Sie eine Aktion für Anrufe von dieser Nummer.";
 $text['description-action']['ar-eg'] = "";
 $text['description-action']['he'] = "";
+$text['description-action']['it-it'] = "Imposta un'azione per questo numero.";
 
 ?>
