@@ -1132,6 +1132,7 @@ $text['description-user_record']['de-at'] = "Wählen Sie ob lokale (local), ausg
 $text['description-user_record']['ro'] = "Alegeți dacă înregistrați apelurile locale, primite, trimise sau toate.";
 $text['description-user_record']['ar-eg'] = "";
 $text['description-user_record']['he'] = "";
+$text['description-user_record']['it-it'] = "Scegli se registrare le chiamate locali, in ingresso, in uscita o tutte.";
 
 $text['description-user_list']['en-us'] = "Assign the users that are assigned to this extension. ";
 $text['description-user_list']['es-cl'] = "Asigna los usuarios asociados a esta extensión";
@@ -1145,6 +1146,7 @@ $text['description-user_list']['de-at'] = "Weisen Sie dieser Nebenstelle Benutze
 $text['description-user_list']['ro'] = "Asignați utilizatorii acestei extensii.";
 $text['description-user_list']['ar-eg'] = "";
 $text['description-user_list']['he'] = "";
+$text['description-user_list']['it-it'] = "Assegna gli utenti che sono assegnati a questo interno. ";
 
 $text['description-user_context']['en-us'] = "Enter the user context here.";
 $text['description-user_context']['es-cl'] = "Ingrese el contexto de usuario aquí.";
@@ -1158,6 +1160,7 @@ $text['description-user_context']['de-at'] = "Geben Sie den Benutzer Kontext an.
 $text['description-user_context']['ro'] = "Introduceți contextul utilizatorilor aici.";
 $text['description-user_context']['ar-eg'] = "";
 $text['description-user_context']['he'] = "";
+$text['description-user_context']['it-it'] = "Inserisci il contesto dell'utente qui.";
 
 $text['description-toll_allow']['en-us'] = "Enter the toll allow value here.  (Examples: domestic,international,local)";
 $text['description-toll_allow']['es-cl'] = "Ingrese el tipo de tarifa especial a permitir (ej: doméstica, internacional, local).";
@@ -1171,6 +1174,7 @@ $text['description-toll_allow']['de-at'] = "Geben Sie die Berechtigung an. (z.B.
 $text['description-toll_allow']['ro'] = "Introduceți tipurile de destinație aici. (Ex.: fix, internațional, local)";
 $text['description-toll_allow']['ar-eg'] = "";
 $text['description-toll_allow']['he'] = "";
+$text['description-toll_allow']['it-it'] = "Inserisci il tipo di tariffa permessa.  (Esempio: urbana,internazionale,interna)";
 
 $text['description-sip_force_expires']['en-us'] = "To prevent stale registrations SIP Force expires can override the client expire.";
 $text['description-sip_force_expires']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
@@ -1184,6 +1188,7 @@ $text['description-sip_force_expires']['de-at'] = "Um abgelaufene Registrierunge
 $text['description-sip_force_expires']['ro'] = "Pentru a preveni înregistrările agățate SIP Force Expire poate suprascrie opțiunea Expire a clientului.";
 $text['description-sip_force_expires']['ar-eg'] = "";
 $text['description-sip_force_expires']['he'] = "";
+$text['description-sip_force_expires']['it-it'] = "Per prevenire le registrazioni SIP vecchie, questa impostazione può sovrascive il valore di scadenza del client.";
 
 $text['description-sip_force_contact']['en-us'] = "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.";
 $text['description-sip_force_contact']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
@@ -1197,6 +1202,7 @@ $text['description-sip_force_contact']['de-at'] = "Wählen Sie ob contact Port o
 $text['description-sip_force_contact']['ro'] = "Alegeți dacă rescrieți portul sau rescrieți IP-ul și portul.";
 $text['description-sip_force_contact']['ar-eg'] = "";
 $text['description-sip_force_contact']['he'] = "";
+$text['description-sip_force_contact']['it-it'] = "Scegli se riscrivere la porta di contatto, o riscrivere sia l'IP e la porta";
 
 $text['description-sip_bypass_media']['en-us'] = "Choose whether to send the media stream point to point or in transparent proxy mode.";
 $text['description-sip_bypass_media']['es-cl'] = "Seleccione si desea enviar el flujo de medios punto a punto o en modo proxy de transporte.";
@@ -1210,6 +1216,7 @@ $text['description-sip_bypass_media']['de-at'] = "Wählen Sie ob Mediendaten dir
 $text['description-sip_bypass_media']['ro'] = "Alegeți dacă doriți media în regim punct la punct sau proxy transparent.";
 $text['description-sip_bypass_media']['ar-eg'] = "";
 $text['description-sip_bypass_media']['he'] = "";
+$text['description-sip_bypass_media']['it-it'] = "Scegli se inviare il flusso audio punto-punto o nella modalità proxy trasparente.";
 
 $text['description-range']['en-us'] = "Enter the number of extensions to create. Increments each extension by 1.";
 $text['description-range']['es-cl'] = "Ingrese la cantidad de extensiones a crear. Incrementa cada extensión en 1";
@@ -1223,6 +1230,7 @@ $text['description-range']['de-at'] = "Geben Sie die Anzahl der Nebenstellen an,
 $text['description-range']['ro'] = "Introduceți numărul de extensii pe care le doriți create. Se incrementează fiecare extensie cu 1.";
 $text['description-range']['ar-eg'] = "";
 $text['description-range']['he'] = "";
+$text['description-range']['it-it'] = "Inserisci il numero dell'interno da creare. Incrementa ogni interno di 1.";
 
 $text['description-provisioning']['en-us'] = "Select a device and line number to assign to this extension.";
 $text['description-provisioning']['es-cl'] = "Seleccione un dispositivo y un número de línea para asignar a esta extensión.";
@@ -1236,6 +1244,7 @@ $text['description-provisioning']['de-at'] = "Wählen Sie eine Geräte- und Lini
 $text['description-provisioning']['ro'] = "Selectați un echipament și un număr de linie pentru a asigna această extensie.";
 $text['description-provisioning']['ar-eg'] = "";
 $text['description-provisioning']['he'] = "";
+$text['description-provisioning']['it-it'] = "Seleziona un telefono e un numero di linea da assegnare a questo interno.";
 
 $text['description-password']['en-us'] = "Enter the password here.";
 $text['description-password']['es-cl'] = "Ingrese una contraseña aquí";
@@ -1249,6 +1258,7 @@ $text['description-password']['de-at'] = "Geben Sie das Passwort ein.";
 $text['description-password']['ro'] = "Introduceți parola aici.";
 $text['description-password']['ar-eg'] = "";
 $text['description-password']['he'] = "הכנס סיסמא";
+$text['description-password']['it-it'] = "Inserisci la password qui.";
 
 $text['description-outbound_caller_id_number-select']['en-us'] = "Select the external (public) caller ID number.";
 $text['description-outbound_caller_id_number-select']['es-cl'] = "Seleccione el número de caller ID externo (público).";
@@ -1262,6 +1272,7 @@ $text['description-outbound_caller_id_number-select']['de-at'] = "Wählen Sie di
 $text['description-outbound_caller_id_number-select']['ro'] = "Selectați numărul Caller ID extern (public).";
 $text['description-outbound_caller_id_number-select']['ar-eg'] = "";
 $text['description-outbound_caller_id_number-select']['he'] = "";
+$text['description-outbound_caller_id_number-select']['it-it'] = "Seleziona il numero Caller ID esterno (pubblico).";
 
 $text['description-outbound_caller_id_number-custom']['en-us'] = "Enter the external (public) caller ID number here.";
 $text['description-outbound_caller_id_number-custom']['es-cl'] = "Ingrese el número de caller ID externo (público) aquí.";
@@ -1275,6 +1286,7 @@ $text['description-outbound_caller_id_number-custom']['de-at'] = "Geben Sie die 
 $text['description-outbound_caller_id_number-custom']['ro'] = "Introduceți numărul Caller ID extern (public).";
 $text['description-outbound_caller_id_number-custom']['ar-eg'] = "";
 $text['description-outbound_caller_id_number-custom']['he'] = "";
+$text['description-outbound_caller_id_number-custom']['it-it'] = "Inserisci qui il numero Caller Id esterno (pubblico).";
 
 $text['description-outbound_caller_id_name-select']['en-us'] = "Select the external (public) caller ID name.";
 $text['description-outbound_caller_id_name-select']['es-cl'] = "Seleccione el nombre de Caller ID externo (público).";
@@ -1288,6 +1300,7 @@ $text['description-outbound_caller_id_name-select']['de-at'] = "Wählen Sie die 
 $text['description-outbound_caller_id_name-select']['ro'] = "Selectați numele pentru Caller ID extern (public).";
 $text['description-outbound_caller_id_name-select']['ar-eg'] = "";
 $text['description-outbound_caller_id_name-select']['he'] = "";
+$text['description-outbound_caller_id_name-select']['it-it'] = "Seleziona il nome Caller Id esterno (pubblico).";
 
 $text['description-outbound_caller_id_name-custom']['en-us'] = "Enter the external (public) caller ID name here.";
 $text['description-outbound_caller_id_name-custom']['es-cl'] = "Ingrese el el nombre de Caller ID externo (público) aquí.";
@@ -1301,6 +1314,7 @@ $text['description-outbound_caller_id_name-custom']['de-at'] = "Geben Sie die ex
 $text['description-outbound_caller_id_name-custom']['ro'] = "Introduceți numele pentru Caller ID extern (public).";
 $text['description-outbound_caller_id_name-custom']['ar-eg'] = "";
 $text['description-outbound_caller_id_name-custom']['he'] = "";
+$text['description-outbound_caller_id_name-custom']['it-it'] = "Inserisci qui il nome Caller Id esterno (pubblico).";
 
 $text['description-number_alias']['en-us'] = "If the extension is numeric then number alias is optional.";
 $text['description-number_alias']['es-cl'] = "Si la extensión es numérica, entonces el alias numérico es opcional";
@@ -1314,6 +1328,7 @@ $text['description-number_alias']['de-at'] = "Wenn die Nebenstelle numerisch ist
 $text['description-number_alias']['ro'] = "Dacă numele extensiei este numeric atunci aliasul numeric este opțional.";
 $text['description-number_alias']['ar-eg'] = "";
 $text['description-number_alias']['he'] = "";
+$text['description-number_alias']['it-it'] = "Se l'interno è numerico allora il numero alias è opzionale.";
 
 $text['description-nibble_account']['en-us'] = "Enter the account number for nibblebill to use.";
 $text['description-nibble_account']['es-cl'] = "Ingrese el número de cuenta para ser usada por nibblebill.";
@@ -1327,6 +1342,7 @@ $text['description-nibble_account']['de-at'] = "Geben Sie den Nibblebill Benutze
 $text['description-nibble_account']['ro'] = "Introduceți numărul de cont folosit de  nibblebil.";
 $text['description-nibble_account']['ar-eg'] = "";
 $text['description-nibble_account']['he'] = "";
+$text['description-nibble_account']['it-it'] = "Inserisci il numero account da usare per nibblebill.";
 
 $text['description-mwi_account']['en-us'] = "MWI Account with user@domain of the voicemail to monitor.";
 $text['description-mwi_account']['es-cl'] = "Cuenta MWI con usuario@dominio del correo de voz para monitorear.";
@@ -1340,6 +1356,7 @@ $text['description-mwi_account']['de-at'] = "MWI Benutzer (user@domain) der Mail
 $text['description-mwi_account']['ro'] = "Contul MWI cu utilizator@domeniu al mesageriei vocale ce va fi monitorizat.";
 $text['description-mwi_account']['ar-eg'] = "";
 $text['description-mwi_account']['he'] = "";
+$text['description-mwi_account']['it-it'] = "Account MWI con utente@dominio della casella vocale da monitorare.";
 
 $text['description-absolute_codec_string']['en-us'] = "Absolute Codec String for the extension";
 $text['description-absolute_codec_string']['es-cl'] = "";
@@ -1353,6 +1370,7 @@ $text['description-absolute_codec_string']['de-at'] = "";
 $text['description-absolute_codec_string']['ro'] = "";
 $text['description-absolute_codec_string']['ar-eg'] = "";
 $text['description-absolute_codec_string']['he'] = "";
+$text['description-absolute_codec_string']['it-it'] = "Stringa codec per l'interno";
 
 $text['description-force_ping']['en-us'] = "Use OPTIONS to detect if extension is reacheable";
 $text['description-force_ping']['es-cl'] = "";
@@ -1366,6 +1384,7 @@ $text['description-force_ping']['de-at'] = "";
 $text['description-force_ping']['ro'] = "";
 $text['description-force_ping']['ar-eg'] = "";
 $text['description-force_ping']['he'] = "";
+$text['description-force_ping']['it-it'] = "Usa OPTIONS per verificare se l'interno è raggiungibile";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
 $text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";
@@ -1379,6 +1398,7 @@ $text['description-missed_call']['de-at'] = "Wählen Sie den Benachrichtigungsty
 $text['description-missed_call']['ro'] = "Selectați tipul de notificare și introduceți destinația potrivită.";
 $text['description-missed_call']['ar-eg'] = "";
 $text['description-missed_call']['he'] = "";
+$text['description-missed_call']['it-it'] = "Seleziona il tipo di notifica e inserisce la destinazione appropriata.";
 
 $text['description-limit_max']['en-us'] = "Enter the max number of outgoing calls for this user.";
 $text['description-limit_max']['es-cl'] = "Ingrese el número máximo de llamadas salientes para este usuario.";
@@ -1392,6 +1412,7 @@ $text['description-limit_max']['de-at'] = "Geben Sie die maximale Anzahl ausgehe
 $text['description-limit_max']['ro'] = "Introduceți numărul maxim de apeluri ce pot fi inițiate de acestă extensie.";
 $text['description-limit_max']['ar-eg'] = "";
 $text['description-limit_max']['he'] = "";
+$text['description-limit_max']['it-it'] = "Inserisci il numero massimo di chiamate uscenti contemporanee per questo utente.";
 
 $text['description-limit_destination']['en-us'] = "Enter the destination to send the calls when the max number of outgoing calls has been reached.";
 $text['description-limit_destination']['es-cl'] = "Ingrese el destino a quien enviar las llamadas cuando el máximo de llamadas salientes ha sido alcanzado.";
@@ -1405,6 +1426,7 @@ $text['description-limit_destination']['de-at'] = "Geben Sie das Ziel an, wohin 
 $text['description-limit_destination']['ro'] = "Introduceți destinația unde se vor trimite apelurile atunci când numărul maxim de apeluri  inițiate a fost atins.";
 $text['description-limit_destination']['ar-eg'] = "";
 $text['description-limit_destination']['he'] = "";
+$text['description-limit_destination']['it-it'] = "Inserisci la destinazione a cui inviare le telefonate quando il numero massimo di chiamate uscenti viene raggiunto.";
 
 $text['description-hold_music']['en-us'] = "Select the MOH Category here.";
 $text['description-hold_music']['es-cl'] = "Ingrese la categoría de música en espera aquí";
@@ -1418,6 +1440,7 @@ $text['description-hold_music']['de-at'] = "Wählen Sie Kategorie der Haltemusik
 $text['description-hold_music']['ro'] = "Selectați categoria pentru MOH (muzică în așteptare).";
 $text['description-hold_music']['ar-eg'] = "";
 $text['description-hold_music']['he'] = "";
+$text['description-hold_music']['it-it'] = "Seleziona la musica di attesa qui.";
 
 $text['description-extensions']['en-us'] = "Use this to configure your SIP extensions.";
 $text['description-extensions']['es-cl'] = "Utilizado para configurar Extensiones SIP.";
@@ -1431,6 +1454,7 @@ $text['description-extensions']['de-at'] = "Benutzen sie das um Ihre SIP Nebenst
 $text['description-extensions']['ro'] = "Folosiți această secțiune pentru a configura extensiile SIP.";
 $text['description-extensions']['ar-eg'] = "";
 $text['description-extensions']['he'] = "";
+$text['description-extensions']['it-it'] = "Utilizzato per configurare il tuo interno SIP.";
 
 $text['description-extension']['en-us'] = "Enter the alphanumeric extension. The default configuration allows 2 - 7 digit extensions.";
 $text['description-extension']['es-cl'] = "Ingrese una extensión alfanumérica. La configuración predeterminada permite extensiones de 2 a 7 dígitos.";
@@ -1444,6 +1468,7 @@ $text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Linie
 $text['description-extension']['ro'] = "Introduceți extensia în format alfanumeric. Configurația implicită permite extensii cu 2 - 7 digiți.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['he'] = "";
+$text['description-extension']['it-it'] = "Inserisci un interno alfanumerico. La configurazione di default permette di 2-7 cifre.";
 
 $text['description-enabled']['en-us'] = "Set the status of the extension.";
 $text['description-enabled']['es-cl'] = "Seleccione el estado de la extensión.";
@@ -1457,6 +1482,7 @@ $text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Nebenstell
 $text['description-enabled']['ro'] = "Configurați starea extensiei.";
 $text['description-enabled']['ar-eg'] = "";
 $text['description-enabled']['he'] = "";
+$text['description-enabled']['it-it'] = "Imposta lo stato dell'interno.";
 
 $text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID number here.";
 $text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID de emergencia aquí.";
@@ -1470,6 +1496,7 @@ $text['description-emergency_caller_id_number']['de-at'] = "Geben Sie die Anrufe
 $text['description-emergency_caller_id_number']['ro'] = "Introduceți numărul Caller ID pentru apeluri de urgență.";
 $text['description-emergency_caller_id_number']['ar-eg'] = "";
 $text['description-emergency_caller_id_number']['he'] = "";
+$text['description-emergency_caller_id_number']['it-it'] = "Inserisci qui il numero Caller ID di emergenza.";
 
 $text['description-emergency_caller_id_name']['en-us'] = "Enter the emergency caller ID name here.";
 $text['description-emergency_caller_id_name']['es-cl'] = "Ingrese el nombre de Caller ID de emergencia aquí.";
@@ -1483,6 +1510,7 @@ $text['description-emergency_caller_id_name']['de-at'] = "Geben Sie die Anruferk
 $text['description-emergency_caller_id_name']['ro'] = "Introduceți numele Caller ID pentru apeluri de urgență.";
 $text['description-emergency_caller_id_name']['ar-eg'] = "";
 $text['description-emergency_caller_id_name']['he'] = "";
+$text['description-emergency_caller_id_name']['it-it'] = "Inserisci qui il nome Caller ID di emergenza.";
 
 $text['description-effective_caller_id_number']['en-us'] = "Enter the internal caller ID number here.";
 $text['description-effective_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID interno aquí.";
@@ -1496,6 +1524,7 @@ $text['description-effective_caller_id_number']['de-at'] = "Geben Sie die intern
 $text['description-effective_caller_id_number']['ro'] = "Introduceți numărul intern Caller ID.";
 $text['description-effective_caller_id_number']['ar-eg'] = "";
 $text['description-effective_caller_id_number']['he'] = "";
+$text['description-effective_caller_id_number']['it-it'] = "Inserisci qui il numero Caller ID interno.";
 
 $text['description-effective_caller_id_name']['en-us'] = "Enter the internal caller ID name here.";
 $text['description-effective_caller_id_name']['es-cl'] = "Ingrese el nombre de Caller ID interno aquí.";
@@ -1509,6 +1538,7 @@ $text['description-effective_caller_id_name']['de-at'] = "Geben Sie die interne 
 $text['description-effective_caller_id_name']['ro'] = "Introduceți numele intern Caller ID.";
 $text['description-effective_caller_id_name']['ar-eg'] = "";
 $text['description-effective_caller_id_name']['he'] = "";
+$text['description-effective_caller_id_name']['it-it'] = "Inserisci qui il nome Caller ID interno.";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -1522,6 +1552,7 @@ $text['description-domain']['de-at'] = "";
 $text['description-domain']['ro'] = "";
 $text['description-domain']['ar-eg'] = "";
 $text['description-domain']['he'] = "";
+$text['description-domain']['it-it'] = "";
 
 $text['description-directory_visible']['en-us'] = "Select whether to hide the name from the directory.";
 $text['description-directory_visible']['es-cl'] = "Seleccione si desea esconder el nombre desde el directorio.";
@@ -1535,6 +1566,7 @@ $text['description-directory_visible']['de-at'] = "Wählen Sie ob der Name im Ve
 $text['description-directory_visible']['ro'] = "Selectați dacă doriți să ascundeți numele în directory.";
 $text['description-directory_visible']['ar-eg'] = "";
 $text['description-directory_visible']['he'] = "";
+$text['description-directory_visible']['it-it'] = "Seleziona se nascondere il nome dall'elenco.";
 
 $text['description-directory_full_name']['en-us'] = "Enter the first name followed by the last name.";
 $text['description-directory_full_name']['es-cl'] = "Ingrese el nombre seguido del apellido.";
@@ -1548,6 +1580,7 @@ $text['description-directory_full_name']['de-at'] = "Geben Sie zuerst den Vornam
 $text['description-directory_full_name']['ro'] = "Introduceți numele urmat de prenume.";
 $text['description-directory_full_name']['ar-eg'] = "";
 $text['description-directory_full_name']['he'] = "";
+$text['description-directory_full_name']['it-it'] = "Inserisci il nome seguito dal cognome.";
 
 $text['description-directory_exten_visible']['en-us'] = "Select whether announce the extension when calling the directory.";
 $text['description-directory_exten_visible']['es-cl'] = "Seleccione si desea mostrar la extensión cuando se llame al directorio.";
@@ -1561,6 +1594,7 @@ $text['description-directory_exten_visible']['de-at'] = "Geben Sie an, ob die Ne
 $text['description-directory_exten_visible']['ro'] = "Selectați dacă se anunță extensia atunci când se apelează directory.";
 $text['description-directory_exten_visible']['ar-eg'] = "";
 $text['description-directory_exten_visible']['he'] = "";
+$text['description-directory_exten_visible']['it-it'] = "Seleziona se annunciare l'interno quando si chiama dall'elenco.";
 
 $text['description-dial_string']['en-us'] = "Location of the endpoint.";
 $text['description-dial_string']['es-cl'] = "Ubicación de extremo.";
@@ -1574,6 +1608,7 @@ $text['description-dial_string']['de-at'] = "Standort des Endgeräts";
 $text['description-dial_string']['ro'] = "Locația echipamentului.";
 $text['description-dial_string']['ar-eg'] = "";
 $text['description-dial_string']['he'] = "";
+$text['description-dial_string']['it-it'] = "Locazione punto finale.";
 
 $text['description-cidr']['en-us'] = "Enter the CIDR here.";
 $text['description-cidr']['es-cl'] = "Ingrese el CIDR aquí";
@@ -1587,6 +1622,7 @@ $text['description-cidr']['de-at'] = "Geben Sie hier die Beschränkung der IP Ad
 $text['description-cidr']['ro'] = "Introduceți adresa în format CIDR aici.";
 $text['description-cidr']['ar-eg'] = "";
 $text['description-cidr']['he'] = "";
+$text['description-cidr']['it-it'] = "Inserisci qui il CIDR.";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
 $text['description-call_timeout']['es-cl'] = "Ingrese el tiempo de espera de llamada.";
@@ -1600,6 +1636,7 @@ $text['description-call_timeout']['de-at'] = "Geben Sie die Abwurfzeit an.";
 $text['description-call_timeout']['ro'] = "Introduceți timpul de expirare pentru apel.";
 $text['description-call_timeout']['ar-eg'] = "";
 $text['description-call_timeout']['he'] = "";
+$text['description-call_timeout']['it-it'] = "Inserisci il timeout di chiamata.";
 
 $text['description-call_screen_enabled']['en-us'] = "Choose whether to enable or disable call screening.";
 $text['description-call_screen_enabled']['es-cl'] = "";
@@ -1613,6 +1650,7 @@ $text['description-call_screen_enabled']['de-at'] = "Wählen Sie ob die Anruf An
 $text['description-call_screen_enabled']['ro'] = "";
 $text['description-call_screen_enabled']['ar-eg'] = "";
 $text['description-call_screen_enabled']['he'] = "";
+$text['description-call_screen_enabled']['it-it'] = "Scegli se abilitare o disabilitare il monitoraggio.";
 
 $text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";
 $text['description-call_group']['es-cl'] = "Ingrese el grupo a llamar aquí. Los grupos disponible de forma predeterminada son: ventas, soporte, facturación.";
@@ -1626,6 +1664,7 @@ $text['description-call_group']['de-at'] = "Geben Sie eine Rufgruppe an. Standar
 $text['description-call_group']['ro'] = "Introduceți grupul de apelare din care face parte utilizatorul. Grupurile disponibile implicit sunt vânzări, suport și plăți.";
 $text['description-call_group']['ar-eg'] = "";
 $text['description-call_group']['he'] = "";
+$text['description-call_group']['it-it'] = "Inserisci qui il gruppo di chiamata. I gruppi predefiniti disponibili: sales, support, billing.";
 
 $text['description-auth_acl']['en-us'] = "Enter the Auth ACL here.";
 $text['description-auth_acl']['es-cl'] = "Ingrese el ACL de autenticación aquí";
@@ -1639,6 +1678,7 @@ $text['description-auth_acl']['de-at'] = "Geben Sie die Auth ACL hier an.";
 $text['description-auth_acl']['ro'] = "Introduceți ACL-ul pentru autentificare aici.";
 $text['description-auth_acl']['ar-eg'] = "";
 $text['description-auth_acl']['he'] = "";
+$text['description-auth_acl']['it-it'] = "Inserisci qui l'autenticazione ACL.";
 
 $text['description-accountcode']['en-us'] = "Enter the account code here.";
 $text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta aquí.";
@@ -1652,6 +1692,7 @@ $text['description-accountcode']['de-at'] = "Geben Sie den Account Code hier an.
 $text['description-accountcode']['ro'] = "Introduceți codul contului aici.";
 $text['description-accountcode']['ar-eg'] = "";
 $text['description-accountcode']['he'] = "";
+$text['description-accountcode']['it-it'] = "Inserisci qui il codice account.";
 
 $text['checkbox-range']['en-us'] = "Auto-generate user with extension as login name";
 $text['checkbox-range']['es-cl'] = "Generar automáticamente usuario con su nombre de inicio de sesión como extensión";
@@ -1665,6 +1706,7 @@ $text['checkbox-range']['de-at'] = "Benutzer automatisch anlegen (Nebenstelle al
 $text['checkbox-range']['ro'] = "Generare automată utilizator și extensie. Extensia ca nume de utilizator.";
 $text['checkbox-range']['ar-eg'] = "";
 $text['checkbox-range']['he'] = "";
+$text['checkbox-range']['it-it'] = "Auto-genera l'utente con l'interno come nome di login";
 
 $text['button-call_routing']['en-us'] = "Call Routing";
 $text['button-call_routing']['es-cl'] = "enrutamiento de llamadas";
@@ -1677,5 +1719,6 @@ $text['button-call_routing']['de-at'] = "Call Routing";
 $text['button-call_routing']['ro'] = "rutare de apel";
 $text['button-call_routing']['ar-eg'] = "توجيه الدعوة";
 $text['button-call_routing']['he'] = "ניתוב שיחות";
+$text['button-call_routing']['it-it'] = "Instradamento Chiamate";
 
 ?>
