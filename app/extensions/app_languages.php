@@ -502,6 +502,7 @@ $text['label-proxy_media']['de-at'] = "Proxy Media";
 $text['label-proxy_media']['ro'] = "Proxy Media";
 $text['label-proxy_media']['ar-eg'] = "";
 $text['label-proxy_media']['he'] = "";
+$text['label-proxy_media']['it-it'] = "Proxy Media";
 
 $text['label-provisioning']['en-us'] = "Device Provisioning";
 $text['label-provisioning']['es-cl'] = "Provisionamiento de Teléfono";
@@ -543,6 +544,7 @@ $text['label-outbound_caller_id_number']['de-at'] = "Ausgehende Anruferkennung (
 $text['label-outbound_caller_id_number']['ro'] = "Număr Caller ID pentru ieșire";
 $text['label-outbound_caller_id_number']['ar-eg'] = "";
 $text['label-outbound_caller_id_number']['he'] = "";
+$text['label-outbound_caller_id_number']['it-it'] = "Numero Caller ID in Uscita";
 
 $text['label-outbound_caller_id_name']['en-us'] = "Outbound Caller ID Name";
 $text['label-outbound_caller_id_name']['es-cl'] = "Nombre de Caller ID Saliente";
@@ -556,6 +558,7 @@ $text['label-outbound_caller_id_name']['de-at'] = "Ausgehende Anruferkennung (Na
 $text['label-outbound_caller_id_name']['ro'] = "Nume Caller ID pentru ieșire";
 $text['label-outbound_caller_id_name']['ar-eg'] = "";
 $text['label-outbound_caller_id_name']['he'] = "";
+$text['label-outbound_caller_id_name']['it-it'] = "Nome Caller ID in Uscita";
 
 $text['label-number_alias']['en-us'] = "Number Alias";
 $text['label-number_alias']['es-cl'] = "Alias de Número";
@@ -569,6 +572,7 @@ $text['label-number_alias']['de-at'] = "Alternative Nummer";
 $text['label-number_alias']['ro'] = "Alias număr";
 $text['label-number_alias']['ar-eg'] = "";
 $text['label-number_alias']['he'] = "";
+$text['label-number_alias']['it-it'] = "Alias Numerico";
 
 $text['label-nibble_account']['en-us'] = "Nibble Account";
 $text['label-nibble_account']['es-cl'] = "Cuenta Nibble";
@@ -582,6 +586,7 @@ $text['label-nibble_account']['de-at'] = "Nibble Benutzer";
 $text['label-nibble_account']['ro'] = "Cont Nibble";
 $text['label-nibble_account']['ar-eg'] = "";
 $text['label-nibble_account']['he'] = "";
+$text['label-nibble_account']['it-it'] = "Account Nibble";
 
 $text['label-mwi_account']['en-us'] = "MWI Account";
 $text['label-mwi_account']['es-cl'] = "Cuenta MWI";
@@ -595,6 +600,7 @@ $text['label-mwi_account']['de-at'] = "MWI Benutzer";
 $text['label-mwi_account']['ro'] = "Cont MWI";
 $text['label-mwi_account']['ar-eg'] = "";
 $text['label-mwi_account']['he'] = "";
+$text['label-mwi_account']['it-it'] = "Account MWI";
 
 $text['label-missed_call']['en-us'] = "Missed Call";
 $text['label-missed_call']['es-cl'] = "Llamada Perdida";
@@ -608,6 +614,7 @@ $text['label-missed_call']['de-at'] = "Verpasster Anruf";
 $text['label-missed_call']['ro'] = "Apel pierdut";
 $text['label-missed_call']['ar-eg'] = "";
 $text['label-missed_call']['he'] = "";
+$text['label-missed_call']['it-it'] = "Chiamate Perse";
 
 $text['label-line']['en-us'] = "Line";
 $text['label-line']['pt-pt'] = "Linha";
@@ -621,6 +628,7 @@ $text['label-line']['de-at'] = "Linie";
 $text['label-line']['ro'] = "Linie";
 $text['label-line']['ar-eg'] = "خط";
 $text['label-line']['he'] = "קו";
+$text['label-line']['it-it'] = "Linea";
 
 $text['label-limit_max']['en-us'] = "Limit Max";
 $text['label-limit_max']['es-cl'] = "Límite Máximo";
@@ -634,6 +642,7 @@ $text['label-limit_max']['de-at'] = "Limit Max";
 $text['label-limit_max']['ro'] = "Limită maximă";
 $text['label-limit_max']['ar-eg'] = "";
 $text['label-limit_max']['he'] = "הגבל מקסימום";
+$text['label-limit_max']['it-it'] = "Limite Massimo";
 
 $text['label-limit_destination']['en-us'] = "Limit Destination";
 $text['label-limit_destination']['es-cl'] = "Límitar Destino";
@@ -647,6 +656,7 @@ $text['label-limit_destination']['de-at'] = "Limit Ziel";
 $text['label-limit_destination']['ro'] = "Limită destinație";
 $text['label-limit_destination']['ar-eg'] = "";
 $text['label-limit_destination']['he'] = "הגבל יעד";
+$text['label-limit_destination']['it-it'] = "Limita Destinatione";
 
 $text['label-hold_music']['en-us'] = "Hold Music";
 $text['label-hold_music']['es-cl'] = "Música en Espera";
@@ -660,6 +670,7 @@ $text['label-hold_music']['de-at'] = "Haltemusik";
 $text['label-hold_music']['ro'] = "Muzică în așteptare";
 $text['label-hold_music']['ar-eg'] = "";
 $text['label-hold_music']['he'] = "מוסיקה בהמתנה";
+$text['label-hold_music']['it-it'] = "Musica Attesa";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -673,6 +684,7 @@ $text['label-extension']['de-at'] = "Nebenstelle";
 $text['label-extension']['ro'] = "Extensie";
 $text['label-extension']['ar-eg'] = "رقم داخلي";
 $text['label-extension']['he'] = "שלוחה";
+$text['label-extension']['it-it'] = "Interno";
 
 $text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 $text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
@@ -686,6 +698,7 @@ $text['label-emergency_caller_id_number']['de-at'] = "Notruf Anruferkennung (Num
 $text['label-emergency_caller_id_number']['ro'] = "Număr Caller ID apel de urgență";
 $text['label-emergency_caller_id_number']['ar-eg'] = "";
 $text['label-emergency_caller_id_number']['he'] = "";
+$text['label-emergency_caller_id_number']['it-it'] = "Numero Caller ID Chiamate Emergenza";
 
 $text['label-emergency_caller_id_name']['en-us'] = "Emergency Caller ID Name";
 $text['label-emergency_caller_id_name']['es-cl'] = "Nombre de Caller ID de emergencia";
@@ -699,6 +712,7 @@ $text['label-emergency_caller_id_name']['de-at'] = "Notruf Anruferkennung (Name)
 $text['label-emergency_caller_id_name']['ro'] = "Nume Caller ID apel de urgență";
 $text['label-emergency_caller_id_name']['ar-eg'] = "";
 $text['label-emergency_caller_id_name']['he'] = "";
+$text['label-emergency_caller_id_name']['it-it'] = "Nome Caller ID Chiamate Emergenza";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "Email";
@@ -712,6 +726,7 @@ $text['label-email']['de-at'] = "Email";
 $text['label-email']['ro'] = "Email";
 $text['label-email']['ar-eg'] = "البريد الإليكتروني";
 $text['label-email']['he'] = "אימייל";
+$text['label-email']['it-it'] = "Email";
 
 $text['label-effective_caller_id_number']['en-us'] = "Effective Caller ID Number";
 $text['label-effective_caller_id_number']['es-cl'] = "Número de Caller ID Efectivo";
@@ -725,6 +740,7 @@ $text['label-effective_caller_id_number']['de-at'] = "Tatsächliche Anruferkennu
 $text['label-effective_caller_id_number']['ro'] = "Număr Caller ID";
 $text['label-effective_caller_id_number']['ar-eg'] = "رقم المتصل الفعال";
 $text['label-effective_caller_id_number']['he'] = "";
+$text['label-effective_caller_id_number']['it-it'] = "Numero Caller ID effettivo";
 
 $text['label-effective_caller_id_name']['en-us'] = "Effective Caller ID Name";
 $text['label-effective_caller_id_name']['es-cl'] = "Nombre de Caller ID Efectivo";
@@ -738,6 +754,7 @@ $text['label-effective_caller_id_name']['de-at'] = "Tatsächliche Anruferkennung
 $text['label-effective_caller_id_name']['ro'] = "Nume Caller ID";
 $text['label-effective_caller_id_name']['ar-eg'] = "إسم المتصل الفعال";
 $text['label-effective_caller_id_name']['he'] = "";
+$text['label-effective_caller_id_name']['it-it'] = "Nome Caller ID effettivo";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -751,6 +768,7 @@ $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['ro'] = "Domeniu";
 $text['label-domain']['ar-eg'] = "النطاق";
 $text['label-domain']['he'] = "דומיין";
+$text['label-domain']['it-it'] = "Dominio";
 
 $text['label-directory_visible']['en-us'] = "Directory Visible";
 $text['label-directory_visible']['es-cl'] = "Directorio Visible";
@@ -764,6 +782,7 @@ $text['label-directory_visible']['de-at'] = "Verzeichnis sichtbar";
 $text['label-directory_visible']['ro'] = "Vizibil în directory";
 $text['label-directory_visible']['ar-eg'] = "";
 $text['label-directory_visible']['he'] = "";
+$text['label-directory_visible']['it-it'] = "Elenco Visibile";
 
 $text['label-directory_full_name']['en-us'] = "Directory Full Name";
 $text['label-directory_full_name']['es-cl'] = "Nombre Completo de Directorio";
@@ -777,6 +796,7 @@ $text['label-directory_full_name']['de-at'] = "Verzeichnis voller Name";
 $text['label-directory_full_name']['ro'] = "Nume complet în directory";
 $text['label-directory_full_name']['ar-eg'] = "";
 $text['label-directory_full_name']['he'] = "";
+$text['label-directory_full_name']['it-it'] = "Nome Completo per Elenco";
 
 $text['label-directory_exten_visible']['en-us'] = "Directory Extension Visible";
 $text['label-directory_exten_visible']['es-cl'] = "Extensión de Directorio Visible";
@@ -790,6 +810,7 @@ $text['label-directory_exten_visible']['de-at'] = "Verzeichnis Nebenstelle sicht
 $text['label-directory_exten_visible']['ro'] = "Extensie vizibilă în directory";
 $text['label-directory_exten_visible']['ar-eg'] = "";
 $text['label-directory_exten_visible']['he'] = "";
+$text['label-directory_exten_visible']['it-it'] = "Interno visibile in Elenco";
 
 $text['label-dial_string']['en-us'] = "Dial String";
 $text['label-dial_string']['es-cl'] = "Cadena de Marcado";
@@ -803,6 +824,7 @@ $text['label-dial_string']['de-at'] = "Wahl Zeichenkette";
 $text['label-dial_string']['ro'] = "Secvență de apelare";
 $text['label-dial_string']['ar-eg'] = "";
 $text['label-dial_string']['he'] = "";
+$text['label-dial_string']['it-it'] = "Stringa di Composizione";
 
 $text['label-device_template']['en-us'] = "Template";
 $text['label-device_template']['pt-pt'] = "Template";
@@ -816,6 +838,7 @@ $text['label-device_template']['de-at'] = "Vorlage";
 $text['label-device_template']['ro'] = "Șablon";
 $text['label-device_template']['ar-eg'] = "";
 $text['label-device_template']['he'] = "";
+$text['label-device_template']['it-it'] = "Modello";
 
 $text['label-device_mac_address']['en-us'] = "MAC Address";
 $text['label-device_mac_address']['pt-pt'] = "Endereço MAC";
@@ -829,6 +852,7 @@ $text['label-device_mac_address']['de-at'] = "MAC Adresse";
 $text['label-device_mac_address']['ro'] = "Adresă MAC";
 $text['label-device_mac_address']['ar-eg'] = "";
 $text['label-device_mac_address']['he'] = "";
+$text['label-device_mac_address']['it-it'] = "Indirizzo MAC";
 
 $text['label-description']['en-us'] = "Description";
 $text['label-description']['es-cl'] = "Descripción";
@@ -842,6 +866,7 @@ $text['label-description']['de-at'] = "Beschreibung";
 $text['label-description']['ro'] = "Descriere";
 $text['label-description']['ar-eg'] = "الوصف";
 $text['label-description']['he'] = "תיאור";
+$text['label-description']['it-it'] = "Descrizione";
 
 $text['label-cidr']['en-us'] = "CIDR";
 $text['label-cidr']['es-cl'] = "CIDR";
@@ -855,6 +880,7 @@ $text['label-cidr']['de-at'] = "CIDR";
 $text['label-cidr']['ro'] = "CIDR";
 $text['label-cidr']['ar-eg'] = "";
 $text['label-cidr']['he'] = "";
+$text['label-cidr']['it-it'] = "CIDR";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['es-cl'] = "Tiempo de Espera de Llamada";
@@ -868,6 +894,7 @@ $text['label-call_timeout']['de-at'] = "Abwurfzeit";
 $text['label-call_timeout']['ro'] = "Timp de expirare apel";
 $text['label-call_timeout']['ar-eg'] = "";
 $text['label-call_timeout']['he'] = "";
+$text['label-call_timeout']['it-it'] = "Timeout di Chiamata";
 
 $text['label-call_screen_enabled']['en-us'] = "Call Screen";
 $text['label-call_screen_enabled']['es-cl'] = "";
@@ -881,6 +908,7 @@ $text['label-call_screen_enabled']['de-at'] = "Anruf Anzeige";
 $text['label-call_screen_enabled']['ro'] = "";
 $text['label-call_screen_enabled']['ar-eg'] = "";
 $text['label-call_screen_enabled']['he'] = "";
+$text['label-call_screen_enabled']['it-it'] = "Analisi Chiamata";
 
 $text['label-call_group']['en-us'] = "Call Group";
 $text['label-call_group']['es-cl'] = "Llamar a Grupo";
@@ -894,6 +922,7 @@ $text['label-call_group']['de-at'] = "Rufgruppe";
 $text['label-call_group']['ro'] = "Grup apelare";
 $text['label-call_group']['ar-eg'] = "";
 $text['label-call_group']['he'] = "קבוצת חיוג";
+$text['label-call_group']['it-it'] = "Gruppo di Chiamata";
 
 $text['label-bypass_media_after_bridge']['en-us'] = "Bypass Media After Bridge";
 $text['label-bypass_media_after_bridge']['es-cl'] = "Después de la omisión de medios puente";
@@ -907,6 +936,7 @@ $text['label-bypass_media_after_bridge']['de-at'] = "Bypass Media After Bridge";
 $text['label-bypass_media_after_bridge']['ro'] = "Bypass Media After Bridge";
 $text['label-bypass_media_after_bridge']['ar-eg'] = "";
 $text['label-bypass_media_after_bridge']['he'] = "";
+$text['label-bypass_media_after_bridge']['it-it'] = "Bypass Media Dopo Interconnessione";
 
 $text['label-bypass_media']['en-us'] = "Bypass Media";
 $text['label-bypass_media']['es-cl'] = "Bypass de Medios";
@@ -920,6 +950,7 @@ $text['label-bypass_media']['de-at'] = "Bypass Media";
 $text['label-bypass_media']['ro'] = "Bypass Media";
 $text['label-bypass_media']['ar-eg'] = "";
 $text['label-bypass_media']['he'] = "";
+$text['label-bypass_media']['it-it'] = "Bypass Media";
 
 $text['label-billing_warning']['en-us'] = "Billing is installed, please take note you need to have enough balance to create extensions.";
 $text['label-billing_warning']['es-cl'] = "La cobranza está instalada, por favor note que necesita suficiente balance para crear extensiones.";
@@ -933,6 +964,7 @@ $text['label-billing_warning']['de-at'] = "Das Rechnungsmodul ist installiert. B
 $text['label-billing_warning']['ro'] = "Sistemul de plată este instalat. Este nevoie de un sold pozitiv pentru a crea extensii.";
 $text['label-billing_warning']['ar-eg'] = "";
 $text['label-billing_warning']['he'] = "";
+$text['label-billing_warning']['it-it'] = "Il modulo di fatturazione è installato, ricorda che devi avere sufficiente credito per creare l'interno.";
 
 $text['label-auth_acl']['en-us'] = "Auth ACL";
 $text['label-auth_acl']['es-cl'] = "ACL de Autenticación";
@@ -946,6 +978,7 @@ $text['label-auth_acl']['de-at'] = "Auth ACL";
 $text['label-auth_acl']['ro'] = "ACL autentificare";
 $text['label-auth_acl']['ar-eg'] = "";
 $text['label-auth_acl']['he'] = "";
+$text['label-auth_acl']['it-it'] = "Autenticazione ACL";
 
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['es-cl'] = "Código de Cuenta";
@@ -959,6 +992,7 @@ $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['ar-eg'] = "";
 $text['label-accountcode']['he'] = "קוד חשבון";
+$text['label-accountcode']['it-it'] = "Codice Account";
 
 $text['label-is_registered']['en-us'] = "Registered";
 $text['label-is_registered']['es-cl'] = "";
@@ -972,6 +1006,7 @@ $text['label-is_registered']['de-at'] = "";
 $text['label-is_registered']['ro'] = "";
 $text['label-is_registered']['ar-eg'] = "";
 $text['label-is_registered']['he'] = "";
+$text['label-is_registered']['it-it'] = "Registrato";
 
 $text['header-extensions']['en-us'] = "Extensions";
 $text['header-extensions']['es-cl'] = "Extensiones";
@@ -985,6 +1020,7 @@ $text['header-extensions']['de-at'] = "Nebenstellen";
 $text['header-extensions']['ro'] = "Extensii";
 $text['header-extensions']['ar-eg'] = "الأرقام الداخلية";
 $text['header-extensions']['he'] = "שלוחות";
+$text['header-extensions']['it-it'] = "Interni";
 
 $text['header-extension-edit']['en-us'] = "Extension";
 $text['header-extension-edit']['es-cl'] = "Extensión";
@@ -998,6 +1034,7 @@ $text['header-extension-edit']['de-at'] = "Nebenstelle";
 $text['header-extension-edit']['ro'] = "Extensie";
 $text['header-extension-edit']['ar-eg'] = "رقم داخلي";
 $text['header-extension-edit']['he'] = "שלוחה";
+$text['header-extension-edit']['it-it'] = "Interno";
 
 $text['header-extension-add']['en-us'] = "Extension Add";
 $text['header-extension-add']['es-cl'] = "Agregar Extensión";
@@ -1011,6 +1048,7 @@ $text['header-extension-add']['de-at'] = "Nebenstelle hinzufügen";
 $text['header-extension-add']['ro'] = "Adăugare extensie";
 $text['header-extension-add']['ar-eg'] = "إضافة رقم داخلي";
 $text['header-extension-add']['he'] = "הוסף שלוחה";
+$text['header-extension-add']['it-it'] = "Aggiungi Interno";
 
 $text['description-voicemail_password']['en-us'] = "Enter the numeric voicemail  password here.";
 $text['description-voicemail_password']['es-cl'] = "Ingrese la contraseña numérica para el correo de voz aquí.";
@@ -1024,6 +1062,7 @@ $text['description-voicemail_password']['de-at'] = "Geben Sie das numerische Mai
 $text['description-voicemail_password']['ro'] = "Introduceți parola numerică pentru mesageria vocală aici.";
 $text['description-voicemail_password']['ar-eg'] = "";
 $text['description-voicemail_password']['he'] = "";
+$text['description-voicemail_password']['it-it'] = "Inserisci qui la password numerica per la casella vocale.";
 
 $text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to (optional).";
 $text['description-voicemail_mail_to']['es-cl'] = "Ingrese una dirección de correo electrónico para enviar el correo de voz (opcional).";
@@ -1037,6 +1076,7 @@ $text['description-voicemail_mail_to']['de-at'] = "Geben Sie die Email Adresse a
 $text['description-voicemail_mail_to']['ro'] = "Introduceți adresa de email unde se vor trimite mesajele vocale (opțional).";
 $text['description-voicemail_mail_to']['ar-eg'] = "";
 $text['description-voicemail_mail_to']['he'] = "";
+$text['description-voicemail_mail_to']['it-it'] = "Inserisci l'indirizzo email al quale inviare i messaggi vocali (opzionale).";
 
 $text['description-voicemail_local_after_email']['en-us'] = "Choose whether to keep the voicemail in the system after sending the email notification.";
 $text['description-voicemail_local_after_email']['es-cl'] = "Escoja si desea mantener el buzón de voz en el sistema después de enviar la notificación por correo electrónico.";
@@ -1050,6 +1090,7 @@ $text['description-voicemail_local_after_email']['de-at'] = "Wählen Sie ob die 
 $text['description-voicemail_local_after_email']['ro'] = "Alegeți dacă păstrați mesajele vocale după ce sunt trimise prin email.";
 $text['description-voicemail_local_after_email']['ar-eg'] = "";
 $text['description-voicemail_local_after_email']['he'] = "";
+$text['description-voicemail_local_after_email']['it-it'] = "Scegli se mantenere il messaggio vocale nel sistema dopo aver spedito l'email di notifica.";
 
 $text['description-voicemail_file']['en-us'] = "Select a listening option to include with the email notification.";
 $text['description-voicemail_file']['es-cl'] = "Seleccione qué opción de escucha para incluir en la notificación de correo electrónico.";
@@ -1063,6 +1104,7 @@ $text['description-voicemail_file']['de-at'] = "Wählen Sie eine Option für die
 $text['description-voicemail_file']['ro'] = "Selectați o opțiune de a asculta mesajul vocal în notificarea prin email.";
 $text['description-voicemail_file']['ar-eg'] = "";
 $text['description-voicemail_file']['he'] = "";
+$text['description-voicemail_file']['it-it'] = "Seleziona un'opzione di ascolto da includere nell'email di notifica.";
 
 $text['description-voicemail_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
 $text['description-voicemail_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
@@ -1076,6 +1118,7 @@ $text['description-voicemail_enabled']['de-at'] = "Mailbox für diese Nebenstell
 $text['description-voicemail_enabled']['ro'] = "Activați/dezactivați mesageria vocală pentru această extensie.";
 $text['description-voicemail_enabled']['ar-eg'] = "";
 $text['description-voicemail_enabled']['he'] = "";
+$text['description-voicemail_enabled']['it-it'] = "Abilita/disabilita la casella vocale per questo interno.";
 
 $text['description-user_record']['en-us'] = "Choose whether to record local, inbound, outbound, or all.";
 $text['description-user_record']['es-cl'] = "Seleccione entrantes, salientes o para grabar todas las llamadas.";
