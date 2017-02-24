@@ -549,6 +549,6 @@ $text['button-view_all']['sv-se'] = "Visa Allt";
 $text['button-view_all']['ro'] = "";
 $text['button-view_all']['de-at'] = "Alle anzeigen";
 $text['button-view_all']['he'] = "הצג הכל";
-$text['button-view_all']['it-it'] = "Vedi Tutto";
+$text['button-view_all']['it-it'] = "Mostra Tutto";
 
 ?>
