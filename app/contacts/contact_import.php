@@ -363,7 +363,7 @@ else {
 			require_once "resources/footer.php";
 
 		//end the script
-			break;
+			exit;
 	}
 
 //include the header
