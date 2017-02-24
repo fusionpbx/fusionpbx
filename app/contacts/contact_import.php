@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -210,7 +210,8 @@
 			//$line = str_replace("company", "organization", $line);
 			//$line = str_replace("company", "contact_email", $line);
 
-		exit;
+		//end the script
+			exit;
 	}
 
 //get the parent table
