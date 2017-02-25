@@ -387,6 +387,9 @@
 	if (permission_exists("xml_cdr_mos")) {
 		$sql .= "rtp_audio_in_mos, ";
 	}
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+		$sql .= "carrier_name, call_buy, call_sell, ";
+	}
 	$sql .= "(answer_epoch - start_epoch) as tta ";
 	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
 		$sql .= ", domain_name ";
