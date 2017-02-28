@@ -10,6 +10,7 @@ $text['title-2']['sv-se'] = "Aktiva anknytningar";
 $text['title-2']['uk'] = "Активні розширення";
 $text['title-2']['de-at'] = "Aktive Nebenstellen";
 $text['title-2']['he'] = "שלוחה פעילה";
+$text['title-2']['it-it'] = "Interni Attivi";
 
 $text['title']['en-us'] = "Active Calls";
 $text['title']['es-cl'] = "Llamadas Activas";
@@ -21,6 +22,7 @@ $text['title']['sv-se'] = "Aktiva Samtal";
 $text['title']['uk'] = "Активні дзвінки";
 $text['title']['de-at'] = "Aktive Gespräche";
 $text['title']['he'] = "הגדרת חשבון";
+$text['title']['it-it'] = "Chiamate Attive";
 
 $text['label-time']['en-us'] = "Time";
 $text['label-time']['es-cl'] = "Tiempo";
@@ -32,6 +34,7 @@ $text['label-time']['sv-se'] = "Tid";
 $text['label-time']['uk'] = "Час";
 $text['label-time']['de-at'] = "Zeit";
 $text['label-time']['he'] = "אזור זמן";
+$text['label-time']['it-it'] = "Tempo";
 
 $text['label-stop']['en-us'] = "stop record";
 $text['label-stop']['es-cl'] = "terminar grabación";
@@ -43,6 +46,7 @@ $text['label-stop']['sv-se'] = "Stoppa inspelning";
 $text['label-stop']['uk'] = "Зупинити запис";
 $text['label-stop']['de-at'] = "Stoppe Aufnahme";
 $text['label-stop']['he'] = "הפסק הקלטה";
+$text['label-stop']['it-it'] = "ferma registrazione";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -54,6 +58,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk'] = "Статус";
 $text['label-status']['de-at'] = "Status";
 $text['label-status']['he'] = "סטטוס";
+$text['label-status']['it-it'] = "Stato";
 
 $text['label-start']['en-us'] = "start record";
 $text['label-start']['es-cl'] = "iniciar grabación";
@@ -65,6 +70,7 @@ $text['label-start']['sv-se'] = "Starta inspelning";
 $text['label-start']['uk'] = "Запустити запис";
 $text['label-start']['de-at'] = "Starte Aufnahme";
 $text['label-start']['he'] = "התחל הקלטה";
+$text['label-start']['it-it'] = "avvia registrazione";
 
 $text['label-secure']['en-us'] = "Secure";
 $text['label-secure']['es-cl'] = "Seguro";
@@ -76,6 +82,7 @@ $text['label-secure']['sv-se'] = "Skydda";
 $text['label-secure']['uk'] = "Захищено";
 $text['label-secure']['de-at'] = "Sicher";
 $text['label-secure']['he'] = "מאובטח";
+$text['label-secure']['it-it'] = "Sicuro";
 
 $text['label-refresh_pause']['en-us'] = "Pause Refresh";
 $text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
@@ -86,6 +93,7 @@ $text['label-refresh_pause']['pl'] = "Pauzuj odÅ›wieÅ¼anie";
 $text['label-refresh_pause']['uk'] = "пауза Оновити";
 $text['label-refresh_pause']['de-at'] = "Seite neu laden deaktivieren";
 $text['label-refresh_pause']['he'] = "עצור רענון";
+$text['label-refresh_pause']['it-it'] = "Interrompi refresh";
 
 $text['label-refresh_enable']['en-us'] = "Enable Refresh";
 $text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
@@ -96,6 +104,7 @@ $text['label-refresh_enable']['pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
 $text['label-refresh_enable']['uk'] = "включити Оновити";
 $text['label-refresh_enable']['de-at'] = "Seite neu laden aktivieren";
 $text['label-refresh_enable']['he'] = "אפשר רענון";
+$text['label-refresh_enable']['it-it'] = "Attiva Refresh";
 
 $text['label-profile']['en-us'] = "Profile";
 $text['label-profile']['es-cl'] = "Perfil";
@@ -107,6 +116,7 @@ $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['uk'] = "Профіль";
 $text['label-profile']['de-at'] = "Profil";
 $text['label-profile']['he'] = "פרופיל";
+$text['label-profile']['it-it'] = "Profilo";
 
 $text['label-park-extension']['en-us'] = "Park";
 $text['label-park-extension']['es-cl'] = "Parquear Extensión";
@@ -118,6 +128,7 @@ $text['label-park-extension']['sv-se'] = "Parkera";
 $text['label-park-extension']['uk'] = "Паркувати";
 $text['label-park-extension']['de-at'] = "Parken";
 $text['label-park-extension']['he'] = "חניה";
+$text['label-park-extension']['it-it'] = "Parcheggia";
 
 $text['label-park']['en-us'] = "park";
 $text['label-park']['es-cl'] = "parquear";
@@ -129,6 +140,7 @@ $text['label-park']['sv-se'] = "Parkera";
 $text['label-park']['uk'] = "паркувати";
 $text['label-park']['de-at'] = "Parken";
 $text['label-park']['he'] = "חניה";
+$text['label-park']['it-it'] = "parcheggia";
 
 $text['label-opt']['en-us'] = "Options";
 $text['label-opt']['es-cl'] = "Opciones";
@@ -140,6 +152,7 @@ $text['label-opt']['sv-se'] = "Alternativ";
 $text['label-opt']['uk'] = "Опції";
 $text['label-opt']['de-at'] = "Optionen";
 $text['label-opt']['he'] = "אפשרויות";
+$text['label-opt']['it-it'] = "Opzioni";
 
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
@@ -151,6 +164,7 @@ $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['uk'] = "Номер";
 $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['he'] = "מספר";
+$text['label-number']['it-it'] = "Numero";
 
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
@@ -162,6 +176,7 @@ $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk'] = "Повідомлення";
 $text['label-message']['de-at'] = "Nachricht";
 $text['label-message']['he'] = "הודעה";
+$text['label-message']['it-it'] = "Messaggio";
 
 $text['label-hangup']['en-us'] = "Hangup";
 $text['label-hangup']['es-cl'] = "Terminar";
@@ -173,6 +188,7 @@ $text['label-hangup']['sv-se'] = "Avsluta";
 $text['label-hangup']['uk'] = "Розірвати";
 $text['label-hangup']['de-at'] = "Auflegen";
 $text['label-hangup']['he'] = "ניתוק";
+$text['label-hangup']['it-it'] = "Riaggancia";
 
 $text['label-ext']['en-us'] = "Ext";
 $text['label-ext']['es-cl'] = "Extensión";
@@ -184,6 +200,7 @@ $text['label-ext']['sv-se'] = "Ank";
 $text['label-ext']['uk'] = "Ext ";
 $text['label-ext']['de-at'] = "Nst";
 $text['label-ext']['he'] = "שלוחה";
+$text['label-ext']['it-it'] = "Interno";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -194,6 +211,7 @@ $text['label-domain']['pl'] = "Domena";
 $text['label-domain']['uk'] = "Домен";
 $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['he'] = "תחום";
+$text['label-domain']['it-it'] = "Dominio";
 
 $text['label-destination']['en-us'] = "Dest";
 $text['label-destination']['es-cl'] = "Destino";
@@ -205,6 +223,7 @@ $text['label-destination']['sv-se'] = "Dest";
 $text['label-destination']['uk'] = "Номер";
 $text['label-destination']['de-at'] = "Ziel";
 $text['label-destination']['he'] = "יעד";
+$text['label-destination']['it-it'] = "Destinazione";
 
 $text['label-created']['en-us'] = "Created";
 $text['label-created']['es-cl'] = "Creado";
@@ -216,6 +235,7 @@ $text['label-created']['sv-se'] = "Skapad";
 $text['label-created']['uk'] = "Створено";
 $text['label-created']['de-at'] = "Geöffnet";
 $text['label-created']['he'] = "נוצר";
+$text['label-created']['it-it'] = "Creato";
 
 $text['label-codec']['en-us'] = "Read / Write Codec";
 $text['label-codec']['es-cl'] = "Codec de Lectura / Escritura ";
@@ -227,6 +247,7 @@ $text['label-codec']['sv-se'] = "Läs/Skriv Codec";
 $text['label-codec']['uk'] = "Кодеки читання/запису";
 $text['label-codec']['de-at'] = "Lese / Schreib Codec";
 $text['label-codec']['he'] = "קריאה / כתיבה codec";
+$text['label-codec']['it-it'] = "Codec Lettura / Scrittura";
 
 $text['label-cid-number']['en-us'] = "CID Number";
 $text['label-cid-number']['es-cl'] = "Número CID";
@@ -238,6 +259,7 @@ $text['label-cid-number']['sv-se'] = "CID, nummerspresentation";
 $text['label-cid-number']['uk'] = "CID Номер";
 $text['label-cid-number']['de-at'] = "Anrufer Nummer";
 $text['label-cid-number']['he'] = "זהוי מספר";
+$text['label-cid-number']['it-it'] = "Numero CID";
 
 $text['label-cid-name']['en-us'] = "CID Name";
 $text['label-cid-name']['es-cl'] = "Nombre CID";
@@ -249,6 +271,7 @@ $text['label-cid-name']['sv-se'] = "CID namnpresentation";
 $text['label-cid-name']['uk'] = "CID Ім’я";
 $text['label-cid-name']['de-at'] = "Anrufer Name";
 $text['label-cid-name']['he'] = "זהוי שם";
+$text['label-cid-name']['it-it'] = "Nome CID";
 
 $text['label-app']['en-us'] = "Application";
 $text['label-app']['es-cl'] = "Aplicación";
@@ -260,6 +283,7 @@ $text['label-app']['sv-se'] = "Ansökan";
 $text['label-app']['uk'] = "Додаток";
 $text['label-app']['de-at'] = "Anwendung";
 $text['label-app']['he'] = "אפליקציה";
+$text['label-app']['it-it'] = "Applicazione";
 
 $text['description-2']['en-us'] = "Use this to view all extensions and monitor and interact with active calls.";
 $text['description-2']['es-cl'] = "Utilice este menú para ver todas las extensiones, monitorear e interactuar con las llamadas activas.";
@@ -271,6 +295,7 @@ $text['description-2']['sv-se'] = "Använd detta för att se alla anknytningar o
 $text['description-2']['uk'] = "Використовуйте це, щоб переглянути всі розширення, контролювати і взаємодіяти з активними викликами.";
 $text['description-2']['de-at'] = "Benutzen Sie die Funktionen um alle Nebenstellen anzuzeigen, zu überwachen und aktive Gespräche zu steuern.";
 $text['description-2']['he'] = "";
+$text['description-2']['it-it'] = "Usa questo menu per visualizzare tutti gli interni e monitorare e interagire con le chiamate attive.";
 
 $text['description']['en-us'] = "Use this to monitor and interact with the active calls.";
 $text['description']['es-cl'] = "Utilice este menú para monitorear e interactuar con las llamadas activas.";
@@ -282,6 +307,7 @@ $text['description']['sv-se'] = "Använd detta för att monitorera och hantera a
 $text['description']['uk'] = "Використовуйте це, щоб контролювати і взаємодіяти з активними викликами.";
 $text['description']['de-at'] = "Benutzen Sie die Funktionen um aktive Gespräche zu steuern.";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+$text['description']['it-it'] = "Usa questo menu per monitorare e interagire con le chiamate attive.";
 
 $text['confirm-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['confirm-socket']['es-cl'] = "Conexión con socket fallida.";
@@ -293,6 +319,7 @@ $text['confirm-socket']['sv-se'] = "Anslutning till 'Event Socket' misslyckades"
 $text['confirm-socket']['uk'] = "Помилка підключення до сокета подій";
 $text['confirm-socket']['de-at'] = "Verbindung zum Event Socket fehlgeschlagen.";
 $text['confirm-socket']['he'] = "";
+$text['confirm-socket']['it-it'] = "Connessione al Socket Eventi fallita.";
 
 $text['confirm-hangup']['en-us'] = "Do you really want to hangup this call?";
 $text['confirm-hangup']['es-cl'] = "¿Realmente desea terminar esta llamada?";
@@ -304,6 +331,7 @@ $text['confirm-hangup']['sv-se'] = "Vill du verkligen avsluta detta samtal";
 $text['confirm-hangup']['uk'] = "Ви дійсно бажаєте розірвати дзвінок?";
 $text['confirm-hangup']['de-at'] = "Wollen Sie dieses Gespräch wirklich beenden?";
 $text['confirm-hangup']['he'] = "";
+$text['confirm-hangup']['it-it'] = "Vuoi davvero riagganciare questa chiamata?";
 
 $text['check-onbreak-status']['en-us'] = "On Break";
 $text['check-onbreak-status']['es-cl'] = "En Pausa";
@@ -315,6 +343,7 @@ $text['check-onbreak-status']['sv-se'] = "På Rast";
 $text['check-onbreak-status']['uk'] = "На перерві";
 $text['check-onbreak-status']['de-at'] = "Auf Pause";
 $text['check-onbreak-status']['he'] = "בהפסקה";
+$text['check-onbreak-status']['it-it'] = "In Pausa";
 
 $text['check-loggedout-status']['en-us'] = "Logged Out";
 $text['check-loggedout-status']['es-cl'] = "Desconectado";
@@ -326,6 +355,7 @@ $text['check-loggedout-status']['sv-se'] = "Utloggad";
 $text['check-loggedout-status']['uk'] = "Вийшов";
 $text['check-loggedout-status']['de-at'] = "Abgemeldet";
 $text['check-loggedout-status']['he'] = "התנתק";
+$text['check-loggedout-status']['it-it'] = "Sconnesso";
 
 $text['check-do-not-disturb-status']['en-us'] = "Do Not Disturb";
 $text['check-do-not-disturb-status']['es-cl'] = "No molestar";
@@ -337,6 +367,7 @@ $text['check-do-not-disturb-status']['sv-se'] = "Stör Ej";
 $text['check-do-not-disturb-status']['uk'] = "Не турбувати";
 $text['check-do-not-disturb-status']['de-at'] = "Bitte nicht Stören";
 $text['check-do-not-disturb-status']['he'] = "לא להפריע";
+$text['check-do-not-disturb-status']['it-it'] = "Non Disturbare";
 
 $text['check-available-status']['en-us'] = "Available";
 $text['check-available-status']['es-cl'] = "Disponible";
@@ -348,6 +379,7 @@ $text['check-available-status']['sv-se'] = "Anträffbar";
 $text['check-available-status']['uk'] = "Доступний";
 $text['check-available-status']['de-at'] = "Erreichbar";
 $text['check-available-status']['he'] = "זמין";
+$text['check-available-status']['it-it'] = "Disponibile";
 
 $text['check-available-on-demand-status']['en-us'] = "Available (On Demand)";
 $text['check-available-on-demand-status']['es-cl'] = "Disponible (On Demand)";
@@ -359,6 +391,7 @@ $text['check-available-on-demand-status']['sv-se'] = "Anträffbar (På Begäran)
 $text['check-available-on-demand-status']['uk'] = "Доступний (на вимогу)";
 $text['check-available-on-demand-status']['de-at'] = "Erreichbar (Auf Anfrage)";
 $text['check-available-on-demand-status']['he'] = "";
+$text['check-available-on-demand-status']['it-it'] = "Disponibile (Su Richiesta)";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
@@ -369,5 +402,6 @@ $text['button-show_all']['pl'] = "Pokaż Wszystkie";
 $text['button-show_all']['uk'] = "Показати всі";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "";
+$text['button-show_all']['it-it'] = "Mostra Tutto";
 
 ?>

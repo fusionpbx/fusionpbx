@@ -10,6 +10,7 @@ $text['title-music_on_hold_settings']['sv-se'] = "Väntmusik inställningar";
 $text['title-music_on_hold_settings']['uk'] = "Музика на утриманні настройки";
 $text['title-music_on_hold_settings']['de-at'] = "Haltemusik Einstellungen";
 $text['title-music_on_hold_settings']['he'] = "מוסיקה על גדרות מתן";
+$text['title-music_on_hold_settings']['it-it'] = "Impostazioni Musica di Attesa";
 
 $text['title-music_on_hold']['en-us'] = "Music on Hold";
 $text['title-music_on_hold']['es-cl'] = "Musica en Espera";
@@ -21,6 +22,7 @@ $text['title-music_on_hold']['sv-se'] = "Väntmusik";
 $text['title-music_on_hold']['uk'] = "Музика на утриманні";
 $text['title-music_on_hold']['de-at'] = "Haltemusik";
 $text['title-music_on_hold']['he'] = "מוסיקה בהמתנה";
+$text['title-music_on_hold']['it-it'] = "Musica di Attesa";
 
 $text['label-others']['en-us'] = "Others";
 $text['label-others']['pt-pt'] = "Outras";
@@ -34,6 +36,7 @@ $text['label-others']['de-at'] = "Andere";
 $text['label-others']['he'] = "אחרים";
 $text['label-others']['ar-eg'] = "آخرون";
 $text['label-others']['ru-ru'] = "другие";
+$text['label-others']['it-it'] = "Altro";
 
 $text['option-local']['en-us'] = "Local";
 $text['option-local']['es-cl'] = "Local";
@@ -45,6 +48,7 @@ $text['option-local']['uk'] = "місцевий";
 $text['option-local']['sv-se'] = "Lokal";
 $text['option-local']['de-at'] = "lokal";
 $text['option-local']['he'] = "מְקוֹמִי";
+$text['option-local']['it-it'] = "Locale";
 
 $text['option-global']['en-us'] = "Global";
 $text['option-global']['es-cl'] = "Global";
@@ -56,6 +60,7 @@ $text['option-global']['uk'] = "Глобальний";
 $text['option-global']['sv-se'] = "Global";
 $text['option-global']['de-at'] = "Global";
 $text['option-global']['he'] = "כללי";
+$text['option-global']['it-it'] = "Globale";
 
 $text['option-default']['en-us'] = "Default";
 $text['option-default']['es-cl'] = "Predeterminado";
@@ -67,6 +72,7 @@ $text['option-default']['sv-se'] = "Standard";
 $text['option-default']['uk'] = "Типово";
 $text['option-default']['de-at'] = "Standard";
 $text['option-default']['he'] = "ברירת מחדל";
+$text['option-default']['it-it'] = "Predefinito";
 
 $text['message-upload_completed']['en-us'] = "Upload Completed";
 $text['message-upload_completed']['es-cl'] = "Cargar Completado";
@@ -78,6 +84,7 @@ $text['message-upload_completed']['sv-se'] = "Ladda Avslutat";
 $text['message-upload_completed']['uk'] = "Завантажено";
 $text['message-upload_completed']['de-at'] = "Erfolgreich hochgeladen";
 $text['message-upload_completed']['he'] = "העדכון הושלם בהצלחה";
+$text['message-upload_completed']['it-it'] = "Caricamento Completato";
 
 $text['message-unsupported_file_type']['en-us'] = "Unsupported File Type";
 $text['message-unsupported_file_type']['es-cl'] = "Tipo de archivo no compatible";
@@ -89,6 +96,7 @@ $text['message-unsupported_file_type']['sv-se'] = "Inte stöds filtyp";
 $text['message-unsupported_file_type']['uk'] = "Тип файлу не підтримується";
 $text['message-unsupported_file_type']['de-at'] = "Dateityp nicht unterstützt";
 $text['message-unsupported_file_type']['he'] = "סוג הקובץ לא נתמך";
+$text['message-unsupported_file_type']['it-it'] = "Tipo File non Supportato";
 
 $text['message-nofiles']['en-us'] = "No files found.";
 $text['message-nofiles']['es-cl'] = "No se encontraron archivos.";
@@ -100,6 +108,7 @@ $text['message-nofiles']['sv-se'] = "Ingen ljudfil.";
 $text['message-nofiles']['uk'] = "Файлів не знайдено";
 $text['message-nofiles']['de-at'] = "Es wurden keine Dateien gefunden.";
 $text['message-nofiles']['he'] = "לא נמצאו קבצים";
+$text['message-nofiles']['it-it'] = "File non trovato.";
 
 $text['message-missing_required_fields']['en-us'] = "Missing Required Fields";
 $text['message-missing_required_fields']['es-cl'] = "Missing Campos requeridos";
@@ -111,6 +120,7 @@ $text['message-missing_required_fields']['sv-se'] = "Saknas Obligatoriska fält"
 $text['message-missing_required_fields']['uk'] = "Відсутні поля обов'язкові для заповнення";
 $text['message-missing_required_fields']['de-at'] = "Fehlende Pflichtangaben ";
 $text['message-missing_required_fields']['he'] = "חסרים שדות חובה";
+$text['message-missing_required_fields']['it-it'] = "Alcuni campi obbligatori sono mancanti";
 
 $text['message-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['message-event-socket']['es-cl'] = "Conexión a socket fallida.";
@@ -122,6 +132,7 @@ $text['message-event-socket']['sv-se'] = "Kontakt till 'Event Socket' misslyckad
 $text['message-event-socket']['uk'] = "Помилка підключення до сокета подій";
 $text['message-event-socket']['de-at'] = "Verbindung zum Event Socket unterbrochen.";
 $text['message-event-socket']['he'] = "";
+$text['message-event-socket']['it-it'] = "Connessione al Socket Eventi fallita.";
 
 $text['message-click-select']['en-us'] = "Double-Click to Select an Existing Category";
 $text['message-click-select']['es-cl'] = "Doble click para seleccionar una categoría existente";
@@ -133,6 +144,7 @@ $text['message-click-select']['sv-se'] = "Dubbelklicka för att välja en existe
 $text['message-click-select']['uk'] = "Двічі клацніть, щоб вибрати існуючу категорію";
 $text['message-click-select']['de-at'] = "Doppelklicken Sie um eine existierende Kategorie auszuwählen";
 $text['message-click-select']['he'] = "לחץ פעמיים כדי לבחור קטגוריה קיימת";
+$text['message-click-select']['it-it'] = "Doppio-Click per selezionare una Categoria esistente";
 
 $text['label-uploaded']['en-us'] = "Uploaded";
 $text['label-uploaded']['es-cl'] = "Subir";
@@ -144,6 +156,7 @@ $text['label-uploaded']['sv-se'] = "Uppladdad";
 $text['label-uploaded']['uk'] = "Завантажено";
 $text['label-uploaded']['de-at'] = "Hochgeladen";
 $text['label-uploaded']['he'] = "הוטען";
+$text['label-uploaded']['it-it'] = "Caricati";
 
 $text['label-upload-music_on_hold']['en-us'] = "Upload Music";
 $text['label-upload-music_on_hold']['es-cl'] = "Subir Música";
@@ -155,6 +168,7 @@ $text['label-upload-music_on_hold']['sv-se'] = "Ladda Upp Musik";
 $text['label-upload-music_on_hold']['uk'] = "Завантажити мелодію";
 $text['label-upload-music_on_hold']['de-at'] = "Musik hochladen";
 $text['label-upload-music_on_hold']['he'] = "הטען מוסיקה";
+$text['label-upload-music_on_hold']['it-it'] = "Carica Musica";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Instrumentos";
@@ -166,6 +180,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Інструменти";
 $text['label-tools']['de-at'] = "Funktionen";
 $text['label-tools']['he'] = "כלים";
+$text['label-tools']['it-it'] = "Strumenti";
 
 $text['label-stop']['en-us'] = "Stop";
 $text['label-stop']['es-cl'] = "Detener";
@@ -177,6 +192,7 @@ $text['label-stop']['sv-se'] = "Sluta";
 $text['label-stop']['uk'] = "СТОП";
 $text['label-stop']['de-at'] = "Halt";
 $text['label-stop']['he'] = "תפסיק";
+$text['label-stop']['it-it'] = "Ferma";
 
 $text['label-stereo']['en-us'] = "Stereo";
 $text['label-stereo']['es-cl'] = "Estéreo";
@@ -188,6 +204,7 @@ $text['label-stereo']['sv-se'] = "Stereo";
 $text['label-stereo']['uk'] = "стерео";
 $text['label-stereo']['de-at'] = "стерео";
 $text['label-stereo']['he'] = "סטריאו";
+$text['label-stereo']['it-it'] = "Stereo";
 
 $text['label-shuffle']['en-us'] = "Shuffle";
 $text['label-shuffle']['es-cl'] = "Barajar";
@@ -199,6 +216,7 @@ $text['label-shuffle']['sv-se'] = "Blanda";
 $text['label-shuffle']['uk'] = "тасування";
 $text['label-shuffle']['de-at'] = "Shuffle";
 $text['label-shuffle']['he'] = "לְעַרְבֵּב";
+$text['label-shuffle']['it-it'] = "Mescola";
 
 $text['label-select_a_file']['en-us'] = "Select a file...";
 $text['label-select_a_file']['es-cl'] = "Seleccione un archivo...";
@@ -210,6 +228,7 @@ $text['label-select_a_file']['sv-se'] = "Välj en fil ...";
 $text['label-select_a_file']['uk'] = "Виберіть файл ...";
 $text['label-select_a_file']['de-at'] = "Wählen Sie eine Datei ...";
 $text['label-select_a_file']['he'] = "בחר קובץ ...";
+$text['label-select_a_file']['it-it'] = "Seleziona un file...";
 
 $text['label-rate']['en-us'] = "Sampling";
 $text['label-rate']['es-cl'] = "Muestreo";
@@ -221,6 +240,7 @@ $text['label-rate']['sv-se'] = "Sampling";
 $text['label-rate']['uk'] = "Якість";
 $text['label-rate']['de-at'] = "Abtastrate";
 $text['label-rate']['he'] = "דגימת קול";
+$text['label-rate']['it-it'] = "Campionamento";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
@@ -232,6 +252,7 @@ $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk'] = "Відтворити";
 $text['label-play']['de-at'] = "Play";
 $text['label-play']['he'] = "נגן";
+$text['label-play']['it-it'] = "Riproduci";
 
 $text['label-path']['en-us'] = "Path";
 $text['label-path']['es-cl'] = "Camino";
@@ -243,6 +264,7 @@ $text['label-path']['sv-se'] = "Väg";
 $text['label-path']['uk'] = "Path";
 $text['label-path']['de-at'] = "Pfad";
 $text['label-path']['he'] = "Path";
+$text['label-path']['it-it'] = "Percorso";
 
 $text['label-pause']['en-us'] = "Pause";
 $text['label-pause']['es-cl'] = "Pausa";
@@ -254,6 +276,7 @@ $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk'] = "Призупинити";
 $text['label-pause']['de-at'] = "Pause";
 $text['label-pause']['he'] = "השהייה";
+$text['label-pause']['it-it'] = "Pausa";
 
 $text['label-mono']['en-us'] = "Mono";
 $text['label-mono']['es-cl'] = "Cosa";
@@ -265,6 +288,7 @@ $text['label-mono']['sv-se'] = "sak";
 $text['label-mono']['uk'] = "річ";
 $text['label-mono']['de-at'] = "Sache";
 $text['label-mono']['he'] = "דבר";
+$text['label-mono']['it-it'] = "Mono";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Musica en Espera";
@@ -276,6 +300,7 @@ $text['label-music_on_hold']['sv-se'] = "Väntmusik";
 $text['label-music_on_hold']['uk'] = "Музика на утриманні";
 $text['label-music_on_hold']['de-at'] = "Haltemusik";
 $text['label-music_on_hold']['he'] = "מוסיקה בהמתנה";
+$text['label-music_on_hold']['it-it'] = "Musica di Attesa";
 
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['es-cl'] = "Ubicación";
@@ -287,6 +312,7 @@ $text['label-location']['sv-se'] = "Plats";
 $text['label-location']['uk'] = "Розміщення";
 $text['label-location']['de-at'] = "Standort";
 $text['label-location']['he'] = "מיקום";
+$text['label-location']['it-it'] = "Posizione";
 
 $text['label-interval']['en-us'] = "Interval";
 $text['label-interval']['es-cl'] = "Intervalo";
@@ -297,6 +323,7 @@ $text['label-interval']['pl'] = "Interwał";
 $text['label-interval']['sv-se'] = "Intervall";
 $text['label-interval']['uk'] = "Інтервал";
 $text['label-interval']['de-at'] = "Intervall";
+$text['label-interval']['it-it'] = "Intervallo";
 
 $text['label-timer_name']['en-us'] = "Timer Name";
 $text['label-timer_name']['es-cl'] = "";
@@ -307,6 +334,7 @@ $text['label-timer_name']['pl'] = "";
 $text['label-timer_name']['sv-se'] = "";
 $text['label-timer_name']['uk'] = "";
 $text['label-timer_name']['de-at'] = "";
+$text['label-timer_name']['it-it'] = "Nome Timer";
 
 $text['label-global']['en-us'] = "Global";
 $text['label-global']['es-cl'] = "Global";
@@ -318,6 +346,7 @@ $text['label-global']['uk'] = "Глобальний";
 $text['label-global']['sv-se'] = "Global";
 $text['label-global']['de-at'] = "Global";
 $text['label-global']['he'] = "כללי";
+$text['label-global']['it-it'] = "Globale";
 
 $text['label-file_name']['en-us'] = "File Name";
 $text['label-file_name']['es-cl'] = "Nombre del Archivo";
@@ -329,6 +358,7 @@ $text['label-file_name']['sv-se'] = "Fil-namn";
 $text['label-file_name']['uk'] = "Назва файлу";
 $text['label-file_name']['de-at'] = "Dateiname";
 $text['label-file_name']['he'] = "שם קובץ";
+$text['label-file_name']['it-it'] = "Nome File";
 
 $text['label-file-size']['en-us'] = "File Size";
 $text['label-file-size']['es-cl'] = "Tamaño del archivo";
@@ -340,6 +370,7 @@ $text['label-file-size']['sv-se'] = "Filstorlek";
 $text['label-file-size']['uk'] = "Розмір файлу";
 $text['label-file-size']['de-at'] = "Dateigröße";
 $text['label-file-size']['he'] = "גודל קובץ";
+$text['label-file-size']['it-it'] = "Dimensione File";
 
 $text['label-file-path']['en-us'] = "File Path";
 $text['label-file-path']['es-cl'] = "Ruta al archivo";
@@ -351,6 +382,7 @@ $text['label-file-path']['sv-se'] = "Sökväg till fil";
 $text['label-file-path']['uk'] = "Шлях";
 $text['label-file-path']['de-at'] = "Dateipfad";
 $text['label-file-path']['he'] = "נתיב קובץ";
+$text['label-file-path']['it-it'] = "Percorso File";
 
 $text['label-download']['en-us'] = "Download";
 $text['label-download']['es-cl'] = "Descargar";
@@ -362,6 +394,7 @@ $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk'] = "Скачати";
 $text['label-download']['de-at'] = "Download";
 $text['label-download']['he'] = "הורדה";
+$text['label-download']['it-it'] = "Scarica";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -375,6 +408,7 @@ $text['label-domain']['de-at'] = "Domain";
 $text['label-domain']['ro'] = "Domeniu";
 $text['label-domain']['ar-eg'] = "النطاق";
 $text['label-domain']['he'] = "דומיין";
+$text['label-domain']['it-it'] = "Dominio";
 
 $text['label-delete-category']['en-us'] = "Delete Category";
 $text['label-delete-category']['es-cl'] = "Eliminar categoría";
@@ -386,6 +420,7 @@ $text['label-delete-category']['sv-se'] = "Ta Bort Kategori";
 $text['label-delete-category']['uk'] = "Видалити категорію";
 $text['label-delete-category']['de-at'] = "Kategorie löschen";
 $text['label-delete-category']['he'] = "מחק קטגוריה";
+$text['label-delete-category']['it-it'] = "Elimina Categoria";
 
 $text['label-default']['en-us'] = "Default";
 $text['label-default']['es-cl'] = "Predeterminado";
@@ -397,6 +432,7 @@ $text['label-default']['sv-se'] = "Standard";
 $text['label-default']['uk'] = "Типово";
 $text['label-default']['de-at'] = "Standard";
 $text['label-default']['he'] = "ברירת מחדל";
+$text['label-default']['it-it'] = "Predefinito";
 
 $text['label-chime_maximum']['en-us'] = "Chime Maximum";
 $text['label-chime_maximum']['es-cl'] = "máximos Chimes";
@@ -410,6 +446,7 @@ $text['label-chime_maximum']['ro'] = "maxime Chimes";
 $text['label-chime_maximum']['de-at'] = "Maximale Chimes";
 $text['label-chime_maximum']['ar-eg'] = "الحد الأقصى الدقات";
 $text['label-chime_maximum']['he'] = "פעמונים מקסימאליים";
+$text['label-chime_maximum']['it-it'] = "Chime Massimo";
 
 $text['label-chime_list']['en-us'] = "Chime File";
 $text['label-chime_list']['es-cl'] = "archivo carillón";
@@ -423,6 +460,7 @@ $text['label-chime_list']['ro'] = "Fișier chime";
 $text['label-chime_list']['de-at'] = "Chime Datei";
 $text['label-chime_list']['ar-eg'] = "الملف تتناغم";
 $text['label-chime_list']['he'] = "קובץ Chime";
+$text['label-chime_list']['it-it'] = "File Chime";
 
 $text['label-chime_frequency']['en-us'] = "Chime Frequency";
 $text['label-chime_frequency']['es-cl'] = "Frecuencia carillón";
@@ -436,6 +474,7 @@ $text['label-chime_frequency']['ro'] = "Frecventa chime";
 $text['label-chime_frequency']['de-at'] = "Chime Frequency";
 $text['label-chime_frequency']['ar-eg'] = "تردد الرنين";
 $text['label-chime_frequency']['he'] = "תדירות Chime";
+$text['label-chime_frequency']['it-it'] = "Frequenza Chime";
 
 $text['label-channels']['en-us'] = "Channels";
 $text['label-channels']['es-cl'] = "Canales";
@@ -449,6 +488,7 @@ $text['label-channels']['ro'] = "Canale";
 $text['label-channels']['de-at'] = "Kanäle";
 $text['label-channels']['ar-eg'] = "قنوات";
 $text['label-channels']['he'] = "ערוצים";
+$text['label-channels']['it-it'] = "Canali";
 
 $text['header-music_on_hold_settings']['en-us'] = "Music on Hold Settings";
 $text['header-music_on_hold_settings']['es-cl'] = "Musica en Espera ajustes";
@@ -460,6 +500,7 @@ $text['header-music_on_hold_settings']['sv-se'] = "Väntmusik inställningar";
 $text['header-music_on_hold_settings']['uk'] = "Музика на утриманні настройки";
 $text['header-music_on_hold_settings']['de-at'] = "Haltemusik Einstellungen";
 $text['header-music_on_hold_settings']['he'] = "מוסיקה על גדרות מתן";
+$text['header-music_on_hold_settings']['it-it'] = "Impostazioni Musica di Attesa";
 
 $text['desc-music_on_hold']['en-us'] = "Music on hold can be in WAV or MP3 format. To play an MP3 file you must have mod_shout enabled on the 'Modules' tab. You can adjust the volume of the MP3 audio from the 'Settings' tab. For best performance upload 16 bit, 8/16/32/48 kHz <i>mono</i> WAV files.";
 $text['desc-music_on_hold']['es-cl'] = "La música en espera puede estar en formato WAV o MP3. Para reproducir un archivo en frmato MP3 debe tener activado el módulo mod_shout. Puede ajustar el volumen del MP3 desde la pestaña 'Configuraciones'. Para el mejor rendimiento se recomienda utilizar archivos en formato WAV 16 bit, 8/16/32/48 kHz <i>mono</i>.";
@@ -471,6 +512,7 @@ $text['desc-music_on_hold']['sv-se'] = "Väntmusik kan vara i formaten WAV eller
 $text['desc-music_on_hold']['uk'] = "Музика на утриманні може бути в WAV або MP3 формат. Для відтворення файлів MP3 ви повинні включити mod_shout на вкладці 'модулі'. Ви можете налаштувати гучність MP3-аудіо на вкладці «Налаштування». Для кращої продуктивності завантаження 16 біт, моно 8/16/32/48 кГц WAV файлів.";
 $text['desc-music_on_hold']['de-at'] = "Haltemusik können Dateien im WAV oder MP3 Format sein. Um MP3 Dateien abzuspielen muss mod_shout installiert und aktiviert sein. Sie können die Lautstärke der MP3 Dateien in den Einstellungen verändern. Für beste Funktionalität laden Sie 16bit, 8/16/32/48 kHz mono WAV Dateien hoch.";
 $text['desc-music_on_hold']['he'] = "";
+$text['desc-music_on_hold']['it-it'] = "La Musica di Attesa può essere caricata in formato WAV or MP3. Per riprodurre un file MP3 devi avere il modulo mod_shout abilitato nella sezione 'Moduli'. Puoi aggiornare il volume del file MP3 dalla schermata 'Impostazioni'. Per prestazioni ottimali caricare il file a 16 bit, 8/16/32/48 kHz <i>mono</i> nel formato WAV.";
 
 $text['button-upload']['en-us'] = "Upload";
 $text['button-upload']['es-cl'] = "Subir";
@@ -482,6 +524,7 @@ $text['button-upload']['sv-se'] = "Ladda Upp";
 $text['button-upload']['uk'] = "Завантажити";
 $text['button-upload']['de-at'] = "Hochladen";
 $text['button-upload']['he'] = "הטען";
+$text['button-upload']['it-it'] = "Carica";
 
 $text['button-clear']['en-us'] = "Clear";
 $text['button-clear']['es-cl'] = "Limpiar";
@@ -493,5 +536,6 @@ $text['button-clear']['sv-se'] = "Rensa";
 $text['button-clear']['uk'] = "Очистити";
 $text['button-clear']['de-at'] = "Zurücksetzen";
 $text['button-clear']['he'] = "נקה";
+$text['button-clear']['it-it'] = "Reset";
 
 ?>
