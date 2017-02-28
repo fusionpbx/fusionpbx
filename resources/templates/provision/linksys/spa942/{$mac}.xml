@@ -327,7 +327,7 @@
 <Call_Back_Serv group="Phone/Supplementary_Services">Yes</Call_Back_Serv>
 <Block_CID_Serv group="Phone/Supplementary_Services">Yes</Block_CID_Serv>
 <Secure_Call_Serv group="Phone/Supplementary_Services">Yes</Secure_Call_Serv>
-<Cfwd_All_Serv group="Phone/Supplementary_Services">No</Cfwd_All_Serv>
+<Cfwd_All_Serv group="Phone/Supplementary_Services">Yes</Cfwd_All_Serv>
 <Cfwd_Busy_Serv group="Phone/Supplementary_Services">No</Cfwd_Busy_Serv>
 <Cfwd_No_Ans_Serv group="Phone/Supplementary_Services">No</Cfwd_No_Ans_Serv>
 <Paging_Serv group="Phone/Supplementary_Services">Yes</Paging_Serv>
