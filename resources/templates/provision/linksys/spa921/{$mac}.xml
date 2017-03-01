@@ -1,4 +1,9 @@
 <flat-profile>
+<Enable_Web_Server>Yes</Enable_Web_Server>
+<Web_Server_Port>80</Web_Server_Port>
+<Enable_Web_Admin_Access>Yes</Enable_Web_Admin_Access>
+<Admin_Passwd>{$admin_password}</Admin_Passwd>
+<User_Password></User_Password>
 <Station_Name>{$display_name_1}</Station_Name>
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
 <Resync_Periodic>0</Resync_Periodic>
