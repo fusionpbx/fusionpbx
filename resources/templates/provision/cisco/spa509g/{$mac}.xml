@@ -349,7 +349,7 @@
 <Locale group="Regional/Miscellaneous">en-US</Locale>
 
 <!-- Phone/General -->
-<Station_Name group="Phone/General">{$display_name_1}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
