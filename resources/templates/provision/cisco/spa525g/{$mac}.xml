@@ -36,8 +36,8 @@
 <Debug_Server ua="na"></Debug_Server>
 <Debug_Level ua="na">0</Debug_Level> <!-- options: 0/1/2/3 -->
 <Layer_2_Logging ua="na">No</Layer_2_Logging>
-<Primary_NTP_Server ua="na"></Primary_NTP_Server>
-<Secondary_NTP_Server ua="na"></Secondary_NTP_Server>
+<Primary_NTP_Server ua="na">{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server ua="na">{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- VLAN Settings -->
 <Enable_VLAN ua="rw">No</Enable_VLAN>
