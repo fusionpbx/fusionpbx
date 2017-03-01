@@ -323,6 +323,10 @@ if(!function_exists('fax_split_dtmf')) {
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][9]);
+		$fax_prefix = $tmp_array[1];
+		unset($tmp_array);
+	
+		$tmp_array = explode("=", $_SERVER["argv"][10]);
 		$mailfrom_address = $tmp_array[1];
 		unset($tmp_array);
 
@@ -414,6 +418,7 @@ if(!function_exists('fax_split_dtmf')) {
 			//$fax_email = $row["fax_email"];
 			$fax_uuid = $row["fax_uuid"];
 			$fax_accountcode = $row["fax_accountcode"];
+			$fax_prefix = $row["fax_prefix"];
 			$fax_pin_number = $row["fax_pin_number"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
@@ -434,33 +439,34 @@ if(!function_exists('fax_split_dtmf')) {
 	$fax_file = path_join($dir_fax, $fax_file_only);
 
 //used for debug
-	echo "mailto_adress is $mailto_address\n";
-	echo "fax_email is $fax_email\n";
-	echo "fax_extension is $fax_extension\n";
-	echo "fax_name is $fax_file_only\n";
-	echo "dir_fax is $dir_fax\n";
-	echo "full_path is $fax_file\n";
+	echo "fax_prefix: $fax_prefix\n";
+	echo "mailto_adress: $mailto_address\n";
+	echo "fax_email: $fax_email\n";
+	echo "fax_extension: $fax_extension\n";
+	echo "fax_name: $fax_file_only\n";
+	echo "dir_fax: $dir_fax\n";
+	echo "full_path: $fax_file\n";
 
 	$pdf_file = tiff2pdf($fax_file);
-	echo "file is $pdf_file \n";
+	echo "file: $pdf_file \n";
 	if(!$pdf_file){
-		$fax_file_warning = ' Fax image not available on server.';
+		$fax_file_warning = 'warning: Fax image not available on server.';
 	}
 	else{
 		$fax_file_warning = '';
 	}
 
 //used for debug
-	echo "pdf file is $pdf_file\n";
+	echo "pdf file: $pdf_file\n";
 
 //forward the fax
 	if(file_exists($fax_file)) {
 		if (strpos($fax_file_name,'#') !== false) {
 			$tmp = explode("#",$fax_file_name);
-			$fax_forward_number = $tmp[0];
+			$fax_forward_number = $fax_prefix.$tmp[0];
 		}
 
-		echo "fax_forward_number is $fax_forward_number\n";
+		echo "fax_forward_number: $fax_forward_number\n";
 		if (strlen($fax_forward_number) > 0) {
 			fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
@@ -708,4 +714,5 @@ if(!function_exists('fax_split_dtmf')) {
 			fwrite($fp, $content);
 			fclose($fp);
 	}
+
 ?>
