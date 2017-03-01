@@ -32,8 +32,8 @@
 <Password_1_>{$user_password_1}</Password_1_>
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Auth_ID_1_></Auth_ID_1_>
-<Primary_NTP_Server group="System/Optional_Network_Configuration">pool.ntp.org</Primary_NTP_Server>
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />  
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
 <Dial_Plan_1_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
 <!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Line_Enable_2_>Yes</Line_Enable_2_>
