@@ -256,7 +256,7 @@
 <Force_G729a_Code group="Regional/Outbound_Call_Codec_Selection_Codes">*02729</Force_G729a_Code>
 <Set_Local_Date__mm_dd_ group="Regional/Miscellaneous"/>
 <Set_Local_Time__HH_mm_ group="Regional/Miscellaneous"/>
-<Time_Zone group="Regional/Miscellaneous">GMT</Time_Zone>
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous"/>
 <Daylight_Saving_Time_Rule group="Regional/Miscellaneous">start=3/8/7/02:0:0;end=11/1/7/02:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
