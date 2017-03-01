@@ -1630,8 +1630,8 @@
 <Back_Light_Timer ua="na">10 s</Back_Light_Timer> <!-- options: Off/10 s/20 s/30 s/Always On -->
 
 <!-- General -->
-<Station_Name ua="na">{$display_name_1}</Station_Name>
-<Station_Display_Name ua="na"></Station_Display_Name>
+<Station_Name ua="na">{$device_label}</Station_Name>
+<Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>
