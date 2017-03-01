@@ -266,7 +266,7 @@
 <Dictionary_Server_Script group="Regional/Miscellaneous"/>
 <Language_Selection group="Regional/Miscellaneous"/>
 <Default_Character_Encoding group="Regional/Miscellaneous">ISO-8859-1</Default_Character_Encoding>
-<Station_Name group="Phone/General">{$Company}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
 <Text_Logo group="Phone/General"/>
 <BMP_Picture_Download_URL group="Phone/General"/>
