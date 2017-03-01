@@ -39,7 +39,6 @@
   <Primary_NTP_Server>{$domain_name}</Primary_NTP_Server>
   <Secondary_NTP_Server>pool.ntp.org</Secondary_NTP_Server>
 
-
   <!-- remote logging - valid debug levels are 0, 1, 2 and 3
   <Syslog_Server>{$domain_name}</Syslog_Server>
   <Debug_Server>{$domain_name}</Debug_Server>
