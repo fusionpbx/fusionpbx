@@ -143,7 +143,7 @@
 <Key_System_Auto_Discovery>Yes</Key_System_Auto_Discovery>
 <Key_System_IP_Address></Key_System_IP_Address>
 <Force_LAN_Codec>none</Force_LAN_Codec>
-<Station_Name></Station_Name>
+<Station_Name>{$device_label}</Station_Name>
 <Line_Enable_1_>Yes</Line_Enable_1_>
 <SAS_Enable_1_>No</SAS_Enable_1_>
 <SAS_DLG_Refresh_Intvl_1_>30</SAS_DLG_Refresh_Intvl_1_>
