@@ -37,8 +37,8 @@
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
 <Layer_2_Logging group="System/Optional_Network_Configuration">No</Layer_2_Logging>
 <NTP_Enable group="System/Optional_Network_Configuration">Yes</NTP_Enable>
-<Primary_NTP_Server group="System/Optional_Network_Configuration" />
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- System/VLAN_Settings -->
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
