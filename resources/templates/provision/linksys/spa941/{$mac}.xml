@@ -20,8 +20,8 @@
 <Syslog_Server group="System/Optional_Network_Configuration"/>
 <Debug_Server group="System/Optional_Network_Configuration"/>
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
-<Primary_NTP_Server group="System/Optional_Network_Configuration">uk.pool.ntp.org</Primary_NTP_Server>
-<Secondary_NTP_Server group="System/Optional_Network_Configuration"/>
+<Primary_NTP_Server>{$domain_name}</Primary_NTP_Server>
+<Secondary_NTP_Server>pool.ntp.org</Secondary_NTP_Server>  
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
