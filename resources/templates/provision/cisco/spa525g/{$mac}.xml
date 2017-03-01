@@ -1595,8 +1595,8 @@
 <Auto_Answer_Page ua="na">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device ua="rw">Speaker</Preferred_Audio_Device> <!-- options: Speaker/Headset -->
 <Send_Audio_To_Speaker ua="rw">No</Send_Audio_To_Speaker>
-<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
-<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
+<Time_Format ua="rw">{$spa_time_format}</Time_Format>
+<Date_Format ua="rw">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut ua="rw">Yes</Miss_Call_Shortcut>
 <Miss_Call_Banner ua="rw">Yes</Miss_Call_Banner>
 <Accept_Media_Loopback_Request ua="na">automatic</Accept_Media_Loopback_Request> <!-- options: never/automatic/manual -->
