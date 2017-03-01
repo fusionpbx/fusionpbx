@@ -54,6 +54,8 @@
 <Insert_VIA_received>No</Insert_VIA_received>
 <Insert_VIA_rport>{$cisco_insert_via_rport}</Insert_VIA_rport>
 <Time_Zone>{$spa_time_zone}</Time_Zone>
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
 <!--
 <Reset_Button_Enable>0</Reset_Button_Enable>
 <Web_Management>
