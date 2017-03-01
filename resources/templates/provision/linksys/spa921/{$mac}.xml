@@ -30,6 +30,6 @@
 (*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)
 </Dial_Plan_1_>
 <Headset_Input_Gain>6</Headset_Input_Gain>
-<Time_Format>24hr</Time_Format>
-<Date_Format>day/month</Date_Format>
+<Time_Format>{$spa_time_format}</Time_Format>
+<Date_Format>{$spa_date_format}</Date_Format>
 </flat-profile>
