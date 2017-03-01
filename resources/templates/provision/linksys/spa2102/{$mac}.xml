@@ -4,8 +4,8 @@
 
 <!--<GPP_B>{$v_agent}</GPP_B>-->
 <!--Sets the time. Dunno what else.-->
-<Primary_NTP_Server>0.pool.ntp.org</Primary_NTP_Server>
-<Secondary_NTP_Server>time.nist.gov</Secondary_NTP_Server>
+<Primary_NTP_Server>{$domain_name}</Primary_NTP_Server>
+<Secondary_NTP_Server>pool.ntp.org</Secondary_NTP_Server>
 
 <Upgrade_Rule></Upgrade_Rule>
 <Voice_Mail_Number>*97</Voice_Mail_Number>
