@@ -631,7 +631,7 @@
 <Handset_Volume group="User/Audio_Volume">10</Handset_Volume>
 <Headset_Volume group="User/Audio_Volume">10</Headset_Volume>
 <LCD_Contrast group="User/Audio_Volume">8</LCD_Contrast>
-<Back_Light_Timer group="User/Audio_Volume">10 s</Back_Light_Timer>
+<Back_Light_Timer group="User/Audio_Volume">${spa_back_light_timer}</Back_Light_Timer>
 <Subscribe_Expires group="Attendant_Console/General">1800</Subscribe_Expires>
 <Subscribe_Retry_Interval group="Attendant_Console/General">30</Subscribe_Retry_Interval>
 <Unit_1_Enable group="Attendant_Console/General">Yes</Unit_1_Enable>
