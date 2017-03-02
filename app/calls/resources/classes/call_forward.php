@@ -84,8 +84,12 @@ include "root.php";
 						$dial_string .= ",accountcode=".$this->accountcode;
 					}
 
-					if (strlen($this->forward_caller_id_uuid) > 0){
-						$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->forward_caller_id_uuid'";
+					if (strlen($this->forward_caller_id_uuid) > 0) {
+						$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
+						$sql_caller .= "from v_destinations ";
+						$sql_caller .= "where domain_uuid = '$this->domain_uuid' ";
+						$sql_caller .= "and destination_type = 'inbound' ";
+						$sql_caller .= "and destination_uuid = '$this->forward_caller_id_uuid'";
 						$prep_statement_caller = $db->prepare($sql_caller);
 						if ($prep_statement_caller) {
 							$prep_statement_caller->execute();
@@ -99,24 +103,16 @@ include "root.php";
 							if(strlen($caller_id_name) == 0){
 								$caller_id_name = $row_caller['destination_description'];
 							}
-
-							if (strlen($caller_id_name) > 0) {
-								$dial_string_caller_id_name = $caller_id_name;
-								$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
-							}
-							if (strlen($caller_id_number) > 0) {
-								$dial_string_caller_id_number = $caller_id_number;
-								$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
-								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";
-							}
 						}
 					}
-					else{
-						if ($_SESSION['cdr']['call_forward_fix']['boolean'] == "true"){
-							$dial_string .= ",outbound_caller_id_name=".$this->outbound_caller_id_name;
-							$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
-							$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
-							$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+					else {
+						if ($_SESSION['cdr']['call_forward_fix']['boolean'] === "true") {
+							if (strlen($this->outbound_caller_id_name) > 0) {
+								$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
+							}
+							if (strlen($this->outbound_caller_id_number) > 0) {
+								$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
+							}
 						}
 					}
 
@@ -130,6 +126,16 @@ include "root.php";
 					else {
 						// setting here presence_id equal extension not dialed number allows work BLF and intercept.
 						$presence_id = extension_presence_id($this->extension, $this->number_alias);
+
+						if (strlen($caller_id_number) > 0) {
+							//set the caller id if it is set
+							if (strlen($caller_id_name) > 0) { $dial_string .= ",origination_caller_id_name=".$caller_id_name; }
+							$dial_string .= ",origination_caller_id_number=".$caller_id_number;
+						}
+						else {
+							//set the outbound caller id number if the caller id number is a user
+							$dial_string .= ",\${cond(\${user_exists id \${caller_id_number} \${domain_name}} == true ? origination_caller_id_name=\${outbound_caller_id_name},origination_caller_id_number=\${outbound_caller_id_number} : )}";
+						}
 						// $presence_id = $this->forward_all_destination;
 						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
 						$dial_string .= "}";
