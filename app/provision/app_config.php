@@ -292,9 +292,9 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'da21eec7-699b-4a8b-a5e5-30ce118aaf8c';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'GMT-07:00';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'spa_time_zone';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'spa_time_zone';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'GMT-07:00';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
