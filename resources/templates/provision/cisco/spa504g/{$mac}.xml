@@ -17,7 +17,7 @@
 <Debug_Server group="System/Optional_Network_Configuration" />
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
 <Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
-<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
@@ -104,12 +104,12 @@
 <G729b_Codec_Name group="SIP/SDP_Payload_Types">G729ab</G729b_Codec_Name>
 <G722_Codec_Name group="SIP/SDP_Payload_Types">G722</G722_Codec_Name>
 <EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
-<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_rport>
-<Insert_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
