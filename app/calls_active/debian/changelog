@@ -1,0 +1,6 @@
+fusionpbx-app-calls-active (3.8.4-1) stable; urgency=low
+
+  * new deb pkg for fusionpbx-app-calls-active
+
+ -- FusionPBX <debian@fusionpbx.com>  Sun, 02 Feb 2014 09:00:00 -0500
+

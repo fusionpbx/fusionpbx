@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  install|upgrade)
+    if [ -d /var/www/fusionpbx/app/call_broadcast ]; then
+      echo "It looks like you have FusionPBX call broadcast app installed !." >&2
+    fi
+    ;;
+  abort-upgrade)
+    ;;
+  *)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

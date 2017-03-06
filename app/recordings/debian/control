@@ -1,0 +1,12 @@
+Source: fusionpbx-app-recordings
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-recordings
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-recordings:  Manager recordings primarily used with an IVR.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

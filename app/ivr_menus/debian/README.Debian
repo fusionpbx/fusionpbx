@@ -1,0 +1,6 @@
+fussionpbx-app-ivr-menu
+--------------------
+The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more. 
+
+ -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
+

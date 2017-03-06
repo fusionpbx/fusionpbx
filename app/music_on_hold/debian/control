@@ -1,0 +1,12 @@
+Source: fusionpbx-app-music-on-hold
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-music-on-hold
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-music-on-hold: Add, Delete, or Play Music on hold files. 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

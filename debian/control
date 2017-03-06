@@ -1,0 +1,12 @@
+Source: fusionpbx-core
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-core
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-core: core and core apps for fusionpbx Web gui for controlling/administrating freeswitch softswitch 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

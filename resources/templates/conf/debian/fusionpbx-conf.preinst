@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  install|upgrade)
+    if [ -d /usr/share/examples/fusionpbx/resources/templates/conf ]; then
+      echo "It looks like you have FusionPBX-conf installed !." >&2
+    fi
+    ;;
+  abort-upgrade)
+    ;;
+  *)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

@@ -1,0 +1,6 @@
+fussionpbx-app-dialplan-inbound
+--------------------
+The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. 
+
+ -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
+

@@ -1,0 +1,12 @@
+Source: fusionpbx-app-gateways
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-gateways
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-gateways: Gateways provide access into other voice networksand voip providers.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
