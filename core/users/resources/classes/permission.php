@@ -79,52 +79,54 @@
 
 				//restore default permissions
 					foreach($apps as $row) {
-						foreach ($row['permissions'] as $permission) {
-							//set the variables
-							if ($permission['groups']) {
-								foreach ($permission['groups'] as $group) {
-									//check group protection
-									$sql = "select * from v_groups ";
-									$sql .= "where group_name = '".$group."' ";
-									$sql .= "and group_protected = 'true'";
-									$prep_statement = $db->prepare(check_sql($sql));
-									if ($prep_statement) {
-										$prep_statement->execute();
-										$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-										unset ($prep_statement);
-										if (count($result) == 0) {
-											//if the item uuid is not currently in the db then add it
-											$sql = "select * from v_group_permissions ";
-											$sql .= "where permission_name = '".$permission['name']."' ";
-											$sql .= "and group_name = '$group' ";
-											$prep_statement = $db->prepare(check_sql($sql));
-											if ($prep_statement) {
-												$prep_statement->execute();
-												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-												unset ($prep_statement);
-												if (count($result) == 0) {
-													//insert the default permissions into the database
-													$sql = "insert into v_group_permissions ";
-													$sql .= "(";
-													$sql .= "group_permission_uuid, ";
-													$sql .= "permission_name, ";
-													$sql .= "group_name ";
-													$sql .= ") ";
-													$sql .= "values ";
-													$sql .= "(";
-													$sql .= "'".uuid()."', ";
-													$sql .= "'".$permission['name']."', ";
-													$sql .= "'".$group."' ";
-													$sql .= ");";
-													$db->exec(check_sql($sql));
-													unset($sql);
-												} // if count
-											} // if prepared statement
-										} // if count
-									} // if prepared statement
-								} // foreach group permission
-							} // if permission
-						} // foreach permission
+						if ($row['permissions']) {
+							foreach ($row['permissions'] as $permission) {
+								//set the variables
+								if ($permission['groups']) {
+									foreach ($permission['groups'] as $group) {
+										//check group protection
+										$sql = "select * from v_groups ";
+										$sql .= "where group_name = '".$group."' ";
+										$sql .= "and group_protected = 'true'";
+										$prep_statement = $db->prepare(check_sql($sql));
+										if ($prep_statement) {
+											$prep_statement->execute();
+											$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+											unset ($prep_statement);
+											if (count($result) == 0) {
+												//if the item uuid is not currently in the db then add it
+												$sql = "select * from v_group_permissions ";
+												$sql .= "where permission_name = '".$permission['name']."' ";
+												$sql .= "and group_name = '$group' ";
+												$prep_statement = $db->prepare(check_sql($sql));
+												if ($prep_statement) {
+													$prep_statement->execute();
+													$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+													unset ($prep_statement);
+													if (count($result) == 0) {
+														//insert the default permissions into the database
+														$sql = "insert into v_group_permissions ";
+														$sql .= "(";
+														$sql .= "group_permission_uuid, ";
+														$sql .= "permission_name, ";
+														$sql .= "group_name ";
+														$sql .= ") ";
+														$sql .= "values ";
+														$sql .= "(";
+														$sql .= "'".uuid()."', ";
+														$sql .= "'".$permission['name']."', ";
+														$sql .= "'".$group."' ";
+														$sql .= ");";
+														$db->exec(check_sql($sql));
+														unset($sql);
+													} // if count
+												} // if prepared statement
+											} // if count
+										} // if prepared statement
+									} // foreach group permission
+								} // if permission
+							} // foreach permission
+						} // if row permission
 					} // foreach app
 
 			} // function
