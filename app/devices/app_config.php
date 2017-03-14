@@ -113,6 +113,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_outbound_proxy_primary';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_outbound_proxy_secondary';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
