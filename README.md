@@ -2,7 +2,7 @@ What is [FusionPBX](http://fusionpbx.com/)?
 --------------------------------------
 [FusionPBX](http://fusionpbx.com/) is a flexible, customizable administration web GUI that takes [FreeSwitch](http://freeswitch.org) and converts it into a single- or multi-tenant gateway or PBX system out of the box.
 It will run on any operating system and x86-based hardware of your choice.
-It provides the functionality your business needs and brings corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/channel/UCN5j2ITmjua1MfjGR8jX9TA)
+It provides the functionality your business needs and brings corporate-level phone system features to small, medium, and large businesses. Read more at [FusionPBX](http://fusionpbx.com/). [Please visit our youtube channel](https://www.youtube.com/FusionPBX)
 
 In addition to providing all of the usual PBX functionality, FusionPBX allows you to configure:
 
@@ -16,7 +16,7 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 - Ring Groups
 - Find Me / Follow Me
 - Dialplan Features that can be endlessly combined for your preferences
-- [Many other Features](http://wiki.fusionpbx.com/index.php?title=Features)
+- [Many other Features](http://docs.fusionpbx.com/en/latest/features/features.html)
 
 Free Support
 --------------------------------------
@@ -38,10 +38,10 @@ These options support the project and cover any kind of help you might need from
 
 Software Requirements
 --------------------------------------
-- [Debian Jessie](http://cdimage.debian.org/debian-cd/8.1.0/amd64/iso-cd/debian-8.1.0-amd64-netinst.iso) - Recommended
+- [Debian Jessie](http://cdimage.debian.org/debian-cd/8.7.1/) - Recommended
 This is the distribution recommended by the FreeSwitch team
 - Fusion will also install on Debian Wheezy, Ubuntu 10.10 LTS and is known to work on FreeBSD
-- [FusionPBX Installer](http://fusionpbx.com)
+- [FusionPBX Installer](http://fusionpbx.com/download.php)
 
 
 Community
@@ -54,7 +54,7 @@ We have a pretty thriving community. You can find us here:
 Contributing
 ---------------------------------------
 
-###Requirements
+### Requirements
 It's easy to contribute to FusionPBX the only thing we ask before accepting your pull request is that you sign a Contributor License Agreement.
 We ask that you sign the Contributor License Agreement for the following reasons:
 
