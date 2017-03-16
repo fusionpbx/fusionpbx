@@ -8,7 +8,8 @@ $text['title-menus']['pt-br'] = "Menu Admistrador";
 $text['title-menus']['pl'] = "Menedżer menu";
 $text['title-menus']['uk'] = "Менеджер меню";
 $text['title-menus']['sv-se'] = "Meny Inställningar";
-$text['title-menus']['de-at'] = "Menü Einstellungen";
+$text['title-menus']['de-de'] = "Menü Konfigurationsmanager";
+$text['title-menus']['de-at'] = "Menü Konfigurationsmanager";
 $text['title-menus']['it-it'] = "Gestione Menu";
 
 $text['title-menu_item-edit']['en-us'] = "Menu Item";
@@ -19,6 +20,7 @@ $text['title-menu_item-edit']['pt-br'] = "Editar o Item do Menu";
 $text['title-menu_item-edit']['pl'] = "Pozycja menu";
 $text['title-menu_item-edit']['uk'] = "Пункт меню";
 $text['title-menu_item-edit']['sv-se'] = "Meny Post";
+$text['title-menu_item-edit']['de-de'] = "Menüpunkt";
 $text['title-menu_item-edit']['de-at'] = "Menüpunkt";
 $text['title-menu_item-edit']['it-it'] = "Elemento Menu";
 
@@ -30,6 +32,7 @@ $text['title-menu_item-add']['pt-br'] = "Adicionar um Item ao Menu";
 $text['title-menu_item-add']['pl'] = "Pozycja menu";
 $text['title-menu_item-add']['uk'] = "Пункт меню";
 $text['title-menu_item-add']['sv-se'] = "Meny Post";
+$text['title-menu_item-add']['de-de'] = "Menüpunkt";
 $text['title-menu_item-add']['de-at'] = "Menüpunkt";
 $text['title-menu_item-add']['it-it'] = "Elemento Menu";
 
@@ -41,6 +44,7 @@ $text['title-menu-edit']['pt-br'] = "Editar Menu";
 $text['title-menu-edit']['pl'] = "Menu";
 $text['title-menu-edit']['uk'] = "Меню";
 $text['title-menu-edit']['sv-se'] = "Meny";
+$text['title-menu-edit']['de-de'] = "Menü";
 $text['title-menu-edit']['de-at'] = "Menü";
 $text['title-menu-edit']['it-it'] = "Menu";
 
@@ -52,6 +56,7 @@ $text['title-menu-add']['pt-br'] = "Adicionar Menu";
 $text['title-menu-add']['pl'] = "Menu";
 $text['title-menu-add']['uk'] = "Меню";
 $text['title-menu-add']['sv-se'] = "Meny";
+$text['title-menu-add']['de-de'] = "Menü";
 $text['title-menu-add']['de-at'] = "Menü";
 $text['title-menu-add']['it-it'] = "Menu";
 
@@ -63,6 +68,7 @@ $text['option-internal']['pt-br'] = "Interno";
 $text['option-internal']['pl'] = "Wewnętrzny";
 $text['option-internal']['uk'] = "Внутрішній (Internal)";
 $text['option-internal']['sv-se'] = "Intern";
+$text['option-internal']['de-de'] = "Intern";
 $text['option-internal']['de-at'] = "Intern";
 $text['option-internal']['it-it'] = "Interno";
 
@@ -74,6 +80,7 @@ $text['option-external']['pt-br'] = "Externo";
 $text['option-external']['pl'] = "Zewnętrzny";
 $text['option-external']['uk'] = "Зовнішній (External)";
 $text['option-external']['sv-se'] = "EXtern";
+$text['option-external']['de-de'] = "Extern";
 $text['option-external']['de-at'] = "Extern";
 $text['option-external']['it-it'] = "Esterno";
 
@@ -85,6 +92,7 @@ $text['option-email']['pt-br'] = "E-mail";
 $text['option-email']['pl'] = "E-mail";
 $text['option-email']['uk'] = "Електронна пошта";
 $text['option-email']['sv-se'] = "E-post";
+$text['option-email']['de-de'] = "E-mail";
 $text['option-email']['de-at'] = "E-mail";
 $text['option-email']['it-it'] = "E-mail";
 
@@ -96,6 +104,7 @@ $text['message-update']['pt-br'] = "Atualização Efetuada";
 $text['message-update']['pl'] = "Zaktualizowano poprawnie";
 $text['message-update']['uk'] = "Оновлення завершено";
 $text['message-update']['sv-se'] = "Uppdatering Klar";
+$text['message-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['message-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['message-update']['it-it'] = "Aggiornamento completato";
 
@@ -107,6 +116,7 @@ $text['message-moved_up']['pt-br'] = "Mover Item para cima";
 $text['message-moved_up']['pl'] = "Pozycja przeniesiona do góry";
 $text['message-moved_up']['uk'] = "Елемент переміщено вгору";
 $text['message-moved_up']['sv-se'] = "Posten Flyttades Uppåt";
+$text['message-moved_up']['de-de'] = "Menüpunkt nach oben verschoben";
 $text['message-moved_up']['de-at'] = "Menüpunkt nach oben verschoben";
 $text['message-moved_up']['it-it'] = "Elemento Spostato sù";
 
@@ -118,6 +128,7 @@ $text['message-moved_down']['pt-br'] = "Mover Item para baixo";
 $text['message-moved_down']['pl'] = "Pozycja przeniesiona na dół";
 $text['message-moved_down']['uk'] = "Елемент переміщено вниз";
 $text['message-moved_down']['sv-se'] = "Posten Flyttades Nedåt";
+$text['message-moved_down']['de-de'] = "Menüpunkt nach unten verschoben";
 $text['message-moved_down']['de-at'] = "Menüpunkt nach unten verschoben";
 $text['message-moved_down']['it-it'] = "Elemento spostato giù";
 
@@ -129,6 +140,7 @@ $text['label-title']['pt-br'] = "Título";
 $text['label-title']['pl'] = "Tytuł";
 $text['label-title']['uk'] = "Назва";
 $text['label-title']['sv-se'] = "Titel";
+$text['label-title']['de-de'] = "Titel";
 $text['label-title']['de-at'] = "Titel";
 $text['label-title']['it-it'] = "Titolo";
 
@@ -140,6 +152,7 @@ $text['label-protected']['pt-br'] = "Protegido";
 $text['label-protected']['pl'] = "Zabezpieczony";
 $text['label-protected']['uk'] = "Захищено";
 $text['label-protected']['sv-se'] = "Skyddad";
+$text['label-protected']['de-de'] = "Geschützt";
 $text['label-protected']['de-at'] = "Geschützt";
 $text['label-protected']['it-it'] = "Protetto";
 
@@ -151,6 +164,7 @@ $text['label-parent_menu']['pt-br'] = "Meni Pai";
 $text['label-parent_menu']['pl'] = "Główne menu";
 $text['label-parent_menu']['uk'] = "Батьківське меню";
 $text['label-parent_menu']['sv-se'] = "Överordnad Meny";
+$text['label-parent_menu']['de-de'] = "Übergeordnetes Menü";
 $text['label-parent_menu']['de-at'] = "Übergeordnetes Menü";
 $text['label-parent_menu']['it-it'] = "Menu Padre";
 
@@ -162,6 +176,7 @@ $text['label-name']['pt-br'] = "Nome";
 $text['label-name']['pl'] = "Nazwa";
 $text['label-name']['uk'] = "Назва";
 $text['label-name']['sv-se'] = "Namn";
+$text['label-name']['de-de'] = "Name";
 $text['label-name']['de-at'] = "Name";
 $text['label-name']['it-it'] = "Nome";
 
@@ -173,6 +188,7 @@ $text['label-menu_order']['pt-br'] = "Ordem";
 $text['label-menu_order']['pl'] = "Kolejność";
 $text['label-menu_order']['uk'] = "Інше";
 $text['label-menu_order']['sv-se'] = "Ordning";
+$text['label-menu_order']['de-de'] = "Reihenfolge";
 $text['label-menu_order']['de-at'] = "Reihenfolge";
 $text['label-menu_order']['it-it'] = "Ordine";
 
@@ -184,6 +200,7 @@ $text['label-link']['pt-br'] = "Ligação";
 $text['label-link']['pl'] = "Link";
 $text['label-link']['uk'] = "Посилання";
 $text['label-link']['sv-se'] = "Länk";
+$text['label-link']['de-de'] = "Link";
 $text['label-link']['de-at'] = "Link";
 $text['label-link']['it-it'] = "Link";
 
@@ -196,6 +213,7 @@ $text['label-language']['pl'] = "Język";
 $text['label-language']['uk'] = "Мова";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['de-at'] = "Sprache";
+$text['label-language']['de-de'] = "Sprache";
 $text['label-language']['it-it'] = "Lingua";
 
 $text['label-icon']['en-us'] = "Icon";
@@ -206,6 +224,7 @@ $text['label-icon']['pt-br'] = "Ícone";
 $text['label-icon']['pl'] = "Ikona";
 $text['label-icon']['uk'] = "іконка";
 $text['label-icon']['sv-se'] = "Ikon";
+$text['label-icon']['de-de'] = "Symbol";
 $text['label-icon']['de-at'] = "Symbol";
 $text['label-icon']['it-it'] = "Icona";
 
@@ -217,6 +236,7 @@ $text['label-groups']['pt-br'] = "Grupos";
 $text['label-groups']['pl'] = "Grupy";
 $text['label-groups']['uk'] = "Групи";
 $text['label-groups']['sv-se'] = "Grupper";
+$text['label-groups']['de-de'] = "Gruppen";
 $text['label-groups']['de-at'] = "Gruppen";
 $text['label-groups']['it-it'] = "Gruppi";
 
@@ -228,6 +248,7 @@ $text['label-category']['pt-br'] = "Destino";
 $text['label-category']['pl'] = "Kategoria";
 $text['label-category']['uk'] = "Категорія";
 $text['label-category']['sv-se'] = "Kategori";
+$text['label-category']['de-de'] = "Ziel";
 $text['label-category']['de-at'] = "Ziel";
 $text['label-category']['it-it'] = "Destinazione";
 
@@ -239,7 +260,8 @@ $text['header-menus']['pt-br'] = "Menu Administrador";
 $text['header-menus']['pl'] = "Menedżer menu";
 $text['header-menus']['uk'] = "Менеджер меню";
 $text['header-menus']['sv-se'] = "Meny Inställningar";
-$text['header-menus']['de-at'] = "Menü Einstellungen";
+$text['header-menus']['de-de'] = "Menü Konfigurationsmanager";
+$text['header-menus']['de-at'] = "Menü Konfigurationsmanager";
 $text['header-menus']['it-it'] = "Gestione Menu";
 
 $text['header-menu_item-edit']['en-us'] = "Menu Item";
@@ -250,6 +272,7 @@ $text['header-menu_item-edit']['pt-br'] = "Editar Item do Menu";
 $text['header-menu_item-edit']['pl'] = "Pozycja menu";
 $text['header-menu_item-edit']['uk'] = "Пункт меню";
 $text['header-menu_item-edit']['sv-se'] = "Meny Post";
+$text['header-menu_item-edit']['de-de'] = "Menüpunkt";
 $text['header-menu_item-edit']['de-at'] = "Menüpunkt";
 $text['header-menu_item-edit']['it-it'] = "Elemento Menu";
 
@@ -261,6 +284,7 @@ $text['header-menu_item-add']['pt-br'] = "Adicionar um Item ao Menu";
 $text['header-menu_item-add']['pl'] = "Pozycja menu";
 $text['header-menu_item-add']['uk'] = "Пункт меню";
 $text['header-menu_item-add']['sv-se'] = "Meny Post";
+$text['header-menu_item-add']['de-de'] = "Menüpunkt";
 $text['header-menu_item-add']['de-at'] = "Menüpunkt";
 $text['header-menu_item-add']['it-it'] = "Elemento Menu";
 
@@ -272,6 +296,7 @@ $text['header-menu-edit']['pt-br'] = "Editar Menu";
 $text['header-menu-edit']['pl'] = "Menu";
 $text['header-menu-edit']['uk'] = "Меню";
 $text['header-menu-edit']['sv-se'] = "Meny";
+$text['header-menu-edit']['de-de'] = "Menü";
 $text['header-menu-edit']['de-at'] = "Menü";
 $text['header-menu-edit']['it-it'] = "Menu";
 
@@ -283,6 +308,7 @@ $text['header-menu-add']['pt-br'] = "Adicionar Menu";
 $text['header-menu-add']['pl'] = "Menu";
 $text['header-menu-add']['uk'] = "Меню";
 $text['header-menu-add']['sv-se'] = "Meny";
+$text['header-menu-add']['de-de'] = "Menü";
 $text['header-menu-add']['de-at'] = "Menü";
 $text['header-menu-add']['it-it'] = "Menu";
 
@@ -294,6 +320,7 @@ $text['description-title']['pt-br'] = "Descrição";
 $text['description-title']['pl'] = "Opis";
 $text['description-title']['uk'] = "Опис";
 $text['description-title']['sv-se'] = "Beskrivning";
+$text['description-title']['de-de'] = "Beschreibung";
 $text['description-title']['de-at'] = "Beschreibung";
 $text['description-title']['it-it'] = "Descrizione";
 
@@ -305,6 +332,7 @@ $text['description-protected']['pt-br'] = "Selecione para proteger os itens do m
 $text['description-protected']['pl'] = "Włącz tę opcję, aby zapobiec usunięciu pozycji menu przez funkcje  'Przywróć ustawienia domyślne'.";
 $text['description-protected']['uk'] = "Цей параметр використовується для захисту пункту меню від видалення після  'Відновити значення за замовчуванням».";
 $text['description-protected']['sv-se'] = "Aktivera för att skydda menyalternativet från att tas bort med 'Återställ Standard'.";
+$text['description-protected']['de-de'] = "Setzen Sie diese Option auf Ein um zu verhindern, dass dieser Menüpunkt durch 'Zurücksetzen' entfernt wird.";
 $text['description-protected']['de-at'] = "Setzen Sie diese Option auf Ein um zu verhindern, dass dieser Menüpunkt durch 'Zurücksetzen' entfernt wird.";
 $text['description-protected']['it-it'] = "Abilita questo per proteggere gli elementi del mene dell'essere rimossi dal 'Ripristina predefiniti'.";
 
@@ -316,6 +344,7 @@ $text['description-parent_menu']['pt-br'] = "Descrição";
 $text['description-parent_menu']['pl'] = "Opis";
 $text['description-parent_menu']['uk'] = "Опис";
 $text['description-parent_menu']['sv-se'] = "Beskrivning";
+$text['description-parent_menu']['de-de'] = "Beschreibung";
 $text['description-parent_menu']['de-at'] = "Beschreibung";
 $text['description-parent_menu']['it-it'] = "Descrizione";
 
@@ -327,7 +356,8 @@ $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['uk'] = "Введіть назву меню";
 $text['description-name']['sv-se'] = "Skriv in namnet på menyn.";
-$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an";
+$text['description-name']['de-de'] = "Geben Sie den Namen des Menüs an.";
+$text['description-name']['de-at'] = "Geben Sie den Namen des Menüs an.";
 $text['description-name']['it-it'] = "Inserisci il nome del menu.";
 
 $text['description-menus']['en-us'] = "Used to customize one or more menus.";
@@ -338,6 +368,7 @@ $text['description-menus']['pt-br'] = "Utilize para customizar um ou mais menus"
 $text['description-menus']['pl'] = "Używany jest do konfiguracji jednej lub kilku list menu.";
 $text['description-menus']['uk'] = "Використовується для налаштування одного або декількох меню.";
 $text['description-menus']['sv-se'] = "Används för att anpassa en eller flera menyer.";
+$text['description-menus']['de-de'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menus']['de-at'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menus']['it-it'] = "Usato per personalizzare uno o più menu.";
 
@@ -349,6 +380,7 @@ $text['description-menu_order']['pt-br'] = "Descrição";
 $text['description-menu_order']['pl'] = "Opis";
 $text['description-menu_order']['uk'] = "Опис";
 $text['description-menu_order']['sv-se'] = "Beskrivning";
+$text['description-menu_order']['de-de'] = "Beschreibung";
 $text['description-menu_order']['de-at'] = "Beschreibung";
 $text['description-menu_order']['it-it'] = "Descrizione";
 
@@ -359,6 +391,7 @@ $text['description-menu_item-edit']['pt-br'] = "Descrição";
 $text['description-menu_item-edit']['pl'] = "Opis";
 $text['description-menu_item-edit']['uk'] = "Опис";
 $text['description-menu_item-edit']['sv-se'] = "Beskrivning";
+$text['description-menu_item-edit']['de-de'] = "Beschreibung";
 $text['description-menu_item-edit']['de-at'] = "Beschreibung";
 $text['description-menu_item-edit']['it-it'] = "Descrizione";
 
@@ -370,6 +403,7 @@ $text['description-menu_item-add']['pt-br'] = "Descrição";
 $text['description-menu_item-add']['pl'] = "Opis";
 $text['description-menu_item-add']['uk'] = "Опис";
 $text['description-menu_item-add']['sv-se'] = "Beskrivning";
+$text['description-menu_item-add']['de-de'] = "Beschreibung";
 $text['description-menu_item-add']['de-at'] = "Beschreibung";
 $text['description-menu_item-add']['it-it'] = "Descrizione";
 
@@ -381,6 +415,7 @@ $text['description-menu-edit']['pt-br'] = "Utilize para customizar um ou mais me
 $text['description-menu-edit']['pl'] = "Używane do konfiguracji jednego lub kilku menu.";
 $text['description-menu-edit']['uk'] = "Використовується для налаштування одного або декількох меню.";
 $text['description-menu-edit']['sv-se'] = "Används för att anpassa en eller flera menyer.";
+$text['description-menu-edit']['de-de'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menu-edit']['de-at'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menu-edit']['it-it'] = "Usato per personalizzare uno o più menu.";
 
@@ -392,6 +427,7 @@ $text['description-menu-add']['pt-br'] = "Utilize para customizar um ou mais men
 $text['description-menu-add']['pl'] = "Używane do konfiguracji jednego lub kilku menu.";
 $text['description-menu-add']['uk'] = "Використовується для налаштування одного або декількох меню.";
 $text['description-menu-add']['sv-se'] = "Används för att anpassa en eller flera menyer.";
+$text['description-menu-add']['de-de'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menu-add']['de-at'] = "Hier können Sie die Menüleiste bearbeiten.";
 $text['description-menu-add']['it-it'] = "Usato per personalizzare uno o più menu.";
 
@@ -403,6 +439,7 @@ $text['description-link']['pt-br'] = "Descrição";
 $text['description-link']['pl'] = "Opis";
 $text['description-link']['uk'] = "Опис";
 $text['description-link']['sv-se'] = "Beskrivning";
+$text['description-link']['de-de'] = "Beschreibung";
 $text['description-link']['de-at'] = "Beschreibung";
 $text['description-link']['it-it'] = "Descrizione";
 
@@ -414,6 +451,7 @@ $text['description-language']['pt-br'] = "Insira a linguagem";
 $text['description-language']['pl'] = "Wprowadź język";
 $text['description-language']['uk'] = "Введіть мову.";
 $text['description-language']['sv-se'] = "Väl språk";
+$text['description-language']['de-de'] = "Geben Sie die Sprache an.";
 $text['description-language']['de-at'] = "Geben Sie die Sprache an.";
 $text['description-language']['it-it'] = "Inserisci la lingua.";
 
@@ -436,7 +474,8 @@ $text['description-description']['pt-br'] = "Insira a descrição, caso desejar"
 $text['description-description']['pl'] = "Wprowadź opis (opcjonalne)";
 $text['description-description']['uk'] = "Введіть опис, якщо це необхідно.";
 $text['description-description']['sv-se'] = "Fyll i en beskrivning, om nödvändigt.";
-$text['description-description']['de-at'] = "Falls gewünscht, geben Sie eine Beschreibung an.";
+$text['description-description']['de-de'] = "Geben Sie eine Beschreibung an falls gewünscht.";
+$text['description-description']['de-at'] = "Geben Sie eine Beschreibung an falls gewünscht.";
 $text['description-description']['it-it'] = "Inserisci una richiesta, se lo si desidera.";
 
 $text['description-category']['en-us'] = "Description";
@@ -447,6 +486,7 @@ $text['description-category']['pt-br'] = "Descrição";
 $text['description-category']['pl'] = "Wprowadź kategorię";
 $text['description-category']['uk'] = "Опис";
 $text['description-category']['sv-se'] = "Beskrivning";
+$text['description-category']['de-de'] = "Beschreibung";
 $text['description-category']['de-at'] = "Beschreibung";
 $text['description-category']['it-it'] = "Descrizione";
 
@@ -458,6 +498,7 @@ $text['button-restore_default']['pt-br'] = "Restaurar Configurações";
 $text['button-restore_default']['pl'] = "Przywróć do ustawień domyślnych";
 $text['button-restore_default']['uk'] = "Відновити значення за замовчуванням";
 $text['button-restore_default']['sv-se'] = "Återställ Standard";
+$text['button-restore_default']['de-de'] = "Zurücksetzen";
 $text['button-restore_default']['de-at'] = "Zurücksetzen";
 $text['button-restore_default']['it-it'] = "Ripristina predefiniti";
 
@@ -469,6 +510,7 @@ $text['button-restore_all']['pt-br'] = "Restaurar Tudo";
 $text['button-restore_all']['pl'] = "Przywróć wszystko";
 $text['button-restore_all']['uk'] = "Відновити все";
 $text['button-restore_all']['sv-se'] = "Återställ Allt";
+$text['button-restore_all']['de-de'] = "Alles Zurücksetzen";
 $text['button-restore_all']['de-at'] = "Alles Zurücksetzen";
 $text['button-restore_all']['it-it'] = "Ripristina Tutto";
 
@@ -480,6 +522,7 @@ $text['button-move_up']['pt-br'] = "Mover Item para cima";
 $text['button-move_up']['pl'] = "Przenieś w górę";
 $text['button-move_up']['uk'] = "Перемістити вгору";
 $text['button-move_up']['sv-se'] = "Flytta Upp";
+$text['button-move_up']['de-de'] = "Nach Oben";
 $text['button-move_up']['de-at'] = "Nach Oben";
 $text['button-move_up']['it-it'] = "Sposta Sù";
 
@@ -491,6 +534,7 @@ $text['button-move_down']['pt-br'] = "Mover Item para baixo";
 $text['button-move_down']['pl'] = "Przenieś w dół";
 $text['button-move_down']['uk'] = "Перемістити вниз";
 $text['button-move_down']['sv-se'] = "Flytta Ned";
+$text['button-move_down']['de-de'] = "Nach Unten";
 $text['button-move_down']['de-at'] = "Nach Unten";
 $text['button-move_down']['it-it'] = "Sposta Giù";
 
