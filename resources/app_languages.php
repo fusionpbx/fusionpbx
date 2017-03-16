@@ -837,6 +837,20 @@ $text['label-tone']['he'] = "טוֹן";
 $text['label-tone']['ru-ru'] = "Тон";
 $text['label-tone']['it-it'] = "Tono";
 
+$text['label-tones']['en-us'] = "Tones";
+$text['label-tones']['es-cl'] = "Tono";
+$text['label-tones']['pt-pt'] = "Tom";
+$text['label-tones']['pt-br'] = "Tom";
+$text['label-tones']['pl'] = "Ton";
+$text['label-tones']['fr-fr'] = "Ton";
+$text['label-tones']['nl-nl'] = "Toon";
+$text['label-tones']['sv-se'] = "Tona";
+$text['label-tones']['uk'] = "Тон";
+$text['label-tones']['de-at'] = "Ton";
+$text['label-tones']['he'] = "טוֹן";
+$text['label-tones']['ru-ru'] = "Тон";
+$text['label-tones']['it-it'] = "Tono";
+
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['es-cl'] = "Musica en Espera";
 $text['label-music_on_hold']['pt-pt'] = "Música em Espera";
