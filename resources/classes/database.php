@@ -1133,7 +1133,7 @@ include "root.php";
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-//					$this->db->beginTransaction();
+					$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
@@ -1598,7 +1598,7 @@ include "root.php";
 					$this->message = $message;
 
 				//commit the atomic transaction
-					//$this->db->commit();
+					$this->db->commit();
 
 				//get the domain uuid
 					$domain_uuid = $_SESSION['domain_uuid'];
