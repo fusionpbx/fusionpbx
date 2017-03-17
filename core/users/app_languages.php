@@ -12,7 +12,7 @@ $text['title-user_setting-add']['en-us'] = "User Setting Add";
 $text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
 $text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
-$text['title-user_setting-add']['de-de] = "Benutzereinstellung hinzufügen";
+$text['title-user_setting-add']['de-de'] = "Benutzereinstellung hinzufügen";
 $text['title-user_setting-add']['de-at'] = "Benutzereinstellung hinzufügen";
 $text['title-user_setting-add']['it-it'] = "Aggiungi Impostazione Utente";
 
@@ -233,7 +233,7 @@ $text['message-copy']['pl'] = "Skopiowano poprawnie";
 $text['message-copy']['uk'] = "Скопійовано";
 $text['message-copy']['sv-se'] = "Kopiering Slutförd";
 $text['message-copy']['ro'] = "Copiere completă";
-$text['message-copy']['de-de'] = "Kopieren erfolgreich"
+$text['message-copy']['de-de'] = "Kopieren erfolgreich";
 $text['message-copy']['de-at'] = "Kopieren erfolgreich";
 $text['message-copy']['he'] = "העתקה הושלמה";
 $text['message-copy']['it-it'] = "Copia Completata";
