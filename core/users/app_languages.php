@@ -12,7 +12,7 @@ $text['title-user_setting-add']['en-us'] = "User Setting Add";
 $text['title-user_setting-add']['es-cl'] = "Ajuste del usuario Agregar";
 $text['title-user_setting-add']['pt-pt'] = "Usuário setting Adicionar";
 $text['title-user_setting-add']['fr-fr'] = "Cadre utilisateur Ajouter";
-$text['title-user_setting-add']['de-de] = "Benutzereinstellung hinzufügen";
+$text['title-user_setting-add']['de-de'] = "Benutzereinstellung hinzufügen";
 $text['title-user_setting-add']['de-at'] = "Benutzereinstellung hinzufügen";
 $text['title-user_setting-add']['it-it'] = "Aggiungi Impostazione Utente";
 
