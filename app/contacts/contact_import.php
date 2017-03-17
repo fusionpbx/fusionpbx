@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -281,6 +281,23 @@
 								}
 							}
 
+						//process a chunk of the array
+							if ($row_id === 1000) {
+
+								//save to the data
+									$database = new database;
+									$database->app_name = 'contacts';
+									$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+									$database->save($array);
+									//$message = $database->message;
+
+								//clear the array
+									unset($array);
+									
+								//set the row id back to 0
+									$row_id = 0;
+							}
+
 						//increment row id
 							$row_id++;
 					}
@@ -293,11 +310,13 @@
 					//exit;
 
 				//save to the data
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-					$database->save($array);
-					//$message = $database->message;
+					if (is_array($array)) {
+						$database = new database;
+						$database->app_name = 'contacts';
+						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+						$database->save($array);
+						//$message = $database->message;
+					}
 
 				//send the redirect header
 					header("Location: contacts.php");
