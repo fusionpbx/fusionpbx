@@ -72,6 +72,7 @@
 	}
 
 //copy the csv file
+	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
 		if (check_str($_POST['type']) == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
@@ -163,6 +164,7 @@
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
+				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
 				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
@@ -226,8 +228,8 @@
 //upload the contact csv
 	if (file_exists($_SESSION['file']) && $action == 'import') {
 
-//form to match the fields to the column names
-require_once "resources/header.php";
+		//form to match the fields to the column names
+			//require_once "resources/header.php";
 
 		//user selected fields
 			$fields = $_POST['fields'];
@@ -260,40 +262,42 @@ require_once "resources/header.php";
 								
 								//get the parent table name
 								$parent = get_parent($schema, $table_name);
-								
+
 								//remove formatting from the phone number
 								if ($field_name == "phone_number") {
 									$result[$key] = preg_replace('{\D}', '', $result[$key]);
 								}
 
 								//build the data array
-								if (strlen($parent) == 0) {
-									$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
-									$array[$table_name][$row_id][$field_name] = $result[$key];
+								if (strlen($table_name) > 0) {
+									if (strlen($parent) == 0) {
+										$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
+										$array[$table_name][$row_id][$field_name] = $result[$key];
+									}
+									else {
+										$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+										$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+									}
 								}
-								else {
-									$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-									$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-								}
-
-								//increment
-								$y++;
 							}
 
 						//increment row id
 							$row_id++;
 					}
 					fclose($handle);
+				
+				//debug info
+					//echo "<pre>\n";
+					//print_r($array);
+					//echo "</pre>\n";
+					//exit;
 
 				//save to the data
 					$database = new database;
 					$database->app_name = 'contacts';
 					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-					//if (strlen($contact_uuid) > 0) {
-					//	$database->uuid($contact_uuid);
-					//}
 					$database->save($array);
-					$message = $database->message;
+					//$message = $database->message;
 
 				//send the redirect header
 					header("Location: contacts.php");
