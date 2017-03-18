@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
+	Copyright (C) 2010 - 2017
 	All Rights Reserved.
 
 	Contributor(s):
@@ -546,7 +546,7 @@ include "root.php";
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-//					$this->db->beginTransaction();
+					//$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
@@ -579,7 +579,6 @@ include "root.php";
 					}
 					*/
 
-//-------------------
 				//loop through the array
 					if (is_array($new_array)) {
 						foreach ($new_array as $schema_name => $schema_array) {
@@ -871,7 +870,7 @@ include "root.php";
 					$this->message = $message;
 
 				//commit the atomic transaction
-//					$this->db->commit();
+					//$this->db->commit();
 
 				//get the domain uuid
 					$domain_uuid = $_SESSION['domain_uuid'];
@@ -1134,14 +1133,14 @@ include "root.php";
 					$this->debug["sql"] = true;
 
 				//start the atomic transaction
-//					$this->db->beginTransaction();
+					$this->db->beginTransaction();
 
 				//debug info
 					//echo "<pre>\n";
 					//print_r($new_array);
 					//echo "</pre>\n";
 					//exit;
-//------------------------------------------
+
 				//loop through the array
 					if (is_array($new_array)) foreach ($new_array as $schema_name => $schema_array) {
 
@@ -1359,7 +1358,7 @@ include "root.php";
 												//prepare the variables
 													$child_name = $this->singular($key);
 													$child_key_name = $child_name."_uuid";
-			
+
 												//determine if the parent key exists in the child array
 													$parent_key_exists = false;
 													if (!isset($array[$parent_key_name])) {
@@ -1478,7 +1477,7 @@ include "root.php";
 												if ($action == "add") {
 													if (permission_exists($child_name.'_add')) {
 														//determine if child or parent key exists
-														$child_key_name = $this->singular($child_name).'_uuid';
+														$child_key_name = $child_name.'_uuid';
 														$parent_key_exists = false;
 														$child_key_exists = false;
 														if (is_array($row)) {
@@ -1599,7 +1598,7 @@ include "root.php";
 					$this->message = $message;
 
 				//commit the atomic transaction
-//					$this->db->commit();
+					$this->db->commit();
 
 				//get the domain uuid
 					$domain_uuid = $_SESSION['domain_uuid'];
