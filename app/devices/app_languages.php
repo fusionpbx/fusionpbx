@@ -2138,6 +2138,19 @@ $text['label-provison_now']['de-at'] = "";
 $text['label-provison_now']['ar-eg'] = "";
 $text['label-provison_now']['he'] = "";
 
+$text['label-paging_list']['en-us'] = "Paging List";
+$text['label-paging_list']['es-cl'] = "";
+$text['label-paging_list']['pt-pt'] = "";
+$text['label-paging_list']['fr-fr'] = "";
+$text['label-paging_list']['pt-br'] = "";
+$text['label-paging_list']['pl'] = "";
+$text['label-paging_list']['uk'] = "";
+$text['label-paging_list']['sv-se'] = "";
+$text['label-paging_list']['ro'] = "";
+$text['label-paging_list']['de-at'] = "";
+$text['label-paging_list']['ar-eg'] = "";
+$text['label-paging_list']['he'] = "";
+
 //Additional translations
 $text['header-profiles']['en-us'] = "Profiles";
 $text['header-profiles']['es-cl'] = "Perfiles";
