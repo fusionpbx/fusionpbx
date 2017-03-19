@@ -1006,6 +1006,12 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['label'] = "label-paging_list";
+		$vendors[$y]['functions'][$z]['name'] = "paging_list";
+		$vendors[$y]['functions'][$z]['value'] = "66";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 
 		$y++; //vendors array index
 		$z=0; //functions array index

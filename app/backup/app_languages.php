@@ -8,7 +8,8 @@ $text['title-backup']['pt-br'] = "Backup";
 $text['title-backup']['pl'] = "Kopie zapasowe";
 $text['title-backup']['sv-se'] = "Backup";
 $text['title-backup']['uk'] = "Резервна копія";
-$text['title-backup']['de-at'] = "Sicherung";
+$text['title-backup']['de-de'] = "Datensicherung";
+$text['title-backup']['de-at'] = "Datensicherung";
 $text['title-backup']['it-it'] = "Backup";
 
 $text['option-file_download']['en-us'] = "File Download";
@@ -19,7 +20,8 @@ $text['option-file_download']['pt-br'] = "Download do arquivo";
 $text['option-file_download']['pl'] = "Pobierz plik";
 $text['option-file_download']['sv-se'] = "Ladda Ned Fil";
 $text['option-file_download']['uk'] = "Скачування файлу";
-$text['option-file_download']['de-at'] = "Datei Download";
+$text['option-file_download']['de-de'] = "Datei herunterladen";
+$text['option-file_download']['de-at'] = "Datei herunterladen";
 $text['option-file_download']['it-it'] = "Download File";
 
 $text['option-command']['en-us'] = "Command";
@@ -30,6 +32,7 @@ $text['option-command']['pt-br'] = "Comando";
 $text['option-command']['pl'] = "Polecenie";
 $text['option-command']['sv-se'] = "Komando";
 $text['option-command']['uk'] = "Команда";
+$text['option-command']['de-de'] = "Befehl";
 $text['option-command']['de-at'] = "Befehl";
 $text['option-command']['it-it'] = "Comando";
 
@@ -41,6 +44,7 @@ $text['message-restore_failed_upload']['pt-br'] = "Falha de restauração - Uplo
 $text['message-restore_failed_upload']['pl'] = "Przywracanie oraz  przesłanie pliku nie powiodło się";
 $text['message-restore_failed_upload']['sv-se'] = "Återställning Misslyckades - Filöverföring misslyckades";
 $text['message-restore_failed_upload']['uk'] = "Помилка відновлення: неможливо завантажити файл";
+$text['message-restore_failed_upload']['de-de'] = "Wiederherstellung fehlgeschlagen - Datei hochladen fehlgeschlagen";
 $text['message-restore_failed_upload']['de-at'] = "Wiederherstellung fehlgeschlagen - Datei hochladen fehlgeschlagen";
 $text['message-restore_failed_upload']['it-it'] = "Ripristino Fallito - Caricamento del File Fallito";
 
@@ -52,6 +56,7 @@ $text['message-restore_failed_format']['pt-br'] = "Falha na restauração - Form
 $text['message-restore_failed_format']['pl'] = "Przywracanie  nie powiodło się - niepoprawny format pliku";
 $text['message-restore_failed_format']['sv-se'] = "Återställning Misslyckades - Ogiltigt Filformat";
 $text['message-restore_failed_format']['uk'] = "Помилка відновлення: хибний формат файлу";
+$text['message-restore_failed_format']['de-de'] = "Wiederherstellung fehlgeschlagen - Ungültiges Dateiformat";
 $text['message-restore_failed_format']['de-at'] = "Wiederherstellung fehlgeschlagen - Ungültiges Dateiformat";
 $text['message-restore_failed_format']['it-it'] = "Ripristino Fallito - Formato File non valido";
 
@@ -63,6 +68,7 @@ $text['message-restore_failed_extract']['pt-br'] = "Falha na restauração - Fal
 $text['message-restore_failed_extract']['pl'] = "Przywracanie  nie powiodło się - Ekstrakcja zawiodły";
 $text['message-restore_failed_extract']['sv-se'] = "Återställning Misslyckades - extraktion misslyckades";
 $text['message-restore_failed_extract']['uk'] = "Помилка відновлення: Помилка при вилученні";
+$text['message-restore_failed_extract']['de-de'] = "Wiederherstellung fehlgeschlagen - Die Extraktion ist fehlgeschlagen";
 $text['message-restore_failed_extract']['de-at'] = "Wiederherstellung fehlgeschlagen - Die Extraktion ist fehlgeschlagen";
 $text['message-restore_failed_extract']['it-it'] = "Ripristino Fallito - Errore di Estrazione";
 
@@ -74,6 +80,7 @@ $text['message-restore_completed']['pt-br'] = "Restauração Concluída";
 $text['message-restore_completed']['pl'] = "Przywracanie zakończono pomyślnie.";
 $text['message-restore_completed']['sv-se'] = "Återställning Genomförd";
 $text['message-restore_completed']['uk'] = "Відновлено";
+$text['message-restore_completed']['de-de'] = "Wiederherstellung erfolgreich";
 $text['message-restore_completed']['de-at'] = "Wiederherstellung erfolgreich";
 $text['message-restore_completed']['it-it'] = "Ripristino Completato";
 
@@ -85,6 +92,7 @@ $text['message-backup_failed_paths']['pt-br'] = "Backup falhou - Sem destino par
 $text['message-backup_failed_paths']['pl'] = "Przywracanie  nie powiodło się – ścieżki nie zostały zdefiniowane.";
 $text['message-backup_failed_paths']['sv-se'] = "Backup misslyckades - Ingen Backup Sökväg Definierad";
 $text['message-backup_failed_paths']['uk'] = "Помилка: не вказано шлях для збереження файлу резервної копії";
+$text['message-backup_failed_paths']['de-de'] = "Sicherung fehlgeschlagen - Kein Sicherungspfad angegeben";
 $text['message-backup_failed_paths']['de-at'] = "Sicherung fehlgeschlagen - Kein Sicherungspfad angegeben";
 $text['message-backup_failed_paths']['it-it'] = "Backup Fallito - Nessuno percorso di Backup definito";
 
@@ -96,6 +104,7 @@ $text['message-backup_failed_format']['pt-br'] = "Falha no backup - Não é poss
 $text['message-backup_failed_format']['pl'] = "Przywracanie  nie powiodło się - nie można utworzyć pliku kopii zapasowej";
 $text['message-backup_failed_format']['sv-se'] = "Backup misslyckades - Kunde Inte Skapa Backup Fil";
 $text['message-backup_failed_format']['uk'] = "Помилка: неможливо створити файл резервної копії";
+$text['message-backup_failed_format']['de-de'] = "Sicherung fehlgeschlagen - Sicherungsdatei kann nicht erstellt werden";
 $text['message-backup_failed_format']['de-at'] = "Sicherung fehlgeschlagen - Sicherungsdatei kann nicht erstellt werden";
 $text['message-backup_failed_format']['it-it'] = "Backup Fallito - Impossibile creare il File di Backup";
 
@@ -107,6 +116,7 @@ $text['label-target_type']['pt-br'] = "Tipo de destino";
 $text['label-target_type']['pl'] = "Typ docelowy";
 $text['label-target_type']['sv-se'] = "Mål Typ";
 $text['label-target_type']['uk'] = "Призначення";
+$text['label-target_type']['de-de'] = "Ziel Typ";
 $text['label-target_type']['de-at'] = "Ziel Typ";
 $text['label-target_type']['it-it'] = "Tipo Destinazione";
 
@@ -118,6 +128,7 @@ $text['label-source_paths']['pt-br'] = "Destino de origem";
 $text['label-source_paths']['pl'] = " Ścieżki źródłowe";
 $text['label-source_paths']['sv-se'] = "Källa Sökväg";
 $text['label-source_paths']['uk'] = "Об’єкти для резервного копіювання";
+$text['label-source_paths']['de-de'] = "Quell Pfade";
 $text['label-source_paths']['de-at'] = "Quell Pfade";
 $text['label-source_paths']['it-it'] = "Percorso Sorgenti";
 
@@ -129,7 +140,8 @@ $text['label-select_backup']['pt-br'] = "Selecione o arquivo de Backup";
 $text['label-select_backup']['pl'] = "Wybierz plik kopii zapasowej";
 $text['label-select_backup']['sv-se'] = "Välj Backup Fil";
 $text['label-select_backup']['uk'] = "Виберіть файл резервної копії";
-$text['label-select_backup']['de-at'] = "Wählen Sie eine Sicherungsdatei";
+$text['label-select_backup']['de-de'] = "Wählen Sie eine Sicherungsdatei aus";
+$text['label-select_backup']['de-at'] = "Wählen Sie eine Sicherungsdatei aus";
 $text['label-select_backup']['it-it'] = "Seleziona il File di Backup";
 
 $text['label-file_format']['en-us'] = "File Format";
@@ -140,6 +152,7 @@ $text['label-file_format']['pt-br'] = "Formato do arquivo";
 $text['label-file_format']['pl'] = "Format pliku";
 $text['label-file_format']['sv-se'] = "Filformat";
 $text['label-file_format']['uk'] = "Формат файлу";
+$text['label-file_format']['de-de'] = "Dateiformat";
 $text['label-file_format']['de-at'] = "Dateiformat";
 $text['label-file_format']['it-it'] = "Formato File";
 
@@ -151,6 +164,7 @@ $text['label-command']['pt-br'] = "Comando";
 $text['label-command']['pl'] = "Polecenie";
 $text['label-command']['sv-se'] = "Komando";
 $text['label-command']['uk'] = "Команда";
+$text['label-command']['de-de'] = "Befehl";
 $text['label-command']['de-at'] = "Befehl";
 $text['label-command']['it-it'] = "Comando";
 
@@ -162,6 +176,7 @@ $text['header-restore']['pt-br'] = "Restaurar";
 $text['header-restore']['pl'] = "Przywracanie kopii zapasowej";
 $text['header-restore']['sv-se'] = "Återställ";
 $text['header-restore']['uk'] = "Відновлення";
+$text['header-restore']['de-de'] = "Wiederherstellen";
 $text['header-restore']['de-at'] = "Wiederherstellen";
 $text['header-restore']['it-it'] = "Ripristina";
 
@@ -173,6 +188,7 @@ $text['header-backup']['pt-br'] = "Backup";
 $text['header-backup']['pl'] = "Tworzenie kopii zapasowej";
 $text['header-backup']['sv-se'] = "Backup";
 $text['header-backup']['uk'] = "Резервна копія";
+$text['header-backup']['de-de'] = "Sichern";
 $text['header-backup']['de-at'] = "Sichern";
 $text['header-backup']['it-it'] = "Backup";
 
@@ -184,6 +200,7 @@ $text['description-restore_warning']['pt-br'] = "Aviso: Os arquivos existentes, 
 $text['description-restore_warning']['pl'] = "Uwaga - obecne pliki (jeżeli istnieją), zostaną nadpisane";
 $text['description-restore_warning']['sv-se'] = "Varning: Befintliga filer, om någon, kommer att skrivas över.";
 $text['description-restore_warning']['uk'] = "Увага! Файли, які вже існують, будуть перезаписані.";
+$text['description-restore_warning']['de-de'] = "Warnung: Existierende Dateien, falls vorhanden, werden überschrieben.";
 $text['description-restore_warning']['de-at'] = "Warnung: Existierende Dateien, falls vorhanden, werden überschrieben.";
 $text['description-restore_warning']['it-it'] = "Attenzione: I File esistenti, se presenti, saranno sovrascritti.";
 
@@ -195,7 +212,8 @@ $text['description-restore']['pt-br'] = "Para restaurar um backup de um arquivo 
 $text['description-restore']['pl'] = "Aby przywrócić kopię zapasową z pliku w systemie lokalnym, kliknij  'Przeglądaj', wybierz żądany plik kopii zapasowej (np. 'Backup_ [ YYMMDD ] _ [ GGMMSS ] .tgz' ), a następnie kliknij przycisk 'Przywróć ustawienia domyślne'.";
 $text['description-restore']['sv-se'] = "För att återställa en säkerhetskopia från en fil på ditt lokala system,  klicka på ' Bläddra ' och välj sedan önskad säkerhetskopia (t.ex. . ' Backup_ [ ÅÅMMDD ] _ [ HHMMSS ] .tgz ' ) och klicka på ' Återställ ' -knappen.";
 $text['description-restore']['uk'] = "Для відновлення резервної копії з файлу, натисніть кнопку 'Огляд' і виберіть потрібний файл резервної копії, а потім натисніть кнопку 'Відновити '.";
-$text['description-restore']['de-at'] = "Um das System von einer lokalen Datei Wiederherzustellen klicken Sie 'Durchsuchen' und wählen Sie die gewünschte Sicherungsdatei.";
+$text['description-restore']['de-de'] = "Um das System von einer lokalen Datei wiederherzustellen klicken Sie 'Durchsuchen' und wählen Sie die gewünschte Sicherungsdatei.";
+$text['description-restore']['de-at'] = "Um das System von einer lokalen Datei wiederherzustellen klicken Sie 'Durchsuchen' und wählen Sie die gewünschte Sicherungsdatei.";
 $text['description-restore']['it-it'] = "Per ripristinare un backup dal tuo file system locale, clicca 'Sfoglia' e seleziona il file di backup desiderato (eg. 'backup_[YYMMDD]_[HHMMSS].tgz'), poi clicca il pulsante 'Ripristina'.";
 
 $text['description-backup']['en-us'] = "To create a backup of the Source Paths below (defined in Default Settings), select the desired File Format and Target Type.";
@@ -206,7 +224,8 @@ $text['description-backup']['pt-br'] = "Para criar uma cópia de segurança dos 
 $text['description-backup']['pl'] = "Aby utworzyć kopię zapasową scieżki zródłowej zdefiniowanej w ustawieniach  domyślnych, wybierz żądany format pliku i typ docelowy.";
 $text['description-backup']['sv-se'] = "För att skapa en säkerhetskopia av Källa Sökväg nedan (som definieras i standardinställningar), välj önskad Filformat och Mål Typ.";
 $text['description-backup']['uk'] = "Щоб створити резервну копію  вказаних нижче об’єктів (вказано у налаштуваннях за замовчуванням), виберіть потрібний формат і призначення";
-$text['description-backup']['de-at'] = "Um eine Sicherung der unten angeführten Quell Pfade (in Standard Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
+$text['description-backup']['de-de'] = "Um eine Sicherung der unten angeführten Quell-Pfade (in Standard-Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
+$text['description-backup']['de-at'] = "Um eine Sicherung der unten angeführten Quell-Pfade (in Standard-Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
 $text['description-backup']['it-it'] = "Per creare un backup dei percorsi sorgente (definiti nelle Impostazioni Predefinite), sleziona il formato del File e il Tipo di Destinazione.";
 
 $text['button-generate']['en-us'] = "Generate";
@@ -217,7 +236,8 @@ $text['button-generate']['pt-br'] = "Geração";
 $text['button-generate']['pl'] = "Generuj";
 $text['button-generate']['sv-se'] = "Generera";
 $text['button-generate']['uk'] = "Згенерувати";
-$text['button-generate']['de-at'] = "Generieren";
+$text['button-generate']['de-de'] = "Erzeugen";
+$text['button-generate']['de-at'] = "Erzeugen";
 $text['button-generate']['it-it'] = "Genera";
 
 ?>
