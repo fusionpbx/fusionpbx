@@ -132,10 +132,12 @@
 						freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: " .. string.sub(dtmf_digits, 0, 1) .. "\n");
 						if (dtmf_digits == "*") then
 							--check the voicemail password
-								check_password(voicemail_id, password_tries);
+							--	check_password(voicemail_id, password_tries);
 							--send to the main menu
-								timeouts = 0;
-								main_menu();
+							--	timeouts = 0;
+							--	main_menu();
+							--this should be disabled as it opens backdoor for hackers, also there is no voice prompt for this option
+							session:hangup();
 						elseif (string.sub(dtmf_digits, 0, 1) == "*") then
 							--do not allow dialing numbers prefixed with *
 							session:hangup();
