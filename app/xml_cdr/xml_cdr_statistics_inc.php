@@ -324,7 +324,7 @@ else {
 		$stats[$i]['start_epoch'] = $start_epoch;
 		$stats[$i]['stop_epoch'] = $stop_epoch;
 		$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
-		$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
+		$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $sql_where);
 		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
 		$stats[$i]['avg_sec'] = ($stats[$i]['volume']==0) ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
 		$stats[$i]['avg_min'] = (($stats[$i]['volume']==0) ? 0 : $stats[$i]['volume'] - $stats[$i]['missed']) / 60;
