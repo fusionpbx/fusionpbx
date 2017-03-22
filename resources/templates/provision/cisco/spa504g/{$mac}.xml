@@ -122,8 +122,8 @@
 <Resync_On_Reset group="Provisioning/Configuration_Profile">Yes</Resync_On_Reset>
 <Resync_Random_Delay group="Provisioning/Configuration_Profile">2</Resync_Random_Delay>
 <Resync_Periodic group="Provisioning/Configuration_Profile">0</Resync_Periodic>
-<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay group="Provisioning/Configuration_Profile">14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay group="Provisioning/Configuration_Profile">30</Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt group="Provisioning/Configuration_Profile">Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1 group="Provisioning/Configuration_Profile" />
