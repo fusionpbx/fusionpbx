@@ -8,6 +8,7 @@ $text['message-denied']['pt-br'] = "Acesso negado";
 $text['message-denied']['pl'] = "Odmowa dostępu";
 $text['message-denied']['sv-se'] = "Tillträde Nekat";
 $text['message-denied']['uk'] = "в доступі відмовлено";
+$text['message-denied']['de-de'] = "Zugang verweigert";
 $text['message-denied']['de-at'] = "Zugang verweigert";
 
 $text['message-connection']['en-us'] = "Connection to Event Socket failed.";
@@ -18,6 +19,7 @@ $text['message-connection']['pt-br'] = "Conexão ao evento Socket falhou";
 $text['message-connection']['pl'] = "Połączenie do „Event Socket” nie powiodło się";
 $text['message-connection']['sv-se'] = "Anslutning till Händelse misslyckades";
 $text['message-connection']['uk'] = "Помилка підключення до сокета подій.";
+$text['message-connection']['de-de'] = "Verbindung zum Event Socket fehlgeschlagen.";
 $text['message-connection']['de-at'] = "Verbindung zum Event Socket fehlgeschlagen.";
 
 $text['message-click_to_unmute']['en-us'] = "Click to Unmute Member";
@@ -28,6 +30,7 @@ $text['message-click_to_unmute']['pt-br'] = "Clique para desativar o mudo";
 $text['message-click_to_unmute']['pl'] = "Kliknij, aby wyłączyć wyciszenie uczestnika";
 $text['message-click_to_unmute']['sv-se'] = "Klicka för att Aktivera Deltagares Mikrofon";
 $text['message-click_to_unmute']['uk'] = "Натисніть, щоб включити учасника";
+$text['message-click_to_unmute']['de-det'] = "Klicken Sie hier um die Stummschaltung zu deaktivieren";
 $text['message-click_to_unmute']['de-at'] = "Klicken Sie hier um die Stummschaltung zu deaktivieren";
 
 $text['message-click_to_mute']['en-us'] = "Click to mute Member";
@@ -38,6 +41,7 @@ $text['message-click_to_mute']['pt-br'] = "Clique para ativar o mudo";
 $text['message-click_to_mute']['pl'] = "Kliknij, aby wyciszyć uczestnika";
 $text['message-click_to_mute']['sv-se'] = "Klicka för att Stänga Av Deltagares Mikrofon";
 $text['message-click_to_mute']['uk'] = "Натисніть, щоб вилючити учасника";
+$text['message-click_to_mute']['de-de'] = "Klicken Sie hier um den Teilnehmer stumm zu schalten";
 $text['message-click_to_mute']['de-at'] = "Klicken Sie hier um den Teilnehmer stumm zu schalten";
 
 $text['label-yes']['en-us'] = "Yes";
@@ -48,6 +52,7 @@ $text['label-yes']['pt-br'] = "Sim";
 $text['label-yes']['pl'] = "Tak";
 $text['label-yes']['sv-se'] = "Ja";
 $text['label-yes']['uk'] = "Так";
+$text['label-yes']['de-de'] = "Ja";
 $text['label-yes']['de-at'] = "Ja";
 
 $text['label-volume']['en-us'] = "Vol";
@@ -58,6 +63,7 @@ $text['label-volume']['pt-br'] = "Volume";
 $text['label-volume']['pl'] = "Głośność";
 $text['label-volume']['sv-se'] = "Vol";
 $text['label-volume']['uk'] = "";
+$text['label-volume']['de-de'] = "Lautstärke";
 $text['label-volume']['de-at'] = "Lautstärke";
 
 $text['label-video']['en-us'] = "Video";
@@ -68,6 +74,7 @@ $text['label-video']['pt-br'] = "Video";
 $text['label-video']['pl'] = "Wideo";
 $text['label-video']['sv-se'] = "Video";
 $text['label-video']['uk'] = "Відео";
+$text['label-video']['de-de'] = "Video";
 $text['label-video']['de-at'] = "Video";
 
 $text['label-unmute-all']['en-us'] = "Unmute All";
@@ -78,7 +85,8 @@ $text['label-unmute-all']['pt-br'] = "Todos com som";
 $text['label-unmute-all']['pl'] = "Wyłącz wyciszenie wszystkim";
 $text['label-unmute-all']['sv-se'] = "Aktivera Allas Mikrofoner";
 $text['label-unmute-all']['uk'] = "Unmute All ";
-$text['label-unmute-all']['de-at'] = "Stumm deaktivieren, alle";
+$text['label-unmute-all']['de-de'] = "Stummschaltung deaktivieren, alle";
+$text['label-unmute-all']['de-at'] = "Stummschaltung deaktivieren, alle";
 
 $text['label-unmute']['en-us'] = "Unmute";
 $text['label-unmute']['es-cl'] = "Desilenciar";
@@ -88,7 +96,8 @@ $text['label-unmute']['pt-br'] = "Com som";
 $text['label-unmute']['pl'] = "Wyłącz wyciszenie";
 $text['label-unmute']['sv-se'] = "Mikrofon Aktiv";
 $text['label-unmute']['uk'] = "Unmute ";
-$text['label-unmute']['de-at'] = "Stumm deaktivieren";
+$text['label-unmute']['de-de'] = "Stummschaltung deaktivieren";
+$text['label-unmute']['de-at'] = "Stummschaltung deaktivieren";
 
 $text['label-unlock']['en-us'] = "Unlock";
 $text['label-unlock']['es-cl'] = "Desbloquear";
@@ -98,7 +107,8 @@ $text['label-unlock']['pt-br'] = "Desbloquear";
 $text['label-unlock']['pl'] = "Odblokuj";
 $text['label-unlock']['sv-se'] = "Lås Upp";
 $text['label-unlock']['uk'] = "Розблокувати";
-$text['label-unlock']['de-at'] = "Unlock";
+$text['label-unlock']['de-de'] = "Entsperren";
+$text['label-unlock']['de-at'] = "Entsperren";
 
 $text['label-undeaf']['en-us'] = "Undeaf";
 $text['label-undeaf']['es-cl'] = "Deshacer Sordo";
@@ -108,7 +118,8 @@ $text['label-undeaf']['pt-br'] = "Desensurdecer ";
 $text['label-undeaf']['pl'] = "Undeaf ";
 $text['label-undeaf']['sv-se'] = "Hörbarhet";
 $text['label-undeaf']['uk'] = "";
-$text['label-undeaf']['de-at'] = "Undeaf";
+$text['label-undeaf']['de-de'] = "Hörbarkeit";
+$text['label-undeaf']['de-at'] = "Hörbarkeit";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -118,7 +129,8 @@ $text['label-tools']['pt-br'] = "Ferramentas";
 $text['label-tools']['pl'] = "Narzędzia";
 $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk'] = "Параметри";
-$text['label-tools']['de-at'] = "Werkzeug";
+$text['label-tools']['de-de'] = "Werkzeuge";
+$text['label-tools']['de-at'] = "Werkzeuge";
 
 $text['label-tool']['en-us'] = "Tools";
 $text['label-tool']['es-cl'] = "Herramientas";
@@ -128,7 +140,8 @@ $text['label-tool']['pt-br'] = "Ferramentas";
 $text['label-tool']['pl'] = "Narzędzia";
 $text['label-tool']['sv-se'] = "Verktyg";
 $text['label-tool']['uk'] = "Параметри";
-$text['label-tool']['de-at'] = "Funktionen";
+$text['label-tool']['de-de'] = "Werkzeug";
+$text['label-tool']['de-at'] = "Werkzeug";
 
 $text['label-talking']['en-us'] = "Talking";
 $text['label-talking']['es-cl'] = "Hablando";
@@ -138,6 +151,7 @@ $text['label-talking']['pt-br'] = "Falando";
 $text['label-talking']['pl'] = "Mówiący";
 $text['label-talking']['sv-se'] = "Talande";
 $text['label-talking']['uk'] = "Розмова";
+$text['label-talking']['de-de'] = "spricht";
 $text['label-talking']['de-at'] = "spricht";
 
 $text['label-speak']['en-us'] = "Speak";
@@ -148,6 +162,7 @@ $text['label-speak']['pt-br'] = "Falar";
 $text['label-speak']['pl'] = "Mów";
 $text['label-speak']['sv-se'] = "Tala";
 $text['label-speak']['uk'] = "Говорити";
+$text['label-speak']['de-de'] = "sprechen";
 $text['label-speak']['de-at'] = "sprechen";
 
 $text['label-recording']['en-us'] = "Recording";
@@ -158,6 +173,7 @@ $text['label-recording']['pt-br'] = "Gravando";
 $text['label-recording']['pl'] = "Nagrywanie";
 $text['label-recording']['sv-se'] = "Inspelning";
 $text['label-recording']['uk'] = "Запис";
+$text['label-recording']['de-de'] = "Aufnahme";
 $text['label-recording']['de-at'] = "Aufnahme";
 
 $text['label-quiet']['en-us'] = "Quiet";
@@ -168,7 +184,8 @@ $text['label-quiet']['pt-br'] = "Tranquilo";
 $text['label-quiet']['pl'] = "Cichy";
 $text['label-quiet']['sv-se'] = "Tyst";
 $text['label-quiet']['uk'] = "";
-$text['label-quiet']['de-at'] = "still";
+$text['label-quiet']['de-de'] = "Leise";
+$text['label-quiet']['de-at'] = "Leise";
 
 $text['label-participant-pin']['en-us'] = "Participant PIN";
 $text['label-participant-pin']['es-cl'] = "Participante PIN";
@@ -178,6 +195,7 @@ $text['label-participant-pin']['pt-br'] = "Participante";
 $text['label-participant-pin']['pl'] = "Numer PIN uczestnika";
 $text['label-participant-pin']['sv-se'] = "PIN Deltagare";
 $text['label-participant-pin']['uk'] = "PIN учасника";
+$text['label-participant-pin']['de-de'] = "Teilnehmer PIN";
 $text['label-participant-pin']['de-at'] = "Teilnehmer PIN";
 
 $text['label-participant']['en-us'] = "Participant";
@@ -188,6 +206,7 @@ $text['label-participant']['pt-br'] = "Participante";
 $text['label-participant']['pl'] = "Uczestnik";
 $text['label-participant']['sv-se'] = "Deltagare";
 $text['label-participant']['uk'] = "Учасник";
+$text['label-participant']['de-de'] = "Teilnehmer";
 $text['label-participant']['de-at'] = "Teilnehmer";
 
 $text['label-not-recording']['en-us'] = "Not Recording";
@@ -198,6 +217,7 @@ $text['label-not-recording']['pt-br'] = "Não gravando";
 $text['label-not-recording']['pl'] = "Nie nagrywa";
 $text['label-not-recording']['sv-se'] = "Spelar inte in";
 $text['label-not-recording']['uk'] = "";
+$text['label-not-recording']['de-de'] = "Nicht Aufnehmen";
 $text['label-not-recording']['de-at'] = "Nicht Aufnehmen";
 
 $text['label-no']['en-us'] = "No";
@@ -208,6 +228,7 @@ $text['label-no']['pt-br'] = "Não ";
 $text['label-no']['pl'] = "Nie";
 $text['label-no']['sv-se'] = "Nej";
 $text['label-no']['uk'] = "Ні";
+$text['label-no']['de-de'] = "Nein";
 $text['label-no']['de-at'] = "Nein";
 
 $text['label-mute-all-alt']['en-us'] = "Mute all Participants.";
@@ -218,7 +239,8 @@ $text['label-mute-all-alt']['pt-br'] = "Silenciar todos menos o moderador";
 $text['label-mute-all-alt']['pl'] = "Wycisz wszystkich uczestników";
 $text['label-mute-all-alt']['sv-se'] = "Stäng av Deltagares mikrofon";
 $text['label-mute-all-alt']['uk'] = "";
-$text['label-mute-all-alt']['de-at'] = "Alle Teilnehmer Stumm schalten.";
+$text['label-mute-all-alt']['de-de'] = "Alle Teilnehmer stumm schalten.";
+$text['label-mute-all-alt']['de-at'] = "Alle Teilnehmer stumm schalten.";
 
 $text['label-mute-all']['en-us'] = "Mute All";
 $text['label-mute-all']['es-cl'] = "Silenciar a todos";
@@ -228,7 +250,8 @@ $text['label-mute-all']['pt-br'] = "Silenciar todos";
 $text['label-mute-all']['pl'] = "Wycisz wszystkich";
 $text['label-mute-all']['sv-se'] = "Stäng av Allas mikrofon";
 $text['label-mute-all']['uk'] = "";
-$text['label-mute-all']['de-at'] = "Alle Stumm";
+$text['label-mute-all']['de-de'] = "Alle stummschalten";
+$text['label-mute-all']['de-at'] = "Alle stummschalten";
 
 $text['label-mute']['en-us'] = "Mute";
 $text['label-mute']['es-cl'] = "Silenciar";
@@ -238,7 +261,8 @@ $text['label-mute']['pt-br'] = "Silenciar";
 $text['label-mute']['pl'] = "Wycisz";
 $text['label-mute']['sv-se'] = "Stäng av mikrofon";
 $text['label-mute']['uk'] = "";
-$text['label-mute']['de-at'] = "Stumm";
+$text['label-mute']['de-de'] = "Stummschalten";
+$text['label-mute']['de-at'] = "Stummschalten";
 
 $text['label-moderator']['en-us'] = "Moderator";
 $text['label-moderator']['es-cl'] = "Moderador";
@@ -248,6 +272,7 @@ $text['label-moderator']['pt-br'] = "Administrador";
 $text['label-moderator']['pl'] = "Moderator";
 $text['label-moderator']['sv-se'] = "Värd";
 $text['label-moderator']['uk'] = "Модератор";
+$text['label-moderator']['de-de'] = "Moderator";
 $text['label-moderator']['de-at'] = "Moderator";
 
 $text['label-message']['en-us'] = "Message";
@@ -258,6 +283,7 @@ $text['label-message']['pt-br'] = "Mensagem";
 $text['label-message']['pl'] = "Wiadomość";
 $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk'] = "Повідомлення";
+$text['label-message']['de-de'] = "Nachricht";
 $text['label-message']['de-at'] = "Nachricht";
 
 $text['label-members']['en-us'] = "Members";
@@ -268,6 +294,7 @@ $text['label-members']['pt-br'] = "Total";
 $text['label-members']['pl'] = "Uczestnicy";
 $text['label-members']['sv-se'] = "Deltagare";
 $text['label-members']['uk'] = "Учасники";
+$text['label-members']['de-de'] = "Teilnehmer";
 $text['label-members']['de-at'] = "Teilnehmer";
 
 $text['label-member-count']['en-us'] = "Member Count";
@@ -278,7 +305,8 @@ $text['label-member-count']['pt-br'] = "Total de membros";
 $text['label-member-count']['pl'] = "Liczba uczestników";
 $text['label-member-count']['sv-se'] = "Antal Deltagare";
 $text['label-member-count']['uk'] = "Кількість учасиків";
-$text['label-member-count']['de-at'] = "Teilnehmer";
+$text['label-member-count']['de-de'] = "Anzahl Teilnehmer";
+$text['label-member-count']['de-at'] = "Anzahl Teilnehmer";
 
 $text['label-lock']['en-us'] = "Lock";
 $text['label-lock']['es-cl'] = "Bloquear";
@@ -288,7 +316,8 @@ $text['label-lock']['pt-br'] = "Bloquear";
 $text['label-lock']['pl'] = "Zablokowany";
 $text['label-lock']['sv-se'] = "Lås";
 $text['label-lock']['uk'] = "Блокувати";
-$text['label-lock']['de-at'] = "sperren";
+$text['label-lock']['de-de'] = "Sperren";
+$text['label-lock']['de-at'] = "Sperren";
 
 $text['label-kick']['en-us'] = "Kick";
 $text['label-kick']['es-cl'] = "Echar";
@@ -298,7 +327,8 @@ $text['label-kick']['pt-br'] = "Ejetar";
 $text['label-kick']['pl'] = "Kick ";
 $text['label-kick']['sv-se'] = "Kick";
 $text['label-kick']['uk'] = "";
-$text['label-kick']['de-at'] = "rauswerfen";
+$text['label-kick']['de-de'] = "Rauswerfen";
+$text['label-kick']['de-at'] = "Rauswerfen";
 
 $text['label-joined']['en-us'] = "Joined";
 $text['label-joined']['es-cl'] = "Unido";
@@ -308,7 +338,8 @@ $text['label-joined']['pt-br'] = "Entrou";
 $text['label-joined']['pl'] = "Dołączył";
 $text['label-joined']['sv-se'] = "Blev medlem";
 $text['label-joined']['uk'] = "";
-$text['label-joined']['de-at'] = "verbunden";
+$text['label-joined']['de-de'] = "Verbunden";
+$text['label-joined']['de-at'] = "Verbunden";
 
 $text['label-interactive']['en-us'] = "Interactive Conference";
 $text['label-interactive']['es-cl'] = "Conferencia Interactiva";
@@ -318,6 +349,7 @@ $text['label-interactive']['pt-br'] = "Conferência interativa";
 $text['label-interactive']['pl'] = "Interaktywna rozmowa konferencyjna";
 $text['label-interactive']['sv-se'] = "Interaktiv Konferens";
 $text['label-interactive']['uk'] = "";
+$text['label-interactive']['de-de'] = "Inaktive Konferenz";
 $text['label-interactive']['de-at'] = "Inaktive Konferenz";
 
 $text['label-id']['en-us'] = "ID";
@@ -338,6 +370,7 @@ $text['label-hear']['pt-br'] = "Ouvir";
 $text['label-hear']['pl'] = "Usłysz";
 $text['label-hear']['sv-se'] = "Höra";
 $text['label-hear']['uk'] = "";
+$text['label-hear']['de-de'] = "hören";
 $text['label-hear']['de-at'] = "hören";
 
 $text['label-gain']['en-us'] = "Gain";
@@ -348,7 +381,8 @@ $text['label-gain']['pt-br'] = "Ganho";
 $text['label-gain']['pl'] = "Przyrost";
 $text['label-gain']['sv-se'] = "Förstärka";
 $text['label-gain']['uk'] = "";
-$text['label-gain']['de-at'] = "Gain";
+$text['label-gain']['de-de'] = "Verstärkung";
+$text['label-gain']['de-at'] = "Verstärkung";
 
 $text['label-floor']['en-us'] = "Has Floor";
 $text['label-floor']['es-cl'] = "Tiene Piso";
@@ -358,7 +392,8 @@ $text['label-floor']['pt-br'] = "Derrubar";
 $text['label-floor']['pl'] = "Posiada piętro";
 $text['label-floor']['sv-se'] = "Har Ordet";
 $text['label-floor']['uk'] = "";
-$text['label-floor']['de-at'] = "Has Floor";
+$text['label-floor']['de-de'] = "Hat das Wort";
+$text['label-floor']['de-at'] = "Hat das Wort";
 
 $text['label-energy']['en-us'] = "Energy";
 $text['label-energy']['es-cl'] = "Energía";
@@ -368,7 +403,8 @@ $text['label-energy']['pt-br'] = "Energia";
 $text['label-energy']['pl'] = "Energia";
 $text['label-energy']['sv-se'] = "Energi";
 $text['label-energy']['uk'] = "";
-$text['label-energy']['de-at'] = "Energy";
+$text['label-energy']['de-de'] = "Energie";
+$text['label-energy']['de-at'] = "Energie";
 
 $text['label-end-conference']['en-us'] = "End Conference";
 $text['label-end-conference']['es-cl'] = "Terminar Conferencia";
@@ -378,6 +414,7 @@ $text['label-end-conference']['pt-br'] = "Finalizar conferência";
 $text['label-end-conference']['pl'] = "Zakończ rozmowę konferencyjna";
 $text['label-end-conference']['sv-se'] = "Avsluta Konferens";
 $text['label-end-conference']['uk'] = "";
+$text['label-end-conference']['de-de'] = "Konferenz beenden";
 $text['label-end-conference']['de-at'] = "Konferenz beenden";
 
 $text['label-deaf']['en-us'] = "Deaf";
@@ -388,7 +425,8 @@ $text['label-deaf']['pt-br'] = "Ensurdecer ";
 $text['label-deaf']['pl'] = "Głuchy";
 $text['label-deaf']['sv-se'] = "Hör inte";
 $text['label-deaf']['uk'] = "";
-$text['label-deaf']['de-at'] = "Deaf";
+$text['label-deaf']['de-de'] = "Taub";
+$text['label-deaf']['de-at'] = "Taub";
 
 $text['label-cid-num']['en-us'] = "CID Number";
 $text['label-cid-num']['es-cl'] = "Número de Caller ID";
@@ -398,6 +436,7 @@ $text['label-cid-num']['pt-br'] = "Número de destino";
 $text['label-cid-num']['pl'] = "Prezentacja numeru dzwoniącego";
 $text['label-cid-num']['sv-se'] = "CID, nummerpresentation";
 $text['label-cid-num']['uk'] = "CID Номер";
+$text['label-cid-num']['de-de'] = "Anrufer Nummer";
 $text['label-cid-num']['de-at'] = "Anrufer Nummer";
 
 $text['label-cid-name']['en-us'] = "CID Name";
@@ -408,6 +447,7 @@ $text['label-cid-name']['pt-br'] = "Nome CID";
 $text['label-cid-name']['pl'] = "Prezentacja nazwy dzwoniącego";
 $text['label-cid-name']['sv-se'] = "CID, namnpresentation";
 $text['label-cid-name']['uk'] = "CID Ім’я";
+$text['label-cid-name']['de-de'] = "Anrufer Name";
 $text['label-cid-name']['de-at'] = "Anrufer Name";
 
 $text['label-capabilities']['en-us'] = "Capabilities";
@@ -418,6 +458,7 @@ $text['label-capabilities']['pt-br'] = "Capacidades";
 $text['label-capabilities']['pl'] = "Możliwości";
 $text['label-capabilities']['sv-se'] = "Möjligheter";
 $text['label-capabilities']['uk'] = "Можливості";
+$text['label-capabilities']['de-de'] = "Möglichkeiten";
 $text['label-capabilities']['de-at'] = "Möglichkeiten";
 
 $text['label-active']['en-us'] = "Active Conferences";
@@ -428,6 +469,7 @@ $text['label-active']['pt-br'] = "Conferências ativas";
 $text['label-active']['pl'] = "Aktywne konferencje";
 $text['label-active']['sv-se'] = "Aktiva Konferenser";
 $text['label-active']['uk'] = "Активні кноференції";
+$text['label-active']['de-de'] = "Aktive Konferenzen";
 $text['label-active']['de-at'] = "Aktive Konferenzen";
 
 $text['description-interactive']['en-us'] = "Use this to monitor and interact with the members of the conference.";
@@ -438,6 +480,7 @@ $text['description-interactive']['pt-br'] = "Para interagir e monitorar os membr
 $text['description-interactive']['pl'] = "Użyj tej funkcji do monitorowania i interakcji z uczestnikami konferencji.";
 $text['description-interactive']['sv-se'] = "Använd detta för att Monitorera och Interagera med deltagare i Konferensen";
 $text['description-interactive']['uk'] = "";
+$text['description-interactive']['de-de'] = "Teilnehmer der Konferenz überwachen und aktiv eingreifen.";
 $text['description-interactive']['de-at'] = "Teilnehmer der Konferenz überwachen und aktiv eingreifen.";
 
 $text['description-active']['en-us'] = "List all the conferences that are currently active with one or more members.";
@@ -448,6 +491,7 @@ $text['description-active']['pt-br'] = "Lista com todas as conferência que est�
 $text['description-active']['pl'] = "Lista wszystkich aktywnych konferencji z przynajmniej jednym uczestnikiem.";
 $text['description-active']['sv-se'] = "Lista alla Konferenser som är aktiva med en eller fler deltagare";
 $text['description-active']['uk'] = "";
+$text['description-active']['de-de'] = "Liste alle aktiven Konferenzen mit einem oder mehreren Teilnehmern.";
 $text['description-active']['de-at'] = "Liste alle aktiven Konferenzen mit einem oder mehreren Teilnehmern.";
 
 $text['button-stop-rec']['en-us'] = "Stop Record";
@@ -458,7 +502,8 @@ $text['button-stop-rec']['pt-br'] = "Pausar gravação";
 $text['button-stop-rec']['pl'] = "Zatrzymanie nagrywania";
 $text['button-stop-rec']['sv-se'] = "Stoppa Inspelning";
 $text['button-stop-rec']['uk'] = "Зупинити";
-$text['button-stop-rec']['de-at'] = "Stoppe Aufnahme";
+$text['button-stop-rec']['de-de'] = "Aufnahme beenden";
+$text['button-stop-rec']['de-at'] = "Aufnahme beenden";
 
 $text['button-start-rec']['en-us'] = "Start Record";
 $text['button-start-rec']['es-cl'] = "Iniciar Grabación";
@@ -468,6 +513,7 @@ $text['button-start-rec']['pt-br'] = "Iniciar gravação";
 $text['button-start-rec']['pl'] = "Początek nagrywania";
 $text['button-start-rec']['sv-se'] = "Starta Inspelning";
 $text['button-start-rec']['uk'] = "Записувати";
-$text['button-start-rec']['de-at'] = "Starte Aufnahme";
+$text['button-start-rec']['de-de'] = "Aufnahme starten";
+$text['button-start-rec']['de-at'] = "Aufnahme starten";
 
 ?>
