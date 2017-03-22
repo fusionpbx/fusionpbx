@@ -14,8 +14,8 @@
 <Resync_At__HHmm_></Resync_At__HHmm_>
 <Resync_At_Random_Delay>600</Resync_At_Random_Delay>
 <Resync_Periodic>0</Resync_Periodic>
-<Resync_Error_Retry_Delay>3600</Resync_Error_Retry_Delay>
-<Forced_Resync_Delay>14400</Forced_Resync_Delay>
+<Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
+<Forced_Resync_Delay>30</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
 <Resync_Trigger_1></Resync_Trigger_1>
