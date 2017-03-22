@@ -106,6 +106,13 @@ if (!class_exists('scripts')) {
 					if (is_readable($dst_dir)) {
 						recursive_copy($src_dir,$dst_dir);
 						unset($src_dir);
+						
+						// Copy the app/*/resource/install/scripts
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
+						foreach ($app_scripts as $app_script){
+							recursive_copy($app_script, $dst_dir);
+						}
+						unset($app_scripts);
 					}else{
 						throw new Exception("Cannot read from '$src_dir' to get the scripts");
 					}
