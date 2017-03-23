@@ -1033,6 +1033,11 @@ $text['label-import_duplicates']['sv-se'] = "Dubbletter";
 $text['label-import_duplicates']['de-at'] = "Duplikate";
 $text['label-import_duplicates']['he'] = "";
 
+$text['label-import_data']['en-us'] = "Data";
+$text['label-import_data']['es-cl'] = "Datos";
+$text['label-import_data']['fr-fr'] = "Donnée";
+$text['label-import_data']['pt-pt'] = "Dados";
+	
 $text['label-import_delimiter']['en-us'] = "Delimiter";
 $text['label-import_delimiter']['es-cl'] = "Delimitador";
 $text['label-import_delimiter']['pt-pt'] = "Delimitador de campos";
@@ -2128,6 +2133,11 @@ $text['description-import_duplicates']['uk'] = "";
 $text['description-import_duplicates']['sv-se'] = "Välj hur kontakter som importerats tidigare skall hanteras.";
 $text['description-import_duplicates']['de-at'] = "Wählen Sie aus, wie mit vorhandenen Kontakten verfahren werden soll.";
 $text['description-import_duplicates']['he'] = "";
+
+$text['description-import_data']['en-us'] = "Copy and paste the comma delimitted data into the text area to begin the import.";
+$text['description-import_data']['es-cl'] = "Copie y pegue la información delimitada por comas en el cuadro de texto para comenzar su importación.";
+$text['description-import_data']['fr-fr'] = "Copier et coller les données séparées par une virgule ou un \"pipe\" dans la zone de texte pour commencer l'import.";
+$text['description-import_data']['pt-pt'] = "Copie e cole os dados separados por vírgula para iniciar a importação.";
 
 $text['description-import_delimiter']['en-us'] = "Select the delimiter (comma or pipe).";
 $text['description-import_delimiter']['es-cl'] = "Select el delimitador (coma o pipe).";

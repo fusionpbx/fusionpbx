@@ -231,7 +231,7 @@
 
 				//build the xml dialplan
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
@@ -376,20 +376,20 @@
 
 //add an empty row to the options array
 	if (count($ivr_menu_options) == 0) {
-		$count = 5;
-		$x = 0;
+		$rows = $_SESSION['ivr_menu']['option_add_rows']['numeric'];
+		$id = 0;
 	}
 	if (count($ivr_menu_options) > 0) {
-		$count = 1;
-		$x = '';
+		$rows = $_SESSION['ivr_menu']['option_edit_rows']['numeric'];
+		$id = count($ivr_menu_options)+1;
 	}
-	while ($x < $count) {
-		$ivr_menu_options[$x]['ivr_menu_option_digits'] = '';
-		$ivr_menu_options[$x]['ivr_menu_option_action'] = '';
-		$ivr_menu_options[$x]['ivr_menu_option_param'] = '';
-		$ivr_menu_options[$x]['ivr_menu_option_order'] = '';
-		$ivr_menu_options[$x]['ivr_menu_option_description'] = '';
-		$x++;
+	for ($x = 0; $x < $rows; $x++) {
+		$ivr_menu_options[$id]['ivr_menu_option_digits'] = '';
+		$ivr_menu_options[$id]['ivr_menu_option_action'] = '';
+		$ivr_menu_options[$id]['ivr_menu_option_param'] = '';
+		$ivr_menu_options[$id]['ivr_menu_option_order'] = '';
+		$ivr_menu_options[$id]['ivr_menu_option_description'] = '';
+		$id++;
 	}
 
 //set the defaults

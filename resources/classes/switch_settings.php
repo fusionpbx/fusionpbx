@@ -51,7 +51,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_port)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (strlen($_SESSION['event_socket_port']) > 0) {
 						$this->event_socket_port = $_SESSION['event_socket_port'];
 					}
 					else {
@@ -59,7 +59,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_password)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (strlen($_SESSION['event_socket_password']) > 0) {
 						$this->event_socket_password = $_SESSION['event_socket_password'];
 					}
 					else {
@@ -73,9 +73,6 @@ if (!class_exists('switch_settings')) {
 
 			//run the api command
 				$result = $esl->request('api global_getvar');
-
-			//close event socket
-				fclose($fp);
 
 			//set the result as a named array
 				$vars = array();

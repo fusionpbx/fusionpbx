@@ -291,13 +291,16 @@ include "root.php";
 				$dial_string_caller_id_name = "\${effective_caller_id_name}";
 				$dial_string_caller_id_number = "\${effective_caller_id_number}";
 
-				if (strlen($this->follow_me_caller_id_uuid) > 0){
-					$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
+				if (strlen($this->follow_me_caller_id_uuid) > 0) {
+					$sql_caller = "select destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
+					$sql_caller .= "from v_destinations ";
+					$sql_caller .= "where domain_uuid = '$this->domain_uuid' ";
+					$sql_caller .= "and destination_type = 'inbound' ";
+					$sql_caller .= "and destination_uuid = '$this->follow_me_caller_id_uuid'";
 					$prep_statement_caller = $db->prepare($sql_caller);
 					if ($prep_statement_caller) {
 						$prep_statement_caller->execute();
 						$row_caller = $prep_statement_caller->fetch(PDO::FETCH_ASSOC);
-
 						$caller_id_number = $row_caller['destination_caller_id_number'];
 						if(strlen($caller_id_number) == 0){
 							$caller_id_number = $row_caller['destination_number'];
@@ -306,31 +309,10 @@ include "root.php";
 						if(strlen($caller_id_name) == 0){
 							$caller_id_name = $row_caller['destination_description'];
 						}
-
-						if (strlen($caller_id_name) > 0) {
-							$dial_string_caller_id_name = $caller_id_name;
-						}
-						if (strlen($caller_id_number) > 0) {
-							$dial_string_caller_id_number = $caller_id_number;
-						}
 					}
 				}
 
-				if (strlen($this->cid_name_prefix) > 0) {
-					$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."$dial_string_caller_id_name";
-				}
-				else {
-					$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
-				}
-
-				if (strlen($this->cid_number_prefix) > 0) {
-					//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
-				$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."$dial_string_caller_id_number";
-				}
-				else {
-					$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
-				}
-
+				//accountcode
 				if (strlen($this->accountcode) == 0) {
 					$dial_string .= ",sip_h_X-accountcode=\${accountcode}";
 				}
@@ -339,6 +321,7 @@ include "root.php";
 					$dial_string .= ",accountcode=".$this->accountcode;
 				}
 
+				//toll allow
 				if ($this->toll_allow != '') {
 					$dial_string .= ",toll_allow='".$this->toll_allow."'";
 				}
@@ -352,11 +335,10 @@ include "root.php";
 					if (($presence_id = extension_presence_id($row["follow_me_destination"])) !== false) {
 						//set the dial string
 						// using here `sofia_contact` instead of `user/` allows add registered device
-						// so you can make follow me for extension `100` like `100` and avoid recusion
+						// so you can make follow me for extension `100` like `100` and avoid recursion
 						// but it ignores DND/CallForwad settings
 						if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 							$dial_string .= "[";
-							$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number,";
 							$dial_string .= "presence_id=".$presence_id."@".$_SESSION['domain_name'].',';
 							if ($row["follow_me_prompt"] == "1") {
 								$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
@@ -366,30 +348,59 @@ include "root.php";
 							$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
 						}
 						else {
-							$replace_value = $row["follow_me_destination"];
+							//get the session dial string
+							$dial_string_template = $_SESSION['domain']['dial_string']['text'];
+
+							//replace the variables with the values
+							$dial_string_template = str_replace("sip_invite_domain=\${domain_name},", "", $dial_string_template);
+							$dial_string_template = str_replace("presence_id=\${dialed_user}@\${dialed_domain}", "", $dial_string_template);
+							$dial_string_template = str_replace("\${dialed_user}", $row["follow_me_destination"], $dial_string_template);
+							$dial_string_template = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $dial_string_template);
+							$dial_string_template = str_replace("\${call_timeout}", $row["follow_me_timeout"], $dial_string_template);
+							$dial_string_template = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $dial_string_template);
+
+							//seperate the variables from the bridge statement
+							preg_match_all('/{((?:[^{}]|(?R))*)}/', $dial_string_template, $matches, PREG_PATTERN_ORDER);
+							$dial_string_variables = $matches[1][0];
+							$dial_string_bridge = $matches[1][1];
+
+							//add to the dial string
+							$dial_string .= "[";
+							$dial_string .= $dial_string_variables;
+
+							//group confirm
 							if ($row["follow_me_prompt"] == "1") {
-								$replace_value .= "[group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
+								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true";
 							}
-							$local_dial_string = $_SESSION['domain']['dial_string']['text'];
-							$local_dial_string = str_replace("\${dialed_user}", $replace_value, $local_dial_string);
-							$local_dial_string = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $local_dial_string);
-							$local_dial_string = str_replace("\${call_timeout}", $row["follow_me_timeout"], $local_dial_string);
-							$local_dial_string = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $local_dial_string);
-							$dial_string .= $local_dial_string;
+							$dial_string .= "]";
+							$dial_string .= "\${".$dial_string_bridge."}";
 						}
 					}
 					else {
 						$presence_id = extension_presence_id($this->extension, $this->number_alias);
 						$dial_string .= "[";
-						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true"){
-							$dial_string .= "outbound_caller_id_name=".$this->outbound_caller_id_name;
-							$dial_string .= ",outbound_caller_id_number=".$this->outbound_caller_id_number;
-							$dial_string .= ",origination_caller_id_name=".$this->outbound_caller_id_name;
-							$dial_string .= ",origination_caller_id_number=".$this->outbound_caller_id_number;
+
+						//set the caller id
+						if ($_SESSION['cdr']['follow_me_fix']['boolean'] == "true") {
+							if (strlen($this->outbound_caller_id_name) > 0) {
+								$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix.$this->outbound_caller_id_name;
+							}
+							if (strlen($this->outbound_caller_id_number) > 0) {
+								$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix.$this->outbound_caller_id_number;
+							}
 						}
-						else{
-							$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number";
+						else {
+							if (strlen($caller_id_number) > 0) {
+								//set the caller id if it is set
+								if (strlen($caller_id_name) > 0) { $dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix.$caller_id_name; }
+								$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix.$caller_id_number;
+							}
+							else {
+								//set the outbound caller id number if the caller id number is a user
+								$dial_string .= ",\${cond(\${user_exists id \${caller_id_number} \${domain_name}} == true ? origination_caller_id_name=".$this->cid_name_prefix."\${outbound_caller_id_name},origination_caller_id_number=".$this->cid_number_prefix."\${outbound_caller_id_number} : )}";
+							}
 						}
+
 						$dial_string .= ",presence_id=".$presence_id."@".$_SESSION['domain_name'];
 						if ($row["follow_me_prompt"] == "1") {
 							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
@@ -417,6 +428,7 @@ include "root.php";
 					}
 					$x++;
 				}
+				$dial_string = str_replace(",]", "]", $dial_string);
 				$this->dial_string = $dial_string;
 
 				$sql  = "update v_follow_me set ";

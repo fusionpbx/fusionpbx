@@ -154,10 +154,12 @@ include "root.php";
 					if (preg_match('/^es\d\d\d.*$/i', $agent)) {
 						return "escene";
 					}
-			}
-
-			// unknown vendor
-				return "";
+					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
+						return "panasonic";
+					}
+					// unknown vendor
+					return "";
+				}
 		}
 
 		public function get_template_dir() {

@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -63,8 +63,8 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						dbh:query(sql, params, function(rows)
-							domain_uuid = rows["domain_uuid"];
+						dbh:query(sql, params, function(row)
+							domain_uuid = row.domain_uuid;
 						end);
 					end
 			end
@@ -91,7 +91,7 @@
 			profile_tag_status = "closed";
 
 		--run the query
-			sql = "select p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
+			sql = "select p.sip_profile_uuid, p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
 			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
 			sql = sql .. "and p.sip_profile_enabled = 'true' ";
@@ -105,6 +105,7 @@
 			x = 0;
 			dbh:query(sql, params, function(row)
 				--set as variables
+					sip_profile_uuid = row.sip_profile_uuid;
 					sip_profile_name = row.sip_profile_name;
 					--sip_profile_description = row.sip_profile_description;
 					sip_profile_setting_name = row.sip_profile_setting_name;
@@ -220,7 +221,28 @@
 
 						table.insert(xml, [[					</gateways>]]);
 						table.insert(xml, [[					<domains>]]);
-						table.insert(xml, [[						<domain name="all" alias="false" parse="true"/>]]);
+
+						--add sip profile domain: name, alias, and parse
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways-->]]);
+						table.insert(xml, [[						<!--<domain name="$${domain}" parse="true"/>-->]]);
+						table.insert(xml, [[						<!-- indicator to parse the directory for domains with parse="true" to get gateways and alias every domain to this profile -->]]);
+						table.insert(xml, [[						<!--<domain name="all" alias="true" parse="true"/>-->]]);
+						sql = "SELECT sip_profile_domain_name, sip_profile_domain_alias, sip_profile_domain_parse FROM v_sip_profile_domains ";
+						sql = sql .. "WHERE sip_profile_uuid = :sip_profile_uuid";
+						local params = {sip_profile_uuid = sip_profile_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; sip_profile_uuid:" .. sip_profile_uuid .. "\n");
+						end
+						dbh:query(sql, params, function(row)
+							name = row.sip_profile_domain_name;
+							alias = row.sip_profile_domain_alias;
+							parse = row.sip_profile_domain_parse;
+							if (name == nil or name == '') then name = 'false'; end
+							if (alias == nil or alias == '') then alias = 'false'; end
+							if (parse == nil or parse == '') then parse = 'false'; end
+							table.insert(xml, [[						<domain name="]] .. name .. [[" alias="]] .. alias .. [[" parse="]] .. parse .. [[""/>]]);
+						end);
+						
 						table.insert(xml, [[					</domains>]]);
 						table.insert(xml, [[					<settings>]]);
 						profile_tag_status = "open";

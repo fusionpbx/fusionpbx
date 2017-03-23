@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "fax";
 		$apps[$x]['destinations'][$y]['name'] = "fax";
@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -154,10 +154,182 @@
 		$apps[$x]['permissions'][$y]['name'] = 'fax_active_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '6840bdb0-eb9d-45bd-a79a-ccb64d08fd97';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'allowed_extension';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '.pdf';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '7031d8ec-4610-4696-b5b4-9b5f89f2bff1';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'allowed_extension';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '.tif';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'c3c4487d-62f1-48d1-9fda-048fca830fb9';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'allowed_extension';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '.tiff';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'cec88775-8aaf-4667-a04d-414b3274e545';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'cover_logo';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Path to image/logo file displayed in the header of the cover sheet.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '6aba55ae-ced9-4853-81d0-33667be763e5';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'cover_font';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'times';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Font used to generate cover page. Can be full path to .ttf file or font name alredy installed.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '549f8854-2377-448f-892c-58a85ac83a56';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'cover_footer';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "The information contained in this facsimile is intended for the sole confidential use of the recipient(s) designated above, and may contain confidential and legally privileged information. If you are not the intended recipient, you are hereby notified that the review, disclosure, dissemination, distribution, copying, duplication in any form, and taking of any action in regards to the contents of this document - except with respect to its direct delivery to the intended recipient - is strictly prohibited.  Please notify the sender immediately and destroy this cover sheet and all attachments.  If stored or viewed electronically, please permanently delete it from your system.";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Notice displayed in the footer of the cover sheet.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e907df99-6b3a-4864-bd11-681888f20289';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'cover_header';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Default information displayed beneath the logo in the header of the cover sheet.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '8338a404-3966-416e-b4f9-a1ac36c37bd1';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'page_size';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'letter';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default page size of new faxes.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '9fd6cb5f-5824-4cbb-89b2-53066649272e';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'resolution';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'normal';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Set the default transmission quality of new faxes.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '63e55b19-8bf2-4aaa-b7df-a514c62ecfcc';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'variable';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'fax_enable_t38=true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable T.38';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '0f07d24a-296a-4798-8478-e6ef1a59f54f';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'variable';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'fax_enable_t38_request=false';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Send a T38 reinvite when a fax tone is detected.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '7681e5d8-1462-420b-9276-acf4b2156982';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'variable';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'ignore_early_media=true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Ignore ringing to improve fax success rate.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '80eee263-a22c-4ec9-9df1-397908a274f6';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'keep_local';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'boolean';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Keep the file after sending or receiving the fax.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '63d2cb3c-708a-43c2-b233-a3f4e3367224';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_mode';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'queue';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'd2977fe1-ee7e-4403-b44f-8d86aeb5f310';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_retry_limit';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '5';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Number of attempts to send fax (count only calls with answer)';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '6ca1712b-5a53-4c54-ba53-b2046c89280d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_retry_interval';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '15';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Delay before we make next call after answered call';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '2c5640d0-493f-4426-b76d-04e378c86d76';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_no_answer_retry_limit';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Number of unanswered attempts in sequence';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '03820df1-f242-4358-950f-ede87f502e9a';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_no_answer_retry_interval';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '30';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Delay before we make next call after no answered call';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '9ed2e73c-6b82-4a79-83db-b7588f78c675';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_no_answer_limit';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '3';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Giveup reach the destination after this number of sequences';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'c97457b7-da9a-44a6-a4a4-442dbf5fa4fa';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'send_no_answer_interval';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '300';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Delay before next call sequence';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '325e3b06-1199-40e0-8703-8adf7efd9f4f';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'fax';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage_type';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'base64';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Store FAX in base64.';
+		$y++;
+
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "fax_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -306,9 +478,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
@@ -351,9 +524,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_fax_files';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_files";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -415,9 +589,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 
-		$y = 3; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_fax_logs";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_logs";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_log_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -516,9 +691,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 4; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_fax_tasks';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_fax_tasks";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_fax";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_task_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -591,4 +767,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+
 ?>

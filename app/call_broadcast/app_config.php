@@ -42,9 +42,10 @@
 		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_broadcasts";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_broadcasts";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_broadcast_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

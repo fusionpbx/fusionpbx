@@ -19,5 +19,31 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
-		
+
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e13895b7-ef2f-43ed-8d2a-e739ccffccc2';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'tftp_service_address';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '0.0.0.0';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'the address for the TFTP service to listen for connection on';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '3fe87ea5-9633-4af0-bb5c-a61dbba2772c';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'tftp_service_port';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '69';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'the port for the TFTP service to listen for connection on';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '5e21c189-ac27-42aa-acaf-57c8cdcbbcef';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'tftp_service_file_path';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '/tmp';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'the location for static files e.g. firmware';
+
 ?>

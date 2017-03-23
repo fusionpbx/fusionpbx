@@ -40,17 +40,16 @@
 	require_once "resources/require.php";
 
 //define a function to remove html tags
-	function rip_tags($string) {
-		// ----- remove HTML TAGs -----
+	function remove_tags($string) {
+		//remove HTML tags
 		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		// ----- remove control characters -----
-
+		//remove control characters
 		$string = str_replace("\r", '', $string);    // --- replace with empty space
 		$string = str_replace("\n", ' ', $string);   // --- replace with space
 		$string = str_replace("\t", ' ', $string);   // --- replace with space
 
-		// ----- remove multiple spaces -----
+		//remove multiple spaces
 		$string = trim(preg_replace('/ {2,}/', ' ', $string));
 		return $string;
 	}
@@ -313,7 +312,7 @@
 	}
 
 //add the body to the email
-	$body_plain = rip_tags($body);
+	$body_plain = remove_tags($body);
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
@@ -336,30 +335,32 @@
 			echo "Retained in v_emails \n";
 		} else {
 			// log/store message in database for review
-			$email_uuid = uuid();
-			$sql = "insert into v_emails ( ";
-			$sql .= "email_uuid, ";
-			if ($call_uuid) {
-				$sql .= "call_uuid, ";
+			if (!isset($email_uuid)) {
+				$email_uuid = uuid();
+				$sql = "insert into v_emails ( ";
+				$sql .= "email_uuid, ";
+				if ($call_uuid) {
+					$sql .= "call_uuid, ";
+				}
+				$sql .= "domain_uuid, ";
+				$sql .= "sent_date, ";
+				$sql .= "type, ";
+				$sql .= "status, ";
+				$sql .= "email ";
+				$sql .= ") values ( ";
+				$sql .= "'".$email_uuid."', ";
+				if ($call_uuid) {
+					$sql .= "'".$call_uuid."', ";
+				}
+				$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+				$sql .= "now(),";
+				$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+				$sql .= "'failed', ";
+				$sql .= "'".str_replace("'", "''", $msg)."' ";
+				$sql .= ") ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 			}
-			$sql .= "domain_uuid, ";
-			$sql .= "sent_date, ";
-			$sql .= "type, ";
-			$sql .= "status, ";
-			$sql .= "email ";
-			$sql .= ") values ( ";
-			$sql .= "'".$email_uuid."', ";
-			if ($call_uuid) {
-				$sql .= "'".$call_uuid."', ";
-			}
-			$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-			$sql .= "now(),";
-			$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-			$sql .= "'failed', ";
-			$sql .= "'".str_replace("'", "''", $msg)."' ";
-			$sql .= ") ";
-			$db->exec(check_sql($sql));
-			unset($sql);
 
 			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
 		}

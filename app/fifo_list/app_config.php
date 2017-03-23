@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "FIFO List";
 		$apps[$x]['uuid'] = "fcd0afab-164b-abd7-3971-d613598fe3da";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -21,21 +21,22 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "active_queue_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "450f1225-9187-49ac-a119-87bc26025f7d";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "active_queue_add";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "active_queue_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "active_queue_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "active_queue_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "450f1225-9187-49ac-a119-87bc26025f7d";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "active_queue_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "active_queue_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "active_queue_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

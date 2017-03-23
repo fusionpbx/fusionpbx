@@ -35,10 +35,9 @@
 
   <!-- network config -->
   <DHCP>yes</DHCP> <!-- for WAN port -->
-  <!--
-  <Primary_NTP_Server>{$domain_name}</Primary_NTP_Server>
-  <Secondary_NTP_Server>pool.ntp.org</Secondary_NTP_Server>
-  -->
+
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
   <!-- remote logging - valid debug levels are 0, 1, 2 and 3
   <Syslog_Server>{$domain_name}</Syslog_Server>
@@ -63,7 +62,7 @@
   <Admin_Passwd/>
   <User_Password/>
   -->
-  <Time_Zone>GMT-{$time_zone_offset}</Time_Zone>
+  <Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 
   <!-- SIP settings -->
   <Proxy_1_>{$server_address_1}</Proxy_1_>

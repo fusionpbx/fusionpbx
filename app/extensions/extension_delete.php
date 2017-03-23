@@ -60,6 +60,7 @@
 						foreach ($extensions as &$row) {
 							$extension = $row["extension"];
 							$user_context = $row["user_context"];
+							$follow_me_uuid = $row["follow_me_uuid"];
 						}
 						unset ($prep_statement);
 					}
@@ -130,6 +131,21 @@
 					$sql = "delete from v_extension_users ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and extension_uuid = '".$extension_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($prep_statement, $sql);
+
+				//delete the follow-me
+					$sql = "delete from v_follow_me_destinations ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and follow_me_uuid = '".$follow_me_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($prep_statement, $sql);
+					
+					$sql = "delete from v_follow_me ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and follow_me_uuid = '".$follow_me_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					unset($prep_statement, $sql);

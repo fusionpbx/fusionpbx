@@ -292,8 +292,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/sqlite.sql";
 				}
 				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
@@ -387,8 +387,8 @@ include "root.php";
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
-					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/sql/pgsql.sql";
 				}
 				else {
 				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
@@ -558,8 +558,8 @@ include "root.php";
 
 			//add the defaults data into the database
 				//get the contents of the sql file
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
-						$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
+					if (file_exists('/usr/share/examples/fusionpbx/sql/mysql.sql')){
+						$filename = "/usr/share/examples/fusionpbx/sql/mysql.sql";
 					}
 					else {
 						$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
@@ -774,9 +774,9 @@ include "root.php";
 				$_SESSION["domain_uuid"] = $this->global_settings->domain_uuid();
 				require $this->config_php;
 				require "resources/require.php";
-				$_SESSION['event_socket_ip_address'] = $this->global_settings->event_host;
-				$_SESSION['event_socket_port'] = $this->global_settings->event_port;
-				$_SESSION['event_socket_password'] = $this->global_settings->event_password;
+				$_SESSION['event_socket_ip_address'] = $this->global_settings->switch_event_host();
+				$_SESSION['event_socket_port'] = $this->global_settings->switch_event_port();
+				$_SESSION['event_socket_password'] = $this->global_settings->switch_event_password();
 
 			//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 				$sql = "SELECT * FROM v_group_users ";

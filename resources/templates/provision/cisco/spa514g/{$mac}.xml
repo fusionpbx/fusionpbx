@@ -9,7 +9,7 @@
 <Admin_Passwd group="System/System_Configuration" />
 <User_Password group="System/System_Configuration" />
 <Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
-<User_Password group="System/System_Configuration">{$user_password}</User_Password>
+<User_Password group="System/System_Configuration"></User_Password>
 <Signaling_Protocol group="System/System_Configuration">SIP</Signaling_Protocol>
 <SPCP_Auto-detect group="System/System_Configuration">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly group="System/System_Configuration">No</Phone-UI-readonly>
@@ -40,8 +40,8 @@
 <Layer_2_Logging group="System/Optional_Network_Configuration">No</Layer_2_Logging>
 <Port_Mirroring group="System/Optional_Network_Configuration">No</Port_Mirroring>
 <NTP_Enable group="System/Optional_Network_Configuration">Yes</NTP_Enable>
-<Primary_NTP_Server group="System/Optional_Network_Configuration" />
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- System/VLAN_Settings -->
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
@@ -57,12 +57,12 @@
 <Asset_ID group="System/Inventory_Settings" />
 
 <!-- SIP/NAT_Support_Parameters -->
-<Handle_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_handle_via_rport}</Handle_VIA_rport>
-<Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_insert_via_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Send_Resp_To_Src_Port>
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
+<Insert_VIA_received group="SIP/NAT_Support_Parameters">Na</Insert_VIA_received>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
@@ -152,7 +152,7 @@
 <Locale group="Regional/Miscellaneous">en-US</Locale>
 
 <!-- Phone/General -->
-<Station_Name group="Phone/General">{$display_name_1}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
@@ -721,8 +721,8 @@
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
 <Send_Audio_To_Speaker group="User/Supplementary_Services">No</Send_Audio_To_Speaker>
-<Time_Format group="User/Supplementary_Services">12hr</Time_Format>
-<Date_Format group="User/Supplementary_Services">month/day</Date_Format>
+<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
+<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut group="User/Supplementary_Services">Yes</Miss_Call_Shortcut>
 <Miss_Call_Banner group="User/Supplementary_Services">Yes</Miss_Call_Banner>
 <Accept_Media_Loopback_Request group="User/Supplementary_Services">automatic</Accept_Media_Loopback_Request>

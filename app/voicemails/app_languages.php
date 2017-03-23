@@ -157,6 +157,17 @@ $text['label-voicemail_sms_to']['uk'] = "SMS-повідомлення на";
 $text['label-voicemail_sms_to']['de-at'] = "SMS an";
 $text['label-voicemail_sms_to']['he'] = "";
 
+$text['label-voicemail_transcription_enabled']['en-us'] = "Transcription Enabled";
+$text['label-voicemail_transcription_enabled']['es-cl'] = "";
+$text['label-voicemail_transcription_enabled']['pt-pt'] = "";
+$text['label-voicemail_transcription_enabled']['fr-fr'] = "";
+$text['label-voicemail_transcription_enabled']['pt-br'] = "";
+$text['label-voicemail_transcription_enabled']['pl'] = "";
+$text['label-voicemail_transcription_enabled']['sv-se'] = "";
+$text['label-voicemail_transcription_enabled']['uk'] = "";
+$text['label-voicemail_transcription_enabled']['de-at'] = "";
+$text['label-voicemail_transcription_enabled']['he'] = "";
+
 $text['label-voicemail_mail_to']['en-us'] = "Mail To";
 $text['label-voicemail_mail_to']['es-cl'] = "Correo a";
 $text['label-voicemail_mail_to']['pt-pt'] = "Email Para";
@@ -521,6 +532,17 @@ $text['description-voicemail_sms_to']['sv-se'] = "Ange numret SMS för att skick
 $text['description-voicemail_sms_to']['uk'] = "Введіть номер SMS відправити повідомлення голосової пошти.";
 $text['description-voicemail_sms_to']['de-at'] = "Geben Sie die SMS-Nummer um Voicemail Benachrichtigung zu senden.";
 $text['description-voicemail_sms_to']['he'] = "הזן את מספר ה-SMS לשלוח הודעת תא קולי.";
+
+$text['description-voicemail_transcription_enabled']['en-us'] = "Choose if voicemail transcription is enabled for this extension ";
+$text['description-voicemail_transcription_enabled']['es-cl'] = "";
+$text['description-voicemail_transcription_enabled']['pt-pt'] = "";
+$text['description-voicemail_transcription_enabled']['fr-fr'] = "";
+$text['description-voicemail_transcription_enabled']['pt-br'] = "";
+$text['description-voicemail_transcription_enabled']['pl'] = "";
+$text['description-voicemail_transcription_enabled']['sv-se'] = "";
+$text['description-voicemail_transcription_enabled']['uk'] = "";
+$text['description-voicemail_transcription_enabled']['de-at'] = "";
+$text['description-voicemail_transcription_enabled']['he'] = "";
 
 $text['description-voicemail_message']['en-us'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 $text['description-voicemail_message']['es-cl'] = "Un listado de grabaciones de mensajes de voz que muestran la fecha de creación, información del Caller ID, duración, tamaño del archivo y permite descargar o eliminar el archivo";

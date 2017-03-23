@@ -73,7 +73,7 @@
 	echo "			<b>".$text['header-user_dashboard']."</b><br />";
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
-	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a>";
+	echo "			".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -108,7 +108,7 @@
 
 
 //collect stats for counts and limits
-	if (in_array('counts', $selected_blocks) || in_array('limits', $selected_blocks)) {
+	if ((is_array($selected_blocks) && in_array('counts', $selected_blocks)) || (is_array($selected_blocks) && in_array('limits', $selected_blocks))) {
 
 		//domains
 			if (permission_exists('domain_view')) {
@@ -336,7 +336,7 @@
 	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/"; // used for missed and recent calls
 
 	//voicemail
-		if (in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+		if (is_array($selected_blocks) && in_array('voicemail', $selected_blocks) && permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
 			//required class
 				require_once "app/voicemails/resources/classes/voicemail.php";
 			//get the voicemail
@@ -405,13 +405,13 @@
 		}
 
 	//missed calls
-		if (in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (is_array($selected_blocks) && in_array('missed', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$missed_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
+			$missed_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -520,13 +520,13 @@
 
 
 	//recent calls
-		if (in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
+		if (is_array($selected_blocks) && in_array('recent', $selected_blocks) && permission_exists('xml_cdr_view') && is_array($_SESSION['user']['extension']) && sizeof($_SESSION['user']['extension']) > 0) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
 
 			//if also viewing system status, show more recent calls (more room avaialble)
-			$recent_limit = (in_array('counts', $selected_blocks)) ? 10 : 5;
+			$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
 			$sql = "
 				select
@@ -605,13 +605,13 @@
 					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("n/j g:ia", $row['start_epoch']) : date("n/j H:i", $row['start_epoch']);
 
 					//determine name
-						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
+						$cdr_name = ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) ? $row['caller_id_name'] : $row['destination_number'];
 					//determine number to display
-						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && in_array($row['destination_number'], $assigned_extensions))) {
+						if ($row['direction'] == 'inbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['destination_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'];
 							$dest = $row['caller_id_number'];
 						}
-						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && in_array($row['caller_id_number'], $assigned_extensions))) {
+						else if ($row['direction'] == 'outbound' || ($row['direction'] == 'local' && is_array($assigned_extensions) && in_array($row['caller_id_number'], $assigned_extensions))) {
 							$cdr_number = (is_numeric($row['destination_number'])) ? format_phone($row['destination_number']) : $row['destination_number'];
 							$dest = $row['destination_number'];
 						}
@@ -666,7 +666,7 @@
 
 
 	//domain limits
-		if (in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+		if (is_array($selected_blocks) && in_array('limits', $selected_blocks) && is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -753,7 +753,7 @@
 
 
 	//system/domain counts
-		if (in_array('counts', $selected_blocks)) {
+		if (is_array($selected_blocks) && in_array('counts', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -929,7 +929,7 @@
 
 
 	//system status
-		if (in_array('system', $selected_blocks)) {
+		if (is_array($selected_blocks) && in_array('system', $selected_blocks)) {
 			$c = 0;
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
@@ -939,7 +939,11 @@
 			//disk usage
 			if (stristr(PHP_OS, 'Linux')) {
 				$df = shell_exec("/usr/bin/which df");
-				$tmp = shell_exec($df." /home 2>&1");
+				if($df){
+					$tmp = shell_exec($df." /home 2>&1");
+				} else {
+					$tmp = shell_exec("df /home 2>&1");
+				}
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
@@ -1138,7 +1142,7 @@
 	if (is_array($hud) && sizeof($hud) > 0) {
 
 		//javascript function: send_cmd
-		if ((in_array('missed', $selected_blocks) || in_array('recent', $selected_blocks)) && permission_exists('xml_cdr_view')) {
+		if (((is_array($selected_blocks) && in_array('missed', $selected_blocks)) || (is_array($selected_blocks) && in_array('recent', $selected_blocks))) && permission_exists('xml_cdr_view')) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "	function send_cmd(url) {\n";
 			//echo "		alert(url);\n";

@@ -51,7 +51,7 @@
 	if (strlen($app_uuid) == 0) {
 		$app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 	}
-	
+
 //get the dialplan xml
 	if (is_uuid($dialplan_uuid)) {
 		$sql = "select * from v_dialplans ";
@@ -81,7 +81,7 @@
 			$x = 0;
 			//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
 			$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
-			$array['dialplans'][$x]["dialplan_xml"] =  $_REQUEST['dialplan_xml'];;
+			$array['dialplans'][$x]["dialplan_xml"] =  $_REQUEST['dialplan_xml'];
 
 		//save to the data
 			$database = new database;
@@ -92,7 +92,7 @@
 			//}
 			$database->save($array);
 			$message = $database->message;
-			
+
 		//debug info
 			//echo "<pre>\n";
 			//print_r($message);

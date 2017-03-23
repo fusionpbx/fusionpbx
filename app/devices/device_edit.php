@@ -473,6 +473,18 @@
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
+
+//get the device line info for provision button
+	foreach($device_lines as $row) {
+		if (strlen($row['user_id']) > 0) {
+			$user_id = $row['user_id'];
+		}
+		if (strlen($row['server_address']) > 0) {
+			$server_address = $row['server_address'];
+		}
+	}
+	$sip_profile_name = 'internal';
+
 //show the header
 	require_once "resources/header.php";
 
@@ -508,50 +520,6 @@
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-		function check_duplicates() {
-			//check mac
-			var mac_addr = document.getElementById('device_mac_address').value;
-			$("#duplicate_mac_response").load("device_edit.php?check=duplicate&mac="+mac_addr+"&device_uuid=<?php echo $device_uuid;?>", function() {
-				var duplicate_mac = false;
-
-				if ($("#duplicate_mac_response").html() != '') {
-					$('#device_mac_address').addClass('formfld_highlight_bad');
-					display_message($("#duplicate_mac_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-					duplicate_mac = true;
-				}
-				else {
-					$("#duplicate_mac_response").html('');
-					$('#device_mac_address').removeClass('formfld_highlight_bad');
-					duplicate_mac = false;
-				}
-
-				//check username
-				if (duplicate_mac == false) {
-					var username = document.getElementById('device_username').value;
-					var domain_uuid = document.getElementById('domain_uuid').value;
-					if (username != '') {
-						$("#duplicate_username_response").load("device_edit.php?check=duplicate&username="+username+"&domain_uuid="+domain_uuid+"&device_uuid=<?php echo $device_uuid;?>", function() {
-							var duplicate_username = false;
-
-							if ($("#duplicate_username_response").html() != '') {
-								$('#device_username').addClass('formfld_highlight_bad');
-								display_message($("#duplicate_username_response").html(), 'negative'<?php if (if_group("superadmin")) { echo ', 3000'; } ?>);
-								duplicate_username = true;
-							}
-							else {
-								$("#duplicate_username_response").html('');
-								$('#device_username').removeClass('formfld_highlight_bad');
-								duplicate_username = false;
-								submit_form_2();
-							}
-						});
-					}
-					else {
-						submit_form_2();
-					}
-				}
-			});
-		}
 	</script>
 
 <?php
@@ -628,6 +596,7 @@
 	echo "</td>\n";
 	echo "<td align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'/>\n";
+	echo "	<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_vendor."';\">&nbsp;\n";
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
@@ -651,7 +620,6 @@
 			echo "		</select>\n";
 			//echo "		<input type='button' class='btn' id='button_download' style='display: none;' alt='".$text['button-download']."' value='".$text['button-download']."' onclick='document.forms.frm.submit();'>";
 	}
-//	echo "		<input type='button' class='btn' alt='".$text['button-provision']."' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
 
 	if (permission_exists('device_add') && $action != "add") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'/>\n";
@@ -1105,19 +1073,17 @@
 						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
 					}
 					$selected = '';
-					if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
+					if (strtolower($row['device_key_vendor']) == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 						$selected = "selected='selected'";
 					}
 					if (strlen($row['device_key_vendor']) == 0) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 					}
-					if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
+					if (strlen($row['device_key_vendor']) > 0 && strtolower($row['device_key_vendor']) == $function['vendor_name']) {
 						echo "		<option value='".$function['value']."' vendor='".$function['vendor_name']."' $selected >".$text['label-'.$function['name']]."</option>\n";
-						
 					}
 					$previous_vendor = $function['vendor_name'];
 					$i++;
-					
 				}
 				if (strlen($row['device_key_vendor']) == 0) {
 					echo "	</optgroup>\n";
@@ -1458,7 +1424,7 @@
 	echo "	}); \n";
 	// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		check_duplicates();\n";
+	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "	function submit_form_2() {\n";
 	echo "		$('input:password').css('visibility','hidden');\n";

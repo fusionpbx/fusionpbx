@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "extensions";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
@@ -53,7 +53,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -137,11 +137,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 
-
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_extensions";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_extensions";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "extension_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -422,10 +422,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_extension_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_extension_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_extensions";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

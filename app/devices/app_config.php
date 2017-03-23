@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "device_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f9dce498-b7f9-740f-e592-9e8ff3dac2a0";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -100,10 +100,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_line_transport';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_line_register_expires';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_key_line';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -112,7 +114,8 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_outbound_proxy_primary';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_outbound_proxy_secondary';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -249,9 +252,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_devices";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_devices";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "hardware_device_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -376,9 +380,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_device_lines";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_lines";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_devices";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -451,9 +456,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_device_settings";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_devices";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_setting_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -513,9 +519,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;		
 
-		$y = 3; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_device_keys';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_keys";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_devices";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -584,9 +591,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the label.';
 		$z++;
 
-		$y = 4; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_device_profiles';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_profiles";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_profile_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -614,9 +622,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y = 5; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_device_vendors';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_vendors";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_vendor_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -636,9 +645,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
-		$y = 6; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_device_vendor_functions';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_vendor_functions";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_device_vendors";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_vendor_function_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
@@ -674,9 +684,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
-		$y = 7; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_device_vendor_function_groups";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_device_vendor_function_groups";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_device_vendor_functions";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_vendor_function_group_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

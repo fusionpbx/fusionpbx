@@ -124,7 +124,6 @@ if (count($_POST)>0) {
 		if ($table_name != '') { $sql_array[] = "select * from ".$table_name; }
 		$show_query = (sizeof($sql_array) > 1) ? true : false;
 
-		reset($sql_array);
 		if (is_array($sql_array)) foreach($sql_array as $sql_index => $sql) {
 			$sql = trim($sql);
 

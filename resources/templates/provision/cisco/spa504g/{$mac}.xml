@@ -6,7 +6,7 @@
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
-<User_Password ua="rw">{$user_password}</User_Password>
+<User_Password ua="rw"></User_Password>
 <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
 <SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
@@ -16,8 +16,8 @@
 <Syslog_Server group="System/Optional_Network_Configuration" />
 <Debug_Server group="System/Optional_Network_Configuration" />
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
-<Primary_NTP_Server group="System/Optional_Network_Configuration">pool.ntp.org</Primary_NTP_Server>
-<Secondary_NTP_Server group="System/Optional_Network_Configuration" />
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
 <Enable_VLAN group="System/VLAN_Settings">No</Enable_VLAN>
 <Enable_CDP group="System/VLAN_Settings">Yes</Enable_CDP>
 <VLAN_ID group="System/VLAN_Settings">1</VLAN_ID>
@@ -104,12 +104,12 @@
 <G729b_Codec_Name group="SIP/SDP_Payload_Types">G729ab</G729b_Codec_Name>
 <G722_Codec_Name group="SIP/SDP_Payload_Types">G722</G722_Codec_Name>
 <EncapRTP_Codec_Name group="SIP/SDP_Payload_Types">encaprtp</EncapRTP_Codec_Name>
-<Handle_VIA_received group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Handle_VIA_received>
-<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_handle_via_rport}</Handle_VIA_rport>
+<Handle_VIA_received group="SIP/NAT_Support_Parameters">No</Handle_VIA_received>
+<Handle_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received group="SIP/NAT_Support_Parameters">No</Insert_VIA_received>
-<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$cisco_insert_via_rport}</Insert_VIA_rport>
-<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Substitute_VIA_Addr>
-<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">{$cisco_spa_rport}</Send_Resp_To_Src_Port>
+<Insert_VIA_rport group="SIP/NAT_Support_Parameters">{$spa_insert_via_rport}</Insert_VIA_rport>
+<Substitute_VIA_Addr group="SIP/NAT_Support_Parameters">No</Substitute_VIA_Addr>
+<Send_Resp_To_Src_Port group="SIP/NAT_Support_Parameters">No</Send_Resp_To_Src_Port>
 <STUN_Enable group="SIP/NAT_Support_Parameters">No</STUN_Enable>
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
@@ -170,7 +170,7 @@
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">No</Daylight_Saving_Time_Enable>
-<Station_Name group="Phone/General">{$display_name_1}</Station_Name>
+<Station_Name group="Phone/General">{$device_label}</Station_Name>
 <Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General" />
@@ -613,8 +613,8 @@
 <Auto_Answer_Page group="User/Supplementary_Services">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device group="User/Supplementary_Services">Speaker</Preferred_Audio_Device>
 <Send_Audio_To_Speaker group="User/Supplementary_Services">No</Send_Audio_To_Speaker>
-<Time_Format group="User/Supplementary_Services">12hr</Time_Format>
-<Date_Format group="User/Supplementary_Services">month/day</Date_Format>
+<Time_Format group="User/Supplementary_Services">{$spa_time_format}</Time_Format>
+<Date_Format group="User/Supplementary_Services">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut group="User/Supplementary_Services">Yes</Miss_Call_Shortcut>
 <Accept_Media_Loopback_Request group="User/Supplementary_Services">automatic</Accept_Media_Loopback_Request>
 <Media_Loopback_Mode group="User/Supplementary_Services">source</Media_Loopback_Mode>
@@ -631,7 +631,7 @@
 <Handset_Volume group="User/Audio_Volume">10</Handset_Volume>
 <Headset_Volume group="User/Audio_Volume">10</Headset_Volume>
 <LCD_Contrast group="User/Audio_Volume">8</LCD_Contrast>
-<Back_Light_Timer group="User/Audio_Volume">10 s</Back_Light_Timer>
+<Back_Light_Timer group="User/Audio_Volume">{$spa_back_light_timer}</Back_Light_Timer>
 <Subscribe_Expires group="Attendant_Console/General">1800</Subscribe_Expires>
 <Subscribe_Retry_Interval group="Attendant_Console/General">30</Subscribe_Retry_Interval>
 <Unit_1_Enable group="Attendant_Console/General">Yes</Unit_1_Enable>

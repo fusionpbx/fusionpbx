@@ -7,7 +7,7 @@
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
-<User_Password ua="rw">{$user_password}</User_Password>
+<User_Password ua="rw"></User_Password>
 <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
 <SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
@@ -36,8 +36,8 @@
 <Debug_Server ua="na"></Debug_Server>
 <Debug_Level ua="na">0</Debug_Level> <!-- options: 0/1/2/3 -->
 <Layer_2_Logging ua="na">No</Layer_2_Logging>
-<Primary_NTP_Server ua="na"></Primary_NTP_Server>
-<Secondary_NTP_Server ua="na"></Secondary_NTP_Server>
+<Primary_NTP_Server ua="na">{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server ua="na">{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <!-- VLAN Settings -->
 <Enable_VLAN ua="rw">No</Enable_VLAN>
@@ -1595,8 +1595,8 @@
 <Auto_Answer_Page ua="na">Yes</Auto_Answer_Page>
 <Preferred_Audio_Device ua="rw">Speaker</Preferred_Audio_Device> <!-- options: Speaker/Headset -->
 <Send_Audio_To_Speaker ua="rw">No</Send_Audio_To_Speaker>
-<Time_Format ua="rw">12hr</Time_Format> <!-- options: 12hr/24hr -->
-<Date_Format ua="rw">month/day</Date_Format> <!-- options: month/day/day/month -->
+<Time_Format ua="rw">{$spa_time_format}</Time_Format>
+<Date_Format ua="rw">{$spa_date_format}</Date_Format>
 <Miss_Call_Shortcut ua="rw">Yes</Miss_Call_Shortcut>
 <Miss_Call_Banner ua="rw">Yes</Miss_Call_Banner>
 <Accept_Media_Loopback_Request ua="na">automatic</Accept_Media_Loopback_Request> <!-- options: never/automatic/manual -->
@@ -1630,8 +1630,8 @@
 <Back_Light_Timer ua="na">10 s</Back_Light_Timer> <!-- options: Off/10 s/20 s/30 s/Always On -->
 
 <!-- General -->
-<Station_Name ua="na">{$display_name_1}</Station_Name>
-<Station_Display_Name ua="na"></Station_Display_Name>
+<Station_Name ua="na">{$device_label}</Station_Name>
+<Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>

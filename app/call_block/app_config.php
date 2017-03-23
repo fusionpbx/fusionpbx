@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -40,9 +40,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_block";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_block";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

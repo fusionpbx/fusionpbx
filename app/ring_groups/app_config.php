@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "ring_groups";
 		$apps[$x]['destinations'][$y]['name'] = "ring_groups";
@@ -35,7 +35,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b30f085f-3ec6-2819-7e62-53dfba5cb8d5";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -97,10 +97,30 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '745d8fdc-57bc-4f43-97d7-508fda8f70a8';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_add_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '5';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ddf306c9-6f58-40f7-910e-2f27dc33fa57';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'ring_group';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'destination_edit_rows';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'numeric';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_ring_groups";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_ring_groups";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -189,9 +209,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_ring_group_destinations";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_ring_group_destinations";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_ring_groups";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_destination_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -233,9 +254,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_ring_group_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_ring_group_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_ring_groups";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "ring_group_user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

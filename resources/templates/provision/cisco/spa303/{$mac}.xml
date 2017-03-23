@@ -6,8 +6,8 @@
 <Enable_Web_Server ua="na">Yes</Enable_Web_Server>
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
-<User_Password ua="rw">{$user_password}</User_Password>
+{if isset ($admin_password)}<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>{/if}
+<User_Password ua="rw"></User_Password>
 <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
 <SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
@@ -206,9 +206,9 @@
 
 <!-- NAT Support Parameters -->
 <Handle_VIA_received ua="na">No</Handle_VIA_received>
-<Handle_VIA_rport ua="na">{$cisco_handle_via_rport}</Handle_VIA_rport>
+<Handle_VIA_rport ua="na">{$spa_handle_via_rport}</Handle_VIA_rport>
 <Insert_VIA_received ua="na">No</Insert_VIA_received>
-<Insert_VIA_rport ua="na">{$cisco_insert_via_rport}</Insert_VIA_rport>
+<Insert_VIA_rport ua="na">{$spa_insert_via_rport}</Insert_VIA_rport>
 <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
 <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
 <STUN_Enable ua="na">No</STUN_Enable>
@@ -289,8 +289,8 @@
 
 <!-- Proxy and Registration -->
 <Proxy_1_ ua="na">{$server_address_1}</Proxy_1_>
-<Outbound_Proxy_1_ ua="na"></Outbound_Proxy_1_>
-<Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
+<Outbound_Proxy_1_>{$outbound_proxy_primary_1}</Outbound_Proxy_1_>
+<Use_Outbound_Proxy_1_>{if isset ($outbound_proxy_primary_1)}Yes{else}No{/if}</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
@@ -401,8 +401,8 @@
 
 <!-- Proxy and Registration -->
 <Proxy_2_ ua="na">{$server_address_2}</Proxy_2_>
-<Outbound_Proxy_2_ ua="na"></Outbound_Proxy_2_>
-<Use_Outbound_Proxy_2_ ua="na">No</Use_Outbound_Proxy_2_>
+<Outbound_Proxy_2_>{$outbound_proxy_primary_2}</Outbound_Proxy_2_>
+<Use_Outbound_Proxy_2_>{if isset ($outbound_proxy_primary_2)}Yes{else}No{/if}</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
@@ -1630,8 +1630,8 @@
 <Back_Light_Timer ua="na">10 s</Back_Light_Timer> <!-- options: Off/10 s/20 s/30 s/Always On -->
 
 <!-- General -->
-<Station_Name ua="na">{$display_name_1}</Station_Name>
-<Station_Display_Name ua="na"></Station_Display_Name>
+<Station_Name ua="na">{$device_label}</Station_Name>
+<Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>

@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "contact_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f14e6ab6-6565-d4e6-cbad-a51d2e3e8ec6";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -35,6 +35,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "contact_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_upload";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -201,9 +205,10 @@
 
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_contacts";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contacts";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "contact_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -306,8 +311,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_addresses";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_addresses";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_address_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -386,8 +393,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_phones";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_phones";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_phone_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -454,8 +463,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_notes";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_notes";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "contacts_note_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
@@ -512,8 +523,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -549,8 +562,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_groups";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_groups";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "contact_group_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "contact_groups_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -587,8 +602,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_settings";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_setting_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -638,8 +655,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_relations";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_relations";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_relation_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -675,8 +694,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_emails";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_emails";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_email_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -719,8 +740,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email description.";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = "v_contact_urls";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_urls";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "contact_url_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -767,8 +790,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the URL description.";
 		$z++;
 
-		$y++; //table array index
-		$apps[$x]['db'][$y]['table'] = 'v_contact_times';
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_contact_times";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_contacts";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';

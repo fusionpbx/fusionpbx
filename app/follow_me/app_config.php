@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -84,9 +84,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_follow_me";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -126,6 +127,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_destinations";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "destination_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_ignore_busy";
@@ -134,9 +138,10 @@
 		$z++;
 
 	//schema details
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_follow_me_destinations";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me_destinations";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_follow_me";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Voicemail Greetings";
 		$apps[$x]['uuid'] = "e4b4fbee-9e4d-8e46-3810-91ba663db0c2";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -21,45 +21,46 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "voicemail_greeting_view";
-		$apps[$x]['permissions'][0]['groups'][] = "user";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "voicemail_greeting_add";
-		$apps[$x]['permissions'][1]['groups'][] = "user";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "voicemail_greeting_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "user";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "voicemail_greeting_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "user";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][4]['name'] = "voicemail_greeting_upload";
-		$apps[$x]['permissions'][4]['groups'][] = "user";
-		$apps[$x]['permissions'][4]['groups'][] = "admin";
-		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][5]['name'] = "voicemail_greeting_play";
-		$apps[$x]['permissions'][5]['groups'][] = "user";
-		$apps[$x]['permissions'][5]['groups'][] = "admin";
-		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][6]['name'] = "voicemail_greeting_download";
-		$apps[$x]['permissions'][6]['groups'][] = "user";
-		$apps[$x]['permissions'][6]['groups'][] = "admin";
-		$apps[$x]['permissions'][6]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_upload";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_play";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_greeting_download";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_voicemail_greetings";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_greetings";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "greeting_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

@@ -21,15 +21,16 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "system_status_sofia_status";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "b7aea9f7-d3cf-711f-828e-46e56e2e5328";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "system_status_sofia_status_profile";
-		$apps[$x]['permissions'][1]['menu']['uuid'] = "b7aea9f7-d3cf-711f-828e-46e56e2e5328";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "sip_status_switch_status";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "system_status_sofia_status";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b7aea9f7-d3cf-711f-828e-46e56e2e5328";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "system_status_sofia_status_profile";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b7aea9f7-d3cf-711f-828e-46e56e2e5328";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "sip_status_switch_status";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>
