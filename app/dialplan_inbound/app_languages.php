@@ -7,6 +7,8 @@ $text['title-dialplan-inbound-add']['fr-fr'] = "Routage des appels entrant";
 $text['title-dialplan-inbound-add']['pl'] = "Przesyłanie (routing) rozmów przychodzących";
 $text['title-dialplan-inbound-add']['uk'] = "Маршрутизація вхідних дзвінків";
 $text['title-dialplan-inbound-add']['it-it'] = "Instradamento Chiamate in Ingresso";
+$text['title-dialplan-inbound-add']['de-de'] = "Routing eingehender Anrufe";
+$text['title-dialplan-inbound-add']['de-at'] = "Routing eingehender Anrufe";
 
 $text['option-uuid']['en-us'] = "UUID";
 $text['option-uuid']['es-cl'] = "UUID";
@@ -15,6 +17,8 @@ $text['option-uuid']['fr-fr'] = "UUID";
 $text['option-uuid']['pl'] = "UUID";
 $text['option-uuid']['uk'] = "UUID";
 $text['option-uuid']['it-it'] = "UUID";
+$text['option-uuid']['de-de'] = "UUID";
+$text['option-uuid']['de-at'] = "UUID";
 
 $text['option-username']['en-us'] = "Username";
 $text['option-username']['es-cl'] = "Nombre de usuario";
@@ -23,6 +27,8 @@ $text['option-username']['fr-fr'] = "Utilisateur";
 $text['option-username']['pl'] = "Użytkownik";
 $text['option-username']['uk'] = "Користувач";
 $text['option-username']['it-it'] = "Nome utente";
+$text['option-username']['de-de'] = "Benutzername";
+$text['option-username']['de-at'] = "Benutzername";
 
 $text['option-source']['en-us'] = "Source";
 $text['option-source']['es-cl'] = "Fuente";
@@ -31,6 +37,8 @@ $text['option-source']['fr-fr'] = "Source";
 $text['option-source']['pl'] = "Źródło";
 $text['option-source']['uk'] = "Джерело";
 $text['option-source']['it-it'] = "Sorgente";
+$text['option-source']['de-de'] = "Quelle";
+$text['option-source']['de-at'] = "Quelle";
 
 $text['option-rdnis']['en-us'] = "RDNIS";
 $text['option-rdnis']['es-cl'] = "RDNIS";
@@ -39,6 +47,8 @@ $text['option-rdnis']['fr-fr'] = "RDNIS";
 $text['option-rdnis']['pl'] = "RDNIS";
 $text['option-rdnis']['uk'] = "RDNIS";
 $text['option-rdnis']['it-it'] = "RDNIS";
+$text['option-rdnis']['de-de'] = "RDNIS";
+$text['option-rdnis']['de-at'] = "RDNIS";
 
 $text['option-public']['en-us'] = "Public";
 $text['option-public']['es-cl'] = "Público";
@@ -47,6 +57,8 @@ $text['option-public']['fr-fr'] = "";
 $text['option-public']['pl'] = "Publiczny";
 $text['option-public']['uk'] = "Публічний";
 $text['option-public']['it-it'] = "Pubblico";
+$text['option-public']['de-de'] = "Öffentlich";
+$text['option-public']['de-de'] = "Öffentlich";
 
 $text['option-network_addr']['en-us'] = "Network Address";
 $text['option-network_addr']['es-cl'] = "Dirección de Red";
@@ -55,6 +67,8 @@ $text['option-network_addr']['fr-fr'] = "Adresse Réseau";
 $text['option-network_addr']['pl'] = "Adres sieci";
 $text['option-network_addr']['uk'] = "Адреси мережі";
 $text['option-network_addr']['it-it'] = "Indirizzo di Rete";
+$text['option-network_addr']['de-at'] = "Netzwerk Adresse";
+$text['option-network_addr']['de-de'] = "Netzwerk Adresse";
 
 $text['option-destination_number']['en-us'] = "Destination Number";
 $text['option-destination_number']['es-cl'] = "Número de Destino";
@@ -63,6 +77,8 @@ $text['option-destination_number']['fr-fr'] = "Numéro de Destination";
 $text['option-destination_number']['pl'] = "Numer destynacji";
 $text['option-destination_number']['uk'] = "Номер призначення";
 $text['option-destination_number']['it-it'] = "Numero Destinazione";
+$text['option-destination_number']['de-de'] = "Ziel Rufnummer";
+$text['option-destination_number']['de-at'] = "Ziel Rufnummer";
 
 $text['option-context']['en-us'] = "Context";
 $text['option-context']['es-cl'] = "Contexto";
@@ -71,6 +87,8 @@ $text['option-context']['fr-fr'] = "Contexte";
 $text['option-context']['pl'] = "Kontekst";
 $text['option-context']['uk'] = "Контекст";
 $text['option-context']['it-it'] = "Contesto";
+$text['option-context']['de-de'] = "Kontext";
+$text['option-context']['de-at'] = "Kontext";
 
 $text['option-chan_name']['en-us'] = "Channel Name";
 $text['option-chan_name']['es-cl'] = "Nombre de Canal";
@@ -79,6 +97,8 @@ $text['option-chan_name']['fr-fr'] = "Nom de canal";
 $text['option-chan_name']['pl'] = "Nazwa kanału";
 $text['option-chan_name']['uk'] = "Назва каналу";
 $text['option-chan_name']['it-it'] = "Nome Canale";
+$text['option-chan_name']['de-de'] = "Kanal Name";
+$text['option-chan_name']['de-at'] = "Kanal Name";
 
 $text['option-caller_id_number']['en-us'] = "Caller ID Number";
 $text['option-caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -87,6 +107,8 @@ $text['option-caller_id_number']['fr-fr'] = "Numéro d'appelant";
 $text['option-caller_id_number']['pl'] = "Prezentacja numeru dzwoniącego";
 $text['option-caller_id_number']['uk'] = "Caller ID Номер";
 $text['option-caller_id_number']['it-it'] = "Numero Caller ID";
+$text['option-caller_id_number']['de-de'] = "Anruferkennung (Nummer)";
+$text['option-caller_id_number']['de-at'] = "Anruferkennung (Nummer)";
 
 $text['option-caller_id_name']['en-us'] = "Caller ID Name";
 $text['option-caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -95,6 +117,8 @@ $text['option-caller_id_name']['fr-fr'] = "Nom d'appelant";
 $text['option-caller_id_name']['pl'] = "Prezentacja nazwy dzwoniącego";
 $text['option-caller_id_name']['uk'] = "Caller ID Назва";
 $text['option-caller_id_name']['it-it'] = "Nome Caller ID";
+$text['option-caller_id_name']['de-de'] = "Anruferkennung (Name)";
+$text['option-caller_id_name']['de-at'] = "Anruferkennung (Name)";
 
 $text['option-ani2']['en-us'] = "ANI2";
 $text['option-ani2']['es-cl'] = "ANI2";
@@ -103,6 +127,8 @@ $text['option-ani2']['fr-fr'] = "ANI2";
 $text['option-ani2']['pl'] = "ANI2";
 $text['option-ani2']['uk'] = "ANI2";
 $text['option-ani2']['it-it'] = "ANI2";
+$text['option-ani2']['de-de'] = "ANI2";
+$text['option-ani2']['de-at'] = "ANI2";
 
 $text['option-ani']['en-us'] = "ANI";
 $text['option-ani']['es-cl'] = "ANI";
@@ -111,6 +137,8 @@ $text['option-ani']['fr-fr'] = "ANI";
 $text['option-ani']['pl'] = "ANI";
 $text['option-ani']['uk'] = "ANI";
 $text['option-ani']['it-it'] = "ANI";
+$text['option-ani']['de-de'] = "ANI";
+$text['option-ani']['de-at'] = "ANI";
 
 $text['label-select-inbound-destination-number']['en-us'] = "Select the inbound destination number.";
 $text['label-select-inbound-destination-number']['es-cl'] = "Seleccione el número de destino entrante.";
@@ -119,6 +147,8 @@ $text['label-select-inbound-destination-number']['fr-fr'] = "";
 $text['label-select-inbound-destination-number']['pl'] = "Wybierz destynację numeru przychodzącego.";
 $text['label-select-inbound-destination-number']['uk'] = "Виберіть вхідний номер";
 $text['label-select-inbound-destination-number']['it-it'] = "Seleziona il numero di destinazione in ingresso.";
+$text['label-select-inbound-destination-number']['de-de'] = "Wählen Sie die Zielnummer für eingehende Anrufe.";
+$text['label-select-inbound-destination-number']['de-at'] = "Wählen Sie die Zielnummer für eingehende Anrufe.";
 
 $text['label-required-domain_uuid']['en-us'] = "Please provide: domain_uuid";
 $text['label-required-domain_uuid']['es-cl'] = "Por favor indique: domain_uuid";
