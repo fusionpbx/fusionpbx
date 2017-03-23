@@ -301,29 +301,6 @@
 						array_map('unlink', glob(path_join($stream_path, '*.mp3')));
 						array_map('unlink', glob(path_join($stream_path, '*.ogg')));
 					}
-				//remove record and folder(s), if empty
-					$file_count = 0;
-					$file_count += ($files = glob(path_join($stream_path, '*.wav'))) ? count($files) : 0;
-					$file_count += ($files = glob(path_join($stream_path, '*.mp3'))) ? count($files) : 0;
-					$file_count += ($files = glob(path_join($stream_path, '*.ogg'))) ? count($files) : 0;
-					if ($file_count == 0) {
-						//remove rate folder
-							rmdir($stream_path);
-						//remove record
-							$sql = "delete from v_music_on_hold ";
-							$sql .= "where music_on_hold_uuid = '".$stream_uuid."' ";
-							if (!permission_exists('music_on_hold_domain')) {
-								$sql .= "and domain_uuid = '".$stream_domain_uuid."' ";
-							}
-							//echo $sql; exit;
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							unset($sql);
-						//remove parent folder, if empty
-							$parent_path = dirname($stream_path);
-							$parent_path_files = glob(path_join($parent_path, '*'));
-							if (sizeof($parent_files) === 0) { rmdir($parent_path); }
-					}
 				//set message
 					$_SESSION['message'] = $text['message-delete'];
 			}
