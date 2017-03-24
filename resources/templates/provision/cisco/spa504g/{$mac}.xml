@@ -348,7 +348,7 @@
 <DTMF_Process_AVT_1_ group="Ext_1/Audio_Configuration">Yes</DTMF_Process_AVT_1_>
 <Silence_Supp_Enable_1_ group="Ext_1/Audio_Configuration">No</Silence_Supp_Enable_1_>
 <DTMF_Tx_Method_1_ group="Ext_1/Audio_Configuration">Auto</DTMF_Tx_Method_1_>
-<Dial_Plan_1_ group="Ext_1/Dial_Plan">(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ group="Ext_1/Dial_Plan">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ group="Ext_1/Dial_Plan" />
 <Enable_IP_Dialing_1_ group="Ext_1/Dial_Plan">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ group="Ext_1/Dial_Plan" />
