@@ -306,6 +306,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //set defaults
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = "false"; }	
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
