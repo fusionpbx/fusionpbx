@@ -245,6 +245,17 @@ $text['label-voicemail_description']['uk'] = "Опис";
 $text['label-voicemail_description']['de-at'] = "Beschreibung";
 $text['label-voicemail_description']['he'] = "תאור";
 
+$text['label-voicemail_tutorial']['en-us'] = "Play Tutorial";
+$text['label-voicemail_tutorial']['es-cl'] = "";
+$text['label-voicemail_tutorial']['pt-pt'] = "";
+$text['label-voicemail_tutorial']['fr-fr'] = "";
+$text['label-voicemail_tutorial']['pt-br'] = "";
+$text['label-voicemail_tutorial']['pl'] = "";
+$text['label-voicemail_tutorial']['sv-se'] = "";
+$text['label-voicemail_tutorial']['uk'] = "";
+$text['label-voicemail_tutorial']['de-at'] = "";
+$text['label-voicemail_tutorial']['he'] = "";
+
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
 $text['label-tools']['pt-pt'] = "Ferramentas";
@@ -752,6 +763,17 @@ $text['description-caller_id_name']['sv-se'] = "Namnpresentation";
 $text['description-caller_id_name']['uk'] = "Caller ID Ім’я";
 $text['description-caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['description-caller_id_name']['he'] = "";
+
+$text['description-voicemail_tutorial']['en-us'] = "Play the voicemail tutorial after the next voicemail login.";
+$text['description-voicemail_tutorial']['es-cl'] = "";
+$text['description-voicemail_tutorial']['pt-pt'] = "";
+$text['description-voicemail_tutorial']['fr-fr'] = "";
+$text['description-voicemail_tutorial']['pt-br'] = "";
+$text['description-voicemail_tutorial']['pl'] = "";
+$text['description-voicemail_tutorial']['sv-se'] = "";
+$text['description-voicemail_tutorial']['uk'] = "";
+$text['description-voicemail_tutorial']['de-at'] = "";
+$text['description-voicemail_tutorial']['he'] = "";
 
 $text['button-toggle']['en-us'] = "Toggle";
 $text['button-toggle']['es-cl'] = "Palanca";
