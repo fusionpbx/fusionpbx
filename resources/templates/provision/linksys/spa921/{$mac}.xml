@@ -27,7 +27,7 @@
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Preferred_Codec_2_>G711u</Preferred_Codec_2_>
 <Dial_Plan_1_>
-(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)
+{$spa_dial_plan}
 </Dial_Plan_1_>
 <Headset_Input_Gain>6</Headset_Input_Gain>
 <Time_Format>{$spa_time_format}</Time_Format>
