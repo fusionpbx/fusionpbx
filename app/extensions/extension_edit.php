@@ -385,6 +385,7 @@
 								//if voicemail_uuid does not exist then get a new uuid
 									if (!isset($voicemail_uuid)) {
 										$voicemail_uuid = uuid();
+										$voicemail_tutorial = 'true';
 									}
 
 								//add the voicemail
@@ -403,6 +404,7 @@
 										$voicemail_description = $description;
 									}
 									$array["voicemails"][$i]["voicemail_description"] = $voicemail_description;
+									$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 							}
 
 						//increment the extension number
@@ -650,6 +652,7 @@
 					$voicemail_local_after_email = $row["voicemail_local_after_email"];
 					$voicemail_enabled = $row["voicemail_enabled"];
 					$voicemail_description = $row["voicemail_description"];
+					$voicemail_tutorial = $row["voicemail_tutorial"];
 				}
 				unset ($prep_statement);
 			//clean the variables

@@ -24,7 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --record message menu
-	function record_menu(type, tmp_file, greeting_id)
+	function record_menu(type, tmp_file, greeting_id, menu)
 		if (session:ready()) then
 			--clear the dtmf digits variable
 				dtmf_digits = '';
@@ -55,7 +55,7 @@
 							session:streamFile(tmp_file);
 							--session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 						--record menu (1=listen, 2=save, 3=re-record)
-							record_menu(type, tmp_file, greeting_id);
+							record_menu(type, tmp_file, greeting_id, menu);
 					elseif (dtmf_digits == "2") then
 						--save the message
 							dtmf_digits = '';
@@ -161,10 +161,21 @@
 										voicemail_id = voicemail_id};
 									dbh:query(sql, params);
 
-								advanced();
+								if (menu == "advanced") then
+									advanced();
+								end
+								if (menu == "tutorial") then
+									tutorial("finish")	
+								end
 							end
 							if (type == "name") then
-								advanced();
+								if (menu == "advanced") then
+									advanced();
+								end
+								if (menu == "tutorial") then
+									tutorial("change_password")	
+								end
+
 							end
 					elseif (dtmf_digits == "3") then
 						--re-record the message
@@ -178,10 +189,10 @@
 									if (file_exists(tmp_file)) then
 										os.remove(tmp_file);
 									end
-								record_greeting(greeting_id);
+								record_greeting(greeting_id, menu);
 							end
 							if (type == "name") then
-								record_name();
+								record_name(menu);
 							end
 					elseif (dtmf_digits == "*") then
 						if (type == "greeting") then
@@ -200,7 +211,7 @@
 						if (session:ready()) then
 							timeouts = timeouts + 1;
 							if (timeouts < max_timeouts) then
-								record_menu(type, tmp_file, greeting_id);
+								record_menu(type, tmp_file, greeting_id, menu);
 							else
 								if (type == "message") then
 									dtmf_digits = '';
@@ -213,10 +224,20 @@
 										if (file_exists(tmp_file)) then
 											os.remove(tmp_file);
 										end
-									advanced();
+									if (menu == "advanced") then
+										advanced();
+									end
+									if (menu == "tutorial") then
+										tutorial("finish")	
+									end
 								end
 								if (type == "name") then
-									advanced();
+									if (menu == "advanced") then
+										advanced();
+									end
+									if (menu == "tutorial") then
+										tutorial("change_password")	
+									end									
 								end
 							end
 						end

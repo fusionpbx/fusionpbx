@@ -28,7 +28,7 @@
 	local Settings = require "resources.functions.lazy_settings"
 
 --define a function to record the greeting
-	function record_greeting(greeting_id)
+	function record_greeting(greeting_id, menu)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 
@@ -88,7 +88,7 @@
 				--option to play, save, and re-record the greeting
 					if (session:ready()) then
 						timeouts = 0;
-						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", greeting_id);
+						record_menu("greeting", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", greeting_id, menu);
 					end
 			else
 				--invalid greeting_id
@@ -101,10 +101,17 @@
 					if (session:ready()) then
 						timeouts = timeouts + 1;
 						if (timeouts < max_timeouts) then
-							record_greeting();
+							record_greeting(nil, menu);
 						else
 							timeouts = 0;
-							advanced();
+							if (menu == "tutorial") then
+								tutorial("finish")
+							end
+							if (menu == "advanced") then
+								advanced();
+							else
+								advanced();	
+							end
 						end
 					end
 			end

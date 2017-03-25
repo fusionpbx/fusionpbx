@@ -24,7 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --check the voicemail password
-	function change_password(voicemail_id)
+	function change_password(voicemail_id, menu)
 		if (session:ready()) then
 			--flush dtmf digits from the input buffer
 				session:flushDigits();
@@ -48,6 +48,11 @@
 				macro(session, "password_changed", 20, 3000, password);
 			--advanced menu
 				timeouts = 0;
-				advanced();
+				if (menu == "advanced") then
+					advanced();
+				end
+				if (menu == "tutorial") then
+					tutorial("record_greeting");
+				end
 		end
 	end
