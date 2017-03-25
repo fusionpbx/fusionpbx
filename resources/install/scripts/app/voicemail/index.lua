@@ -200,6 +200,7 @@
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
 							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
+							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
 					--set default values
 						if (voicemail_local_after_email == nil) then
@@ -264,6 +265,7 @@
 	require "app.voicemail.resources.functions.record_name";
 	require "app.voicemail.resources.functions.message_count"
 	require "app.voicemail.resources.functions.mwi_notify";
+	require "app.voicemail.resources.functions.tutorial";	
 
 --send a message waiting event
 	if (voicemail_action == "mwi") then
@@ -314,7 +316,11 @@
 
 			--send to the main menu
 				timeouts = 0;
-				main_menu();
+				if (voicemail_tutorial == "true") then 
+					tutorial("intro");
+				else
+					main_menu();
+				end
 		end
 	end
 
