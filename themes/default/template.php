@@ -454,6 +454,8 @@
 						<ul class="nav navbar-nav">
 							<?php
 							foreach ($menu_array as $index_main => $menu_parent) {
+								$mod_li = "";
+								$mod_a_1 = "";
 								$submenu = false;
 								if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
 									$mod_li = "class='dropdown' ";
