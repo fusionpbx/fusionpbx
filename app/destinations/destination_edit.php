@@ -441,7 +441,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
 					// billing
-					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+					if ((file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) && (permission_exists('billing_edit'))){
 						$db2 = new database;
 						$db2->sql = "select currency, billing_uuid, balance from v_billings where type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
@@ -759,7 +759,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	// billing
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+	if ((file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")) && (permission_exists('billing_edit'))){
 		echo "<tr id='tr_sell'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "  ".$text['label-monthly_price']."\n";
