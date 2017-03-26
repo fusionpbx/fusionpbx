@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Provision";
 		$apps[$x]['uuid'] = "abf28ead-92ef-3de6-ebbb-023fbc2b6dd3";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
@@ -17,7 +17,7 @@
 		//$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 	//default settings
-		$y = 0;
+		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '931f9369-9aac-4620-8d4b-7d2bf642b1d2';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'enabled';
@@ -154,6 +154,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ef0ad392-8956-4355-bf44-48d8712c74c1';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'daylight_savings_start_weekday';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '7';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '7b444c2f-bed7-4da5-8cf3-4cc79df8625f';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'daylight_savings_start_time';
@@ -175,6 +183,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'daylight_savings_stop_day';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '6';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e7942398-3d32-4a32-924f-e61bf31299fa';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'daylight_savings_stop_weekday';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '7';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
@@ -335,6 +351,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'spa_insert_via_rport';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Yes';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '72de5cdf-31f8-4d4b-b94b-468be0aa7a3d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'spa_dial_plan';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 
