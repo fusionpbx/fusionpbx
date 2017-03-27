@@ -264,7 +264,42 @@
 					if (name == "goodbye") then
 						table.insert(actions, {app="streamFile",data="voicemail/vm-goodbye.wav"});
 					end
+			--Tutorial
+				--Tutorial intro
+					if (name == "tutorial_intro") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_yes_no.wav"});
+					end
+				
+				--Tutorial to record your name 1
+					if (name == "tutorial_to_record_name") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_record_name.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name2.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end
+					
+				--Tutorial to change your password press 1
+					if (name == "tutorial_change_password") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-tutorial_change_pin.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-change_password.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end
 
+				--Tutorial to record your greeting press 1
+					if (name == "tutorial_record_greeting") then
+						table.insert(actions, {app="streamFile",data="voicemail/vm-to_record_greeting.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
+					end					
+					
+				--Tutorial To skip
+					if (name == "tutorial_skip") then
+						table.insert(actions, {app="streamFile",data="ivr/ivr-to_skip.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/2.wav"});
+					end
+		
 			--if actions table exists then process it
 				if (actions) then
 					--set default values
