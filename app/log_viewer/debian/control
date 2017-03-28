@@ -1,0 +1,12 @@
+Source: fusionpbx-app-log-viewer
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-log-viewer
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-log-viewer: Display the freeswitch logs.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

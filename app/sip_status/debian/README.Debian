@@ -1,0 +1,6 @@
+fussionpbx-app-sip-status
+--------------------
+Displays system information such status of the sip profiles and the status of registrations to providers
+
+ -- FusionPBX <debian@fusionpbx.com> Wed, 03 Dec 2014 08:30:00 -0600
+

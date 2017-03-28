@@ -1,0 +1,12 @@
+Source: fusionpbx-app-fax
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-fax
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-fax: To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number 
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

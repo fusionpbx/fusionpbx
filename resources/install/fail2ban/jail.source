@@ -1,0 +1,76 @@
+[freeswitch-tcp]
+enabled  = true
+port     = 5060,5061,5080,5081,5070
+protocol = tcp
+filter   = freeswitch
+logpath  = /usr/local/freeswitch/log/freeswitch.log
+action   = iptables-allports[name=freeswitch-tcp, protocol=all]
+maxretry = 5
+findtime = 600
+bantime  = 600
+#          sendmail-whois[name=FreeSwitch, dest=root, sender=fail2ban@example.org] #no smtp server installed
+
+[freeswitch-udp]
+enabled  = true
+port     = 5060,5061,5080,5081,5070
+protocol = udp
+filter   = freeswitch
+logpath  = /usr/local/freeswitch/log/freeswitch.log
+action   = iptables-allports[name=freeswitch-udp, protocol=all]
+maxretry = 5
+findtime = 600
+bantime  = 600
+#          sendmail-whois[name=FreeSwitch, dest=root, sender=fail2ban@example.org] #no smtp server installed
+
+[freeswitch-ip]
+enabled = true
+port = 5060,5061,5080,5081
+protocol = udp
+filter = freeswitch-ip
+logpath = /usr/local/freeswitch/log/freeswitch.log
+action = iptables-allports[name=freeswitch-ip, protocol=all]
+maxretry = 1
+findtime = 30
+bantime  = 86400
+
+[freeswitch-dos]
+enabled = true
+port = 5060,5061,5080,5081,5070
+protocol = udp
+filter = freeswitch-dos
+logpath = /usr/local/freeswitch/log/freeswitch.log
+action = iptables-allports[name=freeswitch-dos, protocol=all]
+maxretry = 50
+findtime = 30
+bantime  = 6000
+
+[fusionpbx]
+enabled  = true
+port     = 80,443
+protocol = tcp
+filter   = fusionpbx
+logpath  = /var/log/auth.log
+action   = iptables-allports[name=fusionpbx, protocol=all]
+#          sendmail-whois[name=fusionpbx, dest=root, sender=fail2ban@example.org] #no smtp server installed
+maxretry = 5
+findtime = 600
+bantime  = 600	
+
+[nginx-404]
+enabled = true
+port = http,https
+filter = nginx-404
+logpath = /var/log/nginx/access*.log
+bantime = 600
+findtime = 600
+maxretry = 10
+
+[nginx-dos]
+# Based on apache-badbots
+enabled = true
+port = http
+filter = nginx-dos
+logpath = /var/log/nginx/access*.log
+findtime = 60
+bantime = 172800
+maxretry = 240

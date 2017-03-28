@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  install|upgrade)
+    if [ -d /var/www/fusionpbx/app/services ]; then
+      echo "It looks like you have FusionPBX services app installed !." >&2
+    fi
+    ;;
+  abort-upgrade)
+    ;;
+  *)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+#DEBHELPER#
+exit 0

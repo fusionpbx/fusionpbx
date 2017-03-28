@@ -1,0 +1,12 @@
+Source: fusionpbx-app-call-broadcast
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-app-call-broadcast
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-app-call-broadcast: Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.
+#XSBC-Bugtracker: mailto:r.neese@gmail.com

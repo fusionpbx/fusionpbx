@@ -1,0 +1,12 @@
+Source: fusionpbx-provisioning-template-panasonic
+Section: user/www
+Priority: extra
+Maintainer: FusionPBX <debian@fusionpbx.com>
+Standards-Version: 3.7.2
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
+
+Package: fusionpbx-provisioning-template-panasonic
+Architecture: all
+Depends: ${misc:Depends}
+Description: Fusionpbx-provisioning-template-panasonic: Provisioning templates for panasonic sip phons  
+#XSBC-Bugtracker: mailto:r.neese@gmail.com
