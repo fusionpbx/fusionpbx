@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gs_provision version="1">
+  <config version="1">
+    <!-- Configuration Template For GXP21xx Firmware Version 1.0.5.32 -->
+    <!-- Account Settings -->
+    <!-- Account 1 -->
+    <!-- Account 1/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P271>1</P271>
+    <!-- Account Name -->
+    <P270>{$display_name_1}</P270>
+    <!-- SIP Server -->
+    <P47>{$server_address_1}</P47>
+    <!-- Secondary SIP Server -->
+    <P2312></P2312>
+    <!-- Outbound Proxy -->
+    <P48></P48>
+    <!-- SIP User ID -->
+    <P35>{$user_id_1}</P35>
+    <!-- Authenticate ID -->
+    <P36>{$auth_id_1}</P36>
+    <!-- Authenticate Password -->
+    <P34>{$user_password_1}</P34>
+    <!-- Display Name -->
+    <P3>{$display_name_1}</P3>
+    <!-- Voice Mail UserID -->
+    <P33>*97</P33>
+    <!-- Account 1/Network Settings -->
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <P103>0</P103>
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
+    <P52>0</P52>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
+    {if $sip_transport_1 == 'udp'}<P130>0</P130>
+    {elseif $sip_transport_1 == 'tcp'}<P130>1</P130>
+    {elseif $sip_transport_1 == 'tls'}<P130>2</P130>
+    {elseif $sip_transport_1 == 'dns srv'}<P130>1</P130>
+    {/if}
+
+    <!-- BLF Call-pickup Prefix. Default is -->
+    <P1347>**</P1347>
+    <!-- Dial Plan. Default value is { x+ | *x+ | *xx*x+ } -->
+    <!-- Modified to support FreeSwitch parking per Grandstream Tech Support -->
+    <P290>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P290>
+    <!-- Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
+    <!-- Set to no as FreePBX manages all our feature codes! -->
+    <P191>0</P191>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P104>0</P104>
+    <!-- Matching Incoming Caller ID. Matching Rule 1 -->
+    <P1488></P1488>
+    <!-- Matching Rule 1 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
+    <P1489>0</P1489>
+    <!-- Matching Incoming Caller ID. Matching Rule 2 -->
+    <P1490></P1490>
+    <!-- Matching Rule 2 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1491>0</P1491>
+    <!-- Matching Incoming Caller ID. Matching Rule 3 -->
+    <P1492></P1492>
+    <!-- Matching Rule 3 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1493>0</P1493>
+    <!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <P298>1</P298>
+    <!-- Account 2 -->
+    <!-- Account 2/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P401>1</P401>
+    <!-- Account Name -->
+    <P417>{$display_name_2}</P417>
+    <!-- SIP Server -->
+    <P402>{$server_address_2}</P402>
+    <!-- SIP User ID -->
+    <P404>{$user_id_2}</P404>
+    <!-- Authenticate ID -->
+    <P405>{$user_id_2}</P405>
+    <!-- Authenticate Password -->
+    <P406>{$user_password_2}</P406>
+    <!-- Display Name -->
+    <P407>{$display_name_2}</P407>
+    <!-- Voice Mail UserID -->
+    <P426>*97</P426>
+    <!-- Account 2/Network Settings -->
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <P408>0</P408>
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+    <P414>4</P414>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
+    {if $sip_transport_2 == 'udp'}<P448>0</P448>{/if}
+    {if $sip_transport_2 == 'tcp'}<P448>1</P448>{/if}
+    {if $sip_transport_2 == 'tls'}<P448>2</P448>{/if}
+    {if $sip_transport_2 == 'dns srv'}<P448>1</P448>{/if}
+    <!-- BLF Call-pickup Prefix. Default is -->
+    <P481>**</P481>
+    <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+    <!-- Set per Grandstream Tech Support to support Monitored Call Park -->
+    <P459>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P459>
+    <!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- Fresswitch manages our features! -->
+    <P420>0</P420>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <!-- Mandatory  -->
+    <P423>0</P423>
+    <!-- Matching Incoming Caller ID. Matching Rule 1 -->
+    <P1494></P1494>
+    <!-- Matching Rule 1 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1495>0</P1495>
+    <!-- Matching Incoming Caller ID. Matching Rule 2. -->
+    <P1496></P1496>
+    <!-- Matching Rule 2 Distinctive Ringtone. -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1497>0</P1497>
+    <!-- Matching Incoming Caller ID. Matching Rule 3. -->
+    <P1498></P1498>
+    <!-- Matching Rule 3 Distinctive Ringtone. -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1499>0</P1499>
+    <!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <P438>1</P438>
+    <!-- Account 3 -->
+    <!-- Account 3/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P501>1</P501>
+    <!-- Account Name -->
+    <P517>{$display_name_3}</P517>
+    <!-- SIP Server -->
+    <P502>{$server_address_3}</P502>
+    <!-- SIP User ID -->
+    <P504>{$user_id_3}</P504>
+    <!-- Authenticate ID -->
+    <P505>{$user_id_3}</P505>
+    <!-- Authenticate Password -->
+    <P506>{$user_password_3}</P506>
+    <!-- Display Name -->
+    <P507>{$display_name_3}</P507>
+    <!-- Voice Mail UserID -->
+    <P526>*97</P526>
+    <!-- Account 3/Network Settings -->
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <P508>0</P508>
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+    <P514>4</P514>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
+    {if $sip_transport_3 == 'udp'}<P548>0</P548>{/if}
+    {if $sip_transport_3 == 'tcp'}<P548>1</P548>{/if}
+    {if $sip_transport_3 == 'tls'}<P548>2</P548>{/if}
+    {if $sip_transport_3 == 'dns srv'}<P548>1</P548>{/if}
+    <!-- BLF Call-pickup Prefix. Default is -->
+    <P581>**</P581>
+    <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+    <P559>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P559>
+    <!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- Freeswitch manages features -->
+    <P520>0</P520>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P523>0</P523>
+    <!-- Matching Incoming Caller ID. Matching Rule 1 -->
+    <P1500></P1500>
+    <!-- Matching Rule 1 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1501>0</P1501>
+    <!-- Matching Incoming Caller ID. Matching Rule 2 -->
+    <!--  String -->
+    <P1502></P1502>
+    <!-- Matching Rule 2 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1503>0</P1503>
+    <!-- Matching Incoming Caller ID. Matching Rule 3 -->
+    <P1504></P1504>
+    <!-- Matching Rule 3 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1505>0</P1505>
+    <!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <P538>1</P538>
+    <!-- Account 4 -->
+    <!-- Account 4/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P601>1</P601>
+    <!-- Account Name -->
+    <P617>{$display_name_4}</P617>
+    <!-- SIP Server -->
+    <P602>{$server_address_4}</P602>
+    <!-- SIP User ID -->
+    <P604>{$user_id_4}</P604>
+    <!-- Authenticate ID -->
+    <P605>{$user_id_4}</P605>
+    <!-- Authenticate password -->
+    <P606>{$user_password_4}</P606>
+    <!-- Display Name -->
+    <P607>{$display_name_4}</P607>
+    <!-- Voice Mail UserID -->
+    <P626>*97</P626>
+    <!-- Account 4/Network Settings -->
+    <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <P608>0</P608>
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+    <P614>4</P614>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
+    {if $sip_transport_4 == 'udp'}<P648>0</P648>{/if}
+    {if $sip_transport_4 == 'tcp'}<P648>1</P648>{/if}
+    {if $sip_transport_4 == 'tls'}<P648>2</P648>{/if}
+    {if $sip_transport_4 == 'dns srv'}<P648>1</P648>{/if}
+    <!-- BLF Call-pickup Prefix. Default is -->
+    <P681>**</P681>
+    <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+    <P659>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P659>
+    <!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <P620>0</P620>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P623>0</P623>
+    <!-- Matching Incoming Caller ID. Matching Rule 1 -->
+    <P1506></P1506>
+    <!-- Matching Rule 1 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1507>0</P1507>
+    <!-- Matching Incoming Caller ID. Matching Rule 2 -->
+    <P1508></P1508>
+    <!-- Matching Rule 2 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1509>0</P1509>
+    <!-- Matching Incoming Caller ID. Matching Rule 3 -->
+    <P1510></P1510>
+    <!-- Matching Rule 3 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1511>0</P1511>
+    <!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <P638>1</P638>
+    <!-- Account 5, For GXP2120 ONLY -->
+    <!-- Account 5/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P1701>1</P1701>
+    <!-- Account Name -->
+    <P1717>{$display_name_5}</P1717>
+    <!-- SIP Server -->
+    <P1702>{$server_address_5}</P1702>
+    <!-- SIP User ID -->
+    <P1704>{$user_id_5}</P1704>
+    <!-- Authenticate ID -->
+    <P1705>{$user_id_5}</P1705>
+    <!-- Authenticate Password -->
+    <P1706>{$user_password_5}</P1706>
+    <!-- Display Name -->
+    <P1707>{$display_name_5}</P1707>
+    <!-- Voice Mail UserID -->
+    <P1726>*97</P1726>
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+    <P1714>4</P1714>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
+
+    {if $sip_transport_5 == 'udp'}<P1748>0</P1748>{/if}
+    {if $sip_transport_5 == 'tcp'}<P1748>1</P1748>{/if}
+    {if $sip_transport_5 == 'tls'}<P1748>2</P1748>{/if}
+    {if $sip_transport_5 == 'dns srv'}<P1748>1</P1748>{/if}
+    <!-- BLF Call-pickup Prefix. Default is  -->
+    <P1781>**</P1781>
+    <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+    <P1759>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P1759>
+    <!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <P1720>0</P1720>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1723>0</P1723>
+    <!-- Matching Incoming Caller ID. Matching Rule 1. -->
+    <P1512></P1512>
+    <!--  Matching Rule 1 Distinctive Ringtone. -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1513>0</P1513>
+    <!-- Matching Incoming Caller ID. Matching Rule 2 -->
+    <P1514></P1514>
+    <!-- Matching Rule 2 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1515>0</P1515>
+    <!-- Matching Incoming Caller ID. Matching Rule 3 -->
+    <P1516></P1516>
+    <!-- Matching Rule 3 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1517>0</P1517>
+    <!-- Ring Timeout (in seconds). Default is 60 -->
+    <!--  Number: 30 - 3600 -->
+    <P1776>60</P1776>
+    <!-- Account 6, For GXP2120 ONLY -->
+    <!-- Account 6/General Settings -->
+    <!-- Account Active. 0 - No, 1 - Yes. Default is 1 -->
+    <P1801>1</P1801>
+    <!-- Account Name -->
+    <P1817>{$display_name_6}</P1817>
+    <!-- SIP Server -->
+    <P1802>{$server_address_6}</P1802>
+    <!-- SIP User ID -->
+    <P1804>{$user_id_6}</P1804>
+    <!-- Authenticate ID -->
+    <P1805>{$user_id_6}</P1805>
+    <!-- Authenticate password -->
+    <P1806>{$user_password_6}</P1806>
+    <!-- Display Name -->
+    <P1807>{$display_name_6}</P1807>
+    <!-- Voice Mail UserID -->
+    <P1826>*97</P1826>
+    <!-- Account 6/Network Settings -->
+    <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
+    <P1814>4</P1814>
+    <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
+    {if $sip_transport_6 == 'udp'}<P1848>0</P1848>{/if}
+    {if $sip_transport_6 == 'tcp'}<P1848>1</P1848>{/if}
+    {if $sip_transport_6 == 'tls'}<P1848>2</P1848>{/if}
+    {if $sip_transport_6 == 'dns srv'}<P1848>1</P1848>{/if}
+    <!-- BLF Call-pickup Prefix. Default is -->
+    <P1881>**</P1881>
+    <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
+    <P1859>{ x+ | \+x+ | *x+ | *xx*x+ | \p\a\r\k\+*x+ }</P1859>
+    <!-- Enable Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <P1820>0</P1820>
+    <!-- Account Ring Tone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1823>0</P1823>
+    <!-- Matching Incoming Caller ID. Matching Rule 1 -->
+    <P1518></P1518>
+    <!-- Matching Rule 1 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1519>0</P1519>
+    <!-- Matching Incoming Caller ID. Matching Rule 2 -->
+    <P1520></P1520>
+    <!-- Matching Rule 2 Distinctive Ringtone. -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1521>0</P1521>
+    <!-- Matching Incoming Caller ID. Matching Rule 3 -->
+    <P1522></P1522>
+    <!-- Matching Rule 3 Distinctive Ringtone -->
+    <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
+    <P1523>0</P1523>
+    <!-- Ring Timeout (in seconds). Default is 60 -->
+    <P1876>60</P1876>
+    <!-- Network/Basic Settings -->
+    <!-- Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
+    <P1415>0</P1415>
+    <!-- IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <P8>0</P8>
+    <!-- DHCP -->
+    <!-- Host name, DHCP option 12. Max length allowed is 64 characters -->
+    <P146>phone-{$display_name_1}</P146>
+    <!-- IPv6 Address type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <P1419>0</P1419>
+    <!-- Network/Advanced Settings -->
+    <!-- Maintenance/ Web Accessv -->
+    <!-- End User Password -->
+    <P196>{$user_password}</P196>
+    <!-- Admin password for web interface -->
+    <P2>{$admin_password}</P2>
+    <!-- Maintenance/Upgrade and Provisioning -->
+    <!-- Firmware Upgrade and Provisioning -->
+    <!-- 0 - Always Check For New Firmware -->
+    <!-- 1 - Check New Firmware only when F/W pre/suffix changes -->
+    <!-- 2 - Always Skip the Firmware Checkv -->
+    <P238>0</P238>
+    <!-- XML Config File Password -->
+    <P1359></P1359>
+    <!-- HTTP/HTTPS User Name -->
+    <P1360>{$http_auth_username}</P1360>
+    <!-- HTTP/HTTPS Password -->
+    <P1361>{$http_auth_password}</P1361>
+    <!-- Firmware Upgrade Via. 0 - TFTP Upgrade,  1 - HTTP Upgrade, 2 - HTTPS Upgrade. Default is 1 -->
+    <P212>2</P212>
+    <!-- Firmware Server Path -->
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    <!-- Config Server Path -->
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    <!-- Allow DHCP Option 43 and Option 66 to override server. 0 - No, 1 - Yes. Default is 1 -->
+    <P145>0</P145>
+    <!-- Allow DHCP Option 120 to Override SIP Server -->
+    <!-- 0 - No, 1 - Yes. Default is 0 -->
+    <P1411>0</P1411>
+    <!-- Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
+    <P194>0</P194>
+    <!-- Check for new firmware every () minutes. Default is 7 days. -->
+    <P193>10080</P193>
+    <!-- Hour of the Day (0-23). Default is 1 -->
+    <P285>1</P285>
+    <!-- Day of the Week (0-6). Default is 1 -->
+    <P286>1</P286>
+    <!-- Authenticate Conf File. 0 - No, 1 - Yes. Default is No -->
+    <P240>0</P240>
+    <!-- Maintenance/Syslog -->
+    <!-- Syslog Server (name of the server, max length is 64 characters) -->
+    <P207></P207>
+    <!-- Syslog Level. 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default is 0 -->
+    <P208>0</P208>
+    <!-- Send SIP Log. 0 - Do not send SIP log in Syslog, 1 - Send SIP log in Syslog if configured and set to DEBUG level. Default is 0 -->
+    <P1387>0</P1387>
+    <!-- Maintenance/Security -->
+    <!-- Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode. Default is 0 -->
+    <P1357>0</P1357>
+    <!-- Web Access Mode. 0 - HTTPS, 1 - HTTP. Default is 1 -->
+    <P1650>1</P1650>
+    <!-- Disable SSH. 0 - No, 1 - Yes. Default is 0 -->
+    <P276>0</P276>
+    <!-- Public Mode. 0 - No. 1 - Yes. Default is 0 -->
+    {if isset($public_mode) }
+    {if $public_mode|strtolower == 'true'}
+    <P1345>1</P1345>
+    {elseif $public_mode|strtolower == 'yes'}
+    <P1345>1</P1345>
+    {elseif $public_mode == '1'}
+    <P1345>1</P1345>
+    {else}
+    <P1345>0</P1345>
+    {/if}
+    {else}
+    <P1345>0</P1345>
+    {/if}
+    <!-- Settings/Call Features -->
+    <!-- Enable MPK Sending DTMF, 0 - No, 1 - Yes. Default is 0 -->
+    <P1339>0</P1339>
+    <!-- Auto-Attended Transfer. 0 - No, 1 -Yes. Default is 0 -->
+    <P1376>0</P1376>
+    <!-- Settings/Audio Control -->
+    <!-- HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
+    <P1312>0</P1312>
+    <!-- Date Display Format -->
+    <!-- 0: yyyy-mm-dd      eg. 2011-10-31 -->
+    <!-- 1: mm-dd-yyyy      eg. 10-31-2011 -->
+    <!-- 2: dd-mm-yyyy      eg. 31-10-2011 -->
+    <!-- 3: dddd, MMMM dd   eg. Monday, October 31 -->
+    <!-- 4: MMMM dd, dddd   eg. October 31, Monday -->
+    <!-- (some options might not fit for the screen layout) -->
+    <P102>1</P102>
+    <!-- Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
+    <P1464>0</P1464>
+    <!-- Settings/LCD Display -->
+    <!-- Backlight Brightness, active.  10-100 -->
+    <P334>100</P334>
+    <!-- Idle -->
+    <P335>40</P335>
+    <!-- LCD Contrast. Default is 10 -->
+    <P1329>7</P1329>
+<!-- Another good variable location -->
+    <!-- Screensaver Settings -->
+    <!-- Screensaver. 0 - No, 1 - Yes. Default is 1 -->
+    <P2918>0</P2918>
+    <!-- Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
+    <P351>0</P351>
+    <!-- Use Long Label.  0 - No, 1 - Yes. Default is 0 -->
+    <P8346>1</P8346>
+    <!-- Settings/Date and Time -->
+    <!-- NTP Server -->
+   <!-- FIXME: Use variable here -->
+    <P30>us.pool.ntp.org</P30>
+    <!-- Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- When set to Yes(1), it will override the configured NTP server -->
+    <P144>1</P144>
+    <!-- Time Zone - String, formatted per Grandstream docs (too long to replicate here) -->
+{if isset($grandstream_timezone) }
+    <P64>{$grandstream_timezone}</P64>
+    {else}
+    <P64>auto</P64>
+    {/if}
+    <!-- Settings/Web Service -->
+    <!-- Weather Update -->
+    <!-- Enable weather update. 0 - No, 1 - Yes. Default is 1 -->
+    <P1402>1</P1402>
+    <!-- City Code -->a
+<!-- Good place for variables -->
+    <!-- 0 - Use Self-Defined City Code, 1 - Automatic. Default is 1 -->
+    <P1405>1</P1405>
+    <!-- Self-Defined City Code -->
+    <P1377></P1377>
+    <!-- Update Interval (in minutes). Default is 15 -->
+    <P1378>15</P1378>
+    <!-- Degree Unit. auto - Automatic, f - Fahrenheit, c - Celsius. Default is auto -->
+    <!-- String: auto, f, c -->
+    <P1379>auto</P1379>
+    <!-- Stock Update -->
+    <!-- Enable stocke update. 0 - No, 1 - Yes. Default is 1 -->
+    <P1403>0</P1403>
+    <!-- Currency Update -->
+    <!-- Enable Currency update. 0 - No, 1 - Yes. Default is 1 -->
+    <P1404>0</P1404>
+    <!-- New line_key section -->
+    <!-- Grandstream did some really stupid design choices, so this is in multiple parts -->
+
+<!-- First 6 line keys ("fixed VPK") Origional P numbering -->
+<!-- Line keys 7-12 ("fixed VPK") new numbers, but "line" types -->
+<!-- Line keys 13-48 ("Dynamic VPK") Continuing new numbers, but "MPK" types -->
+
+{foreach $keys["line"] as $row}
+{$key_id = $row.device_key_id - 1}
+
+{if $key_id < 6}
+{$start_id = 1363}
+{$type_id = $start_id + ($key_id * 2)}
+{$line_id = ($start_id + 1) + ($key_id * 2)}
+{$label_id = ($start_id + 102) + ($key_id * 2)}
+{$value_id = ($start_id + 103) + ($key_id * 2)}
+{if $row.device_key_type == "speed dial"}    <P{$type_id}>10</P{$type_id}>{/if}
+{if $row.device_key_type == "blf"}    <P{$type_id}>11</P{$type_id}>{/if}
+{if $row.device_key_type == "presence watcher"}    <P{$type_id}>12</P{$type_id}>{/if}
+{if $row.device_key_type == "eventlist blf"}    <P{$type_id}>13</P{$type_id}>{/if}
+{if $row.device_key_type == "speed dial active"}    <P{$type_id}>14</P{$type_id}>{/if}
+{if $row.device_key_type == "dial dtmf"}    <P{$type_id}>15</P{$type_id}>{/if}
+{if $row.device_key_type == "voicemail"}    <P{$type_id}>16</P{$type_id}>{/if}
+{if $row.device_key_type == "call return"}    <P{$type_id}>17</P{$type_id}>{/if}
+{if $row.device_key_type == "transfer"}    <P{$type_id}>18</P{$type_id}>{/if}
+{if $row.device_key_type == "call park"}    <P{$type_id}>26</P{$type_id}>{/if}
+{if $row.device_key_type == "intercom"}    <P{$type_id}>20</P{$type_id}>{/if}
+{if $row.device_key_type == "ldap search"}    <P{$type_id}>21</P{$type_id}>{/if}
+    
+    <P{$line_id}>{$row.device_key_line}</P{$line_id}>
+    <P{$label_id}>{$row.device_key_label}</P{$label_id}>
+    <P{$value_id}>{$row.device_key_value}</P{$value_id}>
+
+{elseif $key_id < 8}
+{$start_id = 23800}
+{$type_id = $start_id + (($key_id - 6) * 4)}
+{$line_id = ($start_id + 1) + (($key_id - 6) * 4)}
+{$label_id = ($start_id + 2) + (($key_id - 6) * 4)}
+{$value_id = ($start_id + 3) + (($key_id - 6) * 4)}
+{if $row.device_key_type == "speed dial"}    <P{$type_id}>10</P{$type_id}>{/if}
+{if $row.device_key_type == "blf"}    <P{$type_id}>11</P{$type_id}>{/if}
+{if $row.device_key_type == "presence watcher"}    <P{$type_id}>12</P{$type_id}>{/if}
+{if $row.device_key_type == "eventlist blf"}    <P{$type_id}>13</P{$type_id}>{/if}
+{if $row.device_key_type == "speed dial active"}    <P{$type_id}>14</P{$type_id}>{/if}
+{if $row.device_key_type == "dial dtmf"}    <P{$type_id}>15</P{$type_id}>{/if}
+{if $row.device_key_type == "voicemail"}    <P{$type_id}>16</P{$type_id}>{/if}
+{if $row.device_key_type == "call return"}    <P{$type_id}>17</P{$type_id}>{/if}
+{if $row.device_key_type == "transfer"}    <P{$type_id}>18</P{$type_id}>{/if}
+{if $row.device_key_type == "call park"}    <P{$type_id}>26</P{$type_id}>{/if}
+{if $row.device_key_type == "intercom"}    <P{$type_id}>20</P{$type_id}>{/if}
+{if $row.device_key_type == "ldap search"}    <P{$type_id}>21</P{$type_id}>{/if}
+
+    <P{$line_id}>{$row.device_key_line}</P{$line_id}>
+    <P{$label_id}>{$row.device_key_label}</P{$label_id}>
+    <P{$value_id}>{$row.device_key_value}</P{$value_id}>
+
+{elseif $key_id < 32}
+{$start_id = 23800}
+{$type_id = $start_id + (($key_id - 6) * 4)}
+{$line_id = ($start_id + 1) + (($key_id - 6) * 4)}
+{$label_id = ($start_id + 2) + (($key_id - 6) * 4)}
+{$value_id = ($start_id + 3) + (($key_id - 6) * 4)}
+{if $row.device_key_type == "speed dial"}    <P{$type_id}>0</P{$type_id}>{/if}
+{if $row.device_key_type == "blf"}    <P{$type_id}>1</P{$type_id}>{/if}
+{if $row.device_key_type == "presence watcher"}    <P{$type_id}>2</P{$type_id}>{/if}
+{if $row.device_key_type == "eventlist blf"}    <P{$type_id}>3</P{$type_id}>{/if}
+{if $row.device_key_type == "speed dial active"}    <P{$type_id}>4</P{$type_id}>{/if}
+{if $row.device_key_type == "dial dtmf"}    <P{$type_id}>5</P{$type_id}>{/if}
+{if $row.device_key_type == "voicemail"}    <P{$type_id}>6</P{$type_id}>{/if}
+{if $row.device_key_type == "call return"}    <P{$type_id}>7</P{$type_id}>{/if}
+{if $row.device_key_type == "transfer"}    <P{$type_id}>8</P{$type_id}>{/if}
+{if $row.device_key_type == "call park"}    <P{$type_id}>16</P{$type_id}>{/if}
+{if $row.device_key_type == "intercom"}    <P{$type_id}>10</P{$type_id}>{/if}
+{if $row.device_key_type == "ldap search"}    <P{$type_id}>11</P{$type_id}>{/if}
+
+    <P{$line_id}>{$row.device_key_line}</P{$line_id}>
+    <P{$label_id}>{$row.device_key_label}</P{$label_id}>
+    <P{$value_id}>{$row.device_key_value}</P{$value_id}>
+
+{/if}
+{/foreach}
+<!-- End line keys -->
+
+  </config>
+</gs_provision>
