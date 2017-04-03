@@ -143,7 +143,7 @@ $text['label-switch']['uk'] = "перемикач";
 $text['label-switch']['de-at'] = "Schalter";
 $text['label-switch']['it-it'] = "Switch";
 
-$text['label-git_branch']['en-us'] = "Branch:";
+$text['label-git_branch']['en-us'] = "Branch";
 $text['label-git_branch']['es-cl'] = "Rama";
 $text['label-git_branch']['pt-pt'] = "Ramo";
 $text['label-git_branch']['fr-fr'] = "Une succursale";
@@ -152,9 +152,9 @@ $text['label-git_branch']['pl'] = "Gałąź";
 $text['label-git_branch']['sv-se'] = "Gren";
 $text['label-git_branch']['uk'] = "філія";
 $text['label-git_branch']['de-at'] = "Ast";
-$text['label-git_branch']['it-it'] = "Branch:";
+$text['label-git_branch']['it-it'] = "Branch";
 
-$text['label-git_commit']['en-us'] = "Commit:";
+$text['label-git_commit']['en-us'] = "Commit";
 $text['label-git_commit']['es-cl'] = "Cometer";
 $text['label-git_commit']['pt-pt'] = "cometer";
 $text['label-git_commit']['fr-fr'] = "Commettre";
@@ -163,9 +163,9 @@ $text['label-git_commit']['pl'] = "Popełnić";
 $text['label-git_commit']['sv-se'] = "Begå";
 $text['label-git_commit']['uk'] = "здійснити";
 $text['label-git_commit']['de-at'] = "Verpflichten";
-$text['label-git_commit']['it-it'] = "Commit:";
+$text['label-git_commit']['it-it'] = "Commit";
 
-$text['label-git_origin']['en-us'] = "Origin:";
+$text['label-git_origin']['en-us'] = "Origin";
 $text['label-git_origin']['es-cl'] = "Origen";
 $text['label-git_origin']['pt-pt'] = "Origem";
 $text['label-git_origin']['fr-fr'] = "Origine";
@@ -174,7 +174,18 @@ $text['label-git_origin']['pl'] = "Pochodzenie";
 $text['label-git_origin']['sv-se'] = "Ursprung";
 $text['label-git_origin']['uk'] = "походження";
 $text['label-git_origin']['de-at'] = "Herkunft";
-$text['label-git_origin']['it-it'] = "Origine:";
+$text['label-git_origin']['it-it'] = "Origine";
+
+$text['label-git_status']['en-us'] = "Status";
+$text['label-git_status']['es-cl'] = "Estado de";
+$text['label-git_status']['pt-pt'] = "Status do";
+$text['label-git_status']['fr-fr'] = "Statut";
+$text['label-git_status']['pt-br'] = "Status do";
+$text['label-git_status']['pl'] = "Status";
+$text['label-git_status']['sv-se'] = "Status";
+$text['label-git_status']['uk'] = "Статус";
+$text['label-git_status']['de-at'] = "Status";
+$text['label-git_status']['it-it'] = "Stato";
 
 $text['label-memcache_status']['en-us'] = "Memcache Status";
 $text['label-memcache_status']['es-cl'] = "Estado de Memcache";
