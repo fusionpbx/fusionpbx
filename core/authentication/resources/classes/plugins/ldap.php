@@ -56,7 +56,7 @@ class plugin_ldap {
 				if ($bind) {
 					//connected and authorized
 					$user_authorized = true;
-					break;
+					exit;
 				}
 				else {
 					//connection failed
