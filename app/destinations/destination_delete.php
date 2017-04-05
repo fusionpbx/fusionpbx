@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,12 +43,12 @@
 	$text = $language->get();
 
 //get the ID
-	if (count($_GET) > 0) {
+	if (is_array($_GET)) {
 		$id = check_str($_GET["id"]);
 	}
 
 //if the ID is not set then exit
-	if (!isset($id)) {
+	if (!is_uuid($id)) {
 		echo "ID is required.";
 		exit;
 	}
@@ -82,22 +82,22 @@
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
 		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		//echo $sql."<br />\n";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		//echo $sql."<br />\n";
 		$db->exec(check_sql($sql));
 		unset($sql);
 	 }
 
 //delete the destination
 	$sql = "delete from v_destinations ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and destination_uuid = '".$id."' ";
+	$sql .= "where destination_uuid = '".$id."' ";
+	echo $sql."<br />\n";
 	$db->exec(check_sql($sql));
 	unset($sql);
 
