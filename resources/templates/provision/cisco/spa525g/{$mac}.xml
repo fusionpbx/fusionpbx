@@ -332,7 +332,7 @@
 <Codec_Negotiation_1_ ua="na">Default</Codec_Negotiation_1_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_1_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<Dial_Plan_1_ ua="na">{$spa_dial_plan}</Dial_Plan_1_>
 <Caller_ID_Map_1_ ua="na"></Caller_ID_Map_1_>
 <Enable_IP_Dialing_1_ ua="na">Yes</Enable_IP_Dialing_1_>
 <Emergency_Number_1_ ua="na"></Emergency_Number_1_>
@@ -444,7 +444,7 @@
 <Codec_Negotiation_2_ ua="na">Default</Codec_Negotiation_2_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_2_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<Dial_Plan_2_ ua="na">{$spa_dial_plan}</Dial_Plan_2_>
 <Caller_ID_Map_2_ ua="na"></Caller_ID_Map_2_>
 <Enable_IP_Dialing_2_ ua="na">Yes</Enable_IP_Dialing_2_>
 <Emergency_Number_2_ ua="na"></Emergency_Number_2_>
@@ -556,7 +556,7 @@
 <Codec_Negotiation_3_ ua="na">Default</Codec_Negotiation_3_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_3_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_3_>
+<Dial_Plan_3_ ua="na">{$spa_dial_plan}</Dial_Plan_3_>
 <Caller_ID_Map_3_ ua="na"></Caller_ID_Map_3_>
 <Enable_IP_Dialing_3_ ua="na">Yes</Enable_IP_Dialing_3_>
 <Emergency_Number_3_ ua="na"></Emergency_Number_3_>
@@ -668,7 +668,7 @@
 <Codec_Negotiation_4_ ua="na">Default</Codec_Negotiation_4_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_4_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_4_>
+<Dial_Plan_4_ ua="na">{$spa_dial_plan}</Dial_Plan_4_>
 <Caller_ID_Map_4_ ua="na"></Caller_ID_Map_4_>
 <Enable_IP_Dialing_4_ ua="na">Yes</Enable_IP_Dialing_4_>
 <Emergency_Number_4_ ua="na"></Emergency_Number_4_>
@@ -780,7 +780,7 @@
 <Codec_Negotiation_5_ ua="na">Default</Codec_Negotiation_5_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_5_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_5_>
+<Dial_Plan_5_ ua="na">{$spa_dial_plan}</Dial_Plan_5_>
 <Caller_ID_Map_5_ ua="na"></Caller_ID_Map_5_>
 <Enable_IP_Dialing_5_ ua="na">Yes</Enable_IP_Dialing_5_>
 <Emergency_Number_5_ ua="na"></Emergency_Number_5_>
@@ -892,7 +892,7 @@
 <Codec_Negotiation_6_ ua="na">Default</Codec_Negotiation_6_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_6_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_6_>
+<Dial_Plan_6_ ua="na">{$spa_dial_plan}</Dial_Plan_6_>
 <Caller_ID_Map_6_ ua="na"></Caller_ID_Map_6_>
 <Enable_IP_Dialing_6_ ua="na">Yes</Enable_IP_Dialing_6_>
 <Emergency_Number_6_ ua="na"></Emergency_Number_6_>
@@ -1004,7 +1004,7 @@
 <Codec_Negotiation_7_ ua="na">Default</Codec_Negotiation_7_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_7_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_7_>
+<Dial_Plan_7_ ua="na">{$spa_dial_plan}</Dial_Plan_7_>
 <Caller_ID_Map_7_ ua="na"></Caller_ID_Map_7_>
 <Enable_IP_Dialing_7_ ua="na">Yes</Enable_IP_Dialing_7_>
 <Emergency_Number_7_ ua="na"></Emergency_Number_7_>
@@ -1116,7 +1116,7 @@
 <Codec_Negotiation_8_ ua="na">Default</Codec_Negotiation_8_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_8_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_8_>
+<Dial_Plan_8_ ua="na">{$spa_dial_plan}</Dial_Plan_8_>
 <Caller_ID_Map_8_ ua="na"></Caller_ID_Map_8_>
 <Enable_IP_Dialing_8_ ua="na">Yes</Enable_IP_Dialing_8_>
 <Emergency_Number_8_ ua="na"></Emergency_Number_8_>
@@ -1228,7 +1228,7 @@
 <Codec_Negotiation_9_ ua="na">Default</Codec_Negotiation_9_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_9_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_9_>
+<Dial_Plan_9_ ua="na">{$spa_dial_plan}</Dial_Plan_9_>
 <Caller_ID_Map_9_ ua="na"></Caller_ID_Map_9_>
 <Enable_IP_Dialing_9_ ua="na">Yes</Enable_IP_Dialing_9_>
 <Emergency_Number_9_ ua="na"></Emergency_Number_9_>
@@ -1340,7 +1340,7 @@
 <Codec_Negotiation_10_ ua="na">Default</Codec_Negotiation_10_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_10_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_10_>
+<Dial_Plan_10_ ua="na">{$spa_dial_plan}</Dial_Plan_10_>
 <Caller_ID_Map_10_ ua="na"></Caller_ID_Map_10_>
 <Enable_IP_Dialing_10_ ua="na">Yes</Enable_IP_Dialing_10_>
 <Emergency_Number_10_ ua="na"></Emergency_Number_10_>
@@ -1452,7 +1452,7 @@
 <Codec_Negotiation_11_ ua="na">Default</Codec_Negotiation_11_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_11_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_11_>
+<Dial_Plan_11_ ua="na">{$spa_dial_plan}</Dial_Plan_11_>
 <Caller_ID_Map_11_ ua="na"></Caller_ID_Map_11_>
 <Enable_IP_Dialing_11_ ua="na">Yes</Enable_IP_Dialing_11_>
 <Emergency_Number_11_ ua="na"></Emergency_Number_11_>
@@ -1564,7 +1564,7 @@
 <Codec_Negotiation_12_ ua="na">Default</Codec_Negotiation_12_> <!-- options: Default/List All -->
 
 <!-- Dial Plan -->
-<Dial_Plan_12_ ua="na">(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_12_>
+<Dial_Plan_12_ ua="na">{$spa_dial_plan}</Dial_Plan_12_>
 <Caller_ID_Map_12_ ua="na"></Caller_ID_Map_12_>
 <Enable_IP_Dialing_12_ ua="na">Yes</Enable_IP_Dialing_12_>
 <Emergency_Number_12_ ua="na"></Emergency_Number_12_>
@@ -1645,7 +1645,7 @@
 {foreach $keys["line"] as $row}
 {if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
@@ -1904,7 +1904,7 @@
 <Time_Zone ua="na">{$spa_time_zone}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
 <Time_Offset__HH_mm_ ua="na"></Time_Offset__HH_mm_>
 <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule ua="na"></Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule ua="na">start={$daylight_savings_start_month}/{$daylight_savings_start_day}/{$daylight_savings_start_weekday}/{$daylight_savings_start_time}:0:0;end={$daylight_savings_stop_month}/{$daylight_savings_stop_day}/{$daylight_savings_stop_weekday}/{$daylight_savings_stop_time}:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable ua="na">No</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level ua="na">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length ua="na">.1</DTMF_Playback_Length>

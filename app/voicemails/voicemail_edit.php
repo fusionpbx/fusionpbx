@@ -68,6 +68,7 @@
 			$voicemail_local_after_email = check_str($_POST["voicemail_local_after_email"]);
 			$voicemail_enabled = check_str($_POST["voicemail_enabled"]);
 			$voicemail_description = check_str($_POST["voicemail_description"]);
+			$voicemail_tutorial = check_str($_POST["voicemail_tutorial"]);
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 
@@ -153,6 +154,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_mail_to, ";
 				$sql .= "voicemail_sms_to, ";
 				$sql .= "voicemail_transcription_enabled, ";
+				$sql .= "voicemail_tutorial, ";
 				$sql .= "voicemail_file, ";
 				$sql .= "voicemail_local_after_email, ";
 				$sql .= "voicemail_enabled, ";
@@ -169,6 +171,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".$voicemail_mail_to."', ";
 				$sql .= "'".$voicemail_sms_to."', ";
 				$sql .= "'".$voicemail_transcription_enabled."', ";
+				$sql .= "'".$voicemail_tutorial."', ";
 				$sql .= "'".$voicemail_file."', ";
 				$sql .= "'".$voicemail_local_after_email."', ";
 				$sql .= "'".$voicemail_enabled."', ";
@@ -189,6 +192,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "voicemail_mail_to = '".$voicemail_mail_to."', ";
 				$sql .= "voicemail_sms_to = '".$voicemail_sms_to."', ";
 				$sql .= "voicemail_transcription_enabled = '".$voicemail_transcription_enabled."', ";
+				$sql .= "voicemail_tutorial = '".$voicemail_tutorial."', ";
 				$sql .= "voicemail_file = '".$voicemail_file."', ";
 				$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
 				$sql .= "voicemail_enabled = '".$voicemail_enabled."', ";
@@ -287,6 +291,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$voicemail_mail_to = $row["voicemail_mail_to"];
 			$voicemail_sms_to = $row["voicemail_sms_to"];
 			$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+			$voicemail_tutorial = $row["voicemail_tutorial"];
 			$voicemail_file = $row["voicemail_file"];
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
@@ -307,6 +312,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
 	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = "false"; }	
+	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = "false"; }
 
 //get the greetings list
 	$sql = "select * from v_voicemail_greetings ";
@@ -359,6 +365,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-voicemail_tutorial']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='voicemail_tutorial' id='voicemail_tutorial'>\n";
+	echo "    	<option value='true' ".(($voicemail_tutorial == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "    	<option value='false' ".(($voicemail_tutorial == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-voicemail_tutorial']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-greeting']."\n";

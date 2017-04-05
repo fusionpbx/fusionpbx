@@ -385,6 +385,7 @@
 								//if voicemail_uuid does not exist then get a new uuid
 									if (!isset($voicemail_uuid)) {
 										$voicemail_uuid = uuid();
+										$voicemail_tutorial = 'true';
 									}
 
 								//add the voicemail
@@ -403,6 +404,7 @@
 										$voicemail_description = $description;
 									}
 									$array["voicemails"][$i]["voicemail_description"] = $voicemail_description;
+									$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 							}
 
 						//increment the extension number
@@ -650,6 +652,7 @@
 					$voicemail_local_after_email = $row["voicemail_local_after_email"];
 					$voicemail_enabled = $row["voicemail_enabled"];
 					$voicemail_description = $row["voicemail_description"];
+					$voicemail_tutorial = $row["voicemail_tutorial"];
 				}
 				unset ($prep_statement);
 			//clean the variables
@@ -727,6 +730,7 @@
 
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
+	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
 
@@ -1281,7 +1285,7 @@
 	echo "    ".$text['label-limit_max']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='limit_max' maxlength='255' min='0' step='1' value=\"$limit_max\">\n";
+	echo "    <input class='formfld' type='text' name='limit_max' maxlength='255' value=\"$limit_max\">\n";
 	echo "<br />\n";
 	echo $text['description-limit_max']."\n";
 	echo "</td>\n";
