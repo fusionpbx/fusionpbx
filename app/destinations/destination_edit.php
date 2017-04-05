@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013-2016
+	Portions created by the Initial Developer are Copyright (C) 2013-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -116,6 +116,9 @@
 			if ($action == "update") {
 				$destination_uuid = check_str($_POST["destination_uuid"]);
 			}
+
+		//set the default context
+			if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
 
 		//check for all required data
 			$msg = '';
@@ -306,7 +309,7 @@
 
 								//delete previous fax detection settings
 									$sql = "delete from v_dialplan_details ";
-									$sql .= "where domain_uuid = '".$domain_uuid."' ";
+									$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 									$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 									$sql .= "and (";
 									$sql .= "	dialplan_detail_data like '%tone_detect%' ";
@@ -383,7 +386,7 @@
 								$sql = "delete from v_dialplan_details ";
 								$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 								if (!permission_exists('destination_domain')) {
-									$sql .= "and domain_uuid = '".$domain_uuid."' ";
+									$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 								}
 								//echo $sql."<br><br>";
 								$db->exec(check_sql($sql));
@@ -574,6 +577,8 @@
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
+	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
+	if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
 
 //show the header
 	require_once "resources/header.php";
@@ -597,7 +602,6 @@
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
-	echo "			document.getElementById('destination_context').value = '".$_SESSION['domain_name']."'";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
