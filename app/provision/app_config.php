@@ -361,5 +361,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '(*xxxxxxx|*xxxxxx|*xxxxx|*xxxx|*xxx|*xx*|*x|**xxxxx|**xxxx|**xxx|**xx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'bf122bc9-c9bf-497c-9dda-95d125293eaf';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'yealink_srtp_encryption';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '0';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 
 ?>
