@@ -132,10 +132,10 @@ local log = require "resources.functions.log".ring_group
 --set the caller id
 	if (session:ready()) then
 		if (string.len(ring_group_cid_name_prefix) > 0) then
-			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+			session:execute("export", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
 		end
 		if (string.len(ring_group_cid_number_prefix) > 0) then
-			session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
+			session:execute("export", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 		end
 	end
 
