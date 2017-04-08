@@ -300,43 +300,35 @@
 //set a default number of rows to show
 	$num_rows = '0';
 
-//set a default CDR limit
-	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
-		$_SESSION['cdr']['limit']['numeric'] = 1000;
-	}
-
 //disable the paging
 	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
 	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-			if ($_SESSION['cdr']['count']['boolean'] == "true") {
-				//get the number of rows in the v_xml_cdr
-					$sql = "select count(uuid) as num_rows from v_xml_cdr ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if ($row['num_rows'] > 0) {
-							$num_rows = $row['num_rows'];
-						}
-						else {
-							$num_rows = '0';
-						}
-					}
-					unset($prep_statement, $result);
+
+		//get the number of rows in the v_xml_cdr
+			$sql = "select count(uuid) as num_rows from v_xml_cdr ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$num_rows = $row['num_rows'];
+				}
+				else {
+					$num_rows = '0';
+				}
 			}
-			else {
-				//limit the number of results
-					if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
-						$num_rows = $_SESSION['cdr']['limit']['numeric'];
-					}
-					else {
-						$num_rows = '1000';
-					}
+			unset($prep_statement, $result);
+
+		//limit the number of results
+			if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+				$num_rows = $_SESSION['cdr']['limit']['numeric'];
 			}
+
+		//set the default paging
 			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
 				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 			}
