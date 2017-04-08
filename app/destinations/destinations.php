@@ -68,9 +68,9 @@
 		$sql .= "(";
 		$sql .= "	destination_type like '%".$search."%' ";
 		$sql .= " 	or destination_number like '%".$search."%' ";
-		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or lower(destination_context) like '%".strtolower($search)."%' ";
 		$sql .= " 	or destination_enabled like '%".$search."%' ";
-		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= " 	or lower(destination_description) like '%".strtolower($search)."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -110,9 +110,9 @@
 		$sql .= " (";
 		$sql .= "	destination_type like '%".$search."%' ";
 		$sql .= " 	or destination_number like '%".$search."%' ";
-		$sql .= " 	or destination_context like '%".$search."%' ";
+		$sql .= " 	or lower(destination_context) like '%".strtolower($search)."%' ";
 		$sql .= " 	or destination_enabled like '%".$search."%' ";
-		$sql .= " 	or destination_description like '%".$search."%' ";
+		$sql .= " 	or lower(destination_description) like '%".strtolower($search)."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) > 0) {
