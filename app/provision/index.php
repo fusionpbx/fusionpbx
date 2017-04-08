@@ -79,6 +79,11 @@
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
