@@ -87,6 +87,11 @@
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
