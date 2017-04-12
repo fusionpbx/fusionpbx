@@ -1491,18 +1491,21 @@
 		$vendors[$y]['uuid'] = "cbedd8ac-e3f0-45ac-9fd8-dc3089ca133a";
 		$vendors[$y]['name'] = "cisco";
 		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "199c6379-e628-4a64-8136-04905b6f739b";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf";
 		$vendors[$y]['functions'][$z]['name'] = "blf";
 		$vendors[$y]['functions'][$z]['value'] = "blf";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "eb008983-a2b3-411f-baab-10fe5cc152d7";
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
 		$vendors[$y]['functions'][$z]['name'] = "line";
 		$vendors[$y]['functions'][$z]['value'] = "line";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "73805147-a9e5-4e26-9573-cdbeadf1703f";
 		$vendors[$y]['functions'][$z]['label'] = "label-disabled";
 		$vendors[$y]['functions'][$z]['name'] = "disabled";
 		$vendors[$y]['functions'][$z]['value'] = "disabled";
@@ -1510,51 +1513,59 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
 		$y++;
-		$vendors[$y]['uuid'] = "";
+		$vendors[$y]['uuid'] = "30f714c0-b364-4d5b-83f6-d778eaf0dfd0";
 		$vendors[$y]['name'] = "escene";
 		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "eeba34d5-c146-4a15-b183-5f2cbfb5ac3f";
 		$vendors[$y]['functions'][$z]['label'] = "label-blf";
 		$vendors[$y]['functions'][$z]['name'] = "blf";
 		$vendors[$y]['functions'][$z]['value'] = "1";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "15484a5e-7cc2-40bf-ab07-030b8b6aa8f1";
 		$vendors[$y]['functions'][$z]['label'] = "label-call_park";
 		$vendors[$y]['functions'][$z]['name'] = "call_park";
 		$vendors[$y]['functions'][$z]['value'] = "7";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "edb0075a-844b-47c0-9987-457d71f8ed2d";
 		$vendors[$y]['functions'][$z]['label'] = "label-dtmf";
 		$vendors[$y]['functions'][$z]['name'] = "dtmf";
 		$vendors[$y]['functions'][$z]['value'] = "4";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "36b07f22-6696-455b-a9a7-45523a5a056d";
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
 		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
 		$vendors[$y]['functions'][$z]['value'] = "5";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "e6ca8bb7-203d-4285-ab35-577cfc64bd37";
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial_prefix";
 		$vendors[$y]['functions'][$z]['name'] = "speed_dial_prefix";
 		$vendors[$y]['functions'][$z]['value'] = "2";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "1819d16d-4cbe-4e28-bd15-bb8df3165b7b";
 		$vendors[$y]['functions'][$z]['label'] = "label-intercom";
 		$vendors[$y]['functions'][$z]['name'] = "intercom";
 		$vendors[$y]['functions'][$z]['value'] = "8";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "d6aab974-6c8d-4a51-b098-6994ee383284";
 		$vendors[$y]['functions'][$z]['label'] = "label-pickup";
 		$vendors[$y]['functions'][$z]['name'] = "pickup";
 		$vendors[$y]['functions'][$z]['value'] = "9";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "d81175b6-4d49-4537-84e7-81d665743c7d";
 		$vendors[$y]['functions'][$z]['label'] = "label-broadsoft_group";
 		$vendors[$y]['functions'][$z]['name'] = "broadsoft_group";
 		$vendors[$y]['functions'][$z]['value'] = "11";
@@ -1563,9 +1574,10 @@
 		//BLA type 3 Paging type 6
 
 		$y++;
-		$vendors[$y]['uuid'] = "";
+		$vendors[$y]['uuid'] = "425ae7ef-a25a-402e-91f0-c4a1fbc45cf9";
 		$vendors[$y]['name'] = "escene programmable";
 		$z=0;
+		$vendors[$y]['functions'][$z]['uuid'] = "e523fd42-03e6-4d8d-a6d4-e91777536a58";
 		$vendors[$y]['functions'][$z]['label'] = "label-default";
 		$vendors[$y]['functions'][$z]['name'] = "default";
 		$vendors[$y]['functions'][$z]['value'] = "0";
@@ -1573,6 +1585,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Default";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "70d81149-66a2-4311-98b7-63fa8562e27e";
 		$vendors[$y]['functions'][$z]['label'] = "label-redial";
 		$vendors[$y]['functions'][$z]['name'] = "redial";
 		$vendors[$y]['functions'][$z]['value'] = "1";
@@ -1580,6 +1593,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Redial";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "c8f0ce02-95e5-4d28-82e2-c2c141d0ff4e";
 		$vendors[$y]['functions'][$z]['label'] = "label-dnd";
 		$vendors[$y]['functions'][$z]['name'] = "dnd";
 		$vendors[$y]['functions'][$z]['value'] = "2";
@@ -1587,6 +1601,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "DND";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "466b3206-a52f-47a4-8d17-8a55a21936e6";
 		$vendors[$y]['functions'][$z]['label'] = "label-phone_book";
 		$vendors[$y]['functions'][$z]['name'] = "phone_book";
 		$vendors[$y]['functions'][$z]['value'] = "3";
@@ -1594,6 +1609,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Contacts";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "f2a83ada-0871-4931-abc1-76586c0b5539";
 		$vendors[$y]['functions'][$z]['label'] = "label-ent_phone_book";
 		$vendors[$y]['functions'][$z]['name'] = "ent_phone_book";
 		$vendors[$y]['functions'][$z]['value'] = "4";
@@ -1601,6 +1617,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Enterprise Phonebook";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "632b689e-7333-4d7c-b2bd-e13474816bd6";
 		$vendors[$y]['functions'][$z]['label'] = "label-ldap";
 		$vendors[$y]['functions'][$z]['name'] = "ldap";
 		$vendors[$y]['functions'][$z]['value'] = "5";
@@ -1608,6 +1625,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "LDAP";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "bfe8d2d9-dacc-4789-b0f3-83c60e0b4f1a";
 		$vendors[$y]['functions'][$z]['label'] = "label-directory";
 		$vendors[$y]['functions'][$z]['name'] = "directory";
 		$vendors[$y]['functions'][$z]['value'] = "6";
@@ -1615,6 +1633,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Directory";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "9cf990cf-5d11-420b-9316-6c25e73b081b";
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
 		$vendors[$y]['functions'][$z]['name'] = "speed_dial";
 		$vendors[$y]['functions'][$z]['value'] = "7";
@@ -1622,6 +1641,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Speed Dial";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "503c86e2-7670-49b0-b2d8-a72497730a17";
 		$vendors[$y]['functions'][$z]['label'] = "label-call_log";
 		$vendors[$y]['functions'][$z]['name'] = "call_log";
 		$vendors[$y]['functions'][$z]['value'] = "8";
@@ -1629,6 +1649,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Call List";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "78cec073-4782-464b-8156-ff6e4247409f";
 		$vendors[$y]['functions'][$z]['label'] = "label-missed_calls";
 		$vendors[$y]['functions'][$z]['name'] = "missed_calls";
 		$vendors[$y]['functions'][$z]['value'] = "9";
@@ -1636,6 +1657,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Missed Calls";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "44a3ee60-3154-4490-978d-f7c3d1b54ce9";
 		$vendors[$y]['functions'][$z]['label'] = "label-received_calls";
 		$vendors[$y]['functions'][$z]['name'] = "received_calls";
 		$vendors[$y]['functions'][$z]['value'] = "10";
@@ -1643,6 +1665,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Received Calls";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "0f9c9343-7c6d-4b6f-87cf-bfa23cbf22ac";
 		$vendors[$y]['functions'][$z]['label'] = "label-dialed_calls";
 		$vendors[$y]['functions'][$z]['name'] = "dialed_calls";
 		$vendors[$y]['functions'][$z]['value'] = "11";
@@ -1650,6 +1673,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Dialed Calls";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "165d8867-af41-4a7c-9a19-013b95f6c9b3";
 		$vendors[$y]['functions'][$z]['label'] = "label-menu";
 		$vendors[$y]['functions'][$z]['name'] = "menu";
 		$vendors[$y]['functions'][$z]['value'] = "12";
@@ -1657,6 +1681,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Menu";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "153d19a7-a43d-4608-92b7-bede80fb14db";
 		$vendors[$y]['functions'][$z]['label'] = "label-sms";
 		$vendors[$y]['functions'][$z]['name'] = "sms";
 		$vendors[$y]['functions'][$z]['value'] = "13";
@@ -1664,6 +1689,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "SMS";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "2c504bd8-0f9f-46d3-9cc1-bbedf19fa221";
 		$vendors[$y]['functions'][$z]['label'] = "label-new_sms";
 		$vendors[$y]['functions'][$z]['name'] = "new_sms";
 		$vendors[$y]['functions'][$z]['value'] = "14";
@@ -1671,6 +1697,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "New SMS";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "396f323b-8aa9-4539-a41e-3acc985b8f30";
 		$vendors[$y]['functions'][$z]['label'] = "label-forward";
 		$vendors[$y]['functions'][$z]['name'] = "forward";
 		$vendors[$y]['functions'][$z]['value'] = "15";
@@ -1678,6 +1705,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Call Forward";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "54834857-0c8e-4206-828c-e47d09996a7f";
 		$vendors[$y]['functions'][$z]['label'] = "label-status";
 		$vendors[$y]['functions'][$z]['name'] = "status";
 		$vendors[$y]['functions'][$z]['value'] = "16";
@@ -1685,6 +1713,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "View Status";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "d4be90e4-4776-4cfd-b013-bd5db5976111";
 		$vendors[$y]['functions'][$z]['label'] = "label-enable_account";
 		$vendors[$y]['functions'][$z]['name'] = "enable_account";
 		$vendors[$y]['functions'][$z]['value'] = "17";
@@ -1692,6 +1721,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Enable/Disable SIP Account";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "cd08d06c-6f9a-4d37-a485-81538a9e18f2";
 		$vendors[$y]['functions'][$z]['label'] = "label-xml_browser";
 		$vendors[$y]['functions'][$z]['name'] = "xml_browser";
 		$vendors[$y]['functions'][$z]['value'] = "18";
@@ -1700,6 +1730,7 @@
 		$vendors[$y]['functions'][$z]['enabled'] = "false";
 		$vendors[$y]['functions'][$z]['description'] = "XML Browser";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "a6eafa1b-e31e-4e6c-b414-3358b199b04c";
 		$vendors[$y]['functions'][$z]['label'] = "label-provison_now";
 		$vendors[$y]['functions'][$z]['name'] = "provison_now";
 		$vendors[$y]['functions'][$z]['value'] = "19";
@@ -1707,6 +1738,7 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['description'] = "Auto Provison Now";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "c1486704-152b-483d-9b23-f24be29cc62e";
 		$vendors[$y]['functions'][$z]['label'] = "label-hot_desking";
 		$vendors[$y]['functions'][$z]['name'] = "hot_desking";
 		$vendors[$y]['functions'][$z]['value'] = "20";
@@ -1716,7 +1748,7 @@
 		$z++;
 
 		$y++;
-		$vendors[$y]['uuid'] = "";
+		$vendors[$y]['uuid'] = "c486dd68-1462-4128-901e-d902d17d1951";
 		$vendors[$y]['name'] = "grandstream";
 		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
