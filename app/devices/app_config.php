@@ -727,9 +727,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 	//vendor details
-		$y=0; //vendor array index
-		$z=0; //functions array index
+		$y=0;
+		$vendors[$y]['uuid'] = "c795c58e-7fcc-4aa1-bcc3-e23d9bc45209";
 		$vendors[$y]['name'] = "yealink";
+		$z=0;
 		$vendors[$y]['functions'][$z]['uuid'] = "e0dfc266-bdab-43b3-8554-aa905e290114";
 		$vendors[$y]['functions'][$z]['label'] = "label-na";
 		$vendors[$y]['functions'][$z]['name'] = "na";
@@ -1017,9 +1018,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "snom";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-none";
 		$vendors[$y]['functions'][$z]['name'] = "none";
 		$vendors[$y]['functions'][$z]['value'] = "none";
@@ -1153,9 +1155,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "polycom";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
 		$vendors[$y]['functions'][$z]['name'] = "line";
 		$vendors[$y]['functions'][$z]['value'] = "line";
@@ -1216,9 +1219,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "aastra";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-none";
 		$vendors[$y]['functions'][$z]['name'] = "none";
 		$vendors[$y]['functions'][$z]['value'] = "none";
@@ -1381,9 +1385,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "cisco";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-blf";
 		$vendors[$y]['functions'][$z]['name'] = "blf";
 		$vendors[$y]['functions'][$z]['value'] = "blf";
@@ -1402,9 +1407,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "escene";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-blf";
 		$vendors[$y]['functions'][$z]['name'] = "blf";
 		$vendors[$y]['functions'][$z]['value'] = "1";
@@ -1454,9 +1460,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		//BLA type 3 Paging type 6
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "escene programmable";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-default";
 		$vendors[$y]['functions'][$z]['name'] = "default";
 		$vendors[$y]['functions'][$z]['value'] = "0";
@@ -1606,9 +1613,10 @@
 		$vendors[$y]['functions'][$z]['description'] = "Hot Desking";
 		$z++;
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "grandstream";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
 		$vendors[$y]['functions'][$z]['name'] = "line";
 		$vendors[$y]['functions'][$z]['value'] = "line";
@@ -1693,9 +1701,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "mitel";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-not_programmed";
 		$vendors[$y]['functions'][$z]['name'] = "not_programmed";
 		$vendors[$y]['functions'][$z]['value'] = "0";
@@ -1780,9 +1789,10 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 
-		$y++; //vendors array index
-		$z=0; //functions array index
+		$y++;
+		$vendors[$y]['uuid'] = "";
 		$vendors[$y]['name'] = "sangoma";
+		$z=0;
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
 		$vendors[$y]['functions'][$z]['name'] = "line";
 		$vendors[$y]['functions'][$z]['value'] = "1";
