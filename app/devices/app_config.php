@@ -730,24 +730,28 @@
 		$y=0; //vendor array index
 		$z=0; //functions array index
 		$vendors[$y]['name'] = "yealink";
+		$vendors[$y]['functions'][$z]['uuid'] = "e0dfc266-bdab-43b3-8554-aa905e290114";
 		$vendors[$y]['functions'][$z]['label'] = "label-na";
 		$vendors[$y]['functions'][$z]['name'] = "na";
 		$vendors[$y]['functions'][$z]['value'] = "0";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "236061aa-2ae8-4547-a3d3-e112976c47bc";
 		$vendors[$y]['functions'][$z]['label'] = "label-line";
 		$vendors[$y]['functions'][$z]['name'] = "line";
 		$vendors[$y]['functions'][$z]['value'] = "15";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "7384b1f7-46d1-4b36-a8c5-3f50c845b62c";
 		$vendors[$y]['functions'][$z]['label'] = "label-conference";
 		$vendors[$y]['functions'][$z]['name'] = "conference";
 		$vendors[$y]['functions'][$z]['value'] = "1";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "";
 		$vendors[$y]['functions'][$z]['label'] = "label-forward";
 		$vendors[$y]['functions'][$z]['name'] = "forward";
 		$vendors[$y]['functions'][$z]['value'] = "2";
