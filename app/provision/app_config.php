@@ -392,7 +392,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'on';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting on=enabled off=disable';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting on=enabled off=disable visual only and ringer';
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '096ef50c-3ff4-4a1f-bc37-79876a7eb832';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
