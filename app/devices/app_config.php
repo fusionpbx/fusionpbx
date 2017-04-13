@@ -223,6 +223,9 @@
 		$apps[$x]['permissions'][$y]['name'] = 'device_vendor_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_vendor_restore';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_vendor_function_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
@@ -2206,5 +2209,24 @@
 		$vendors[$y]['functions'][$z]['value'] = "47";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
-
+		$y++; //vendors array index
+                $z=0; //functions array index
+                $vendors[$y]['name'] = "audiocodes";
+                $vendors[$y]['functions'][$z]['label'] = "label-blf";
+                $vendors[$y]['functions'][$z]['name'] = "blf";
+                $vendors[$y]['functions'][$z]['value'] = "SPEED_DIAL_BLF";
+                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+                $vendors[$y]['functions'][$z]['groups'][] = "admin";
+                $z++;
+                $vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
+                $vendors[$y]['functions'][$z]['name'] = "speed_dial";
+                $vendors[$y]['functions'][$z]['value'] = "SPEED_DIAL";
+                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+                $vendors[$y]['functions'][$z]['groups'][] = "admin";
+                $z++;
+                $vendors[$y]['functions'][$z]['label'] = "label-page";
+                $vendors[$y]['functions'][$z]['name'] = "page";
+                $vendors[$y]['functions'][$z]['value'] = "PAGING";
+                $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+                $vendors[$y]['functions'][$z]['groups'][] = "admin";
 ?>
