@@ -1586,7 +1586,7 @@
 <Speed_Dial_9 ua="rw"></Speed_Dial_9>
 
 <!-- Supplementary Services -->
-<CW_Setting ua="rw">Yes</CW_Setting>
+<CW_Setting ua="rw">{spa_call_waiting}</CW_Setting>
 <Block_CID_Setting ua="rw">No</Block_CID_Setting>
 <Block_ANC_Setting ua="rw">No</Block_ANC_Setting>
 <DND_Setting ua="rw">No</DND_Setting>
