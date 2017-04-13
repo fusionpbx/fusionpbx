@@ -369,5 +369,37 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '0';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'f0704072-c3d9-48df-b89b-2aea6035b3c4';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'yealink_call_waiting';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 1=enabled 0=disable';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '564c50ee-4403-4e26-a30b-637f661db389';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'spa_call_waiting';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'Yes';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting Yes=enabled No=disable';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '8fc369c3-bd6e-4fbb-957c-681de8a325fc';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'snom_call_waiting';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'on';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting on=enabled off=disable';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '096ef50c-3ff4-4a1f-bc37-79876a7eb832';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'polycom_call_waiting';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 1=enabled 0=disable';
 
 ?>
