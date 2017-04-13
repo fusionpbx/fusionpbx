@@ -132,6 +132,17 @@ $text['label-git_info']['uk'] = "Гіт інформація";
 $text['label-git_info']['de-at'] = "Git Informationen";
 $text['label-git_info']['it-it'] = "Informazioni Git";
 
+$text['label-git_corrupted']['en-us'] = "Git data is corrupt";
+$text['label-git_corrupted']['es-cl'] = "Git datos es corrupto";
+$text['label-git_corrupted']['pt-pt'] = "Dados Git é corrupto";
+$text['label-git_corrupted']['fr-fr'] = "Données Git est corrompu";
+$text['label-git_corrupted']['pt-br'] = "Dados Git é corrupto";
+$text['label-git_corrupted']['pl'] = "Git danych jest uszkodzony";
+$text['label-git_corrupted']['sv-se'] = "Git uppgifter är korrupt";
+$text['label-git_corrupted']['uk'] = "Гіт дані пошкоджені";
+$text['label-git_corrupted']['de-at'] = "Git Daten ist beschädigt" ;
+$text['label-git_corrupted']['it-it'] = "Dati Git è corrotto";
+
 $text['label-switch']['en-us'] = "Switch";
 $text['label-switch']['es-cl'] = "Cambiar";
 $text['label-switch']['pt-pt'] = "Interruptor";
