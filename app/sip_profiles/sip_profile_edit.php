@@ -209,7 +209,6 @@
 //add an empty row
 	$x = count($sip_profile_settings);
 	$sip_profile_settings[$x]['sip_profile_setting_uuid'] = uuid();
-	$sip_profile_settings[$x]['sip_profile_setting_uuid'] = '';
 	$sip_profile_settings[$x]['sip_profile_uuid'] = '';
 	$sip_profile_settings[$x]['sip_profile_setting_name'] = '';
 	$sip_profile_settings[$x]['sip_profile_setting_value'] = '';
