@@ -257,6 +257,10 @@
 				//update the ring group destinations array
 					$x = 0;
 					foreach ($_POST["ring_group_destinations"] as $row) {
+
+						//sanitize the destination_number
+							$_POST["ring_group_destinations"][$x]["destination_number"] = str_replace('$', '', $_POST["ring_group_destinations"][$x]["destination_number"]);
+
 						//add the domain_uuid
 							if (strlen($_POST["ring_group_destinations"][$x]["domain_uuid"]) == 0) {
 								$_POST["ring_group_destinations"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
