@@ -11,6 +11,7 @@ $text['title-fax']['de-de'] = "Fax Server";
 $text['title-fax']['de-at'] = "Fax Server";
 $text['title-fax']['ro'] = "Server Fax";
 $text['title-fax']['he'] = "הגדרת חשבון";
+$text['title-fax']['ru-ru'] = "Fax Сервер";
 
 $text['title-fax_logs']['en-us'] = "Fax Logs";
 $text['title-fax_logs']['es-cl'] = "Registros de fax";
@@ -23,6 +24,7 @@ $text['title-fax_logs']['de-de'] = "Fax Logs";
 $text['title-fax_logs']['de-at'] = "Fax Logs";
 $text['title-fax_logs']['ro'] = "Fișier log Fax";
 $text['title-fax_logs']['he'] = "";
+$text['title-fax_logs']['ru-ru'] = "Fax Логи";
 
 $text['title-fax_log']['en-us'] = "Fax Log";
 $text['title-fax_log']['es-cl'] = "Registro de fax";
@@ -35,6 +37,7 @@ $text['title-fax_log']['de-de'] = "Fax Log";
 $text['title-fax_log']['de-at'] = "Fax Log";
 $text['title-fax_log']['ro'] = "Fișier log Fax";
 $text['title-fax_log']['he'] = "";
+$text['title-fax_log']['ru-ru'] = "Fax Лог";
 
 $text['title-fax_files']['en-us'] = "FAX Files";
 $text['title-fax_files']['es-cl'] = "Los archivos de fax";
@@ -47,6 +50,7 @@ $text['title-fax_files']['de-de'] = "Fax Dateien";
 $text['title-fax_files']['de-at'] = "Fax Dateien";
 $text['title-fax_files']['ro'] = "Fișiere Fax";
 $text['title-fax_files']['he'] = "";
+$text['title-fax_files']['ru-ru'] = "FAX Файлы";
 
 $text['title-fax_file']['en-us'] = "Fax File";
 $text['title-fax_file']['es-cl'] = "Archivo de fax";
@@ -59,6 +63,7 @@ $text['title-fax_file']['de-de'] = "Fax Datei";
 $text['title-fax_file']['de-at'] = "Fax Datei";
 $text['title-fax_file']['ro'] = "Fișier Fax";
 $text['title-fax_file']['he'] = "";
+$text['title-fax_file']['ru-ru'] = "Fax Файл";
 
 $text['table-view']['en-us'] = "View";
 $text['table-view']['es-cl'] = "Ver";
@@ -71,6 +76,7 @@ $text['table-view']['de-de'] = "Ansicht";
 $text['table-view']['de-at'] = "Ansicht";
 $text['table-view']['ro'] = "Vizualizare";
 $text['table-view']['he'] = "";
+$text['table-view']['ru-ru'] = "Просмотр";
 
 $text['table-size']['en-us'] = "Size";
 $text['table-size']['es-cl'] = "Tamaño";
@@ -83,6 +89,7 @@ $text['table-size']['de-de'] = "Größe";
 $text['table-size']['de-at'] = "Größe";
 $text['table-size']['ro'] = "Mărime";
 $text['table-size']['he'] = "";
+$text['table-size']['ru-ru'] = "Размер";
 
 $text['table-modified']['en-us'] = "Last Modified";
 $text['table-modified']['es-cl'] = "Última modificación";
@@ -95,6 +102,7 @@ $text['table-modified']['de-de'] = "Zuletzt geändert";
 $text['table-modified']['de-at'] = "Zuletzt geändert";
 $text['table-modified']['ro'] = "Ultima modificare";
 $text['table-modified']['he'] = "";
+$text['table-modified']['ru-ru'] = "Последние изменения";
 
 $text['table-file']['en-us'] = "File Name (Download)";
 $text['table-file']['es-cl'] = "Nombre de Archivo (Descargar)";
@@ -107,6 +115,7 @@ $text['table-file']['de-de'] = "Dateiname (Download)";
 $text['table-file']['de-at'] = "Dateiname (Download)";
 $text['table-file']['ro'] = "Nume fișier (clic pentru descărcare)";
 $text['table-file']['he'] = "";
+$text['table-file']['ru-ru'] = "Имена файлов (Загрузить)";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['es-cl'] = "Verdadero";
@@ -119,6 +128,7 @@ $text['option-true']['de-de'] = "Ein";
 $text['option-true']['de-at'] = "Ein";
 $text['option-true']['ro'] = "";
 $text['option-true']['he'] = "";
+$text['option-true']['ru-ru'] = "Активно";
 
 $text['option-fax-resolution-superfine']['en-us'] = "Superfine";
 $text['option-fax-resolution-superfine']['es-cl'] = "Superfino";
@@ -131,6 +141,7 @@ $text['option-fax-resolution-superfine']['de-de'] = "Superfein";
 $text['option-fax-resolution-superfine']['de-at'] = "Superfein";
 $text['option-fax-resolution-superfine']['ro'] = "Superfin";
 $text['option-fax-resolution-superfine']['he'] = "";
+$text['option-fax-resolution-superfine']['ru-ru'] = "Наилучшее";
 
 $text['option-fax-resolution-normal']['en-us'] = "Normal";
 $text['option-fax-resolution-normal']['es-cl'] = "Normal";
@@ -143,6 +154,7 @@ $text['option-fax-resolution-normal']['de-de'] = "Normal";
 $text['option-fax-resolution-normal']['de-at'] = "Normal";
 $text['option-fax-resolution-normal']['ro'] = "Normal";
 $text['option-fax-resolution-normal']['he'] = "";
+$text['option-fax-resolution-normal']['ru-ru'] = "Нормальное";
 
 $text['option-fax-resolution-fine']['en-us'] = "Fine";
 $text['option-fax-resolution-fine']['es-cl'] = "Fine";
@@ -155,6 +167,7 @@ $text['option-fax-resolution-fine']['de-de'] = "Fein";
 $text['option-fax-resolution-fine']['de-at'] = "Fein";
 $text['option-fax-resolution-fine']['ro'] = "Fin";
 $text['option-fax-resolution-fine']['he'] = "";
+$text['option-fax-resolution-fine']['ru-ru'] = "Исходное";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "Falso";
@@ -167,6 +180,7 @@ $text['option-false']['de-de'] = "Aus";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['ro'] = "";
 $text['option-false']['he'] = "";
+$text['option-false']['ru-ru'] = "Ошибка";
 
 $text['message-no_faxes_found']['en-us'] = "No Faxes Found";
 $text['message-no_faxes_found']['es-cl'] = "No Hay Faxes Encontrados";
@@ -179,6 +193,7 @@ $text['message-no_faxes_found']['de-de'] = "Keine Faxe gefunden";
 $text['message-no_faxes_found']['de-at'] = "Keine Faxe gefunden";
 $text['message-no_faxes_found']['ro'] = "Nu s-au găsit faxuri";
 $text['message-no_faxes_found']['he'] = "";
+$text['message-no_faxes_found']['ru-ru'] = "Факсы отсутствуют";
 
 $text['message-invalid-fax']['en-us'] = "Invalid Fax - Please enter a message or select a file to send.";
 $text['message-invalid-fax']['es-cl'] = "Fax Inválido - Por favor ingrese el mensaje o seleccione un archivo para enviar.";
@@ -191,6 +206,7 @@ $text['message-invalid-fax']['de-de'] = "Ungültiges Fax - Bitte geben Sie eine 
 $text['message-invalid-fax']['de-at'] = "Ungültiges Fax - Bitte geben Sie eine Nachricht ein oder wählen Sie eine Datei zum Senden.";
 $text['message-invalid-fax']['ro'] = "Fax invalid - Vă rog introduceți un mesaj sau selectați un fișier pentru a fi trimis.";
 $text['message-invalid-fax']['he'] = "";
+$text['message-invalid-fax']['ru-ru'] = "Неверный FAX - введите сообщение или выберите файл для отправки.";
 
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
 $text['message-cannot_connect']['es-cl'] = "Error de Conexión";
@@ -203,6 +219,7 @@ $text['message-cannot_connect']['de-de'] = "Verbindung fehlgeschlagen";
 $text['message-cannot_connect']['de-at'] = "Verbindung fehlgeschlagen";
 $text['message-cannot_connect']['ro'] = "Conexiune eșuată";
 $text['message-cannot_connect']['he'] = "";
+$text['message-cannot_connect']['ru-ru'] = "Ошибка соединения";
 
 $text['label-user-list']['en-us'] = "User List";
 $text['label-user-list']['es-cl'] = "Lista de usuarios";
@@ -215,6 +232,7 @@ $text['label-user-list']['de-de'] = "Benutzer Liste";
 $text['label-user-list']['de-at'] = "Benutzer Liste";
 $text['label-user-list']['ro'] = "Listă utilizatori";
 $text['label-user-list']['he'] = "";
+$text['label-user-list']['ru-ru'] = "Список Пользователей";
 
 $text['label-tools']['en-us'] = "Tools";
 $text['label-tools']['es-cl'] = "Herramientas";
@@ -227,6 +245,7 @@ $text['label-tools']['de-de'] = "Werkzeuge";
 $text['label-tools']['de-at'] = "Werkzeuge";
 $text['label-tools']['ro'] = "Căsuță Fax";
 $text['label-tools']['he'] = "כלים";
+$text['label-tools']['ru-ru'] = "Инструменты";
 
 $text['label-sent']['en-us'] = "Sent";
 $text['label-sent']['es-cl'] = "Enviado";
@@ -239,6 +258,7 @@ $text['label-sent']['de-de'] = "Gesendet";
 $text['label-sent']['de-at'] = "Gesendet";
 $text['label-sent']['ro'] = "Trimise";
 $text['label-sent']['he'] = "";
+$text['label-sent']['ru-ru'] = "Переданные";
 
 $text['label-selected']['en-us'] = "Selected";
 $text['label-selected']['es-cl'] = "Seleccionado";
@@ -251,6 +271,7 @@ $text['label-selected']['de-de'] = "Ausgewählt";
 $text['label-selected']['de-at'] = "Ausgewählt";
 $text['label-selected']['ro'] = "Selectate";
 $text['label-selected']['he'] = "";
+$text['label-selected']['ru-ru'] = "Выбор";
 
 $text['label-pin']['en-us'] = "PIN Number";
 $text['label-pin']['es-cl'] = "Número PIN";
@@ -263,6 +284,7 @@ $text['label-pin']['de-de'] = "PIN Nummer";
 $text['label-pin']['de-at'] = "PIN Nummer";
 $text['label-pin']['ro'] = "Cod PIN";
 $text['label-pin']['he'] = "";
+$text['label-pin']['ru-ru'] = "PIN Номер";
 
 $text['label-new']['en-us'] = "New";
 $text['label-new']['es-cl'] = "Nueva";
@@ -275,6 +297,7 @@ $text['label-new']['de-de'] = "Neu";
 $text['label-new']['de-at'] = "Neu";
 $text['label-new']['ro'] = "Nou";
 $text['label-new']['he'] = "חדש";
+$text['label-new']['ru-ru'] = "Новый";
 
 $text['label-log']['en-us'] = "Log";
 $text['label-log']['es-cl'] = "Log";
@@ -287,6 +310,7 @@ $text['label-log']['de-de'] = "Log";
 $text['label-log']['de-at'] = "Log";
 $text['label-log']['ro'] = "Log";
 $text['label-log']['he'] = "";
+$text['label-log']['ru-ru'] = "Лог";
 
 $text['label-active']['en-us'] = "Active";
 $text['label-active']['es-cl'] = "";
@@ -299,6 +323,7 @@ $text['label-active']['de-de'] = "Aktiv";
 $text['label-active']['de-at'] = "Aktiv";
 $text['label-active']['ro'] = "";
 $text['label-active']['he'] = "";
+$text['label-active']['ru-ru'] = "Активные";
 
 $text['label-location']['en-us'] = "Location";
 $text['label-location']['es-cl'] = "Localización";
@@ -311,6 +336,7 @@ $text['label-location']['de-de'] = "Standort";
 $text['label-location']['de-at'] = "Standort";
 $text['label-location']['ro'] = "Locație";
 $text['label-location']['he'] = "";
+$text['label-location']['ru-ru'] = "Расположение";
 
 $text['label-inbox']['en-us'] = "Inbox";
 $text['label-inbox']['es-cl'] = "Bandeja de Entrada";
@@ -323,6 +349,7 @@ $text['label-inbox']['de-de'] = "Postfach";
 $text['label-inbox']['de-at'] = "Postfach";
 $text['label-inbox']['ro'] = "Recepționate";
 $text['label-inbox']['he'] = "";
+$text['label-inbox']['ru-ru'] = "Входящие";
 
 $text['label-forward']['en-us'] = "Forward Number";
 $text['label-forward']['es-cl'] = "Dirigir Número";
@@ -335,6 +362,7 @@ $text['label-forward']['de-de'] = "Weiterleiten";
 $text['label-forward']['de-at'] = "Weiterleiten";
 $text['label-forward']['ro'] = "Număr pentru redirecționare";
 $text['label-forward']['he'] = "העבר";
+$text['label-forward']['ru-ru'] = "Набираемый Номер";
 
 $text['label-file']['en-us'] = "File not found.";
 $text['label-file']['es-cl'] = "Archivo no encontrado.";
@@ -347,6 +375,7 @@ $text['label-file']['de-de'] = "Datei nicht gefunden";
 $text['label-file']['de-at'] = "Datei nicht gefunden";
 $text['label-file']['ro'] = "Fișierul nu a fost găsit.";
 $text['label-file']['he'] = "";
+$text['label-file']['ru-ru'] = "Файл отсутствует.";
 
 $text['label-fax_uuid']['en-us'] = "FAX UUID";
 $text['label-fax_uuid']['es-cl'] = "Detección de Fax";
@@ -359,6 +388,7 @@ $text['label-fax_uuid']['de-de'] = "Fax Erkennung";
 $text['label-fax_uuid']['de-at'] = "Fax Erkennung";
 $text['label-fax_uuid']['ro'] = "UUID Fax";
 $text['label-fax_uuid']['he'] = "זיהוי פקסים";
+$text['label-fax_uuid']['ru-ru'] = "FAX UUID";
 
 $text['label-fax_uri']['en-us'] = "URI";
 $text['label-fax_uri']['es-cl'] = "URI";
@@ -371,6 +401,7 @@ $text['label-fax_uri']['de-de'] = "URI";
 $text['label-fax_uri']['de-at'] = "URI";
 $text['label-fax_uri']['ro'] = "URI";
 $text['label-fax_uri']['he'] = "";
+$text['label-fax_uri']['ru-ru'] = "URI";
 
 $text['label-fax_transfer_rate']['en-us'] = "Transfer Rate";
 $text['label-fax_transfer_rate']['es-cl'] = "Velocidad de Transferencia";
@@ -383,6 +414,7 @@ $text['label-fax_transfer_rate']['de-de'] = "Transferrate";
 $text['label-fax_transfer_rate']['de-at'] = "Transferrate";
 $text['label-fax_transfer_rate']['ro'] = "Rată de transfer";
 $text['label-fax_transfer_rate']['he'] = "";
+$text['label-fax_transfer_rate']['ru-ru'] = "Скорость передачи";
 
 $text['label-fax_success']['en-us'] = "Success";
 $text['label-fax_success']['es-cl'] = "éxito";
@@ -395,6 +427,7 @@ $text['label-fax_success']['de-de'] = "Erfolgreich";
 $text['label-fax_success']['de-at'] = "Erfolgreich";
 $text['label-fax_success']['ro'] = "Succes";
 $text['label-fax_success']['he'] = "";
+$text['label-fax_success']['ru-ru'] = "Успешно";
 
 $text['label-fax_retry_sleep']['en-us'] = "Retry Sleep";
 $text['label-fax_retry_sleep']['es-cl'] = "Vuelva a Intentar el Sueño";
@@ -407,6 +440,7 @@ $text['label-fax_retry_sleep']['de-de'] = "Widerholung Pause";
 $text['label-fax_retry_sleep']['de-at'] = "Widerholung Pause";
 $text['label-fax_retry_sleep']['ro'] = "Pauză între încercări";
 $text['label-fax_retry_sleep']['he'] = "";
+$text['label-fax_retry_sleep']['ru-ru'] = "Повтор Sleep";
 
 $text['label-fax_retry_limit']['en-us'] = "Retry Limit";
 $text['label-fax_retry_limit']['es-cl'] = "Límite de Reintentos";
@@ -419,6 +453,7 @@ $text['label-fax_retry_limit']['de-de'] = "Max. Anzahl von Wiederholungen";
 $text['label-fax_retry_limit']['de-at'] = "Max. Anzahl von Wiederholungen";
 $text['label-fax_retry_limit']['ro'] = "Limită număr de încercări";
 $text['label-fax_retry_limit']['he'] = "";
+$text['label-fax_retry_limit']['ru-ru'] = "Количество повторов";
 
 $text['label-fax_retry_attempts']['en-us'] = "Retry";
 $text['label-fax_retry_attempts']['es-cl'] = "Vuelva a Intentarlo";
@@ -431,6 +466,7 @@ $text['label-fax_retry_attempts']['de-de'] = "Wiederholung";
 $text['label-fax_retry_attempts']['de-at'] = "Wiederholung";
 $text['label-fax_retry_attempts']['ro'] = "Încercări";
 $text['label-fax_retry_attempts']['he'] = "";
+$text['label-fax_retry_attempts']['ru-ru'] = "Повторить";
 
 $text['label-fax_result_text']['en-us'] = "Result";
 $text['label-fax_result_text']['es-cl'] = "Resultado";
@@ -443,6 +479,7 @@ $text['label-fax_result_text']['de-de'] = "Ergebnis";
 $text['label-fax_result_text']['de-at'] = "Ergebnis";
 $text['label-fax_result_text']['ro'] = "Rezultat";
 $text['label-fax_result_text']['he'] = "";
+$text['label-fax_result_text']['ru-ru'] = "Результат";
 
 $text['label-fax_result_code']['en-us'] = "Code";
 $text['label-fax_result_code']['es-cl'] = "Código";
@@ -455,6 +492,7 @@ $text['label-fax_result_code']['de-de'] = "Code";
 $text['label-fax_result_code']['de-at'] = "Code";
 $text['label-fax_result_code']['ro'] = "Cod";
 $text['label-fax_result_code']['he'] = "קוד";
+$text['label-fax_result_code']['ru-ru'] = "Код";
 
 $text['label-fax_prefix']['en-us'] = "Prefix";
 $text['label-fax_prefix']['es-cl'] = "Prefijo";
@@ -467,6 +505,7 @@ $text['label-fax_prefix']['de-de'] = "Präfix";
 $text['label-fax_prefix']['de-at'] = "Präfix";
 $text['label-fax_prefix']['ro'] = "Prefix";
 $text['label-fax_prefix']['he'] = "";
+$text['label-fax_prefix']['ru-ru'] = "Префикс";
 
 $text['label-fax_number']['en-us'] = "FAX Number";
 $text['label-fax_number']['es-cl'] = "Número de Fax";
@@ -479,6 +518,7 @@ $text['label-fax_number']['de-de'] = "Fax Nummer";
 $text['label-fax_number']['de-at'] = "Fax Nummer";
 $text['label-fax_number']['ro'] = "Număr fax";
 $text['label-fax_number']['he'] = "מספר פקס";
+$text['label-fax_number']['ru-ru'] = "FAX Номер";
 
 $text['label-fax_mode']['en-us'] = "Mode";
 $text['label-fax_mode']['es-cl'] = "Modo";
@@ -491,6 +531,7 @@ $text['label-fax_mode']['de-de'] = "Modus";
 $text['label-fax_mode']['de-at'] = "Modus";
 $text['label-fax_mode']['ro'] = "Mod";
 $text['label-fax_mode']['he'] = "";
+$text['label-fax_mode']['ru-ru'] = "Моде";
 
 $text['label-fax_local_station_id']['en-us'] = "Local Station ID";
 $text['label-fax_local_station_id']['es-cl'] = "Local ID de la estación";
@@ -503,6 +544,7 @@ $text['label-fax_local_station_id']['de-de'] = "Lokale Stations-Kennung";
 $text['label-fax_local_station_id']['de-at'] = "Lokale Stations-Kennung";
 $text['label-fax_local_station_id']['ro'] = "ID stație locală";
 $text['label-fax_local_station_id']['he'] = "";
+$text['label-fax_local_station_id']['ru-ru'] = "ID локальной станции";
 
 $text['label-fax_image_size']['en-us'] = "Image Size";
 $text['label-fax_image_size']['es-cl'] = "Tamaño de la Imagen";
@@ -515,6 +557,7 @@ $text['label-fax_image_size']['de-de'] = "Bild Größe";
 $text['label-fax_image_size']['de-at'] = "Bild Größe";
 $text['label-fax_image_size']['ro'] = "Mărime imagine";
 $text['label-fax_image_size']['he'] = "";
+$text['label-fax_image_size']['ru-ru'] = "Размер изображения";
 
 $text['label-fax_image_resolution']['en-us'] = "Image Resolution";
 $text['label-fax_image_resolution']['es-cl'] = "Resolución de la imagen";
@@ -527,6 +570,7 @@ $text['label-fax_image_resolution']['de-de'] = "Bild Aulösung";
 $text['label-fax_image_resolution']['de-at'] = "Bild Aulösung";
 $text['label-fax_image_resolution']['ro'] = "Rezoluție imagine";
 $text['label-fax_image_resolution']['he'] = "";
+$text['label-fax_image_resolution']['ru-ru'] = "Разрешение изображения";
 
 $text['label-fax_files']['en-us'] = "Fax File(s)";
 $text['label-fax_files']['es-cl'] = "Facsímil del Archivo(s)";
@@ -539,6 +583,7 @@ $text['label-fax_files']['de-de'] = "Fax Dateien";
 $text['label-fax_files']['de-at'] = "Fax Dateien";
 $text['label-fax_files']['ro'] = "Fișier(e) fax";
 $text['label-fax_files']['he'] = "";
+$text['label-fax_files']['ru-ru'] = "Fax Файл(ы)";
 
 $text['label-fax_file_type']['en-us'] = "File Type";
 $text['label-fax_file_type']['es-cl'] = "Tipo de archivo";
@@ -551,6 +596,7 @@ $text['label-fax_file_type']['de-de'] = "Datei Typ";
 $text['label-fax_file_type']['de-at'] = "Datei Typ";
 $text['label-fax_file_type']['ro'] = "Tip fișier";
 $text['label-fax_file_type']['he'] = "";
+$text['label-fax_file_type']['ru-ru'] = "Типы Файлов";
 
 $text['label-fax_file_path']['en-us'] = "File Path";
 $text['label-fax_file_path']['es-cl'] = "Ruta De Archivo";
@@ -563,6 +609,7 @@ $text['label-fax_file_path']['de-de'] = "Datei Pfad";
 $text['label-fax_file_path']['de-at'] = "Datei Pfad";
 $text['label-fax_file_path']['ro'] = "Cale fișier";
 $text['label-fax_file_path']['he'] = "";
+$text['label-fax_file_path']['ru-ru'] = "Путь к Файлу";
 
 $text['label-fax_file']['en-us'] = "File";
 $text['label-fax_file']['es-cl'] = "Expediente";
@@ -575,6 +622,7 @@ $text['label-fax_file']['de-de'] = "Datei";
 $text['label-fax_file']['de-at'] = "Datei";
 $text['label-fax_file']['ro'] = "Fișier";
 $text['label-fax_file']['he'] = "קובץ";
+$text['label-fax_file']['ru-ru'] = "Файл";
 
 $text['label-fax_epoch']['en-us'] = "Epoch";
 $text['label-fax_epoch']['es-cl'] = "época";
@@ -587,6 +635,7 @@ $text['label-fax_epoch']['de-de'] = "Zeitraum";
 $text['label-fax_epoch']['de-at'] = "Zeitraum";
 $text['label-fax_epoch']['ro'] = "Epocă";
 $text['label-fax_epoch']['he'] = "";
+$text['label-fax_epoch']['ru-ru'] = "Эпоха";
 
 $text['label-fax_ecm_used']['en-us'] = "ECM";
 $text['label-fax_ecm_used']['es-cl'] = "ECM";
@@ -599,6 +648,7 @@ $text['label-fax_ecm_used']['de-de'] = "ECM";
 $text['label-fax_ecm_used']['de-at'] = "ECM";
 $text['label-fax_ecm_used']['ro'] = "ECM";
 $text['label-fax_ecm_used']['he'] = "";
+$text['label-fax_ecm_used']['ru-ru'] = "ECM";
 
 $text['label-fax_document_transferred_pages']['en-us'] = "Document Transferred Pages";
 $text['label-fax_document_transferred_pages']['es-cl'] = "Páginas de documentos Transferido";
@@ -611,6 +661,7 @@ $text['label-fax_document_transferred_pages']['de-de'] = "Gesendete Seiten";
 $text['label-fax_document_transferred_pages']['de-at'] = "Gesendete Seiten";
 $text['label-fax_document_transferred_pages']['ro'] = "Pagini transferate";
 $text['label-fax_document_transferred_pages']['he'] = "";
+$text['label-fax_document_transferred_pages']['ru-ru'] = "Страница документа отправлена";
 
 $text['label-fax_document_total_pages']['en-us'] = "Document Total Pages";
 $text['label-fax_document_total_pages']['es-cl'] = "Documento Total de páginas";
@@ -623,6 +674,7 @@ $text['label-fax_document_total_pages']['de-de'] = "Gesamtanzahl Seiten";
 $text['label-fax_document_total_pages']['de-at'] = "Gesamtanzahl Seiten";
 $text['label-fax_document_total_pages']['ro'] = "Număr total pagini";
 $text['label-fax_document_total_pages']['he'] = "";
+$text['label-fax_document_total_pages']['ru-ru'] = "Всего страниц в документе";
 
 $text['label-fax_destination']['en-us'] = "Destination";
 $text['label-fax_destination']['es-cl'] = "Destino";
@@ -635,6 +687,7 @@ $text['label-fax_destination']['de-de'] = "Ziel";
 $text['label-fax_destination']['de-at'] = "Ziel";
 $text['label-fax_destination']['ro'] = "Destinație";
 $text['label-fax_destination']['he'] = "";
+$text['label-fax_destination']['ru-ru'] = "Отправитель";
 
 $text['label-fax_date']['en-us'] = "Date";
 $text['label-fax_date']['es-cl'] = "Fecha";
@@ -647,6 +700,7 @@ $text['label-fax_date']['de-de'] = "Datum";
 $text['label-fax_date']['de-at'] = "Datum";
 $text['label-fax_date']['ro'] = "Data";
 $text['label-fax_date']['he'] = "תאריך";
+$text['label-fax_date']['ru-ru'] = "Дата";
 
 $text['label-fax_caller_id_number']['en-us'] = "Caller ID Number";
 $text['label-fax_caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -659,6 +713,7 @@ $text['label-fax_caller_id_number']['de-de'] = "Anruferkennung (Nummer)";
 $text['label-fax_caller_id_number']['de-at'] = "Anruferkennung (Nummer)";
 $text['label-fax_caller_id_number']['ro'] = "Număr Caller ID";
 $text['label-fax_caller_id_number']['he'] = "";
+$text['label-fax_caller_id_number']['ru-ru'] = "Caller ID Номер";
 
 $text['label-fax_caller_id_name']['en-us'] = "Caller ID Name";
 $text['label-fax_caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -671,6 +726,7 @@ $text['label-fax_caller_id_name']['de-de'] = "Anruferkennung (Name)";
 $text['label-fax_caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['label-fax_caller_id_name']['ro'] = "Nume Caller ID";
 $text['label-fax_caller_id_name']['he'] = "";
+$text['label-fax_caller_id_name']['ru-ru'] = "Caller ID Имя";
 
 $text['label-fax_base64']['en-us'] = "Base64";
 $text['label-fax_base64']['es-cl'] = "Base64";
@@ -683,6 +739,7 @@ $text['label-fax_base64']['de-de'] = "Base64";
 $text['label-fax_base64']['de-at'] = "Base64";
 $text['label-fax_base64']['ro'] = "Base64";
 $text['label-fax_base64']['he'] = "";
+$text['label-fax_base64']['ru-ru'] = "Base64";
 
 $text['label-fax_bad_rows']['en-us'] = "Bad Rows";
 $text['label-fax_bad_rows']['es-cl'] = "Bad Filas";
@@ -695,6 +752,7 @@ $text['label-fax_bad_rows']['de-de'] = "Korrupte Zeilen";
 $text['label-fax_bad_rows']['de-at'] = "Korrupte Zeilen";
 $text['label-fax_bad_rows']['ro'] = "Rânduri eronate";
 $text['label-fax_bad_rows']['he'] = "";
+$text['label-fax_bad_rows']['ru-ru'] = "Bad Rows";
 
 $text['label-fax-subject']['en-us'] = "Subject";
 $text['label-fax-subject']['es-cl'] = "Asunto";
@@ -707,6 +765,7 @@ $text['label-fax-subject']['de-de'] = "Betreff";
 $text['label-fax-subject']['de-at'] = "Betreff";
 $text['label-fax-subject']['ro'] = "Subiect";
 $text['label-fax-subject']['he'] = "נושא";
+$text['label-fax-subject']['ru-ru'] = "Субъект";
 
 $text['label-fax-sender']['en-us'] = "From";
 $text['label-fax-sender']['es-cl'] = "Remitente";
@@ -719,6 +778,7 @@ $text['label-fax-sender']['de-de'] = "Von";
 $text['label-fax-sender']['de-at'] = "Von";
 $text['label-fax-sender']['ro'] = "De la";
 $text['label-fax-sender']['he'] = "נשלח מ";
+$text['label-fax-sender']['ru-ru'] = "Из";
 
 $text['label-fax-resolution']['en-us'] = "Resolution";
 $text['label-fax-resolution']['es-cl'] = "Resolución";
@@ -731,6 +791,7 @@ $text['label-fax-resolution']['de-de'] = "Auflösung";
 $text['label-fax-resolution']['de-at'] = "Auflösung";
 $text['label-fax-resolution']['ro'] = "Rezoluție";
 $text['label-fax-resolution']['he'] = "";
+$text['label-fax-resolution']['ru-ru'] = "Разрешение";
 
 $text['label-fax-recipient']['en-us'] = "To";
 $text['label-fax-recipient']['es-cl'] = "Destinatario";
@@ -743,6 +804,7 @@ $text['label-fax-recipient']['de-de'] = "An";
 $text['label-fax-recipient']['de-at'] = "An";
 $text['label-fax-recipient']['ro'] = "Către";
 $text['label-fax-recipient']['he'] = "אל";
+$text['label-fax-recipient']['ru-ru'] = "В направлении";
 
 $text['label-fax-pages']['en-us'] = "Pages";
 $text['label-fax-pages']['es-cl'] = "Páginas";
@@ -755,6 +817,7 @@ $text['label-fax-pages']['de-de'] = "Seiten";
 $text['label-fax-pages']['de-at'] = "Seiten";
 $text['label-fax-pages']['ro'] = "Pagini";
 $text['label-fax-pages']['he'] = "דפים";
+$text['label-fax-pages']['ru-ru'] = "Страниц";
 
 $text['label-fax-page-size']['en-us'] = "Page Size";
 $text['label-fax-page-size']['es-cl'] = "Tamaño de Página";
@@ -767,6 +830,7 @@ $text['label-fax-page-size']['de-de'] = "Seiten Format";
 $text['label-fax-page-size']['de-at'] = "Seiten Format";
 $text['label-fax-page-size']['ro'] = "Mărime pagină";
 $text['label-fax-page-size']['he'] = "גודל דף";
+$text['label-fax-page-size']['ru-ru'] = "Размер Страницы";
 
 $text['label-fax-page']['en-us'] = "Page";
 $text['label-fax-page']['es-cl'] = "Página";
@@ -779,6 +843,7 @@ $text['label-fax-page']['de-de'] = "Seite";
 $text['label-fax-page']['de-at'] = "Seite";
 $text['label-fax-page']['ro'] = "Pagină";
 $text['label-fax-page']['he'] = "דף";
+$text['label-fax-page']['ru-ru'] = "Страница";
 
 $text['label-fax-number']['en-us'] = "Fax Number";
 $text['label-fax-number']['es-cl'] = "Número de Fax";
@@ -791,6 +856,7 @@ $text['label-fax-number']['de-de'] = "Fax Nummer";
 $text['label-fax-number']['de-at'] = "Fax Nummer";
 $text['label-fax-number']['ro'] = "Număr fax";
 $text['label-fax-number']['he'] = "מספר פקס";
+$text['label-fax-number']['ru-ru'] = "Fax Номер";
 
 $text['label-fax-message']['en-us'] = "Message";
 $text['label-fax-message']['es-cl'] = "Mensaje";
@@ -803,6 +869,7 @@ $text['label-fax-message']['de-de'] = "Nachricht";
 $text['label-fax-message']['de-at'] = "Nachricht";
 $text['label-fax-message']['ro'] = "Mesaj";
 $text['label-fax-message']['he'] = "הודעה";
+$text['label-fax-message']['ru-ru'] = "Сообщение";
 
 $text['label-fax-header']['en-us'] = "Header";
 $text['label-fax-header']['es-cl'] = "Header";
@@ -815,6 +882,7 @@ $text['label-fax-header']['de-de'] = "Kopfzeile";
 $text['label-fax-header']['de-at'] = "Kopfzeile";
 $text['label-fax-header']['ro'] = "Header";
 $text['label-fax-header']['he'] = "ראש עמוד";
+$text['label-fax-header']['ru-ru'] = "Заголовок";
 
 $text['label-fax-footer']['en-us'] = "Footer";
 $text['label-fax-footer']['es-cl'] = "Pie de Página";
@@ -827,6 +895,7 @@ $text['label-fax-footer']['de-de'] = "Fußzeile";
 $text['label-fax-footer']['de-at'] = "Fußzeile";
 $text['label-fax-footer']['ro'] = "Notă de subsol";
 $text['label-fax-footer']['he'] = "תחתית עמוד";
+$text['label-fax-footer']['ru-ru'] = "Нижняя сноска";
 
 $text['label-fax-fax']['en-us'] = "FAX";
 $text['label-fax-fax']['es-cl'] = "Facsímil";
@@ -839,6 +908,7 @@ $text['label-fax-fax']['de-de'] = "FAX";
 $text['label-fax-fax']['de-at'] = "FAX";
 $text['label-fax-fax']['ro'] = "FAX";
 $text['label-fax-fax']['he'] = "פקס";
+$text['label-fax-fax']['ru-ru'] = "FAX";
 
 $text['label-fax-cover-sheet']['en-us'] = "COVER SHEET";
 $text['label-fax-cover-sheet']['es-cl'] = "CARTA DE PRESENTACIÓN";
@@ -851,6 +921,7 @@ $text['label-fax-cover-sheet']['de-de'] = "DECKBLATT";
 $text['label-fax-cover-sheet']['de-at'] = "DECKBLATT";
 $text['label-fax-cover-sheet']['ro'] = "Copertă";
 $text['label-fax-cover-sheet']['he'] = "דף מקדים";
+$text['label-fax-cover-sheet']['ru-ru'] = "Титульный Лсист";
 
 $text['label-fax-attached']['en-us'] = "Attached";
 $text['label-fax-attached']['es-cl'] = "Adjunto";
@@ -863,6 +934,7 @@ $text['label-fax-attached']['de-de'] = "im Anhang";
 $text['label-fax-attached']['de-at'] = "im Anhang";
 $text['label-fax-attached']['ro'] = "Atașat";
 $text['label-fax-attached']['he'] = "מצורף";
+$text['label-fax-attached']['ru-ru'] = "Прикрепить";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
@@ -875,6 +947,7 @@ $text['label-extension']['de-de'] = "Durchwahl";
 $text['label-extension']['de-at'] = "Durchwahl";
 $text['label-extension']['ro'] = "Extensie";
 $text['label-extension']['he'] = "שלוחה";
+$text['label-extension']['ru-ru'] = "Extension";
 
 $text['label-email_size']['en-us'] = "Size";
 $text['label-email_size']['es-cl'] = "Tamaño";
@@ -887,6 +960,7 @@ $text['label-email_size']['de-de'] = "Größe";
 $text['label-email_size']['de-at'] = "Größe";
 $text['label-email_size']['ro'] = "Mărime";
 $text['label-email_size']['he'] = "גודל";
+$text['label-email_size']['ru-ru'] = "Размер";
 
 $text['label-email_remote_inbox']['en-us'] = "Remote Inbox";
 $text['label-email_remote_inbox']['es-cl'] = "Bandeja de Entrada Remota";
@@ -899,6 +973,7 @@ $text['label-email_remote_inbox']['de-de'] = "Entferntes Postfach";
 $text['label-email_remote_inbox']['de-at'] = "Entferntes Postfach";
 $text['label-email_remote_inbox']['ro'] = "Inbox la distanță";
 $text['label-email_remote_inbox']['he'] = "";
+$text['label-email_remote_inbox']['ru-ru'] = "Удаленный почтовый ящик";
 
 $text['label-email_received']['en-us'] = "Received";
 $text['label-email_received']['es-cl'] = "Recibido";
@@ -911,6 +986,7 @@ $text['label-email_received']['de-de'] = "Empfangen";
 $text['label-email_received']['de-at'] = "Empfangen";
 $text['label-email_received']['ro'] = "Recepționat";
 $text['label-email_received']['he'] = "התקבל";
+$text['label-email_received']['ru-ru'] = "Принято";
 
 $text['label-email_outbound_subject_tag']['en-us'] = "Subject Tag";
 $text['label-email_outbound_subject_tag']['es-cl'] = "Asunto Tag";
@@ -923,6 +999,7 @@ $text['label-email_outbound_subject_tag']['de-de'] = "Betreff Kennzeichnung";
 $text['label-email_outbound_subject_tag']['de-at'] = "Betreff Kennzeichnung";
 $text['label-email_outbound_subject_tag']['ro'] = "Etichetă subiect";
 $text['label-email_outbound_subject_tag']['he'] = "";
+$text['label-email_outbound_subject_tag']['ru-ru'] = "Подчеркнутый текст";
 
 $text['label-email_outbound_authorized_senders']['en-us'] = "Authorized Senders";
 $text['label-email_outbound_authorized_senders']['es-cl'] = "Los Remitentes Autorizados";
@@ -935,6 +1012,7 @@ $text['label-email_outbound_authorized_senders']['de-de'] = "Authorisierte Sende
 $text['label-email_outbound_authorized_senders']['de-at'] = "Authorisierte Sender";
 $text['label-email_outbound_authorized_senders']['ro'] = "Expeditori autorizați";
 $text['label-email_outbound_authorized_senders']['he'] = "";
+$text['label-email_outbound_authorized_senders']['ru-ru'] = "Авторизованные отправители";
 
 $text['label-email_inbound_subject_tag']['en-us'] = "Subject Tag";
 $text['label-email_inbound_subject_tag']['es-cl'] = "Asunto Tag";
@@ -947,6 +1025,7 @@ $text['label-email_inbound_subject_tag']['de-de'] = "Betreff Kennzeichnung";
 $text['label-email_inbound_subject_tag']['de-at'] = "Betreff Kennzeichnung";
 $text['label-email_inbound_subject_tag']['ro'] = "Etichetă subiect";
 $text['label-email_inbound_subject_tag']['he'] = "";
+$text['label-email_inouund_subject_tag']['ru-ru'] = "Подчеркнутый текст";
 
 $text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['es-cl'] = "Email-a-Fax";
@@ -959,6 +1038,7 @@ $text['label-email_email-to-fax']['de-de'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['de-at'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['ro'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['he'] = "פקס לאימייל";
+$text['label-email_email-to-fax']['ru-ru'] = "Email-на-Fax";
 
 $text['label-email_connection_validate']['en-us'] = "Validate Certificate";
 $text['label-email_connection_validate']['es-cl'] = "Validar Certificado";
@@ -971,6 +1051,7 @@ $text['label-email_connection_validate']['de-de'] = "Zertifikat validieren";
 $text['label-email_connection_validate']['de-at'] = "Zertifikat validieren";
 $text['label-email_connection_validate']['ro'] = "Validare certificat";
 $text['label-email_connection_validate']['he'] = "";
+$text['label-email_connection_validate']['ru-ru'] = "Подтвердить сертификат";
 
 $text['label-email_connection_username']['en-us'] = "Username";
 $text['label-email_connection_username']['es-cl'] = "Nombre de usuario";
@@ -983,6 +1064,7 @@ $text['label-email_connection_username']['de-de'] = "Benutzername";
 $text['label-email_connection_username']['de-at'] = "Benutzername";
 $text['label-email_connection_username']['ro'] = "Utilizator";
 $text['label-email_connection_username']['he'] = "שם משתמש";
+$text['label-email_connection_username']['ru-ru'] = "Имя пользователя";
 
 $text['label-email_connection_type']['en-us'] = "Type";
 $text['label-email_connection_type']['es-cl'] = "Tipo";
@@ -995,6 +1077,7 @@ $text['label-email_connection_type']['de-de'] = "Typ";
 $text['label-email_connection_type']['de-at'] = "Typ";
 $text['label-email_connection_type']['ro'] = "Tip";
 $text['label-email_connection_type']['he'] = "סוג";
+$text['label-email_connection_type']['ru-ru'] = "Тип";
 
 $text['label-email_connection_server']['en-us'] = "Server";
 $text['label-email_connection_server']['es-cl'] = "Servidor";
@@ -1007,6 +1090,7 @@ $text['label-email_connection_server']['de-de'] = "Server";
 $text['label-email_connection_server']['de-at'] = "Server";
 $text['label-email_connection_server']['ro'] = "Server";
 $text['label-email_connection_server']['he'] = "שרת";
+$text['label-email_connection_server']['ru-ru'] = "Сервер";
 
 $text['label-email_connection_security']['en-us'] = "Security";
 $text['label-email_connection_security']['es-cl'] = "seguridad";
@@ -1019,6 +1103,7 @@ $text['label-email_connection_security']['de-de'] = "Sicherheit";
 $text['label-email_connection_security']['de-at'] = "Sicherheit";
 $text['label-email_connection_security']['ro'] = "Securitate";
 $text['label-email_connection_security']['he'] = "";
+$text['label-email_connection_security']['ru-ru'] = "Безопасность";
 
 $text['label-email_connection_password']['en-us'] = "Password";
 $text['label-email_connection_password']['es-cl'] = "Contraseña";
@@ -1031,6 +1116,7 @@ $text['label-email_connection_password']['de-de'] = "Passwort";
 $text['label-email_connection_password']['de-at'] = "Passwort";
 $text['label-email_connection_password']['ro'] = "Parolă";
 $text['label-email_connection_password']['he'] = "סיסמא";
+$text['label-email_connection_password']['ru-ru'] = "Пароль";
 
 $text['label-email_connection_mailbox']['en-us'] = "Mailbox Folder";
 $text['label-email_connection_mailbox']['es-cl'] = "Carpeta Buzón";
@@ -1043,6 +1129,7 @@ $text['label-email_connection_mailbox']['de-de'] = "Mailbox Ordner";
 $text['label-email_connection_mailbox']['de-at'] = "Mailbox Ordner";
 $text['label-email_connection_mailbox']['ro'] = "Director mail";
 $text['label-email_connection_mailbox']['he'] = "";
+$text['label-email_connection_mailbox']['ru-ru'] = "Папка почтового ящика";
 
 $text['label-email_account_connection']['en-us'] = "Account Connection";
 $text['label-email_account_connection']['es-cl'] = "Conexión Cuenta";
@@ -1055,6 +1142,7 @@ $text['label-email_account_connection']['de-de'] = "Konto Verbindung";
 $text['label-email_account_connection']['de-at'] = "Konto Verbindung";
 $text['label-email_account_connection']['ro'] = "Setări conexiune";
 $text['label-email_account_connection']['he'] = "";
+$text['label-email_account_connection']['ru-ru'] = "Подключение к аккаунту";
 
 $text['label-email-fax']['en-us'] = "Fax";
 $text['label-email-fax']['es-cl'] = "Facsímil";
@@ -1067,6 +1155,7 @@ $text['label-email-fax']['de-de'] = "Fax";
 $text['label-email-fax']['de-at'] = "Fax";
 $text['label-email-fax']['ro'] = "Fax";
 $text['label-email-fax']['he'] = "פקס";
+$text['label-email-fax']['ru-ru'] = "Fax";
 
 $text['label-email']['en-us'] = "Email";
 $text['label-email']['es-cl'] = "E-mail";
@@ -1079,6 +1168,7 @@ $text['label-email']['de-de'] = "Email";
 $text['label-email']['de-at'] = "Email";
 $text['label-email']['ro'] = "Email";
 $text['label-email']['he'] = "אימייל";
+$text['label-email']['ru-ru'] = "Email";
 
 $text['label-destination-number']['en-us'] = "Destination Number";
 $text['label-destination-number']['es-cl'] = "Número de Destino";
@@ -1091,6 +1181,7 @@ $text['label-destination-number']['de-de'] = "Ziel Nummer";
 $text['label-destination-number']['de-at'] = "Ziel Nummer";
 $text['label-destination-number']['ro'] = "Număr destinație";
 $text['label-destination-number']['he'] = "מספר יעד";
+$text['label-destination-number']['ru-ru'] = "Номер Адресата";
 
 $text['label-caller-id-number']['en-us'] = "Caller ID Number";
 $text['label-caller-id-number']['es-cl'] = "Número de Caller ID";
@@ -1103,6 +1194,7 @@ $text['label-caller-id-number']['de-de'] = "Anruferkennung (Nummer)";
 $text['label-caller-id-number']['de-at'] = "Anruferkennung (Nummer)";
 $text['label-caller-id-number']['ro'] = "Număr Caller ID";
 $text['label-caller-id-number']['he'] = "";
+$text['label-caller-id-number']['ru-ru'] = "Caller ID Номер";
 
 $text['label-caller-id-name']['en-us'] = "Caller ID Name";
 $text['label-caller-id-name']['es-cl'] = "Nombre de Caller ID";
@@ -1114,6 +1206,7 @@ $text['label-caller-id-name']['sv-se'] = "Namnpresentation";
 $text['label-caller-id-name']['de-at'] = "Anruferkennung (Name)";
 $text['label-caller-id-name']['ro'] = "Nume Caller ID";
 $text['label-caller-id-name']['he'] = "";
+$text['label-caller-id-name']['ru-ru'] = "Caller ID Имя";
 
 $text['label-advanced_settings']['en-us'] = "Advanced Settings";
 $text['label-advanced_settings']['es-cl'] = "Configuración Avanzada";
@@ -1126,6 +1219,7 @@ $text['label-advanced_settings']['de-de'] = "Erweiterte Einstellungen";
 $text['label-advanced_settings']['de-at'] = "Erweiterte Einstellungen";
 $text['label-advanced_settings']['ro'] = "Setări avansate";
 $text['label-advanced_settings']['he'] = "הגדרות מתקדמות";
+$text['label-advanced_settings']['ru-ru'] = "Раширенные Настройки";
 
 $text['label-accountcode']['en-us'] = "Account Code";
 $text['label-accountcode']['es-cl'] = "Código de Cuenta";
@@ -1138,6 +1232,7 @@ $text['label-accountcode']['de-de'] = "Account Code";
 $text['label-accountcode']['de-at'] = "Account Code";
 $text['label-accountcode']['ro'] = "Cod cont";
 $text['label-accountcode']['he'] = "קוד חשבון";
+$text['label-accountcode']['ru-ru'] = "Код Аккаунта";
 
 $text['label-fax_send_greeting']['en-us'] = "Greeting";
 $text['label-fax_send_greeting']['es-cl'] = "";
@@ -1150,6 +1245,7 @@ $text['label-fax_send_greeting']['de-de'] = "Begrüßung";
 $text['label-fax_send_greeting']['de-at'] = "Begrüßung";
 $text['label-fax_send_greeting']['ro'] = "";
 $text['label-fax_send_greeting']['he'] = "";
+$text['label-fax_send_greeting']['ru-ru'] = "Приветствие";
 
 $text['label-fax_send_channels']['en-us'] = "Number of channels";
 $text['label-fax_send_channels']['es-cl'] = "";
@@ -1162,6 +1258,7 @@ $text['label-fax_send_channels']['de-de'] = "Anzahl der Kanäle";
 $text['label-fax_send_channels']['de-at'] = "Anzahl der Kanäle";
 $text['label-fax_send_channels']['ro'] = "";
 $text['label-fax_send_channels']['he'] = "";
+$text['label-fax_send_channels']['ru-ru'] = "Номер Канала";
 
 $text['header-sent']['en-us'] = "Sent Faxes";
 $text['header-sent']['es-cl'] = "Los Faxes Enviados";
@@ -1174,6 +1271,7 @@ $text['header-sent']['de-de'] = "Gesendete Faxe";
 $text['header-sent']['de-at'] = "Gesendete Faxe";
 $text['header-sent']['ro'] = "Faxuri trimise";
 $text['header-sent']['he'] = "פקסים שנשלחו";
+$text['header-sent']['ru-ru'] = "Передача Fax";
 
 $text['header-send']['en-us'] = "New Fax";
 $text['header-send']['es-cl'] = "Nueva Fax";
@@ -1186,6 +1284,7 @@ $text['header-send']['de-de'] = "Neues Fax";
 $text['header-send']['de-at'] = "Neues Fax";
 $text['header-send']['ro'] = "Fax nou";
 $text['header-send']['he'] = "פקס חדש";
+$text['header-send']['ru-ru'] = "Новый Fax";
 
 $text['header-inbox']['en-us'] = "Inbox";
 $text['header-inbox']['es-cl'] = "Bandeja de entrada";
@@ -1198,6 +1297,7 @@ $text['header-inbox']['de-de'] = "Eingang";
 $text['header-inbox']['de-at'] = "Eingang";
 $text['header-inbox']['ro'] = "Inbox";
 $text['header-inbox']['he'] = "";
+$text['header-inbox']['ru-ru'] = "Входящий";
 
 $text['header-fax_server_settings']['en-us'] = "Fax Server Settings";
 $text['header-fax_server_settings']['es-cl'] = "Configuración del Servidor de Fax";
@@ -1210,6 +1310,7 @@ $text['header-fax_server_settings']['de-de'] = "Fax Server Einstellungen";
 $text['header-fax_server_settings']['de-at'] = "Fax Server Einstellungen";
 $text['header-fax_server_settings']['ro'] = "Setări server Fax";
 $text['header-fax_server_settings']['he'] = "שרת פקסים הגדרות";
+$text['header-fax_server_settings']['ru-ru'] = "Настройки Fax Сервера";
 
 $text['description-user-add']['en-us'] = "Assign the users that can manage this fax extension.";
 $text['description-user-add']['es-cl'] = "Definir los usuarios que pueden administrar esta extensión de fax.";
@@ -1221,6 +1322,7 @@ $text['description-user-add']['sv-se'] = "Tilldela de användare som kan manager
 $text['description-user-add']['de-de'] = "Wählen Sie die Benutzer aus, die diese Fax Nebenstelle verwalten können.";
 $text['description-user-add']['ro'] = "Asignați utilizatori ce pot administra această extensie de fax";
 $text['description-user-add']['he'] = "";
+$text['description-user-add']['ru-ru'] = "Назначьте пользователей, которые могут управлять этим номером факса.";
 
 $text['description-pin']['en-us'] = "Enter the PIN number here.";
 $text['description-pin']['es-cl'] = "Ingrese el número PIN aquí.";
@@ -1233,6 +1335,7 @@ $text['description-pin']['de-de'] = "Geben Sie hier die PIN Nummer an.";
 $text['description-pin']['de-at'] = "Geben Sie hier die PIN Nummer an.";
 $text['description-pin']['ro'] = "Introduceți codul PIN aici.";
 $text['description-pin']['he'] = "";
+$text['description-pin']['ru-ru'] = "Введите здесь PIN-код.";
 
 $text['description-name']['en-us'] = "Enter the name here.";
 $text['description-name']['es-cl'] = "Ingrese el nombre aquí.";
@@ -1245,6 +1348,7 @@ $text['description-name']['de-de'] = "Geben Sie den Namen an";
 $text['description-name']['de-at'] = "Geben Sie den Namen an";
 $text['description-name']['ro'] = "Introduceți numele aici.";
 $text['description-name']['he'] = "הכנס את השם";
+$text['description-name']['ru-ru'] = "Введите здесь название.";
 
 $text['description-info']['en-us'] = "Enter the description here.";
 $text['description-info']['es-cl'] = "Ingrese una descripción aquí.";
@@ -1257,6 +1361,7 @@ $text['description-info']['de-de'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['de-at'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['ro'] = "Introduceți descrierea aici.";
 $text['description-info']['he'] = "הכנס תאור";
+$text['description-info']['ru-ru'] = "Введите описание здесь.";
 
 $text['description-forward-number']['en-us'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
 $text['description-forward-number']['es-cl'] = "Ingrese el número de desvío aquí. Utilizado para desviar el fax a una extensión registrada o un número externo.";
@@ -1269,6 +1374,7 @@ $text['description-forward-number']['de-de'] = "Geben Sie eine Nebenstelle oder 
 $text['description-forward-number']['de-at'] = "Geben Sie eine Nebenstelle oder externe Nummer ein, auf die eingehende Faxe weitergeleitet werden sollen.";
 $text['description-forward-number']['ro'] = "Introduceți numărul pentru redirecționare aici. Este folosit pentru a redirecționa faxul către o extensie înregistrată sau un număr extern.";
 $text['description-forward-number']['he'] = "";
+$text['description-forward-number']['ru-ru'] = "Введите здесь номер пересылки. Используется для пересылки факса на зарегистрированный внутренний или внешний номер.";
 
 $text['description-fax_uuid']['en-us'] = "FAX server primary key";
 $text['description-fax_uuid']['es-cl'] = "Seleccione el destino de fax para activar su detección";
@@ -1281,6 +1387,7 @@ $text['description-fax_uuid']['de-de'] = "Primärschlüssel des Fax Servers";
 $text['description-fax_uuid']['de-at'] = "Primärschlüssel des Fax Servers";
 $text['description-fax_uuid']['ro'] = "Cheia principală a serverului Fax";
 $text['description-fax_uuid']['he'] = "";
+$text['description-fax_uuid']['ru-ru'] = "Первичный код FAX Сервера.";
 
 $text['description-fax_uri']['en-us'] = "";
 $text['description-fax_uri']['es-cl'] = "";
@@ -1293,6 +1400,7 @@ $text['description-fax_uri']['de-de'] = "";
 $text['description-fax_uri']['de-at'] = "";
 $text['description-fax_uri']['ro'] = "";
 $text['description-fax_uri']['he'] = "";
+$text['description-fax_uri']['ru-ru'] = "";
 
 $text['description-fax_transfer_rate']['en-us'] = "";
 $text['description-fax_transfer_rate']['es-cl'] = "";
@@ -1305,6 +1413,7 @@ $text['description-fax_transfer_rate']['de-de'] = "";
 $text['description-fax_transfer_rate']['de-at'] = "";
 $text['description-fax_transfer_rate']['ro'] = "";
 $text['description-fax_transfer_rate']['he'] = "";
+$text['description-fax_transfer_rate']['ru-ru'] = "";
 
 $text['description-fax_success']['en-us'] = "";
 $text['description-fax_success']['es-cl'] = "";
@@ -1317,6 +1426,7 @@ $text['description-fax_success']['de-de'] = "";
 $text['description-fax_success']['de-at'] = "";
 $text['description-fax_success']['ro'] = "";
 $text['description-fax_success']['he'] = "";
+$text['description-fax_success']['ru-ru'] = "";
 
 $text['description-fax_retry_sleep']['en-us'] = "";
 $text['description-fax_retry_sleep']['es-cl'] = "";
@@ -1329,6 +1439,7 @@ $text['description-fax_retry_sleep']['de-de'] = "";
 $text['description-fax_retry_sleep']['de-at'] = "";
 $text['description-fax_retry_sleep']['ro'] = "";
 $text['description-fax_retry_sleep']['he'] = "";
+$text['description-fax_retry_sleep']['ru-ru'] = "";
 
 $text['description-fax_retry_limit']['en-us'] = "";
 $text['description-fax_retry_limit']['es-cl'] = "";
@@ -1389,6 +1500,7 @@ $text['description-fax_prefix']['de-de'] = "Geben Sie ein Präfix an, das bei au
 $text['description-fax_prefix']['de-at'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll.";
 $text['description-fax_prefix']['ro'] = "Introduceți un prefix ce va fi folosit pentru a trimite fax.";
 $text['description-fax_prefix']['he'] = "";
+$text['description-fax_prefix']['ru-ru'] = "Введите префикс, который будет использоваться при отправке факса..";
 
 $text['description-fax_number']['en-us'] = "Fax destination number";
 $text['description-fax_number']['es-cl'] = "Número de destino de fax";
@@ -1401,6 +1513,7 @@ $text['description-fax_number']['de-de'] = "Fax Zielnummer";
 $text['description-fax_number']['de-at'] = "Fax Zielnummer";
 $text['description-fax_number']['ro'] = "Numărul de fax al destinației";
 $text['description-fax_number']['he'] = "";
+$text['description-fax_number']['ru-ru'] = "FAX номер адресата";
 
 $text['description-fax_mode']['en-us'] = "RX means receive and TX means transmit.";
 $text['description-fax_mode']['es-cl'] = "Medios RX reciben y TX significa Transmisión.";
@@ -1413,6 +1526,7 @@ $text['description-fax_mode']['de-de'] = "RX bedeutet empfangen und TX bedeutet 
 $text['description-fax_mode']['de-at'] = "RX bedeutet empfangen und TX bedeutet senden.";
 $text['description-fax_mode']['ro'] = "RX înseamnă recepție și TX înseamnă transmisie";
 $text['description-fax_mode']['he'] = "";
+$text['description-fax_mode']['ru-ru'] = "RX означает прием, а TX означает передачу.";
 
 $text['description-fax_log']['en-us'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
 $text['description-fax_log']['es-cl'] = "Los detalles para el envío y recepción de faxes se incluyen si fax se ha realizado correctamente, ECM (Modo de Corrección de Errores), número de reintentos, número de destino, fecha, etc.";
@@ -1425,6 +1539,7 @@ $text['description-fax_log']['de-de'] = "Die angeführten Details für gesendete
 $text['description-fax_log']['de-at'] = "Die angeführten Details für gesendete und empfangende Faxe sind entweder Fax erfolgreich gesendet, ECM (Error Correction Mode), Anzahl der Versuche, Zielnummer, Datum, etc...";
 $text['description-fax_log']['ro'] = "Detaliile pentru recepția și transmisia fax includ ECM (Mod Corecție Erori), numărul de încercări, numărul destinației, data, succes, etc.";
 $text['description-fax_log']['he'] = "";
+$text['description-fax_log']['ru-ru'] = "Детали отправки и получения включенного факса: успешность факсимильного сообщения, ECM (режим коррекции ошибок), количество повторных попыток, номер пункта назначения, дата и т.д.";
 
 $text['description-fax_local_station_id']['en-us'] = "";
 $text['description-fax_local_station_id']['es-cl'] = "";
@@ -1473,6 +1588,7 @@ $text['description-fax_files']['de-de'] = "Wählen Sie die Datei(en) zum senden.
 $text['description-fax_files']['de-at'] = "Wählen Sie die Datei(en) zum senden.";
 $text['description-fax_files']['ro'] = "";
 $text['description-fax_files']['he'] = "";
+$text['description-fax_files']['ru-ru'] = "Выберите файл (файлы) для загрузки и отправки.";
 
 $text['description-fax_file_type']['en-us'] = "TIF / PDF";
 $text['description-fax_file_type']['es-cl'] = "TIF / PDF";
@@ -1485,6 +1601,7 @@ $text['description-fax_file_type']['de-de'] = "TIF / PDF";
 $text['description-fax_file_type']['de-at'] = "TIF / PDF";
 $text['description-fax_file_type']['ro'] = "TIF/PDF";
 $text['description-fax_file_type']['he'] = "TIF / PDF";
+$text['description-fax_file_type']['ru-ru'] = "TIF / PDF";
 
 $text['description-fax_file_path']['en-us'] = "";
 $text['description-fax_file_path']['es-cl'] = "";
@@ -1509,6 +1626,7 @@ $text['description-fax_file']['de-de'] = "FAX Dateien";
 $text['description-fax_file']['de-at'] = "FAX Dateien";
 $text['description-fax_file']['ro'] = "Fișiere Fax";
 $text['description-fax_file']['he'] = "";
+$text['description-fax_file']['ru-ru'] = "FAX Файлы";
 
 $text['description-fax_epoch']['en-us'] = "";
 $text['description-fax_epoch']['es-cl'] = "";
@@ -1629,6 +1747,7 @@ $text['description-fax-subject']['de-de'] = "Geben Sie einen Betreff für das De
 $text['description-fax-subject']['de-at'] = "Geben Sie einen Betreff für das Deckblatt an (optional).";
 $text['description-fax-subject']['ro'] = "Introduceți un subiect pentru copertă (opțional).";
 $text['description-fax-subject']['he'] = "";
+$text['description-fax-subject']['ru-ru'] = "Введите тему титульного листа (опционально).";
 
 $text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover sheet (optional).";
 $text['description-fax-sender']['es-cl'] = "Introduzca el nombre del remitente para la portada (opcional).";
@@ -1641,6 +1760,7 @@ $text['description-fax-sender']['de-de'] = "Geben Sie den Namen des Senders für
 $text['description-fax-sender']['de-at'] = "Geben Sie den Namen des Senders für das Deckblatt an (optional).";
 $text['description-fax-sender']['ro'] = "Introduceți numele expeditorului pentru copertă (opțional).";
 $text['description-fax-sender']['he'] = "";
+$text['description-fax-sender']['ru-ru'] = "Введите имя отправителя для титульного листа (опционально).";
 
 $text['description-fax-resolution']['en-us'] = "Select the transmission quality.";
 $text['description-fax-resolution']['es-cl'] = "Seleccione la calidad de la transmisión.";
@@ -1653,6 +1773,7 @@ $text['description-fax-resolution']['de-de'] = "Wählen Sie die Übertragungsqua
 $text['description-fax-resolution']['de-at'] = "Wählen Sie die Übertragungsqualität.";
 $text['description-fax-resolution']['ro'] = "Selectați calitatea rezoluției.";
 $text['description-fax-resolution']['he'] = "";
+$text['description-fax-resolution']['ru-ru'] = "Выберите качество передачи.";
 
 $text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover sheet (optional).";
 $text['description-fax-recipient']['es-cl'] = "Introduzca el nombre del destinatario de la portada (opcional).";
@@ -1665,6 +1786,7 @@ $text['description-fax-recipient']['de-de'] = "Geben Sie den Namen des Empfänge
 $text['description-fax-recipient']['de-at'] = "Geben Sie den Namen des Empfängers für das Deckblatt an (optional).";
 $text['description-fax-recipient']['ro'] = "Introduceți numele destinatarului pentru copertă (opțional).";
 $text['description-fax-recipient']['he'] = "";
+$text['description-fax-recipient']['ru-ru'] = "Введите имя получателя для титульного листа (опционально).";
 
 $text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
 $text['description-fax-page-size']['es-cl'] = "Seleccione el tamaño de página de transmitir.";
@@ -1677,6 +1799,7 @@ $text['description-fax-page-size']['de-de'] = "Wählen Sie die Seitengröße aus
 $text['description-fax-page-size']['de-at'] = "Wählen Sie die Seitengröße aus.";
 $text['description-fax-page-size']['ro'] = "Selectați mărimea paginii.";
 $text['description-fax-page-size']['he'] = "";
+$text['description-fax-page-size']['ru-ru'] = "Выберите размер страницы для передачи.";
 
 $text['description-fax-number']['en-us'] = "Enter the recipient fax number(s).";
 $text['description-fax-number']['es-cl'] = "Introduzca el número(s) de fax del destinatario.";
@@ -1689,6 +1812,7 @@ $text['description-fax-number']['de-de'] = "Geben Sie die Zielnummern für das F
 $text['description-fax-number']['de-at'] = "Geben Sie die Zielnummern für das Fax ein.";
 $text['description-fax-number']['ro'] = "Introduceți numărul (numerele) de fax al destinatarului.";
 $text['description-fax-number']['he'] = "";
+$text['description-fax-number']['ru-ru'] = "Введите номер (номера) получателя факса.";
 
 $text['description-fax-message']['en-us'] = "Enter a message for the cover sheet (optional).";
 $text['description-fax-message']['es-cl'] = "Escriba un mensaje para la portada (opcional).";
@@ -1701,6 +1825,7 @@ $text['description-fax-message']['de-de'] = "Geben Sie eine Nachricht für das D
 $text['description-fax-message']['de-at'] = "Geben Sie eine Nachricht für das Deckblatt an (optional).";
 $text['description-fax-message']['ro'] = "Introduceți un mesaj pentru copertă (opțional).";
 $text['description-fax-message']['he'] = "";
+$text['description-fax-message']['ru-ru'] = "Введите сообщение для титульного листа (опционально).";
 
 $text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
 $text['description-fax-header']['es-cl'] = "Aparece debajo del logotipo en la cabecera de la portada (opcional).";
@@ -1713,6 +1838,7 @@ $text['description-fax-header']['de-de'] = "Wird unter dem Logo am Deckblatt ang
 $text['description-fax-header']['de-at'] = "Wird unter dem Logo am Deckblatt angezeigt (optional).";
 $text['description-fax-header']['ro'] = "";
 $text['description-fax-header']['he'] = "";
+$text['description-fax-header']['ru-ru'] = "Отображается под логотипом в заголовке титульного листа (опционально).";
 
 $text['description-fax-footer']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
 $text['description-fax-footer']['es-cl'] = "Se muestra en el pie de página de la portada (opcional).";
@@ -1725,6 +1851,7 @@ $text['description-fax-footer']['de-de'] = "Wird in der Fußzeile auf dem Deckbl
 $text['description-fax-footer']['de-at'] = "Wird in der Fußzeile auf dem Deckblatt angezeigt (optional).";
 $text['description-fax-footer']['ro'] = "";
 $text['description-fax-footer']['he'] = "";
+$text['description-fax-footer']['ru-ru'] = "Отображается в нижнем колонтитуле титульного листа (опционально).";
 
 $text['description-extension']['en-us'] = "Enter the fax extension here.";
 $text['description-extension']['es-cl'] = "Ingrese la extensión de fax aquí.";
@@ -1737,6 +1864,7 @@ $text['description-extension']['de-de'] = "Geben Sie die Fax Nebenstelle hier an
 $text['description-extension']['de-at'] = "Geben Sie die Fax Nebenstelle hier an.";
 $text['description-extension']['ro'] = "Introduceți extensia de fax aici.";
 $text['description-extension']['he'] = "";
+$text['description-extension']['ru-ru'] = "Введите здесь номер факса.";
 
 $text['description-email_outbound_subject_tag']['en-us'] = "Set the email subject tag for outbound faxes.";
 $text['description-email_outbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes salientes.";
@@ -1749,6 +1877,7 @@ $text['description-email_outbound_subject_tag']['de-de'] = "Geben Sie den Email 
 $text['description-email_outbound_subject_tag']['de-at'] = "Geben Sie den Email Betreff für ausgehende Faxe an.";
 $text['description-email_outbound_subject_tag']['ro'] = "";
 $text['description-email_outbound_subject_tag']['he'] = "";
+$text['description-email_outbound_subject_tag']['ru-ru'] = "Установите email темы сообщения для исходящих факсов.";
 
 $text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
 $text['description-email_outbound_authorized_senders']['es-cl'] = "Definir la dirección de correo electrónico(es) pueden enviar faxes a través de este servidor.";
@@ -1761,6 +1890,7 @@ $text['description-email_outbound_authorized_senders']['de-de'] = "Geben Sie die
 $text['description-email_outbound_authorized_senders']['de-at'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen.";
 $text['description-email_outbound_authorized_senders']['ro'] = "";
 $text['description-email_outbound_authorized_senders']['he'] = "";
+$text['description-email_outbound_authorized_senders']['ru-ru'] = "Укажите адрес электронной почты, с помощью которого можно отправлять факсы через этот сервер.";
 
 $text['description-email_inbound_subject_tag']['en-us'] = "Set the email subject tag for inbound faxes.";
 $text['description-email_inbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes entrantes.";
@@ -1773,6 +1903,7 @@ $text['description-email_inbound_subject_tag']['de-de'] = "Setzen Sie den Email 
 $text['description-email_inbound_subject_tag']['de-at'] = "Setzen Sie den Email Betreff für eingehende Faxe.";
 $text['description-email_inbound_subject_tag']['ro'] = "";
 $text['description-email_inbound_subject_tag']['he'] = "";
+$text['description-email_inbound_subject_tag']['ru-ru'] = "Установите email сообщения для входящих факсов.";
 
 $text['description-email_connection_validate']['en-us'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
 $text['description-email_connection_validate']['es-cl'] = "Activar la validación del certificado del servidor.<br>(Seleccione 'Falso' para certificados con firma.)";
@@ -1785,6 +1916,7 @@ $text['description-email_connection_validate']['de-de'] = "Server Zertifikat Val
 $text['description-email_connection_validate']['de-at'] = "Server Zertifikat Validierung einschalten. (Wählen Sie 'Aus' für selbst signierte Zertifikate)";
 $text['description-email_connection_validate']['ro'] = "";
 $text['description-email_connection_validate']['he'] = "";
+$text['description-email_connection_validate']['ru-ru'] = "Включить проверку сертификата сервера.<br>(Выберете 'False' для самозаверяющих сертифткатов.)";
 
 $text['description-email_connection_username']['en-us'] = "Enter the authentication username.";
 $text['description-email_connection_username']['es-cl'] = "Introduzca el nombre de usuario de autenticación.";
@@ -1797,6 +1929,7 @@ $text['description-email_connection_username']['de-de'] = "Geben Sie den Benutze
 $text['description-email_connection_username']['de-at'] = "Geben Sie den Benutzernamen ein.";
 $text['description-email_connection_username']['ro'] = "";
 $text['description-email_connection_username']['he'] = "";
+$text['description-email_connection_username']['ru-ru'] = "Введите имя пользователя для аутентификации.";
 
 $text['description-email_connection_type']['en-us'] = "Select the type of connection.";
 $text['description-email_connection_type']['es-cl'] = "Seleccione el tipo de conexión.";
@@ -1809,6 +1942,7 @@ $text['description-email_connection_type']['de-de'] = "Wählen Sie den Verbindun
 $text['description-email_connection_type']['de-at'] = "Wählen Sie den Verbindungstyp.";
 $text['description-email_connection_type']['ro'] = "";
 $text['description-email_connection_type']['he'] = "";
+$text['description-email_connection_type']['ru-ru'] = "Выберите тип соединения.";
 
 $text['description-email_connection_server']['en-us'] = "Enter the host address and port.";
 $text['description-email_connection_server']['es-cl'] = "Introduzca la dirección de host y el puerto.";
@@ -1821,6 +1955,7 @@ $text['description-email_connection_server']['de-de'] = "Geben Sie Server Addres
 $text['description-email_connection_server']['de-at'] = "Geben Sie Server Addresse und Port an.";
 $text['description-email_connection_server']['ro'] = "";
 $text['description-email_connection_server']['he'] = "";
+$text['description-email_connection_server']['ru-ru'] = "Введите адрес и порт хоста.";
 
 $text['description-email_connection_security']['en-us'] = "Select the required security.";
 $text['description-email_connection_security']['es-cl'] = "Seleccione la seguridad requerida.";
@@ -1833,6 +1968,7 @@ $text['description-email_connection_security']['de-de'] = "Wählen Sie die nöti
 $text['description-email_connection_security']['de-at'] = "Wählen Sie die nötige Verschlüsselung.";
 $text['description-email_connection_security']['ro'] = "";
 $text['description-email_connection_security']['he'] = "";
+$text['description-email_connection_security']['ru-ru'] = "Выберите требуемую безопасность.";
 
 $text['description-email_connection_password']['en-us'] = "Enter the authentication password.";
 $text['description-email_connection_password']['es-cl'] = "Introduzca la contraseña de autenticación.";
@@ -1845,6 +1981,7 @@ $text['description-email_connection_password']['de-de'] = "Geben Sie das Passwor
 $text['description-email_connection_password']['de-at'] = "Geben Sie das Passwort ein.";
 $text['description-email_connection_password']['ro'] = "";
 $text['description-email_connection_password']['he'] = "";
+$text['description-email_connection_password']['ru-ru'] = "Введите пароль для аутентификации.";
 
 $text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to monitor.";
 $text['description-email_connection_mailbox']['es-cl'] = "Escriba el nombre de la carpeta remota para monitorear.";
@@ -1857,6 +1994,7 @@ $text['description-email_connection_mailbox']['de-de'] = "Geben Sie den Email Or
 $text['description-email_connection_mailbox']['de-at'] = "Geben Sie den Email Ordner an, der überwacht werden soll (optional).";
 $text['description-email_connection_mailbox']['ro'] = "";
 $text['description-email_connection_mailbox']['he'] = "";
+$text['description-email_connection_mailbox']['ru-ru'] = "Введите имя удаленной папки для контроля.";
 
 $text['description-email']['en-us'] = "Enter a delivery address for inbound faxes.";
 $text['description-email']['es-cl'] = "Ingrese la dirección de email para enviar el fax.";
@@ -1869,6 +2007,7 @@ $text['description-email']['de-de'] = "Geben Sie eine Zustelladdresse für einge
 $text['description-email']['de-at'] = "Geben Sie eine Zustelladdresse für eingehende Faxe ein.";
 $text['description-email']['ro'] = "";
 $text['description-email']['he'] = "";
+$text['description-email']['ru-ru'] = "Введите адрес доставки входящих факсов.";
 
 $text['description-destination-number']['en-us'] = "Enter the fax destination number.";
 $text['description-destination-number']['es-cl'] = "Ingrese el número de fax de destino.";
@@ -1881,6 +2020,7 @@ $text['description-destination-number']['de-de'] = "Geben Sie die Fax Zielnummer
 $text['description-destination-number']['de-at'] = "Geben Sie die Fax Zielnummer ein.";
 $text['description-destination-number']['ro'] = "";
 $text['description-destination-number']['he'] = "";
+$text['description-destination-number']['ru-ru'] = "Введите номер получателя факса.";
 
 $text['description-caller-id-number']['en-us'] = "Enter the Caller ID number here.";
 $text['description-caller-id-number']['es-cl'] = "Ingrese el número de Caller ID aquí.";
@@ -1893,6 +2033,7 @@ $text['description-caller-id-number']['de-de'] = "Geben Sie die Anruferkennung (
 $text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
 $text['description-caller-id-number']['ro'] = "";
 $text['description-caller-id-number']['he'] = "";
+$text['description-caller-id-number']['ru-ru'] = "Введите номер вызывающего абонента здесь.";
 
 $text['description-caller-id-name']['en-us'] = "Enter the Caller ID name here.";
 $text['description-caller-id-name']['es-cl'] = "Ingrese el nombre de Caller ID aquí.";
@@ -1905,6 +2046,7 @@ $text['description-caller-id-name']['de-de'] = "Geben Sie die Anruferkennung (Na
 $text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein.";
 $text['description-caller-id-name']['ro'] = "";
 $text['description-caller-id-name']['he'] = "";
+$text['description-caller-id-name']['ru-ru'] = "Введите здесь имя вызывающего абонента.";
 
 $text['description-advanced_settings']['en-us'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
 $text['description-advanced_settings']['es-cl'] = "Configure las opciones de abajo para permitir que la bandeja de entrada remota y funcionalidad-Email-a-Fax.";
@@ -1917,6 +2059,7 @@ $text['description-advanced_settings']['de-de'] = "Konfigurieren Sie die Einstel
 $text['description-advanced_settings']['de-at'] = "Konfigurieren Sie die Einstellungen unten um ein Externes Email Postfach und/oder die Email-to-Fax Funktion zu aktivieren.";
 $text['description-advanced_settings']['ro'] = "";
 $text['description-advanced_settings']['he'] = "";
+$text['description-advanced_settings']['ru-ru'] = "Настройте параметры ниже, чтобы включить функцию Email-на-Fax.";
 
 $text['description-3']['en-us'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
 $text['description-3']['es-cl'] = "Instalar LibreOffice de apoyo adicional de formato de archivo (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, ...). Ver el estado de una transmisión de fax en la página de llamadas activas, el Visor de registro, o por ver los resultados en la consola del switch.";
@@ -1929,6 +2072,7 @@ $text['description-3']['de-de'] = "LibreOffice muss installiert sein um weitere 
 $text['description-3']['de-at'] = "LibreOffice muss installiert sein um weitere Dateiformate zu unterstützen (doc, docx, xls, xlsx, odt, ott, rtf, etc...). Den Status der Fax Übertragung können Sie auf der Seite Aktive Gespräche, in den Logs oder in der Switch Konsole beobachten.";
 $text['description-3']['ro'] = "";
 $text['description-3']['he'] = "";
+$text['description-3']['ru-ru'] = "Установите LibreOffice для дополнительной поддержки форматов файлов (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, и т.д.). Вы можете посмотреть результаты во вкладке Логи.";
 
 $text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
 $text['description-2']['es-cl'] = "Para enviar un fax, cargar un archivo <strong>PDF</strong> o <strong>TIF</strong>.  Para generar una hoja de presentación, escriba un asunto y / o mensaje a continuación.";
@@ -1941,6 +2085,7 @@ $text['description-2']['de-de'] = "Um ein Fax zu senden, laden Sie eine PDF oder
 $text['description-2']['de-at'] = "Um ein Fax zu senden, laden Sie eine PDF oder eine TIF Datei hoch. Um ein Deckblatt zu generieren, geben Sie einen Betreff und/oder eine Nachricht unten an.";
 $text['description-2']['ro'] = "";
 $text['description-2']['he'] = "";
+$text['description-2']['ru-ru'] = "Чтобы послать факс, загрузите <strong>PDF</strong> или <strong>TIF</strong> файл. Чтобы изготовить титульный лист, войдите Субъект и/или сообщение ниже.";
 
 $text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después dirija el tráfico entrante a esta.'";
@@ -1953,6 +2098,7 @@ $text['description']['de-de'] = "Um ein Fax zu empfangen konfigurieren Sie eine 
 $text['description']['de-at'] = "Um ein Fax zu empfangen konfigurieren Sie eine Fax Nebenstelle und leiten eingehende Gespräche auf diese Nebenstelle um.";
 $text['description']['ro'] = "Editare cont";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+$text['description']['ru-ru'] = "Чтобы получить факс, настройте номер факса и затем направьте входящие на него.";
 
 $text['confirm-update']['en-us'] = "Update Complete";
 $text['confirm-update']['es-cl'] = "Actualización Completada";
@@ -1965,6 +2111,7 @@ $text['confirm-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['ro'] = "Actualizare completă";
 $text['confirm-update']['he'] = "עידכון הושלם";
+$text['confirm-update']['ru-ru'] = "Обновление Завершено";
 
 $text['confirm-fax']['en-us'] = "Please provide: A file to Fax";
 $text['confirm-fax']['es-cl'] = "Por favor insique: un archivo para enviar vía fax.";
@@ -1977,6 +2124,7 @@ $text['confirm-fax']['de-de'] = "Bitte laden Sie ein Fax hoch.";
 $text['confirm-fax']['de-at'] = "Bitte laden Sie ein Fax hoch.";
 $text['confirm-fax']['ro'] = "";
 $text['confirm-fax']['he'] = "";
+$text['confirm-fax']['ru-ru'] = "Предоставьте: файл для факса";
 
 $text['confirm-ext']['en-us'] = "Por favor indique: Extensión";
 $text['confirm-ext']['pt-pt'] = "Por favor indique: Extensão";
@@ -1989,6 +2137,7 @@ $text['confirm-ext']['de-de'] = "Bitte geben Sie eine Nebenstelle an.";
 $text['confirm-ext']['de-at'] = "Bitte geben Sie eine Nebenstelle an.";
 $text['confirm-ext']['ro'] = "";
 $text['confirm-ext']['he'] = "";
+$text['confirm-ext']['ru-ru'] = "Пожалуйста, укажите: Номер";
 
 $text['confirm-copy-info']['en-us'] = "Do you really want to copy this?";
 $text['confirm-copy-info']['es-cl'] = "¿Desea realmente copiar esto?";
@@ -2001,6 +2150,7 @@ $text['confirm-copy-info']['de-de'] = "Wollen Sie das wirklich kopieren?";
 $text['confirm-copy-info']['de-at'] = "Wollen Sie das wirklich kopieren?";
 $text['confirm-copy-info']['ro'] = "";
 $text['confirm-copy-info']['he'] = "";
+$text['confirm-copy-info']['ru-ru'] = "Вы действительно хотите скопировать это?";
 
 $text['confirm-copy']['en-us'] = "Copy Complete";
 $text['confirm-copy']['es-cl'] = "Copia Completada";
@@ -2013,6 +2163,7 @@ $text['confirm-copy']['de-de'] = "Erfolgreich kopiert";
 $text['confirm-copy']['de-at'] = "Erfolgreich kopiert";
 $text['confirm-copy']['ro'] = "Copiere completă";
 $text['confirm-copy']['he'] = "העתקה הושלמה";
+$text['confirm-copy']['ru-ru'] = "Копирвание завершено";
 
 $text['confirm-add']['en-us'] = "Add Complete";
 $text['confirm-add']['es-cl'] = "Agregar Completado";
@@ -2025,6 +2176,7 @@ $text['confirm-add']['de-de'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['ro'] = "Adăugare completă";
 $text['confirm-add']['he'] = "הוספה הושלמה";
+$text['confirm-add']['ru-ru'] = "Добавление Выполнено";
 
 $text['button-settings']['en-us'] = "Settings";
 $text['button-settings']['es-cl'] = "Configuraciones";
@@ -2037,6 +2189,7 @@ $text['button-settings']['de-de'] = "Einstellungen";
 $text['button-settings']['de-at'] = "Einstellungen";
 $text['button-settings']['ro'] = "Setări";
 $text['button-settings']['he'] = "הגדרות";
+$text['button-settings']['ru-ru'] = "Настройки";
 
 $text['button-send']['en-us'] = "Send";
 $text['button-send']['es-cl'] = "Enviar";
@@ -2049,6 +2202,7 @@ $text['button-send']['de-de'] = "Senden";
 $text['button-send']['de-at'] = "Senden";
 $text['button-send']['ro'] = "Trimite";
 $text['button-send']['he'] = "נשלח";
+$text['button-send']['ru-ru'] = "Передача";
 
 $text['button-preview']['en-us'] = "Preview";
 $text['button-preview']['es-cl'] = "Prevista";
@@ -2061,6 +2215,7 @@ $text['button-preview']['de-de'] = "Vorschau";
 $text['button-preview']['de-at'] = "Vorschau";
 $text['button-preview']['ro'] = "Previzualizare";
 $text['button-preview']['he'] = "תצוגה מקדימה";
+$text['button-preview']['ru-ru'] = "Предпросмотр";
 
 $text['button-show_all']['en-us'] = "Show All";
 $text['button-show_all']['es-cl'] = "Mostrar Todos";
@@ -2072,53 +2227,66 @@ $text['button-show_all']['uk'] = "Показати всі";
 $text['button-show_all']['de-de'] = "Alle anzeigen";
 $text['button-show_all']['de-at'] = "Alle anzeigen";
 $text['button-show_all']['he'] = "";
+$text['button-show_all']['ru-ru'] = "Посмотреть Все";
 
 $text['fax-active_title']['en-us'] = "Fax queue";
 $text['fax-active_title']['de-de'] = "Fax Warteschlange";
 $text['fax-active_title']['de-at'] = "Fax Warteschlange";
+$text['fax-active_title']['ru-ru'] = "Fax очередь";
 
 $text['fax-active_description']['en-us'] = "Current status of fax queue";
 $text['fax-active_description']['de-de'] = "Aktueller Status der Fax Warteschlange";
 $text['fax-active_description']['de-at'] = "Aktueller Status der Fax Warteschlange";
+$text['fax-active_description']['ru-ru'] = "Текущий статус fax очереди";
 
 $text['fax-active_title_fax_server']['en-us'] = "Fax";
 $text['fax-active_title_fax_server']['de-de'] = "Fax";
 $text['fax-active_title_fax_server']['de-AT'] = "Fax";
+$text['fax-active_title_fax_server']['ru-ru'] = "Fax";
 
 $text['fax-active_title_enabled']['en-us'] = "Enabled";
 $text['fax-active_title_enabled']['de-de'] = "Aktiviert";
 $text['fax-active_title_enabled']['de-at'] = "Aktiviert";
+$text['fax-active_title_enabled']['ru-ru'] = "Включено";
 
 $text['fax-active_title_status']['en-us'] = "Status";
 $text['fax-active_title_status']['de-de'] = "Status";
 $text['fax-active_title_status']['de-at'] = "Status";
+$text['fax-active_title_enabled']['ru-ru'] = "Включено";
 
 $text['fax-active_title_next_time']['en-us'] = "Next time";
 $text['fax-active_title_next_time']['de-de'] = "Nächstes mal";
 $text['fax-active_title_next_time']['de-at'] = "Nächstes mal";
+$text['fax-active_title_next_time']['ru-ru'] = "Следующее время";
 
 $text['fax-active_title_files']['en-us'] = "Files";
 $text['fax-active_title_files']['de-de'] = "Dateien";
 $text['fax-active_title_files']['de-at'] = "Dateien";
+$text['fax-active_title_files']['ru-ru'] = "Файлы";
 
 $text['fax-active_title_uri']['en-us'] = "URI";
 $text['fax-active_title_uri']['de-de'] = "URI";
 $text['fax-active_title_uri']['de-at'] = "URI";
+$text['fax-active_title_uri']['ru-ru'] = "URI";
 
 $text['fax-active_status_wait']['en-us'] = "Wait";
 $text['fax-active_status_wait']['de-de'] = "Warte";
 $text['fax-active_status_wait']['de-at'] = "Warte";
+$text['fax-active_status_wait']['ru-ru'] = "Ожидайте";
 
 $text['fax-active_status_execute']['en-us'] = "Execute";
 $text['fax-active_status_execute']['de-de'] = "Ausführen";
 $text['fax-active_status_execute']['de-de'] = "Ausführen";
+$text['fax-active_status_execute']['ru-ru'] = "Выполнить";
 
 $text['fax-active_status_success']['en-us'] = "Success";
 $text['fax-active_status_success']['de-de'] = "Erfolgreich";
 $text['fax-active_status_success']['de-at'] = "Erfolgreich";
+$text['fax-active_status_success']['ru-ru'] = "Успешно";
 
 $text['fax-active_status_fail']['en-us'] = "Fail";
 $text['fax-active_status_fail']['de-de'] = "Fehlgeschlagen";
 $text['fax-active_status_fail']['de-at'] = "Fehlgeschlagen";
+$text['fax-active_status_fail']['ru-ru'] = "Ошибка";
 
 ?>
