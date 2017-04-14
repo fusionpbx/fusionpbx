@@ -267,7 +267,7 @@
 
 				//build the data array
 					if (!isset($range)) { $range = 1; }
-					for ($i=0; $i<=$range; $i++) {
+					for ($i=0; $i<$range; $i++) {
 
 						//check if the extension exists
 							if ($action == "add" && extension_exists($extension)) {
@@ -368,8 +368,6 @@
 									$array["extensions"][$i]["enabled"] = $enabled;
 									$array["extensions"][$i]["description"] = $description;
 
-								//increment the row id
-									$i++;
 							}
 
 						//add or update voicemail
@@ -402,6 +400,7 @@
 											$array["voicemails"][$i]["domain_uuid"] = $domain_uuid;
 											$array["voicemails"][$i]["voicemail_uuid"] = $voicemail_uuid;
 											$array["voicemails"][$i]["voicemail_id"] = $voicemail_id;
+
 											$array["voicemails"][$i]["voicemail_password"] = $voicemail_password;
 											//$array["voicemails"][$i]["greeting_id"] = $greeting_id;
 											//$array["voicemails"][$i]["voicemail_alternate_greet_id"] = $alternate_greet_id;
