@@ -2209,10 +2209,11 @@
 		$vendors[$y]['functions'][$z]['value'] = "47";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		
 		$y++; //vendors array index
-                $z=0; //functions array index
-		$vendors[$y]['uuid'] = "c4a8bfa2-e91f-4adb-a1df-24c51ef506c7";
+                $vendors[$y]['uuid'] = "c4a8bfa2-e91f-4adb-a1df-24c51ef506c7";
                 $vendors[$y]['name'] = "audiocodes";
+		$z=0; //functions array index
 		$vendors[$y]['functions'][$z]['uuid'] = "297a5086-5b4e-4c1e-8cfd-121a3c2897b6";
                 $vendors[$y]['functions'][$z]['label'] = "label-blf";
                 $vendors[$y]['functions'][$z]['name'] = "blf";
