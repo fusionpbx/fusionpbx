@@ -2211,19 +2211,23 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$y++; //vendors array index
                 $z=0; //functions array index
+		$vendors[$y]['uuid'] = "c4a8bfa2-e91f-4adb-a1df-24c51ef506c7";
                 $vendors[$y]['name'] = "audiocodes";
+		$vendors[$y]['functions'][$z]['uuid'] = "297a5086-5b4e-4c1e-8cfd-121a3c2897b6";
                 $vendors[$y]['functions'][$z]['label'] = "label-blf";
                 $vendors[$y]['functions'][$z]['name'] = "blf";
                 $vendors[$y]['functions'][$z]['value'] = "SPEED_DIAL_BLF";
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "91197b89-4732-496a-9613-dd8ce866103f";
                 $vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
                 $vendors[$y]['functions'][$z]['name'] = "speed_dial";
                 $vendors[$y]['functions'][$z]['value'] = "SPEED_DIAL";
                 $vendors[$y]['functions'][$z]['groups'][] = "superadmin";
                 $vendors[$y]['functions'][$z]['groups'][] = "admin";
                 $z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "abd132d4-9ab4-4a74-8cc7-35094f262fe6";
                 $vendors[$y]['functions'][$z]['label'] = "label-page";
                 $vendors[$y]['functions'][$z]['name'] = "page";
                 $vendors[$y]['functions'][$z]['value'] = "PAGING";
