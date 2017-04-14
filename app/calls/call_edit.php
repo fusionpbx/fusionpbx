@@ -24,16 +24,19 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -236,6 +239,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		include "resources/classes/follow_me.php";
 		include "resources/classes/do_not_disturb.php";
 
+	//sanitize the destinations
+		$forward_all_destination = str_replace('$', '', $forward_all_destination);
+
 	//call forward config
 		if (permission_exists('call_forward')) {
 			$call_forward = new call_forward;
@@ -273,6 +279,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($dnd);
 		}
 
+	//sanitize the destinations
+		$destination_data_1 = str_replace('$', '', $destination_data_1);
+		$destination_data_2 = str_replace('$', '', $destination_data_2);
+		$destination_data_3 = str_replace('$', '', $destination_data_3);
+		$destination_data_4 = str_replace('$', '', $destination_data_4);
+		$destination_data_5 = str_replace('$', '', $destination_data_5);
+		
 	//follow me config
 		if (permission_exists('follow_me')) {
 			$follow_me = new follow_me;
@@ -367,6 +380,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ext->xml();
 			unset($ext);
 		}
+
+	//sanitize the destinations
+		$forward_busy_destination = str_replace('$', '', $forward_busy_destination);
+		$forward_no_answer_destination = str_replace('$', '', $forward_no_answer_destination);
+		$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
 
 	// Forward on busy and no_answer is stored in table and will be used by lua scripts
 		$sql = "update v_extensions set ";
