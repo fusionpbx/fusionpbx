@@ -239,8 +239,10 @@
 	unset ($prep_statement, $sql);
 
 //create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-	$x = 0;
-	$details = '';
+	//set the array index
+		$x = 0;
+	//define the array
+		$details = array();
 	//conditions
 		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "condition") {
