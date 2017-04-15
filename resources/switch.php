@@ -25,7 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
-//incldues
+
+//includes
 	require_once "root.php";
 	require_once "resources/require.php";
 
