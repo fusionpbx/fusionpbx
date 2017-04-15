@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,9 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
-require_once "root.php";
-require_once "resources/require.php";
+//incldues
+	require_once "root.php";
+	require_once "resources/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
@@ -751,7 +752,7 @@ function save_dialplan_xml() {
 						unset ($prep_statement_2, $sql);
 
 						//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-							$details = '';
+							$details = array();
 							$previous_tag = '';
 							$details[$group]['condition_count'] = '';
 							//conditions
