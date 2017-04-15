@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gerir um único domínio ou vários domínios para multi-tenant.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Управление одним доменом или несколькими доменами для нескольких пользователей";
 
 	//permission details
 		$y=0;

@@ -12,7 +12,7 @@ $text['language-name']['sv-se'] = "Svenska - Sverige";
 $text['language-name']['uk'] = "Українська - Україна";
 $text['language-name']['de-at'] = "Deutsch - Österreich";
 $text['language-name']['ar-eg'] = "العربية - مصر";
-$text['language-name']['ru-ru'] = 'Русский - Россия';
+$text['language-name']['ru-ru'] = "Русский - Россия";
 $text['language-name']['it-it'] = "Italiano - Italia";
 
 //language for `Select Language` install page
@@ -27,7 +27,7 @@ $text['language-sv-se']['en-us'] = "Svenska - Sverige";
 $text['language-uk'   ]['en-us'] = "Українська - Україна";
 $text['language-de-at']['en-us'] = "Deutsch - Österreich";
 $text['language-ar-eg']['en-us'] = "العربية - مصر";
-$text['language-ru-ru']['en-us'] = 'Русский - Россия';
+$text['language-ru-ru']['en-us'] = "Русский - Россия";
 $text['language-it-it']['it-it'] = "italiano - Italia";
 
 //message

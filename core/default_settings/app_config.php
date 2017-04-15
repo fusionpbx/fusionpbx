@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Configurações padrão que se aplicam a todos os domínios.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Настройки по умолчанию для всех доменов";
 
 	//permission details
 		$y=0;
