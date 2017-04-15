@@ -646,7 +646,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 	unset($sql);
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
+function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break = null, $dialplan_detail_inline = null) {
 
 	//get the database connection
 	require_once "resources/classes/database.php";
