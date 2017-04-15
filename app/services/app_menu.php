@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Services";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Serviços";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Serviços";
 $apps[$x]['menu'][0]['title']['pl'] = "Serwisy";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Службы";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Tjänster";
 $apps[$x]['menu'][0]['title']['ro'] = "Servicii";
 $apps[$x]['menu'][0]['title']['uk'] = "Служби";

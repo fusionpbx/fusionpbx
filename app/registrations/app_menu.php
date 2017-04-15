@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Enregistrements SIP";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Registos";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Registros";
 $apps[$x]['menu'][0]['title']['pl'] = "Rejestracje";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Регистрации SIP";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Registreringar";
 $apps[$x]['menu'][0]['title']['uk'] = "Реєстрації";
 $apps[$x]['menu'][0]['title']['de-at'] = "Registrierungen";

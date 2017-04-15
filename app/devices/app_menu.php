@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['fr-ca'] = "Dispositifs";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Telefones";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Telefones";
 $apps[$x]['menu'][0]['title']['pl'] = "Urządzenia";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Устройства";
 $apps[$x]['menu'][0]['title']['uk'] = "Пристрої";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Enheter";
 $apps[$x]['menu'][0]['title']['ro'] = "Dispozitive";

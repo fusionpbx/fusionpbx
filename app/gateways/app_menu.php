@@ -7,6 +7,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Passerelles";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Gateways";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Gateways";
 $apps[$x]['menu'][0]['title']['pl'] = "Brama wyjściowa ";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Шлюзы";
 $apps[$x]['menu'][0]['title']['uk'] = "Шлюзи";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Gateways";
 $apps[$x]['menu'][0]['title']['de-at'] = "Gateways";

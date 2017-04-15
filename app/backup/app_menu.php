@@ -4,6 +4,7 @@ $apps[$x]['menu'][0]['title']['en-us'] = "Backup";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "Sauvegarde";
 $apps[$x]['menu'][0]['title']['pl'] = "Kopie zapasowe";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Backup";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Резервное копирование";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Backup";
 $apps[$x]['menu'][0]['title']['uk'] = "Резервна копія";
 $apps[$x]['menu'][0]['title']['de-at'] = "Sicherung";

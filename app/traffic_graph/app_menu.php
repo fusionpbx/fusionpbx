@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Traffic Graphe";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Grafico de Trafego";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Gráfico de tráfego";
 $apps[$x]['menu'][0]['title']['pl'] = "Wykres przesyłu danych";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "График трафика";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Trafik Graf";
 $apps[$x]['menu'][0]['title']['uk'] = "Трафік";
 $apps[$x]['menu'][0]['title']['de-at'] = "Netzauslastung";

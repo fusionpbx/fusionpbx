@@ -8,6 +8,7 @@ $apps[$x]['menu'][0]['title']['fr-ca'] = "Post téléphonique";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Extensões";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Extensões";
 $apps[$x]['menu'][0]['title']['pl'] = "Numery wewnętrzne";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Внутренние номера";
 $apps[$x]['menu'][0]['title']['uk'] = "Розширення";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Anknytningar";
 $apps[$x]['menu'][0]['title']['ro'] = "Extensii";

@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Profiles SIP";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Perfis SIP";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Perfis SIP";
 $apps[$x]['menu'][0]['title']['pl'] = "Profile SIP";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Профили SIP";
 $apps[$x]['menu'][0]['title']['sv-se'] = "SIP Profiler";
 $apps[$x]['menu'][0]['title']['uk'] = "SIP профілі";
 $apps[$x]['menu'][0]['title']['de-at'] = "SIP Profile";

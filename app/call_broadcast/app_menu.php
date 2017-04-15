@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Campagne d'Appels";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Chamada em Broadcast";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Chamada em broadcast";
 $apps[$x]['menu'][0]['title']['pl'] = "Rozsyłanie rozmów";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Рассылка звонка";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Samtalsdistribution";
 $apps[$x]['menu'][0]['title']['uk'] = "Трансляція дзвінка";
 $apps[$x]['menu'][0]['title']['de-at'] = "Automatische Anrufe";

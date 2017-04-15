@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Configuration";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Definições";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Definições";
 $apps[$x]['menu'][0]['title']['pl'] = "Ustawienia";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Конфигурация";
 $apps[$x]['menu'][0]['title']['uk'] = "Налаштування";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Inställningar";
 $apps[$x]['menu'][0]['title']['de-at'] = "Einstellungen";

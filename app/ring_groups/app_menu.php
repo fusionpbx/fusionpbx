@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Groupes de sonnerie";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Grupos de Ring";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Grupos de chamada";
 $apps[$x]['menu'][0]['title']['pl'] = "Grupy odbiorców rozmów.";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Группы вызовов";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Ringgrupper";
 $apps[$x]['menu'][0]['title']['uk'] = "Групи";
 $apps[$x]['menu'][0]['title']['de-at'] = "Rufgruppen";

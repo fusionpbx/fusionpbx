@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = "Guides Vocaux";
 $apps[$x]['menu'][0]['title']['pt-pt'] = "Gravações";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Gravações";
 $apps[$x]['menu'][0]['title']['pl'] = "Nagrywanie rozmów";
+$apps[$x]['menu'][0]['title']['ru-ru'] = "Записи";
 $apps[$x]['menu'][0]['title']['sv-se'] = "Inspelningar";
 $apps[$x]['menu'][0]['title']['uk'] = "Записи";
 $apps[$x]['menu'][0]['title']['de-at'] = "Aufnahmen";
