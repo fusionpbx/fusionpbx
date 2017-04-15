@@ -36,7 +36,6 @@
 	$dir_count = 0;
 	$file_count = 0;
 	$row_count = 0;
-	$tmp_array = '';
 	$device_template = '';
 
 //define PHP variables from the HTTP values
