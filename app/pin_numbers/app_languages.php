@@ -5,7 +5,7 @@
 		$text['title-pin_numbers']['es-cl'] = '';
 		$text['title-pin_numbers']['pt-pt'] = '';
 		$text['title-pin_numbers']['fr-fr'] = '';
-		$text['title-pin_numbers']['ru-ru'] = 'PIN Номера';
+		$text['title-pin_numbers']['ru-ru'] = 'PIN Номеров';
 
 		$text['title-pin_number']['en-us'] = 'PIN Number';
 		$text['title-pin_number']['es-cl'] = '';
