@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Adicionar, editar, apagar e pesquisa pelos utilizadores.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Добавление, редактирование, удаление и поиск пользователей";
 
 	//permission details
 		$y=0;
