@@ -10,6 +10,7 @@ $text['title-services']['sv-se'] = "Tjänster";
 $text['title-services']['ro'] = "Servicii";
 $text['title-services']['uk'] = "Служби";
 $text['title-services']['de-at'] = "Services";
+$text['title-services']['ru-ru'] = "Службы";
 
 $text['title']['en-us'] = "Service Add";
 $text['title']['es-cl'] = "Agregar Servicio";
@@ -21,6 +22,7 @@ $text['title']['sv-se'] = "Lägg Till Tjänst";
 $text['title']['ro'] = "Adăugare serviciu";
 $text['title']['uk'] = "Параметри облікового запису";
 $text['title']['de-at'] = "Service hinzufügen";
+$text['title']['ru-ru'] = "Служба добавлена";
 
 $text['message-stopping']['en-us'] = "Stopping Service";
 $text['message-stopping']['es-cl'] = "Servicio de Detención";
@@ -32,6 +34,7 @@ $text['message-stopping']['sv-se'] = "Stoppar Tjänst";
 $text['message-stopping']['ro'] = "Oprire serviciu";
 $text['message-stopping']['uk'] = "Зупинка служби";
 $text['message-stopping']['de-at'] = "Stoppe Service";
+$text['message-stopping']['ru-ru'] = "Остановка Сервиса";
 
 $text['message-starting']['en-us'] = "Starting Service";
 $text['message-starting']['es-cl'] = "Servicio de Inicio";
@@ -43,6 +46,7 @@ $text['message-starting']['sv-se'] = "Startar Tjänst";
 $text['message-starting']['ro'] = "Pornire serviciu";
 $text['message-starting']['uk'] = "Запуск служби";
 $text['message-starting']['de-at'] = "Starte Service";
+$text['message-starting']['ru-ru'] = "Старт Сервиса";
 
 $text['label-stopped']['en-us'] = "Stopped";
 $text['label-stopped']['es-cl'] = "Detenido";
@@ -54,6 +58,7 @@ $text['label-stopped']['sv-se'] = "Stoppad";
 $text['label-stopped']['ro'] = "Oprit";
 $text['label-stopped']['uk'] = "Зупинено";
 $text['label-stopped']['de-at'] = "Gestoppt";
+$text['label-stopped']['ru-ru'] = "Остановлено";
 
 $text['label-stop_command']['en-us'] = "Stop Command";
 $text['label-stop_command']['es-cl'] = "Comando para Detener";
@@ -65,6 +70,7 @@ $text['label-stop_command']['sv-se'] = "Stopp Komando";
 $text['label-stop_command']['ro'] = "Comandă oprire";
 $text['label-stop_command']['uk'] = "Команда для зупинки ";
 $text['label-stop_command']['de-at'] = "Stopp Befehl";
+$text['label-stop_command']['ru-ru'] = "Команда остановить";
 
 $text['label-stop']['en-us'] = "Stop";
 $text['label-stop']['es-cl'] = "Deténgase";
@@ -76,6 +82,7 @@ $text['label-stop']['sv-se'] = "Stoppa";
 $text['label-stop']['ro'] = "Oprește";
 $text['label-stop']['uk'] = "Зупинити";
 $text['label-stop']['de-at'] = "Stopp";
+$text['label-stop']['ru-ru'] = "Остановить";
 
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['es-cl'] = "Estado";
@@ -87,6 +94,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['ro'] = "Stare";
 $text['label-status']['uk'] = "Стан";
 $text['label-status']['de-at'] = "Status";
+$text['label-status']['ru-ru'] = "Статус";
 
 $text['label-start_command']['en-us'] = "Start Command";
 $text['label-start_command']['es-cl'] = "Comando para Iniciar";
@@ -98,6 +106,7 @@ $text['label-start_command']['sv-se'] = "Start Komando";
 $text['label-start_command']['ro'] = "Comandă pornire";
 $text['label-start_command']['uk'] = "Команда для запуску ";
 $text['label-start_command']['de-at'] = "Start Befehl";
+$text['label-start_command']['ru-ru'] = "Команда стартовать";
 
 $text['label-start']['en-us'] = "Start";
 $text['label-start']['es-cl'] = "Comienzo";
@@ -109,6 +118,7 @@ $text['label-start']['sv-se'] = "Starta";
 $text['label-start']['ro'] = "Pornește";
 $text['label-start']['uk'] = "Запустити";
 $text['label-start']['de-at'] = "Start";
+$text['label-start']['ru-ru'] = "Старт";
 
 $text['label-running']['en-us'] = "Running";
 $text['label-running']['es-cl'] = "Runcionamiento";
@@ -120,6 +130,7 @@ $text['label-running']['sv-se'] = "I Drift";
 $text['label-running']['ro'] = "În desfășurare";
 $text['label-running']['uk'] = "Запущено";
 $text['label-running']['de-at'] = "Läuft";
+$text['label-running']['ru-ru'] = "Запущено";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -131,6 +142,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['ro'] = "Data";
 $text['label-data']['uk'] = "Дані";
 $text['label-data']['de-at'] = "Daten";
+$text['label-data']['ru-ru'] = "Дата";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -142,6 +154,7 @@ $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['ro'] = "Acțiune";
 $text['label-action']['uk'] = "Дія";
 $text['label-action']['de-at'] = "Aktion";
+$text['label-action']['ru-ru'] = "Действие";
 
 $text['header-services']['en-us'] = "Services";
 $text['header-services']['es-cl'] = "Servicios";
@@ -153,6 +166,7 @@ $text['header-services']['sv-se'] = "Tjänster";
 $text['header-services']['ro'] = "Servicii";
 $text['header-services']['uk'] = "Служби";
 $text['header-services']['de-at'] = "Services";
+$text['header-services']['ru-ru'] = "Сервисы";
 
 $text['description-type']['en-us'] = "Select the service type.";
 $text['description-type']['es-cl'] = "Seleccione el tipo de servicio.";
@@ -164,6 +178,7 @@ $text['description-type']['sv-se'] = "Ange Tjänst-typen.";
 $text['description-type']['ro'] = "Selectați tipul serviciului";
 $text['description-type']['uk'] = "Вкажіть тип служби";
 $text['description-type']['de-at'] = "Wählen Sie einen Service Typ.";
+$text['description-type']['ru-ru'] = "Выберите тип сервиса.";
 
 $text['description-stop_command']['en-us'] = "Enter the command to stop the service.";
 $text['description-stop_command']['es-cl'] = "Ingrese el comando para detener el servicio.";
@@ -175,6 +190,7 @@ $text['description-stop_command']['sv-se'] = "Ange kommandot för att stoppa tj�
 $text['description-stop_command']['ro'] = "Introduceți comanda de oprire a serviciului.";
 $text['description-stop_command']['uk'] = "Введіть команду, щоб зупинити службу";
 $text['description-stop_command']['de-at'] = "Geben Sie einen Befehl zum Stoppen des Services an.";
+$text['description-stop_command']['ru-ru'] = "Введите команду для остановки сервиса.";
 
 $text['description-start_command']['en-us'] = "Enter the command to start the service.";
 $text['description-start_command']['es-cl'] = "Ingrese el comando para iniciar el servicio.";
@@ -186,6 +202,7 @@ $text['description-start_command']['sv-se'] = "Ange kommandot för att starta tj
 $text['description-start_command']['ro'] = "Introduceți comanda de pornire a serviciului";
 $text['description-start_command']['uk'] = "Введіть команду, щоб запустити службу";
 $text['description-start_command']['de-at'] = "Geben Sie einen Befehl zum Starten des Services an.";
+$text['description-start_command']['ru-ru'] = "Введите клманду для старта срвиса.";
 
 $text['description-services']['en-us'] = "Shows a list of processes, the status of the process and provides control to start and stop the process.";
 $text['description-services']['es-cl'] = "Muestra una lista de los procesos, el estado del proceso y proporciona un control para iniciar y detener el proceso.";
@@ -197,6 +214,7 @@ $text['description-services']['sv-se'] = "Visar en lista med tjänster, statusen
 $text['description-services']['ro'] = "";
 $text['description-services']['uk'] = "Показує список процесів, стан процесу і забезпечує контроль запуску і зупинки процесу.";
 $text['description-services']['de-at'] = "Zeigt eine Liste von Prozessen, deren Status und bietet die Möglichkeit, diese Prozesse zu starten und zu stoppen.";
+$text['description-services']['ru-ru'] = "Показывает список процессов, состояние процесса и обеспечивает контроль запуска и остановки процесса.";
 
 $text['description-name']['en-us'] = "Enter the service name.";
 $text['description-name']['es-cl'] = "Ingrese el nombre del servicio.";
@@ -208,6 +226,7 @@ $text['description-name']['sv-se'] = "Ange namn på tjänsten.";
 $text['description-name']['ro'] = "Introduceți numele serviciului";
 $text['description-name']['uk'] = "Введіть назву служби";
 $text['description-name']['de-at'] = "Geben Sie den Namen des Services an";
+$text['description-name']['ru-ru'] = "Введите имя сервиса.";
 
 $text['description-data']['en-us'] = "Enter the service data.";
 $text['description-data']['es-cl'] = "Ingrese los datos del servicio.";
@@ -219,6 +238,7 @@ $text['description-data']['sv-se'] = "Ange data för tjänsten.";
 $text['description-data']['ro'] = "";
 $text['description-data']['uk'] = "Введіть дані про службу";
 $text['description-data']['de-at'] = "Geben Sie die Service Daten ein.";
+$text['description-data']['ru-ru'] = "Введите данные службы.";
 
 $text['description']['en-us'] = "Shows a list of processes and provides ability to start and stop them.";
 $text['description']['es-cl'] = "Muestra una lista de procesos y permite iniciarlos y detenerlos.";
@@ -230,5 +250,6 @@ $text['description']['sv-se'] = "Visar en lista med tjänster samt ger möjlighe
 $text['description']['ro'] = "";
 $text['description']['uk'] = "Показує список процесів і забезпечує можливість запуску і зупинки їх.";
 $text['description']['de-at'] = "Zeigt eine Liste der Prozesse und bietet die Möglichkeit diese zu Starten und zu Stoppen.";
+$text['description']['ru-ru'] = "Показывает список процессов и предоставляет возможность запускать и останавливать их.";
 
 ?>
