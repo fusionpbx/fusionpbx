@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gerenciar grupos de usuários e permissões.";
 		$apps[$x]['description']['pt-br'] = "Gerenciar grupos de usuários e permissões.";
+		$apps[$x]['description']['ru-ru'] = "Управление группами пользователей и уровнями доступа";
 
 	//permission details
 		$y=0;
