@@ -812,6 +812,17 @@ $text['label-direction']['uk'] = "";
 $text['label-direction']['de-at'] = "Richtung";
 $text['label-direction']['he'] = "כיוון";
 
+$text['label-origin-destination']['en-us'] = "DID/DDI";
+$text['label-origin-destination']['es-cl'] = "DID/DDI";
+$text['label-origin-destination']['pt-pt'] = "DID/DDI";
+$text['label-origin-destination']['fr-fr'] = "DID/DDI";
+$text['label-origin-destination']['pt-br'] = "DID/DDI";
+$text['label-origin-destination']['pl'] = "DID/DDI";
+$text['label-origin-destination']['sv-se'] = "DID/DDI";
+$text['label-origin-destination']['uk'] = "DID/DDI";
+$text['label-origin-destination']['de-at'] = "DID/DDI";
+$text['label-origin-destination']['he'] = "DID/DDI";
+
 $text['label-destination']['en-us'] = "Destination";
 $text['label-destination']['es-cl'] = "Destino";
 $text['label-destination']['pt-pt'] = "Destino";
