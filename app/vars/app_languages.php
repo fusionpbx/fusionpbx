@@ -9,7 +9,7 @@ $text['title-variables_advanced']['pl'] = "Zmienne PBXu (zaawansowane)";
 $text['title-variables_advanced']['uk'] = "Задання змінних: Додатково";
 $text['title-variables_advanced']['sv-se'] = "Switch Variabler: Avancerat";
 $text['title-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
-$text['title-variables_advanced']['ru-ru'] = "Переменные Переключателя: Расширенный";
+$text['title-variables_advanced']['ru-ru'] = "Параметры FreeSwitch: Расширенные";
 
 $text['title-variables']['en-us'] = "Switch Variables";
 $text['title-variables']['es-cl'] = "Variables de Switch";
