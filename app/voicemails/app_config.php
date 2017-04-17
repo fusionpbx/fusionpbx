@@ -90,6 +90,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";		
 		$y++;
+
 	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '1cf61dea-42b5-4799-b9fa-f2c3bd29e933';
