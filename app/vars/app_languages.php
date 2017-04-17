@@ -20,7 +20,7 @@ $text['title-variables']['pl'] = "Zmienne PBXu";
 $text['title-variables']['uk'] = "Задання змінних ";
 $text['title-variables']['sv-se'] = "Switch Variabler";
 $text['title-variables']['de-at'] = "Switch Variablen";
-$text['title-variables']['ru-ru'] = "Переменные Переключателя";
+$text['title-variables']['ru-ru'] = "Параметры FreeSwitch";
 
 $text['title-variable_edit']['en-us'] = "Variable";
 $text['title-variable_edit']['es-cl'] = "Editar Variable";
