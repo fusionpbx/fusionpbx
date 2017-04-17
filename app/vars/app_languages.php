@@ -114,7 +114,7 @@ $text['description-variables_advanced']['pl'] = "Tutaj zdefiniuj zmienne preproc
 $text['description-variables_advanced']['uk'] = "Задайте змінні препроцесора тут. Вони будуть доступними в конфігурації XML з символом $.";
 $text['description-variables_advanced']['sv-se'] = "Definiera preprocessor variabler här. Kan nås i xml konfigurationen med $.";
 $text['description-variables_advanced']['de-at'] = "Definieren Sie Preprozessor Variablen. Auf diese kann in der XML Konfiguration mittels $ zugegriffen werden.";
-$text['description-variables_advanced']['ru-ru'] = "Определите здесь переменные препроцессора. Доступ к файлу xml можно получить с помощью $.";
+$text['description-variables_advanced']['ru-ru'] = "Определите здесь параметры FreeSwitch. Доступ к файлу xml можно получить с помощью $.";
 
 $text['description-variables']['en-us'] = "Define preprocessor variables here.";
 $text['description-variables']['es-cl'] = "Defina variables de procesador aquí.";
@@ -125,7 +125,7 @@ $text['description-variables']['pl'] = "Tutaj zdefiniuj zmienne preprocesora";
 $text['description-variables']['uk'] = "Задайте змінні препроцесора тут.";
 $text['description-variables']['sv-se'] = "Definiera preprocessor variabler här.";
 $text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen.";
-$text['description-variables']['ru-ru'] = "Определите здесь переменные препроцессора.";
+$text['description-variables']['ru-ru'] = "Определите здесь параметры FreeSwitch.";
 
 $text['description-name']['en-us'] = "Enter the variable name.";
 $text['description-name']['es-cl'] = "Ingrese el nombre de la variable.";
