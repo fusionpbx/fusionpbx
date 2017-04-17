@@ -490,17 +490,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								// get current values
 								$device_line_uuid = $row["device_line_uuid"];
 								$server_address = $row["server_address"];
-								$outbound_proxy_primary = $row["outbound_proxy"];
-								$outbound_proxy_secondary = $row["outbound_proxy"];
+								$outbound_proxy_primary = $row["outbound_proxy_primary"];
+								$outbound_proxy_secondary = $row["outbound_proxy_secondary"];
 								// replace old domain name with new domain
 								$server_address = str_replace($original_domain_name, $domain_name, $server_address);
-								$outbound_proxy_primary = str_replace($original_domain_name, $domain_name, $outbound_proxy);
-								$outbound_proxy_secondary = str_replace($original_domain_name, $domain_name, $outbound_proxy);
+								$outbound_proxy_primary = str_replace($original_domain_name, $domain_name, $outbound_proxy_primary);
+								$outbound_proxy_secondary = str_replace($original_domain_name, $domain_name, $outbound_proxy_secondary);
 								// update db record
 								$sql = "update v_device_lines set ";
 								$sql .= "server_address = '".$server_address."', ";
-								$sql .= "outbound_proxy_primary = '".$outbound_proxy."' ";
-								$sql .= "outbound_proxy_secondary = '".$outbound_proxy."' ";
+								$sql .= "outbound_proxy_primary = '".$outbound_proxy_primary."' ";
+								$sql .= "outbound_proxy_secondary = '".$outbound_proxy_secondary."' ";
 								$sql .= "where device_line_uuid = '".$device_line_uuid."' ";
 								$sql .= "and domain_uuid = '".$domain_uuid."' ";
 								$db->exec(check_sql($sql));
