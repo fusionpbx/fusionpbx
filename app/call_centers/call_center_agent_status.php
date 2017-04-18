@@ -102,7 +102,7 @@ else {
 
 //get the agents from the database
 	$sql = "select * from v_call_center_agents ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = '$domain_uuid' ORDER BY agent_name ASC ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$agents = $prep_statement->fetchAll(PDO::FETCH_NAMED);

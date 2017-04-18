@@ -51,7 +51,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_port)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (strlen($_SESSION['event_socket_port']) > 0) {
 						$this->event_socket_port = $_SESSION['event_socket_port'];
 					}
 					else {
@@ -59,7 +59,7 @@ if (!class_exists('switch_settings')) {
 					}
 				}
 				if (!isset($this->event_socket_password)) {
-					if (strlen($_SESSION['event_socket_ip_address']) > 0) {
+					if (strlen($_SESSION['event_socket_password']) > 0) {
 						$this->event_socket_password = $_SESSION['event_socket_password'];
 					}
 					else {
@@ -73,9 +73,6 @@ if (!class_exists('switch_settings')) {
 
 			//run the api command
 				$result = $esl->request('api global_getvar');
-
-			//close event socket
-				fclose($fp);
 
 			//set the result as a named array
 				$vars = array();
@@ -169,7 +166,7 @@ if (!class_exists('switch_settings')) {
 				$array[$x]['default_setting_subcategory'] = 'phrases';
 				$array[$x]['default_setting_name'] = 'dir';
 				$array[$x]['default_setting_value'] = $vars['conf_dir'].'/lang';
-				$array[$x]['default_setting_enabled'] = 'false';
+				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = '';
 				$x++;
 				$array[$x]['default_setting_category'] = 'switch';

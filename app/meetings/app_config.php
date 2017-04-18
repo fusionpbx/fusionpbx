@@ -12,7 +12,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "meeting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -46,9 +46,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_meetings";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_meetings";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -80,9 +81,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Description.for the meeting description.";
 		$z++;
 
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_meeting_users";
+		$y++;
+		$apps[$x]['db'][$y]['table']['name'] = "v_meeting_users";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_meetings";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

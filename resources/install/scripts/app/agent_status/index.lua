@@ -6,8 +6,14 @@
 	debug["sql"] = true;
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --set the api
 	api = freeswitch.API();
@@ -27,6 +33,7 @@
 			domain_name = session:getVariable("domain_name");
 			context = session:getVariable("context");
 			uuid = session:get_uuid();
+			agent_authorized = session:getVariable("agent_authorized");
 			agent_id = session:getVariable("agent_id");
 			agent_password = session:getVariable("agent_password");
 
@@ -37,6 +44,11 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
+	end
+
+--set default as access denied
+	if (agent_authorized == nil or agent_authorized ~= 'true') then
+		agent_authorized = 'false';
 	end
 
 --define the sounds directory
@@ -52,47 +64,52 @@
 	end
 
 --get the pin number from the caller
-	if (agent_password == nil) then
+	if (agent_password == nil and agent_authorized ~= 'true') then
 		min_digits = 3;
 		max_digits = 20;
 		max_tries = 3;
 		agent_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 	end
 
---set default as access denied
-	authorized = 'false';
-
 --get the agent password
-	sql = "SELECT * FROM v_call_center_agents ";
-	sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
-	sql = sql .. "AND agent_id = '" .. agent_id .."' ";
-	sql = sql .. "AND agent_password = '" .. agent_password .."' ";
-	freeswitch.consoleLog("notice", "[user status] sql: " .. sql .. "\n");
-	dbh:query(sql, function(row)
+	local params = {domain_uuid = domain_uuid, agent_id = agent_id}
+	local sql = "SELECT * FROM v_call_center_agents ";
+	sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+	sql = sql .. "AND agent_id = :agent_id ";
+	if (agent_authorized ~= 'true') then
+		sql = sql .. "AND agent_password = :agent_password ";
+		params.agent_password = agent_password;
+	end
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[user status] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+
+	dbh:query(sql, params, function(row)
 		--set the variables
 			agent_name = row.agent_name;
 			agent_id = row.agent_id;
 		--authorize the user
-			authorized = 'true';
+			agent_authorized = 'true';
 	end);
 
 --show the results
 	if (agent_id) then
-		freeswitch.consoleLog("notice", "[user status][login] agent_id: " .. agent_id .. " authorized " .. authorized .. "\n");
+		freeswitch.consoleLog("notice", "[user status][login] agent id: " .. agent_id .. " authorized: " .. agent_authorized .. "\n");
 	end
 	if (agent_password and debug["password"]) then
-		freeswitch.consoleLog("notice", "[user status][login] agent_password: " .. agent_password .. "\n");
+		freeswitch.consoleLog("notice", "[user status][login] agent password: " .. agent_password .. "\n");
 	end
 
 --get the user_uuid
-	if (authorized == 'true') then
-		sql = "SELECT user_uuid, user_status FROM v_users ";
-		sql = sql .. "WHERE username = '".. agent_name .."' ";
-		sql = sql .. "AND domain_uuid = '" .. domain_uuid .."' ";
+	if (agent_authorized == 'true') then
+		local sql = "SELECT user_uuid, user_status FROM v_users ";
+		sql = sql .. "WHERE username = :agent_name ";
+		sql = sql .. "AND domain_uuid = :domain_uuid ";
+		local params = {agent_name = agent_name, domain_uuid = domain_uuid};
 		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "[call_center] sql: ".. sql .. "\n");
+			freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 		end
-		dbh:query(sql, function(row)
+		dbh:query(sql, params, function(row)
 			--get the user info
 				user_uuid = row.user_uuid;
 				user_status = row.user_status;
@@ -108,13 +125,14 @@
 				freeswitch.consoleLog("NOTICE", "[call_center] user_status: ".. status .. "\n");
 
 			--set the user_status in the users table
-				sql = "UPDATE v_users SET ";
-				sql = sql .. "user_status = '"..status.."' ";
-				sql = sql .. "WHERE user_uuid = '" .. user_uuid .."' ";
+				local sql = "UPDATE v_users SET ";
+				sql = sql .. "user_status = :status ";
+				sql = sql .. "WHERE user_uuid = :user_uuid ";
+				local params = {status = status, user_uuid = user_uuid};
 				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "[call_center] sql: ".. sql .. "\n");
+					freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
-				dbh:query(sql);
+				dbh:query(sql, params);
 
 			--send a login or logout to mod_callcenter
 				cmd = "callcenter_config agent set status "..agent_name.."@"..domain_name.." '"..status.."'";
@@ -156,9 +174,19 @@
 	end
 
 --unauthorized
-	if (authorized == 'false') then
+	if (agent_authorized == 'false') then
 		result = session:streamFile(sounds_dir.."/voicemail/vm-fail_auth.wav");
 		status = "Invalid ID or Password";
+	end
+
+--set the status and presence
+	if (session:ready()) then
+		if (action == "login") then
+			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_in.wav");
+		end
+		if (action == "logout") then
+			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_out.wav");
+		end
 	end
 
 --send the status to the display
@@ -169,16 +197,4 @@
 --set the session sleep to give time to see the display
 	if (session:ready()) then
 		session:execute("sleep", "2000");
-	end
-
---set the status and presence
-	if (session:ready()) then
-		if (action == "login") then
-			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_in.wav");
-			--session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
-		end
-		if (action == "logout") then
-			session:execute("playback", sounds_dir.."/ivr/ivr-you_are_now_logged_out.wav");
-			--session:execute("playback", "tone_stream://%(200,0,500,600,700)");
-		end
 	end

@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('script_editor_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('script_editor_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -195,7 +199,7 @@ echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
 ini_set("session.cookie_httponly", True);
-session_start();
+if (!isset($_SESSION)) { session_start(); }
 switch ($_SESSION["app"]["edit"]["dir"]) {
 	case 'scripts':
 		echo recur_dir($_SESSION['switch']['scripts']['dir']);

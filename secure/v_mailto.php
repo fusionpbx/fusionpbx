@@ -40,17 +40,16 @@
 	require_once "resources/require.php";
 
 //define a function to remove html tags
-	function rip_tags($string) {
-		// ----- remove HTML TAGs -----
+	function remove_tags($string) {
+		//remove HTML tags
 		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		// ----- remove control characters -----
-
+		//remove control characters
 		$string = str_replace("\r", '', $string);    // --- replace with empty space
 		$string = str_replace("\n", ' ', $string);   // --- replace with space
 		$string = str_replace("\t", ' ', $string);   // --- replace with space
 
-		// ----- remove multiple spaces -----
+		//remove multiple spaces
 		$string = trim(preg_replace('/ {2,}/', ' ', $string));
 		return $string;
 	}
@@ -79,9 +78,8 @@
 //includes
 	require('resources/pop3/mime_parser.php');
 	require('resources/pop3/rfc822_addresses.php');
-	
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php")) {
-		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_translation.php");
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
+		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
 	}
 
 //parse the email message
@@ -190,6 +188,22 @@
 			default: $mail->IsSMTP(); break;
 		}
 	} else $mail->IsSMTP();
+
+// optional bypass TLS certificate check e.g. for self-signed certificates
+    if (isset($_SESSION['email']['smtp_validate_certificate'])) {
+            if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+
+                    // this is needed to work around TLS certificate problems
+                    $mail->SMTPOptions = array(
+                            'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                            'allow_self_signed' => true
+                            )
+                    );
+            }
+    }
+
 	$mail->SMTPAuth = $smtp['auth'];
 	$mail->Host = $smtp['host'];
 	if ($smtp['port']!=0) $mail->Port=$smtp['port'];
@@ -287,8 +301,8 @@
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
 					if (function_exists(get_transcription)) {
-						$attachments_array=$mail->GetAttachments();
-						$transcription=get_transcription($attachments_array[0]);
+						$attachments_array = $mail->GetAttachments();
+						$transcription = get_transcription($attachments_array[0]);
 						echo "Transcription: " . $transcription;
 					} else {
 						$transcription = '';
@@ -298,7 +312,7 @@
 	}
 
 //add the body to the email
-	$body_plain = rip_tags($body);
+	$body_plain = remove_tags($body);
 	//echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
@@ -321,30 +335,32 @@
 			echo "Retained in v_emails \n";
 		} else {
 			// log/store message in database for review
-			$email_uuid = uuid();
-			$sql = "insert into v_emails ( ";
-			$sql .= "email_uuid, ";
-			if ($call_uuid) {
-				$sql .= "call_uuid, ";
+			if (!isset($email_uuid)) {
+				$email_uuid = uuid();
+				$sql = "insert into v_emails ( ";
+				$sql .= "email_uuid, ";
+				if ($call_uuid) {
+					$sql .= "call_uuid, ";
+				}
+				$sql .= "domain_uuid, ";
+				$sql .= "sent_date, ";
+				$sql .= "type, ";
+				$sql .= "status, ";
+				$sql .= "email ";
+				$sql .= ") values ( ";
+				$sql .= "'".$email_uuid."', ";
+				if ($call_uuid) {
+					$sql .= "'".$call_uuid."', ";
+				}
+				$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+				$sql .= "now(),";
+				$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+				$sql .= "'failed', ";
+				$sql .= "'".str_replace("'", "''", $msg)."' ";
+				$sql .= ") ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 			}
-			$sql .= "domain_uuid, ";
-			$sql .= "sent_date, ";
-			$sql .= "type, ";
-			$sql .= "status, ";
-			$sql .= "email ";
-			$sql .= ") values ( ";
-			$sql .= "'".$email_uuid."', ";
-			if ($call_uuid) {
-				$sql .= "'".$call_uuid."', ";
-			}
-			$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-			$sql .= "now(),";
-			$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-			$sql .= "'failed', ";
-			$sql .= "'".str_replace("'", "''", $msg)."' ";
-			$sql .= ") ";
-			$db->exec(check_sql($sql));
-			unset($sql);
 
 			echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
 		}

@@ -130,6 +130,9 @@ class destinations {
 			$destination_id = str_replace("]", "", $destination_name);
 			$destination_id = str_replace("[", "_", $destination_id);
 
+		//set the css style
+			$select_style = 'width: 200px;';
+
 		//add additional
 			if (if_group("superadmin")) {
 				$response = "<script>\n";
@@ -254,7 +257,9 @@ class destinations {
 			}
 			if (!$select_found) {
 				$destination_label = str_replace(":", " ", $destination_value);
-				$destination_label = str_replace("menu-exec-app:", " ", $destination_label);
+				$destination_label = str_replace("menu-exec-app", "", $destination_label);
+				$destination_label = str_replace("transfer", "", $destination_label);
+				$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
 				$response .= "			<option value='".$destination_value."' selected='selected'>".trim($destination_label)."</option>\n";
 			}
 			$response .= "	</select>\n";

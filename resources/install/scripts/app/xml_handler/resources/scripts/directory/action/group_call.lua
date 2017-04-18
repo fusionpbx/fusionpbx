@@ -34,8 +34,14 @@
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") then
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			local dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
@@ -44,28 +50,35 @@
 			if (domain_uuid == nil) then
 				--get the domain_uuid
 					if (domain_name ~= nil) then
-						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						local sql = "SELECT domain_uuid FROM v_domains ";
+						sql = sql .. "WHERE domain_name = :domain_name ";
+						local params = {domain_name = domain_name};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(rows)
+						dbh:query(sql, params, function(rows)
 							domain_uuid = rows["domain_uuid"];
 						end);
 					end
 			end
 
+			if not domain_uuid then
+				freeswitch.consoleLog("warning", "[xml_handler] Can not find domain name: " .. tostring(domain_name) .. "\n");
+				return
+			end
+
 		--build the call group array
-			sql = [[
+			local sql = [[
 			select * from v_extensions
-			where domain_uuid = ']]..domain_uuid..[['
+			where domain_uuid = :domain_uuid
 			order by call_group asc
 			]];
+			local params = {domain_uuid = domain_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			call_group_array = {};
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				call_group = row['call_group'];
 				--call_group = str_replace(";", ",", call_group);
 				tmp_array = explode(",", call_group);

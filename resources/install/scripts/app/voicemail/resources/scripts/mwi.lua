@@ -30,17 +30,18 @@
 	sleep = 300;
 
 --define the run file
-	run_file = scripts_dir .. "/resources/run/voicemail-mwi.tmp";
+	run_file = scripts_dir .. "/run/voicemail-mwi.tmp";
 
 --debug
 	debug["sql"] = false;
 	debug["info"] = false;
 
 --only run the script a single time
-	runonce = true
+	runonce = false;
+
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
 
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
@@ -51,6 +52,12 @@
 
 --check if a file exists
 	require "resources.functions.file_exists";
+
+--send MWI NOTIFY message
+	require "app.voicemail.resources.functions.mwi_notify";
+
+--get message count for mailbox
+	require "app.voicemail.resources.functions.message_count";
 
 --create the api object
 	api = freeswitch.API();
@@ -65,7 +72,7 @@
 			end
 
 		--Send MWI events for voicemail boxes with messages
-			sql = [[SELECT v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name, COUNT(*) AS message_count
+			local sql = [[SELECT v.voicemail_id, v.voicemail_uuid, v.domain_uuid, d.domain_name, COUNT(*) AS message_count
 				FROM v_voicemail_messages as m, v_voicemails as v, v_domains as d
 				WHERE v.voicemail_uuid = m.voicemail_uuid
 				AND v.domain_uuid = d.domain_uuid
@@ -73,43 +80,20 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, function(row)
 
 				--get saved and new message counts
-					sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. row["domain_uuid"] ..[['
-						AND voicemail_uuid = ']] .. row["voicemail_uuid"] ..[['
-						AND (message_status is null or message_status = '') ]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(r)
-						new_messages = r["new_messages"];
-					end);
-					sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. row["domain_uuid"] ..[['
-						AND voicemail_uuid = ']] .. row["voicemail_uuid"] ..[['
-						AND message_status = 'saved' ]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(r)
-						saved_messages = r["saved_messages"];
-					end);
+					local new_messages, saved_messages = message_count_by_uuid(
+						row["voicemail_uuid"], row["domain_uuid"]
+					)
 
 				--send the message waiting event
-					local event = freeswitch.Event("message_waiting");
-					if (new_messages == "0") then
-						event:addHeader("MWI-Messages-Waiting", "no");
-					else
-						event:addHeader("MWI-Messages-Waiting", "yes");
-					end
-					event:addHeader("MWI-Message-Account", "sip:"..row["voicemail_id"].."@"..row["domain_name"]);
-					event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
-					event:fire();
+					local account = row["voicemail_id"].."@"..row["domain_name"]
+					mwi_notify(account, new_messages, saved_messages)
+
 				--log to console
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..row["voicemail_id"].."@"..row["domain_name"].." messages: " .. row["message_count"] .. " \n");
+						freeswitch.consoleLog("notice", "[voicemail] mailbox: "..account.." messages: " .. (new_messages or "0") .. "/" .. (saved_messages or "0") .. " \n");
 					end
 			end);
 

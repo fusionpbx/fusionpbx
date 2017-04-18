@@ -1,6 +1,6 @@
 --	directory.lua
 --	Part of FusionPBX
---	Copyright (C) 2012 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2012-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 --	notice, this list of conditions and the following disclaimer in the
 --	documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -27,7 +27,6 @@
 --set the defaults
 	digit_max_length = 3;
 	timeout_pin = 5000;
-	timeout_transfer = 5000;
 	max_tries = 3;
 	digit_timeout = 5000;
 	search_limit = 3;
@@ -37,8 +36,14 @@
 	require "resources.functions.config";
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --include functions
 	require "resources.functions.format_ringback"
@@ -74,10 +79,6 @@
 		end
 	end
 
---debug
-	debug["info"] = false;
-	debug["sql"] = false;
-
 --prepare the api object
 	api = freeswitch.API();
 
@@ -92,6 +93,9 @@
 		--get the domain info
 			domain_name = session:getVariable("domain_name");
 			domain_uuid = session:getVariable("domain_uuid");
+
+		--get the timeout destination
+			timeout_destination = session:getVariable("timeout_destination");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -124,14 +128,15 @@
 --get the domain_uuid
 	if (domain_uuid == nil) then
 		if (domain_name ~= nil) then
-			sql = "SELECT domain_uuid FROM v_domains ";
-			sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+			local sql = "SELECT domain_uuid FROM v_domains ";
+			sql = sql .. "WHERE domain_name = :domain_name";
+			local params = {domain_name = domain_name};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(rows)
+			dbh:query(sql, params, function(rows)
 				domain_uuid = string.lower(rows["domain_uuid"]);
-				end);
+			end);
 		end
 	end
 
@@ -186,8 +191,17 @@
 			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
 		end
 		if (string.len(dtmf_digits) == 0) then
-			digit_timeout = "3000";
 			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/1.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-for_next.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
+		end
+		if (string.len(dtmf_digits) == 0) then
+			digit_timeout = "5000";
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/6.wav", "", "\\d+");
 		end
 		return dtmf_digits;
 	end
@@ -224,24 +238,26 @@
 					if (row.first_name) then
 						--play the recorded name
 							if (storage_type == "base64") then
-								sql = [[SELECT * FROM v_voicemails
-									WHERE domain_uuid = ']] .. domain_uuid ..[['
-									AND voicemail_id = ']].. row.extension.. [[' ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
-								end
-								status = dbh:query(sql, function(field)
-									--add functions
-										require "resources.functions.base64";
+								local dbh = Database.new('system', 'base64/read')
 
+								local sql = [[SELECT * FROM v_voicemails
+									WHERE domain_uuid = :domain_uuid
+									AND voicemail_id = :voicemail_id]];
+								local params = {domain_uuid = domain_uuid, voicemail_id = row.extension};
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
+								end
+								dbh:query(sql, params, function(field)
 									--set the voicemail message path
 										file_location = voicemail_dir.."/"..row.extension.."/recorded_name.wav";
 
 									--save the recording to the file system
 										if (string.len(field["voicemail_name_base64"]) > 32) then
-											local file = io.open(file_location, "w");
-											file:write(base64.decode(field["voicemail_name_base64"]));
-											file:close();
+											--include the file io
+												local file = require "resources.functions.file"
+
+											--write decoded string to file
+												file.write_base64(file_location, field["voicemail_name_base64"]);
 										end
 
 									--play the recorded name
@@ -249,21 +265,24 @@
 											session:streamFile(file_location);
 										else
 											--announce the first and last names
-											if (speak_mod ~= nil and speak_voice ~= nil) then
-												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
-											else
-												session:execute("say", "en name_spelled iterated "..row.first_name);
+											if (row.first_name ~= nil and row.first_name ~= '') then
+												if (speak_mod ~= nil and speak_voice ~= nil) then
+													session:execute("speak", speak_mod.."|"..speak_voice.."|"..row.first_name);
+												else
+													session:execute("say", default_language.." name_spelled iterated "..row.first_name);
+												end
 											end
 											--session:execute("sleep", "500");
-											if (row.last_name ~= nil) then
+											if (row.last_name ~= nil and row.last_name ~= '') then
 												if (speak_mod ~= nil and speak_voice ~= nil) then
-													session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
+													session:execute("speak", speak_mod.."|"..speak_voice.."|"..row.last_name);
 												else
-													session:execute("say", "en name_spelled iterated "..row.last_name);
+													session:execute("say", default_language.." name_spelled iterated "..row.last_name);
 												end
 											end
 										end
 								end);
+								dbh:release()
 							elseif (storage_type == "http_cache") then
 								file_location = storage_path.."/"..row.extension.."/recorded_name.wav";
 								if (file_exists(file_location)) then
@@ -277,28 +296,30 @@
 									session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
 								else
 									--announce the first and last names
-										if (speak_mod ~= nil and speak_voice ~= nil) then
-											session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
-										else
-											session:execute("say", "en name_spelled iterated "..row.first_name);
+										if (row.first_name ~= nil and row.first_name ~= '') then
+											if (speak_mod ~= nil and speak_voice ~= nil) then
+												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.first_name);
+											else
+												session:execute("say", default_language.." name_spelled iterated "..row.first_name);
+											end
 										end
-										if (row.last_name ~= nil) then
+										if (row.last_name ~= nil and row.last_name ~= '') then
 											--session:execute("sleep", "500");
 											if (speak_mod ~= nil and speak_voice ~= nil) then
 												session:execute("speak",speak_mod.."|"..speak_voice.."|"..row.last_name);
 											else
-												session:execute("say", "en name_spelled iterated "..row.last_name);
+												session:execute("say", default_language.." name_spelled iterated "..row.last_name);
 											end
 										end
 								end
 							end
 
 						--announce the extension number
-							if (row.directory_exten_visible == "false") then
+							--if (row.directory_exten_visible == "false") then
 								--invisible extension number
-							else
+							if (row.extension ~= nil and row.extension ~= '' and row.directory_exten_visible == "true") then
 								session:streamFile(sounds_dir.."/directory/dir-at_extension.wav");
-								session:execute("say", "en number iterated "..row.extension);
+								session:execute("say", default_language.." NAME_SPELLED iterated "..row.extension);
 							end
 
 						--select this entry press 1
@@ -322,13 +343,14 @@
 	end
 
 --get the extensions from the database
-	sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
+		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 	end
 	x = 1;
 	directory = {}
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		--show all key value pairs
 			--for key, val in pairs(row) do
 			--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. val .. "\n");
@@ -375,7 +397,12 @@
 		directory_search();
 	end
 
-	session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+--timeout action
+	if (timeout_destination == nil) then
+		session:streamFile(sounds_dir.."/voicemail/vm-goodbye.wav");
+	else
+		session:execute("transfer", timeout_destination.." XML "..row.context);
+	end
 
 --notes
 	--session:execute("say", "en name_spelled pronounced mark");

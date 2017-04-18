@@ -93,15 +93,12 @@ if (!class_exists('scripts')) {
 		 * Copy the switch scripts from the web directory to the switch directory
 		 */
 		public function copy_files() {
-			if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if(strlen($dst_dir) == 0) {
-					throw new Exception("Cannot copy scripts the 'script_dir' is empty");
-				}
 				if (file_exists($dst_dir)) {
 					//get the source directory
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
-						$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
+					if (file_exists('/usr/share/examples/fusionpbx/scripts')){
+						$src_dir = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
 						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
@@ -109,6 +106,13 @@ if (!class_exists('scripts')) {
 					if (is_readable($dst_dir)) {
 						recursive_copy($src_dir,$dst_dir);
 						unset($src_dir);
+						
+						// Copy the app/*/resource/install/scripts
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
+						foreach ($app_scripts as $app_script){
+							recursive_copy($app_script, $dst_dir);
+						}
+						unset($app_scripts);
 					}else{
 						throw new Exception("Cannot read from '$src_dir' to get the scripts");
 					}
@@ -122,7 +126,7 @@ if (!class_exists('scripts')) {
 		 * Writes the config.lua
 		 */
 		public function write_config() {
-			if (is_dir($_SESSION['switch']['scripts']['dir'])) {
+			if (is_array($_SESSION['switch']['scripts'])) {
 
 				//replace the backslash with a forward slash
 					$this->db_path = str_replace("\\", "/", $this->db_path);
@@ -143,13 +147,15 @@ if (!class_exists('scripts')) {
 							$prep_statement = $this->db->prepare(check_sql($sql));
 							$prep_statement->execute();
 							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result as &$row) {
-								$this->dsn_name = $row["database_name"];
-								$this->dsn_username = $row["database_username"];
-								$this->dsn_password = $row["database_password"];
-								break; //limit to 1 row
+							if (is_array($result)) {
+								foreach ($result as &$row) {
+									$this->dsn_name = $row["database_name"];
+									$this->dsn_username = $row["database_username"];
+									$this->dsn_password = $row["database_password"];
+									break; //limit to 1 row
+								}
+								unset ($prep_statement);
 							}
-							unset ($prep_statement);
 						}
 						else {
 							$odbc_num_rows = '0';
@@ -157,7 +163,17 @@ if (!class_exists('scripts')) {
 					}
 
 				//get the recordings directory
-					$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					if (is_array($_SESSION['switch']['recordings'])) {
+						$recordings_dir = $_SESSION['switch']['recordings']['dir'];
+					}
+
+				//get the http_protocol
+					if (!isset($_SERVER['HTTP_PROTOCOL'])) {
+						$_SERVER['HTTP_PROTOCOL'] = 'http';
+						if (isset($_SERVER['REQUEST_SCHEME'])) { $_SERVER['HTTP_PROTOCOL'] = $_SERVER['REQUEST_SCHEME']; }
+						if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+						if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
+					}
 
 				//find the location to write the config.lua
 					if (is_dir("/etc/fusionpbx")){
@@ -176,11 +192,11 @@ if (!class_exists('scripts')) {
 				//make the config.lua
 					$tmp = "\n";
 					$tmp .= "--set the variables\n";
+					if (strlen($_SESSION['switch']['conf']['dir']) > 0) {
+						$tmp .= $this->correct_path("	conf_dir = [[".$_SESSION['switch']['conf']['dir']."]];\n");
+					}
 					if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
 						$tmp .= $this->correct_path("	sounds_dir = [[".$_SESSION['switch']['sounds']['dir']."]];\n");
-					}
-					if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
-						$tmp .= $this->correct_path("	phrases_dir = [[".$_SESSION['switch']['phrases']['dir']."]];\n");
 					}
 					if (strlen($_SESSION['switch']['db']['dir']) > 0) {
 						$tmp .= $this->correct_path("	database_dir = [[".$_SESSION['switch']['db']['dir']."]];\n");
@@ -201,10 +217,15 @@ if (!class_exists('scripts')) {
 					if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 						$tmp .= "	php_bin = \"php.exe\";\n";
 					}
+					elseif (file_exists(PHP_BINDIR."/php5")) { 
+	 					$tmp .= "	php_bin = \"php5\";\n";
+ 					}
 					else {
-						$tmp .= "	php_bin = \"php5\";\n";
+						$tmp .= "	php_bin = \"php\";\n";
 					}
 					$tmp .= $this->correct_path("	document_root = [[".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	project_path = [[".PROJECT_PATH."]];\n");
+					$tmp .= $this->correct_path("	http_protocol = [[".$_SERVER['HTTP_PROTOCOL']."]];\n");
 					$tmp .= "\n";
 
 					$tmp .= "--store settings in memcache\n";
@@ -236,18 +257,25 @@ if (!class_exists('scripts')) {
 							$tmp .= "	database.switch = \"\";\n";
 						}
 						$tmp .= "\n";
+						$tmp .= "	database.backend = {}\n";
+						$tmp .= "	database.backend.base64 = 'luasql'\n";
+						$tmp .= "\n";
 					}
 					$tmp .= "--set defaults\n";
 					$tmp .= "	expire = {}\n";
+					$tmp .= "	expire.default = \"3600\";\n";
 					$tmp .= "	expire.directory = \"3600\";\n";
 					$tmp .= "	expire.dialplan = \"3600\";\n";
 					$tmp .= "	expire.languages = \"3600\";\n";
 					$tmp .= "	expire.sofia = \"3600\";\n";
 					$tmp .= "	expire.acl = \"3600\";\n";
+					$tmp .= "	expire.ivr = \"3600\";\n";
 					$tmp .= "\n";
 					$tmp .= "--set xml_handler\n";
 					$tmp .= "	xml_handler = {}\n";
 					$tmp .= "	xml_handler.fs_path = false;\n";
+					$tmp .= "	xml_handler.reg_as_number_alias = false;\n";
+					$tmp .= "	xml_handler.number_as_presence_id = true;\n";
 					$tmp .= "\n";
 					$tmp .= "--set settings\n";
 					$tmp .= "	settings = {}\n";

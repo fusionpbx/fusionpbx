@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('time_condition_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('time_condition_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -63,38 +67,12 @@ else {
 	require_once "resources/paging.php";
 	$document['title'] = $text['title-time_conditions'];
 
-//show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td align='left' valign='top'>\n";
-	echo "		<span class='title'>\n";
-	echo "			".$text['header-time_conditions']."\n";
-	echo "		</span>\n";
-	echo "		<br><br>\n";
-	echo "		<span class='vexpl'>\n";
-	echo $text['description-time_conditions'];
-	echo "		</span>\n";
-	echo "	</td>\n";
+//set the alternating styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
-	echo "		<form name='frm_search' method='get' action=''>\n";
-	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
-	if (strlen($app_uuid) > 0) {
-		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
-	}
-	if (strlen($order_by) > 0) {
-		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
-		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
-	}
-	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "		</form>\n";
-	echo "	</td>\n";
-
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br />";
-
-	//get the number of rows in the dialplan
+//get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
@@ -132,6 +110,7 @@ else {
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
+//get the data
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
@@ -156,10 +135,40 @@ else {
 	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//show the content
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td align='left' valign='top'>\n";
+	echo "		<span class='title'>\n";
+	echo "			".$text['header-time_conditions']."\n";
+	echo "		</span>\n";
+	echo "		<br><br>\n";
+	echo "	</td>\n";
+	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
+	echo "		<form name='frm_search' method='get' action=''>\n";
+	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
+	if (strlen($app_uuid) > 0) {
+		echo "		<input type='hidden' class='txt' name='app_uuid' value='".$app_uuid."'>";
+	}
+	if (strlen($order_by) > 0) {
+		echo "		<input type='hidden' class='txt' name='order_by' value='".$order_by."'>";
+		echo "		<input type='hidden' class='txt' name='order' value='".$order."'>";
+	}
+	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "		</form>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "	<td colspan='2'>\n";
+	echo "		<span class='vexpl'>\n";
+	echo $text['description-time_conditions'];
+	echo "		</span>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br />";
 
+//show the content
 	echo "<form name='frm_delete' method='post' action='time_condition_delete.php'>\n";
 	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

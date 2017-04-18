@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015
+	Copyright (C) 2015-2016
 	All Rights Reserved.
 
 	Contributor(s):
@@ -83,113 +83,71 @@
 						$this->forward_prefix = $this->forward_prefix.$this->fax_forward_number.'#'; //found
 					}
 
-				//delete previous dialplan
-					if (strlen($this->dialplan_uuid) > 0) {
-						//delete the previous dialplan
-						$sql = "delete from v_dialplans ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-
+				//set the dialplan_uuid
+					if (strlen($this->dialplan_uuid) == 0) {
+						$this->dialplan_uuid = uuid();
+					}
+					else {
+						//delete the previous details
 						$sql = "delete from v_dialplan_details ";
 						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
 						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
 						$this->db->exec($sql);
 						unset($sql);
 					}
-					unset($prep_statement);
+
+				//set the fax name
+		 			$fax_name = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
+		 
+		 		//set the  last fax
+		 			if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
+						$last_fax = "last_fax=".$_SESSION['fax']['last_fax']['text'];
+					}
+					else {
+						$last_fax = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
+					}
+				
+				//set the rx_fax
+					$rxfax_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
+		
+				//build the xml dialplan
+					$dialplan_xml = "<extension name=\"".$fax_name ."\" continue=\"false\" uuid=\"".$this->dialplan_uuid."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$this->destination_number."$\">\n";
+					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"fax_uuid=".$this->fax_uuid."\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua\"/>\n";
+					foreach($_SESSION['fax']['variable'] as $data) {
+						if (substr($data,0,8) == "inbound:") {
+							$dialplan_xml .= "		<action application=\"set\" data=\"".substr($data,8,strlen($data))."\"/>\n";
+						}
+						elseif (substr($data,0,9) == "outbound:") {}
+						else {
+							$dialplan_xml .= "		<action application=\"set\" data=\"".$data."\"/>\n";
+						}
+					}
+					$dialplan_xml .= "		<action application=\"set\" data=\"".$last_fax."\"/>\n";
+					$dialplan_xml .= "		<action application=\"playback\" data=\"silence_stream://2000\"/>\n";
+					$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
+					$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
+					$dialplan_xml .= "	</condition>\n";
+					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
 					$dialplan["app_uuid"] = "24108154-4ac3-1db6-1551-4731703a4440";
 					$dialplan["domain_uuid"] = $this->domain_uuid;
+					$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
 					$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 					$dialplan["dialplan_number"] = $this->fax_extension;
 					$dialplan["dialplan_context"] = $_SESSION['context'];
 					$dialplan["dialplan_continue"] = "false";
+					$dialplan["dialplan_xml"] = $dialplan_xml;
 					$dialplan["dialplan_order"] = "310";
 					$dialplan["dialplan_enabled"] = "true";
 					$dialplan["dialplan_description"] = $this->fax_description;
 					$dialplan_detail_order = 10;
 
-				//add the public condition
-					$y = 1;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "^".$this->destination_number."\$";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_break"] = "";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax_uuid=".$this->fax_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "api_hangup_hook=lua app/fax/resources/scripts/hangup_rx.lua";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					foreach($_SESSION['fax']['variable'] as $data) {
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-						if (substr($data,0,8) == "inbound:") {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = substr($data,8,strlen($data));
-						}
-						elseif (substr($data,0,9) == "outbound:") {}
-						else {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $data;
-						}
-						$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-						$y++;
-					}
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-					if (strlen($_SESSION['fax']['last_fax']['text']) > 0) {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "last_fax=".$_SESSION['fax']['last_fax']['text'];
-					}
-					else {
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "last_fax=\${caller_id_number}-\${strftime(%Y-%m-%d-%H-%M-%S)}";
-					}
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "silence_stream://2000";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "rxfax";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$this->fax_extension.'/inbox/'.$this->forward_prefix.'${last_fax}.tif';
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "hangup";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
-					$y++;
+				//prepare the array
+					$array['dialplans'][] = $dialplan;
 
 				//add the dialplan permission
 					$p = new permissions;
@@ -199,19 +157,11 @@
 					$p->add("dialplan_detail_edit", 'temp');
 
 				//save the dialplan
-					$orm = new orm;
-					$orm->name('dialplans');
-					$orm->save($dialplan);
-					$dialplan_response = $orm->message;
-					$this->dialplan_uuid = $dialplan_response['uuid'];
-
-				//if new dialplan uuid then update the call center queue
-					$sql = "update v_fax ";
-					$sql .= "set dialplan_uuid = '".$this->dialplan_uuid."' ";
-					$sql .= "where fax_uuid = '".$this->fax_uuid."' ";
-					$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-					$this->db->exec($sql);
-					unset($sql);
+					$database = new database;
+					$database->app_name = 'fax';
+					$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+					$database->save($array);
+					//$message = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');

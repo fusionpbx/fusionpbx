@@ -27,7 +27,7 @@
 	//session handling
 		//start the session
 			ini_set("session.cookie_httponly", True);
-			session_start();
+			if (!isset($_SESSION)) { session_start(); }
 		//regenerate sessions to avoid session id attacks such as session fixation
 			if (array_key_exists('security',$_SESSION) and $_SESSION['security']['session_rotate']['boolean'] == "true") {
 				$_SESSION['session']['last_activity'] = time();

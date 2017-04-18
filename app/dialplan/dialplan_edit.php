@@ -17,34 +17,37 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-require_once "resources/classes/orm.php";
-if (permission_exists('dialplan_add')
-	|| permission_exists('dialplan_edit')
-	|| permission_exists('inbound_route_add')
-	|| permission_exists('inbound_route_edit')
-	|| permission_exists('outbound_route_add')
-	|| permission_exists('outbound_route_edit')
-	|| permission_exists('fifo_edit')
-	|| permission_exists('fifo_add')
-	|| permission_exists('time_condition_add')
-	|| permission_exists('time_condition_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (permission_exists('dialplan_add')
+		|| permission_exists('dialplan_edit')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('inbound_route_edit')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('outbound_route_edit')
+		|| permission_exists('fifo_edit')
+		|| permission_exists('fifo_add')
+		|| permission_exists('time_condition_add')
+		|| permission_exists('time_condition_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -64,6 +67,7 @@ else {
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
+		$hostname = check_str($_POST["hostname"]);
 		$dialplan_name = check_str($_POST["dialplan_name"]);
 		$dialplan_number = check_str($_POST["dialplan_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
@@ -92,12 +96,13 @@ else {
 //process and save the data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		$msg = '';
-		if ($action == "update") {
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		}
+		//get the dialplan uuid
+			if ($action == "update") {
+				$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+			}
 
 		//check for all required data
+			$msg = '';
 			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
@@ -123,48 +128,64 @@ else {
 			$dialplan_name = str_replace("/", "", $dialplan_name);
 
 		//build the array
-			if (strlen($row["dialplan_uuid"]) > 0) {
-				$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
-			}
-			if (isset($_POST["domain_uuid"])) {
-				$array['domain_uuid'] = $_POST['domain_uuid'];
+			$x = 0;
+			if (isset($_POST["dialplan_uuid"])) {
+				$array['dialplans'][$x]['dialplan_uuid'] = $_POST["dialplan_uuid"];
 			}
 			else {
-				$array['domain_uuid'] = $_SESSION['domain_uuid'];
+				$dialplan_uuid = uuid();
+				$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 			}
-			$array['dialplan_name'] = $dialplan_name;
-			$array['dialplan_number'] = $_POST["dialplan_number"];
-			$array['dialplan_context'] = $_POST["dialplan_context"];
-			$array['dialplan_continue'] = $_POST["dialplan_continue"];
-			$array['dialplan_order'] = $_POST["dialplan_order"];
-			$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
-			$array['dialplan_description'] = $_POST["dialplan_description"];
-			$x = 0;
-			foreach ($_POST["dialplan_details"] as $row) {
-				if (strlen($row["dialplan_detail_tag"]) > 0) {
-					if (strlen($row["dialplan_detail_uuid"]) > 0) {
-						$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+			if (isset($_POST["domain_uuid"])) {
+				$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+			}
+			else {
+				$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
+			$array['dialplans'][$x]['hostname'] = $hostname;
+			$array['dialplans'][$x]['dialplan_name'] = $dialplan_name;
+			$array['dialplans'][$x]['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplans'][$x]['dialplan_context'] = $_POST["dialplan_context"];
+			$array['dialplans'][$x]['dialplan_continue'] = $_POST["dialplan_continue"];
+			$array['dialplans'][$x]['dialplan_order'] = $_POST["dialplan_order"];
+			$array['dialplans'][$x]['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplans'][$x]['dialplan_description'] = $_POST["dialplan_description"];
+			$y = 0;
+			if (is_array($_POST["dialplan_details"])) {
+				foreach ($_POST["dialplan_details"] as $row) {
+					if (strlen($row["dialplan_detail_tag"]) > 0) {
+						if (strlen($row["dialplan_detail_uuid"]) > 0) {
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+						}
+						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 					}
-					$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
-					$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-					$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-					$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-					$array['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
-					$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-					$array['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
-					$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+					$y++;
 				}
-				$x++;
 			}
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				$orm = new orm;
-				$orm->name('dialplans');
-				$orm->uuid($dialplan_uuid);
-				$orm->save($array);
-				//$message = $orm->message;
+				$database = new database;
+				$database->app_name = 'dialplans';
+				$database->app_uuid = $app_uuid;
+				$database->uuid($dialplan_uuid);
+				$database->save($array);
+				//$message = $database->message;
 			}
+
+		//update the dialplan xml
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->xml();
 
 		//clear the cache
 			$cache = new cache;
@@ -192,9 +213,10 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		if (is_array($result)) foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			//$app_uuid = $row["app_uuid"];
+			$hostname = $row["hostname"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
 			$dialplan_order = $row["dialplan_order"];
@@ -217,10 +239,12 @@ else {
 	unset ($prep_statement, $sql);
 
 //create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-	$x = 0;
-	$details = '';
+	//set the array index
+		$x = 0;
+	//define the array
+		$details = array();
 	//conditions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "condition") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -230,7 +254,7 @@ else {
 			$x++;
 		}
 	//regex
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "regex") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -240,7 +264,7 @@ else {
 			$x++;
 		}
 	//actions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "action") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -250,7 +274,7 @@ else {
 			$x++;
 		}
 	//anti-actions
-		foreach($result as $row) {
+		if (is_array($result)) foreach($result as $row) {
 			if ($row['dialplan_detail_tag'] == "anti-action") {
 				$group = $row['dialplan_detail_group'];
 				foreach ($row as $key => $val) {
@@ -261,11 +285,11 @@ else {
 		}
 		unset($result);
 	//blank row
-		foreach($details as $group => $row) {
+		if (is_array($details)) foreach($details as $group => $row) {
 			//set the array key for the empty row
 				$x = "999";
 			//get the highest dialplan_detail_order
-				foreach ($row as $key => $field) {
+				if (is_array($row)) foreach ($row as $key => $field) {
 					$dialplan_detail_order = 0;
 					if ($dialplan_detail_order < $field['dialplan_detail_order']) {
 						$dialplan_detail_order = $field['dialplan_detail_order'];
@@ -285,7 +309,9 @@ else {
 				$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
 		}
 	//sort the details array by group number
-		ksort($details);
+		if (is_array($details)) {
+			ksort($details);
+		}
 
 //show the header
 	require_once "resources/header.php";
@@ -334,6 +360,9 @@ else {
 	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
+	if (permission_exists('dialplan_xml')) {
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".$dialplan_uuid."&".((strlen($app_uuid) > 0) ? "app_uuid=".$app_uuid : null)."';\" value='".$text['button-xml']."'>\n";
+	}
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$dialplan_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -352,143 +381,156 @@ else {
 	echo "<tr>\n";
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-name']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' width='70%' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\" required='required'>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+	echo "		".$text['label-name']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' width='70%' align='left'>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\" required='required'>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-number']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-context']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left' width='70%'>\n";
-		echo "    <input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"$dialplan_context\">\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-number']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-continue']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='dialplan_continue'>\n";
-		if ($dialplan_continue == "true") {
-			echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['option-true']."</option>\n";
-		}
-		if ($dialplan_continue == "false") {
-			echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['option-false']."</option>\n";
-		}
-		echo "    </select>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-hostname']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "		<input class='formfld' type='text' name='hostname' maxlength='255' value=\"$hostname\">\n";
+	echo "		<br />\n";
+	echo "		".$text['description-hostname']."\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+	echo "		".$text['label-context']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left' width='70%'>\n";
+	echo "		<input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"$dialplan_context\">\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-continue']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "		<select class='formfld' name='dialplan_continue'>\n";
+	if ($dialplan_continue == "true") {
+		echo "			<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "			<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($dialplan_continue == "false") {
+		echo "			<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "			<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "		</select>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
 
 	echo "</td>";
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-order']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left' width='70%'>\n";
-		echo "	<select name='dialplan_order' class='formfld'>\n";
-		$i=0;
-		while($i<=999) {
-			$selected = ($i == $dialplan_order) ? "selected" : null;
-			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
+	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+	echo "		".$text['label-order']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left' width='70%'>\n";
+	echo "		<select name='dialplan_order' class='formfld'>\n";
+	$i=0;
+	while($i<=999) {
+		$selected = ($i == $dialplan_order) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
 		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (strlen($i) == 2) {
+			echo "			<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "			<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
-		if (permission_exists('dialplan_domain')) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-domain']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='domain_uuid'>\n";
-			if (strlen($domain_uuid) == 0) {
-				echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+	if (permission_exists('dialplan_domain')) {
+		echo "	<tr>\n";
+		echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "		".$text['label-domain']."\n";
+		echo "	</td>\n";
+		echo "	<td class='vtable' align='left'>\n";
+		echo "		<select class='formfld' name='domain_uuid'>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
+		}
+		else {
+			echo "		<option value=''>".$text['select-global']."</option>\n";
+		}
+		if (is_array($_SESSION['domains'])) foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
 			}
 			else {
-				echo "    <option value=''>".$text['select-global']."</option>\n";
+				echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
 			}
-			foreach ($_SESSION['domains'] as $row) {
-				if ($row['domain_uuid'] == $domain_uuid) {
-					echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
-				}
-				else {
-					echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
-				}
-			}
-			echo "    </select>\n";
-			echo "<br />\n";
-			echo $text['description-domain_name']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
 		}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-domain_name']."\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
 
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-enabled']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='dialplan_enabled'>\n";
-		if ($dialplan_enabled == "true") {
-			echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['option-true']."</option>\n";
-		}
-		if ($dialplan_enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['option-false']."</option>\n";
-		}
-		echo "    </select>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-		echo "    ".$text['label-description']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left' width='70%'>\n";
-		echo "    <textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".htmlspecialchars($dialplan_description)."</textarea>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
+	echo "	<tr>\n";
+	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "		".$text['label-enabled']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='dialplan_enabled'>\n";
+	if ($dialplan_enabled == "true") {
+		echo "		<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($dialplan_enabled == "false") {
+		echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "		</select>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+	echo "		".$text['label-description']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left' width='70%'>\n";
+	echo "		<textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".htmlspecialchars($dialplan_description)."</textarea>\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
 
 	echo "</td>";
 	echo "</tr>";
@@ -518,7 +560,7 @@ else {
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0' style='margin: -2px; border-spacing: 2px;'>\n";
 
 				$x = 0;
-				foreach($details as $group) {
+				if (is_array($details)) foreach($details as $group) {
 
 					if ($x != 0) {
 						echo "<tr><td colspan='7'><br><br></td></tr>";
@@ -535,7 +577,7 @@ else {
 					echo "<td>&nbsp;</td>\n";
 					echo "</tr>\n";
 
-					foreach($group as $index => $row) {
+					if (is_array($group)) foreach($group as $index => $row) {
 
 						//get the values from the database and set as variables
 							$dialplan_detail_uuid = $row['dialplan_detail_uuid'];
@@ -622,7 +664,7 @@ else {
 							//}
 							//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 								echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
-								foreach ($_SESSION['switch']['applications'] as $row) {
+								if (is_array($_SESSION['switch']['applications'])) foreach ($_SESSION['switch']['applications'] as $row) {
 									if (strlen($row) > 0) {
 										$application = explode(",", $row);
 										if ($application[0] != "name" && stristr($application[0], "[") != true) {

@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Log Viewer";
 		$apps[$x]['uuid'] = "159a2724-77e1-2782-9366-db08b3750e06";
@@ -20,14 +21,15 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "log_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "781ebbec-a55a-9d60-f7bb-f54ab2ee4e7e";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "log_download";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "log_path_view";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "log_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "781ebbec-a55a-9d60-f7bb-f54ab2ee4e7e";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "log_download";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "log_path_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

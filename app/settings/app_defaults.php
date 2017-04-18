@@ -40,7 +40,7 @@ if ($domains_processed == 1) {
 			$event_socket_ip_address = "127.0.0.1";
 			$event_socket_port = "8021";
 			$event_socket_password = "ClueCon";
-			$xml_rpc_http_port = "8787";
+			$xml_rpc_http_port = "8080";
 			$xml_rpc_auth_realm = "freeswitch";
 			$xml_rpc_auth_user = "freeswitch";
 			$xml_rpc_auth_pass = "works";

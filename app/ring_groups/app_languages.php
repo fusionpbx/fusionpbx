@@ -88,6 +88,17 @@ $text['option-frring']['uk'] = "fr-ring";
 $text['option-frring']['de-at'] = "fr-ring";
 $text['option-frring']['he'] = "צלצול צרפתי";
 
+$text['option-dering']['en-us'] = "de-ring";
+$text['option-dering']['es-cl'] = "de-ring";
+$text['option-dering']['fr-fr'] = "Allemagne";
+$text['option-dering']['pt-pt'] = "de-ring";
+$text['option-dering']['pt-br'] = "DERing";
+$text['option-dering']['pl'] = "de-ring ";
+$text['option-dering']['sv-se'] = "de-ring";
+$text['option-dering']['uk'] = "de-ring";
+$text['option-dering']['de-at'] = "de-ring";
+$text['option-dering']['he'] = "טבעת גרמנית";
+
 $text['option-enterprise']['en-us'] = "Enterprise";
 $text['option-enterprise']['es-cl'] = "Compañia";
 $text['option-enterprise']['fr-fr'] = "Entreprise";
@@ -263,17 +274,6 @@ $text['label-strategy']['sv-se'] = "Strategi";
 $text['label-strategy']['uk'] = "";
 $text['label-strategy']['de-at'] = "Strategie";
 $text['label-strategy']['he'] = "";
-
-$text['label-skip_active']['en-us'] = "Skip Active";
-$text['label-skip_active']['es-cl'] = "Saltar activo";
-$text['label-skip_active']['fr-fr'] = "Faire sonner les postes occupés";
-$text['label-skip_active']['pt-pt'] = "Ir ativa";
-$text['label-skip_active']['pt-br'] = "Pular ativação";
-$text['label-skip_active']['pl'] = "Pomiń aktywne";
-$text['label-skip_active']['sv-se'] = "Hoppa Över Aktiva";
-$text['label-skip_active']['uk'] = "";
-$text['label-skip_active']['de-at'] = "Aktive überspringen";
-$text['label-skip_active']['he'] = "דלג על שיחה פעילה";
 
 $text['label-ringback']['en-us'] = "Ring Back";
 $text['label-ringback']['es-cl'] = "Tono de retorno";

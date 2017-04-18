@@ -21,12 +21,12 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
 		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_context as context, destination_description as description from v_destinations ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and destination_type = 'outbound' and destination_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and destination_type = 'outbound' and destination_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
 		$apps[$x]['destinations'][$y]['field']['uuid'] = "destination_uuid";
 		$apps[$x]['destinations'][$y]['field']['context'] = "destination_context";
@@ -37,7 +37,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "destination_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "fd2a708a-ff03-c707-c19d-5a4194375eba";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -62,11 +62,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
-
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_destinations";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_destinations";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

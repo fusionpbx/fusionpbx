@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,61 +39,6 @@
 			}
 		}
 		*/
-
-		//add CDR settings to default settings
-		$x = 0;
-		$array[$x]['default_setting_category'] = 'cdr';
-		$array[$x]['default_setting_subcategory'] = 'format';
-		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'json';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = '';
-		$x++;
-		$array[$x]['default_setting_category'] = 'cdr';
-		$array[$x]['default_setting_subcategory'] = 'storage';
-		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = 'db';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = '';
-		$x++;
-		$array[$x]['default_setting_category'] = 'cdr';
-		$array[$x]['default_setting_subcategory'] = 'limit';
-		$array[$x]['default_setting_name'] = 'numeric';
-		$array[$x]['default_setting_value'] = '800';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = '';
-		$x++;
-		$array[$x]['default_setting_category'] = 'cdr';
-		$array[$x]['default_setting_subcategory'] = 'http_enabled';
-		$array[$x]['default_setting_name'] = 'boolean';
-		$array[$x]['default_setting_value'] = 'true';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = '';
-
-		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_category = 'cdr' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
-		$x = 0;
-		if (isset($array)) foreach ($array as $row) {
-			$found = false;
-			foreach ($default_settings as $field) {
-				if ($row['default_setting_subcategory'] == $field['default_setting_subcategory']) {
-					$found = true;
-					$break;
-				}
-			}
-			if (!$found) {
-				$orm = new orm;
-				$orm->name('default_settings');
-				$orm->save($array[$x]);
-				$message = $orm->message;
-			}
-			$x++;
-		}
-
 	}
 
 ?>

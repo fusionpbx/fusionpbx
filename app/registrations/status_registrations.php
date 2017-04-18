@@ -41,10 +41,25 @@ require_once "resources/check_auth.php";
 	$language = new text;
 	$text = $language->get();
 
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['header-registrations'];
 
+//show the search
+	echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
+	echo "<tr>\n";
+	echo "		<form method='get' action=''>\n";	
+	echo "			<td style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</td>\n";
+	echo "		</form>\n";	
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 //set the variables
 	$profile = (isset($_REQUEST['profile']) && $_REQUEST['profile'] != '') ? $_REQUEST['profile'] : "internal";
 	$show = trim($_REQUEST["show"]);
@@ -53,7 +68,7 @@ require_once "resources/check_auth.php";
 	?>
 	<script type="text/javascript">
 		var refresh = 1500;
-		var source_url = 'status_registrations_inc.php?profile=<?php echo $profile; ?>&show=<?php echo $show; ?>';
+		var source_url = 'status_registrations_inc.php?profile=<?php echo $profile; ?>&show=<?php echo $show; ?>&search_value=<?php echo $search; ?>';
 		var interval_timer_id;
 
 		function loadXmlHttp(url, id) {

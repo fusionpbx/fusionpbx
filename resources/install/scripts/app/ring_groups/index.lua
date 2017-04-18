@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,14 @@
 local log = require "resources.functions.log".ring_group
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --include functions
 	require "resources.functions.trim";
@@ -65,6 +71,11 @@ local log = require "resources.functions.log".ring_group
 --default to local if nil
 	if (call_direction == nil) then
 		call_direction = "local";
+	end
+
+--set ring ready
+	if (session:ready()) then
+		session:execute("ring_ready", "");
 	end
 
 --define additional variables
@@ -104,8 +115,9 @@ local log = require "resources.functions.log".ring_group
 	ring_group_forward_enabled = "";
 	ring_group_forward_destination = "";
 	sql = "SELECT * FROM v_ring_groups ";
-	sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-	status = dbh:query(sql, function(row)
+	sql = sql .. "where ring_group_uuid = :ring_group_uuid ";
+	local params = {ring_group_uuid = ring_group_uuid};
+	status = dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
 		ring_group_name = row["ring_group_name"];
 		ring_group_extension = row["ring_group_extension"];
@@ -120,10 +132,10 @@ local log = require "resources.functions.log".ring_group
 --set the caller id
 	if (session:ready()) then
 		if (string.len(ring_group_cid_name_prefix) > 0) then
-			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+			session:execute("export", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
 		end
 		if (string.len(ring_group_cid_number_prefix) > 0) then
-			session:execute("set", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
+			session:execute("export", "effective_caller_id_number="..ring_group_cid_number_prefix..caller_id_number);
 		end
 	end
 
@@ -202,19 +214,20 @@ local log = require "resources.functions.log".ring_group
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
-			sql = [[
-					SELECT
-						r.ring_group_strategy
-					FROM
-						v_ring_groups as r
-					WHERE
-						ring_group_uuid = ']]..ring_group_uuid..[['
-						AND r.domain_uuid = ']]..domain_uuid..[['
-						AND r.ring_group_enabled = 'true'
-					]];
+			local sql = [[
+				SELECT
+					r.ring_group_strategy
+				FROM
+					v_ring_groups as r
+				WHERE
+					ring_group_uuid = :ring_group_uuid
+					AND r.domain_uuid = :domain_uuid
+					AND r.ring_group_enabled = 'true'
+			]];
 
+			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
 
-			assert(dbh:query(sql, function(row)
+			assert(dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
@@ -231,21 +244,23 @@ local log = require "resources.functions.log".ring_group
 				SELECT
 					r.ring_group_strategy, r.ring_group_timeout_app, r.ring_group_distinctive_ring,
 					d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt,
-					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback, r.ring_group_skip_active
+					r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_cid_number_prefix, r.ring_group_ringback
 				FROM
 					v_ring_groups as r, v_ring_group_destinations as d
 				WHERE
 					d.ring_group_uuid = r.ring_group_uuid
-					AND d.ring_group_uuid = ']]..ring_group_uuid..[['
-					AND r.domain_uuid = ']]..domain_uuid..[['
+					AND d.ring_group_uuid = :ring_group_uuid
+					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = 'true'
 				ORDER BY
 					]]..sql_order..[[
-				]];
-			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			]];
+			if debug["sql"] then
+				freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+			end
 			destinations = {};
 			x = 1;
-			assert(dbh:query(sql, function(row)
+			assert(dbh:query(sql, params, function(row)
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
 				end
@@ -283,25 +298,29 @@ local log = require "resources.functions.log".ring_group
 		--get the dialplan data and save it to a table
 			if (external) then
 				sql = [[select * from v_dialplans as d, v_dialplan_details as s
-				where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
-				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-				and d.dialplan_enabled = 'true'
-				and d.dialplan_uuid = s.dialplan_uuid
-				order by
-				d.dialplan_order asc,
-				d.dialplan_name asc,
-				d.dialplan_uuid asc,
-				s.dialplan_detail_group asc,
-				CASE s.dialplan_detail_tag
-				WHEN 'condition' THEN 1
-				WHEN 'action' THEN 2
-				WHEN 'anti-action' THEN 3
-				ELSE 100 END,
-				s.dialplan_detail_order asc ]]
-				--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+					where (d.domain_uuid = :domain_uuid or d.domain_uuid is null)
+					and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
+					and d.dialplan_enabled = 'true'
+					and d.dialplan_uuid = s.dialplan_uuid
+					order by
+					d.dialplan_order asc,
+					d.dialplan_name asc,
+					d.dialplan_uuid asc,
+					s.dialplan_detail_group asc,
+					CASE s.dialplan_detail_tag
+					WHEN 'condition' THEN 1
+					WHEN 'action' THEN 2
+					WHEN 'anti-action' THEN 3
+					ELSE 100 END,
+					s.dialplan_detail_order asc
+				]];
+				params = {domain_uuid = domain_uuid};
+				if debug["sql"] then
+					freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
 				dialplans = {};
 				x = 1;
-				assert(dbh:query(sql, function(row)
+				assert(dbh:query(sql, params, function(row)
 					dialplans[x] = row;
 					x = x + 1;
 				end));
@@ -319,7 +338,6 @@ local log = require "resources.functions.log".ring_group
 					ring_group_cid_number_prefix = row.ring_group_cid_number_prefix;
 					ring_group_distinctive_ring = row.ring_group_distinctive_ring;
 					ring_group_ringback = row.ring_group_ringback;
-					ring_group_skip_active = row.ring_group_skip_active;
 					destination_number = row.destination_number;
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
@@ -425,14 +443,7 @@ local log = require "resources.functions.log".ring_group
 						extension_uuid = trim(api:executeString(cmd));
 						--send to user
 						local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
-						if (ring_group_skip_active == "true") then
-							local channels = channels_by_number(destination_number, domain_name)
-							if (not channels) or #channels == 0 then
-								dial_string = dial_string_to_user
-							end
-						else
 							dial_string = dial_string_to_user;
-						end
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
@@ -441,6 +452,7 @@ local log = require "resources.functions.log".ring_group
 						y = 0;
 						dial_string = '';
 						previous_dialplan_uuid = '';
+						regex_match = false;
 						for k, r in pairs(dialplans) do
 							if (y > 0) then
 								if (previous_dialplan_uuid ~= r.dialplan_uuid) then
@@ -532,22 +544,27 @@ local log = require "resources.functions.log".ring_group
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 
-					local bind_target = 'both'
-					-- if session:getVariable("sip_authorized") ~= "true" then
-					-- 	bind_target = 'peer'
-					-- end
-
+				-- support conf-xfer feature
+				-- do
+				-- 	local uuid = api:executeString("create_uuid")
+				-- 	session:execute("export", "conf_xfer_number=xfer-" .. uuid .. "-" .. domain_name)
+				-- end
 				--set bind digit action
+					local bind_target = 'peer'
+					if session:getVariable("sip_authorized") == "true" then
+						bind_target = 'both';
+					end
 					local bindings = {
 						"local,*1,exec:execute_extension,dx XML " .. context,
 						"local,*2,exec:record_session," .. record_file,
 						"local,*3,exec:execute_extension,cf XML " .. context,
 						"local,*4,exec:execute_extension,att_xfer XML " .. context,
+						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do
 						session:execute("bind_digit_action", str .. "," .. bind_target)
 					end
-					session:execute("digit_action_set_realm", "local")
+					session:execute("digit_action_set_realm", "local");
 
 					--if the user is busy rollover to the next destination
 						if (ring_group_strategy == "rollover") then
@@ -616,6 +633,7 @@ local log = require "resources.functions.log".ring_group
 								or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE"
 								or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION"
 								or session:getVariable("originate_disposition") == "USER_BUSY"
+								or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 								or session:getVariable("originate_disposition") == "failure"
 							) then
 								--send missed call notification
@@ -630,10 +648,13 @@ local log = require "resources.functions.log".ring_group
 								--execute the time out action
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							else
-								sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
-								sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-								--freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
-								dbh:query(sql, function(row)
+								local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
+								sql = sql .. "where ring_group_uuid = :ring_group_uuid";
+								local params = {ring_group_uuid = ring_group_uuid};
+								if debug["sql"] then
+									freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
+								end
+								dbh:query(sql, params, function(row)
 									--send missed call notification
 										missed();
 									--execute the time out action

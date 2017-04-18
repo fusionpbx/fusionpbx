@@ -8,6 +8,7 @@ $text['title']['pt-br'] = "Configurações da Conta";
 $text['title']['pl'] = "Rozsyłanie rozmów";
 $text['title']['sv-se'] = "Samtalsdistributioner";
 $text['title']['uk'] = "Трансляція дзвінків";
+$text['title']['de-de'] = "Automatische Anrufe";
 $text['title']['de-at'] = "Automatische Anrufe";
 $text['title']['he'] = "הגדרת חשבון";
 
@@ -19,6 +20,7 @@ $text['option-true']['pt-br'] = "Sim";
 $text['option-true']['pl'] = "Tak";
 $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk'] = "Так";
+$text['option-true']['de-de'] = "Ein";
 $text['option-true']['de-at'] = "Ein";
 $text['option-true']['he'] = "חוקי";
 
@@ -30,6 +32,7 @@ $text['option-false']['pt-br'] = "Não";
 $text['option-false']['pl'] = "Nie";
 $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk'] = "Ні";
+$text['option-false']['de-de'] = "Aus";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['he'] = "לא חוקי";
 
@@ -41,6 +44,7 @@ $text['label-view-calls']['pt-br'] = "Ver chamadas";
 $text['label-view-calls']['pl'] = "Podgląd rozmów";
 $text['label-view-calls']['sv-se'] = "Granska Samtal";
 $text['label-view-calls']['uk'] = "Перегляд дзвінків";
+$text['label-view-calls']['de-de'] = "Anrufe ansehen";
 $text['label-view-calls']['de-at'] = "Anrufe ansehen";
 $text['label-view-calls']['he'] = "";
 
@@ -52,7 +56,8 @@ $text['label-timeout']['pt-br'] = "Tempo limite";
 $text['label-timeout']['pl'] = "Przekroczenie czasu oczekiwania (timeout)";
 $text['label-timeout']['sv-se'] = "Tidsgräns";
 $text['label-timeout']['uk'] = "Таймаут";
-$text['label-timeout']['de-at'] = "Abwurfzeit";
+$text['label-timeout']['de-de'] = "Zeitüberschreitung";
+$text['label-timeout']['de-at'] = "Zeitüberschreitung";
 $text['label-timeout']['he'] = "";
 
 $text['label-phone']['en-us'] = "Phone Number List";
@@ -63,6 +68,7 @@ $text['label-phone']['pt-br'] = "Lista de números de telefone";
 $text['label-phone']['pl'] = "Lista numerów telefonu";
 $text['label-phone']['sv-se'] = "Lista Med Telefonnummer";
 $text['label-phone']['uk'] = "Список телефонних номерів";
+$text['label-phone']['de-de'] = "Liste der Telefonnummern";
 $text['label-phone']['de-at'] = "Liste der Telefonnummern";
 $text['label-phone']['he'] = "רשימת מספרי טלפון";
 
@@ -74,6 +80,7 @@ $text['label-message']['pt-br'] = "Mensagem";
 $text['label-message']['pl'] = "Wiadomość";
 $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk'] = "Повідомлення";
+$text['label-message']['de-de'] = "Nachricht";
 $text['label-message']['de-at'] = "Nachricht";
 $text['label-message']['he'] = "הודעה";
 
@@ -81,10 +88,11 @@ $text['label-has-been']['en-us'] = "has been started";
 $text['label-has-been']['es-cl'] = "iniciada";
 $text['label-has-been']['pt-pt'] = "foi inicializada";
 $text['label-has-been']['fr-fr'] = "a commencé";
-$text['label-has-been']['pt-br'] = "Foi inicializada";
+$text['label-has-been']['pt-br'] = "foi inicializada";
 $text['label-has-been']['pl'] = "rozpoczęto";
 $text['label-has-been']['sv-se'] = "har startat";
 $text['label-has-been']['uk'] = "було запущено";
+$text['label-has-been']['de-de'] = "bereits gestartet";
 $text['label-has-been']['de-at'] = "bereits gestartet";
 $text['label-has-been']['he'] = "";
 
@@ -96,6 +104,7 @@ $text['label-destination']['pt-br'] = "Número de destino";
 $text['label-destination']['pl'] = "Destynacja";
 $text['label-destination']['sv-se'] = "Destinationsnummer";
 $text['label-destination']['uk'] = "Номер";
+$text['label-destination']['de-de'] = "Zielnummer";
 $text['label-destination']['de-at'] = "Zielnummer";
 $text['label-destination']['he'] = "יעד";
 
@@ -103,10 +112,11 @@ $text['label-concurrent-limit']['en-us'] = "Concurrent Limit";
 $text['label-concurrent-limit']['es-cl'] = "Límite de concurrencia";
 $text['label-concurrent-limit']['pt-pt'] = "Limite de chamadas concorrentes";
 $text['label-concurrent-limit']['fr-fr'] = "Appels Simultanés";
-$text['label-concurrent-limit']['pt-br'] = "Limite de chamadas concorrentes";
+$text['label-concurrent-limit']['pt-br'] = "Limite de chamadas simultâneas";
 $text['label-concurrent-limit']['pl'] = "Limit jednoczesnych rozmów";
 $text['label-concurrent-limit']['sv-se'] = "Samtidig Gräns";
 $text['label-concurrent-limit']['uk'] = "Обмеження одночасної кількості";
+$text['label-concurrent-limit']['de-de'] = "Gleichzeitige Anrufe";
 $text['label-concurrent-limit']['de-at'] = "Gleichzeitige Anrufe";
 $text['label-concurrent-limit']['he'] = "";
 
@@ -118,6 +128,7 @@ $text['label-callerid-number']['pt-br'] = "Número do discador";
 $text['label-callerid-number']['pl'] = "Prezentacja numeru dzwoniącego";
 $text['label-callerid-number']['sv-se'] = "Caller ID Nummer";
 $text['label-callerid-number']['uk'] = "Caller ID Номер";
+$text['label-callerid-number']['de-de'] = "Anruferkennung (Nummer)";
 $text['label-callerid-number']['de-at'] = "Anruferkennung (Nummer)";
 $text['label-callerid-number']['he'] = "";
 
@@ -129,6 +140,7 @@ $text['label-caller-id-name']['pt-br'] = "Nome do discador";
 $text['label-caller-id-name']['pl'] = "Prezentacja nazwy dzwoniącego";
 $text['label-caller-id-name']['sv-se'] = "Caller ID Namn";
 $text['label-caller-id-name']['uk'] = "Caller ID Ім’я";
+$text['label-caller-id-name']['de-de'] = "Anruferkennung (Name)";
 $text['label-caller-id-name']['de-at'] = "Anruferkennung (Name)";
 $text['label-caller-id-name']['he'] = "";
 
@@ -140,6 +152,7 @@ $text['label-call-broadcasts']['pt-br'] = "Chamadas broadcast";
 $text['label-call-broadcasts']['pl'] = "Rozsyłanie rozmów";
 $text['label-call-broadcasts']['sv-se'] = "Samtalsdistributioner";
 $text['label-call-broadcasts']['uk'] = "Трансляція дзвінків";
+$text['label-call-broadcasts']['de-de'] = "Automatische Anrufe";
 $text['label-call-broadcasts']['de-at'] = "Automatische Anrufe";
 $text['label-call-broadcasts']['he'] = "";
 
@@ -151,6 +164,7 @@ $text['label-call-broadcast']['pt-br'] = "Chamada de broadcast";
 $text['label-call-broadcast']['pl'] = "Rozsyłanie rozmów";
 $text['label-call-broadcast']['sv-se'] = "Samtalsdistribution";
 $text['label-call-broadcast']['uk'] = "Трансляція дзвінка";
+$text['label-call-broadcast']['de-de'] = "Automatische Anrufe";
 $text['label-call-broadcast']['de-at'] = "Automatische Anrufe";
 $text['label-call-broadcast']['he'] = "";
 
@@ -162,6 +176,7 @@ $text['label-avmd']['pt-br'] = "Detecção Voicemail";
 $text['label-avmd']['pl'] = "Wykrywanie poczty głosowej";
 $text['label-avmd']['sv-se'] = "Känn Av Röstbrevlåda";
 $text['label-avmd']['uk'] = "Виявлення голосової пошти";
+$text['label-avmd']['de-de'] = "Mailboxerkennung";
 $text['label-avmd']['de-at'] = "Mailboxerkennung";
 $text['label-avmd']['he'] = "";
 
@@ -173,39 +188,43 @@ $text['label-accountcode']['pt-br'] = "Código da conta";
 $text['label-accountcode']['pl'] = "Numer konta billingowego";
 $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk'] = "Код облікового запису";
-$text['label-accountcode']['de-at'] = "Account Code";
+$text['label-accountcode']['de-de'] = "Kontoschlüssel";
+$text['label-accountcode']['de-at'] = "KOntoschlüssel";
 $text['label-accountcode']['he'] = "קוד חשבון";
 
 $text['description-timeout']['en-us'] = "";
 $text['description-timeout']['es-cl'] = "";
-$text['description-timeout']['pt-pt'] = "";
+$text['description-timeout']['pt-pt'] = "Limite de tempo (em milissegundos) de espera após reproduzir gravações ou confirmar a macro.";
 $text['description-timeout']['fr-fr'] = "";
 $text['description-timeout']['pt-br'] = "";
 $text['description-timeout']['pl'] = "Ilość milisekund oczekiwania po odtworzeniu nagrania lub potwierdzenia makro.";
 $text['description-timeout']['sv-se'] = "";
 $text['description-timeout']['uk'] = "";
-$text['description-timeout']['de-at'] = "Geben Sie das absolute Time-Out in Sekunden an.";
+$text['description-timeout']['de-de'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
+$text['description-timeout']['de-at'] = "Geben Sie die absolute Zeitüberschreitung in Sekunden an.";
 $text['description-timeout']['he'] = "";
 
 $text['description-phone']['en-us'] = "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name";
 $text['description-phone']['es-cl'] = "Opcional, definir una lista de números de telefono, uno por línea en el siguiente formato:  123-123-1234 | Apellido, Nombre";
 $text['description-phone']['pt-pt'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 210000000 | Apelido, Primeiro Nome";
 $text['description-phone']['fr-fr'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
-$text['description-phone']['pt-br'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 210000000 | Apelido, Primeiro Nome ";
+$text['description-phone']['pt-br'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 210000000 | Apelido, Primeiro Nome.";
 $text['description-phone']['pl'] = "Opcjonalne - ułóż listę numerów (jeden pod drugim) w formacie: 123-123-1234|Nazwisko, Imię";
 $text['description-phone']['sv-se'] = "Frivillig, fyll i en lista med nummer (ett per rad) i följande format: 123-123-1234|Efternamn, Förnamn";
 $text['description-phone']['uk'] = "Додатково, задайте список телефонних номерів по одному на рядок в наступному форматі: 123-123-1234 | Прізвище, ім'я";
-$text['description-phone']['de-at'] = "Optional. Setzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname, Vorname";
+$text['description-phone']['de-de'] = "Optional: Ergänzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname, Vorname";
+$text['description-phone']['de-at'] = "Optional: Ergänzen Sie eine Liste von Telefonnummern, eine Nummer pro Zeile im folgenden Format: 123-123-1234|Nachname, Vorname";
 $text['description-phone']['he'] = "";
 
 $text['description-name']['en-us'] = "Enter the name here.";
 $text['description-name']['es-cl'] = "Ingrese el nombre aquí.";
 $text['description-name']['pt-pt'] = "Introduza o nome aqui.";
 $text['description-name']['fr-fr'] = "Insérer le Nom.";
-$text['description-name']['pt-br'] = "Insira o nome do menu";
+$text['description-name']['pt-br'] = "Insira o nome do broadcast.";
 $text['description-name']['pl'] = "Wprowadź nazwę";
 $text['description-name']['sv-se'] = "Skriv in namnet här.";
 $text['description-name']['uk'] = "Введіть назву";
+$text['description-name']['de-de'] = "Geben Sie den Namen an.";
 $text['description-name']['de-at'] = "Geben Sie den Namen an.";
 $text['description-name']['he'] = "הכנס את השם";
 
@@ -217,6 +236,7 @@ $text['description-info']['pt-br'] = "Inisra uma descrição";
 $text['description-info']['pl'] = "Wprowadź opis";
 $text['description-info']['sv-se'] = "Ange beskrivning här.";
 $text['description-info']['uk'] = "Введіть опис";
+$text['description-info']['de-de'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['de-at'] = "Geben Sie eine Beschreibung an.";
 $text['description-info']['he'] = "הכנס תאור";
 
@@ -228,6 +248,7 @@ $text['description-destination']['pt-br'] = "Enviar a chamada para a extensão d
 $text['description-destination']['pl'] = "Wybierz numer docelowy.";
 $text['description-destination']['sv-se'] = "Skicka samtalet till en anknytning, IVR Meny, Konferens Rum eller något annat nummer.";
 $text['description-destination']['uk'] = "Відправити дзвінок на розширення, меню IVR, конференцію, або будь-який інший номер.";
+$text['description-destination']['de-de'] = "Der Anruf wird auf diese Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
 $text['description-destination']['de-at'] = "Der Anruf wird auf diese Nebenstelle, eine Automatische Vermittlung, ein Konferenzraum oder jede andere Nummer weitergeleitet.";
 $text['description-destination']['he'] = "";
 
@@ -235,20 +256,22 @@ $text['description-concurrent-limit']['en-us'] = "Limit the approximate number o
 $text['description-concurrent-limit']['es-cl'] = "Limitar el número de llamadas simultaneas. Deje en blanco para no establecer un límite.";
 $text['description-concurrent-limit']['pt-pt'] = "Limitar o número de chamadas concurrentes. Deixe este campo em branco para não ter limite.";
 $text['description-concurrent-limit']['fr-fr'] = "Limite le nombre d'appels concurrents. Laisser vide pour illimité.";
-$text['description-concurrent-limit']['pt-br'] = "Limitar o número de chamadas concorrentes. Deixe este campo em branco para não ter limite. ";
+$text['description-concurrent-limit']['pt-br'] = "Limitar o número de chamadas simultâneas. Deixe este campo em branco para não ter limite.";
 $text['description-concurrent-limit']['pl'] = "Ogranicz liczbę równoczesnych  połączeń. Aby nie było limitu zostaw to pole puste.";
 $text['description-concurrent-limit']['sv-se'] = "Begränsa ungefärliga antalet samtidiga samtal. Lämna det här tomt för ingen gräns.";
 $text['description-concurrent-limit']['uk'] = "Обмеження приблизної кількості одночасних дзвінків. Якщо пусто - без обмежень";
-$text['description-concurrent-limit']['de-at'] = "Limitiert die gleichzeitigen Anrufe. Kein Limit wenn leer gelassen.";
+$text['description-concurrent-limit']['de-de'] = "Limitiert die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
+$text['description-concurrent-limit']['de-at'] = "Limitiert die Anzahl gleichzeitiger Anrufe. Kein Limit wenn leer gelassen.";
 $text['description-concurrent-limit']['he'] = "";
 
 $text['description-caller-id-number']['en-us'] = "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000";
 $text['description-caller-id-number']['pt-pt'] = "Aplicável se o provedor permitir o envio do número do originador das chamadas. Omissão: 0000000000";
 $text['description-caller-id-number']['fr-fr'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du numéro d'appelant. Par défaut: 0000000000";
-$text['description-caller-id-number']['pt-br'] = "Aplicável se o provedor permitir o envio do número do originador das chamadas. Omissão: 0000000000 ";
+$text['description-caller-id-number']['pt-br'] = "Aplicável se o provedor permitir o envio do número do originador das chamadas. Omissão: 0000000000.";
 $text['description-caller-id-number']['pl'] = "Zastosowane w przypadku jeżeli operator zezwala na prezentację numeru. Standardowo prezentacja jest w formacie: 0000000000";
 $text['description-caller-id-number']['sv-se'] = "Gäller om leverantör tillåter att Caller ID nummer skickas. Standard: 0000000000";
 $text['description-caller-id-number']['uk'] = "Стосується, якщо постачальник, дозволяє надсилати номер абонента (Caller ID номер). За замовчуванням: 0000000000";
+$text['description-caller-id-number']['de-de'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
 $text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein.";
 $text['description-caller-id-number']['he'] = "";
 
@@ -256,22 +279,24 @@ $text['description-caller-id-name']['en-us'] = "Applicable if the provider allow
 $text['description-caller-id-name']['es-cl'] = "Applicable si el proveedor permite enviar el número de origen. Por defecto: 0000000000";
 $text['description-caller-id-name']['pt-pt'] = "Aplicável se o provedor permitir o envio do nome do originador das chamadas. Omissão: anonymous";
 $text['description-caller-id-name']['fr-fr'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du nom d'appelant. Par défaut: anonymous";
-$text['description-caller-id-name']['pt-br'] = "Aplicar se o provedor ";
+$text['description-caller-id-name']['pt-br'] = "Aplicável se o provedor de telefônia liberar o nome de quem está discando. Por padrão: anonymous (anônimo).";
 $text['description-caller-id-name']['pl'] = "Zastosowane w przypadku jeżeli operator zezwala na prezentację nazwy. Standardowo prezentacja jest w formacie: 0000000000";
 $text['description-caller-id-name']['sv-se'] = "Gäller om leverantör tillåter att Caller ID namn skickas. Standard: anonymous";
 $text['description-caller-id-name']['uk'] = "Стосується, якщо постачальник, дозволяє надсилати ім’я абонента (Caller ID Ім’я). За замовчуванням: anonymous";
-$text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein.";
+$text['description-caller-id-name']['de-de'] = "Geben Sie die Anruferkennung (Name) hier ein, sofern der Provider dieses unterstützt. Default: anonym.";
+$text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein, sofern der Provider dieses unterstützt. Default: anonym.";
 $text['description-caller-id-name']['he'] = "";
 
 $text['description-avmd']['en-us'] = "Select whether to enable or disable the detection of voicemail messaging and answering machine systems.";
 $text['description-avmd']['es-cl'] = "Seleccione si desea activar o desactivar la detección de sistemas de contestador automático de mensajes de correo de voz y.";
 $text['description-avmd']['pt-pt'] = "Selecione se deseja ativar ou desativar a detecção de mensagens de correio de voz e sistemas de secretária eletrônica.";
 $text['description-avmd']['fr-fr'] = "Indiquez si vous souhaitez activer ou désactiver la détection de la messagerie vocale et les systèmes de machines de répondeur.";
-$text['description-avmd']['pt-br'] = "Selecione se deseja ativar ou desativar a detecção de mensagens de correio de voz e sistemas de secretária eletrônica. ";
+$text['description-avmd']['pt-br'] = "Selecione se deseja ativar ou desativar a detecção de mensagens de correio de voz e sistemas de secretária eletrônica.";
 $text['description-avmd']['pl'] = "Wybierz, czy chcesz włączyć lub wyłączyć wykrywanie wiadomości poczty głosowej lub innych systemów automatycznego odbierania rozmów.";
 $text['description-avmd']['sv-se'] = "Välj om deteketering av röstbrevlåda skall användas.";
 $text['description-avmd']['uk'] = "Виберіть, чи слід включити або відключити виявлення повідомлень голосової пошти і систему автовідповідача.";
-$text['description-avmd']['de-at'] = "Wählen Sie ob die Erkennung von Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
+$text['description-avmd']['de-de'] = "Wählen Sie ob die Erkennung von Sprach-Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
+$text['description-avmd']['de-at'] = "Wählen Sie ob die Erkennung von Sprach-Mailboxen und automatischen Anrufbeantwortern Ein- oder Ausgeschaltet werden soll.";
 $text['description-avmd']['he'] = "";
 
 $text['confirm-update']['en-us'] = "Update Complete";
@@ -282,6 +307,7 @@ $text['confirm-update']['pt-br'] = "Atualização Efetuada";
 $text['confirm-update']['pl'] = "Aktualizacja zakonczona";
 $text['confirm-update']['sv-se'] = "Uppdatering Klar";
 $text['confirm-update']['uk'] = "Оновлення завершено";
+$text['confirm-update']['de-de'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt";
 $text['confirm-update']['he'] = "עידכון הושלם";
 
@@ -289,10 +315,11 @@ $text['confirm-name']['en-us'] = "Please provide: Name";
 $text['confirm-name']['es-cl'] = "Por favor agregue: Nombre";
 $text['confirm-name']['pt-pt'] = "Por favor indique: Nome";
 $text['confirm-name']['fr-fr'] = "Merci d'indiquer: Nom";
-$text['confirm-name']['pt-br'] = "Por favor indique: Nome";
+$text['confirm-name']['pt-br'] = "Por favor insira: Nome";
 $text['confirm-name']['pl'] = "Wprowadź: Nazwę";
 $text['confirm-name']['sv-se'] = "Ange: Namn";
 $text['confirm-name']['uk'] = "Введіть назву";
+$text['confirm-name']['de-de'] = "Bitte geben Sie den Namen an";
 $text['confirm-name']['de-at'] = "Bitte geben Sie den Namen an";
 $text['confirm-name']['he'] = "";
 
@@ -304,6 +331,7 @@ $text['confirm-delete-info']['pt-br'] = "Deseja realmente remover isto?";
 $text['confirm-delete-info']['pl'] = "Czy na pewno chcesz to usunąć?";
 $text['confirm-delete-info']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete-info']['uk'] = "Ви дійсно бажаєте це видалити?";
+$text['confirm-delete-info']['de-de'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-info']['de-at'] = "Wollen Sie das wirklich löschen?";
 $text['confirm-delete-info']['he'] = "";
 
@@ -315,6 +343,7 @@ $text['confirm-add']['pt-br'] = "Criação efetuada";
 $text['confirm-add']['pl'] = "Dodano poprawnie";
 $text['confirm-add']['sv-se'] = "Tillagd";
 $text['confirm-add']['uk'] = "Додано";
+$text['confirm-add']['de-de'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt";
 $text['confirm-add']['he'] = "הוספה הושלמה";
 
@@ -326,6 +355,7 @@ $text['button-stop']['pt-br'] = "Pausar Broadcast";
 $text['button-stop']['pl'] = "Zatrzymaj rozsylanie rozmów";
 $text['button-stop']['sv-se'] = "Stoppa Samtalsdistribution";
 $text['button-stop']['uk'] = "Зупинити трансляцію";
+$text['button-stop']['de-de'] = "Stopp";
 $text['button-stop']['de-at'] = "Stopp";
 $text['button-stop']['he'] = "";
 
@@ -337,6 +367,7 @@ $text['button-send']['pt-br'] = "Enviar Broadcast";
 $text['button-send']['pl'] = "Wysłane";
 $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['uk'] = "Транслювати";
+$text['button-send']['de-de'] = "Senden";
 $text['button-send']['de-at'] = "Senden";
 $text['button-send']['he'] = "נשלח";
 

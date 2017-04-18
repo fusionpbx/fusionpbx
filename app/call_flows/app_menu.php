@@ -1,6 +1,7 @@
 <?php
 
 $apps[$x]['menu'][0]['title']['en-us'] = "Call Flows";
+$apps[$x]['menu'][0]['title']['pt-br'] = "Fluxo de chamadas";
 $apps[$x]['menu'][0]['title']['es-cl'] = "Flujo de Llamada";
 $apps[$x]['menu'][0]['title']['fr-fr'] = "cinématiques d'Appel";
 $apps[$x]['menu'][0]['title']['fr-ca'] = "Circulation d'Appel";

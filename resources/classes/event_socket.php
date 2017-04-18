@@ -103,6 +103,11 @@ class event_socket {
 	}
 
 	public function connect($host, $port, $password) {
+		//set defaults
+		if ($host == '') { $host = '127.0.0.1'; }
+		if ($port == '') { $port = '8021'; }
+		if ($password == '') { $password = 'ClueCon'; }
+
 		$fp = fsockopen($host, $port, $errno, $errdesc, 3);
 
 		if (!$fp) {

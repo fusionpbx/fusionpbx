@@ -21,9 +21,9 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "inbound_route_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "b64b2bbf-f99b-b568-13dc-32170515a687";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b64b2bbf-f99b-b568-13dc-32170515a687";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;

@@ -23,16 +23,23 @@
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
+//include root.php
+	include "root.php";
 
 //start session
 	ini_set("session.cookie_httponly", True);
-	session_start();
+	if (!isset($_SESSION)) { session_start(); }
 
 //retain message
 	if (isset($_SESSION["message"])) {
 		$message_mood = $_SESSION["message_mood"];
 		$message = $_SESSION["message"];
+	}
+	else {
+		$message_mood = null;
+		$message = null;
+		$_SESSION["message"] = null;
+		$_SESSION["message_mood"] = null;
 	}
 
 //destroy session

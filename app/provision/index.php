@@ -24,16 +24,18 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/functions/device_by.php";
-openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/functions/device_by.php";
+
+//logging
+	openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
 //set default variables
 	$dir_count = 0;
 	$file_count = 0;
 	$row_count = 0;
-	$tmp_array = '';
 	$device_template = '';
 
 //define PHP variables from the HTTP values
@@ -54,10 +56,8 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	}
 
 // Escence make request based on UserID for Memory keys
-/*
-The file name is fixed to `Account1_Extern.xml`.
-(Account1 is the first account you register)
-*/
+	// The file name is fixed to `Account1_Extern.xml`.
+	// (Account1 is the first account you register)
 	if(empty($mac) && !empty($ext)){
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
@@ -81,10 +81,20 @@ The file name is fixed to `Account1_Extern.xml`.
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+                //Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
-	if (isset($_REQUEST['mac'])) {
+	if (isset($mac)) {
 		//normalize the mac address to lower case
 			$mac = strtolower($mac);
 		//replace all non hexadecimal values and validate the mac address
@@ -223,12 +233,15 @@ The file name is fixed to `Account1_Extern.xml`.
 	foreach($_SESSION['provision'] as $key=>$val) {
 		if (strlen($val['var']) > 0) { $value = $val['var']; }
 		if (strlen($val['text']) > 0) { $value = $val['text']; }
+		if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
+		if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
 		if (strlen($value) > 0) { $provision[$key] = $value; }
 		unset($value);
 	}
 
 //check if provisioning has been enabled
 	if ($provision["enabled"] != "true") {
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is not enabled for ".check_str($_REQUEST['mac']));
 		echo "access denied";
 		exit;
 	}
@@ -237,6 +250,7 @@ The file name is fixed to `Account1_Extern.xml`.
 	if (strlen($_SERVER['auth_server']) > 0) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".check_str($_REQUEST['mac']));
 			echo "access denied";
 			exit;
 		}
@@ -260,6 +274,7 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 		}
 		if (!$found) {
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".check_str($_REQUEST['mac']));
 			echo "access denied";
 			exit;
 		}
@@ -341,6 +356,7 @@ The file name is fixed to `Account1_Extern.xml`.
 			}
 			else {
 				//access denied
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
 				header('HTTP/1.0 401 Unauthorized');
 				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -356,15 +372,32 @@ The file name is fixed to `Account1_Extern.xml`.
 	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
 		if ($provision['password'] != check_str($_REQUEST['password'])) {
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 			closelog();
-			echo "access denied 4";
+			echo "access denied";
 			return;
 		}
 	}
 
+//register that we have seen the device
+	$sql = "UPDATE v_devices "; 
+	$sql .= "SET device_provisioned_date=:date, device_provisioned_method=:method, device_provisioned_ip=:ip ";
+	$sql .= "WHERE domain_uuid=:domain_uuid AND device_mac_address=:mac ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		//use the prepared statement
+			$prep_statement->bindValue(':domain_uuid', $domain_uuid);
+			$prep_statement->bindValue(':mac', strtolower($mac));
+			$prep_statement->bindValue(':date', date("Y-m-d H:i:s"));
+			$prep_statement->bindValue(':method', (isset($_SERVER["HTTPS"]) ? 'https' : 'http'));
+			$prep_statement->bindValue(':ip', $_SERVER['REMOTE_ADDR']);
+			$prep_statement->execute();
+			unset($prep_statement);
+	}
+	
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;

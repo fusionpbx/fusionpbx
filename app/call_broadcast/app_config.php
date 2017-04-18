@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ca'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_broadcast_view";
@@ -42,9 +42,10 @@
 		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_broadcasts";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_broadcasts";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_broadcast_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

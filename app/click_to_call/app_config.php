@@ -17,18 +17,19 @@
 		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com um URL.";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Gera chamadas a partir de um URL";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "click_to_call_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "f862556f-9ddd-2697-fdf4-bed08ec63aa5";
-		$apps[$x]['permissions'][0]['groups'][] = "user";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "click_to_call_call";
-		$apps[$x]['permissions'][1]['groups'][] = "user";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "click_to_call_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f862556f-9ddd-2697-fdf4-bed08ec63aa5";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "click_to_call_call";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

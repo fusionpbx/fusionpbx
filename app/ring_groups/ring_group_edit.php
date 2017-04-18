@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2015
+	Portions created by the Initial Developer are Copyright (C) 2010-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,17 +25,21 @@
 	James Rose <james.o.rose@gmail.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/classes/ringbacks.php";
-if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/classes/ringbacks.php";
+
+//check permissions
+	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -100,7 +104,6 @@ else {
 			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_distinctive_ring = check_str($_POST["ring_group_distinctive_ring"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
-			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
 			$ring_group_missed_call_app = check_str($_POST["ring_group_missed_call_app"]);
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
@@ -155,8 +158,9 @@ else {
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//get the ring group uuid
-			if (strlen($ring_group_uuid) == 0) {
-				$ring_group_uuid = check_str($_REQUEST["ring_group_uuid"]);
+			if (!isset($ring_group_uuid)) {
+				$ring_group_uuid = uuid();
+				$_POST["ring_group_uuid"] = $ring_group_uuid;
 			}
 
 		//check for all required data
@@ -253,6 +257,10 @@ else {
 				//update the ring group destinations array
 					$x = 0;
 					foreach ($_POST["ring_group_destinations"] as $row) {
+
+						//sanitize the destination_number
+							$_POST["ring_group_destinations"][$x]["destination_number"] = str_replace('$', '', $_POST["ring_group_destinations"][$x]["destination_number"]);
+
 						//add the domain_uuid
 							if (strlen($_POST["ring_group_destinations"][$x]["domain_uuid"]) == 0) {
 								$_POST["ring_group_destinations"][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
@@ -269,80 +277,51 @@ else {
 							$x++;
 					}
 
+				//build the xml dialplan
+					$dialplan_xml = "<extension name=\"ring group\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
+					$dialplan_xml .= "<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
+					$dialplan_xml .= "<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
+					$dialplan_xml .= "<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
+					$dialplan_xml .= "</condition>\n";
+					$dialplan_xml .= "</extension>\n";
+
+				//build the dialplan array
+					$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
+					$dialplan["dialplan_uuid"] = $dialplan_uuid;
+					$dialplan["dialplan_name"] = $ring_group_name;
+					$dialplan["dialplan_number"] = $ring_group_extension;
+					$dialplan["dialplan_context"] = $ring_group_context;
+					$dialplan["dialplan_continue"] = "false";
+					$dialplan["dialplan_xml"] = $dialplan_xml;
+					$dialplan["dialplan_order"] = "101";
+					$dialplan["dialplan_enabled"] = "true";
+					$dialplan["dialplan_description"] = $ring_group_description;
+					$dialplan["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
+
+				//prepare the array
+					$array['ring_groups'][] = $_POST;
+					$array['dialplans'][] = $dialplan;
+
+				//add the dialplan permission
+					$p = new permissions;
+					$p->add("dialplan_add", "temp");
+					$p->add("dialplan_edit", "temp");
+
 				//save to the data
-					$orm = new orm;
-					$orm->name('ring_groups');
+					$database = new database;
+					//$d->name('ring_groups');
+					$database->app_name = 'ring_groups';
+					$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
 					if (strlen($ring_group_uuid) > 0) {
-						$orm->uuid($ring_group_uuid);
+						$database->uuid($ring_group_uuid);
 					}
-					$orm->save($_POST);
-					$message = $orm->message;
-					if (strlen($ring_group_uuid) == 0) {
-						$ring_group_uuid = $message['uuid'];
-						$_GET["id"] = $ring_group_uuid;
-					}
+					$database->save($array);
+					$message = $database->message;
+
+				//remove the temporary permission
+					$p->delete("dialplan_add", "temp");
+					$p->delete("dialplan_edit", "temp");
 			}
-
-		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-		//delete from the dialplan
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-		//add the dialplan
-			$database = new database;
-			$database->db = $db;
-			$database->table = "v_dialplans";
-			$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database->fields['dialplan_uuid'] = $dialplan_uuid;
-			$database->fields['dialplan_name'] = $ring_group_name;
-			$database->fields['dialplan_order'] = '333';
-			$database->fields['dialplan_context'] = $ring_group_context;
-			$database->fields['dialplan_enabled'] = 'true';
-			$database->fields['dialplan_description'] = $ring_group_description;
-			$database->fields['app_uuid'] = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-			$database->add();
-
-		//add the dialplan details
-			$database->table = "v_dialplan_details";
-			$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database->fields['dialplan_uuid'] = $dialplan_uuid;
-			$database->fields['dialplan_detail_uuid'] = uuid();
-			$database->fields['dialplan_detail_tag'] = 'condition'; //condition, action, antiaction
-			$database->fields['dialplan_detail_type'] = 'destination_number';
-			$database->fields['dialplan_detail_data'] = '^'.$ring_group_extension.'$';
-			$database->fields['dialplan_detail_order'] = '000';
-			$database->add();
-
-		//add the dialplan details
-			$database->table = "v_dialplan_details";
-			$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database->fields['dialplan_uuid'] = $dialplan_uuid;
-			$database->fields['dialplan_detail_uuid'] = uuid();
-			$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-			$database->fields['dialplan_detail_type'] = 'set';
-			$database->fields['dialplan_detail_data'] = 'ring_group_uuid='.$ring_group_uuid;
-			$database->fields['dialplan_detail_order'] = '025';
-			$database->add();
-
-		//add the dialplan details
-			$database->table = "v_dialplan_details";
-			$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database->fields['dialplan_uuid'] = $dialplan_uuid;
-			$database->fields['dialplan_detail_uuid'] = uuid();
-			$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-			$database->fields['dialplan_detail_type'] = 'lua';
-			$database->fields['dialplan_detail_data'] = 'app.lua ring_groups';
-			$database->fields['dialplan_detail_order'] = '030';
-			$database->add();
 
 		//save the xml
 			save_dialplan_xml();
@@ -392,7 +371,6 @@ else {
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
-			$ring_group_skip_active = $row["ring_group_skip_active"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
@@ -422,18 +400,24 @@ else {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$ring_group_destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$x = count($ring_group_destinations);
-		$limit = $x + 1;
 	}
 
-	while($x < $limit) {
-		$ring_group_destinations[$x]['destination_number'] = '';
-		$ring_group_destinations[$x]['destination_delay'] = '';
-		$ring_group_destinations[$x]['destination_timeout'] = '';
-		$ring_group_destinations[$x]['destination_prompt'] = '';
-		$x++;
+//add an empty row to the options array
+	if (count($ring_group_destinations) == 0) {
+		$rows = $_SESSION['ring_group']['destination_add_rows']['numeric'];
+		$id = 0;
 	}
-	unset($limit);
+	if (count($ring_group_destinations) > 0) {
+		$rows = $_SESSION['ring_group']['destination_edit_rows']['numeric'];
+		$id = count($ring_group_destinations)+1;
+	}
+	for ($x = 0; $x < $rows; $x++) {
+		$ring_group_destinations[$id]['destination_number'] = '';
+		$ring_group_destinations[$id]['destination_delay'] = '';
+		$ring_group_destinations[$id]['destination_timeout'] = '';
+		$ring_group_destinations[$id]['destination_prompt'] = '';
+		$id++;
+	}
 
 //get the ring group users
 	if (strlen($ring_group_uuid) > 0) {
@@ -449,14 +433,26 @@ else {
 		//$ring_group_users[$x]['username'] = '';
 	}
 
+//get the users
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and user_enabled = 'true' ";
+	$sql .= "order by username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //set defaults
-	if (strlen($ring_group_skip_active) == 0) { $ring_group_skip_active = 'false'; }
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //set the context for users that are not in the superadmin group
 	if (strlen($ring_group_context) == 0) {
 		$ring_group_context = $_SESSION['domain_name'];
 	}
+
+//get the ring backs
+	$ringbacks = new ringbacks;
+	$ringbacks = $ringbacks->select('ring_group_ringback', $ring_group_ringback);
 
 //show the header
 	require_once "resources/header.php";
@@ -647,10 +643,7 @@ else {
 	echo "	 ".$text['label-ringback']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-	$ringbacks = new ringbacks;
-	echo $ringbacks->select('ring_group_ringback', $ring_group_ringback);
-
+	echo "	".$ringbacks;
 	echo "<br />\n";
 	echo $text['description-ringback']."\n";
 	echo "</td>\n";
@@ -670,16 +663,9 @@ else {
 	}
 	echo "			</table>\n";
 	echo "			<br />\n";
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and user_enabled = 'true' ";
-	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
+	foreach($users as $field) {
 		echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 	}
 	echo "			</select>";
@@ -690,30 +676,6 @@ else {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-skip_active']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_skip_active'>\n";
-	if ($ring_group_skip_active == "true") {
-		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($ring_group_skip_active == "false") {
-		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-skip_active']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('ring_group_missed_call')) {
 		echo "<tr>\n";
@@ -816,4 +778,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

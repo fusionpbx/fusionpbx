@@ -21,7 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "recordings";
 		$apps[$x]['destinations'][$y]['name'] = "recordings";
@@ -37,41 +37,54 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "recording_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "e4290fd2-3ccc-a758-1714-660d38453104";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "recording_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "e4290fd2-3ccc-a758-1714-660d38453104";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_upload";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_play";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_download";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
-		$apps[$x]['permissions'][1]['name'] = "recording_add";
-		$apps[$x]['permissions'][1]['groups'][] = "admin";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "recording_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "admin";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "recording_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "admin";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][4]['name'] = "recording_upload";
-		$apps[$x]['permissions'][4]['groups'][] = "admin";
-		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][5]['name'] = "recording_play";
-		$apps[$x]['permissions'][5]['groups'][] = "user";
-		$apps[$x]['permissions'][5]['groups'][] = "admin";
-		$apps[$x]['permissions'][5]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][6]['name'] = "recording_download";
-		$apps[$x]['permissions'][6]['groups'][] = "user";
-		$apps[$x]['permissions'][6]['groups'][] = "admin";
-		$apps[$x]['permissions'][6]['groups'][] = "superadmin";
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'a780b88f-188b-4d73-a1df-f93a114ca16d';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'recordings';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'storage_type';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'base64';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_recordings";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_recordings";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "recording_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";

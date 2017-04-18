@@ -81,6 +81,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			case "pt-ring": $ringback_value = "\'%(1000,5000,400.0,0.0)\'"; break;
 			case "rs-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
 			case "it-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
+			case "de-ring": $ringback_value = "\'%(1000,4000,425.0,0.0)\'"; break;
 			case "us-ring":
 			default:
 				$ringback = 'us-ring';

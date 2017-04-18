@@ -7,6 +7,7 @@ $text['title-option_edit']['fr-fr'] = "Menu SVI Editer un Option";
 $text['title-option_edit']['pt-br'] = "Editar IVR";
 $text['title-option_edit']['pl'] = "Edycja zapowiedzi głosowych (IVR)";
 $text['title-option_edit']['sv-se'] = "Ändra IVR Meny Val";
+$text['title-option_edit']['de-de'] = "Optionen der Automatischen Vermittlung bearbeiten";
 $text['title-option_edit']['de-at'] = "Optionen der Automatischen Vermittlung bearbeiten";
 
 $text['title-option_add']['en-us'] = "IVR Menu Option Add";
@@ -16,6 +17,7 @@ $text['title-option_add']['fr-fr'] = "Menu SVI Ajouter une Option";
 $text['title-option_add']['pt-br'] = "Adicionar IVR";
 $text['title-option_add']['pl'] = "Dodaj zapowiedź głosową (IVR)";
 $text['title-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
+$text['title-option_add']['de-de'] = "Optionen der Automatischen Vermittlung hinzufügen";
 $text['title-option_add']['de-at'] = "Optionen der Automatischen Vermittlung hinzufügen";
 
 $text['title-ivr_menus']['en-us'] = "IVR Menus";
@@ -25,6 +27,7 @@ $text['title-ivr_menus']['fr-fr'] = "Menus SVI";
 $text['title-ivr_menus']['pt-br'] = "Menus de IVR";
 $text['title-ivr_menus']['pl'] = "Menu zapowiedzi głosowych (IVR)";
 $text['title-ivr_menus']['sv-se'] = "IVR Menyer";
+$text['title-ivr_menus']['de-de'] = "Automatische Vermittlungen";
 $text['title-ivr_menus']['de-at'] = "Automatische Vermittlungen";
 
 $text['title-ivr_menu']['en-us'] = "IVR Menu";
@@ -34,6 +37,7 @@ $text['title-ivr_menu']['fr-fr'] = "Menu SVI";
 $text['title-ivr_menu']['pt-br'] = "Menus de IVR";
 $text['title-ivr_menu']['pl'] = "Menu zapowiedzi głosowej (IVR)";
 $text['title-ivr_menu']['sv-se'] = "IVR Meny";
+$text['title-ivr_menu']['de-de'] = "Automatische Vermittlung";
 $text['title-ivr_menu']['de-at'] = "Automatische Vermittlung";
 
 $text['title-ivr_menus_sub']['en-us'] = "IVR Menus - Sub";
@@ -43,6 +47,7 @@ $text['title-ivr_menus_sub']['fr-fr'] = "Menus SVI - Sub";
 $text['title-ivr_menus_sub']['pt-br'] = "Menus de IVR - Sub";
 $text['title-ivr_menus_sub']['pl'] = "Menu zapowiedzi głosowych (IVR) - Sub";
 $text['title-ivr_menus_sub']['sv-se'] = "IVR Menyer - Sub";
+$text['title-ivr_menus_sub']['de-de'] = "Automatische Vermittlungen - Sub";
 $text['title-ivr_menus_sub']['de-at'] = "Automatische Vermittlungen - Sub";
 
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
@@ -52,6 +57,7 @@ $text['message-maximum_ivr_menus']['fr-fr'] = "Menus Maximale SVI Admis:";
 $text['message-maximum_ivr_menus']['pt-br'] = "Menu máximo IVR";
 $text['message-maximum_ivr_menus']['pl'] = "Maksymalna ilość zapowiedzi głosowych";
 $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
+$text['message-maximum_ivr_menus']['de-de'] = "Maximale Anzahl an Automatischen Vermittlungen:";
 $text['message-maximum_ivr_menus']['de-at'] = "Maximale Anzahl an Automatischen Vermittlungen:";
 
 $text['label-tts_voice']['en-us'] = "TTS Voice";
@@ -61,6 +67,7 @@ $text['label-tts_voice']['fr-fr'] = "Voix TTS";
 $text['label-tts_voice']['pt-br'] = "Voz do TTS";
 $text['label-tts_voice']['pl'] = "Głos syntezatora mowy (TTS)";
 $text['label-tts_voice']['sv-se'] = "TTS Voice";
+$text['label-tts_voice']['de-de'] = "TTS Sprache";
 $text['label-tts_voice']['de-at'] = "TTS Sprache";
 
 $text['label-tts_engine']['en-us'] = "TTS Engine";
@@ -70,6 +77,7 @@ $text['label-tts_engine']['fr-fr'] = "Moteur TTS";
 $text['label-tts_engine']['pt-br'] = "Gerador TTS";
 $text['label-tts_engine']['pl'] = "Napęd syntezatora mowy  (TTS)";
 $text['label-tts_engine']['sv-se'] = "TTS Engine";
+$text['label-tts_engine']['de-de'] = "TTS Generator";
 $text['label-tts_engine']['de-at'] = "TTS Generator";
 
 $text['label-timeout']['en-us'] = "Timeout";
@@ -79,6 +87,7 @@ $text['label-timeout']['fr-fr'] = "Timeout";
 $text['label-timeout']['pt-br'] = "Tempo limite";
 $text['label-timeout']['pl'] = "Przekroczenie czasu oczekiwania (timeout)";
 $text['label-timeout']['sv-se'] = "Tidsgräns";
+$text['label-timeout']['de-de'] = "Abwurfzeit";
 $text['label-timeout']['de-at'] = "Abwurfzeit";
 
 $text['label-ring_back']['en-us'] = "Ring Back";
@@ -88,7 +97,8 @@ $text['label-ring_back']['fr-fr'] = "Retour de Sonnerie";
 $text['label-ring_back']['pt-br'] = "Tom de chamada";
 $text['label-ring_back']['pl'] = "Rodzaj sygnału w słuchawce dzwoniącego";
 $text['label-ring_back']['sv-se'] = "Ring Tillbaka";
-$text['label-ring_back']['de-at'] = "Wähl Ton";
+$text['label-ring_back']['de-de'] = "Wählton";
+$text['label-ring_back']['de-at'] = "Wählton";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['es-cl'] = "Opciones";
@@ -97,6 +107,7 @@ $text['label-options']['fr-fr'] = "Options";
 $text['label-options']['pt-br'] = "Opções";
 $text['label-options']['pl'] = "Opcje";
 $text['label-options']['sv-se'] = "Val";
+$text['label-options']['de-de'] = "Optionen";
 $text['label-options']['de-at'] = "Optionen";
 
 $text['label-option']['en-us'] = "Option";
@@ -106,6 +117,7 @@ $text['label-option']['fr-fr'] = "Option";
 $text['label-option']['pt-br'] = "Opção";
 $text['label-option']['pl'] = "Opcja";
 $text['label-option']['sv-se'] = "Val";
+$text['label-option']['de-de'] = "Option";
 $text['label-option']['de-at'] = "Option";
 
 $text['label-max_timeouts']['en-us'] = "Max Timeouts";
@@ -115,6 +127,7 @@ $text['label-max_timeouts']['fr-fr'] = "Timeouts Max";
 $text['label-max_timeouts']['pt-br'] = "Nª máximo de tempo de saída";
 $text['label-max_timeouts']['pl'] = "Maksymalna wartość przekroczenia czasu oczekiwania";
 $text['label-max_timeouts']['sv-se'] = "Max Tidsgräns";
+$text['label-max_timeouts']['de-de'] = "Max Abwurfzeit";
 $text['label-max_timeouts']['de-at'] = "Max Abwurfzeit";
 
 $text['label-max_failures']['en-us'] = "Max Failures";
@@ -124,6 +137,7 @@ $text['label-max_failures']['fr-fr'] = "Echecs Max";
 $text['label-max_failures']['pt-br'] = "Nª máximo de falhas";
 $text['label-max_failures']['pl'] = "Maksymalna ilość nieudanych prób";
 $text['label-max_failures']['sv-se'] = "Max Fel";
+$text['label-max_failures']['de-de'] = "Max Fehlversuche";
 $text['label-max_failures']['de-at'] = "Max Fehlversuche";
 
 $text['label-invalid_sound']['en-us'] = "Invalid Sound";
@@ -133,7 +147,8 @@ $text['label-invalid_sound']['fr-fr'] = "Audio si Invalide";
 $text['label-invalid_sound']['pt-br'] = "Áudio inválido";
 $text['label-invalid_sound']['pl'] = "Dźwięk nieprawidłowego wyboru.";
 $text['label-invalid_sound']['sv-se'] = "Fel Ljud";
-$text['label-invalid_sound']['de-at'] = "Ton bei ungültig";
+$text['label-invalid_sound']['de-de'] = "Ungültiger Ton";
+$text['label-invalid_sound']['de-at'] = "Ungültiger Ton";
 
 $text['label-inter-digit_timeout']['en-us'] = "Inter-Digit Timeout";
 $text['label-inter-digit_timeout']['es-cl'] = "Inter-Digit Tiempo de espera";
@@ -142,7 +157,8 @@ $text['label-inter-digit_timeout']['fr-fr'] = "Timeout Inter-Digit";
 $text['label-inter-digit_timeout']['pt-br'] = "Tempo de saída entre digitos";
 $text['label-inter-digit_timeout']['pl'] = "Czas pomiędzy wybranymi cyframi na klawiaturze";
 $text['label-inter-digit_timeout']['sv-se'] = "Inter-Digit Tidsgräns";
-$text['label-inter-digit_timeout']['de-at'] = "Time-Out zwischen Tastendruck";
+$text['label-inter-digit_timeout']['de-de'] = "Time-Out zwischen Tastendrucke";
+$text['label-inter-digit_timeout']['de-at'] = "Time-Out zwischen Tastendrucke";
 
 $text['label-greet_short']['en-us'] = "Greet Short";
 $text['label-greet_short']['es-cl'] = "Mensaje Corto";
@@ -151,6 +167,7 @@ $text['label-greet_short']['fr-fr'] = "Message Court";
 $text['label-greet_short']['pt-br'] = "Saudação curta";
 $text['label-greet_short']['pl'] = "Krótkie powiadomienie";
 $text['label-greet_short']['sv-se'] = "Kort Hälsning";
+$text['label-greet_short']['de-de'] = "Begrüßung kurz";
 $text['label-greet_short']['de-at'] = "Begrüßung kurz";
 
 $text['label-greet_long']['en-us'] = "Greet Long";
@@ -160,6 +177,7 @@ $text['label-greet_long']['fr-fr'] = "Message Long";
 $text['label-greet_long']['pt-br'] = "Saudação longa";
 $text['label-greet_long']['pl'] = "Długie powiadomienie";
 $text['label-greet_long']['sv-se'] = "Lång Hälsning";
+$text['label-greet_long']['de-de'] = "Begrüßung lang";
 $text['label-greet_long']['de-at'] = "Begrüßung lang";
 
 $text['label-extension']['en-us'] = "Extension";
@@ -169,6 +187,7 @@ $text['label-extension']['fr-fr'] = "Extension";
 $text['label-extension']['pt-br'] = "Ramal";
 $text['label-extension']['pl'] = "Numer wewnętrzny";
 $text['label-extension']['sv-se'] = "Anknytning";
+$text['label-extension']['de-de'] = "Nebenstelle";
 $text['label-extension']['de-at'] = "Nebenstelle";
 
 $text['label-exit_sound']['en-us'] = "Exit Sound";
@@ -178,6 +197,7 @@ $text['label-exit_sound']['fr-fr'] = "Audio de sortie";
 $text['label-exit_sound']['pt-br'] = "Áudio de saída";
 $text['label-exit_sound']['pl'] = "Dźwięk przy wyjściu";
 $text['label-exit_sound']['sv-se'] = "Avslutningsljud";
+$text['label-exit_sound']['de-at'] = "Ton beideerlassen";
 $text['label-exit_sound']['de-at'] = "Ton bei verlassen";
 
 $text['label-exit_action']['en-us'] = "Exit Action";
@@ -187,6 +207,7 @@ $text['label-exit_action']['fr-fr'] = "Action de Sortie";
 $text['label-exit_action']['pt-br'] = "Ação de saída";
 $text['label-exit_action']['pl'] = "Porzuć operację";
 $text['label-exit_action']['sv-se'] = "Avslutningsaktion";
+$text['label-exit_action']['de-de'] = "Aktion bei verlassen";
 $text['label-exit_action']['de-at'] = "Aktion bei verlassen";
 
 $text['label-direct_dial']['en-us'] = "Direct Dial";
@@ -196,6 +217,7 @@ $text['label-direct_dial']['fr-fr'] = "Appel Direct";
 $text['label-direct_dial']['pt-br'] = "Marcações diretas";
 $text['label-direct_dial']['pl'] = "Numer telefoniczny przypisany do numeru wewnętrznego (DDI)";
 $text['label-direct_dial']['sv-se'] = "Direkt Ringning";
+$text['label-direct_dial']['de-de'] = "Direkte Wahl";
 $text['label-direct_dial']['de-at'] = "Direkte Wahl";
 
 $text['label-digit_length']['en-us'] = "Digit Length";
@@ -205,6 +227,7 @@ $text['label-digit_length']['fr-fr'] = "Nombre de Digits";
 $text['label-digit_length']['pt-br'] = "Número de digitos";
 $text['label-digit_length']['pl'] = "Długość wybranej cyfry";
 $text['label-digit_length']['sv-se'] = "Nummerlängd";
+$text['label-digit_length']['de-de'] = "Ziffernlänge";
 $text['label-digit_length']['de-at'] = "Ziffernlänge";
 
 $text['label-destination']['en-us'] = "Destination";
@@ -214,6 +237,7 @@ $text['label-destination']['fr-fr'] = "Destination";
 $text['label-destination']['pt-br'] = "Número de destino";
 $text['label-destination']['pl'] = "Destynacja";
 $text['label-destination']['sv-se'] = "Destination";
+$text['label-destination']['de-de'] = "Ziel";
 $text['label-destination']['de-at'] = "Ziel";
 
 $text['label-comfirm_macro']['en-us'] = "Confirm Macro";
@@ -223,6 +247,7 @@ $text['label-comfirm_macro']['fr-fr'] = "Macro de Confirmation";
 $text['label-comfirm_macro']['pt-br'] = "Confirmar macro";
 $text['label-comfirm_macro']['pl'] = "Potwierdź makro";
 $text['label-comfirm_macro']['sv-se'] = "Konfirmera Macro";
+$text['label-comfirm_macro']['de-de'] = "Bestätigungs Makro";
 $text['label-comfirm_macro']['de-at'] = "Bestätigungs Makro";
 
 $text['label-comfirm_key']['en-us'] = "Confirm Key";
@@ -232,6 +257,7 @@ $text['label-comfirm_key']['fr-fr'] = "Touche de Confirmation";
 $text['label-comfirm_key']['pt-br'] = "Tecla de confirmação";
 $text['label-comfirm_key']['pl'] = "Potwierdź przyciskiem";
 $text['label-comfirm_key']['sv-se'] = "Konfirmera Knapp";
+$text['label-comfirm_key']['de-de'] = "Bestätigungs Schlüssel";
 $text['label-comfirm_key']['de-at'] = "Bestätigungs Schlüssel";
 
 $text['label-comfirm_attempts']['en-us'] = "Confirm Attempts";
@@ -241,6 +267,7 @@ $text['label-comfirm_attempts']['fr-fr'] = "Essais de Confirmation";
 $text['label-comfirm_attempts']['pt-br'] = "Confirmar tentativas";
 $text['label-comfirm_attempts']['pl'] = "Potwierdź próby";
 $text['label-comfirm_attempts']['sv-se'] = "Konfirmera Försök";
+$text['label-comfirm_attempts']['de-de'] = "Bestätigungs Versuche";
 $text['label-comfirm_attempts']['de-at'] = "Bestätigungs Versuche";
 
 $text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
@@ -250,6 +277,7 @@ $text['label-caller_id_name_prefix']['fr-fr'] = "Préfixe ajouté au nom de l'ap
 $text['label-caller_id_name_prefix']['pt-br'] = "Prefixo do nome do discador";
 $text['label-caller_id_name_prefix']['pl'] = "Prefiks nazwy abonenta dzwoniacego";
 $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
+$text['label-caller_id_name_prefix']['de-de'] = "Anruferkennung (Name) Prefix";
 $text['label-caller_id_name_prefix']['de-at'] = "Anruferkennung (Name) Prefix";
 
 $text['header-option_list']['en-us'] = "Option List";
@@ -259,6 +287,7 @@ $text['header-option_list']['fr-fr'] = "Liste d'Option";
 $text['header-option_list']['pt-br'] = "Lista de opções";
 $text['header-option_list']['pl'] = "Lista opcji";
 $text['header-option_list']['sv-se'] = "Val Lista";
+$text['header-option_list']['de-de'] = "Optionsliste";
 $text['header-option_list']['de-at'] = "Optionsliste";
 
 $text['header-option_edit']['en-us'] = "IVR Menu Option Edit";
@@ -268,6 +297,7 @@ $text['header-option_edit']['fr-fr'] = "Menu SVI Editer un Option";
 $text['header-option_edit']['pt-br'] = "Editar opção de IVR";
 $text['header-option_edit']['pl'] = "Edytuj opcje menu IVR";
 $text['header-option_edit']['sv-se'] = "Ändra IVR Meny Val";
+$text['header-option_edit']['de-de'] = "Optionen der Automatischen Vermittlung bearbeiten";
 $text['header-option_edit']['de-at'] = "Optionen der Automatischen Vermittlung bearbeiten";
 
 $text['header-option_add']['en-us'] = "IVR Menu Option Add";
@@ -277,6 +307,7 @@ $text['header-option_add']['fr-fr'] = "Menu SVI Ajouter une Option";
 $text['header-option_add']['pt-br'] = "Adicionar opção de IVR";
 $text['header-option_add']['pl'] = "Dodaj opcje do menu IVR";
 $text['header-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
+$text['header-option_add']['de-de'] = "Optionen der Automatischen Vermittlung hinzufügen";
 $text['header-option_add']['de-at'] = "Optionen der Automatischen Vermittlung hinzufügen";
 
 $text['header-ivr_menus']['en-us'] = "IVR Menus";
@@ -286,6 +317,7 @@ $text['header-ivr_menus']['fr-fr'] = "Menus SVI";
 $text['header-ivr_menus']['pt-br'] = "Menus de IVR";
 $text['header-ivr_menus']['pl'] = "Menu zapowiedzi głosowych (IVR)";
 $text['header-ivr_menus']['sv-se'] = "IVR Menyer";
+$text['header-ivr_menus']['de-de'] = "Automatische Vermittlungen";
 $text['header-ivr_menus']['de-at'] = "Automatische Vermittlungen";
 
 $text['header-ivr_menu']['en-us'] = "IVR Menu";
@@ -295,6 +327,7 @@ $text['header-ivr_menu']['fr-fr'] = "Menu SVI";
 $text['header-ivr_menu']['pt-br'] = "Menu IVR";
 $text['header-ivr_menu']['pl'] = "Menu zapowiedzi głosowej (IVR)";
 $text['header-ivr_menu']['sv-se'] = "IVR Meny";
+$text['header-ivr_menu']['de-de'] = "Automatische Vermittlung";
 $text['header-ivr_menu']['de-at'] = "Automatische Vermittlung";
 
 $text['description-tts_voice']['en-us'] = "Text to speech voice.";
@@ -304,6 +337,7 @@ $text['description-tts_voice']['fr-fr'] = "Voix du Text-To-Speech (texte vers pa
 $text['description-tts_voice']['pt-br'] = "Texto para áudio";
 $text['description-tts_voice']['pl'] = "Głos syntezatora mowy (TTS)";
 $text['description-tts_voice']['sv-se'] = "Text till tal röst.";
+$text['description-tts_voice']['de-de'] = "'Text To Speech' Stimme.";
 $text['description-tts_voice']['de-at'] = "'Text To Speech' Stimme.";
 
 $text['description-tts_engine']['en-us'] = "Text to speech engine.";
@@ -313,6 +347,7 @@ $text['description-tts_engine']['fr-fr'] = "Moteur du Text-To-Speech (texte vers
 $text['description-tts_engine']['pt-br'] = "Gerador de texto para áudio";
 $text['description-tts_engine']['pl'] = "Napęd syntezatora mowy  (TTS)";
 $text['description-tts_engine']['sv-se'] = "Text till tal 'engine'.";
+$text['description-tts_engine']['de-de'] = "'Text To Speech' Generator.";
 $text['description-tts_engine']['de-at'] = "'Text To Speech' Generator.";
 
 $text['description-timeout']['en-us'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
@@ -322,7 +357,8 @@ $text['description-timeout']['fr-fr'] = "Le temps en millisecondes à attendre a
 $text['description-timeout']['pt-br'] = "Informe o tempo em segundos para o tempo depois de tocar a mensagem de saudação";
 $text['description-timeout']['pl'] = "Ilość milisekund oczekiwania po odtworzeniu nagrania lub potwierdzenia makro.";
 $text['description-timeout']['sv-se'] = "Antal millisekunder att vänta efter hälsning eller konfirmera macro.";
-$text['description-timeout']['de-at'] = "Wartezeit in Millisekunden nach abspielen der Begrüßung oder des Bestätigungs Makros";
+$text['description-timeout']['de-de'] = "Wartezeit in Millisekunden nach abspielen der Begrüßung oder des Bestätigungs-Makros";
+$text['description-timeout']['de-at'] = "Wartezeit in Millisekunden nach abspielen der Begrüßung oder des Bestätigungs-Makros";
 
 $text['description-ring_back']['en-us'] = "Defines what the caller will hear while the destination is being called.";
 $text['description-ring_back']['es-cl'] = "Define qué va a escuchar quien llama mientras el destino es llamado.";
@@ -331,6 +367,7 @@ $text['description-ring_back']['fr-fr'] = "Défini ce que l'appelant entendra lo
 $text['description-ring_back']['pt-br'] = "Defina o áudio que o destino estará ouvindo enquando estiver na linha";
 $text['description-ring_back']['pl'] = "Zdefiniuj jaki sygnał słyszy dzwoniący podczas łączenia z numerem docelowym.";
 $text['description-ring_back']['sv-se'] = "Definierar vad inringande kommer att höra under tiden som destinationen rings upp.";
+$text['description-ring_back']['de-de'] = "Definiert was der Anrufer hört wenn das Ziel angerufen wird.";
 $text['description-ring_back']['de-at'] = "Definiert was der Anrufer hört wenn das Ziel angerufen wird.";
 
 $text['description-order']['en-us'] = "Select the order.";
@@ -340,6 +377,7 @@ $text['description-order']['fr-fr'] = "Choisir l'ordre.";
 $text['description-order']['pt-br'] = "Defina a ordem (indice) para este elemento da matriz";
 $text['description-order']['pl'] = "Wybierz kolejność.";
 $text['description-order']['sv-se'] = "Välj ordning.";
+$text['description-order']['de-de'] = "Wählen Sie die Reihenfolge.";
 $text['description-order']['de-at'] = "Wählen Sie die Reihenfolge.";
 
 $text['description-options']['en-us'] = "Define caller options for the IVR menu.";
@@ -349,6 +387,7 @@ $text['description-options']['fr-fr'] = "Définir les options de l'appelant pour
 $text['description-options']['pt-br'] = "Selecione o nome da fila";
 $text['description-options']['pl'] = "Zdefiniuj opcje dzwoniącego w menu IVR";
 $text['description-options']['sv-se'] = "Definiera inringandes val i IVR Meny.";
+$text['description-options']['de-de'] = "Geben Sie Anrufer Optionen für die Automatische Vermittlung an.";
 $text['description-options']['de-at'] = "Geben Sie Anrufer Optionen für die Automatische Vermittlung an.";
 
 $text['description-option_list']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
@@ -358,6 +397,7 @@ $text['description-option_list']['fr-fr'] = "Le guide vocal présente les option
 $text['description-option_list']['pt-br'] = "A gravação apresenta ao chamador opções que pode escolher. As opções correspondem a teclas primidas pelo chamador (dígitos DTMF) que redirecionam a chamada para os destinos desejados. ";
 $text['description-option_list']['pl'] = "Menu IVR odtwarza wcześniej nagrany komunikat dając dzwoniącemu kilka opcji do wyboru. Po wybraniu jakiekolwiek opcji (DTMF) rozmowa jest przekazywana do wcześniej zdefiniowanego numeru, może to być poczta głosowa, inne menu IVR, faks, kolejkowanie polaczeń lub inne. ";
 $text['description-option_list']['sv-se'] = "Inspelningen presenterar val för inringande. Valen matchar knapptryckningar (DTMF) från inringande som sedan kopplar inringande till olika destinationer.";
+$text['description-option_list']['de-de'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen.";
 $text['description-option_list']['de-at'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen.";
 
 $text['description-option_add_edit']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
@@ -367,6 +407,7 @@ $text['description-option_add_edit']['fr-fr'] = "Le guide vocal présente les op
 $text['description-option_add_edit']['pt-br'] = "A gravação apresenta ao chamador opções que pode escolher. As opções correspondem a teclas primidas pelo chamador (dígitos DTMF) que redirecionam a chamada para os destinos desejados. ";
 $text['description-option_add_edit']['pl'] = "Menu IVR odtwarza wcześniej nagrany komunikat dając dzwoniącemu kilka opcji do wyboru. Po wybraniu jakiekolwiek opcji (DTMF) rozmowa jest przekazywana do wcześniej zdefiniowanego numeru, może to być poczta głosowa, inne menu IVR, faks, kolejkowanie polaczeń lub inne. ";
 $text['description-option_add_edit']['sv-se'] = "Inspelningen presenterar val för inringande. Valen matchar knapptryckningar (DTMF) från inringande som sedan kopplar inringande till olika destinationer.";
+$text['description-option_add_edit']['de-de'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen.";
 $text['description-option_add_edit']['de-at'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen.";
 
 $text['description-option']['en-us'] = "Any number between 1-5 digits or regular expressions.";
@@ -376,7 +417,8 @@ $text['description-option']['fr-fr'] = "N'importe quel numéro entre 1 et 5 digi
 $text['description-option']['pt-br'] = "Informe um número de 1 a 5 digitos ou uma expressão regular";
 $text['description-option']['pl'] = "Jakikolwiek numer pomiędzy 1-5 lub wyrażenia regularne.";
 $text['description-option']['sv-se'] = "Ett nummer mellan 1-5 siffror eller ett reguljärt uttryck.";
-$text['description-option']['de-at'] = "EIne beliebige Nummer zwischen 1 und 5 Ziffern oder ein Regulärer Ausdruck.";
+$text['description-option']['de-de'] = "Eine beliebige Nummer von 1 und 5 Ziffern Länge oder ein Regulärer Ausdruck.";
+$text['description-option']['de-at'] = "Eine beliebige Nummer von 1 und 5 Ziffern Länge oder ein Regulärer Ausdruck.";
 
 $text['description-name']['en-us'] = "Enter a name for the IVR menu.";
 $text['description-name']['es-cl'] = "Ingrese un nombre para el menú IVR.";
@@ -385,6 +427,7 @@ $text['description-name']['fr-fr'] = "Choisir un nom pour le menu SVI";
 $text['description-name']['pt-br'] = "Insira o nome do menu";
 $text['description-name']['pl'] = "Wprowadź nazwę zapowiedzi głosowej.";
 $text['description-name']['sv-se'] = "Skriv in namnet på IVR Menyn.";
+$text['description-name']['de-de'] = "Geben Sie den Namen der Automatischen Vermittlung an";
 $text['description-name']['de-at'] = "Geben Sie den Namen der Automatischen Vermittlung an";
 
 $text['description-max_timeouts']['en-us'] = "Maximum number of timeouts before exit.";
@@ -394,6 +437,7 @@ $text['description-max_timeouts']['fr-fr'] = "Nombre maximum de timeouts avant d
 $text['description-max_timeouts']['pt-br'] = "Número máximo de tempo de saída antes de sair";
 $text['description-max_timeouts']['pl'] = "Maksymalna długość limitu czasu przed rozłączeniem.";
 $text['description-max_timeouts']['sv-se'] = "Max antal timeout innan slut.";
+$text['description-max_timeouts']['de-de'] = "Maximale Anzahl an Abwürfen bevor beendet werden soll.";
 $text['description-max_timeouts']['de-at'] = "Maximale Anzahl an Abwürfen bevor beendet werden soll.";
 
 $text['description-max_failures']['en-us'] = "Maximum number of retries before exit.";
@@ -403,6 +447,7 @@ $text['description-max_failures']['fr-fr'] = "Nombre maximum de tentatives avant
 $text['description-max_failures']['pt-br'] = "Número máximo de tentativas antes de sair";
 $text['description-max_failures']['pl'] = "Maksymalna ilość prób przed rozłączeniem.";
 $text['description-max_failures']['sv-se'] = "Max antal försök innan slut.";
+$text['description-max_failures']['de-de'] = "Maximale Anzahl an Widerholungen bevor beendet werden soll.";
 $text['description-max_failures']['de-at'] = "Maximale Anzahl an Widerholungen bevor beendet werden soll.";
 
 $text['description-ivr_menus']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
@@ -412,6 +457,7 @@ $text['description-ivr_menus']['fr-fr'] = "Le Menu SVI joue un guide vocal ou un
 $text['description-ivr_menus']['pt-br'] = "O IVR toca uma gravação ou uma frase pré-definidos que são apresentados ao chamador na forma de opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de FAX, etc. ";
 $text['description-ivr_menus']['pl'] = "Menu IVR odtwarza wcześniej nagrany komunikat dając dzwoniącemu kilka opcji do wyboru. Po wybraniu jakiekolwiek opcji (DTMF) rozmowa jest przekazywana do wcześniej zdefiniowanego numeru, może to być poczta głosowa, inne menu IVR, faks, kolejkowanie polaczeń lub inne. ";
 $text['description-ivr_menus']['sv-se'] = "IVR Menyn spelar upp en inspelning eller en fördefinierad fras som ger uppringaren alternativ att välja mellan. Varje val har en motsvarande destination. Destinationerna kan vara anknytningar, röstbrevlåda, andra IVR menyer , samtalsgrupper, FAX anknytningar mm.";
+$text['description-ivr_menus']['de-de'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein.";
 $text['description-ivr_menus']['de-at'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein.";
 
 $text['description-ivr_menu']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
@@ -421,6 +467,7 @@ $text['description-ivr_menu']['fr-fr'] = "Le Menu SVI joue un guide vocal ou un 
 $text['description-ivr_menu']['pt-br'] = "O IVR toca uma gravação ou uma frase pré-definidos que são apresentados ao chamador na forma de opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de FAX, etc. ";
 $text['description-ivr_menu']['pl'] = "Menu IVR odtwarza wcześniej nagrany komunikat dając dzwoniącemu kilka opcji do wyboru. Po wybraniu jakiekolwiek opcji (DTMF) rozmowa jest przekazywana do wcześniej zdefiniowanego numeru, może to być poczta głosowa, inne menu IVR, faks, kolejkowanie polaczeń lub inne. ";
 $text['description-ivr_menu']['sv-se'] = "IVR Menyn spelar upp en inspelning eller en fördefinierad fras som ger uppringaren alternativ att välja mellan. Varje val har en motsvarande destination. Destinationerna kan vara anknytningar, röstbrevlåda, andra IVR menyer , samtalsgrupper, FAX anknytningar mm.";
+$text['description-ivr_menu']['de-de'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein.";
 $text['description-ivr_menu']['de-at'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein.";
 
 $text['description-invalid_sound']['en-us'] = "Played when and invalid option is chosen.";
@@ -430,6 +477,7 @@ $text['description-invalid_sound']['fr-fr'] = "Joué quand une option invalide e
 $text['description-invalid_sound']['pt-br'] = "É tocado quando escolhida uma opção inválida";
 $text['description-invalid_sound']['pl'] = "Jest odtwarzane gdy zostanie wybrana nieprawidłowa opcja.";
 $text['description-invalid_sound']['sv-se'] = "Spelas upp när ett ogiltigt val använts.";
+$text['description-invalid_sound']['de-de'] = "Wird abgespielt, falls eine ungültige Option gewählt wird.";
 $text['description-invalid_sound']['de-at'] = "Wird abgespielt, falls eine ungültige Option gewählt wird.";
 
 $text['description-inter-digit_timeout']['en-us'] = "The number of milliseconds to wait between digits.";
@@ -439,6 +487,7 @@ $text['description-inter-digit_timeout']['fr-fr'] = "Le temps en millisecondes �
 $text['description-inter-digit_timeout']['pt-br'] = "Número em segundas a espera entre digitos";
 $text['description-inter-digit_timeout']['pl'] = "Ilość milisekund oczekiwania pomiędzy wprowadzonymi cyframi.";
 $text['description-inter-digit_timeout']['sv-se'] = "Antal millisekunder att vänta mellan siffror.";
+$text['description-inter-digit_timeout']['de-de'] = "Anzahl an Millisekunden wie lange zwischen zwei Tastendrücken gewartet werden soll.";
 $text['description-inter-digit_timeout']['de-at'] = "Anzahl an Millisekunden wie lange zwischen zwei Tastendrücken gewartet werden soll.";
 
 $text['description-greet_short']['en-us'] = "The short greeting is played when returning to the menu.";
@@ -448,6 +497,7 @@ $text['description-greet_short']['fr-fr'] = "Le message court est joué lors du 
 $text['description-greet_short']['pt-br'] = "A saudação curta é tocada ao retornar ao menu";
 $text['description-greet_short']['pl'] = "Odtwarzane jest krótkie powitanie w momencie wejścia do menu.";
 $text['description-greet_short']['sv-se'] = "Den korta hälsningen spelas upp när man kommer tillbaka till IVR Menyn.";
+$text['description-greet_short']['de-de'] = "Die kurze Begrüßung wird abgespielt, wenn der Anrufer zurück zur Automatischen Vermittlung kommt.";
 $text['description-greet_short']['de-at'] = "Die kurze Begrüßung wird abgespielt, wenn der Anrufer zurück zur Automatischen Vermittlung kommt.";
 
 $text['description-greet_long']['en-us'] = "The long greeting is played when entering the menu.";
@@ -457,6 +507,7 @@ $text['description-greet_long']['fr-fr'] = "Le message long est joué une fois l
 $text['description-greet_long']['pt-br'] = "A saudação longa é tocada quando se entra no menu";
 $text['description-greet_long']['pl'] = "Odtwarzane jest długie powitanie w momencie wejścia do menu.";
 $text['description-greet_long']['sv-se'] = "Den långa hälsningen spelas upp när man kommer till IVR Menyn.";
+$text['description-greet_long']['de-de'] = "Die lange Begrüßung wird abgespielt, wenn der Anrufer zum ersten mal zur Automatischen Vermittlung kommt.";
 $text['description-greet_long']['de-at'] = "Die lange Begrüßung wird abgespielt, wenn der Anrufer zum ersten mal zur Automatischen Vermittlung kommt.";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
@@ -466,6 +517,7 @@ $text['description-extension']['fr-fr'] = "Choisir le numéro d'extension.";
 $text['description-extension']['pt-br'] = "Atribua a extensão e números ao dispositivo";
 $text['description-extension']['pl'] = "Wprowadź numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
+$text['description-extension']['de-de'] = "Geben Sie die Nebenstelle ein.";
 $text['description-extension']['de-at'] = "Geben Sie die Nebenstelle ein.";
 
 $text['description-exit_sound']['en-us'] = "Played when leaving the menu.";
@@ -475,6 +527,7 @@ $text['description-exit_sound']['fr-fr'] = "Joué lorsque l'on quitte ce menu.";
 $text['description-exit_sound']['pt-br'] = "É tocado quando se abandona o menu";
 $text['description-exit_sound']['pl'] = "Jest odtwarzane w momencie opuszczenia menu";
 $text['description-exit_sound']['sv-se'] = "Spelas när man lämnar IVR Menyn.";
+$text['description-exit_sound']['de-de'] = "Wird abgespielt, wenn die Automatische Vermittlung verlassen wird.";
 $text['description-exit_sound']['de-at'] = "Wird abgespielt, wenn die Automatische Vermittlung verlassen wird.";
 
 $text['description-exit_action']['en-us'] = "Select the exit action to be performed if the IVR exits.";
@@ -484,6 +537,7 @@ $text['description-exit_action']['fr-fr'] = "Choisir l'action à executer en sor
 $text['description-exit_action']['pt-br'] = "Escolher a ação de saída a realizar se o IVR existir";
 $text['description-exit_action']['pl'] = "Wybierz następny krok po wyjściu z IVR.";
 $text['description-exit_action']['sv-se'] = "Välj en aktion som skall utföras när IVR Menyn är 'slut'";
+$text['description-exit_action']['de-de'] = "Wählen Sie eine Aktion bei verlassen der Automatischen Vermittlung.";
 $text['description-exit_action']['de-at'] = "Wählen Sie eine Aktion bei verlassen der Automatischen Vermittlung.";
 
 $text['description-enabled']['en-us'] = "Set the status of this IVR Menu.";
@@ -493,7 +547,7 @@ $text['description-enabled']['fr-fr'] = "Choisir l'état de ce menu.";
 $text['description-enabled']['pt-br'] = "Escolha o estado desta definição";
 $text['description-enabled']['pl'] = "Ustaw status menu IVR.";
 $text['description-enabled']['sv-se'] = "Välj status på denna IVR Meny.";
-$text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Automatischen Vermittlung.";
+$text['description-enabled']['de-de'] = "Setzen Sie den Status dieser Automatischen Vermittlung.";
 
 $text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to registered extensions.";
 $text['description-direct_dial']['es-cl'] = "Define si quienes llaman pueden marcar directamente a las extensiones y códigos.";
@@ -502,6 +556,7 @@ $text['description-direct_dial']['fr-fr'] = "Défini si on peut appeler directem
 $text['description-direct_dial']['pt-br'] = "Defina se as ligações podem ligar diretamente para extensões";
 $text['description-direct_dial']['pl'] = "Wybierz czy dzwoniący mogą się wydzwaniać  bezpośrednio na numery wewnętrzne (z pominięciem opcji IVR).";
 $text['description-direct_dial']['sv-se'] = "Välj om inringande skall kunna ringa direkt till registrerade anknytningar.";
+$text['description-direct_dial']['de-de'] = "Definieren Sie ob Anrufer direkt zu Nebenstellen durchwählen können.";
 $text['description-direct_dial']['de-at'] = "Definieren Sie ob Anrufer direkt zu Nebenstellen durchwählen können.";
 
 $text['description-digit_length']['en-us'] = "Maximum number of digits allowed.";
@@ -511,6 +566,7 @@ $text['description-digit_length']['fr-fr'] = "Nombre maximum ed digits authoris�
 $text['description-digit_length']['pt-br'] = "Número máximo de digitos permitido";
 $text['description-digit_length']['pl'] = "Maksymalna ilość cyfr";
 $text['description-digit_length']['sv-se'] = "Max antal siffror som tillåts.";
+$text['description-digit_length']['de-de'] = "Maximal erlaubte Länge.";
 $text['description-digit_length']['de-at'] = "Maximal erlaubte Länge.";
 
 $text['description-destination']['en-us'] = "Select the destination.";
@@ -520,6 +576,7 @@ $text['description-destination']['fr-fr'] = "Choisir la destination.";
 $text['description-destination']['pt-br'] = "Enviar a chamada para a extensão de um menu de IVR, Sala de Conferência ou qualquer outro número.";
 $text['description-destination']['pl'] = "Wybierz numer docelowy.";
 $text['description-destination']['sv-se'] = "Välj destination.";
+$text['description-destination']['de-de'] = "Wählen Sie das Ziel.";
 $text['description-destination']['de-at'] = "Wählen Sie das Ziel.";
 
 $text['description-comfirm_macro']['en-us'] = "Enter the confirm macro.";
@@ -529,6 +586,7 @@ $text['description-comfirm_macro']['fr-fr'] = "Entrer la Macro de Confirmation."
 $text['description-comfirm_macro']['pt-br'] = "Insira a confirmação da macro";
 $text['description-comfirm_macro']['pl'] = "Wpisz potwierdzenie makro.";
 $text['description-comfirm_macro']['sv-se'] = "Ange bekräftelse makro.";
+$text['description-comfirm_macro']['de-de'] = "Geben Sie das Bestätigungs Makro an.";
 $text['description-comfirm_macro']['de-at'] = "Geben Sie das Bestätigungs Makro an.";
 
 $text['description-comfirm_key']['en-us'] = "Enter the confirm key.";
@@ -538,6 +596,7 @@ $text['description-comfirm_key']['fr-fr'] = "Entrer la touche de confirmation.";
 $text['description-comfirm_key']['pt-br'] = "Insira telca de confirmação";
 $text['description-comfirm_key']['pl'] = "Wpisz przycisk zatwierdzający..";
 $text['description-comfirm_key']['sv-se'] = "Ange bekräftelse knappen.";
+$text['description-comfirm_key']['de-de'] = "Geben Sie den Bestätigungs Schlüssel an.";
 $text['description-comfirm_key']['de-at'] = "Geben Sie den Bestätigungs Schlüssel an.";
 
 $text['description-comfirm_attempts']['en-us'] = "The maximum number of confirm attempts allowed.";
@@ -547,6 +606,7 @@ $text['description-comfirm_attempts']['fr-fr'] = "Nombre maximum de tentatives d
 $text['description-comfirm_attempts']['pt-br'] = "Número máximo de tentativas permitidas";
 $text['description-comfirm_attempts']['pl'] = "Maksymalna ilość prób potwierdzenia.";
 $text['description-comfirm_attempts']['sv-se'] = "Max antal bekräftelse försök som tillåts.";
+$text['description-comfirm_attempts']['de-de'] = "Die Maximal erlaubte Anzahl an Bestätigungsversuchen";
 $text['description-comfirm_attempts']['de-at'] = "Die Maximal erlaubte Anzahl an Bestätigungsversuchen";
 
 $text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
@@ -556,6 +616,7 @@ $text['description-caller_id_name_prefix']['fr-fr'] = "Choisie un préfixe à aj
 $text['description-caller_id_name_prefix']['pt-br'] = "Defina um prefixo no nome do originador";
 $text['description-caller_id_name_prefix']['pl'] = "Ustaw prefiks nazwy abonenta dzwoniącego.";
 $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID namn.";
+$text['description-caller_id_name_prefix']['de-de'] = "Setzen Sie ein Präfix für die Anruferkennung (Name).";
 $text['description-caller_id_name_prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name).";
 
 ?>

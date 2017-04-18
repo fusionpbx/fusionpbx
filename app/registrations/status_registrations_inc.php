@@ -27,6 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/status_registrations.php";
 
 //check permissions
 	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
@@ -37,11 +38,15 @@ require_once "resources/check_auth.php";
 		exit;
 	}
 
+//Search
+	//$search_value = "1003";
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the HTTP values and set as variables
+	$search_value = trim($_REQUEST["search_value"]);
 	$sip_profile_name = trim($_REQUEST["profile"]);
 	$show = trim($_REQUEST["show"]);
 	if ($show != "all") { $show = ''; }
@@ -87,53 +92,24 @@ require_once "resources/check_auth.php";
 				echo $e->getMessage();
 				exit;
 			}
-
-		//build the registration array
-			if (count($xml->registrations->registration) > 0) {
-				$registrations = '';
-				$x = 0;
-				foreach ($xml->registrations->registration as $row) {
-					//get the values from xml and set them to the channel array
-						$registrations[$x]['user'] = $row->{'user'};
-						$user_array = explode('@', $row->{'user'});
-						$registrations[$x]['call-id'] = $row->{'call-id'};
-						$registrations[$x]['contact'] = $row->{'contact'};
-						$registrations[$x]['sip-auth-user'] = $row->{'sip-auth-user'};
-						$registrations[$x]['agent'] = $row->{'agent'};
-						$registrations[$x]['host'] = $row->{'host'};
-						$registrations[$x]['network-ip'] = $row->{'network-ip'};
-						$registrations[$x]['network-port'] = $row->{'network-port'};
-						$registrations[$x]['sip-auth-realm'] = $row->{'sip-auth-realm'};
-						$registrations[$x]['mwi-account'] = $row->{'mwi-account'};
-						$registrations[$x]['status'] = $row->{'status'};
-
-					//get the LAN IP address if it exists replace the external ip
-						$call_id_array = explode('@', $row->{'call-id'});
-						if (isset($call_id_array[1])) {
-							$registrations[$x]['lan-ip'] = $call_id_array[1];
-						}
-
-					//remove unrelated domains
-						if (count($_SESSION["domains"]) > 1) {
-							if (!(permission_exists('registration_all') && $show == "all")) {
-								if ($registrations[$x]['sip-auth-realm'] == $_SESSION['domain_name']) {}
-								elseif ($user_array[1] == $_SESSION['domain_name']){}
-								else {
-									unset($registrations[$x]);
-								}
-							}
-						}
-
-					//increment the array id
-						$x++;
+		//get the registrations
+			$registrations = get_registrations($sip_profile_name);
+		//count the registrations
+			$registration_count = 0;
+			if (count($registrations) > 0) {
+				foreach ($registrations as $row) {
+					//search 
+					$matches = preg_grep ("/$search_value/i",$row);
+					if ($matches != FALSE) {
+						$registration_count++;
+					}
 				}
 			}
-
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='100%'>\n";
-			echo "	<b>".$text['header-registrations']." (".count($registrations).")</b>\n";
+			echo "	<b>".$text['header-registrations']." (".$registration_count.")</b>\n";
 			echo "</td>\n";
 			echo "<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
 			echo "	<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
@@ -152,6 +128,7 @@ require_once "resources/check_auth.php";
 			echo "</table>\n";
 			echo "<br />\n";
 
+			
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 			echo "<tr>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
@@ -161,6 +138,7 @@ require_once "resources/check_auth.php";
 			echo "	<th>".$text['label-port']."</th>\n";
 			echo "	<th>".$text['label-hostname']."</th>\n";
 			echo "	<th>".$text['label-status']."</th>\n";
+			echo "	<th>".$text['label-ping']."</th>\n";
 			echo "	<th>".$text['label-tools']."&nbsp;</th>\n";
 			echo "</tr>\n";
 
@@ -172,25 +150,30 @@ require_once "resources/check_auth.php";
 		//display the array
 			if (count($registrations) > 0) {
 				foreach ($registrations as $row) {
-					//set the user agent
-						$agent = $row['agent'];
+					//search 
+						$matches = preg_grep ("/$search_value/i",$row);
+						if ($matches != FALSE) {
+						//set the user agent
+							$agent = $row['agent'];
 
-					//show the registrations
-						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['lan-ip']."' target='_blank'>".$row['lan-ip']."</a>&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['host']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
-						echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
-						echo "	</td>\n";
-						echo "</tr>\n";
-						if ($c==0) { $c=1; } else { $c=0; }
+						//show the registrations
+							echo "<tr>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['user']."&nbsp;</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".htmlentities($row['agent'])."&nbsp;</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['lan-ip']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['network-ip']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['network-port']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['host']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['status']."</td>\n";
+							echo "	<td class='".$row_style[$c]."'>".$row['ping-time']."</td>\n";
+							echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
+							echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=unregister&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&show=".$show."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" ".$onhover_pause_refresh.">\n";
+							echo "	</td>\n";
+							echo "</tr>\n";
+							if ($c==0) { $c=1; } else { $c=0; }
+						}
 				}
 			}
 			echo "</table>\n";

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2014
+--	Copyright (C) 2010-2016
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -70,24 +70,41 @@
 			session:sleep(1000);
 
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			local Database = require "resources.functions.database";
+			dbh = Database.new('system');
+
+		--include json library
+			local json
+			if (debug["sql"]) then
+				json = require "resources.functions.lunajson"
+			end
 
 		--determine whether to update the dial string
-			sql = "select * from v_extensions ";
-			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+			local sql = "select * from v_extensions ";
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and extension_uuid = :extension_uuid ";
+			local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[do_not_disturb] " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				extension = row.extension;
 				number_alias = row.number_alias or '';
 				accountcode = row.accountcode;
 				follow_me_uuid = row.follow_me_uuid;
+				do_not_disturb = row.do_not_disturb;
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..row.extension.."\n");
 				--freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..row.accountcode.."\n");
 			end);
+
+		--toggle do not disturb
+			if (enabled == "toggle") then
+				if (do_not_disturb == "true") then
+					enabled = "false";
+				else
+					enabled = "true";
+				end
+			end
 
 		--set the dial string
 			if (enabled == "true") then
@@ -114,43 +131,46 @@
 		--disable follow me
 			if (follow_me_uuid ~= nil) then
 				if (string.len(follow_me_uuid) > 0 and enabled == "true") then
-					sql = "update v_follow_me set ";
+					local sql = "update v_follow_me set ";
 					sql = sql .. "follow_me_enabled = 'false' ";
-					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-					sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+					sql = sql .. "where domain_uuid = :domain_uuid ";
+					sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+					local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
-					dbh:query(sql);
+					dbh:query(sql, params);
 				end
 			end
 
 		--update the extension
 			sql = "update v_extensions set ";
 			if (enabled == "true") then
-				sql = sql .. "dial_string = '"..dial_string.."', ";
+				sql = sql .. "dial_string = :dial_string, ";
 				sql = sql .. "do_not_disturb = 'true', ";
 			else
 				sql = sql .. "dial_string = null, ";
 				sql = sql .. "do_not_disturb = 'false', ";
 			end
 			sql = sql .. "forward_all_enabled = 'false' ";
-			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+			sql = sql .. "where domain_uuid = :domain_uuid ";
+			sql = sql .. "and extension_uuid = :extension_uuid ";
+			local params = {dial_string = dial_string, domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 			end
-			dbh:query(sql);
+			dbh:query(sql, params);
 
 		--determine whether to update the dial string
 			sql = "select * from v_extension_users as e, v_users as u ";
-			sql = sql .. "where e.extension_uuid = '"..extension_uuid.."' ";
+			sql = sql .. "where e.extension_uuid = :extension_uuid ";
 			sql = sql .. "and e.user_uuid = u.user_uuid ";
-			sql = sql .. "and e.domain_uuid = '"..domain_uuid.."' ";
+			sql = sql .. "and e.domain_uuid = :domain_uuid ";
+			local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				--update the call center status
 					if (enabled == "true") then
 						user_status = "Logged Out";
@@ -163,14 +183,15 @@
 					else
 						user_status = "Available";
 					end
-					sql = "update v_users set ";
-					sql = sql .. "user_status = '"..user_status.."' ";
-					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-					sql = sql .. "and user_uuid = '"..row.user_uuid.."' ";
+					local sql = "update v_users set ";
+					sql = sql .. "user_status = :user_status ";
+					sql = sql .. "where domain_uuid = :domain_uuid ";
+					sql = sql .. "and user_uuid = :user_uuid ";
+					local params = {user_status = user_status, domain_uuid = domain_uuid, user_uuid = row.user_uuid};
 					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
-					dbh:query(sql);
+					dbh:query(sql, params);
 			end);
 
 		--clear the cache

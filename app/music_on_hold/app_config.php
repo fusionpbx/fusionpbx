@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Music on Hold";
 		$apps[$x]['uuid'] = "1dafe0f8-c08a-289b-0312-15baf4f20f81";
@@ -20,20 +21,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_global_view";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_global_add";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_global_edit";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_global_delete";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -62,9 +50,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_music_on_hold";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_music_on_hold";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "music_on_hold_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

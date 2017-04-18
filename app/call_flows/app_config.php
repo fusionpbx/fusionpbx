@@ -20,7 +20,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//destination details
-		$y = 0;
+		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b0939384-7055-44e8-8b4c-9f72293e1878";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -54,9 +54,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_flows";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_flows";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -83,64 +84,79 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the name.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o nome.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the extension number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o ramal.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_feature_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the feature code.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o código de recurso.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the context.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o contexto.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_status";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the status.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Selecione o estado.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the PIN number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com o número PIN.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the label.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com uma etiqueta.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_sound";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the sound.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Selecione o som.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the application.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com a aplicação.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the application data.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com os dados da aplicação.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_label";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alternate label.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com uma etiqueta alternativa.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_alternate_sound";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Select the alternate sound.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Selecione um som alternativo.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_app";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alternate application.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com uma aplicação alternativa.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_data";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the alernate application data.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com os dados da aplicação alternativa.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the description.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Entre com a descrição.";
 
 ?>

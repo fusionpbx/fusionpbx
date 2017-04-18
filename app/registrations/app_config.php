@@ -21,13 +21,14 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "registration_domain";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
-		$apps[$x]['permissions'][0]['groups'][] = "admin";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "registration_all";
-		$apps[$x]['permissions'][1]['menu']['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "registration_domain";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "registration_all";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "17dbfd56-291d-8c1c-bc43-713283a9dd5a";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

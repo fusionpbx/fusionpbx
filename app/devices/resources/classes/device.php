@@ -98,6 +98,9 @@ include "root.php";
 				case "00907a":
 					$device_vendor = "polycom";
 					break;
+				case "64167f":
+					$device_vendor = "polycom";
+					break;
 				case "000413":
 					$device_vendor = "snom";
 					break;
@@ -151,10 +154,12 @@ include "root.php";
 					if (preg_match('/^es\d\d\d.*$/i', $agent)) {
 						return "escene";
 					}
-			}
-
-			// unknown vendor
-				return "";
+					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
+						return "panasonic";
+					}
+					// unknown vendor
+					return "";
+				}
 		}
 
 		public function get_template_dir() {

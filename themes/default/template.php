@@ -247,6 +247,16 @@
 				recording_audio.play();
 				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
+
+				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
+				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
+				
+				$('audio').each(function(){
+					if ($(this).get(0) != recording_audio) {
+					    $(this).get(0).pause(); // Stop playing
+					    $(this).get(0).currentTime = 0; // Reset time
+					}
+				});
 			}
 			else {
 				recording_audio.pause();
@@ -383,6 +393,7 @@
 						$menu_type = 'default';
 						$menu_width = 'calc(100% - 20px)';
 						$menu_brand = false;
+						$menu_corners = null;
 						break;
 					case 'static':
 						$menu_type = 'static-top';
@@ -396,6 +407,7 @@
 						$menu_type = 'fixed-'.$menu_position;
 						$menu_width = 'calc(90% - 20px)';
 						$menu_brand = true;
+						$menu_corners = null;
 				}
 			?>
 
@@ -442,6 +454,8 @@
 						<ul class="nav navbar-nav">
 							<?php
 							foreach ($menu_array as $index_main => $menu_parent) {
+								$mod_li = "";
+								$mod_a_1 = "";
 								$submenu = false;
 								if (is_array($menu_parent['menu_items']) && sizeof($menu_parent['menu_items']) > 0) {
 									$mod_li = "class='dropdown' ";
@@ -455,7 +469,7 @@
 										$menu_main_icon = "<span class='glyphicon ".$menu_parent['menu_item_icon']."' title=\"".$menu_parent['menu_language_title']."\"></span>";
 									}
 									else {
-										unset($menu_main_icon);
+										$menu_main_icon = null;
 									}
 									$menu_main_item = "<span class='hidden-sm' style='margin-left: 5px;'>".$menu_parent['menu_language_title']."</span>";
 								}
@@ -486,7 +500,7 @@
 												$menu_sub_icon = "<span class='glyphicon ".$menu_sub['menu_item_icon']."'></span>";
 											}
 											else {
-												unset($menu_sub_icon);
+												$menu_sub_icon = null;
 											}
 										}
 										echo "<li><a href='".$mod_a_2."' ".$mod_a_3.">".(($_SESSION['theme']['menu_sub_icons']) ? "<span class='glyphicon glyphicon-minus visible-xs pull-left' style='margin: 4px 10px 0 25px;'></span>" : null).$menu_sub['menu_language_title'].$menu_sub_icon."</a></li>\n";
@@ -533,10 +547,11 @@
 			switch ($menu_style) {
 				case 'inline':
 					$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
+					$logo_style = ($_SESSION['theme']['logo_style']['text'] != '') ? $_SESSION['theme']['logo_style']['text'] : '';
 					echo str_replace("center", $logo_align, $open_container);
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/core/install/install.php") {
 						$logo = ($_SESSION['theme']['logo']['text'] != '') ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/default/images/logo.png";
-						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;'></a>";
+						echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px;$logo_style'></a>";
 					}
 
 					show_menu($menu_array, $menu_style, $menu_position);

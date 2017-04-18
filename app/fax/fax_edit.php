@@ -17,30 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
-//detect billing app
-	$billing_app_exists = file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php");
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
-	if ($billing_app_exists) {
-		require_once "app/billing/resources/functions/currency.php";
-		require_once "app/billing/resources/functions/rating.php";
+//check permissions
+	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -97,7 +92,7 @@ else {
 		$fax_accountcode = check_str($_POST["accountcode"]);
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
 		$fax_prefix = check_str($_POST["fax_prefix"]);
-		$fax_email = check_str($_POST["fax_email"]);
+		$fax_email = check_str(implode(',',array_filter($_POST["fax_email"])));
 		$fax_email_connection_type = check_str($_POST["fax_email_connection_type"]);
 		$fax_email_connection_host = check_str($_POST["fax_email_connection_host"]);
 		$fax_email_connection_port = check_str($_POST["fax_email_connection_port"]);
@@ -215,8 +210,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 			$php_bin = 'php.exe';
 		}
+		elseif (file_exists(PHP_BINDIR."/php5")) { 
+			$php_bin = 'php5'; 
+		}
 		else {
-			$php_bin = 'php5';
+			$php_bin = 'php';
 		}
 
 	//add or update the database
@@ -518,41 +516,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'='nowrap='nowrap''>\n";
-			echo "    ".$text['label-accountcode']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			if ($billing_app_exists) {
-				$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$domain_uuid."'";
-				echo "<select name='accountcode' id='accountcode' class='formfld'>\n";
-				$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
-				$prep_statement_accountcode->execute();
-				$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result_accountcode as &$row_accountcode) {
-					$selected = '';
-					if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
-						$selected='selected="selected"';
-					}
-					elseif ($row_accountcode['type_value'] == $fax_accountcode){
-						$selected='selected="selected"';
-					}
-					echo "<option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
-				}
-				unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
-				echo "</select>";
-			}
-			else {
-				if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
-				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$fax_accountcode."\">\n";
-			}
-
-			echo "<br />\n";
-			echo $text['description-accountcode']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-accountcode']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
+		echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$fax_accountcode."\">\n";
+		echo "<br />\n";
+		echo $text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -581,12 +555,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
+		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
+		$fax_emails = explode(',',$fax_email);
+		$x = 0;
+		foreach($fax_emails as $email) {
+			echo "<tr>\n";
+			echo "<td>\n";
+			echo "	<input class='formfld' type=\"text\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".$email."\">\n";
+			echo "</td>\n";
+			$x++;
+		}
+		echo "<tr>\n";
+		echo "	<td>\n";
+		echo "		<input class='formfld' type=\"text\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
+		echo "	</td>\n";
+		echo "</table>\n";
+		echo "	".$text['description-email']."\n";
+		echo "<br />\n";
 		if (permission_exists('fax_extension_advanced') && function_exists("imap_open") && file_exists("fax_files_remote.php")) {
 			echo "<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"toggle_advanced('advanced_email_connection');\">\n";
 		}
 		echo "<br />\n";
-		echo "	".$text['description-email']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -747,17 +736,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</optgroup>\n";
 			}
 		//sounds
-			$dir_path = $_SESSION['switch']['sounds']['dir'];
-			recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-			if (count($dir_array) > 0) {
+			$file = new file;
+			$sound_files = $file->sounds();
+			if (is_array($sound_files)) {
 				echo "<optgroup label='Sounds'>\n";
-				foreach ($dir_array as $key => $value) {
+				foreach ($sound_files as $value) {
 					if (strlen($value) > 0) {
 						if (substr($fax_send_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 							$fax_send_greeting = substr($fax_send_greeting, 71);
 						}
-						$selected = ($fax_send_greeting == $key) ? true : false;
-						echo "	<option value='".$key."' ".(($selected) ? "selected='selected'" : null).">".$key."</option>\n";
+						$selected = ($fax_send_greeting == $value) ? true : false;
+						echo "	<option value='".$value."' ".(($selected) ? "selected='selected'" : null).">".$value."</option>\n";
 						if ($selected) { $tmp_selected = true; }
 					}
 				}
@@ -870,7 +859,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-email_connection_server']."\n";
 			echo "</td>\n";
-			echo "<td class='vtable' style='white-space: nowrap='nowrap';' align='left'>\n";
+			echo "<td class='vtable' style='white-space: nowrap;' align='left'>\n";
 			echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"$fax_email_connection_host\">&nbsp;:&nbsp;";
 			echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
 			echo "<br />\n";
@@ -943,7 +932,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</table>\n";
 
 		echo "		</td>";
-		echo "		<td style='white-space: nowrap='nowrap';'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+		echo "		<td style='white-space: nowrap;'>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "		<td width='50%' valign='top'>";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

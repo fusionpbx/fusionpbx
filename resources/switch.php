@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,10 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
-require_once "root.php";
-require_once "resources/require.php";
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
@@ -379,58 +381,60 @@ function save_gateway_xml() {
 }
 
 function save_var_xml() {
-	global $config, $domain_uuid;
+	if (is_array($_SESSION['switch']['conf'])) {
+		global $config, $domain_uuid;
 
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
+		//get the database connection
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->connect();
+		$db = $database->db;
 
-	//open the vars.xml file
-	$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
+		//open the vars.xml file
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
 
-	//get the hostname
-	$hostname = trim(event_socket_request_cmd('api switchname'));
+		//get the hostname
+		$hostname = trim(event_socket_request_cmd('api switchname'));
 
-	//build the xml
-	$sql = "select * from v_vars ";
-	$sql .= "where var_enabled = 'true' ";
-	$sql .= "order by var_cat, var_order asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$prev_var_cat = '';
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$xml = '';
-	foreach ($result as &$row) {
-		if ($row['var_cat'] != 'Provision') {
-			if ($prev_var_cat != $row['var_cat']) {
-				$xml .= "\n<!-- ".$row['var_cat']." -->\n";
-				if (strlen($row["var_description"]) > 0) {
-					$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+		//build the xml
+		$sql = "select * from v_vars ";
+		$sql .= "where var_enabled = 'true' ";
+		$sql .= "order by var_cat, var_order asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$prev_var_cat = '';
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$xml = '';
+		foreach ($result as &$row) {
+			if ($row['var_cat'] != 'Provision') {
+				if ($prev_var_cat != $row['var_cat']) {
+					$xml .= "\n<!-- ".$row['var_cat']." -->\n";
+					if (strlen($row["var_description"]) > 0) {
+						$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+					}
+				}
+
+				if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; } else { $var_cmd = 'set'; }
+				if (strlen($row['var_hostname']) == 0) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+				} elseif ($row['var_hostname'] == $hostname) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 				}
 			}
-
-			if ($row['var_cat'] == 'Exec-Set') { $var_cmd = 'exec-set'; } else { $var_cmd = 'set'; }
-			if (strlen($row['var_hostname']) == 0) {
-				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-			} elseif ($row['var_hostname'] == $hostname) {
-				$xml .= "<X-PRE-PROCESS cmd=\"".$var_cmd."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-			}
+			$prev_var_cat = $row['var_cat'];
 		}
-		$prev_var_cat = $row['var_cat'];
-	}
-	$xml .= "\n";
-	fwrite($fout, $xml);
-	unset($xml);
-	fclose($fout);
+		$xml .= "\n";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
 
-	//apply settings
+		//apply settings
 		$_SESSION["reload_xml"] = true;
 
-	//$cmd = "api reloadxml";
-	//event_socket_request_cmd($cmd);
-	//unset($cmd);
+		//$cmd = "api reloadxml";
+		//event_socket_request_cmd($cmd);
+		//unset($cmd);
+	}
 }
 
 function outbound_route_to_bridge ($domain_uuid, $destination_number) {
@@ -451,8 +455,12 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 		return $bridge_array;
 	}
 
+	//get the hostname
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+	$sql .= "and (hostname = '".$hostname."' or hostname is null) ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
@@ -531,7 +539,7 @@ function extension_exists($extension) {
 	$database->connect();
 	$db = $database->db;
 
-	$sql = "select * from v_extensions ";
+	$sql = "select 1 from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and (extension = '$extension' ";
 	$sql .= "or number_alias = '$extension') ";
@@ -543,6 +551,42 @@ function extension_exists($extension) {
 	else {
 		return false;
 	}
+}
+
+function extension_presence_id($extension, $number_alias = false) {
+	global $domain_uuid;
+
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
+	if ($number_alias === false) {
+		$sql = "select extension, number_alias from v_extensions ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and (extension = '$extension' ";
+		$sql .= "or number_alias = '$extension') ";
+		$sql .= "and enabled = 'true' ";
+
+		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) == 0) {
+			return false;
+		}
+
+		foreach ($result as &$row) {
+			$extension = $row['extension'];
+			$number_alias = $row['number_alias'];
+			break;
+		}
+	}
+
+	if(strlen($number_alias) > 0) {
+		if($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
+			return $number_alias;
+		}
+	}
+	return $extension;
 }
 
 function get_recording_filename($id) {
@@ -602,7 +646,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 	unset($sql);
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
+function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break = null, $dialplan_detail_inline = null) {
 
 	//get the database connection
 	require_once "resources/classes/database.php";
@@ -713,7 +757,7 @@ function save_dialplan_xml() {
 						unset ($prep_statement_2, $sql);
 
 						//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-							$details = '';
+							$details = array();
 							$previous_tag = '';
 							$details[$group]['condition_count'] = '';
 							//conditions

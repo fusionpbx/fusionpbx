@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -32,26 +32,30 @@
 					macro(session, "message_deleted", 1, 100, '');
 				end
 			end
+
 		--get the voicemail_uuid
-			sql = [[SELECT * FROM v_voicemails
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_id = ']] .. voicemail_id ..[[']];
-			status = dbh:query(sql, function(row)
+			local sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = :domain_uuid
+				AND voicemail_id = :voicemail_id]];
+			local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
+			dbh:query(sql, params, function(row)
 				db_voicemail_uuid = row["voicemail_uuid"];
 			end);
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 		--delete the file
+			os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 			os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 		--delete from the database
 			sql = [[DELETE FROM v_voicemail_messages
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
-				AND voicemail_message_uuid = ']] .. uuid ..[[']];
+				WHERE domain_uuid = :domain_uuid
+				AND voicemail_uuid = :voicemail_uuid
+				AND voicemail_message_uuid = :uuid]];
+			params = {domain_uuid = domain_uuid, voicemail_uuid = db_voicemail_uuid, uuid = uuid};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			dbh:query(sql);
+			dbh:query(sql, params);
 		--log to console
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");

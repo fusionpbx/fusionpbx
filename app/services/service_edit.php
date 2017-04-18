@@ -128,8 +128,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "service_cmd_start = '$service_cmd_start', ";
 				$sql .= "service_cmd_stop = '$service_cmd_stop', ";
 				$sql .= "service_description = '$service_description' ";
-				$sql .= "where domain_uuid = '$domain_uuid'";
-				$sql .= "and service_uuid = '$service_uuid'";
+				$sql .= "where service_uuid = '$service_uuid' ";
+				// $sql .= "and domain_uuid = '$domain_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -238,7 +238,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-data']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='service_data' maxlength='255' value=\"$service_data\">\n";
+	echo "	<input class='formfld' type='text' name='service_data' maxlength='255' value=\"" .  htmlspecialchars($service_data) . "\">\n";
 	//echo "	<textarea class='formfld' name='service_data' rows='4'>$service_data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-data']."\n";
@@ -250,7 +250,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-start_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='service_cmd_start' maxlength='255' value=\"$service_cmd_start\">\n";
+	echo "	<input class='formfld' type='text' name='service_cmd_start' maxlength='255' value=\"" .  htmlspecialchars($service_cmd_start) . "\">\n";
 	echo "<br />\n";
 	echo $text['description-start_command']."\n";
 	echo "</td>\n";
@@ -261,7 +261,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-stop_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='service_cmd_stop' maxlength='255' value=\"$service_cmd_stop\">\n";
+	echo "	<input class='formfld' type='text' name='service_cmd_stop' maxlength='255' value=\"" .  htmlspecialchars($service_cmd_stop) . "\">\n";
 	echo "<br />\n";
 	echo $text['description-stop_command']."\n";
 	echo "</td>\n";

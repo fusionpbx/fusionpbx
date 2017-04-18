@@ -17,10 +17,10 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
 
 	//permission details
-		$y = 0;
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "call_block_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -40,9 +40,10 @@
 		$y++;
 
 	//schema details
-		$y = 0; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = "v_call_block";
+		$y=0;
+		$apps[$x]['db'][$y]['table']['name'] = "v_call_block";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
@@ -63,30 +64,36 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_caller_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the name.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Insira o nome.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_number";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_caller_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enter the full phone number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Insira o número de telefone completo.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_count";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_call_count";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Number of calls.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Número de chamadas.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_action";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_call_action";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Action for call.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Ação para a chamada.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "date_added";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Date/Time number was added.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Data/Hora que o número foi adicionado.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "block_call_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "Enable/disable blocking the call.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['pt-br'] = "Habilitar/desabilitar bloqueamento da chamada.";
 		$z++;
 
 ?>

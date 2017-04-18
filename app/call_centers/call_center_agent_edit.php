@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -77,55 +81,60 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
+	if (is_array($_POST)) {
+		$call_center_agent_uuid = check_str($_POST["call_center_agent_uuid"]);
 		$agent_name = check_str($_POST["agent_name"]);
 		$agent_type = check_str($_POST["agent_type"]);
 		$agent_call_timeout = check_str($_POST["agent_call_timeout"]);
 		$agent_id = check_str($_POST["agent_id"]);
 		$agent_password = check_str($_POST["agent_password"]);
-		$agent_contact = check_str($_POST["agent_contact"]);
 		$agent_status = check_str($_POST["agent_status"]);
-		//$agent_logout = check_str($_POST["agent_logout"]);
+		$agent_contact = check_str($_POST["agent_contact"]);
 		$agent_no_answer_delay_time = check_str($_POST["agent_no_answer_delay_time"]);
 		$agent_max_no_answer = check_str($_POST["agent_max_no_answer"]);
 		$agent_wrap_up_time = check_str($_POST["agent_wrap_up_time"]);
 		$agent_reject_delay_time = check_str($_POST["agent_reject_delay_time"]);
 		$agent_busy_delay_time = check_str($_POST["agent_busy_delay_time"]);
+		//$agent_logout = check_str($_POST["agent_logout"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the user data and save it to the database
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
+		//get the uuid from the POST
+			if ($action == "update") {
+				$call_center_agent_uuid = check_str($_POST["call_center_agent_uuid"]);
+			}
 
-	if ($action == "update") {
-		$call_center_agent_uuid = check_str($_POST["call_center_agent_uuid"]);
-	}
-
-	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
-		//if (strlen($agent_name) == 0) { $msg .= $text['message-required'].$text['label-agent_name']."<br>\n"; }
-		//if (strlen($agent_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
-		//if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required'].$text['label-call_timeout']."<br>\n"; }
-		//if (strlen($agent_contact) == 0) { $msg .= $text['message-required'].$text['label-contact']."<br>\n"; }
-		//if (strlen($agent_status) == 0) { $msg .= $text['message-required'].$text['label-status']."<br>\n"; }
-		//if (strlen($agent_logout) == 0) { $msg .= $text['message-required'].$text['label-agent_logout']."<br>\n"; }
-		//if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required'].$text['label-no_answer_delay_time']."<br>\n"; }
-		//if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required'].$text['label-max_no_answer']."<br>\n"; }
-		//if (strlen($agent_wrap_up_time) == 0) { $msg .= $text['message-required'].$text['label-wrap_up_time']."<br>\n"; }
-		//if (strlen($agent_reject_delay_time) == 0) { $msg .= $text['message-required'].$text['label-reject_delay_time']."<br>\n"; }
-		//if (strlen($agent_busy_delay_time) == 0) { $msg .= $text['message-required'].$text['label-busy_delay_time']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
+		//check for all required data
+			$msg = '';
+			//if (strlen($call_center_agent_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-call_center_agent_uuid']."<br>\n"; }
+			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
+			if (strlen($agent_name) == 0) { $msg .= $text['message-required']." ".$text['label-agent_name']."<br>\n"; }
+			if (strlen($agent_type) == 0) { $msg .= $text['message-required']." ".$text['label-agent_type']."<br>\n"; }
+			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
+			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
+			if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
+			if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
+			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
+			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
+			if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required']." ".$text['label-agent_max_no_answer']."<br>\n"; }
+			if (strlen($agent_wrap_up_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_wrap_up_time']."<br>\n"; }
+			if (strlen($agent_reject_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_reject_delay_time']."<br>\n"; }
+			if (strlen($agent_busy_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_busy_delay_time']."<br>\n"; }
+			//if (strlen($agent_logout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_logout']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
 	//get and then set the complete agent_contact with the call_timeout and when necessary confirm
 		//if you change this variable, also change resources/switch.php
@@ -157,14 +166,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$agent_contact = $first.','.$confirm.$sip_invite_domain.$call_timeout.$last;
 			}
 		}
-
-	//set the user_status
-		$sql  = "update v_users set ";
-		$sql .= "user_status = '".$agent_status."' ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and username = '".$agent_name."' ";
- 		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
 
 	//add the agent
 		//setup the event socket connection
@@ -201,96 +202,67 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$response = event_socket_request($fp, $cmd);
 			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
-			//add the agent to the database
+		//set the domain_uuid
+			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+
+		//add the call_center_agent_uuid
+			if (strlen($_POST["call_center_agent_uuid"]) == 0) {
 				$call_center_agent_uuid = uuid();
-				$sql = "insert into v_call_center_agents ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "call_center_agent_uuid, ";
-				$sql .= "agent_name, ";
-				$sql .= "agent_type, ";
-				$sql .= "agent_call_timeout, ";
-				$sql .= "agent_id, ";
-				$sql .= "agent_password, ";
-				$sql .= "agent_contact, ";
-				$sql .= "agent_status, ";
-				//$sql .= "agent_logout, ";
-				$sql .= "agent_no_answer_delay_time, ";
-				$sql .= "agent_max_no_answer, ";
-				$sql .= "agent_wrap_up_time, ";
-				$sql .= "agent_reject_delay_time, ";
-				$sql .= "agent_busy_delay_time ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'$call_center_agent_uuid', ";
-				$sql .= "'$agent_name', ";
-				$sql .= "'$agent_type', ";
-				$sql .= "'$agent_call_timeout', ";
-				$sql .= "'$agent_id', ";
-				$sql .= "'$agent_password', ";
-				$sql .= "'$agent_contact', ";
-				$sql .= "'$agent_status', ";
-				//$sql .= "'$agent_logout', ";
-				$sql .= "'$agent_no_answer_delay_time', ";
-				$sql .= "'$agent_max_no_answer', ";
-				$sql .= "'$agent_wrap_up_time', ";
-				$sql .= "'$agent_reject_delay_time', ";
-				$sql .= "'$agent_busy_delay_time' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$_POST["call_center_agent_uuid"] = $call_center_agent_uuid;
+			}
 
-			//syncrhonize configuration
-				save_call_center_xml();
-				remove_config_from_cache('configuration:callcenter.conf');
+		//get the user_uuid
+			$sql = "select user_uuid from v_users ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and username = '".$agent_name."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$user_uuid = $row["user_uuid"];
+			}
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: call_center_agents.php");
-			return;
-		} //if ($action == "add")
+		//prepare the array
+			$array['call_center_agents'][] = $_POST;
+			$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['users'][0]['user_uuid'] = $user_uuid;
+			$array['users'][0]['user_status'] = $agent_status;
 
-		if ($action == "update") {
-			$sql = "update v_call_center_agents set ";
-			$sql .= "agent_name = '$agent_name', ";
-			$sql .= "agent_type = '$agent_type', ";
-			$sql .= "agent_call_timeout = '$agent_call_timeout', ";
-			$sql .= "agent_id = '$agent_id', ";
-			$sql .= "agent_password = '$agent_password', ";
-			$sql .= "agent_contact = '$agent_contact', ";
-			$sql .= "agent_status = '$agent_status', ";
-			//$sql .= "agent_logout = '$agent_logout', ";
-			$sql .= "agent_no_answer_delay_time = '$agent_no_answer_delay_time', ";
-			$sql .= "agent_max_no_answer = '$agent_max_no_answer', ";
-			$sql .= "agent_wrap_up_time = '$agent_wrap_up_time', ";
-			$sql .= "agent_reject_delay_time = '$agent_reject_delay_time', ";
-			$sql .= "agent_busy_delay_time = '$agent_busy_delay_time' ";
-			$sql .= "where domain_uuid = '$domain_uuid'";
-			$sql .= "and call_center_agent_uuid = '$call_center_agent_uuid'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		//save to the data
+			$database = new database;
+			$database->app_name = 'call_center';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+			if (strlen($call_center_agent_uuid) > 0) {
+				$database->uuid($call_center_agent_uuid);
+			}
+			$database->save($array);
+			$message = $database->message;
 
-			//syncrhonize configuration
-				save_call_center_xml();
-				remove_config_from_cache('configuration:callcenter.conf');
+		//syncrhonize configuration
+			save_call_center_xml();
 
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: call_center_agents.php");
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+		//clear the cache
+			remove_config_from_cache('configuration:callcenter.conf');
+
+		//redirect the user
+			if (isset($action)) {
+				if ($action == "add") {
+					$_SESSION["message"] = $text['message-add'];
+				}
+				if ($action == "update") {
+					$_SESSION["message"] = $text['message-update'];
+				}
+				header("Location: call_center_agents.php");
+				return;
+			}
+	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
 
 //initialize the destinations object
 	$destination = new destinations;
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$call_center_agent_uuid = $_GET["id"];
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+		$call_center_agent_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_call_center_agents ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_agent_uuid = '$call_center_agent_uuid' ";
@@ -298,20 +270,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$call_center_agent_uuid = $row["call_center_agent_uuid"];
 			$agent_name = $row["agent_name"];
 			$agent_type = $row["agent_type"];
 			$agent_call_timeout = $row["agent_call_timeout"];
 			$agent_id = $row["agent_id"];
 			$agent_password = $row["agent_password"];
-			$agent_contact = $row["agent_contact"];
 			$agent_status = $row["agent_status"];
-			//$agent_logout = $row["agent_logout"];
+			$agent_contact = $row["agent_contact"];
 			$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
 			$agent_max_no_answer = $row["agent_max_no_answer"];
 			$agent_wrap_up_time = $row["agent_wrap_up_time"];
 			$agent_reject_delay_time = $row["agent_reject_delay_time"];
 			$agent_busy_delay_time = $row["agent_busy_delay_time"];
-			break; //limit to 1 row
+			//$agent_logout = $row["agent_logout"];
 		}
 		unset ($prep_statement);
 	}
@@ -333,6 +305,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$document['title'] = $text['title-call_center_agent_edit'];
 	}
+
+//get the list of users for this domain
+	$sql = "SELECT * FROM v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and user_enabled = 'true' ";
+	$sql .= "order by username asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset($sql);
 
 //javascript to check for duplicates
 	?>
@@ -385,29 +367,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	//---- Begin Select List --------------------
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and user_enabled = 'true' ";
-	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	//$catcount = count($result);
-	foreach($result as $field) {
-		if ($field[username] == $agent_name) {
-			echo "<option value='".$field[username]."' selected='selected'>".$field[username]."</option>\n";
-		}
-		else {
-			echo "<option value='".$field[username]."'>".$field[username]."</option>\n";
+	if (is_array($users)) {
+		foreach($users as $field) {
+			if ($field[username] == $agent_name) {
+				echo "<option value='".$field[username]."' selected='selected'>".$field[username]."</option>\n";
+			}
+			else {
+				echo "<option value='".$field[username]."'>".$field[username]."</option>\n";
+			}
 		}
 	}
 	echo "</select>";
-	unset($sql, $result);
-	//---- End Select List --------------------
 	echo "<br />\n";
 	echo $text['description-agent_name']."\n";
 	echo "</td>\n";
@@ -583,10 +555,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-	echo "<br><br>";
 	echo "</form>";
+	echo "<br /><br />";
 
-//footer
+//include the footer
 	require_once "resources/footer.php";
 
 ?>

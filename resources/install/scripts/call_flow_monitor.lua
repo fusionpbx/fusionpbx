@@ -38,7 +38,7 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
-	require "resources.functions.database_handle";
+	local Database = require "resources.functions.database";
 
 	local log = require "resources.functions.log".call_flow_monitor
 
@@ -68,7 +68,7 @@
 	log.notice("Start")
 --monitor the call flows status
 	local sql = "select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code," ..
-		"f.call_flow_status, f.call_flow_label, f.call_flow_anti_label "..
+		"f.call_flow_status, f.call_flow_label, f.call_flow_alternate_label "..
 		"from v_call_flows as f, v_domains as d " ..
 		"where f.domain_uuid = d.domain_uuid " -- and call_flow_enabled = 'true'
 	while true do
@@ -78,7 +78,7 @@
 			end
 
 		--connect to the database
-			local dbh = database_handle('system');
+			local dbh = Database.new('system');
 
 		--get the extension list
 			if dbh:connected() then
@@ -92,7 +92,7 @@
 					local call_flow_status = row.call_flow_status;
 					--local pin_number = row.call_flow_pin_number;
 					local call_flow_label = row.call_flow_label;
-					local call_flow_anti_label = row.call_flow_anti_label;
+					local call_flow_alternate_label = row.call_flow_alternate_label;
 
 					-- turn the lamp
 						presence_in.turn_lamp( call_flow_status == "false",
@@ -101,7 +101,7 @@
 						);
 
 					if (debug["log"]) then
-						local label = (call_flow_status == "true") and call_flow_label or call_flow_anti_label
+						local label = (call_flow_status == "true") and call_flow_label or call_flow_alternate_label
 						log.noticef("label=%s,status=%s,uuid=%s", label, call_flow_status, call_flow_uuid);
 					end
 				end);

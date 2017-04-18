@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_center_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_center_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -106,13 +110,15 @@ else {
 
 			//prepare the result for array_multisort
 				$x = 0;
-				if (isset($result)) foreach ($result as $row) {
-					$tier_result[$x]['level'] = $row['level'];
-					$tier_result[$x]['position'] = $row['position'];
-					$tier_result[$x]['agent'] = $row['agent'];
-					$tier_result[$x]['state'] = trim($row['state']);
-					$tier_result[$x]['queue'] = $row['queue'];
-					$x++;
+				if (is_array($result)) {
+					foreach ($result as $row) {
+						$tier_result[$x]['level'] = $row['level'];
+						$tier_result[$x]['position'] = $row['position'];
+						$tier_result[$x]['agent'] = $row['agent'];
+						$tier_result[$x]['state'] = trim($row['state']);
+						$tier_result[$x]['queue'] = $row['queue'];
+						$x++;
+					}
 				}
 
 			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING

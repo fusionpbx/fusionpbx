@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2017 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
 --	  notice, this list of conditions and the following disclaimer in the
 --	  documentation and/or other materials provided with the distribution.
 --
---	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 --	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
 --	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
@@ -37,8 +37,8 @@
 	direct_dial["max_digits"] = 4;
 
 --debug
-	debug["info"] = false;
-	debug["sql"] = false;
+	debug["info"] = true;
+	debug["sql"] = true;
 
 --get the argv values
 	script_name = argv[1];
@@ -50,8 +50,13 @@
 	password_tries = 0;
 
 --connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+	Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--include json library (as global object)
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --set the api
 	api = freeswitch.API();
@@ -69,6 +74,9 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
+			if (string.sub(caller_id_number, 1, 1) == "/") then
+				caller_id_number = string.sub(caller_id_number, 2, -1);
+			end
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
@@ -83,6 +91,8 @@
 				record_silence_threshold = 300;
 			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
+			sip_from_user = session:getVariable("sip_from_user");
+			sip_number_alias = session:getVariable("sip_number_alias");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
 
 		--set the sounds path for the language, dialect and voice
@@ -99,12 +109,13 @@
 				if (domain_uuid == nil) then
 					--get the domain_uuid using the domain name required for multi-tenant
 						if (domain_name ~= nil) then
-							sql = "SELECT domain_uuid FROM v_domains ";
-							sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
+							local sql = "SELECT domain_uuid FROM v_domains ";
+							sql = sql .. "WHERE domain_name = :domain_name ";
+							local params = {domain_name = domain_name};
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 							end
-							status = dbh:query(sql, function(rows)
+							dbh:query(sql, params, function(rows)
 								domain_uuid = rows["domain_uuid"];
 							end);
 						end
@@ -147,6 +158,17 @@
 					end
 				end
 			end
+
+			if settings['voicemail'] then
+				if settings['voicemail']['voicemail_to_sms'] then
+					voicemail_to_sms = (settings['voicemail']['voicemail_to_sms']['boolean'] == 'true');
+				end
+				if settings['voicemail']['voicemail_to_sms_did'] then
+					voicemail_to_sms_did = settings['voicemail']['voicemail_to_sms_did']['text'];
+				end
+				voicemail_to_sms_did = voicemail_to_sms_did or '';
+			end
+
 			if (not temp_dir) or (#temp_dir == 0) then
 				if (settings['server'] ~= nil) then
 					if (settings['server']['temp'] ~= nil) then
@@ -161,20 +183,24 @@
 			if (voicemail_id ~= nil) then
 				if (session:ready()) then
 					--get the information from the database
-						sql = [[SELECT * FROM v_voicemails
-							WHERE domain_uuid = ']] .. domain_uuid ..[['
-							AND voicemail_id = ']] .. voicemail_id ..[['
+						local sql = [[SELECT * FROM v_voicemails
+							WHERE domain_uuid = :domain_uuid
+							AND voicemail_id = :voicemail_id
 							AND voicemail_enabled = 'true' ]];
+						local params = {domain_uuid = domain_uuid, voicemail_id = voicemail_id};
 						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
-						status = dbh:query(sql, function(row)
+						dbh:query(sql, params, function(row)
 							voicemail_uuid = string.lower(row["voicemail_uuid"]);
 							voicemail_password = row["voicemail_password"];
 							greeting_id = row["greeting_id"];
+							voicemail_alternate_greet_id = row["voicemail_alternate_greet_id"];
 							voicemail_mail_to = row["voicemail_mail_to"];
 							voicemail_attach_file = row["voicemail_attach_file"];
 							voicemail_local_after_email = row["voicemail_local_after_email"];
+							voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
+							voicemail_tutorial = row["voicemail_tutorial"];
 						end);
 					--set default values
 						if (voicemail_local_after_email == nil) then
@@ -222,11 +248,13 @@
 	require "app.voicemail.resources.functions.play_greeting";
 	require "app.voicemail.resources.functions.record_message";
 	require "app.voicemail.resources.functions.record_menu";
+	require "app.voicemail.resources.functions.forward_add_intro";
 	require "app.voicemail.resources.functions.forward_to_extension";
 	require "app.voicemail.resources.functions.main_menu";
 	require "app.voicemail.resources.functions.listen_to_recording";
 	require "app.voicemail.resources.functions.message_waiting";
 	require "app.voicemail.resources.functions.send_email";
+	require "app.voicemail.resources.functions.send_sms";
 	require "app.voicemail.resources.functions.delete_recording";
 	require "app.voicemail.resources.functions.message_saved";
 	require "app.voicemail.resources.functions.return_call";
@@ -235,6 +263,9 @@
 	require "app.voicemail.resources.functions.record_greeting";
 	require "app.voicemail.resources.functions.choose_greeting";
 	require "app.voicemail.resources.functions.record_name";
+	require "app.voicemail.resources.functions.message_count"
+	require "app.voicemail.resources.functions.mwi_notify";
+	require "app.voicemail.resources.functions.tutorial";	
 
 --send a message waiting event
 	if (voicemail_action == "mwi") then
@@ -248,11 +279,12 @@
 			debug["info"] = "true";
 
 		--get voicemail message details
-			sql = [[SELECT * FROM v_domains WHERE domain_name = ']] .. domain_name ..[[']]
+			local sql = [[SELECT * FROM v_domains WHERE domain_name = :domain_name]];
+			local params = {domain_name = domain_name};
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
-			status = dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				domain_uuid = string.lower(row["domain_uuid"]);
 			end);
 
@@ -267,7 +299,11 @@
 				if (voicemail_id) then
 					if (voicemail_authorized) then
 						if (voicemail_authorized == "true") then
-							--skip the password check
+							if (voicemail_id == sip_from_user or voicemail_id == sip_number_alias) then
+								--skip the password check
+							else
+								check_password(voicemail_id, password_tries);
+							end
 						else
 							check_password(voicemail_id, password_tries);
 						end
@@ -280,7 +316,11 @@
 
 			--send to the main menu
 				timeouts = 0;
-				main_menu();
+				if (voicemail_tutorial == "true") then 
+					tutorial("intro");
+				else
+					main_menu();
+				end
 		end
 	end
 
@@ -288,20 +328,23 @@
 	if (voicemail_action == "save") then
 
 		--check the voicemail quota
-			if (vm_disk_quota) then
+			if (voicemail_uuid ~= nil and vm_disk_quota ~= nil) then
 				--get voicemail message seconds
-					sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(row)
+					local sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
+						WHERE domain_uuid = :domain_uuid
+						AND voicemail_uuid = :voicemail_uuid]]
+					local params = {domain_uuid = domain_uuid, voicemail_uuid = voicemail_uuid};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params, function(row)
 						message_sum = row["message_sum"];
 					end);
 					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
 						--play message mailbox full
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+						--hangup
+							session:hangup("NORMAL_CLEARING");
 						--set the voicemail_uuid to nil to prevent saving the voicemail
 							voicemail_uuid = nil;
 					end
@@ -322,32 +365,32 @@
 						--show the storage type
 							freeswitch.consoleLog("notice", "[voicemail] ".. storage_type .. "\n");
 
-						--include the base64 function
-							require "resources.functions.base64";
+						--include the file io
+							local file = require "resources.functions.file"
 
-						--base64 encode the file
-							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								--get the base
-									local f = io.open(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, "rb");
-									local file_content = f:read("*all");
-									f:close();
-									message_base64 = base64.encode(file_content);
+						-- build full path to file
+							local full_path = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext
+
+							if file_exists(full_path) then
+								--read file content as base64 string
+									message_base64 = assert(file.read_base64(full_path));
 									--freeswitch.consoleLog("notice", "[voicemail] ".. message_base64 .. "\n");
 
 								--delete the file
-									os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+									os.remove(full_path);
 							end
 					end
 
 				--get the voicemail destinations
 					sql = [[select * from v_voicemail_destinations
-					where voicemail_uuid = ']]..voicemail_uuid..[[']]
-					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "\n");
+					where voicemail_uuid = :voicemail_uuid]]
+					params = {voicemail_uuid=voicemail_uuid};
+					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "; params:" .. json.encode(params) .. "\n");
 					destinations = {};
 					x = 1;
 					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
 					x = x + 1;
-					assert(dbh:query(sql, function(row)
+					assert(dbh:query(sql, params, function(row)
 						destinations[x] = row;
 						x = x + 1;
 					end));
@@ -380,71 +423,90 @@
 								if (storage_type == "base64") then
 									table.insert(sql, "message_base64, ");
 								end
+								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
+									table.insert(sql, "message_transcription, ");
+								end
 								table.insert(sql, "message_length ");
 								--table.insert(sql, "message_status, ");
 								--table.insert(sql, "message_priority, ");
 								table.insert(sql, ") ");
 								table.insert(sql, "VALUES ");
 								table.insert(sql, "( ");
-								table.insert(sql, "'"..voicemail_message_uuid.."', ");
-								table.insert(sql, "'"..domain_uuid.."', ");
-								table.insert(sql, "'"..row.voicemail_uuid_copy.."', ");
-								table.insert(sql, "'"..start_epoch.."', ");
-								table.insert(sql, "'"..caller_id_name.."', ");
-								table.insert(sql, "'"..caller_id_number.."', ");
+								table.insert(sql, ":voicemail_message_uuid, ");
+								table.insert(sql, ":domain_uuid, ");
+								table.insert(sql, ":voicemail_uuid, ");
+								table.insert(sql, ":start_epoch, ");
+								table.insert(sql, ":caller_id_name, ");
+								table.insert(sql, ":caller_id_number, ");
 								if (storage_type == "base64") then
-									table.insert(sql, "'"..message_base64.."', ");
+									table.insert(sql, ":message_base64, ");
 								end
-								table.insert(sql, "'"..message_length.."' ");
-								--table.insert(sql, "'"..message_status.."', ");
-								--table.insert(sql, "'"..message_priority.."' ");
+								if (transcribe_enabled == "true") and (voicemail_transcription_enabled == "true") then
+									table.insert(sql,  ":transcription, ");
+								end
+								table.insert(sql, ":message_length ");
+								--table.insert(sql, ":message_status, ");
+								--table.insert(sql, ":message_priority ");
 								table.insert(sql, ") ");
 								sql = table.concat(sql, "\n");
+								local params = {
+									voicemail_message_uuid = voicemail_message_uuid;
+									domain_uuid = domain_uuid;
+									voicemail_uuid = row.voicemail_uuid_copy;
+									start_epoch = start_epoch;
+									caller_id_name = caller_id_name;
+									caller_id_number = caller_id_number;
+									message_base64 = message_base64;
+									transcription = transcription;
+									message_length = message_length;
+									--message_status = message_status;
+									--message_priority = message_priority;
+								};
 								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 								end
 								if (storage_type == "base64") then
-									array = explode("://", database["system"]);
-									local luasql = require "luasql.postgres";
-									local env = assert (luasql.postgres());
-									local db = env:connect(array[2]);
-									res, serr = db:execute(sql);
-									db:close();
-									env:close();
+									local Database = require "resources.functions.database"
+									local dbh = Database.new('system', 'base64');
+									dbh:query(sql, params);
+									dbh:release();
 								else
-									dbh:query(sql);
+									dbh:query(sql, params);
 								end
 							end
 
-						--get saved and new message counts
+							local params = {domain_uuid = domain_uuid, voicemail_uuid = row.voicemail_uuid_copy};
+
+						--get new message count
 							sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-								WHERE domain_uuid = ']] .. domain_uuid ..[['
-								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_uuid = :voicemail_uuid
 								AND (message_status is null or message_status = '') ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(result)
 								new_messages = result["new_messages"];
 							end);
+
+						--get saved message count
 							sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
-								WHERE domain_uuid = ']] .. domain_uuid ..[['
-								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
+								WHERE domain_uuid = :domain_uuid
+								AND voicemail_uuid = :voicemail_uuid
 								AND message_status = 'saved' ]];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(result)
 								saved_messages = result["saved_messages"];
 							end);
 
 						--get the voicemail_id
-							sql = [[SELECT voicemail_id FROM v_voicemails
-								WHERE voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[[']];
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-								end
-							status = dbh:query(sql, function(result)
+							sql = [[SELECT voicemail_id FROM v_voicemails WHERE voicemail_uuid = :voicemail_uuid]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+							end
+							dbh:query(sql, params, function(result)
 								voicemail_id_copy = result["voicemail_id"];
 							end);
 
@@ -468,17 +530,23 @@
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
 								send_email(voicemail_id_copy, voicemail_message_uuid);
+								if (voicemail_to_sms) then
+									send_sms(voicemail_id_copy, voicemail_message_uuid);
+								end
 							end
 					end --for
 
 			else
 				--voicemail not enabled or does not exist
-					referred_by = session:getVariable("sip_h_Referred-By");
-					if (referred_by) then
-						referred_by = referred_by:match('[%d]+');
-						session:transfer(referred_by, "XML", context);
-					else
-						session:hangup("NO_ANSWER");
+					if (session:ready()) then
+						referred_by = session:getVariable("sip_h_Referred-By");
+						if (referred_by) then
+							referred_by = referred_by:match('[%d]+');
+							session:transfer(referred_by, "XML", context);
+						else
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							session:hangup("NO_ANSWER");
+						end
 					end
 			end
 	end

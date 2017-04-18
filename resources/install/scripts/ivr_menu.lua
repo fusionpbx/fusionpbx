@@ -34,12 +34,17 @@
 --include config.lua
 	require "resources.functions.config";
 
---connect to the database
-	require "resources.functions.database_handle";
-	dbh = database_handle('system');
+--include Database class
+	local Database = require "resources.functions.database";
 
 --get logger
 	local log = require "resources.functions.log".ivr_menu
+
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
+	end
 
 --include functions
 	require "resources.functions.format_ringback"
@@ -54,6 +59,9 @@
 	domain_uuid = session:getVariable("domain_uuid");
 
 	local recordings_dir = recordings_dir .. "/" .. domain_name
+
+--connect to the database
+	dbh = Database.new('system');
 
 --settings
 	require "resources.functions.settings";
@@ -96,12 +104,13 @@
 
 --get the ivr menu from the database
 	sql = [[SELECT * FROM v_ivr_menus
-		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
+		WHERE ivr_menu_uuid = :ivr_menu_uuid
 		AND ivr_menu_enabled = 'true' ]];
+	local params = {ivr_menu_uuid = ivr_menu_uuid};
 	if (debug["sql"]) then
-		log.notice("SQL: " .. sql);
+		log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 	end
-	dbh:query(sql, function(row)
+	dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
 		ivr_menu_name = row["ivr_menu_name"];
 		--ivr_menu_extension = row["ivr_menu_extension"];
@@ -126,6 +135,9 @@
 		ivr_menu_ringback = row["ivr_menu_ringback"];
 		ivr_menu_cid_prefix = row["ivr_menu_cid_prefix"];
 	end);
+
+--disconnect from db
+	dbh:release()
 
 --set the caller id name
 	if caller_id_name and #caller_id_name > 0 and ivr_menu_cid_prefix and #ivr_menu_cid_prefix > 0 then
@@ -164,10 +176,11 @@
 	ivr_menu_invalid_sound_is_base64 = false;
 	ivr_menu_exit_sound_is_base64 = false;
 	if (storage_type == "base64") then
-
 		--add functions
-			require "resources.functions.base64";
 			require "resources.functions.mkdir";
+
+		--connect to the database
+			local dbh = Database.new('system', 'base64/read')
 
 		--make sure the recordings directory exists
 			mkdir(recordings_dir);
@@ -179,23 +192,28 @@
 					return full_path
 				end
 
-				local sql = [[SELECT * FROM v_recordings WHERE domain_uuid = ']]..domain_uuid..
-							[['AND recording_filename = ']]..file_name..[[' ]];
+				local sql = "SELECT * FROM v_recordings WHERE domain_uuid = :domain_uuid "
+							.. "AND recording_filename = :file_name";
+
+				local params = {domain_uuid = domain_uuid, file_name = file_name};
 
 				if (debug["sql"]) then
-					log.notice("SQL: "..sql);
+					log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 				end
 
 				local is_base64
-				dbh:query(sql, function(row)
+				dbh:query(sql, params, function(row)
 					if #row.recording_base64 > 32 then
-						local file, err = io.open(full_path, "w");
-						if not file then
-							log.err("can not create file: "..full_path.."; Error - " .. tostring(err));
-							return
-						end
-						file:write(base64.decode(row.recording_base64));
-						file:close();
+						--include the file io
+							local file = require "resources.functions.file"
+
+						--write decoded string to file
+							local ok, err = file.write_base64(full_path, row.recording_base64);
+							if not ok then
+								log.err("can not create file: "..full_path.."; Error - " .. tostring(err));
+								return
+							end
+
 						is_base64 = true;
 					end
 				end);
@@ -223,6 +241,8 @@
 			if #ivr_menu_exit_sound > 1 then
 				ivr_menu_exit_sound, ivr_menu_exit_sound_is_base64 = load_file(exit_sound_file_name)
 			end
+
+			dbh:release()
 
 	elseif (storage_type == "http_cache") then
 		--add the path to file name
@@ -312,13 +332,20 @@
 			end
 
 		--get the ivr menu options
-			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			local sql = "SELECT * FROM v_ivr_menu_options "
+				.. "WHERE ivr_menu_uuid = :ivr_menu_uuid "
+				.. "ORDER BY ivr_menu_option_order asc ";
+			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
-				log.notice("SQL: " .. sql);
+				log.notice("SQL: " .. sql .. "; params: " .. json.encode(params));
 			end
 
+		--connect to the database
+			local dbh = Database.new('system')
+
+		--select actions to execute
 			local actions = {}
-			dbh:query(sql, function(row)
+			dbh:query(sql, params, function(row)
 				-- declare vars
 					local action, script, data
 
@@ -371,6 +398,7 @@
 				-- we have unsupported IVR action
 					log.warning("invalid action in ivr: " .. row.ivr_menu_option_action);
 			end); --end results
+			dbh:release()
 
 		--execute
 			if #actions > 0 then

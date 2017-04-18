@@ -61,8 +61,11 @@ require_once "resources/check_auth.php";
 	echo "</table>";
 	echo "<br />\n";
 
-	$sql = "select * from v_phrases ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql = "select count(*) as num_rows from v_phrases ";
+	$sql .= "where ( ";
+	$sql .= " domain_uuid = '".$domain_uuid."'  ";
+	$sql .= " or domain_uuid is null ";
+	$sql .= ") ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -77,7 +80,10 @@ require_once "resources/check_auth.php";
 	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_phrases ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where ( ";
+	$sql .= " domain_uuid = '".$domain_uuid."'  ";
+	$sql .= " or domain_uuid is null ";
+	$sql .= ") ";
 	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by." ".$order." " : "phrase_name asc ");
 	$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));

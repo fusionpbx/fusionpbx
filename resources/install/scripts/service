@@ -1,0 +1,73 @@
+-- File to conrol FusionPBX Lua services/monitors
+-- @usage: 
+--  # stop `call_flow_subscribe` monitor
+--  fs_cli -x "lua service flow stop"
+--  # stop `mwi_subscribe` monitor
+--  fs_cli -x "lua service mwi stop"
+
+require "resources.functions.config"
+
+local log  = require "resources.functions.log".service
+local file = require "resources.functions.file"
+
+local destination = assert(argv[1], "No service name")
+local command     = assert(argv[2], "No command")
+
+local function service_status(name)
+	local pid_file = scripts_dir .. "/run/" .. name .. ".tmp"
+	return not not file.exists(pid_file)
+end
+
+local function send_control(name, cmd)
+	local event = freeswitch.Event("CUSTOM", "fusion::service::control")
+	event:addHeader('service-name', name)
+	event:addHeader('service-command', cmd)
+	event:fire()
+end
+
+local known_commands = {}
+
+known_commands.status = function()
+	log.noticef( 'service %s: %s', destination,
+		service_status(destination) and 'RUNNING' or 'STOPPED'
+	)
+end;
+
+known_commands.start = function()
+	if service_status(destination) then
+		log.warningf('service %s already started', destination)
+		return
+	end
+
+	--! @todo implemnt start command
+	log.err('Not implemted yet')
+end;
+
+known_commands.restart = function()
+	if not service_status(destination) then
+		log.warningf('service %s not started', destination)
+		return
+	end
+
+	--! @todo implemnt start command
+	log.err('Not implemted yet')
+end;
+
+known_commands.stop = function()
+	if not service_status(destination) then
+		log.warningf('service %s not started', destination)
+		return
+	end
+
+	log.noticef('stopping service: %s', destination)
+	send_control(destination, 'stop')
+end;
+
+-- try handle known commands
+local cmd = known_commands[command]
+if cmd then return cmd() end
+
+log.warningf('send raw command `%s` to service %s', command, destination)
+
+-- forward command to service itself
+send_control(destination, command)

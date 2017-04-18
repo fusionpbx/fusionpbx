@@ -22,16 +22,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/header.php";
@@ -49,7 +53,8 @@ else {
 	}
 
 //get total devices count from the database
-	$sql = "select count(*) as num_rows from v_devices where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select count(*) as num_rows from v_devices ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -83,6 +88,8 @@ else {
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	$prep_statement = $db->prepare($sql);
@@ -134,6 +141,8 @@ else {
 		$sql .= "	or d.device_enabled like '%".$search."%' ";
 		$sql .= "	or d.device_template like '%".$search."%' ";
 		$sql .= "	or d.device_description like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_method like '%".$search."%' ";
+		$sql .= "	or d.device_provisioned_ip like '%".$search."%' ";
 		$sql .= ") ";
 	}
 	if (strlen($order_by) == 0) {
@@ -162,8 +171,6 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='100%' align='left' valign='top'>";
 	echo "			<b>".$text['header-devices']." (".$num_rows.")</b>";
-	echo "			<br /><br />";
-	echo "			".$text['description-devices'];
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
@@ -175,12 +182,20 @@ else {
 			echo "	<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
 		}
 	}
+	if (permission_exists('device_vendor_view')) {
+		echo "		<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">";
+	}
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2'>\n";
+	echo "			".$text['description-devices'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -203,6 +218,7 @@ else {
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
+	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('device_add')) {
@@ -237,6 +253,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['device_enabled']]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provisioned_date']." - ".$row['device_provisioned_method']." - ".$row['device_provisioned_ip']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('device_edit')) {

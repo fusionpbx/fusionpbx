@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('xml_cdr_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //additional includes
 	require_once "resources/paging.php";
@@ -71,6 +75,15 @@ else {
 		$bridge_uuid = check_str($_REQUEST["network_addr"]);
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
+		if (is_array($_SESSION['cdr']['field'])) {
+			foreach ($_SESSION['cdr']['field'] as $field) {
+				$array = explode(",", $field);
+				$field_name = end($array);
+				if (isset($_REQUEST[$field_name])) {
+					$$field_name = check_str($_REQUEST[$field_name]);
+				}
+			}
+		}
 		if (strlen(check_str($_REQUEST["mos_comparison"])) > 0) {
 			switch(check_str($_REQUEST["mos_comparison"])) {
 				case 'less': $mos_comparison = "<"; break;
@@ -80,9 +93,9 @@ else {
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-         } else {
-             $mos_comparison = '';
-        }
+		} else {
+			$mos_comparison = '';
+		}
 		//$mos_comparison = check_str($_REQUEST["mos_comparison"]);
 		$mos_score = check_str($_REQUEST["mos_score"]);
 	}
@@ -111,6 +124,18 @@ else {
 		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
 	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
+
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($$field_name)) {
+				$$field_name = check_str($_REQUEST[$field_name]);
+				$sql_where_ands[] = "$field_name like '%".$$field_name."%'";
+			}
+		}
+	}
+
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
 	else {
 		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
@@ -252,6 +277,15 @@ else {
 	$param .= "&bridge_uuid=".$bridge_uuid;
 	$param .= "&mos_comparison=".$mos_comparison;
 	$param .= "&mos_score=".$mos_score;
+	if (is_array($_SESSION['cdr']['field'])) {
+		foreach ($_SESSION['cdr']['field'] as $field) {
+			$array = explode(",", $field);
+			$field_name = end($array);
+			if (isset($$field_name)) {
+				$param .= "&".$field_name."=".$$field_name;
+			}
+		}
+	}
 	if ($_GET['showall'] == 'true' && permission_exists('xml_cdr_all')) {
 		$param .= "&showall=true";
 	}
@@ -266,49 +300,40 @@ else {
 //set a default number of rows to show
 	$num_rows = '0';
 
-//set a default CDR limit
-	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
-		$_SESSION['cdr']['limit']['numeric'] = 800;
-	}
+//disable the paging
+	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
+	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-			if ($_SESSION['cdr']['count']['boolean'] == "true") {
-				//get the number of rows in the v_xml_cdr
-					$sql = "select count(*) as num_rows from v_xml_cdr ";
-					$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if ($row['num_rows'] > 0) {
-							$num_rows = $row['num_rows'];
-						}
-						else {
-							$num_rows = '0';
-						}
-					}
-					unset($prep_statement, $result);
+
+		//get the number of rows in the v_xml_cdr
+			$sql = "select count(uuid) as num_rows from v_xml_cdr ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$num_rows = $row['num_rows'];
+				}
+				else {
+					$num_rows = '0';
+				}
 			}
-			else {
-				//limit the number of results
-					if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
-						$num_rows = $_SESSION['cdr']['limit']['numeric'];
-					}
-					else {
-						$num_rows = '1000';
-					}
+			unset($prep_statement, $result);
+
+		//limit the number of results
+			if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+				$num_rows = $_SESSION['cdr']['limit']['numeric'];
 			}
+
+		//set the default paging
 			if ($_SESSION['domain']['paging']['numeric'] != '' && $rows_per_page > $_SESSION['domain']['paging']['numeric']) {
 				$rows_per_page = $_SESSION['domain']['paging']['numeric'];
 			}
 			else {
 				$rows_per_page = 50;
-			}
-
-		//disable the paging
-			if ($_REQUEST['export_format'] == "csv") {
-				$rows_per_page = 0;
 			}
 
 		//prepare to page the results
@@ -337,9 +362,12 @@ else {
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
 	$sql .= "destination_number, ";
+	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
-			$sql .= $field.", ";
+			$array = explode(",", $field);
+			$field_name = end($array);
+			$sql .= $field_name.", ";
 		}
 	}
 	$sql .= "accountcode, ";
@@ -363,7 +391,7 @@ else {
 	}
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
-	if ($_REQUEST['export_format'] != "csv") {
+	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
 		}

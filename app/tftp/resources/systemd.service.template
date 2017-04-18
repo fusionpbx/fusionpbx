@@ -1,0 +1,26 @@
+[Unit]
+Description={$fullname}
+After=syslog.target network.target {$database}
+Requires={$database}
+
+[Service]
+Type=simple
+PIDFile=/run/{$shortname}.pid
+WorkingDirectory={$scriptfolder}
+StandardOutput=null
+StandardError=syslog
+ExecStart=/usr/bin/php {$scriptpath}
+ExecStop=/bin/kill $MAINPID
+PrivateTmp=true
+InaccessibleDirectories=/home /root /boot /opt /mnt /media
+ReadOnlyDirectories=/etc /usr
+
+;Permissions
+User=root
+Group=daemon
+
+;Limits
+LimitCORE=1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,22 +1,25 @@
 -- Start background service to support Lua-ODBC-Pool database backend
 
 require "resources.functions.config"
-require "resources.functions.file_exists"
 
-local log      = require "resources.functions.log".dbpool
-local odbc     = require "odbc"
-local odbcpool = require "odbc.pool"
+local log           = require "resources.functions.log".odbcpool
+local odbc          = require "odbc"
+local odbcpool      = require "odbc.pool"
+local EventConsumer = require "resources.functions.event_consumer"
 
 -- Configuration
-local POLL_TIMEOUT = 5
-local run_file = scripts_dir .. "/run/dbpool.tmp";
+local service_name = 'odbcpool'
+local pid_file     = scripts_dir .. "/run/" .. service_name .. ".tmp"
+local pool_size    = 5
 
 -- Pool ctor
 local function run_odbc_pool(name, n)
   local connection_string = assert(database[name])
 
   local typ, dsn, user, password = connection_string:match("^(.-)://(.-):(.-):(.-)$")
-  assert(typ == 'odbc', "unsupported connection string:" .. connection_string)
+  if typ ~= 'odbc' then
+    return log.warningf("unsupported connection string type: %s", tostring(typ))
+  end
 
   local cli = odbcpool.client(name)
 
@@ -42,26 +45,57 @@ local function run_odbc_pool(name, n)
   }
 end
 
+-- Pool dtor
 local function stop_odbc_pool(ctx)
   log.noticef("Stopping reconnect thread[%s] ...", ctx.name)
   ctx.thr:stop()
   log.noticef("Reconnect thread[%s] stopped", ctx.name)
 end
 
-local function main()
-  local system_pool = run_odbc_pool("system", 10)
-  local switch_pool = run_odbc_pool("switch", 10)
+local system_pool = run_odbc_pool("system", pool_size)
+local switch_pool = run_odbc_pool("switch", pool_size)
 
-  local file = assert(io.open(run_file, "w"));
-  file:write("remove this file to stop the script");
-  file:close()
-
-  while file_exists(run_file) do
-    freeswitch.msleep(POLL_TIMEOUT*1000)
-  end
-
-  stop_odbc_pool(system_pool)
-  stop_odbc_pool(switch_pool)
+if not (system_pool or switch_pool) then
+  log.errf('there no supported databases')
+  return
 end
 
-main()
+local events = EventConsumer.new(pid_file)
+
+-- FS shutdown
+events:bind("SHUTDOWN", function(self, name, event)
+  log.notice("shutdown")
+  return self:stop()
+end)
+
+-- Control commands from FusionPBX
+events:bind("CUSTOM::fusion::service::control", function(self, name, event)
+  if service_name ~= event:getHeader('service-name') then return end
+
+  local command = event:getHeader('service-command')
+  if command == "stop" then
+    log.notice("get stop command")
+    return self:stop()
+  end
+
+  log.warningf('Unknown service command: %s', command or '<NONE>')
+end)
+
+-- Overwrite `events:stop` method to do cleanup
+--! @todo find more elegant way
+do local stop = events.stop
+function events:stop(...)
+  -- do not rise any error
+  pcall(function()
+    if system_pool then stop_odbc_pool(system_pool); system_pool = nil end
+    if switch_pool then stop_odbc_pool(switch_pool); switch_pool = nil end
+  end)
+  stop(self, ...)
+end
+end
+
+log.notice("start")
+
+events:run()
+
+log.notice("stop")

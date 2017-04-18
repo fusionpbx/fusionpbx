@@ -46,12 +46,17 @@ This method causes the script to get its manadatory arguments directly from the 
 
 -- Command line parameters
 	local params = {
-			cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
-			cid_name = session:getVariable("caller_id_name"),
-			domain_name = session:getVariable("domain_name"),
-			userid = "", -- session:getVariable("id")
-			loglevel = "W" -- Warning, Debug, Info
-			}
+		cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
+		cid_name = session:getVariable("caller_id_name"),
+		domain_name = session:getVariable("domain_name"),
+		userid = "", -- session:getVariable("id")
+		loglevel = "W" -- Warning, Debug, Info
+		}
+
+--check if cid_num is numeric
+	if (tonumber(params["cid_num"]) == nil) then
+		return
+	end
 
 -- local storage
 	local sql = nil
@@ -88,8 +93,8 @@ This method causes the script to get its manadatory arguments directly from the 
 	--if not cached then get the information from the database
 	if (cache == "-ERR NOT FOUND") then
 		--connect to the database
-			require "resources.functions.database_handle";
-			dbh = database_handle('system');
+			Database = require "resources.functions.database";
+			dbh = Database.new('system');
 
 		--log if not connect
 			if dbh:connected() == false then
@@ -99,14 +104,14 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
-			status = dbh:query(sql, function(rows)
+			sql = sql .. "WHERE c.call_block_number = :cid_num AND d.domain_name = :domain_name "
+			dbh:query(sql, params, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
 				found_enabled = rows["call_block_enabled"];
 				found_action = rows["call_block_action"];
 				found_count = rows["call_block_count"];
-				end)
+			end)
 			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
 
 		--set the cache
@@ -171,7 +176,9 @@ This method causes the script to get its manadatory arguments directly from the 
 				k = k + 1
 			end
 			if (source == "database") then
-				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+				dbh:query("UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid",{
+					call_block_count = found_count + 1, call_block_uuid = found_uuid
+				})
 			end
 			session:execute("set", "call_blocked=true");
 			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])

@@ -68,7 +68,10 @@ cnf_join_enable: "1"     ; 0-Disabled, 1-Enabled (default)
 semi_attended_transfer: "0"   ; 0-Disabled, 1-Enabled (default)
 
 # Telnet Level (enable or disable the ability to telnet into this phone
-telnet_level: "2"      ; 0-Disabled (default), 1-Enabled, 2-Privileged
+telnet_level: "0"      ; 0-Disabled (default), 1-Enabled, 2-Privileged
+
+# Uncomment the line below for different telnet password
+# phone_password: "FusionPBX"
 
 # Inband DTMF Settings (0-disable, 1-enable (default))
 dtmf_inband: "1"

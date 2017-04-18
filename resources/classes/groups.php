@@ -91,27 +91,32 @@ if (!class_exists('groups')) {
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 					if (count($result) == 0) {
 						$x = 0;
-						$tmp[$x]['group_name'] = 'superadmin';
-						$tmp[$x]['group_description'] = 'Super Administrator Group';
-						$tmp[$x]['group_protected'] = 'false';
+						//$groups[$x]['group_uuid'] = '';
+						$groups[$x]['group_name'] = 'superadmin';
+						$groups[$x]['group_description'] = 'Super Administrator Group';
+						$groups[$x]['group_protected'] = 'false';
 						$x++;
-						$tmp[$x]['group_name'] = 'admin';
-						$tmp[$x]['group_description'] = 'Administrator Group';
-						$tmp[$x]['group_protected'] = 'false';
+						//$groups[$x]['group_uuid'] = '';
+						$groups[$x]['group_name'] = 'admin';
+						$groups[$x]['group_description'] = 'Administrator Group';
+						$groups[$x]['group_protected'] = 'false';
 						$x++;
-						$tmp[$x]['group_name'] = 'user';
-						$tmp[$x]['group_description'] = 'User Group';
-						$tmp[$x]['group_protected'] = 'false';
+						//$groups[$x]['group_uuid'] = '';
+						$groups[$x]['group_name'] = 'user';
+						$groups[$x]['group_description'] = 'User Group';
+						$groups[$x]['group_protected'] = 'false';
 						$x++;
-						$tmp[$x]['group_name'] = 'public';
-						$tmp[$x]['group_description'] = 'Public Group';
-						$tmp[$x]['group_protected'] = 'false';
+						//$groups[$x]['group_uuid'] = '';
+						$groups[$x]['group_name'] = 'public';
+						$groups[$x]['group_description'] = 'Public Group';
+						$groups[$x]['group_protected'] = 'false';
 						$x++;
-						$tmp[$x]['group_name'] = 'agent';
-						$tmp[$x]['group_description'] = 'Call Center Agent Group';
-						$tmp[$x]['group_protected'] = 'false';
+						//$groups[$x]['group_uuid'] = '';
+						$groups[$x]['group_name'] = 'agent';
+						$groups[$x]['group_description'] = 'Call Center Agent Group';
+						$groups[$x]['group_protected'] = 'false';
 						$this->db->beginTransaction();
-						foreach($tmp as $row) {
+						foreach($groups as $row) {
 							if (strlen($row['group_name']) > 0) {
 								$sql = "insert into v_groups ";
 								$sql .= "(";
@@ -156,8 +161,8 @@ if (!class_exists('groups')) {
 					//no permissions found add the defaults
 						$this->db->beginTransaction();
 						foreach($apps as $app) {
-							foreach ($app['permissions'] as $row) {
-								foreach ($row['groups'] as $group) {
+							if (is_array($app['permissions'])) foreach ($app['permissions'] as $row) {
+								if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
 									//add the record
 									$sql = "insert into v_group_permissions ";
 									$sql .= "(";
