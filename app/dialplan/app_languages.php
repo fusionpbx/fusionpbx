@@ -11,6 +11,7 @@ $text['title-dialplan_manager']['sv-se'] = "Nummerplan Inställningar";
 $text['title-dialplan_manager']['de-de'] = "Wählplan Einstellungen";
 $text['title-dialplan_manager']['de-at'] = "Wählplan Einstellungen";
 $text['title-dialplan_manager']['he'] = "";
+$text['title-dialplan_manager']['ru-ru'] = "Управление Планом Нумерации";
 
 $text['title-dialplan_edit']['en-us'] = "Dialplan";
 $text['title-dialplan_edit']['es-cl'] = "Editar Plan de Marcado";
@@ -23,6 +24,7 @@ $text['title-dialplan_edit']['sv-se'] = "Nummerplan";
 $text['title-dialplan_edit']['de-de'] = "Wählplan";
 $text['title-dialplan_edit']['de-at'] = "Wählplan";
 $text['title-dialplan_edit']['he'] = "תוכנית חיוג";
+$text['title-dialplan_edit']['ru-ru'] = "План Нумерации";
 
 $text['title-dialplan_detail']['en-us'] = "Dialplan Detail";
 $text['title-dialplan_detail']['es-cl'] = "Detalle de Plan de Marcado";
@@ -35,6 +37,7 @@ $text['title-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['title-dialplan_detail']['de-de'] = "Wählplan Details";
 $text['title-dialplan_detail']['de-at'] = "Wählplan Details";
 $text['title-dialplan_detail']['he'] = "";
+$text['title-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 
 $text['title-dialplan_add']['en-us'] = "Dialplan";
 $text['title-dialplan_add']['es-cl'] = "Agregar Plan de Marcado";
@@ -47,6 +50,7 @@ $text['title-dialplan_add']['sv-se'] = "Nummerplan";
 $text['title-dialplan_add']['de-de'] = "Wählplan";
 $text['title-dialplan_add']['de-at'] = "Wählplan";
 $text['title-dialplan_add']['he'] = "תוכנית חיוג";
+$text['title-dialplan_add']['ru-ru'] = "План Нумерации";
 
 $text['title-default_dialplan']['en-us'] = "Default Dialplan";
 $text['title-default_dialplan']['es-cl'] = "Plan de Marcado Predeterminado";
@@ -59,6 +63,7 @@ $text['title-default_dialplan']['sv-se'] = "Standard Nummerplan";
 $text['title-default_dialplan']['de-de'] = "Standard Wählplan";
 $text['title-default_dialplan']['de-at'] = "Standard Wählplan";
 $text['title-default_dialplan']['he'] = "";
+$text['title-default_dialplan']['ru-ru'] = "План Нумерации по умолчанию";
 
 $text['title-time_conditions']['en-us'] = "Time Conditions";
 $text['title-time_conditions']['es-cl'] = "Condiciones de Tiempo";
@@ -71,6 +76,7 @@ $text['title-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['title-time_conditions']['de-de'] = "Zeitvorgaben";
 $text['title-time_conditions']['de-at'] = "Zeitvorgaben";
 $text['title-time_conditions']['he'] = "תלוי זמן";
+$text['title-time_conditions']['ru-ru'] = "Временные условия";
 
 $text['title-outbound_routes']['en-us'] = "Outbound Routes";
 $text['title-outbound_routes']['es-cl'] = "Rutas Salientes";
@@ -83,6 +89,7 @@ $text['title-outbound_routes']['sv-se'] = "Utgående Router";
 $text['title-outbound_routes']['de-de'] = "Ausgehende Routen";
 $text['title-outbound_routes']['de-at'] = "Ausgehende Routen";
 $text['title-outbound_routes']['he'] = "";
+$text['title-outbound_routes']['ru-ru'] = "Исходящие маршруты";
 
 $text['title-inbound_routes']['en-us'] = "Inbound Routes";
 $text['title-inbound_routes']['es-cl'] = "Rutas Entrantes";
@@ -95,6 +102,7 @@ $text['title-inbound_routes']['sv-se'] = "Inkommande Router";
 $text['title-inbound_routes']['de-de'] = "Eingehende Routen";
 $text['title-inbound_routes']['de-at'] = "Eingehende Routen";
 $text['title-inbound_routes']['he'] = "";
+$text['title-inbound_routes']['ru-ru'] = "Входящие маршруты";
 
 $text['title-other']['en-us'] = "Other";
 $text['title-other']['es-cl'] = "Otro";
@@ -106,6 +114,7 @@ $text['title-other']['sv-se'] = "Annat";
 $text['title-other']['uk'] = "Інший";
 $text['title-other']['de-de'] = "Sonstiges";
 $text['title-other']['de-at'] = "Sonstiges";
+$text['title-other']['ru-ru'] = "Другие";
 
 $text['option-check_voicemail']['en-us'] = "Check Voicemail";
 $text['option-check_voicemail']['es-cl'] = "Compruebe el correo de voz";
@@ -117,6 +126,7 @@ $text['option-check_voicemail']['sv-se'] = "Kontrollera röstbrevlådan";
 $text['option-check_voicemail']['uk'] = "Перевірте голосову пошту";
 $text['option-check_voicemail']['de-de'] = "Voicemail überprüfen";
 $text['option-check_voicemail']['de-at'] = "Voicemail überprüfen";
+$text['option-check_voicemail']['ru-ru'] = "Проверить Голосовую Почту";
 
 $text['option-company_directory']['en-us'] = "Company Directory";
 $text['option-company_directory']['es-cl'] = "Directorio de la empresa";
@@ -128,6 +138,7 @@ $text['option-company_directory']['sv-se'] = "Företagskatalog";
 $text['option-company_directory']['uk'] = "Каталог компаній";
 $text['option-company_directory']['de-de'] = "Firmenverzeichnis";
 $text['option-company_directory']['de-at'] = "Firmenverzeichnis";
+$text['option-company_directory']['ru-ru'] = "Каталог компаний";
 
 $text['option-hangup']['en-us'] = "Hangup";
 $text['option-hangup']['es-cl'] = "Colgar";
@@ -139,6 +150,7 @@ $text['option-hangup']['sv-se'] = "Lägg på";
 $text['option-hangup']['uk'] = "роз'єднання";
 $text['option-hangup']['de-de'] = "Auflegen";
 $text['option-hangup']['de-at'] = "Auflegen";
+$text['option-hangup']['ru-ru'] = "Отбой";
 
 $text['option-record']['en-us'] = "Record";
 $text['option-record']['es-cl'] = "Registro";
@@ -150,6 +162,7 @@ $text['option-record']['sv-se'] = "Spela";
 $text['option-record']['uk'] = "Запис";
 $text['option-record']['de-de'] = "Aufzeichnen";
 $text['option-record']['de-at'] = "Aufzeichnen";
+$text['option-record']['ru-ru'] = "Запись";
 
 $text['select-global']['en-us'] = "Global";
 $text['select-global']['es-cl'] = "Global";
@@ -162,6 +175,7 @@ $text['select-global']['sv-se'] = "Global";
 $text['select-global']['de-de'] = "Global";
 $text['select-global']['de-at'] = "Global";
 $text['select-global']['he'] = "כללי";
+$text['select-global']['ru-ru'] = "Глобальный";
 
 $text['option-year']['en-us'] = "Year";
 $text['option-year']['es-cl'] = "Año";
@@ -174,6 +188,7 @@ $text['option-year']['sv-se'] = "År";
 $text['option-year']['de-de'] = "Jahr";
 $text['option-year']['de-at'] = "Jahr";
 $text['option-year']['he'] = "שנה";
+$text['option-year']['ru-ru'] = "Год";
 
 $text['option-week_of_month']['en-us'] = "Week of Month";
 $text['option-week_of_month']['es-cl'] = "Semana del Mes";
@@ -186,6 +201,7 @@ $text['option-week_of_month']['sv-se'] = "Vecka i Månad";
 $text['option-week_of_month']['de-de'] = "Woche des Monats";
 $text['option-week_of_month']['de-at'] = "Woche des Monats";
 $text['option-week_of_month']['he'] = "שבוע בחודש";
+$text['option-week_of_month']['ru-ru'] = "Неделя месяца";
 
 $text['option-week']['en-us'] = "Week";
 $text['option-week']['es-cl'] = "Semana";
@@ -198,6 +214,7 @@ $text['option-week']['sv-se'] = "Vecka";
 $text['option-week']['de-de'] = "Woche";
 $text['option-week']['de-at'] = "Woche";
 $text['option-week']['he'] = "שבוע";
+$text['option-week']['ru-ru'] = "Неделя";
 
 $text['option-uuid']['en-us'] = "UUID";
 $text['option-uuid']['es-cl'] = "UUID";
@@ -210,6 +227,7 @@ $text['option-uuid']['sv-se'] = "UUID";
 $text['option-uuid']['de-de'] = "UUID";
 $text['option-uuid']['de-at'] = "UUID";
 $text['option-uuid']['he'] = "";
+$text['option-uuid']['ru-ru'] = "UUID";
 
 $text['option-username']['en-us'] = "Username";
 $text['option-username']['es-cl'] = "Nombre de usuario";
@@ -222,6 +240,7 @@ $text['option-username']['sv-se'] = "Användarnamn";
 $text['option-username']['de-de'] = "Benutzername";
 $text['option-username']['de-at'] = "Benutzername";
 $text['option-username']['he'] = "שם משתמש";
+$text['option-username']['ru-ru'] = "Имя Пользователя";
 
 $text['option-true']['en-us'] = "True";
 $text['option-true']['pt-pt'] = "Sim";
@@ -234,6 +253,7 @@ $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['de-de'] = "Ein";
 $text['option-true']['de-at'] = "Ein";
 $text['option-true']['he'] = "חוקי";
+$text['option-true']['ru-ru'] = "Да";
 
 $text['option-source']['en-us'] = "Source";
 $text['option-source']['es-cl'] = "Fuente";
@@ -246,6 +266,7 @@ $text['option-source']['sv-se'] = "Källa";
 $text['option-source']['de-de'] = "Quelle";
 $text['option-source']['de-at'] = "Quelle";
 $text['option-source']['he'] = "מקור";
+$text['option-source']['ru-ru'] = "Исходный";
 
 $text['option-regex']['en-us'] = "Regular Expression";
 $text['option-regex']['pt-pt'] = "Expressão Regular";
@@ -258,6 +279,7 @@ $text['option-regex']['sv-se'] = "Reguljärt Uttryck";
 $text['option-regex']['de-de'] = "Regulärer Ausdruck";
 $text['option-regex']['de-at'] = "Regulärer Ausdruck";
 $text['option-regex']['he'] = "";
+$text['option-regex']['ru-ru'] = "Регулярное выражение";
 
 $text['option-rdnis']['en-us'] = "RDNIS";
 $text['option-rdnis']['es-cl'] = "RDNIS";
@@ -270,6 +292,7 @@ $text['option-rdnis']['sv-se'] = "RDNIS";
 $text['option-rdnis']['de-de'] = "RDNIS";
 $text['option-rdnis']['de-at'] = "RDNIS";
 $text['option-rdnis']['he'] = "";
+$text['option-rdnis']['ru-ru'] = "RDNIS";
 
 $text['option-public']['en-us'] = "Public";
 $text['option-public']['es-cl'] = "Público";
@@ -282,6 +305,7 @@ $text['option-public']['sv-se'] = "Publik";
 $text['option-public']['de-de'] = "Öffentlich";
 $text['option-public']['de-at'] = "Öffentlich";
 $text['option-public']['he'] = "ציבורי";
+$text['option-public']['ru-ru'] = "Публичный";
 
 $text['option-on_true']['en-us'] = "On True";
 $text['option-on_true']['es-cl'] = "En Verdadero";
@@ -294,6 +318,7 @@ $text['option-on_true']['sv-se'] = "Om Sann";
 $text['option-on_true']['de-de'] = "Wenn richtig";
 $text['option-on_true']['de-at'] = "Wenn richtig";
 $text['option-on_true']['he'] = "במצב חוקי";
+$text['option-on_true']['ru-ru'] = "Если Да";
 
 $text['option-on_false']['en-us'] = "On False";
 $text['option-on_false']['es-cl'] = "En Falso";
@@ -306,6 +331,7 @@ $text['option-on_false']['sv-se'] = "Om Falsk";
 $text['option-on_false']['de-de'] = "Wenn falsch";
 $text['option-on_false']['de-at'] = "Wenn falsch";
 $text['option-on_false']['he'] = "במצב לא חוקי";
+$text['option-on_false']['ru-ru'] = "Если Нет";
 
 $text['option-never']['en-us'] = "Never";
 $text['option-never']['es-cl'] = "Nunca";
@@ -318,6 +344,7 @@ $text['option-never']['sv-se'] = "Aldrig";
 $text['option-never']['de-de'] = "Nie";
 $text['option-never']['de-at'] = "Nie";
 $text['option-never']['he'] = "לעולם לא";
+$text['option-never']['ru-ru'] = "Никогда";
 
 $text['option-network_addr']['en-us'] = "Network Address";
 $text['option-network_addr']['es-cl'] = "Dirección de red";
@@ -330,6 +357,7 @@ $text['option-network_addr']['sv-se'] = "Nätverks-adress";
 $text['option-network_addr']['de-de'] = "Netzwerk Adresse";
 $text['option-network_addr']['de-at'] = "Netzwerk Adresse";
 $text['option-network_addr']['he'] = "כתובת רשת";
+$text['option-network_addr']['ru-ru'] = "Сетевые Адреса";
 
 $text['option-month']['en-us'] = "Month";
 $text['option-month']['es-cl'] = "Mes";
@@ -342,6 +370,7 @@ $text['option-month']['sv-se'] = "Månad";
 $text['option-month']['de-de'] = "Monat";
 $text['option-month']['de-at'] = "Monat";
 $text['option-month']['he'] = "חודש";
+$text['option-month']['ru-ru'] = "Месяц";
 
 $text['option-minute_of_day']['en-us'] = "Minute of Day";
 $text['option-minute_of_day']['es-cl'] = "Minuto del Día";
@@ -354,6 +383,7 @@ $text['option-minute_of_day']['sv-se'] = "Minut på Dagen";
 $text['option-minute_of_day']['de-de'] = "Minute des Tages";
 $text['option-minute_of_day']['de-at'] = "Minute des Tages";
 $text['option-minute_of_day']['he'] = "דקה ביום";
+$text['option-minute_of_day']['ru-ru'] = "Минута Дня";
 
 $text['option-minute']['en-us'] = "Minute";
 $text['option-minute']['es-cl'] = "Minuto";
@@ -366,6 +396,7 @@ $text['option-minute']['sv-se'] = "Minut";
 $text['option-minute']['de-de'] = "Minute";
 $text['option-minute']['de-at'] = "Minute";
 $text['option-minute']['he'] = "דקה";
+$text['option-minute']['ru-ru'] = "Минута";
 
 $text['option-hour']['en-us'] = "Hour";
 $text['option-hour']['es-cl'] = "Hora";
@@ -378,6 +409,7 @@ $text['option-hour']['sv-se'] = "Timma";
 $text['option-hour']['de-de'] = "Stunde";
 $text['option-hour']['de-at'] = "Stunde";
 $text['option-hour']['he'] = "שעה";
+$text['option-hour']['ru-ru'] = "Час";
 
 $text['option-false']['en-us'] = "False";
 $text['option-false']['es-cl'] = "Falso";
@@ -390,6 +422,7 @@ $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['de-de'] = "Aus";
 $text['option-false']['de-at'] = "Aus";
 $text['option-false']['he'] = "לא חוקי";
+$text['option-false']['ru-ru'] = "Нет";
 
 $text['option-dialplan']['en-us'] = "Dialplan";
 $text['option-dialplan']['es-cl'] = "Plan de marcado";
@@ -402,6 +435,7 @@ $text['option-dialplan']['sv-se'] = "Nummerplan";
 $text['option-dialplan']['de-de'] = "Wählplan";
 $text['option-dialplan']['de-at'] = "Wählplan";
 $text['option-dialplan']['he'] = "תוכנית חיוג";
+$text['option-dialplan']['ru-ru'] = "План Нумерации";
 
 $text['option-destination_number']['en-us'] = "Destination Number";
 $text['option-destination_number']['es-cl'] = "Número de destino";
@@ -414,6 +448,7 @@ $text['option-destination_number']['sv-se'] = "Detsinations Nummer";
 $text['option-destination_number']['de-de'] = "Zielnummer";
 $text['option-destination_number']['de-at'] = "Zielnummer";
 $text['option-destination_number']['he'] = "מספר יעד";
+$text['option-destination_number']['ru-ru'] = "Целевой номер";
 
 $text['option-day_of_year']['en-us'] = "Day of Year";
 $text['option-day_of_year']['es-cl'] = "Día del año";
@@ -426,6 +461,7 @@ $text['option-day_of_year']['sv-se'] = "Dag på Året";
 $text['option-day_of_year']['de-de'] = "Tag des Jahres";
 $text['option-day_of_year']['de-at'] = "Tag des Jahres";
 $text['option-day_of_year']['he'] = "יום בשנה";
+$text['option-day_of_year']['ru-ru'] = "День Года";
 
 $text['option-day_of_week']['en-us'] = "Day of Week";
 $text['option-day_of_week']['es-cl'] = "Día de la semana";
@@ -438,6 +474,7 @@ $text['option-day_of_week']['sv-se'] = "Dag i Vecka";
 $text['option-day_of_week']['de-de'] = "Tag der Woche";
 $text['option-day_of_week']['de-at'] = "Tag der Woche";
 $text['option-day_of_week']['he'] = "יום בשבוע";
+$text['option-day_of_week']['ru-ru'] = "День Недели";
 
 $text['option-day_of_month']['en-us'] = "Day of Month";
 $text['option-day_of_month']['es-cl'] = "Día del Mes";
@@ -450,6 +487,7 @@ $text['option-day_of_month']['sv-se'] = "Dag i Månad";
 $text['option-day_of_month']['de-de'] = "Tag des Monats";
 $text['option-day_of_month']['de-at'] = "Tag des Monats";
 $text['option-day_of_month']['he'] = "יום בחודש";
+$text['option-day_of_month']['ru-ru'] = "День Месяца";
 
 $text['option-context']['en-us'] = "Context";
 $text['option-context']['es-cl'] = "Contexto";
@@ -462,6 +500,7 @@ $text['option-context']['sv-se'] = "Context";
 $text['option-context']['de-de'] = "Kontext";
 $text['option-context']['de-at'] = "Kontext";
 $text['option-context']['he'] = "";
+$text['option-context']['ru-ru'] = "Контекст";
 
 $text['option-condition']['en-us'] = "Condition";
 $text['option-condition']['es-cl'] = "Condición";
@@ -474,6 +513,7 @@ $text['option-condition']['sv-se'] = "Tillstånd";
 $text['option-condition']['de-de'] = "Bedingung";
 $text['option-condition']['de-at'] = "Bedingung";
 $text['option-condition']['he'] = "תנאי";
+$text['option-condition']['ru-ru'] = "Состояние";
 
 $text['option-chan_name']['en-us'] = "Channel Name";
 $text['option-chan_name']['es-cl'] = "Nombre de Canal";
@@ -486,6 +526,7 @@ $text['option-chan_name']['sv-se'] = "Namn på Kanal";
 $text['option-chan_name']['de-de'] = "Kanal Name";
 $text['option-chan_name']['de-at'] = "Kanal Name";
 $text['option-chan_name']['he'] = "שם ערוץ";
+$text['option-chan_name']['ru-ru'] = "Имя Канала";
 
 $text['option-caller_id_number']['en-us'] = "Caller ID Number";
 $text['option-caller_id_number']['es-cl'] = "Número de Caller ID";
@@ -498,6 +539,7 @@ $text['option-caller_id_number']['sv-se'] = "Caller ID Nummer";
 $text['option-caller_id_number']['de-de'] = "Anruferkennung (Nummer)";
 $text['option-caller_id_number']['de-at'] = "Anruferkennung (Nummer)";
 $text['option-caller_id_number']['he'] = "";
+$text['option-caller_id_number']['ru-ru'] = "Идентификационный номер (Caller ID) вызывающего абонента";
 
 $text['option-caller_id_name']['en-us'] = "Caller ID Name";
 $text['option-caller_id_name']['es-cl'] = "Nombre de Caller ID";
@@ -510,6 +552,7 @@ $text['option-caller_id_name']['sv-se'] = "Caller ID Namn";
 $text['option-caller_id_name']['de-de'] = "Anruferkennung (Name)";
 $text['option-caller_id_name']['de-at'] = "Anruferkennung (Name)";
 $text['option-caller_id_name']['he'] = "";
+$text['option-caller_id_nume']['ru-ru'] = "Идентификационное имя (Caller ID) вызывающего абонента";
 
 $text['option-anti-action']['en-us'] = "Anti-Action";
 $text['option-anti-action']['es-cl'] = "Anti-Acción";
@@ -522,6 +565,7 @@ $text['option-anti-action']['sv-se'] = "Anti-Aktion";
 $text['option-anti-action']['de-de'] = "Anti-Aktion";
 $text['option-anti-action']['de-at'] = "Anti-Aktion";
 $text['option-anti-action']['he'] = "";
+$text['option-anti-action']['ru-ru'] = "Противодействие";
 
 $text['option-ani2']['en-us'] = "ANI2";
 $text['option-ani2']['es-cl'] = "ANI2";
@@ -534,6 +578,7 @@ $text['option-ani2']['sv-se'] = "ANI2";
 $text['option-ani2']['de-de'] = "ANI2";
 $text['option-ani2']['de-at'] = "ANI2";
 $text['option-ani2']['he'] = "";
+$text['option-ani2']['ru-ru'] = "ANI2";
 
 $text['option-ani']['en-us'] = "ANI";
 $text['option-ani']['es-cl'] = "ANI";
@@ -546,6 +591,7 @@ $text['option-ani']['sv-se'] = "ANI";
 $text['option-ani']['de-de'] = "ANI";
 $text['option-ani']['de-at'] = "ANI";
 $text['option-ani']['he'] = "";
+$text['option-ani']['ru-ru'] = "ANI";
 
 $text['option-always']['en-us'] = "Always";
 $text['option-always']['es-cl'] = "Siempre";
@@ -558,6 +604,7 @@ $text['option-always']['sv-se'] = "Alltid";
 $text['option-always']['de-de'] = "Immer";
 $text['option-always']['de-at'] = "Immer";
 $text['option-always']['he'] = "תמיד";
+$text['option-always']['ru-ru'] = "Всегда";
 
 $text['option-action']['en-us'] = "Action";
 $text['option-action']['es-cl'] = "Acción";
@@ -570,6 +617,7 @@ $text['option-action']['sv-se'] = "Aktion";
 $text['option-action']['de-de'] = "Aktion";
 $text['option-action']['de-at'] = "Aktion";
 $text['option-action']['he'] = "פעולה";
+$text['option-action']['ru-ru'] = "Действие";
 
 $text['optgroup-condition_or_regex']['en-us'] = "Condition or Regex";
 $text['optgroup-condition_or_regex']['pt-pt'] = "Condições ou Expressões Regulares";
@@ -582,6 +630,7 @@ $text['optgroup-condition_or_regex']['sv-se'] = "Tillstånd eller Regex";
 $text['optgroup-condition_or_regex']['de-de'] = "Bedingung oder Regulärer Ausdruck";
 $text['optgroup-condition_or_regex']['de-at'] = "Bedingung oder Regulärer Ausdruck";
 $text['optgroup-condition_or_regex']['he'] = "";
+$text['optgroup-condition_or_regex']['ru-ru'] = "Условие или регулярное выражение";
 
 $text['optgroup-applications']['en-us'] = "Applications";
 $text['optgroup-applications']['es-cl'] = "Aplicaciiones";
@@ -594,6 +643,7 @@ $text['optgroup-applications']['sv-se'] = "Applikationer";
 $text['optgroup-applications']['de-de'] = "Anwendungen";
 $text['optgroup-applications']['de-at'] = "Anwendungen";
 $text['optgroup-applications']['he'] = "אפליקציות";
+$text['optgroup-applications']['ru-ru'] = "Приложения";
 
 $text['label-tag']['en-us'] = "Tag";
 $text['label-tag']['es-cl'] = "Etiqueta";
@@ -606,6 +656,7 @@ $text['label-tag']['sv-se'] = "Tag";
 $text['label-tag']['de-de'] = "Bezeichnung";
 $text['label-tag']['de-at'] = "Bezeichnung";
 $text['label-tag']['he'] = "";
+$text['label-tag']['ru-ru'] = "Тег";
 
 $text['label-number']['en-us'] = "Number";
 $text['label-number']['es-cl'] = "Número";
@@ -618,6 +669,7 @@ $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['de-de'] = "Nummer";
 $text['label-number']['de-at'] = "Nummer";
 $text['label-number']['he'] = "מספר";
+$text['label-number']['ru-ru'] = "Номер";
 
 $text['label-inline']['en-us'] = "Inline";
 $text['label-inline']['es-cl'] = "En línea";
@@ -630,6 +682,7 @@ $text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['de-de'] = "Inline";
 $text['label-inline']['de-at'] = "Inline";
 $text['label-inline']['he'] = "";
+$text['label-inline']['ru-ru'] = "В очереди";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['es-cl'] = "Grupo";
@@ -642,6 +695,7 @@ $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['de-de'] = "Gruppe";
 $text['label-group']['de-at'] = "Gruppe";
 $text['label-group']['he'] = "קבוצה";
+$text['label-group']['ru-ru'] = "Группа";
 
 $text['label-field']['en-us'] = "Field";
 $text['label-field']['es-cl'] = "Campo";
@@ -654,6 +708,7 @@ $text['label-field']['sv-se'] = "Fält";
 $text['label-field']['de-de'] = "Feld";
 $text['label-field']['de-at'] = "Feld";
 $text['label-field']['he'] = "שדה";
+$text['label-field']['ru-ru'] = "Поле";
 
 $text['label-expression']['en-us'] = "Expression";
 $text['label-expression']['es-cl'] = "Expresión";
@@ -666,6 +721,7 @@ $text['label-expression']['sv-se'] = "Uttryck";
 $text['label-expression']['de-de'] = "Ausdruck";
 $text['label-expression']['de-at'] = "Ausdruck";
 $text['label-expression']['he'] = "";
+$text['label-expression']['ru-ru'] = "Выражение";
 
 $text['label-domain']['en-us'] = "Domain";
 $text['label-domain']['es-cl'] = "Dominio";
@@ -678,6 +734,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['de-de'] = "Domäne";
 $text['label-domain']['de-at'] = "Domäne";
 $text['label-domain']['he'] = "דומיין";
+$text['label-domain']['ru-ru'] = "Домен";
 
 $text['label-dialplan_detail']['en-us'] = "Dialplan Details";
 $text['label-dialplan_detail']['pt-pt'] = "Detalhes dos Dialplans";
@@ -689,6 +746,7 @@ $text['label-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['label-dialplan_detail']['de-de'] = "Wählplan Details";
 $text['label-dialplan_detail']['de-at'] = "Wählplan Details";
 $text['label-dialplan_detail']['he'] = "פרטי תוכנית חיוג";
+$text['label-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 
 $text['label-data']['en-us'] = "Data";
 $text['label-data']['es-cl'] = "Datos";
@@ -701,6 +759,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['de-de'] = "Daten";
 $text['label-data']['de-at'] = "Daten";
 $text['label-data']['he'] = "מידע";
+$text['label-data']['ru-ru'] = "Дата";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['pt-pt'] = "Hostname";
@@ -712,6 +771,7 @@ $text['label-hostname']['ro'] = "Hostname";
 $text['label-hostname']['uk'] = "Назва хоста";
 $text['label-hostname']['de-de'] = "Hostname";
 $text['label-hostname']['de-at'] = "Hostname";
+$text['label-hostname']['ru-ru'] = "Имя Хоста";
 
 $text['label-continue']['en-us'] = "Continue";
 $text['label-continue']['es-cl'] = "Continuar";
@@ -724,6 +784,7 @@ $text['label-continue']['sv-se'] = "Fortsätt";
 $text['label-continue']['de-de'] = "fortfahren";
 $text['label-continue']['de-at'] = "fortfahren";
 $text['label-continue']['he'] = "המשך";
+$text['label-continue']['ru-ru'] = "Продолжить";
 
 $text['label-context']['en-us'] = "Context";
 $text['label-context']['es-cl'] = "Contexto";
@@ -736,6 +797,7 @@ $text['label-context']['sv-se'] = "Context";
 $text['label-context']['de-de'] = "Kontext";
 $text['label-context']['de-at'] = "Kontext";
 $text['label-context']['he'] = "";
+$text['label-context']['ru-ru'] = "Контекст";
 
 $text['label-condition_2']['en-us'] = "Condition 2";
 $text['label-condition_2']['es-cl'] = "Condición 2";
@@ -748,6 +810,7 @@ $text['label-condition_2']['sv-se'] = "Tillstånd 2";
 $text['label-condition_2']['de-de'] = "Bedingung 2";
 $text['label-condition_2']['de-at'] = "Bedingung 2";
 $text['label-condition_2']['he'] = "תנאי 2";
+$text['label-condition_2']['ru-ru'] = "Условие 2";
 
 $text['label-condition_1']['en-us'] = "Condition 1";
 $text['label-condition_1']['es-cl'] = "Condición 1";
@@ -760,6 +823,7 @@ $text['label-condition_1']['sv-se'] = "Tillstånd 1";
 $text['label-condition_1']['de-de'] = "Bedingung 1";
 $text['label-condition_1']['de-at'] = "Bedingung 1";
 $text['label-condition_1']['he'] = "תנאי 1";
+$text['label-condition_1']['ru-ru'] = "Условие 1";
 
 $text['label-break']['en-us'] = "Break";
 $text['label-break']['es-cl'] = "Interrupción";
@@ -772,6 +836,7 @@ $text['label-break']['sv-se'] = "Paus";
 $text['label-break']['de-de'] = "Abbrechen";
 $text['label-break']['de-at'] = "Abbrechen";
 $text['label-break']['he'] = "הפסקה";
+$text['label-break']['ru-ru'] = "Прервать";
 
 $text['label-application']['en-us'] = "Application";
 $text['label-application']['es-cl'] = "Aplicación";
@@ -784,6 +849,7 @@ $text['label-application']['sv-se'] = "Applikation";
 $text['label-application']['de-de'] = "Anwendung";
 $text['label-application']['de-at'] = "Anwendung";
 $text['label-application']['he'] = "אפליקציה";
+$text['label-application']['ru-ru'] = "Приложение";
 
 $text['label-action_2']['en-us'] = "Action 2";
 $text['label-action_2']['es-cl'] = "Acción 2";
@@ -796,6 +862,7 @@ $text['label-action_2']['sv-se'] = "Aktion 2";
 $text['label-action_2']['de-de'] = "Aktion 2";
 $text['label-action_2']['de-at'] = "Aktion 2";
 $text['label-action_2']['he'] = "פעולה 2";
+$text['label-action_2']['ru-ru'] = "Действие 2";
 
 $text['label-action_1']['en-us'] = "Action 1";
 $text['label-action_1']['es-cl'] = "Acción 1";
@@ -808,6 +875,7 @@ $text['label-action_1']['sv-se'] = "Aktion 1";
 $text['label-action_1']['de-de'] = "Aktion 1";
 $text['label-action_1']['de-at'] = "Aktion 1";
 $text['label-action_1']['he'] = "פעולה 1";
+$text['label-action_1']['ru-ru'] = "Действие 1";
 
 $text['header-time_conditions']['en-us'] = "Time Conditions";
 $text['header-time_conditions']['es-cl'] = "Condiciones de Tiempo";
@@ -820,6 +888,7 @@ $text['header-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['header-time_conditions']['de-de'] = "Zeitvorgaben";
 $text['header-time_conditions']['de-at'] = "Zeitvorgaben";
 $text['header-time_conditions']['he'] = "";
+$text['header-time_conditions']['ru-ru'] = "Временные Условия";
 
 $text['header-queues']['en-us'] = "Queues";
 $text['header-queues']['es-cl'] = "Colas";
@@ -832,6 +901,7 @@ $text['header-queues']['sv-se'] = "Kö:er";
 $text['header-queues']['de-de'] = "Warteschlangen";
 $text['header-queues']['de-at'] = "Warteschlangen";
 $text['header-queues']['he'] = "תור";
+$text['header-queues']['ru-ru'] = "Очереди";
 
 $text['header-outbound_routes']['en-us'] = "Outbound Routes";
 $text['header-outbound_routes']['es-cl'] = "Rutas Salientes";
@@ -844,6 +914,7 @@ $text['header-outbound_routes']['sv-se'] = "Utgående Router";
 $text['header-outbound_routes']['de-de'] = "Ausgehende Routen";
 $text['header-outbound_routes']['de-at'] = "Ausgehende Routen";
 $text['header-outbound_routes']['he'] = "";
+$text['header-outbound_routes']['ru-ru'] = "Исходящий Маршрут";
 
 $text['header-inbound_routes']['en-us'] = "Inbound Routes";
 $text['header-inbound_routes']['es-cl'] = "Rutas Entrantes";
@@ -856,6 +927,7 @@ $text['header-inbound_routes']['sv-se'] = "Inkommande Router";
 $text['header-inbound_routes']['de-de'] = "Eingehende Routen";
 $text['header-inbound_routes']['de-at'] = "Eingehende Routen";
 $text['header-inbound_routes']['he'] = "";
+$text['header-inbound_routes']['ru-ru'] = "Входящий Маршрут";
 
 $text['header-dialplan_manager']['en-us'] = "Dialplan Manager";
 $text['header-dialplan_manager']['es-cl'] = "Administrador de Plan de Marcado";
@@ -868,6 +940,7 @@ $text['header-dialplan_manager']['sv-se'] = "Nummerplan Inställningar";
 $text['header-dialplan_manager']['de-de'] = "Wählplan Einstellungen";
 $text['header-dialplan_manager']['de-at'] = "Wählplan Einstellungen";
 $text['header-dialplan_manager']['he'] = "";
+$text['header-dialplan_manager']['ru-ru'] = "Управление Планом Нумерации";
 
 $text['header-dialplan_detail']['en-us'] = "Dialplan Detail";
 $text['header-dialplan_detail']['es-cl'] = "Detalle de Plan de Marcado";
@@ -880,6 +953,7 @@ $text['header-dialplan_detail']['sv-se'] = "Nummerplan Detaljer";
 $text['header-dialplan_detail']['de-de'] = "Wählplan Details";
 $text['header-dialplan_detail']['de-at'] = "Wählplan Details";
 $text['header-dialplan_detail']['he'] = "";
+$text['header-dialplan_detail']['ru-ru'] = "Подробная информация о Плане Нумерации";
 
 $text['header-dialplan-edit']['en-us'] = "Dialplan";
 $text['header-dialplan-edit']['es-cl'] = "Editar Plan de Marcado";
@@ -892,6 +966,7 @@ $text['header-dialplan-edit']['sv-se'] = "Nummerplan";
 $text['header-dialplan-edit']['de-de'] = "Wählplan";
 $text['header-dialplan-edit']['de-at'] = "Wählplan";
 $text['header-dialplan-edit']['he'] = "תוכנית חיוג";
+$text['header-dialplan-edit']['ru-ru'] = "План Нумерации";
 
 $text['header-dialplan-add']['en-us'] = "Dialplan";
 $text['header-dialplan-add']['es-cl'] = "Agregar Plan de Marcado";
@@ -904,6 +979,7 @@ $text['header-dialplan-add']['sv-se'] = "Nummerplan";
 $text['header-dialplan-add']['de-de'] = "Wählplan";
 $text['header-dialplan-add']['de-at'] = "Wählplan";
 $text['header-dialplan-add']['he'] = "תוכנית חיוג";
+$text['header-dialplan-add']['ru-ru'] = "План Нумерации";
 
 $text['header-default_dialplan']['en-us'] = "Default Dialplan";
 $text['header-default_dialplan']['es-cl'] = "Plan de Marcado Predeterminado";
@@ -916,6 +992,7 @@ $text['header-default_dialplan']['sv-se'] = "Standard Nummerplan";
 $text['header-default_dialplan']['de-de'] = "Standard Wählplan";
 $text['header-default_dialplan']['de-at'] = "Standard Wählplan";
 $text['header-default_dialplan']['he'] = "";
+$text['header-default_dialplan']['ru-ru'] = "Стандартный План Нумерации";
 
 $text['header-conditions_and_actions']['en-us'] = "Conditions and Actions";
 $text['header-conditions_and_actions']['es-cl'] = "Condiciones y acciones";
@@ -928,6 +1005,7 @@ $text['header-conditions_and_actions']['sv-se'] = "Tillstånd och Aktioner";
 $text['header-conditions_and_actions']['de-de'] = "Bedingungen und Aktionen";
 $text['header-conditions_and_actions']['de-at'] = "Bedingungen und Aktionen";
 $text['header-conditions_and_actions']['he'] = "";
+$text['header-conditions_and_actions']['ru-ru'] = "Условия и действия";
 
 $text['description-time_conditions']['en-us'] = "Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.";
 $text['description-time_conditions']['es-cl'] = "Las condiciones de tiempo dirijen llamadas basado en condiciones temporales. Puede utilizar estas condiciones para enviar llamadas a un IVR, Número externos, scripts u otro destino.";
@@ -940,6 +1018,7 @@ $text['description-time_conditions']['sv-se'] = "Tidsvillkor styr samtal baserat
 $text['description-time_conditions']['de-de'] = "Zeitliche Bedingungen routen Anrufe anhand zeitliche Vorgaben. Sie können zeitliche Bedingungen nutzen um IVR Menüs, Skripte und andere Ziele zu erreichen.";
 $text['description-time_conditions']['de-at'] = "Zeitliche Bedingungen routen Anrufe anhand zeitliche Vorgaben. Sie können zeitliche Bedingungen nutzen um IVR Menüs, Skripte und andere Ziele zu erreichen.";
 $text['description-time_conditions']['he'] = "";
+$text['description-time_conditions']['ru-ru'] = "Временные условия маршрутизации вызовов. Вы можете использовать временные условия для отправки вызовов в меню IVR, на внешние номера, сценарии или на другие адресаты.";
 
 $text['description-queues']['en-us'] = "Queues are used to setup waiting lines for callers. Also known as FIFO Queues.";
 $text['description-queues']['es-cl'] = "Las colas se utilizan para configurar líneas de espera para quienes llaman. También conocidas como colas FIFO.";
@@ -952,6 +1031,7 @@ $text['description-queues']['sv-se'] = "Kö används för att kö:a inkommande s
 $text['description-queues']['de-de'] = "Warteschlangen werden benutzt um Anrufer zu reihen. Auch als FIFO Warteschlangen bekannt.";
 $text['description-queues']['de-at'] = "Warteschlangen werden benutzt um Anrufer zu reihen. Auch als FIFO Warteschlangen bekannt.";
 $text['description-queues']['he'] = "";
+$text['description-queues']['ru-ru'] = "Очереди используются для установки ожидающих линий для вызывающих абонентов. Также известны как очереди FIFO.";
 
 $text['description-outbound_routes']['en-us'] = "Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.";
 $text['description-outbound_routes']['es-cl'] = "Dirija llamadas salientes a una pasarela, TDM, enum y más. Cuando una llamada coincide con las condiciones la llamada saliente es dirijida.";
@@ -964,6 +1044,7 @@ $text['description-outbound_routes']['sv-se'] = "Styr utgående samtal till Gate
 $text['description-outbound_routes']['de-de'] = "Ausgehende Anrufe zu Gateways, TDM, ENUM und andere weiterleiten, wenn der Anruf die Bedingungen für die ausgehenden Routen erfüllt.";
 $text['description-outbound_routes']['de-at'] = "Ausgehende Anrufe zu Gateways, TDM, ENUM und andere weiterleiten, wenn der Anruf die Bedingungen für die ausgehenden Routen erfüllt.";
 $text['description-outbound_routes']['he'] = "";
+$text['description-outbound_routes']['ru-ru'] = "Маршрутизация исходящих вызовов на шлюзы, сети общего пользования. Когда вызов соответствует условиям вызова исходящих маршрутов.";
 
 $text['description-inbound_routes']['en-us'] = "Route incoming calls to destinations based on one or more conditions. It can send incoming calls to an IVR Menu, Call Group, Extension, External Number, Script. Order is important when an anti-action is used or when there are multiple conditions that match.";
 $text['description-inbound_routes']['es-cl'] = "Dirija llamadas entrantes a destinos basado en una o más condiciones. Puede enviar llamadas entrantes a un IVR, Grupo de llamadas, Extensión, Número externo o un Script. El orden es importante cuando se utiliza una anti-acción, o cuando existen múltiples condiciones que coinciden.";
@@ -976,6 +1057,7 @@ $text['description-inbound_routes']['sv-se'] = "Styr inkommande samtal till dest
 $text['description-inbound_routes']['de-de'] = "Eingehende Anrufe anhand Bedingungen routen. Anrufe können an IVR Menüs, Rufgruppen, Nebenstellen, externe Nummern oder Skripte weitergeleitet werden. Die Reihenfolge ist entscheidend, wenn eine Anti-Aktion gesetzt ist oder wenn mehrere Bedingungen angelegt wurden.";
 $text['description-inbound_routes']['de-at'] = "Eingehende Anrufe anhand Bedingungen routen. Anrufe können an IVR Menüs, Rufgruppen, Nebenstellen, externe Nummern oder Skripte weitergeleitet werden. Die Reihenfolge ist entscheidend, wenn eine Anti-Aktion gesetzt ist oder wenn mehrere Bedingungen angelegt wurden.";
 $text['description-inbound_routes']['he'] = "";
+$text['description-inbound_routes']['ru-ru'] = "Маршрутизация входящих вызовы в пункты назначения на основе одного или нескольких условий. Он может отправлять входящие вызовы в Голосовое Меню (IVR), Группу Вызовов, внутренний или внешний номер, скрипт. Порядок важен, когда используется противодействие или когда есть несколько условий, которые соответствуют.";
 
 $text['description-domain']['en-us'] = "";
 $text['description-domain']['es-cl'] = "";
@@ -987,6 +1069,7 @@ $text['description-domain']['uk'] = "";
 $text['description-domain']['sv-se'] = "";
 $text['description-domain']['de-at'] = "";
 $text['description-domain']['he'] = "";
+$text['description-domain']['ru-ru'] = "";
 
 $text['description-dialplan_manager-superadmin']['en-us'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
 $text['description-dialplan_manager-superadmin']['es-cl'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
@@ -999,6 +1082,7 @@ $text['description-dialplan_manager-superadmin']['sv-se'] = "Nummerplanen använ
 $text['description-dialplan_manager-superadmin']['de-de'] = "Der Wählplan wird für die Anrufsteuerung basierend auf Bedingungen und Kontext benutzt. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 $text['description-dialplan_manager-superadmin']['de-at'] = "Der Wählplan wird für die Anrufsteuerung basierend auf Bedingungen und Kontext benutzt. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 $text['description-dialplan_manager-superadmin']['he'] = "";
+$text['description-dialplan_manager-superadmin']['ru-ru'] = "План Нумерации используется для настройки целевых вызовов на основе условий и контекста. Вы можете использовать диалплан для отправки вызовов шлюзам, автосекретарям, внешним номерам, сценариям или любому месту назначения.";
 
 $text['description-dialplan_manager']['en-us'] = "The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.";
 $text['description-dialplan_manager']['es-cl'] = "El plan de marcado provee una vista de los códigos distintivos, así como también el menú IVR, Conferencias, Colas y otros destinos.";
@@ -1011,6 +1095,7 @@ $text['description-dialplan_manager']['sv-se'] = "Nummerplanen ger en vy över n
 $text['description-dialplan_manager']['de-de'] = "Der Wählplan bietet eine Ansicht aller Funktions-Codes sowie aller IVR Menüs, Konferenzen, Warteschlangen und anderen Zielen.";
 $text['description-dialplan_manager']['de-at'] = "Der Wählplan bietet eine Ansicht aller Funktions-Codes sowie aller IVR Menüs, Konferenzen, Warteschlangen und anderen Zielen.";
 $text['description-dialplan_manager']['he'] = "";
+$text['description-dialplan_manager']['ru-ru'] = "В Плане Нумерации представлены некоторые коды функций, а также Голосовые Меню (IVR), Конференции, Очереди и другие пункты назначения.";
 
 $text['description-dialplan-edit']['en-us'] = "Dialplan include general settings.";
 $text['description-dialplan-edit']['es-cl'] = "Configuraciones incluidas en el plan de marcado.";
@@ -1023,6 +1108,7 @@ $text['description-dialplan-edit']['sv-se'] = "Nummerplan inkluderar allmänna i
 $text['description-dialplan-edit']['de-de'] = "Wählplan umfasst Standardeinstellungen";
 $text['description-dialplan-edit']['de-at'] = "Wählplan umfasst Standardeinstellungen";
 $text['description-dialplan-edit']['he'] = "";
+$text['description-dialplan-edit']['ru-ru'] = "В План Нумерации входят общие конфигурации.";
 
 $text['description-default_dialplan']['en-us'] = "The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
 $text['description-default_dialplan']['es-cl'] = "El plan de marcado predeterminado se utiliza para configurar destinos basado en condiciones y contexto. Puede utilizar el plan de marcado para enviar llamadas a pasarelas, IVR, números externos, scripts o cualquier destino.";
@@ -1035,6 +1121,7 @@ $text['description-default_dialplan']['sv-se'] = "Standard Nummerplanen används
 $text['description-default_dialplan']['de-de'] = "Der Standard Wählplan wird für Anruf-Ziele basierend auf Bedingungen und Kontext verwendet. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, Automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 $text['description-default_dialplan']['de-at'] = "Der Standard Wählplan wird für Anruf-Ziele basierend auf Bedingungen und Kontext verwendet. Sie können den Wählplan dazu benutzen um Anrufe an Gateways, Automatische Vermittlungen, externe Nummern, Skripte oder andere Anwendungen zu routen.";
 $text['description-default_dialplan']['he'] = "";
+$text['description-default_dialplan']['ru-ru'] = "Стандартный План Нумерации используется для настройки целевых вызовов на основе условий и контекста. Вы можете использовать План Нумерации для отправки вызовов шлюзам, автосекретарям, внешним номерам, сценариям или любому месту назначения.";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.";
 $text['description-conditions_and_actions']['es-cl'] = "Las siguientes condiciones, acciones y anti-acciones son usadas en el plan de marcado para dirigir el flujo de llamado. Cada una es procesada en el orden dado. Puede utilizar tantas condiciones, acciones o anti-acciones como necesite.";
@@ -1047,6 +1134,7 @@ $text['description-conditions_and_actions']['sv-se'] = "Följande villkor, aktio
 $text['description-conditions_and_actions']['de-de'] = "Die folgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan für direkte Anruf-Steuerung benutzt. Diese werden in der angegebenen Reihenfolge abgearbeitet. Verwenden Sie so viele Bedingungen, Aktionen und Anti-aktionen wie Sie benötigen.";
 $text['description-conditions_and_actions']['de-at'] = "Die folgenden Bedingungen, Aktionen und Anti-Aktionen werden im Wählplan für direkte Anruf-Steuerung benutzt. Diese werden in der angegebenen Reihenfolge abgearbeitet. Verwenden Sie so viele Bedingungen, Aktionen und Anti-aktionen wie Sie benötigen.";
 $text['description-conditions_and_actions']['he'] = "";
+$text['description-conditions_and_actions']['ru-ru'] = "Следующие условия, действия и противодействия используются в Плане Нумерации для направления потока вызовов. Используйте столько условий, действий или противодействий, сколько необходимо.";
 
 $text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
 $text['billing-warning']['es-cl'] = "Si está utilizando la aplicación de facturación fusionpbx, asegúrese de agregar lasvariables accountcode y carrier";
@@ -1059,5 +1147,6 @@ $text['billing-warning']['sv-se'] = "Om du använder fusionpbx fakturering progr
 $text['billing-warning']['de-de'] = "Wenn Sie die Fusionpbx Abrechnung verwenden, stellen Sie sicher, dass Account Code und Betreiber Variablen gesetzt sind.";
 $text['billing-warning']['de-at'] = "Wenn Sie die Fusionpbx Abrechnung verwenden, stellen Sie sicher, dass Account Code und Betreiber Variablen gesetzt sind.";
 $text['billing-warning']['he'] = "";
+$text['billing-warning']['ru-ru'] = "Если вы используете приложение биллинга FusionPBX, обязательно добавьте код Учетной Записи и переменные-несущие.";
 
 ?>
