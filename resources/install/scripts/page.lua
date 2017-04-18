@@ -82,7 +82,7 @@
 			end
 
 		--define the conference name
-			local conference_name = "page-"..destination_number.."-"..domain_name.."@page"
+			local conference_name = "page-"..destination_number.."@"..domain_name.."@page"
 
 		--set the caller id
 			if (caller_id_name) then
