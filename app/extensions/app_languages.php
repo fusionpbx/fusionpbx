@@ -1676,7 +1676,7 @@ $text['description-extension']['ro'] = "Introduceți extensia în format alfanum
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['he'] = "";
 $text['description-extension']['it-it'] = "Inserisci un interno alfanumerico. La configurazione di default permette di 2-7 cifre.";
-$text['description-extension']['ru-ru'] = "Введите буквенно-цифровой Внутренний Номер. Конфигурация по умолчанию позволяет 2-7-значные Внутренние Номерара.";
+$text['description-extension']['ru-ru'] = "Введите буквенно-цифровой Внутренний Номер. Конфигурация по умолчанию позволяет 2-7-значные Внутренние Номера.";
 
 $text['description-enabled']['en-us'] = "Set the status of the extension.";
 $text['description-enabled']['es-cl'] = "Seleccione el estado de la extensión.";
