@@ -71,13 +71,13 @@
 		$text['label-true']['es-cl'] = '';
 		$text['label-true']['pt-pt'] = '';
 		$text['label-true']['fr-fr'] = '';
-		$text['label-true']['ru-ru'] = 'верно';
+		$text['label-true']['ru-ru'] = 'Да';
 
 		$text['label-false']['en-us'] = 'false';
 		$text['label-false']['es-cl'] = 'falso';
 		$text['label-false']['pt-pt'] = 'falso';
 		$text['label-false']['fr-fr'] = 'falso';
-		$text['label-false']['re-ru'] = 'Ложно';
+		$text['label-false']['re-ru'] = 'Нет';
 
 		$text['button-add']['en-us'] = 'Add';
 		$text['button-add']['es-cl'] = '';
