@@ -43,8 +43,8 @@
 		local begin_value, end_value = split_first(value, "-", true)
 		if (not end_value) or (begin_value == end_value) then
 			return function()
-				local result = value
-				value = nil
+				local result = begin_value
+				begin_value = nil
 				return result
 			end
 		end
