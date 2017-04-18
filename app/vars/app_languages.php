@@ -72,7 +72,7 @@ $text['header-variables_advanced']['pl'] = "Zamień zmienne (zaawansowane)";
 $text['header-variables_advanced']['uk'] = "Задання змінних: Додатково";
 $text['header-variables_advanced']['sv-se'] = "Switch Variabler: Avancerat";
 $text['header-variables_advanced']['de-at'] = "Switch Variablen: Erweitert";
-$text['header-variables_advanced']['ru-ru'] = "Переменные Переключателя: Расширенный";
+$text['header-variables_advanced']['ru-ru'] = "Параметры FreeSwitch: Расширенный";
 
 $text['header-variables']['en-us'] = "Switch Variables";
 $text['header-variables']['es-cl'] = "Variables de Switch";
@@ -83,7 +83,7 @@ $text['header-variables']['pl'] = "Zmienne PBXu";
 $text['header-variables']['uk'] = "Задання змінних";
 $text['header-variables']['sv-se'] = "Switch Variabler";
 $text['header-variables']['de-at'] = "Switch Variablen";
-$text['header-variables']['ru-ru'] = "Переменные Переключателя";
+$text['header-variables']['ru-ru'] = "Параметры FreeSwitch";
 
 $text['header-variable_edit']['en-us'] = "Variable";
 $text['header-variable_edit']['es-cl'] = "Editar Variable";
