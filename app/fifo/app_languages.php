@@ -70,7 +70,7 @@ $text['option-false']['fr-fr'] = "Non";
 $text['option-false']['pl'] = "Nie";
 $text['option-false']['de-de'] = "Aus";
 $text['option-false']['de-at'] = "Aus";
-$text['option-false']['ru-ru'] = "Ложно";
+$text['option-false']['ru-ru'] = "Нет";
 
 $text['option-condition']['en-us'] = "Condition";
 $text['option-condition']['es-cl'] = "Condición";
@@ -304,7 +304,7 @@ $text['description-continue']['fr-fr'] = "Continuer, Dans la plus part des cas �
 $text['description-continue']['pl'] = "Kontynuacja w większości przypadków jest ustawiona na NIE.";
 $text['description-continue']['de-de'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen.";
 $text['description-continue']['de-at'] = "Die Option Weiterführen sollte in der Regel auf Aus stehen.";
-$text['description-continue']['ru-ru'] = "Для продолжения в большинстве случаев должно быть установлено значение Ложно.";
+$text['description-continue']['ru-ru'] = "Для продолжения в большинстве случаев должно быть установлено значение Нет.";
 
 $text['description-conditions_and_actions']['en-us'] = "The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order until you reach the action dialplan_detail_tag which tells what action to perform. You are not limited to only one condition or action dialplan_detail_tag for a given extension.";
 $text['description-conditions_and_actions']['es-cl'] = "Las siguientes condiciones, acciones y anti-acciones son usada en el plan de marcado para dirigir el flujo de llamado. Cada uno es procesado en orden hasta que se alcanza la accion dialplan_detail_tag, el cual indica la acción a ejecutar. No está limitado a solo una condición o acción dialplan_detail_tag para una extensión dada.";
