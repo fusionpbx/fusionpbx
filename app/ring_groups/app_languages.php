@@ -492,7 +492,7 @@ $text['label-destination_order']['sv-se'] = "Ordning";
 $text['label-destination_order']['uk'] = "Порядок";
 $text['label-destination_order']['de-at'] = "Reihenfolge";
 $text['label-destination_order']['he'] = "";
-$text['label-destination_order']['ru-ru'] = "Порядок";
+$text['label-destination_order']['ru-ru'] = "Порядковый номер";
 
 $text['label-destination_number']['en-us'] = "Destination";
 $text['label-destination_number']['es-cl'] = "Destino";
