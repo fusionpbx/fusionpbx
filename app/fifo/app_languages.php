@@ -52,7 +52,7 @@ $text['option-true']['fr-fr'] = "Oui";
 $text['option-true']['pl'] = "Tak";
 $text['option-true']['de-de'] = "Ein";
 $text['option-true']['de-at'] = "Ein";
-$text['option-true']['ru-ru'] = "Правда";
+$text['option-true']['ru-ru'] = "Да";
 
 $text['option-parameter']['en-us'] = "Parameter";
 $text['option-parameter']['es-cl'] = "Parámetro";
