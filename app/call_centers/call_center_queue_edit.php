@@ -97,6 +97,7 @@
 			$queue_cid_prefix = check_str($_POST["queue_cid_prefix"]);
 			$queue_announce_sound = check_str($_POST["queue_announce_sound"]);
 			$queue_announce_frequency = check_str($_POST["queue_announce_frequency"]);
+			$queue_cc_exit_keys = check_str($_POST["queue_cc_exit_keys"]);
 			$queue_description = check_str($_POST["queue_description"]);
 
 		//replace the space in the queue name with a dash
@@ -222,6 +223,9 @@
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if (strlen($queue_cid_prefix) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$queue_cid_prefix."#\${caller_id_name}\"/>\n";
+			}
+			if (strlen($queue_cc_exit_keys) > 0) {
+				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".$queue_cc_exit_keys."\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$queue_name.'@'.$_SESSION['domain_name']."\"/>\n";
 			$dialplan_xml .= "		<action application=\"".$queue_timeout_application."\" data=\"".$queue_timeout_data."\"/>\n";
@@ -377,6 +381,7 @@
 				$queue_cid_prefix = $row["queue_cid_prefix"];
 				$queue_announce_sound = $row["queue_announce_sound"];
 				$queue_announce_frequency = $row["queue_announce_frequency"];
+				$queue_cc_exit_keys = check_str($_POST["queue_cc_exit_keys"]);
 				$queue_description = $row["queue_description"];
 			}
 		}
@@ -884,6 +889,17 @@
 	echo $text['description-caller_announce_frequency']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+        echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+       	echo "  ".$text['label-exit_keys']."\n";
+       	echo "</td>\n";
+       	echo "<td class='vtable' align='left'>\n";
+       	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='$queue_cc_exit_keys'>\n";
+       	echo "<br />\n";
+       	echo $text['description-exit_keys']."\n";
+       	echo "</td>\n";
+       	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
