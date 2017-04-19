@@ -42,35 +42,24 @@
 	$language = new text;
 	$text = $language->get();
 
+	$sip_profile_uuid=@$_GET['sip_profile_uuid'];
+	$sip_profile_domain_uuid=@$_GET['id'];
+
 //delete the data
-	if (is_uuid($_GET["id"])) {
-
-		//get the id
-			$id = $_GET["id"];
-
-		//get the details of the sip profile
-			$sql = "select * from v_sip_profile_domains ";
-			$sql .= "where sip_profile_domain_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			if (is_array($result)) {
-				foreach ($result as &$row) {
-					$sip_profile_uuid = $row["sip_profile_uuid"];
-				}
-			}
-			unset ($prep_statement);
-
+	if (is_uuid($sip_profile_uuid) && is_uuid($sip_profile_domain_uuid)) {
 		//delete sip_profile_domain
 			$sql = "delete from v_sip_profile_domains ";
-			$sql .= "where sip_profile_domain_uuid = '$id' ";
+			$sql .= "where sip_profile_uuid = '$sip_profile_uuid' and sip_profile_domain_uuid = '$sip_profile_domain_uuid' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($sql);
+			unset($prep_statement);
 	}
 
 //redirect the user
-	$_SESSION['message'] = $text['message-delete'];
-	header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
+	if (is_uuid($sip_profile_uuid)) {
+		$_SESSION['message'] = $text['message-delete'];
+		header('Location: sip_profile_edit.php?id='.$sip_profile_uuid);
+	}
 
 ?>
