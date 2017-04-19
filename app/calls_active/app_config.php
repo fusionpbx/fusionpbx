@@ -18,6 +18,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Canais ativos no sistema.";
 		$apps[$x]['description']['pt-br'] = "Canais ativos no sistema.";
+		$apps[$x]['description']['ru-ru'] = "Активные каналы в системе";
 
 	//permission details
 		$y=0;
