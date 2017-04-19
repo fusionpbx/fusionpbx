@@ -108,6 +108,7 @@
 			$ring_group_missed_call_data = check_str($_POST["ring_group_missed_call_data"]);
 			$ring_group_forward_enabled = check_str($_POST["ring_group_forward_enabled"]);
 			$ring_group_forward_destination = check_str($_POST["ring_group_forward_destination"]);
+			$ring_group_forward_toll_allow = check_str($_POST["ring_group_forward_toll_allow"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -375,6 +376,7 @@
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
 			$ring_group_forward_enabled = $row["ring_group_forward_enabled"];
 			$ring_group_forward_destination = $row["ring_group_forward_destination"];
+			$ring_group_forward_toll_allow = $row["ring_group_forward_toll_allow"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -712,6 +714,19 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('ring_group_forward_toll_allow')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-ring_group_forward_toll_allow']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=".$ring_group_forward_toll_allow.">\n";
+		echo "<br />\n";
+		echo $text['description-ring_group_forward_toll_allow']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	
 	if (if_group("superadmin")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
