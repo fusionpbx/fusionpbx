@@ -120,7 +120,7 @@
 	$text['confirm-profile']['fr-fr'] = "Merci d'indiquer: Profile";
 	$text['confirm-profile']['de-de'] = "Bitte angeben: Profil";
 	$text['confirm-profile']['de-at'] = "Bitte angeben: Profil";
-	$text['confirm-profile']['ru-ru'] = "Просьба казать: Профиль";
+	$text['confirm-profile']['ru-ru'] = "Просьба указать: Профиль";
 
 	$text['confirm-enabled']['en-us'] = "Please provide: Enabled";
 	$text['confirm-enabled']['es-cl'] = "Por favor, indique: Activado";
@@ -128,7 +128,7 @@
 	$text['confirm-enabled']['fr-fr'] = "Merci d'indiquer: Actif";
 	$text['confirm-enabled']['de-de'] = "Bitte angeben: Aktiviert";
 	$text['confirm-enabled']['de-at'] = "Bitte angeben: Aktiviert";
-	$text['confirm-enabled']['ru-ru'] = "Просьба казать: Включено";
+	$text['confirm-enabled']['ru-ru'] = "Просьба указать: Включено";
 
 	$text['label-conference-add']['en-us'] = "Conferences Add";
 	$text['label-conference-add']['es-cl'] = "Agregar Conferencias";
@@ -136,7 +136,7 @@
 	$text['label-conference-add']['fr-fr'] = "Ajouter des conférences";
 	$text['label-conference-add']['de-de'] = "Konferenz hinzufügen";
 	$text['label-conference-add']['de-at'] = "Konferenz hinzufügen";
-	$text['label-conference-add']['ru-ru'] = "Конференции Добавить";
+	$text['label-conference-add']['ru-ru'] = "Добавить Конференции";
 
 	$text['label-conference-edit']['en-us'] = "Conferences Edit";
 	$text['label-conference-edit']['es-cl'] = "Edición de Conferencias";
@@ -144,7 +144,7 @@
 	$text['label-conference-edit']['fr-fr'] = "Editer les conférences";
 	$text['label-conference-edit']['de-de'] = "Konferenz bearbeiten";
 	$text['label-conference-edit']['de-at'] = "Konferenz bearbeiten";
-	$text['label-conference-edit']['ru-ru'] = "Конференции Редактировать";
+	$text['label-conference-edit']['ru-ru'] = "Редактировать Конференции";
 
 	$text['label-extension']['en-us'] = "Extension";
 	$text['label-extension']['es-cl'] = "Extensión";
