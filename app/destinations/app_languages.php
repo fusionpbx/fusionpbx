@@ -576,7 +576,7 @@ $text['description-destination_number']['fa'] = "";
 $text['description-destination_number']['ar-eg'] = "أدخل جهه الأتصال";
 $text['description-destination_number']['he'] = "הכנס יעד";
 $text['description-destination_number']['it-it'] = "Inserisci la destinazione.";
-$text['description-destination_number']['ru-ru'] = "Введите пункт назначения.";
+$text['description-destination_number']['ru-ru'] = "Введите номер назначения.";
 
 $text['description-destination_enabled']['en-us'] = "Set the current status of this destination.";
 $text['description-destination_enabled']['es-cl'] = "Configure el estado actual de este destino";
