@@ -24,7 +24,7 @@ $text['title-contacts_import']['sv-se'] = "Importera Kontakter";
 $text['title-contacts_import']['de-de'] = "Kontakte importieren";
 $text['title-contacts_import']['de-at'] = "Kontakte importieren";
 $text['title-contacts_import']['he'] = "ייבא אנשי קשר";
-$text['title-contacts_import']['ru-ru'] = "Импортировать контакты";
+$text['title-contacts_import']['ru-ru'] = "Импортировать Контакты";
 
 $text['title-contacts']['en-us'] = "Contacts";
 $text['title-contacts']['es-cl'] = "Contactos";
