@@ -570,6 +570,21 @@ $text['label-password']['ar-eg'] = "كلمة السر";
 $text['label-password']['he'] = "סיסמא";
 $text['label-password']['it-it'] = "Password";
 
+$text['label-caller_id_number']['en-us'] = "Caller ID";
+$text['label-caller_id_number']['es-cl'] = "Caller ID";
+$text['label-caller_id_number']['pt-pt'] = "público";
+$text['label-caller_id_number']['fr-fr'] = "public";
+$text['label-caller_id_number']['pt-br'] = "público";
+$text['label-caller_id_number']['pl'] = "";
+$text['label-caller_id_number']['uk'] = "";
+$text['label-caller_id_number']['sv-se'] = "Utgående";
+$text['label-caller_id_number']['de-de'] = "Ausgehende Anruferkennung";
+$text['label-caller_id_number']['de-at'] = "Ausgehende Anruferkennung";
+$text['label-caller_id_number']['ro'] = "Caller ID pentru ieșire";
+$text['label-caller_id_number']['ar-eg'] = "";
+$text['label-caller_id_number']['he'] = "";
+$text['label-caller_id_number']['it-it'] = "Caller ID in Uscita";
+
 $text['label-outbound_caller_id_number']['en-us'] = "Outbound Caller ID Number";
 $text['label-outbound_caller_id_number']['es-cl'] = "Número de Caller ID Saliente";
 $text['label-outbound_caller_id_number']['pt-pt'] = "Número público";
