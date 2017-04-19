@@ -317,6 +317,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the admin group.';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '3f727c07-51ec-42fb-82fc-0a711b87dd76';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'admin';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'caller_id';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable changing Caller ID name and number.';
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '610cfc85-7a17-4c96-a7c7-a83054710bc1';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'superadmin';
@@ -373,6 +381,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable Dashboard Call Routing controls for users in the superadmin group.';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'd81aa35c-06cd-4013-b985-1119ce4ba6bc';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'superadmin';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'caller_id';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable changing Caller ID name and number.';
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '78bb45d5-8108-4bed-aced-d764575531dc';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'superadmin';
@@ -420,6 +436,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'ring_groups';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable Dashboard Ring Group Forwarding controls for users in the users group.';
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'ed51b63a-0a42-4c82-84e2-09e9222034ea';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'dashboard';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'user';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'caller_id';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Enable changing Caller ID name and number.';
 		$y++;
 
 	//schema details
