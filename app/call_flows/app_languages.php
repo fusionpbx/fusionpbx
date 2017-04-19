@@ -239,8 +239,8 @@ $text['description-call_flow_extension']['pt-br'] = "Atribua o número de ramal.
 $text['description-call_flow_extension']['pl'] = "Wprowadź alfanumeryczny numer wewnętrzny. Domyślna konfiguracja pozwala na 2-7 cyfrowe  numery wewnętrzne";
 $text['description-call_flow_extension']['sv-se'] = "Ange anknytningsnumret.";
 $text['description-call_flow_extension']['uk'] = "Введіть номер розширення.";
-$text['description-call_flow_extension']['de-de'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
-$text['description-call_flow_extension']['de-at'] = "Weisen Sie die Nebenstellen und Linien einem Gerät zu.";
+$text['description-call_flow_extension']['de-de'] = "Weisen Sie die Nebenstellen und Leitungen einem Gerät zu.";
+$text['description-call_flow_extension']['de-at'] = "Weisen Sie die Nebenstellen und Leitungen einem Gerät zu.";
 
 $text['description-call_flow_destination_label']['en-us'] = "Enter the destination label.";
 $text['description-call_flow_destination_label']['es-cl'] = "Ingrese la etiqueta de destino.";

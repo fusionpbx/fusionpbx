@@ -576,7 +576,7 @@
 {if $row.device_key_type == "voicemail"}    <P{$type_id}>6</P{$type_id}>{/if}
 {if $row.device_key_type == "call return"}    <P{$type_id}>7</P{$type_id}>{/if}
 {if $row.device_key_type == "transfer"}    <P{$type_id}>8</P{$type_id}>{/if}
-{if $row.device_key_type == "call park"}    <P{$type_id}>19</P{$type_id}>{/if}
+{if $row.device_key_type == "call park"}    <P{$type_id}>16</P{$type_id}>{/if}
 {if $row.device_key_type == "intercom"}    <P{$type_id}>10</P{$type_id}>{/if}
 {if $row.device_key_type == "ldap search"}    <P{$type_id}>11</P{$type_id}>{/if}
 

@@ -8,6 +8,7 @@ $text['title-databases']['pt-br'] = "Base de dados";
 $text['title-databases']['pl'] = "Bazy danych";
 $text['title-databases']['sv-se'] = "Databaser";
 $text['title-databases']['uk'] = "Бази даних";
+$text['title-databases']['de-de'] = "Datenbanken";
 $text['title-databases']['de-at'] = "Datenbanken";
 $text['title-databases']['it-it'] = "Database";
 
@@ -19,6 +20,7 @@ $text['title-command']['pt-br'] = "Comando";
 $text['title-command']['pl'] = "Polecenie";
 $text['title-command']['sv-se'] = "Kommando";
 $text['title-command']['uk'] = "Команди";
+$text['title-command']['de-de'] = "Befehl";
 $text['title-command']['de-at'] = "Befehl";
 $text['title-command']['it-it'] = "Comando";
 
@@ -30,6 +32,7 @@ $text['option-result_type_view']['pt-br'] = "Visualizar";
 $text['option-result_type_view']['pl'] = "Widok";
 $text['option-result_type_view']['sv-se'] = "Granska";
 $text['option-result_type_view']['uk'] = "Перегляд";
+$text['option-result_type_view']['de-de'] = "Ansicht";
 $text['option-result_type_view']['de-at'] = "Ansicht";
 $text['option-result_type_view']['it-it'] = "Visualizza";
 
@@ -41,6 +44,7 @@ $text['option-result_type_insert']['pt-br'] = "SQL";
 $text['option-result_type_insert']['pl'] = "SQL";
 $text['option-result_type_insert']['sv-se'] = "SQL";
 $text['option-result_type_insert']['uk'] = "SQL ";
+$text['option-result_type_insert']['de-de'] = "SQL";
 $text['option-result_type_insert']['de-at'] = "SQL";
 $text['option-result_type_insert']['it-it'] = "SQL";
 
@@ -52,6 +56,7 @@ $text['option-result_type_csv']['pt-br'] = "CSV";
 $text['option-result_type_csv']['pl'] = "CSV";
 $text['option-result_type_csv']['sv-se'] = "CSV";
 $text['option-result_type_csv']['uk'] = "CSV ";
+$text['option-result_type_csv']['de-de'] = "CSV";
 $text['option-result_type_csv']['de-at'] = "CSV";
 $text['option-result_type_csv']['it-it'] = "CSV";
 
@@ -63,6 +68,7 @@ $text['label-table']['pt-br'] = "Tabela";
 $text['label-table']['pl'] = "Tabela";
 $text['label-table']['sv-se'] = "TAbell";
 $text['label-table']['uk'] = "Таблиця";
+$text['label-table']['de-de'] = "Tabelle";
 $text['label-table']['de-at'] = "Tabelle";
 $text['label-table']['it-it'] = "Tabella";
 
@@ -74,6 +80,7 @@ $text['label-switch']['pt-br'] = "Comando Freeswitch ";
 $text['label-switch']['pl'] = "PBX";
 $text['label-switch']['sv-se'] = "Switch";
 $text['label-switch']['uk'] = "FreeSwitch";
+$text['label-switch']['de-de'] = "Switch";
 $text['label-switch']['de-at'] = "Switch";
 $text['label-switch']['it-it'] = "Switch";
 
@@ -85,6 +92,7 @@ $text['label-shell']['pt-br'] = "Comando Shell ";
 $text['label-shell']['pl'] = "Powłoka (shell)";
 $text['label-shell']['sv-se'] = "Shell";
 $text['label-shell']['uk'] = "Консоль";
+$text['label-shell']['de-de'] = "Shell";
 $text['label-shell']['de-at'] = "Shell";
 $text['label-shell']['it-it'] = "Terminale dei Comandi";
 
@@ -96,6 +104,7 @@ $text['label-results']['pt-br'] = "Resultados";
 $text['label-results']['pl'] = "Rezultaty";
 $text['label-results']['sv-se'] = "Resultat";
 $text['label-results']['uk'] = "Результати";
+$text['label-results']['de-de'] = "Ergebnisse";
 $text['label-results']['de-at'] = "Ergebnisse";
 $text['label-results']['it-it'] = "Risultati";
 
@@ -107,6 +116,7 @@ $text['label-result_type']['pt-br'] = "Resultado";
 $text['label-result_type']['pl'] = "Rezultat";
 $text['label-result_type']['sv-se'] = "Resultat";
 $text['label-result_type']['uk'] = "Результат";
+$text['label-result_type']['de-de'] = "Ergebnis";
 $text['label-result_type']['de-at'] = "Ergebnis";
 $text['label-result_type']['it-it'] = "Risultati";
 
@@ -118,6 +128,7 @@ $text['label-response']['pt-br'] = "Resposta";
 $text['label-response']['pl'] = "Odpowiedź";
 $text['label-response']['sv-se'] = "Respons";
 $text['label-response']['uk'] = "Відповідь";
+$text['label-response']['de-de'] = "Antwort";
 $text['label-response']['de-at'] = "Antwort";
 $text['label-response']['it-it'] = "Risposta";
 
@@ -130,6 +141,7 @@ $text['label-reset']['pl'] = "Resetuj";
 $text['label-reset']['he'] = "אפס";
 $text['label-reset']['uk'] = "Скинути";
 $text['label-reset']['sv-se'] = "Återställ";
+$text['label-reset']['de-de'] = "Zurücksetzen";
 $text['label-reset']['de-at'] = "Zurücksetzen";
 $text['label-reset']['ro'] = "Inițializare";
 $text['label-reset']['fa'] = "";
@@ -144,7 +156,8 @@ $text['label-records']['pt-br'] = "Registros";
 $text['label-records']['pl'] = "Dokumentacja";
 $text['label-records']['sv-se'] = "Uppgifter";
 $text['label-records']['uk'] = "документація";
-$text['label-records']['de-at'] = "Aufzeichnungen";
+$text['label-records']['de-de'] = "Einträge";
+$text['label-records']['de-at'] = "Einträge";
 $text['label-records']['it-it'] = "Records";
 
 $text['label-sql']['en-us'] = "SQL";
@@ -155,6 +168,7 @@ $text['label-sql']['pt-br'] = "SQL";
 $text['label-sql']['pl'] = "SQL";
 $text['label-sql']['sv-se'] = "SQL";
 $text['label-sql']['uk'] = "SQL";
+$text['label-sql']['de-de'] = "SQL";
 $text['label-sql']['de-at'] = "SQL";
 $text['label-sql']['it-it'] = "SQL";
 
@@ -166,6 +180,7 @@ $text['label-php']['pt-br'] = "Comandos PHP ";
 $text['label-php']['pl'] = "PHP";
 $text['label-php']['sv-se'] = "PHP";
 $text['label-php']['uk'] = "PHP";
+$text['label-php']['de-de'] = "PHP";
 $text['label-php']['de-at'] = "PHP";
 $text['label-php']['it-it'] = "PHP";
 
@@ -177,7 +192,8 @@ $text['label-execute']['pt-br'] = "Executar";
 $text['label-execute']['pl'] = "Wykonywanie poleceń";
 $text['label-execute']['sv-se'] = "Utför Kommando";
 $text['label-execute']['uk'] = "Виконання команд";
-$text['label-execute']['de-at'] = "Ausführen";
+$text['label-execute']['de-de'] = "Befehl Ausführen";
+$text['label-execute']['de-at'] = "Befehl Ausführen";
 $text['label-execute']['it-it'] = "Esegui Comando";
 
 $text['label-error']['en-us'] = "Error";
@@ -188,6 +204,7 @@ $text['label-error']['pt-br'] = "Erro";
 $text['label-error']['pl'] = "Błąd";
 $text['label-error']['sv-se'] = "Fel";
 $text['label-error']['uk'] = "Помилка";
+$text['label-error']['de-de'] = "Fehler";
 $text['label-error']['de-at'] = "Fehler";
 $text['label-error']['it-it'] = "Errore";
 
@@ -199,6 +216,7 @@ $text['header-databases']['pt-br'] = "Base de dados";
 $text['header-databases']['pl'] = "Bazy danych";
 $text['header-databases']['sv-se'] = "Databaser";
 $text['header-databases']['uk'] = "Бази даних";
+$text['header-databases']['de-de'] = "Datenbanken";
 $text['header-databases']['de-at'] = "Datenbanken";
 $text['header-databases']['it-it'] = "Databases";
 
@@ -210,7 +228,8 @@ $text['description-switch']['pt-br'] = "Para verificar a lista de comandos váli
 $text['description-switch']['pl'] = "Aby uzyskać listę poprawnych poleceń użyj pomocy";
 $text['description-switch']['sv-se'] = "För en lista med giltiga kommandon använd: help";
 $text['description-switch']['uk'] = "Для перегляду списку команд виконайте команду: help";
-$text['description-switch']['de-at'] = "Um eine Liste der gültigen Befehle zu bekommen tippen Sie: 'help'";
+$text['description-switch']['de-de'] = "Um eine Liste der gültigen Befehle zu erhalten tippen Sie: 'help'";
+$text['description-switch']['de-at'] = "Um eine Liste der gültigen Befehle zu erhalten tippen Sie: 'help'";
 $text['description-switch']['it-it'] = "Switch CLI. Visualizza i comandi validi digitando: 'help'.";
 
 $text['description-shell']['en-us'] = "Execute system commands.";
@@ -221,7 +240,8 @@ $text['description-shell']['pt-br'] = "Comando do sistema";
 $text['description-shell']['pl'] = "Polecenia systemowe.";
 $text['description-shell']['sv-se'] = "System Kommandon.";
 $text['description-shell']['uk'] = "Системні команди";
-$text['description-shell']['de-at'] = "System Befehle";
+$text['description-shell']['de-de'] = "System Befehle ausführen";
+$text['description-shell']['de-at'] = "System Befehle ausführen";
 $text['description-shell']['it-it'] = "Esegui comandi di sistema.";
 
 $text['description-sql']['en-us'] = "Execute statements against the database.";
@@ -232,7 +252,8 @@ $text['description-sql']['pt-br'] = "Executar instruções de consulta no banco 
 $text['description-sql']['pl'] = "Wykonać polecenie zapytania do bazy danych.";
 $text['description-sql']['sv-se'] = "Utför fråge uttalanden mot databasen.";
 $text['description-sql']['uk'] = "Виконання операторів запитів до бази даних.";
-$text['description-sql']['de-at'] = "Führen Sie Abfrage-Anweisungen für die Datenbank.";
+$text['description-sql']['de-det'] = "Abfragen gegen die Datenbank ausführen.";
+$text['description-sql']['de-at'] = "Abfragen gegen die Datenbank ausführen.";
 $text['description-sql']['it-it'] = "Esegue istruzioni nel database.";
 
 $text['description-php']['en-us'] = "Execute PHP commands.  See: <a href='http://php.net/manual/' target='_blank'>PHP Manual</a>";
@@ -243,7 +264,8 @@ $text['description-php']['pt-br'] = "Utilize a ligação seguinte como referênc
 $text['description-php']['pl'] = "Aby użyć odniesienia do PHP kliknij na ten link: <a href='http://php.net/manual/' target='_blank'>PHP Manual</a>";
 $text['description-php']['sv-se'] = "Använd följande länk som en referens gällande PHP: <a href='http://php.net/manual/' target='_blank'>PHP Manual</a>";
 $text['description-php']['uk'] = "Посилання на довідку PHP: <a href='http://php.net/manual/' target='_blank'>PHP Manual</a>";
-$text['description-php']['de-at'] = "Benutzen Sie folgenden Link als PHP Referenz: <a href='http://php.net/manual/>PHP Manual</a>";
+$text['description-php']['de-de'] = "PHP Befehle ausführen. Benutzen Sie folgenden Link als PHP Referenz: <a href='http://php.net/manual/>PHP Manual</a>";
+$text['description-php']['de-at'] = "PHP Befehle ausführen. Benutzen Sie folgenden Link als PHP Referenz: <a href='http://php.net/manual/>PHP Manual</a>";
 $text['description-php']['it-it'] = "Esegui comandi PHP.  Visualizza: <a href='http://php.net/manual/' target='_blank'>Manuale PHP</a>";
 
 $text['description-execute']['en-us'] = "Provides a conventient way to execute system, PHP, switch and SQL commands.";
@@ -254,7 +276,8 @@ $text['description-execute']['pt-br'] = "Utilize facilmente a execução de coma
 $text['description-execute']['pl'] = "Ta funkcja zapewnia dogodny sposób wykonywania poleceń systemowych, PHP oraz switch.";
 $text['description-execute']['sv-se'] = "Erbjuder ett smidigt sätt att köra system, PHP och switch kommandon.";
 $text['description-execute']['uk'] = "Забезпечує зручний спосіб виконати команди PHP, switch, а також системні команди";
-$text['description-execute']['de-at'] = "Bietet die Möglichkeit System, PHP und Switch Kommandos auszuführen.";
+$text['description-execute']['de-de'] = "Bietet die Möglichkeit System, PHP, Switch und SQL Befehle auszuführen.";
+$text['description-execute']['de-at'] = "Bietet die Möglichkeit System, PHP, Switch und SQL Befehle auszuführen.";
 $text['description-execute']['it-it'] = "Offre un modo comodo per eseguire comandi di sistema, PHP, switch e SQL.";
 
 $text['description-databases']['en-us'] = "Select the database to execute SQL query statements against.";
@@ -265,6 +288,7 @@ $text['description-databases']['pt-br'] = "Informações sobre a base de dados";
 $text['description-databases']['pl'] = "Informacje o bazie danych.";
 $text['description-databases']['sv-se'] = "Välj databas att använda för SQL Fråga.";
 $text['description-databases']['uk'] = "Інформація про базу даних.";
+$text['description-databases']['de-de'] = "Wählen Sie die Datenbank für die SQL Abfrage aus.";
 $text['description-databases']['de-at'] = "Wählen Sie die Datenbank für die SQL Abfrage aus.";
 $text['description-databases']['it-it'] = "Seleziona il database su cui eseguire la query SQL.";
 
@@ -276,7 +300,8 @@ $text['button-select_database']['pt-br'] = "Selecionar base de dados";
 $text['button-select_database']['pl'] = "Wybierz bazę danych";
 $text['button-select_database']['sv-se'] = "Välj Databas";
 $text['button-select_database']['uk'] = "Вибрати БД";
-$text['button-select_database']['de-at'] = "Datenbank wählen";
+$text['button-select_database']['de-de'] = "Datenbank auswählen";
+$text['button-select_database']['de-at'] = "Datenbank auswählen";
 $text['button-select_database']['it-it'] = "Seleziona Database";
 
 $text['button-manage']['en-us'] = "Manage";
@@ -287,6 +312,7 @@ $text['button-manage']['pt-br'] = "Gerenciar";
 $text['button-manage']['pl'] = "Zarządzaj";
 $text['button-manage']['sv-se'] = "Hantera";
 $text['button-manage']['uk'] = "Керувати";
+$text['button-manage']['de-de'] = "Verwalten";
 $text['button-manage']['de-at'] = "Verwalten";
 $text['button-manage']['it-it'] = "Gestisci";
 
@@ -298,6 +324,7 @@ $text['button-backup']['pt-br'] = "Backup";
 $text['button-backup']['pl'] = "Kopia Zapasowa";
 $text['button-backup']['sv-se'] = "Backup";
 $text['button-backup']['uk'] = "Резервна копія";
+$text['button-backup']['de-de'] = "Sichern";
 $text['button-backup']['de-at'] = "Sichern";
 $text['button-backup']['it-it'] = "Backup";
 

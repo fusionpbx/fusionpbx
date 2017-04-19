@@ -62,7 +62,7 @@
 						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
 						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. access_token_result .. "\n");
 					end
-					transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+					transcribe_cmd = "curl -X POST \"https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=" .. transcribe_language .. "&device.os=Freeswitch&version=3.0&format=json&instanceid=" .. gen_uuid() .. "&requestid=" .. gen_uuid() .. "\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
 					local handle = io.popen(transcribe_cmd);
 					local transcribe_result = handle:read("*a");
 					handle:close();
@@ -226,7 +226,7 @@
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
-					if (shout_exists == "true" and transcribe_enabled == "false") then
+					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "false") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
 						--record in mp3 directly
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);

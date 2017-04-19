@@ -32,8 +32,7 @@
 <Password_1_>{$user_password_1}</Password_1_>
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Auth_ID_1_></Auth_ID_1_>
-<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
-<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
+<Call_Waiting_Serv_1_>{$spa_call_waiting}</Call_Waiting_Serv_1_>  
 <Dial_Plan_1_>{$spa_dial_plan}</Dial_Plan_1_>
 <!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Line_Enable_2_>Yes</Line_Enable_2_>
@@ -56,6 +55,8 @@
 <Insert_VIA_received>No</Insert_VIA_received>
 <Insert_VIA_rport>{$spa_insert_via_rport}</Insert_VIA_rport>
 <Time_Zone>{$spa_time_zone}</Time_Zone>
+<Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
+<Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>  
 <!--
 <Reset_Button_Enable>0</Reset_Button_Enable>
 <Web_Management>

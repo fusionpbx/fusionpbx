@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,10 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Riccardo Granchi <riccardo.granchi@nems.it>
 */
-require_once "root.php";
-require_once "resources/require.php";
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
 
 //get the event socket information
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
@@ -644,7 +646,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 	unset($sql);
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
+function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break = null, $dialplan_detail_inline = null) {
 
 	//get the database connection
 	require_once "resources/classes/database.php";
@@ -755,7 +757,7 @@ function save_dialplan_xml() {
 						unset ($prep_statement_2, $sql);
 
 						//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-							$details = '';
+							$details = array();
 							$previous_tag = '';
 							$details[$group]['condition_count'] = '';
 							//conditions

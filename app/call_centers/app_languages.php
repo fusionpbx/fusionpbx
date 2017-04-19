@@ -772,6 +772,26 @@ $text['label-caller_announce_frequency']['fr-fr'] = "Annoncer Fréquence";
 $text['label-caller_announce_frequency']['de-de'] = "Häufigkeit der Ankündigung";
 $text['label-caller_announce_frequency']['de-at'] = "Häufigkeit der Ankündigung";
 
+$text['label-exit_keys']['en-us'] = "Exit Key";
+$text['label-exit_keys']['pt-br'] = "";
+$text['label-exit_keys']['pl'] = "";
+$text['label-exit_keys']['sv-se'] = "";
+$text['label-exit_keys']['uk'] = "";
+$text['label-exit_keys']['es-cl'] = "Tecla de salida";
+$text['label-exit_keys']['pt-pt'] = "";
+$text['label-exit_keys']['fr-fr'] = "Clé pour sortir la queue";
+$text['label-exit_keys']['de-at'] = "";
+
+$text['description-exit_keys']['en-us'] = "Keys to quite the current queue waiting.";
+$text['description-exit_keys']['pt-br'] = "";
+$text['description-exit_keys']['pl'] = "";
+$text['description-exit_keys']['sv-se'] = "";
+$text['description-exit_keys']['uk'] = "";
+$text['description-exit_keys']['es-cl'] = "Teclas para salir de la espera de la cola.";
+$text['description-exit_keys']['pt-pt'] = "";
+$text['description-exit_keys']['fr-fr'] = "Clés pour sortir de l'attendance de la queue.";
+$text['description-exit_keys']['de-at'] = "";
+
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['es-cl'] = "Timeout de Llamada";
 $text['label-call_timeout']['pt-pt'] = "Tempo limite da chamada";

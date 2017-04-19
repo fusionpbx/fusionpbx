@@ -104,6 +104,9 @@
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_vendors']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	if (permission_exists('device_vendor_restore')) {
+		echo "                          <input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"document.location='device_vendor_restore.php'\" value='".$text['button-restore']."'>";
+	}
 	echo "				<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";

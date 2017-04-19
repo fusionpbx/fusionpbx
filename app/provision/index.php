@@ -36,7 +36,6 @@
 	$dir_count = 0;
 	$file_count = 0;
 	$row_count = 0;
-	$tmp_array = '';
 	$device_template = '';
 
 //define PHP variables from the HTTP values
@@ -80,6 +79,16 @@
 		//Panasonic: $_SERVER['HTTP_USER_AGENT'] = "Panasonic_KX-UT670/01.022 (0080f000000)"
 			if (substr($_SERVER['HTTP_USER_AGENT'],0,9) == "Panasonic") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-14);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+                //Grandstream: $_SERVER['HTTP_USER_AGENT'] = "Grandstream Model HW GXP2135 SW 1.0.7.97 DevId 000b828aa872"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,11) == "Grandstream") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-12);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+		//Audiocodes: $_SERVER['HTTP_USER_AGENT'] = "AUDC-IPPhone/2.2.8.61 (440HDG-Rev0; 00908F602AAC)"
+			if (substr($_SERVER['HTTP_USER_AGENT'],0,12) == "AUDC-IPPhone") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-13);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
 	}
