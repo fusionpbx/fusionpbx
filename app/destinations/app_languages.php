@@ -474,7 +474,7 @@ $text['description-monthly_price_buy']['fa'] = "";
 $text['description-monthly_price_buy']['ar-eg'] = "";
 $text['description-monthly_price_buy']['he'] = "";
 $text['description-monthly_price_buy']['it-it'] = "Inserire il prezzo mensile pagato per questa destinazione (solo quando In Entrata)";
-$text['description-monthly_price_buy']['ru-ru'] = "Введите ежемесячную цену, которую вы платите за это место (только за входящие)";
+$text['description-monthly_price_buy']['ru-ru'] = "Введите ежемесячную цену, которую вы платите за это направление (только за входящие)";
 
 $text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";
 $text['description-monthly_price']['es-cl'] = "Ingrese el precio mensual a cobrar por este destino (sólo entrante)";
