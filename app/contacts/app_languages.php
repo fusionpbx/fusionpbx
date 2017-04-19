@@ -2530,6 +2530,7 @@ $text['description-import_data']['fr-fr'] = "Copier et coller les données sépa
 $text['description-import_data']['pt-pt'] = "Copie e cole os dados separados por vírgula para iniciar a importação.";
 $text['description-import_data']['de-de'] = "Kopieren Sie die komma-getrennten Daten in den Textbereich um den Import zu starten.";
 $text['description-import_data']['de-de'] = "Kopieren Sie die komma-getrennten Daten in den Textbereich um den Import zu starten.";
+$text['description-import_data']['ru-ru'] = "Скопируйте и вставьте данные с разделителями-запятыми в текстовую область, чтобы начать импорт.";
 
 $text['description-import_delimiter']['en-us'] = "Select the delimiter (comma or pipe).";
 $text['description-import_delimiter']['es-cl'] = "Select el delimitador (coma o pipe).";
@@ -2542,6 +2543,7 @@ $text['description-import_delimiter']['sv-se'] = "Välj avgränsare (comma or pi
 $text['description-import_delimiter']['de-de'] = "Wählen Sie das Trennzeichen (Beistrich oder Wagrechter Strich)";
 $text['description-import_delimiter']['de-at'] = "Wählen Sie das Trennzeichen (Beistrich oder Wagrechter Strich)";
 $text['description-import_delimiter']['he'] = "";
+$text['description-import_delimiter']['ru-ru'] = "Выберите разделитель (запятая или канал).";
 
 $text['description-users']['en-us'] = "Select the users that are allowed to view this contact.";
 $text['description-users']['es-cl'] = "Asignar usuarios adicionales como administradores de esta sala de conferencia.";
@@ -2552,6 +2554,7 @@ $text['description-users']['pl'] = "'Dodaj dodatkowych użytkowników jako admin
 $text['description-users']['sv-se'] = "Lägg till ytterligare användare som administratörer för detta konferensrum.";
 $text['description-users']['uk'] = "Зв'язати додаткових користувачів як адміністраторів цього конференц-залу.";
 $text['description-users']['de-at'] = "Weisen Sie diesem Konferenzraum weitere Administratoren zu. ";
+$text['description-users']['ru-ru'] = "Выберите пользователей, которым разрешено просматривать этот контакт.";
 
 $text['description-groups']['en-us'] = "Select the groups that are allowed to view this contact.";
 $text['description-groups']['es-cl'] = "Contactos asignados a un grupo sólo son visibles para los usuarios del grupo. Los contactos no asignados a un grupo serán visibles para todos los usuarios del dominio.";
@@ -2564,6 +2567,7 @@ $text['description-groups']['sv-se'] = "Kontakter tilldelade till en grupp är e
 $text['description-groups']['de-de'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist. Kontakte ohne Gruppenzuordnung sind für alle Benutzer dieser Domain sichtbar.";
 $text['description-groups']['de-at'] = "Legen Sie die Gruppen fest, für die dieser Kontakt sichtbar ist. Kontakte ohne Gruppenzuordnung sind für alle Benutzer dieser Domain sichtbar.";
 $text['description-groups']['he'] = "";
+$text['description-groups']['ru-ru'] = "Выберите группы, которым разрешено просматривать этот контакт.";
 
 $text['description-email_primary']['en-us'] = "Set as the primary Email for this contact.";
 $text['description-email_primary']['es-cl'] = "Establecer como el correo electrónico principal para este contacto.";
@@ -2576,6 +2580,7 @@ $text['description-email_primary']['sv-se'] = "Ställ in som primär E-post för
 $text['description-email_primary']['de-de'] = "Als primäre Email-Adresse für diesen Kontakt setzen.";
 $text['description-email_primary']['de-at'] = "Als primäre Email-Adresse für diesen Kontakt setzen.";
 $text['description-email_primary']['he'] = "";
+$text['description-email_primary']['ru-ru'] = "Укажите основной адрес электронной почты для этого контакта.";
 
 $text['description-contacts_import_google']['en-us'] = "Select the desired contacts to import.";
 $text['description-contacts_import_google']['es-cl'] = "Seleccione los contactos de Google deseados importar.";
@@ -2588,6 +2593,7 @@ $text['description-contacts_import_google']['sv-se'] = "Välj de kontakter som s
 $text['description-contacts_import_google']['de-de'] = "Wählen Sie die Kontakte, die importiert werden sollen.";
 $text['description-contacts_import_google']['de-at'] = "Wählen Sie die Kontakte, die importiert werden sollen.";
 $text['description-contacts_import_google']['he'] = "";
+$text['description-contacts_import_google']['ru-ru'] = "Выберите нужные контакты для импорта.";
 
 $text['description-contacts_import']['en-us'] = "Export your contacts from outlook to a comma delimitted csv file. Then use this tool to upload and add the contacts from that file.";
 $text['description-contacts_import']['es-cl'] = "Exporte sus contactos desde Outlook a un archivo csv separado por comas. Luego, utilice esta herramienta para importarlos desde el archivo csv.";
@@ -2600,6 +2606,7 @@ $text['description-contacts_import']['sv-se'] = "Exportera dina kontakter från 
 $text['description-contacts_import']['de-de'] = "Exportieren Sie Ihre Kontakte aus Outlook in eine CSV Datei und benützen Sie diese Funktion um Ihre Kontakte zu importieren.";
 $text['description-contacts_import']['de-at'] = "Exportieren Sie Ihre Kontakte aus Outlook in eine CSV Datei und benützen Sie diese Funktion um Ihre Kontakte zu importieren.";
 $text['description-contacts_import']['he'] = "";
+$text['description-contacts_import']['ru-ru'] = "Экспортируйте контакты из внешнего вида в файл csv с разделителями-запятыми. Затем используйте этот инструмент для загрузки и добавления контактов из этого файла.";
 
 $text['description-contacts']['en-us'] = "The contact is a list of individuals and organizations.";
 $text['description-contacts']['es-cl'] = "El contacto es una lista de personas y organizaciones";
@@ -2612,6 +2619,7 @@ $text['description-contacts']['sv-se'] = "Kontakterna är en lista på individer
 $text['description-contacts']['de-de'] = "Kontakte sind Benutzer, externe Personen oder Unternehmen.";
 $text['description-contacts']['de-at'] = "Kontakte sind Benutzer, externe Personen oder Unternehmen.";
 $text['description-contacts']['he'] = "";
+$text['description-contacts']['ru-ru'] = "Контакт - это список лиц и организаций.";
 
 $text['description-contact_url-edit']['en-us'] = "Contact url address information.";
 $text['description-contact_url-edit']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
@@ -2624,6 +2632,7 @@ $text['description-contact_url-edit']['sv-se'] = "Kontakt url adress information
 $text['description-contact_url-edit']['de-de'] = "URL mit Adressinformationen des Kontakts.";
 $text['description-contact_url-edit']['de-at'] = "URL mit Adressinformationen des Kontakts.";
 $text['description-contact_url-edit']['he'] = "";
+$text['description-contact_url-edit']['ru-ru'] = "Контактные URL-адреса.";
 
 $text['description-contact_url-add']['en-us'] = "Contact url address information.";
 $text['description-contact_url-add']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
@@ -2636,6 +2645,7 @@ $text['description-contact_url-add']['sv-se'] = "Kontakt url adress information.
 $text['description-contact_url-add']['de-de'] = "URL mit Adressinformationen des Kontakts.";
 $text['description-contact_url-add']['de-at'] = "URL mit Adressinformationen des Kontakts.";
 $text['description-contact_url-add']['he'] = "";
+$text['description-contact_url-add']['ru-ru'] = "Контактные URL-адреса.";
 
 $text['description-contact_url']['en-us'] = "Enter the website address.";
 $text['description-contact_url']['es-cl'] = "Ingrese la dirección del sitio web.";
@@ -2648,6 +2658,7 @@ $text['description-contact_url']['sv-se'] = "Ange websida adress.";
 $text['description-contact_url']['de-de'] = "Geben Sie die Webseite an.";
 $text['description-contact_url']['de-at'] = "Geben Sie die Webseite an.";
 $text['description-contact_url']['he'] = "";
+$text['description-contact_url']['ru-ru'] = "Введите адрес web-сайта.";
 
 $text['description-contact_type_import']['en-us'] = "Set a type for the contacts.";
 $text['description-contact_type_import']['es-cl'] = "Definición de un tipo de los contactos.";
@@ -2660,6 +2671,7 @@ $text['description-contact_type_import']['sv-se'] = "Ställ in en typ för konta
 $text['description-contact_type_import']['de-de'] = "Setzen Sie die Art des Kontakts.";
 $text['description-contact_type_import']['de-at'] = "Setzen Sie die Art des Kontakts.";
 $text['description-contact_type_import']['he'] = "";
+$text['description-contact_type_import']['ru-ru'] = "Задайте тип контактов.";
 
 $text['description-contact_type']['en-us'] = "Set the contact type.";
 $text['description-contact_type']['es-cl'] = "Establecer el tipo de contacto.";
@@ -2672,6 +2684,7 @@ $text['description-contact_type']['sv-se'] = "Ange kontakt typ-.";
 $text['description-contact_type']['de-de'] = "Setzen Sie die Art des Kontakts";
 $text['description-contact_type']['de-at'] = "Setzen Sie die Art des Kontakts";
 $text['description-contact_type']['he'] = "";
+$text['description-contact_type']['ru-ru'] = "Задайте тип контакта.";
 
 $text['description-contact_title']['en-us'] = "Enter the title.";
 $text['description-contact_title']['es-cl'] = "Ingrese el título.";
@@ -2684,6 +2697,7 @@ $text['description-contact_title']['sv-se'] = "Ange Titel.";
 $text['description-contact_title']['de-de'] = "Geben Sie einen Titel an.";
 $text['description-contact_title']['de-at'] = "Geben Sie einen Titel an.";
 $text['description-contact_title']['he'] = "";
+$text['description-contact_title']['ru-ru'] = "Введите название.";
 
 $text['description-contact_time_zone']['en-us'] = "Enter the time zone.";
 $text['description-contact_time_zone']['es-cl'] = "Ingrese la zona horaria.";
@@ -2696,6 +2710,7 @@ $text['description-contact_time_zone']['sv-se'] = "Ange Tidszon.";
 $text['description-contact_time_zone']['de-de'] = "Geben Sie eine Zeitzone an.";
 $text['description-contact_time_zone']['de-at'] = "Geben Sie eine Zeitzone an.";
 $text['description-contact_time_zone']['he'] = "";
+$text['description-contact_time_zone']['ru-ru'] = "Введите часовой пояс.";
 
 $text['description-contact_setting_value']['en-us'] = "Enter the value of this setting.";
 $text['description-contact_setting_value']['es-cl'] = "Ingrese el valor para esta configuración.";
@@ -2708,6 +2723,7 @@ $text['description-contact_setting_value']['sv-se'] = "Ange värdet på denna in
 $text['description-contact_setting_value']['de-de'] = "Geben Sie den Wert für diese Einstellung an.";
 $text['description-contact_setting_value']['de-at'] = "Geben Sie den Wert für diese Einstellung an.";
 $text['description-contact_setting_value']['he'] = "";
+$text['description-contact_setting_value']['ru-ru'] = "Введите значение этого параметра.";
 
 $text['description-contact_setting_type']['en-us'] = "Enter the type.";
 $text['description-contact_setting_type']['es-cl'] = "Introduzca el tipo.";
@@ -2720,6 +2736,7 @@ $text['description-contact_setting_type']['sv-se'] = "Ange Typen.";
 $text['description-contact_setting_type']['de-de'] = "Geben Sie die Art an.";
 $text['description-contact_setting_type']['de-at'] = "Geben Sie die Art an.";
 $text['description-contact_setting_type']['he'] = "";
+$text['description-contact_setting_type']['ru-ru'] = "Введите тип.";
 
 $text['description-contact_setting_subcategory']['en-us'] = "Enter the subcategory.";
 $text['description-contact_setting_subcategory']['es-cl'] = "Ingrese la categoría.";
@@ -2732,6 +2749,7 @@ $text['description-contact_setting_subcategory']['sv-se'] = "Ange underkategori.
 $text['description-contact_setting_subcategory']['de-de'] = "Geben Sie eine Unterkategorie an.";
 $text['description-contact_setting_subcategory']['de-at'] = "Geben Sie eine Unterkategorie an.";
 $text['description-contact_setting_subcategory']['he'] = "";
+$text['description-contact_setting_subcategory']['ru-ru'] = "Вход в подкатегорию.";
 
 $text['description-contact_setting_edit']['en-us'] = "Edit a setting for this contact.";
 $text['description-contact_setting_edit']['es-cl'] = "Edita una configuración para este contacto.";
