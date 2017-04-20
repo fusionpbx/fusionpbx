@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "Прямые вызовы на основании времени суток.";
 
 	//destination details
 		$y=0;
