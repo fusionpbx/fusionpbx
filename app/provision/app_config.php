@@ -401,7 +401,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 1=enabled 0=disable';
-$y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'bf083e2c-ad73-48ba-a981-9e1c92b2554e';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'grandstream_call_waiting';
@@ -409,5 +409,13 @@ $y++;
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '0';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 0=enabled 1=disable';
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '203711b9-1d2a-4b52-9d8c-d6f23b451d8f';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'device_nway_conference';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'N-Way conferencing for devices supporting network conference uri';
+		$y++;
 
 ?>
