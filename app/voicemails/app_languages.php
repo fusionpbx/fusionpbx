@@ -205,7 +205,7 @@ $text['label-voicemail_local_after_email']['sv-se'] = "Behåll Lokalt";
 $text['label-voicemail_local_after_email']['uk'] = "Залишати локально";
 $text['label-voicemail_local_after_email']['de-at'] = "Mailbox Nachricht am Server behalten";
 $text['label-voicemail_local_after_email']['he'] = "תא קולי השאר עותק";
-$text['label-voicemail_local_after_email']['ru-ru'] = "Оставлять оркально";
+$text['label-voicemail_local_after_email']['ru-ru'] = "Оставлять локально";
 
 $text['label-voicemail_id']['en-us'] = "Voicemail ID";
 $text['label-voicemail_id']['es-cl'] = "ID de correo de voz";
