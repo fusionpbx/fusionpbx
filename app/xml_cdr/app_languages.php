@@ -34,7 +34,7 @@ $text['title']['sv-se'] = "Detaljerad Samtalsinformation";
 $text['title']['uk'] = "Параметри облікового запису";
 $text['title']['de-at'] = "Meine Gespräche";
 $text['title']['he'] = "הגדרת חשבון";
-$text['title']['ru-ru'] = "Вызова Детальные записи";
+$text['title']['ru-ru'] = "Детализация Вызовов";
 
 $text['table-time']['en-us'] = "Time";
 $text['table-time']['es-cl'] = "Tiempo";
