@@ -304,7 +304,7 @@ $text['label-view']['sv-se'] = "Visa";
 $text['label-view']['uk'] = "Перегляд";
 $text['label-view']['de-de'] = "Ansicht";
 $text['label-view']['de-at'] = "Ansicht";
-$text['label-view']['ru-ru'] = "View";
+$text['label-view']['ru-ru'] = "Просмотр";
 
 $text['label-uuid']['en-us'] = "UUID";
 $text['label-uuid']['es-cl'] = "UUID";
