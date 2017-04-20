@@ -401,7 +401,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '1';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 1=enabled 0=disable';
-$y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'bf083e2c-ad73-48ba-a981-9e1c92b2554e';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'grandstream_call_waiting';
