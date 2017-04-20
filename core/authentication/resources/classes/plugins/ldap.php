@@ -1,7 +1,7 @@
 <?php
 
 /**
- * plugin_ldap 
+ * plugin_ldap
  *
  * @method ldap checks a local or remote ldap database to authenticate the user
  */
@@ -16,6 +16,69 @@ class plugin_ldap {
 	public $password;
 	public $user_uuid;
 	public $contact_uuid;
+	public $connection;
+
+    /**
+     * Authenticate a username and password with a specific ldap resource
+     * @param $connection
+     * @param $short_domain
+     * @param $bind_user
+     * @param $bind_password
+     * @return bool
+     */
+    private function authenticate($connection, $short_domain, $bind_user, $bind_password) {
+        // Try to bind with the connection and credentials
+        $bind = @ldap_bind($connection, $short_domain . '\\' . $bind_user, $bind_password);
+        // Return a boolean based on the successes of the bind
+        return ($bind) ? true : false;
+    }
+
+    /**
+     * Connects to ldap server. Supports multiple LDAP servers, uses the first one that binds correctly and sets the class $connection variable.
+     * @param $prefix
+     * @param $hosts
+     * @param $port
+     * @param $short_domain
+     * @param $bind_user
+     * @param $bind_password
+     * @return resource
+     */
+	private function connect($prefix, $hosts, $port, $short_domain, $bind_user, $bind_password) {
+
+	    // Note: this could potentially be improved by taking an associative array with hosts as the key and the port as the value.
+        // As it is right now, only one port is applied to all hosts.
+
+        // Set the certpath if it is there
+    	if (isset($_SESSION["ldap"]["certpath"])) {
+			$s = "LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
+			putenv($s);
+		}
+		// Set the certkey if it is there
+		if (isset($_SESSION["ldap"]["certkey"])) {
+			$s = "LDAPTLS_KEY=" . $_SESSION["ldap"]["certkey"]["text"];
+			putenv($s);
+		}
+
+        // Loop over each host, return the first to connect
+        foreach ($hosts as $host) {
+        	// Connect to the current host using the scheme and port specified
+            $this->connection = ldap_connect($prefix . $host, $port);
+            // Set ldap options
+           	//ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 10);
+			//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+            ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
+
+            // If the authenticate function returns true, break out of the foreach hosts loop and return the connection resource.
+            // Otherwise move onto the next host.
+            if ($this->authenticate($this->connection, $short_domain, $bind_user, $bind_password)) {
+                return $this->connection;
+            }
+        }
+        // Die if we make it here, none of the servers provided worked
+        die('Could not connect to any LDAP servers. [' . implode(', ',$hosts) . ']:' . $port);
+    }
+
 
 	/**
 	 * ldap checks a local or remote ldap database to authenticate the user
@@ -30,55 +93,24 @@ class plugin_ldap {
 			$database->connect();
 			$db = $database->db;
 
-		//use ldap to validate the user credentials
-			if (isset($_SESSION["ldap"]["certpath"])) {
-				$s = "LDAPTLS_CERT=" . $_SESSION["ldap"]["certpath"]["text"];
-				putenv($s);
-			}
-			if (isset($_SESSION["ldap"]["certkey"])) {
-				$s = "LDAPTLS_KEY=" . $_SESSION["ldap"]["certkey"]["text"];
-				 putenv($s);
-			}
-			$host = $_SESSION["ldap"]["server_host"]["text"];
-			$port = $_SESSION["ldap"]["server_port"]["numeric"];
-			$connect = ldap_connect($host)
-				or die("Could not connect to the LDAP server.");
-			//ldap_set_option($connect, LDAP_OPT_NETWORK_TIMEOUT, 10);
-			ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
-			//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+        // gather variables that pertain to ldap
+            $ldap_prefix = ($_SESSION["ldap"]["secure"]["boolean"]) ? 'ldaps://' : 'ldap://';
+            $ldap_port = $_SESSION["ldap"]["server_port"]["numeric"];
+            $ldap_bind_user = $_SESSION["ldap"]["bind_username"]["text"];
+            $lda_bind_password = $_SESSION["ldap"]["bind_password"]["text"];
+            $ldap_short_domain = $_SESSION["ldap"]["short_domain"]["text"];
+        //provide backwards compatibility for hosts
+            if (strlen($_SESSION["ldap"]["server_host"]["text"]) > 0) {
+            	$_SESSION["ldap"]["server_host"][] = $_SESSION["ldap"]["server_host"]["text"];
+            }
+			$ldap_hosts = $_SESSION["ldap"]["server_host"];
 
-		//set the default for $user_authorized to false
-			$user_authorized = false;
+        // connect to ldap
+			$connect = $this->connect($ldap_prefix, $ldap_hosts, $ldap_port, $ldap_short_domain, $ldap_bind_user, $lda_bind_password);
 
-		//provide backwards compatability
-			if (strlen($_SESSION["ldap"]["user_dn"]["text"]) > 0) {
-				$_SESSION["ldap"]["user_dn"][] = $_SESSION["ldap"]["user_dn"]["text"];
-			}
+		// determine if the user logging in is authorized
+			$user_authorized = $this->authenticate($connect, $ldap_short_domain, $this->username, $this->password);
 
-		//check all user_dn in the array
-			foreach ($_SESSION["ldap"]["user_dn"] as $user_dn) {
-				$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$this->username.",".$user_dn;
-				$bind_pw = $this->password;
-				//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
-				//called below with all arguments '*uninitialized*'. However, the debugger
-				//single-stepping just before the failing call correctly displays all the values.
-				if (strlen($bind_pw) > 0) {
-					$bind = ldap_bind($connect, $bind_dn, $bind_pw);
-					if ($bind) {
-						//connected and authorized
-						$user_authorized = true;
-						exit;
-					}
-					else {
-						//connection failed
-						$user_authorized = false;
-					}
-				}
-				else {
-					//password not provided
-					$user_authorized = false;
-				}
-			}
 
 		//check to see if the user exists
 			 if ($user_authorized) {
