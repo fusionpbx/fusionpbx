@@ -469,7 +469,7 @@ $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['uk'] = "Профіль";
 $text['label-profile']['de-de'] = "Profil";
 $text['label-profile']['de-at'] = "Profil";
-$text['label-profile'][ru-ru'] = "Профиль";
+$text['label-profile']['ru-ru'] = "Профиль";
 
 $text['label-play']['en-us'] = "Play";
 $text['label-play']['es-cl'] = "Reproducir";
