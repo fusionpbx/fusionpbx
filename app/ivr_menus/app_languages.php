@@ -108,7 +108,7 @@ $text['label-ring_back']['pl'] = "Rodzaj sygnału w słuchawce dzwoniącego";
 $text['label-ring_back']['sv-se'] = "Ring Tillbaka";
 $text['label-ring_back']['de-de'] = "Wählton";
 $text['label-ring_back']['de-at'] = "Wählton";
-$text['label-ring_back']['ru-ru'] = "Обратный Вызов";
+$text['label-ring_back']['ru-ru'] = "Контроль посылки вызова (КПВ)";
 
 $text['label-options']['en-us'] = "Options";
 $text['label-options']['es-cl'] = "Opciones";
