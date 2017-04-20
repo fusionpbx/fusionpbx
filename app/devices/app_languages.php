@@ -640,6 +640,7 @@ $text['label-profile_enabled']['de-de'] = "Ein";
 $text['label-profile_enabled']['de-at'] = "Ein";
 $text['label-profile_enabled']['ar-eg'] = "";
 $text['label-profile_enabled']['he'] = "";
+$text['label-profile_enabled']['ru-ru'] = "Включено";
 
 $text['label-profile_domain']['en-us'] = "Domain";
 $text['label-profile_domain']['es-cl'] = "Dominio";
