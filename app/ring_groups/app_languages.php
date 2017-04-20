@@ -310,7 +310,7 @@ $text['label-ringback']['sv-se'] = "Tillbakaringning";
 $text['label-ringback']['uk'] = "";
 $text['label-ringback']['de-at'] = "Ruf Ton";
 $text['label-ringback']['he'] = "";
-$text['label-ringback']['ru-ru'] = "Обратный вызов";
+$text['label-ringback']['ru-ru'] = "Контроль посылки вызова (КПВ)";
 
 $text['label-ring-group-extension']['en-us'] = "Ring Group Extension";
 $text['label-ring-group-extension']['es-cl'] = "Extensión de grupo de llamado";
