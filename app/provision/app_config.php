@@ -409,8 +409,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '0';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Call Waiting 0=enabled 1=disable';
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '203711b9-1d2a-4b52-9d8c-d6f23b451d8f';
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '203711b9-1d2a-4b52-9d8c-d6f23b451d8f';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'device_nway_conference';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
