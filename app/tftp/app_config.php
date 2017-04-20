@@ -19,6 +19,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['ru-ru'] = "TFTP Сервер";
 
 	//default settings
 		$y=0;
