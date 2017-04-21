@@ -333,6 +333,20 @@ $text['label-forwarding']['ro'] = "expediere";
 $text['label-forwarding']['fa'] = "";
 $text['label-forwarding']['ar-eg'] = "إعادة توجيه";
 
+$text['label-ring_group_forward_toll_allow']['en-us'] = "Forwarding Toll Allow";
+$text['label-ring_group_forward_toll_allow']['es-cl'] = "reenvío Toll Allow";
+$text['label-ring_group_forward_toll_allow']['pt-pt'] = "encaminhando Toll Allow";
+$text['label-ring_group_forward_toll_allow']['fr-fr'] = "Expéditeur Toll Allow";
+$text['label-ring_group_forward_toll_allow']['pt-br'] = "encaminhando Toll Allow";
+$text['label-ring_group_forward_toll_allow']['pl'] = "Przekierowanie Toll Allow";
+$text['label-ring_group_forward_toll_allow']['he'] = "שילוח";
+$text['label-ring_group_forward_toll_allow']['uk'] = "експедиція";
+$text['label-ring_group_forward_toll_allow']['sv-se'] = "Spedition Toll Allow";
+$text['label-ring_group_forward_toll_allow']['de-at'] = "Weiterleiten Toll Allow";
+$text['label-ring_group_forward_toll_allow']['ro'] = "expediere";
+$text['label-ring_group_forward_toll_allow']['fa'] = "Toll Allow";
+$text['label-ring_group_forward_toll_allow']['ar-eg'] = "Toll Allow إعادة ت وجيه";
+
 $text['label-forward_destination']['en-us'] = "Number";
 $text['label-forward_destination']['es-cl'] = "Número";
 $text['label-forward_destination']['fr-fr'] = "Numéro";
@@ -737,6 +751,17 @@ $text['description']['sv-se'] = "En ringgrupp är en uppsättning av destination
 $text['description']['uk'] = "Редагування інформації облікового запису";
 $text['description']['de-at'] = "Rufgruppen sind gruppierte Ziele, welche über eine vordefinierte Rufstrategie angerufen werden.";
 $text['description']['he'] = "ערוך את פרטי החשבון";
+
+$text['description-ring_group_forward_toll_allow']['en-us'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['es-cl'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['fr-fr'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['pt-pt'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['pt-br'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['pl'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['sv-se'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['uk'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['de-at'] = "Ring group forwarding toll allow.";
+$text['description-ring_group_forward_toll_allow']['he'] = "";
 
 $text['button-view_all']['en-us'] = "View All";
 $text['button-view_all']['es-cl'] = "Mostrar Todos";
