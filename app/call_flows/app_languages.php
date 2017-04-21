@@ -346,6 +346,7 @@ $text['description-call_flow_sound']['sv-se'] = "Välj ljud att spela när statu
 $text['description-call_flow_sound']['uk'] = "Виберіть звук для відтворення , коли статус встановлений в пункти призначення.";
 $text['description-call_flow_sound']['de-de'] = "Wählen Sie den zu spielenden Ton aus, wenn der Status auf das Ziel festgelegt ist.";
 $text['description-call_flow_sound']['de-at'] = "Wählen Sie den zu spielenden Ton aus, wenn der Status auf das Ziel festgelegt ist.";
+$text['description-call_flow_sound']['ru-ru'] = "Выберите звук для воспроизведения, когда состояние устанавливается в пункты назначения.";
 
 $text['description-call_flow_alternate_sound']['en-us'] = "Select the sound to play when status is set to the alternate destination.";
 $text['description-call_flow_alternate_sound']['es-cl'] = "Seleccione el sonido a reproducir cuando el estado se establece en el destino alternativo.";
