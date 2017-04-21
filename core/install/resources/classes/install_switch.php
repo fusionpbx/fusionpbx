@@ -48,12 +48,14 @@ include "root.php";
 		function write_debug($message) {
 			if($this->debug){
 				echo "$message\n";
+				flush();
 			}
 		}
 
 		function write_progress($message) {
 			if ($this->echo_progress){
 				echo "$message\n";
+				flush();
 			}
 		}
 

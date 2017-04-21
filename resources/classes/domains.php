@@ -30,10 +30,18 @@ if (!class_exists('domains')) {
 
 		//define variables
 		public $db;
+		public $echo_progress = false;
 
 		//class constructor
 		public function __construct() {
 
+		}
+
+		function write_progress($message) {
+			if($this->echo_progress){
+				echo "$message\n";
+				flush();
+			}
 		}
 
 		public function set() {
@@ -238,7 +246,11 @@ if (!class_exists('domains')) {
 				unset($config_list_1,$config_list_2);
 				$db = $this->db;
 				$x=0;
+				$this->write_progress("\tProcessing application configuration");
 				foreach ($config_list as &$config_path) {
+					$app_name = dirname($config_path);
+					$app_name = basename(dirname($app_name)) . "/" . basename($app_name);
+					$this->write_progress("\t\t$app_name");
 					include($config_path);
 					$x++;
 				}
@@ -284,6 +296,7 @@ if (!class_exists('domains')) {
 				}
 
 			//loop through all domains
+				$this->write_progress("\tProcessing domains");
 				$domain_count = count($domains);
 				$domains_processed = 1;
 				foreach ($domains as &$row) {
@@ -300,6 +313,7 @@ if (!class_exists('domains')) {
 							echo $domain_name;
 							echo "\n";
 						}
+						$this->write_progress("\t\t$domain_name");
 
 					//get the default settings - this needs to be done to reset the session values back to the defaults for each domain in the loop
 						foreach($database_default_settings as $row) {
@@ -343,8 +357,12 @@ if (!class_exists('domains')) {
 						}
 
 					//get the list of installed apps from the core and mod directories and execute the php code in app_defaults.php
+						$this->write_progress("\tProcessing app_defaults");
 						$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
 						foreach ($default_list as &$default_path) {
+							$app_name = dirname($default_path);
+							$app_name = basename(dirname($app_name)) . "/" . basename($app_name);
+							$this->write_progress("\t\t$app_name");
 							include($default_path);
 						}
 

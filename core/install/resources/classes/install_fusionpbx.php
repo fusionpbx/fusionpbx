@@ -68,12 +68,14 @@ include "root.php";
 		function write_debug($message) {
 			if($this->debug){
 				echo "$message\n";
+				flush();
 			}
 		}
 
 		function write_progress($message) {
 			if($this->echo_progress){
 				echo "$message\n";
+				flush();
 			}
 		}
 
@@ -97,7 +99,7 @@ include "root.php";
 		function install_phase_2() {
 			ini_set('max_execution_time',3600);
 			$this->write_progress("Install phase 2 started for FusionPBX");
-			//$this->app_defaults();
+			$this->app_defaults();
 			$this->write_progress("Install phase 2 complete for FusionPBX");
 		}
 
@@ -821,11 +823,12 @@ include "root.php";
 			//add the database structure
 				require_once "resources/classes/schema.php";
 				$schema = new schema;
-				echo $schema->schema();
+				echo $schema->schema('plain');
 
 			//run all app_defaults.php files
 				$default_language = $this->install_language;
 				$domain = new domains;
+				$domain->echo_progress = true;
 				$domain->upgrade();
 
 			//get the switch default settings
