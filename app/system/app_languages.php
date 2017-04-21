@@ -8,6 +8,7 @@ $text['title-sys-status']['pt-br'] = "Status do sistema";
 $text['title-sys-status']['pl'] = "Stan systemu";
 $text['title-sys-status']['sv-se'] = "System Status";
 $text['title-sys-status']['uk'] = "Стан системи ";
+$text['title-sys-status']['de-de'] = "System Status";
 $text['title-sys-status']['de-at'] = "System Status";
 $text['title-sys-status']['it-it'] = "Stato sistema";
 
@@ -19,6 +20,7 @@ $text['title-sys-info']['pt-br'] = "Informação do sistema";
 $text['title-sys-info']['pl'] = "Informacje o systemie";
 $text['title-sys-info']['sv-se'] = "System Information";
 $text['title-sys-info']['uk'] = "Інформація про систему";
+$text['title-sys-info']['de-de'] = "System Information";
 $text['title-sys-info']['de-at'] = "System Information";
 $text['title-sys-info']['it-it'] = "Informazioni sistema";
 
@@ -30,6 +32,7 @@ $text['title-os-info']['pt-br'] = "Informação do Sistema operacional";
 $text['title-os-info']['pl'] = "Informacje o System operacyjny";
 $text['title-os-info']['sv-se'] = "Operativsystem Systeminformation";
 $text['title-os-info']['uk'] = "Інформація про Операційна система ";
+$text['title-os-info']['de-de'] = "Informationen zum Betriebssystem";
 $text['title-os-info']['de-at'] = "Informationen zum Betriebssystem";
 $text['title-os-info']['it-it'] = "Informazioni sistema operativo";
 
@@ -41,6 +44,7 @@ $text['title-memcache']['pt-br'] = "Informação da memória cache";
 $text['title-memcache']['pl'] = "Informacje o pamięci podręcznej (memcache)";
 $text['title-memcache']['sv-se'] = "Memcache Information ";
 $text['title-memcache']['uk'] = "Інформація про кеш-пам'ять ";
+$text['title-memcache']['de-de'] = "Memcache Information";
 $text['title-memcache']['de-at'] = "Memcache Information";
 $text['title-memcache']['it-it'] = "Informazioni Memcache";
 
@@ -52,6 +56,7 @@ $text['title-mem']['pt-br'] = "Informação da memória";
 $text['title-mem']['pl'] = "Informacje o pamięci";
 $text['title-mem']['sv-se'] = "Minnes Information";
 $text['title-mem']['uk'] = "Інформація про пам'ять ";
+$text['title-mem']['de-de'] = "Speicher Information";
 $text['title-mem']['de-at'] = "Speicher Information";
 $text['title-mem']['it-it'] = "Informazioni memoria";
 
@@ -63,6 +68,7 @@ $text['title-drive']['pt-br'] = "Informação do disco";
 $text['title-drive']['pl'] = "Informacje o dysku";
 $text['title-drive']['sv-se'] = "Enhetsinformation";
 $text['title-drive']['uk'] = "Інформація про привід ";
+$text['title-drive']['de-de'] = "Festplatten Information";
 $text['title-drive']['de-at'] = "Festplatten Information";
 $text['title-drive']['it-it'] = "Informazioni disco";
 
@@ -74,6 +80,7 @@ $text['title-cpu']['pt-br'] = "Informação da CPU";
 $text['title-cpu']['pl'] = "Informacje o procesorze";
 $text['title-cpu']['sv-se'] = "CPU Information";
 $text['title-cpu']['uk'] = "Інформація про процесор";
+$text['title-cpu']['de-de'] = "CPU Information";
 $text['title-cpu']['de-at'] = "CPU Information";
 $text['title-cpu']['it-it'] = "Informazioni CPU";
 
@@ -85,6 +92,7 @@ $text['message-unavailable']['pt-br'] = "Indisponivel";
 $text['message-unavailable']['pl'] = "Niedostępny";
 $text['message-unavailable']['sv-se'] = "Otillgänglig";
 $text['message-unavailable']['uk'] = "Недоступний ";
+$text['message-unavailable']['de-de'] = "Nicht verfügbar";
 $text['message-unavailable']['de-at'] = "Nicht verfügbar";
 $text['message-unavailable']['it-it'] = "Non disponibile";
 
@@ -96,6 +104,7 @@ $text['label-os']['pt-br'] = "Sistema operacional";
 $text['label-os']['pl'] = "System operacyjny";
 $text['label-os']['sv-se'] = "Operativsystem";
 $text['label-os']['uk'] = "Операційна система ";
+$text['label-os']['de-de'] = "Betriebssystem";
 $text['label-os']['de-at'] = "Betriebssystem";
 $text['label-os']['it-it'] = "Sistema operativo";
 
@@ -107,6 +116,7 @@ $text['label-version']['pt-br'] = "Versão";
 $text['label-version']['pl'] = "Wersja";
 $text['label-version']['sv-se'] = "Version";
 $text['label-version']['uk'] = "версія";
+$text['label-version']['de-de'] = "Version";
 $text['label-version']['de-at'] = "Version";
 $text['label-version']['it-it'] = "Versione";
 
@@ -118,6 +128,7 @@ $text['label-path']['pt-br'] = "Caminho do projeto";
 $text['label-path']['pl'] = "Ścieżka projektu";
 $text['label-path']['sv-se'] = "projekt Path";
 $text['label-path']['uk'] = "шлях проекту";
+$text['label-path']['de-de'] = "Projektpfad";
 $text['label-path']['de-at'] = "Projektpfad";
 $text['label-path']['it-it'] = "Percorso progetto";
 
@@ -129,6 +140,7 @@ $text['label-git_info']['pt-br'] = "Informações git";
 $text['label-git_info']['pl'] = "git informacji";
 $text['label-git_info']['sv-se'] = "git Information";
 $text['label-git_info']['uk'] = "Гіт інформація";
+$text['label-git_info']['de-de'] = "Git Informationen";
 $text['label-git_info']['de-at'] = "Git Informationen";
 $text['label-git_info']['it-it'] = "Informazioni Git";
 
@@ -140,7 +152,8 @@ $text['label-git_corrupted']['pt-br'] = "Dados Git é corrupto";
 $text['label-git_corrupted']['pl'] = "Git danych jest uszkodzony";
 $text['label-git_corrupted']['sv-se'] = "Git uppgifter är korrupt";
 $text['label-git_corrupted']['uk'] = "Гіт дані пошкоджені";
-$text['label-git_corrupted']['de-at'] = "Git Daten ist beschädigt" ;
+$text['label-git_corrupted']['de-de'] = "Git Daten sind korrupt" ;
+$text['label-git_corrupted']['de-at'] = "Git Daten sind korrupt" ;
 $text['label-git_corrupted']['it-it'] = "Dati Git è corrotto";
 
 $text['label-switch']['en-us'] = "Switch";
@@ -151,7 +164,8 @@ $text['label-switch']['pt-br'] = "Interruptor";
 $text['label-switch']['pl'] = "Przełącznik";
 $text['label-switch']['sv-se'] = "Växla";
 $text['label-switch']['uk'] = "перемикач";
-$text['label-switch']['de-at'] = "Schalter";
+$text['label-switch']['de-de'] = "Switch";
+$text['label-switch']['de-at'] = "Switch";
 $text['label-switch']['it-it'] = "Switch";
 
 $text['label-git_branch']['en-us'] = "Branch";
@@ -162,7 +176,8 @@ $text['label-git_branch']['pt-br'] = "Ramo";
 $text['label-git_branch']['pl'] = "Gałąź";
 $text['label-git_branch']['sv-se'] = "Gren";
 $text['label-git_branch']['uk'] = "філія";
-$text['label-git_branch']['de-at'] = "Ast";
+$text['label-git_branch']['de-de'] = "Zweig";
+$text['label-git_branch']['de-at'] = "Zweig";
 $text['label-git_branch']['it-it'] = "Branch";
 
 $text['label-git_commit']['en-us'] = "Commit";
@@ -173,7 +188,8 @@ $text['label-git_commit']['pt-br'] = "cometer";
 $text['label-git_commit']['pl'] = "Popełnić";
 $text['label-git_commit']['sv-se'] = "Begå";
 $text['label-git_commit']['uk'] = "здійснити";
-$text['label-git_commit']['de-at'] = "Verpflichten";
+$text['label-git_commit']['de-de'] = "Übergeben";
+$text['label-git_commit']['de-at'] = "Übergeben";
 $text['label-git_commit']['it-it'] = "Commit";
 
 $text['label-git_origin']['en-us'] = "Origin";
@@ -184,7 +200,8 @@ $text['label-git_origin']['pt-br'] = "Origem";
 $text['label-git_origin']['pl'] = "Pochodzenie";
 $text['label-git_origin']['sv-se'] = "Ursprung";
 $text['label-git_origin']['uk'] = "походження";
-$text['label-git_origin']['de-at'] = "Herkunft";
+$text['label-git_origin']['de-de'] = "Quelle";
+$text['label-git_origin']['de-at'] = "Quelle";
 $text['label-git_origin']['it-it'] = "Origine";
 
 $text['label-git_status']['en-us'] = "Status";
@@ -195,6 +212,7 @@ $text['label-git_status']['pt-br'] = "Status do";
 $text['label-git_status']['pl'] = "Status";
 $text['label-git_status']['sv-se'] = "Status";
 $text['label-git_status']['uk'] = "Статус";
+$text['label-git_status']['de-de'] = "Status";
 $text['label-git_status']['de-at'] = "Status";
 $text['label-git_status']['it-it'] = "Stato";
 
@@ -206,6 +224,7 @@ $text['label-memcache_status']['pt-br'] = "Estado da memória cache";
 $text['label-memcache_status']['pl'] = "Status pamięci podręcznej (memcache)";
 $text['label-memcache_status']['sv-se'] = "Memcache Status ";
 $text['label-memcache_status']['uk'] = "Стан кеш-пам'яті";
+$text['label-memcache_status']['de-de'] = "Memcache Status";
 $text['label-memcache_status']['de-at'] = "Memcache Status";
 $text['label-memcache_status']['it-it'] = "Stato Memcache";
 
@@ -217,6 +236,7 @@ $text['label-mem']['pt-br'] = "Estado de memória";
 $text['label-mem']['pl'] = "Status pamięci";
 $text['label-mem']['sv-se'] = "Minnesstatus";
 $text['label-mem']['uk'] = "Стан пам'яті ";
+$text['label-mem']['de-de'] = "Speicher Status";
 $text['label-mem']['de-at'] = "Speicher Status";
 $text['label-mem']['it-it'] = "Stato Memoria";
 
@@ -228,6 +248,7 @@ $text['label-drive-percent']['pt-br'] = "Percentagem livre";
 $text['label-drive-percent']['pl'] = "Dostępne w %";
 $text['label-drive-percent']['sv-se'] = "Ledigt Procent";
 $text['label-drive-percent']['uk'] = "Відсоток вільного";
+$text['label-drive-percent']['de-de'] = "Prozent Frei";
 $text['label-drive-percent']['de-at'] = "Prozent Frei";
 $text['label-drive-percent']['it-it'] = "Percentuale libera";
 
@@ -239,6 +260,7 @@ $text['label-drive-free']['pt-br'] = "Espeço livre";
 $text['label-drive-free']['pl'] = "Wolne miejsce";
 $text['label-drive-free']['sv-se'] = "Ledigt Utrymme";
 $text['label-drive-free']['uk'] = "Вільно";
+$text['label-drive-free']['de-de'] = "Freier Speicherplatz";
 $text['label-drive-free']['de-at'] = "Freier Speicherplatz";
 $text['label-drive-free']['it-it'] = "Spazio Libero";
 
@@ -250,6 +272,7 @@ $text['label-drive-capacity']['pt-br'] = "Capacidade";
 $text['label-drive-capacity']['pl'] = "Pojemność";
 $text['label-drive-capacity']['sv-se'] = "Kapacitet";
 $text['label-drive-capacity']['uk'] = "Емність";
+$text['label-drive-capacity']['de-de'] = "Kapazität";
 $text['label-drive-capacity']['de-at'] = "Kapazität";
 $text['label-drive-capacity']['it-it'] = "Capacità";
 
@@ -261,6 +284,7 @@ $text['label-drive']['pt-br'] = "Espaço do disco";
 $text['label-drive']['pl'] = "Pojemność dysku";
 $text['label-drive']['sv-se'] = "Enhetsutrymme";
 $text['label-drive']['uk'] = "Диски";
+$text['label-drive']['de-de'] = "Festplatten Speicher";
 $text['label-drive']['de-at'] = "Festplatten Speicher";
 $text['label-drive']['it-it'] = "Spazio disco";
 
@@ -272,6 +296,7 @@ $text['label-cpu']['pt-br'] = "Estado da CPU";
 $text['label-cpu']['pl'] = "Status procesora";
 $text['label-cpu']['sv-se'] = "CPU Status";
 $text['label-cpu']['uk'] = "Стан процесора ";
+$text['label-cpu']['de-de'] = "CPU Status";
 $text['label-cpu']['de-at'] = "CPU Status";
 $text['label-cpu']['it-it'] = "Stato CPU";
 
@@ -283,6 +308,7 @@ $text['header-sys-status']['pt-br'] = "Status do sistema";
 $text['header-sys-status']['pl'] = "Status systemu";
 $text['header-sys-status']['sv-se'] = "System Status";
 $text['header-sys-status']['uk'] = "Стан системи ";
+$text['header-sys-status']['de-de'] = "System Status";
 $text['header-sys-status']['de-at'] = "System Status";
 $text['header-sys-status']['it-it'] = "Stato Sistema";
 

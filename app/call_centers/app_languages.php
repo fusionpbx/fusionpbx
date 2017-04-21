@@ -780,7 +780,8 @@ $text['label-exit_keys']['uk'] = "";
 $text['label-exit_keys']['es-cl'] = "Tecla de salida";
 $text['label-exit_keys']['pt-pt'] = "";
 $text['label-exit_keys']['fr-fr'] = "Clé pour sortir la queue";
-$text['label-exit_keys']['de-at'] = "";
+$text['label-exit_keys']['de-de'] = "Abbruch Taste";
+$text['label-exit_keys']['de-at'] = "Abbruch Taste";
 
 $text['description-exit_keys']['en-us'] = "Keys to quite the current queue waiting.";
 $text['description-exit_keys']['pt-br'] = "";
@@ -790,7 +791,8 @@ $text['description-exit_keys']['uk'] = "";
 $text['description-exit_keys']['es-cl'] = "Teclas para salir de la espera de la cola.";
 $text['description-exit_keys']['pt-pt'] = "";
 $text['description-exit_keys']['fr-fr'] = "Clés pour sortir de l'attendance de la queue.";
-$text['description-exit_keys']['de-at'] = "";
+$text['description-exit_keys']['de-de'] = "Tasten um die aktuelle Warteschlange zu verlassen.";
+$text['description-exit_keys']['de-at'] = "Tasten um die aktuelle Warteschlange zu verlassen.";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['es-cl'] = "Timeout de Llamada";
