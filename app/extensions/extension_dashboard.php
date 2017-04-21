@@ -126,8 +126,8 @@
 	$extensions = $_SESSION['user']['extension'];
 
 //get the destinations
-	$sql = "select * from v_destinations ";
-	$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
+	$sql = "select destination_caller_id_name, destination_caller_id_number from v_destinations ";
+	$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
 	$sql .= "and destination_type = 'inbound' ";
 	$sql .= "order by destination_number asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -197,12 +197,12 @@
 					echo "	<select name='extensions[".$x."][outbound_caller_id_name]' id='outbound_caller_id_name' class='formfld'>\n";
 					echo "	<option value=''></option>\n";
 					foreach ($destinations as &$row) {
-						if(strlen($tmp) > 0){
-							if ($outbound_caller_id_name == $row['outbound_caller_id_name']) {
-								echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+						if(strlen($row['destination_caller_id_name']) > 0){
+							if ($outbound_caller_id_name == $row['destination_caller_id_name']) {
+								echo "		<option value='".$row['destination_caller_id_name']."' selected='selected'>".$row['destination_caller_id_name']."</option>\n";
 							}
 							else {
-								echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+								echo "		<option value='".$row['destination_caller_id_name']."'>".$row['destination_caller_id_name']."</option>\n";
 							}
 						}
 					}
@@ -220,12 +220,12 @@
 					echo "	<select name='extensions[".$x."][outbound_caller_id_number]' id='outbound_caller_id_number' class='formfld'>\n";
 					echo "	<option value=''></option>\n";
 					foreach ($destinations as &$row) {
-						if(strlen($tmp) > 0){
-							if ($outbound_caller_id_number == $row['outbound_caller_id_number']) {
-								echo "		<option value='".$tmp."' selected='selected'>".$tmp."</option>\n";
+						if(strlen($row['destination_caller_id_number']) > 0){
+							if ($outbound_caller_id_number == $row['destination_caller_id_number']) {
+								echo "		<option value='".$row['destination_caller_id_number']."' selected='selected'>".$row['destination_caller_id_number']."</option>\n";
 							}
 							else {
-								echo "		<option value='".$tmp."'>".$tmp."</option>\n";
+								echo "		<option value='".$row['destination_caller_id_number']."'>".$row['destination_caller_id_number']."</option>\n";
 							}
 						}
 					}
