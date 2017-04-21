@@ -245,6 +245,7 @@ $text['description-backup']['uk'] = "Щоб створити резервну к
 $text['description-backup']['de-de'] = "Um eine Sicherung der unten angeführten Quell-Pfade (in Standard-Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
 $text['description-backup']['de-at'] = "Um eine Sicherung der unten angeführten Quell-Pfade (in Standard-Einstellungen definiert) zu erstellen, wählen Sie das gewünschte Dateiformat und den Ziel Typ.";
 $text['description-backup']['it-it'] = "Per creare un backup dei percorsi sorgente (definiti nelle Impostazioni Predefinite), sleziona il formato del File e il Tipo di Destinazione.";
+$text['description-backup']['ru-ru'] = "Чтобы создать резервную копию исходных путей ниже (определяется в настройках по умолчанию), выберите нужный тип формата файла и Target.";
 
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['es-cl'] = "Generar";
