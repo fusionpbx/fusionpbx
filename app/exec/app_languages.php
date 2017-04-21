@@ -128,7 +128,7 @@ $text['label-result_type']['uk'] = "Результат";
 $text['label-result_type']['de-de'] = "Ergebnis";
 $text['label-result_type']['de-at'] = "Ergebnis";
 $text['label-result_type']['it-it'] = "Risultati";
-$text['label-result_type']['ru-ru'] = "Результат"
+$text['label-result_type']['ru-ru'] = "Результат";
 
 $text['label-response']['en-us'] = "Response";
 $text['label-response']['es-cl'] = "Respuesta";
