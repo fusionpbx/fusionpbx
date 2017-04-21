@@ -21,7 +21,7 @@
 	}
 
 //get the failed emails
-	$sql = "select email_uuid, email from v_emails";
+	$sql = "select email_uuid, email from v_emails limit 100";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$emails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -45,7 +45,6 @@
 				unset($sql, $prep_statement);
 			}
 			unset($mailer_error);
-			break;
 		}
 	}
 	unset ($prep_statement, $sql, $emails);
