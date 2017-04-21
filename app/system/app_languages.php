@@ -70,7 +70,7 @@ $text['title-drive']['sv-se'] = "Enhetsinformation";
 $text['title-drive']['uk'] = "Інформація про привід ";
 $text['title-drive']['de-at'] = "Festplatten Information";
 $text['title-drive']['it-it'] = "Informazioni disco";
-$text['title-drive']['ru-ru'] = "Сведения о диске";
+$text['title-drive']['ru-ru'] = "Сведения о дисках";
 
 $text['title-cpu']['en-us'] = "CPU Information";
 $text['title-cpu']['es-cl'] = "Info CPU";
@@ -166,7 +166,7 @@ $text['label-switch']['sv-se'] = "Växla";
 $text['label-switch']['uk'] = "перемикач";
 $text['label-switch']['de-at'] = "Schalter";
 $text['label-switch']['it-it'] = "Switch";
-$text['label-switch']['ru-ru'] = "Переключатель";
+$text['label-switch']['ru-ru'] = "FreeSwitch";
 
 $text['label-git_branch']['en-us'] = "Branch";
 $text['label-git_branch']['es-cl'] = "Rama";
@@ -178,7 +178,7 @@ $text['label-git_branch']['sv-se'] = "Gren";
 $text['label-git_branch']['uk'] = "філія";
 $text['label-git_branch']['de-at'] = "Ast";
 $text['label-git_branch']['it-it'] = "Branch";
-$text['label-git_branch']['ru-ru'] = "Филиал";
+$text['label-git_branch']['ru-ru'] = "Ветка";
 
 $text['label-git_commit']['en-us'] = "Commit";
 $text['label-git_commit']['es-cl'] = "Cometer";
@@ -190,7 +190,7 @@ $text['label-git_commit']['sv-se'] = "Begå";
 $text['label-git_commit']['uk'] = "здійснити";
 $text['label-git_commit']['de-at'] = "Verpflichten";
 $text['label-git_commit']['it-it'] = "Commit";
-$text['label-git_commit']['ru-ru'] = "Фиксировать";
+$text['label-git_commit']['ru-ru'] = "Фиксация";
 
 $text['label-git_origin']['en-us'] = "Origin";
 $text['label-git_origin']['es-cl'] = "Origen";
