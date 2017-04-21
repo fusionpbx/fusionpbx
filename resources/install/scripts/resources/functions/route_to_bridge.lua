@@ -3,11 +3,18 @@ local log  = require "resources.functions.log".route_to_bridge
 local pcre_match
 
 if freeswitch then
-	--! @todo find better way to extract captures
 	api = api or freeswitch.API()
+
+	local function escape_regex(s)
+		s = string.gsub(s, '\\', '\\\\')
+		s = string.gsub(s, '|', '\\|')
+		return s
+	end
+
+	--! @todo find better way to extract captures
 	local unpack = unpack or table.unpack
 	function pcre_match(str, pat)
-		local a = str .. "|/" .. pat .."/"
+		local a = escape_regex(str) .. "|/" .. escape_regex(pat) .."/"
 		if api:execute("regex", a) == 'false' then return end
 		local t = {}
 		for i = 1, 5 do
@@ -23,6 +30,7 @@ else
 end
 
 local function pcre_self_test()
+	io.write('Test regex ')
 	local a, b, c
 	a,b,c = pcre_match('abcd', '(\\d{3})(\\d{3})')
 	assert(a == nil)
@@ -30,6 +38,14 @@ local function pcre_self_test()
 	a,b,c = pcre_match('123456', '(\\d{3})(\\d{3})')
 	assert(a == '123', a)
 	assert(b == '456', b)
+
+	a,b,c = pcre_match('999', '(888|999)')
+	assert(a == '999', a)
+
+	a,b,c = pcre_match('888|999', '(888\\|999)')
+	assert(a == '888|999', a)
+
+	io.write(' - ok\n')
 end
 
 local select_routes_sql = [[
