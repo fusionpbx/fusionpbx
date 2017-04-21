@@ -412,7 +412,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '203711b9-1d2a-4b52-9d8c-d6f23b451d8f';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'provision';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'device_nway_conference';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'nway_conference';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
