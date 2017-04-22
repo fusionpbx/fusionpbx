@@ -1356,7 +1356,7 @@ $text['description-sip_force_expires']['ro'] = "Pentru a preveni înregistrăril
 $text['description-sip_force_expires']['ar-eg'] = "";
 $text['description-sip_force_expires']['he'] = "";
 $text['description-sip_force_expires']['it-it'] = "Per prevenire le registrazioni SIP vecchie, questa impostazione può sovrascive il valore di scadenza del client.";
-$text['description-sip_force_expires']['ru-ru'] = "Чтобы предотвратить несвоевременную регистрацию, срок действия SIP Force может отменять истечение срока действия клиента.";
+$text['description-sip_force_expires']['ru-ru'] = "Чтобы предотвратить частую регистрацию, срок действия SIP Force может отменять истечение срока действия клиента.";
 
 $text['description-sip_force_contact']['en-us'] = "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.";
 $text['description-sip_force_contact']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
@@ -1564,7 +1564,7 @@ $text['description-absolute_codec_string']['ro'] = "";
 $text['description-absolute_codec_string']['ar-eg'] = "";
 $text['description-absolute_codec_string']['he'] = "";
 $text['description-absolute_codec_string']['it-it'] = "Stringa codec per l'interno";
-$text['description-absolute_codec_string']['ru-ru'] = "Последовательность выбора кодеков для Внутреннего НОмера";
+$text['description-absolute_codec_string']['ru-ru'] = "Последовательность выбора кодеков для Внутреннего Номера";
 
 $text['description-force_ping']['en-us'] = "Use OPTIONS to detect if extension is reacheable";
 $text['description-force_ping']['es-cl'] = "";
@@ -1580,7 +1580,7 @@ $text['description-force_ping']['ro'] = "";
 $text['description-force_ping']['ar-eg'] = "";
 $text['description-force_ping']['he'] = "";
 $text['description-force_ping']['it-it'] = "Usa OPTIONS per verificare se l'interno è raggiungibile";
-$text['description-force_ping']['ru-ru'] = "Используйте ОПЦИИ, чтобы определить доступность Внутреннего Номера";
+$text['description-force_ping']['ru-ru'] = "Использовать OPTIONS, чтобы определить доступность Внутреннего Номера";
 
 $text['description-missed_call']['en-us'] = "Select the notification type, and enter the appropriate destination.";
 $text['description-missed_call']['es-cl'] = "Seleccione el tipo de notificación, y entrar en el destino apropiado.";

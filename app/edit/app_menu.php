@@ -50,7 +50,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Provisionamento";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
-	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор условий";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор шаблонов автоконфигурации";
 	$apps[$x]['menu'][$y]['uuid'] = "57773542-a565-1a29-605d-6535da1a0870";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "external";

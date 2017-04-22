@@ -142,7 +142,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['ro'] = "Data";
 $text['label-data']['uk'] = "Дані";
 $text['label-data']['de-at'] = "Daten";
-$text['label-data']['ru-ru'] = "Дата";
+$text['label-data']['ru-ru'] = "Данные";
 
 $text['label-action']['en-us'] = "Action";
 $text['label-action']['es-cl'] = "Acción";
@@ -190,7 +190,7 @@ $text['description-stop_command']['sv-se'] = "Ange kommandot för att stoppa tj�
 $text['description-stop_command']['ro'] = "Introduceți comanda de oprire a serviciului.";
 $text['description-stop_command']['uk'] = "Введіть команду, щоб зупинити службу";
 $text['description-stop_command']['de-at'] = "Geben Sie einen Befehl zum Stoppen des Services an.";
-$text['description-stop_command']['ru-ru'] = "Введите команду для остановки сервиса.";
+$text['description-stop_command']['ru-ru'] = "Введите команду для остановки службы.";
 
 $text['description-start_command']['en-us'] = "Enter the command to start the service.";
 $text['description-start_command']['es-cl'] = "Ingrese el comando para iniciar el servicio.";
@@ -202,7 +202,7 @@ $text['description-start_command']['sv-se'] = "Ange kommandot för att starta tj
 $text['description-start_command']['ro'] = "Introduceți comanda de pornire a serviciului";
 $text['description-start_command']['uk'] = "Введіть команду, щоб запустити службу";
 $text['description-start_command']['de-at'] = "Geben Sie einen Befehl zum Starten des Services an.";
-$text['description-start_command']['ru-ru'] = "Введите клманду для старта срвиса.";
+$text['description-start_command']['ru-ru'] = "Введите команду для старта службы.";
 
 $text['description-services']['en-us'] = "Shows a list of processes, the status of the process and provides control to start and stop the process.";
 $text['description-services']['es-cl'] = "Muestra una lista de los procesos, el estado del proceso y proporciona un control para iniciar y detener el proceso.";

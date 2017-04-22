@@ -277,7 +277,7 @@ $text['description-queue_add']['fr-fr'] = "En résumé, ces files d'attente diff
 $text['description-queue_add']['pl'] = "Kolejki przetrzymują dzwoniących aż do momentu, gdy któryś z agentów będzie mógł odebrać rozmowę. Znane one są również jako kolejki FIFO.";
 $text['description-queue_add']['de-de'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt.";
 $text['description-queue_add']['de-at'] = "Einfach ausgedrückt sind WarteschlangenWarteschlangen in denen die Anruf gehalten werden, bit jemand verfügbar ist, der den Anruf annehmen kann. Diese sind als FIFO-Warteschlangen bekannt.";
-$text['description-queue_add']['ru-ru'] = "Говоря простыми словами, очереди держат образцы для звонящих, чтобы ждать, пока кто-то не сможет принять вызов. Также известны как очереди FIFO.";
+$text['description-queue_add']['ru-ru'] = "Говоря простыми словами, очереди удерживают звонящих на линии, пока кто-то не сможет принять вызов. Также известны как очереди FIFO.";
 
 $text['description-name']['en-us'] = "The name the queue will be assigned.";
 $text['description-name']['es-cl'] = "El nombre al que la cola que va a ser asignada.";

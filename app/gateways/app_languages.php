@@ -178,7 +178,7 @@ $text['label-retry_seconds']['de-de'] = "Sekunden bis erneuten Versuch";
 $text['label-retry_seconds']['de-at'] = "Sekunden bis erneuten Versuch";
 $text['label-retry_seconds']['ar-eg'] = "";
 $text['label-retry_seconds']['he'] = "";
-$text['label-retry_seconds']['ru-ru'] = "Повторить попытку через секунд ";
+$text['label-retry_seconds']['ru-ru'] = "Повтор попытки регистрации";
 
 $text['label-register_transport']['en-us'] = "Register Transport";
 $text['label-register_transport']['es-cl'] = "Transporte de Registro";
@@ -208,7 +208,7 @@ $text['label-register_proxy']['de-de'] = "Register Proxy";
 $text['label-register_proxy']['de-at'] = "Register Proxy";
 $text['label-register_proxy']['ar-eg'] = "";
 $text['label-register_proxy']['he'] = "";
-$text['label-register_proxy']['ru-ru'] = "Регистрация прокси";
+$text['label-register_proxy']['ru-ru'] = "Прокси-сервер регистрации";
 
 $text['label-register']['en-us'] = "Register";
 $text['label-register']['es-cl'] = "Registrar";
@@ -403,7 +403,7 @@ $text['label-expire_seconds']['de-de'] = "Expire Seconds";
 $text['label-expire_seconds']['de-at'] = "Expire Seconds";
 $text['label-expire_seconds']['ar-eg'] = "";
 $text['label-expire_seconds']['he'] = "";
-$text['label-expire_seconds']['ru-ru'] = "Секунд до истечения";
+$text['label-expire_seconds']['ru-ru'] = "Время жизни регистрации";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['pt-pt'] = "Hostname";
@@ -625,7 +625,7 @@ $text['description-retry_seconds']['de-de'] = "Geben Sie an, nach welcher Zeit d
 $text['description-retry_seconds']['de-at'] = "Geben Sie an, nach welcher Zeit die Registrierung erneut versucht werden soll (nach fehlgeschlagener Registrierung).";
 $text['description-retry_seconds']['ar-eg'] = "";
 $text['description-retry_seconds']['he'] = "";
-$text['description-retry_seconds']['ru-ru'] = "Вставьте здесь время в секундах, прежде чем пытаться перерегистрировать после тайм-аут превышена или сбоя.";
+$text['description-retry_seconds']['ru-ru'] = "Укажите время в секундах, прежде чем пытаться перерегистрировать после превышения времени ожидания ответа или сбоя.";
 
 $text['description-register_transport']['en-us'] = "Choose whether to register-transport.";
 $text['description-register_transport']['es-cl'] = "Seleccione el tipo de transporte de registro.";
@@ -640,7 +640,7 @@ $text['description-register_transport']['de-de'] = "Wählen Sie ob register-tran
 $text['description-register_transport']['de-at'] = "Wählen Sie ob register-transport verwendet werden soll.";
 $text['description-register_transport']['ar-eg'] = "";
 $text['description-register_transport']['he'] = "";
-$text['description-register_transport']['ru-ru'] = "Выберите, следует ли регистрировать-перенос.";
+$text['description-register_transport']['ru-ru'] = "Выберите предпочтительный транспорт для регистраций.";
 
 $text['description-register_proxy']['en-us'] = "Enter the register proxy here.";
 $text['description-register_proxy']['es-cl'] = "Ingrese el proxy de registro aquí";
@@ -878,7 +878,7 @@ $text['description-expire_seconds']['de-de'] = "Geben Sie an, nach wie vielen Se
 $text['description-expire_seconds']['de-at'] = "Geben Sie an, nach wie vielen Sekunden die Registrierung des Gateways erneuert werden soll.";
 $text['description-expire_seconds']['ar-eg'] = "";
 $text['description-expire_seconds']['he'] = "";
-$text['description-expire_seconds']['ru-ru'] = "Время записи в секундах. Это время, после чего необходимо повторно зарегистрироваться со шлюзом.";
+$text['description-expire_seconds']['ru-ru'] = "Время в секундах. Это время, по истечению которого необходимо обновить регистрацию.";
 
 $text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
 $text['description-hostname']['pt-pt'] = "Introduza o hostname";

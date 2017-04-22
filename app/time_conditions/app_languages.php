@@ -490,7 +490,7 @@ $text['label-condition_value']['sv-se'] = "Värde";
 $text['label-condition_value']['uk'] = "Значення";
 $text['label-condition_value']['de-at'] = "Wert";
 $text['label-condition_value']['he'] = "";
-$text['label-condition_value']['ru-ru'] = "Стоимость";
+$text['label-condition_value']['ru-ru'] = "Значение От";
 
 $text['label-condition_range']['en-us'] = "Range";
 $text['label-condition_range']['es-cl'] = "Rango";
@@ -502,7 +502,7 @@ $text['label-condition_range']['sv-se'] = "Intervall";
 $text['label-condition_range']['uk'] = "";
 $text['label-condition_range']['de-at'] = "Bereich";
 $text['label-condition_range']['he'] = "טווח";
-$text['label-condition_range']['ru-ru'] = "Ассортимент";
+$text['label-condition_range']['ru-ru'] = "Значение До";
 
 $text['label-condition_parameter']['en-us'] = "Parameter";
 $text['label-condition_parameter']['es-cl'] = "Parámetro";
@@ -526,7 +526,7 @@ $text['label-condition']['sv-se'] = "Villkor";
 $text['label-condition']['uk'] = "Умова";
 $text['label-condition']['de-at'] = "Bedingung";
 $text['label-condition']['he'] = "תנאי";
-$text['label-condition']['ru-ru'] = "Состояние";
+$text['label-condition']['ru-ru'] = "Условие";
 
 $text['label-alternate-destination']['en-us'] = "Alternate Destination";
 $text['label-alternate-destination']['es-cl'] = "Destino Alternativo";

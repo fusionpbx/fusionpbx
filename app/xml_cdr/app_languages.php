@@ -417,7 +417,7 @@ $text['label-start_range']['sv-se'] = "Intervall start";
 $text['label-start_range']['uk'] = "";
 $text['label-start_range']['de-at'] = "Start Bereich";
 $text['label-start_range']['he'] = "החל מטווח";
-$text['label-start_range']['ru-ru'] = "Начальный диапазон";
+$text['label-start_range']['ru-ru'] = "Начало вызова";
 
 $text['label-start_date_time']['en-us'] = "Start Date/Time";
 $text['label-start_date_time']['es-cl'] = "Fecha/Hora de Comienzo";
@@ -813,7 +813,7 @@ $text['label-end_range']['sv-se'] = "Intervall Slut";
 $text['label-end_range']['uk'] = "";
 $text['label-end_range']['de-at'] = "Ende Bereich";
 $text['label-end_range']['he'] = "עד טווח";
-$text['label-end_range']['ru-ru'] = "Конечный диапазон";
+$text['label-end_range']['ru-ru'] = "Окончание вызова";
 
 $text['label-end_date_time']['en-us'] = "End Date/Time";
 $text['label-end_date_time']['es-cl'] = "Fecha/Hora";
@@ -1178,7 +1178,7 @@ $text['label-answer_range']['sv-se'] = "Svarstid";
 $text['label-answer_range']['uk'] = "";
 $text['label-answer_range']['de-at'] = "Antwort Rate";
 $text['label-answer_range']['he'] = "";
-$text['label-answer_range']['ru-ru'] = "Диапазон ответов";
+$text['label-answer_range']['ru-ru'] = "Отвечен";
 
 $text['label-answer']['en-us'] = "Answer";
 $text['label-answer']['es-cl'] = "Respuesta";
