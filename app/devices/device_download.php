@@ -17,87 +17,93 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/paging.php";
-if (if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
-$language = new text;
-$text = $language->get();
+	$language = new text;
+	$text = $language->get();
 
-function array2csv(array &$array)
-{
-   if (count($array) == 0) {
-     return null;
-   }
-   ob_start();
-   $df = fopen("php://output", 'w');
-   fputcsv($df, array_keys(reset($array)));
-   foreach ($array as $row) {
-      fputcsv($df, $row);
-   }
-   fclose($df);
-   return ob_get_clean();
-}
+//define the functions
+	function array2csv(array &$array)
+	{
+		if (count($array) == 0) {
+			return null;
+		}
+		ob_start();
+		$df = fopen("php://output", 'w');
+		fputcsv($df, array_keys(reset($array)));
+		foreach ($array as $row) {
+			fputcsv($df, $row);
+		}
+		fclose($df);
+		return ob_get_clean();
+	}
 
-function download_send_headers($filename) {
-    // disable caching
-    $now = gmdate("D, d M Y H:i:s");
-    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-    header("Last-Modified: {$now} GMT");
+	function download_send_headers($filename) {
+		// disable caching
+		$now = gmdate("D, d M Y H:i:s");
+		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+		header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+		header("Last-Modified: {$now} GMT");
 
-    // force download
-    header("Content-Type: application/force-download");
-    header("Content-Type: application/octet-stream");
-    header("Content-Type: application/download");
+		// force download
+		header("Content-Type: application/force-download");
+		header("Content-Type: application/octet-stream");
+		header("Content-Type: application/download");
 
-    // disposition / encoding on response body
-    header("Content-Disposition: attachment;filename={$filename}");
-    header("Content-Transfer-Encoding: binary");
-}
+		// disposition / encoding on response body
+		header("Content-Disposition: attachment;filename={$filename}");
+		header("Content-Transfer-Encoding: binary");
+	}
 
-if (isset($_REQUEST["column_group"])) {
+//get the devices and send them as output
+	if (isset($_REQUEST["column_group"])) {
+		$columns = implode(",",$_REQUEST["column_group"]);
+		$sql = "select " . $columns . " from v_devices ";
+		$sql .= " where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$devices = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		unset ($sql, $prep_statement);
+		//print_r($extensions);
 
-	$columns = implode(",",$_REQUEST["column_group"]);
-	$sql = "select " . $columns . " from v_devices ";
-	$sql .= " where domain_uuid = '".$domain_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$devices = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	unset ($sql, $prep_statement);
-//	print_r($extensions);
+		download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+		echo array2csv($devices);
+		die();
+	}
 
-	download_send_headers("data_export_" . date("Y-m-d") . ".csv");
-	echo array2csv($devices);
-	die();
+//define the columns in the array
+	$columns[] = 'device_uuid';
+	$columns[] = 'domain_uuid';
+	$columns[] = 'device_mac_address';
+	$columns[] = 'device_label';
+	$columns[] = 'device_template';
+	$columns[] = 'device_description';
 
-}
-
-$columns[] = 'device_uuid';
-$columns[] = 'domain_uuid';
-$columns[] = 'device_mac_address';
-$columns[] = 'device_label';
-$columns[] = 'device_template';
-$columns[] = 'device_description';
-
-$c = 0;
-$row_style["0"] = "row_style0";
-$row_style["1"] = "row_style1";
+//set the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //begin the page content
 	require_once "resources/header.php";
@@ -105,23 +111,18 @@ $row_style["1"] = "row_style1";
 	echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-		echo "<tr>\n";
-		echo "<th><input type=\"checkbox\" id=\"selecctall\"/>";
-		echo "</th>";
-		echo "<th> Column Name";
-		echo "</th>";
-		echo "<th> Description";
-		echo "</th>";
-		echo "</tr>";
-	echo "</tr>";
+	echo "	<th><input type=\"checkbox\" id=\"selecctall\"/></th>\n";
+	echo "	<th>Column Name</th>\n";
+	echo "	<th>Description</th>\n";
+	echo "</tr>\n";
+
 	foreach ($columns as $value) {
 		echo "<tr>\n";
-		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'><input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
-		echo "</td>";
-		echo "	<td valign='top' class='".$row_style[$c]."'> $value";
-		echo "</td>";
-		echo "	<td valign='top' class='".$row_style[$c]."'>";
-		echo "</td>";
+		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
+		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
+		echo "	</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>$value</td>";
+		echo "	<td valign='top' class='".$row_style[$c]."'></td>";
 		echo "</tr>";
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
@@ -139,4 +140,5 @@ $row_style["1"] = "row_style1";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
