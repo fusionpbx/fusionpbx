@@ -61,7 +61,7 @@ $text['title-call_groups']['ro'] = "Grup apelare";
 $text['title-call_groups']['ar-eg'] = "";
 $text['title-call_groups']['he'] = "קבוצת חיוג";
 $text['title-call_groups']['it-it'] = "Gruppi di Chiamata";
-$text['title-call_groups']['ru-ru'] = "Группа Вызовов";
+$text['title-call_groups']['ru-ru'] = "Группы Вызовов";
 
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
@@ -1340,7 +1340,7 @@ $text['description-toll_allow']['ro'] = "Introduceți tipurile de destinație ai
 $text['description-toll_allow']['ar-eg'] = "";
 $text['description-toll_allow']['he'] = "";
 $text['description-toll_allow']['it-it'] = "Inserisci il tipo di tariffa permessa.  (Esempio: urbana,internazionale,interna)";
-$text['description-toll_allow']['ru-ru'] = "Введите здесь доступные значения. (Примеры: внутренние, международные, местные)";
+$text['description-toll_allow']['ru-ru'] = "Введите здесь доступные значения. (Примеры: domestic,international,local)";
 
 $text['description-sip_force_expires']['en-us'] = "To prevent stale registrations SIP Force expires can override the client expire.";
 $text['description-sip_force_expires']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
@@ -1900,7 +1900,7 @@ $text['description-call_group']['ro'] = "Introduceți grupul de apelare din care
 $text['description-call_group']['ar-eg'] = "";
 $text['description-call_group']['he'] = "";
 $text['description-call_group']['it-it'] = "Inserisci qui il gruppo di chiamata. I gruppi predefiniti disponibili: sales, support, billing.";
-$text['description-call_group']['ru-ru'] = "Войдите в группу пользователей. Группы доступные по умолчанию: продажа, поддержка, бухгалтерия.";
+$text['description-call_group']['ru-ru'] = "Войдите в группу пользователей. Группы доступные по умолчанию: sales, support, billing.";
 
 $text['description-auth_acl']['en-us'] = "Enter the Auth ACL here.";
 $text['description-auth_acl']['es-cl'] = "Ingrese el ACL de autenticación aquí";
