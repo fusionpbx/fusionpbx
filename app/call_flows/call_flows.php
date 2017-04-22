@@ -167,7 +167,7 @@
 				$tr_link = "href='call_flow_edit.php?id=".$row['call_flow_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($row['call_flow_status'] != "false") {
 				echo $row['call_flow_label'];
 			}
