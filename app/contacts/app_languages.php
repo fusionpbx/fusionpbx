@@ -1783,7 +1783,7 @@ $text['label-contact_name_middle']['sv-se'] = "Mellan";
 $text['label-contact_name_middle']['de-de'] = "Mittel";
 $text['label-contact_name_middle']['de-at'] = "Mittel";
 $text['label-contact_name_middle']['he'] = "שם אמצעי";
-$text['label-contact_name_middle']['ru-ru'] = "средний";
+$text['label-contact_name_middle']['ru-ru'] = "Отчество";
 
 $text['label-contact_name_given']['en-us'] = "First Name";
 $text['label-contact_name_given']['es-cl'] = "Primer Nombre";
