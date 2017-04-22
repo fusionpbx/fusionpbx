@@ -274,7 +274,7 @@ $text['label-timeout']['sv-se'] = "Tidsgräns";
 $text['label-timeout']['uk'] = "Таймаут";
 $text['label-timeout']['de-at'] = "Time-Out";
 $text['label-timeout']['he'] = "";
-$text['label-timeout']['ru-ru'] = "Таймаут";
+$text['label-timeout']['ru-ru'] = "Тайм-аут";
 
 $text['label-text']['en-us'] = "Text";
 $text['label-text']['es-cl'] = "Texto";
@@ -444,7 +444,7 @@ $text['label-destination_timeout']['sv-se'] = "Tidsgräns";
 $text['label-destination_timeout']['uk'] = "Таймаут";
 $text['label-destination_timeout']['de-at'] = "Abwurfzeit";
 $text['label-destination_timeout']['he'] = "";
-$text['label-destination_timeout']['ru-ru'] = "Таймаут";
+$text['label-destination_timeout']['ru-ru'] = "Тайм-аут";
 
 $text['label-destination_prompt_confirm']['en-us'] = "Confirm";
 $text['label-destination_prompt_confirm']['es-cl'] = "Confirmar";
