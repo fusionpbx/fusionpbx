@@ -196,7 +196,7 @@ if ($domains_processed == 1) {
 				$sql .= "('".uuid()."', 'Raeto-Romance', 'rm'), ";
 				$sql .= "('".uuid()."', 'Romanian - Moldova', 'ro-mo'), ";
 				$sql .= "('".uuid()."', 'Romanian - Romania', 'ro'), ";
-				$sql .= "('".uuid()."', 'Russian', 'ru'), ";
+				$sql .= "('".uuid()."', 'Russian', 'ru-ru'), ";
 				$sql .= "('".uuid()."', 'Russian - Moldova', 'ru-mo'), ";
 				$sql .= "('".uuid()."', 'Sanskrit', 'sa'), ";
 				$sql .= "('".uuid()."', 'Serbian - Cyrillic, Latin', 'sr-sp'), ";
