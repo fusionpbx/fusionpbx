@@ -40,7 +40,7 @@
 	$text['desc-click2call']['es-cl'] = "Ingrese la siguiente información para realizar una llamada desde un número de origen a un número de destino.";
 	$text['desc-click2call']['pt-pt'] = "Forneça a informação seguinte para realizar uma chamada com uma determinada origem para um determinado destino.";
 	$text['desc-click2call']['pt-br'] = "Forneça as seguintes informações para realizar uma chamada do telefone originário para o telefone de destino.";
-	$text['desc-click2call']['ru-ru'] = "Предоставьте следующую информацию, чтобы сделать звонок от исходного номера до номера адресата.";
+	$text['desc-click2call']['ru-ru'] = "Предоставьте следующую информацию, чтобы сделать вызов от исходного номера до номера адресата.";
 	$text['desc-click2call']['fr-fr'] = "Fournissez les informations suivantes afin de lancer un appel d'un numéro vers un autre.";
 	$text['desc-click2call']['de-de'] = "Geben Sie folgende Informationen an um einen Anruf von der Quellrufnummer zur Zielrufniummer her zu stellen";
 	$text['desc-click2call']['de-at'] = "Geben Sie folgende Informationen an um einen Anruf von der Quellrufnummer zur Zielrufniummer her zu stellen";

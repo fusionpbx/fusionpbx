@@ -367,7 +367,7 @@ $text['label-800']['pl'] = "Połaczenia specjalne (toll-free)";
 $text['label-800']['uk'] = "Безкоштовний";
 $text['label-800']['de-de'] = "Gebührenfrei";
 $text['label-800']['de-at'] = "Gebührenfrei";
-$text['label-800']['ru-ru'] = "Бесплатный звонок";
+$text['label-800']['ru-ru'] = "Вызов на бесплантые номера";
 
 $text['label-inum']['en-us'] = "iNum 0118335100xxxxxxxx";
 $text['label-inum']['es-cl'] = "iNum 0118335100xxxxxxxx";
