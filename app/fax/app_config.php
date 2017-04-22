@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.";
 		$apps[$x]['description']['pt-br'] = "";
-		$apps[$x]['description']['ru-ru'] = "Чтобы принять факс, добавьте внутренний номер для факсов и направьте входящий звонки на выделенный номер, или вы можете обнаружить FAX-тон, используя вкладку 'Общие'.";
+		$apps[$x]['description']['ru-ru'] = "Чтобы принять факс, добавьте внутренний номер для факсов и направьте входящий вызовы на выделенный номер, или вы можете обнаружить FAX-тон, используя вкладку 'Общие'.";
 
 	//destination details
 		$y=0;

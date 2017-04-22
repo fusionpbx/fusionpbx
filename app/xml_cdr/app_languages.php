@@ -1007,7 +1007,7 @@ $text['label-call-statistics-description']['sv-se'] = "Detaljerad Samtals-statis
 $text['label-call-statistics-description']['uk'] = "";
 $text['label-call-statistics-description']['de-at'] = "Anruf Statistiken fassen alle Anrufinformationen zusammen.";
 $text['label-call-statistics-description']['he'] = "";
-$text['label-call-statistics-description']['ru-ru'] = "Статистика записей звонков обобщает информацию о вызовах.";
+$text['label-call-statistics-description']['ru-ru'] = "Обобщенная информацию о вызовах.";
 
 $text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
 $text['label-call-statistics']['es-cl'] = "Estadísticas de ñps  detalles de grabación de llamadas";
@@ -1019,7 +1019,7 @@ $text['label-call-statistics']['sv-se'] = "Detaljerad Samtals-statistik";
 $text['label-call-statistics']['uk'] = "";
 $text['label-call-statistics']['de-at'] = "Anruf Statistiken";
 $text['label-call-statistics']['he'] = "";
-$text['label-call-statistics']['ru-ru'] = "Статистика записей вызовов";
+$text['label-call-statistics']['ru-ru'] = "Статистика вызовов";
 
 $text['label-call-flow-5']['en-us'] = "Call Flow: Times";
 $text['label-call-flow-5']['es-cl'] = "Flujos de llamada: Tiempos";
@@ -1298,7 +1298,7 @@ $text['description-3']['sv-se'] = "Använd fälten för att filtrera fram det ö
 $text['description-3']['uk'] = "";
 $text['description-3']['de-at'] = "Benutzen Sie die Felder um Informationen betreffend spezifischer Anrufe zu filtern.";
 $text['description-3']['he'] = "";
-$text['description-3']['ru-ru'] = "Используйте поля для фильтрации информации для конкретных записей звонков, которые вам нужны.";
+$text['description-3']['ru-ru'] = "Используйте поля для фильтрации информации для конкретных записей вызовов, которые вам нужны.";
 
 $text['description-2']['en-us'] = "The information contains source, destination, duration, and other useful call details.";
 $text['description-2']['es-cl'] = "La información contiene origen, destino, duración y otra información útil.";
