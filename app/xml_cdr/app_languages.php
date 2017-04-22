@@ -381,7 +381,7 @@ $text['label-to']['sv-se'] = "Till";
 $text['label-to']['uk'] = "До";
 $text['label-to']['de-at'] = "Bis";
 $text['label-to']['he'] = "ל";
-$text['label-to']['ru-ru'] = "Кому";
+$text['label-to']['ru-ru'] = "До";
 
 $text['label-summary']['en-us'] = "Summary";
 $text['label-summary']['es-cl'] = "Sumario";
