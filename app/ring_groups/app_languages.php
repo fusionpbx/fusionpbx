@@ -262,7 +262,7 @@ $text['label-timeout_destination']['sv-se'] = "Timeout Destination";
 $text['label-timeout_destination']['uk'] = "";
 $text['label-timeout_destination']['de-at'] = "Time-Out Ziel";
 $text['label-timeout_destination']['he'] = "";
-$text['label-timeout_destination']['ru-ru'] = "Тайм-аут назначения";
+$text['label-timeout_destination']['ru-ru'] = "Переадресация по Тайм-ауту";
 
 $text['label-timeout']['en-us'] = "Timeout";
 $text['label-timeout']['es-cl'] = "Timeout";
@@ -373,7 +373,7 @@ $text['label-forward_destination']['sv-se'] = "Nummer";
 $text['label-forward_destination']['uk'] = "";
 $text['label-forward_destination']['de-at'] = "Nummer";
 $text['label-forward_destination']['he'] = "מספר";
-$text['label-forward_destination']['ru-ru'] = "Число";
+$text['label-forward_destination']['ru-ru'] = "Номер";
 
 $text['label-extension']['en-us'] = "Extension";
 $text['label-extension']['es-cl'] = "Extensión";
