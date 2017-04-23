@@ -1009,7 +1009,7 @@ $text['label-primary']['sv-se'] = "Primär";
 $text['label-primary']['de-de'] = "Primär";
 $text['label-primary']['de-at'] = "Primär";
 $text['label-primary']['he'] = "ראשי";
-$text['label-primary']['ru-ru'] = "Первичный";
+$text['label-primary']['ru-ru'] = "Основной";
 
 $text['label-phone_type']['en-us'] = "Type";
 $text['label-phone_type']['es-cl'] = "Tipo";
