@@ -682,7 +682,7 @@ $text['label-inline']['sv-se'] = "Inline";
 $text['label-inline']['de-de'] = "Inline";
 $text['label-inline']['de-at'] = "Inline";
 $text['label-inline']['he'] = "";
-$text['label-inline']['ru-ru'] = "В очереди";
+$text['label-inline']['ru-ru'] = "inline";
 
 $text['label-group']['en-us'] = "Group";
 $text['label-group']['es-cl'] = "Grupo";
@@ -759,7 +759,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['de-de'] = "Daten";
 $text['label-data']['de-at'] = "Daten";
 $text['label-data']['he'] = "מידע";
-$text['label-data']['ru-ru'] = "Дата";
+$text['label-data']['ru-ru'] = "Аргумент";
 
 $text['label-hostname']['en-us'] = "Hostname";
 $text['label-hostname']['pt-pt'] = "Hostname";
@@ -836,7 +836,7 @@ $text['label-break']['sv-se'] = "Paus";
 $text['label-break']['de-de'] = "Abbrechen";
 $text['label-break']['de-at'] = "Abbrechen";
 $text['label-break']['he'] = "הפסקה";
-$text['label-break']['ru-ru'] = "Прервать";
+$text['label-break']['ru-ru'] = "break";
 
 $text['label-application']['en-us'] = "Application";
 $text['label-application']['es-cl'] = "Aplicación";

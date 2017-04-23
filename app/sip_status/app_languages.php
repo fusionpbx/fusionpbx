@@ -94,7 +94,7 @@ $text['header-sip-status']['sv-se'] = "SIP Status";
 $text['header-sip-status']['uk'] = "Стан SIP";
 $text['header-sip-status']['de-at'] = "SIP Status";
 $text['header-sip-status']['it-it'] = "Stato SIP";
-$text['header-sip-status']['ru-ru'] = "SIP статус";
+$text['header-sip-status']['ru-ru'] = "Статус SIP";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
@@ -166,7 +166,7 @@ $text['button-flush_registrations']['sv-se'] = "'Flush' Registreringar";
 $text['button-flush_registrations']['uk'] = "Скинути реєстрації";
 $text['button-flush_registrations']['de-at'] = "Registrierungen verwerfen";
 $text['button-flush_registrations']['it-it'] = "Aggiorna registrazioni";
-$text['button-flush_registrations']['ru-ru'] = "Отключить Регистрацию";
+$text['button-flush_registrations']['ru-ru'] = "Сбросить регистрацию";
 
 $text['button-flush_memcache']['en-us'] = "Flush Memcache";
 $text['button-flush_memcache']['es-cl'] = "Memcache Flush";

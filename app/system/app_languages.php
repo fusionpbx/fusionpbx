@@ -94,7 +94,7 @@ $text['message-unavailable']['sv-se'] = "Otillgänglig";
 $text['message-unavailable']['uk'] = "Недоступний ";
 $text['message-unavailable']['de-at'] = "Nicht verfügbar";
 $text['message-unavailable']['it-it'] = "Non disponibile";
-$text['message-unavailable']['ru-ru'] = "Недоступный";
+$text['message-unavailable']['ru-ru'] = "Недоступен";
 
 $text['label-os']['en-us'] = "Operating System";
 $text['label-os']['es-cl'] = "Sistema Operativo";
