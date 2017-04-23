@@ -1139,7 +1139,7 @@ $text['label-order']['sv-se'] = "Ordning";
 $text['label-order']['de-de'] = "Reihenfolge";
 $text['label-order']['de-at'] = "Reihenfolge";
 $text['label-order']['he'] = "סדר";
-$text['label-order']['ru-ru'] = "Порядковый номер";
+$text['label-order']['ru-ru'] = "Приоритет";
 
 $text['label-note_user']['en-us'] = "User";
 $text['label-note_user']['es-cl'] = "Usuario";

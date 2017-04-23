@@ -63,7 +63,7 @@
 	$text['table-order']['fr-fr'] = "Ordre";
 	$text['table-order']['de-de'] = "Reihenfolge";
 	$text['table-order']['de-at'] = "Reihenfolge";
-	$text['table-order']['ru-ru'] = "Порядковый номер";
+	$text['table-order']['ru-ru'] = "Приоритет";
 
 	$text['table-enabled']['en-us'] = "Enabled";
 	$text['table-enabled']['es-cl'] = "Activo";
