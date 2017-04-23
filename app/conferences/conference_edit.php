@@ -211,7 +211,7 @@
 						$dialplan_detail_type = 'conference';
 						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
 						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+						$dialplan_detail_data = $conference_name.'@'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
 						$dialplan_detail_order = '020';
 						$dialplan_detail_group = '2';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -263,7 +263,7 @@
 					//update dialplan detail action
 						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
 						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+						$dialplan_detail_data = $conference_name.'@'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
 						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";

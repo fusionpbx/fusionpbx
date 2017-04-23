@@ -123,6 +123,7 @@ local log = require "resources.functions.log".ring_group
 		ring_group_extension = row["ring_group_extension"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
+		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
 		missed_call_app = row["ring_group_missed_call_app"];
@@ -211,6 +212,7 @@ local log = require "resources.functions.log".ring_group
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
+			session:setVariable("toll_allow",ring_group_forward_toll_allow);	
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations

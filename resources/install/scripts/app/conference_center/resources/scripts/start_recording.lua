@@ -17,7 +17,7 @@
 	api = freeswitch.API();
 
 --check if the conference exists
-	cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+	cmd = "conference "..meeting_uuid.."@"..domain_name.." xml_list";
 	freeswitch.consoleLog("INFO","" .. cmd .. "\n");
 	result = trim(api:executeString(cmd));
 	if (string.sub(result, -9) == "not found") then
@@ -44,7 +44,7 @@
 
 		--send a command to record the conference
 			if (not file_exists(recording..".wav")) then
-				cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
+				cmd = "conference "..meeting_uuid.."@"..domain_name.." record "..recording..".wav";
 				freeswitch.consoleLog("notice", "[start-recording] cmd: " .. cmd .. "\n");
 				response = api:executeString(cmd);
 			end

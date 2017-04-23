@@ -1,6 +1,7 @@
 <?php
 
 $apps[$x]['menu'][0]['title']['en-us'] = "Operator Panel";
+$apps[$x]['menu'][0]['title']['fr-fr'] = "Panneau Operateur";
 $apps[$x]['menu'][0]['title']['pl'] = "Panel operatora";
 $apps[$x]['menu'][0]['title']['pt-br'] = "Painel do operador";
 $apps[$x]['menu'][0]['title']['ru-ru'] = "Панель оператора";

@@ -83,7 +83,7 @@ else {
 		//show the conferences that have a matching domain
 			$tmp_domain = substr($name, -strlen($_SESSION['domain_name']));
 			if ($tmp_domain == $_SESSION['domain_name']) {
-				$conference_name = substr($name, 0, strlen($name) - strlen('-'.$_SESSION['domain_name']));
+				$conference_name = substr($name, 0, strlen($name) - strlen('@'.$_SESSION['domain_name']));
 				if (is_uuid($conference_name)) {
 					$meeting_uuid = $conference_name;
 					$sql = "select ";
